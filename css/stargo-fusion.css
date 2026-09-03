@@ -38,3 +38,81 @@
   display: block;
   width: 100%;
 }
+
+/* ======================================================================
+   Owner review, 2026-09-03: four homepage fixes. All CSS; no markup or
+   interaction data changed.
+   ====================================================================== */
+
+/* 1. The testimonial cards fly upward and out of their sticky band on
+      scroll. In the Mono template the next section (.section.drk) sits at
+      z-index 11 and covers them as they leave; the Scalora providers band
+      that now follows the testimonials was static, so the departing cards
+      stayed visible on top of it. Same stacking as the template's own
+      successor. */
+.sc-scope.integration {
+  position: relative;
+  z-index: 11;
+}
+
+/* 2. Quote block centred inside every testimonial card. The template card is
+      space-between (header at top, quote at bottom); with the short STARGO
+      quotations the bottom-anchored block reads as misplaced. Auto margins
+      centre it in the space below the header without touching the header. */
+.testimonials-card .card-testi {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+/* 3. Architecture band (card stack) fills the viewport exactly on desktop.
+      The template is content-height — 1188px at 1440×900, taller than most
+      laptop screens. Height is pinned to the viewport; on shorter screens the
+      3D card stack is zoomed down (zoom, not transform, so the interaction
+      runtime's own transforms on the stack are untouched). */
+@media (min-width: 992px) {
+  .sc-scope.sc-hero {
+    height: 100vh;
+    min-height: 640px;
+    box-sizing: border-box;
+  }
+  .sc-scope.sc-hero .hero-inner { height: 100%; }
+  .sc-scope.sc-hero .hero-contant-wrapper {
+    height: 100%;
+    box-sizing: border-box;
+    padding-top: 0;
+    padding-bottom: 0;
+    row-gap: clamp(16px, 3vh, 56px);
+    justify-content: center;
+  }
+  .sc-scope.sc-hero .hero-cards-wrapper { flex: 0 0 auto; zoom: 1; }
+}
+@media (min-width: 992px) and (max-height: 1000px) { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .85; } }
+@media (min-width: 992px) and (max-height: 880px)  { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .72; } }
+@media (min-width: 992px) and (max-height: 780px)  { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .6; } }
+@media (min-width: 992px) and (max-height: 700px)  { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .5; } }
+
+/* 4. Sticky product switcher: the pinned panel fills the viewport while
+      pinned. The template pins a 666px panel with 100px of air above and
+      below; here the pinned block is one screen tall and the panel grows
+      into it. The dashboard image keeps its natural size (a 700px raster
+      upscaled would blur) and is centred in the taller panel. */
+@media (min-width: 992px) {
+  .sc-scope.products .product-sticky-inner-block {
+    height: 100vh;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+  }
+  .sc-scope.products .product-sticky-inner-block > * { width: 100%; }
+  .sc-scope.products .products-cards-wrapper { height: calc(100vh - 96px); }
+  .sc-scope.products .products-cards-dashboard-block {
+    height: 100%;
+    box-sizing: border-box;
+    justify-content: center;
+  }
+  .sc-scope.products .products-cards-dashboard-block img {
+    max-width: 100%;
+    max-height: calc(100vh - 96px - 94px - 200px);
+    width: auto;
+  }
+}
