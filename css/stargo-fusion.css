@@ -66,9 +66,12 @@
 
 /* 3. Architecture band (card stack) fills the viewport exactly on desktop.
       The template is content-height — 1188px at 1440×900, taller than most
-      laptop screens. Height is pinned to the viewport; on shorter screens the
-      3D card stack is zoomed down (zoom, not transform, so the interaction
-      runtime's own transforms on the stack are untouched). */
+      laptop screens. Height is pinned to the viewport; the text block keeps
+      its template size (378px) and the 3D card stack is zoomed to whatever
+      is left. Measured: the rotated stack paints 1.086× its 500px box, so
+      zoom = (viewport − 474px) / 543px, stepped every ~60px of height.
+      `zoom`, not `transform`, so the interaction runtime's own transforms on
+      the stack are untouched. */
 @media (min-width: 992px) {
   .sc-scope.sc-hero {
     height: 100vh;
@@ -79,17 +82,20 @@
   .sc-scope.sc-hero .hero-contant-wrapper {
     height: 100%;
     box-sizing: border-box;
-    padding-top: 0;
+    padding-top: 48px;
     padding-bottom: 0;
-    row-gap: clamp(16px, 3vh, 56px);
-    justify-content: center;
+    row-gap: 24px;
+    justify-content: flex-start;
   }
   .sc-scope.sc-hero .hero-cards-wrapper { flex: 0 0 auto; zoom: 1; }
 }
-@media (min-width: 992px) and (max-height: 1000px) { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .85; } }
-@media (min-width: 992px) and (max-height: 880px)  { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .72; } }
-@media (min-width: 992px) and (max-height: 780px)  { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .6; } }
-@media (min-width: 992px) and (max-height: 700px)  { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .5; } }
+@media (min-width: 992px) and (max-height: 1029px) { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .78; } }
+@media (min-width: 992px) and (max-height: 897px)  { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .66; } }
+@media (min-width: 992px) and (max-height: 831px)  { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .58; } }
+@media (min-width: 992px) and (max-height: 788px)  { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .5; } }
+@media (min-width: 992px) and (max-height: 744px)  { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .42; } }
+@media (min-width: 992px) and (max-height: 701px)  { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .34; } }
+@media (min-width: 992px) and (max-height: 658px)  { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .28; } }
 
 /* 4. Sticky product switcher: the pinned panel fills the viewport while
       pinned. The template pins a 666px panel with 100px of air above and
