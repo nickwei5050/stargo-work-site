@@ -1,0 +1,171 @@
+/**
+ * Build js/app.fused.js — the one Webflow bundle every page of this site loads.
+ *
+ * Why one bundle. Only ONE Webflow runtime can exist on a page: window.Webflow
+ * is a hard singleton, and a second core captures the first as a ready-queue
+ * and calls .define() on its function-valued properties with no factory —
+ * a guaranteed TypeError on DOM ready. So Scalora's runtime is dropped and
+ * only its animation DATA is carried over.
+ *
+ * Why the union. Mono exports six per-page bundles. tools/ix-union-check.mjs
+ * proved their IX2 payloads are byte-identical (409 events / 140 action
+ * lists, zero conflicts) and only the IX3 (GSAP) interaction lists differ per
+ * page. Without the union, a Mono module moved from studio.html to a page
+ * built on the blog bundle silently loses its hover interaction. With it,
+ * any module works on any page.
+ *
+ * Base: app.6e875794 (the homepage bundle) — the only one whose registered
+ * modules include dropdown and lightbox, on top of the lottie the nav needs.
+ */
+import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { readBundle, evalLiteral } from './ix-lib.mjs';
+
+const SITE = 'F:/stargo 网站/stargo-site';
+const JS = `${SITE}/js`;
+const BUNDLES = `${SITE}/tools/bundles`;          // the six Mono page bundles, kept as sources only
+const MONO_BASE = `${BUNDLES}/app.6e875794.53d57b6d7b6754cb.js`;
+const SCALORA_BUNDLE = process.argv[2]
+  ?? 'C:/Users/1/AppData/Local/Temp/claude/F--stargo---/b31df949-b6bc-4f89-9d0e-7fa0dc333312/scratchpad/scalora/js/app.e1bb07ef.d077b7f57348968e.js';
+const OUT_BUNDLE = `${JS}/app.fused.js`;
+
+const MONO_PAGE = '699b6466d5f19893993a4bf1';     // homepage id; imported Scalora ix3 is rescoped to it
+const SCALORA_PAGE = '69a01661589c516ba5f0f92f';
+const NS = 'sc-';
+
+/** Runtime built-ins present in both payloads; renaming them breaks both. */
+const BUILTIN = new Set(['fadeIn', 'fadeOut', 'slideInBottom', 'slideInTop', 'slideInLeft', 'slideInRight']);
+
+/* --------------------------------------------------------- renaming ---- */
+
+function buildRenameMap(payload) {
+  const map = new Map();
+  for (const key of [...Object.keys(payload.events ?? {}), ...Object.keys(payload.actionLists ?? {})]) {
+    if (!BUILTIN.has(key)) map.set(key, NS + key);
+  }
+  return map;
+}
+
+function renameString(value, map) {
+  if (map.has(value)) return map.get(value);
+  for (const [from, to] of map) {
+    if (value.startsWith(from + '-')) return to + value.slice(from.length);   // "a-48-p", "a-48-n-2"
+  }
+  if (value.startsWith(SCALORA_PAGE + '|')) return MONO_PAGE + value.slice(SCALORA_PAGE.length);
+  if (value === SCALORA_PAGE) return MONO_PAGE;
+  return value;
+}
+
+function deepRename(node, map, stats) {
+  if (typeof node === 'string') {
+    const next = renameString(node, map);
+    if (next !== node) stats.strings++;
+    return next;
+  }
+  if (Array.isArray(node)) return node.map((n) => deepRename(n, map, stats));
+  if (node && typeof node === 'object') {
+    const out = {};
+    for (const [k, v] of Object.entries(node)) out[renameString(k, map)] = deepRename(v, map, stats);
+    return out;
+  }
+  return node;
+}
+
+const dropBuiltins = (obj) => Object.fromEntries(Object.entries(obj ?? {}).filter(([k]) => !BUILTIN.has(k)));
+
+/* --------------------------------------------------------------- main -- */
+
+const monoSrc = readFileSync(MONO_BASE, 'utf8');
+const mono = readBundle(monoSrc);
+const scalora = readBundle(readFileSync(SCALORA_BUNDLE, 'utf8'));
+
+/* IX2: Mono payload + renamed Scalora events/lists. */
+const map = buildRenameMap(scalora.ix2Payload);
+const stats = { strings: 0 };
+const renamed = deepRename(scalora.ix2Payload, map, stats);
+const scaEvents = dropBuiltins(renamed.events);
+const scaLists = dropBuiltins(renamed.actionLists);
+
+const collide = [
+  ...Object.keys(scaEvents).filter((k) => k in mono.ix2Payload.events),
+  ...Object.keys(scaLists).filter((k) => k in mono.ix2Payload.actionLists),
+];
+if (collide.length) { console.error('FAIL: ids still collide after renaming', collide); process.exit(1); }
+
+/* One page id for the whole site. IX2 addresses elements as "<pageId>|<nodeId>"
+   and ix3 timelines are scoped per page, so a module moved from studio.html
+   to another page silently lost its hover. Every page now declares the
+   homepage id (chrome.mjs rewrites data-wf-page) and every payload reference
+   is folded onto it. Node ids are site-unique, so nothing collides. */
+const MONO_PAGE_RE = /^699b6466d5f19893993a4[0-9a-f]{3}$/;
+const foldPages = (node) => {
+  if (typeof node === 'string') {
+    const bar = node.indexOf('|');
+    if (bar === 24 && MONO_PAGE_RE.test(node.slice(0, 24))) return MONO_PAGE + node.slice(24);
+    if (MONO_PAGE_RE.test(node)) return MONO_PAGE;
+    return node;
+  }
+  if (Array.isArray(node)) return node.map(foldPages);
+  if (node && typeof node === 'object') return Object.fromEntries(Object.entries(node).map(([k, v]) => [foldPages(k), foldPages(v)]));
+  return node;
+};
+const mergedPayload = foldPages({
+  ...mono.ix2Payload,
+  events: { ...mono.ix2Payload.events, ...scaEvents },
+  actionLists: { ...mono.ix2Payload.actionLists, ...scaLists },
+});
+
+/* IX3: union of every Mono page bundle, plus Scalora's rescoped to this site. */
+const interactions = new Map();
+const timelines = new Map();
+const addIx3 = (b, rescope) => {
+  for (const i of b.ix3Interactions) {
+    const x = rescope ? { ...i, scope: { type: 'pages', value: [MONO_PAGE] } } : i;
+    const j = JSON.stringify(x);
+    if (interactions.has(x.id) && interactions.get(x.id) !== j) throw new Error(`ix3 conflict ${x.id}`);
+    interactions.set(x.id, j);
+  }
+  for (const t of b.ix3Timelines) {
+    const j = JSON.stringify(t);
+    if (timelines.has(t.id) && timelines.get(t.id) !== j) throw new Error(`ix3 timeline conflict ${t.id}`);
+    timelines.set(t.id, j);
+  }
+};
+const monoBundles = readdirSync(BUNDLES).filter((f) => /^app\.[0-9a-f]{8}\.[0-9a-f]+\.js$/.test(f));
+for (const f of monoBundles) addIx3(readBundle(readFileSync(`${BUNDLES}/${f}`, 'utf8')), true);
+const beforeScalora = interactions.size;
+addIx3(scalora, true);
+
+/* Scalora's ix3 interactions target page-scoped elements; the ones we import
+   are the title reveals inside the three modules. They remain scoped to the
+   homepage id, which is the page that carries those modules. */
+
+let out = monoSrc.slice(0, mono.ix2.argStart) + JSON.stringify(mergedPayload) + monoSrc.slice(mono.ix2.argEnd);
+const ix3 = readBundle(out).ix3;
+const mergedIx3 = `([${[...interactions.values()].join(',')}],[${[...timelines.values()].join(',')}])`;
+const at = out.indexOf(ix3.args.text);
+out = out.slice(0, at) + mergedIx3 + out.slice(at + ix3.args.text.length);
+
+/* Sanity: the result must still parse into the same shapes. */
+const check = readBundle(out);
+if (Object.keys(check.ix2Payload.events).length !== Object.keys(mergedPayload.events).length) throw new Error('ix2 round-trip mismatch');
+if (check.ix3Interactions.length !== interactions.size) throw new Error('ix3 round-trip mismatch');
+for (const ev of Object.values(check.ix2Payload.events)) {
+  const id = ev.action?.config?.actionListId;
+  if (id && !(id in check.ix2Payload.actionLists) && !BUILTIN.has(id)) throw new Error(`event references missing action list ${id}`);
+}
+
+writeFileSync(OUT_BUNDLE, out, 'utf8');
+
+console.log(JSON.stringify({
+  monoEvents: Object.keys(mono.ix2Payload.events).length,
+  scaloraEventsAdded: Object.keys(scaEvents).length,
+  mergedEvents: Object.keys(mergedPayload.events).length,
+  mergedActionLists: Object.keys(mergedPayload.actionLists).length,
+  idsRenamed: map.size,
+  stringsRewritten: stats.strings,
+  ix3FromMono: beforeScalora,
+  ix3Total: interactions.size,
+  ix3Timelines: timelines.size,
+  bytes: out.length,
+  wrote: OUT_BUNDLE,
+}, null, 2));

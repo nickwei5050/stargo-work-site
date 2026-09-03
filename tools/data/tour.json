@@ -1,0 +1,127 @@
+{
+ "goal": "找到合格的巴西电动摩托车经销商，研究其采购决策链，准备合规的报价与形式发票，并在越过毛利红线时取得人工审批。",
+ "disclaimer": "互动产品演示 · 演示数据。本页不会调用任何外部系统，也不会发送任何邮件或消息。所有公司、联系人与金额均为演示虚构。",
+ "closing": "十步中有七步系统可以自己完成。最后三步——写入 CRM、发出报价、回复买家——都是对外产生真实后果的动作，因此都停在人工审批上。这不是能力不足，这是设计。",
+ "steps": [
+  {
+   "n": 1,
+   "actorId": "ava",
+   "risk": "R0",
+   "requiresApproval": false,
+   "outcome": "reads",
+   "title": "从收件队列里取出询盘",
+   "detail": "系统读取待处理会话队列，取出一条新的询盘。这一步只读，不产生任何外部动作。",
+   "produces": [
+    "询盘 #DEMO-4471 · 来自 Moto Verde Distribuidora（演示）"
+   ]
+  },
+  {
+   "n": 2,
+   "actorId": "ava",
+   "risk": "R0",
+   "requiresApproval": false,
+   "outcome": "reads",
+   "title": "读买家自己的原话",
+   "detail": "读取整条会话，包括买家原文与附件，而不是只读一句摘要。措辞本身就是信号。",
+   "produces": [
+    "买家原文：询 500 台，CIF 桑托斯港，要求 IP67 与巴西 INMETRO 认证（演示）"
+   ]
+  },
+  {
+   "n": 3,
+   "actorId": "ava",
+   "risk": "R1",
+   "requiresApproval": false,
+   "outcome": "writes",
+   "title": "把询盘解析成结构化需求",
+   "detail": "自由文本被拆成可比对的字段：数量、贸易条款、目的港、认证要求、交期。写入内部记录，带回读校验。",
+   "produces": [
+    "结构化需求：数量 500 · CIF Santos · IP67 · INMETRO · 交期 60 天（演示）"
+   ]
+  },
+  {
+   "n": 4,
+   "actorId": "leo",
+   "risk": "R0",
+   "requiresApproval": false,
+   "outcome": "reads",
+   "title": "对照企业产品知识匹配",
+   "detail": "在公司自己的产品知识库里检索匹配型号——引用的是企业事实，不是模型凭空生成的规格。",
+   "produces": [
+    "匹配型号 SG-EM-750（演示）· 认证状态：INMETRO 待确认"
+   ]
+  },
+  {
+   "n": 5,
+   "actorId": "leo",
+   "risk": "R0",
+   "requiresApproval": false,
+   "outcome": "reads",
+   "title": "读附件里的图纸与样品照片",
+   "detail": "买家发来的图纸与照片被读取并与型号规格比对，避免“看起来匹配但接口不同”。",
+   "produces": [
+    "附件读取：充电接口为 Type-2，与 SG-EM-750 标配不一致，已标记（演示）"
+   ]
+  },
+  {
+   "n": 6,
+   "actorId": "alex",
+   "risk": "R1",
+   "requiresApproval": false,
+   "outcome": "writes",
+   "title": "筛查询盘方（制裁与拒绝清单）",
+   "detail": "在写入 CRM 之前先做制裁与拒绝清单比对。顺序是硬性的——反过来，受制裁方会变成一条看起来完全正常的记录，然后有人照常给他发邮件。",
+   "produces": [
+    "筛查通过 · 无命中 · 结果与时间戳入台账（演示）"
+   ]
+  },
+  {
+   "n": 7,
+   "actorId": "mia",
+   "risk": "R1",
+   "requiresApproval": false,
+   "outcome": "writes",
+   "title": "构建成本与毛利测算表",
+   "detail": "按数量、贸易条款与运费口径算出落地成本与毛利率，并与该市场的毛利红线比对。",
+   "produces": [
+    "测算：毛利率 16.4%，低于该市场 18% 红线 → 触发审批（演示）"
+   ]
+  },
+  {
+   "n": 8,
+   "actorId": "emma",
+   "risk": "R2",
+   "requiresApproval": true,
+   "outcome": "gated",
+   "title": "把商机写入 CRM",
+   "detail": "这是第一个对外系统的写入动作，因此是 R2：必须先取得人工审批，审批事件成对入账，审批通道不可用即拒绝执行。",
+   "produces": [
+    "等待人工审批 · approval/asked 已记录（演示）"
+   ]
+  },
+  {
+   "n": 9,
+   "actorId": "mia",
+   "risk": "R2",
+   "requiresApproval": true,
+   "outcome": "gated",
+   "title": "发出报价",
+   "detail": "报价的发送经过受治理的编排器，而不是模型直接调用邮件接口。动作后有回读校验：没有回读证据就不算成功。",
+   "produces": [
+    "报价 #DEMO-Q-2210 · 待审批放行（演示）"
+   ]
+  },
+  {
+   "n": 10,
+   "actorId": "emma",
+   "risk": "R2",
+   "requiresApproval": true,
+   "outcome": "gated",
+   "title": "在询盘进来的那条会话里回复买家",
+   "detail": "回复回到买家最初发起的那条会话上，而不是另起一封孤立的邮件——客户的时间线保持完整。",
+   "produces": [
+    "回复草稿已就绪 · 待审批放行 · 回读将确认送达（演示）"
+   ]
+  }
+ ]
+}

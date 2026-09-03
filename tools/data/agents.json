@@ -1,0 +1,298 @@
+[
+ {
+  "id": "ava",
+  "name": "Ava",
+  "domain": "sales",
+  "role": "询盘分析师",
+  "goal": "让每一条询盘在进入销售流程前就被读懂：买方是谁、真正要什么、值不值得跟。",
+  "permitted": [
+   "读取会话队列与买家原话",
+   "把询盘解析成结构化需求",
+   "对照产品知识库匹配",
+   "读取附件图纸与样品照片"
+  ],
+  "backingRole": "fp.stargo-inquiry-handler",
+  "autonomyCeiling": "R0",
+  "status": "pilot",
+  "backedByProvider": null,
+  "capabilityIds": [
+   "E05",
+   "E04"
+  ],
+  "workflowIds": [
+   "WF02"
+  ]
+ },
+ {
+  "id": "leo",
+  "name": "Leo",
+  "domain": "sales",
+  "role": "产品技术顾问",
+  "goal": "用公司自己的产品事实回答技术问题，而不是生成一个听起来合理的规格。",
+  "permitted": [
+   "检索企业产品知识",
+   "读取产品证据与评审记录",
+   "对比竞品定位"
+  ],
+  "backingRole": "fp.stargo-positioning-strategist",
+  "autonomyCeiling": "R0",
+  "status": "pilot",
+  "backedByProvider": null,
+  "capabilityIds": [
+   "E04",
+   "E03"
+  ],
+  "workflowIds": [
+   "WF02"
+  ]
+ },
+ {
+  "id": "mia",
+  "name": "Mia",
+  "domain": "sales",
+  "role": "报价与形式发票专家",
+  "goal": "把成本、毛利与条款算清楚，越过毛利红线就停下来等人批。",
+  "permitted": [
+   "检索产品与价格事实",
+   "构建成本与毛利测算表",
+   "生成报价与形式发票草稿",
+   "在越线时发起人工审批"
+  ],
+  "backingRole": "fp.stargo-quotation",
+  "autonomyCeiling": "R0",
+  "status": "pilot",
+  "backedByProvider": null,
+  "capabilityIds": [
+   "E06"
+  ],
+  "workflowIds": [
+   "WF02"
+  ]
+ },
+ {
+  "id": "emma",
+  "name": "Emma",
+  "domain": "sales",
+  "role": "客户经理",
+  "goal": "让每个客户的状态、承诺与下一步动作始终有人负责、有据可查。",
+  "permitted": [
+   "维护客户与商机记录",
+   "整合全渠道会话历史",
+   "安排跟进计划"
+  ],
+  "backingRole": "fp.stargo-crm-steward",
+  "autonomyCeiling": "R0",
+  "status": "pilot",
+  "backedByProvider": null,
+  "capabilityIds": [
+   "E05",
+   "E21"
+  ],
+  "workflowIds": [
+   "WF02",
+   "WF05"
+  ]
+ },
+ {
+  "id": "noah",
+  "name": "Noah",
+  "domain": "growth",
+  "role": "市场情报分析师",
+  "goal": "从公开信息里持续找出真实的需求信号，并保留每条结论的来源。",
+  "permitted": [
+   "检索公开市场信息",
+   "抓取并阅读候选买家站点",
+   "对照企业自有产品与价格知识"
+  ],
+  "backingRole": "fp.stargo-market-analyst",
+  "autonomyCeiling": "R2",
+  "status": "pilot",
+  "backedByProvider": null,
+  "capabilityIds": [
+   "E19",
+   "E20"
+  ],
+  "workflowIds": [
+   "WF01"
+  ]
+ },
+ {
+  "id": "scout",
+  "name": "Scout",
+  "domain": "growth",
+  "role": "账户研究与销售开发",
+  "goal": "找到对的公司里对的人，并弄清他们的采购决策链。",
+  "permitted": [
+   "候选买家发现与研究",
+   "采购决策链梳理",
+   "线索评分与资格判定"
+  ],
+  "backingRole": "fp.stargo-customer-researcher",
+  "autonomyCeiling": "R2",
+  "status": "pilot",
+  "backedByProvider": null,
+  "capabilityIds": [
+   "E20",
+   "E19"
+  ],
+  "workflowIds": [
+   "WF01",
+   "WF02"
+  ]
+ },
+ {
+  "id": "alex",
+  "name": "Alex",
+  "domain": "trade-ops",
+  "role": "风险与合规审查员",
+  "goal": "在对方被写进 CRM 之前完成制裁与拒绝清单筛查——顺序错了，受制裁方就会变成一条看起来正常的记录。",
+  "permitted": [
+   "制裁与拒绝清单比对",
+   "受益所有人核查",
+   "在命中时硬门控阻断后续步骤"
+  ],
+  "backingRole": "fp.stargo-customer-vetting",
+  "autonomyCeiling": "R0",
+  "status": "pilot",
+  "backedByProvider": null,
+  "capabilityIds": [
+   "E23"
+  ],
+  "workflowIds": [
+   "WF01",
+   "WF02",
+   "WF04"
+  ]
+ },
+ {
+  "id": "luna",
+  "name": "Luna",
+  "domain": "create",
+  "role": "创意总监",
+  "goal": "让产出的物料符合品牌与产品事实，而不是好看但不是我们的产品。",
+  "permitted": [
+   "创意企划与分镜结构",
+   "内容策略与详情页规划",
+   "视觉质检"
+  ],
+  "backingRole": "fp.stargo-creative-strategist",
+  "autonomyCeiling": "R0",
+  "status": "pilot",
+  "backedByProvider": null,
+  "capabilityIds": [
+   "E12",
+   "E13",
+   "E14"
+  ],
+  "workflowIds": [
+   "WF03"
+  ]
+ },
+ {
+  "id": "owen",
+  "name": "Owen",
+  "domain": "trade-ops",
+  "role": "订单与运营协调员",
+  "goal": "让订单从确认到生产到发运的每个节点都有人知道、有据可查。",
+  "permitted": [
+   "任务分派与路由",
+   "订单与生产节点跟踪"
+  ],
+  "backingRole": "fp.stargo-dispatcher",
+  "autonomyCeiling": "R0",
+  "status": "pilot",
+  "backedByProvider": null,
+  "capabilityIds": [
+   "E24"
+  ],
+  "workflowIds": [
+   "WF05"
+  ]
+ },
+ {
+  "id": "felix",
+  "name": "Felix",
+  "domain": "trade-ops",
+  "role": "物流协调员",
+  "goal": "订舱、跟踪、预计到港与异常处理集中在一条时间线上。",
+  "permitted": [],
+  "backingRole": null,
+  "autonomyCeiling": null,
+  "status": "roadmap",
+  "backedByProvider": null,
+  "capabilityIds": [
+   "E26"
+  ],
+  "workflowIds": []
+ },
+ {
+  "id": "fiona",
+  "name": "Fiona",
+  "domain": "trade-ops",
+  "role": "应收与财务协调员",
+  "goal": "定金、尾款、信用证与汇率对账跟着订单走，不靠人记。",
+  "permitted": [],
+  "backingRole": null,
+  "autonomyCeiling": null,
+  "status": "roadmap",
+  "backedByProvider": null,
+  "capabilityIds": [
+   "E27"
+  ],
+  "workflowIds": []
+ },
+ {
+  "id": "sara",
+  "name": "Sara",
+  "domain": "retention",
+  "role": "售后与经销商成功",
+  "goal": "售后请求带着原始订单与产品配置进来，客户不用重讲一遍。",
+  "permitted": [],
+  "backingRole": null,
+  "autonomyCeiling": null,
+  "status": "roadmap",
+  "backedByProvider": null,
+  "capabilityIds": [
+   "E28",
+   "E29"
+  ],
+  "workflowIds": []
+ },
+ {
+  "id": "reddit-scout",
+  "name": "Reddit Scout",
+  "domain": "growth",
+  "role": "社区策略与需求侦察",
+  "goal": "从真实社区讨论里读出还没被满足的需求，以及买家自己的说法。",
+  "permitted": [
+   "社区讨论检索与主题聚类",
+   "需求信号提取",
+   "社区内容策略"
+  ],
+  "backingRole": null,
+  "autonomyCeiling": null,
+  "status": "pilot",
+  "backedByProvider": "reddit-geo",
+  "capabilityIds": [
+   "E33",
+   "E34"
+  ],
+  "workflowIds": []
+ },
+ {
+  "id": "tara",
+  "name": "Tara",
+  "domain": "trade-ops",
+  "role": "出口退税专员",
+  "goal": "退税单证的齐套性与一致性先自检，减少反复补件。",
+  "permitted": [],
+  "backingRole": null,
+  "autonomyCeiling": null,
+  "status": "roadmap",
+  "backedByProvider": null,
+  "capabilityIds": [
+   "E41"
+  ],
+  "workflowIds": []
+ }
+]

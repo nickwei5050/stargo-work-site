@@ -1,0 +1,40 @@
+/* Fusion overrides.
+   Loaded after both template stylesheets. Everything here exists to make the
+   imported Scalora modules sit correctly inside the Mono page; nothing here
+   restyles Mono itself. */
+
+/* The imported architecture band ships two <h1> elements. A second and third
+   h1 on a page that already has one is an accessibility defect, so the markup
+   uses <h2> and the h1 type scale is restored here. Same pixels, correct
+   document outline. */
+.sc-scope .hero-title-block h2,
+.sc-scope .hero-title-inner-block h2 {
+  font-size: var(--_typography---heading-h1--h1-font-size);
+  line-height: var(--_typography---heading-h1--h1-line-height);
+  letter-spacing: var(--_typography---heading-h1--h1-letter-spacing);
+  font-weight: var(--_typography---font-weight--font-weight-mediem);
+  margin: 0;
+}
+
+/* Mono hides the pointer globally (body { cursor: none }) and draws its own
+   crosshair. Inside an imported block the crosshair still tracks, but the
+   Scalora modules have their own hit targets, so restore a real pointer on
+   anything clickable there. */
+.sc-scope a,
+.sc-scope button,
+.sc-scope [role="button"] {
+  cursor: pointer;
+}
+
+/* Mono sections are full-bleed; the imported ones bring their own container
+   padding.
+
+   Note what is NOT here: `overflow-x: clip`. Setting one axis to clip while
+   the other stays `visible` makes the visible axis compute to `auto`, so the
+   card stack — which is designed to overhang its section — was cropped at the
+   section edge and grew a scrollbar. If horizontal bleed ever appears, fix it
+   on the offending child, not by clipping the band. */
+.sc-scope {
+  display: block;
+  width: 100%;
+}

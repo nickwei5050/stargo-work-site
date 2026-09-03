@@ -1,0 +1,31 @@
+{
+ "facts": [
+  {
+   "value": "202",
+   "label": "注册在案的能力",
+   "verify": "jq '[.providers[].capabilities[]] | length' first-party/stargo-growth-os/registry/capabilities.json"
+  },
+  {
+   "value": "25",
+   "label": "已接入的能力提供方",
+   "verify": "jq '.providers | length' first-party/stargo-growth-os/registry/capabilities.json"
+  },
+  {
+   "value": "30",
+   "label": "强制人工审批的动作",
+   "verify": "jq '[.providers[].capabilities[] | select(.approvalRequired==true)] | length' first-party/stargo-growth-os/registry/capabilities.json"
+  },
+  {
+   "value": "6",
+   "label": "已登记的业务闭环",
+   "verify": "jq '(.workflows // .) | length' first-party/stargo-growth-os/registry/workflows.json"
+  }
+ ],
+ "caveat": "这些是注册表里的数字，说明的是「登记了什么」，不是「什么现在能跑」。其中 26 项能力当前处于关闭状态；六条闭环已登记并可达，但审批闸门之后的步骤不会自动执行。",
+ "category": "受治理的企业 AI 工作系统",
+ "headline": "从老板一句目标，到可验收的业务结果。",
+ "support": "STARGO WORK 7.0 连接企业知识、客户、产品、软件与人员，由 14 位岗位型数字员工协同完成市场洞察、主动获客、询盘分析、客户管理、报价与 PI、订单、单证、物流、财务、内容生产和售后。关键动作经过权限与人工审批，每一步可见、可追踪、可回读。",
+ "contrast": "不是另一个聊天框，而是一套推动真实业务交付的企业工作系统。",
+ "ctaPrimary": "预约企业 AI 诊断",
+ "ctaSecondary": "体验真实业务流程"
+}

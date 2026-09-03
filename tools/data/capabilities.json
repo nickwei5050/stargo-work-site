@@ -1,0 +1,470 @@
+[
+ {
+  "id": "E01",
+  "slug": "route-audit-migration",
+  "version": "6.2",
+  "domain": "platform",
+  "title": "存量路由审计与迁移",
+  "value": "把历史遗留的系统入口逐条盘清并迁移，确保没有旧路径能绕开权限与审批继续动作。",
+  "status": "roadmap"
+ },
+ {
+  "id": "E02",
+  "slug": "tenant-auth-rbac-audit",
+  "version": "6.2",
+  "domain": "platform",
+  "title": "租户 · 身份 · 权限 · 审计",
+  "value": "每个动作都知道是谁、以什么身份、在哪个租户下发起的，并且写进不可篡改的台账。",
+  "status": "demo-verified"
+ },
+ {
+  "id": "E03",
+  "slug": "product-model-import",
+  "version": "6.2",
+  "domain": "sales",
+  "title": "动态产品模型与导入",
+  "value": "把分散在表格和目录里的产品资料变成可被检索、可被报价引用的结构化事实。",
+  "status": "pilot"
+ },
+ {
+  "id": "E04",
+  "slug": "enterprise-knowledge",
+  "version": "6.2",
+  "domain": "command",
+  "title": "企业知识与 AI 档案",
+  "value": "让数字员工引用公司自己的产品、价格与话术，而不是凭空生成看起来合理的答案。",
+  "status": "pilot"
+ },
+ {
+  "id": "E05",
+  "slug": "customer-inquiry-matching",
+  "version": "6.2",
+  "domain": "sales",
+  "title": "客户 · 询盘 · 需求 · 匹配",
+  "value": "询盘进来即被结构化：买方是谁、要什么、匹配哪款产品、下一步该做什么。",
+  "status": "pilot"
+ },
+ {
+  "id": "E06",
+  "slug": "cpq-quote-approval-pi",
+  "version": "6.2",
+  "domain": "sales",
+  "title": "报价 · 审批 · 形式发票",
+  "value": "成本、毛利与条款在一张表里成型，越过毛利红线时强制走人工审批。",
+  "status": "pilot"
+ },
+ {
+  "id": "E07",
+  "slug": "task-agentrun-outbox",
+  "version": "6.2",
+  "domain": "command",
+  "title": "任务 · 执行记录 · 事件 · 发件箱",
+  "value": "每一次执行都有开始、结束、结果与证据，可以逐条回读，而不是只留一句“已完成”。",
+  "status": "demo-verified"
+ },
+ {
+  "id": "E08",
+  "slug": "workforce-command-center",
+  "version": "6.2",
+  "domain": "command",
+  "title": "数字员工指挥中心",
+  "value": "像看一支团队一样看数字员工：谁在做什么、卡在哪、花了多少、产出了什么。",
+  "status": "pilot"
+ },
+ {
+  "id": "E09",
+  "slug": "agent-office-sandbox",
+  "version": "6.2",
+  "domain": "command",
+  "title": "2D 数字员工办公室与策略沙盘",
+  "value": "在不触碰真实系统的前提下预演一套打法，看它会在哪一步失败。",
+  "status": "roadmap"
+ },
+ {
+  "id": "E10",
+  "slug": "provider-gateway-router",
+  "version": "6.2",
+  "domain": "platform",
+  "title": "能力网关 · 路由 · 计量",
+  "value": "所有能力先注册再调用，不允许猜一个接口名就发起真实动作。",
+  "status": "demo-verified"
+ },
+ {
+  "id": "E11",
+  "slug": "asset-lock-brand-kit",
+  "version": "6.2",
+  "domain": "create",
+  "title": "产品素材锁定与品牌套件",
+  "value": "生成的物料只能用被批准的产品图与品牌元素，避免出图“像但不是我们的产品”。",
+  "status": "roadmap"
+ },
+ {
+  "id": "E12",
+  "slug": "creative-planner",
+  "version": "6.2",
+  "domain": "create",
+  "title": "创意企划 · 详情页 · campaign",
+  "value": "从卖点到详情页结构到投放计划，一条线走完而不是三个部门各写一版。",
+  "status": "pilot"
+ },
+ {
+  "id": "E13",
+  "slug": "visual-qa-block-editor",
+  "version": "6.2",
+  "domain": "create",
+  "title": "视觉质检与区块级修复",
+  "value": "出图前先自检，问题定位到具体区块再重做那一块，而不是整张重来。",
+  "status": "pilot"
+ },
+ {
+  "id": "E14",
+  "slug": "video-creative-dna",
+  "version": "6.2",
+  "domain": "create",
+  "title": "视频创意 DNA 与分镜",
+  "value": "把有效视频的结构沉淀成可复用的模板，而不是每次从零想创意。",
+  "status": "roadmap"
+ },
+ {
+  "id": "E15",
+  "slug": "video-providers-post",
+  "version": "6.2",
+  "domain": "create",
+  "title": "多供应商视频生成与后期",
+  "value": "换一个视频模型不用重做流程，字幕、水印与多规格导出保持一致。",
+  "status": "pilot"
+ },
+ {
+  "id": "E16",
+  "slug": "second-enterprise-onboarding",
+  "version": "6.2",
+  "domain": "platform",
+  "title": "第二家企业上线",
+  "value": "同一套系统换一家公司就能重新跑起来，证明它不是围着某一家企业写死的一次性项目。当前限制：一台主机服务一个租户。",
+  "status": "pilot"
+ },
+ {
+  "id": "E17",
+  "slug": "observability-backup-security",
+  "version": "6.2",
+  "domain": "platform",
+  "title": "可观测性 · 备份 · 安全",
+  "value": "出问题能查、能回滚到已知good状态，而不是靠记忆重建。",
+  "status": "pilot"
+ },
+ {
+  "id": "E18",
+  "slug": "plans-quotas-billing",
+  "version": "6.2",
+  "domain": "platform",
+  "title": "套餐 · 配额 · 计费 · 指标",
+  "value": "用量与成本按团队和场景看得见，避免月底才发现超支。",
+  "status": "roadmap"
+ },
+ {
+  "id": "E19",
+  "slug": "market-intelligence",
+  "version": "6.2",
+  "domain": "growth",
+  "title": "市场情报与信号图谱",
+  "value": "从公开渠道持续收集买家与竞品信号，形成可追溯来源的判断。",
+  "status": "pilot"
+ },
+ {
+  "id": "E20",
+  "slug": "gtm-prospecting",
+  "version": "6.2",
+  "domain": "growth",
+  "title": "GTM · 潜客开发 · 账户研究",
+  "value": "主动找到对的买家并研究其采购决策链，而不是等询盘上门。",
+  "status": "pilot"
+ },
+ {
+  "id": "E21",
+  "slug": "omnichannel-voice",
+  "version": "6.2",
+  "domain": "sales",
+  "title": "全渠道销售与语音",
+  "value": "邮件、WhatsApp、网站会话与通话汇到同一条客户时间线上。",
+  "status": "pilot"
+ },
+ {
+  "id": "E22",
+  "slug": "contract-terms-esign",
+  "version": "6.2",
+  "domain": "trade-ops",
+  "title": "合同 · 商务条款 · 电子签",
+  "value": "条款版本与签署事件留痕，避免“对方说改过了”这类争议。",
+  "status": "roadmap"
+ },
+ {
+  "id": "E23",
+  "slug": "trade-compliance-kyc",
+  "version": "6.2",
+  "domain": "trade-ops",
+  "title": "贸易合规 · KYC · 制裁筛查",
+  "value": "在把对方写进 CRM 之前先做制裁与拒绝清单筛查——顺序错了，受制裁方就会变成一条看起来正常的记录。",
+  "status": "demo-verified"
+ },
+ {
+  "id": "E24",
+  "slug": "order-procurement-production",
+  "version": "6.2",
+  "domain": "trade-ops",
+  "title": "订单 · 采购 · 生产对接",
+  "value": "订单进入制造与采购系统，节点变化回流到客户跟进上。",
+  "status": "pilot"
+ },
+ {
+  "id": "E25",
+  "slug": "trade-document-intelligence",
+  "version": "6.2",
+  "domain": "trade-ops",
+  "title": "质检与单证智能",
+  "value": "发票、装箱单、证书与提单之间互相校验，不一致会被挡下来。",
+  "status": "roadmap"
+ },
+ {
+  "id": "E26",
+  "slug": "logistics-control-tower",
+  "version": "6.2",
+  "domain": "trade-ops",
+  "title": "物流控制塔",
+  "value": "订舱、跟踪、预计到港与异常协调集中在一个视图里。",
+  "status": "roadmap"
+ },
+ {
+  "id": "E27",
+  "slug": "finance-receivables",
+  "version": "6.2",
+  "domain": "trade-ops",
+  "title": "财务 · 应收 · 贸易结算",
+  "value": "定金、尾款、信用证与汇率对账跟着订单走。",
+  "status": "roadmap"
+ },
+ {
+  "id": "E28",
+  "slug": "aftersales-warranty",
+  "version": "6.2",
+  "domain": "retention",
+  "title": "售后 · 保修 · 备件",
+  "value": "售后请求带着原始订单与产品配置进来，不用客户重讲一遍。",
+  "status": "roadmap"
+ },
+ {
+  "id": "E29",
+  "slug": "dealer-success",
+  "version": "6.2",
+  "domain": "retention",
+  "title": "经销商与渠道成功",
+  "value": "给经销商一个自助的目录、价格与下单入口。",
+  "status": "roadmap"
+ },
+ {
+  "id": "E30",
+  "slug": "growth-distribution",
+  "version": "6.2",
+  "domain": "growth",
+  "title": "增长分发与社媒发布",
+  "value": "内容与外联通过受治理的编排器发出，动作前审批、动作后回读。",
+  "status": "demo-verified"
+ },
+ {
+  "id": "E31",
+  "slug": "ai-learning-eval",
+  "version": "6.2",
+  "domain": "platform",
+  "title": "AI 学习 · 评测 · 实验",
+  "value": "用例测的是行为不是措辞——换个说法就假失败的断言抓不住真正的危险。",
+  "status": "pilot"
+ },
+ {
+  "id": "E32",
+  "slug": "tool-skill-mcp-governance",
+  "version": "6.2",
+  "domain": "platform",
+  "title": "工具 · 技能 · MCP 治理",
+  "value": "新增一个工具要过清单校验与风险定级，不能私自接进来就能动手。",
+  "status": "demo-verified"
+ },
+ {
+  "id": "E33",
+  "slug": "reddit-demand-intelligence",
+  "version": "6.2",
+  "domain": "growth",
+  "title": "Reddit 需求侦察",
+  "value": "从真实社区讨论里读出还没被满足的需求与话术。",
+  "status": "pilot"
+ },
+ {
+  "id": "E34",
+  "slug": "reddit-engagement",
+  "version": "6.2",
+  "domain": "growth",
+  "title": "Reddit 互动与线索转化",
+  "value": "社区互动沉淀成 CRM 里的真实线索，而不是停留在浏览量。",
+  "status": "roadmap"
+ },
+ {
+  "id": "E35",
+  "slug": "workspace-shell",
+  "version": "6.2",
+  "domain": "platform",
+  "title": "工作台外壳与应用编排",
+  "value": "所有 STARGO 应用在同一个工作台里打开、切换与并排使用。",
+  "status": "pilot"
+ },
+ {
+  "id": "E36",
+  "slug": "dsh-runtime-adapter",
+  "version": "6.2",
+  "domain": "platform",
+  "title": "官方 AI 运行时适配",
+  "value": "钉住官方运行时版本，升级是一次受控动作而不是一次意外。",
+  "status": "pilot"
+ },
+ {
+  "id": "E37",
+  "slug": "plugin-sdk-registry",
+  "version": "6.2",
+  "domain": "platform",
+  "title": "插件 SDK · 注册表 · 生命周期",
+  "value": "扩展能力有统一契约与生命周期，不会变成一堆互不相识的脚本。",
+  "status": "pilot"
+ },
+ {
+  "id": "E38",
+  "slug": "skillopt-optimizer",
+  "version": "6.2",
+  "domain": "platform",
+  "title": "技能优化适配器",
+  "value": "数字员工的提示词与技能在受控评测下迭代改进，改动是否真的更好由评测回答，而不是靠手感。",
+  "status": "research-preview"
+ },
+ {
+  "id": "E39",
+  "slug": "evolution-evidence",
+  "version": "6.2",
+  "domain": "platform",
+  "title": "演化评估与发布证据",
+  "value": "每次能力变更都带着评测结果发布，可以回答“这次改动到底变好了没有”。",
+  "status": "pilot"
+ },
+ {
+  "id": "E40",
+  "slug": "plugin-marketplace",
+  "version": "6.2",
+  "domain": "platform",
+  "title": "精选插件市场",
+  "value": "可安装的能力经过挑选与审查，而不是开放一个什么都能装的口子。",
+  "status": "roadmap"
+ },
+ {
+  "id": "E41",
+  "slug": "export-tax-rebate",
+  "version": "6.2",
+  "domain": "trade-ops",
+  "title": "出口退税与申报支持",
+  "value": "退税所需单证的齐套性与一致性检查，减少反复补件。",
+  "status": "roadmap"
+ },
+ {
+  "id": "E42",
+  "slug": "operational-ontology",
+  "version": "7.0",
+  "domain": "platform",
+  "title": "运营本体（企业业务图谱）",
+  "value": "记录跨系统的同一实体、状态与时序，并区分证据、推断、建议与承诺——决定可以倒着走回它依据的证据。",
+  "status": "pilot"
+ },
+ {
+  "id": "E43",
+  "slug": "persistent-employee-profile",
+  "version": "7.0",
+  "domain": "command",
+  "title": "持久化数字员工档案",
+  "value": "岗位型数字员工保有稳定的职责、边界与历史，而不是每次对话从零开始。",
+  "status": "pilot"
+ },
+ {
+  "id": "E44",
+  "slug": "shared-enterprise-context",
+  "version": "7.0",
+  "domain": "platform",
+  "title": "共享企业上下文",
+  "value": "多个数字员工在同一份企业上下文上协作，而不是各自持有一份不一致的理解。",
+  "status": "research-preview"
+ },
+ {
+  "id": "E45",
+  "slug": "goal-to-outcome-agent",
+  "version": "7.0",
+  "domain": "command",
+  "title": "目标到结果交付",
+  "value": "一句业务目标被拆成任务、责任人、审批点与验收条件。",
+  "status": "roadmap"
+ },
+ {
+  "id": "E46",
+  "slug": "durable-missions",
+  "version": "7.0",
+  "domain": "command",
+  "title": "持续任务与承诺",
+  "value": "跨天跨周的承诺不会因为会话结束而消失。",
+  "status": "pilot"
+ },
+ {
+  "id": "E47",
+  "slug": "agent-observability",
+  "version": "7.0",
+  "domain": "platform",
+  "title": "高级智能体可观测性",
+  "value": "研究方向：更深入地观察智能体内部状态。此项不构成可交付功能。",
+  "status": "research-preview"
+ },
+ {
+  "id": "E48",
+  "slug": "physical-operations-layer",
+  "version": "7.0",
+  "domain": "platform",
+  "title": "物理作业兼容层",
+  "value": "研究方向：与仓储、产线等物理执行设备的兼容接口。此项不构成可交付功能。",
+  "status": "research-preview"
+ },
+ {
+  "id": "E49",
+  "slug": "governed-improvement",
+  "version": "7.0",
+  "domain": "platform",
+  "title": "受治理的持续改进",
+  "value": "能力改进要通过评测门槛才能发布，改进本身也受治理。",
+  "status": "roadmap"
+ },
+ {
+  "id": "E50",
+  "slug": "mission-control-value",
+  "version": "7.0",
+  "domain": "command",
+  "title": "任务控制台与价值归因",
+  "value": "把结果归因到具体的动作与投入上，回答“这套系统到底带来了什么”。",
+  "status": "roadmap"
+ },
+ {
+  "id": "E51",
+  "slug": "industry-packs",
+  "version": "7.0",
+  "domain": "platform",
+  "title": "行业交付包",
+  "value": "把一次行业交付沉淀成可复用的包，下一家客户不用从零开始。",
+  "status": "pilot"
+ },
+ {
+  "id": "E52",
+  "slug": "autonomy-assurance",
+  "version": "7.0",
+  "domain": "platform",
+  "title": "自主性保障",
+  "value": "越危险的动作越不允许自动执行；R4 在结构上被禁止，且每次尝试都会留痕。",
+  "status": "demo-verified"
+ }
+]
