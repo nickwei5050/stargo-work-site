@@ -122,3 +122,48 @@
     width: auto;
   }
 }
+
+/* ======================================================================
+   Brand wordmark, language switch, and the two foreign page bodies
+   (lifelogx pages, Scalora pricing) inside the Mono shell.
+   ====================================================================== */
+.stargo-wordmark { display: block; width: auto; height: 20px; }
+.stargo-wordmark.in-nav { height: 22px; }
+.stargo-wordmark.in-footer { height: 26px; }
+.stargo-wordmark.in-pill { height: 16px; }
+.stargo-wordmark.in-card { height: 18px; }
+
+/* lifelogx body: dark, its own tokens; pointer restored (Mono hides the cursor). */
+.lx-scope { display: block; width: 100%; background: #0d0d0d; }
+.lx-scope a, .lx-scope button, .lx-scope [role="button"] { cursor: pointer; }
+.lx-scope .lx-hero-text { word-break: keep-all; }
+
+/* Scalora pricing body: the module stylesheet sets the page ground on .sc-scope;
+   give the page block the same ground so the Mono white never shows between
+   sections, and keep the pricing tabs usable without the Webflow tabs module. */
+.sc-scope.sc-page { display: block; width: 100%; background-color: var(--beckground-color--bg-color-02, #161616); padding-top: 24px; }
+.sc-scope.sc-page a, .sc-scope.sc-page [role="button"] { cursor: pointer; }
+.sc-scope.sc-page .w-tab-pane { display: none; }
+.sc-scope.sc-page .w-tab-pane.w--tab-active { display: block; }
+.sc-scope.sc-page .pricing-card-price-block.year { display: none; }
+
+/* Pages whose body is the dark lifelogx template: Mono's nav is drawn in
+   black for its white pages, so it is turned white here (the hamburger is a
+   white Lottie that Mono inverts; un-invert it). */
+body.lx-page { background: #0d0d0d; }
+body.lx-page .navigation-top .navigation-text-main { color: #fff; }
+body.lx-page .navigation-top .line-divider-menu { background-color: #fff; }
+body.lx-page .navigation-top .lottie-white { filter: none; }
+
+/* Data tables (loop, capability map, integration): the template's award
+   list has three equal columns for one-word cells. These hold sentences, so
+   the middle column gets the room and the last is left-aligned. */
+#loop .award-wrapper, #loop .grdi-3-columns.mk3,
+#atlas .award-wrapper, #atlas .grdi-3-columns.mk3,
+#table .award-wrapper, #table .grdi-3-columns.mk3 {
+  grid-template-columns: minmax(0, .8fr) minmax(0, 1.7fr) minmax(0, 1fr);
+}
+#loop .award-text, #atlas .award-text, #table .award-text { text-align: left; justify-content: flex-start; }
+
+/* Stat numbers in the studio layout: "288" must stay on one line in its .4fr column. */
+.stats-grid .h2._01 { font-size: clamp(56px, 5vw, 72px); white-space: nowrap; line-height: 1; }

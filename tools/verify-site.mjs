@@ -23,7 +23,8 @@ const SITE = 'F:/stargo 网站/stargo-site';
 const SHOTS = process.env.SHOTS ?? 'C:/Users/1/AppData/Local/Temp/claude/F--stargo---/b31df949-b6bc-4f89-9d0e-7fa0dc333312/scratchpad/shots-site';
 mkdirSync(SHOTS, { recursive: true });
 
-const PAGES = ['index.html', 'capabilities.html', 'workforce.html', 'governance.html', 'integrations.html', 'tour.html', 'contact.html', 'notices.html', '404.html'];
+const NAMES = ['index.html', 'intelligence.html', 'capabilities.html', 'workforce.html', 'pricing.html', 'enterprise.html', 'contact.html', 'notices.html', '404.html'];
+const PAGES = process.env.ONLY ? process.env.ONLY.split(',') : [...NAMES, ...NAMES.map((n) => `en/${n}`)];
 
 /** Latin tokens that are supposed to be there. */
 const ALLOWED = /^(STARGO|WORK|7\.0|AI|CRM|R[0-4]|E\d\d|WF\d\d|jq|json|fp\.[a-z-]+|tests?\/[\w./-]+|[\w.-]+\.(mjs|json)|Activepieces|Chatwoot|MoneyPrinterTurbo|WeKnora|Yente|OpenSanctions|Evolution|Console|Reddit|GEO|Identity|Spine|Playwright|Twenty|Firecrawl|Univer|ModLens|AgentTeams|Infinite|Canvas|Corey|Haines|Marketing|Skills|Puter|Windmill|ERPNext|Medusa|StaffDeck|PostHog|OpenAI|Codex|Channel|Plugin|SDK|Ava|Leo|Mia|Emma|Noah|Scout|Alex|Luna|Owen|Felix|Fiona|Sara|Tara|Moto|Verde|Distribuidora|Subscribe|CIF|Santos|IP67|INMETRO|SG-EM-750|Type-2|PROV-O|SQLite|MIT|OFL|SIL|GSAP|SplitText|ScrollTrigger|Lenis|Lottie|Webflow|jQuery|Inter|Display|Instrument|Serif|Mōno™?|Scalora|Startup|GreenSock|LICENSE|live-verified|demo-verified|pilot|roadmap|research-preview|test-[\w-]+|approval\/asked|DEMO-[\w-]+|first-party|registry|capabilities|workflows|providers|length|select|approvalRequired|true|campaign|DNA|GTM|KYC|MCP|ETL|provider|Open|Font|License|SIL|OFL|STARGO|Nothing|SG)$/;
@@ -58,7 +59,7 @@ for (const page of PAGES) {
   for (let y = 0; y < H; y += 600) { await p.evaluate((v) => scrollTo(0, v), y); await p.waitForTimeout(70); }
   await p.evaluate(() => scrollTo(0, 0));
   await p.waitForTimeout(800);
-  await p.screenshot({ path: `${SHOTS}/${page.replace('.html', '')}.png`, fullPage: true });
+  await p.screenshot({ path: `${SHOTS}/${page.replace('.html', '').replace('/', '-')}.png`, fullPage: true });
 
   // Rendered text that still carries Latin words.
   const latin = await p.evaluate(() => {
@@ -73,11 +74,12 @@ for (const page of PAGES) {
     }
     return [...out];
   });
-  const residue = latin.filter((t) => !t.split(/[\s·（）()「」【】、，。：:；;/·—–-]+/).filter(Boolean).every((w) => !/[A-Za-z]{3,}/.test(w) || ALLOWED.test(w)));
+  const residue = page.startsWith('en/') ? [] : latin.filter((t) => !t.split(/[\s·（）()「」【】、，。：:；;/·—–-]+/).filter(Boolean).every((w) => !/[A-Za-z]{3,}/.test(w) || ALLOWED.test(w)));
 
   // Internal links must resolve to a file in the site root.
   const hrefs = await p.evaluate(() => [...document.querySelectorAll('a[href]')].map((a) => a.getAttribute('href')));
-  const broken = [...new Set(hrefs.filter((h) => /\.html(#.*)?$/.test(h) && !/^https?:/.test(h)).map((h) => h.split('#')[0]).filter((h) => !existsSync(`${SITE}/${h}`)))];
+  const dir = page.includes('/') ? `${SITE}/en` : SITE;
+  const broken = [...new Set(hrefs.filter((h) => /\.html(#.*)?$/.test(h) && !/^https?:/.test(h)).map((h) => h.split('#')[0]).filter((h) => !existsSync(`${dir}/${h}`)))];
   const dangling = [...new Set(hrefs.filter((h) => h === '#' || h === ''))].length;
 
   const ok = status === 200 && errors.length === 0 && failed.length === 0 && external.size === 0 && broken.length === 0;

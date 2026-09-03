@@ -17,15 +17,17 @@
  * Base: app.6e875794 (the homepage bundle) — the only one whose registered
  * modules include dropdown and lightbox, on top of the lottie the nav needs.
  */
-import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { readdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { readBundle, evalLiteral } from './ix-lib.mjs';
 
 const SITE = 'F:/stargo 网站/stargo-site';
 const JS = `${SITE}/js`;
 const BUNDLES = `${SITE}/tools/bundles`;          // the six Mono page bundles, kept as sources only
 const MONO_BASE = `${BUNDLES}/app.6e875794.53d57b6d7b6754cb.js`;
-const SCALORA_BUNDLE = process.argv[2]
-  ?? 'C:/Users/1/AppData/Local/Temp/claude/F--stargo---/b31df949-b6bc-4f89-9d0e-7fa0dc333312/scratchpad/scalora/js/app.e1bb07ef.d077b7f57348968e.js';
+const SCALORA_BUNDLE = process.argv[2] ?? `${BUNDLES}/scalora.app.e1bb07ef.d077b7f57348968e.js`;
+/* Further donors, already renamed and rescoped by their own prepare script
+   (tools/lifelogx-prepare.mjs writes tools/fragments/lx-ix.json). */
+const DONORS = [`${SITE}/tools/fragments/lx-ix.json`].filter((f) => existsSync(f));
 const OUT_BUNDLE = `${JS}/app.fused.js`;
 
 const MONO_PAGE = '699b6466d5f19893993a4bf1';     // homepage id; imported Scalora ix3 is rescoped to it
@@ -108,10 +110,28 @@ const foldPages = (node) => {
   if (node && typeof node === 'object') return Object.fromEntries(Object.entries(node).map(([k, v]) => [foldPages(k), foldPages(v)]));
   return node;
 };
+const donorEvents = {};
+const donorLists = {};
+const donorIx3 = [];
+const donorTl = [];
+for (const f of DONORS) {
+  const d = JSON.parse(readFileSync(f, 'utf8'));
+  for (const [k, v] of Object.entries(d.events ?? {})) {
+    if (k in mono.ix2Payload.events || k in scaEvents || k in donorEvents) throw new Error(`donor event id collides: ${k}`);
+    donorEvents[k] = v;
+  }
+  for (const [k, v] of Object.entries(d.actionLists ?? {})) {
+    if (k in mono.ix2Payload.actionLists || k in scaLists || k in donorLists) throw new Error(`donor action list id collides: ${k}`);
+    donorLists[k] = v;
+  }
+  donorIx3.push(...(d.interactions ?? []));
+  donorTl.push(...(d.timelines ?? []));
+}
+
 const mergedPayload = foldPages({
   ...mono.ix2Payload,
-  events: { ...mono.ix2Payload.events, ...scaEvents },
-  actionLists: { ...mono.ix2Payload.actionLists, ...scaLists },
+  events: { ...mono.ix2Payload.events, ...scaEvents, ...donorEvents },
+  actionLists: { ...mono.ix2Payload.actionLists, ...scaLists, ...donorLists },
 });
 
 /* IX3: union of every Mono page bundle, plus Scalora's rescoped to this site. */
@@ -134,6 +154,7 @@ const monoBundles = readdirSync(BUNDLES).filter((f) => /^app\.[0-9a-f]{8}\.[0-9a
 for (const f of monoBundles) addIx3(readBundle(readFileSync(`${BUNDLES}/${f}`, 'utf8')), true);
 const beforeScalora = interactions.size;
 addIx3(scalora, true);
+addIx3({ ix3Interactions: donorIx3, ix3Timelines: donorTl }, false);
 
 /* Scalora's ix3 interactions target page-scoped elements; the ones we import
    are the title reveals inside the three modules. They remain scoped to the
@@ -141,7 +162,12 @@ addIx3(scalora, true);
 
 let out = monoSrc.slice(0, mono.ix2.argStart) + JSON.stringify(mergedPayload) + monoSrc.slice(mono.ix2.argEnd);
 const ix3 = readBundle(out).ix3;
-const mergedIx3 = `([${[...interactions.values()].join(',')}],[${[...timelines.values()].join(',')}])`;
+/* SplitText "words" splits on whitespace. Chinese has none, so a whole
+   paragraph became one unbreakable inline-block "word" and wrapped only at
+   the few Latin tokens. Line splits are computed from layout and wrap
+   correctly in both languages; the reveal becomes line-by-line. */
+const asLines = (t) => t.replace(/"type":"words"/g, '"type":"lines"').replace(/"mask":"words"/g, '"mask":"lines"');
+const mergedIx3 = `([${[...interactions.values()].join(',')}],[${[...timelines.values()].map(asLines).join(',')}])`;
 const at = out.indexOf(ix3.args.text);
 out = out.slice(0, at) + mergedIx3 + out.slice(at + ix3.args.text.length);
 
@@ -159,6 +185,7 @@ writeFileSync(OUT_BUNDLE, out, 'utf8');
 console.log(JSON.stringify({
   monoEvents: Object.keys(mono.ix2Payload.events).length,
   scaloraEventsAdded: Object.keys(scaEvents).length,
+  donorEventsAdded: Object.keys(donorEvents).length,
   mergedEvents: Object.keys(mergedPayload.events).length,
   mergedActionLists: Object.keys(mergedPayload.actionLists).length,
   idsRenamed: map.size,

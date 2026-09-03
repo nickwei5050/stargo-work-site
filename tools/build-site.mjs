@@ -1,101 +1,38 @@
 /**
- * Build every page of the STARGO WORK site from the Mono template pages.
+ * Build every page of the STARGO WORK site, in Chinese (root) and English
+ * (/en/), from three Webflow templates:
  *
- *   node tools/build-fusion.mjs     # homepage + the three Scalora modules
- *   node tools/fuse-ix.mjs          # the one bundle every page loads
- *   node tools/build-site.mjs       # this file: all pages, chrome, links
+ *   Mono      — shell (nav, footer), homepage skeleton, capabilities,
+ *               enterprise, contact, notices, 404
+ *   Scalora   — three homepage modules and the pricing page
+ *   lifelogx  — the Intelligence and AI Workforce pages
  *
- * Idempotent: it reads only tools/templates/* and tools/fragments/*, never
- * its own output, so it can be re-run after every copy change.
+ *   node tools/lifelogx-prepare.mjs   # once per template change
+ *   node tools/fuse-ix.mjs            # the one bundle every page loads
+ *   node tools/build-site.mjs         # this file
  *
- * Every figure on these pages comes from tools/data/*.json, which
- * tools/extract-data.mjs reads out of the verified Next.js content files.
- * Nothing numeric is typed here by hand.
+ * Idempotent: reads only tools/templates/*, tools/fragments/* and
+ * tools/copy.mjs. Every replacement is asserted — a template string that
+ * stops matching fails the build rather than shipping an agency's copy.
  */
-import { readFileSync, writeFileSync } from 'node:fs';
-import { makeSub, findByClass, removeByClass, elementContaining, setInner, setEachInner, setLink, escapeHtml } from './lib-html.mjs';
-import { applyChrome, remapLinks, assertInternalLinks } from './chrome.mjs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 'node:fs';
+import { makeSub, findByClass, removeByClass, elementContaining, extractElement, setInner, setEachInner, setLink, escapeHtml } from './lib-html.mjs';
+import { applyChrome, remapLinks, relocateAssets, assertInternalLinks } from './chrome.mjs';
+import * as C from './copy.mjs';
 
 const SITE = 'F:/stargo 网站/stargo-site';
 const TPL = `${SITE}/tools/templates`;
-const data = (f) => JSON.parse(readFileSync(`${SITE}/tools/data/${f}.json`, 'utf8'));
+const FRAG = `${SITE}/tools/fragments`;
 const tpl = (f) => readFileSync(`${TPL}/${f}`, 'utf8');
+const frag = (f) => readFileSync(`${FRAG}/${f}`, 'utf8');
 
-const CAPS = data('capabilities');
-const AGENTS = data('agents');
-const INTEGRATIONS = data('integrations');
-const TOUR = data('tour');
-const RISK = data('risk');
-const FACTS = data('facts');
+const SCALORA_CDN = /https:\/\/cdn\.prod\.website-files\.com\/([^"'\s]+)/g;
+const localise = (s) => s.replace(SCALORA_CDN, (_, rel) => `assets/${rel}`);
+/** Scalora classes renamed when its stylesheet was namespaced (see css/scalora-modules.sc.css). */
+const SC_RENAME = new Set(['container', 'hero', 'navbar', 'menu-button', 'footer', 'white', 'faq-item', 'error-message', 'contact-card', 'button-text', 'pricing-card', 'color-block', 'utility-page-wrap', 'utility-page-content']);
+const scClasses = (html) => html.replace(/class="([^"]*)"/g, (_, v) => `class="${v.split(/\s+/).filter(Boolean).map((c) => (SC_RENAME.has(c) ? 'sc-' + c : c)).join(' ')}"`);
+const addRootClass = (fragment, token) => fragment.replace(/^(<section\b[^>]*class=")/, `$1${token} `);
 
-const CHECKED = '2026-09-01';   // the day the five governance suites were run and the registries read
-
-const STATUS_ZH = { 'demo-verified': '演示验证', pilot: '试点', roadmap: '路线图', 'research-preview': '研究预览' };
-const DOMAIN_ZH = { platform: '平台', sales: '销售', command: '指挥', create: '创意', growth: '增长', 'trade-ops': '外贸履约', retention: '售后' };
-const AGENT_DOMAIN_ZH = { sales: '销售', growth: '增长', 'trade-ops': '外贸履约', create: '创意', retention: '售后' };
-
-const count = (arr, k, v) => arr.filter((x) => x[k] === v).length;
-
-/** The four quotations already published on the homepage, attributed to the governing document. */
-const QUOTES = {
-  approval: { text: '「对外产生真实后果的动作，必须先取得人类审批。审批通道不可用时，拒绝执行，而不是绕过。」', who: 'STARGO 宪法', where: '第 4 章 · 风险分级' },
-  ledger: { text: '「台账只追加，不可修改。已经发生的动作不能被事后抹平。」', who: 'STARGO 宪法', where: '第 6 章 · 审计台账' },
-  r4: { text: '「R4 动作结构性禁止自动执行，只能由人发起。」', who: 'STARGO 宪法', where: '第 4 章 · 风险分级' },
-  readback: { text: '「没有回读证据，动作不计为成功。」', who: '受治理编排器', where: '回读校验契约' },
-};
-
-/* ================================================================ modules */
-
-/**
- * Mono's awards table (studio.html), as a reusable 3-column list.
- * The row hover (IX2 e-… on .award-wrapper) is in the fused bundle, so the
- * table keeps its interaction on any page.
- */
-function awardsTable({ id, caption, title, total, button, headers, rows }) {
-  const studio = tpl('studio.html');
-  const sec = elementContaining(studio, '(Awards 23-26©)', 'section');
-  const { fn: s } = makeSub('awards');
-  let html = sec.text;
-  html = html.replace(/^<section class="section">/, `<section id="${id}" class="section">`);
-  if (!html.startsWith(`<section id="${id}"`)) throw new Error('awards: unexpected section opener');
-  html = s(html, '(Awards 23-26©)', caption);
-  html = s(html, '<h2 class="h2">Awards<span class="small-ftd">(7)</span></h2>', `<h2 class="h2">${title}<span class="small-ftd">(${total})</span></h2>`);
-  html = setLink(html, 'View all work', { href: button.href, text: button.label });
-  html = s(html, '(Awards)', headers[0]);
-  html = s(html, '(Recognition)', headers[1]);
-  html = s(html, '(Year)', headers[2]);
-
-  const first = findByClass(html, 'div', 'award-wrapper', 0);
-  let last = first;
-  for (let n = 1; ; n++) { const el = findByClass(html, 'div', 'award-wrapper', n); if (!el) break; last = el; }
-  const rowTpl = first.text;
-  const cells = rowTpl.match(/class="award-text">[^<]*</g);
-  if (!cells || cells.length !== 3) throw new Error('awards: row template does not have 3 cells');
-  const renderRow = (r) => {
-    let out = rowTpl;
-    for (let i = 0; i < 3; i++) out = out.replace(cells[i], `class="award-text">${r[i]}<`);
-    return out;
-  };
-  html = html.slice(0, first.start) + rows.map(renderRow).join('') + html.slice(last.end);
-  if ((html.match(/award-wrapper/g) ?? []).length !== rows.length) throw new Error('awards: row count mismatch');
-  return html;
-}
-
-/** Replace a `.team-wrapper` card's name, role and (optionally) image. */
-function teamCard(html, oldName, oldRole, { name, role, image }) {
-  const { fn: s } = makeSub(`team:${oldName}`);
-  let out = s(html, `>${oldName}<`, `>${name}<`, { count: 1 });
-  out = s(out, `>${oldRole}<`, `>${role}<`, { count: 1 });
-  if (image) {
-    const card = elementContaining(out, `>${name}<`, 'div', { up: 2 });
-    if (!card.text.includes('team-wrapper')) throw new Error(`team: card wrapper not found for ${name}`);
-    const swapped = card.text.replace(/src="[^"]*"/, `src="${image}"`);
-    out = out.slice(0, card.start) + swapped + out.slice(card.end);
-  }
-  return out;
-}
-
-/* Non-portrait template images, for cards that describe things rather than people. */
 const ABSTRACT = [
   'assets/699b6466d5f19893993a4c2c/699b6466d5f19893993a4dca_Sleek%20Container%20Set.webp',
   'assets/699b6466d5f19893993a4c2c/699b6466d5f19893993a4d64_blog-2.webp',
@@ -103,149 +40,418 @@ const ABSTRACT = [
   'assets/699b6466d5f19893993a4c2c/699b6466d5f19893993a4da8_Futuristic-Device-Design-(4).webp',
   'assets/699b6466d5f19893993a4bf2/699b6466d5f19893993a4faf_Coding-Workspace-Close-Up.webp',
 ];
-const TEAM_TPL = [
-  ['Adrian Keller', '(Founder)'], ['Luca Moretti', '(Lead Product Designer)'], ['Elena Novak', '(UI/UX Designer)'],
-  ['Daniel Hartmann', '( Developer)'], ['Maya Laurent', '(Framer Specialist)'],
-];
+const CHECK = 'assets/69a01660589c516ba5f0f917/69a9086623545093091785d8_check-icon.svg';
+const CROSS = 'assets/69a01660589c516ba5f0f917/69a91f28a82e2c7b982d5703_cancel-circle-icon.svg';
 
-/** studio.html as a long-form page: hero, 4-step sticky story, intro, approach, stats, quote, 5 cards, table. */
-function fromStudio(spec) {
+/* ================================================================ modules */
+
+/** Mono's awards table (studio.html) as a reusable 3-column list. */
+function awardsTable({ id, caption, title, total, button, headers, rows }) {
+  const studio = tpl('studio.html');
+  const sec = elementContaining(studio, '(Awards 23-26©)', 'section');
+  const { fn: s } = makeSub('awards');
+  let html = sec.text.replace(/^<section class="section">/, `<section id="${id}" class="section">`);
+  if (!html.startsWith(`<section id="${id}"`)) throw new Error('awards: unexpected section opener');
+  html = s(html, '(Awards 23-26©)', caption);
+  html = s(html, '<h2 class="h2">Awards<span class="small-ftd">(7)</span></h2>', `<h2 class="h2">${title}<span class="small-ftd">(${total})</span></h2>`);
+  html = setLink(html, 'View all work', { href: button.href, text: button.label });
+  html = s(html, '(Awards)', headers[0]);
+  html = s(html, '(Recognition)', headers[1]);
+  html = s(html, '(Year)', headers[2]);
+  const first = findByClass(html, 'div', 'award-wrapper', 0);
+  let last = first;
+  for (let n = 1; ; n++) { const el = findByClass(html, 'div', 'award-wrapper', n); if (!el) break; last = el; }
+  const rowTpl = first.text;
+  const cells = rowTpl.match(/class="award-text">[^<]*</g);
+  if (!cells || cells.length !== 3) throw new Error('awards: row template does not have 3 cells');
+  const renderRow = (r) => { let out = rowTpl; for (let i = 0; i < 3; i++) out = out.replace(cells[i], `class="award-text">${r[i]}<`); return out; };
+  html = html.slice(0, first.start) + rows.map(renderRow).join('') + html.slice(last.end);
+  if ((html.match(/award-wrapper/g) ?? []).length !== rows.length) throw new Error('awards: row count mismatch');
+  return html;
+}
+
+function teamCard(html, oldName, oldRole, { name, role, image }) {
+  const { fn: s } = makeSub(`team:${oldName}`);
+  let out = s(html, `>${oldName}<`, `>${name}<`, { count: 1 });
+  out = s(out, `>${oldRole}<`, `>${role}<`, { count: 1 });
+  if (image) {
+    const card = elementContaining(out, `>${name}<`, 'div', { up: 2 });
+    if (!card.text.includes('team-wrapper')) throw new Error(`team: card wrapper not found for ${name}`);
+    out = out.slice(0, card.start) + card.text.replace(/src="[^"]*"/, `src="${image}"`) + out.slice(card.end);
+  }
+  return out;
+}
+const TEAM_TPL = [['Adrian Keller', '(Founder)'], ['Luca Moretti', '(Lead Product Designer)'], ['Elena Novak', '(UI/UX Designer)'], ['Daniel Hartmann', '( Developer)'], ['Maya Laurent', '(Framer Specialist)']];
+
+/** The Mono studio page as a long-form page. */
+function fromStudio(spec, lang) {
+  const t = (p) => (typeof p === 'string' ? p : p[lang]);
   const { fn: s } = makeSub(spec.name);
   let h = tpl('studio.html');
-
-  h = s(h, '(Our Studio ©26)', spec.eyebrow);
-  h = s(h, '>About Mōno™<', `>${spec.h1}<`);
-
-  // Sticky story: four labelled slides.
+  h = s(h, '(Our Studio ©26)', t(spec.eyebrow));
+  h = s(h, '>About Mōno™<', `>${t(spec.h1)}<`);
   ['d01', 'd02', 'd03', 'd04'].forEach((d, i) => {
-    h = s(h, `<h2 class="h2 for-abt ${d}">(©2${3 + i})</h2>`, `<h2 class="h2 for-abt ${d}">${spec.story[i].label}</h2>`);
-    h = setInner(h, `<p class="top-text for-abt t0${i + 1}">`, spec.story[i].text);
+    h = s(h, `<h2 class="h2 for-abt ${d}">(©2${3 + i})</h2>`, `<h2 class="h2 for-abt ${d}">${t(spec.story[i].label)}</h2>`);
+    h = setInner(h, `<p class="top-text for-abt t0${i + 1}">`, t(spec.story[i].text));
   });
-
-  h = s(h, '(Introduction)', spec.introLabel);
-  h = setInner(h, '<h2 class="h2 _01 sm _600">', spec.intro);
-  h = removeByClass(h, 'div', 'as-seen');   // four invented press logos
-
-  h = s(h, '(Approach)', spec.approachLabel);
-  ['Think clearly.', 'Design precisely.', 'Build intelligently.', 'Refine continuously.'].forEach((t, i) => { h = s(h, t, spec.approach[i], { count: 1 }); });
-  h = setLink(h, 'Begin collaboration', { href: spec.approachButton.href, text: spec.approachButton.label });
-
-  h = s(h, '(Stats)', spec.statsLabel);
+  h = s(h, '(Introduction)', t(spec.introLabel));
+  h = setInner(h, '<h2 class="h2 _01 sm _600">', t(spec.intro));
+  h = removeByClass(h, 'div', 'as-seen');
+  h = s(h, '(Approach)', t(spec.approachLabel));
+  ['Think clearly.', 'Design precisely.', 'Build intelligently.', 'Refine continuously.'].forEach((x, i) => { h = s(h, x, t(spec.approach[i]), { count: 1 }); });
+  h = setLink(h, 'Begin collaboration', { href: spec.approachButton.href, text: t(spec.approachButton.label) });
+  h = s(h, '(Stats)', t(spec.statsLabel));
   [['30', spec.stats[0]], ['80', spec.stats[1]], ['+7', spec.stats[2]]].forEach(([old, st]) => {
     const open = `<h2 class="h2 _01">${old}</h2></div><div><p class="top-text">`;
     const i = h.indexOf(open);
     if (i === -1) throw new Error(`${spec.name}: stat ${old} not found`);
     const end = h.indexOf('<br/></p>', i);
-    h = h.slice(0, i) + `<h2 class="h2 _01">${st.value}</h2></div><div><p class="top-text">${st.text}` + h.slice(end);
+    h = h.slice(0, i) + `<h2 class="h2 _01">${st.value}</h2></div><div><p class="top-text">${t(st.text)}` + h.slice(end);
   });
-
-  h = s(h, '(Success stories)', '(治理原则)');
-  h = setInner(h, '<div class="top-text for-sst">', spec.quote.text);
-  h = s(h, '>Elena Rossi<', `>${spec.quote.who}<`);
-  h = s(h, '>Marketing Director at Auralis®<', `>${spec.quote.where}<`);
-  h = h.replace(/<img[^>]*class="logo-absolute"[^>]*\/>/, (m) => { if (!m) throw new Error('logo-absolute'); return ''; });
-  if (h.includes('logo-absolute')) throw new Error(`${spec.name}: fake client logo survives`);
-
-  h = s(h, 'Creative Minds <span class="small-ftd finr">(5)</span>', `${spec.cards.title} <span class="small-ftd finr">(5)</span>`);
-  TEAM_TPL.forEach(([n, r], i) => { h = teamCard(h, n, r, spec.cards.items[i]); });
-  h = s(h, '(Leadership)', spec.cards.noteLabel);
-  h = setInner(h, '<p class="top-text big for-inr">', spec.cards.note);
-  h = setLink(h, 'Join us', { href: spec.cards.button.href, text: spec.cards.button.label });
-
-  // Partner logo wall: sixteen invented brands. Deleted, not hidden.
+  h = s(h, '(Success stories)', t(spec.quoteLabel));
+  h = setInner(h, '<div class="top-text for-sst">', t(spec.quote.text));
+  h = s(h, '>Elena Rossi<', `>${t(spec.quote.who)}<`);
+  h = s(h, '>Marketing Director at Auralis®<', `>${t(spec.quote.where)}<`);
+  h = h.replace(/<img[^>]*class="logo-absolute"[^>]*\/>/, '');
+  if (h.includes('logo-absolute')) throw new Error(`${spec.name}: template client logo survives`);
+  h = s(h, 'Creative Minds <span class="small-ftd finr">(5)</span>', `${t(spec.cardsTitle)} <span class="small-ftd finr">(5)</span>`);
+  TEAM_TPL.forEach(([n, r], i) => { h = teamCard(h, n, r, { name: t(spec.cards[i].name), role: t(spec.cards[i].role), image: ABSTRACT[i] }); });
+  h = s(h, '(Leadership)', t(spec.noteLabel));
+  h = setInner(h, '<p class="top-text big for-inr">', t(spec.note));
+  h = setLink(h, 'Join us', { href: spec.noteButton.href, text: t(spec.noteButton.label) });
   const partners = elementContaining(h, '(Partners)', 'div', { up: 2 });
   if (!partners.text.includes('partner-grid') || !partners.text.startsWith('<div class="margin-150">')) throw new Error(`${spec.name}: partner block boundary`);
   h = h.slice(0, partners.start) + h.slice(partners.end);
-  if (h.includes('partner-grid')) throw new Error(`${spec.name}: partner grid survives`);
-
-  // Awards → data table.
   const awards = elementContaining(h, '(Awards 23-26©)', 'section');
-  h = h.slice(0, awards.start) + awardsTable(spec.table) + h.slice(awards.end);
-
+  const tb = spec.table;
+  h = h.slice(0, awards.start) + awardsTable({
+    id: 'table', caption: t(tb.caption), title: t(tb.title), total: tb.rows.length,
+    button: { label: t(tb.button.label), href: tb.button.href }, headers: tb.headers.map(t),
+    rows: tb.rows.map((r) => r.map((c) => escapeHtml(t(c)))),
+  }) + h.slice(awards.end);
   return h;
+}
+
+/** Mono page shell (nav … footer) with a foreign body dropped in. */
+function inMonoShell(body, extraCss) {
+  const studio = tpl('studio.html');
+  const heroAt = studio.search(/<div[^>]*class="hero for-inner/);
+  const footerAt = studio.indexOf('<div data-wf--footer--variant="base" class="footer">');
+  if (heroAt === -1 || footerAt === -1) throw new Error('shell: studio cut points');
+  let html = studio.slice(0, heroAt) + body + studio.slice(footerAt);
+  const monoLink = /<link href="css\/monof-template\.app\.shared\.[a-f0-9]+\.css" rel="stylesheet" type="text\/css"\/>/;
+  if (!monoLink.test(html)) throw new Error('shell: Mono stylesheet link not found');
+  html = html.replace(monoLink, (m) => `${m}\n${extraCss.map((c) => `<link href="css/${c}" rel="stylesheet" type="text/css"/>`).join('\n')}`);
+  return html;
 }
 
 /* ================================================================== pages */
 
 const PAGES = {};
 
-/* ---- capabilities.html — from work_work-1.html ------------------------ */
-PAGES['capabilities.html'] = () => {
+/* ---- index.html — Mono homepage + three Scalora modules --------------- */
+PAGES['index.html'] = (lang) => {
+  const t = (p) => (typeof p === 'string' ? p : p[lang]);
+  const { fn: s } = makeSub('home');
+  let h = tpl('index.en.html');
+
+  // The raw export fetches fonts from Google and every asset from Webflow's CDN.
+  // This site makes no request that leaves its origin: Inter is self-hosted
+  // (css/inter.css) and the assets were mirrored under assets/.
+  h = h.replace(/<link href="https:\/\/(?:cdn\.prod\.website-files\.com|fonts\.googleapis\.com|fonts\.gstatic\.com)" rel="preconnect"\/>/g, '');
+  h = h.replace(/<script src="js\/webfont\.js" type="text\/javascript"><\/script>/, '');
+  h = h.replace(/<script type="text\/javascript">WebFont\.load\([\s\S]*?<\/script>/, '');
+  if (/webfont|WebFont\.load|googleapis/.test(h)) throw new Error('index: Google Fonts loader survives');
+  h = localise(h);
+  h = h.replace(/<link href="css\/monof-template\.app\.shared\.[a-f0-9]+\.css" rel="stylesheet" type="text\/css"\/>/, (m) => `${m}
+<link href="css/inter.css" rel="stylesheet" type="text/css"/>`);
+
+  // Hero list: the five loop stages in loop order (the template's five service
+  // names are not in the order their numbered sections use).
+  {
+    const flex = findByClass(h, 'div', 'flex-top');
+    if (!flex) throw new Error('index: hero list');
+    const labels = ['Web Design', 'Social Media', 'Development', 'Brand Identity', 'Marketing'];
+    const inner = labels.map((l) => `<p class="top-text big">${l}<!--$--><br/><!--/$--></p>`).join('');
+    h = h.slice(0, flex.start) + `<div class="flex-top">${inner}</div>` + h.slice(flex.end);
+  }
+  for (const [old, pair, opts] of C.HOME_MONO) h = s(h, old, t(pair), opts);
+  const D = C.HOME_DUP_DESC;
+  h = s(h, D.original, t(D.first), { nth: 0 });
+  h = s(h, D.original, t(D.second), { nth: 0 });
+  h = h.replace(/(class="(?:top-text logo[^"]*|h1)">)Studio(<)/g, '$1WORK$2');
+  h = h.replace(/<title>Mōno™<\/title>/, '<title>STARGO</title>');
+  h = s(h, '© 2026 Mōno™ Studio', '© 2026 STARGO WORK');
+  h = h.split('Mōno™').join('STARGO');
+
+  // Brand wall: real logos from assets/brands/, or no wall at all.
+  const brands = existsSync(`${SITE}/assets/brands`) ? readdirSync(`${SITE}/assets/brands`).filter((f) => /\.(svg|png|webp|jpg|jpeg)$/i.test(f)).sort() : [];
+  const grid = elementContaining(h, 'class="partner-grid"', 'div', { up: 1 });
+  if (!grid.text.startsWith('<div class="margin-50">')) throw new Error('index: partner grid wrapper');
+  if (brands.length) {
+    const card = findByClass(grid.text, 'div', 'partner-card');
+    const cards = brands.map((f, i) => card.text
+      .replace(/card-wrapper _0\d/, `card-wrapper _0${(i % 8) + 1}`)
+      .replace(/<img[^>]*class="front-logo-img"[^>]*\/>|(<div class="front-logo">)<img[^>]*\/>/, (m, open) => `${open ?? ''}<img src="assets/brands/${f}" loading="lazy" alt="" class="brand-logo"/>`)
+      .replace(/(<div class="back-logo">)<img[^>]*\/>/, `$1<img src="assets/brands/${brands[(i + 1) % brands.length]}" loading="lazy" alt="" class="brand-logo"/>`));
+    const inner = findByClass(grid.text, 'div', 'partner-grid');
+    const rebuilt = grid.text.slice(0, inner.start) + inner.text.replace(/>[\s\S]*<\/div>$/, `>${cards.join('')}</div>`) + grid.text.slice(inner.end);
+    h = h.slice(0, grid.start) + rebuilt + h.slice(grid.end);
+    h = s(h, '(Partners)', t(C.HOME_BRAND_WALL.caption));
+  } else {
+    h = h.slice(0, grid.start) + h.slice(grid.end);
+    h = s(h, '(Partners)', t(C.HOME_BRAND_WALL.captionNoLogos));
+  }
+
+  // The "work" cards point at the loop table below.
+  for (const p of ['project_forma-digital.html', 'project_one-step.html', 'project_nero-vision.html', 'project_bold-moves.html']) h = s(h, `href="${p}"`, 'href="#loop"');
+  h = setLink(h, t(C.HOME_MONO.find(([o]) => o === 'View all work')[1]), { href: '#loop' });
+  h = h.replace(/<h3 class="work-title">\d\d<\/h3><h3 class="work-title">©<\/h3>/g, (m, i) => m).replace(/<h3 class="work-title">(26|24|25)<\/h3><h3 class="work-title">©<\/h3>/g, (m) => m);
+  {
+    let n = 0;
+    h = h.replace(/<h3 class="work-title">(?:26|25|24)<\/h3><h3 class="work-title">©<\/h3>/g, () => `<h3 class="work-title">0${++n}</h3><h3 class="work-title"></h3>`);
+    if (n !== 4) throw new Error(`index: expected 4 work cards, found ${n}`);
+  }
+
+  // Scalora modules.
+  const sub = (name, fragment, list) => { const { fn } = makeSub(name); let f = fragment; for (const [old, pair, opts] of list) f = fn(f, old, t(pair), opts); return f; };
+  let hero = frag('hero.html').replace(/<h1 /g, '<h2 ').replace(/<\/h1>/g, '</h2>');
+  hero = addRootClass(sub('sc-hero', hero, C.HOME_SC_HERO), 'sc-scope');
+  const products = addRootClass(sub('sc-products', frag('products.html'), C.HOME_SC_PRODUCTS), 'sc-scope');
+  const integration = addRootClass(sub('sc-integration', frag('integration.html'), C.HOME_SC_INTEGRATION), 'sc-scope');
+  const L = C.HOME_LOOP_TABLE;
+  const loop = awardsTable({
+    id: 'loop', caption: t(L.caption), title: t(L.title), total: L.rows.length,
+    button: { label: t(L.button), href: 'capabilities.html' }, headers: L.headers.map(t),
+    rows: L.rows.map(([a, b, c]) => [a, escapeHtml(t(b)), escapeHtml(t(c))]),
+  });
+  const insertBefore = (html, anchor, fragment, label) => { const i = html.indexOf(anchor); if (i === -1) throw new Error(`insertion anchor not found for ${label}`); return html.slice(0, i) + fragment + '\n' + html.slice(i); };
+  h = insertBefore(h, '<section class="section with-minus"', hero, 'four-layer stack');
+  h = insertBefore(h, '<section class="video-section"', loop + products, 'loop + switcher');
+  h = insertBefore(h, '<section class="section drk"', integration, 'channels band');
+  const monoLink = /<link href="css\/monof-template\.app\.shared\.[a-f0-9]+\.css" rel="stylesheet" type="text\/css"\/>/;
+  h = h.replace(monoLink, (m) => `${m}\n<link href="css/scalora-modules.sc.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>`);
+  return h;
+};
+
+/* ---- intelligence.html / workforce.html — lifelogx homepage ----------- */
+function lxPage(spec, lang, name) {
+  const t = (p) => (typeof p === 'string' ? p : p[lang]);
+  const { fn: s } = makeSub(name);
+  let b = frag('lx-home.html');
+  b = s(b, '<div class="lx-hero-text">Lifelogx</div>', `<div class="lx-hero-text">${t(spec.heroWord)}</div>`);
+  b = s(b, '>Tomato Store<', `>${t(spec.store1.name)}<`);
+  b = s(b, 'Download on the Tomato Store', t(spec.store1.sub));
+  b = s(b, '>Market Play<', `>${t(spec.store2.name)}<`);
+  b = s(b, 'Get it on Market Play', t(spec.store2.sub));
+  b = setLink(b, t(spec.store1.name), { href: spec.store1.href });
+  b = setLink(b, t(spec.store2.name), { href: spec.store2.href });
+  b = s(b, 'The friend who never forgets.', t(spec.heroDesc));
+  b = s(b, 'Natural, human-like chats that keep users engaged and understood.', t(spec.features[0].text));
+  b = s(b, '<h3 class="lx-expandable-text">Interaction</h3>', `<h3 class="lx-expandable-text">${t(spec.features[0].title)}</h3>`);
+  b = s(b, 'Smooth, intuitive actions that make every tap feel effortless.', t(spec.features[1].text));
+  b = s(b, '<h3 class="lx-expandable-text">Conversation</h3>', `<h3 class="lx-expandable-text">${t(spec.features[1].title)}</h3>`);
+  b = s(b, 'Ready made features your users already expect.', t(spec.features[2].text));
+  b = s(b, '<h3 class="lx-expandable-text">Organised</h3>', `<h3 class="lx-expandable-text">${t(spec.features[2].title)}</h3>`);
+  for (const [k, v] of Object.entries(spec.tags)) b = s(b, `>${k}<`, `>${t(v)}<`);
+  // six carousel cards plus the story card share these two classes
+  b = setEachInner(b, '<h3 class="lx-heading-style-h3 lx-home-feature">', [...spec.cards.slice(0, 6).map((c) => t(c.title)), t(spec.feat2Card.title)]);
+  b = setEachInner(b, '<div class="lx-text-size-regular lx-text-weight-light">', [...spec.cards.slice(0, 6).map((c) => t(c.text)), t(spec.feat2Card.text)]);
+  spec.gradient.forEach((g, i) => {
+    const re = new RegExp(`(class="lx-heading-style-h1 lx-_${i + 1}">)[^<]*(</h3>)`);
+    if (!re.test(b)) throw new Error(`${name}: gradient heading ${i + 1}`);
+    b = b.replace(re, `$1${t(g)}$2`);
+  });
+  b = s(b, '>Is this you<', `>${t(spec.bigText)}<`);
+  const bubbleOriginals = ["I'll remember that for later", "It's too boring to document.", "I can't be bothered.", "I'll remember that", "No way I'm writing all that", 'Documenting can be a drag sometimes', 'IT Support', 'Logistics Analyst', "It's just not on my priority list", 'I prefer to keep it in my head..', "Maybe I'll get to it eventually.", "I'd rather focus on the fun parts."];
+  const order = [7, 0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11]; // longest-first originals mapped back to the spec order
+  bubbleOriginals.forEach((orig, i) => {
+    const html = orig.replace(/'/g, '&#x27;');
+    const target = t(spec.bubbles[order[i]]);
+    if (b.includes(html)) b = s(b, html, target); else b = s(b, orig, target);
+  });
+  ['_1', '_2', '_3', '_4'].forEach((k, i) => {
+    const re = new RegExp(`(class="lx-big-gradient-text lx-${k}">)[^<]*(</h3>)`, 'g');
+    if (!re.test(b)) throw new Error(`${name}: gradient word ${k}`);
+    b = b.replace(re, `$1${t(spec.words[i])}$2`);
+  });
+  b = s(b, '<h3 class="lx-heading-style-h1 lx-pink">Add your Notes in minutes</h3>', `<h3 class="lx-heading-style-h1 lx-pink">${t(spec.feat2Title)}</h3>`);
+  b = s(b, '<h3 class="lx-heading-style-h1">As simple as talking</h3>', `<h3 class="lx-heading-style-h1">${t(spec.feat2Sub)}</h3>`);
+  b = setLink(b, 'Get started', { href: spec.feat2Button.href, text: t(spec.feat2Button.label) });
+  b = s(b, 'Your story, <br/>Your memories, <br/>Your moments', spec.feat2Lines.map(t).join(' <br/>'));
+  b = s(b, '>Your AI companion<', `>${t(spec.ctaTitle)}<`);
+  b = s(b, 'class="lx-cta-text lx-_2nd">As simple as talking</h4>', `class="lx-cta-text lx-_2nd">${t(spec.ctaSub)}</h4>`);
+  b = s(b, 'class="lx-cta-logo-text">Lifelogx</div>', `class="lx-cta-logo-text">${t(spec.ctaLogo)}</div>`);
+  b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
+  b = s(b, 'The smartest friend you’ll ever have.', t(spec.ctaDesc));
+  b = b.replace(/<div([^>]*)class="([^"]*\blx-gradient-section\b[^"]*)"/, '<div id="lx-more"$1class="$2"');
+  b = b.replace(/<div class="lx-cta-wrapper">/, '<div id="lx-evolution" class="lx-cta-wrapper">');
+  if (!b.includes('id="lx-more"') || !b.includes('id="lx-evolution"')) throw new Error(`${name}: anchor ids`);
+  if (/Lifelogx|Tomato|lifelog/i.test(b)) throw new Error(`${name}: template brand survives`);
+  return inMonoShell(b, ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
+}
+PAGES['intelligence.html'] = (lang) => lxPage(C.LX_INTELLIGENCE, lang, 'intelligence');
+PAGES['workforce.html'] = (lang) => lxPage(C.LX_WORKFORCE, lang, 'workforce');
+
+/* ---- pricing.html — Scalora pricing page ------------------------------ */
+PAGES['pricing.html'] = (lang) => {
+  const t = (p) => (typeof p === 'string' ? p : p[lang]);
+  const P = C.PRICING;
+  const { fn: s } = makeSub('pricing');
+  const src = tpl('scalora-pricing.html');
+  const cut = (cls) => { const i = src.indexOf(`<section class="${cls}"`); if (i === -1) throw new Error(`pricing: section ${cls}`); return extractElement(src, i, 'section').text; };
+  let hero = cut('pricing-hero');
+  let plans = cut('plans');
+  let cta = cut('cta');
+  let faq = cut('faq');
+
+  /* hero: caption, title, period toggle */
+  hero = s(hero, '>Pricing plan<', `>${t(P.caption)}<`);
+  hero = hero.replace(/<h1>[\s\S]*?<\/h1>/, `<h1>${t(P.title)}</h1>`);
+  hero = s(hero, '>Pay monthly<', `>${t(P.toggleA)}<`);
+  hero = s(hero, '>Pay yearly (save 30%)<', `>${t(P.toggleB)}<`);
+  /* tabs: keep two of four */
+  for (const n of [3, 4]) {
+    hero = hero.replace(new RegExp(`<a data-w-tab="Tab ${n}"[^>]*>[\\s\\S]*?<\\/a>`), '');
+    const pane = hero.indexOf(`<div data-w-tab="Tab ${n}"`);
+    if (pane === -1) throw new Error(`pricing: pane ${n}`);
+    const el = extractElement(hero, pane, 'div');
+    hero = hero.slice(0, el.start) + hero.slice(el.end);
+  }
+  P.tabs.forEach((label, i) => { hero = hero.replace(new RegExp(`(<a data-w-tab="Tab ${i + 1}"[^>]*>)<div>[^<]*</div>`), `$1<div>${t(label)}</div>`); });
+  /* cards */
+  const unitOf = (u) => u === 'year' ? t(P.unitYear) : u === 'first' ? t(P.unitFirst) : u === 'demo' ? (lang === 'zh' ? '免费' : 'free') : '';
+  const fillCard = (card, spec) => {
+    let c = card;
+    c = c.replace(/(<div class="heading-style-h5">)[^<]*(<\/div>)/, `$1${t(spec.name)}$2`);
+    // price blocks: monthly = first year, year = renewal
+    let k = 0;
+    c = c.replace(/(class="pricing-card-price">)[^<]*(<)/g, (_, a, b) => `${a}${k++ === 0 ? t(spec.price) : spec.renewal === 'ask' ? t(P.renewalPrice) : spec.renewal === 'custom' ? t(spec.price) : spec.renewal === 'demo' ? t(spec.price) : spec.renewal}${b}`);
+    let u = 0;
+    c = c.replace(/(class="heading-style-h6">)[^<]*(<)/g, (_, a, b) => `${a}${u++ === 0 ? unitOf(spec.unit) : (spec.renewal === 'ask' ? t(P.unitYear) : unitOf(spec.unit === 'first' ? 'year' : spec.unit))}${b}`);
+    const paras = [t(spec.desc), ...spec.items.map(t)];
+    let pi = 0;
+    c = c.replace(/(<div class="paragraph-p1">)[^<]*(<\/div>)/g, (_, a, b) => `${a}${paras[pi++] ?? ''}${b}`);
+    if (pi !== 6) throw new Error(`pricing: card ${t(spec.name)} has ${pi} paragraphs`);
+    c = c.replace(/(class="button-text">)[^<]*(<)/g, `$1${t(spec.cta)}$2`);
+    c = c.replace(/href="contact\.html"/g, 'href="contact.html"');
+    return c;
+  };
+  P.panes.forEach((cards, pi) => {
+    const paneAt = hero.indexOf(`<div data-w-tab="Tab ${pi + 1}"`);
+    const pane = extractElement(hero, paneAt, 'div');
+    let text = pane.text;
+    for (let ci = 0; ci < 3; ci++) {
+      const card = findByClass(text, 'div', 'pricing-card', ci);
+      if (!card) throw new Error(`pricing: card ${ci} in pane ${pi + 1}`);
+      text = text.slice(0, card.start) + fillCard(card.text, cards[ci]) + text.slice(card.end);
+    }
+    hero = hero.slice(0, pane.start) + text + hero.slice(pane.end);
+  });
+  /* comparison table */
+  plans = plans.replace(/<h2>Compare all of our plans<\/h2>/, `<h2>${t(P.compareTitle)}</h2>`);
+  plans = s(plans, '<div class="heading-style-h5">Features</div>', `<div class="heading-style-h5">${t(P.compareFeatures)}</div>`);
+  {
+    let i = 0;
+    plans = plans.replace(/<div class="heading-style-h5">(Starter|Growth|Premium)<\/div><div class="plan-description-text">[^<]*<\/div>/g, () => { const p = P.comparePlans[i++]; return `<div class="heading-style-h5">${t(p.name)}</div><div class="plan-description-text">${t(p.desc)}</div>`; });
+    if (i !== 3) throw new Error('pricing: plan headers');
+    let g = 0;
+    plans = plans.replace(/(<div class="company-plans-title-block"><div class="heading-style-h5">)[^<]*(<\/div>)/g, (_, a, b) => `${a}${t(P.compareGroups[g++].title)}${b}`);
+    if (g !== 3) throw new Error('pricing: group titles');
+    const rows = P.compareGroups.flatMap((grp) => grp.rows);
+    let r = 0;
+    plans = plans.replace(/<div class="company-plans-list-wrapper"><div id="[^"]*" class="company-plans-list-block title-block"><div class="paragraph-p1">[^<]*<\/div><\/div>((?:<div class="company-plans-list-block"><img[^>]*\/><\/div>){3})<\/div>/g, (whole) => {
+      const [label, flags] = rows[r++];
+      let cell = 0;
+      return whole
+        .replace(/(<div class="paragraph-p1">)[^<]*(<\/div>)/, `$1${t(label)}$2`)
+        .replace(/<img[^>]*\/>/g, () => { const on = flags[cell++]; return `<img src="${on ? CHECK : CROSS}" loading="lazy" alt="${on ? 'included' : 'not included'}" class="icon-24px"/>`; });
+    });
+    if (r !== 12) throw new Error(`pricing: expected 12 comparison rows, matched ${r}`);
+  }
+  /* cta + faq */
+  cta = cta.replace(/<h2>[\s\S]*?<\/h2>/, `<h2>${t(P.ctaTitle)}</h2>`);
+  cta = cta.replace(/(<div class="paragraph-p1">)[^<]*(<\/div>)/, `$1${t(P.ctaDesc)}$2`);
+  cta = cta.replace(/(class="button-text">)[^<]*(<)/g, `$1${t(P.ctaButton.label)}$2`).replace(/href="contact\.html"/, `href="${P.ctaButton.href}"`);
+  faq = s(faq, '>Questions and Answers<', `>${t(P.faqCaption)}<`);
+  faq = faq.replace(/<h2>Frequently asked questions<\/h2>/, `<h2>${t(P.faqTitle)}</h2>`);
+  {
+    let q = 0;
+    faq = faq.replace(/(<div class="heading-style-h6">)[^<]*(<\/div>)/g, (_, a, b) => `${a}${t(P.faq[q++][0])}${b}`);
+    if (q !== 10) throw new Error(`pricing: ${q} faq questions`);
+    let an = 0;
+    faq = faq.replace(/(<div class="paragraph-p2">)[^<]*(<\/div>)/g, (_, a, b) => `${a}${t(P.faq[an++][1])}${b}`);
+    if (an !== 10) throw new Error(`pricing: ${an} faq answers`);
+  }
+  let body = [hero, plans, cta, faq].join('\n');
+  body = localise(scClasses(body));
+  body = body.replace(/alt="(Pricing Card Icon|Check Icon|Close Icon|Arrow Dowen)"/g, 'alt=""');
+  if (/Scalora|\$\d/.test(body)) throw new Error('pricing: template copy or dollar price survives');
+  body = `<div class="sc-scope sc-page">\n${body}\n</div>`;
+  return inMonoShell(body, ['scalora-modules.sc.css', 'stargo-fusion.css']);
+};
+
+/* ---- enterprise.html — Mono studio ------------------------------------ */
+PAGES['enterprise.html'] = (lang) => fromStudio({ name: 'enterprise', ...C.ENTERPRISE, cards: C.ENTERPRISE.cards }, lang);
+
+/* ---- capabilities.html — Mono work-1 + table -------------------------- */
+PAGES['capabilities.html'] = (lang) => {
+  const t = (p) => (typeof p === 'string' ? p : p[lang]);
+  const K = C.CAPABILITIES;
   const { fn: s } = makeSub('capabilities');
   let h = tpl('work_work-1.html');
-  const byStatus = (st) => count(CAPS, 'status', st);
-  const groups = [
-    { name: '销售与外贸履约', domains: ['sales', 'trade-ops', 'retention'] },
-    { name: '增长与获客', domains: ['growth'] },
-    { name: '指挥与创意', domains: ['command', 'create'] },
-    { name: '平台与治理', domains: ['platform'] },
-  ].map((g) => ({ ...g, n: CAPS.filter((c) => g.domains.includes(c.domain)).length }));
-  if (groups.reduce((a, g) => a + g.n, 0) !== CAPS.length) throw new Error('capability groups do not partition E01–E52');
-
-  h = s(h, '>Selected Works', `>能力全景`);
-  h = s(h, '>(4)<', '>(52)<', { count: 1 });
-  h = s(h, '(Portfolio 23-26©)', `(E01–E52 · 核对于 ${CHECKED})`);
-  h = s(h, 'Helping businesses turn vision into reality. Take a look at our latest projects.',
-    `52 项能力，状态只看仓库里实际存在的证据：${byStatus('demo-verified')} 项演示验证，${byStatus('pilot')} 项试点，${byStatus('roadmap')} 项路线图，${byStatus('research-preview')} 项研究预览。没有一项标为「已上线」——那需要客户生产环境的运行证据，目前不存在。`);
-
-  // Four project cards → four capability groups, linking to the table below.
+  const groupByN = Object.fromEntries(C.CAPABILITY_GROUPS.map((g) => [g.n, g]));
+  h = s(h, '>Selected Works', `>${t(K.h1)}`);
+  h = s(h, '>(4)<', `>(${C.CAPABILITY_GROUPS.length})<`, { count: 1 });
+  h = s(h, '(Portfolio 23-26©)', t(K.caption));
+  h = s(h, 'Helping businesses turn vision into reality. Take a look at our latest projects.', t(K.intro));
   [['Forma Digital', 'project_forma-digital.html'], ['Nero Vision', 'project_nero-vision.html'], ['One Step', 'project_one-step.html'], ['Bold Moves', 'project_bold-moves.html']]
     .forEach(([name, href], i) => {
-      h = s(h, `>${name}<`, `>${groups[i].name}<`, { count: 1 });
-      h = s(h, `href="${href}"`, 'href="#atlas"', { count: 1 });
+      h = s(h, `>${name}<`, `>${t(K.macro[i].name)}<`, { count: 1 });
+      h = s(h, `href="${href}"`, `href="#g${K.macro[i].groups[0]}"`, { count: 1 });
     });
   const years = h.match(/<h3 class="work-title">\d\d<\/h3><h3 class="work-title">©<\/h3>/g);
   if (!years || years.length !== 4) throw new Error('capabilities: expected 4 year pairs');
-  years.forEach((y, i) => { h = h.replace(y, `<h3 class="work-title">${groups[i].n}</h3><h3 class="work-title">项</h3>`); });
+  years.forEach((y, i) => { h = h.replace(y, `<h3 class="work-title">${K.macro[i].groups.length}</h3><h3 class="work-title">${t(K.unit)}</h3>`); });
 
-  // Pricing block → the status ladder. No price anywhere.
-  h = s(h, 'id="Pricing"', 'id="status"');
-  h = s(h, '(Pricing)', '(状态怎么定)');
-  h = s(h, '>Pick Smart.<', '>先看证据。<');
-  h = s(h, '>Pay Less.<', '>再定状态。<');
-  h = s(h, '>Build Better.<', '>宁低勿高。<');
-  h = s(h, 'Choose the plan that fits you best.', '状态由仓库里的证据决定，不由规划文档决定。证据不明时取较低的那一档。');
-  h = s(h, '>Starter<', '>演示验证<');
-  h = s(h, 'Built for early-stage teams establishing their online presence.', '有真实代码，能在确定性数据上端到端跑通，但还没有客户生产环境的证据。这是当前的上限。');
-  h = s(h, '$2,000', String(byStatus('demo-verified')));
-  h = s(h, '>Growth<', '>试点<');
-  h = s(h, 'Designed for businesses ready to elevate their digital experience.', '已注册并接线，但默认关闭、只有部分实现，或没有在运营中验证过。');
-  h = s(h, '$4,000', String(byStatus('pilot')));
-  h = s(h, '(Project)', '(项)', { count: 2 });
-  h = s(h, 'What&#x27;s included:', '门槛：', { count: 2 });
-  [['Tailored website layouts', '实现代码存在于产品仓库'], ['Core SEO configuration', '有可执行测试，或有工作流实际使用的注册表行'],
-    ['Mobile-first responsive design', '在确定性演示数据上端到端跑通'], ['Brand-ready UI framework', '尚无客户生产环境的运行证据'],
-    ['Ideal for new launches and rebrands', '提升状态必须在同一次提交里加证据并删掉钉住它的测试'],
-    ['High-end design with smooth interactions', '注册表里有对应的能力行'], ['Complete on-site SEO setup', '可能位于默认关闭的部署配置之后'],
-    ['Adaptive layouts for every screen', '部分步骤仍需人工完成'], ['CMS setup for content or case studies', '没有在运营中验证'],
-    ['Performance tuning &amp; optimization', '页面上不会把它写成「可用」'],
-  ].forEach(([a, b]) => { h = s(h, `>${a}<`, `>${b}<`, { count: 1 }); });
-  h = s(h, '>Timeline:<', '>核对日期：<', { count: 2 });
-  h = s(h, '>1-2 weeks<', `>${CHECKED}<`);
-  h = s(h, '>2-3 weeks<', `>${CHECKED}<`);
-  h = setLink(h, 'Book a call', { href: 'governance.html', text: '看治理测试', all: true });
+  h = s(h, 'id="Pricing"', 'id="start"');
+  h = s(h, '(Pricing)', t(K.ladderCaption));
+  h = s(h, '>Pick Smart.<', `>${t(K.ladder[0])}<`);
+  h = s(h, '>Pay Less.<', `>${t(K.ladder[1])}<`);
+  h = s(h, '>Build Better.<', `>${t(K.ladder[2])}<`);
+  h = s(h, 'Choose the plan that fits you best.', t(K.ladderDesc));
+  const card = (c, name, desc, price, bullets, tl, btn) => {
+    h = s(h, `>${name}<`, `>${t(c.name)}<`);
+    h = s(h, desc, t(c.desc));
+    h = s(h, price, c.big);
+    bullets.forEach((b, i) => { h = s(h, `>${b}<`, `>${t(c.items[i])}<`, { count: 1 }); });
+    h = s(h, `>${tl}<`, `>${t(c.tl)}<`);
+  };
+  card(K.card1, 'Starter', 'Built for early-stage teams establishing their online presence.', '$2,000', ['Tailored website layouts', 'Core SEO configuration', 'Mobile-first responsive design', 'Brand-ready UI framework', 'Ideal for new launches and rebrands'], '1-2 weeks');
+  card(K.card2, 'Growth', 'Designed for businesses ready to elevate their digital experience.', '$4,000', ['High-end design with smooth interactions', 'Complete on-site SEO setup', 'Adaptive layouts for every screen', 'CMS setup for content or case studies', 'Performance tuning &amp; optimization'], '2-3 weeks');
+  h = s(h, '(Project)', t(K.card1.unit), { nth: 0 });
+  h = s(h, '(Project)', t(K.card2.unit), { nth: 0 });
+  h = s(h, 'What&#x27;s included:', lang === 'zh' ? '包含：' : 'Included:', { count: 2 });
+  h = s(h, '>Timeline:<', `>${t(K.card1.tlLabel)}<`, { nth: 0 });
+  h = s(h, '>Timeline:<', `>${t(K.card2.tlLabel)}<`, { nth: 0 });
+  h = setLink(h, 'Book a call', { href: K.card1.button.href, text: t(K.card1.button.label) });
+  h = setLink(h, 'Book a call', { href: K.card2.button.href, text: t(K.card2.button.label) });
+  h = s(h, '(FAQ)', t(K.faqCaption));
+  [['What services does your agency offer?', 0], ['How do you determine the right strategy?', 1], ['How long does a typical project take?', 2], ['Do you work with businesses in any industry?', 3]]
+    .forEach(([q, i]) => { h = s(h, `>${q}<`, `>${t(K.faq[i][0])}<`, { count: 1 }); });
+  h = setEachInner(h, '<p class="paragraph">', K.faq.map((f) => t(f[1])));
+  h = s(h, '(Looking for more?)', t(K.moreLabel));
+  h = s(h, 'Expand your scope with marketing, SEO, or content creation.', t(K.more));
+  h = setLink(h, 'Contact us', { href: 'contact.html', text: t(K.moreButton) });
 
-  // FAQ → the other two statuses and the missing one.
-  h = s(h, '(FAQ)', '(另外两种状态)');
-  [['What services does your agency offer?', '「路线图」是什么意思？'], ['How do you determine the right strategy?', '「研究预览」是什么意思？'],
-    ['How long does a typical project take?', '为什么没有一项是「已上线」？'], ['Do you work with businesses in any industry?', '状态会变吗？'],
-  ].forEach(([a, b]) => { h = s(h, `>${a}<`, `>${b}<`, { count: 1 }); });
-  h = setEachInner(h, '<p class="paragraph">', [
-    `仓库里没有找到实现。${byStatus('roadmap')} 项能力处于这个状态。它们出现在清单里是为了把边界说清楚，不是承诺交期。`,
-    `一个研究方向，刻意不作为功能宣称。${byStatus('research-preview')} 项。`,
-    '「已上线」（live-verified）要求可复现的客户生产运行证据。产品仓库现有的可执行测试证明的是治理属性——审批不可绕过、台账只追加、R4 结构性禁止自动化——不是某项业务能力在客户环境跑通过。所以上限停在「演示验证」。',
-    `会。提升任何一项的状态，必须在同一次提交里加上证据引用、改状态、并删掉钉住它的测试断言；缺一项，构建就不通过。核对日期 ${CHECKED} 随之更新。`,
-  ]);
-  h = s(h, '(Looking for more?)', '(想看某一项的证据？)');
-  h = s(h, 'Expand your scope with marketing, SEO, or content creation.', '每一项能力的证据引用都在产品仓库里，按编号可查。诊断时我们逐项打开给你看。');
-  h = setLink(h, 'Contact us', { href: 'contact.html', text: '预约诊断' });
-
-  // Atlas: all 52 rows, inserted between the group cards and the status ladder.
-  const rows = CAPS.map((c) => [c.id, `${escapeHtml(c.title)} · ${DOMAIN_ZH[c.domain]}`, STATUS_ZH[c.status]]);
+  const rows = C.CAPABILITY_GROUPS.flatMap((g) => g.items.map(([item, gloss], i) => [
+    i === 0 ? `<span id="g${g.n}">${g.n} · ${escapeHtml(t(g.name))}</span>` : '',
+    escapeHtml(item),
+    escapeHtml(t(gloss)),
+  ]));
   const table = awardsTable({
-    id: 'atlas', caption: '(按编号)', title: '能力图谱', total: CAPS.length,
-    button: { label: '查看数字员工', href: 'workforce.html' },
-    headers: ['(编号)', '(能力 · 领域)', '(状态)'], rows,
+    id: 'atlas', caption: t(K.table.caption), title: t(K.table.title), total: rows.length,
+    button: { label: t(K.table.button.label), href: K.table.button.href }, headers: K.table.headers.map(t), rows,
   });
   const anchor = '<div data-w-id="f7fb6f0b-16b8-25a9-4160-54883563ff75" class="rounder-wrapper">';
   if (!h.includes(anchor)) throw new Error('capabilities: insertion anchor missing');
@@ -253,339 +459,110 @@ PAGES['capabilities.html'] = () => {
   return h;
 };
 
-/* ---- workforce.html — from studio.html -------------------------------- */
-PAGES['workforce.html'] = () => {
-  const backed = AGENTS.filter((a) => a.backingRole).length;
-  const roadmap = AGENTS.filter((a) => a.status === 'roadmap');
-  const byDomain = (d) => AGENTS.filter((a) => a.domain === d);
-  const names = (d) => byDomain(d).map((a) => a.name).join(' / ');
-  const tier = (t) => `${t} ${RISK[t].label}`;
-  return fromStudio({
-    name: 'workforce',
-    eyebrow: `(数字员工 · 注册表核对于 ${CHECKED})`,
-    h1: `${AGENTS.length} 位岗位型数字员工`,
-    story: [
-      { label: '(R0)', text: `${RISK.R0.meaning}读取会话、检索知识、比对清单。${AGENTS.filter((a) => a.autonomyCeiling === 'R0').length} 位数字员工的自主上限就在这一级：可以看，可以算，不能对外产生任何动作。` },
-      { label: '(R1)', text: `${RISK.R1.meaning}把询盘解析成结构化字段、生成测算表与草稿，写进内部记录。不触碰任何外部系统。` },
-      { label: '(R2)', text: `${RISK.R2.meaning}写入 CRM、发出报价、回复买家都在这一级。审批事件成对入台账；审批通道不可用时，系统拒绝执行，而不是自行决定。${AGENTS.filter((a) => a.autonomyCeiling === 'R2').length} 位数字员工的自主上限是 R2。` },
-      { label: '(R3 · R4)', text: `R3：${RISK.R3.meaning}R4：${RISK.R4.meaning}没有任何数字员工的自主上限达到这两级；R4 在代码结构上没有自动化路径，每一次尝试都会被记录。` },
-    ],
-    introLabel: '(先说清楚)',
-    intro: `注册表里没有人名。员工注册表的 288 条记录全部按职能命名——fp.stargo-inquiry-handler、fp.stargo-quotation——其中 273 条是从第三方 MIT 仓库导入的角色，15 条是 STARGO 自有职能角色。下面这 ${AGENTS.length} 个名字是网站的呈现层：${backed} 位背后有真实角色记录，1 位由能力提供方支撑，${roadmap.length} 位没有任何落地，标为路线图且不持有任何可执行动作。`,
-    approachLabel: '(每一位都这样工作)',
-    approach: ['先注册。', '再编排。', '后审批。', '留台账。'],
-    approachButton: { label: '查看治理与安全', href: 'governance.html' },
-    statsLabel: '(数字)',
-    stats: [
-      { value: String(AGENTS.length), text: '个岗位。名字是呈现层；职责、获授权的动作范围与自主上限来自注册表，不是编辑判断。' },
-      { value: String(backed), text: '位有注册表角色记录支撑（fp.* 自有职能角色）。自主上限取该角色所拥有的可执行步骤中最高的风险等级。' },
-      { value: String(roadmap.length), text: `位没有任何落地支撑：${roadmap.map((a) => a.role).join('、')}。全仓库检索不到对应角色，标为路线图，不持有可执行动作。` },
-    ],
-    quote: QUOTES.approval,
-    cards: {
-      title: '五个业务域',
-      items: [
-        { name: '销售', role: `(${byDomain('sales').length} 位 · ${names('sales')})` },
-        { name: '增长', role: `(${byDomain('growth').length} 位 · ${names('growth')})` },
-        { name: '外贸履约', role: `(${byDomain('trade-ops').length} 位 · ${names('trade-ops')})` },
-        { name: '创意', role: `(${byDomain('create').length} 位 · ${names('create')})` },
-        { name: '售后', role: `(${byDomain('retention').length} 位 · ${names('retention')})` },
-      ],
-      noteLabel: '(关于头像)',
-      note: '图片是模板自带的示意，不对应任何真人，也不对应任何数字员工。数字员工由职能命名，注册表中不含人名与头像。',
-      button: { label: '看一条询盘怎么走', href: 'tour.html' },
-    },
-    table: {
-      id: 'roster', caption: '(岗位清单)', title: '岗位', total: AGENTS.length,
-      button: { label: '查看能力全景', href: 'capabilities.html' },
-      headers: ['(岗位)', '(支撑角色)', '(自主上限)'],
-      rows: AGENTS.map((a) => [
-        `${a.name} · ${escapeHtml(a.role)}`,
-        a.backingRole ? a.backingRole : a.backedByProvider ? `能力提供方 ${a.backedByProvider}（无角色记录）` : '路线图 · 无可执行动作',
-        a.autonomyCeiling ? tier(a.autonomyCeiling) : '—',
-      ]),
-    },
-  });
-};
-
-/* ---- governance.html — from studio.html ------------------------------- */
-PAGES['governance.html'] = () => {
-  const TESTS = [
-    ['审批与读写分离', 'test-approval-and-readwrite-split', '审批经独立通道路由，失败即关闭；模型自己写下的「已批准」标记是废弃的空操作，从不被读取'],
-    ['审计台账', 'test-audit-ledger', '台账只追加；台账不可写时只有 R0 只读动作可以继续'],
-    ['黄金旅程覆盖', 'test-golden-journey-coverage', '每个工作流步骤都解析到一条已启用的注册表行；每个对外写入都声明回读与成功判据，或诚实地声明没有'],
-    ['运营本体', 'test-ontology', 'SQLite 运营本体，PROV-O 对齐，双时态'],
-    ['R4 结构性禁止', 'test-r4-structural', 'R4 在结构上禁止自动化，每一次尝试都入台账'],
-  ];
-  const gated = FACTS.facts.find((f) => f.value === '30');
-  return fromStudio({
-    name: 'governance',
-    eyebrow: '(治理与安全)',
-    h1: '问不到人时，系统拒绝执行。',
-    story: [
-      { label: '(审批)', text: '审批不可绕过。对外产生真实后果的动作必须先取得成对的人工审批事件；审批经由独立的审批通道路由，通道不可用时动作被拒绝，而不是放行。模型自己写下的「已批准」标记是废弃的空操作，从不被读取。有可执行测试守着这一条。' },
-      { label: '(台账)', text: '台账只追加。每一次执行的开始、结束、结果与证据都写入不可修改的台账，可以逐条回读；台账不可写时，只有 R0 只读动作可以继续。有可执行测试守着这一条。' },
-      { label: '(禁止)', text: 'R4 结构性禁止自动执行。最高风险等级的动作在代码结构上没有自动化路径——不是一个可以改的策略开关——每一次尝试都会被记录。有可执行测试守着这一条。' },
-      { label: '(回读)', text: '回读才算完成。每一个对外写入都必须声明回读与成功判据，或诚实地声明没有；没有回读证据，动作不计为成功。有可执行测试守着这一条。' },
-    ],
-    introLabel: '(这些测试证明什么)',
-    intro: `五套可执行测试，${CHECKED} 全部通过。它们证明的是治理属性——审批不可绕过、台账只追加、R4 禁止自动化、回读才算完成——不是某项业务能力在客户环境里跑通过。这也是为什么能力全景里没有一项标为「已上线」。`,
-    approachLabel: '(五个风险等级)',
-    approach: [`R0 ${RISK.R0.label}。`, `R1 ${RISK.R1.label}。`, `R2 / R3 ${RISK.R2.label}。`, `R4 ${RISK.R4.label}。`],
-    approachButton: { label: '看一条询盘怎么走', href: 'tour.html' },
-    statsLabel: '(数字)',
-    stats: [
-      { value: String(TESTS.length), text: '套可执行治理测试：审批与读写分离、审计台账、黄金旅程覆盖、运营本体、R4 结构性禁止。' },
-      { value: gated.value, text: `个已登记动作强制人工审批。注册表数字，可用 ${escapeHtml(gated.verify.split(' first-party')[0])} 重新推导。` },
-      { value: '0', text: '项能力标为「已上线」。那个标签要求客户生产环境的运行证据；目前的上限是「演示验证」。' },
-    ],
-    quote: QUOTES.readback,
-    cards: {
-      title: '五套测试',
-      items: TESTS.map(([name, file], i) => ({ name, role: `(${file})`, image: ABSTRACT[i] })),
-      noteLabel: '(它们在哪里)',
-      note: '五套测试都在产品仓库的 tests/governance/ 目录下，任何人拿到仓库都可以重新运行。网站上的每一条治理声明都对应其中一套。',
-      button: { label: '预约诊断', href: 'contact.html' },
-    },
-    table: {
-      id: 'tests', caption: '(可执行测试)', title: '测试清单', total: TESTS.length,
-      button: { label: '查看集成状态', href: 'integrations.html' },
-      headers: ['(测试)', '(它证明什么)', '(结果)'],
-      rows: TESTS.map(([name, file, proves]) => [`${name}<br/><span class="top-text gray-small">tests/governance/${file}.mjs</span>`, proves, `通过 · ${CHECKED}`]),
-    },
-  });
-};
-
-/* ---- integrations.html — from studio.html ----------------------------- */
-PAGES['integrations.html'] = () => {
-  const total = INTEGRATIONS.reduce((n, i) => n + i.capabilities, 0);
-  const off = INTEGRATIONS.reduce((n, i) => n + i.disabled, 0);
-  const gated = INTEGRATIONS.reduce((n, i) => n + i.approvalGated, 0);
-  const allOff = INTEGRATIONS.filter((i) => i.disabled === i.capabilities);
-  const mostlyOff = INTEGRATIONS.filter((i) => i.disabled > 0 && i.disabled < i.capabilities && i.disabled / i.capabilities >= 0.5);
-  const spotlight = [...allOff.filter((i) => i.capabilities > 1), ...mostlyOff].slice(0, 5);
-  if (spotlight.length !== 5) throw new Error(`integrations: expected 5 spotlight providers, got ${spotlight.length}`);
-  const orchestrator = INTEGRATIONS.find((i) => i.id === 'activepieces');
-  const f = (v) => FACTS.facts.find((x) => x.value === v);
-  return fromStudio({
-    name: 'integrations',
-    eyebrow: `(能力接入 · 注册表核对于 ${CHECKED})`,
-    h1: `${INTEGRATIONS.length} 个提供方。`,
-    story: [
-      { label: '(登记)', text: `${INTEGRATIONS.length} 个提供方登记了 ${total} 项能力。这些是注册表数字：说明登记了什么，不说明什么现在能跑。每个数字都附带重新推导它的命令。` },
-      { label: '(关闭)', text: `${off} 项能力当前关闭。${allOff.map((i) => `${i.upstream} ${i.disabled}/${i.capabilities}`).join('、')} 全部关闭；${mostlyOff.map((i) => `${i.upstream} ${i.capabilities} 项中 ${i.disabled} 项关闭`).join('、')}。它们出现在清单里，是为了让你在试点之前就知道，而不是在试点中发现。` },
-      { label: '(审批)', text: `${gated} 个动作需要人工审批，其中 ${orchestrator.approvalGated} 个集中在 ${orchestrator.upstream}——唯一的主业务编排器——因为所有对外发出的动作都从那里走。` },
-      { label: '(上游)', text: '上游名字不隐藏。Chatwoot、Twenty CRM、Yente / OpenSanctions、WeKnora……品牌政策要求上游身份始终可查，即使导航用的是 STARGO 的名字。它们在这里出现不表示背书。' },
-    ],
-    introLabel: '(为什么有这一页)',
-    intro: `一张常规的集成页会放 ${INTEGRATIONS.length} 个 logo，暗示 ${INTEGRATIONS.length} 条能用的连接。这一页写的是哪些今天真的能用——因为在试点中发现差异的买家，不会把它当成细节。`,
-    approachLabel: '(接入规则)',
-    approach: ['先注册。', '后调用。', '关了就是关了。', '审批不可绕过。'],
-    approachButton: { label: '查看能力全景', href: 'capabilities.html' },
-    statsLabel: '(数字 · 附推导命令)',
-    stats: [
-      { value: f('202').value, text: `项登记能力。<br/>${escapeHtml(f('202').verify.split(' first-party')[0])}` },
-      { value: String(off), text: '项当前关闭。登记不等于可用。' },
-      { value: f('30').value, text: `个动作需人工审批。<br/>${escapeHtml(f('30').verify.split(' first-party')[0])}` },
-    ],
-    quote: QUOTES.ledger,
-    cards: {
-      title: '当前全部或大部分关闭',
-      items: spotlight.map((i, k) => ({ name: i.upstream, role: `(${i.disabled}/${i.capabilities} 关闭${i.defaultOffProfile ? ' · 默认关闭配置' : ''})`, image: ABSTRACT[k] })),
-      noteLabel: '(说明)',
-      note: '它们已接线但默认关闭，位于需要显式开启的部署配置之后。启用之前不视为可用，页面上也不会写成可用。',
-      button: { label: '预约诊断', href: 'contact.html' },
-    },
-    table: {
-      id: 'providers', caption: '(提供方清单)', title: '提供方', total: INTEGRATIONS.length,
-      button: { label: '查看治理与安全', href: 'governance.html' },
-      headers: ['(提供方)', '(用途)', '(能力 · 关闭 · 需审批)'],
-      rows: INTEGRATIONS.map((i) => [escapeHtml(i.upstream), escapeHtml(i.purpose), `${i.capabilities} · ${i.disabled} · ${i.approvalGated}`]),
-    },
-  });
-};
-
-/* ---- tour.html — from project_forma-digital.html ---------------------- */
-PAGES['tour.html'] = () => {
-  const { fn: s } = makeSub('tour');
-  let h = tpl('project_forma-digital.html');
-  const actor = (id) => AGENTS.find((a) => a.id === id);
-  const auto = TOUR.steps.filter((st) => st.outcome !== 'gated').length;
-  const gated = TOUR.steps.length - auto;
-
-  h = s(h, '>Forma Digital</h1>', '>一条询盘，十步。</h1>');
-  h = s(h, '(Introduction)', '(互动产品演示 · 演示数据)');
-  h = setInner(h, '<p class="top-text big for-inr">', escapeHtml(TOUR.disclaimer));
-  h = s(h, '(Challenges)', '(目标)');
-  h = setEachInner(h, '<h2 class="h2 _01 wkp">', [escapeHtml(TOUR.goal), escapeHtml(TOUR.closing)]);
-  h = s(h, '(Client)', '(演示买家)');
-  h = s(h, '<p class="top-text">Forma Digital</p>', '<p class="top-text">Moto Verde Distribuidora（演示虚构）</p>');
-  h = s(h, '(Data)', '(步骤)');
-  h = s(h, '<p class="top-text">©</p>', '<p class="top-text"></p>', { nth: 0 });
-  h = s(h, '<p class="top-text">26</p>', `<p class="top-text">${TOUR.steps.length} 步 · ${auto} 步自动 · ${gated} 步停在审批</p>`, { count: 1 });
-  h = s(h, '(Services)', '(闭环)');
-  h = s(h, '>Strategy, Concept<', '>WF02 · 询盘响应<');
-  h = s(h, '(Final thoughts)', '(这是设计，不是限制)');
-  h = setLink(h, 'Live Project', { href: 'contact.html', text: '预约企业 AI 诊断' });
-
-  // Related works → two onward links.
-  h = s(h, '(Portfolio 23-26©)', '(接下来)');
-  h = s(h, '>Related Works<', '>继续看<');
-  h = s(h, '>Bold Moves<', '>治理与安全<');
-  h = s(h, '>Nero Vision<', '>数字员工<');
-  h = s(h, 'href="project_bold-moves.html"', 'href="governance.html"');
-  h = s(h, 'href="project_nero-vision.html"', 'href="workforce.html"');
-  h = s(h, '<p class="top-text">24</p>', '<p class="top-text">5 套测试</p>');
-  h = s(h, '<p class="top-text">25</p>', `<p class="top-text">${AGENTS.length} 位</p>`);
-  h = s(h, '<p class="top-text">©</p>', '<p class="top-text"></p>', { count: 2 });
-
-  // The ten steps, with real risk tier and gate, before the onward links.
-  const table = awardsTable({
-    id: 'steps', caption: '(WF02 · 逐步逐闸)', title: '十步', total: TOUR.steps.length,
-    button: { label: '查看治理与安全', href: 'governance.html' },
-    headers: ['(步骤)', '(动作 · 执行者)', '(风险 · 闸门)'],
-    rows: TOUR.steps.map((st) => [
-      String(st.n).padStart(2, '0'),
-      `${escapeHtml(st.title)} · ${actor(st.actorId).name} ${escapeHtml(actor(st.actorId).role)}<br/><span class="top-text gray-small">${escapeHtml(st.detail)}</span>`,
-      st.outcome === 'gated' ? `${st.risk} · 停在人工审批` : st.outcome === 'writes' ? `${st.risk} · 内部写入，带回读` : `${st.risk} · 只读`,
-    ]),
-  });
-  const anchor = '<section class="section gr mns-wp">';
-  h = s(h, anchor, `${table}\n${anchor}`, { count: 1 });
-  return h;
-};
-
-/* ---- contact.html — from contact_contact-1.html ----------------------- */
-PAGES['contact.html'] = () => {
+/* ---- contact.html ----------------------------------------------------- */
+PAGES['contact.html'] = (lang) => {
+  const t = (p) => (typeof p === 'string' ? p : p[lang]);
+  const K = C.CONTACT;
   const { fn: s } = makeSub('contact');
   let h = tpl('contact_contact-1.html');
-  h = s(h, '(Contact)', '(联系)');
-  h = s(h, 'Let’s Connect', '预约企业 AI 诊断');
-  // The testimonial card: a five-star quote from an invented founder. Replaced with the governing document.
+  h = s(h, '(Contact)', t(K.eyebrow));
+  h = s(h, 'Let’s Connect', t(K.h1));
   h = h.replace(/<img[^>]*class="logo-testi-1"[^>]*\/>/, '');
-  if (h.includes('logo-testi-1')) throw new Error('contact: fake client logo survives');
   h = s(h, '>★★★★★<', '><');
-  h = s(h, '“Their ability to listen, challenge assumptions, and translate ideas into a clean digital system.”', QUOTES.approval.text);
-  h = s(h, '>Joda Trump<br/>', `>${QUOTES.approval.who}<br/>`);
-  h = s(h, '>Founder of Light Studio®<br/>', `>${QUOTES.approval.where}<br/>`);
-  h = s(h, '(Fill the form)', '(填写表单)');
-  h = s(h, '>Name*<', '>姓名*<');
-  h = s(h, '>Email*<', '>邮箱*<');
-  h = s(h, '>Subject<', '>公司<');
-  h = s(h, '>Category<', '>需求<');
-  h = s(h, '>Message<', '>留言<');
-  h = s(h, '>Select one...<', '>请选择…<');
-  h = s(h, '>First choice<', '>企业 AI 诊断<');
-  h = s(h, '>Second choice<', '>受控试点<');
-  h = s(h, '>Third choice<', '>其他咨询<');
+  h = s(h, '“Their ability to listen, challenge assumptions, and translate ideas into a clean digital system.”', t(K.quote));
+  h = s(h, '>Joda Trump<br/>', `>${t(K.quoteWho)}<br/>`);
+  h = s(h, '>Founder of Light\u00a0Studio®<br/>', `>${t(K.quoteWhere)}<br/>`);
+  h = s(h, '(Fill the form)', t(K.formLabel));
+  h = s(h, '>Name*<', `>${t(K.fields.name)}<`);
+  h = s(h, '>Email*<', `>${t(K.fields.email)}<`);
+  h = s(h, '>Subject<', `>${t(K.fields.company)}<`);
+  h = s(h, '>Category<', `>${t(K.fields.category)}<`);
+  h = s(h, '>Message<', `>${t(K.fields.message)}<`);
+  h = s(h, '>Select one...<', `>${t(K.selectPlaceholder)}<`);
+  // twelve workflow entry points instead of the template's three options
+  h = h.replace(/<option value="First">First choice<\/option><option value="Second">Second choice<\/option><option value="Third">Third choice<\/option>/,
+    K.options.map((o, i) => `<option value="${i + 1}">${t(o)}</option>`).join(''));
+  if (h.includes('First choice')) throw new Error('contact: select options');
+  // five more fields, cloned from the company field
+  const field = (id, label) => `<div><label for="${id}" class="field-name">${label}</label><input class="text-field-2 w-input" maxlength="256" name="${id}" data-name="${id}" placeholder="" type="text" id="${id}"/></div>`;
+  const extra = `<div class="grid-form _01">${field('whatsapp', t(K.fields.whatsapp))}${field('industry', t(K.fields.industry))}</div><div class="grid-form _01">${field('markets', t(K.fields.markets))}${field('team', t(K.fields.team))}</div><div class="grid-form _01">${field('systems', t(K.fields.systems))}<div></div></div>`;
+  const msgAt = h.indexOf('<label for="field-2"');
+  if (msgAt === -1) throw new Error('contact: message field');
+  const blockStart = h.lastIndexOf('<div>', msgAt);
+  h = h.slice(0, blockStart) + extra + h.slice(blockStart);
+  h = h.replace(/value="Contact Us"/, `value="${t(K.submit)}"`);
   return h;
 };
 
-/* ---- notices.html — from a blog post ---------------------------------- */
-PAGES['notices.html'] = () => {
+/* ---- notices.html ----------------------------------------------------- */
+PAGES['notices.html'] = (lang) => {
+  const t = (p) => (typeof p === 'string' ? p : p[lang]);
+  const N = C.NOTICES;
   const { fn: s } = makeSub('notices');
   let h = tpl('post_designing-digital-systems-that-scale-with-your-business.html');
-  h = s(h, 'October 4, 2025', '2026-09-03 更新');
-  h = s(h, '>Designing digital systems that scale your business<', '>第三方声明<');
-  const body = `
-<h4>网站模板</h4>
-<p>本站版式来自两套 Webflow 模板：Mōno™（页面骨架、导航、页脚）与 Scalora Startup（首页的四层卡片堆、粘性切换器与能力接入三个模块）。两套模板均按 Webflow 模板许可使用，其原有文案已全部替换；模板附带的示例图片仅作版式示意，不代表任何真实客户、人物、产品或界面截图。</p>
-<h4>运行时库</h4>
-<ul>
-<li>Webflow 运行时与交互引擎（随模板导出），jQuery 3.5.1（MIT）</li>
-<li>GSAP 3.15 · SplitText · ScrollTrigger — GreenSock 标准「免费」许可。该许可允许网站实现（含商业用途），但许可方保留全部知识产权并可修改条款；因此本站的内容与控件都不依赖它才能工作</li>
-<li>Lenis（MIT）— 平滑滚动</li>
-<li>Lottie（随 Webflow 运行时加载，MIT）— 导航图标动画</li>
-</ul>
-<h4>字体</h4>
-<p>Inter、Inter Display 与 Instrument Serif，均按 SIL Open Font License 1.1 自托管，不向任何第三方字体服务发起请求。</p>
-<h4>上游软件</h4>
-<p>站内提到的 Activepieces、Chatwoot、Twenty CRM、Yente / OpenSanctions、WeKnora、Firecrawl、Playwright、Univer、Windmill、ERPNext、Medusa、PostHog、Puter 等名称，均为各自所有者的商标或项目名。STARGO 的品牌政策要求上游身份始终可查，它们在本站出现是为了这一点，不表示相关项目对 STARGO 的背书。</p>
-<h4>员工注册表中的导入角色</h4>
-<p>产品的员工注册表含 288 条记录，其中 273 条角色自第三方 MIT 许可仓库导入，15 条为 STARGO 自有职能角色。导入角色所引用的 LICENSE 文件在当前检出中缺失，发布前需补全归属——这是业主待办事项，此处如实记录。</p>
-<h4>STARGO 自有资产</h4>
-<p>STARGO 标识、字标与轨道图形为 STARGO 自有作品。四角星标沿用产品端已发布的品牌资源，该资源自身记录了它是原创绘制、并非任何上游标识的衍生或修改。</p>
-<h4>本页没有的东西</h4>
-<p>本站不展示任何客户标识、评价或指标，不展示价格，不声明任何认证、可用性或投资回报。这些不是遗漏：仓库里没有可公开的对应证据，所以页面上也没有。</p>`;
-  h = setInner(h, '<div class="w-richtext">', body.trim());
-  h = setLink(h, 'Back to blog', { href: 'index.html', text: '返回首页' });
-
-  // "Related stories" → three onward pages, on the template's product-shot cards.
-  h = s(h, '>Related Stories<', '>继续看<');
-  h = s(h, 'From foundational design to advanced optimization — built for digital growth.', '每一页都只写仓库里能找到证据的东西。');
+  h = s(h, 'October 4, 2025', t(N.date));
+  h = s(h, '>Designing digital systems that scale your business<', `>${t(N.h1)}<`);
+  h = setInner(h, '<div class="w-richtext">', t(N.body).trim());
+  h = setLink(h, 'Back to blog', { href: 'index.html', text: t(N.back) });
+  h = s(h, '>Related Stories<', `>${t(N.relatedTitle)}<`);
+  h = s(h, 'From foundational design to advanced optimization — built for digital growth.', t(N.relatedIntro));
   const cards = [
-    ['November 11, 2025', 'The power of simplicity in modern real brand design', 'Learn effective social media marketing tips to engage your audience and build brand loyalty.', 'post_the-power-of-simplicity-in-modern-brand-design.html',
-      `(${CAPS.length} 项)`, '能力全景', '每一项能力的真实状态与核对日期。', 'capabilities.html'],
-    ['October 1, 2025', 'From idea to execution: building products that last', 'An overview of Content Management Systems, their benefits, and popular platforms.', 'post_from-idea-to-execution-building-products-that-last.html',
-      `(${AGENTS.length} 位)`, '数字员工', '谁有注册表角色支撑，谁还只是路线图。', 'workforce.html'],
-    ['October 3, 2026', 'Why great brands are built on clarity, not complexity', 'Discover the latest SEO strategies for 2023 to enhance your website&#x27;s visibility and performance.', 'post_why-great-brands-are-built-on-clarity-not-complexity.html',
-      `(${TOUR.steps.length} 步)`, '产品演示', '一条询盘走完 WF02，三步停在人工审批。', 'tour.html'],
+    ['November 11, 2025', 'The power of simplicity in modern real brand design', 'Learn effective social media marketing tips to engage your audience and build brand loyalty.', 'post_the-power-of-simplicity-in-modern-brand-design.html'],
+    ['October 1, 2025', 'From idea to execution: building products that last', 'An overview of Content Management Systems, their benefits, and popular platforms.', 'post_from-idea-to-execution-building-products-that-last.html'],
+    ['October 3, 2026', 'Why great brands are built on clarity, not complexity', 'Discover the latest SEO strategies for 2023 to enhance your website&#x27;s visibility and performance.', 'post_why-great-brands-are-built-on-clarity-not-complexity.html'],
   ];
-  for (const [d, t, p, href, d2, t2, p2, href2] of cards) {
-    h = s(h, `>${d}<`, `>${d2}<`, { count: 1 });
-    h = s(h, `>${t}<`, `>${t2}<`, { count: 1 });
-    h = s(h, `>${p}<`, `>${p2}<`, { count: 1 });
-    h = s(h, `href="${href}"`, `href="${href2}"`, { count: 1 });
-  }
-  h = s(h, '>Read more<', '>查看<', { count: 4 });   // three cards plus the cursor tooltip
+  cards.forEach(([d, ti, p, href], i) => {
+    const r = N.related[i];
+    h = s(h, `>${d}<`, `>${t(r.tag)}<`, { count: 1 });
+    h = s(h, `>${ti}<`, `>${t(r.title)}<`, { count: 1 });
+    h = s(h, `>${p}<`, `>${t(r.desc)}<`, { count: 1 });
+    h = s(h, `href="${href}"`, `href="${r.href}"`, { count: 1 });
+  });
+  h = s(h, '>Read more<', `>${t(N.view)}<`, { count: 4 });
   return h;
 };
 
-/* ---- 404.html ---------------------------------------------------------- */
-PAGES['404.html'] = () => {
+/* ---- 404.html --------------------------------------------------------- */
+PAGES['404.html'] = (lang) => {
+  const t = (p) => p[lang];
   const { fn: s } = makeSub('404');
   let h = tpl('404.html');
-  h = s(h, '>404 Error Page<', '>404<');
-  h = s(h, 'The page you are looking for doesn&#x27;t exist or has been moved', '这个页面不存在，或者已经移动。');
-  h = setLink(h, 'Back Home', { href: 'index.html', text: '回到首页' });
-  return h;
-};
-
-/* ---- index.html — the fused homepage, chrome and cleanup only ---------- */
-PAGES['index.html'] = () => {
-  let h = readFileSync(`${SITE}/tools/fragments/index.fused.html`, 'utf8');
-  // Eight invented partner logos on flip cards. Deleted, not hidden.
-  const grid = elementContaining(h, 'class="partner-grid"', 'div', { up: 1 });
-  if (!grid.text.startsWith('<div class="margin-50">')) throw new Error('index: partner grid wrapper');
-  h = h.slice(0, grid.start) + h.slice(grid.end);
-  if (h.includes('partner-card')) throw new Error('index: partner cards survive');
+  h = s(h, '>404 Error Page<', `>${t(C.NOT_FOUND.title)}<`);
+  h = s(h, 'The page you are looking for doesn&#x27;t exist or has been moved', t(C.NOT_FOUND.text));
+  h = setLink(h, 'Back Home', { href: 'index.html', text: t(C.NOT_FOUND.back) });
   return h;
 };
 
 /* ================================================================== main */
 
-const META = {
-  'index.html': { title: 'STARGO WORK 7.0', description: FACTS.category + '。' + FACTS.contrast },
-  'capabilities.html': { title: '能力全景', description: `E01–E52 全部 ${CAPS.length} 项能力与各自的真实状态。` },
-  'workforce.html': { title: '数字员工', description: `${AGENTS.length} 个岗位：职责、授权范围与自主上限；哪些有注册表角色支撑，哪些还只是路线图。` },
-  'governance.html': { title: '治理与安全', description: '风险分级、审批闸门、回读与台账，以及守着它们的五套可执行测试。' },
-  'integrations.html': { title: '集成', description: `${INTEGRATIONS.length} 个能力提供方，以及其中哪些现在真的能用。` },
-  'tour.html': { title: '产品演示', description: '一条询盘走完 WF02 十步真实业务闭环，含每一步的风险等级与审批闸门。演示数据。' },
-  'contact.html': { title: '联系', description: '预约企业 AI 诊断。' },
-  'notices.html': { title: '第三方声明', description: '模板、运行时库、字体与上游软件的许可与署名。' },
-  '404.html': { title: '404', description: '页面不存在。' },
-};
-
 const FORBIDDEN = [
-  /Mōno/, /monostudio/i, /Scalora/, /Awwwards/, /Webby/, /Lorem/i, /cal\.com/,
-  /\$\s?\d/, /¥\s?\d/, /\/mo\b/, /per seat/i, /起\s*$/m,
-  /Forma Digital/, /Nero Vision/, /One Step/, /Bold Moves/, /Auralis/, /Light[\s ]Studio/, /Joda Trump/,
-  /partner-card/, /Elena Rossi/, /Adrian Keller/,
+  /Mōno™ Studio/, /monostudio/i, /Awwwards/, /Lorem/i, /cal\.com/, /Tomato Store/, /Market Play/,
+  /Forma Digital/, /Nero Vision/, /One Step/, /Bold Moves/, /Auralis/, /Light[\s\u00a0]Studio/, /Joda Trump/, /Elena Rossi/, /Adrian Keller/, /Camila Verga/,
+  /\$\s?\d/, /logoipsum/i,
 ];
-const ALLOWED_TEMPLATE_NAMES = { 'notices.html': [/Mōno/, /Scalora/] };   // attribution names them on purpose
+const ALLOWED = { 'notices.html': [/Mōno™ Studio/] };
 
+mkdirSync(`${SITE}/en`, { recursive: true });
 const written = [];
-for (const [name, build] of Object.entries(PAGES)) {
-  let html = build();
-  html = applyChrome(html, { current: name, ...META[name] });
-  html = remapLinks(html);
-  assertInternalLinks(html, name);
-  const body = html.slice(html.indexOf('<body'));
-  for (const re of FORBIDDEN) {
-    if ((ALLOWED_TEMPLATE_NAMES[name] ?? []).some((ok) => ok.source === re.source)) continue;
-    if (re.test(body)) throw new Error(`[${name}] forbidden content: ${re}`);
+for (const lang of C.LANGS) {
+  for (const [name, build] of Object.entries(PAGES)) {
+    let html = build(lang);
+    html = applyChrome(html, { lang, current: name });
+    html = remapLinks(html);
+    assertInternalLinks(html, `${lang}/${name}`);
+    const body = html.slice(html.indexOf('<body'));
+    for (const re of FORBIDDEN) {
+      if ((ALLOWED[name] ?? []).some((ok) => ok.source === re.source)) continue;
+      if (re.test(body)) throw new Error(`[${lang}/${name}] forbidden content: ${re}`);
+    }
+    for (const m of html.matchAll(/(?:src|href|data-src|data-poster-url|poster)="(assets\/[^"]+)"/g)) {
+      const rel = decodeURIComponent(m[1]).split('?')[0];
+      if (!existsSync(`${SITE}/${rel}`) && !existsSync(`${SITE}/${m[1]}`)) throw new Error(`[${lang}/${name}] missing asset: ${m[1]}`);
+    }
+    if (lang === 'en') html = relocateAssets(html);
+    const out = lang === 'zh' ? `${SITE}/${name}` : `${SITE}/en/${name}`;
+    writeFileSync(out, html, 'utf8');
+    written.push(`${lang}/${name}`);
   }
-  writeFileSync(`${SITE}/${name}`, html, 'utf8');
-  written.push(`${name} (${html.length})`);
 }
-console.log('wrote', written.join(', '));
+console.log(`wrote ${written.length} pages: ${written.join(', ')}`);
