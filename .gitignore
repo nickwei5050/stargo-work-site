@@ -1,1 +1,4 @@
-tools/fragments/index.fused.html
+nohup.out
+*.log
+.DS_Store
+Thumbs.db
