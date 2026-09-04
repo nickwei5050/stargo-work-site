@@ -38,3 +38,21 @@ Serve the folder with any static server (for example `python -m http.server 4200
 - No request leaves the origin: fonts, images and videos are all under `assets/` and `css/`.
 - Every internal link resolves to a page the build produces.
 - No template brand, invented client, placeholder price in dollars, or `cal.com` link survives into a page.
+
+## Deploy (Cloudflare Pages, project `stargo`)
+
+```bash
+node tools/make-dist.mjs
+node "F:/stargo 网站/stargo-work-website/node_modules/wrangler/bin/wrangler.js" pages deploy dist --project-name stargo --branch main --commit-dirty=true
+```
+
+Production URL: https://stargo.pages.dev (English at https://stargo.pages.dev/en/).
+Pages serves clean URLs, so `/pricing.html` redirects to `/pricing`.
+
+Run the deploy with the local proxy variables unset (`HTTP_PROXY`, `HTTPS_PROXY`,
+`ALL_PROXY`): through the proxy the upload API times out; a direct connection
+uploads all 917 files in a couple of minutes. Login once with
+`… wrangler.js login` (a browser window asks for authorisation; it waits two
+minutes). `*.pages.dev` is generally unreachable from mainland China; bind a
+domain you own (for example `work.stargomoto.com`) under the project's
+Custom domains for a stable address.
