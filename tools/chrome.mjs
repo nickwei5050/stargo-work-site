@@ -160,6 +160,11 @@ function scripts(html) {
     out = out.replace(/(<link href="css\/monof-template\.app\.shared\.[a-f0-9]+\.css" rel="stylesheet" type="text\/css"\/>)/, '$1\n<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>');
     if (!out.includes('css/stargo-fusion.css')) throw new Error('chrome: could not attach stargo-fusion.css');
   }
+  // Chinese word segmentation for SplitText; must sit between SplitText and the engine's DOM-ready run.
+  if (!out.includes('js/stargo-splittext-cjk.js')) {
+    out = out.replace('<script src="js/SplitText.min.js" type="text/javascript"></script>', '<script src="js/SplitText.min.js" type="text/javascript"></script><script src="js/stargo-splittext-cjk.js"></script>');
+    if (!out.includes('js/stargo-splittext-cjk.js')) throw new Error('chrome: SplitText script tag not found');
+  }
   if (!out.includes('js/stargo-forms.js')) out = out.replace('</body>', '<script src="js/stargo-forms.js"></script></body>');
   if (!out.includes('js/stargo-tabs.js')) out = out.replace('</body>', '<script src="js/stargo-tabs.js"></script></body>');
   out = out.replace(
