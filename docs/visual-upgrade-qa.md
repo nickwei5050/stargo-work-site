@@ -1,6 +1,6 @@
 # STARGO WORK · 图片与交互升级验收
 
-日期：2026-09-05。以下为本轮实际执行的本地验证；线上发布检查另以发布记录为准。范围：内容视觉替换、视频恢复、切换可靠性及生产适配，不冒充战略重做或无障碍认证。
+日期：2026-09-05。以下为本轮实际执行的本地及发布验证。范围：内容视觉替换、视频恢复、切换可靠性及生产适配，不冒充战略重做或无障碍认证。
 
 ## 发现与修正
 
@@ -51,6 +51,16 @@ node tools/verify-site.mjs
 - 实际提示词及输出来源：tools/imagegen/generated-sources.json；尺寸/原稿哈希：assets-manifest.json。
 - 视频来源：assets/stargo-motion/SOURCE.md；保留模板来源说明，不冒充独立验证授权。
 - 保留品牌标识、渠道 Logo、功能图标及装饰/动画资源。双语声明及非装饰 alt 标明 AI 概念视觉，不冒充真实产品、员工或客户。
+
+## 线上发布验证
+
+- 网站版本：1351a61；Cloudflare Pages 部署：107581fd；正式站 https://stargo.pages.dev/。
+- 151/151 文件 SHA-256 与验收目录一致：22 页、43 主图加 80 响应式文件、视频/海报和 4 个样式/运行时文件。
+- 6/6 线上浏览器场景通过：中英首页在 390/1440 宽的首屏、手机菜单/Escape、桌面四项点击、视频播放/暂停；中英能力页手机视口的四组配图职责匹配。
+- 不存在的路径正确返回 404。线上首页复测未发现 JS 错误或资源 HTTP 错误。
+- 初次资源比对遇到代理 TLS 中断；检查脚本仅对传输中断做有限重试，不忽略 HTTP 状态或哈希不匹配。最终完整重跑通过。
+- 复跑：设置 BASE_URL 和可选 BROWSER_PROXY 后运行 node tools/verify-release.mjs。证据：.wrangler/release-qa/report.json 及同目录截图。
+- 另以只读方式检查 Pages production secrets，未配置任何 secret；因此邮件投递所需 RESEND_API_KEY 仍确实缺失。
 
 ## 外部依赖与未认证事项
 

@@ -14,17 +14,30 @@ const hash = b => createHash('sha256').update(b).digest('hex');
 const queue = [...files], checked = [];
 const OUT = '.wrangler/release-qa';
 mkdirSync(OUT, { recursive: true });
+let transportRetries = 0;
+async function get(path, options) {
+  for (let attempt = 0; ; attempt++) {
+    try { return await api.get(path, options); }
+    catch (e) {
+      // Retry transport interruptions only. HTTP or hash failures still fail.
+      if (attempt === 3 || !/socket|TLS|ECONNRESET|ETIMEDOUT|Timeout/i.test(e.message)) throw e;
+      transportRetries++;
+      await new Promise(resolve => setTimeout(resolve, 500 * (attempt + 1)));
+    }
+  }
+}
 async function verifyFiles() {
   while (queue.length) {
     const file = queue.shift();
-    const response = await api.get('/' + file, { headers: { 'Cache-Control': 'no-cache' } });
+    const response = await get('/' + file, { headers: { 'Cache-Control': 'no-cache' } });
     assert.equal(response.status(), 200, file);
     assert.equal(hash(await response.body()), hash(readFileSync(file)), `deployed bytes differ: ${file}`);
     checked.push(file);
+    if (checked.length % 25 === 0) console.log(`Verified ${checked.length}/${files.length} deployed file hashes`);
   }
 }
 await Promise.all([verifyFiles(), verifyFiles(), verifyFiles(), verifyFiles()]);
-assert.equal((await api.get('/__stargo_qa_missing_page__')).status(), 404, 'custom missing route');
+assert.equal((await get('/__stargo_qa_missing_page__')).status(), 404, 'custom missing route');
 console.log(`PASS deployed bytes: ${pages.length} pages, 123 image files, video/poster and 4 runtimes; custom route 404`);
 await api.dispose();
 const browser = await chromium.launch({ proxy });
@@ -82,5 +95,5 @@ try {
     await page.close();
   }
 } finally { await browser.close(); }
-writeFileSync(`${OUT}/report.json`, JSON.stringify({ base: BASE, checkedAt: new Date().toISOString(), byteMatches: checked.length, scenarios }, null, 2));
+writeFileSync(`${OUT}/report.json`, JSON.stringify({ base: BASE, checkedAt: new Date().toISOString(), byteMatches: checked.length, transportRetries, scenarios }, null, 2));
 console.log(`PASS release: ${checked.length} matching files, ${scenarios.length} browser scenarios`);

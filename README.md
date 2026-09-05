@@ -27,6 +27,7 @@ node tools/verify-site.mjs           # loads every page in Chromium: JS errors, 
 node tools/verify-visual-upgrade.mjs # bilingual 390/768/1440/1920: switcher, keyboard, video, reduced-motion
 node tools/verify-editorial.mjs     # 43 originals + 80 variants, 42 responsive page scenarios
 node tools/verify-conversion.mjs    # client fixtures, pricing and resize (no real mail)
+node tools/verify-release.mjs       # production: 151 byte matches and 6 browser smoke scenarios; optional BROWSER_PROXY
 ```
 
 Serve the folder with any static server (for example `python -m http.server 4200`).
