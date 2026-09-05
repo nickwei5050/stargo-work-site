@@ -732,7 +732,8 @@ export const NOTICES = {
 <h4>字体</h4>
 <p>Inter、Inter Display、Instrument Serif 与 42dot Sans，均按 SIL Open Font License 1.1 自托管，不向任何第三方字体服务发起请求。</p>
 <h4>图片素材</h4>
-<p>站内的 STARGO OS 界面图、手机界面图与品牌示意图均由 STARGO 以 HTML/CSS 自行绘制并渲染（tools/visuals），其中的公司、人名与数字均为演示数据，不代表任何真实客户。模板自带的示例照片已全部替换；仍在使用的模板图形仅为图标与装饰元素，来自各模板作者及其声明的来源，按其各自许可用于商业展示。STARGO 标识与字标为 STARGO 自有作品。</p>
+<p>首页中心视频采用网站所有者提供的第四套模板 Fearless Vision Hero 中的银色轨道动画，已压缩并自托管。它用于品牌概念展示，不是 STARGO 产品操作录像或客户案例。</p>
+<p>本站的业务场景、品牌雕塑与数字角色图像为 AI 生成的概念视觉，用于解释业务关系、协作和治理；不是真实产品截图、员工肖像、客户案例或交付现场照片。中英文页面共用同一套无文字图像。模板图标与装饰元素仍保留各自来源及许可要求。STARGO 标识与字标为 STARGO 自有作品。</p>
 <h4>上游软件</h4>
 <p>站内提到的 Activepieces、Chatwoot、Twenty CRM、WeKnora、Windmill、Playwright、Yente / OpenSanctions、Univer、Puter、Medusa、ERPNext、PostHog、Microsoft SkillOpt、Notion、Google、Reddit、LinkedIn、Facebook、YouTube、Alibaba、WhatsApp 等名称，均为各自所有者的商标或项目名。它们在本站出现是为了让上游身份可查，不表示相关项目对 STARGO 的背书。</p>
 <h4>联系</h4>
@@ -749,7 +750,8 @@ export const NOTICES = {
 <h4>Fonts</h4>
 <p>Inter, Inter Display, Instrument Serif and 42dot Sans, all self-hosted under the SIL Open Font License 1.1. No request goes to a third-party font service.</p>
 <h4>Imagery</h4>
-<p>The STARGO OS screens, phone screens and brand visuals on this site are drawn and rendered by STARGO in HTML/CSS (tools/visuals); the companies, names and figures in them are demonstration data and depict no real customer. The sample photographs that shipped with the templates have all been replaced; the template graphics still in use are icons and decorative elements only, from their authors and the sources they credit, used for commercial display under their respective licences. The STARGO mark and wordmark are STARGO’s own work.</p>
+<p>The homepage centre film uses the silver orbital animation from the owner-supplied fourth template, Fearless Vision Hero. It is compressed and self-hosted as conceptual brand imagery, not footage of the STARGO product or a customer engagement.</p>
+<p>The business scenes, brand sculptures and digital-role imagery on this site are AI-generated conceptual visuals illustrating business relationships, collaboration and governance. They are not actual product screenshots, employee portraits, customer cases or photographs of a delivery site. Both languages share the same text-free imagery. Retained template icons and decorative elements remain subject to their respective attribution and licence requirements. The STARGO mark and wordmark are STARGO’s own work.</p>
 <h4>Upstream software</h4>
 <p>Activepieces, Chatwoot, Twenty CRM, WeKnora, Windmill, Playwright, Yente / OpenSanctions, Univer, Puter, Medusa, ERPNext, PostHog, Microsoft SkillOpt, Notion, Google, Reddit, LinkedIn, Facebook, YouTube, Alibaba, WhatsApp and other names mentioned on this site are trademarks or project names of their respective owners. They appear so that upstream identity stays discoverable; none implies endorsement of STARGO.</p>
 <h4>Contact</h4>

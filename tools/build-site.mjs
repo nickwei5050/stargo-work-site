@@ -234,12 +234,22 @@ PAGES['index.html'] = (lang) => {
     cards.forEach((k, i) => { h = swapImg(h, k, SILO[i]); });
     const scenes = [['Scene%20%239.webp', OS.desk], ['Scene%20%235.webp', OS.inquiries], ['Scene%20%2310%20(Light)', OS.cockpit], ['Scene%20%238.webp', OS.quote], ['Scene%2018.webp', OS.agents]];
     scenes.forEach(([k, src]) => { h = swapImg(h, k, src); });
-    // theatre: seven looping stock videos → seven STARGO OS screens; the YouTube lightbox goes.
+    // Retain the original grid/zoom animation. The centre is a real video,
+    // sourced from the owner's fourth template; surrounding imagery is separate.
     const theatre = [OS.boot, OS.loading, OS.login, OS.desktop, OS.cockpit, OS.agents, OS.inquiries];
     const ids = [...h.matchAll(/class="video-bg-animation w-background-video w-background-video-atom"><video id="([^"]+)-video"/g)].map((m) => m[1]);
     const inTheatre = ids.filter((id) => h.indexOf(`id="${id}-video"`) > h.indexOf('<section class="video-section"') && h.indexOf(`id="${id}-video"`) < h.indexOf('<section id="compare"'));
     if (inTheatre.length !== 7) throw new Error(`index: expected 7 theatre videos, found ${inTheatre.length}`);
-    inTheatre.forEach((id, i) => { h = stillImage(h, id, theatre[i], 'STARGO OS'); });
+    inTheatre.forEach((id, i) => {
+      h = stillImage(h, id, theatre[i], 'STARGO OS');
+      if (i === 3) {
+        const marker = `<img src="${theatre[i]}" alt="STARGO OS" loading="lazy" class="stargo-still"/>`;
+        if (!h.includes(marker)) throw new Error('index: centre media marker missing');
+        h = h.replace(marker, `<video id="stargo-brand-film" data-stargo-video loop muted playsinline preload="none" poster="assets/stargo-motion/orbit-poster.webp" aria-label="${lang === 'zh' ? '银色轨道协同运转的品牌概念动画' : 'Brand film: silver orbital forms moving together'}"><source src="assets/stargo-motion/orbit.mp4" type="video/mp4"/></video>`);
+      }
+    });
+    const mediaLabel = lang === 'zh' ? '播放视频' : 'Play video';
+    h = h.replace('<div class="sticky-video-section">', `<div class="sticky-video-section"><button class="stargo-media-toggle" type="button" aria-controls="stargo-brand-film" aria-pressed="false" data-play-label="${mediaLabel}" data-pause-label="${lang === 'zh' ? '暂停视频' : 'Pause video'}">${mediaLabel}</button>`);
     const play = elementContaining(h, 'class="play-video w-inline-block w-lightbox"', 'a');
     h = h.slice(0, play.start) + h.slice(play.end);
     if (/youtube|embedly|w-lightbox/.test(h)) throw new Error('index: lightbox survives');

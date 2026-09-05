@@ -80,63 +80,102 @@
   }
 
 
-  /* Core-system switcher on the homepage. The template drives the four panels
-     from scroll progress (an IX2 "scroll into view" action list over a 400vh
-     block). The four names on the left were only styled as tabs. Clicking one
-     scrolls the page to the zone where that panel is the active one, then
-     nudges the position until the panel actually reads as fully visible — the
-     scroll animation stays the single source of truth, and the mapping never
-     has to be guessed. Lenis (the template's smooth scroll) is used when
-     present. */
+  /* Keep the template's four panels, sticky layout and crossfade. One
+     controller owns both click and scroll state; no scroll-position guessing,
+     corrective nudges, or competing IX2 writers (see tools/fuse-ix.mjs). */
   function initSwitcher() {
     var block = document.querySelector('.product-sticky-block');
     if (!block) return;
     var names = block.querySelectorAll('.products-card-name-wrapper .products-card-name-block');
     var panels = block.querySelectorAll('.products-cards-right-inner-block .products-cards-dashboard-block');
     if (names.length !== 4 || panels.length !== 4) return;
-    var zones = [0.17, 0.37, 0.58, 0.72];      // rough scroll progress of each panel; refined live
-    var settling = 0;
-    function scrollTo(y, seconds) {
-      if (typeof lenis !== 'undefined' && lenis && lenis.scrollTo) lenis.scrollTo(y, { duration: seconds });
-      else window.scrollTo({ top: y, behavior: seconds > 0.4 ? 'smooth' : 'auto' });
-    }
-    function opacity(el) { return +getComputedStyle(el).opacity || 0; }
-    /* The scroll animation only advances on scroll events (its smoothing is
-       applied per event), so after an animated scroll ends it can sit halfway
-       through a crossfade. A handful of ±1px scroll events lets it converge. */
-    function jiggle(n, done) {
-      if (n <= 0) { done(); return; }
-      window.scrollBy(0, n % 2 ? 1 : -1);
-      requestAnimationFrame(function () { setTimeout(function () { jiggle(n - 1, done); }, 24); });
-    }
-    function settle(i, token, attempt) {
-      if (token !== settling) return;
-      jiggle(10, function () {
-        if (token !== settling) return;
-        if (opacity(panels[i]) > 0.96 || attempt > 12) return;
-        var shown = -1, best = 0;
-        for (var k = 0; k < 4; k++) { var o = opacity(panels[k]); if (o > best) { best = o; shown = k; } }
-        var dir = shown > i ? -1 : 1;                 // wrong panel, or still mid-fade: keep moving toward the zone
-        window.scrollBy(0, dir * 40);
-        setTimeout(function () { settle(i, token, attempt + 1); }, 60);
-      });
+    var active = -1;
+    var trigger = null;
+    var clickTarget = null;
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var list = block.querySelector('.products-card-name-wrapper');
+    list.setAttribute('role', 'tablist');
+    list.setAttribute('aria-orientation', 'vertical');
+    list.setAttribute('aria-label', document.documentElement.lang.startsWith('zh') ? '核心系统' : 'Core systems');
+    block.classList.add('stargo-switcher');
+    function activate(index) {
+      if (index === active) return;
+      active = index;
+      for (var k = 0; k < names.length; k++) {
+        var selected = k === index;
+        names[k].setAttribute('aria-selected', String(selected));
+        names[k].setAttribute('tabindex', selected ? '0' : '-1');
+        panels[k].classList.toggle('is-active', selected);
+        panels[k].setAttribute('aria-hidden', String(!selected));
+        panels[k].inert = !selected;
+      }
     }
     function go(i) {
-      var vh = window.innerHeight;
-      var top = block.getBoundingClientRect().top + window.pageYOffset;
-      var y = Math.round(top - vh + (block.offsetHeight + vh) * zones[i]);
-      var token = ++settling;
-      scrollTo(y, 1.1);
-      setTimeout(function () { settle(i, token, 0); }, 1300);
+      if (trigger) trigger.refresh(); // Earlier template reveals can change page height.
+      activate(i);
+      if (!trigger) return; // Click remains functional if animation JS is unavailable.
+      var y = trigger.start + (trigger.end - trigger.start) * (i + 0.5) / names.length;
+      clickTarget = i;
+      if (typeof lenis !== 'undefined' && lenis && lenis.scrollTo) {
+        lenis.scrollTo(y, { duration: 0.8, immediate: reduced.matches, onComplete: function () { clickTarget = null; } });
+      } else {
+        window.scrollTo(0, y);
+        clickTarget = null;
+      }
     }
     for (var i = 0; i < names.length; i++) {
       (function (idx) {
         var n = names[idx];
-        n.setAttribute('role', 'button');
-        n.setAttribute('tabindex', '0');
+        n.id = 'core-tab-' + idx;
+        n.setAttribute('role', 'tab');
+        n.setAttribute('aria-controls', 'core-panel-' + idx);
+        panels[idx].id = 'core-panel-' + idx;
+        panels[idx].setAttribute('role', 'tabpanel');
+        panels[idx].setAttribute('aria-labelledby', n.id);
         n.addEventListener('click', function () { go(idx); });
-        n.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(idx); } });
+        n.addEventListener('keydown', function (e) {
+          var to = idx;
+          if (e.key === 'ArrowDown' || e.key === 'ArrowRight') to = (idx + 1) % names.length;
+          else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') to = (idx + names.length - 1) % names.length;
+          else if (e.key === 'Home') to = 0;
+          else if (e.key === 'End') to = names.length - 1;
+          else if (e.key !== 'Enter' && e.key !== ' ') return;
+          e.preventDefault();
+          go(to);
+          names[to].focus({ preventScroll: true });
+        });
       })(i);
+    }
+    activate(0);
+    function interrupt() { clickTarget = null; }
+    window.addEventListener('wheel', interrupt, { passive: true });
+    window.addEventListener('touchstart', interrupt, { passive: true });
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.matchMedia().add('(min-width: 992px)', function () {
+      trigger = ScrollTrigger.create({
+        id: 'stargo-core-systems',
+        trigger: block,
+        start: 'top top',
+        end: function () { return '+=' + Math.max(1, block.offsetHeight - window.innerHeight); },
+        onUpdate: function (self) {
+          if (clickTarget === null) activate(Math.min(names.length - 1, Math.floor(self.progress * names.length)));
+        },
+        onRefresh: function (self) {
+          if (clickTarget === null) activate(Math.min(names.length - 1, Math.floor(self.progress * names.length)));
+        }
+      });
+      return function () { trigger = null; clickTarget = null; };
+    });
+    // Fonts/images can alter the sticky start after initial layout.
+    if (document.fonts) document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
+    window.addEventListener('load', function () { ScrollTrigger.refresh(); }, { once: true });
+    if ('ResizeObserver' in window) {
+      var refreshTimer;
+      new ResizeObserver(function () {
+        clearTimeout(refreshTimer);
+        refreshTimer = setTimeout(function () { if (trigger) trigger.refresh(); }, 120);
+      }).observe(document.body);
     }
   }
   initSwitcher();

@@ -134,6 +134,14 @@ const mergedPayload = foldPages({
   actionLists: { ...mono.ix2Payload.actionLists, ...scaLists, ...donorLists },
 });
 
+// The core-system switcher now has one deterministic ScrollTrigger controller
+// (stargo-tabs.js). Do not let IX2 and that controller write to the same panels.
+// All other template interactions, including the mobile accordions, stay intact.
+if (mergedPayload.events['sc-e-133']?.action?.config?.actionListId !== 'sc-a-48') {
+  throw new Error('core-system switcher animation contract changed');
+}
+delete mergedPayload.events['sc-e-133'];
+
 /* IX3: union of every Mono page bundle, plus Scalora's rescoped to this site. */
 const interactions = new Map();
 const timelines = new Map();

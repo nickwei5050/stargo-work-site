@@ -19,11 +19,14 @@ intact; the words, the imagery and the information architecture are STARGO's.
 ## Build
 
 ```bash
-node tools/visuals/render.mjs        # only after changing tools/visuals/*: renders the STARGO OS imagery to assets/stargo/
+node tools/imagegen/prepare-assets.mjs # only after new generated originals: encode responsive artwork + manifest
 node tools/lifelogx-prepare.mjs      # only after changing the lifelogx template: mirrors assets, namespaces CSS, exports interactions
 node tools/fuse-ix.mjs               # the one Webflow bundle every page loads (Mono + Scalora + lifelogx interaction data)
 node tools/build-site.mjs            # all 22 pages from tools/templates + tools/fragments + tools/copy.mjs
 node tools/verify-site.mjs           # loads every page in Chromium: JS errors, failed/external requests, dead links, leftover English
+node tools/verify-visual-upgrade.mjs # bilingual 390/768/1440/1920: switcher, keyboard, video, reduced-motion
+node tools/verify-editorial.mjs     # 43 originals + 80 variants, 42 responsive page scenarios
+node tools/verify-conversion.mjs    # client fixtures, pricing and resize (no real mail)
 ```
 
 Serve the folder with any static server (for example `python -m http.server 4200`).
@@ -32,9 +35,11 @@ Serve the folder with any static server (for example `python -m http.server 4200
 
 - **All copy, both languages:** `tools/copy.mjs`. Every entry is keyed by the template string it replaces; a key that no longer matches fails the build instead of leaving the template's own words on the page. The homepage narrative and the legal pages are at the top and bottom of that file.
 - **Navigation, footer, metadata (canonical, hreflang, Open Graph, JSON-LD), language switch, wordmark, link hygiene:** `tools/chrome.mjs`. Internal links never open a new tab; external ones carry `rel="noopener"`; placeholder `#` legal links are rewritten to the real pages.
-- **Imagery:** `tools/visuals/` — the STARGO OS screens, phone screens, "before" silo screens, brand visuals, avatars and the Open Graph cover are HTML/CSS mocks rendered by `tools/visuals/render.mjs` into `assets/stargo/`. No template stock photography survives; the build fails if any does.
+- **Imagery:** 43 distinct AI-generated editorial images in `assets/stargo-editorial/`, with responsive WebP sizes, small PNG role emblems and a 1200×630 Open Graph cover. `tools/editorial-images.mjs` maps all legacy image slots while preserving template elements and supplies bilingual conceptual-image alt text. Legacy HTML/CSS mocks in `assets/stargo/` are retained for rollback but no longer referenced by generated pages or computed CSS overrides.
+- **Generation provenance:** after the owner explicitly authorized the built-in image tool, all 43 images were generated individually. The exact model ID is not exposed by that tool. `tools/imagegen/generated-sources.json` records actual prompts and output filenames; `assets-manifest.json` records dimensions, variants and original hashes. Full-resolution originals are retained locally in ignored `output/imagegen/originals/`. `docs/visual-upgrade-brief.md` documents the art direction. No API key is required to build from committed web assets; only re-encoding requires the retained originals and Sharp.
+- **Restored video:** `assets/stargo-motion/` contains the fourth template's orbital film and a frame-derived poster; see its `SOURCE.md`. `js/stargo-media.js` controls lazy playback, pause/resume, offscreen suspension and reduced-motion preference, leaving the original grid/zoom structure intact.
 - **Site overrides:** `css/stargo-fusion.css` — the only hand-written stylesheet (full-bleed loop hero, lifelogx palette, still images in former video boxes, template CSS photos overridden, focus rings).
-- **Behaviour:** `js/stargo-tabs.js` (pricing tabs, period toggle, and the clickable core-system switcher on the homepage — clicking a name scrolls to the point where the template's scroll animation shows that panel), `js/stargo-forms.js` (form submission), `js/stargo-mobile-copy.js` (shorter copy on phones, swapped in before the text animations split lines), `js/stargo-splittext-cjk.js` (Chinese word segmentation for SplitText).
+- **Behaviour:** `js/stargo-tabs.js` (pricing tabs, period toggle, and the homepage core-system switcher — one ScrollTrigger controller for click/scroll with the original card design and crossfade; the conflicting IX2 event alone is removed by `fuse-ix.mjs`), `js/stargo-forms.js` (form submission), `js/stargo-mobile-copy.js` (shorter copy on phones, swapped in before the text animations split lines), `js/stargo-splittext-cjk.js` (Chinese word segmentation for SplitText).
 - **Forms:** submissions POST to `/api/contact` — `functions/api/contact.js`, a Cloudflare Pages Function that relays them by e-mail through Resend. It needs `RESEND_API_KEY` (and optionally `CONTACT_TO`, `CONTACT_FROM`) in the Pages project's environment variables. Until that key is set the endpoint answers 503 and the page falls back to the visitor's mail client, saying so — it never shows a fake "thank you". A honeypot field and a busy lock guard against bots and double submits.
 - **Brand wall on the homepage:** drop real logo files (svg/png/webp/jpg) into `assets/brands/` and rebuild. With the folder empty the wall is not rendered.
 

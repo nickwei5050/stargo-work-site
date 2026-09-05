@@ -11,6 +11,9 @@
  * did not match pointing at a template page that no longer exists.
  */
 import { makeSub, findByClass, extractElement } from './lib-html.mjs';
+import { editorialImages } from './editorial-images.mjs';
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 import { NAV, SECONDARY, LANG_SWITCH, CHROME, META, CONTACT_INFO, SITE_URL } from './copy.mjs';
 
 export const ALL_PAGES = new Set([...NAV, ...SECONDARY].map((n) => n.href).concat(['404.html']));
@@ -222,6 +225,7 @@ function scripts(html) {
   }
   if (!out.includes('js/stargo-forms.js')) out = out.replace('</body>', '<script src="js/stargo-forms.js"></script></body>');
   if (!out.includes('js/stargo-tabs.js')) out = out.replace('</body>', '<script src="js/stargo-tabs.js"></script></body>');
+  if (out.includes('data-stargo-video') && !out.includes('js/stargo-media.js')) out = out.replace('</body>', '<script src="js/stargo-media.js"></script></body>');
   out = out.replace(
     'const nav = document.querySelector(".menu-bottom");',
     'const nav = document.querySelector(".menu-bottom");\n  if (!nav) return; // no pill on this page',
@@ -242,7 +246,7 @@ function scripts(html) {
 function linkHygiene(html) {
   let out = html.replace(/<a\b([^>]*)href="#"([^>]*)>([\s\S]*?)<\/a>/g, (m, pre, post, body) => {
     const text = body.replace(/<[^>]+>/g, '');
-    const href = /隐私|Privacy/i.test(text) ? 'privacy.html' : /条款|Terms/i.test(text) ? 'terms.html' : null;
+    const href = /\blogo-first\b/.test(pre + post) ? 'index.html' : /隐私|Privacy/i.test(text) ? 'privacy.html' : /条款|Terms/i.test(text) ? 'terms.html' : null;
     return href ? `<a${pre}href="${href}"${post}>${body}</a>` : m;
   });
   out = out.replace(/<a\b[^>]*>/g, (tag) => {
@@ -324,6 +328,13 @@ export function applyChrome(html, { lang, current }) {
   out = chromeImagery(out);
   out = scripts(out);
   out = linkHygiene(out);
+  out = editorialImages(out, lang);
+  // Unhashed local runtimes used to stay stale for a day after deployments.
+  // Version the URL while retaining the original file and script ordering.
+  out = out.replace(/((?:src|href)=")((?:css|js)\/[^"?]+\.(?:css|js))"/g, (_, attr, path) => {
+    const hash = createHash('sha256').update(readFileSync(new URL(`../${path}`, import.meta.url))).digest('hex').slice(0, 12);
+    return `${attr}${path}?v=${hash}"`;
+  });
   if (/monostudio|Mōno™ Studio/i.test(out)) throw new Error(`chrome: template brand survives in ${current}`);
   return out;
 }

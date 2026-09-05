@@ -189,17 +189,57 @@ body.lx-page .navigation-top .lottie-white { filter: none; }
       theatre, the sticky card, the contact quote card). */
 .w-background-video > img.stargo-still { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 
+/* The restored film inherits the template grid/zoom; these rules only handle
+   its media box and an accessible pause control outside the transformed grid. */
+[data-stargo-video] { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+@media (max-width: 767px) {
+  /* The supplied film's sculpture is left of centre: retain it in portrait crops. */
+  [data-stargo-video] { object-position: 28% center; }
+}
+.stargo-media-toggle {
+  position: absolute; z-index: 30; right: max(24px, env(safe-area-inset-right));
+  bottom: max(24px, env(safe-area-inset-bottom)); min-height: 44px;
+  padding: 10px 18px; border: 1px solid #ffffff70; border-radius: 999px;
+  background: #101010e6; color: #fff; font: inherit; font-size: 13px; cursor: pointer;
+}
+.stargo-media-toggle:disabled { opacity: .65; }
+
+/* Keep the existing switcher's palette and crossfade, with exclusive panels. */
+.stargo-switcher .products-card-name-wrapper [role="tab"] { cursor: pointer; }
+.stargo-switcher .products-card-name-wrapper [role="tab"] .products-card-name-inner-block {
+  color: #b2b0ae; background-color: #1b191a !important;
+  transition: color .35s ease, background-color .35s ease;
+}
+.stargo-switcher .products-card-name-wrapper [aria-selected="true"] .products-card-name-inner-block {
+  color: #fff; background-color: #282522 !important;
+}
+.stargo-switcher .products-cards-right-inner-block > [role="tabpanel"] {
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity .35s ease, visibility 0s linear .35s;
+}
+.stargo-switcher .products-cards-right-inner-block > [role="tabpanel"].is-active {
+  opacity: 1; visibility: visible; pointer-events: auto;
+  transition: opacity .35s ease, visibility 0s;
+}
+@media (min-width: 992px) {
+  .sc-scope.products .product-sticky-inner-block > .section-contant-padding { padding-block: 48px; }
+  .stargo-switcher .products-cards-right-inner-block { height: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stargo-switcher [role="tabpanel"], .stargo-switcher .products-card-name-inner-block { transition: none !important; }
+}
+
 /* 4. Template stock photography that is set in CSS → STARGO imagery. */
-.image-about, .image-about._01 { background-image: url("../assets/stargo/os-cockpit.webp"); }
-.image-about._02 { background-image: url("../assets/stargo/os-agent-center.webp"); }
-.image-about._03 { background-image: url("../assets/stargo/os-login.webp"); }
-.image-about._04 { background-image: url("../assets/stargo/os-trade-execution.webp"); }
-.photo-section { background-image: url("../assets/stargo/brand-glow-wide.webp"); opacity: .95; }
-.absolute-photo { background-image: url("../assets/stargo/os-cockpit.webp"); }
-.team-small-card { background-image: url("../assets/stargo/avatar-01.png"); }
-.team-small-card._02 { background-image: url("../assets/stargo/avatar-04.png"); }
-.team-small-card._03 { background-image: url("../assets/stargo/avatar-06.png"); }
-.team-small-card._04 { background-image: url("../assets/stargo/avatar-09.png"); }
+.image-about, .image-about._01 { background-image: url("../assets/stargo-editorial/os-cockpit.webp"); }
+.image-about._02 { background-image: url("../assets/stargo-editorial/os-agent-center.webp"); }
+.image-about._03 { background-image: url("../assets/stargo-editorial/os-login.webp"); }
+.image-about._04 { background-image: url("../assets/stargo-editorial/os-trade-execution.webp"); }
+.photo-section { background-image: url("../assets/stargo-editorial/brand-glow-wide.webp"); opacity: .95; }
+.absolute-photo { background-image: url("../assets/stargo-editorial/os-cockpit.webp"); }
+.team-small-card { background-image: url("../assets/stargo-editorial/avatar-01.png"); }
+.team-small-card._02 { background-image: url("../assets/stargo-editorial/avatar-04.png"); }
+.team-small-card._03 { background-image: url("../assets/stargo-editorial/avatar-06.png"); }
+.team-small-card._04 { background-image: url("../assets/stargo-editorial/avatar-09.png"); }
 
 /* 5. lifelogx pages (Intelligence, AI Workforce): the STARGO copper palette
       instead of the template's pink, and a hero that clears the Mono nav. */
@@ -231,15 +271,15 @@ form[data-stargo-busy] input[type="submit"] { opacity: .6; pointer-events: none;
 .w-richtext ul { padding-left: 20px; }
 
 /* 9. Quote/author avatars are template portraits set in CSS → STARGO avatars. */
-.author-circle { background-image: url("../assets/stargo/avatar-01.png"); }
-.author-circle._01 { background-image: url("../assets/stargo/avatar-02.png"); }
-.author-circle._02 { background-image: url("../assets/stargo/avatar-03.png"); }
-.author-circle._03 { background-image: url("../assets/stargo/avatar-04.png"); }
-.author-circle._04 { background-image: url("../assets/stargo/avatar-05.png"); }
-.author-circle.small { background-image: url("../assets/stargo/avatar-07.png"); }
-.author-circle.small._01 { background-image: url("../assets/stargo/avatar-08.png"); }
-.author-circle.small._02 { background-image: url("../assets/stargo/avatar-10.png"); }
-.author-circle.small._03 { background-image: url("../assets/stargo/avatar-11.png"); }
+.author-circle { background-image: url("../assets/stargo-editorial/avatar-01.png"); }
+.author-circle._01 { background-image: url("../assets/stargo-editorial/avatar-02.png"); }
+.author-circle._02 { background-image: url("../assets/stargo-editorial/avatar-03.png"); }
+.author-circle._03 { background-image: url("../assets/stargo-editorial/avatar-04.png"); }
+.author-circle._04 { background-image: url("../assets/stargo-editorial/avatar-05.png"); }
+.author-circle.small { background-image: url("../assets/stargo-editorial/avatar-07.png"); }
+.author-circle.small._01 { background-image: url("../assets/stargo-editorial/avatar-08.png"); }
+.author-circle.small._02 { background-image: url("../assets/stargo-editorial/avatar-10.png"); }
+.author-circle.small._03 { background-image: url("../assets/stargo-editorial/avatar-11.png"); }
 
 /* 10. lifelogx hero: the giant word is absolutely positioned; anchor it to
        its own holder (after the padding that clears the Mono nav), and turn
@@ -248,7 +288,7 @@ form[data-stargo-busy] input[type="submit"] { opacity: .6; pointer-events: none;
 .lx-scope .lx-main-items-home { padding-top: 5vh; }
 @media (max-width: 767px) { .lx-scope .lx-main-items-home { padding-top: 7vh; } }
 .lx-scope .lx-gradient-no-writing { background-image: linear-gradient(180deg, #000, #3a1a0c 46%, #e8823a); }
-.lx-scope .lx-bg-gradient-image { background-image: url("../assets/stargo/brand-glow-wide.webp"); }
+.lx-scope .lx-bg-gradient-image { background-image: url("../assets/stargo-editorial/brand-glow-wide.webp"); }
 
 /* 11. Floating pill: English labels are longer than the template's; give the
        pill room instead of clipping "Capabilities" / "AI Workforce". */
