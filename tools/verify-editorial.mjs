@@ -41,7 +41,9 @@ async function worker() {
     page.on('request', r => { if (/stargo-editorial/.test(r.url())) assets.push(r.url()); if (/assets\/stargo\//.test(r.url())) errors.push(`Old image requested: ${r.url()}`); });
     try {
       assert.equal((await page.goto(`${BASE}/${lang}${name}.html`, { waitUntil: 'load' })).status(), 200);
-      await page.waitForTimeout(1100);
+      // Mono's retained introductory curtain lasts several seconds. Capture
+      // the finished hero, not a transient blank animation frame.
+      await page.waitForTimeout(name === 'index' ? 5500 : 1100);
       const switcher = page.locator('.nav-menu a[hreflang]').first();
       assert.equal(await switcher.getAttribute('href'), lang ? `../${name}.html` : `en/${name}.html`);
       assert.equal(await switcher.getAttribute('aria-current'), null, 'language is not current page');

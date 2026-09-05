@@ -52,3 +52,4 @@
 - 43/43 张原图保存在 `output/imagegen/originals/`；网站版本在 `assets/stargo-editorial/`。原稿共 75.98 MB，主图共 4.28 MB，响应式版本共 2.21 MB。
 - 完整实际提示词与内置生成来源在 `tools/imagegen/generated-sources.json`；尺寸、原图哈希及网页文件清单在 `tools/imagegen/assets-manifest.json`。
 - 模板中所有原 STARGO 内容图片路径通过构建末端统一映射，CSS 背景同步更新；标志、功能图标及动效结构保持不变。新路径避免旧图片的长缓存。
+- 最终逐屏审阅按内容重新分配：能力页四图依次为市场机会、客户上下文、包装履约、分层治理；专业工具协作图用于首页 AI Workforce 入口，避免按文件序号机械对应。

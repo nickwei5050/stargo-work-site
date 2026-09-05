@@ -258,7 +258,7 @@ PAGES['index.html'] = (lang) => {
     if (!stickyVideo) throw new Error('index: sticky card video');
     h = stillImage(h, stickyVideo, BRAND.square, '');
     h = swapImg(h, '699b6466d5f19893993a4f1a_Sunset-Serenity', BRAND.square);
-    const doors = [['699b6466d5f19893993a4dca_Sleek', BRAND.ontology], ['699b6466d5f19893993a4d64_blog-2', BRAND.loop], ['699b6466d5f19893993a4e03_Futuristic', OS.agents], ['699b6466d5f19893993a4de3_blog-1', OS.login]];
+    const doors = [['699b6466d5f19893993a4dca_Sleek', BRAND.ontology], ['699b6466d5f19893993a4d64_blog-2', BRAND.loop], ['699b6466d5f19893993a4e03_Futuristic', BRAND.family(3)], ['699b6466d5f19893993a4de3_blog-1', OS.login]];
     doors.forEach(([k, src]) => { h = swapImg(h, k, src); });
     h = swapImg(h, '699b6466d5f19893993a4efc_Smiling%20Bearded', IMG('avatar-core.png'));   // the chat card's bearded-man avatar → the core orb
     const doorHrefs = ['intelligence.html', 'capabilities.html', 'workforce.html', 'enterprise.html'];
@@ -575,9 +575,12 @@ PAGES['capabilities.html'] = (lang) => {
     rows: L.rows.map(([a, b, c]) => [a, escapeHtml(t(b)), escapeHtml(t(c))]),
   });
   h = h.replace(anchor, `${loop}\n${table}\n${anchor}`);
-  // Four fashion photographs on the family cards → the four capability-family visuals.
+  // Assign by buyer meaning, not image sequence: growth, customer context,
+  // commercial fulfilment, workforce/governance. Parallel-team art belongs
+  // at the homepage Workforce door, not beneath the Commercial label.
+  const familyArt = [BRAND.family(1), OS.inquiries, BRAND.family(2), BRAND.family(4)];
   ['699b6466d5f19893993a4d79_work-1.webp', '699b6466d5f19893993a4d1a_work-4.webp', '699b6466d5f19893993a4d34_work-5.webp', '699b6466d5f19893993a4d8f_work-8.webp']
-    .forEach((k, i) => { h = swapImg(h, k, BRAND.family(i + 1)); });
+    .forEach((k, i) => { h = swapImg(h, k, familyArt[i]); });
   return h;
 };
 
