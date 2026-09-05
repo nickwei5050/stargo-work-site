@@ -252,11 +252,41 @@ function linkHygiene(html) {
   out = out.replace(/<a\b[^>]*>/g, (tag) => {
     const href = (tag.match(/href="([^"]*)"/) || [])[1] || '';
     const external = /^(https?:)?\/\//.test(href) || /^(mailto|tel):/.test(href);
+    if (/\bsocial-wrapper\b/.test(tag)) {
+      const label = href.startsWith('mailto:') ? 'Email STARGO WORK' : href.includes('wa.me/') ? 'WhatsApp STARGO WORK' : 'STARGO corporate website';
+      tag = tag.replace('<a ', `<a aria-label="${label}" title="${label}" `);
+    }
     if (!external) return tag.replace(/\s*target="_blank"/g, '');
     if (/target="_blank"/.test(tag) && !/\brel=/.test(tag)) return tag.replace('target="_blank"', 'target="_blank" rel="noopener noreferrer"');
     return tag;
   });
-  return out;
+  // These are accordion controls, not links to the top of the page. The
+  // retained IX2 listener is on .toggle-wrapper, so button clicks still bubble.
+  return out.replace(/<a\b[^>]*href="#"[^>]*class="toggle-header w-inline-block"[^>]*>([\s\S]*?)<\/a>/g, '<button type="button" class="toggle-header w-inline-block">$1</button>');
+}
+
+function uniqueLayoutIds(html) {
+  const seen = new Map();
+  return html.replace(/\sid="(w-node-[^"]+)"/g, (attribute, id) => {
+    const occurrence = seen.get(id) || 0; seen.set(id, occurrence + 1);
+    return occurrence ? ` id="${id}-copy-${occurrence}" data-stargo-grid="${id}"` : attribute;
+  });
+}
+
+function formMarkup(html, lang) {
+  return html.replace(/<form\b[^>]*>[\s\S]*?<\/form>/g, form => {
+    const isNews = /id="Subscribe"/.test(form);
+    form = form.replace(/<form\b/, `<form data-stargo-form="${isNews ? 'newsletter' : 'contact'}"`).replace(/method="get"/, 'method="post" action="/api/contact"');
+    if (!form.includes('name="website"')) form = form.replace(/(<form[^>]*>)/, '$1<div class="stargo-hp" aria-hidden="true"><input aria-label="Website" name="website" type="text" tabindex="-1" autocomplete="off"/></div>');
+    form = form.replace(/<input\b[^>]*>/g, tag => {
+      if (/type="email"/.test(tag)) return tag.replace('<input ', `<input autocomplete="email" aria-label="${lang === 'zh' ? '邮箱' : 'Email'}" `);
+      if (/name="[Nn]ame"/.test(tag)) return tag.replace('<input ', `<input autocomplete="name" aria-label="${lang === 'zh' ? '姓名' : 'Name'}" `);
+      if (/name="(?:Subject|Last-Name)"/.test(tag)) return tag.replace('<input ', `<input autocomplete="organization" aria-label="${lang === 'zh' ? '公司' : 'Company'}" `);
+      return tag;
+    });
+    const consent = lang === 'zh' ? '提交前请阅读我们的 <a href="privacy.html">隐私政策</a>。我们仅用这些信息处理你的申请。' : 'Please read our <a href="privacy.html">Privacy Policy</a>. We use these details to respond to your request.';
+    return form.replace('</form>', `<p class="stargo-form-consent">${consent}</p></form>`);
+  });
 }
 
 /** Template people and stock photos in the shared chrome → STARGO imagery. */
@@ -328,6 +358,8 @@ export function applyChrome(html, { lang, current }) {
   out = chromeImagery(out);
   out = scripts(out);
   out = linkHygiene(out);
+  out = formMarkup(out, lang);
+  out = uniqueLayoutIds(out);
   out = editorialImages(out, lang);
   // Unhashed local runtimes used to stay stale for a day after deployments.
   // Version the URL while retaining the original file and script ordering.

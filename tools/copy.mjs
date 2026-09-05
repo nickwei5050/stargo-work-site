@@ -712,7 +712,7 @@ export const CONTACT = {
   selectPlaceholder: B('请选择…', 'Select one…'),
   options: [B('AI 主动获客', 'AI customer acquisition'), B('询盘自动处理', 'Inquiry automation'), B('多渠道客户回复', 'Omnichannel customer replies'), B('CRM 与客户管理', 'CRM and customer management'), B('企业知识库', 'Enterprise knowledge base'), B('报价与 PI', 'Quote and PI'), B('订单与出口流程', 'Orders and export workflows'), B('SEO · GEO', 'SEO · GEO'), B('AI 内容生产', 'AI content production'), B('AI Workforce', 'AI Workforce'), B('完整 STARGO WORK', 'Full STARGO WORK'), B('企业定制', 'Enterprise customisation')],
   submit: B('发送', 'Send'),
-  notice: B(`已为你打开邮件客户端。也可以直接发到 ${CONTACT_INFO.email}，或 WhatsApp ${CONTACT_INFO.whatsapp}。`, `Your mail client should open now. You can also write to ${CONTACT_INFO.email} or WhatsApp ${CONTACT_INFO.whatsapp}.`),
+  notice: B(`暂时无法确认提交结果。请重试，或主动点击邮件链接联系 ${CONTACT_INFO.email}；WhatsApp ${CONTACT_INFO.whatsapp}。`, `Submission confirmation is unavailable. Retry, or choose the email link to contact ${CONTACT_INFO.email}; WhatsApp ${CONTACT_INFO.whatsapp}.`),
 };
 
 /* ============================================================= notices === */
@@ -789,7 +789,8 @@ export const LEGAL = {
 <li><strong>Cookie 与本地存储。</strong>本站不使用分析或广告 Cookie，不加载任何第三方追踪脚本；所有字体、图片与脚本均从本站自身域名加载。</li>
 </ul>
 <h4>如何使用与共享</h4>
-<p>表单内容会通过本站的邮件发送服务投递到 sales@stargomoto.com，并仅在 STARGO 内部用于处理你的请求。除法律要求外，我们不会向第三方出售或共享你的信息。若邮件发送服务未配置，浏览器会改为打开你自己的邮件客户端，信息不会经过本站服务器。</p>
+<p>提交时，表单内容先发送至托管于 Cloudflare 的本站接口进行验证；邮件服务配置完成后，通过 Resend 投递到 sales@stargomoto.com，用于处理你的请求。我们不出售你的信息；除完成托管、投递所需的服务商和法律要求外，不向第三方共享。本接口不会将表单内容写入数据库。</p>
+<p>若邮件服务未配置或无法确认投递，页面会保留你填写的内容并提示重试，同时提供邮件链接。只有你主动点击该链接，才会打开自己的邮件客户端；这不代表在线提交已经成功。</p>
 <h4>保存期限</h4>
 <p>咨询信息在处理完毕后最多保存 24 个月；订阅邮箱在你退订前保留。你可以随时要求删除。</p>
 <h4>你的权利</h4>
@@ -807,7 +808,8 @@ export const LEGAL = {
 <li><strong>Cookies and local storage.</strong> The site sets no analytics or advertising cookies and loads no third-party tracking script; fonts, images and scripts are served from this site’s own domain.</li>
 </ul>
 <h4>How it is used and shared</h4>
-<p>Form submissions are delivered by the site’s e-mail service to sales@stargomoto.com and used inside STARGO only to handle your request. We do not sell or share your information with third parties except where the law requires it. If the e-mail service is not configured, your browser opens your own mail client instead and nothing passes through this site’s servers.</p>
+<p>When you submit a form, its contents first reach this site’s Cloudflare-hosted endpoint for validation. Once the mail service is configured, Resend delivers them to sales@stargomoto.com to handle your request. We do not sell your information; sharing is limited to service providers needed for hosting and delivery, or as required by law. This endpoint does not write form contents to a database.</p>
+<p>If the mail service is not configured or delivery cannot be confirmed, the page retains your entries, offers a retry and provides an email link. Your own mail client opens only when you choose that link; this does not mean the online submission succeeded.</p>
 <h4>Retention</h4>
 <p>Inquiries are kept for at most 24 months after they are handled; a newsletter address is kept until you unsubscribe. You can ask for deletion at any time.</p>
 <h4>Your rights</h4>

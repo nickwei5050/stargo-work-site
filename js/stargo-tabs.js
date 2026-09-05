@@ -16,14 +16,19 @@
     });
   }
 
-  function initTabs(root) {
+  function initTabs(root, groupIndex) {
     var links = root.querySelectorAll('.w-tab-link');
     var panes = root.querySelectorAll('.w-tab-pane');
     var dIn = parseInt(root.getAttribute('data-duration-in') || '300', 10);
     var dOut = parseInt(root.getAttribute('data-duration-out') || '100', 10);
-    var busy = false;
+    var busy = false, queued = null;
+    var list = root.querySelector('.w-tab-menu');
+    if (list) {
+      list.setAttribute('role', 'tablist');
+      list.setAttribute('aria-label', document.documentElement.lang.startsWith('zh') ? '方案类别' : 'Plan categories');
+    }
     function activate(name) {
-      if (busy) return;
+      if (busy) { queued = name; return; }
       var current = root.querySelector('.w-tab-pane.w--tab-active');
       var next = null;
       for (var i = 0; i < panes.length; i++) if (panes[i].getAttribute('data-w-tab') === name) next = panes[i];
@@ -36,16 +41,36 @@
         links[j].setAttribute('tabindex', on ? '0' : '-1');
       }
       var show = function () {
-        if (current) current.classList.remove('w--tab-active');
+        if (current) { current.classList.remove('w--tab-active'); current.inert = true; }
         next.classList.add('w--tab-active');
-        fade(next, 0, 1, dIn, function () { busy = false; });
+        next.inert = false;
+        fade(next, 0, 1, dIn, function () { busy = false; if (queued !== null) { var pending = queued; queued = null; activate(pending); } });
       };
       if (current) fade(current, 1, 0, dOut, show); else show();
     }
     for (var k = 0; k < links.length; k++) {
+      var on = links[k].classList.contains('w--current');
+      links[k].id = 'pricing-tab-' + groupIndex + '-' + k;
       links[k].setAttribute('role', 'tab');
+      links[k].setAttribute('aria-selected', String(on));
+      links[k].setAttribute('tabindex', on ? '0' : '-1');
+      for (var n = 0; n < panes.length; n++) if (panes[n].getAttribute('data-w-tab') === links[k].getAttribute('data-w-tab')) {
+        panes[n].id = 'pricing-panel-' + groupIndex + '-' + k;
+        panes[n].setAttribute('role', 'tabpanel');
+        panes[n].setAttribute('aria-labelledby', links[k].id);
+        panes[n].inert = !on;
+        links[k].setAttribute('aria-controls', panes[n].id);
+      }
       links[k].addEventListener('click', function (e) { e.preventDefault(); activate(this.getAttribute('data-w-tab')); });
-      links[k].addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(this.getAttribute('data-w-tab')); } });
+      links[k].addEventListener('keydown', function (e) {
+        var index = Array.prototype.indexOf.call(links, this);
+        if (e.key === 'ArrowRight') index = (index + 1) % links.length;
+        else if (e.key === 'ArrowLeft') index = (index + links.length - 1) % links.length;
+        else if (e.key === 'Home') index = 0;
+        else if (e.key === 'End') index = links.length - 1;
+        else if (e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault(); links[index].focus({ preventScroll: true }); activate(links[index].getAttribute('data-w-tab'));
+      });
     }
   }
 
@@ -59,6 +84,7 @@
       for (var i = 0; i < opts.length; i++) {
         var dot = opts[i].querySelector('.pricing-tab-bot');
         opts[i].classList.toggle('is-active', i === idx);
+        opts[i].setAttribute('aria-pressed', String(i === idx));
         if (dot) dot.style.backgroundColor = i === idx ? 'var(--border-color--border-color-03)' : 'var(--border-color--border-color-02)';
       }
       var yearly = idx === 1;
@@ -181,7 +207,33 @@
   initSwitcher();
 
   var tabs = document.querySelectorAll('.w-tabs');
-  for (var i = 0; i < tabs.length; i++) initTabs(tabs[i]);
+  for (var i = 0; i < tabs.length; i++) initTabs(tabs[i], i);
   var periods = document.querySelectorAll('.pricing-tabs-info-block');
   for (var p = 0; p < periods.length; p++) initPeriod(periods[p]);
+
+  // Observe the retained IX2 accordion height; do not run a second animation.
+  // Native buttons supply Enter/Space activation, which bubbles to the donor
+  // .toggle-wrapper click listener exactly like a pointer click.
+  var accordions = document.querySelectorAll('.toggle-wrapper');
+  for (var a = 0; a < accordions.length; a++) {
+    (function (wrapper, index) {
+      var button = wrapper.querySelector('.toggle-header');
+      var content = wrapper.querySelector('.toggle-content');
+      if (!button || !content) return;
+      content.id = 'faq-answer-' + index;
+      button.id = 'faq-question-' + index;
+      button.setAttribute('aria-controls', content.id);
+      content.setAttribute('role', 'region');
+      content.setAttribute('aria-labelledby', button.id);
+      function sync() {
+        var open = content.getBoundingClientRect().height > 1;
+        button.setAttribute('aria-expanded', String(open));
+        content.setAttribute('aria-hidden', String(!open));
+        content.inert = !open;
+      }
+      sync();
+      if ('ResizeObserver' in window) new ResizeObserver(sync).observe(content);
+      else wrapper.addEventListener('click', function () { setTimeout(sync, 550); });
+    })(accordions[a], a);
+  }
 })();

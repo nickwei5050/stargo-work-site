@@ -13,7 +13,7 @@
  * failure, not a pass.
  */
 import { createRequire } from 'node:module';
-import { existsSync, mkdirSync, readFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 
 const require = createRequire('F:/stargo 网站/stargo-work-website/package.json');
 const { chromium } = require('@playwright/test');
@@ -88,6 +88,7 @@ for (const page of PAGES) {
   await ctx.close();
 }
 await browser.close();
+writeFileSync(`${SHOTS}/report.json`, JSON.stringify(summary, null, 2));
 
 for (const s of summary) console.log(JSON.stringify(s));
 console.log(failures ? `FAIL: ${failures} page(s) with problems` : `PASS: ${summary.length} pages loaded, 0 errors, 0 failed requests, 0 external requests, 0 broken links`);

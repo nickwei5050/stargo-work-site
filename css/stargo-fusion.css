@@ -305,3 +305,68 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   .w-nav-overlay .nav-menu .button-link { min-height: 44px; padding-top: 8px; padding-bottom: 8px; align-items: center; }
   body:has(.w-nav-button.w--open) { overflow: hidden; }
 }
+
+/* Audit fixes: retain each template's motion, make content legible at rest. */
+body.stargo-dark-page { background: #1b1a19; }
+body.stargo-dark-page .navigation-top .navigation-text-main { color: #fff; }
+body.stargo-dark-page .navigation-top .line-divider-menu { background-color: #fff; }
+@media (max-width: 991px) {
+  body .navigation-top .menu-button,
+  body .navigation-top .menu-button.w--open { background: #f4f4f4; min-width: 44px; min-height: 44px; }
+  body .navigation-top .menu-button .lottie-white { filter: invert(1); }
+  /* Webflow moves the links into its light overlay on mobile. */
+  body .navigation-top .w-nav-overlay .navigation-text-main { color: #111; }
+}
+.lx-scope .lx-hero-text { font-size: clamp(56px, 22vw, 320px); letter-spacing: -.045em; white-space: nowrap; }
+html[lang="en"] .lx-scope .lx-hero-text { font-size: clamp(40px, 14.2vw, 210px); }
+#lx-ontology, #lx-teams, #lx-more, #lx-evolution { scroll-margin-top: 100px; }
+.stargo-contact-page .grid-form { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.stargo-contact-page .grid-form > div { min-width: 0; }
+.stargo-contact-page .text-field-2 { width: 100%; min-height: 48px; }
+.stargo-contact-page textarea.text-field-2 { min-height: 140px; resize: vertical; }
+@media (max-width: 991px) {
+  .stargo-contact-page .grid-form { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .stargo-contact-page .text-field-2 { font-size: 16px; }
+  .stargo-contact-page .form-amin { padding-inline: 16px; }
+}
+/* The AI contact-band image is lighter than the donor photo: keep the photo
+   animation and give only its form card a dependable dark reading surface. */
+.section.ctc .contact-card { background-color: #141414f2; color: #fff; }
+.section.ctc .contact-card .text-field { color: #fff; border-color: #888; font-size: 16px; }
+.section.ctc .contact-card .text-field::placeholder { color: #ccc; font-size: 16px; }
+.stargo-form-consent { margin: 16px 0; font-size: 13px; line-height: 1.6; }
+.stargo-form-consent a { color: inherit; text-decoration: underline; }
+.sc-scope .pricing-tab-link.w--current { color: #17110c; }
+.top-text.big.gray.sm { color: #999; opacity: 1; }
+button.toggle-header { width: 100%; border: 0; border-radius: 0; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+/* Cloned template grid nodes need unique IDs, but keep the donor placement. */
+[data-stargo-grid="w-node-f4f6d413-6968-d40f-07ed-7736cdf55b9b-cdf55b9b"],
+[data-stargo-grid="w-node-f4f6d413-6968-d40f-07ed-7736cdf55b9c-cdf55b9b"] { grid-area: 1 / 1 / 2 / 5; }
+[data-stargo-grid="w-node-f4f6d413-6968-d40f-07ed-7736cdf55b9f-cdf55b9b"] { grid-area: 1 / 4 / 2 / 5; }
+[data-stargo-grid="w-node-_8fd1d186-4590-97f8-ca96-eaab35b924c9-993a4d49"],
+[data-stargo-grid="w-node-_8fd1d186-4590-97f8-ca96-eaab35b924cb-993a4d49"] { justify-self: start; }
+[data-stargo-grid="w-node-_8fd1d186-4590-97f8-ca96-eaab35b924cd-993a4d49"] { justify-self: end; }
+[data-stargo-grid="w-node-_8a43d27d-b7fc-1aa9-5720-a9b126877931-993a4d49"] { grid-area: 1 / 2 / 2 / 4; }
+[data-stargo-grid="w-node-_8fd1d186-4590-97f8-ca96-eaab35b924c2-993a4d49"] { justify-self: center; }
+[data-stargo-grid="w-node-_8fd1d186-4590-97f8-ca96-eaab35b924c4-993a4d49"] { grid-area: 1 / 3 / 2 / 4; justify-self: end; }
+@media (max-width: 991px) { [data-stargo-grid="w-node-_8fd1d186-4590-97f8-ca96-eaab35b924c2-993a4d49"] { justify-self: end; } }
+@media (max-width: 479px) {
+  [data-stargo-grid="w-node-_8fd1d186-4590-97f8-ca96-eaab35b924c0-993a4d49"] { justify-self: start; }
+  [data-stargo-grid="w-node-_8fd1d186-4590-97f8-ca96-eaab35b924c2-993a4d49"] { justify-self: center; }
+}
+@media (max-width: 767px) {
+  /* The donor had four categories; STARGO has two. Don't retain empty tracks. */
+  .sc-scope .pricing-tabs-menu { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sc-scope .pricing-tab-link { display: flex; align-items: center; justify-content: center; min-height: 52px; }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  /* Match the three columns of the animated phone below. The donor's 1:2.5:1
+     intro grid squeezed copy; a full-width row would intersect the phone's
+     retained upward entrance. Equal columns preserve its clear centre lane. */
+  .lx-scope .lx-hero-home-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .lx-scope .lx-hero-home-mobile { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  /* The retained entrance scales the holder to 1.5. Size its content for that
+     largest state; do not override the animation's transform or timing. */
+  .lx-scope .lx-home-hero-mobile-wrapper .lx-integrations_06-app { width: calc(100% / 1.5); }
+  .lx-scope .lx-hero-desc { width: 100%; font-size: 24px; }
+}

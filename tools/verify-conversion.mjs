@@ -26,7 +26,8 @@ try {
     assert.equal(requests, 1, 'duplicate submission blocked');
     assert.equal(await form.getAttribute('data-stargo-busy'), null, 'busy state cleared');
     assert(await form.isVisible(), 'unavailable service cannot show fake success');
-    assert.match(await form.locator('.stargo-form-note').innerText(), /暂不可用|unavailable/);
+    assert.match(await form.locator('.stargo-form-note').innerText(), /无法确认|unavailable/);
+    assert.equal(await form.locator('.stargo-form-note a[href^="mailto:"]').count(), 1, 'explicit fallback link, never automatic app launch');
     const legal = await p.locator('a').evaluateAll(as => as.filter(a => /Privacy|隐私|Terms|条款/.test(a.innerText)).map(a => a.getAttribute('href')));
     assert(legal.length > 0 && legal.every(h => /(?:privacy|terms)\.html/.test(h)));
     await p.goto(`${BASE}/${lang}pricing.html`, { waitUntil: 'load' });

@@ -393,6 +393,7 @@ function lxPage(spec, lang, name) {
   }
   b = b.replace(/<div([^>]*)class="([^"]*\blx-gradient-section\b[^"]*)"/, '<div id="lx-more"$1class="$2"');
   b = b.replace(/<div class="lx-cta-wrapper">/, '<div id="lx-evolution" class="lx-cta-wrapper">');
+  b = b.replace('class="lx-sitcky-section"', `id="${name === 'intelligence' ? 'lx-ontology' : 'lx-teams'}" class="lx-sitcky-section"`);
   if (!b.includes('id="lx-more"') || !b.includes('id="lx-evolution"')) throw new Error(`${name}: anchor ids`);
   if (/Lifelogx|Tomato|lifelog/i.test(b)) throw new Error(`${name}: template brand survives`);
   return inMonoShell(b, ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
@@ -497,7 +498,7 @@ PAGES['pricing.html'] = (lang) => {
   body = body.replace(/alt="(Pricing Card Icon|Check Icon|Close Icon|Arrow Dowen)"/g, 'alt=""');
   if (/Scalora|\$\d/.test(body)) throw new Error('pricing: template copy or dollar price survives');
   body = `<div class="sc-scope sc-page">\n${body}\n</div>`;
-  return inMonoShell(body, ['scalora-modules.sc.css', 'stargo-fusion.css']);
+  return inMonoShell(body, ['scalora-modules.sc.css', 'stargo-fusion.css']).replace('<body ', '<body class="stargo-dark-page" ');
 };
 
 /* ---- enterprise.html — Mono studio ------------------------------------ */
@@ -610,7 +611,7 @@ PAGES['contact.html'] = (lang) => {
   if (h.includes('First choice')) throw new Error('contact: select options');
   // five more fields, cloned from the company field
   const field = (id, label) => `<div><label for="${id}" class="field-name">${label}</label><input class="text-field-2 w-input" maxlength="256" name="${id}" data-name="${id}" placeholder="" type="text" id="${id}"/></div>`;
-  const extra = `<div class="grid-form _01">${field('whatsapp', t(K.fields.whatsapp))}${field('industry', t(K.fields.industry))}</div><div class="grid-form _01">${field('markets', t(K.fields.markets))}${field('team', t(K.fields.team))}</div><div class="grid-form _01">${field('systems', t(K.fields.systems))}<div></div></div>`;
+  const extra = ['whatsapp', 'industry', 'markets', 'team', 'systems'].map(id => field(id, t(K.fields[id]))).join('');
   const msgAt = h.indexOf('<label for="field-2"');
   if (msgAt === -1) throw new Error('contact: message field');
   const blockStart = h.lastIndexOf('<div>', msgAt);
@@ -622,7 +623,7 @@ PAGES['contact.html'] = (lang) => {
   h = stillImage(h, vid[1], BRAND.square, '');
   h = h.replace(/(<form id="email-form"[^>]*>)/, '$1<div class="stargo-hp" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"/></div>');
   if (!h.includes('stargo-hp')) throw new Error('contact: form not found');
-  return h;
+  return h.replace(/<body\b/, '<body class="stargo-contact-page"');
 };
 
 /* ---- privacy.html / terms.html — Mono post layout ---------------------- */

@@ -27,7 +27,7 @@ const OUT = '.wrangler/editorial-qa';
 mkdirSync(OUT, { recursive: true });
 const names = ['index', 'intelligence', 'capabilities', 'workforce', 'pricing', 'enterprise', 'contact'];
 const jobs = [];
-for (const lang of ['', 'en/']) for (const width of [390, 768, 1440]) for (const name of names) jobs.push({ lang, width, name });
+for (const lang of ['', 'en/']) for (const width of (process.env.WIDTHS || '390,768,1440').split(',').map(Number)) for (const name of names) jobs.push({ lang, width, name });
 const browser = await chromium.launch();
 const reports = [];
 async function worker() {

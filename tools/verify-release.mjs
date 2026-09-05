@@ -9,10 +9,12 @@ const proxy = process.env.BROWSER_PROXY ? { server: process.env.BROWSER_PROXY } 
 const api = await request.newContext({ baseURL: BASE, proxy, timeout: 45000 });
 const assets = JSON.parse(readFileSync('tools/imagegen/assets-manifest.json', 'utf8')).assets;
 const pages = [...readdirSync('.').filter(f => f.endsWith('.html')), ...readdirSync('en').filter(f => f.endsWith('.html')).map(f => 'en/' + f)];
-const files = [...pages, ...assets.flatMap(a => [a.src, ...a.variants.map(v => v.src)]), 'assets/stargo-motion/orbit.mp4', 'assets/stargo-motion/orbit-poster.webp', 'css/stargo-fusion.css', 'js/stargo-media.js', 'js/stargo-tabs.js', 'js/app.fused.js'];
+const imageFiles = assets.flatMap(a => [a.src, ...a.variants.map(v => v.src)]);
+const runtimes = ['css', 'js'].flatMap(dir => readdirSync(dir).filter(f => /\.(css|js|json)$/.test(f)).map(f => `${dir}/${f}`));
+const files = [...pages, ...imageFiles, 'assets/stargo-motion/orbit.mp4', 'assets/stargo-motion/orbit-poster.webp', ...runtimes];
 const hash = b => createHash('sha256').update(b).digest('hex');
 const queue = [...files], checked = [];
-const OUT = '.wrangler/release-qa';
+const OUT = process.env.QA_OUT || '.wrangler/release-qa';
 mkdirSync(OUT, { recursive: true });
 let transportRetries = 0;
 async function get(path, options) {
@@ -38,7 +40,7 @@ async function verifyFiles() {
 }
 await Promise.all([verifyFiles(), verifyFiles(), verifyFiles(), verifyFiles()]);
 assert.equal((await get('/__stargo_qa_missing_page__')).status(), 404, 'custom missing route');
-console.log(`PASS deployed bytes: ${pages.length} pages, 123 image files, video/poster and 4 runtimes; custom route 404`);
+console.log(`PASS deployed bytes: ${pages.length} pages, ${imageFiles.length} image files, video/poster and ${runtimes.length} runtime files; custom route 404`);
 await api.dispose();
 const browser = await chromium.launch({ proxy });
 const scenarios = [];
