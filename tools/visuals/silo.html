@@ -1,0 +1,101 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../css/inter.css"><script src="lib.js"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:100%;height:100%;overflow:hidden;background:#e9eaee}
+  body{font-family:Inter,system-ui,sans-serif;font-size:13px;color:#1f2937;-webkit-font-smoothing:antialiased;filter:saturate(.72) contrast(.96)}
+  .stage{position:relative;width:1500px;height:1000px;overflow:hidden;background:#eef0f3}
+  svg{display:block}
+  /* email */
+  .mail{display:grid;grid-template-columns:220px 520px 1fr;height:100%}
+  .mail .fold{background:#f5f6f8;border-right:1px solid #d9dce2;padding:18px 12px}
+  .mail .fold div{padding:8px 12px;border-radius:6px;color:#4b5563;font-size:13px;display:flex;justify-content:space-between}
+  .mail .fold div.on{background:#dfe4ee;color:#111827;font-weight:600}
+  .mail .fold b{background:#f59e0b;color:#fff;border-radius:10px;padding:1px 7px;font-size:11px}
+  .mail .list{border-right:1px solid #d9dce2;background:#fff}
+  .mail .bar{height:52px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;padding:0 16px;gap:10px;color:#6b7280}
+  .mail .it{padding:12px 16px;border-bottom:1px solid #eef0f3;display:grid;grid-template-columns:1fr auto;gap:4px 10px}
+  .mail .it.u{background:#fbfcff}.mail .it.u .s,.mail .it.u .t{font-weight:700}
+  .mail .it .s{font-size:12.5px}.mail .it .t{font-size:12.5px}.mail .it .p{grid-column:1/3;color:#6b7280;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mail .it .d{color:#9ca3af;font-size:11px}
+  .mail .read{padding:28px 32px;background:#fff}
+  .mail .read h2{font-size:20px;font-weight:600}
+  .mail .read p{margin-top:14px;line-height:1.6;color:#374151;font-size:13.5px}
+  .mail .badge{position:absolute;left:250px;top:60px;background:#fde68a;color:#78350f;font-size:12px;font-weight:700;padding:4px 10px;border-radius:6px}
+  /* whatsapp */
+  .wa{display:grid;grid-template-columns:380px 1fr;height:100%}
+  .wa .l{background:#fff;border-right:1px solid #d9dce2}
+  .wa .top{height:60px;background:#f0f2f5;display:flex;align-items:center;padding:0 16px;gap:10px;border-bottom:1px solid #d9dce2}
+  .wa .c{display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid #eef0f3;align-items:center}
+  .wa .c .av{width:44px;height:44px;border-radius:50%;background:#cfd6df;flex:none}
+  .wa .c .n{font-weight:600;font-size:13.5px}.wa .c .m{color:#6b7280;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:230px}
+  .wa .c .r{margin-left:auto;text-align:right;font-size:11px;color:#9ca3af}.wa .c .r b{display:inline-block;background:#25d366;color:#fff;border-radius:10px;padding:1px 6px;margin-top:4px;font-size:10.5px}
+  .wa .chat{background:#e5ddd5;position:relative;display:flex;flex-direction:column}
+  .wa .msgs{flex:1;padding:24px 60px;display:flex;flex-direction:column;gap:10px}
+  .wa .b{max-width:52%;padding:8px 12px;border-radius:8px;font-size:13.5px;background:#fff;box-shadow:0 1px 1px rgba(0,0,0,.08)}
+  .wa .b.me{align-self:flex-end;background:#d9fdd3}
+  .wa .b small{display:block;text-align:right;color:#9ca3af;font-size:10px;margin-top:3px}
+  .wa .day{align-self:center;background:#fff;border-radius:6px;padding:4px 10px;font-size:11px;color:#6b7280}
+  .wa .foot{height:60px;background:#f0f2f5;display:flex;align-items:center;padding:0 20px;gap:12px;color:#6b7280}
+  .wa .foot div{flex:1;height:40px;border-radius:20px;background:#fff;display:flex;align-items:center;padding:0 16px;color:#9ca3af}
+  /* excel */
+  .xl{height:100%;display:flex;flex-direction:column;background:#fff}
+  .xl .title{height:36px;background:#217346;color:#fff;display:flex;align-items:center;padding:0 14px;font-size:12.5px;gap:14px}
+  .xl .ribbon{height:80px;background:#f3f3f3;border-bottom:1px solid #d1d5db;display:flex;align-items:flex-end;padding:0 14px 6px;gap:26px;font-size:12px;color:#444}
+  .xl .fx{height:30px;border-bottom:1px solid #d1d5db;display:flex;align-items:center;font-size:12px}
+  .xl .fx span{width:80px;border-right:1px solid #d1d5db;height:100%;display:flex;align-items:center;justify-content:center;color:#555}
+  .xl .fx i{padding-left:10px;font-style:normal;color:#333}
+  .xl table{border-collapse:collapse;font-size:12px;width:100%}
+  .xl th,.xl td{border:1px solid #d9d9d9;padding:0 6px;height:22px;white-space:nowrap;overflow:hidden;text-align:left}
+  .xl th{background:#f3f3f3;font-weight:400;color:#555;text-align:center}
+  .xl td.h{background:#f3f3f3;text-align:center;color:#555;width:36px}
+  .xl .y{background:#fff2cc}.xl .r{background:#f8cbad}.xl .g{background:#e2efda}.xl .err{color:#c00;font-weight:700}
+  .xl .tabs{margin-top:auto;height:30px;border-top:1px solid #d1d5db;display:flex;align-items:center;font-size:12px;background:#f3f3f3}
+  .xl .tabs span{padding:5px 14px;border-right:1px solid #d1d5db}.xl .tabs span.on{background:#fff;color:#217346;font-weight:700;border-bottom:2px solid #217346}
+  /* erp */
+  .erp{height:100%;background:#d4d0c8;display:flex;flex-direction:column;font-family:Tahoma,Verdana,Inter,sans-serif;font-size:12px}
+  .erp .t{height:28px;background:linear-gradient(#0a246a,#a6caf0);color:#fff;display:flex;align-items:center;padding:0 8px;font-weight:700}
+  .erp .menu{height:24px;display:flex;align-items:center;gap:16px;padding:0 8px;border-bottom:1px solid #808080}
+  .erp .tb{height:30px;display:flex;align-items:center;gap:6px;padding:0 8px;border-bottom:1px solid #808080}
+  .erp .tb i{width:22px;height:22px;background:#c0c0c0;border:1px solid #808080;display:block}
+  .erp .grid{flex:1;margin:8px;background:#fff;border:2px inset #808080;overflow:hidden;position:relative}
+  .erp table{border-collapse:collapse;width:100%;font-size:11.5px}
+  .erp th{background:#ece9d8;border:1px solid #aca899;padding:3px 6px;text-align:left;font-weight:700}
+  .erp td{border-bottom:1px solid #e0e0e0;border-right:1px solid #eee;padding:3px 6px;white-space:nowrap}
+  .erp tr:nth-child(even) td{background:#f4f4f4}
+  .erp tr.sel td{background:#0a246a;color:#fff}
+  .erp .dlg{position:absolute;left:520px;top:300px;width:440px;background:#ece9d8;border:1px solid #0a246a;box-shadow:4px 4px 0 rgba(0,0,0,.25)}
+  .erp .dlg .dt{height:24px;background:linear-gradient(90deg,#0a246a,#a6caf0);color:#fff;display:flex;align-items:center;padding:0 8px;font-weight:700}
+  .erp .dlg .bd{padding:14px}
+  .erp .dlg .bd div{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dotted #aca899}
+  .erp .dlg .btns{display:flex;justify-content:flex-end;gap:8px;padding:0 14px 12px}
+  .erp .dlg .btns span{border:1px solid #003c74;background:#f0f0ea;padding:3px 16px;border-radius:3px}
+  .erp .sb{height:22px;border-top:1px solid #808080;display:flex;align-items:center;padding:0 8px;gap:20px;color:#333}
+</style></head><body><div class="stage" id="st"></div>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  const v=new URLSearchParams(location.search).get('v')||'email';
+  const V={
+    email(){const M=[['Rodrigo Alves','Inquiry: 120 units electric motorcycle — Brazil','Hello, we are looking for a supplier of 72V e-motorcycles for our dealer network in São Paulo…','09:12',1],['Karim Ben Salah','RE: RE: RE: quotation SG-C40','Please resend the quotation, my colleague cannot find the file…','08:47',1],['Alibaba Trade Assurance','New inquiry from buyer in Poland','A buyer sent you an inquiry about Smart Wash Systems…','08:30',1],['Anna Kowalski','Fwd: price list?','Do you have an updated price list for 2025? Our boss…','Yesterday',1],['sales@panamacold.com','Warehouse cooling quotation','Following our call last week, can you confirm CIF price…','Yesterday',1],['Suryatech Purchase','PO draft + technical questions (3 attachments)','See attached. Also please clarify battery certification…','Yesterday',0],['Alibaba Trade Assurance','Buyer replied: Conveyor Line Modernization','','Mon',1],['Maria Santos','FW: FW: customer asking about warranty','','Mon',0],['DHL Express','Shipment notification 4472 8811 093','','Mon',0],['Carlos Mendes','Re: Samples arrived?','','Sun',1],['Chamber of Commerce','Form E application — missing documents','','Fri',1],['Andes Mining Services','Ventilation for mining site — quotation request','','Fri',1],['Bank of China','Inward remittance advice','','Thu',0]];
+      return `<div class="mail"><div class="fold"><div class="on"><span>Inbox</span><b>1,248</b></div><div><span>Starred</span></div><div><span>Snoozed</span></div><div><span>Sent</span></div><div><span>Drafts</span><b style="background:#9ca3af">37</b></div><div><span>Quotes 2024</span></div><div><span>Quotes old</span></div><div><span>Customers?</span></div><div><span>Alibaba</span></div><div><span>To reply!!!</span></div><div><span>Spam</span><b style="background:#9ca3af">412</b></div></div>
+      <div class="list"><div class="bar">${S.icon('search',15)} Search mail</div>${M.map(([s,t,p,d,u])=>`<div class="it ${u?'u':''}"><span class="s">${s}</span><span class="d">${d}</span><span class="t">${t}</span>${p?`<span class="p">${p}</span>`:''}</div>`).join('')}</div>
+      <div class="read"><h2>Inquiry: 120 units electric motorcycle — Brazil</h2><div style="color:#6b7280;font-size:12px;margin-top:8px">Rodrigo Alves &lt;rodrigo@auroramobility.com.br&gt; · to sales · 09:12</div><p>Hello,</p><p>We are looking for a supplier of 72V electric motorcycles for our dealer network in São Paulo. Could you send your catalogue, prices for 120 units, and let us know whether you support CKD?</p><p>We also need the INMETRO certification status and the delivery time to Santos.</p><p>Best regards,<br>Rodrigo</p><p style="color:#9ca3af;font-size:12px;margin-top:40px">— 3 similar inquiries from this company are in other folders. Nobody replied to the one from March.</p></div></div><div class="badge">1,248 unread</div>`;},
+    whatsapp(){const C=[['Rodrigo · Aurora Mobility','Can you do CIF?','09:40',3,1],['Karim (STE ZAYN)','Which model has 72V?','09:12',1,0],['Anna Kowalski','Boss said price too high','Yesterday',2,0],['Panama Cold Storage','Photo','Yesterday',0,0],['Suryatech — Vikram','Please send PI again','Mon',5,0],['Carlos Mendes','👍','Mon',0,0],['Andes Mining','Voice message (0:41)','Sun',1,0],['Chamber of Commerce','Documents received','Fri',0,0],['Nortex — Ali','?','Fri',1,0],['Greenfield Logistics','Ok','Thu',0,0]];
+      const B=[['day','12 May'],['','Hi, can you send the quotation again? I lost the email.','10:02'],['me','Sure, sending now.','10:15'],['','Which model has 72V?','10:31'],['day','19 May'],['','Boss said price too high 😅 can you do better for 120 units?','15:04'],['me','Let me check with my manager and come back to you.','15:40'],['day','26 May'],['','Any update?','08:55'],['','Can you do CIF? And what about INMETRO?','09:40'],['','typing…','']];
+      return `<div class="wa"><div class="l"><div class="top">${S.icon('search',16)} <span style="color:#6b7280">Search or start new chat</span></div>${C.map(([n,m,t,b,on])=>`<div class="c" style="${on?'background:#f0f2f5':''}"><span class="av"></span><div><div class="n">${n}</div><div class="m">${m}</div></div><div class="r">${t}${b?`<br><b>${b}</b>`:''}</div></div>`).join('')}</div>
+      <div class="chat"><div class="top" style="background:#f0f2f5"><span class="av" style="width:36px;height:36px;border-radius:50%;background:#cfd6df;display:inline-block"></span><div><div style="font-weight:600">Rodrigo · Aurora Mobility</div><div style="font-size:11px;color:#6b7280">online</div></div></div><div class="msgs">${B.map(([k,t,tm])=>k==='day'?`<span class="day">${t}</span>`:`<div class="b ${k}">${t}${tm?`<small>${tm}</small>`:''}</div>`).join('')}</div><div class="foot">${S.icon('plus',18)}<div>Type a message</div>${S.icon('send',18)}</div></div></div>`;},
+    excel(){const H=['Company','Country','Contact','Last email','Quote sent?','Price','Notes','Follow up'];
+      const R=[['Aurora Mobility','Brazil','Rodrigo','12/05/2025','YES','2,940','ask Tom about CKD','??'],['STE ZAYN','Tunisia','Karim','2025-05-19','yes','','waiting boss','next week'],['Washka','Poland','Anna','19.05.25','NO','1,860','too high?','!!'],['Panama Cold Storage','Panama','','','','','see whatsapp',''],['Suryatech','India','Vikram','5/12','YES (v2?)','','sent PI twice','check'],['SBML','Panamá','Luis','2025/5/20','yes','3.35M','','Jun'],['Nortex Industries','Turkey','Ali','','?','','old file','?'],['Delta Manufacturing','USA','','','','','#REF!',''],['Greenfield Logistics','Kenya','Sam','20/05','no','','','call'],['Solaris Energies','Chile','','','','','budget?',''],['EcoClimate','Brazil','','','','','new','TODO'],['Andes Mining','Chile','Pedro','23/05','','','voice msg','?'],['PolTherm','Poland','','','','','',''],['Tunisia Tech','Tunisia','','','','','linkedin',''],['NexusCore','US','','','','','','?'],['MotoSul','Brazil','','2024','yes','','dormant',''],['Volt Mobility','Brazil','','2024','','','',''],['Urban E-Moto','Brazil','','','','','',''],['Roda Livre','Brazil','','2023','yes','','no reply',''],['Superbike Brasil','Brazil','Paulo','','','','see Tom',''],['','','','','','','',''],['','','','','','','','']];
+      const cls=(c,i,ri)=>{if(c==='#REF!')return 'err';if(c==='??'||c==='!!'||c==='?')return 'y';if(c==='NO'||c==='no')return 'r';if(/^yes/i.test(c))return 'g';return ''};
+      return `<div class="xl"><div class="title"><b>Customers_2025_FINAL_v7(2).xlsx</b> — Excel <span style="margin-left:auto">AutoSave ● Off</span></div><div class="ribbon"><span><b>File</b></span><span>Home</span><span>Insert</span><span>Page Layout</span><span>Formulas</span><span>Data</span><span>Review</span><span>View</span></div><div class="fx"><span>C7</span><i>=IFERROR(VLOOKUP(A7,'Quotes old'!A:F,5,0),"")</i></div>
+      <table><tr><th style="width:36px"></th>${H.map((h,i)=>`<th>${String.fromCharCode(65+i)}</th>`).join('')}</tr><tr><td class="h">1</td>${H.map((h)=>`<td style="font-weight:700;background:#dbe5f1">${h}</td>`).join('')}</tr>${R.map((r,ri)=>`<tr><td class="h">${ri+2}</td>${r.map((c,i)=>`<td class="${cls(c,i,ri)}">${c}</td>`).join('')}</tr>`).join('')}</table>
+      <div class="tabs"><span class="on">Customers</span><span>Quotes old</span><span>Copy of Quotes</span><span>Sheet3</span><span>+</span></div></div>`;},
+    erp(){const H=['Order No','Customer','PI No','Amount','Deposit','Production','ETD','Docs','Status'];
+      const R=[['2025-0142','Aurora Mobility Brazil','PI-0142','510,500.00','153,150.00','62%','2025-07-02','3/8','OPEN'],['2025-0141','SBML Panama','PI-0141','3,350,000.00','','0%','','0/8','QUOTE'],['2025-0139','Suryatech Industries','PI-0139','412,300.00','123,690.00','100%','2025-06-10','7/8','SHIP'],['2025-0138','STE ZAYN Tunisia','','2,180,000.00','','','','','DRAFT'],['2025-0136','Washka Poland','PI-0136','1,920,000.00','','','','','HOLD'],['2025-0131','Nortex Industries','PI-0131','88,400.00','26,520.00','100%','2025-05-28','8/8','SHIP'],['2025-0129','Delta Manufacturing','PI-0129','230,000.00','69,000.00','80%','2025-06-20','2/8','OPEN'],['2025-0125','Greenfield Logistics','PI-0125','64,000.00','64,000.00','100%','2025-05-15','8/8','DONE'],['2025-0122','Solaris Energies','','120,000.00','','','','','QUOTE'],['2025-0119','Panama Cold Storage','PI-0119','98,000.00','29,400.00','40%','2025-07-15','1/8','OPEN'],['2025-0117','MotoSul Group','PI-0117','410,000.00','','','','','CANCEL'],['2025-0112','Volt Mobility SP','PI-0112','275,000.00','82,500.00','100%','2025-05-02','8/8','DONE'],['2025-0108','Roda Livre','PI-0108','56,000.00','16,800.00','100%','2025-04-22','8/8','DONE'],['2025-0104','Urban E-Moto','','','','','','','DRAFT'],['2025-0101','Superbike Brasil','PI-0101','640,000.00','192,000.00','100%','2025-04-10','8/8','DONE'],['2024-0398','Andes Mining Services','PI-0398','44,000.00','13,200.00','100%','2024-12-18','8/8','DONE'],['2024-0391','PolTherm Sp. z o.o.','PI-0391','122,000.00','36,600.00','100%','2024-12-02','8/8','DONE'],['2024-0387','EcoClimate Engineering','','','','','','','DRAFT']];
+      return `<div class="erp"><div class="t">ERP Pro 9.2 — [Sales Orders]</div><div class="menu"><span>File</span><span>Edit</span><span>View</span><span>Orders</span><span>Production</span><span>Shipping</span><span>Reports</span><span>Tools</span><span>Help</span></div><div class="tb">${'<i></i>'.repeat(14)}</div>
+      <div class="grid"><table><tr>${H.map((h)=>`<th>${h}</th>`).join('')}</tr>${R.map((r,i)=>`<tr class="${i===0?'sel':''}">${r.map((c)=>`<td>${c}</td>`).join('')}</tr>`).join('')}</table>
+      <div class="dlg"><div class="dt">Order 2025-0142 — Documents: 3/8</div><div class="bd"><div><span>Proforma Invoice</span><span>OK</span></div><div><span>Commercial Invoice</span><span>OK</span></div><div><span>Packing List</span><span>OK</span></div><div><span>Certificate of Origin (Form E)</span><span>MISSING</span></div><div><span>Bill of Lading</span><span>—</span></div><div><span>Insurance</span><span>MISSING</span></div><div><span>Export declaration</span><span>—</span></div><div><span>Tax rebate file</span><span>MISSING</span></div></div><div class="btns"><span>Print</span><span>Close</span></div></div></div>
+      <div class="sb"><span>Connected to ERP-SRV01</span><span>User: sales02</span><span>18 records</span><span>Last sync: 2025-05-26 18:02</span></div></div>`;},
+  };
+  st.innerHTML=V[v]();
+});
+</script></body></html>

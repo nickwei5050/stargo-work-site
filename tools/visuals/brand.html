@@ -1,0 +1,43 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../css/inter.css"><link rel="stylesheet" href="os.css"><script src="lib.js"></script>
+<style>
+  .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(70% 70% at 50% 50%,#000 30%,transparent 100%)}
+  .g{position:absolute;filter:drop-shadow(0 0 22px rgba(255,255,255,.35))}
+  .lab{position:absolute;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:rgba(244,237,228,.55)}
+  .node{position:absolute;width:132px;height:132px;margin:-66px 0 0 -66px;border-radius:50%;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(10px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;box-shadow:0 20px 50px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.1)}
+  .node i{width:12px;height:12px;border-radius:50%;background:var(--accent);box-shadow:0 0 18px var(--accent)}
+  .node span{font-size:11px;letter-spacing:.2em;color:var(--text)}
+  .lp{position:absolute;width:36px;height:36px;margin:-18px 0 0 -18px;border-radius:50%;background:#1a120c;border:2px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center}
+  .lp i{width:10px;height:10px;border-radius:50%;background:var(--accent2);box-shadow:0 0 14px var(--accent)}
+  .lp.done i{background:var(--green);box-shadow:0 0 14px var(--green)}
+  .lpl{position:absolute;font-size:11px;letter-spacing:.22em;color:rgba(244,237,228,.7);transform:translate(-50%,-50%);white-space:nowrap}
+  .numeral{position:absolute;right:-30px;top:50%;transform:translateY(-52%);font-size:640px;font-weight:200;letter-spacing:-.04em;color:rgba(255,255,255,.06);line-height:1}
+  .ftile{position:absolute;left:90px;bottom:90px;width:250px;height:110px;border-radius:22px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:space-around;color:var(--text)}
+  .og .wm{position:absolute;left:80px;top:96px}
+  .og h1{position:absolute;left:80px;top:220px;font-size:58px;font-weight:600;letter-spacing:-.02em;line-height:1.1;width:640px}
+  .og p{position:absolute;left:80px;top:420px;font-size:22px;color:var(--muted);width:700px;line-height:1.4}
+  .og .n{position:absolute;left:80px;bottom:60px;font-size:13px;letter-spacing:.26em;color:var(--faint)}
+</style></head><body><div class="stage" id="st"></div>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  const q=new URLSearchParams(location.search);const v=q.get('v')||'wide';const st=document.getElementById('st');
+  const W=(cls)=>{st.className='stage '+cls;};
+  const glow=()=>S.wall()+'<div class="grid"></div>';
+  const V={
+    wide(){W('wide');return glow()+`<div class="g" style="left:50%;top:50%;transform:translate(-50%,-50%)">${S.glyph(150,'#fff')}</div>`;},
+    square(){W('square');return glow()+`<div class="orb ring" style="position:absolute;left:50%;top:50%;width:460px;height:460px;transform:translate(-50%,-50%)"></div>`;},
+    tall(){W('tall');return glow()+`<div class="g" style="left:90px;bottom:90px">${S.glyph(120,'#fff')}</div>`;},
+    ontology(){W('wide');const N=[['CUSTOMER',330,300],['INQUIRY',620,200],['QUOTE',900,290],['ORDER',1150,420],['SHIPMENT',980,700],['TASK',640,760],['AGENT',400,600]];
+      const E=[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,0],[0,2],[6,2],[6,3],[1,6]];
+      const lines=E.map(([a,b])=>`<line x1="${N[a][1]}" y1="${N[a][2]}" x2="${N[b][1]}" y2="${N[b][2]}" stroke="rgba(242,163,91,.45)" stroke-width="1.4"/>`).join('');
+      const core=`<circle cx="750" cy="490" r="8" fill="#f2a35b"/>`+N.map(([,x,y])=>`<line x1="750" y1="490" x2="${x}" y2="${y}" stroke="rgba(255,255,255,.12)" stroke-width="1" stroke-dasharray="3 6"/>`).join('');
+      return glow()+`<svg style="position:absolute;inset:0" width="1500" height="1000" viewBox="0 0 1500 1000">${lines}${core}</svg>`+N.map(([n,x,y])=>`<div class="node" style="left:${x}px;top:${y}px"><i></i><span>${n}</span></div>`).join('')+`<div class="lab" style="left:90px;top:90px">Operational ontology</div><div class="lab" style="left:90px;bottom:90px">One model of the business</div>`;},
+    loop(){W('wide');const L=['DISCOVER','QUALIFY','ENGAGE','UNDERSTAND','RESPOND','QUOTE','EXECUTE','FOLLOW','LEARN'];const cx=750,cy=500,r=330;
+      const pts=L.map((n,i)=>{const a=-Math.PI/2+i*2*Math.PI/9;return [n,cx+r*Math.cos(a),cy+r*Math.sin(a),cx+(r+64)*Math.cos(a),cy+(r+64)*Math.sin(a)];});
+      return glow()+`<svg style="position:absolute;inset:0" width="1500" height="1000"><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="rgba(242,163,91,.55)" stroke-width="1.6"/><circle cx="${cx}" cy="${cy}" r="${r-30}" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="1"/><circle cx="${cx}" cy="${cy}" r="${r+30}" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="1" stroke-dasharray="2 8"/></svg>`+pts.map(([n,x,y,lx,ly],i)=>`<div class="lp ${i<3?'done':''}" style="left:${x}px;top:${y}px"><i></i></div><div class="lpl" style="left:${lx}px;top:${ly}px">${n}</div>`).join('')+`<div class="orb ring" style="position:absolute;left:${cx}px;top:${cy}px;width:180px;height:180px;transform:translate(-50%,-50%)"></div>`;},
+    family(){W('wide');const n=+(q.get('n')||1);const hue=['rgba(232,130,58,.5)','rgba(240,179,90,.45)','rgba(255,107,138,.42)','rgba(143,124,255,.42)'][n-1];const ic=[['grid','search','signal'],['users','chat','doc'],['coin','ship','sparkle'],['robot','shield','layers']][n-1];
+      return `<div class="wall"><div class="silk a" style="background:radial-gradient(closest-side,${hue},transparent 72%)"></div><div class="silk b" style="background:radial-gradient(closest-side,${hue},transparent 70%);opacity:.6"></div></div><div class="vignette"></div><div class="grid"></div><div class="numeral">0${n}</div><div class="ftile">${ic.map((i)=>S.icon(i,28,1.4)).join('')}</div>`;},
+    og(){st.style.width='1200px';st.style.height='630px';st.className='stage og';return S.wall()+`<div class="grid"></div><div class="wm">${S.wordmark(18,'#f4ede4')}</div><h1>The AI Operating System<br>for Global Trade.</h1><p>288 AI employees. One shared business context. From market signal to order, on one loop.</p><div class="n">STARGO WORK · stargomoto.com</div><div class="orb ring" style="position:absolute;right:90px;top:50%;width:250px;height:250px;transform:translateY(-50%)"></div>`;},
+  };
+  st.innerHTML=V[v]();
+});
+</script></body></html>

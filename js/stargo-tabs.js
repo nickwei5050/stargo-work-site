@@ -79,6 +79,68 @@
     select(0);
   }
 
+
+  /* Core-system switcher on the homepage. The template drives the four panels
+     from scroll progress (an IX2 "scroll into view" action list over a 400vh
+     block). The four names on the left were only styled as tabs. Clicking one
+     scrolls the page to the zone where that panel is the active one, then
+     nudges the position until the panel actually reads as fully visible — the
+     scroll animation stays the single source of truth, and the mapping never
+     has to be guessed. Lenis (the template's smooth scroll) is used when
+     present. */
+  function initSwitcher() {
+    var block = document.querySelector('.product-sticky-block');
+    if (!block) return;
+    var names = block.querySelectorAll('.products-card-name-wrapper .products-card-name-block');
+    var panels = block.querySelectorAll('.products-cards-right-inner-block .products-cards-dashboard-block');
+    if (names.length !== 4 || panels.length !== 4) return;
+    var zones = [0.17, 0.37, 0.58, 0.72];      // rough scroll progress of each panel; refined live
+    var settling = 0;
+    function scrollTo(y, seconds) {
+      if (typeof lenis !== 'undefined' && lenis && lenis.scrollTo) lenis.scrollTo(y, { duration: seconds });
+      else window.scrollTo({ top: y, behavior: seconds > 0.4 ? 'smooth' : 'auto' });
+    }
+    function opacity(el) { return +getComputedStyle(el).opacity || 0; }
+    /* The scroll animation only advances on scroll events (its smoothing is
+       applied per event), so after an animated scroll ends it can sit halfway
+       through a crossfade. A handful of ±1px scroll events lets it converge. */
+    function jiggle(n, done) {
+      if (n <= 0) { done(); return; }
+      window.scrollBy(0, n % 2 ? 1 : -1);
+      requestAnimationFrame(function () { setTimeout(function () { jiggle(n - 1, done); }, 24); });
+    }
+    function settle(i, token, attempt) {
+      if (token !== settling) return;
+      jiggle(10, function () {
+        if (token !== settling) return;
+        if (opacity(panels[i]) > 0.96 || attempt > 12) return;
+        var shown = -1, best = 0;
+        for (var k = 0; k < 4; k++) { var o = opacity(panels[k]); if (o > best) { best = o; shown = k; } }
+        var dir = shown > i ? -1 : 1;                 // wrong panel, or still mid-fade: keep moving toward the zone
+        window.scrollBy(0, dir * 40);
+        setTimeout(function () { settle(i, token, attempt + 1); }, 60);
+      });
+    }
+    function go(i) {
+      var vh = window.innerHeight;
+      var top = block.getBoundingClientRect().top + window.pageYOffset;
+      var y = Math.round(top - vh + (block.offsetHeight + vh) * zones[i]);
+      var token = ++settling;
+      scrollTo(y, 1.1);
+      setTimeout(function () { settle(i, token, 0); }, 1300);
+    }
+    for (var i = 0; i < names.length; i++) {
+      (function (idx) {
+        var n = names[idx];
+        n.setAttribute('role', 'button');
+        n.setAttribute('tabindex', '0');
+        n.addEventListener('click', function () { go(idx); });
+        n.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(idx); } });
+      })(i);
+    }
+  }
+  initSwitcher();
+
   var tabs = document.querySelectorAll('.w-tabs');
   for (var i = 0; i < tabs.length; i++) initTabs(tabs[i]);
   var periods = document.querySelectorAll('.pricing-tabs-info-block');

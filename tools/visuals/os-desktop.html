@@ -1,0 +1,55 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../css/inter.css"><link rel="stylesheet" href="os.css"><script src="lib.js"></script>
+<style>
+  .menubar{position:absolute;top:0;left:0;right:0;height:40px;display:flex;align-items:center;padding:0 24px;font-size:11px;letter-spacing:.22em;color:var(--muted);z-index:6}
+  .menubar .l{display:flex;align-items:center;gap:22px}.menubar .l b{font-weight:500;color:var(--text)}
+  .menubar .c{position:absolute;left:50%;transform:translateX(-50%);color:var(--text)}
+  .menubar .r{margin-left:auto;display:flex;align-items:center;gap:20px}
+  .clock{position:absolute;left:0;right:0;top:150px;text-align:center;font-size:118px;font-weight:200;letter-spacing:.06em;line-height:1;color:#fff;text-shadow:0 0 30px rgba(255,200,150,.25)}
+  .date{position:absolute;left:0;right:0;top:288px;text-align:center;font-size:13px;letter-spacing:.32em;color:var(--muted)}
+  .core{position:absolute;left:50%;top:520px;transform:translate(-50%,-50%)}
+  .act{position:absolute;left:0;right:0;top:872px;text-align:center;font-size:11px;letter-spacing:.3em;color:var(--muted)}
+  .actb{position:absolute;left:50%;top:898px;width:22px;height:22px;margin-left:-11px;border-radius:50%;border:1.5px solid rgba(255,255,255,.6)}
+  .w{position:absolute;width:440px;padding:22px 24px;border-radius:22px}
+  .w.left{left:120px;top:310px;height:390px}
+  .w.right{right:120px;top:310px;height:500px}
+  .temp{font-size:78px;font-weight:300;line-height:1;margin-top:18px;letter-spacing:-.03em}
+  .hours{display:flex;justify-content:space-between;margin-top:26px;padding:14px 16px;border-radius:14px;background:var(--glass2);text-align:center}
+  .hours div{display:flex;flex-direction:column;gap:6px;font-size:15px}.hours div b{font-weight:500;font-size:17px}
+  .days{display:flex;justify-content:space-between;margin-top:22px;text-align:center}
+  .days div{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:12px;color:var(--muted)}.days div b{color:var(--text);font-weight:500;font-size:14px}
+  .tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}
+  .tiles .card.sub{padding:14px 16px}
+  .lst{margin-top:18px}
+  .lst .row{padding:12px 0;border-top:1px solid rgba(255,255,255,.06)}
+</style></head><body><div class="stage"><span data-tpl="wall"></span>
+<div class="menubar"><div class="l"><span class="lights" style="position:static"><i></i><i></i><i></i></span><b>● STARGO OS</b></div><div class="c" id="wm"></div><div class="r"><span data-icon="search" data-size="16"></span><span data-icon="wifi" data-size="16"></span><span data-icon="volume" data-size="16"></span><span style="letter-spacing:.05em;color:var(--text)">16:17</span><span class="orb xs"></span></div></div>
+<div class="clock">16:17:01</div><div class="date">WEDNESDAY, MAY 21, 2025</div>
+<div class="core"><div class="orb ring" style="width:150px;height:150px"></div></div>
+<div class="act">ACTIVATE AI</div><div class="actb"></div>
+
+<div class="card w left">
+  <div class="hd"><span class="row" style="gap:8px;font-size:15px;font-weight:500"><span data-icon="pin" data-size="16"></span>Liuzhou, Guangxi</span><span class="row" style="gap:10px;color:var(--muted)"><span class="tile sm" data-icon="refresh" data-size="14"></span><span class="tile sm" data-icon="nav" data-size="14"></span><span class="tile sm" data-icon="more" data-size="14"></span></span></div>
+  <div class="row between"><div><div class="temp">24°</div><div class="sub-t" style="font-size:18px;margin-top:8px">Cloudy &nbsp;<span class="faint">—</span></div></div><span style="color:#fff;opacity:.9" data-icon="cloud" data-size="86" data-sw="1.2"></span></div>
+  <div class="hours"><div><b>Now</b><span>24°</span></div><div><b>17:00</b><span>24°</span></div><div><b>18:00</b><span>23°</span></div><div><b>19:00</b><span>22°</span></div><div><b>20:00</b><span>21°</span></div></div>
+  <div class="days"><div>THU<span data-icon="cloud" data-size="26"></span><b>24°</b></div><div>FRI<span data-icon="cloud" data-size="26"></span><b>23°</b></div><div>SAT<span data-icon="sun" data-size="26"></span><b>22°</b></div><div>SUN<span data-icon="sun" data-size="26"></span><b>22°</b></div><div>MON<span data-icon="cloud" data-size="26"></span><b>20°</b></div></div>
+</div>
+
+<div class="card w right">
+  <div class="hd"><h4 style="font-size:13px;letter-spacing:.12em">PIPELINE</h4><span class="tile sm" data-icon="more" data-size="14"></span></div>
+  <div class="tiles">
+    <div class="card sub"><div class="lbl" style="font-size:9.5px">Total pipeline</div><div class="row" style="margin-top:8px;gap:10px"><span class="num">$48.6M</span><span class="green small up">16.3%</span></div><div class="bar green" style="margin-top:12px"><i style="width:68%"></i></div></div>
+    <div class="card sub"><div class="lbl" style="font-size:9.5px">7D change</div><div class="num" style="margin-top:8px;font-size:22px">+4.3%</div><div style="margin-top:8px" id="sp0"></div></div>
+  </div>
+  <div class="lst">
+    <div class="row between tiny lbl" style="padding-bottom:6px"><span>Opportunities</span><span>Stage</span></div>
+    <div id="rows"></div>
+  </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  wm.innerHTML=S.wordmark(11,'#f4ede4');
+  sp0.innerHTML=S.spark([3,4,3.6,4.4,4.2,5,5.4,5.2,6,6.4],'#5fd08b',190,42);
+  const R=[['SB','Aurora Mobility Brazil','Product match','$4.75M','+4.3%',[2,3,2.5,3.4,3.2,4,4.6]],['SZ','STE ZAYN Tunisia','Qualified','$2.18M','+2.5%',[2,2.4,2.2,2.9,3.1,3,3.4]],['WP','Washka Poland','Product match','$1.92M','+1.8%',[1,1.6,1.4,2,2.2,2.1,2.5]],['SP','SBML Panama','Quotation','$3.35M','+0.9%',[3,3.1,3.3,3.2,3.5,3.6,3.7]]];
+  rows.innerHTML=R.map(([m,n,s,v,d,p])=>`<div class="row"><span class="tile mono">${m}</span><div class="grow"><div class="name">${n}</div><div class="sub">${s}</div></div><span style="font-weight:500;width:64px;text-align:right">${v}</span><span>${S.spark(p,'#5fd08b',56,20)}</span><span class="green small" style="width:44px;text-align:right">${d}</span></div>`).join('');
+});
+</script></div></body></html>

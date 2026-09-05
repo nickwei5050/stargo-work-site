@@ -1,0 +1,58 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../css/inter.css"><link rel="stylesheet" href="os.css"><script src="lib.js"></script>
+<style>
+  .stage.mobile{overflow:hidden}
+  .hdr{display:flex;align-items:center;justify-content:space-between}
+  .ap{padding:28px 30px}
+  .ap .t{font-size:24px;font-weight:600;line-height:1.25}.ap .s{font-size:19px;color:var(--muted);margin-top:8px;line-height:1.4}
+  .ap .m{display:flex;gap:12px;margin-top:22px}
+  .ap .m .btn{flex:1}
+  .ag{display:flex;align-items:center;gap:18px;padding:18px 0;border-top:1px solid rgba(255,255,255,.07)}
+  .ag:first-child{border-top:0}
+  .ag .n{font-size:22px;font-weight:600}.ag .st{margin-left:auto;font-size:18px}
+  .act{display:flex;gap:16px;font-size:18px;padding:9px 0;color:var(--muted)}.act .t{color:var(--faint);width:70px}
+  .bub{max-width:82%;padding:18px 24px;border-radius:24px;font-size:20px;line-height:1.4}
+  .bub.me{align-self:flex-end;background:linear-gradient(180deg,#f39a4e,#d8672a);color:#1c0f06;border-bottom-right-radius:8px}
+  .bub.ai{align-self:flex-start;background:var(--glass2);border:1px solid var(--line);border-bottom-left-radius:8px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .inp{position:absolute;left:36px;right:36px;bottom:150px;height:78px;border-radius:39px;background:rgba(255,255,255,.07);border:1px solid var(--line2);display:flex;align-items:center;padding:0 10px 0 30px;font-size:21px;color:var(--faint)}
+  .inp .go{margin-left:auto;width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#f39a4e,#d8672a);display:flex;align-items:center;justify-content:center;color:#1c0f06}
+  .req{display:flex;gap:14px;align-items:flex-start;font-size:19px;color:var(--muted);padding:8px 0}
+  p.body-t{font-size:19px;color:var(--muted);line-height:1.5;margin-top:10px}
+</style></head><body><div class="stage mobile"><span data-tpl="wall"></span><span data-tpl="sbar"></span>
+<div class="body" id="body"></div>
+<div id="tab"></div>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  const v=new URLSearchParams(location.search).get('v')||'approvals';
+  const V={
+    approvals:()=>`<div class="hdr"><h1>Approvals</h1><span class="chip warn">3 pending</span></div>
+      <div class="card ap"><div class="row" style="gap:12px"><span class="chip acc">Quote Q-5678</span><span class="faint tiny">8m ago</span></div><div class="t" style="margin-top:14px">Aurora Mobility Brazil — $510,500</div><div class="s">Gross margin 23%, below the 25% guardrail. Requested by Quote Agent.</div><div class="m"><span class="btn">Reject</span><span class="btn primary">Approve at 24%</span></div></div>
+      <div class="card ap"><div class="row" style="gap:12px"><span class="chip info">PI-0143</span><span class="faint tiny">1h ago</span></div><div class="t" style="margin-top:14px">STE ZAYN Tunisia — $2.18M</div><div class="s">Proforma invoice ready to issue. Payment 30/70, CIF Radès.</div><div class="m"><span class="btn">Review</span><span class="btn primary">Issue PI</span></div></div>
+      <div class="card ap"><div class="row" style="gap:12px"><span class="chip vio">Key customer reply</span><span class="faint tiny">2h ago</span></div><div class="t" style="margin-top:14px">Washka Poland</div><div class="s">Draft reply uses knowledge base v12 and the 2025 price list.</div><div class="m"><span class="btn">Edit</span><span class="btn primary">Send</span></div></div>
+      <div class="faint" style="text-align:center;font-size:18px;margin-top:6px">AI does the work. You keep the authority.</div>`,
+    agents:()=>`<div class="hdr"><h1>Agent Teams</h1><span data-icon="more" data-size="30"></span></div>
+      <div class="card ap"><div class="row between"><span class="chip ok">Running</span><span class="faint tiny">6 agents · 14m</span></div><div class="t" style="margin-top:14px">Find new dealers in Brazil</div><div class="s">SG-EM-750 · São Paulo, Curitiba, Belo Horizonte</div><div class="bar" style="margin-top:20px"><i style="width:65%"></i></div><div class="row between" style="margin-top:10px"><span class="faint tiny">Progress</span><span class="tiny">65%</span></div></div>
+      <div class="card" style="padding:12px 30px">${[['Market Research Agent','Running','','search'],['Importer Intelligence Agent','Running','','ship'],['Dealer Discovery Agent','Running','','pin'],['Buying Committee Agent','Queued','blue','users'],['Product Matching Agent','Done','','box'],['Follow-up Agent','Waiting','grey','clock']].map(([n,st,c,ic])=>`<div class="ag"><span class="tile">${S.icon(ic,26)}</span><span class="n">${n}</span><span class="st ${st==='Done'?'green':c||'green'}"><span class="dot ${st==='Done'?'':c}"></span>${st}</span></div>`).join('')}</div>
+      <div class="card ap"><h4>Live activity</h4><div style="margin-top:12px">${[['16:16','14 candidate dealers found'],['16:15','3 have 72V import history'],['16:14','Buying committees mapped for 2'],['16:12','Product fit scored']].map(([t,s])=>`<div class="act"><span class="t">${t}</span><span>${s}</span></div>`).join('')}</div></div>`,
+    inquiry:()=>`<div class="hdr"><span class="chip">Inquiry · 10m ago</span><span class="red small">● High priority</span></div>
+      <h2 style="line-height:1.25">Industrial HVAC Solutions for New Facility</h2>
+      <div class="row" style="gap:12px;color:var(--muted);font-size:19px"><span data-icon="briefcase" data-size="20"></span>EcoClimate Engineering Ltd. · Brazil · via Website</div>
+      <div class="chips"><span class="chip acc">Qualification</span><span class="chip">Maria Santos</span><span class="chip">$250k–$350k</span></div>
+      <div class="card ap"><h4>AI summary</h4><p class="body-t">New manufacturing facility, 25,000 m². Needs an energy-efficient HVAC system that integrates with the existing BMS, installation Q3–Q4 2025, with after-sales service.</p></div>
+      <div class="card ap"><h4>Key requirements</h4><div style="margin-top:8px">${['High-efficiency system for 25,000 m²','BMS integration','Energy recovery ventilation','After-sales &amp; maintenance'].map((r)=>`<div class="req"><span class="check on"></span>${r}</div>`).join('')}</div></div>
+      <div class="card ap"><h4>Suggested reply</h4><p class="body-t">Thank you for the detail on the São Paulo facility. Based on the 25,000 m² footprint and BMS integration, we recommend the SG-HV series with energy recovery…</p><div class="m"><span class="btn">Edit</span><span class="btn primary">Send for approval</span></div></div>`,
+    core:()=>`<div class="hdr"><div class="row" style="gap:16px"><span class="orb sm" style="width:52px;height:52px"></span><div><div style="font-size:22px;font-weight:600;letter-spacing:.08em">STARGO CORE</div><div class="green tiny"><span class="dot"></span>online</div></div></div><span data-icon="more" data-size="30"></span></div>
+      <div class="col" style="gap:18px;margin-top:10px">
+        <div class="bub me">Find us new dealers in Brazil for the SG-EM-750.</div>
+        <div class="bub ai">Forming a team: Market Research, Importer Intelligence, Dealer Discovery, Buying Committee, Product Matching, Follow-up.<div class="chips">${['Research','Importer','Dealer','Committee','Product','Follow-up'].map((c)=>`<span class="chip">${c}</span>`).join('')}</div></div>
+        <div class="bub ai">Found 14 candidate dealers in São Paulo and Curitiba. 3 have import history with 72V products. Want the brief?</div>
+        <div class="bub me">Yes — and draft first emails for the three.</div>
+        <div class="bub ai"><span class="green"><span class="dot"></span>Working</span> · Email drafts will wait for your approval before sending.</div>
+      </div>
+      <div class="inp">Ask STARGO CORE…<span class="go">${S.icon('arrow',26,2.2)}</span></div>`,
+  };
+  body.innerHTML=V[v]();
+  tab.outerHTML=S.tabbar({approvals:2,agents:2,inquiry:1,core:0}[v]);
+  document.querySelectorAll('[data-icon]').forEach((el)=>{el.innerHTML=S.icon(el.dataset.icon,+(el.dataset.size||18),+(el.dataset.sw||1.6));});
+});
+</script></div></body></html>

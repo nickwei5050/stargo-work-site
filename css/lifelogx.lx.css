@@ -29,7 +29,7 @@
   font-weight: 500;
   font-style: normal;
   font-display: swap;
-} .lx-lx-scope{
+} .lx-scope{
   --_semantics---background-default: var(--_primitives---neutral--neutral-900);
   --_ui-styles---fonts--text: Inter, sans-serif;
   --_semantics---text: var(--_primitives---neutral--neutral-50);
@@ -196,7 +196,7 @@
 } .w-form-formradioinput--inputType-custom.w--redirected-checked{
   border-width: 4px;
   border-color: #3898ec;
-} .lx-lx-scope{
+} .lx-scope{
   background-color: var(--_semantics---background-default);
   font-family: var(--_ui-styles---fonts--text);
   color: var(--_semantics---text);
@@ -4326,7 +4326,7 @@
   }
 }
 
-@media screen and (max-width: 991px) { .lx-lx-scope{
+@media screen and (max-width: 991px) { .lx-scope{
     --_ui-styles---fonts--text: Inter, sans-serif;
     --_ui-styles---fonts--heading: "42 Dotsans", Arial, sans-serif;
     --_ui-styles---borderradius--small: .8rem;
@@ -4649,7 +4649,7 @@
   }
 }
 
-@media screen and (max-width: 767px) { .lx-lx-scope{
+@media screen and (max-width: 767px) { .lx-scope{
     --_ui-styles---fonts--text: Inter, sans-serif;
     --_ui-styles---fonts--heading: "42 Dotsans", Arial, sans-serif;
     --_ui-styles---borderradius--small: .8rem;
@@ -5068,7 +5068,7 @@
   }
 }
 
-@media screen and (max-width: 479px) { .lx-lx-scope{
+@media screen and (max-width: 479px) { .lx-scope{
     --_ui-styles---fonts--text: Inter, sans-serif;
     --_ui-styles---fonts--heading: "42 Dotsans", Arial, sans-serif;
     --_ui-styles---borderradius--small: .8rem;

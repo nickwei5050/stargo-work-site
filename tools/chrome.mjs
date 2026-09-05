@@ -1,7 +1,8 @@
 /**
  * Site chrome shared by every page: navigation, overlay menu, floating pill,
- * footer, head metadata, script tags, the brand wordmark, the language
- * switch and the template's shared English strings — in both languages.
+ * footer, head metadata (canonical, hreflang, Open Graph, structured data),
+ * script tags, the brand wordmark, the language switch, link hygiene and the
+ * template's shared English strings — in both languages.
  *
  * Links are REGENERATED from one list, not edited in place. The Mono export
  * carries three copies of its navigation on every page (top bar, overlay
@@ -10,10 +11,15 @@
  * did not match pointing at a template page that no longer exists.
  */
 import { makeSub, findByClass, extractElement } from './lib-html.mjs';
-import { NAV, SECONDARY, LANG_SWITCH, CHROME, META, CONTACT_INFO } from './copy.mjs';
+import { NAV, SECONDARY, LANG_SWITCH, CHROME, META, CONTACT_INFO, SITE_URL } from './copy.mjs';
 
 export const ALL_PAGES = new Set([...NAV, ...SECONDARY].map((n) => n.href).concat(['404.html']));
 const WORDMARK = 'assets/brand/stargo-wordmark-600.png';
+const AVATAR = 'assets/stargo/avatar-core.png';
+const OG_IMAGE = 'assets/stargo/og-cover.png';
+
+/** Product screens that replace the template's photo strips (overlay menu) and image rotator (contact band). */
+export const SCREENS = ['os-cockpit', 'os-sales-desk', 'os-inquiries', 'os-agent-center', 'os-quote-studio', 'os-trade-execution', 'os-desktop', 'os-login', 'os-boot', 'os-loading'].map((n) => `assets/stargo/${n}.webp`);
 
 /** Pages that existed in the templates and where each now lives. */
 const LEGACY = {
@@ -40,13 +46,14 @@ function firstLink(block) {
   return extractElement(block, m.index, 'a').text;
 }
 
-function renderLink(tpl, { href, label }, current) {
+function renderLink(tpl, { href, label, lang }, current) {
   let out = tpl
     .replace(/\s*aria-current="page"/, '')
     .replace(/ w--current\b/, '')
     .replace(/href="[^"]*"/, `href="${href}"`)
     .replace(/(<div class="navigation-text-main[^"]*">)[^<]*(<\/div>)/, `$1${label}$2`)
     .replace(/(<div class="button-text[^"]*">)[^<]*(<\/div>)/g, `$1${label}$2`);
+  if (lang) out = out.replace(/<a\b/, `<a hreflang="${lang}" lang="${lang}"`);
   if (current) out = out.replace(/<a\b/, '<a aria-current="page"').replace(/class="([^"]*)"/, 'class="$1 w--current"');
   return out;
 }
@@ -57,6 +64,17 @@ function replaceInner(html, el, inner) {
   return html.slice(0, el.start + openEnd) + inner + html.slice(el.end - closeLen);
 }
 
+/** A `w-background-video` block becomes a still image (same box, same interactions, no video). */
+export function stillImage(html, videoId, src, alt = '') {
+  const i = html.indexOf(`id="${videoId}-video"`);
+  if (i === -1) throw new Error(`still: video ${videoId} not found`);
+  const vStart = html.lastIndexOf('<video', i);
+  const vEnd = html.indexOf('</video>', i) + '</video>'.length;
+  const wrapStart = html.lastIndexOf('<div', vStart);
+  let wrap = html.slice(wrapStart, vStart).replace(/\s*data-(video-urls|poster-url|autoplay|loop)="[^"]*"/g, '');
+  return html.slice(0, wrapStart) + wrap + `<img src="${src}" alt="${alt}" loading="lazy" class="stargo-still"/>` + html.slice(vEnd);
+}
+
 /* -------------------------------------------------------------- parts -- */
 
 function links(lang, current) {
@@ -64,7 +82,7 @@ function links(lang, current) {
   const other = lang === 'zh' ? `en/${current}` : `../${current}`;
   const nav = NAV.map((n) => ({ href: n.href, label: t(n.label) }));
   const secondary = SECONDARY.map((n) => ({ href: n.href, label: t(n.label) }));
-  const swap = { href: other, label: t(LANG_SWITCH), swap: true };
+  const swap = { href: other, label: t(LANG_SWITCH), swap: true, lang: lang === 'zh' ? 'en' : 'zh-CN' };
   return { nav, secondary, swap };
 }
 
@@ -77,6 +95,7 @@ function topNav(html, L, current) {
   return html.replace(m[0], `<nav role="navigation" class="nav-menu first w-nav-menu">${out}</nav>`);
 }
 
+/** Overlay menu: the product pages and the language switch. Legal pages sit in its bottom row and in the footer. */
 function overlayMenu(html, L, current) {
   const flex = findByClass(html, 'div', 'nav-top-flex');
   if (!flex) {
@@ -85,7 +104,7 @@ function overlayMenu(html, L, current) {
   }
   const item = findByClass(flex.text, 'div', 'menu-item');
   const linkTpl = firstLink(item.text);
-  const items = [...L.nav, ...L.secondary, L.swap].map((n, i) =>
+  const items = [...L.nav, L.swap].map((n, i) =>
     `<div class="menu-item _0${i + 1}">${renderLink(linkTpl, n, n.href === current)}</div>`).join('');
   return replaceInner(html, flex, items);
 }
@@ -109,7 +128,7 @@ function footerPages(html, L, current) {
   if (!grid) throw new Error('chrome: footer pages grid not found');
   const tpl = firstLink(grid.text);
   const n = L.nav;
-  const cols = [[n[0], n[1], n[2]], [n[3], n[4], n[5]], [n[6], ...L.secondary, L.swap]];
+  const cols = [[n[0], n[1], n[2], n[3]], [n[4], n[5], n[6], L.swap], [...L.secondary]];
   const inner = cols.map((c) => `<div class="flex-item">${c.map((x) => renderLink(tpl, x, x.href === current)).join('')}</div>`).join('');
   return replaceInner(html, grid, inner);
 }
@@ -124,24 +143,55 @@ function wordmark(html) {
     .replace(/<p class="top-text logo nbg">(?:Mōno™|STARGO)<\/p>/g, img('in-card'));
 }
 
+/** Clean URL of a page as Cloudflare Pages serves it. */
+export const cleanUrl = (lang, page) => {
+  const p = page === 'index.html' ? '' : page.replace(/\.html$/, '');
+  return lang === 'zh' ? `${SITE_URL}/${p}` : `${SITE_URL}/en/${p}`;
+};
+
 function head(html, lang, current) {
   const meta = META[current];
   const title = current === 'index.html' ? meta.title[lang] : `${meta.title[lang]} — STARGO WORK`;
   const description = meta.description[lang];
-  const zhHref = current, enHref = `en/${current}`;
-  const alt = lang === 'zh'
-    ? `<link rel="alternate" hreflang="zh-CN" href="${zhHref}"/><link rel="alternate" hreflang="en" href="${enHref}"/>`
-    : `<link rel="alternate" hreflang="zh-CN" href="../${zhHref}"/><link rel="alternate" hreflang="en" href="${current}"/>`;
+  const self = cleanUrl(lang, current);
+  const zh = cleanUrl('zh', current);
+  const en = cleanUrl('en', current);
+  const ld = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      { '@type': 'Organization', '@id': `${SITE_URL}/#org`, name: 'STARGO WORK', url: `${SITE_URL}/`, logo: `${SITE_URL}/${WORDMARK}`, email: CONTACT_INFO.email, telephone: CONTACT_INFO.whatsapp, address: { '@type': 'PostalAddress', addressLocality: 'Liuzhou', addressRegion: 'Guangxi', addressCountry: 'CN' }, sameAs: [CONTACT_INFO.siteHref] },
+      { '@type': 'WebSite', '@id': `${SITE_URL}/#site`, url: `${SITE_URL}/`, name: 'STARGO WORK', inLanguage: ['zh-CN', 'en'], publisher: { '@id': `${SITE_URL}/#org` } },
+      { '@type': 'WebPage', '@id': self, url: self, name: title, description, inLanguage: lang === 'zh' ? 'zh-CN' : 'en', isPartOf: { '@id': `${SITE_URL}/#site` } },
+      ...(current === 'index.html' ? [{ '@type': 'SoftwareApplication', name: 'STARGO WORK', applicationCategory: 'BusinessApplication', operatingSystem: 'Web', url: `${SITE_URL}/`, description, offers: { '@type': 'AggregateOffer', priceCurrency: 'CNY', lowPrice: '10000', highPrice: '40000', offerCount: 4 }, provider: { '@id': `${SITE_URL}/#org` } }] : []),
+    ],
+  };
+  const extra = [
+    `<link rel="canonical" href="${self}"/>`,
+    `<link rel="alternate" hreflang="zh-CN" href="${zh}"/>`,
+    `<link rel="alternate" hreflang="en" href="${en}"/>`,
+    `<link rel="alternate" hreflang="x-default" href="${zh}"/>`,
+    `<meta property="og:url" content="${self}"/>`,
+    '<meta property="og:type" content="website"/>',
+    '<meta property="og:site_name" content="STARGO WORK"/>',
+    `<meta property="og:locale" content="${lang === 'zh' ? 'zh_CN' : 'en_US'}"/>`,
+    `<meta property="og:image" content="${SITE_URL}/${OG_IMAGE}"/>`,
+    '<meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/>',
+    '<meta name="twitter:card" content="summary_large_image"/>',
+    `<meta name="twitter:image" content="${SITE_URL}/${OG_IMAGE}"/>`,
+    '<meta name="theme-color" content="#0d0906"/>',
+    `<script type="application/ld+json">${JSON.stringify(ld)}</script>`,
+  ].join('');
   let out = html
+    .replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/g, '')   // the template's own structured data
     .replace(/<html([^>]*)lang="en"/, `<html$1lang="${lang === 'zh' ? 'zh-CN' : 'en'}"`)
-    .replace(/<title>[^<]*<\/title>/, `<title>${title}</title>${alt}`)
+    .replace(/<title>[^<]*<\/title>/, `<title>${title}</title>${extra}`)
     .replace(/<meta content="[^"]*" (name|property)="(description|og:description|twitter:description)"\/>/g, `<meta content="${description}" $1="$2"/>`)
     .replace(/<meta content="[^"]*" (name|property)="(og:title|twitter:title)"\/>/g, `<meta content="${title}" $1="$2"/>`)
     .replace(/<meta content="[^"]*" property="og:image"\/>/, '')
-    .replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/g, '')
+    .replace(/<meta content="[^"]*" property="twitter:image"\/>/, '')
     .replace(/<link href="[^"]*" rel="shortcut icon" type="image\/x-icon"\/>/, '<link href="assets/brand/stargo-wordmark-600.png" rel="shortcut icon" type="image/png"/>')
     .replace(/<link href="[^"]*" rel="apple-touch-icon"\/>/, '<link href="assets/brand/stargo-wordmark-600.png" rel="apple-touch-icon"/>');
-  const headText = out.slice(0, out.indexOf('<body')).replace(/<link[^>]*>/g, '');   // stylesheet file names carry template names
+  const headText = out.slice(0, out.indexOf('<body')).replace(/<link[^>]*>/g, '');
   if (/Mōno|monostudio|Scalora|Lifelogx/i.test(headText)) throw new Error(`chrome: template metadata survives in <head> of ${current}`);
   return out;
 }
@@ -165,6 +215,11 @@ function scripts(html) {
     out = out.replace('<script src="js/SplitText.min.js" type="text/javascript"></script>', '<script src="js/SplitText.min.js" type="text/javascript"></script><script src="js/stargo-splittext-cjk.js"></script>');
     if (!out.includes('js/stargo-splittext-cjk.js')) throw new Error('chrome: SplitText script tag not found');
   }
+  // Shorter copy on phones must be in place before the page bundle splits the text.
+  if (!out.includes('js/stargo-mobile-copy.js')) {
+    out = out.replace('<script src="js/app.fused.js"', '<script src="js/stargo-mobile-copy.js"></script><script src="js/app.fused.js"');
+    if (!out.includes('js/stargo-mobile-copy.js')) throw new Error('chrome: bundle script tag not found');
+  }
   if (!out.includes('js/stargo-forms.js')) out = out.replace('</body>', '<script src="js/stargo-forms.js"></script></body>');
   if (!out.includes('js/stargo-tabs.js')) out = out.replace('</body>', '<script src="js/stargo-tabs.js"></script></body>');
   out = out.replace(
@@ -175,6 +230,51 @@ function scripts(html) {
     'const overlay = document.querySelector(".blur-overlay");\n',
     'const overlay = document.querySelector(".blur-overlay");\n  if (!modal) return; // the template ships this markup removed\n',
   );
+  return out;
+}
+
+/**
+ * Link hygiene on every page:
+ *  - the template's placeholder legal links (href="#") go to the real pages;
+ *  - internal links never open a new tab;
+ *  - external links that do open a new tab carry rel="noopener noreferrer".
+ */
+function linkHygiene(html) {
+  let out = html.replace(/<a\b([^>]*)href="#"([^>]*)>([\s\S]*?)<\/a>/g, (m, pre, post, body) => {
+    const text = body.replace(/<[^>]+>/g, '');
+    const href = /隐私|Privacy/i.test(text) ? 'privacy.html' : /条款|Terms/i.test(text) ? 'terms.html' : null;
+    return href ? `<a${pre}href="${href}"${post}>${body}</a>` : m;
+  });
+  out = out.replace(/<a\b[^>]*>/g, (tag) => {
+    const href = (tag.match(/href="([^"]*)"/) || [])[1] || '';
+    const external = /^(https?:)?\/\//.test(href) || /^(mailto|tel):/.test(href);
+    if (!external) return tag.replace(/\s*target="_blank"/g, '');
+    if (/target="_blank"/.test(tag) && !/\brel=/.test(tag)) return tag.replace('target="_blank"', 'target="_blank" rel="noopener noreferrer"');
+    return tag;
+  });
+  return out;
+}
+
+/** Template people and stock photos in the shared chrome → STARGO imagery. */
+function chromeImagery(html) {
+  let out = html;
+  // The "Talk to Denis" avatar in the overlay menu.
+  out = out.replace(/<img[^>]*class="photo-image"[^>]*\/>/g, `<img src="${AVATAR}" loading="lazy" alt="" class="photo-image"/>`);
+  // Overlay menu photo strips and the contact band's image rotator (balanced
+  // elements: the strips nest <div>s, so a lazy regex would stop early).
+  let i = 0;
+  for (const cls of ['photo-block', 'photo-block-reverse', 'image-text-rotator']) {
+    for (let n = 0; ; n++) {
+      const el = findByClass(out, 'div', cls, n);
+      if (!el) break;
+      const inner = el.text.replace(/<img[^>]*\/>/g, (img) => {
+        const cl = (img.match(/class="([^"]*)"/) || [])[1];
+        const src = SCREENS[i++ % SCREENS.length];
+        return `<img src="${src}" loading="lazy" alt=""${cl ? ` class="${cl}"` : ''}/>`;
+      });
+      out = out.slice(0, el.start) + inner + out.slice(el.end);
+    }
+  }
   return out;
 }
 
@@ -203,6 +303,7 @@ export function relocateAssets(html) {
     .replace(/((?:src|href|data-src|data-poster-url|poster)=")(assets|css|js)\//g, '$1../$2/')
     .replace(/(srcset=")([^"]*)"/g, (_, a, v) => `${a}${v.replace(/(^|,\s*)(assets\/)/g, '$1../$2')}"`)
     .replace(/(data-video-urls=")([^"]*)"/g, (_, a, v) => `${a}${v.replace(/(^|,)(assets\/)/g, '$1../$2')}"`)
+    .replace(/(data-mobile-src=")(assets\/)/g, '$1../$2')
     .replace(/url\((&quot;|"|')?assets\//g, 'url($1../assets/')
     .replace(/url\(assets\//g, 'url(../assets/');
 }
@@ -220,7 +321,9 @@ export function applyChrome(html, { lang, current }) {
   out = footerPages(out, L, current);
   for (const [a, b] of CHROME) out = opt(out, a, b[lang]);
   out = wordmark(out);
+  out = chromeImagery(out);
   out = scripts(out);
+  out = linkHygiene(out);
   if (/monostudio|Mōno™ Studio/i.test(out)) throw new Error(`chrome: template brand survives in ${current}`);
   return out;
 }

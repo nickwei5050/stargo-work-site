@@ -1,0 +1,58 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../css/inter.css"><link rel="stylesheet" href="os.css"><script src="lib.js"></script>
+<style>
+  .clock{position:absolute;left:0;right:0;top:118px;text-align:center;font-size:104px;font-weight:200;letter-spacing:.05em;line-height:1;color:#fff}
+  .date{position:absolute;left:0;right:0;top:236px;text-align:center;font-size:19px;color:var(--muted)}
+  .core{position:absolute;left:50%;top:470px;transform:translate(-50%,-50%)}
+  .core .orbit{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;border:1px dashed rgba(255,255,255,.14)}
+  .cap{position:absolute;left:0;right:0;top:604px;text-align:center;font-size:12px;letter-spacing:.3em;color:var(--text)}
+  .cap2{position:absolute;left:0;right:0;top:632px;text-align:center;font-size:15px;color:var(--muted)}
+  .ask{position:absolute;left:50%;top:686px;width:500px;height:50px;transform:translateX(-50%);border-radius:25px;background:rgba(255,255,255,.06);border:1px solid var(--line2);display:flex;align-items:center;padding:0 8px 0 22px;color:var(--faint);font-size:13.5px;backdrop-filter:blur(10px)}
+  .ask .go{margin-left:auto;width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#f39a4e,#d8672a);display:flex;align-items:center;justify-content:center;color:#1a0d06}
+  .col-l{position:absolute;left:78px;top:120px;width:380px;display:flex;flex-direction:column;gap:16px}
+  .col-r{position:absolute;right:78px;top:120px;width:380px;display:flex;flex-direction:column;gap:16px}
+  .pr{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid rgba(255,255,255,.06)}
+  .pr:first-child{border-top:0}
+  .cb{width:16px;height:16px;border-radius:4px;border:1px solid var(--line2);flex:none}
+  .pr .t{font-size:12.5px;font-weight:500}.pr .s{font-size:10.5px;color:var(--faint);margin-top:2px}
+  .pr .tm{margin-left:auto;font-size:11px;color:var(--muted)}
+  .foot{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:11.5px;color:var(--accent2)}
+  .ap{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:var(--glass2);margin-top:8px}
+  .ap .t{font-size:12.5px;font-weight:500}.ap .s{font-size:10.5px;color:var(--muted);margin-top:3px;display:flex;gap:8px;align-items:center}
+  .ap .btns{margin-left:auto;display:flex;gap:6px;align-items:center}
+  .rev{display:flex;justify-content:space-between;align-items:flex-end;padding:14px;border-radius:12px;background:var(--glass2)}
+  .rev .num{font-size:30px}
+  .k{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:10px}
+  .k .card.sub{padding:12px}
+  .k .num{font-size:20px;margin-top:4px}
+</style></head><body><div class="stage"><span data-tpl="wall"></span><span data-tpl="appbar" data-args="[0,3]"></span>
+<div class="clock">16:17:01</div><div class="date">Tuesday, May 27, 2025</div>
+<div class="core"><span class="orbit" style="width:330px;height:330px"></span><span class="orbit" style="width:270px;height:270px;border-style:solid;border-color:rgba(255,255,255,.06)"></span><div class="orb ring" style="width:210px;height:210px"></div></div>
+<div class="cap">STARGO CORE •</div><div class="cap2">Your AI Command Center</div>
+<div class="ask">What would you like to accomplish today?<span class="go" data-icon="arrow" data-size="18" data-sw="2"></span></div>
+
+<div class="col-l">
+  <div class="card"><div class="hd"><h4>Today's priorities</h4><span class="chip acc">AI Suggested</span></div>
+    <div id="pri"></div>
+    <div class="foot"><span class="row" style="gap:6px"><span data-icon="plus" data-size="12"></span>Add Priority</span><span class="row" style="gap:6px">View All <span data-icon="arrow" data-size="12"></span></span></div></div>
+  <div class="card"><div class="hd"><h4>Active AI workforce</h4><span class="chip ok">12 Running</span></div>
+    <div id="agents"></div>
+    <div class="foot"><span class="row" style="gap:6px">View All Agents</span><span data-icon="arrow" data-size="12"></span></div></div>
+</div>
+<div class="col-r">
+  <div class="card"><div class="hd"><h4>Approvals</h4><span class="amber small">● 3 Pending</span></div>
+    <div id="apps"></div>
+    <div class="foot"><span class="row" style="gap:6px"><span style="color:var(--accent)">•</span> View All Approvals</span><span data-icon="arrow" data-size="12"></span></div></div>
+  <div class="card"><div class="hd"><h4>Revenue snapshot</h4><span class="small muted row" style="gap:4px">Q2 2025 <span data-icon="chev" data-size="12"></span></span></div>
+    <div class="rev"><div><div class="lbl" style="font-size:9.5px;letter-spacing:.08em;text-transform:none">Total Revenue</div><div class="row" style="gap:10px;margin-top:6px"><span class="num">$12.68M</span><span class="green small up">+18.6%</span></div><div class="faint tiny" style="margin-top:6px">vs Q1 2025</div></div><span id="rsp"></span></div>
+    <div class="k"><div class="card sub"><div class="lbl" style="font-size:9px;text-transform:none;letter-spacing:.04em">MRR</div><div class="num">$4.2M</div><div class="green tiny up">+12.3%</div></div><div class="card sub"><div class="lbl" style="font-size:9px;text-transform:none;letter-spacing:.04em">New Business</div><div class="num">$3.1M</div><div class="green tiny up">+23.7%</div></div><div class="card sub"><div class="lbl" style="font-size:9px;text-transform:none;letter-spacing:.04em">Gross Margin</div><div class="num">78.4%</div><div class="green tiny up">+2.1%</div></div></div>
+    <div class="foot"><span>View Full Report</span><span data-icon="arrow" data-size="12"></span></div></div>
+</div>
+<span data-tpl="dock"></span>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  pri.innerHTML=[['Review Q2 financial forecast','Finance','09:30'],['Approve marketing campaign budget','Marketing','11:00'],['Strategy sync with leadership team','Leadership','14:00'],['Review product roadmap updates','Product','16:30']].map(([t,s,m])=>`<div class="pr"><span class="cb"></span><div><div class="t">${t}</div><div class="s">${s}</div></div><span class="tm">${m}</span></div>`).join('');
+  agents.innerHTML=[['Market Research Analyst','Analyzing competitor landscape','Running','users'],['Financial Forecasting Agent','Updating Q2 revenue projections','Running','chart'],['Customer Success Manager','Monitoring client health scores','Running','eye'],['Content Creation Agent','Generating campaign assets','Review','sparkle']].map(([t,s,st,ic])=>`<div class="pr"><span class="tile sm">${S.icon(ic,15)}</span><div><div class="t">${t}</div><div class="s">${s}</div></div><span class="tm ${st==='Review'?'amber':'green'}"><span class="dot ${st==='Review'?'amber':''}"></span>${st}</span></div>`).join('');
+  apps.innerHTML=[['Q2 Marketing Budget Increase','$250,000','Marketing','2h ago'],['New Enterprise Contract','$1,250,000','Sales','4h ago'],['Product Development Request','AI Features Module','Product','6h ago']].map(([t,a,tag,tm])=>`<div class="ap"><div><div class="t">${t}</div><div class="s"><span>${a}</span><span class="chip" style="padding:1px 6px;font-size:9.5px">${tag}</span><span class="faint">${tm}</span></div></div><div class="btns"><span class="btn sq ok">${S.icon('check',14,2)}</span><span class="btn sq no">${S.icon('x',14,2)}</span></div></div>`).join('');
+  rsp.innerHTML=S.spark([4,4.6,4.3,5.2,5,5.8,6.1,5.9,6.8,7.4,7.2,8.1],'#5fd08b',120,44);
+});
+</script></div></body></html>

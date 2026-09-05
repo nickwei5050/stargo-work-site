@@ -23,10 +23,15 @@ export const NAV = [
   { href: 'enterprise.html', label: B('企业与治理', 'Enterprise') },
   { href: 'contact.html', label: B('联系', 'Contact') },
 ];
+/** Utility pages: footer and legal rows only, never the product navigation. */
 export const SECONDARY = [
+  { href: 'privacy.html', label: B('隐私政策', 'Privacy') },
+  { href: 'terms.html', label: B('使用条款', 'Terms') },
   { href: 'notices.html', label: B('第三方声明', 'Notices') },
 ];
 export const LANG_SWITCH = B('EN', '中文');
+/** Production origin — canonical URLs, hreflang, Open Graph and the sitemap. Bind a custom domain and change it here. */
+export const SITE_URL = 'https://stargo.pages.dev';
 
 export const CONTACT_INFO = {
   email: 'sales@stargomoto.com',
@@ -99,6 +104,8 @@ export const META = {
   'enterprise.html': { title: B('企业与治理', 'Enterprise'), description: B('能执行，也能被控制：权限、审批闸门、证据、审计台账、凭据管理、租户隔离、Canary 与回滚；通过 API、MCP 与连接器接入已有系统；云端、专属环境或私有化部署。', 'Built to act, built to be controlled: permissions, approval gates, evidence, audit ledger, credential management, tenant isolation, canary and rollback; connects to existing systems through API, MCP and connectors; cloud, dedicated or private deployment.') },
   'contact.html': { title: B('联系', 'Contact'), description: B('从一条流程开始。告诉我们最影响效率或增长的一条业务流程，我们从那里开始。', 'Start with one workflow. Tell us the process that most affects efficiency or growth, and we start there.') },
   'notices.html': { title: B('第三方声明', 'Third-party notices'), description: B('模板、运行时库、字体、图片素材与上游软件的许可与署名。', 'Licences and attribution for templates, runtime libraries, fonts, imagery and upstream software.') },
+  'privacy.html': { title: B('隐私政策', 'Privacy policy'), description: B('本站收集什么、为什么收集、保存多久，以及你的权利。', 'What this site collects, why, for how long, and your rights.') },
+  'terms.html': { title: B('使用条款', 'Terms of use'), description: B('使用本网站的条款：内容、知识产权、价格说明与责任。', 'Terms for using this website: content, intellectual property, pricing notes and liability.') },
   '404.html': { title: B('404', '404'), description: B('页面不存在。', 'Page not found.') },
 };
 
@@ -116,58 +123,82 @@ const LOOP_DESC = [
   B('沉睡客户再激活、展会线索持续转化；每一次成交结果回到 Evolution Engine，让下一次执行更好。', 'Dormant leads are reactivated and trade-show contacts kept warm; every outcome feeds the Evolution Engine so the next run is better.'),
 ];
 
+/**
+ * Homepage narrative (2026-09-05). One idea has one home:
+ *   hero → the problem (silos) → the answer (one loop) → who runs it (288 + approval)
+ *   → the five stages → the four core systems → the channels → the interface
+ *   → why an OS beats hiring → start with one workflow → what is underneath
+ *   (ontology → evolution) → the pricing ladder → four doors → book a demo.
+ */
+export const HOME_HERO_LIST = [
+  B('一个外贸闭环', 'One trade loop'), B('288 位 AI 员工', '288 AI employees'), B('企业本体', 'Enterprise ontology'),
+  B('人工审批闸门', 'Human approval gates'), B('可治理的进化', 'Governed evolution'),
+];
+/** Shorter phrasings swapped in on phones before the text animations split the lines. */
+export const HOME_MOBILE = {
+  heroSupport: B('面向制造业与外贸企业的 AI 操作系统。288 个 AI 员工，把从找客户到订单的整条链连起来。', 'The AI operating system for manufacturers and exporters. 288 AI employees connect the whole chain, from prospect to order.'),
+  scHero: B('客户、产品、询盘、报价、订单、文件、任务和 AI 员工，第一次在同一个系统里。', 'Customers, products, inquiries, quotes, orders, documents, tasks and AI employees — in one system for the first time.'),
+  ladder: B('AI 运营能力一级一级往上加：先建底座，再启动运营，再建增长引擎，再打开主动获客。', 'AI operating capacity, level by level: foundation, operation, growth engine, then AI acquisition.'),
+};
+export const HOME_THEATRE = B('STARGO OS ©2026', 'STARGO OS ©2026');
+
 /** Mono homepage: [templateString, pair, opts]. Order matters. */
 export const HOME_MONO = [
-  /* testimonials → one customer, every channel, one memory */
+  /* sticky cards → the intelligence layer: why it is not a chatbot */
   ['&quot;Working with Mōno™ felt like having an internal team rather than an external agency. They were proactive, detail-oriented, and genuinely invested in the outcome.&quot;',
-    B('客户不会按照你的 CRM 工作。有人发 Email，有人发 WhatsApp，有人从 Alibaba 来，有人在官网咨询。', 'Customers don’t work the way your CRM does. Some email, some WhatsApp, some come from Alibaba, some ask on the website.')],
-  ['John Doe', B('Customer Timeline', 'Customer Timeline')],
-  ['Head design at Circle®', B('所有沟通进入同一条时间线', 'Every conversation on one timeline')],
+    B('企业本体。AI 知道客户、询盘、报价、订单、出货和任务之间是什么关系——不是孤立的数据表，而是有状态、有逻辑、可以操作的业务对象。', 'An enterprise ontology. AI knows how customers, inquiries, quotes, orders, shipments and tasks relate — not isolated tables, but business objects with state, logic and actions.')],
+  ['John Doe', B('Ontology', 'Ontology')],
+  ['Head design at Circle®', B('给 AI 一个企业模型', 'A model of the business, for AI')],
   ['“We didn’t just get a website — we got a solid digital foundation. Mōno™ is the kind of partner you want when building something meant to last.”',
-    B('AI 可以读取客户背景、历史对话、产品偏好、报价历史、未完成任务、知识库和订单状态。', 'AI reads the customer background, past conversations, product preferences, quote history, open tasks, the knowledge base and order status.')],
-  ['Amantha Doe', B('Customer 360', 'Customer 360')],
-  ['Founder of Radius®', B('每一次交流都会更新它', 'Updated by every exchange')],
+    B('前置部署。软件适应企业，而不是企业适应软件：真实流程直接反馈到系统能力建设中。', 'Forward deployed. Software adapts to the company, not the other way round: real workflows feed straight back into the platform.')],
+  ['Amantha Doe', B('Forward Deployed', 'Forward Deployed')],
+  ['Founder of Radius®', B('FDE 进入真实流程', 'FDE inside the real workflow')],
   ['“Their ability to listen, challenge assumptions, and translate ideas into a clean digital system.”',
-    B('所以客户换一个渠道，企业不需要重新认识他一次。', 'So when a customer switches channel, the company doesn’t have to meet them again.')],
-  ['Max Trump', B('Unified Inbox', 'Unified Inbox')],
-  ['Founder of Light Studio®', B('Email · WhatsApp · Alibaba · 官网', 'Email · WhatsApp · Alibaba · Website')],
+    B('主动执行。不等提问：基于事件、时间、状态和目标持续运行，在授权范围内主动行动。', 'Proactive by design. It does not wait for a prompt: it runs on events, time, state and goals, and acts within its authority.')],
+  ['Max Trump', B('Proactive', 'Proactive')],
+  ['Founder of Light\u00a0Studio®', B('主动，不是被动', 'Proactive, not reactive')],
   ['“What stood out with Mōno™ was the balance between design quality and technical execution. Everything was thoughtful, scalable, and built with term use in mind.”',
-    B('不知道的事情，不让 AI 编。简单问题自动处理，复杂问题进入人工审批。', 'What it doesn’t know, it doesn’t make up. Simple questions are handled; complex ones go to a human.')],
-  ['Camila Verga', B('Knowledge-Grounded Reply', 'Knowledge-Grounded Reply')],
-  ['Head design at LogoIspum®', B('企业知识库 · 产品数据库 · 历史报价', 'Knowledge base · product data · past quotes')],
+    B('可治理的自我进化。每一次结果回到 Evolution Engine：评估、灰度、审批，再推广或回滚。', 'Governed self-evolution. Every outcome returns to the Evolution Engine: evaluated, canaried, approved — then promoted or rolled back.')],
+  ['Camila Verga', B('Evolution Engine', 'Evolution Engine')],
+  ['Head design at LogoIspum®', B('Observer → Evaluation → Canary → Promote / Rollback', 'Observer → Evaluation → Canary → Promote / Rollback')],
+  /* the image + quote card that closes the pricing ladder → Enterprise */
   ['&quot;Mōno™ helped us simplify complexity. They streamlined our product narrative, improved performance, and delivered a digital experience that truly reflects our brand. The results were immediate — higher engagement.&quot;',
-    B('「传统 CRM 只管理已经出现的客户。STARGO Growth OS 的目标，是帮助企业发现还没有进入 CRM 的未来客户。」', '“A traditional CRM manages the customers who already showed up. STARGO Growth OS exists to find the future customers who are not in your CRM yet.”')],
-  ['Elena Rossi', B('STARGO Growth OS', 'STARGO Growth OS')],
-  ['Marketing Director at Auralis®', B('别再等询盘。', 'Stop waiting for leads.')],
+    B('「多部门、多公司、多品牌、多账号；复杂审批与系统接入；专属 FDE；私有化部署。」', '“Multiple departments, companies, brands and accounts. Complex approvals and system integration. A dedicated FDE. Private deployment.”')],
+  ['Elena Rossi', B('Enterprise · 定制', 'Enterprise · Custom')],
+  ['Marketing Director at Auralis®', B('联系 STARGO Enterprise', 'Talk to STARGO Enterprise')],
 
-  /* stats → from conversation to revenue */
-  ['Mōno™ stands behind the data.', B('从市场信号到订单，一条链。', 'From market signal to order. One chain.')],
+  /* flip cards → the pricing ladder */
+  ['Mōno™ stands behind the data.', B('从企业需要的 AI 层级开始。', 'Start at the level of AI your company needs.')],
   ['Our success is reflected in the numbers we achieve for our clients. Every project is designed with measurable growth at its core.',
-    B('市场信号 → 合格客户 → 对话 → Customer 360 → 产品匹配 → 报价 → 人工审批 → PI / 订单 → 贸易执行 → 跟进 → 结果 → 进化。这不是一个 AI 聊天框，这是 STARGO WORK 的全球贸易运行闭环。', 'Market signal → qualified account → conversation → Customer 360 → product match → quote → human approval → PI / order → trade execution → follow-up → outcome → evolution. Not an AI chatbox: the global trade loop STARGO WORK runs.')],
-  ['(Value created)', B('(AI 员工)', '(AI employees)')],
-  ['$174M', B('288', '288')],
-  ['Empowering growth through strategic solutions.', B('在同一个企业上下文中协同工作。', 'Working in one shared business context.')],
-  ['CRI: 5.1% → 6.7%', B('岗位 · 目标 · 技能 · 工具', 'Role · Goal · Skills · Tools')],
-  ['“We didn’t expect smoother onboarding and a noticeable lift in qualified leads.”', B('「一支数字团队，不是一个聊天框。」', '“A digital team, not a chatbox.”')],
-  ['Daniel Kim', B('AI Workforce', 'AI Workforce')],
-  ['(Return client rate)', B('(闭环阶段)', '(Loop stages)')],
-  ['92%', B('9', '9')],
-  ['Building lasting partnerships built on trust.', B('从发现到学习，每一步都在系统里。', 'Discover to Learn — every step inside the system.')],
-  ['CRI: 2.9% → 4.4%', B('记忆 · 知识 · 权限', 'Memory · Knowledge · Permissions')],
-  ['“Everything feels faster, clearer, and more premium. We shipped the redesign and conversions followed immediately.”', B('「结果重新进入数据飞轮。」', '“Outcomes flow back into the flywheel.”')],
-  ['Olivia Carter', B('Trade Loop', 'Trade Loop')],
-  ['(Projects delivered)', B('(能力域)', '(Capability groups)')],
-  ['+320', B('14', '14')],
-  ['Driving successful outcomes across industries.', B('从指挥工作台到进化引擎。', 'From command workspace to evolution engine.')],
-  ['CRI: 1.7% → 2.6%', B('指挥 · 获客 · 报价 · 履约', 'Command · Growth · Quote · Trade')],
-  ['“The new site finally matches our product. Cleaner UX, better messaging, and results we can actually measure.”', B('「一个操作系统，很多完整的业务能力。」', '“One operating system, many complete business capabilities.”')],
-  ['Marcus Reed', B('Capabilities', 'Capabilities')],
-  ['(Client retention)', B('(操作系统)', '(Operating system)')],
-  ['88%', B('1', '1')],
-  ['Optimized journeys that turn traffic into growth.', B('云端运行，合上笔记本也不停。', 'Runs in the cloud. Doesn’t stop when you close the laptop.')],
-  ['CRI: 3.8% → 5.6%', B('云端 · 桌面 · 移动端', 'Cloud · Desktop · Mobile')],
-  ['“The redesign removed friction everywhere. It’s simple, sharp, and performs better across every device.”', B('「你的 AI 团队已经上线。」', '“Your AI team is already online.”')],
-  ['Sofia Martinez', B('STARGO WORK', 'STARGO WORK')],
+    B('不是功能越多越贵，而是 AI 运营能力一级一级往上加：先建底座，再启动运营，再建增长引擎，再打开主动获客。', 'Not more features for more money — AI operating capacity added level by level: build the foundation, launch the operation, build the growth engine, then turn on AI acquisition.')],
+  ['(Value created)', B('(Foundation)', '(Foundation)')],
+  ['$174M', B('¥10,000', '¥10,000')],
+  ['Empowering growth through strategic solutions.', B('企业 AI 数字底座：云端 Workspace、AI 员工、知识库、CRM、报价与审批。', 'The enterprise AI foundation: cloud workspace, AI employees, knowledge base, CRM, quoting and approval.')],
+  ['CRI: 5.1% → 6.7%', B('首年 ¥10,000 · 按年续费', '¥10,000 first year · renews yearly')],
+  ['“We didn’t expect smoother onboarding and a noticeable lift in qualified leads.”', B('「先把企业的知识、客户和报价放进同一个系统。」', '“Put the company’s knowledge, customers and quotes into one system first.”')],
+  ['Daniel Kim', B('Foundation · 从 STARGO WORK 开始', 'Foundation · Start with STARGO WORK')],
+  ['(Return client rate)', B('(Launch)', '(Launch)')],
+  ['92%', B('¥20,000', '¥20,000')],
+  ['Building lasting partnerships built on trust.', B('底座之上，启动第一阶段数字化增长：企业内容、官网与数字资产、产品内容体系。', 'On the foundation, the first stage of digital growth: enterprise content, website and digital assets, the product content system.')],
+  ['CRI: 2.9% → 4.4%', B('首年 ¥20,000 · 续费另议', '¥20,000 first year · renewal confirmed per plan')],
+  ['“Everything feels faster, clearer, and more premium. We shipped the redesign and conversions followed immediately.”', B('「让 AI 开始对外工作。」', '“Let AI start working outward.”')],
+  ['Olivia Carter', B('Launch · 启动 AI 运营', 'Launch · Launch the AI operation')],
+  ['(Projects delivered)', B('(Growth)', '(Growth)')],
+  ['+320', B('¥30,000', '¥30,000')],
+  ['Driving successful outcomes across industries.', B('SEO · GEO 增长、客户智能与增长分析、自动跟进与 CRM Growth Loop。', 'SEO · GEO growth, customer intelligence and growth analytics, automatic follow-up and the CRM growth loop.')],
+  ['CRI: 1.7% → 2.6%', B('首年 ¥30,000 · 续费另议', '¥30,000 first year · renewal confirmed per plan')],
+  ['“The new site finally matches our product. Cleaner UX, better messaging, and results we can actually measure.”', B('「不只处理工作，也开始帮助企业增长。」', '“Not only doing the work — starting to drive growth.”')],
+  ['Marcus Reed', B('Growth · 建立增长引擎', 'Growth · Build the growth engine')],
+  ['(Client retention)', B('(Global Acquisition)', '(Global Acquisition)')],
+  ['88%', B('¥40,000', '¥40,000')],
+  ['Optimized journeys that turn traffic into growth.', B('Growth OS 与 Trade Signal Revenue Engine：补货雷达、竞争对手客户图谱、决策链识别、沉睡客户再激活。', 'Growth OS and the Trade Signal Revenue Engine: reorder radar, competitor customer graph, buying-committee intelligence, dormant-lead reactivation.')],
+  ['CRI: 3.8% → 5.6%', B('首年 ¥40,000 · 续费另议', '¥40,000 first year · renewal confirmed per plan')],
+  ['“The redesign removed friction everywhere. It’s simple, sharp, and performs better across every device.”', B('「别再等询盘。」', '“Stop waiting for leads.”')],
+  ['Sofia Martinez', B('Global Acquisition · 打开 AI 获客', 'Global Acquisition · Turn on AI acquisition')],
+  ['>★★★★★<', B('>云端 · 知识 · CRM · 审批<', '>Cloud · knowledge · CRM · approval<'), { nth: 0 }],
+  ['>★★★★★<', B('>包含 Foundation 全部内容<', '>Everything in Foundation<'), { nth: 0 }],
+  ['>★★★★★<', B('>包含 Launch 全部内容<', '>Everything in Launch<'), { nth: 0 }],
+  ['>★★★★★<', B('>包含 Growth 全部内容<', '>Everything in Growth<'), { nth: 0 }],
 
   /* FAQ */
   ['What services does your agency offer?', B('STARGO WORK 到底是什么？', 'What is STARGO WORK?')],
@@ -185,7 +216,7 @@ export const HOME_MONO = [
 
   /* hero support */
   ['No cookie cutter sites. No empty claims. Only practical tools and smart strategies that drive growth and build brands.',
-    B('为制造业与外贸企业打造的云端 AI 工作系统。从寻找潜在客户、判断采购机会、回复询盘，到客户管理、报价、订单、出口单证和后续跟进，288 个专业 AI 员工在同一个企业上下文中协同工作，把分散在人、软件、表格和聊天窗口里的外贸流程，连接成一个持续运行的业务闭环。', 'The cloud AI work system built for manufacturers and global-trade companies. From finding prospects, judging buying opportunities and answering inquiries to customer management, quoting, orders, export documents and follow-up, 288 specialised AI employees work in one shared business context — turning a trade process scattered across people, software, spreadsheets and chat windows into one continuously running loop.')],
+    B('为制造业与外贸企业打造的 AI 操作系统。288 个 AI 员工在同一个企业上下文中工作，把找客户、询盘、报价、订单、出口单证和跟进，连成一个持续运行的闭环。', 'The AI operating system built for manufacturers and global-trade companies. 288 AI employees work in one shared business context, connecting prospecting, inquiries, quotes, orders, export documents and follow-up into one loop that keeps running.')],
 
   /* who we are → 288 */
   ['We shape brands with focus, intention, and impact.', B('288 个专业 AI 员工，在同一个企业上下文中协同工作。', '288 specialised AI employees, working in one shared business context.')],
@@ -251,17 +282,17 @@ export const HOME_MONO = [
   ['Bold Moves', B('ERP 负责订单', 'ERP owns the order')],
   ['View all work', B('看闭环怎么连起来', 'See how the loop connects')],
 
-  /* blog → Growth OS */
-  ['Smart insights.', B('别再等询盘。', 'Stop waiting for leads.')],
-  ['>See all<', B('>看全部能力<', '>All capabilities<')],
-  ['November 11, 2025', B('Importer Reorder Radar', 'Importer Reorder Radar')],
-  ['The power of simplicity in modern real brand design', B('进口商补货雷达：谁正在进入补货周期', 'Which importers are entering a reorder cycle')],
-  ['October 1, 2025', B('Competitor Customer Graph', 'Competitor Customer Graph')],
-  ['From idea to execution: building products that last', B('竞争对手客户图谱：对手在卖给谁', 'Who your competitors are selling to')],
-  ['October 3, 2026', B('Buying Committee Intelligence', 'Buying Committee Intelligence')],
-  ['Why great brands are built on clarity, not complexity', B('决策链识别：谁真正拍板', 'Who actually decides')],
-  ['October 4, 2025', B('Trade Signal Revenue Engine', 'Trade Signal Revenue Engine')],
-  ['Designing digital systems that scale your business', B('贸易信号收入引擎：把信号变成收入', 'Turn trade signals into revenue')],
+  /* blog cards → the four doors into the rest of the site */
+  ['Smart insights.', B('四个入口。', 'Four doors.')],
+  ['>See all<', B('>预约演示<', '>Book a Demo<')],
+  ['November 11, 2025', B('(智能层)', '(Intelligence)')],
+  ['The power of simplicity in modern real brand design', B('为什么它不是聊天机器人：本体、前置部署、主动执行、进化。', 'Why it is not a chatbot: ontology, forward deployment, proactive execution, evolution.')],
+  ['October 1, 2025', B('(能力)', '(Capabilities)')],
+  ['From idea to execution: building products that last', B('九个阶段、14 个能力域，覆盖全球贸易的每个环节。', 'Nine stages and 14 capability groups, across every stage of global trade.')],
+  ['October 3, 2026', B('(数字员工)', '(AI Workforce)')],
+  ['Why great brands are built on clarity, not complexity', B('288 个 AI 员工怎么工作：岗位、组队、云端、审批。', 'How 288 AI employees work: roles, teams, cloud, approval.')],
+  ['October 4, 2025', B('(企业与治理)', '(Enterprise)')],
+  ['Designing digital systems that scale your business', B('能执行，也能被控制：权限、证据、审计、部署。', 'Built to act, built to be controlled: permissions, evidence, audit, deployment.')],
 
   /* short / global */
   ['>Get started<', B('>看能力全景<', '>See all capabilities<')],
@@ -274,10 +305,10 @@ export const HOME_MONO = [
   ['(Services)', B('(外贸闭环 · 五个阶段)', '(The trade loop · five stages)')],
   ['(Pricing)', B('(两种外贸)', '(Two ways to run trade)')],
   ['(FAQ)', B('(常见问题)', '(FAQ)')],
-  ['(Testimonials)', B('(一个客户，所有渠道，一份记忆)', '(One customer. Every channel. One memory.)')],
-  ['(Success stories)', B('(STARGO Growth OS)', '(STARGO Growth OS)')],
-  ['(Stats)', B('(从对话到收入)', '(From conversation to revenue)')],
-  ['(Blog)', B('(Growth OS 核心能力)', '(Growth OS capabilities)')],
+  ['(Testimonials)', B('(智能层 · 它为什么不是聊天机器人)', '(Intelligence · why it is not a chatbot)')],
+  ['(Success stories)', B('(Enterprise)', '(Enterprise)')],
+  ['(Stats)', B('(定价 · AI 层级)', '(Pricing · the AI ladder)')],
+  ['(Blog)', B('(继续深入)', '(Go deeper)')],
   ['(Project)', B('(每次增长)', '(each growth step)')],
   ['What&#x27;s included:', B('流程：', 'The flow:')],
   ['Timeline:', B('增长方式：', 'Growth means:')],
@@ -289,7 +320,7 @@ export const HOME_MONO = [
   ['Development', LOOP_LABELS[2]],
   ['Brand Identity', LOOP_LABELS[3]],
   ['>Marketing<', B(`>${LOOP_LABELS[4].zh}<`, `>${LOOP_LABELS[4].en}<`)],
-  ['Showreel 26©', B('产品剧场 2026©', 'Product theatre 2026©')],
+  ['Showreel 26©', HOME_THEATRE],
   ['+13', B('288', '288')],
   ['team members', B('AI 员工', 'AI employees')],
   ['across the', B('覆盖', 'across')],
@@ -337,7 +368,7 @@ export const HOME_SC_HERO = [
   ['Scale.', B('判断。', 'Qualify.')],
   ['Operate.', B('报价。', 'Quote.')],
   ['Scalora is a business platform designed to help teams manage marketing, operations, and growth from one workspace.',
-    B('STARGO WORK 把客户、产品、询盘、沟通、报价、订单、文件、任务和 AI 员工连接到同一个企业 AI 系统中。不是增加一个软件，而是让整个外贸业务第一次真正连接起来。', 'STARGO WORK connects customers, products, inquiries, conversations, quotes, orders, documents, tasks and AI employees in one enterprise AI system. Not one more tool — the whole trade business connected for the first time.')],
+    B('客户、产品、询盘、沟通、报价、订单、文件、任务和 AI 员工，第一次在同一个系统里。不是再加一个软件，而是让整个外贸业务真正连接起来。', 'Customers, products, inquiries, conversations, quotes, orders, documents, tasks and AI employees — in one system for the first time. Not one more tool: the whole trade business, connected.')],
   ['Get started free', B('预约演示', 'Book a Demo'), { count: 2 }],
   ['>Scalora<', B('>STARGO<', '>STARGO<'), { nth: 0 }],
   ['>CRM<', B('>Growth OS<', '>Growth OS<'), { nth: 0 }],
@@ -687,7 +718,7 @@ export const CONTACT = {
 /* ============================================================= notices === */
 
 export const NOTICES = {
-  date: B('2026-09-03 更新', 'Updated 2026-09-03'),
+  date: B('2026-09-05 更新', 'Updated 2026-09-05'),
   h1: B('第三方声明', 'Third-party notices'),
   body: B(`
 <h4>网站模板</h4>
@@ -701,7 +732,7 @@ export const NOTICES = {
 <h4>字体</h4>
 <p>Inter、Inter Display、Instrument Serif 与 42dot Sans，均按 SIL Open Font License 1.1 自托管，不向任何第三方字体服务发起请求。</p>
 <h4>图片素材</h4>
-<p>模板附带的示意图片来自各模板作者及其声明的来源（含 Unsplash 与 Logo To Use），按其各自许可用于商业展示。STARGO 标识与字标为 STARGO 自有作品。</p>
+<p>站内的 STARGO OS 界面图、手机界面图与品牌示意图均由 STARGO 以 HTML/CSS 自行绘制并渲染（tools/visuals），其中的公司、人名与数字均为演示数据，不代表任何真实客户。模板自带的示例照片已全部替换；仍在使用的模板图形仅为图标与装饰元素，来自各模板作者及其声明的来源，按其各自许可用于商业展示。STARGO 标识与字标为 STARGO 自有作品。</p>
 <h4>上游软件</h4>
 <p>站内提到的 Activepieces、Chatwoot、Twenty CRM、WeKnora、Windmill、Playwright、Yente / OpenSanctions、Univer、Puter、Medusa、ERPNext、PostHog、Microsoft SkillOpt、Notion、Google、Reddit、LinkedIn、Facebook、YouTube、Alibaba、WhatsApp 等名称，均为各自所有者的商标或项目名。它们在本站出现是为了让上游身份可查，不表示相关项目对 STARGO 的背书。</p>
 <h4>联系</h4>
@@ -718,7 +749,7 @@ export const NOTICES = {
 <h4>Fonts</h4>
 <p>Inter, Inter Display, Instrument Serif and 42dot Sans, all self-hosted under the SIL Open Font License 1.1. No request goes to a third-party font service.</p>
 <h4>Imagery</h4>
-<p>Illustrative images shipped with the templates come from their authors and the sources they credit (including Unsplash and Logo To Use), used for commercial display under their respective licences. The STARGO mark and wordmark are STARGO’s own work.</p>
+<p>The STARGO OS screens, phone screens and brand visuals on this site are drawn and rendered by STARGO in HTML/CSS (tools/visuals); the companies, names and figures in them are demonstration data and depict no real customer. The sample photographs that shipped with the templates have all been replaced; the template graphics still in use are icons and decorative elements only, from their authors and the sources they credit, used for commercial display under their respective licences. The STARGO mark and wordmark are STARGO’s own work.</p>
 <h4>Upstream software</h4>
 <p>Activepieces, Chatwoot, Twenty CRM, WeKnora, Windmill, Playwright, Yente / OpenSanctions, Univer, Puter, Medusa, ERPNext, PostHog, Microsoft SkillOpt, Notion, Google, Reddit, LinkedIn, Facebook, YouTube, Alibaba, WhatsApp and other names mentioned on this site are trademarks or project names of their respective owners. They appear so that upstream identity stays discoverable; none implies endorsement of STARGO.</p>
 <h4>Contact</h4>
@@ -738,4 +769,87 @@ export const NOT_FOUND = {
   title: B('404', '404'),
   text: B('这个页面不存在，或者已经移动。', 'This page doesn’t exist, or has moved.'),
   back: B('回到首页', 'Back to home'),
+};
+
+/* =============================================================== legal === */
+
+/** Privacy policy and terms of use: real pages, not placeholder anchors. */
+export const LEGAL = {
+  privacy: {
+    date: B('2026-09-05 生效', 'Effective 2026-09-05'),
+    h1: B('隐私政策', 'Privacy policy'),
+    body: B(`
+<p>本政策说明 STARGO WORK 官方网站（以下简称「本站」）收集哪些信息、为什么收集、保存多久，以及你拥有的权利。本站由 STARGO（柳州 · 广西 · 中国）运营。</p>
+<h4>我们收集什么</h4>
+<ul>
+<li><strong>你主动提交的信息。</strong>通过联系表单或订阅表单提交的姓名、邮箱、公司、WhatsApp、行业、目标市场、团队规模、现有系统与留言内容。这些信息仅用于回复你的咨询、安排演示和发送你订阅的产品更新。</li>
+<li><strong>技术日志。</strong>本站托管在 Cloudflare Pages。访问时的 IP 地址、浏览器类型和请求时间会出现在托管方的标准访问日志中，用于安全防护与故障排查；本站不据此建立访客画像。</li>
+<li><strong>Cookie 与本地存储。</strong>本站不使用分析或广告 Cookie，不加载任何第三方追踪脚本；所有字体、图片与脚本均从本站自身域名加载。</li>
+</ul>
+<h4>如何使用与共享</h4>
+<p>表单内容会通过本站的邮件发送服务投递到 sales@stargomoto.com，并仅在 STARGO 内部用于处理你的请求。除法律要求外，我们不会向第三方出售或共享你的信息。若邮件发送服务未配置，浏览器会改为打开你自己的邮件客户端，信息不会经过本站服务器。</p>
+<h4>保存期限</h4>
+<p>咨询信息在处理完毕后最多保存 24 个月；订阅邮箱在你退订前保留。你可以随时要求删除。</p>
+<h4>你的权利</h4>
+<p>你可以随时查询、更正或删除我们持有的关于你的信息，或撤回订阅：发送邮件到 sales@stargomoto.com，或通过 WhatsApp +86 187 7512 7878 联系我们。我们会在 15 个工作日内回复。</p>
+<h4>未成年人</h4>
+<p>本站面向企业用户，不面向未满 18 周岁的个人收集信息。</p>
+<h4>政策更新</h4>
+<p>政策更新时，本页顶部的生效日期会随之变化。重大变更会在本站显著位置提示。</p>`,
+    `
+<p>This policy explains what the STARGO WORK website (“this site”) collects, why, for how long, and the rights you have. The site is operated by STARGO, Liuzhou, Guangxi, China.</p>
+<h4>What we collect</h4>
+<ul>
+<li><strong>What you submit.</strong> Name, e-mail, company, WhatsApp, industry, target markets, team size, current systems and your message, sent through the contact or newsletter forms. They are used only to answer your inquiry, arrange a demo and send the product updates you subscribed to.</li>
+<li><strong>Technical logs.</strong> The site is hosted on Cloudflare Pages. Your IP address, browser type and request time appear in the host’s standard access logs for security and troubleshooting; we do not build visitor profiles from them.</li>
+<li><strong>Cookies and local storage.</strong> The site sets no analytics or advertising cookies and loads no third-party tracking script; fonts, images and scripts are served from this site’s own domain.</li>
+</ul>
+<h4>How it is used and shared</h4>
+<p>Form submissions are delivered by the site’s e-mail service to sales@stargomoto.com and used inside STARGO only to handle your request. We do not sell or share your information with third parties except where the law requires it. If the e-mail service is not configured, your browser opens your own mail client instead and nothing passes through this site’s servers.</p>
+<h4>Retention</h4>
+<p>Inquiries are kept for at most 24 months after they are handled; a newsletter address is kept until you unsubscribe. You can ask for deletion at any time.</p>
+<h4>Your rights</h4>
+<p>You can access, correct or delete the information we hold about you, or withdraw a subscription, at any time: write to sales@stargomoto.com or reach us on WhatsApp +86 187 7512 7878. We answer within 15 working days.</p>
+<h4>Minors</h4>
+<p>The site addresses business users and does not knowingly collect information from anyone under 18.</p>
+<h4>Changes</h4>
+<p>When this policy changes, the effective date at the top of this page changes with it. Material changes are announced prominently on the site.</p>`),
+  },
+  terms: {
+    date: B('2026-09-05 生效', 'Effective 2026-09-05'),
+    h1: B('使用条款', 'Terms of use'),
+    body: B(`
+<p>访问或使用 STARGO WORK 官方网站（以下简称「本站」），即表示你接受以下条款。本站由 STARGO（柳州 · 广西 · 中国）运营。</p>
+<h4>内容用途</h4>
+<p>本站内容用于介绍 STARGO WORK 产品与服务。页面中的界面图、公司名、人名与数字均为演示数据，用于说明产品工作方式，不构成对任何真实客户或结果的陈述。</p>
+<h4>价格与方案</h4>
+<p>本站列出的方案与价格为公开参考价，以人民币计。实际服务范围、续费价格、模型与第三方服务用量，以双方签署的合同或订单为准。我们可能在不另行通知的情况下调整本站的方案与价格。</p>
+<h4>知识产权</h4>
+<p>STARGO 标识、字标、产品名称（含 STARGO WORK、STARGO OS、Growth OS、Quote Studio 等）以及本站的文字、界面图与品牌视觉，均归 STARGO 所有。未经书面许可，不得复制、改编或用于商业用途。本站使用的第三方模板、库与字体，其许可见「第三方声明」。</p>
+<h4>第三方名称</h4>
+<p>站内提到的其他公司、产品与项目名称属于各自所有者，出现在本站是为了说明兼容性或来源，不表示相关方对 STARGO 的背书。</p>
+<h4>责任限制</h4>
+<p>本站按「现状」提供。在法律允许的范围内，STARGO 不对因使用本站或依赖本站内容而产生的任何间接损失承担责任。本站可能不定期变更或中断，恕不另行通知。</p>
+<h4>适用法律</h4>
+<p>本条款适用中华人民共和国法律。因本条款产生的争议，由 STARGO 所在地有管辖权的人民法院管辖。</p>
+<h4>联系</h4>
+<p>关于本条款的问题：sales@stargomoto.com · WhatsApp +86 187 7512 7878。</p>`,
+    `
+<p>By accessing or using the STARGO WORK website (“this site”) you accept the terms below. The site is operated by STARGO, Liuzhou, Guangxi, China.</p>
+<h4>Purpose of the content</h4>
+<p>The site presents the STARGO WORK product and services. Interface images, company names, people and figures on these pages are demonstration data that illustrate how the product works; they make no statement about any real customer or result.</p>
+<h4>Plans and prices</h4>
+<p>Plans and prices listed here are public reference prices in Chinese yuan. The actual scope of service, renewal price and allowance for model and third-party usage are set by the contract or order signed by both parties. Plans and prices on this site may change without notice.</p>
+<h4>Intellectual property</h4>
+<p>The STARGO mark, wordmark and product names (including STARGO WORK, STARGO OS, Growth OS and Quote Studio), together with the text, interface images and brand visuals on this site, belong to STARGO. They may not be copied, adapted or used commercially without written permission. Third-party templates, libraries and fonts used by the site are licensed as described in the Notices page.</p>
+<h4>Third-party names</h4>
+<p>Other company, product and project names mentioned on this site belong to their respective owners. They appear to explain compatibility or origin and imply no endorsement of STARGO.</p>
+<h4>Limitation of liability</h4>
+<p>The site is provided as is. To the extent the law allows, STARGO is not liable for indirect loss arising from use of the site or reliance on its content. The site may change or be interrupted at any time without notice.</p>
+<h4>Governing law</h4>
+<p>These terms are governed by the laws of the People’s Republic of China. Disputes fall under the jurisdiction of the competent people’s court at STARGO’s seat.</p>
+<h4>Contact</h4>
+<p>Questions about these terms: sales@stargomoto.com · WhatsApp +86 187 7512 7878.</p>`),
+  },
+  back: B('返回首页', 'Back to home'),
 };

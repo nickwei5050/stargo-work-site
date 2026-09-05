@@ -1,0 +1,65 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../css/inter.css"><link rel="stylesheet" href="os.css"><script src="lib.js"></script>
+<style>
+  .win{left:64px;right:64px;top:76px;bottom:120px}
+  .side{position:absolute;left:0;top:0;bottom:0;width:190px;border-right:1px solid var(--line);padding:70px 14px 18px}
+  .side a{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;font-size:12.5px;color:var(--muted)}
+  .side a.on{background:rgba(232,130,58,.14);color:var(--text);border:1px solid rgba(232,130,58,.3)}
+  .side .mini{position:absolute;left:14px;right:14px;bottom:18px}
+  .main{position:absolute;left:190px;right:0;top:0;bottom:0;padding:22px 26px}
+  .head{display:flex;align-items:center;gap:14px}
+  .head .srch{margin-left:auto;width:270px;height:36px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid var(--line);display:flex;align-items:center;gap:8px;padding:0 12px;font-size:12px;color:var(--faint)}
+  .stages{display:flex;margin-top:18px;height:52px;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:rgba(255,255,255,.03)}
+  .stages div{flex:1;position:relative;display:flex;flex-direction:column;justify-content:center;padding:0 16px 0 22px;font-size:11.5px;color:var(--muted);clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%)}
+  .stages div+div{margin-left:-6px;padding-left:28px}
+  .stages div b{color:var(--text);font-weight:500;font-size:12.5px}
+  .stages div span{display:flex;justify-content:space-between;margin-top:2px}
+  .stages div.on{background:linear-gradient(90deg,rgba(232,130,58,.28),rgba(232,130,58,.14));color:var(--accent2)}
+  .stages div.on b{color:#fff}
+  .body{display:grid;grid-template-columns:1fr 300px;gap:12px;margin-top:12px}.body .card{padding:14px 16px}
+  .opp{display:grid;grid-template-columns:1fr auto auto auto auto;align-items:center;gap:16px;padding:8px 6px;border-top:1px solid rgba(255,255,255,.06)}
+  .opp:first-child{border-top:0}
+  .lg{width:44px;height:44px;border-radius:10px;background:#f4ede4;color:#1a0d06;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;letter-spacing:.02em}
+  .st{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+  .nx{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:12px}
+  .nx .card.sub{padding:11px 12px}
+  .q{display:flex;gap:10px;align-items:flex-start;padding:6px 0;border-top:1px solid rgba(255,255,255,.06)}
+  .q:first-child{border-top:0}
+  .q .t{font-size:12px;font-weight:500}.q .s{font-size:10.5px;color:var(--muted);margin-top:2px}
+  .q .d{margin-left:auto;font-size:10.5px;color:var(--faint);white-space:nowrap}
+  .snap{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-top:10px}
+  .snap div b{display:block;font-size:20px;font-weight:600;margin:4px 0 2px}
+  .snap div{font-size:9.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.06em}
+  .snap div i{font-style:normal;color:var(--green);text-transform:none;letter-spacing:0;font-size:9.5px}
+</style></head><body><div class="stage"><span data-tpl="wall"></span><span data-tpl="appbar" data-args="[0,3]"></span>
+<div class="win"><span data-tpl="lights"></span>
+  <div class="side" id="side"><div class="mini card sub"><div class="lbl" style="font-size:9px">Pipeline summary</div><div id="bars" style="display:flex;align-items:flex-end;gap:3px;height:34px;margin:10px 0"></div><div class="faint tiny">Total Value</div><div class="row" style="gap:8px"><span class="num" style="font-size:22px">$48.62M</span><span class="green tiny up">16.3%</span></div><div class="faint tiny" style="margin-top:4px">vs last 30 days</div></div></div>
+  <div class="main">
+    <div class="head"><div><h1>Sales Desk</h1><div class="sub-t">Drive your pipeline. Close more. Grow faster.</div></div>
+      <div class="srch"><span data-icon="search" data-size="14"></span>Search opportunities, accounts…</div><span class="btn"><span data-icon="filter" data-size="14"></span>Filters</span><span class="btn primary">New Opportunity</span><span class="btn sq" data-icon="more" data-size="14"></span></div>
+    <div class="stages" id="stages"></div>
+    <div class="body">
+      <div class="col" style="gap:14px">
+        <div class="card"><div class="hd"><h4>Opportunities</h4></div><div id="opps"></div><div class="link row" style="gap:6px;margin-top:8px">View all opportunities <span data-icon="arrow" data-size="12"></span></div></div>
+        <div class="card"><div class="hd" style="justify-content:flex-start;gap:10px"><h4>Next action suggestions</h4><span class="chip acc">AI Powered</span></div><div class="nx" id="nx"></div></div>
+      </div>
+      <div class="col" style="gap:14px">
+        <div class="card"><div class="hd"><h4>Follow-up queue <span class="chip" style="margin-left:6px;padding:1px 7px">6</span></h4><span class="link">View All</span></div><div id="fq"></div></div>
+        <div class="card"><div class="hd"><h4>AI recommendations</h4><span class="faint tiny">Updated 10m ago</span></div><div id="rec"></div><div class="link row" style="gap:6px;margin-top:10px">View all recommendations <span data-icon="arrow" data-size="12"></span></div></div>
+        <div class="card"><div class="hd"><h4>Today's snapshot</h4><span class="faint tiny">May 27, 2025</span></div><div class="snap"><div>Meetings<b>4</b><i>▲ 2 vs yesterday</i></div><div>Emails sent<b>18</b><i>▲ 5 vs yesterday</i></div><div>Proposals sent<b>3</b><i>▲ 1 vs yesterday</i></div><div>Pipeline value<b>$12.68M</b><i>▲ 16.0%</i></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<span data-tpl="dock"></span>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  side.insertAdjacentHTML('afterbegin',[['Overview','home',1],['Pipeline','layers'],['Accounts','users'],['Opportunities','tag'],['Quotations','doc'],['Products','box'],['Activities','clock'],['Documents','folder'],['Reports','chart']].map(([n,i,on])=>`<a class="${on?'on':''}">${S.icon(i,15)}${n}</a>`).join(''));
+  bars.innerHTML=[3,5,4,7,6,8,10,9,12,11,14,13,16].map((v)=>`<i style="flex:1;height:${v*2}px;background:${v>10?'var(--accent)':'rgba(232,130,58,.45)'};border-radius:2px"></i>`).join('');
+  stages.innerHTML=[['New Inquiry',12,'$4.8M'],['Qualified',9,'$6.7M'],['Product Match',7,'$9.3M',1],['Quotation',5,'$11.2M'],['Negotiation',4,'$12.1M'],['PI',3,'$3.9M'],['Deal',2,'$0.62M']].map(([n,c,v,on])=>`<div class="${on?'on':''}"><b>${n}</b><span><span>${c}</span><span>${v}</span></span></div>`).join('');
+  const O=[['AL','Aurora Mobility Brazil','Strategic','acc','Electric Bus Program Expansion','Product match','2h ago','$4.75M','Jun 30, 2025','Product Fit Call','May 28, 2025',[2,3,2.6,3.5,3.2,4.1,4.6]],['ste','STE ZAYN Tunisia','High Potential','warn','Warehouse Automation Upgrade','Qualified','5h ago','$2.18M','Jun 18, 2025','Technical Clarification','May 27, 2025',[2,2.4,2.2,2.9,3.1,3,3.4]],['wk','Washka Poland','New','info','Smart Wash Systems Rollout','Product match','1d ago','$1.92M','Jul 10, 2025','Send Quotation','May 29, 2025',[1,1.6,1.4,2,2.2,2.1,2.5]],['SB','SBML Panama','Existing','vio','Conveyor Line Modernization','Quotation','3h ago','$3.35M','Jun 05, 2025','Commercial Review','May 28, 2025',[3,3.1,3.3,3.2,3.5,3.6,3.7]]];
+  opps.innerHTML=O.map(([lg,n,tag,tc,sub,st,la,v,cl,nx,nd,p])=>`<div class="opp"><div class="row"><span class="lg">${lg}</span><div><div class="row" style="gap:8px"><span class="name">${n}</span><span class="chip ${tc}" style="padding:1px 7px;font-size:9.5px">${tag}</span></div><div class="sub">${sub}</div></div></div><div><div class="st">${st}</div><div class="sub">Last activity: ${la}</div></div><div><div class="name">${v}</div><div class="sub">Est. Close: ${cl}</div></div><div>${S.spark(p,'#5fd08b',70,24)}</div><div class="row" style="gap:10px"><div><div class="st">Next action</div><div style="font-size:12px;margin-top:2px">${nx}</div><div class="sub">${S.icon('calendar',11)} ${nd}</div></div><span class="av" style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#e8823a,#7c5cff);display:inline-block;flex:none"></span></div></div>`).join('');
+  nx.innerHTML=[['clock','Schedule Product Fit Call','Aurora Mobility Brazil','Best time: Tomorrow, 10:00 AM','Schedule','linear-gradient(135deg,#4aa8ff,#1e5fd6)'],['doc','Prepare Custom Quotation','Washka Poland','Based on their technical requirements','Prepare','linear-gradient(135deg,#8f7cff,#5a44d6)'],['mail','Follow up on Proposal','Nortex Industries','Proposal sent 5 days ago','Follow Up','linear-gradient(135deg,#ff8a6a,#d94a3a)']].map(([i,t,c,h,b,bg])=>`<div class="card sub"><div class="row" style="align-items:flex-start"><span class="tile sm" style="background:${bg};border:0">${S.icon(i,15)}</span><div class="grow"><div class="name" style="font-size:12.5px">${t}</div><div class="accent tiny" style="margin-top:2px">${c}</div><div class="sub">${h}</div></div></div><span class="btn sm" style="margin-top:12px">${b}</span></div>`).join('');
+  fq.innerHTML=[['Nortex Industries','Proposal follow-up','Due in 2h','red'],['Delta Manufacturing','PI signature follow-up','Due in 1d',''],['Greenfield Logistics','Product demo follow-up','Due in 2d',''],['Solaris Energies','Budget confirmation','Due in 3d','amber']].map(([n,s,d,c])=>`<div class="q"><span class="dot ${c}" style="margin-top:5px"></span><div><div class="t">${n}</div><div class="s">${s}</div></div><span class="d">${d}</span></div>`).join('');
+  rec.innerHTML=[['star','Focus on Aurora Mobility Brazil','Strong engagement. High win probability.','red'],['shield','Discount guardrail for SBML Panama','Maintain margin &gt; 18%.','vio'],['sparkle','Nurture STE ZAYN Tunisia','High potential. Engage technical champion.','ok']].map(([i,t,s,c])=>`<div class="q"><span class="tile sm" style="width:26px;height:26px;border-radius:7px">${S.icon(i,13)}</span><div><div class="t">${t}</div><div class="s">${s}</div></div><span class="d" style="color:var(--green)">${S.icon('check',12,2)}</span></div>`).join('');
+});
+</script></div></body></html>

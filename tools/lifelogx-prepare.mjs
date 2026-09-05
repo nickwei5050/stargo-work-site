@@ -114,8 +114,11 @@ function rewriteSelectorList(list) {
     let s = sel.trim();
     if (!s) return sel;
     if (/^html\b/.test(s)) return ' ' + s;                   // html.w-mod-… globals: keep
-    if (/^(body|:root)\b/.test(s)) s = s.replace(/^(body|:root)\b/, `.${SCOPE}`);
+    // Rename classes first; the scope class is added afterwards so it is not
+    // itself prefixed (".lx-lx-scope" would match nothing and every token and
+    // body colour would silently fall back to Mono's black).
     s = s.replace(/\.(-?[_a-zA-Z][\w-]*)/g, (_, cls) => '.' + rename(cls));
+    if (/^(body|:root)\b/.test(s)) s = s.replace(/^(body|:root)\b/, `.${SCOPE}`);
     // bare element selectors (p, h1, a …) become descendants of the scope
     const first = s.match(/^([a-z][a-z0-9]*)\b/);
     if (first && BARE.test(first[1]) && !s.startsWith(`.${SCOPE}`)) s = `.${SCOPE} ${s}`;

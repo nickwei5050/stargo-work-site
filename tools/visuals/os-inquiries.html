@@ -1,0 +1,69 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../css/inter.css"><link rel="stylesheet" href="os.css"><script src="lib.js"></script>
+<style>
+  .rail{position:absolute;left:34px;top:80px;width:64px;bottom:60px;display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 0;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
+  .rail .a{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:7.5px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+  .rail .a .tile{width:34px;height:34px;border-radius:10px;border:0}
+  .win{left:118px;right:60px;top:78px;bottom:60px;padding:22px 26px}
+  .head{display:flex;align-items:center;gap:14px}
+  .tabs{display:flex;gap:26px;margin-top:16px;border-bottom:1px solid var(--line)}
+  .tabs a{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:8px 0 12px;position:relative}
+  .tabs a.on{color:var(--text)}.tabs a.on::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--accent);box-shadow:0 0 12px var(--accent)}
+  .filters{display:flex;gap:12px;margin-top:14px}
+  .filters .f{flex:1;height:42px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid var(--line);padding:6px 12px;display:flex;justify-content:space-between;align-items:center}
+  .filters .f small{display:block;font-size:9.5px;color:var(--faint)}.filters .f b{font-weight:400;font-size:12.5px}
+  .body{display:grid;grid-template-columns:440px 1fr;gap:16px;margin-top:14px;height:600px}
+  .feed .it{padding:10px 12px;border-radius:10px;border:1px solid transparent;margin-bottom:4px}
+  .feed .it.sel{background:rgba(232,130,58,.10);border-color:rgba(232,130,58,.4)}
+  .feed .it .t{font-size:12.5px;font-weight:600}.feed .it .c{font-size:11px;color:var(--muted);margin-top:2px}
+  .feed .it .m{display:flex;align-items:center;gap:12px;margin-top:6px;font-size:10.5px;color:var(--muted)}
+  .feed .it .tm{float:right;font-size:10.5px;color:var(--faint)}
+  .fl{display:inline-block;width:14px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+  .det{padding:0}
+  .dtabs{display:flex;gap:22px;padding:14px 18px 0;border-bottom:1px solid var(--line);align-items:center}
+  .dtabs a{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-bottom:12px;position:relative}
+  .dtabs a.on{color:var(--text)}.dtabs a.on::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--accent)}
+  .dtabs .pg{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:11px;color:var(--muted)}
+  .dh{display:flex;align-items:center;gap:14px;padding:16px 18px 0}
+  .facts{display:grid;grid-template-columns:repeat(6,1fr);gap:0;margin:16px 18px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .facts div{padding:12px 10px;border-left:1px solid var(--line);font-size:12px}.facts div:first-child{border-left:0;padding-left:0}
+  .facts small{display:block;font-size:10px;color:var(--faint);margin-bottom:5px}
+  .cols{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:18px;padding:16px 18px}
+  .cols p{font-size:11.5px;color:var(--muted);line-height:1.5;margin-top:8px}
+  .req{display:flex;gap:8px;align-items:flex-start;font-size:11px;margin-top:6px;color:var(--muted)}
+  .kv{display:flex;justify-content:space-between;font-size:11px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05)}.kv span:first-child{color:var(--faint)}
+  .step{display:flex;gap:10px;padding:10px;border-radius:10px;background:var(--glass2);margin-top:8px}
+  .step .n{width:20px;height:20px;border-radius:50%;background:var(--accent);color:#1a0d06;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none}
+  .step .t{font-size:12px;font-weight:500}.step .s{font-size:10.5px;color:var(--muted);margin-top:2px}
+  .note{position:absolute;left:478px;right:18px;bottom:18px;height:44px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.04);display:flex;align-items:center;padding:0 6px 0 14px;font-size:12px;color:var(--faint)}
+  .note .send{margin-left:auto;width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:var(--muted)}
+</style></head><body><div class="stage"><span data-tpl="wall"></span><span data-tpl="appbar" data-args="[0,3]"></span>
+<div class="rail" id="rail"></div>
+<div class="win">
+  <div class="head"><span class="tile" style="width:46px;height:46px;border-radius:50%" data-icon="users" data-size="20"></span><div><h1>Customers &amp; Inquiries</h1><div class="sub-t">Manage inbound inquiries and customer conversations</div></div><span class="btn" style="margin-left:auto"><span data-icon="gear" data-size="14"></span>View Settings</span><span class="btn primary"><span data-icon="plus" data-size="14" data-sw="2.2"></span>New Inquiry</span></div>
+  <div class="tabs"><a class="on">Inquiries</a><a>Customers</a><a>Accounts</a><a>Activity</a><a>Templates</a></div>
+  <div class="filters"><div class="f"><div><small>Market</small><b>All Markets</b></div><span data-icon="chev" data-size="14"></span></div><div class="f"><div><small>Source</small><b>All Sources</b></div><span data-icon="chev" data-size="14"></span></div><div class="f"><div><small>Urgency</small><b>All Priorities</b></div><span data-icon="chev" data-size="14"></span></div><div class="f"><div><small>Status</small><b>All Statuses</b></div><span data-icon="chev" data-size="14"></span></div><span class="btn" style="height:42px"><span data-icon="filter" data-size="14"></span>More Filters</span></div>
+  <div class="body">
+    <div class="card feed" style="padding:14px"><div class="hd" style="margin-bottom:8px"><h4>Inquiry feed <span class="chip acc" style="margin-left:6px;padding:1px 7px">18</span></h4><span class="faint tiny">Sort by: <span style="color:var(--accent2)">Newest ▾</span></span></div><div id="feed"></div><div class="link row" style="gap:6px;margin-top:6px;padding:0 12px">View All Inquiries <span data-icon="arrow" data-size="12"></span></div></div>
+    <div class="card det">
+      <div class="dtabs"><a class="on">Inquiry details</a><a>Notes</a><a>Activity</a><a>Files</a><a>Relationships</a><span class="pg"><span data-icon="chevl" data-size="14"></span>1 of 18<span data-icon="chevr" data-size="14"></span><span data-icon="x" data-size="14"></span></span></div>
+      <div class="dh"><span class="tile" style="width:46px;height:46px;border-radius:50%" data-icon="bell" data-size="18"></span><div class="grow"><div class="row" style="gap:10px"><h2>Industrial HVAC Solutions for New Facility</h2><span class="red tiny">● High Priority</span></div><div class="sub-t row" style="gap:6px;margin-top:3px"><span data-icon="briefcase" data-size="12"></span>EcoClimate Engineering Ltd.</div><div class="faint tiny" style="margin-top:2px">Submitted 10 minutes ago via Website</div></div><span class="btn" style="color:var(--accent2)">Qualification <span data-icon="chev" data-size="12"></span></span><span class="btn sq" data-icon="more" data-size="14"></span></div>
+      <div class="facts"><div><small>Market</small><span class="fl" style="background:linear-gradient(#009c3b 50%,#ffdf00 50%)"></span>Brazil<div class="faint tiny">São Paulo, SP</div></div><div><small>Company Size</small>51 – 200 employees</div><div><small>Industry</small>Manufacturing</div><div><small>Annual Revenue</small>$15M – $50M</div><div><small>Source</small>Website Inquiry</div><div><small>Assigned To</small><span class="row" style="gap:6px"><span style="width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#f2a35b,#c4622a);display:inline-block"></span><span>Maria Santos<div class="faint tiny">Sales Manager</div></span></span></div></div>
+      <div class="cols">
+        <div><h4>Inquiry overview</h4><p>EcoClimate Engineering is planning a new manufacturing facility and is seeking a comprehensive HVAC solution that meets energy efficiency standards and integrates with their building management system.</p><h4 style="margin-top:14px">Key requirements</h4><div id="req"></div><div class="row" style="gap:30px;margin-top:14px"><div><h4>Budget range</h4><div style="font-size:13px;margin-top:6px">$250,000 – $350,000 USD</div></div><div><h4>Target timeline</h4><div style="font-size:13px;margin-top:6px">Q3 – Q4 2025</div></div></div></div>
+        <div><h4>Company snapshot</h4><div class="row" style="margin-top:10px;align-items:flex-start"><span class="tile" style="background:linear-gradient(135deg,#5fd08b,#2f9d5c);border:0" data-icon="globe" data-size="18"></span><div><div class="name">EcoClimate Engineering Ltd.</div><div class="sub">Engineering sustainable environments for industrial growth.</div></div></div><div style="margin-top:10px" id="kv"></div></div>
+        <div><h4>Next steps</h4><div id="steps"></div><span class="btn sm" style="width:100%;margin-top:10px;color:var(--accent2);border-color:rgba(232,130,58,.4)"><span data-icon="plus" data-size="12" data-sw="2.2"></span>Add Next Step</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="note">Write an internal note or @mention a teammate…<span style="display:flex;gap:10px;margin-left:auto;margin-right:10px;color:var(--faint)"><span data-icon="clip" data-size="14"></span><span data-icon="at" data-size="14"></span></span><span class="send" data-icon="send" data-size="15"></span></div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  rail.innerHTML=[['CORE',null],['MAIL','mail','linear-gradient(135deg,#ffd36a,#f2a52b)'],['CALENDAR','calendar','linear-gradient(180deg,#f5f0ea,#e6dfd6)','#1c130c'],['SPACE','planet','linear-gradient(135deg,#3b2f6b,#12101f)'],['DRIVE','folder','linear-gradient(135deg,#ffc14d,#e08a19)'],['AI AGENTS','robot','linear-gradient(135deg,#3a3a44,#17171c)'],['INSIGHTS','chart','linear-gradient(135deg,#4aa8ff,#1e5fd6)'],['AUTOMATIONS','bolt','linear-gradient(135deg,#2c2f5c,#141633)'],['CHAT','chat','linear-gradient(135deg,#5fd08b,#2f9d5c)'],['APP STORE','grid','linear-gradient(135deg,#6aa9ff,#2f6ee0)'],['SETTINGS','gear','linear-gradient(135deg,#8c8c94,#4b4b52)']].map(([n,i,bg,c])=>`<div class="a">${i?`<span class="tile" style="background:${bg};color:${c||'#fff'}">${S.icon(i,17,1.8)}</span>`:'<span class="orb sm"></span>'}<span>${n}</span></div>`).join('');
+  const F=[['Industrial HVAC Solutions for New Facility','EcoClimate Engineering Ltd.','Brazil','linear-gradient(#009c3b 50%,#ffdf00 50%)','Website','High','red','Qualification','acc','10m ago',1],['Consultation on Smart Factory Integration','Tunisia Tech Systems','Tunisia','#e70013','LinkedIn','Medium','amber','Discovery','info','35m ago'],['Chiller System Upgrade for Production Plant','PolTherm Sp. z o.o.','Poland','linear-gradient(#fff 50%,#dc143c 50%)','Email','Medium','amber','Evaluation','vio','1h ago'],['Warehouse Cooling Solution Inquiry','Panama Cold Storage Inc.','Panama','linear-gradient(90deg,#fff 50%,#005293 50%)','Website','Low','','New','warn','2h ago'],['Industrial Automation Partnership','Suryatech Industries Pvt. Ltd.','India','linear-gradient(#ff9933 33%,#fff 33% 66%,#138808 66%)','Referral','High','red','Proposal','bad','3h ago'],['Data Center Cooling Consultation','NexusCore Solutions','United States','linear-gradient(#b22234 50%,#fff 50%)','Website','Medium','amber','Discovery','info','5h ago'],['Ventilation System for Mining Site','Andes Mining Services','Chile','linear-gradient(#fff 50%,#d52b1e 50%)','Email','Low','','New','warn','1d ago']];
+  feed.innerHTML=F.map(([t,c,cty,fl,src,pr,pc,st,sc,tm,sel])=>`<div class="it ${sel?'sel':''}"><span class="tm">${tm}</span><div class="t">${t}</div><div class="c">${c}</div><div class="m"><span><span class="fl" style="background:${fl}"></span>${cty}</span><span>via ${src}</span><span class="${pc}"><span class="dot ${pc||'grey'}" style="width:5px;height:5px"></span>${pr}</span><span class="chip ${sc}" style="margin-left:auto;padding:1px 7px;font-size:9.5px">${st}</span></div></div>`).join('');
+  req.innerHTML=['High-efficiency HVAC system for 25,000 m² facility','Integration with existing BMS (Building Management System)','Energy recovery ventilation and air filtration','Installation timeline: Q3–Q4 2025','After-sales service and preventive maintenance'].map((r)=>`<div class="req"><span class="check on" style="width:13px;height:13px"></span>${r}</div>`).join('');
+  kv.innerHTML=[['Website','<span class="accent">ecoclimate.com.br</span>'],['Founded','2012'],['Headquarters','São Paulo, Brazil'],['Employees','120'],['Markets Served','Brazil, Argentina, Chile'],['Tags','<span class="chip" style="padding:1px 6px;font-size:9.5px">Sustainability</span> <span class="chip" style="padding:1px 6px;font-size:9.5px">Engineering</span> <span class="chip" style="padding:1px 6px;font-size:9.5px">Manufacturing</span>']].map(([k,v])=>`<div class="kv"><span>${k}</span><span>${v}</span></div>`).join('');
+  steps.innerHTML=[['Introductory call','Schedule discovery call','May 28, 2025'],['Technical assessment','Share technical questionnaire','May 30, 2025'],['Solution proposal','Prepare initial proposal','Jun 5, 2025']].map(([t,s,d],i)=>`<div class="step"><span class="n">${i+1}</span><div><div class="t">${t}</div><div class="s">${s}</div><div class="s faint">${d}</div></div></div>`).join('');
+});
+</script></div></body></html>

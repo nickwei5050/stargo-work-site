@@ -1,0 +1,47 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../css/inter.css"><link rel="stylesheet" href="os.css"><script src="lib.js"></script>
+<style>
+  .win{left:64px;right:64px;top:76px;bottom:120px;padding:20px 24px}
+  .head{display:flex;align-items:center;gap:14px}
+  .body{display:grid;grid-template-columns:1fr 360px;gap:12px;margin-top:12px}.body .col .card{padding:13px 18px}
+  .qh{display:flex;align-items:center;gap:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+  .tbl{grid-template-columns:2.2fr .7fr .9fr 1fr}
+  .tbl .td:nth-child(4n+2),.tbl .td:nth-child(4n+3),.tbl .td:nth-child(4n+4),.tbl .th:nth-child(4n+2),.tbl .th:nth-child(4n+3),.tbl .th:nth-child(4n+4){text-align:right}
+  .total{display:flex;justify-content:flex-end;gap:40px;padding:14px 12px 4px;font-size:13px}
+  .total b{font-size:20px;font-weight:600}
+  .terms{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+  .terms div{padding:10px 12px;border-radius:10px;background:var(--glass2);font-size:11.5px}
+  .terms small{display:block;font-size:9.5px;color:var(--faint);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+  .rule{display:flex;justify-content:space-between;font-size:11.5px;padding:5px 0;border-top:1px solid rgba(255,255,255,.06)}.rule:first-child{border-top:0}
+  .gauge{display:flex;align-items:center;gap:16px;margin-top:8px}
+  .note{display:flex;gap:8px;font-size:11.5px;color:var(--muted);padding:6px 0;line-height:1.4}
+  .ver{display:flex;gap:8px;align-items:center;font-size:11px;color:var(--muted);padding:6px 0}
+</style></head><body><div class="stage"><span data-tpl="wall"></span><span data-tpl="appbar" data-args="[1,2]"></span>
+<div class="win">
+  <div class="head"><span class="tile copper" style="width:46px;height:46px;border-radius:50%" data-icon="doc" data-size="20"></span><div><h1>Quote Studio</h1><div class="sub-t">From inquiry to approved quote, without opening Excel</div></div><span class="btn" style="margin-left:auto">Version history</span><span class="btn" style="opacity:.55">Generate PI</span><span class="btn primary">Request approval</span></div>
+  <div class="body">
+    <div class="card">
+      <div class="qh"><div class="grow"><div class="row" style="gap:10px"><h2>Quote Q-5678 <span class="muted" style="font-weight:400">· v3</span></h2><span class="chip warn">Awaiting approval</span></div><div class="sub-t" style="margin-top:3px">Aurora Mobility Brazil &nbsp;•&nbsp; Electric Bus Program Expansion &nbsp;•&nbsp; Inquiry INQ-2025-0311</div></div><div class="col" style="align-items:flex-end;gap:2px"><span class="faint tiny">Owner</span><span class="small">Maria Santos</span></div></div>
+      <div class="tbl" id="items"></div>
+      <div class="total"><span class="muted">Subtotal $479,300</span><span class="muted">Freight $31,200</span><span>Total <b>$510,500</b> <span class="muted">USD</span></span></div>
+      <div class="terms"><div><small>Incoterms</small>CIF Santos</div><div><small>Payment</small>30% T/T deposit, 70% against B/L copy</div><div><small>Validity</small>30 days · to Jun 26, 2025</div><div><small>Lead time</small>45–60 days after deposit</div></div>
+      <div class="row" style="gap:10px;margin-top:14px"><span class="chip">Draft by Quote Agent</span><span class="chip">Reviewed by Pricing Agent</span><span class="chip ok">Product fit 84/100</span><span class="chip">Version 3 of 3</span></div>
+    </div>
+    <div class="col" style="gap:14px">
+      <div class="card"><h4>Pricing rules applied</h4><div style="margin-top:8px" id="rules"></div></div>
+      <div class="card"><h4>Margin guardrail</h4><div class="gauge" id="gauge"></div><div class="amber small" style="margin-top:10px">Below guardrail · human approval required</div><div class="faint tiny" style="margin-top:4px">Approver: Jason Lin · Founder &amp; CEO</div></div>
+      <div class="card"><h4>Context</h4><div id="ctx"></div></div>
+      <div class="card"><h4>AI draft notes</h4><div style="margin-top:6px" id="notes"></div></div>
+    </div>
+  </div>
+</div>
+<span data-tpl="dock" data-args="[[0,1,5]]"></span>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  const I=[['SG-EM-750 electric motorcycle','72V 40Ah · CKD · INMETRO','120 units','$2,940','$352,800'],['SG-C40 cargo trike','60V 45Ah · CKD','40 units','$1,860','$74,400'],['Spare-parts kit (24-month)','per unit','160','$210','$33,600'],['Pre-delivery inspection &amp; CKD packing','third-party','1 lot','$18,500','$18,500'],['Freight CIF Santos','6 × 40\' HC','1','$31,200','$31,200']];
+  items.innerHTML=['Item','Qty','Unit price','Amount'].map((h)=>`<div class="th">${h}</div>`).join('')+I.map(([n,s,q,u,a])=>`<div class="td"><div class="name" style="font-size:12.5px">${n}</div><div class="sub">${s}</div></div><div class="td">${q}</div><div class="td">${u}</div><div class="td" style="font-weight:600">${a}</div>`).join('');
+  rules.innerHTML=[['Distributor tier B','−6%'],['Volume ≥ 100 units','−3%'],['Brazil market surcharge (INMETRO)','+2%'],['Payment 30/70','—']].map(([k,v])=>`<div class="rule"><span>${k}</span><b style="font-weight:500">${v}</b></div>`).join('');
+  gauge.innerHTML=`${S.ring(23/40*100,'#f0b35a',68,6)}<div><div class="row" style="gap:8px;align-items:baseline"><span class="num" style="font-size:34px">23%</span><span class="muted small">gross margin</span></div><div class="faint tiny" style="margin-top:6px">Guardrail floor <b style="color:var(--text);font-weight:500">25%</b> · last accepted 24%</div></div>`;
+  ctx.innerHTML=[['Last quote to account','Q-5401 · Mar 2025 · $1.92M · <span class="green">won</span>'],['Customer 360','7 linked conversations · 3 contacts'],['Competitor signal','Local importer quoted 72V rival at +9%']].map(([k,v])=>`<div class="rule" style="flex-direction:column;gap:2px;align-items:flex-start"><span class="faint tiny">${k}</span><span>${v}</span></div>`).join('');
+  notes.innerHTML=['Quantities confirmed on WhatsApp, May 26.','BMS integration line removed — not in scope for this program.','Recommend approving at 24% to protect margin while matching last year’s level.'].map((n)=>`<div class="note"><span class="accent">✦</span><span>${n}</span></div>`).join('');
+});
+</script></div></body></html>

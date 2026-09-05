@@ -17,7 +17,7 @@
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 'node:fs';
 import { makeSub, findByClass, removeByClass, elementContaining, extractElement, setInner, setEachInner, setLink, escapeHtml } from './lib-html.mjs';
-import { applyChrome, remapLinks, relocateAssets, assertInternalLinks } from './chrome.mjs';
+import { applyChrome, remapLinks, relocateAssets, assertInternalLinks, stillImage } from './chrome.mjs';
 import * as C from './copy.mjs';
 
 const SITE = 'F:/stargo 网站/stargo-site';
@@ -40,6 +40,26 @@ const ABSTRACT = [
   'assets/699b6466d5f19893993a4c2c/699b6466d5f19893993a4da8_Futuristic-Device-Design-(4).webp',
   'assets/699b6466d5f19893993a4bf2/699b6466d5f19893993a4faf_Coding-Workspace-Close-Up.webp',
 ];
+/** STARGO's own imagery (tools/visuals → assets/stargo). */
+const IMG = (n) => `assets/stargo/${n}`;
+const OS = { cockpit: IMG('os-cockpit.webp'), desk: IMG('os-sales-desk.webp'), inquiries: IMG('os-inquiries.webp'), agents: IMG('os-agent-center.webp'), quote: IMG('os-quote-studio.webp'), trade: IMG('os-trade-execution.webp'), desktop: IMG('os-desktop.webp'), login: IMG('os-login.webp'), boot: IMG('os-boot.webp'), loading: IMG('os-loading.webp') };
+const BRAND = { wide: IMG('brand-glow-wide.webp'), square: IMG('brand-glow-square.webp'), tall: IMG('brand-glow-tall.webp'), ontology: IMG('brand-ontology.webp'), loop: IMG('brand-loop.webp'), family: (n) => IMG(`brand-family-0${n}.webp`) };
+const MOBILE = { approvals: IMG('mobile-approvals.webp'), agents: IMG('mobile-agents.webp'), inquiry: IMG('mobile-inquiry.webp'), core: IMG('mobile-core.webp'), phoneApprovals: IMG('phone-approvals.webp'), phoneAgents: IMG('phone-agents.webp') };
+const SILO = ['email', 'whatsapp', 'excel', 'erp'].map((n) => IMG(`silo-${n}.webp`));
+const AVATARS = Array.from({ length: 12 }, (_, i) => IMG(`avatar-${String(i + 1).padStart(2, '0')}.png`));
+/** Replace the src/srcset/sizes of the nth <img> whose src contains `key` (all of them when nth is null). */
+function swapImg(html, key, src, { nth = null, alt = '' } = {}) {
+  let seen = 0, hit = false;
+  const out = html.replace(/<img\b[^>]*>/g, (tag) => {
+    if (!tag.includes(key)) return tag;
+    const idx = seen++;
+    if (nth != null && idx !== nth) return tag;
+    hit = true;
+    return tag.replace(/\s*srcset="[^"]*"/g, '').replace(/\s*sizes="[^"]*"/g, '').replace(/src="[^"]*"/, `src="${src}"`).replace(/alt="[^"]*"/, `alt="${alt}"`);
+  });
+  if (!hit) throw new Error(`swapImg: no <img> with ${key}${nth != null ? ` #${nth}` : ''}`);
+  return out;
+}
 const CHECK = 'assets/69a01660589c516ba5f0f917/69a9086623545093091785d8_check-icon.svg';
 const CROSS = 'assets/69a01660589c516ba5f0f917/69a91f28a82e2c7b982d5703_cancel-circle-icon.svg';
 
@@ -115,7 +135,11 @@ function fromStudio(spec, lang) {
   h = h.replace(/<img[^>]*class="logo-absolute"[^>]*\/>/, '');
   if (h.includes('logo-absolute')) throw new Error(`${spec.name}: template client logo survives`);
   h = s(h, 'Creative Minds <span class="small-ftd finr">(5)</span>', `${t(spec.cardsTitle)} <span class="small-ftd finr">(5)</span>`);
-  TEAM_TPL.forEach(([n, r], i) => { h = teamCard(h, n, r, { name: t(spec.cards[i].name), role: t(spec.cards[i].role), image: ABSTRACT[i] }); });
+  TEAM_TPL.forEach(([n, r], i) => { h = teamCard(h, n, r, { name: t(spec.cards[i].name), role: t(spec.cards[i].role), image: spec.images.cards[i] }); });
+  // Stock photos (keyboard hands, portraits, a crowd, a face) → STARGO imagery; the four hero
+  // backgrounds are CSS and are overridden in stargo-fusion.css (.image-about._01…_04).
+  [['699b6466d5f19893993a4faf_Coding-Workspace-Close-Up', spec.images.work[0]], ['699b6466d5f19893993a4fa9_Portrait-of-a-Man', spec.images.work[1]], ['699b6466d5f19893993a4f9c_Diverse-Group-Portrait', spec.images.work[2]], ['699b6466d5f19893993a4fa0_about-6', spec.images.quote]]
+    .forEach(([k, src]) => { h = swapImg(h, k, src); });
   h = s(h, '(Leadership)', t(spec.noteLabel));
   h = setInner(h, '<p class="top-text big for-inr">', t(spec.note));
   h = setLink(h, 'Join us', { href: spec.noteButton.href, text: t(spec.noteButton.label) });
@@ -166,16 +190,72 @@ PAGES['index.html'] = (lang) => {
   h = h.replace(/<link href="css\/monof-template\.app\.shared\.[a-f0-9]+\.css" rel="stylesheet" type="text\/css"\/>/, (m) => `${m}
 <link href="css/inter.css" rel="stylesheet" type="text/css"/>`);
 
-  // Hero list: the five loop stages in loop order (the template's five service
-  // names are not in the order their numbered sections use).
+  // Hero list: the five pillars the page then walks through (loop, workforce,
+  // ontology, approval, evolution). The template's five service names stay
+  // only in the numbered stage list, where HOME_MONO turns them into stages.
   {
     const flex = findByClass(h, 'div', 'flex-top');
     if (!flex) throw new Error('index: hero list');
-    const labels = ['Web Design', 'Social Media', 'Development', 'Brand Identity', 'Marketing'];
-    const inner = labels.map((l) => `<p class="top-text big">${l}<!--$--><br/><!--/$--></p>`).join('');
+    const inner = C.HOME_HERO_LIST.map((l) => `<p class="top-text big">${t(l)}<!--$--><br/><!--/$--></p>`).join('');
     h = h.slice(0, flex.start) + `<div class="flex-top">${inner}</div>` + h.slice(flex.end);
   }
   for (const [old, pair, opts] of C.HOME_MONO) h = s(h, old, t(pair), opts);
+  // Shorter hero copy on phones (swapped in before the text animation splits lines).
+  h = h.replace(/<p class="top-text big nm">/, `<p class="top-text big nm" data-mobile-text="${escapeHtml(t(C.HOME_MOBILE.heroSupport))}">`);
+
+  // ---- template residue: the "Pages / Get Template" navigator and its dropdown
+  {
+    const nav = findByClass(h, 'div', 'template-navigator');
+    if (!nav) throw new Error('index: template navigator not found');
+    h = h.slice(0, nav.start) + h.slice(nav.end);
+    if (/template-navigator|Get Template/.test(h)) throw new Error('index: template navigator survives');
+  }
+  // Client logos on the sticky cards and the flip cards are the template's; STARGO has none to show there.
+  h = h.replace(/<img[^>]*class="logo-testi-1"[^>]*\/>/g, '');
+  h = h.replace(/<img[^>]*class="logo-absolute"[^>]*\/>/g, '');
+  // "Meet the AI workforce" goes to the workforce page, not to a pricing anchor.
+  h = s(h, 'href="#Pricing"', 'href="workforce.html"', { count: 1 });
+  h = s(h, 'id="Pricing"', 'id="compare"', { count: 1 });
+  // The stats block became the pricing ladder: its button goes to pricing.
+  {
+    const a = h.indexOf('<section class="section drk"'); const z = h.indexOf('<section class="section with-minus"', a);
+    if (a === -1 || z === -1) throw new Error('index: stats section');
+    let sec = h.slice(a, z);
+    const label = t(C.HOME_MONO.find(([o]) => o === 'Let&#x27;s talk')[1]);
+    sec = setLink(sec, label, { href: 'pricing.html', text: lang === 'zh' ? '查看定价' : 'See pricing' });
+    sec = sec.replace('<p class="top-text half">', `<p class="top-text half" data-mobile-text="${escapeHtml(t(C.HOME_MOBILE.ladder))}">`);
+    if (!sec.includes('data-mobile-text')) throw new Error('index: ladder paragraph');
+    h = h.slice(0, a) + sec + h.slice(z);
+  }
+
+  // ---- imagery: the problem cards, the five stages, the OS "theatre", the sticky card, the ladder card, the four doors
+  {
+    const cards = ['699b6466d5f19893993a4d79_work-1.webp', '699b6466d5f19893993a4d34_work-5.webp', '699b6466d5f19893993a4d1a_work-4.webp', '699b6466d5f19893993a4d8f_work-8.webp'];
+    cards.forEach((k, i) => { h = swapImg(h, k, SILO[i]); });
+    const scenes = [['Scene%20%239.webp', OS.desk], ['Scene%20%235.webp', OS.inquiries], ['Scene%20%2310%20(Light)', OS.cockpit], ['Scene%20%238.webp', OS.quote], ['Scene%2018.webp', OS.agents]];
+    scenes.forEach(([k, src]) => { h = swapImg(h, k, src); });
+    // theatre: seven looping stock videos → seven STARGO OS screens; the YouTube lightbox goes.
+    const theatre = [OS.boot, OS.loading, OS.login, OS.desktop, OS.cockpit, OS.agents, OS.inquiries];
+    const ids = [...h.matchAll(/class="video-bg-animation w-background-video w-background-video-atom"><video id="([^"]+)-video"/g)].map((m) => m[1]);
+    const inTheatre = ids.filter((id) => h.indexOf(`id="${id}-video"`) > h.indexOf('<section class="video-section"') && h.indexOf(`id="${id}-video"`) < h.indexOf('<section id="compare"'));
+    if (inTheatre.length !== 7) throw new Error(`index: expected 7 theatre videos, found ${inTheatre.length}`);
+    inTheatre.forEach((id, i) => { h = stillImage(h, id, theatre[i], 'STARGO OS'); });
+    const play = elementContaining(h, 'class="play-video w-inline-block w-lightbox"', 'a');
+    h = h.slice(0, play.start) + h.slice(play.end);
+    if (/youtube|embedly|w-lightbox/.test(h)) throw new Error('index: lightbox survives');
+    // the sticky "Proactive" card's video → orb still; the Enterprise card's photo → orb; the four doors
+    const stickyVideo = [...h.matchAll(/<video id="([^"]+)-video"/g)].map((m) => m[1]).find((id) => h.slice(h.indexOf('<section class="testimonials-section"'), h.indexOf('<section class="section drk"')).includes(`id="${id}-video"`));
+    if (!stickyVideo) throw new Error('index: sticky card video');
+    h = stillImage(h, stickyVideo, BRAND.square, '');
+    h = swapImg(h, '699b6466d5f19893993a4f1a_Sunset-Serenity', BRAND.square);
+    const doors = [['699b6466d5f19893993a4dca_Sleek', BRAND.ontology], ['699b6466d5f19893993a4d64_blog-2', BRAND.loop], ['699b6466d5f19893993a4e03_Futuristic', OS.agents], ['699b6466d5f19893993a4de3_blog-1', OS.login]];
+    doors.forEach(([k, src]) => { h = swapImg(h, k, src); });
+    h = swapImg(h, '699b6466d5f19893993a4efc_Smiling%20Bearded', IMG('avatar-core.png'));   // the chat card's bearded-man avatar → the core orb
+    const doorHrefs = ['intelligence.html', 'capabilities.html', 'workforce.html', 'enterprise.html'];
+    ['post_the-power-of-simplicity-in-modern-brand-design.html', 'post_from-idea-to-execution-building-products-that-last.html', 'post_why-great-brands-are-built-on-clarity-not-complexity.html', 'post_designing-digital-systems-that-scale-with-your-business.html']
+      .forEach((p, i) => { h = s(h, `href="${p}"`, `href="${doorHrefs[i]}"`, { count: 1 }); });
+    // the contact band's background photo (a CSS background) is overridden in stargo-fusion.css
+  }
   const D = C.HOME_DUP_DESC;
   h = s(h, D.original, t(D.first), { nth: 0 });
   h = s(h, D.original, t(D.second), { nth: 0 });
@@ -213,22 +293,27 @@ PAGES['index.html'] = (lang) => {
     if (n !== 4) throw new Error(`index: expected 4 work cards, found ${n}`);
   }
 
-  // Scalora modules.
+  // Scalora modules. The nine-stage table now lives on the capabilities page:
+  // the homepage tells the loop once (five stages) and drills into four systems.
   const sub = (name, fragment, list) => { const { fn } = makeSub(name); let f = fragment; for (const [old, pair, opts] of list) f = fn(f, old, t(pair), opts); return f; };
   let hero = frag('hero.html').replace(/<h1 /g, '<h2 ').replace(/<\/h1>/g, '</h2>');
-  hero = addRootClass(sub('sc-hero', hero, C.HOME_SC_HERO), 'sc-scope');
-  const products = addRootClass(sub('sc-products', frag('products.html'), C.HOME_SC_PRODUCTS), 'sc-scope');
+  hero = addRootClass(sub('sc-hero', hero, C.HOME_SC_HERO), 'sc-scope').replace(/^<section class="/, '<section id="loop" class="');
+  hero = hero.replace(/<div class="hero-description-block"><div>/, `<div class="hero-description-block"><div data-mobile-text="${escapeHtml(t(C.HOME_MOBILE.scHero))}">`);
+  let products = addRootClass(sub('sc-products', frag('products.html'), C.HOME_SC_PRODUCTS), 'sc-scope');
+  {
+    // four Scalora dashboard drawings → the four STARGO OS systems, desktop and mobile variants alike
+    const bySystem = { 'Growth OS': OS.desk, 'Customer 360': OS.inquiries, 'Quote Studio': OS.quote, 'Trade Execution': OS.trade };
+    products = products.replace(/<div class="products-cards-dashboard-block[^"]*">[\s\S]*?<h3 class="heading-style-h4">([^<]*)<\/h3>/g, (block, title) => {
+      const key = Object.keys(bySystem).find((k) => title.startsWith(k));
+      if (!key) throw new Error(`index: unknown system ${title}`);
+      return block.replace(/<img[^>]*class="prodect-dashboard-image"\/>/, `<img src="${bySystem[key]}" loading="lazy" alt="${escapeHtml(title)}" class="prodect-dashboard-image"/>`);
+    });
+    if (/prodect-dashboard-0\d\.svg/.test(products)) throw new Error('index: Scalora dashboard drawing survives');
+  }
   const integration = addRootClass(sub('sc-integration', frag('integration.html'), C.HOME_SC_INTEGRATION), 'sc-scope');
-  const L = C.HOME_LOOP_TABLE;
-  const loop = awardsTable({
-    id: 'loop', caption: t(L.caption), title: t(L.title), total: L.rows.length,
-    button: { label: t(L.button), href: 'capabilities.html' }, headers: L.headers.map(t),
-    rows: L.rows.map(([a, b, c]) => [a, escapeHtml(t(b)), escapeHtml(t(c))]),
-  });
   const insertBefore = (html, anchor, fragment, label) => { const i = html.indexOf(anchor); if (i === -1) throw new Error(`insertion anchor not found for ${label}`); return html.slice(0, i) + fragment + '\n' + html.slice(i); };
   h = insertBefore(h, '<section class="section with-minus"', hero, 'four-layer stack');
-  h = insertBefore(h, '<section class="video-section"', loop + products, 'loop + switcher');
-  h = insertBefore(h, '<section class="section drk"', integration, 'channels band');
+  h = insertBefore(h, '<section class="video-section"', products + integration, 'switcher + channels band');
   const monoLink = /<link href="css\/monof-template\.app\.shared\.[a-f0-9]+\.css" rel="stylesheet" type="text\/css"\/>/;
   h = h.replace(monoLink, (m) => `${m}\n<link href="css/scalora-modules.sc.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>`);
   return h;
@@ -284,14 +369,26 @@ function lxPage(spec, lang, name) {
   b = s(b, 'class="lx-cta-logo-text">Lifelogx</div>', `class="lx-cta-logo-text">${t(spec.ctaLogo)}</div>`);
   b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
   b = s(b, 'The smartest friend you’ll ever have.', t(spec.ctaDesc));
+  // Imagery: the template's dating-app phone screens, people avatars and stock photos → STARGO OS.
+  {
+    const screens = spec.screens;                       // four phone screens per page, in the template's cycling order
+    const keys = ['692dab81598fb8b34428f59d_iPhone', '692daba0e37b1016cdc17929_iPhone', '692dabba95113ec093024ea5_iPhone', '6937f284d63295c8ccb5a176_iPhone'];
+    keys.forEach((k, i) => { b = swapImg(b, k, screens[i]); });
+    b = swapImg(b, '6932b116b7502585152c15b6_image%2024.png', BRAND.wide);
+    b = swapImg(b, '694d149575edcf4ee403b317_no-writing-sc.avif', spec.phoneStill);
+    b = swapImg(b, '6936e930338bd07695b687e0_image%2026.avif', BRAND.tall);
+    const faces = ['692edcecf6e2ae2fd9352460_Ellipse%202.png', '692edcec8af5a6c3b9f8d9a6_Ellipse%202-1.png', '692edcec737d3634fab06561_Ellipse%202-3.png', '692edcecd4a525cca3df2c2f_Ellipse%202-6.png', '692edcecd7175aab4589f1bc_Ellipse%202-7.png', '692edcec807cc992e4e0405c_Ellipse%202-8.png', '692edcec17bb278318484f4b_Ellipse%202-10.png', '692edcec6a013eb0a3d2a8bb_Ellipse%202-11.png', '692edcecae92036ffad3a8b7_Ellipse%202-13.png', '692ec0128bd0a6d48973c168_Team%20Image%201.avif', '692ec0128bd0a6d48973c170_Team%20Image%203.avif', '692ec0128bd0a6d48973c148_Team%20Image%204.avif', '692ec0128bd0a6d48973c160_Team%20Image%206.avif', '692ec0128bd0a6d48973c158_Team%20Image%207.avif', '692ec0128bd0a6d48973c150_Team%20Image%208.avif'];
+    faces.forEach((k, i) => { b = swapImg(b, k, AVATARS[i % AVATARS.length]); });
+    { const mm = b.match(/Ellipse%202|Team%20Image|iPhone%2013|iPhone%2016|image%2024|no-writing-sc|image%2026/); if (mm) throw new Error(`${name}: template imagery survives: ...${b.slice(Math.max(0, mm.index - 160), mm.index + 60)}...`); }
+  }
   b = b.replace(/<div([^>]*)class="([^"]*\blx-gradient-section\b[^"]*)"/, '<div id="lx-more"$1class="$2"');
   b = b.replace(/<div class="lx-cta-wrapper">/, '<div id="lx-evolution" class="lx-cta-wrapper">');
   if (!b.includes('id="lx-more"') || !b.includes('id="lx-evolution"')) throw new Error(`${name}: anchor ids`);
   if (/Lifelogx|Tomato|lifelog/i.test(b)) throw new Error(`${name}: template brand survives`);
   return inMonoShell(b, ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
 }
-PAGES['intelligence.html'] = (lang) => lxPage(C.LX_INTELLIGENCE, lang, 'intelligence');
-PAGES['workforce.html'] = (lang) => lxPage(C.LX_WORKFORCE, lang, 'workforce');
+PAGES['intelligence.html'] = (lang) => lxPage({ ...C.LX_INTELLIGENCE, screens: [MOBILE.core, MOBILE.agents, MOBILE.inquiry, MOBILE.approvals], phoneStill: MOBILE.phoneAgents }, lang, 'intelligence');
+PAGES['workforce.html'] = (lang) => lxPage({ ...C.LX_WORKFORCE, screens: [MOBILE.agents, MOBILE.approvals, MOBILE.core, MOBILE.inquiry], phoneStill: MOBILE.phoneApprovals }, lang, 'workforce');
 
 /* ---- pricing.html — Scalora pricing page ------------------------------ */
 PAGES['pricing.html'] = (lang) => {
@@ -335,6 +432,8 @@ PAGES['pricing.html'] = (lang) => {
     if (pi !== 6) throw new Error(`pricing: card ${t(spec.name)} has ${pi} paragraphs`);
     c = c.replace(/(class="button-text">)[^<]*(<)/g, `$1${t(spec.cta)}$2`);
     c = c.replace(/href="contact\.html"/g, 'href="contact.html"');
+    c = c.replace(/<a href="[^"]*"( class="button-)/g, '<a href="contact.html"$1');   // every plan button books a demo
+    if (/href="#"/.test(c)) throw new Error('pricing: placeholder link in card ' + t(spec.name));
     return c;
   };
   P.panes.forEach((cards, pi) => {
@@ -392,7 +491,10 @@ PAGES['pricing.html'] = (lang) => {
 };
 
 /* ---- enterprise.html — Mono studio ------------------------------------ */
-PAGES['enterprise.html'] = (lang) => fromStudio({ name: 'enterprise', ...C.ENTERPRISE, cards: C.ENTERPRISE.cards }, lang);
+PAGES['enterprise.html'] = (lang) => fromStudio({
+  name: 'enterprise', ...C.ENTERPRISE, cards: C.ENTERPRISE.cards,
+  images: { work: [OS.agents, OS.login, OS.trade], quote: BRAND.square, cards: [OS.agents, OS.login, MOBILE.phoneApprovals, OS.trade, BRAND.ontology] },
+}, lang);
 
 /* ---- capabilities.html — Mono work-1 + table -------------------------- */
 PAGES['capabilities.html'] = (lang) => {
@@ -455,7 +557,17 @@ PAGES['capabilities.html'] = (lang) => {
   });
   const anchor = '<div data-w-id="f7fb6f0b-16b8-25a9-4160-54883563ff75" class="rounder-wrapper">';
   if (!h.includes(anchor)) throw new Error('capabilities: insertion anchor missing');
-  h = h.replace(anchor, `${table}\n${anchor}`);
+  // The nine-stage loop sits above the capability map: business mainline first, then the 14 groups.
+  const L = C.HOME_LOOP_TABLE;
+  const loop = awardsTable({
+    id: 'loop', caption: t(L.caption), title: t(L.title), total: L.rows.length,
+    button: { label: t(L.button), href: '#atlas' }, headers: L.headers.map(t),
+    rows: L.rows.map(([a, b, c]) => [a, escapeHtml(t(b)), escapeHtml(t(c))]),
+  });
+  h = h.replace(anchor, `${loop}\n${table}\n${anchor}`);
+  // Four fashion photographs on the family cards → the four capability-family visuals.
+  ['699b6466d5f19893993a4d79_work-1.webp', '699b6466d5f19893993a4d1a_work-4.webp', '699b6466d5f19893993a4d34_work-5.webp', '699b6466d5f19893993a4d8f_work-8.webp']
+    .forEach((k, i) => { h = swapImg(h, k, BRAND.family(i + 1)); });
   return h;
 };
 
@@ -491,8 +603,33 @@ PAGES['contact.html'] = (lang) => {
   const blockStart = h.lastIndexOf('<div>', msgAt);
   h = h.slice(0, blockStart) + extra + h.slice(blockStart);
   h = h.replace(/value="Contact Us"/, `value="${t(K.submit)}"`);
+  // The quote card's stock video → the orb; a honeypot field for the form endpoint.
+  const vid = h.match(/<video id="([^"]+)-video"/);
+  if (!vid) throw new Error('contact: quote card video');
+  h = stillImage(h, vid[1], BRAND.square, '');
+  h = h.replace(/(<form id="email-form"[^>]*>)/, '$1<div class="stargo-hp" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"/></div>');
+  if (!h.includes('stargo-hp')) throw new Error('contact: form not found');
   return h;
 };
+
+/* ---- privacy.html / terms.html — Mono post layout ---------------------- */
+function legalPage(spec, lang) {
+  const t = (p) => (typeof p === 'string' ? p : p[lang]);
+  const { fn: s } = makeSub('legal');
+  let h = tpl('post_designing-digital-systems-that-scale-with-your-business.html');
+  h = s(h, 'October 4, 2025', t(spec.date));
+  h = s(h, '>Designing digital systems that scale your business<', `>${t(spec.h1)}<`);
+  h = setInner(h, '<div class="w-richtext">', t(spec.body).trim());
+  h = setLink(h, 'Back to blog', { href: 'index.html', text: t(C.LEGAL.back) });
+  h = h.replace(/url\(&quot;assets\/[^&]*blog-1\.webp&quot;\)/, `url(&quot;${BRAND.wide}&quot;)`);   // the post banner photo
+  // No "related stories" on a legal page.
+  const related = elementContaining(h, '>Related Stories<', 'section');
+  h = h.slice(0, related.start) + h.slice(related.end);
+  if (/Related Stories|blog-flex/.test(h)) throw new Error('legal: related block survives');
+  return h;
+}
+PAGES['privacy.html'] = (lang) => legalPage(C.LEGAL.privacy, lang);
+PAGES['terms.html'] = (lang) => legalPage(C.LEGAL.terms, lang);
 
 /* ---- notices.html ----------------------------------------------------- */
 PAGES['notices.html'] = (lang) => {
@@ -504,6 +641,8 @@ PAGES['notices.html'] = (lang) => {
   h = s(h, '>Designing digital systems that scale your business<', `>${t(N.h1)}<`);
   h = setInner(h, '<div class="w-richtext">', t(N.body).trim());
   h = setLink(h, 'Back to blog', { href: 'index.html', text: t(N.back) });
+  h = h.replace(/url\(&quot;assets\/[^&]*blog-1\.webp&quot;\)/, `url(&quot;${BRAND.wide}&quot;)`);   // the post banner photo
+  [['699b6466d5f19893993a4dca_Sleek', BRAND.loop], ['699b6466d5f19893993a4d64_blog-2', OS.agents], ['699b6466d5f19893993a4e03_Futuristic', OS.login]].forEach(([k, src]) => { h = swapImg(h, k, src); });
   h = s(h, '>Related Stories<', `>${t(N.relatedTitle)}<`);
   h = s(h, 'From foundational design to advanced optimization — built for digital growth.', t(N.relatedIntro));
   const cards = [
@@ -538,7 +677,9 @@ PAGES['404.html'] = (lang) => {
 const FORBIDDEN = [
   /Mōno™ Studio/, /monostudio/i, /Awwwards/, /Lorem/i, /cal\.com/, /Tomato Store/, /Market Play/,
   /Forma Digital/, /Nero Vision/, /One Step/, /Bold Moves/, /Auralis/, /Light[\s\u00a0]Studio/, /Joda Trump/, /Elena Rossi/, /Adrian Keller/, /Camila Verga/,
-  /\$\s?\d/, /logoipsum/i,
+  /\$\s?\d/, /logoipsum/i, /Get Template/, /template-navigator/, /youtube\.com/, /embedly/,
+  // stock photography that shipped with the templates
+  /Young%20Man%20Smiling/, /Sunset-Serenity/, /Joyful-Group/, /Red-Hat-Portrait/, /work-\d+\.webp/, /work7\.webp/, /Matcha-Latte/, /Party-Scene/, /Scene%20/, /Portrait-of-a-Man/, /Diverse-Group/, /Coding-Workspace/, /Sleek%20Container/, /Futuristic/, /blog-\d\.webp/, /about-6/, /Ellipse%202/, /Team%20Image/, /iPhone%2013/, /iPhone%2016/, /no-writing-sc/, /image%202[46]\./,
 ];
 const ALLOWED = { 'notices.html': [/Mōno™ Studio/] };
 
@@ -551,9 +692,14 @@ for (const lang of C.LANGS) {
     html = remapLinks(html);
     assertInternalLinks(html, `${lang}/${name}`);
     const body = html.slice(html.indexOf('<body'));
-    for (const re of FORBIDDEN) {
-      if ((ALLOWED[name] ?? []).some((ok) => ok.source === re.source)) continue;
-      if (re.test(body)) throw new Error(`[${lang}/${name}] forbidden content: ${re}`);
+    {
+      const hits = [];
+      for (const re of FORBIDDEN) {
+        if ((ALLOWED[name] ?? []).some((ok) => ok.source === re.source)) continue;
+        const m = body.match(re);
+        if (m) hits.push(re + ' @ ...' + body.slice(Math.max(0, m.index - 90), m.index + 60).replace(/\s+/g, ' ') + '...');
+      }
+      if (hits.length) throw new Error('[' + lang + '/' + name + '] forbidden content:\n  ' + hits.join('\n  '));
     }
     for (const m of html.matchAll(/(?:src|href|data-src|data-poster-url|poster)="(assets\/[^"]+)"/g)) {
       const rel = decodeURIComponent(m[1]).split('?')[0];
@@ -561,7 +707,7 @@ for (const lang of C.LANGS) {
     }
     if (lang === 'en') html = relocateAssets(html);
     const out = lang === 'zh' ? `${SITE}/${name}` : `${SITE}/en/${name}`;
-    writeFileSync(out, html, 'utf8');
+    writeFileSync(out, html.replace(/[\t ]+$/gm, ''), 'utf8');
     written.push(`${lang}/${name}`);
   }
 }

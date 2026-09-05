@@ -1,0 +1,17 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="os.css"><script src="lib.js"></script>
+<style>
+  .stage{width:1262px;height:1474px}
+  .ph{position:absolute;left:50%;top:50%;width:560px;height:1150px;transform:translate(-50%,-50%) rotate(-6deg);border-radius:84px;background:#1a1513;padding:16px;box-shadow:0 60px 120px rgba(0,0,0,.6),inset 0 0 0 2px rgba(255,255,255,.12),0 0 0 6px #0b0908}
+  .ph .scr{width:100%;height:100%;border-radius:68px;overflow:hidden;background:#0c0906;position:relative}
+  .ph .scr img{width:100%;height:100%;object-fit:cover;display:block}
+  .ph .isl{position:absolute;left:50%;top:22px;width:150px;height:40px;transform:translateX(-50%);border-radius:20px;background:#000}
+  .ph .btn1{position:absolute;left:-10px;top:230px;width:5px;height:60px;border-radius:3px;background:#2a2320}
+  .ph .btn2{position:absolute;left:-10px;top:320px;width:5px;height:110px;border-radius:3px;background:#2a2320}
+  .ph .btn3{position:absolute;right:-10px;top:300px;width:5px;height:160px;border-radius:3px;background:#2a2320}
+</style></head><body><div class="stage" id="st"></div>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  const v=new URLSearchParams(location.search).get('v')||'approvals';
+  st.innerHTML=S.wall()+`<div class="ph"><span class="btn1"></span><span class="btn2"></span><span class="btn3"></span><div class="scr"><img src="../../assets/stargo/mobile-${v}.webp"><span class="isl"></span></div></div>`;
+});
+</script></body></html>

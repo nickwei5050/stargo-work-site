@@ -1,0 +1,12 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../css/inter.css"><link rel="stylesheet" href="os.css"><script src="lib.js"></script>
+<style>
+  .stage{background:radial-gradient(45% 45% at 48% 50%, rgba(255,190,140,.55), transparent 65%),linear-gradient(135deg,#ff9a4a 0%,#f2582d 42%,#c72d1f 100%)}
+  .grain{position:absolute;inset:0;background:radial-gradient(60% 60% at 80% 90%, rgba(120,20,10,.35), transparent 70%)}
+  .g{position:absolute;left:50%;top:50%;transform:translate(-50%,-56%);filter:drop-shadow(0 0 24px rgba(255,255,255,.55))}
+  .c{position:absolute;left:0;right:0;top:748px;text-align:center;color:#fff;font-size:20px;letter-spacing:.32em;font-weight:400;padding-left:.32em}
+  .dots{position:absolute;left:0;right:0;top:800px;display:flex;justify-content:center;gap:10px}
+  .dots i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.45)}.dots i:last-child{background:#fff;box-shadow:0 0 10px #fff}
+</style></head><body><div class="stage"><div class="grain"></div><span data-tpl="lights"></span>
+<div class="g" id="g"></div>
+<div class="c">STARGO OS LOADING</div><div class="dots"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<script>document.addEventListener('DOMContentLoaded',()=>{g.innerHTML=S.glyph(260,'#fff')})</script></div></body></html>
