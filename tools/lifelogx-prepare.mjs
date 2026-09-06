@@ -48,6 +48,7 @@ const PAGES = {
   about: { file: 'about.html', start: /<div class="section hero-about">/, end: FOOTER },
   blog: { file: 'blog.html', start: /<div class="section"><div class="padding-global">/, end: FOOTER },
   post: { file: 'post.html', start: /<div class="section"><div class="padding-global">/, end: FOOTER },
+  feature: { file: 'feature.html', start: /<div class="section hero-features">/, end: FOOTER },
 };
 /** Load-timeline targets that are too generic for a site that shares one page id → page-only classes. */
 const UNIQUE_TARGETS = {
@@ -75,6 +76,27 @@ for (const [name, spec] of Object.entries(PAGES)) {
   const logosEnd = f.search(/<div[^>]*class="[^"]*\bgradient-section\b/);
   if (logosStart === -1 || logosEnd === -1 || logosEnd < logosStart) throw new Error('lifelogx: logo wall boundaries');
   pages.home.frag = f.slice(0, logosStart) + f.slice(logosEnd);
+}
+// The Lifelogx footer carries a full-bleed wordmark: a filled headline, a gradient
+// wash over it and a stroked copy that slides across on scroll. We keep Mono's footer,
+// so the cut above drops it. Rescue it as its own fragment; the build re-attaches it
+// above Mono's footer with STARGO's name in place of the template's.
+{
+  const h = pages.home.html;
+  const s0 = h.search(/<div[^>]*class="text-extrabig-loop-wrap"/);
+  const e0 = h.indexOf('<div class="padding-global">', s0);
+  if (s0 === -1 || e0 === -1) throw new Error('lifelogx: footer wordmark boundaries');
+  pages.bigmark = { pageId: pages.home.pageId, frag: h.slice(s0, e0), bundle: pages.home.bundle, snippet: true };
+}
+// The feature page ends with Lifelogx's pricing block: a pink gradient plan card
+// beside a dark one, under a two-tone headline. STARGO's pricing page is built from
+// it, so cut it out of the feature body and keep it as its own fragment.
+{
+  const f = pages.feature;
+  const s0 = f.frag.search(/<div[^>]*class="pricing-wrapper"/);
+  if (s0 === -1) throw new Error('lifelogx: pricing block boundaries');
+  pages.pricing = { pageId: f.pageId, frag: f.frag.slice(s0), bundle: f.bundle, snippet: true };
+  f.frag = f.frag.slice(0, s0);
 }
 // Page-only classes for the load timelines (see UNIQUE_TARGETS).
 pages.about.frag = pages.about.frag
@@ -198,7 +220,11 @@ for (const [name, p] of Object.entries(pages)) {
   let frag = p.frag.replace(/class="([^"]*)"/g, (_, v) => `class="${v.split(/\s+/).filter(Boolean).map(rename).join(' ')}"`);
   frag = localise(frag);
   frag = frag.split(p.pageId).join(MONO_PAGE);
-  frag = `<div class="${SCOPE}${name === 'home' ? '' : ' lx-page-body'}">\n${frag}\n</div>`;
+  // A snippet is re-attached inside another page's body, so it gets neither the
+  // page padding that stands in for the Lifelogx in-flow navigation nor a page body.
+  frag = p.snippet
+    ? `<div class="${SCOPE} lx-snippet">\n${frag}\n</div>`
+    : `<div class="${SCOPE}${name === 'home' ? '' : ' lx-page-body'}">\n${frag}\n</div>`;
   writeFileSync(`${SITE}/tools/fragments/lx-${name}.html`, frag, 'utf8');
   fragmentBytes[name] = frag.length;
 }
@@ -207,6 +233,7 @@ for (const [name, p] of Object.entries(pages)) {
 
 const home = pages.home.bundle;
 for (const [name, p] of Object.entries(pages)) {
+  if (p.snippet) continue;                                    // shares the homepage bundle by construction
   if (JSON.stringify(p.bundle.ix2Payload) !== JSON.stringify(home.ix2Payload)) throw new Error(`lifelogx ${name}: IX2 payload differs from the homepage bundle; export it separately`);
 }
 const idMap = new Map();

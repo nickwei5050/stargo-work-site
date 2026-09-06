@@ -27,6 +27,21 @@ const FRAG = `${SITE}/tools/fragments`;
 const tpl = (f) => readFileSync(`${TPL}/${f}`, 'utf8');
 const frag = (f) => readFileSync(`${FRAG}/${f}`, 'utf8');
 
+/**
+ * Lifelogx closes every page with a full-bleed wordmark above its footer: a filled
+ * headline, a gradient wash over it and a stroked copy that slides across on scroll
+ * (two SCROLL_INTO_VIEW interactions, kept as the template wrote them). We use Mono's
+ * footer, so tools/lifelogx-prepare.mjs rescues the block on its own; here it goes
+ * back where it belongs — the last thing in the body, directly above the footer —
+ * carrying STARGO's name.
+ */
+const bigMark = () => {
+  const b = frag('lx-bigmark.html').split('>Lifelogx</h1>').join('>STARGO</h1>');
+  if (/Lifelogx/.test(b)) throw new Error('bigmark: template brand survives');
+  if ((b.match(/>STARGO<\/h1>/g) ?? []).length !== 2) throw new Error('bigmark: expected the filled and the stroked headline');
+  return b;
+};
+
 const SCALORA_CDN = /https:\/\/cdn\.prod\.website-files\.com\/([^"'\s,]+)/g;
 const localise = (s) => s.replace(SCALORA_CDN, (_, rel) => `assets/${rel.replace(/%2F/g, '/')}`);
 /** Scalora classes renamed when its stylesheet was namespaced (see css/scalora-modules.sc.css). */
@@ -437,7 +452,7 @@ function lxPage(spec, lang, name) {
   b = b.replace('class="lx-sitcky-section"', `id="${name === 'intelligence' ? 'lx-ontology' : 'lx-teams'}" class="lx-sitcky-section"`);
   if (!b.includes('id="lx-more"') || !b.includes('id="lx-evolution"')) throw new Error(`${name}: anchor ids`);
   if (/Lifelogx|Tomato|lifelog/i.test(b)) throw new Error(`${name}: template brand survives`);
-  return inMonoShell(b, ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
+  return inMonoShell(b + bigMark(), ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
 }
 PAGES['intelligence.html'] = (lang) => lxPage(C.LX_INTELLIGENCE, lang, 'intelligence');
 PAGES['workforce.html'] = (lang) => lxPage(C.LX_WORKFORCE, lang, 'workforce');
@@ -467,7 +482,7 @@ PAGES['about.html'] = (lang) => {
   b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt="');
   b = b.replace(/alt="(?=[^"]*$)/g, 'alt=""');
   if (/Lifelogx|Lina Elsen|Amira|Mila Eron|Oren|Full Time|Part Time|Contract<|>Download</.test(b)) throw new Error('about: template copy survives');
-  return inMonoShell(b, ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
+  return inMonoShell(b + bigMark(), ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
 };
 
 /* ---- blog.html — lifelogx blog index ------------------------------------ */
@@ -480,7 +495,7 @@ PAGES['blog.html'] = (lang) => {
   b = blogCards(b, 'lx-blog-list', 'lx-blog-item', POSTS, lang, LX_CARD);
   b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
   if (/Lifelogx|Companion|Moments in Motion|Conversational AI/.test(b)) throw new Error('blog: template copy survives');
-  return inMonoShell(b, ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
+  return inMonoShell(b + bigMark(), ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
 };
 
 /* ---- blog/<slug>.html — lifelogx article page --------------------------- */
@@ -513,7 +528,7 @@ function postPage(post, lang) {
   if (!b.includes('lx-post-meta')) throw new Error('post: meta line');
   b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
   if (/Lifelogx|Companion|Moments in Motion|Conversational AI|Small Support/.test(b)) throw new Error(`post ${post.slug}: template copy survives`);
-  return inMonoShell(b, ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
+  return inMonoShell(b + bigMark(), ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
 }
 for (const post of POSTS) PAGES[postPath(post)] = (lang) => postPage(post, lang);
 
@@ -572,6 +587,32 @@ PAGES['pricing.html'] = (lang) => {
       if (!card) throw new Error(`pricing: card ${ci} in pane ${pi + 1}`);
       text = text.slice(0, card.start) + fillCard(card.text, cards[ci]) + text.slice(card.end);
     }
+    // Scalora hard-codes the raised card into the middle slot; STARGO promotes the
+    // dearest plan in each pane, which is not always the middle one. Move the
+    // treatment — the .growth-card frame, the .growth classes and the top border —
+    // onto the plan that carries `featured`, and leave the ladder in price order.
+    const want = cards.findIndex((c) => c.featured);
+    if (want === -1) throw new Error(`pricing: pane ${pi + 1} promotes no plan`);
+    const wrap = findByClass(text, 'div', 'pricing-cards-wrapper');
+    if (!wrap) throw new Error(`pricing: cards wrapper in pane ${pi + 1}`);
+    const slots = [];
+    for (let ci = 0, from = 0; ci < 3; ci++) {
+      const c = findByClass(wrap.text, 'div', 'pricing-card', ci);
+      if (!c) throw new Error(`pricing: slot ${ci} in pane ${pi + 1}`);
+      slots.push(c.text); from = c.end;
+    }
+    const rebuilt = slots.map((card, ci) => {
+      let inner = card
+        .replace(/class="pricing-card[^"]*"/, `class="pricing-card ${ci === want ? 'growth' : ci === 0 ? '_01' : '_03'}"`)
+        .replace(/class="pricing-card-icon-block[^"]*"/, `class="pricing-card-icon-block${ci === want ? ' growth' : ''}"`)
+        .replace(/<div class="top-border"><\/div>/g, '');
+      if (ci !== want) return inner;
+      const badge = `<div class="stargo-plan-badge">${t(P.featuredBadge)}</div>`;
+      inner = inner.replace(/(<div class="pricing-card-top-block">)/, `$1${badge}`);
+      return `<div class="growth-card">${inner.replace(/(<\/div>)$/, '<div class="top-border"></div>$1')}</div>`;
+    }).join('');
+    text = text.slice(0, wrap.start) + `<div class="pricing-cards-wrapper">${rebuilt}</div>` + text.slice(wrap.end);
+    if ((text.match(/class="growth-card"/g) ?? []).length !== 1) throw new Error(`pricing: pane ${pi + 1} promotes ${(text.match(/class="growth-card"/g) ?? []).length} plans`);
     hero = hero.slice(0, pane.start) + text + hero.slice(pane.end);
   });
   /* comparison table */
@@ -614,7 +655,9 @@ PAGES['pricing.html'] = (lang) => {
   body = body.replace(/alt="(Pricing Card Icon|Check Icon|Close Icon|Arrow Dowen)"/g, 'alt=""');
   if (/Scalora|\$\d/.test(body)) throw new Error('pricing: template copy or dollar price survives');
   body = `<div class="sc-scope sc-page">\n${body}\n</div>`;
-  return inMonoShell(body, ['scalora-modules.sc.css', 'stargo-fusion.css']).replace('<body ', '<body class="stargo-dark-page" ');
+  return inMonoShell(body, ['scalora-modules.sc.css', 'stargo-fusion.css'])
+    .replace('<body ', '<body class="stargo-dark-page stargo-pricing-lx" ')
+    .replace('</body>', '<script src="js/stargo-pricing.js"></script></body>');
 };
 
 /* ---- enterprise.html — Mono studio ------------------------------------ */

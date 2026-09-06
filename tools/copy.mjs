@@ -528,13 +528,13 @@ export const PRICING = {
         desc: B('建立 AI 底座，并完成第一阶段数字化增长基础。', 'The AI foundation plus the first stage of digital growth.'),
         cta: B('启动你的 AI 运营', 'Launch your AI operation'),
         items: [B('包含 Foundation 全部内容', 'Everything in Foundation'), B('企业内容启动', 'Enterprise content launch'), B('官网与数字资产启动能力', 'Website and digital-asset launch'), B('产品内容体系', 'Product content system'), B('基础 SEO · GEO 与核心业务流程配置', 'Basic SEO · GEO and core workflow configuration')] },
-      { name: B('Growth', 'Growth'), price: '¥30,000', unit: 'first', renewal: 'ask',
+      { name: B('Growth', 'Growth'), price: '¥30,000', unit: 'first', renewal: 'ask', featured: true,
         desc: B('让 STARGO WORK 不只处理工作，也开始帮助企业持续增长。', 'STARGO WORK stops being only a workhorse and starts driving growth.'),
         cta: B('建立增长引擎', 'Build your growth engine'),
         items: [B('包含 Launch 全部内容', 'Everything in Launch'), B('SEO · GEO Growth 与 Growth Content', 'SEO · GEO growth and growth content'), B('Customer Intelligence 与 Growth Analytics', 'Customer intelligence and growth analytics'), B('自动跟进与 CRM Growth Loop', 'Automatic follow-up and the CRM growth loop'), B('品牌可信内容体系', 'Brand trust content system')] },
     ],
     [
-      { name: B('Global Acquisition', 'Global Acquisition'), price: '¥40,000', unit: 'first', renewal: 'ask',
+      { name: B('Global Acquisition', 'Global Acquisition'), price: '¥40,000', unit: 'first', renewal: 'ask', featured: true,
         desc: B('让企业拥有主动获客能力。', 'Give the company its own AI acquisition engine.'),
         cta: B('打开 AI 获客', 'Turn on AI acquisition'),
         items: [B('包含 Growth 全部内容', 'Everything in Growth'), B('STARGO Growth OS 与 Trade Signal Revenue Engine', 'STARGO Growth OS and the Trade Signal Revenue Engine'), B('Importer Reorder Radar · Competitor Customer Graph · Dealer Discovery', 'Importer Reorder Radar · Competitor Customer Graph · Dealer Discovery'), B('Buying Committee Intelligence · Opportunity Scoring · Dealer Opportunity Brief', 'Buying Committee Intelligence · Opportunity Scoring · Dealer Opportunity Brief'), B('AI Prospecting · CRM 自动写入 · Dormant Lead Reactivation · Growth Attribution', 'AI prospecting · automatic CRM writes · Dormant Lead Reactivation · growth attribution')] },
@@ -548,6 +548,7 @@ export const PRICING = {
         items: [B('选择最耗时间或最影响增长的一项工作', 'Pick the work that costs the most time or growth'), B('我们从那里开始', 'We start there'), B('看 AI 在你的真实流程里怎么工作', 'See AI working in your real process'), B('再决定需要哪一级', 'Then decide which level you need'), B('不需要一次改变整个企业', 'No need to change the whole company at once')] },
     ],
   ],
+  featuredBadge: B('我们主推', 'Our recommendation'),
   compareTitle: B('方案对比', 'Compare the plans'),
   compareFeatures: B('能力', 'Capability'),
   comparePlans: [

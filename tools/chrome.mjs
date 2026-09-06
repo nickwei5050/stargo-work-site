@@ -105,7 +105,7 @@ function topNav(html, L, current) {
   const m = html.match(/<nav role="navigation" class="nav-menu first w-nav-menu">[\s\S]*?<\/nav>/);
   if (!m) throw new Error('chrome: top nav not found');
   const tpl = firstLink(m[0]);
-  const items = [...L.nav.slice(1), L.swap];          // the wordmark is the home link
+  const items = [...L.nav.slice(1), ...L.more, L.swap];   // the wordmark is the home link; About and Blog sit after the product pages
   const out = items.map((n) => renderLink(tpl, n, isCurrent(n.href, current))).join('');
   return html.replace(m[0], `<nav role="navigation" class="nav-menu first w-nav-menu">${out}</nav>`);
 }

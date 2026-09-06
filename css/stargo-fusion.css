@@ -468,3 +468,94 @@ button.toggle-header { width: 100%; border: 0; border-radius: 0; background: tra
 @media (max-width: 479px) {
   .footer .footer-small-grid:not(.sec):has(> .flex-item > a.button-link) { grid-template-columns: 1fr 1fr; }
 }
+
+/* ---------------------------------------------------------------------------
+   Intrinsic image dimensions.
+
+   Generated imagery carries width/height attributes so the browser can reserve
+   the right box before the file arrives (no layout shift). The templates only
+   ever set `max-width: 100%`, so a constrained image kept the attribute's
+   *pixel* height while its width shrank to the column: a 1586x992 screenshot
+   rendered 295px wide and 992px tall, i.e. squeezed to a ribbon. This was
+   visible on the enterprise team grid and the homepage OS scenes.
+
+   `height: auto` restores the attribute's aspect ratio. It sits at zero
+   specificity, so every template class that sets a genuine height
+   (.work-image-cover, .team-image children, the sticky card art) still wins. */
+:where(img[width][height]) { height: auto; }
+
+/* The wordmark is a fixed-height logo dropped into containers the template
+   sized for its own square mark. Let it letterbox instead of squashing. */
+.stargo-wordmark,
+.logo-testi-1.stargo-card-mark { width: auto; object-fit: contain; }
+
+/* ---------------------------------------------------------------------------
+   Top navigation: nine items.
+
+   Mono lays the bar out as four equal grid columns — logo, then the menu across
+   columns 2-3, then the burger — so the menu had a fixed 629px at 1280 and 685px
+   at 1920 no matter how many items it held. Six product pages plus About, Blog and
+   the language switch need 740px in English, so the last items ran out of their
+   column and into the burger.
+
+   Give the middle column exactly the width the menu needs and split what is left
+   evenly between the two sides: the group stays centred, the burger keeps its
+   corner, and the row can no longer overflow. Below 992px the menu is the
+   template's own dropdown and this does not apply. */
+@media (min-width: 992px) {
+  .navigation-top .navbar { grid-template-columns: 1fr auto 1fr; }
+  .navigation-top .navbar > .make-grid { grid-column: 2 / 3; width: max-content; }
+  .navigation-top .navbar > .last-part { grid-column: 3 / 4; }
+  /* The menu is width:100% inside its column, which contributes nothing to an
+     auto track: size it to its content so the track can ask for what it needs. */
+  .navigation-top .navbar > .make-grid > .nav-menu.first { width: max-content; justify-content: center; }
+}
+
+/* ---------------------------------------------------------------------------
+   Pricing page in the Lifelogx palette.
+
+   The plan ladder is Scalora's, and Scalora's accent is a copper orange that
+   reaches almost everything through one token. Rebind that token to Lifelogx's
+   magenta on this page and restate the three rules that hard-code the orange,
+   and the badge, the active tab, the plan icons, the promoted card and its top
+   border all read pink-purple. Nothing else about the layout moves. */
+body.stargo-pricing-lx,
+body.stargo-pricing-lx .sc-scope { --border-color--border-color-03: #f938a1; }
+
+body.stargo-pricing-lx .top-border { background-image: linear-gradient(#f938a1, #f938a100); }
+
+body.stargo-pricing-lx .sc-pricing-card.growth {
+  background-image:
+    linear-gradient(117deg, #f938a12e .96%, #500b3800 95.98%),
+    url("../assets/69a01660589c516ba5f0f917/69a2a0d626d85bfe3d20a9ed_number-card-big-img.svg");
+  box-shadow: 0 0 0 1px #f938a133, 0 24px 70px -30px #f938a159;
+}
+
+body.stargo-pricing-lx .button-primary {
+  box-shadow: 0 0 0 3px var(--beckground-color--white), 0 2px 5px 0 #0003,
+    0 0 0 2px #f8eaf0, 0 3.714px 4.846px 0 #f938a11c, 0 10.2px 13.3px 0 #f938a114;
+}
+
+/* Scalora's eyebrow icon is an orange SVG, so it cannot follow the token: turn
+   its hue to the same magenta rather than ship a second copy of the asset. */
+body.stargo-pricing-lx .caption-icon { filter: hue-rotate(300deg) saturate(1.3); }
+
+/* The plan STARGO promotes says so, in the template's own eyebrow type. It takes
+   its own line above the plan name so a two-word name is not squeezed. */
+body.stargo-pricing-lx .growth-card .pricing-card-top-block { flex-wrap: wrap; }
+body.stargo-pricing-lx .stargo-plan-badge {
+  order: -1;
+  align-self: flex-start;
+  /* margin-right:100% pushes the plan name onto the next row while the badge
+     itself stays the width of its words. */
+  margin: 0 100% 12px 0;
+  border: 1px solid #f938a159;
+  border-radius: 999px;
+  padding: 4px 10px;
+  color: #ffe3f2;
+  background: #f938a11f;
+  font-size: 12px;
+  letter-spacing: .04em;
+  line-height: 1.2;
+  white-space: nowrap;
+}
