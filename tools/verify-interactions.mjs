@@ -37,10 +37,19 @@ try {
  }
  for(const lang of ['', 'en/']){
   const p=await browser.newPage({viewport:{width:390,height:844}});
-  for(const name of ['intelligence','workforce']) await check(`${lang}${name} anchor lands`,async()=>{
-   await p.goto('http://127.0.0.1:4200/'+lang+name+'.html');await p.waitForTimeout(1000);
-   const id=name==='intelligence'?'lx-ontology':'lx-teams';await p.locator(`a[href="#${id}"]`).click();await p.waitForTimeout(1800);
-   const y=await p.locator('#'+id).evaluate(e=>e.getBoundingClientRect().top);assert(y>=-5&&y<250,`target y=${y}`);
+  // Intelligence keeps the lifelogx homepage and its in-page anchors; workforce moved to
+  // the lifelogx feature template, whose hero button books a demo instead.
+  await check(`${lang}intelligence anchor lands`,async()=>{
+   await p.goto('http://127.0.0.1:4200/'+lang+'intelligence.html');await p.waitForTimeout(1000);
+   await p.locator('a[href="#lx-ontology"]').click();await p.waitForTimeout(1800);
+   const y=await p.locator('#lx-ontology').evaluate(e=>e.getBoundingClientRect().top);assert(y>=-5&&y<250,`target y=${y}`);
+  });
+  await check(`${lang}workforce hero cta`,async()=>{
+   await p.goto('http://127.0.0.1:4200/'+lang+'workforce.html');await p.waitForTimeout(1200);
+   const btn=p.locator('.lx-feature-description-holder a, .lx-hero-features a.lx-button').first();
+   assert.equal(await btn.count(),1,'hero button');
+   await btn.click();await p.waitForURL(u=>/contact/.test(u.pathname),{timeout:15000});
+   assert.equal(await p.locator('form').count()>0,true,'lands on the contact form');
   });
   await check(`${lang}short contact and newsletter relay`,async()=>{
    const original=globalThis.fetch;const mails=[];globalThis.fetch=async(url,opts)=>{mails.push(JSON.parse(opts.body));return Response.json({id:'fixture'});};

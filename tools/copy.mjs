@@ -868,6 +868,60 @@ export const LEGAL = {
     four hero circles show AI-employee roles with STARGO's own role emblems —
     not people, not a team; the careers list becomes five workflow
     entry points that all lead to the contact page. */
+/**
+ * Workforce page, built on the Lifelogx feature template.
+ *
+ * The Intelligence page explains how delegation works. This one answers a
+ * different question: who is actually on the team. Roles, the department each
+ * belongs to, what the department owns, and what a company gets done with them.
+ * No head-count claims, no productivity figures — the template's "Views / 99.6M"
+ * slot carries a department and the object that department owns.
+ */
+export const LX_FEATURE_WORKFORCE = {
+  heroPink: B('288 位 AI 员工。', '288 AI employees.'),
+  heroWhite: B('一张组织架构图。', 'One org chart.'),
+  heroDesc: B('每一位都有岗位、目标、工具、权限和执行记录。不是 288 个聊天机器人。', 'Every one has a role, a goal, tools, permissions and a record. Not 288 chatbots.'),
+  heroButton: B('预约演示', 'Book a demo'),
+  roles: [
+    { name: B('Market Signal Agent', 'Market Signal Agent'), dept: B('部门', 'Team'), owns: B('增长', 'Growth') },
+    { name: B('Quote Agent', 'Quote Agent'), dept: B('部门', 'Team'), owns: B('销售', 'Sales') },
+    { name: B('Follow-up Agent', 'Follow-up Agent'), dept: B('部门', 'Team'), owns: B('客户', 'Accounts') },
+    { name: B('Document Agent', 'Document Agent'), dept: B('部门', 'Team'), owns: B('单证', 'Documents') },
+    { name: B('Orchestrator', 'Orchestrator'), dept: B('部门', 'Team'), owns: B('调度', 'Operations') },
+  ],
+  doTitle: B('一个团队，能替你完成这些', 'What this team gets done'),
+  abilities: [
+    { title: B('主动获客', 'Prospecting'), text: B('市场信号、进口记录、经销商网络与采购决策链，变成可跟进的机会。', 'Market signals, import records, dealer networks and buying committees become opportunities you can work.') },
+    { title: B('询盘到报价', 'Inquiry to quote'), text: B('识别客户、匹配产品、套用价格规则、生成报价，越过利润护栏的进入审批。', 'Identify the customer, match the product, apply the pricing rules, draft the quote; anything past the margin guardrail goes to approval.') },
+    { title: B('订单与单证', 'Orders and documents'), text: B('PI、付款节点、生产进度、出口文件与认证资料，同一个订单对象里。', 'PI, payment milestones, production progress, export documents and certificates, all on one order object.') },
+  ],
+  bullets: [
+    B('看得见优先级', 'Priorities at a glance'),
+    B('跟得住客户与订单', 'Customers and orders tracked'),
+    B('关键动作留有证据', 'Critical actions leave evidence'),
+    B('越权的事进审批', 'Anything past authority needs approval'),
+  ],
+  phoneTitle: B('一个能真正干活的工作台', 'A workspace that does the work'),
+  phoneSub: B('日常运营在同一处', 'Day-to-day operations in one place'),
+  cardA: { title: B('有岗位的 AI', 'AI with a job'), text: B('不从空白提示开始：岗位、目标、知识、工具、权限和执行记录都是配好的。', 'It never starts from a blank prompt: role, goal, knowledge, tools, permissions and record are all configured.') },
+  cardB: { title: B('记得住上下文', 'Context that holds'), text: B('客户、报价、订单是对象，不是聊天记录，换个人接手也不丢。', 'Customers, quotes and orders are objects, not chat logs. Hand the work over and nothing is lost.') },
+  stackedCard: B('企业要的能力，已经在里面。', 'The capabilities a company needs, already inside.'),
+  answersCards: [
+    B('在手机上批掉一条报价', 'Approve a quote from your phone'),
+    B('一个目标，秒级组成团队', 'One goal, a team in seconds'),
+  ],
+  extraRole: { name: B('Audit Ledger', 'Audit Ledger'), owns: B('留痕', 'Evidence') },
+  answersBody: B('岗位、目标、工具、权限、审批与执行记录，全部包含在你选择的层级里。', 'Roles, goals, tools, permissions, approvals and records — all included in the level you choose.'),
+  // The template's square tile has a follower count painted into the artwork.
+  tile: { src: 'assets/stargo-motion/orbit-poster.webp', alt: B('银色轨道协同运转的品牌概念画面', 'Brand concept: silver orbital forms moving together') },
+  answersTitle: B('常见问题都在这里', 'All your answers here'),
+  answerTabs: [B('岗位', 'Roles'), B('权限', 'Authority'), B('部署', 'Deployment')],
+  answersCard: B('把工作交给 AI，权力留在企业', 'Delegate the work. Keep the authority.'),
+  answersButton: B('查看定价', 'See pricing'),
+  storiesTitle: B('文章', 'Stories'),
+  storiesSub: B('我们写下来的', 'we write and share'),
+};
+
 export const ABOUT = {
   eyebrow: B('关于 STARGO WORK', 'About STARGO WORK'),
   title: B('把工作交给 AI，权力留在企业。', 'Delegate the work. Keep the authority.'),

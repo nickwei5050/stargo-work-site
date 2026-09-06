@@ -113,9 +113,11 @@ const noOverflow = async (page, label) => {
   assert(w[2] === 0, `${label}: page scrolls sideways by ${w[2]}px (scrollWidth ${w[0]} > ${w[1]})`);
 };
 
-/* ------------------------------------------------------------ 2. lifelogx scroll states (Intelligence, Workforce) */
+/* ------------------------------------------------------------ 2. lifelogx scroll states (Intelligence)
+   Workforce moved to the Lifelogx *feature* template so the two pages no longer share a
+   layout; its own states are checked in section 2b. */
 for (const width of WIDTHS.filter((w) => [390, 768, 1024, 1280, 1440, 1920].includes(w))) {
-  for (const lang of ['', 'en/']) for (const name of ['intelligence.html', 'workforce.html']) {
+  for (const lang of ['', 'en/']) for (const name of ['intelligence.html']) {
     const id = `${lang ? 'en' : 'zh'}-${name.replace('.html', '')}-${width}`;
     const page = await browser.newPage({ viewport: { width, height: heightFor(width) } });
     const log = watch(page);
@@ -188,6 +190,58 @@ for (const width of WIDTHS.filter((w) => [390, 768, 1024, 1280, 1440, 1920].incl
       await page.setViewportSize({ width: width === 390 ? 768 : 390, height: 844 }); await page.waitForTimeout(700);
       await noOverflow(page, `${id} after resize`);
       assert.deepEqual(log.errors, [], 'JS errors during states');
+    });
+    await page.close();
+  }
+}
+
+/* ------------------------------------------------------------ 2b. workforce on the lifelogx feature template */
+for (const width of WIDTHS.filter((w) => [390, 768, 1280, 1440].includes(w))) {
+  for (const lang of ['', 'en/']) {
+    const id = `${lang ? 'en' : 'zh'}-workforce-feature-${width}`;
+    const page = await browser.newPage({ viewport: { width, height: heightFor(width) } });
+    const log = watch(page);
+    await check(`feature page ${id}`, async () => {
+      await page.goto(`${BASE}/${lang}workforce.html`, { waitUntil: 'load', timeout: NAV });
+      await page.waitForTimeout(2200);
+
+      // It must not be the homepage template any more: those pages carry the hero word,
+      // the sticky accordion and the avatar bubbles, and this one carries none of them.
+      for (const sel of ['.lx-hero-text', '.lx-sitcky-section', '.lx-big-gradient-text']) {
+        assert.equal(await page.locator(sel).count(), 0, `${id}: still the homepage template (${sel})`);
+      }
+      // …and it does carry the feature template's own blocks.
+      for (const sel of ['.lx-hero-features', '.lx-feature-hero-card', '.lx-answers-card', '.lx-blog-list']) {
+        assert(await page.locator(sel).count() > 0, `${id}: feature block missing (${sel})`);
+      }
+
+      // Role cards: five roles, each shown twice for the marquee loop, none of them
+      // carrying a template name or an invented metric.
+      const roles = await page.locator('.lx-name-text').evaluateAll((els) => els.map((e) => e.textContent.trim()));
+      assert(roles.length >= 10, `${id}: ${roles.length} role cards`);
+      for (const r of roles) assert(!/Philip|Arlene|Marjorie|Collen|Greg|Dancing/.test(r), `${id}: template name "${r}"`);
+      const figures = await page.locator('.lx-views-holder').evaluateAll((els) => els.map((e) => e.textContent.trim()));
+      for (const f of figures) assert(!/\d+(\.\d+)?M\b|Views/.test(f), `${id}: invented metric "${f}"`);
+
+      // Every card links inside the site.
+      const hrefs = await page.locator('.lx-feature-hero-card').evaluateAll((els) => els.map((a) => a.getAttribute('href')));
+      for (const h of hrefs) assert(h && !/^https?:/.test(h), `${id}: card links off-site (${h})`);
+
+      // Scroll the whole page: nothing may leave its box or scroll sideways.
+      const H = await page.evaluate(() => document.documentElement.scrollHeight);
+      const step = Math.max(400, Math.round(heightFor(width) * 0.6));
+      for (let y = 0; y < H; y += step) { await scrollTo(page, y); await page.waitForTimeout(120); await noOverflow(page, `${id}@${y}`); }
+      await page.waitForTimeout(1500);
+      await auditText(page, `${id}@end`, []);
+
+      // The rescued wordmark closes the page.
+      const mark = await page.locator('.lx-text-extra-big').first().evaluate((e) => ({ text: e.textContent.trim(), fs: parseFloat(getComputedStyle(e).fontSize) }));
+      assert.equal(mark.text, 'STARGO', `${id}: closing wordmark reads "${mark.text}"`);
+      assert(mark.fs > width * 0.15, `${id}: closing wordmark only ${Math.round(mark.fs)}px at ${width}`);
+
+      await page.screenshot({ path: `${OUT}/${id}.png`, fullPage: false });
+      assert.deepEqual(log.errors, [], 'JS/console errors');
+      assert.deepEqual(log.failed, [], 'failed requests');
     });
     await page.close();
   }

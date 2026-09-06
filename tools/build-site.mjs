@@ -455,7 +455,91 @@ function lxPage(spec, lang, name) {
   return inMonoShell(b + bigMark(), ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
 }
 PAGES['intelligence.html'] = (lang) => lxPage(C.LX_INTELLIGENCE, lang, 'intelligence');
-PAGES['workforce.html'] = (lang) => lxPage(C.LX_WORKFORCE, lang, 'workforce');
+/* ---- workforce.html — lifelogx feature page ----------------------------
+   Intelligence keeps the Lifelogx homepage. The workforce page is built from the
+   Lifelogx *feature* page instead, so the two no longer share a layout: a hero of
+   floating role cards, a capability section, the answers block and the article
+   strip, all with the template's own imagery and interactions. */
+PAGES['workforce.html'] = (lang) => {
+  const t = (p) => (typeof p === 'string' ? p : p[lang]);
+  const W = C.LX_FEATURE_WORKFORCE;
+  const { fn: s } = makeSub('workforce');
+  let b = frag('lx-feature.html');
+
+  /* hero */
+  b = s(b, '>Think it once<', `>${t(W.heroPink)}<`);
+  b = s(b, '>Remember it forever<', `>${t(W.heroWhite)}<`);
+  b = s(b, 'Each feature focuses on reducing friction between thought and action.', t(W.heroDesc));
+  b = s(b, '>Download<', `>${t(W.heroButton)}<`);
+
+  /* the five role cards, repeated once for the marquee loop */
+  const NAMES = ['Philip', 'Arlene', 'Marjorie', 'Collen', 'Greg'];
+  const FIGURES = ['99.6M', '88.3', '16.2M', '73.7M', '125.5M'];
+  NAMES.forEach((person, i) => {
+    b = s(b, `<div class="lx-name-text">${person}</div>`, `<div class="lx-name-text">${t(W.roles[i].name)}</div>`, { count: 2 });
+  });
+  FIGURES.forEach((fig, i) => {
+    b = b.split(`<div class="lx-text-size-tiny">${fig}</div>`).join(`<div class="lx-text-size-tiny">${t(W.roles[i].owns)}</div>`);
+  });
+  b = b.split('<div class="lx-text-size-tiny lx-text-color-grey">Views</div>')
+    .join(`<div class="lx-text-size-tiny lx-text-color-grey">${t(W.roles[0].dept)}</div>`);
+  // the template's cards link to the studio's own social accounts
+  b = b.replace(/href="https:\/\/(?:www\.)?(?:linkedin|instagram|facebook|x|twitter|tiktok|youtube)\.com[^"]*"/g, 'href="contact.html"');
+  // the fifth card and the panel button are placeholders in the template
+  b = b.split('href="#"').join('href="contact.html"');
+
+  /* what the team gets done */
+  b = s(b, '>Here is what you can get done with Us<', `>${t(W.doTitle)}<`);
+  [['Interaction', 'Instantly find what you need dates, notes, or activities without digging around.'],
+   ['Conversation', 'Chat freely with your AI, your friends, or even your thoughts.'],
+   ['Organized Mind', 'Stay on top of everything with a clear overview of your world.']]
+    .forEach(([title, text], i) => {
+      b = s(b, `>${title}<`, `>${t(W.abilities[i].title)}<`, { count: 1 });
+      b = s(b, text, t(W.abilities[i].text));
+    });
+  ['See priorities at a glance', 'Track projects and people', 'Stay focused on what matters', 'Keep distractions out']
+    .forEach((line, i) => { b = s(b, line, t(W.bullets[i])); });
+
+  /* the two feature cards over the pink panel */
+  b = s(b, '>Your Best Friend AI<', `>${t(W.cardA.title)}<`);
+  b = s(b, 'More than an assistant—it’s the friend who listens, remembers, and keeps life simple.', t(W.cardA.text));
+  b = s(b, '>Memory That Sticks<', `>${t(W.cardB.title)}<`);
+  b = s(b, 'From quick notes to deep thoughts, nothing slips through the cracks.', t(W.cardB.text));
+
+  /* the three rotating answer cards and the confirmation card they sit behind */
+  b = s(b, 'Ready‑made features your usersalready expect.', t(W.stackedCard));
+  b = s(b, '>Chatting on the fly with your AI companion<', `>${t(W.answersCards[0])}<`);
+  b = s(b, '>Quickly capture and share ideas<', `>${t(W.answersCards[1])}<`);
+  b = b.split('>An online account that means business<').join(`>${t(W.phoneTitle)}<`);
+  b = b.split('>An online account thatmeans business<').join(`>${t(W.phoneTitle)}<`);
+  b = s(b, '>Easy day-to-day banking<', `>${t(W.phoneSub)}<`);
+  b = s(b, 'Easy day-to-day banking: local IBAN, freeMastercards, instant &amp; international transfers,financing solutions. All included in your plan.', t(W.answersBody));
+  b = s(b, '<div class="lx-name-text">Dancing for you</div>', `<div class="lx-name-text">${t(W.extraRole.name)}</div>`);
+
+  /* the answers block */
+  b = s(b, '>All your answers here<', `>${t(W.answersTitle)}<`);
+  ['CARDS', 'transfers', 'financing'].forEach((tab, i) => { b = s(b, `>${tab}<`, `>${t(W.answerTabs[i])}<`, { count: 1 }); });
+  b = s(b, '>Get the app<', `>${t(W.answersButton)}<`);
+
+  /* the article strip: our own posts */
+  b = s(b, '>Stories<', `>${t(W.storiesTitle)}<`);
+  b = s(b, '>we write and share<', `>${t(W.storiesSub)}<`);
+  b = blogCards(b, 'lx-blog-list', 'lx-blog-item', POSTS.slice(0, 3), lang, LX_CARD);
+
+  // The template's big square tile has "2.4M" painted into the artwork: a follower
+  // count we have no basis for. STARGO's own brand image replaces it.
+  b = swapImg(b, '6942c157beb8f897be077c01_Group', W.tile.src, { alt: t(W.tile.alt) });
+
+  b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
+  b = b.replace(/<div([^>]*)class="([^"]*\blx-section\b[^"]*)"/, '<div id="lx-roles"$1class="$2"');
+  {
+    const leftovers = [/Lifelogx/i, /Philip/, /Arlene/, /Marjorie/, /Collen/, /Greg/, /99\.6M/, />Views</, /Tomato/i,
+      /Ready‑made/, /AI companion/i, /online account/i, /day-to-day banking/i, /Dancing for you/, /Organized Mind/, /your world/i]
+      .filter((re) => re.test(b)).map((re) => String(re));
+    if (leftovers.length) throw new Error(`workforce: template copy survives: ${leftovers.join(', ')}`);
+  }
+  return inMonoShell(b + bigMark(), ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
+};
 
 /* ---- about.html — lifelogx about page ---------------------------------- */
 PAGES['about.html'] = (lang) => {

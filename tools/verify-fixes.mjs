@@ -40,7 +40,7 @@ try {
       await p.locator('.pricng-tab-info').nth(1).click();
       assert.equal(await p.locator('.pricng-tab-info').nth(1).getAttribute('aria-pressed'), 'true');
     });
-    for (const name of ['intelligence', 'workforce']) for (const width of [320, 390, 768]) {
+    for (const name of ['intelligence']) for (const width of [320, 390, 768]) {
       await open(lang + name, width);
       await check(`${lang}${name} ${width} title and anchor`, async () => {
         const r = await p.locator('.lx-hero-text').evaluate(e => { const r = document.createRange(); r.selectNodeContents(e); const b = r.getBoundingClientRect(); return { left: b.left, right: b.right, width: b.width }; });
@@ -56,6 +56,21 @@ try {
         }
       });
       await p.screenshot({ path: `${OUT}/${lang ? 'en' : 'zh'}-${name}-${width}.png` });
+    }
+    // Workforce is the lifelogx feature template: a two-tone headline over floating role
+    // cards. Same question as above — does the title fit the viewport, and is the section
+    // it introduces actually on the page?
+    for (const width of [320, 390, 768]) {
+      await open(lang + 'workforce', width);
+      await check(`${lang}workforce ${width} title and roles`, async () => {
+        const r = await p.locator('.lx-feature-title-holder').first().evaluate(e => { const b = e.getBoundingClientRect(); return { left: b.left, right: b.right, width: b.width }; });
+        assert(r.left >= -1 && r.right <= width + 1, JSON.stringify(r));
+        assert(await p.locator('.lx-feature-hero-card').count() >= 5, 'role cards present');
+        assert.equal(await p.locator('#lx-roles').count(), 1, 'roles section anchor');
+        const names = await p.locator('.lx-name-text').evaluateAll(els => els.map(e => e.textContent.trim()));
+        assert(names.every(n => !/Philip|Arlene|Marjorie|Collen|Greg|Dancing/.test(n)), 'template names replaced');
+      });
+      await p.screenshot({ path: `${OUT}/${lang ? 'en' : 'zh'}-workforce-${width}.png` });
     }
     for (const width of [320, 390, 768, 1440]) {
       await open(lang + 'contact', width);

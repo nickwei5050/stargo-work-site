@@ -77,3 +77,21 @@
 - `BASE_URL=https://stargo.pages.dev WIDTHS=1280 NAV_TIMEOUT=120000 node tools/verify-restore.mjs`：46/48 —— 38 页整页检查、智能层 / 数字员工区域状态（中英）、首页区域（中英）、About / Blog / 文章（中英）全部通过；2 项 “navigation” 失败是脚本断言假定 URL 以 `.html` 结尾，而 Pages 使用干净 URL（`/en/blog/<slug>`），断言已修正。线上语言切换另用导航跟踪单独验证：文章页点击切换只发生一次主框架导航，落在 `/en/blog/from-inquiry-to-quote`（反向为 `/blog/from-inquiry-to-quote`），`<html lang>` 与 H1 正确，菜单 aria-expanded 打开 / Escape 关闭，悬浮菜单 7 个链接，无 ≥400 响应。
 - 路由抽查：`/`、`/about`、`/blog`、`/blog/from-inquiry-to-quote`、`/en/`、`/en/about`、`/en/blog`、`/en/blog/enterprise-ontology-explained`、`/notices`、`/sitemap.xml` 200；`/pricing.html`、`/404.html` 308 → 干净 URL；不存在的路径 404；sitemap 36 条；notices 页无“网站模板”字样。
 - 观察（不属于本次回归）：智能层页面在 1280 宽度的首屏资源约 10 MB（Lifelogx 原模板的图片与视频体量），通过代理的加载时间波动很大；如需瘦身属于后续工作。
+
+## 七、第二轮：导航、模板去重、图片比例、定价改版（2026-09-06 晚）
+
+用户看过线上站后提出的四件事，加上定价页要求。
+
+| # | 要求 | 做法 | 验收 |
+| --- | --- | --- | --- |
+| 1 | 导航栏加「关于」「博客」 | `tools/chrome.mjs` 的 `topNav` 改为 `[...nav.slice(1), ...more, swap]`，顶栏与手机下拉同一元素，两处同时生效。Mōno 把导航栏做成四等分栅格、菜单只占中间两格（1280 时固定 629px），九项放不下；改为「两侧均分、中间按内容取宽」 | 992/1024/1100/1280/1440/1920 × 中英：9 项、0 裁切、0 换行、无横向滚动 |
+| 2 | 智能层与数字员工不能共用同一模板 | 接入此前未使用的 Lifelogx **feature** 页（`tools/templates/lifelogx/feature.html` + 其 bundle）。智能层保留 Lifelogx 首页模板，数字员工改用 feature 页：浮动角色卡、能力粉色面板、旋转卡片、答案区、文章条 | 两页的 `lx-` 区块类各有 71 个独有、仅 29 个共有，重合率 17% |
+| 3 | 企业与治理页长图畸形 | 根因不是那一页：生成图带 `width`/`height` 属性，模板只有 `max-width:100%` 没有 `height:auto`，宽度被压到列宽、高度仍是属性值。全站 28 张被拉成细条（首页也有），最严重的把 1.6 的比例拉成 0.11 | 全站 38 页 × 390/1280 扫描，拉伸实例从 28 降到 0；企业页团队栅格五张图比例全部 1.00 |
+| 4 | 模板里的好设计拿回来（例：Lifelogx 底部大 Logo 改成 STARGO） | 该大字标在 Lifelogx 自己的页脚里，而我们用 Mōno 页脚，整段被裁掉。`lifelogx-prepare.mjs` 单独抢救成 `lx-bigmark` 片段，构建时接回四个 Lifelogx 页面的页脚之上，文字换成 STARGO，两条 SCROLL_INTO_VIEW 动效原样保留 | 1280 时字号 307px、粉色渐变扫光与描边副本都在；390 时 101px |
+| 5 | 定价页改 Lifelogx 粉紫风格 | Scalora 的铜橙色几乎都走一个 token，按页重绑为 Lifelogx 洋红 `#f938a1`，另外重写三条写死橙色的规则（顶部渐变线、主推卡背景、主按钮阴影），眉标图标用 `hue-rotate` 转色 | 中英 390/1280 截图核对 |
+| 6 | 主推最贵的方案 | 模板把「抬起的卡片」焊在中间格。改为按数据指定：`PRICING` 里 `featured: true` 的方案获得该处理，梯队仍按价格排列。平台方案组是 Growth ¥30,000，获客组是 **Global Acquisition ¥40,000** | 两组各一张主推卡，徽标「我们主推」独占一行，方案名不折行 |
+| 7 | 用 GSAP 重做交互 | `js/stargo-pricing.js`（仅定价页加载）：标题与卡片入场、价格数字滚动到真实数值、主推卡一次缓慢粉色呼吸、对比表逐行淡入、切页签后重算触发点。全部叠加在既有 Webflow 时间线之上，`prefers-reduced-motion` 时整体跳过 | 无 JS 错误；价格最终停在 ¥10,000 / ¥20,000 / ¥30,000 / ¥40,000 / 联系我们 |
+
+内容边界：feature 模板自带的虚构数据全部替换——五个人名、五个「Views / 99.6M」指标、大方块图里烧进画面的「2.4M」（换成 STARGO 轨道品牌图）、社交外链（改为联系页）、占位 `href="#"`。全站 38 页扫描：模板品牌、模板人名、虚构指标、虚构评分四类命中 0。
+
+验收脚本相应调整：`verify-restore` 新增第 2b 段（feature 页专属：不得再出现首页模板元素、必须有 feature 区块、角色卡无虚构指标、卡片不外链、收尾字标为 STARGO）；`verify-interactions` 的数字员工检查从锚点跳转改为 hero CTA 落到联系页；`verify-fixes` 增加 feature 页标题与角色卡断言。
