@@ -28,11 +28,11 @@ node tools/blog-covers.mjs           # only after adding an article: re-encodes 
 node tools/fuse-ix.mjs               # the one Webflow bundle every page loads (Mono + Scalora + lifelogx interaction data)
 node tools/build-site.mjs            # all 38 pages from tools/templates + tools/fragments + tools/copy.mjs + tools/blog.mjs
 node tools/verify-site.mjs           # loads every page in Chromium: JS errors, failed/external requests, dead links, leftover English
-node tools/verify-restore.mjs        # every page × 320…1920 × both languages, scroll states of the sticky sections, clipped/covered text, new-page SEO; ORIG_LX/ORIG_MONO add side-by-side sheets against the original templates; ENGINE=webkit
+node tools/verify-restore.mjs        # every page × 320…1920 × both languages, scroll states of the sticky sections, clipped/covered text, new-page SEO; ORIG_LX/ORIG_MONO add side-by-side sheets against the original templates; ENGINE=webkit; BASE_URL/BROWSER_PROXY/WIDTHS/NAV_TIMEOUT for a production run
 node tools/verify-visual-upgrade.mjs # bilingual 390/768/1440/1920: switcher, keyboard, video, reduced-motion
 node tools/verify-editorial.mjs     # generated imagery still placed carries alt/size data; responsive page scenarios
 node tools/verify-conversion.mjs    # client fixtures, pricing and resize (no real mail)
-node tools/verify-release.mjs       # production: byte matches for every page and referenced image, browser smoke scenarios; optional BROWSER_PROXY
+node tools/verify-release.mjs       # production: byte matches for every page and referenced image, browser smoke scenarios; optional BROWSER_PROXY, NAV_TIMEOUT=120000 through a slow proxy
 ```
 
 Serve the folder with any static server (for example `python -m http.server 4200`).

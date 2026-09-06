@@ -6,7 +6,8 @@ import { createHash } from 'node:crypto';
 const { chromium, request } = createRequire('F:/stargo 网站/stargo-work-website/package.json')('@playwright/test');
 const BASE = process.env.BASE_URL || 'https://stargo.pages.dev';
 const proxy = process.env.BROWSER_PROXY ? { server: process.env.BROWSER_PROXY } : undefined;
-const api = await request.newContext({ baseURL: BASE, proxy, timeout: 45000 });
+const NAV = +(process.env.NAV_TIMEOUT || 30000);   // browser navigation budget; raise it for a run through a slow proxy
+const api = await request.newContext({ baseURL: BASE, proxy, timeout: Math.max(45000, NAV) });
 const assets = JSON.parse(readFileSync('tools/imagegen/assets-manifest.json', 'utf8')).assets;
 const pages = [...readdirSync('.').filter(f => f.endsWith('.html')), ...readdirSync('en').filter(f => f.endsWith('.html')).map(f => 'en/' + f), ...readdirSync('blog').map(f => 'blog/' + f), ...readdirSync('en/blog').map(f => 'en/blog/' + f)];
 const html = pages.map(f => readFileSync(f, 'utf8')).join('\n');
@@ -35,7 +36,9 @@ async function get(path, options) {
 async function verifyFiles() {
   while (queue.length) {
     const file = queue.shift();
-    const response = await get('/' + file, { headers: { 'Cache-Control': 'no-cache' } });
+    // Request the path the way a browser does: percent-encode the local file name (a Webflow
+    // responsive variant is stored with a literal "%20" and referenced double-encoded).
+    const response = await get('/' + encodeURI(file), { headers: { 'Cache-Control': 'no-cache' } });
     assert.equal(response.status(), 200, file);
     assert.equal(hash(await response.body()), hash(readFileSync(file)), `deployed bytes differ: ${file}`);
     checked.push(file);
@@ -54,7 +57,7 @@ try {
     const errors = [];
     page.on('pageerror', e => errors.push(e.message));
     page.on('response', r => { if (r.status() >= 400) errors.push(`${r.status()} ${r.url()}`); });
-    await page.goto(`${BASE}/${lang}`, { waitUntil: 'load' });
+    await page.goto(`${BASE}/${lang}`, { waitUntil: 'load', timeout: NAV });
     await page.waitForTimeout(5500);
     assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
     await page.screenshot({ path: `${OUT}/${lang ? 'en' : 'zh'}-${width}-hero.png` });
@@ -88,7 +91,7 @@ try {
   }
   for (const lang of ['', 'en/']) {
     const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
-    await page.goto(`${BASE}/${lang}capabilities`, { waitUntil: 'load' });
+    await page.goto(`${BASE}/${lang}capabilities`, { waitUntil: 'load', timeout: NAV });
     await page.waitForTimeout(1500);
     const expected = ['brand-family-01', 'os-inquiries', 'brand-family-02', 'brand-family-04'];   // capabilities page keeps its generated art
     const actual = await page.locator('a[href="#g01"] img,a[href="#g04"] img,a[href="#g07"] img,a[href="#g10"] img').evaluateAll(imgs => imgs.map(i => i.getAttribute('src').split('/').pop().replace(/\.webp$/, '')));

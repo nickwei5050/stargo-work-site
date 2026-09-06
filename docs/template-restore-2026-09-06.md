@@ -67,3 +67,13 @@
 - `verify-worker`（`wrangler pages dev dist`）：42/42 —— 38 页的干净 URL（含 `/blog/<slug>`、`/en/blog/<slug>`）、sitemap 36 条、404、表单在无邮件凭据时返回 503 而非假成功、GET 拒绝提交、畸形 JSON 返回 400。
 - 未测：Firefox；真实 iOS / Android 设备与 macOS Safari（只跑了 Windows 上的 Playwright WebKit 26.5）；Lighthouse / 性能预算；完整 WCAG 审计（只有套件内的焦点、键盘、reduced-motion 检查）；真实邮件投递（按要求未配置 `RESEND_API_KEY`）。
 - 正式域名验收：见下一节（发布后填写）。
+
+## 正式域名验收（发布后）
+
+- 提交：`ea88964`（分支 `release/website-qa-fixes-20260905`，已推送到 origin）。
+- 部署：Wrangler `pages deploy dist --project-name stargo --branch main`，部署 ID `33b6e097-ad40-4892-ba03-ba2ed7b153b6`，环境 Production，来源提交 ea88964，部署预览 https://33b6e097.stargo.pages.dev，正式域名 https://stargo.pages.dev 。第一次执行在 1134 个文件全部上传后、创建部署的请求 `fetch failed`（网络），重试一次成功（0 个文件重新上传）；代理只在部署命令进程内取消，未改系统配置。
+- 回退：上一部署 `3fbf697e-14a6-4d98-954b-71d2ffb25a7b`（提交 1ca1c94，https://3fbf697e.stargo.pages.dev ）。回退方式：Cloudflare 仪表盘 Pages → stargo → Deployments → 3fbf697e → Rollback；或检出 `7251bf0` 后 `node tools/make-dist.mjs` 并用同一 Wrangler 命令重新部署。
+- `BASE_URL=https://stargo.pages.dev BROWSER_PROXY=… NAV_TIMEOUT=120000 node tools/verify-release.mjs`：261 个文件（38 页、199 张被引用图片、视频与海报、22 个运行时文件）与本地构建逐字节一致；自定义 404 路由正确；6 个浏览器场景（中英 × 390/1440：首页 hero、菜单、视频播放 / 暂停、无 JS 或资源错误；能力页四个语义图片映射）通过。第一次运行暴露了脚本自身的两个问题，已修正：（1）srcset 中双重编码的 Webflow 响应式变体（`%2520`）被脚本先解码再请求而报 404，浏览器实际请求的 URL 在线上返回 200（curl 验证）；（2）30s 导航预算在代理链路上不够（实测同一页面通过代理加载 9–59s，一个 5KB 脚本曾等待 55s），加入 `NAV_TIMEOUT`。
+- `BASE_URL=https://stargo.pages.dev WIDTHS=1280 NAV_TIMEOUT=120000 node tools/verify-restore.mjs`：46/48 —— 38 页整页检查、智能层 / 数字员工区域状态（中英）、首页区域（中英）、About / Blog / 文章（中英）全部通过；2 项 “navigation” 失败是脚本断言假定 URL 以 `.html` 结尾，而 Pages 使用干净 URL（`/en/blog/<slug>`），断言已修正。线上语言切换另用导航跟踪单独验证：文章页点击切换只发生一次主框架导航，落在 `/en/blog/from-inquiry-to-quote`（反向为 `/blog/from-inquiry-to-quote`），`<html lang>` 与 H1 正确，菜单 aria-expanded 打开 / Escape 关闭，悬浮菜单 7 个链接，无 ≥400 响应。
+- 路由抽查：`/`、`/about`、`/blog`、`/blog/from-inquiry-to-quote`、`/en/`、`/en/about`、`/en/blog`、`/en/blog/enterprise-ontology-explained`、`/notices`、`/sitemap.xml` 200；`/pricing.html`、`/404.html` 308 → 干净 URL；不存在的路径 404；sitemap 36 条；notices 页无“网站模板”字样。
+- 观察（不属于本次回归）：智能层页面在 1280 宽度的首屏资源约 10 MB（Lifelogx 原模板的图片与视频体量），通过代理的加载时间波动很大；如需瘦身属于后续工作。

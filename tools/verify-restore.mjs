@@ -31,6 +31,9 @@ mkdirSync(OUT, { recursive: true });
 const proxy = process.env.BROWSER_PROXY ? { server: process.env.BROWSER_PROXY, bypass: 'localhost,127.0.0.1' } : undefined;
 const browser = await pw[ENGINE].launch({ proxy });
 const results = [];
+// Navigation budget. 30s is generous on the local server; a production run through a
+// slow proxy sets NAV_TIMEOUT (ms) so a stalled fetch is reported as such, not as a defect.
+const NAV = +(process.env.NAV_TIMEOUT || 30000);
 const heightFor = (w) => (w <= 480 ? 844 : w <= 1024 ? 1024 : w <= 1440 ? 900 : 1080);
 const origin = new URL(BASE).origin;
 
@@ -117,7 +120,7 @@ for (const width of WIDTHS.filter((w) => [390, 768, 1024, 1280, 1440, 1920].incl
     const page = await browser.newPage({ viewport: { width, height: heightFor(width) } });
     const log = watch(page);
     await check(`lifelogx states ${id}`, async () => {
-      await page.goto(`${BASE}/${lang}${name}`, { waitUntil: 'load' });
+      await page.goto(`${BASE}/${lang}${name}`, { waitUntil: 'load', timeout: NAV });
       await page.waitForTimeout(2200);
       // hero word: fully inside the viewport width, above the phone's top edge at rest
       const hero = await page.locator('.lx-hero-text').evaluate((e) => { const r = document.createRange(); r.selectNodeContents(e); const b = r.getBoundingClientRect(); return { left: b.left, right: b.right, top: b.top, bottom: b.bottom, fs: parseFloat(getComputedStyle(e).fontSize) }; });
@@ -196,7 +199,7 @@ for (const width of WIDTHS.filter((w) => [390, 768, 1280, 1440].includes(w))) fo
   const page = await browser.newPage({ viewport: { width, height: heightFor(width) } });
   const log = watch(page);
   await check(`home areas ${id}`, async () => {
-    await page.goto(`${BASE}/${lang}index.html`, { waitUntil: 'load' }); await page.waitForTimeout(5800);
+    await page.goto(`${BASE}/${lang}index.html`, { waitUntil: 'load', timeout: NAV }); await page.waitForTimeout(5800);
     // pricing ladder title: the orb never overlaps the glyphs of the heading
     const ladder = await secTop(page, '.section.drk');
     await scrollTo(page, ladder.top - 40); await page.waitForTimeout(700);
@@ -252,7 +255,7 @@ for (const lang of ['', 'en/']) {
   const L = lang ? 'en' : 'zh';
   await check(`about/blog/article ${L}`, async () => {
     const head = async (url) => {
-      await page.goto(url, { waitUntil: 'load' }); await page.waitForTimeout(1200);
+      await page.goto(url, { waitUntil: 'load', timeout: NAV }); await page.waitForTimeout(1200);
       return page.evaluate(() => ({
         title: document.title, canonical: document.querySelector('link[rel=canonical]')?.href,
         hreflang: [...document.querySelectorAll('link[rel=alternate][hreflang]')].map((l) => l.getAttribute('hreflang') + '=' + l.href),
@@ -326,7 +329,7 @@ for (const lang of ['', 'en/']) {
   const log = watch(page);
   const L = lang ? 'en' : 'zh';
   await check(`navigation ${L}`, async () => {
-    await page.goto(`${BASE}/${lang}blog/${POSTS[1].slug}.html`, { waitUntil: 'load' }); await page.waitForTimeout(1200);
+    await page.goto(`${BASE}/${lang}blog/${POSTS[1].slug}.html`, { waitUntil: 'load', timeout: NAV }); await page.waitForTimeout(1200);
     const menu = page.locator('.menu-button'); await menu.click(); await page.waitForTimeout(700);
     assert.equal(await menu.getAttribute('aria-expanded'), 'true');
     const overlayLinks = await page.locator('.w-nav-overlay .nav-menu a, .nav-menu a').evaluateAll((as) => as.map((a) => a.getAttribute('href')));
@@ -335,7 +338,8 @@ for (const lang of ['', 'en/']) {
     assert.equal(await menu.getAttribute('aria-expanded'), 'false');
     // real language switch from a nested article
     await page.locator('.nav-menu a[hreflang]').first().evaluate((a) => a.click());
-    await page.waitForURL((u) => u.pathname.endsWith(`/blog/${POSTS[1].slug}.html`) && u.pathname.startsWith('/en/') === !lang, { timeout: 15000 });
+    // Cloudflare Pages serves clean URLs, so the committed link /en/blog/<slug>.html lands on /en/blog/<slug>.
+    await page.waitForURL((u) => u.pathname.replace(/\.html$/, '').endsWith(`/blog/${POSTS[1].slug}`) && u.pathname.startsWith('/en/') === !lang, { timeout: Math.max(15000, NAV) });
     assert.equal(await page.locator('html').getAttribute('lang'), lang ? 'zh-CN' : 'en');
     assert.equal((await page.locator('h1').innerText()).replace(/\s+/g, ' ').trim(), POSTS[1].title[lang ? 'zh' : 'en'].replace(/\s+/g, ' '));
     // footer pages grid contains About and Blog; the overlay marks Blog current on an article
@@ -355,7 +359,7 @@ if (ORIG_LX || ORIG_MONO) {
     for (const [url, tag] of [[a, 'original'], [b, 'stargo']]) {
       const page = await browser.newPage({ viewport: { width, height } });
       try {
-        await page.goto(url, { waitUntil: 'load', timeout: 60000 }); await page.waitForTimeout(url.includes('4200') && /index/.test(url) ? 5800 : 2500);
+        await page.goto(url, { waitUntil: 'load', timeout: Math.max(60000, NAV) }); await page.waitForTimeout(url.includes('4200') && /index/.test(url) ? 5800 : 2500);
         await setup(page, tag);
         shots.push(await page.screenshot());
       } finally { await page.close(); }
@@ -403,7 +407,7 @@ for (const width of WIDTHS) {
       const page = await browser.newPage({ viewport: { width, height: heightFor(width) } });
       const log = watch(page);
       await check(`page ${id}`, async () => {
-        const resp = await page.goto(url, { waitUntil: 'load', timeout: 60000 });
+        const resp = await page.goto(url, { waitUntil: 'load', timeout: Math.max(60000, NAV) });
         assert.equal(resp.status(), name === '404.html' ? 200 : 200);
         await page.waitForTimeout(name === 'index.html' ? 5800 : 1500);
         await noOverflow(page, id);
