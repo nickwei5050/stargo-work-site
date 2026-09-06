@@ -203,7 +203,7 @@
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.2;
-} .lx-scope h1{
+} :where(.lx-scope) h1{
   font-family: var(--_ui-styles---fonts--heading);
   color: var(--_semantics---heading);
   margin-top: 0;
@@ -211,7 +211,7 @@
   font-size: 4rem;
   font-weight: 500;
   line-height: 1.1;
-} .lx-scope h2{
+} :where(.lx-scope) h2{
   font-family: var(--_ui-styles---fonts--heading);
   color: var(--_semantics---heading);
   margin-top: 0;
@@ -219,7 +219,7 @@
   font-size: 3rem;
   font-weight: 500;
   line-height: 1.2;
-} .lx-scope h3{
+} :where(.lx-scope) h3{
   font-family: var(--_ui-styles---fonts--heading);
   color: var(--_semantics---heading);
   margin-top: 0;
@@ -227,7 +227,7 @@
   font-size: 2.5rem;
   font-weight: 500;
   line-height: 1.2;
-} .lx-scope h4{
+} :where(.lx-scope) h4{
   font-family: var(--_ui-styles---fonts--heading);
   color: var(--_semantics---heading);
   margin-top: 0;
@@ -235,7 +235,7 @@
   font-size: 2rem;
   font-weight: 500;
   line-height: 1.4;
-} .lx-scope h5{
+} :where(.lx-scope) h5{
   font-family: var(--_ui-styles---fonts--heading);
   color: var(--_semantics---heading);
   margin-top: 0;
@@ -243,7 +243,7 @@
   font-size: 1.8rem;
   font-weight: 500;
   line-height: 1.5;
-} .lx-scope h6{
+} :where(.lx-scope) h6{
   font-family: var(--_ui-styles---fonts--heading);
   color: var(--_semantics---heading);
   margin-top: 0;
@@ -251,32 +251,32 @@
   font-size: 1.5rem;
   font-weight: 500;
   line-height: 1.5;
-} .lx-scope p{
+} :where(.lx-scope) p{
   margin-bottom: 0;
-} .lx-scope a{
+} :where(.lx-scope) a{
   color: var(--_semantics---text);
-} .lx-scope ul, .lx-scope ol{
+} :where(.lx-scope) ul, :where(.lx-scope) ol{
   margin-top: 0;
   margin-bottom: 0;
   padding-left: 1.5rem;
-} .lx-scope li{
+} :where(.lx-scope) li{
   margin-bottom: .25rem;
-} .lx-scope img{
+} :where(.lx-scope) img{
   max-width: 100%;
   display: inline-block;
-} .lx-scope label{
+} :where(.lx-scope) label{
   margin-bottom: .25rem;
   font-weight: 500;
-} .lx-scope blockquote{
+} :where(.lx-scope) blockquote{
   border-left: .25rem solid #e2e2e2;
   margin-bottom: 0;
   padding: 0 1.25rem;
   font-size: 1.25rem;
   line-height: 1.5;
-} .lx-scope figure{
+} :where(.lx-scope) figure{
   margin-top: 2rem;
   margin-bottom: 2rem;
-} .lx-scope figcaption{
+} :where(.lx-scope) figcaption{
   text-align: center;
   margin-top: .25rem;
 } .lx-utility-page_component{
@@ -4671,11 +4671,11 @@
     --_ui-styles---shadow--shadow-40: #0006;
     --_ui-styles---shadow--shadow-50: #00000080;
     --_ui-styles---shadow--shadow-60: #0009;
-  } .lx-scope h1{
+  } :where(.lx-scope) h1{
     font-size: 3.2rem;
-  } .lx-scope h2{
+  } :where(.lx-scope) h2{
     font-size: 2.5rem;
-  } .lx-scope h3{
+  } :where(.lx-scope) h3{
     font-size: 2rem;
   } .lx-padding-xlarge{
     padding: 2rem;
@@ -5090,17 +5090,17 @@
     --_ui-styles---shadow--shadow-40: #0006;
     --_ui-styles---shadow--shadow-50: #00000080;
     --_ui-styles---shadow--shadow-60: #0009;
-  } .lx-scope h1{
+  } :where(.lx-scope) h1{
     font-size: 2.7rem;
-  } .lx-scope h2{
+  } :where(.lx-scope) h2{
     font-size: 2rem;
-  } .lx-scope h3{
+  } :where(.lx-scope) h3{
     font-size: 1.8rem;
-  } .lx-scope h4{
+  } :where(.lx-scope) h4{
     font-size: 1.5rem;
-  } .lx-scope h5{
+  } :where(.lx-scope) h5{
     font-size: 1.35rem;
-  } .lx-scope h6{
+  } :where(.lx-scope) h6{
     font-size: 1.25rem;
   } .lx-margin-horizontal{
     margin-top: 0;

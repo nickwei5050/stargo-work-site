@@ -29,6 +29,11 @@ export const SECONDARY = [
   { href: 'terms.html', label: B('使用条款', 'Terms') },
   { href: 'notices.html', label: B('第三方声明', 'Notices') },
 ];
+/** Content pages: overlay menu and footer, not the product navigation. Articles live under blog/. */
+export const MORE = [
+  { href: 'about.html', label: B('关于', 'About') },
+  { href: 'blog.html', label: B('博客', 'Blog') },
+];
 export const LANG_SWITCH = B('EN', '中文');
 /** Production origin — canonical URLs, hreflang, Open Graph and the sitemap. Bind a custom domain and change it here. */
 export const SITE_URL = 'https://stargo.pages.dev';
@@ -85,7 +90,7 @@ export const CHROME = [
   ['>Licensing<', B('>第三方声明<', '>Notices<')],
   ['>contact@monostudio.io<', B(`>${CONTACT_INFO.email}<`, `>${CONTACT_INFO.email}<`)],
   ['>info@monostudio.io<', B(`>${CONTACT_INFO.site}<`, `>${CONTACT_INFO.site}<`)],
-  ['>(+1) 930 046 720<', B(`>WhatsApp ${CONTACT_INFO.whatsapp}<`, `>WhatsApp ${CONTACT_INFO.whatsapp}<`)],
+  ['>(+1) 930 046 720<', B(`><span class="stargo-wa">WhatsApp </span>${CONTACT_INFO.whatsapp}<`, `><span class="stargo-wa">WhatsApp </span>${CONTACT_INFO.whatsapp}<`)],
   ['href="mailto:contact@monostudio.io"', B(`href="mailto:${CONTACT_INFO.email}"`, `href="mailto:${CONTACT_INFO.email}"`)],
   ['href="mailto:info@monostudio.io"', B(`href="${CONTACT_INFO.siteHref}"`, `href="${CONTACT_INFO.siteHref}"`)],
   ['href="tel:(+1)930046720"', B(`href="${CONTACT_INFO.whatsappHref}"`, `href="${CONTACT_INFO.whatsappHref}"`)],
@@ -103,7 +108,9 @@ export const META = {
   'pricing.html': { title: B('定价', 'Pricing'), description: B('从企业需要的 AI 层级开始：Foundation、Launch、Growth、Global Acquisition 与 Enterprise。', 'Start with the level of AI your company needs: Foundation, Launch, Growth, Global Acquisition and Enterprise.') },
   'enterprise.html': { title: B('企业与治理', 'Enterprise'), description: B('能执行，也能被控制：权限、审批闸门、证据、审计台账、凭据管理、租户隔离、Canary 与回滚；通过 API、MCP 与连接器接入已有系统；云端、专属环境或私有化部署。', 'Built to act, built to be controlled: permissions, approval gates, evidence, audit ledger, credential management, tenant isolation, canary and rollback; connects to existing systems through API, MCP and connectors; cloud, dedicated or private deployment.') },
   'contact.html': { title: B('联系', 'Contact'), description: B('从一条流程开始。告诉我们最影响效率或增长的一条业务流程，我们从那里开始。', 'Start with one workflow. Tell us the process that most affects efficiency or growth, and we start there.') },
-  'notices.html': { title: B('第三方声明', 'Third-party notices'), description: B('模板、运行时库、字体、图片素材与上游软件的许可与署名。', 'Licences and attribution for templates, runtime libraries, fonts, imagery and upstream software.') },
+  'notices.html': { title: B('第三方声明', 'Third-party notices'), description: B('运行时库、字体、图片素材与上游软件的许可与署名。', 'Licences and attribution for runtime libraries, fonts, imagery and upstream software.') },
+  'about.html': { title: B('关于', 'About'), description: B('STARGO WORK 是什么、来自哪里、如何构建：面向制造业与全球贸易企业的 AI 操作系统，前置部署，权力留在企业。', 'What STARGO WORK is, where it comes from and how it is built: the AI operating system for manufacturers and global-trade companies, forward deployed, with authority kept in the company.') },
+  'blog.html': { title: B('博客', 'Blog'), description: B('关于 AI 操作系统、AI 员工、从询盘到报价、审批治理与全球贸易执行的文章。', 'Articles on the AI operating system, AI employees, inquiry-to-quote, approval governance and global-trade execution.') },
   'privacy.html': { title: B('隐私政策', 'Privacy policy'), description: B('本站收集什么、为什么收集、保存多久，以及你的权利。', 'What this site collects, why, for how long, and your rights.') },
   'terms.html': { title: B('使用条款', 'Terms of use'), description: B('使用本网站的条款：内容、知识产权、价格说明与责任。', 'Terms for using this website: content, intellectual property, pricing notes and liability.') },
   '404.html': { title: B('404', '404'), description: B('页面不存在。', 'Page not found.') },
@@ -144,23 +151,26 @@ export const HOME_THEATRE = B('STARGO OS ©2026', 'STARGO OS ©2026');
 
 /** Mono homepage: [templateString, pair, opts]. Order matters. */
 export const HOME_MONO = [
-  /* sticky cards → the intelligence layer: why it is not a chatbot */
+  /* sticky cards → the intelligence layer as four illustrative scenarios. The
+     template's testimonial design (portrait, gradient, quote, speaker) is kept;
+     the speakers are roles in an example trade company, labelled as such, never
+     named customers. */
   ['&quot;Working with Mōno™ felt like having an internal team rather than an external agency. They were proactive, detail-oriented, and genuinely invested in the outcome.&quot;',
-    B('企业本体。AI 知道客户、询盘、报价、订单、出货和任务之间是什么关系——不是孤立的数据表，而是有状态、有逻辑、可以操作的业务对象。', 'An enterprise ontology. AI knows how customers, inquiries, quotes, orders, shipments and tasks relate — not isolated tables, but business objects with state, logic and actions.')],
-  ['John Doe', B('Ontology', 'Ontology')],
-  ['Head design at Circle®', B('给 AI 一个企业模型', 'A model of the business, for AI')],
+    B('「报价发出去之前，AI 已经知道这个客户上次买的配置、这次的数量和我们的利润护栏。」', '“Before the quote goes out, AI already knows what this customer bought last time, this order’s quantity and our margin guardrail.”')],
+  ['John Doe', B('外贸业务员 · 示例场景', 'Export sales · illustrative scenario')],
+  ['Head design at Circle®', B('Ontology · 企业本体', 'Ontology · a model of the business')],
   ['“We didn’t just get a website — we got a solid digital foundation. Mōno™ is the kind of partner you want when building something meant to last.”',
-    B('前置部署。软件适应企业，而不是企业适应软件：真实流程直接反馈到系统能力建设中。', 'Forward deployed. Software adapts to the company, not the other way round: real workflows feed straight back into the platform.')],
-  ['Amantha Doe', B('Forward Deployed', 'Forward Deployed')],
-  ['Founder of Radius®', B('FDE 进入真实流程', 'FDE inside the real workflow')],
+    B('「不是我们去适应软件，而是 FDE 把我们真实的流程搬进系统。」', '“We didn’t adapt to the software. The FDE moved our real workflow into the system.”')],
+  ['Amantha Doe', B('外贸经理 · 示例场景', 'Trade manager · illustrative scenario')],
+  ['Founder of Radius®', B('Forward Deployed · 前置部署', 'Forward deployed')],
   ['“Their ability to listen, challenge assumptions, and translate ideas into a clean digital system.”',
-    B('主动执行。不等提问：基于事件、时间、状态和目标持续运行，在授权范围内主动行动。', 'Proactive by design. It does not wait for a prompt: it runs on events, time, state and goals, and acts within its authority.')],
-  ['Max Trump', B('Proactive', 'Proactive')],
-  ['Founder of Light\u00a0Studio®', B('主动，不是被动', 'Proactive, not reactive')],
+    B('「我没有问，它先提醒我：一个老客户进入了补货周期。」', '“I didn’t ask. It told me first: an old customer had entered a reorder cycle.”')],
+  ['Max Trump', B('销售总监 · 示例场景', 'Sales director · illustrative scenario')],
+  ['Founder of Light\u00a0Studio®', B('Proactive · 主动执行', 'Proactive execution')],
   ['“What stood out with Mōno™ was the balance between design quality and technical execution. Everything was thoughtful, scalable, and built with term use in mind.”',
-    B('可治理的自我进化。每一次结果回到 Evolution Engine：评估、灰度、审批，再推广或回滚。', 'Governed self-evolution. Every outcome returns to the Evolution Engine: evaluated, canaried, approved — then promoted or rolled back.')],
-  ['Camila Verga', B('Evolution Engine', 'Evolution Engine')],
-  ['Head design at LogoIspum®', B('Observer → Evaluation → Canary → Promote / Rollback', 'Observer → Evaluation → Canary → Promote / Rollback')],
+    B('「每一次成交或丢单都回到系统里，下一次报价更准。」', '“Every win or loss goes back into the system, and the next quote is sharper.”')],
+  ['Camila Verga', B('总经理 · 示例场景', 'General manager · illustrative scenario')],
+  ['Head design at LogoIspum®', B('Evolution Engine · 可治理的进化', 'Evolution Engine · governed evolution')],
   /* the image + quote card that closes the pricing ladder → Enterprise */
   ['&quot;Mōno™ helped us simplify complexity. They streamlined our product narrative, improved performance, and delivered a digital experience that truly reflects our brand. The results were immediate — higher engagement.&quot;',
     B('「多部门、多公司、多品牌、多账号；复杂审批与系统接入；专属 FDE；私有化部署。」', '“Multiple departments, companies, brands and accounts. Complex approvals and system integration. A dedicated FDE. Private deployment.”')],
@@ -168,7 +178,7 @@ export const HOME_MONO = [
   ['Marketing Director at Auralis®', B('联系 STARGO Enterprise', 'Talk to STARGO Enterprise')],
 
   /* flip cards → the pricing ladder */
-  ['Mōno™ stands behind the data.', B('从企业需要的 AI 层级开始。', 'Start at the level of AI your company needs.')],
+  ['Mōno™ stands behind the data.', B('从企业需要的 AI 层级开始。', 'Start at the AI level you need.')],
   ['Our success is reflected in the numbers we achieve for our clients. Every project is designed with measurable growth at its core.',
     B('不是功能越多越贵，而是 AI 运营能力一级一级往上加：先建底座，再启动运营，再建增长引擎，再打开主动获客。', 'Not more features for more money — AI operating capacity added level by level: build the foundation, launch the operation, build the growth engine, then turn on AI acquisition.')],
   ['(Value created)', B('(Foundation)', '(Foundation)')],
@@ -282,17 +292,9 @@ export const HOME_MONO = [
   ['Bold Moves', B('ERP 负责订单', 'ERP owns the order')],
   ['View all work', B('看闭环怎么连起来', 'See how the loop connects')],
 
-  /* blog cards → the four doors into the rest of the site */
-  ['Smart insights.', B('四个入口。', 'Four doors.')],
-  ['>See all<', B('>预约演示<', '>Book a Demo<')],
-  ['November 11, 2025', B('(智能层)', '(Intelligence)')],
-  ['The power of simplicity in modern real brand design', B('为什么它不是聊天机器人：本体、前置部署、主动执行、进化。', 'Why it is not a chatbot: ontology, forward deployment, proactive execution, evolution.')],
-  ['October 1, 2025', B('(能力)', '(Capabilities)')],
-  ['From idea to execution: building products that last', B('九个阶段、14 个能力域，覆盖全球贸易的每个环节。', 'Nine stages and 14 capability groups, across every stage of global trade.')],
-  ['October 3, 2026', B('(数字员工)', '(AI Workforce)')],
-  ['Why great brands are built on clarity, not complexity', B('288 个 AI 员工怎么工作：岗位、组队、云端、审批。', 'How 288 AI employees work: roles, teams, cloud, approval.')],
-  ['October 4, 2025', B('(企业与治理)', '(Enterprise)')],
-  ['Designing digital systems that scale your business', B('能执行，也能被控制：权限、证据、审计、部署。', 'Built to act, built to be controlled: permissions, evidence, audit, deployment.')],
+  /* blog cards: the template's four-card grid, filled from BLOG (build-site.mjs) */
+  ['Smart insights.', B('最新文章。', 'Latest articles.')],
+  ['>See all<', B('>全部文章<', '>All articles<')],
 
   /* short / global */
   ['>Get started<', B('>看能力全景<', '>See all capabilities<')],
@@ -305,10 +307,10 @@ export const HOME_MONO = [
   ['(Services)', B('(外贸闭环 · 五个阶段)', '(The trade loop · five stages)')],
   ['(Pricing)', B('(两种外贸)', '(Two ways to run trade)')],
   ['(FAQ)', B('(常见问题)', '(FAQ)')],
-  ['(Testimonials)', B('(智能层 · 它为什么不是聊天机器人)', '(Intelligence · why it is not a chatbot)')],
+  ['(Testimonials)', B('(智能层 · 四个示例场景)', '(Intelligence · four illustrative scenarios)')],
   ['(Success stories)', B('(Enterprise)', '(Enterprise)')],
   ['(Stats)', B('(定价 · AI 层级)', '(Pricing · the AI ladder)')],
-  ['(Blog)', B('(继续深入)', '(Go deeper)')],
+  ['(Blog)', B('(博客)', '(Blog)')],
   ['(Project)', B('(每次增长)', '(each growth step)')],
   ['What&#x27;s included:', B('流程：', 'The flow:')],
   ['Timeline:', B('增长方式：', 'Growth means:')],
@@ -328,7 +330,7 @@ export const HOME_MONO = [
   ['>+9<', B('>288<', '>288<')],
   ['(Home)', B('(首页)', '(Trade OS)')],
   ['Page Layouts', B('页面', 'Pages')],
-  ['2011-26©', B('2026©', '2026©')],
+  ['2011-26©', B('示意 Logo · 非真实客户', 'Sample logos · not actual clients')],
 ];
 /** The same sentence ships twice (stages 001 and 003); replaced by position. */
 export const HOME_DUP_DESC = {
@@ -336,9 +338,11 @@ export const HOME_DUP_DESC = {
   first: LOOP_DESC[0],
   second: LOOP_DESC[2],
 };
+/** The template's flip-card logo wall. Real logos in assets/brands/ replace the
+    sample marks; until then the wall keeps its eight sample logos and says so. */
 export const HOME_BRAND_WALL = {
   caption: B('(我们服务过的品牌)', '(Brands we have served)'),
-  captionNoLogos: B('(面向全球贸易的 AI 操作系统)', '(AI Operating System for Global Trade)'),
+  captionSample: B('(合作伙伴墙 · 示例)', '(Partner wall · sample)'),
   year: B('2026©', '2026©'),
 };
 export const HOME_LOOP_TABLE = {
@@ -417,12 +421,14 @@ export const LX_INTELLIGENCE = {
   heroWord: B('智能层', 'Intelligence'),
   store1: { name: B('Ontology', 'Ontology'), sub: B('给 AI 一个企业模型', 'Give AI a model of your business'), href: '#lx-ontology' },
   store2: { name: B('Evolution', 'Evolution'), sub: B('可治理的自我进化', 'Governed self-evolution'), href: '#lx-evolution' },
-  heroDesc: B('你的公司不需要另一个聊天机器人。它需要一个运营智能层。', 'Your company doesn’t need another chatbot. It needs an operating intelligence layer.'),
+  heroDesc: B('不是聊天机器人。是运营智能层。', 'Not a chatbot. An operating layer.'),
   tags: LX_TAGS,
   features: [
-    { title: B('Ontology', 'Ontology'), text: B('把企业真实世界映射为 AI 可以理解和操作的业务对象——不是孤立的数据表，而是拥有关系、状态、逻辑和 Action 的对象。', 'Maps the real business into objects AI can understand and act on — not isolated tables, but objects with relationships, state, logic and actions.') },
-    { title: B('前置部署', 'Forward Deployed'), text: B('软件适应企业，而不是企业适应软件。真实流程直接反馈到系统能力建设中。', 'Software adapts to the business, not the other way round. Real workflows feed straight back into the platform.') },
-    { title: B('主动执行', 'Proactive'), text: B('不等提问。基于事件、时间、状态和目标持续运行，在授权范围内主动行动。', 'Doesn’t wait for prompts. Runs on events, time, state and goals, and acts within its authority.') },
+    /* The three animated cards are fixed-height boxes (24rem / 21.5rem / 21.5rem) that
+       hold about four, three and three lines at the template's 2rem type. */
+    { title: B('Ontology', 'Ontology'), text: B('把客户、询盘、报价、订单变成 AI 能理解、能操作的业务对象。', 'Customers, quotes and orders become objects AI can act on.') },
+    { title: B('前置部署', 'Embedded FDE'), text: B('让软件适应企业：真实流程直接进入系统能力。', 'Software adapts to your business, not the reverse.') },
+    { title: B('主动执行', 'Proactive'), text: B('不等提问：按事件、时间和目标运行，主动行动。', 'Runs on events and goals; acts within its authority.') },
   ],
   cards: [
     { title: B('Customer · 客户', 'Customer'), text: B('是谁、来自哪个市场、买过什么、正在谈什么、谁负责、下一步是什么。', 'Who they are, which market, what they bought, what is being discussed, who owns it, what comes next.') },
@@ -468,9 +474,9 @@ export const LX_WORKFORCE = {
   heroDesc: B('你的 AI 团队已经上线。', 'Your AI team is already online.'),
   tags: LX_TAGS,
   features: [
-    { title: B('有岗位', 'Has a job'), text: B('岗位、目标、企业知识、工具、技能、客户上下文、业务规则、长期记忆、任务列表、权限、执行记录。不是从空白 Prompt 开始。', 'Role, goal, enterprise knowledge, tools, skills, customer context, business rules, long-term memory, task list, permissions, execution record. Never a blank prompt.') },
-    { title: B('秒级组队', 'Teams in seconds'), text: B('「帮我进入巴西市场寻找新的经销商。」系统组成研究、进口商、经销商、公司、决策链、产品、邮件、CRM、跟进 Agent，并行工作。', '“Find us new dealers in Brazil.” The system forms research, importer, dealer, company, buying-committee, product, email, CRM and follow-up agents and runs them in parallel.') },
-    { title: B('随处工作', 'Works anywhere'), text: B('云端运行。办公室、工厂、展会、机场、国外，进入同一个企业 AI 工作空间。', 'Runs in the cloud. Office, factory, trade show, airport, abroad — the same enterprise AI workspace.') },
+    { title: B('有岗位', 'Has a job'), text: B('有岗位、目标、知识、工具、权限和执行记录，不从空白提示开始。', 'Role, goal, tools, permissions, record. Never a blank prompt.') },
+    { title: B('秒级组队', 'Instant teams'), text: B('一个目标，秒级组成 Agent 团队并行工作。', 'One goal forms an agent team that runs in parallel.') },
+    { title: B('随处工作', 'Works anywhere'), text: B('云端运行：办公室、工厂、展会或机场都能用。', 'Cloud-based: office, factory, trade show or airport.') },
   ],
   cards: [
     { title: B('Market Research Agent', 'Market Research Agent'), text: B('目标市场、需求变化、竞争格局。', 'Target markets, demand shifts, competitive landscape.') },
@@ -700,6 +706,7 @@ export const CONTACT = {
   eyebrow: B('(联系)', '(Contact)'),
   h1: B('从一条流程开始', 'Start with one workflow'),
   quote: B('「你不需要在第一天改变一切。告诉我们现在最影响企业效率或增长的一条流程，我们从那里开始。」', '“You don’t need to transform everything on day one. Tell us the one workflow that most affects efficiency or growth. We start there.”'),
+  quoteLabel: B('(我们的承诺)', '(Our promise)'),
   quoteWho: B('STARGO WORK', 'STARGO WORK'),
   quoteWhere: CONTACT_INFO.address,
   formLabel: B('(告诉我们你的公司)', '(Tell us about your company)'),
@@ -721,8 +728,6 @@ export const NOTICES = {
   date: B('2026-09-05 更新', 'Updated 2026-09-05'),
   h1: B('第三方声明', 'Third-party notices'),
   body: B(`
-<h4>网站模板</h4>
-<p>本站版式来自三套 Webflow 模板：Mōno™（页面骨架、导航、页脚与内页）、Scalora Startup（首页的闭环卡片堆、核心系统切换器、渠道网络带，以及定价页）、Lifelogx（智能层与数字员工页）。三套模板均按 Webflow 模板许可使用，原有文案已全部替换；模板附带的示例图片与界面图仅作版式示意，不代表任何真实客户、人物、产品或界面截图。</p>
 <h4>运行时库</h4>
 <ul>
 <li>Webflow 运行时与交互引擎（随模板导出），jQuery 3.5.1（MIT）</li>
@@ -733,14 +738,12 @@ export const NOTICES = {
 <p>Inter、Inter Display、Instrument Serif 与 42dot Sans，均按 SIL Open Font License 1.1 自托管，不向任何第三方字体服务发起请求。</p>
 <h4>图片素材</h4>
 <p>首页中心视频采用网站所有者提供的第四套模板 Fearless Vision Hero 中的银色轨道动画，已压缩并自托管。它用于品牌概念展示，不是 STARGO 产品操作录像或客户案例。</p>
-<p>本站的业务场景、品牌雕塑与数字角色图像为 AI 生成的概念视觉，用于解释业务关系、协作和治理；不是真实产品截图、员工肖像、客户案例或交付现场照片。中英文页面共用同一套无文字图像。模板图标与装饰元素仍保留各自来源及许可要求。STARGO 标识与字标为 STARGO 自有作品。</p>
+<p>本站的业务场景、品牌雕塑与数字角色图像为 AI 生成的概念视觉，用于解释业务关系、协作和治理；不是真实产品截图、员工肖像、客户案例或交付现场照片。中英文页面共用同一套无文字图像。页面中的人物照片、示例 Logo 墙、界面示意与装饰图标为已获授权的设计素材，仅作版式示意，不代表真实客户、员工、合作伙伴或客户评价。STARGO 标识与字标为 STARGO 自有作品。</p>
 <h4>上游软件</h4>
 <p>站内提到的 Activepieces、Chatwoot、Twenty CRM、WeKnora、Windmill、Playwright、Yente / OpenSanctions、Univer、Puter、Medusa、ERPNext、PostHog、Microsoft SkillOpt、Notion、Google、Reddit、LinkedIn、Facebook、YouTube、Alibaba、WhatsApp 等名称，均为各自所有者的商标或项目名。它们在本站出现是为了让上游身份可查，不表示相关项目对 STARGO 的背书。</p>
 <h4>联系</h4>
 <p>STARGO WORK · 柳州 · 广西 · 中国 · ${CONTACT_INFO.email} · WhatsApp ${CONTACT_INFO.whatsapp} · ${CONTACT_INFO.site}</p>`,
   `
-<h4>Website templates</h4>
-<p>The layout of this site comes from three Webflow templates: Mōno™ (page skeleton, navigation, footer and inner pages), Scalora Startup (the homepage loop card stack, core-system switcher and channel band, plus the pricing page) and Lifelogx (the Intelligence and AI Workforce pages). All three are used under the Webflow template licence with their original copy replaced; the sample imagery and interface pictures that ship with them are layout illustration only and do not depict any real customer, person, product or screen.</p>
 <h4>Runtime libraries</h4>
 <ul>
 <li>Webflow runtime and interaction engine (exported with the templates), jQuery 3.5.1 (MIT)</li>
@@ -751,7 +754,7 @@ export const NOTICES = {
 <p>Inter, Inter Display, Instrument Serif and 42dot Sans, all self-hosted under the SIL Open Font License 1.1. No request goes to a third-party font service.</p>
 <h4>Imagery</h4>
 <p>The homepage centre film uses the silver orbital animation from the owner-supplied fourth template, Fearless Vision Hero. It is compressed and self-hosted as conceptual brand imagery, not footage of the STARGO product or a customer engagement.</p>
-<p>The business scenes, brand sculptures and digital-role imagery on this site are AI-generated conceptual visuals illustrating business relationships, collaboration and governance. They are not actual product screenshots, employee portraits, customer cases or photographs of a delivery site. Both languages share the same text-free imagery. Retained template icons and decorative elements remain subject to their respective attribution and licence requirements. The STARGO mark and wordmark are STARGO’s own work.</p>
+<p>The business scenes, brand sculptures and digital-role imagery on this site are AI-generated conceptual visuals illustrating business relationships, collaboration and governance. They are not actual product screenshots, employee portraits, customer cases or photographs of a delivery site. Both languages share the same text-free imagery. The people photographs, sample logo wall, interface illustrations and decorative icons are licensed design assets used for layout illustration only; they do not depict real customers, employees, partners or customer reviews. The STARGO mark and wordmark are STARGO’s own work.</p>
 <h4>Upstream software</h4>
 <p>Activepieces, Chatwoot, Twenty CRM, WeKnora, Windmill, Playwright, Yente / OpenSanctions, Univer, Puter, Medusa, ERPNext, PostHog, Microsoft SkillOpt, Notion, Google, Reddit, LinkedIn, Facebook, YouTube, Alibaba, WhatsApp and other names mentioned on this site are trademarks or project names of their respective owners. They appear so that upstream identity stays discoverable; none implies endorsement of STARGO.</p>
 <h4>Contact</h4>
@@ -856,4 +859,46 @@ export const LEGAL = {
 <p>Questions about these terms: sales@stargomoto.com · WhatsApp +86 187 7512 7878.</p>`),
   },
   back: B('返回首页', 'Back to home'),
+};
+
+/* =============================================================== about === */
+
+/** The lifelogx about page: STARGO's own story in the template's layout. The
+    four hero circles show AI-employee roles with STARGO's own role emblems —
+    not people, not a team; the careers list becomes five workflow
+    entry points that all lead to the contact page. */
+export const ABOUT = {
+  eyebrow: B('关于 STARGO WORK', 'About STARGO WORK'),
+  title: B('把工作交给 AI，权力留在企业。', 'Delegate the work. Keep the authority.'),
+  desc: B('STARGO WORK 是为制造业与全球贸易企业打造的 AI 操作系统：288 个专业 AI 员工在同一个企业上下文中协同，把从找客户到订单的整条链连起来。', 'STARGO WORK is the AI operating system for manufacturers and global-trade companies: 288 specialised AI employees in one shared business context, connecting the whole chain from prospect to order.'),
+  button: { label: B('预约演示', 'Book a demo'), href: 'contact.html' },
+  /* The template shows four named people here. STARGO's role emblems (its own
+     conceptual visuals, not portraits) stand for four AI-employee roles instead. */
+  circles: [
+    { label: 'Market Signal Agent', image: 'assets/stargo/avatar-01.png' },
+    { label: 'Quote Agent', image: 'assets/stargo/avatar-03.png' },
+    { label: 'Follow-up Agent', image: 'assets/stargo/avatar-05.png' },
+    { label: 'Orchestrator', image: 'assets/stargo/avatar-06.png' },
+  ],
+  bigImage: { src: 'assets/stargo-motion/orbit-poster.webp', alt: B('银色轨道协同运转的品牌概念画面', 'Brand concept: silver orbital forms moving together') },
+  storyTitle: B('我们的来历', 'Our story'),
+  story: B(`<p>STARGO WORK 不是从一张 SaaS 产品需求表开始的。它来自真实的制造业与全球贸易业务：怎么找到客户、判断客户、快速回复、管理产品知识、报价、审批、做 PI、管理订单、准备出口文件、持续跟进，以及怎么让企业增长不再完全依赖增加人。</p>
+<p>我们的做法是前置部署：软件适应企业，而不是企业适应软件。FDE 进入真实流程，把业务规则、产品知识和审批边界直接反馈到系统能力建设中。</p>
+<p>我们相信 AI 应该真正承担工作，也相信权力应该留在企业。所以从第一天起，权限、审批、证据、审计和可回滚就是产品本身的一部分，而不是事后添加的功能。</p>`,
+    `<p>STARGO WORK did not start from a SaaS product spec. It came out of real manufacturing and global-trade operations: how to find customers, judge them, reply fast, manage product knowledge, quote, approve, make the PI, manage orders, prepare export documents, keep following up — and how to grow without only hiring.</p>
+<p>Our method is forward deployment: software adapts to the company, not the other way round. An FDE enters the real workflow and feeds business rules, product knowledge and approval boundaries straight back into the platform.</p>
+<p>We believe AI should genuinely do the work, and that authority should stay with the company. So from day one, permissions, approval, evidence, audit and rollback have been part of the product itself, not features added afterwards.</p>`),
+  values: [
+    B('人始终掌握决定权。', 'Humans stay in command.'),
+    B('软件适应企业，而不是反过来。', 'Software adapts to the business, not the reverse.'),
+    B('从每一次结果中学习。', 'Learn from every outcome.'),
+  ],
+  startTitle: B('从一条流程开始', 'Start with one workflow'),
+  starts: [
+    { name: B('询盘处理', 'Inquiry handling'), sub: B('阶段 04–05 · 理解与回复', 'Stages 04–05 · Understand & respond') },
+    { name: B('报价与 PI', 'Quotes & PI'), sub: B('阶段 06 · Quote Studio', 'Stage 06 · Quote Studio') },
+    { name: B('主动获客', 'Proactive acquisition'), sub: B('阶段 01–03 · Growth OS', 'Stages 01–03 · Growth OS') },
+    { name: B('客户跟进', 'Customer follow-up'), sub: B('阶段 08 · Follow-up Agents', 'Stage 08 · Follow-up Agents') },
+    { name: B('出口单证', 'Export documents'), sub: B('阶段 07 · Trade Execution', 'Stage 07 · Trade Execution') },
+  ],
 };

@@ -16,7 +16,9 @@
  * longer exists in the source tree is removed one by one.
  */
 import { mkdirSync, copyFileSync, readdirSync, writeFileSync, unlinkSync, rmdirSync, chmodSync, existsSync } from 'node:fs';
-import { NAV, SECONDARY, SITE_URL } from './copy.mjs';
+import { SITE_URL } from './copy.mjs';
+import { SITE_PAGES } from './chrome.mjs';
+import { POSTS, postPath } from './blog.mjs';
 
 const SITE = 'F:/stargo 网站/stargo-site';
 const DIST = `${SITE}/dist`;
@@ -30,7 +32,7 @@ const walk = (dir, rel, out) => {
   }
 };
 for (const f of readdirSync(SITE)) if (f.endsWith('.html')) wanted.add(f);
-for (const d of ['en', 'assets', 'css', 'js']) if (existsSync(`${SITE}/${d}`)) walk(`${SITE}/${d}`, d, wanted);
+for (const d of ['en', 'blog', 'assets', 'css', 'js']) if (existsSync(`${SITE}/${d}`)) walk(`${SITE}/${d}`, d, wanted);
 const GENERATED = ['_headers', 'robots.txt', 'sitemap.xml'];
 for (const g of GENERATED) wanted.add(g);
 
@@ -69,15 +71,16 @@ writeFileSync(`${DIST}/_headers`, [
 ].join('\n'));
 
 // robots + sitemap (clean URLs, both languages, hreflang alternates).
-const pages = [...NAV, ...SECONDARY].map((n) => n.href);
+const pages = SITE_PAGES;
 const clean = (lang, p) => `${SITE_URL}/${lang === 'en' ? 'en/' : ''}${p === 'index.html' ? '' : p.replace(/\.html$/, '')}`;
 const today = new Date().toISOString().slice(0, 10);
+const postDate = Object.fromEntries(POSTS.map((post) => [postPath(post), post.modified ?? post.date]));
 const urls = [];
 for (const p of pages) {
   for (const lang of ['zh', 'en']) {
-    urls.push(`  <url><loc>${clean(lang, p)}</loc><lastmod>${today}</lastmod>` +
+    urls.push(`  <url><loc>${clean(lang, p)}</loc><lastmod>${postDate[p] ?? today}</lastmod>` +
       `<xhtml:link rel="alternate" hreflang="zh-CN" href="${clean('zh', p)}"/><xhtml:link rel="alternate" hreflang="en" href="${clean('en', p)}"/><xhtml:link rel="alternate" hreflang="x-default" href="${clean('zh', p)}"/>` +
-      `<priority>${p === 'index.html' ? '1.0' : /privacy|terms|notices/.test(p) ? '0.2' : '0.8'}</priority></url>`);
+      `<priority>${p === 'index.html' ? '1.0' : /privacy|terms|notices/.test(p) ? '0.2' : p.startsWith('blog/') ? '0.6' : '0.8'}</priority></url>`);
   }
 }
 writeFileSync(`${DIST}/sitemap.xml`, `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls.join('\n')}\n</urlset>\n`);

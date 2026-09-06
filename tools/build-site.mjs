@@ -5,7 +5,7 @@
  *   Mono      — shell (nav, footer), homepage skeleton, capabilities,
  *               enterprise, contact, notices, 404
  *   Scalora   — three homepage modules and the pricing page
- *   lifelogx  — the Intelligence and AI Workforce pages
+ *   lifelogx  — the Intelligence and AI Workforce pages, About, Blog and the articles
  *
  *   node tools/lifelogx-prepare.mjs   # once per template change
  *   node tools/fuse-ix.mjs            # the one bundle every page loads
@@ -17,8 +17,9 @@
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 'node:fs';
 import { makeSub, findByClass, removeByClass, elementContaining, extractElement, setInner, setEachInner, setLink, escapeHtml } from './lib-html.mjs';
-import { applyChrome, remapLinks, relocateAssets, assertInternalLinks, stillImage } from './chrome.mjs';
+import { applyChrome, remapLinks, relocateAssets, relocateLinks, assertInternalLinks, stillImage, WORDMARK } from './chrome.mjs';
 import * as C from './copy.mjs';
+import { POSTS, BLOG_UI, postPath, featured, others, coverSrc, coverSrcset, formatDate } from './blog.mjs';
 
 const SITE = 'F:/stargo 网站/stargo-site';
 const TPL = `${SITE}/tools/templates`;
@@ -26,8 +27,8 @@ const FRAG = `${SITE}/tools/fragments`;
 const tpl = (f) => readFileSync(`${TPL}/${f}`, 'utf8');
 const frag = (f) => readFileSync(`${FRAG}/${f}`, 'utf8');
 
-const SCALORA_CDN = /https:\/\/cdn\.prod\.website-files\.com\/([^"'\s]+)/g;
-const localise = (s) => s.replace(SCALORA_CDN, (_, rel) => `assets/${rel}`);
+const SCALORA_CDN = /https:\/\/cdn\.prod\.website-files\.com\/([^"'\s,]+)/g;
+const localise = (s) => s.replace(SCALORA_CDN, (_, rel) => `assets/${rel.replace(/%2F/g, '/')}`);
 /** Scalora classes renamed when its stylesheet was namespaced (see css/scalora-modules.sc.css). */
 const SC_RENAME = new Set(['container', 'hero', 'navbar', 'menu-button', 'footer', 'white', 'faq-item', 'error-message', 'contact-card', 'button-text', 'pricing-card', 'color-block', 'utility-page-wrap', 'utility-page-content']);
 const scClasses = (html) => html.replace(/class="([^"]*)"/g, (_, v) => `class="${v.split(/\s+/).filter(Boolean).map((c) => (SC_RENAME.has(c) ? 'sc-' + c : c)).join(' ')}"`);
@@ -156,6 +157,46 @@ function fromStudio(spec, lang) {
   return h;
 }
 
+/**
+ * Fill a template card list with articles. `list`/`item` are class tokens of the
+ * list and its repeated item; the item's image, date and title are located by
+ * class. Extra template items are dropped, missing ones cloned from the first.
+ */
+function blogCards(html, list, item, posts, lang, cls) {
+  const t = (p) => (typeof p === 'string' ? p : p[lang]);
+  const wrap = findByClass(html, 'div', list);
+  if (!wrap) throw new Error(`cards: list ${list} not found`);
+  const first = findByClass(wrap.text, 'div', item, 0);
+  if (!first) throw new Error(`cards: item ${item} not found`);
+  let last = first;
+  for (let n = 1; ; n++) { const el = findByClass(wrap.text, 'div', item, n); if (!el) break; last = el; }
+  const imgRe = new RegExp(`<img[^>]*class="${cls.image}"[^>]*/>`);
+  const render = (p) => {
+    let x = first.text;
+    x = x.replace(/href="[^"]*"/, `href="${postPath(p)}"`);
+    if (!imgRe.test(x)) throw new Error(`cards: image ${cls.image}`);
+    // Keep the tag's own attributes (data-w-id and the interaction's initial inline state); swap only the image.
+    x = x.replace(imgRe, (tag) => tag.replace(/\s*srcset="[^"]*"/g, '').replace(/\s*sizes="[^"]*"/g, '').replace(/\s*width="[^"]*"|\s*height="[^"]*"/g, '')
+      .replace(/src="[^"]*"/, `src="${coverSrc(p)}" srcset="${coverSrcset(p)}" sizes="${cls.sizes}"`));   // no width/height: the template sizes these by CSS aspect-ratio
+    const titleRe = new RegExp(`(<(h4|div)[^>]*class="${cls.title}">)[^<]*(</\\2>)`);
+    if (!titleRe.test(x)) throw new Error(`cards: title ${cls.title}`);
+    x = x.replace(titleRe, `$1${escapeHtml(t(p.title))}$3`);
+    if (cls.date) {
+      const dateRe = new RegExp(`(<p[^>]*class="${cls.date}">)[^<]*(</p>)`);
+      if (!dateRe.test(x)) throw new Error(`cards: date ${cls.date}`);
+      x = x.replace(dateRe, `$1<time datetime="${p.date}">${formatDate(p.date, lang)}</time>$2`);
+    }
+    if (cls.description) {
+      const descRe = new RegExp(`(<div[^>]*class="${cls.description}">)[^<]*(</div>)`);
+      if (!descRe.test(x)) throw new Error(`cards: description ${cls.description}`);
+      x = x.replace(descRe, `$1${escapeHtml(t(p.description))}<span class="lx-post-date"><time datetime="${p.date}">${formatDate(p.date, lang)}</time></span>$2`);
+    }
+    return x;
+  };
+  const inner = wrap.text.slice(0, first.start) + posts.map(render).join('') + wrap.text.slice(last.end);
+  return html.slice(0, wrap.start) + inner + html.slice(wrap.end);
+}
+
 /** Mono page shell (nav … footer) with a foreign body dropped in. */
 function inMonoShell(body, extraCss) {
   const studio = tpl('studio.html');
@@ -210,8 +251,8 @@ PAGES['index.html'] = (lang) => {
     h = h.slice(0, nav.start) + h.slice(nav.end);
     if (/template-navigator|Get Template/.test(h)) throw new Error('index: template navigator survives');
   }
-  // Client logos on the sticky cards and the flip cards are the template's; STARGO has none to show there.
-  h = h.replace(/<img[^>]*class="logo-testi-1"[^>]*\/>/g, '');
+  // The template's client logos on the sticky cards and the flip cards → the STARGO mark; the image card's logo goes.
+  h = h.replace(/<img[^>]*class="logo-testi-1"[^>]*\/>/g, `<img src="${WORDMARK}" loading="lazy" alt="STARGO WORK" class="logo-testi-1 stargo-card-mark"/>`);
   h = h.replace(/<img[^>]*class="logo-absolute"[^>]*\/>/g, '');
   // "Meet the AI workforce" goes to the workforce page, not to a pricing anchor.
   h = s(h, 'href="#Pricing"', 'href="workforce.html"', { count: 1 });
@@ -225,6 +266,17 @@ PAGES['index.html'] = (lang) => {
     sec = setLink(sec, label, { href: 'pricing.html', text: lang === 'zh' ? '查看定价' : 'See pricing' });
     sec = sec.replace('<p class="top-text half">', `<p class="top-text half" data-mobile-text="${escapeHtml(t(C.HOME_MOBILE.ladder))}">`);
     if (!sec.includes('data-mobile-text')) throw new Error('index: ladder paragraph');
+    // The template pins its orb 50px from the left of a centred title and indents the first line
+    // past it, which only works for the first line the template happened to have. Inline the orb
+    // before the first character so it travels with the text in both languages and at every width.
+    const orbOpen = '<div class="video-logo for-sct">';
+    const orbAt = sec.indexOf(orbOpen);
+    if (orbAt === -1) throw new Error('index: ladder orb');
+    const orb = extractElement(sec, orbAt, 'div');
+    sec = sec.slice(0, orb.start) + sec.slice(orb.end);
+    const inline = `<span class="video-logo for-sct stargo-inline-orb">${orb.text.slice(orbOpen.length, -'</div>'.length)}</span>`;
+    sec = sec.replace(/(<h2 id="[^"]*" class="h2 for-stats">)/, (m) => m + inline);
+    if (!sec.includes('stargo-inline-orb')) throw new Error('index: ladder orb placement');
     h = h.slice(0, a) + sec + h.slice(z);
   }
 
@@ -253,18 +305,14 @@ PAGES['index.html'] = (lang) => {
     const play = elementContaining(h, 'class="play-video w-inline-block w-lightbox"', 'a');
     h = h.slice(0, play.start) + h.slice(play.end);
     if (/youtube|embedly|w-lightbox/.test(h)) throw new Error('index: lightbox survives');
-    // the sticky "Proactive" card's video → orb still; the Enterprise card's photo → orb; the four doors
+    // The sticky card's portrait film and the contact band's group photograph stay as the
+    // template designed them (licensed template assets; the copy marks the cards as scenarios).
     const stickyVideo = [...h.matchAll(/<video id="([^"]+)-video"/g)].map((m) => m[1]).find((id) => h.slice(h.indexOf('<section class="testimonials-section"'), h.indexOf('<section class="section drk"')).includes(`id="${id}-video"`));
     if (!stickyVideo) throw new Error('index: sticky card video');
-    h = stillImage(h, stickyVideo, BRAND.square, '');
     h = swapImg(h, '699b6466d5f19893993a4f1a_Sunset-Serenity', BRAND.square);
-    const doors = [['699b6466d5f19893993a4dca_Sleek', BRAND.ontology], ['699b6466d5f19893993a4d64_blog-2', BRAND.loop], ['699b6466d5f19893993a4e03_Futuristic', BRAND.family(3)], ['699b6466d5f19893993a4de3_blog-1', OS.login]];
-    doors.forEach(([k, src]) => { h = swapImg(h, k, src); });
     h = swapImg(h, '699b6466d5f19893993a4efc_Smiling%20Bearded', IMG('avatar-core.png'));   // the chat card's bearded-man avatar → the core orb
-    const doorHrefs = ['intelligence.html', 'capabilities.html', 'workforce.html', 'enterprise.html'];
-    ['post_the-power-of-simplicity-in-modern-brand-design.html', 'post_from-idea-to-execution-building-products-that-last.html', 'post_why-great-brands-are-built-on-clarity-not-complexity.html', 'post_designing-digital-systems-that-scale-with-your-business.html']
-      .forEach((p, i) => { h = s(h, `href="${p}"`, `href="${doorHrefs[i]}"`, { count: 1 }); });
-    // the contact band's background photo (a CSS background) is overridden in stargo-fusion.css
+    // The blog grid: the template's four cards, filled with the four newest articles.
+    h = blogCards(h, 'blog-grid', 'w-dyn-item', featured(4), lang, { image: 'testimonials-photo', date: 'data-text ab', title: 'blog-txt', sizes: '(max-width: 767px) 100vw, (max-width: 991px) 50vw, 25vw' });
   }
   const D = C.HOME_DUP_DESC;
   h = s(h, D.original, t(D.first), { nth: 0 });
@@ -289,8 +337,8 @@ PAGES['index.html'] = (lang) => {
     h = h.slice(0, grid.start) + rebuilt + h.slice(grid.end);
     h = s(h, '(Partners)', t(C.HOME_BRAND_WALL.caption));
   } else {
-    h = h.slice(0, grid.start) + h.slice(grid.end);
-    h = s(h, '(Partners)', t(C.HOME_BRAND_WALL.captionNoLogos));
+    // Template wall kept (flip animation and all), labelled as a sample.
+    h = s(h, '(Partners)', t(C.HOME_BRAND_WALL.captionSample));
   }
 
   // The "work" cards point at the loop table below.
@@ -379,18 +427,11 @@ function lxPage(spec, lang, name) {
   b = s(b, 'class="lx-cta-logo-text">Lifelogx</div>', `class="lx-cta-logo-text">${t(spec.ctaLogo)}</div>`);
   b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
   b = s(b, 'The smartest friend you’ll ever have.', t(spec.ctaDesc));
-  // Imagery: the template's dating-app phone screens, people avatars and stock photos → STARGO OS.
-  {
-    const screens = spec.screens;                       // four phone screens per page, in the template's cycling order
-    const keys = ['692dab81598fb8b34428f59d_iPhone', '692daba0e37b1016cdc17929_iPhone', '692dabba95113ec093024ea5_iPhone', '6937f284d63295c8ccb5a176_iPhone'];
-    keys.forEach((k, i) => { b = swapImg(b, k, screens[i]); });
-    b = swapImg(b, '6932b116b7502585152c15b6_image%2024.png', BRAND.wide);
-    b = swapImg(b, '694d149575edcf4ee403b317_no-writing-sc.avif', spec.phoneStill);
-    b = swapImg(b, '6936e930338bd07695b687e0_image%2026.avif', BRAND.tall);
-    const faces = ['692edcecf6e2ae2fd9352460_Ellipse%202.png', '692edcec8af5a6c3b9f8d9a6_Ellipse%202-1.png', '692edcec737d3634fab06561_Ellipse%202-3.png', '692edcecd4a525cca3df2c2f_Ellipse%202-6.png', '692edcecd7175aab4589f1bc_Ellipse%202-7.png', '692edcec807cc992e4e0405c_Ellipse%202-8.png', '692edcec17bb278318484f4b_Ellipse%202-10.png', '692edcec6a013eb0a3d2a8bb_Ellipse%202-11.png', '692edcecae92036ffad3a8b7_Ellipse%202-13.png', '692ec0128bd0a6d48973c168_Team%20Image%201.avif', '692ec0128bd0a6d48973c170_Team%20Image%203.avif', '692ec0128bd0a6d48973c148_Team%20Image%204.avif', '692ec0128bd0a6d48973c160_Team%20Image%206.avif', '692ec0128bd0a6d48973c158_Team%20Image%207.avif', '692ec0128bd0a6d48973c150_Team%20Image%208.avif'];
-    faces.forEach((k, i) => { b = swapImg(b, k, AVATARS[i % AVATARS.length]); });
-    { const mm = b.match(/Ellipse%202|Team%20Image|iPhone%2013|iPhone%2016|image%2024|no-writing-sc|image%2026/); if (mm) throw new Error(`${name}: template imagery survives: ...${b.slice(Math.max(0, mm.index - 160), mm.index + 60)}...`); }
-  }
+  // Imagery stays the template's own (owner decision, 2026-09-06): the phone screens, the
+  // translucent overlays of the gradient and "no writing" sections, the closing card's image and
+  // the avatars in the scenario bubbles are all part of the composition the pink palette was
+  // designed around. Only their template alt text goes.
+  if ((b.match(/lx-author-image-medium/g) ?? []).length !== 48) throw new Error(`${name}: avatar bubbles changed`);
   b = b.replace(/<div([^>]*)class="([^"]*\blx-gradient-section\b[^"]*)"/, '<div id="lx-more"$1class="$2"');
   b = b.replace(/<div class="lx-cta-wrapper">/, '<div id="lx-evolution" class="lx-cta-wrapper">');
   b = b.replace('class="lx-sitcky-section"', `id="${name === 'intelligence' ? 'lx-ontology' : 'lx-teams'}" class="lx-sitcky-section"`);
@@ -398,8 +439,83 @@ function lxPage(spec, lang, name) {
   if (/Lifelogx|Tomato|lifelog/i.test(b)) throw new Error(`${name}: template brand survives`);
   return inMonoShell(b, ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
 }
-PAGES['intelligence.html'] = (lang) => lxPage({ ...C.LX_INTELLIGENCE, screens: [MOBILE.core, MOBILE.agents, MOBILE.inquiry, MOBILE.approvals], phoneStill: MOBILE.phoneAgents }, lang, 'intelligence');
-PAGES['workforce.html'] = (lang) => lxPage({ ...C.LX_WORKFORCE, screens: [MOBILE.agents, MOBILE.approvals, MOBILE.core, MOBILE.inquiry], phoneStill: MOBILE.phoneApprovals }, lang, 'workforce');
+PAGES['intelligence.html'] = (lang) => lxPage(C.LX_INTELLIGENCE, lang, 'intelligence');
+PAGES['workforce.html'] = (lang) => lxPage(C.LX_WORKFORCE, lang, 'workforce');
+
+/* ---- about.html — lifelogx about page ---------------------------------- */
+PAGES['about.html'] = (lang) => {
+  const t = (p) => (typeof p === 'string' ? p : p[lang]);
+  const A = C.ABOUT;
+  const { fn: s } = makeSub('about');
+  let b = frag('lx-about.html');
+  b = s(b, '>Our approach<', `>${t(A.eyebrow)}<`);
+  b = s(b, '>Simple tools for real thinking<', `>${t(A.title)}<`);
+  b = s(b, 'We’re building tools that turn everyday conversations into clear, usable notes — so ideas don’t get lost and thinking feels effortless.', t(A.desc));
+  // A bare <a>Label</a>: setLink only relabels wrapped labels, so replace the whole link.
+  b = s(b, '<a href="contact.html" class="lx-button lx-is-secondary w-button">Download</a>', `<a href="${A.button.href}" class="lx-button lx-is-secondary w-button">${t(A.button.label)}</a>`, { count: 1 });
+  // Four circles: the template's four named people → four AI-employee roles with the template's illustrated avatars.
+  [['Lina Elsen', '6943d80451564405defffaed_Vibrant'], ['Amira Brik', '6943d80f46f426e739f71ec5_Stylish'], ['Mila Eron', '6943d84a7b3093c6e962c7dd_Futuristic'], ['Oren Solis', '6943d8308925855adc2bcb5c_Stylish']]
+    .forEach(([person, key], i) => { b = s(b, `>${person}<`, `>${A.circles[i].label}<`, { count: 1 }); b = swapImg(b, key, A.circles[i].image); });
+  b = swapImg(b, '6943f43d1ea90943e43a09be_Rectangle', A.bigImage.src, { alt: t(A.bigImage.alt) });
+  b = s(b, '>Our Story<', `>${t(A.storyTitle)}<`);
+  b = setInner(b, '<div class="lx-about-rich-text w-richtext">', t(A.story).trim());
+  ['Prioritize customers in everything you do.', 'Own your part, get things done.', 'Always do what’s right, and respect people.'].forEach((x, i) => { b = s(b, x, t(A.values[i]), { count: 1 }); });
+  b = s(b, '>We want to work with you<', `>${t(A.startTitle)}<`);
+  [['Product Design', 'Remote | Full Time'], ['Web Developer', 'NYC | Full Time'], ['Data Analyst', 'Chicago | Part Time'], ['UX Researcher', 'San Francisco | Contract'], ['Marketing Specialist', 'Remote | Full Time']]
+    .forEach(([job, place], i) => { b = s(b, `<div>${job}</div>`, `<div>${t(A.starts[i].name)}</div>`, { count: 1 }); b = s(b, `>${place}<`, `>${t(A.starts[i].sub)}<`, { nth: 0 }); });
+  b = s(b, '<a href="#" class="lx-careers_01-item w-inline-block">', '<a href="contact.html" class="lx-careers_01-item w-inline-block">', { count: 5 });
+  b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt="');
+  b = b.replace(/alt="(?=[^"]*$)/g, 'alt=""');
+  if (/Lifelogx|Lina Elsen|Amira|Mila Eron|Oren|Full Time|Part Time|Contract<|>Download</.test(b)) throw new Error('about: template copy survives');
+  return inMonoShell(b, ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
+};
+
+/* ---- blog.html — lifelogx blog index ------------------------------------ */
+const LX_CARD = { image: 'lx-blog-image', title: 'lx-blog-title', description: 'lx-blog-description', sizes: '(max-width: 767px) 100vw, (max-width: 991px) 50vw, 33vw' };
+PAGES['blog.html'] = (lang) => {
+  const t = (p) => (typeof p === 'string' ? p : p[lang]);
+  const { fn: s } = makeSub('blog');
+  let b = frag('lx-blog.html');
+  b = s(b, '>Discover Our Featured Stories<', `>${t(BLOG_UI.heading)}<`);
+  b = blogCards(b, 'lx-blog-list', 'lx-blog-item', POSTS, lang, LX_CARD);
+  b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
+  if (/Lifelogx|Companion|Moments in Motion|Conversational AI/.test(b)) throw new Error('blog: template copy survives');
+  return inMonoShell(b, ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
+};
+
+/* ---- blog/<slug>.html — lifelogx article page --------------------------- */
+function postPage(post, lang) {
+  const t = (p) => (typeof p === 'string' ? p : p[lang]);
+  const { fn: s } = makeSub(`post:${post.slug}`);
+  let b = frag('lx-post.html');
+  // Lists first (they repeat the template's title), then the title itself.
+  b = blogCards(b, 'lx-blog-list', 'lx-blog-item', others(post, 3), lang, LX_CARD);
+  {
+    const list = findByClass(b, 'div', 'lx-related-list');
+    if (!list) throw new Error('post: related list');
+    const items = others(post, 5).map((p) => `<a role="listitem" href="${postPath(p)}" class="lx-related-item w-dyn-item"><div class="lx-text-size-regular">${escapeHtml(t(p.title))}</div><div class="lx-text-size-small lx-text-size-grey">${escapeHtml(t(p.description))}</div></a>`).join('');
+    b = b.slice(0, list.start) + list.text.replace(/>[\s\S]*<\/div>$/, `>${items}</div>`) + b.slice(list.end);
+  }
+  b = s(b, '>How AI Companions Can Transform Your Life<', `>${escapeHtml(t(post.title))}<`, { count: 1 });
+  b = s(b, '>Related Items<', `>${t(BLOG_UI.related)}<`, { count: 1 });
+  b = s(b, '>More from blog<', `>${t(BLOG_UI.more)}<`, { count: 1 });
+  b = swapImg(b, '6945522d9e13fa6b32ace3c9_Futuristic', coverSrc(post));
+  b = b.replace(/(<img[^>]*class="lx-blog-image lx-details")\/>/, (m, tag) => `${tag} srcset="${coverSrcset(post)}" sizes="(max-width: 991px) 100vw, 1180px"/>`);
+  if (!b.includes(coverSrcset(post))) throw new Error('post: hero image');
+  {
+    // The rich-text block carries the interaction's initial state inline (opacity 0, data-w-id): keep its tag, replace its content.
+    const rich = findByClass(b, 'div', 'lx-text-rich-text');
+    if (!rich) throw new Error('post: rich text block');
+    b = b.slice(0, rich.start) + rich.text.slice(0, rich.text.indexOf('>') + 1) + t(post.body).trim() + '</div>' + b.slice(rich.end);
+  }
+  // Date and byline under the title; the template's CMS page shows neither.
+  b = b.replace('<div class="lx-blog-details-image-holder">', `<p class="lx-post-meta"><time datetime="${post.date}">${formatDate(post.date, lang)}</time> · ${t(BLOG_UI.byline)} · <a href="blog.html">${t(BLOG_UI.all)}</a></p><div class="lx-blog-details-image-holder">`);
+  if (!b.includes('lx-post-meta')) throw new Error('post: meta line');
+  b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
+  if (/Lifelogx|Companion|Moments in Motion|Conversational AI|Small Support/.test(b)) throw new Error(`post ${post.slug}: template copy survives`);
+  return inMonoShell(b, ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
+}
+for (const post of POSTS) PAGES[postPath(post)] = (lang) => postPage(post, lang);
 
 /* ---- pricing.html — Scalora pricing page ------------------------------ */
 PAGES['pricing.html'] = (lang) => {
@@ -593,8 +709,9 @@ PAGES['contact.html'] = (lang) => {
   let h = tpl('contact_contact-1.html');
   h = s(h, '(Contact)', t(K.eyebrow));
   h = s(h, 'Let’s Connect', t(K.h1));
-  h = h.replace(/<img[^>]*class="logo-testi-1"[^>]*\/>/, '');
-  h = s(h, '>★★★★★<', '><');
+  // The quote card keeps the template design (portrait film, gradient, mark); the mark is STARGO's and the rating slot names the card.
+  h = h.replace(/<img[^>]*class="logo-testi-1"[^>]*\/>/, `<img src="${WORDMARK}" loading="lazy" alt="STARGO WORK" class="logo-testi-1 stargo-card-mark"/>`);
+  h = s(h, '>★★★★★<', `>${t(K.quoteLabel)}<`);
   h = s(h, '“Their ability to listen, challenge assumptions, and translate ideas into a clean digital system.”', t(K.quote));
   h = s(h, '>Joda Trump<br/>', `>${t(K.quoteWho)}<br/>`);
   h = s(h, '>Founder of Light\u00a0Studio®<br/>', `>${t(K.quoteWhere)}<br/>`);
@@ -617,10 +734,8 @@ PAGES['contact.html'] = (lang) => {
   const blockStart = h.lastIndexOf('<div>', msgAt);
   h = h.slice(0, blockStart) + extra + h.slice(blockStart);
   h = h.replace(/value="Contact Us"/, `value="${t(K.submit)}"`);
-  // The quote card's stock video → the orb; a honeypot field for the form endpoint.
-  const vid = h.match(/<video id="([^"]+)-video"/);
-  if (!vid) throw new Error('contact: quote card video');
-  h = stillImage(h, vid[1], BRAND.square, '');
+  // A honeypot field for the form endpoint. (The quote card's portrait film stays.)
+  if (!/<video id="[^"]+-video"/.test(h)) throw new Error('contact: quote card video');
   h = h.replace(/(<form id="email-form"[^>]*>)/, '$1<div class="stargo-hp" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"/></div>');
   if (!h.includes('stargo-hp')) throw new Error('contact: form not found');
   return h.replace(/<body\b/, '<body class="stargo-contact-page"');
@@ -693,7 +808,9 @@ const FORBIDDEN = [
   /Forma Digital/, /Nero Vision/, /One Step/, /Bold Moves/, /Auralis/, /Light[\s\u00a0]Studio/, /Joda Trump/, /Elena Rossi/, /Adrian Keller/, /Camila Verga/,
   /\$\s?\d/, /logoipsum/i, /Get Template/, /template-navigator/, /youtube\.com/, /embedly/,
   // stock photography that shipped with the templates
-  /Young%20Man%20Smiling/, /Sunset-Serenity/, /Joyful-Group/, /Red-Hat-Portrait/, /work-\d+\.webp/, /work7\.webp/, /Matcha-Latte/, /Party-Scene/, /Scene%20/, /Portrait-of-a-Man/, /Diverse-Group/, /Coding-Workspace/, /Sleek%20Container/, /Futuristic/, /blog-\d\.webp/, /about-6/, /Ellipse%202/, /Team%20Image/, /iPhone%2013/, /iPhone%2016/, /no-writing-sc/, /image%202[46]\./,
+  /Young%20Man%20Smiling/, /Sunset-Serenity/, /Joyful-Group/, /Red-Hat-Portrait/, /work-\d+\.webp/, /work7\.webp/, /Matcha-Latte/, /Party-Scene/, /Scene%20/, /Portrait-of-a-Man/, /Diverse-Group/, /Coding-Workspace/, /Sleek%20Container/, /Futuristic/, /blog-\d\.webp/, /about-6/,
+  // lifelogx template people, its CMS article images and its brand
+  /Vibrant%20Orange/, /Stylish%20Portrait/, /Metallic%20Jacket/, /Rectangle%2043/, /69417cf6925a82af26179b70/, /Lifelogx/i, /Lina Elsen/, /Amira Brik/, /Mila Eron/, /Oren Solis/,
 ];
 const ALLOWED = { 'notices.html': [/Mōno™ Studio/] };
 
@@ -719,8 +836,19 @@ for (const lang of C.LANGS) {
       const rel = decodeURIComponent(m[1]).split('?')[0];
       if (!existsSync(`${SITE}/${rel}`) && !existsSync(`${SITE}/${m[1]}`)) throw new Error(`[${lang}/${name}] missing asset: ${m[1]}`);
     }
-    if (lang === 'en') html = relocateAssets(html);
+    for (const m of html.matchAll(/srcset="([^"]*)"/g)) {
+      for (const part of m[1].split(',')) {
+        const f = part.trim().split(/\s+/)[0];
+        if (f.startsWith('assets/') && !existsSync(`${SITE}/${decodeURIComponent(f)}`) && !existsSync(`${SITE}/${f}`)) throw new Error(`[${lang}/${name}] missing srcset asset: ${f}`);
+      }
+    }
+    // Pages in a folder (blog/) link and load one level up; English pages one more.
+    const depth = name.split('/').length - 1;
+    html = relocateLinks(html, '../'.repeat(depth));
+    const assetUp = '../'.repeat(depth + (lang === 'en' ? 1 : 0));
+    if (assetUp) html = relocateAssets(html, assetUp);
     const out = lang === 'zh' ? `${SITE}/${name}` : `${SITE}/en/${name}`;
+    mkdirSync(out.slice(0, out.lastIndexOf('/')), { recursive: true });
     writeFileSync(out, html.replace(/[\t ]+$/gm, ''), 'utf8');
     written.push(`${lang}/${name}`);
   }

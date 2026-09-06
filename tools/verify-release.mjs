@@ -1,15 +1,19 @@
 /** Verify deployed bytes against the reviewed local build, then browser smoke. */
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
-import { readFileSync, readdirSync, mkdirSync, writeFileSync } from 'node:fs';
+import { readFileSync, readdirSync, mkdirSync, writeFileSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 const { chromium, request } = createRequire('F:/stargo 网站/stargo-work-website/package.json')('@playwright/test');
 const BASE = process.env.BASE_URL || 'https://stargo.pages.dev';
 const proxy = process.env.BROWSER_PROXY ? { server: process.env.BROWSER_PROXY } : undefined;
 const api = await request.newContext({ baseURL: BASE, proxy, timeout: 45000 });
 const assets = JSON.parse(readFileSync('tools/imagegen/assets-manifest.json', 'utf8')).assets;
-const pages = [...readdirSync('.').filter(f => f.endsWith('.html')), ...readdirSync('en').filter(f => f.endsWith('.html')).map(f => 'en/' + f)];
-const imageFiles = assets.flatMap(a => [a.src, ...a.variants.map(v => v.src)]);
+const pages = [...readdirSync('.').filter(f => f.endsWith('.html')), ...readdirSync('en').filter(f => f.endsWith('.html')).map(f => 'en/' + f), ...readdirSync('blog').map(f => 'blog/' + f), ...readdirSync('en/blog').map(f => 'en/blog/' + f)];
+const html = pages.map(f => readFileSync(f, 'utf8')).join('\n');
+// Every image a page references: the generated set that is still placed, the blog covers and the restored template assets.
+const referenced = new Set([...html.matchAll(/(?:src|srcset|data-poster-url|data-video-urls)="([^"]*)"/g)].flatMap(m => m[1].split(',').map(s => s.trim().split(/\s+/)[0]).filter(s => /^(\.\.\/)*assets\//.test(s)).map(s => decodeURIComponent(s.replace(/^(\.\.\/)+/, '')))));
+const imageFiles = [...referenced].filter(f => /\.(webp|png|jpg|jpeg|avif|svg|gif)$/i.test(f) && existsSync(f));
+for (const a of assets) if (html.includes(a.src)) for (const v of a.variants) if (!referenced.has(v.src)) imageFiles.push(v.src);
 const runtimes = ['css', 'js'].flatMap(dir => readdirSync(dir).filter(f => /\.(css|js|json)$/.test(f)).map(f => `${dir}/${f}`));
 const files = [...pages, ...imageFiles, 'assets/stargo-motion/orbit.mp4', 'assets/stargo-motion/orbit-poster.webp', ...runtimes];
 const hash = b => createHash('sha256').update(b).digest('hex');
@@ -86,7 +90,7 @@ try {
     const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
     await page.goto(`${BASE}/${lang}capabilities`, { waitUntil: 'load' });
     await page.waitForTimeout(1500);
-    const expected = ['brand-family-01', 'os-inquiries', 'brand-family-02', 'brand-family-04'];
+    const expected = ['brand-family-01', 'os-inquiries', 'brand-family-02', 'brand-family-04'];   // capabilities page keeps its generated art
     const actual = await page.locator('a[href="#g01"] img,a[href="#g04"] img,a[href="#g07"] img,a[href="#g10"] img').evaluateAll(imgs => imgs.map(i => i.getAttribute('src').split('/').pop().replace(/\.webp$/, '')));
     assert.deepEqual(actual, expected, 'capability image/meaning mapping');
     await page.locator('a[href="#g04"]').scrollIntoViewIfNeeded();

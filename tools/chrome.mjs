@@ -9,37 +9,45 @@
  * menu, bottom pill) plus a footer "Pages" grid, and each page was exported
  * with a different subset. Rewriting text in place would leave whichever copy
  * did not match pointing at a template page that no longer exists.
+ *
+ * Pages may live one folder down (blog/<slug>.html, en/blog/<slug>.html). Every
+ * page is generated with root-relative names (contact.html, assets/…) and the
+ * build relocates links and assets with relocateLinks / relocateAssets.
  */
 import { makeSub, findByClass, extractElement } from './lib-html.mjs';
 import { editorialImages } from './editorial-images.mjs';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
-import { NAV, SECONDARY, LANG_SWITCH, CHROME, META, CONTACT_INFO, SITE_URL } from './copy.mjs';
+import { NAV, SECONDARY, MORE, LANG_SWITCH, CHROME, META, CONTACT_INFO, SITE_URL } from './copy.mjs';
+import { POSTS, BLOG_UI, postPath, coverSrc } from './blog.mjs';
 
-export const ALL_PAGES = new Set([...NAV, ...SECONDARY].map((n) => n.href).concat(['404.html']));
-const WORDMARK = 'assets/brand/stargo-wordmark-600.png';
+/** Every page the build produces, as root-relative names. */
+export const SITE_PAGES = [...NAV, ...SECONDARY, ...MORE].map((n) => n.href).concat(POSTS.map(postPath));
+export const ALL_PAGES = new Set([...SITE_PAGES, '404.html']);
+export const WORDMARK = 'assets/brand/stargo-wordmark-600.png';
 const AVATAR = 'assets/stargo/avatar-core.png';
 const OG_IMAGE = 'assets/stargo/og-cover.png';
 
 /** Product screens that replace the template's photo strips (overlay menu) and image rotator (contact band). */
 export const SCREENS = ['os-cockpit', 'os-sales-desk', 'os-inquiries', 'os-agent-center', 'os-quote-studio', 'os-trade-execution', 'os-desktop', 'os-login', 'os-boot', 'os-loading'].map((n) => `assets/stargo/${n}.webp`);
 
-/** Pages that existed in the templates and where each now lives. */
+/** Template pages that no longer exist and where each now lives. Real pages are never listed here. */
 const LEGACY = {
   'studio.html': 'enterprise.html',
   'work_work-1.html': 'capabilities.html', 'work_work-2.html': 'capabilities.html', 'work_work-3.html': 'workforce.html',
-  'blog_blog-1.html': 'capabilities.html', 'blog_blog-2.html': 'capabilities.html', 'blog_blog-3.html': 'capabilities.html',
-  'contact.html': 'contact.html',
+  'blog_blog-1.html': 'blog.html', 'blog_blog-2.html': 'blog.html', 'blog_blog-3.html': 'blog.html',
   'contact_contact-1.html': 'contact.html', 'contact_contact-2.html': 'contact.html', 'contact_contact-3.html': 'contact.html',
   'project_forma-digital.html': 'index.html', 'project_nero-vision.html': 'index.html',
   'project_one-step.html': 'index.html', 'project_bold-moves.html': 'index.html',
   '401.html': 'index.html',
-  'post_the-power-of-simplicity-in-modern-brand-design.html': 'capabilities.html',
-  'post_from-idea-to-execution-building-products-that-last.html': 'capabilities.html',
-  'post_why-great-brands-are-built-on-clarity-not-complexity.html': 'capabilities.html',
-  'post_designing-digital-systems-that-scale-with-your-business.html': 'capabilities.html',
-  'pricing.html': 'pricing.html', 'company.html': 'enterprise.html', 'about.html': 'enterprise.html', 'feature.html': 'capabilities.html',
+  'post_the-power-of-simplicity-in-modern-brand-design.html': 'blog.html',
+  'post_from-idea-to-execution-building-products-that-last.html': 'blog.html',
+  'post_why-great-brands-are-built-on-clarity-not-complexity.html': 'blog.html',
+  'post_designing-digital-systems-that-scale-with-your-business.html': 'blog.html',
+  'company.html': 'enterprise.html', 'feature.html': 'capabilities.html',
 };
+
+const postOf = (current) => POSTS.find((p) => postPath(p) === current);
 
 /* ------------------------------------------------------------ helpers -- */
 
@@ -80,13 +88,17 @@ export function stillImage(html, videoId, src, alt = '') {
 
 /* -------------------------------------------------------------- parts -- */
 
+/** An article page counts as being inside the blog for the navigation's current-page marker. */
+const isCurrent = (href, current) => href === current || (href === 'blog.html' && current.startsWith('blog/'));
+
 function links(lang, current) {
   const t = (p) => p[lang];
   const other = lang === 'zh' ? `en/${current}` : `../${current}`;
   const nav = NAV.map((n) => ({ href: n.href, label: t(n.label) }));
+  const more = MORE.map((n) => ({ href: n.href, label: t(n.label) }));
   const secondary = SECONDARY.map((n) => ({ href: n.href, label: t(n.label) }));
   const swap = { href: other, label: t(LANG_SWITCH), swap: true, lang: lang === 'zh' ? 'en' : 'zh-CN' };
-  return { nav, secondary, swap };
+  return { nav, more, secondary, swap };
 }
 
 function topNav(html, L, current) {
@@ -94,11 +106,11 @@ function topNav(html, L, current) {
   if (!m) throw new Error('chrome: top nav not found');
   const tpl = firstLink(m[0]);
   const items = [...L.nav.slice(1), L.swap];          // the wordmark is the home link
-  const out = items.map((n) => renderLink(tpl, n, n.href === current)).join('');
+  const out = items.map((n) => renderLink(tpl, n, isCurrent(n.href, current))).join('');
   return html.replace(m[0], `<nav role="navigation" class="nav-menu first w-nav-menu">${out}</nav>`);
 }
 
-/** Overlay menu: the product pages and the language switch. Legal pages sit in its bottom row and in the footer. */
+/** Overlay menu: the product pages, About and Blog, and the language switch. Legal pages sit in its bottom row and in the footer. */
 function overlayMenu(html, L, current) {
   const flex = findByClass(html, 'div', 'nav-top-flex');
   if (!flex) {
@@ -107,8 +119,8 @@ function overlayMenu(html, L, current) {
   }
   const item = findByClass(flex.text, 'div', 'menu-item');
   const linkTpl = firstLink(item.text);
-  const items = [...L.nav, L.swap].map((n, i) =>
-    `<div class="menu-item _0${i + 1}">${renderLink(linkTpl, n, n.href === current)}</div>`).join('');
+  const items = [...L.nav, ...L.more, L.swap].map((n, i) =>
+    `<div class="menu-item _0${i + 1}">${renderLink(linkTpl, n, isCurrent(n.href, current))}</div>`).join('');
   return replaceInner(html, flex, items);
 }
 
@@ -118,7 +130,7 @@ function bottomPill(html, L, current) {
   let text = pill.text;
   const left = findByClass(text, 'div', 'menu-first-bottom', 0);
   const tpl = firstLink(left.text);
-  const render = (list) => list.map((n) => renderLink(tpl, n, n.href === current)).join('');
+  const render = (list) => list.map((n) => renderLink(tpl, n, isCurrent(n.href, current))).join('');
   const byHref = (h) => L.nav.find((n) => n.href === h);
   text = text.slice(0, left.start) + `<div class="menu-first-bottom">${render([byHref('capabilities.html'), byHref('workforce.html')])}</div>` + text.slice(left.end);
   const right = findByClass(text, 'div', 'menu-first-bottom', 1);
@@ -131,8 +143,8 @@ function footerPages(html, L, current) {
   if (!grid) throw new Error('chrome: footer pages grid not found');
   const tpl = firstLink(grid.text);
   const n = L.nav;
-  const cols = [[n[0], n[1], n[2], n[3]], [n[4], n[5], n[6], L.swap], [...L.secondary]];
-  const inner = cols.map((c) => `<div class="flex-item">${c.map((x) => renderLink(tpl, x, x.href === current)).join('')}</div>`).join('');
+  const cols = [[n[0], n[1], n[2], n[3]], [n[4], n[5], n[6], L.swap], [...L.more, ...L.secondary]];
+  const inner = cols.map((c) => `<div class="flex-item">${c.map((x) => renderLink(tpl, x, isCurrent(x.href, current))).join('')}</div>`).join('');
   return replaceInner(html, grid, inner);
 }
 
@@ -152,46 +164,77 @@ export const cleanUrl = (lang, page) => {
   return lang === 'zh' ? `${SITE_URL}/${p}` : `${SITE_URL}/en/${p}`;
 };
 
+const ORG_ID = `${SITE_URL}/#org`;
+const SITE_ID = `${SITE_URL}/#site`;
+
 function head(html, lang, current) {
-  const meta = META[current];
+  const post = postOf(current);
+  const meta = META[current] ?? (post && { title: post.title, description: post.description });
+  if (!meta) throw new Error(`chrome: no metadata for ${current}`);
   const title = current === 'index.html' ? meta.title[lang] : `${meta.title[lang]} — STARGO WORK`;
   const description = meta.description[lang];
   const self = cleanUrl(lang, current);
   const zh = cleanUrl('zh', current);
   const en = cleanUrl('en', current);
-  const ld = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      { '@type': 'Organization', '@id': `${SITE_URL}/#org`, name: 'STARGO WORK', url: `${SITE_URL}/`, logo: `${SITE_URL}/${WORDMARK}`, email: CONTACT_INFO.email, telephone: CONTACT_INFO.whatsapp, address: { '@type': 'PostalAddress', addressLocality: 'Liuzhou', addressRegion: 'Guangxi', addressCountry: 'CN' }, sameAs: [CONTACT_INFO.siteHref] },
-      { '@type': 'WebSite', '@id': `${SITE_URL}/#site`, url: `${SITE_URL}/`, name: 'STARGO WORK', inLanguage: ['zh-CN', 'en'], publisher: { '@id': `${SITE_URL}/#org` } },
-      { '@type': 'WebPage', '@id': self, url: self, name: title, description, inLanguage: lang === 'zh' ? 'zh-CN' : 'en', isPartOf: { '@id': `${SITE_URL}/#site` } },
-      ...(current === 'index.html' ? [{ '@type': 'SoftwareApplication', name: 'STARGO WORK', applicationCategory: 'BusinessApplication', operatingSystem: 'Web', url: `${SITE_URL}/`, description, offers: { '@type': 'AggregateOffer', priceCurrency: 'CNY', lowPrice: '10000', highPrice: '40000', offerCount: 4 }, provider: { '@id': `${SITE_URL}/#org` } }] : []),
-    ],
-  };
+  const inLanguage = lang === 'zh' ? 'zh-CN' : 'en';
+  const ogImage = post ? `${SITE_URL}/${coverSrc(post)}` : `${SITE_URL}/${OG_IMAGE}`;
+  const pageType = current === 'about.html' ? 'AboutPage' : current === 'blog.html' ? 'CollectionPage' : current === 'contact.html' ? 'ContactPage' : 'WebPage';
+  const blogUrl = cleanUrl(lang, 'blog.html');
+  const graph = [
+    { '@type': 'Organization', '@id': ORG_ID, name: 'STARGO WORK', url: `${SITE_URL}/`, logo: `${SITE_URL}/${WORDMARK}`, email: CONTACT_INFO.email, telephone: CONTACT_INFO.whatsapp, address: { '@type': 'PostalAddress', addressLocality: 'Liuzhou', addressRegion: 'Guangxi', addressCountry: 'CN' }, sameAs: [CONTACT_INFO.siteHref] },
+    { '@type': 'WebSite', '@id': SITE_ID, url: `${SITE_URL}/`, name: 'STARGO WORK', inLanguage: ['zh-CN', 'en'], publisher: { '@id': ORG_ID } },
+    { '@type': pageType, '@id': self, url: self, name: title, description, inLanguage, isPartOf: { '@id': SITE_ID }, ...(post ? { primaryImageOfPage: ogImage } : {}) },
+  ];
+  if (current === 'index.html') {
+    graph.push({ '@type': 'SoftwareApplication', name: 'STARGO WORK', applicationCategory: 'BusinessApplication', operatingSystem: 'Web', url: `${SITE_URL}/`, description, offers: { '@type': 'AggregateOffer', priceCurrency: 'CNY', lowPrice: '10000', highPrice: '40000', offerCount: 4 }, provider: { '@id': ORG_ID } });
+  }
+  if (current === 'blog.html') {
+    graph.push({
+      '@type': 'Blog', '@id': `${blogUrl}#blog`, url: blogUrl, name: `STARGO WORK ${BLOG_UI.section[lang]}`, description, inLanguage, publisher: { '@id': ORG_ID },
+      blogPost: POSTS.map((p) => ({ '@type': 'BlogPosting', '@id': `${cleanUrl(lang, postPath(p))}#article`, headline: p.title[lang], url: cleanUrl(lang, postPath(p)), datePublished: p.date, image: `${SITE_URL}/${coverSrc(p)}` })),
+    });
+  }
+  if (post) {
+    graph.push({
+      '@type': 'BlogPosting', '@id': `${self}#article`, headline: post.title[lang], description, image: ogImage, url: self, mainEntityOfPage: { '@id': self },
+      datePublished: post.date, dateModified: post.modified ?? post.date, inLanguage, keywords: post.keywords.join(', '),
+      author: { '@type': 'Organization', '@id': ORG_ID, name: 'STARGO WORK' }, publisher: { '@id': ORG_ID }, isPartOf: { '@id': `${blogUrl}#blog` },
+    });
+    graph.push({
+      '@type': 'BreadcrumbList', '@id': `${self}#breadcrumb`, itemListElement: [
+        { '@type': 'ListItem', position: 1, name: NAV[0].label[lang], item: cleanUrl(lang, 'index.html') },
+        { '@type': 'ListItem', position: 2, name: BLOG_UI.section[lang], item: blogUrl },
+        { '@type': 'ListItem', position: 3, name: post.title[lang], item: self },
+      ],
+    });
+  }
+  const ld = { '@context': 'https://schema.org', '@graph': graph };
   const extra = [
     `<link rel="canonical" href="${self}"/>`,
     `<link rel="alternate" hreflang="zh-CN" href="${zh}"/>`,
     `<link rel="alternate" hreflang="en" href="${en}"/>`,
     `<link rel="alternate" hreflang="x-default" href="${zh}"/>`,
     `<meta property="og:url" content="${self}"/>`,
-    '<meta property="og:type" content="website"/>',
+    `<meta property="og:type" content="${post ? 'article' : 'website'}"/>`,
     '<meta property="og:site_name" content="STARGO WORK"/>',
     `<meta property="og:locale" content="${lang === 'zh' ? 'zh_CN' : 'en_US'}"/>`,
-    `<meta property="og:image" content="${SITE_URL}/${OG_IMAGE}"/>`,
-    '<meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/>',
+    `<meta property="og:image" content="${ogImage}"/>`,
+    post ? '<meta property="og:image:width" content="1200"/><meta property="og:image:height" content="800"/>' : '<meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/>',
+    ...(post ? [`<meta property="article:published_time" content="${post.date}"/>`, `<meta property="article:modified_time" content="${post.modified ?? post.date}"/>`, `<meta property="article:section" content="${BLOG_UI.section[lang]}"/>`, ...post.keywords.map((k) => `<meta property="article:tag" content="${k}"/>`)] : []),
     '<meta name="twitter:card" content="summary_large_image"/>',
-    `<meta name="twitter:image" content="${SITE_URL}/${OG_IMAGE}"/>`,
+    `<meta name="twitter:image" content="${ogImage}"/>`,
     '<meta name="theme-color" content="#0d0906"/>',
     `<script type="application/ld+json">${JSON.stringify(ld)}</script>`,
   ].join('');
   let out = html
     .replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/g, '')   // the template's own structured data
-    .replace(/<html([^>]*)lang="en"/, `<html$1lang="${lang === 'zh' ? 'zh-CN' : 'en'}"`)
+    .replace(/<html([^>]*)lang="en"/, `<html$1lang="${inLanguage}"`)
     .replace(/<title>[^<]*<\/title>/, `<title>${title}</title>${extra}`)
     .replace(/<meta content="[^"]*" (name|property)="(description|og:description|twitter:description)"\/>/g, `<meta content="${description}" $1="$2"/>`)
     .replace(/<meta content="[^"]*" (name|property)="(og:title|twitter:title)"\/>/g, `<meta content="${title}" $1="$2"/>`)
     .replace(/<meta content="[^"]*" property="og:image"\/>/, '')
     .replace(/<meta content="[^"]*" property="twitter:image"\/>/, '')
+    .replace(/<meta property="og:type" content="website"\/>/, '')                // regenerated above (article for posts)
     .replace(/<link href="[^"]*" rel="shortcut icon" type="image\/x-icon"\/>/, '<link href="assets/brand/stargo-wordmark-600.png" rel="shortcut icon" type="image/png"/>')
     .replace(/<link href="[^"]*" rel="apple-touch-icon"\/>/, '<link href="assets/brand/stargo-wordmark-600.png" rel="apple-touch-icon"/>');
   const headText = out.slice(0, out.indexOf('<body')).replace(/<link[^>]*>/g, '');
@@ -323,23 +366,31 @@ export function remapLinks(html) {
           : /智能|Intelligence/i.test(text) ? 'intelligence.html'
             : /数字员工|Workforce|AI 员工|AI employees/i.test(text) ? 'workforce.html'
               : /能力|Capabilit|全景/i.test(text) ? 'capabilities.html'
-                : /演示|Demo|联系|Contact|诊断|talk/i.test(text) ? 'contact.html'
-                  : /声明|Notices|Licens/i.test(text) ? 'notices.html'
-                    : /首页|Home|Trade OS/i.test(text) ? 'index.html'
-                      : null;
+                : /博客|文章|Blog|Article/i.test(text) ? 'blog.html'
+                  : /关于|About/i.test(text) ? 'about.html'
+                    : /演示|Demo|联系|Contact|诊断|talk/i.test(text) ? 'contact.html'
+                      : /声明|Notices|Licens/i.test(text) ? 'notices.html'
+                        : /首页|Home|Trade OS/i.test(text) ? 'index.html'
+                          : null;
     return `<a${pre}href="${byText ?? LEGACY[href]}"${post}>${body}</a>`;
   });
 }
 
-/** /en/ pages live one level down; every root-relative asset path moves up. */
-export function relocateAssets(html) {
+/** Pages one or two folders down: every root-relative asset path moves up by `up`. */
+export function relocateAssets(html, up = '../') {
   return html
-    .replace(/((?:src|href|data-src|data-poster-url|poster)=")(assets|css|js)\//g, '$1../$2/')
-    .replace(/(srcset=")([^"]*)"/g, (_, a, v) => `${a}${v.replace(/(^|,\s*)(assets\/)/g, '$1../$2')}"`)
-    .replace(/(data-video-urls=")([^"]*)"/g, (_, a, v) => `${a}${v.replace(/(^|,)(assets\/)/g, '$1../$2')}"`)
-    .replace(/(data-mobile-src=")(assets\/)/g, '$1../$2')
-    .replace(/url\((&quot;|"|')?assets\//g, 'url($1../assets/')
-    .replace(/url\(assets\//g, 'url(../assets/');
+    .replace(/((?:src|href|data-src|data-poster-url|poster)=")(assets|css|js)\//g, `$1${up}$2/`)
+    .replace(/(srcset=")([^"]*)"/g, (_, a, v) => `${a}${v.replace(/(^|,\s*)(assets\/)/g, `$1${up}$2`)}"`)
+    .replace(/(data-video-urls=")([^"]*)"/g, (_, a, v) => `${a}${v.replace(/(^|,)(assets\/)/g, `$1${up}$2`)}"`)
+    .replace(/(data-mobile-src=")(assets\/)/g, `$1${up}$2`)
+    .replace(/url\((&quot;|"|')?assets\//g, `url($1${up}assets/`)
+    .replace(/url\(assets\//g, `url(${up}assets/`);
+}
+
+/** Pages inside a folder (blog/): every relative page link moves up by `up`; absolute and anchor links stay. */
+export function relocateLinks(html, up) {
+  if (!up) return html;
+  return html.replace(/href="((?!(?:https?:)?\/\/|mailto:|tel:|\/|#)[^"]*?\.html(?:[#?][^"]*)?)"/g, (_, h) => `href="${up}${h}"`);
 }
 
 /* --------------------------------------------------------------- main -- */
@@ -375,7 +426,8 @@ export function applyChrome(html, { lang, current }) {
 export function assertInternalLinks(html, name) {
   const bad = new Set();
   for (const m of html.matchAll(/href="([^"#?]+\.html)(?:[#?][^"]*)?"/g)) {
-    const h = m[1].replace(/^(\.\.\/|en\/)/, '');
+    if (/^(https?:)?\/\//.test(m[1])) continue;
+    const h = m[1].replace(/^(\.\.\/)+/, '').replace(/^en\//, '');
     if (!ALL_PAGES.has(h)) bad.add(m[1]);
   }
   if (bad.size) throw new Error(`[${name}] links to pages that do not exist: ${[...bad].join(', ')}`);

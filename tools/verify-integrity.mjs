@@ -3,7 +3,7 @@ import { createRequire } from 'node:module';
 import { readFileSync, readdirSync, mkdirSync, writeFileSync } from 'node:fs';
 const require = createRequire('F:/stargo 网站/stargo-work-website/package.json');
 const { chromium } = require('@playwright/test');
-const files = [...readdirSync('.').filter(f=>f.endsWith('.html')), ...readdirSync('en').filter(f=>f.endsWith('.html')).map(f=>'en/'+f)];
+const files = [...readdirSync('.').filter(f=>f.endsWith('.html')), ...readdirSync('en').filter(f=>f.endsWith('.html')).map(f=>'en/'+f), ...readdirSync('blog').map(f=>'blog/'+f), ...readdirSync('en/blog').map(f=>'en/blog/'+f)];
 const browser = await chromium.launch(); const p = await browser.newPage({ viewport: { width: 1440, height: 900 } });
 const results = []; const OUT = '.wrangler/fix-qa-20260905'; mkdirSync(OUT, { recursive: true });
 try {
