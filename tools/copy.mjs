@@ -49,12 +49,12 @@ export const CONTACT_INFO = {
 
 /** Strings shared by every Mono page (footer, contact band, tooltips). */
 export const CHROME = [
-  ['Crafting visuals. Shaping stories.', B('面向全球贸易的 AI 操作系统。', 'The AI Operating System for Global Trade.')],
-  ['Let’s create great work together!', B('288 位 AI 员工。一个操作系统。', '288 AI Employees. One Operating System.')],
+  ['Crafting visuals. Shaping stories.', B('面向全球贸易的 AI 操作系统。', 'Cloud AI software for manufacturers and export teams.')],
+  ['Let’s create great work together!', B('288 位 AI 员工。一个操作系统。', '288 specialized AI employees. One connected business workflow.')],
   ['Let’s Collaborate', B('预约演示', 'Book a Demo')],
   ['(Newsletter)', B('(订阅更新)', '(Newsletter)')],
-  ['Be the first to know what’s new.', B('产品进展第一时间通知你。', 'Be the first to know what’s new.')],
-  ['No noise. Just curated updates.', B('不发广告，只发产品更新。', 'No noise. Just product updates.')],
+  ['Be the first to know what’s new.', B('产品进展第一时间通知你。', 'Stay close to practical AI work.')],
+  ['No noise. Just curated updates.', B('不发广告，只发产品更新。', 'Receive STARGO WORK product notes and practical workflow guides.')],
   ['Thank you for subscribing!', B('订阅成功。', 'You are subscribed.')],
   ['Oops! Something went wrong while submitting the form.', B('提交失败，请稍后重试。', 'Something went wrong. Please try again.')],
   ['Thank you! Your submission has been received!', B('已收到，我们会尽快联系你。', 'Received. We will be in touch shortly.')],
@@ -101,16 +101,16 @@ export const CHROME = [
 ];
 
 export const META = {
-  'index.html': { title: B('STARGO WORK — 面向全球贸易的 AI 操作系统', 'STARGO WORK — The AI Operating System for Global Trade'), description: B('STARGO WORK 是为制造业与外贸企业打造的云端 AI 工作系统：288 个 AI 员工在同一个企业上下文中协同，把获客、询盘、客户、报价、订单、出口单证和跟进连接成一个持续运行的业务闭环。', 'STARGO WORK is the cloud AI work system for manufacturers and global-trade companies: 288 AI employees in one shared context, connecting acquisition, inquiries, customers, quotes, orders, export documents and follow-up into one continuously running loop.') },
-  'intelligence.html': { title: B('智能层', 'Intelligence'), description: B('为什么 STARGO WORK 不是聊天机器人：运营本体、前置部署智能、主动执行、288 个共享上下文的 AI 员工、长任务执行与可治理的自我进化。', 'Why STARGO WORK is not a chatbot: operational ontology, forward-deployed intelligence, proactive execution, 288 AI employees sharing one context, long-horizon execution and governed self-evolution.') },
-  'capabilities.html': { title: B('能力', 'Capabilities'), description: B('一个 AI 操作系统，覆盖全球贸易每个环节：14 个能力域，从指挥工作台、获客、渠道、询盘、CRM、知识、报价、订单履约、内容到 AI 员工、自动化、本体、治理与进化引擎。', 'One AI operating system for every stage of global trade: 14 capability groups from command workspace, growth, channels, inquiries, CRM, knowledge, quoting, trade execution and content to AI workforce, automation, ontology, governance and the evolution engine.') },
-  'workforce.html': { title: B('数字员工', 'AI Workforce'), description: B('288 个 AI 员工，一家云端公司。每个 AI 员工都有岗位、目标、知识、工具、权限与执行记录，可以秒级组队、并行工作、定时运行，并在需要决策时找到你。', '288 AI employees. One cloud company. Each has a role, goal, knowledge, tools, permissions and an execution record; they form teams in seconds, work in parallel, run on schedule and find you when a decision is needed.') },
-  'pricing.html': { title: B('定价', 'Pricing'), description: B('从企业需要的 AI 层级开始：Foundation、Launch、Growth、Global Acquisition 与 Enterprise。', 'Start with the level of AI your company needs: Foundation, Launch, Growth, Global Acquisition and Enterprise.') },
-  'enterprise.html': { title: B('企业与治理', 'Enterprise'), description: B('能执行，也能被控制：权限、审批闸门、证据、审计台账、凭据管理、租户隔离、Canary 与回滚；通过 API、MCP 与连接器接入已有系统；云端、专属环境或私有化部署。', 'Built to act, built to be controlled: permissions, approval gates, evidence, audit ledger, credential management, tenant isolation, canary and rollback; connects to existing systems through API, MCP and connectors; cloud, dedicated or private deployment.') },
-  'contact.html': { title: B('联系', 'Contact'), description: B('从一条流程开始。告诉我们最影响效率或增长的一条业务流程，我们从那里开始。', 'Start with one workflow. Tell us the process that most affects efficiency or growth, and we start there.') },
+  'index.html': { title: B('STARGO WORK — 面向全球贸易的 AI 操作系统', 'STARGO WORK — AI for Manufacturing & Export Teams'), description: B('STARGO WORK 是为制造业与外贸企业打造的云端 AI 工作系统：288 个 AI 员工在同一个企业上下文中协同，把获客、询盘、客户、报价、订单、出口单证和跟进连接成一个持续运行的业务闭环。', 'Connect buyer research, customer replies, CRM, quotations, orders and export paperwork with STARGO WORK, a cloud AI system for export teams.') },
+  'intelligence.html': { title: B('智能层', 'Intelligence — Context, Action & Improvement'), description: B('为什么 STARGO WORK 不是聊天机器人：运营本体、前置部署智能、主动执行、288 个共享上下文的 AI 员工、长任务执行与可治理的自我进化。', 'Explore how business ontology, proactive workflows and governed improvement connect AI employees to the way your company works.') },
+  'capabilities.html': { title: B('能力', 'Capabilities — The Connected Trade Workflow'), description: B('一个 AI 操作系统，覆盖全球贸易每个环节：14 个能力域，从指挥工作台、获客、渠道、询盘、CRM、知识、报价、订单履约、内容到 AI 员工、自动化、本体、治理与进化引擎。', 'Explore the STARGO WORK capability map across acquisition, sales, quotes, orders, content, knowledge, AI teams and enterprise control.') },
+  'workforce.html': { title: B('数字员工', 'AI Workforce — 288 Specialized AI Employees'), description: B('288 个 AI 员工，一家云端公司。每个 AI 员工都有岗位、目标、知识、工具、权限与执行记录，可以秒级组队、并行工作、定时运行，并在需要决策时找到你。', 'Explore specialized AI roles, shared business context, team collaboration and supported cloud workflows in STARGO WORK.') },
+  'pricing.html': { title: B('定价', 'Pricing — Software & Growth Services'), description: B('从企业需要的 AI 层级开始：Foundation、Launch、Growth、Global Acquisition 与 Enterprise。', 'Compare the annual STARGO WORK subscription with optional website, content and customer-acquisition service packages.') },
+  'enterprise.html': { title: B('企业与治理', 'Enterprise — Integration & Delivery'), description: B('能执行，也能被控制：权限、审批闸门、证据、审计台账、凭据管理、租户隔离、Canary 与回滚；通过 API、MCP 与连接器接入已有系统；云端、专属环境或私有化部署。', 'Discuss enterprise workflows, system integration, approvals, deployment requirements and scoped FDE delivery for STARGO WORK.') },
+  'contact.html': { title: B('联系', 'Contact — Discuss Your AI Workflow'), description: B('从一条流程开始。告诉我们最影响效率或增长的一条业务流程，我们从那里开始。', 'Tell the STARGO WORK team which export workflow you want to improve and discuss a relevant demonstration or scoped proposal.') },
   'notices.html': { title: B('第三方声明', 'Third-party notices'), description: B('运行时库、字体、图片素材与上游软件的许可与署名。', 'Licences and attribution for runtime libraries, fonts, imagery and upstream software.') },
-  'about.html': { title: B('关于', 'About'), description: B('STARGO WORK 是什么、来自哪里、如何构建：面向制造业与全球贸易企业的 AI 操作系统，前置部署，权力留在企业。', 'What STARGO WORK is, where it comes from and how it is built: the AI operating system for manufacturers and global-trade companies, forward deployed, with authority kept in the company.') },
-  'blog.html': { title: B('博客', 'Blog'), description: B('关于 AI 操作系统、AI 员工、从询盘到报价、审批治理与全球贸易执行的文章。', 'Articles on the AI operating system, AI employees, inquiry-to-quote, approval governance and global-trade execution.') },
+  'about.html': { title: B('关于', 'About — Built from Export Operations'), description: B('STARGO WORK 是什么、来自哪里、如何构建：面向制造业与全球贸易企业的 AI 操作系统，前置部署，权力留在企业。', 'Learn why STARGO WORK is building a connected AI workspace around the practical needs of manufacturing and export teams.') },
+  'blog.html': { title: B('博客', 'Blog — Practical AI for Global Trade'), description: B('关于 AI 操作系统、AI 员工、从询盘到报价、审批治理与全球贸易执行的文章。', 'Read practical guides to customer acquisition, product knowledge, quotations, approvals and AI-supported export workflows.') },
   'privacy.html': { title: B('隐私政策', 'Privacy policy'), description: B('本站收集什么、为什么收集、保存多久，以及你的权利。', 'What this site collects, why, for how long, and your rights.') },
   'terms.html': { title: B('使用条款', 'Terms of use'), description: B('使用本网站的条款：内容、知识产权、价格说明与责任。', 'Terms for using this website: content, intellectual property, pricing notes and liability.') },
   '404.html': { title: B('404', '404'), description: B('页面不存在。', 'Page not found.') },
@@ -178,15 +178,15 @@ export const HOME_MONO = [
   ['Marketing Director at Auralis®', B('联系 STARGO Enterprise', 'Talk to STARGO Enterprise')],
 
   /* flip cards → the pricing ladder */
-  ['Mōno™ stands behind the data.', B('从企业需要的 AI 层级开始。', 'Start at the AI level you need.')],
+  ['Mōno™ stands behind the data.', B('从企业需要的 AI 层级开始。', 'One system. The right level of support.')],
   ['Our success is reflected in the numbers we achieve for our clients. Every project is designed with measurable growth at its core.',
-    B('不是功能越多越贵，而是 AI 运营能力一级一级往上加：先建底座，再启动运营，再建增长引擎，再打开主动获客。', 'Not more features for more money — AI operating capacity added level by level: build the foundation, launch the operation, build the growth engine, then turn on AI acquisition.')],
-  ['(Value created)', B('(Foundation)', '(Foundation)')],
+    B('不是功能越多越贵，而是 AI 运营能力一级一级往上加：先建底座，再启动运营，再建增长引擎，再打开主动获客。', 'An annual software subscription, with optional website, content and acquisition services. Service prices are first-year totals and already include the subscription.')],
+  ['(Value created)', B('(Foundation)', '(Standard)')],
   ['$174M', B('¥10,000', '¥10,000')],
-  ['Empowering growth through strategic solutions.', B('企业 AI 数字底座：云端 Workspace、AI 员工、知识库、CRM、报价与审批。', 'The enterprise AI foundation: cloud workspace, AI employees, knowledge base, CRM, quoting and approval.')],
+  ['Empowering growth through strategic solutions.', B('企业 AI 数字底座：云端 Workspace、AI 员工、知识库、CRM、报价与审批。', 'A 12-month workspace, core trade workflows and self-service lead discovery.')],
   ['CRI: 5.1% → 6.7%', B('首年 ¥10,000 · 按年续费', '¥10,000 first year · renews yearly')],
   ['“We didn’t expect smoother onboarding and a noticeable lift in qualified leads.”', B('「先把企业的知识、客户和报价放进同一个系统。」', '“Put the company’s knowledge, customers and quotes into one system first.”')],
-  ['Daniel Kim', B('Foundation · 从 STARGO WORK 开始', 'Foundation · Start with STARGO WORK')],
+  ['Daniel Kim', B('Foundation · 从 STARGO WORK 开始', 'Standard · the annual subscription')],
   ['(Return client rate)', B('(Launch)', '(Launch)')],
   ['92%', B('¥20,000', '¥20,000')],
   ['Building lasting partnerships built on trust.', B('底座之上，启动第一阶段数字化增长：企业内容、官网与数字资产、产品内容体系。', 'On the foundation, the first stage of digital growth: enterprise content, website and digital assets, the product content system.')],
@@ -206,7 +206,7 @@ export const HOME_MONO = [
   ['“The redesign removed friction everywhere. It’s simple, sharp, and performs better across every device.”', B('「别再等询盘。」', '“Stop waiting for leads.”')],
   ['Sofia Martinez', B('Global Acquisition · 打开 AI 获客', 'Global Acquisition · Turn on AI acquisition')],
   ['>★★★★★<', B('>云端 · 知识 · CRM · 审批<', '>Cloud · knowledge · CRM · approval<'), { nth: 0 }],
-  ['>★★★★★<', B('>包含 Foundation 全部内容<', '>Everything in Foundation<'), { nth: 0 }],
+  ['>★★★★★<', B('>包含 Foundation 全部内容<', '>The annual Standard subscription, plus:<'), { nth: 0 }],
   ['>★★★★★<', B('>包含 Launch 全部内容<', '>Everything in Launch<'), { nth: 0 }],
   ['>★★★★★<', B('>包含 Growth 全部内容<', '>Everything in Growth<'), { nth: 0 }],
 
@@ -365,10 +365,10 @@ export const HOME_LOOP_TABLE = {
 
 /** Scalora fragments on the homepage. */
 export const HOME_SC_HERO = [
-  ['All in one ecosystem for your business', B('(一个闭环)', '(One closed loop)')],
-  ['The platform that ', B('从询盘到订单，', 'One trade loop ')],
-  ['helps you', B('AI 帮你', 'that helps you')],
-  ['Build.', B('发现。', 'Discover.'), { count: 2 }],
+  ['All in one ecosystem for your business', B('(一个闭环)', '(AI for manufacturers & export teams)')],
+  ['The platform that ', B('从询盘到订单，', 'Find buyers. ')],
+  ['helps you', B('AI 帮你', 'Follow through to')],
+  ['Build.', B('发现。', 'orders.'), { count: 2 }],
   ['Scale.', B('判断。', 'Qualify.')],
   ['Operate.', B('报价。', 'Quote.')],
   ['Scalora is a business platform designed to help teams manage marketing, operations, and growth from one workspace.',
@@ -511,33 +511,33 @@ export const LX_WORKFORCE = {
 
 export const PRICING = {
   caption: B('(定价)', '(Pricing)'),
-  title: B('从企业需要的 <span class="sub-title-text">AI 层级</span> 开始。', 'Start with the <span class="sub-title-text">level of AI</span> your company needs.'),
-  toggleA: B('首年价格', 'First year'),
+  title: B('从企业需要的 <span class="sub-title-text">AI 层级</span> 开始。', 'One system. The right <span class="sub-title-text">level of support</span>.'),
+  toggleA: B('首年价格', 'First-year total'),
   toggleB: B('续费', 'Renewal'),
-  tabs: [B('平台方案', 'Platform plans'), B('获客与企业', 'Acquisition & Enterprise')],
+  tabs: [B('平台方案', 'Software & launch'), B('获客与企业', 'Growth & enterprise')],
   unitYear: B('/ 年', '/ year'),
-  unitFirst: B('/ 首年', '/ first year'),
+  unitFirst: B('/ 首年', '/ first year total'),
   renewalPrice: B('联系我们', 'Ask us'),
   panes: [
     [
-      { name: B('Foundation', 'Foundation'), price: '¥10,000', unit: 'year', renewal: '¥10,000',
-        desc: B('适合希望首先建立企业 AI 数字底座的团队。', 'For teams that want to build the enterprise AI foundation first.'),
-        cta: B('从 STARGO WORK 开始', 'Start with STARGO WORK'),
-        items: [B('云端 STARGO WORK Workspace 与 AI 数字员工', 'Cloud STARGO WORK workspace and AI employees'), B('企业知识库与产品数据中心', 'Enterprise knowledge base and product data centre'), B('Inquiry Workflow 与 Customer CRM · 基础 Customer 360', 'Inquiry workflow and customer CRM · basic Customer 360'), B('Quote Workflow 与人工审批', 'Quote workflow and human approval'), B('基础内容资产与 AI 工作培训', 'Basic content assets and AI work training')] },
+      { name: B('Foundation', 'Standard'), price: '¥10,000', unit: 'year', renewal: '¥10,000',
+        desc: B('适合希望首先建立企业 AI 数字底座的团队。', 'For teams that want to run their own AI-assisted export workflow.'),
+        cta: B('从 STARGO WORK 开始', 'Discuss Standard'),
+        items: [B('云端 STARGO WORK Workspace 与 AI 数字员工', 'A 12-month workspace with up to 5 standard user accounts'), B('企业知识库与产品数据中心', 'Initial text import for company knowledge, FAQ and up to 20 SKUs'), B('Inquiry Workflow 与 Customer CRM · 基础 Customer 360', 'Product, customer, inquiry, matching, quotation and CRM workflows'), B('Quote Workflow 与人工审批', 'Self-service lead discovery, profiling, scoring and CRM entry'), B('基础内容资产与 AI 工作培训', 'Standard annual AI credits, one setup session and one training session')] },
       { name: B('Launch', 'Launch'), price: '¥20,000', unit: 'first', renewal: 'ask',
-        desc: B('建立 AI 底座，并完成第一阶段数字化增长基础。', 'The AI foundation plus the first stage of digital growth.'),
-        cta: B('启动你的 AI 运营', 'Launch your AI operation'),
-        items: [B('包含 Foundation 全部内容', 'Everything in Foundation'), B('企业内容启动', 'Enterprise content launch'), B('官网与数字资产启动能力', 'Website and digital-asset launch'), B('产品内容体系', 'Product content system'), B('基础 SEO · GEO 与核心业务流程配置', 'Basic SEO · GEO and core workflow configuration')] },
+        desc: B('建立 AI 底座，并完成第一阶段数字化增长基础。', 'For manufacturers that need a website and a first set of export sales assets.'),
+        cta: B('启动你的 AI 运营', 'Discuss Launch'),
+        items: [B('包含 Foundation 全部内容', 'The annual Standard subscription, plus:'), B('企业内容启动', 'A website with 3 core pages and 20 SKU template pages'), B('官网与数字资产启动能力', 'Chinese and English website content'), B('产品内容体系', 'An image-content set for 20 SKUs and 10 short videos'), B('基础 SEO · GEO 与核心业务流程配置', 'Basic on-site SEO, 1 year of domain and hosting, up to 3 revision rounds')] },
       { name: B('Growth', 'Growth'), price: '¥30,000', unit: 'first', renewal: 'ask', featured: true,
-        desc: B('让 STARGO WORK 不只处理工作，也开始帮助企业持续增长。', 'STARGO WORK stops being only a workhorse and starts driving growth.'),
-        cta: B('建立增长引擎', 'Build your growth engine'),
-        items: [B('包含 Launch 全部内容', 'Everything in Launch'), B('SEO · GEO Growth 与 Growth Content', 'SEO · GEO growth and growth content'), B('Customer Intelligence 与 Growth Analytics', 'Customer intelligence and growth analytics'), B('自动跟进与 CRM Growth Loop', 'Automatic follow-up and the CRM growth loop'), B('品牌可信内容体系', 'Brand trust content system')] },
+        desc: B('让 STARGO WORK 不只处理工作，也开始帮助企业持续增长。', 'For teams expanding product presentation, languages and search visibility.'),
+        cta: B('建立增长引擎', 'Discuss Growth'),
+        items: [B('包含 Launch 全部内容', 'The annual Standard subscription, plus:'), B('SEO · GEO Growth 与 Growth Content', 'A website with 4 core pages and 40 SKU template pages'), B('Customer Intelligence 与 Growth Analytics', 'Chinese and English plus 3 further languages'), B('自动跟进与 CRM Growth Loop', 'An image-content set for 40 SKUs, 20 short videos and 10 AI videos'), B('品牌可信内容体系', 'SEO and GEO content and structure within the agreed scope')] },
     ],
     [
       { name: B('Global Acquisition', 'Global Acquisition'), price: '¥40,000', unit: 'first', renewal: 'ask', featured: true,
-        desc: B('让企业拥有主动获客能力。', 'Give the company its own AI acquisition engine.'),
-        cta: B('打开 AI 获客', 'Turn on AI acquisition'),
-        items: [B('包含 Growth 全部内容', 'Everything in Growth'), B('STARGO Growth OS 与 Trade Signal Revenue Engine', 'STARGO Growth OS and the Trade Signal Revenue Engine'), B('Importer Reorder Radar · Competitor Customer Graph · Dealer Discovery', 'Importer Reorder Radar · Competitor Customer Graph · Dealer Discovery'), B('Buying Committee Intelligence · Opportunity Scoring · Dealer Opportunity Brief', 'Buying Committee Intelligence · Opportunity Scoring · Dealer Opportunity Brief'), B('AI Prospecting · CRM 自动写入 · Dormant Lead Reactivation · Growth Attribution', 'AI prospecting · automatic CRM writes · Dormant Lead Reactivation · growth attribution')] },
+        desc: B('让企业拥有主动获客能力。', 'For teams adding three months of configured AI acquisition operation.'),
+        cta: B('打开 AI 获客', 'Discuss Global Acquisition'),
+        items: [B('包含 Growth 全部内容', 'The annual Standard subscription, plus:'), B('STARGO Growth OS 与 Trade Signal Revenue Engine', 'A website with 5 core pages and 80 SKU template pages'), B('Importer Reorder Radar · Competitor Customer Graph · Dealer Discovery', 'Website and SKU text in 18 system-translated languages'), B('Buying Committee Intelligence · Opportunity Scoring · Dealer Opportunity Brief', 'An image-content set for 80 SKUs, 50 short videos and 20 AI videos'), B('AI Prospecting · CRM 自动写入 · Dormant Lead Reactivation · Growth Attribution', 'Three months of configured AI acquisition operation and 3 monthly reports')] },
       { name: B('Enterprise', 'Enterprise'), price: B('定制', 'Custom'), unit: 'none', renewal: 'custom',
         desc: B('多部门、多公司、多品牌、多账号，以及更复杂的审批与系统接入。', 'Multiple departments, companies, brands and accounts, with complex approvals and system integration.'),
         cta: B('联系 STARGO Enterprise', 'Talk to STARGO Enterprise'),
@@ -552,8 +552,8 @@ export const PRICING = {
   compareTitle: B('方案对比', 'Compare the plans'),
   compareFeatures: B('能力', 'Capability'),
   comparePlans: [
-    { name: B('Foundation', 'Foundation'), desc: B('企业 AI 数字底座', 'The enterprise AI foundation') },
-    { name: B('Growth', 'Growth'), desc: B('底座 + 持续增长', 'Foundation plus continuous growth') },
+    { name: B('Foundation', 'Standard'), desc: B('企业 AI 数字底座', 'Your own AI-assisted export workflow') },
+    { name: B('Growth', 'Growth'), desc: B('底座 + 持续增长', 'Standard plus website, content and search') },
     { name: B('Global Acquisition', 'Global Acquisition'), desc: B('增长 + 主动获客', 'Growth plus AI acquisition') },
   ],
   compareGroups: [
@@ -582,14 +582,14 @@ export const PRICING = {
   faqCaption: B('(常见问题)', '(Questions and answers)'),
   faqTitle: B('关于定价', 'About pricing'),
   faq: [
-    [B('288 个 AI 员工是无限使用吗？', 'Are the 288 AI employees unlimited?'), B('288 代表 STARGO WORK 的 AI Workforce 能力体系。实际的模型调用、并发、自动任务和第三方服务使用量按方案配置，不承诺无限的模型用量。', '288 is the STARGO WORK workforce capability system. Model calls, concurrency, automated tasks and third-party usage are configured per plan; unlimited model usage is not promised.')],
-    [B('首年之后怎么算？', 'What happens after the first year?'), B('Foundation 按年续费。Launch、Growth 与 Global Acquisition 的首年包含启动与配置工作，续费价格按方案另行确认。', 'Foundation renews yearly. Launch, Growth and Global Acquisition include first-year set-up; renewal is confirmed per plan.')],
-    [B('Foundation 包含什么？', 'What is in Foundation?'), B('云端 Workspace、企业知识库、产品数据中心、AI 数字员工、Inquiry Workflow、Customer CRM、基础 Customer 360、Quote Workflow、基础内容资产、人工审批与 AI 工作培训。', 'Cloud workspace, knowledge base, product data centre, AI employees, inquiry workflow, customer CRM, basic Customer 360, quote workflow, basic content assets, human approval and AI work training.')],
-    [B('可以只要主动获客吗？', 'Can we buy acquisition on its own?'), B('Global Acquisition 建立在 Growth 之上，因为获客信号需要落到同一套 CRM、知识和 Agent 基础设施里才有价值。', 'Global Acquisition builds on Growth, because acquisition signals are only worth something once they land in the same CRM, knowledge and agent infrastructure.')],
+    [B('288 个 AI 员工是无限使用吗？', 'Are the 288 AI employees unlimited?'), B('288 代表 STARGO WORK 的 AI Workforce 能力体系。实际的模型调用、并发、自动任务和第三方服务使用量按方案配置，不承诺无限的模型用量。', 'No. The workforce count describes the capability catalogue. Actual access, active workloads, concurrency, credits and third-party usage depend on the contracted configuration.')],
+    [B('首年之后怎么算？', 'What happens after the first year?'), B('Foundation 按年续费。Launch、Growth 与 Global Acquisition 的首年包含启动与配置工作，续费价格按方案另行确认。', 'The software subscription follows its annual renewal terms. Domain, hosting and ongoing production follow the renewal proposal or the relevant third-party charges. A first-year launch package is not a promise of repeated annual content production.')],
+    [B('Foundation 包含什么？', 'What is in Standard?'), B('云端 Workspace、企业知识库、产品数据中心、AI 数字员工、Inquiry Workflow、Customer CRM、基础 Customer 360、Quote Workflow、基础内容资产、人工审批与 AI 工作培训。', 'Cloud workspace, knowledge base, product data centre, AI employees, inquiry workflow, customer CRM, basic Customer 360, quote workflow, basic content assets, human approval and AI work training.')],
+    [B('可以只要主动获客吗？', 'Is AI acquisition only in the ¥40,000 package?'), B('Global Acquisition 建立在 Growth 之上，因为获客信号需要落到同一套 CRM、知识和 Agent 基础设施里才有价值。', 'No. Standard already includes self-service acquisition: lead discovery, company profiling, scoring, outreach preparation and CRM entry. Global Acquisition adds three months of configured acquisition operation and three monthly reports, alongside its website and content deliverables.')],
     [B('支持私有化部署吗？', 'Is private deployment available?'), B('Enterprise 提供专属企业环境与私有化部署，面向数据、系统和合规要求更高的企业。', 'Enterprise offers a dedicated environment and private deployment for companies with stricter data, system and compliance requirements.')],
     [B('能接现有的 CRM 或 ERP 吗？', 'Can it connect to our CRM or ERP?'), B('可以。通过 API、MCP、Connectors、Activepieces、Windmill、Workspace Bridge 和 Channel Plugins 接入已有系统；系统迁移在 Enterprise 中提供。', 'Yes — through API, MCP, connectors, Activepieces, Windmill, Workspace Bridge and channel plugins; migration is part of Enterprise.')],
     [B('模型费用包含在内吗？', 'Are model costs included?'), B('平台能力与模型 / API / 第三方服务使用量分开计算，各方案配置不同的额度，超出部分按实际使用。', 'Platform capability and model / API / third-party usage are separate; each plan carries its own allowance, with overage billed on use.')],
-    [B('培训和实施怎么做？', 'How are training and implementation done?'), B('Foundation 包含 AI 工作培训；Enterprise 配备专属 FDE，把真实流程直接反馈到系统能力建设中。', 'Foundation includes AI work training; Enterprise comes with a dedicated FDE who feeds real workflows straight back into the platform.')],
+    [B('培训和实施怎么做？', 'How are training and implementation done?'), B('Foundation 包含 AI 工作培训；Enterprise 配备专属 FDE，把真实流程直接反馈到系统能力建设中。', 'Standard includes one setup session and one basic training session. Enterprise comes with a dedicated FDE who feeds real workflows straight back into the platform.')],
     [B('我们该从哪一级开始？', 'Which level should we start at?'), B('从一条流程开始。选择现在最耗时间或最影响增长的一项工作，先把这一条跑通，再决定需要哪一级。', 'Start with one workflow. Pick the work that costs the most time or growth, get it running, then decide which level you need.')],
     [B('多公司、多品牌怎么办？', 'What about multiple companies or brands?'), B('多部门、多公司、多品牌、多账号属于 Enterprise：独立的权限、审批与数据边界，共享同一套 AI Workforce。', 'Multiple departments, companies, brands and accounts belong to Enterprise: separate permissions, approvals and data boundaries on one shared AI workforce.')],
   ],
@@ -878,9 +878,9 @@ export const LEGAL = {
  * slot carries a department and the object that department owns.
  */
 export const LX_FEATURE_WORKFORCE = {
-  heroPink: B('288 位 AI 员工。', '288 AI employees.'),
-  heroWhite: B('一张组织架构图。', 'One org chart.'),
-  heroDesc: B('每一位都有岗位、目标、工具、权限和执行记录。不是 288 个聊天机器人。', 'Every one has a role, a goal, tools, permissions and a record. Not 288 chatbots.'),
+  heroPink: B('288 位 AI 员工。', 'Give the work to a team.'),
+  heroWhite: B('一张组织架构图。', 'Not another chat window.'),
+  heroDesc: B('每一位都有岗位、目标、工具、权限和执行记录。不是 288 个聊天机器人。', 'STARGO WORK brings 288 specialized AI employees into one cloud workspace. Assign a goal, bring the right roles together and follow their progress.'),
   heroButton: B('预约演示', 'Book a demo'),
   roles: [
     { name: B('Market Signal Agent', 'Market Signal Agent'), dept: B('部门', 'Team'), owns: B('增长', 'Growth') },
@@ -889,7 +889,7 @@ export const LX_FEATURE_WORKFORCE = {
     { name: B('Document Agent', 'Document Agent'), dept: B('部门', 'Team'), owns: B('单证', 'Documents') },
     { name: B('Orchestrator', 'Orchestrator'), dept: B('部门', 'Team'), owns: B('调度', 'Operations') },
   ],
-  doTitle: B('一个团队，能替你完成这些', 'What this team gets done'),
+  doTitle: B('一个团队，能替你完成这些', 'Every AI employee needs more than a name.'),
   abilities: [
     { title: B('主动获客', 'Prospecting'), text: B('市场信号、进口记录、经销商网络与采购决策链，变成可跟进的机会。', 'Market signals, import records, dealer networks and buying committees become opportunities you can work.') },
     { title: B('询盘到报价', 'Inquiry to quote'), text: B('识别客户、匹配产品、套用价格规则、生成报价，越过利润护栏的进入审批。', 'Identify the customer, match the product, apply the pricing rules, draft the quote; anything past the margin guardrail goes to approval.') },
@@ -924,8 +924,8 @@ export const LX_FEATURE_WORKFORCE = {
 
 export const ABOUT = {
   eyebrow: B('关于 STARGO WORK', 'About STARGO WORK'),
-  title: B('把工作交给 AI，权力留在企业。', 'Delegate the work. Keep the authority.'),
-  desc: B('STARGO WORK 是为制造业与全球贸易企业打造的 AI 操作系统：288 个专业 AI 员工在同一个企业上下文中协同，把从找客户到订单的整条链连起来。', 'STARGO WORK is the AI operating system for manufacturers and global-trade companies: 288 specialised AI employees in one shared business context, connecting the whole chain from prospect to order.'),
+  title: B('把工作交给 AI，权力留在企业。', 'Built from the work of running an export business.'),
+  desc: B('STARGO WORK 是为制造业与全球贸易企业打造的 AI 操作系统：288 个专业 AI 员工在同一个企业上下文中协同，把从找客户到订单的整条链连起来。', 'STARGO WORK grew from a practical question: how can a manufacturing and export team use AI across the work, not just in a chat window? Customer research, product questions, quotations, order handoffs and follow-up all depend on information that is often scattered.'),
   button: { label: B('预约演示', 'Book a demo'), href: 'contact.html' },
   /* The template shows four named people here. STARGO's role emblems (its own
      conceptual visuals, not portraits) stand for four AI-employee roles instead. */
@@ -944,9 +944,9 @@ export const ABOUT = {
 <p>Our method is forward deployment: software adapts to the company, not the other way round. An FDE enters the real workflow and feeds business rules, product knowledge and approval boundaries straight back into the platform.</p>
 <p>We believe AI should genuinely do the work, and that authority should stay with the company. So from day one, permissions, approval, evidence, audit and rollback have been part of the product itself, not features added afterwards.</p>`),
   values: [
-    B('人始终掌握决定权。', 'Humans stay in command.'),
-    B('软件适应企业，而不是反过来。', 'Software adapts to the business, not the reverse.'),
-    B('从每一次结果中学习。', 'Learn from every outcome.'),
+    B('人始终掌握决定权。', 'Keep people responsible.'),
+    B('软件适应企业，而不是反过来。', 'Keep the business connected.'),
+    B('从每一次结果中学习。', 'Improve with evidence.'),
   ],
   startTitle: B('从一条流程开始', 'Start with one workflow'),
   starts: [

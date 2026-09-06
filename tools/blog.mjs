@@ -57,7 +57,7 @@ export const POSTS = [
 <li><strong>Export documents:</strong> commercial invoice, packing list, certificate of origin, Form E and bill of lading are checked line by line by hand.</li>
 </ul>
 <h3>How the first workflow runs</h3>
-<p>Map the current process and the systems it touches, and model its objects — customers, products, inquiries, quotes, orders — in the enterprise ontology. Then let the AI employees for those roles enter the real workflow, recording response time, throughput and order outcomes from day one. Once it runs, turn what worked into skills and workflows. By then the question of which level you need — Foundation, Growth or Global Acquisition — usually answers itself.</p>
+<p>Map the current process and the systems it touches, and model its objects — customers, products, inquiries, quotes, orders — in the enterprise ontology. Then let the AI employees for those roles enter the real workflow, recording response time, throughput and order outcomes from day one. Once it runs, turn what worked into skills and workflows. By then the question of which level you need — Standard, Growth or Global Acquisition — usually answers itself.</p>
 <h3>People stay in the loop</h3>
 <p>The first workflow gets approval gates too. When a price, a margin, a formal quote or a key customer reply falls outside its authority, AI stops and asks. Delegate the work, keep the authority — a principle from the first workflow on, not something added after scale.</p>
 <p>Tell us the one workflow you most want to improve: <a href="contact.html">book a demo</a> and we start there.</p>`),

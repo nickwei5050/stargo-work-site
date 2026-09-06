@@ -36,9 +36,15 @@ const frag = (f) => readFileSync(`${FRAG}/${f}`, 'utf8');
  * carrying STARGO's name.
  */
 const bigMark = () => {
-  const b = frag('lx-bigmark.html').split('>Lifelogx</h1>').join('>STARGO</h1>');
+  let b = frag('lx-bigmark.html').split('>Lifelogx</h1>').join('>STARGO</h1>');
   if (/Lifelogx/.test(b)) throw new Error('bigmark: template brand survives');
   if ((b.match(/>STARGO<\/h1>/g) ?? []).length !== 2) throw new Error('bigmark: expected the filled and the stroked headline');
+  // Lifelogx tags both copies of the wordmark as <h1>. On its own pages that is the page's
+  // only heading; here it closes an article or an About page that already has one, and two
+  // more "STARGO" level-one headings would compete with it. The type, the gradient wash and
+  // both scroll interactions are class- and data-w-id-driven, so the tag can go.
+  b = b.replace(/<h1(?=[ >])/g, '<div').replace(/<\/h1>/g, '</div>');
+  if (/<h1/.test(b)) throw new Error('bigmark: heading tags remain');
   return b;
 };
 
