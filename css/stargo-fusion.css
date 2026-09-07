@@ -560,80 +560,83 @@ body.stargo-pricing-lx .stargo-plan-badge {
   white-space: nowrap;
 }
 
-/* ============================================================ capability map
-   The Capability map module on /en/capabilities is transplanted from the qubix
-   template's service-detail block (`service-details-rice`): a label + rich-text
-   grid whose bullets lead with a bold term. Everything below is the donor's own
-   measured values — 20/26.8 label at -0.8px, 20/26.8 body at -0.4px, 20/30.8
-   list items, 52px label gutter that becomes a column below 1280px, 24px between
-   rows, 698px text column inside an 872px block — scoped so it cannot reach the
-   rest of the site. The donor font and bullet dot are mirrored locally; the site
-   makes no off-origin requests. */
-@font-face { font-family: Interdisplay; font-style: normal; font-weight: 400; font-display: swap;
-  src: url('../assets/qubix/69a929301030c39cc10f429b_InterDisplay-Regular.ttf') format('truetype'); }
-@font-face { font-family: Interdisplay; font-style: normal; font-weight: 500; font-display: swap;
-  src: url('../assets/qubix/69a9292f6efd1f15aa5dbdc8_InterDisplay-Medium.ttf') format('truetype'); }
-@font-face { font-family: Interdisplay; font-style: normal; font-weight: 600; font-display: swap;
-  src: url('../assets/qubix/69a9292f80901c26b3ecd1d1_InterDisplay-SemiBold.ttf') format('truetype'); }
-@font-face { font-family: Interdisplay; font-style: normal; font-weight: 700; font-display: swap;
-  src: url('../assets/qubix/69a9292ff07ea7afd79211d8_InterDisplay-Bold.ttf') format('truetype'); }
-
-.qx-capmap-section { background: #000; padding: 120px 5vw; }
-.qx-capmap-inner { max-width: 872px; margin: 0 auto; }
-
-/* service-details-rice */
-.qx-capmap { width: 100%; max-width: 872px; display: flex; flex-flow: column; gap: 24px;
-  font-family: Interdisplay, Inter, Arial, sans-serif; }
-
-/* service-details-rice-one — label above the text until the donor's 1280px switch */
-.qx-capmap .qx-row { display: flex; flex-flow: wrap; justify-content: space-between;
-  gap: 52px; overflow: hidden; }
-@media (min-width: 1280px) { .qx-capmap .qx-row { flex-flow: row; } }
-
-/* .h6.vivid-orange */
-.qx-capmap .qx-label { margin: 0; font-size: 20px; line-height: 26.8px; font-weight: 500;
-  letter-spacing: -.8px; color: #fe6512; flex: 0 0 auto; }
-
-/* service-details-rice-content + service-rice-one */
-.qx-capmap .qx-content { width: 100%; max-width: 698px; }
-.qx-capmap .qx-rich { width: 100%; max-width: 698px; }
-.qx-capmap .qx-rich p { margin: 0 0 16px; font-size: 20px; line-height: 26.8px; font-weight: 400;
-  letter-spacing: -.4px; color: #a1a1a1; }
-.qx-capmap .qx-rich p:last-child { margin-bottom: 0; }
-.qx-capmap .qx-rich h2 { margin: 0 0 16px; font-size: 32px; line-height: 39.04px; font-weight: 500;
-  letter-spacing: normal; color: #fdfcfc; }
-.qx-capmap .qx-rich ul { margin: 16px 0 0; padding-left: 0; list-style-type: none;
-  display: flex; flex-flow: column; gap: 16px; }
-.qx-capmap .qx-rich li { font-size: 20px; line-height: 30.8px; color: #a1a1a1; padding-left: 20px;
-  background-image: url('../assets/qubix/dot.svg'); background-position: 0% 50%;
-  background-repeat: no-repeat; background-size: auto; }
-.qx-capmap .qx-rich strong { color: #fdfcfc; font-weight: 500; }
-.qx-capmap .qx-note { font-size: 16px; line-height: 24px; color: #6f6f6f; letter-spacing: -.2px; }
-.qx-capmap .qx-row-note { border-top: 1px solid rgba(253, 252, 252, .12); padding-top: 24px; }
-
-/* the catalogue rows carry the group anchors the rest of the site links to */
-.qx-capmap .qx-cat .qx-label { color: #fdfcfc; }
-.qx-capmap .qx-cat .qx-rich li { font-size: 18px; line-height: 27px; }
-
+/* ======================================================= capability map
+   Wrapper for the transplanted cinery FAQ block. The block's own look —
+   gradient split heading, blur sweep, rounded rows, plus rotation, expand
+   animation — comes from css/cinery.cn.css and js/app.fused.js untouched.
+   These rules only give it a place to sit on our page and space the bands
+   between its three groups of rows. */
+.cn-capmap { background: #000; padding: 140px 5vw; }
+.cn-capmap-inner { max-width: 1180px; margin: 0 auto; }
+.cn-capmap-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 32px; }
+.cn-capmap-lede { max-width: 720px; margin: 40px 0 0; font-size: 20px; line-height: 30px; color: #b9b9b9; }
+.cn-capmap-scope { max-width: 720px; margin: 16px 0 0; font-size: 15px; line-height: 24px; color: #6f6f6f; }
+.cn-capmap .cn-band { display: flex; align-items: baseline; gap: 20px; flex-wrap: wrap;
+  margin: 76px 0 28px; padding-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,.14); }
+.cn-capmap .cn-band-label { font-size: 22px; line-height: 28px; color: #fff; letter-spacing: -.3px; }
+.cn-capmap .cn-band-note { font-size: 15px; line-height: 24px; color: #7d7d7d; }
+.cn-capmap .cn-faq-container { display: flex; flex-flow: column; gap: 14px; }
+/* the donor answers one question with one paragraph; a capability group
+   answers with many, so give consecutive paragraphs a rhythm */
+.cn-capmap .cn-accordion-answer-text + .cn-accordion-answer-text { margin-top: 12px; }
+.cn-capmap .cn-accordion-answer-text strong { color: #fff; font-weight: 500; }
+.cn-capmap .cn-accordion-answer-text.cn-lede { color: #cfcfcf; margin-bottom: 20px; }
+.cn-capmap .cn-accordion-answer-text.cn-out { margin-top: 20px; }
+.cn-capmap .cn-accordion-answer-text.cn-note { color: #6f6f6f; font-size: 15px; margin-top: 16px; }
 @media (max-width: 767px) {
-  .qx-capmap-section { padding: 72px 24px; }
-  .qx-capmap .qx-row { gap: 20px; }
-  .qx-capmap .qx-rich p, .qx-capmap .qx-rich li { font-size: 17px; line-height: 26px; }
-  .qx-capmap .qx-rich h2 { font-size: 26px; line-height: 32px; }
+  .cn-capmap { padding: 80px 22px; }
+  .cn-capmap-head { flex-flow: column; gap: 12px; }
+  .cn-capmap-lede { font-size: 17px; line-height: 26px; }
+  .cn-capmap .cn-band { margin: 52px 0 20px; }
 }
 
-/* The donor block never carried links inside its rich text, so give the
-   catalogue anchors a visible treatment in its own palette, and restore the
-   donor's 24px rhythm where a paragraph follows the bullet list. */
-.qx-capmap .qx-rich a { color: #fdfcfc; text-decoration: underline; text-underline-offset: 3px;
-  text-decoration-color: rgba(253, 252, 252, .35); }
-.qx-capmap .qx-rich a:hover { text-decoration-color: #fe6512; color: #fe6512; }
-.qx-capmap .qx-rich ul + p { margin-top: 24px; }
-
-/* The donor's labels are single words ("Overview", "Deliveries"), so it never
-   needed them to wrap. Ours are outcome sentences: below the donor's 1280px
-   switch, where the row already stacks, let the label take the full width and
-   wrap instead of running past the edge. */
-@media (max-width: 1279px) {
-  .qx-capmap .qx-label { flex: 1 1 100%; }
+/* The "no writing" band sits left of centre: the words and the phone share one
+   grid, and its left margin is consistently 64px tighter than its right (32 vs
+   96 at 1280, 80 vs 144 at 1440, 320 vs 384 at 1920). Move the whole grid — the
+   two words and the phone between them — half that distance right, which
+   balances the margins without changing any spacing inside the band. */
+@media (min-width: 992px) {
+  .lx-scope .lx-gradient-grid { transform: translateX(32px); }
 }
+
+/* ======================================================= pricing palette
+   Scalora writes a few of its accent colours as literal hex rather than
+   through the token this site rebinds, so they survived the recolour at 12%
+   alpha: the caption chip's fill and hairline, its divider, and the CTA icon
+   block's border and wash. Rebind them to the Lifelogx magenta the rest of the
+   page now uses. No orange remains on the page. */
+.hero-section-caption-block { background-color: rgba(249, 56, 161, .12) !important;
+  border-color: rgba(249, 56, 161, .22) !important; }
+.hero-caption-devider { background-color: rgba(249, 56, 161, .35) !important; }
+.cta-icon-block { border-color: rgba(249, 56, 161, .22) !important;
+  background-image: linear-gradient(90deg, rgba(249, 56, 161, .12), rgba(249, 56, 161, .40) 54.55%, rgba(249, 56, 161, .08)) !important; }
+
+/* The pricing headline gets the Intelligence page's treatment: white type
+   fading downward, so the two big statements on the site read as one family.
+   Intelligence clips a gradient to its glyphs, but this headline is split into
+   per-character spans by SplitText, and a clipped background lives on the h1
+   while the glyphs live in the spans — the text disappears. A mask fades the
+   rendered result instead, which the split spans pass through untouched. */
+.pricing-hero-title-block h1 {
+  color: #fffffe;
+  -webkit-mask-image: linear-gradient(180deg, #000 22%, rgba(0, 0, 0, .28));
+  mask-image: linear-gradient(180deg, #000 22%, rgba(0, 0, 0, .28));
+}
+.pricing-hero-title-block h1 .sub-title-text { color: #f938a1; }
+
+/* Scalora accents one word of the headline in Instrument Serif Italic. That
+   reads well in Latin, but the accent here contains Chinese, and a Latin italic
+   serif has no CJK glyphs — the browser synthesises a slanted fallback and the
+   two halves of the phrase stop matching. Let the accent take the headline's
+   own face; the magenta gradient above already marks it out. */
+.pricing-hero-title-block h1 .sub-title-text { font-family: inherit; font-style: normal; }
+
+/* The donor scales this headline 192 / 160 / 128 / 96 / 56px across its own
+   breakpoints, but only the first two sizes sit in a media block the extractor
+   in tools/cinery-prepare.mjs can read; the rest are nested deeper. These are
+   the donor's own values, recovered by measuring its page at each width, so the
+   transplant scales exactly as the original does. */
+@media (max-width: 1279px) { .cn-capmap .cn-heading-style-h2 { font-size: 160px; } }
+@media (max-width: 991px)  { .cn-capmap .cn-heading-style-h2 { font-size: 128px; } }
+@media (max-width: 767px)  { .cn-capmap .cn-heading-style-h2 { font-size: 96px; } }
+@media (max-width: 479px)  { .cn-capmap .cn-heading-style-h2 { font-size: 56px; } }

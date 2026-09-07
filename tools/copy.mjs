@@ -975,8 +975,15 @@ export const ABOUT = {
  * capability differently from the catalogue below it.
  */
 export const CAPABILITY_SHOWCASE = {
-  eyebrow: 'CONNECTED CAPABILITIES',
+  // The donor sets these two lines at 192px and never wraps them, so each has to
+  // fit the 1180px column: "Connected" measures 1216px and does not.
+  eyebrow: 'CAPABILITY MAP',
+  headlineTop: 'Every',
+  headlineBottom: 'Job',
   headline: 'Find buyers. Win orders. Keep the work moving.',
+  storiesLabel: 'What your business gets done',
+  storiesNote: 'Six connected outcomes. Open one to see the work behind it.',
+  foundationsNote: 'Four things every outcome above depends on.',
   body: 'Explore how STARGO brings customer research, conversations, quotations, trade operations and creative work together — with shared business context and 288 specialized AI employees.',
   outputLabel: 'Useful output',
   connectionLabel: 'Connects to',
@@ -1065,5 +1072,5 @@ export const CAPABILITY_SHOWCASE = {
   ],
 
   catalogueLabel: 'The complete catalogue',
-  catalogueNote: 'Every capability in the register, by group. The stories above draw from these same entries.',
+  catalogueNote: 'Every capability in the register, by group. The outcomes above draw from these same entries.',
 };

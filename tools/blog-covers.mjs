@@ -1,8 +1,15 @@
 /**
- * Blog covers: the Mono template's product photographs (licensed template
- * assets, already mirrored under assets/) re-encoded as 1200/800/500px WebP
- * with plain file names in assets/blog/. One entry per article slug; the
- * article data in tools/blog.mjs refers to the slug.
+ * Blog covers, re-encoded as 1200/800/500px WebP with plain file names in
+ * assets/blog/. One entry per article slug; the article data in tools/blog.mjs
+ * refers to the slug.
+ *
+ * Source: this site's own editorial artwork in assets/stargo-editorial/. The
+ * covers used to be the Mono template's product photography — earbuds, a grey
+ * tool on red — which said nothing about what the articles are about. Each
+ * article now carries the STARGO surface it actually describes: the quote
+ * studio for the inquiry-to-quote piece, the ontology artwork for the ontology
+ * piece, the agent centre for the one about 288 AI employees. Our own images,
+ * so no third-party licence or attribution is involved.
  *
  *   node tools/blog-covers.mjs        # idempotent; skips covers that exist
  */
@@ -11,15 +18,15 @@ import { createRequire } from 'node:module';
 const sharp = createRequire('F:/stargo 网站/stargo-work-website/package.json')('sharp');
 
 const SITE = 'F:/stargo 网站/stargo-site';
-const SRC = `${SITE}/assets/699b6466d5f19893993a4c2c`;
+const SRC = `${SITE}/assets/stargo-editorial`;
 const OUT = `${SITE}/assets/blog`;
 const COVERS = {
-  'start-with-one-workflow': '699b6466d5f19893993a4dca_Sleek Container Set.webp',
-  'from-inquiry-to-quote': '699b6466d5f19893993a4d64_blog-2.webp',
-  'approval-gates-for-ai-in-trade': '699b6466d5f19893993a4e03_Futuristic Device Design (2).webp',
-  'ai-operating-system-for-global-trade': '699b6466d5f19893993a4de3_blog-1.webp',
-  '288-ai-employees-not-288-chatbots': '699b6466d5f19893993a4e5f_Modern-Metallic-Design-(2).webp',
-  'enterprise-ontology-explained': '699b6466d5f19893993a4da8_Futuristic-Device-Design-(4).webp',
+  'start-with-one-workflow': 'os-boot.webp',                      // a system coming up, one step at a time
+  'from-inquiry-to-quote': 'os-quote-studio.webp',                // the surface the article walks through
+  'approval-gates-for-ai-in-trade': 'os-cockpit.webp',            // the view an approver works from
+  'ai-operating-system-for-global-trade': 'os-desktop.webp',      // the operating system itself
+  '288-ai-employees-not-288-chatbots': 'os-agent-center.webp',    // the roster the article explains
+  'enterprise-ontology-explained': 'brand-ontology.webp',         // the model of the business
 };
 mkdirSync(OUT, { recursive: true });
 let written = 0;

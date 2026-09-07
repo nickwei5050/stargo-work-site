@@ -808,75 +808,102 @@ PAGES['capabilities.html'] = (lang) => {
 
 
 /**
- * The Capability map, rebuilt on the qubix template's service-detail block.
+ * The Capability map.
  *
- * Donor: tools/templates/qubix/services_*.html → `.service-details-rice`, a
- * label + rich-text grid whose bullets lead with a bold term. It repeats
- * natively, carries no imagery and is dark by default, so a long catalogue
- * reads as a system rather than a spreadsheet. Classes are renamed with a `qx-`
- * prefix and the donor's measured type and spacing live in css/stargo-fusion.css
- * under `.qx-capmap`, so nothing reaches the rest of the site.
+ * Donor: cinery's "Quick / Answers" FAQ block (tools/templates/cinery), lifted
+ * by tools/cinery-prepare.mjs — a gradient split heading with a blur sweep, a
+ * section counter, and rows that expand on click while their plus rotates. The
+ * motion is the donor's own Webflow IX2, merged into js/app.fused.js; the
+ * styles are the donor's own rules, scoped under `.cn-capmap`. Only the words
+ * are ours.
  *
- * Every capability named in CAPABILITY_SHOWCASE.picks is resolved against
- * CAPABILITY_GROUPS and printed with the register's own gloss: the showcase
- * cannot describe a capability differently from the catalogue beneath it, and a
- * renamed capability fails the build instead of vanishing from the page.
+ * Fourteen rows, one per capability group, each opening onto that group's
+ * capabilities. Every capability the register holds keeps a place, and the
+ * six business stories that lead the module draw their bullets from the same
+ * register entries, so the narrative cannot drift from the catalogue.
  */
 function capabilityShowcase(C, lang) {
   const t = (v) => (typeof v === 'string' ? v : v[lang]);
   const S = C.CAPABILITY_SHOWCASE;
+  const frag = readFileSync(`${SITE}/tools/fragments/cn-capmap.html`, 'utf8');
+
+  const headingTpl = frag.slice(frag.indexOf('<!-- heading -->') + 16, frag.indexOf('<!-- row -->')).trim();
+  const rowTpl = frag.slice(frag.indexOf('<!-- row -->') + 12).trim();
+  if (!rowTpl.includes('data-w-id="cn-capmap-row"')) throw new Error('capmap: donor row lost its interaction id');
+
+  /* The heading: subtitle chip, two gradient lines, the counter. The donor's cut
+     carries one closing div too many; take the two halves apart and reassemble. */
+  const headWrap = headingTpl.slice(0, headingTpl.indexOf('<div id="w-node-_7b6f59d4-613e-4d1d-1c00-f836bb437715'));
+  const counter = headingTpl.slice(headingTpl.indexOf('<div id="w-node-_7b6f59d4-613e-4d1d-1c00-f836bb437715'));
+  const heading = (headWrap
+    .replace('>FAQ<', `>${escapeHtml(S.eyebrow)}<`)
+    .replace('>Quick<', `>${escapeHtml(S.headlineTop)}<`)
+    .replace('>Answers<', `>${escapeHtml(S.headlineBottom)}<`))
+    + counter.replace('>(05)<', `>(${String(C.CAPABILITY_GROUPS.length).padStart(2, '0')})<`)
+      .replace(/<\/div>\s*$/, '');
+
   const byName = new Map();
   for (const g of C.CAPABILITY_GROUPS) for (const [name, gloss] of g.items) byName.set(name, { g, gloss });
 
-  const bullets = (picks, label) => picks.map((name) => {
-    const hit = byName.get(name);
-    if (!hit) throw new Error(`capability showcase: "${name}" (${label}) is not in CAPABILITY_GROUPS`);
-    return `<li><strong>${escapeHtml(name)}:</strong> ${escapeHtml(t(hit.gloss))}</li>`;
-  }).join('');
+  /** One accordion row, built from the donor's own markup. */
+  const row = (id, title, bodyHtml) => rowTpl
+    .replace('<div data-w-id="cn-capmap-row"', `<div id="${id}" data-w-id="cn-capmap-row"`)
+    .replace(/<h2 class="cn-accordion-heading">[\s\S]*?<\/h2>/, `<h2 class="cn-accordion-heading">${escapeHtml(title)}</h2>`)
+    .replace(/<div class="cn-accordion-content-block">[\s\S]*?<\/div><\/div><\/div>$/, `<div class="cn-accordion-content-block">${bodyHtml}</div></div></div>`);
 
-  const row = (label, inner, cls = '', id = '') =>
-    `<div class="qx-row${cls ? ` ${cls}` : ''}"${id ? ` id="${id}"` : ''}>` +
-    `<div class="qx-label">${escapeHtml(label)}</div>` +
-    `<div class="qx-content"><div class="qx-rich">${inner}</div></div></div>`;
+  const line = (name, gloss) =>
+    `<p class="cn-accordion-answer-text"><strong>${escapeHtml(name)}</strong> ${escapeHtml(gloss)}</p>`;
 
-  const groupsOf = (x) => x.groups.map((n) => {
-    const g = C.CAPABILITY_GROUPS.find((q) => q.n === n);
-    if (!g) throw new Error(`capability showcase: group ${n} missing`);
-    return `<a href="#g${g.n}">${escapeHtml(`${g.n} ${t(g.name)}`)}</a>`;
-  }).join(' · ');
+  /* Six business stories first: what a buyer can get done, each drawing its
+     bullets from the register so the two can never disagree. */
+  const storyRows = S.stories.map((x, i) => {
+    const bullets = x.picks.map((name) => {
+      const hit = byName.get(name);
+      if (!hit) throw new Error(`capability showcase: "${name}" (${x.label}) is not in CAPABILITY_GROUPS`);
+      return line(name, t(hit.gloss));
+    }).join('');
+    const groups = x.groups.map((n) => `${n} ${t(C.CAPABILITY_GROUPS.find((g) => g.n === n).name)}`).join(' · ');
+    return row(`story-${i + 1}`, x.label,
+      `<p class="cn-accordion-answer-text cn-lede">${escapeHtml(x.promise)}</p>${bullets}` +
+      `<p class="cn-accordion-answer-text cn-out"><strong>${escapeHtml(S.outputLabel)}</strong> ${escapeHtml(x.output)}</p>` +
+      `<p class="cn-accordion-answer-text cn-out"><strong>${escapeHtml(S.connectionLabel)}</strong> ${escapeHtml(x.connection)}</p>` +
+      (x.caveat ? `<p class="cn-accordion-answer-text cn-note">${escapeHtml(x.caveat)}</p>` : '') +
+      `<p class="cn-accordion-answer-text cn-note">${escapeHtml(`In the catalogue: ${groups}`)}</p>`);
+  });
 
-  const story = (x) => row(x.label,
-    `<p>${escapeHtml(x.promise)}</p>` +
-    `<ul role="list">${bullets(x.picks, x.label)}</ul>` +
-    `<p><strong>${escapeHtml(S.outputLabel)}:</strong> ${escapeHtml(x.output)}</p>` +
-    `<p><strong>${escapeHtml(S.connectionLabel)}:</strong> ${escapeHtml(x.connection)}</p>` +
-    (x.caveat ? `<p class="qx-note">${escapeHtml(x.caveat)}</p>` : '') +
-    `<p class="qx-note">In the catalogue: ${groupsOf(x)}</p>`);
+  /* Then the four shared foundations. */
+  const foundationRows = S.foundations.map((x, i) => {
+    const bullets = x.picks.map((name) => {
+      const hit = byName.get(name);
+      if (!hit) throw new Error(`capability showcase: "${name}" (${x.label}) is not in CAPABILITY_GROUPS`);
+      return line(name, t(hit.gloss));
+    }).join('');
+    return row(`foundation-${i + 1}`, x.label,
+      `<p class="cn-accordion-answer-text cn-lede">${escapeHtml(x.promise)}</p>${bullets}` +
+      (x.caveat ? `<p class="cn-accordion-answer-text cn-note">${escapeHtml(x.caveat)}</p>` : ''));
+  });
 
-  const foundation = (x) => row(x.label,
-    `<p>${escapeHtml(x.promise)}</p>` +
-    `<ul role="list">${bullets(x.picks, x.label)}</ul>` +
-    (x.caveat ? `<p class="qx-note">${escapeHtml(x.caveat)}</p>` : '') +
-    `<p class="qx-note">In the catalogue: ${groupsOf(x)}</p>`);
-
-  const catalogue = C.CAPABILITY_GROUPS.map((g) => row(
-    `${g.n} ${t(g.name)}`,
-    `<ul role="list">${g.items.map(([name, gloss]) =>
-      `<li><strong>${escapeHtml(name)}:</strong> ${escapeHtml(t(gloss))}</li>`).join('')}</ul>`,
-    'qx-cat', `g${g.n}`));
+  /* Then the complete catalogue, one row per group. */
+  const catalogueRows = C.CAPABILITY_GROUPS.map((g) => row(
+    `g${g.n}`, `${g.n} ${t(g.name)}`,
+    g.items.map(([name, gloss]) => line(name, t(gloss))).join('')));
 
   const total = C.CAPABILITY_GROUPS.reduce((n, g) => n + g.items.length, 0);
+  const band = (label, note) =>
+    `<div class="cn-band"><div class="cn-band-label">${escapeHtml(label)}</div>` +
+    `<div class="cn-band-note">${escapeHtml(note)}</div></div>`;
 
-  return `<section id="atlas" class="qx-capmap-section"><div class="qx-capmap-inner"><div class="qx-capmap">` +
-    row(S.eyebrow, `<h2>${escapeHtml(S.headline)}</h2><p>${escapeHtml(S.body)}</p>` +
-      `<p class="qx-note">${escapeHtml(S.scopeNote)}</p>`) +
-    S.stories.map(story).join('') +
-    row(S.foundationsLabel, `<p>${escapeHtml('Four things every story above depends on.')}</p>`, 'qx-row-note') +
-    S.foundations.map(foundation).join('') +
-    row(S.catalogueLabel, `<p>${escapeHtml(S.catalogueNote)}</p>` +
-      `<p class="qx-note">${escapeHtml(`${C.CAPABILITY_GROUPS.length} groups · ${total} capabilities`)}</p>`, 'qx-row-note') +
-    catalogue.join('') +
-    `</div></div></section>`;
+  return `<section id="atlas" class="cn-capmap"><div class="cn-capmap-inner">` +
+    `<div class="cn-capmap-head">${heading}</div>` +
+    `<p class="cn-capmap-lede">${escapeHtml(S.body)}</p>` +
+    `<p class="cn-capmap-scope">${escapeHtml(S.scopeNote)}</p>` +
+    band(S.storiesLabel, S.storiesNote) +
+    `<div class="cn-faq-container">${storyRows.join('')}</div>` +
+    band(S.foundationsLabel, S.foundationsNote) +
+    `<div class="cn-faq-container">${foundationRows.join('')}</div>` +
+    band(S.catalogueLabel, `${S.catalogueNote} ${C.CAPABILITY_GROUPS.length} groups · ${total} capabilities.`) +
+    `<div class="cn-faq-container">${catalogueRows.join('')}</div>` +
+    `</div></section>`;
 }
 
   const rows = C.CAPABILITY_GROUPS.flatMap((g) => g.items.map(([item, gloss], i) => [
@@ -900,6 +927,12 @@ function capabilityShowcase(C, lang) {
     rows: L.rows.map(([a, b, c]) => [a, escapeHtml(t(b)), escapeHtml(t(c))]),
   });
   h = h.replace(anchor, `${loop}\n${table}\n${anchor}`);
+  if (lang === 'en') {
+    // the transplanted cinery block brings its own scoped stylesheet
+    const monoLink = /<link href="css\/monof-template\.app\.shared\.[a-f0-9]+\.css" rel="stylesheet" type="text\/css"\/>/;
+    if (!monoLink.test(h)) throw new Error('capabilities: Mono stylesheet link not found');
+    h = h.replace(monoLink, (m) => `${m}\n<link href="css/cinery.cn.css" rel="stylesheet" type="text/css"/>`);
+  }
   // Assign by buyer meaning, not image sequence: growth, customer context,
   // commercial fulfilment, workforce/governance. Parallel-team art belongs
   // at the homepage Workforce door, not beneath the Commercial label.
