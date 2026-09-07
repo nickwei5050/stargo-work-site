@@ -95,3 +95,11 @@
 内容边界：feature 模板自带的虚构数据全部替换——五个人名、五个「Views / 99.6M」指标、大方块图里烧进画面的「2.4M」（换成 STARGO 轨道品牌图）、社交外链（改为联系页）、占位 `href="#"`。全站 38 页扫描：模板品牌、模板人名、虚构指标、虚构评分四类命中 0。
 
 验收脚本相应调整：`verify-restore` 新增第 2b 段（feature 页专属：不得再出现首页模板元素、必须有 feature 区块、角色卡无虚构指标、卡片不外链、收尾字标为 STARGO）；`verify-interactions` 的数字员工检查从锚点跳转改为 hero CTA 落到联系页；`verify-fixes` 增加 feature 页标题与角色卡断言。
+
+## 八、第二次上线（2026-09-07）
+
+- 提交：`a22cdc2`（导航 + 图片比例 + 抢救底部大字标 + 定价改版）、`c497b2b`（数字员工换用 Lifelogx feature 模板）、`3b90e80`（英文文案包）。三个提交已推送到 origin。
+- 部署：Wrangler `pages deploy dist --project-name stargo --branch main`，部署 ID `613fc042-1014-4392-aad4-1fc73cd84bcd`，环境 Production，来源提交 `3b90e80`，预览 https://613fc042.stargo.pages.dev ，正式域名 https://stargo.pages.dev 。上传 67 个新文件（1093 个已存在），一次成功。
+- 回退：上一部署 `33b6e097-ad40-4892-ba03-ba2ed7b153b6`（提交 `ea88964`，https://33b6e097.stargo.pages.dev ）。方式：Cloudflare 仪表盘 Pages → stargo → Deployments → 33b6e097 → Rollback；或检出 `9a16ac6` 后 `node tools/make-dist.mjs` 并用同一命令重新部署。
+- 发布前验收：`verify-restore` 模板轮 298/298（320–1920 全宽度）、文案轮 180/180（390/768/1280/1440）；`verify-site`、`verify-integrity`、`verify-interactions`、`verify-conversion`、`verify-fixes`、`verify-editorial`、`verify-visual-upgrade` 全部 exit=0。构建可复现：重跑构建链后产物零差异。
+- 线上核对：十个关键文件（中英首页、英文定价、中英数字员工、中英关于、fusion CSS、定价 GSAP 脚本、sitemap）与 dist 逐字节一致；干净 URL、`.html` 308 重定向、404 均正确；英文定价页确认 Standard 在、Foundation 已清零、自助获客写在 Standard、首年总价表述存在、主推徽标在 Global Acquisition。
