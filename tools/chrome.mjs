@@ -18,7 +18,7 @@ import { makeSub, findByClass, extractElement } from './lib-html.mjs';
 import { editorialImages } from './editorial-images.mjs';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
-import { NAV, SECONDARY, MORE, LANG_SWITCH, CHROME, META, CONTACT_INFO, SITE_URL } from './copy.mjs';
+import { CAP_JUMPS, NAV, SECONDARY, MORE, LANG_SWITCH, CHROME, META, CONTACT_INFO, SITE_URL } from './copy.mjs';
 import { POSTS, BLOG_UI, postPath, coverSrc } from './blog.mjs';
 
 /** Every page the build produces, as root-relative names. */
@@ -98,7 +98,16 @@ function links(lang, current) {
   const more = MORE.map((n) => ({ href: n.href, label: t(n.label) }));
   const secondary = SECONDARY.map((n) => ({ href: n.href, label: t(n.label) }));
   const swap = { href: other, label: t(LANG_SWITCH), swap: true, lang: lang === 'zh' ? 'en' : 'zh-CN' };
-  return { nav, more, secondary, swap };
+  /* The four stages a buyer looks for, jumping straight to their block on the
+     capability page. They take the pill's middle slot, where a wordmark that
+     linked home used to sit. From the capability page itself they are in-page
+     anchors; from anywhere else they carry the page with them. */
+  const onCaps = current === 'capabilities.html';
+  const capJumps = CAP_JUMPS.map((c) => ({
+    href: onCaps ? `#${c.anchor}` : `capabilities.html#${c.anchor}`,
+    label: t(c.label),
+  }));
+  return { nav, more, secondary, swap, capJumps };
 }
 
 function topNav(html, L, current) {
@@ -124,6 +133,13 @@ function overlayMenu(html, L, current) {
   return replaceInner(html, flex, items);
 }
 
+/**
+ * The floating pill. It used to read 能力 · 数字员工 · [STARGO] · 定价 · 联系, with
+ * the wordmark taking the middle slot — a logo that goes nowhere, in the one
+ * place on screen a reader can always reach. The wordmark is gone and the four
+ * capabilities a buyer actually looks for take its place, jumping straight to
+ * their block on the capability page from wherever the reader happens to be.
+ */
 function bottomPill(html, L, current) {
   const pill = findByClass(html, 'div', 'menu-bottom');
   if (!pill) return html;
@@ -135,6 +151,12 @@ function bottomPill(html, L, current) {
   text = text.slice(0, left.start) + `<div class="menu-first-bottom">${render([byHref('capabilities.html'), byHref('workforce.html')])}</div>` + text.slice(left.end);
   const right = findByClass(text, 'div', 'menu-first-bottom', 1);
   text = text.slice(0, right.start) + `<div class="menu-first-bottom right">${render([byHref('pricing.html'), byHref('contact.html')])}</div>` + text.slice(right.end);
+  /* the wordmark in the middle becomes the capability jumps */
+  const mark = findByClass(text, 'div', 'logo-bottom-menu', 0);
+  if (mark) {
+    const jumps = L.capJumps.map((j) => renderLink(tpl, j, false)).join('');
+    text = text.slice(0, mark.start) + `<div class="menu-first-bottom caps">${jumps}</div>` + text.slice(mark.end);
+  }
   return html.slice(0, pill.start) + text + html.slice(pill.end);
 }
 

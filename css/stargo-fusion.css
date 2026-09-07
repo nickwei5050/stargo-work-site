@@ -652,3 +652,28 @@ body.stargo-pricing-lx .stargo-plan-badge {
   letter-spacing: -.02em; color: #fdfcfc; max-width: 16ch; }
 .lm-capmap .lm-capmap-groups { margin-top: 14px; font-size: 14px; line-height: 22px; color: #8d8d8d; }
 @media (max-width: 767px) { .lm-capmap-cards { gap: 18px; } .cn-capmap-count { font-size: 32px; } }
+
+/* On the Chinese capability page each capability leads with its Chinese name and
+   keeps the product name beneath it as a small subtitle, so a Chinese reader
+   never has to parse English to follow the list. */
+.lm-capmap .lm-cap-en, .cn-capmap .lm-cap-en { display: block; margin-top: 3px;
+  font-size: 12px; letter-spacing: .06em; font-weight: 400; color: #8d8d8d; text-transform: none; }
+.cn-capmap .cn-accordion-answer-text .lm-cap-en { display: inline; margin: 0 0 0 8px; }
+
+/* The pill's middle cell used to hold one wordmark, so it has no layout of its
+   own; four capability jumps dropped into it overlapped. Lay them out as a row
+   and let the cell size itself to them. */
+.menu-bottom .menu-first-bottom.caps { display: flex; align-items: center; gap: 20px;
+  justify-content: center; white-space: nowrap; }
+/* Keep the template's own link structure: the label sits 16px left of centre to
+   cover the icon it hides, so the icon has to stay in the box or the first
+   character is clipped out of it. */
+.menu-bottom .menu-first-bottom.caps .button-link { flex: 0 0 auto; }
+
+/* The pill's middle column was sized for one wordmark (84px). Four capability
+   jumps need their own width, so let that column take its content and the pill
+   grow with it, still centred. */
+.menu-bottom:has(.menu-first-bottom.caps) {
+  grid-template-columns: max-content max-content max-content;
+  width: max-content; max-width: calc(100vw - 40px);
+}

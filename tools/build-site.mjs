@@ -848,20 +848,27 @@ function capabilityShowcase(C, lang) {
   }
 
   const byName = new Map();
-  for (const g of C.CAPABILITY_GROUPS) for (const [name, gloss] of g.items) byName.set(name, { g, gloss });
+  for (const g of C.CAPABILITY_GROUPS) for (const [name, gloss, zhName] of g.items) byName.set(name, { g, gloss, zhName });
 
-  const item = (name, gloss) => listUnit
+  /* On the Chinese page a capability leads with its Chinese name and carries the
+     product name as a small subtitle; on the English page the product name is the
+     name. A visitor should never have to read the other language to follow this. */
+  const capTitle = (name, zhName) => lang === 'zh'
+    ? `${escapeHtml(zhName)}<span class="lm-cap-en">${escapeHtml(name)}</span>`
+    : escapeHtml(name);
+
+  const item = (name, gloss, zhName) => listUnit
     .replace(/<div class="lm-question-text lm-white">[\s\S]*?<\/div>/,
-      `<div class="lm-question-text lm-white">${escapeHtml(name)}</div>`)
+      `<div class="lm-question-text lm-white">${capTitle(name, zhName)}</div>`)
     .replace(/<p class="lm-answer-text lm-white-text">[\s\S]*?<\/p>/,
       `<p class="lm-answer-text lm-white-text">${escapeHtml(gloss)}</p>`);
 
   /** One outcome or foundation, on the donor's card. */
-  const card = (n, x, footer) => {
+  const card = (n, x, footer, anchor) => {
     const items = x.picks.map((name) => {
       const hit = byName.get(name);
       if (!hit) throw new Error(`capability showcase: "${name}" (${t(x.label)}) is not in CAPABILITY_GROUPS`);
-      return item(name, t(hit.gloss));
+      return item(name, t(hit.gloss), hit.zhName);
     }).join('');
     const groups = x.groups
       ? x.groups.map((g) => `${g} ${t(C.CAPABILITY_GROUPS.find((q) => q.n === g).name)}`).join(' · ')
@@ -880,16 +887,17 @@ function capabilityShowcase(C, lang) {
       .replace(/<img([^>]*?)class="lm-services-image-full"([^>]*)>/,
         `<img src="assets/stargo-editorial/${x.image}.webp" alt="${escapeHtml(t(x.label))}" class="lm-services-image-full"/>`)
       + (groups ? `<div class="lm-capmap-groups">${escapeHtml(`${t(S.inCatalogue)}: ${groups}`)}</div>` : '');
-    return head + items + '</div>' + tail;
+    return (anchor ? head.replace('<div class="lm-services-perspective"', `<div id="${anchor}" class="lm-services-perspective"`) : head)
+      + items + '</div>' + tail;
   };
 
   const outcomes = S.stories.map((x, i) => card(String(i + 1).padStart(2, '0'), x,
     `<strong>${escapeHtml(t(S.outputLabel))}</strong> ${escapeHtml(t(x.output))}` +
     ` <strong>${escapeHtml(t(S.connectionLabel))}</strong> ${escapeHtml(t(x.connection))}` +
-    (x.caveat ? ` ${escapeHtml(t(x.caveat))}` : '')));
+    (x.caveat ? ` ${escapeHtml(t(x.caveat))}` : ''), `story-${i + 1}`));
 
   const foundations = S.foundations.map((x, i) => card(String(i + 1).padStart(2, '0'), x,
-    x.caveat ? escapeHtml(t(x.caveat)) : escapeHtml(t(S.foundationsNote))));
+    x.caveat ? escapeHtml(t(x.caveat)) : escapeHtml(t(S.foundationsNote)), `foundation-${i + 1}`));
 
   /* ---- the catalogue keeps cinery's accordion ---- */
   const rowTpl = cnFrag.slice(cnFrag.indexOf('<!-- row -->') + 12).trim();
@@ -898,8 +906,8 @@ function capabilityShowcase(C, lang) {
     .replace(/<h2 class="cn-accordion-heading">[\s\S]*?<\/h2>/, `<h2 class="cn-accordion-heading">${escapeHtml(title)}</h2>`)
     .replace(/<div class="cn-accordion-content-block">[\s\S]*?<\/div><\/div><\/div>$/, `<div class="cn-accordion-content-block">${body}</div></div></div>`);
   const catalogue = C.CAPABILITY_GROUPS.map((g) => catRow(`g${g.n}`, `${g.n} ${t(g.name)}`,
-    g.items.map(([name, gloss]) =>
-      `<p class="cn-accordion-answer-text"><strong>${escapeHtml(name)}</strong> ${escapeHtml(t(gloss))}</p>`).join('')));
+    g.items.map(([name, gloss, zhName]) =>
+      `<p class="cn-accordion-answer-text"><strong>${capTitle(name, zhName)}</strong> ${escapeHtml(t(gloss))}</p>`).join('')));
 
   const total = C.CAPABILITY_GROUPS.reduce((n, g) => n + g.items.length, 0);
   const band = (label, note) =>
