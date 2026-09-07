@@ -681,7 +681,10 @@ export const CAPABILITIES = {
   cardButton: B('看全部能力', 'See every capability'),
   table: { caption: B('(按能力域)', '(By capability group)'), title: B('能力图谱', 'Capability map'), headers: [B('(能力域)', '(Group)'), B('(能力)', '(Capability)'), B('(说明)', '(What it is)')], button: { label: B('认识 AI 员工', 'Meet the AI workforce'), href: 'workforce.html' } },
   ladderCaption: B('(从一条流程开始)', '(Start with one workflow)'),
-  ladder: [B('选一条流程。', 'Pick one workflow.'), B('让它先跑起来。', 'Let it run.'), B('再扩到整家公司。', 'Then scale the company.')],
+  // Scalora stacks these three on one absolutely-positioned line and swaps them.
+  // The slot is one line tall (120px), so each language has to fit on one line:
+  // at 1440 that is 800px at 96px type, roughly sixteen characters.
+  ladder: [B('选一条流程。', 'One workflow.'), B('让它先跑起来。', 'Let it run.'), B('再扩到整家公司。', 'Then scale.')],
   ladderDesc: B('不需要一次改变整个企业。选择一条最重要的业务流程，让 STARGO WORK 从那里开始工作。', 'You don’t need to change the whole company at once. Pick the one workflow that matters most and let STARGO WORK start there.'),
   card1: { name: B('第一条流程', 'The first workflow'), desc: B('最影响效率或增长的那一条：询盘处理、报价、主动获客或客户回复。', 'The one that most affects efficiency or growth: inquiries, quoting, prospecting or customer replies.'), big: '1', unit: B('(条流程)', '(workflow)'),
     items: [B('梳理现有流程与系统', 'Map the current process and systems'), B('映射进 Ontology', 'Model it in the ontology'), B('AI 员工进入真实流程', 'AI employees enter the real workflow'), B('记录响应、效率与订单', 'Measure response, efficiency and orders'), B('沉淀为 Skill 与 Workflow', 'Turn it into skills and workflows')],
