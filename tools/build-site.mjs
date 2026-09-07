@@ -806,15 +806,90 @@ PAGES['capabilities.html'] = (lang) => {
   h = s(h, 'Expand your scope with marketing, SEO, or content creation.', t(K.more));
   h = setLink(h, 'Contact us', { href: 'contact.html', text: t(K.moreButton) });
 
+
+/**
+ * The Capability map, rebuilt on the qubix template's service-detail block.
+ *
+ * Donor: tools/templates/qubix/services_*.html → `.service-details-rice`, a
+ * label + rich-text grid whose bullets lead with a bold term. It repeats
+ * natively, carries no imagery and is dark by default, so a long catalogue
+ * reads as a system rather than a spreadsheet. Classes are renamed with a `qx-`
+ * prefix and the donor's measured type and spacing live in css/stargo-fusion.css
+ * under `.qx-capmap`, so nothing reaches the rest of the site.
+ *
+ * Every capability named in CAPABILITY_SHOWCASE.picks is resolved against
+ * CAPABILITY_GROUPS and printed with the register's own gloss: the showcase
+ * cannot describe a capability differently from the catalogue beneath it, and a
+ * renamed capability fails the build instead of vanishing from the page.
+ */
+function capabilityShowcase(C, lang) {
+  const t = (v) => (typeof v === 'string' ? v : v[lang]);
+  const S = C.CAPABILITY_SHOWCASE;
+  const byName = new Map();
+  for (const g of C.CAPABILITY_GROUPS) for (const [name, gloss] of g.items) byName.set(name, { g, gloss });
+
+  const bullets = (picks, label) => picks.map((name) => {
+    const hit = byName.get(name);
+    if (!hit) throw new Error(`capability showcase: "${name}" (${label}) is not in CAPABILITY_GROUPS`);
+    return `<li><strong>${escapeHtml(name)}:</strong> ${escapeHtml(t(hit.gloss))}</li>`;
+  }).join('');
+
+  const row = (label, inner, cls = '', id = '') =>
+    `<div class="qx-row${cls ? ` ${cls}` : ''}"${id ? ` id="${id}"` : ''}>` +
+    `<div class="qx-label">${escapeHtml(label)}</div>` +
+    `<div class="qx-content"><div class="qx-rich">${inner}</div></div></div>`;
+
+  const groupsOf = (x) => x.groups.map((n) => {
+    const g = C.CAPABILITY_GROUPS.find((q) => q.n === n);
+    if (!g) throw new Error(`capability showcase: group ${n} missing`);
+    return `<a href="#g${g.n}">${escapeHtml(`${g.n} ${t(g.name)}`)}</a>`;
+  }).join(' · ');
+
+  const story = (x) => row(x.label,
+    `<p>${escapeHtml(x.promise)}</p>` +
+    `<ul role="list">${bullets(x.picks, x.label)}</ul>` +
+    `<p><strong>${escapeHtml(S.outputLabel)}:</strong> ${escapeHtml(x.output)}</p>` +
+    `<p><strong>${escapeHtml(S.connectionLabel)}:</strong> ${escapeHtml(x.connection)}</p>` +
+    (x.caveat ? `<p class="qx-note">${escapeHtml(x.caveat)}</p>` : '') +
+    `<p class="qx-note">In the catalogue: ${groupsOf(x)}</p>`);
+
+  const foundation = (x) => row(x.label,
+    `<p>${escapeHtml(x.promise)}</p>` +
+    `<ul role="list">${bullets(x.picks, x.label)}</ul>` +
+    (x.caveat ? `<p class="qx-note">${escapeHtml(x.caveat)}</p>` : '') +
+    `<p class="qx-note">In the catalogue: ${groupsOf(x)}</p>`);
+
+  const catalogue = C.CAPABILITY_GROUPS.map((g) => row(
+    `${g.n} ${t(g.name)}`,
+    `<ul role="list">${g.items.map(([name, gloss]) =>
+      `<li><strong>${escapeHtml(name)}:</strong> ${escapeHtml(t(gloss))}</li>`).join('')}</ul>`,
+    'qx-cat', `g${g.n}`));
+
+  const total = C.CAPABILITY_GROUPS.reduce((n, g) => n + g.items.length, 0);
+
+  return `<section id="atlas" class="qx-capmap-section"><div class="qx-capmap-inner"><div class="qx-capmap">` +
+    row(S.eyebrow, `<h2>${escapeHtml(S.headline)}</h2><p>${escapeHtml(S.body)}</p>` +
+      `<p class="qx-note">${escapeHtml(S.scopeNote)}</p>`) +
+    S.stories.map(story).join('') +
+    row(S.foundationsLabel, `<p>${escapeHtml('Four things every story above depends on.')}</p>`, 'qx-row-note') +
+    S.foundations.map(foundation).join('') +
+    row(S.catalogueLabel, `<p>${escapeHtml(S.catalogueNote)}</p>` +
+      `<p class="qx-note">${escapeHtml(`${C.CAPABILITY_GROUPS.length} groups · ${total} capabilities`)}</p>`, 'qx-row-note') +
+    catalogue.join('') +
+    `</div></div></section>`;
+}
+
   const rows = C.CAPABILITY_GROUPS.flatMap((g) => g.items.map(([item, gloss], i) => [
     i === 0 ? `<span id="g${g.n}">${g.n} · ${escapeHtml(t(g.name))}</span>` : '',
     escapeHtml(item),
     escapeHtml(t(gloss)),
   ]));
-  const table = awardsTable({
-    id: 'atlas', caption: t(K.table.caption), title: t(K.table.title), total: rows.length,
-    button: { label: t(K.table.button.label), href: K.table.button.href }, headers: K.table.headers.map(t), rows,
-  });
+  const table = lang === 'en'
+    ? capabilityShowcase(C, lang)
+    : awardsTable({
+        id: 'atlas', caption: t(K.table.caption), title: t(K.table.title), total: rows.length,
+        button: { label: t(K.table.button.label), href: K.table.button.href }, headers: K.table.headers.map(t), rows,
+      });
   const anchor = '<div data-w-id="f7fb6f0b-16b8-25a9-4160-54883563ff75" class="rounder-wrapper">';
   if (!h.includes(anchor)) throw new Error('capabilities: insertion anchor missing');
   // The nine-stage loop sits above the capability map: business mainline first, then the 14 groups.

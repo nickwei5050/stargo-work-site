@@ -559,3 +559,81 @@ body.stargo-pricing-lx .stargo-plan-badge {
   line-height: 1.2;
   white-space: nowrap;
 }
+
+/* ============================================================ capability map
+   The Capability map module on /en/capabilities is transplanted from the qubix
+   template's service-detail block (`service-details-rice`): a label + rich-text
+   grid whose bullets lead with a bold term. Everything below is the donor's own
+   measured values — 20/26.8 label at -0.8px, 20/26.8 body at -0.4px, 20/30.8
+   list items, 52px label gutter that becomes a column below 1280px, 24px between
+   rows, 698px text column inside an 872px block — scoped so it cannot reach the
+   rest of the site. The donor font and bullet dot are mirrored locally; the site
+   makes no off-origin requests. */
+@font-face { font-family: Interdisplay; font-style: normal; font-weight: 400; font-display: swap;
+  src: url('../assets/qubix/69a929301030c39cc10f429b_InterDisplay-Regular.ttf') format('truetype'); }
+@font-face { font-family: Interdisplay; font-style: normal; font-weight: 500; font-display: swap;
+  src: url('../assets/qubix/69a9292f6efd1f15aa5dbdc8_InterDisplay-Medium.ttf') format('truetype'); }
+@font-face { font-family: Interdisplay; font-style: normal; font-weight: 600; font-display: swap;
+  src: url('../assets/qubix/69a9292f80901c26b3ecd1d1_InterDisplay-SemiBold.ttf') format('truetype'); }
+@font-face { font-family: Interdisplay; font-style: normal; font-weight: 700; font-display: swap;
+  src: url('../assets/qubix/69a9292ff07ea7afd79211d8_InterDisplay-Bold.ttf') format('truetype'); }
+
+.qx-capmap-section { background: #000; padding: 120px 5vw; }
+.qx-capmap-inner { max-width: 872px; margin: 0 auto; }
+
+/* service-details-rice */
+.qx-capmap { width: 100%; max-width: 872px; display: flex; flex-flow: column; gap: 24px;
+  font-family: Interdisplay, Inter, Arial, sans-serif; }
+
+/* service-details-rice-one — label above the text until the donor's 1280px switch */
+.qx-capmap .qx-row { display: flex; flex-flow: wrap; justify-content: space-between;
+  gap: 52px; overflow: hidden; }
+@media (min-width: 1280px) { .qx-capmap .qx-row { flex-flow: row; } }
+
+/* .h6.vivid-orange */
+.qx-capmap .qx-label { margin: 0; font-size: 20px; line-height: 26.8px; font-weight: 500;
+  letter-spacing: -.8px; color: #fe6512; flex: 0 0 auto; }
+
+/* service-details-rice-content + service-rice-one */
+.qx-capmap .qx-content { width: 100%; max-width: 698px; }
+.qx-capmap .qx-rich { width: 100%; max-width: 698px; }
+.qx-capmap .qx-rich p { margin: 0 0 16px; font-size: 20px; line-height: 26.8px; font-weight: 400;
+  letter-spacing: -.4px; color: #a1a1a1; }
+.qx-capmap .qx-rich p:last-child { margin-bottom: 0; }
+.qx-capmap .qx-rich h2 { margin: 0 0 16px; font-size: 32px; line-height: 39.04px; font-weight: 500;
+  letter-spacing: normal; color: #fdfcfc; }
+.qx-capmap .qx-rich ul { margin: 16px 0 0; padding-left: 0; list-style-type: none;
+  display: flex; flex-flow: column; gap: 16px; }
+.qx-capmap .qx-rich li { font-size: 20px; line-height: 30.8px; color: #a1a1a1; padding-left: 20px;
+  background-image: url('../assets/qubix/dot.svg'); background-position: 0% 50%;
+  background-repeat: no-repeat; background-size: auto; }
+.qx-capmap .qx-rich strong { color: #fdfcfc; font-weight: 500; }
+.qx-capmap .qx-note { font-size: 16px; line-height: 24px; color: #6f6f6f; letter-spacing: -.2px; }
+.qx-capmap .qx-row-note { border-top: 1px solid rgba(253, 252, 252, .12); padding-top: 24px; }
+
+/* the catalogue rows carry the group anchors the rest of the site links to */
+.qx-capmap .qx-cat .qx-label { color: #fdfcfc; }
+.qx-capmap .qx-cat .qx-rich li { font-size: 18px; line-height: 27px; }
+
+@media (max-width: 767px) {
+  .qx-capmap-section { padding: 72px 24px; }
+  .qx-capmap .qx-row { gap: 20px; }
+  .qx-capmap .qx-rich p, .qx-capmap .qx-rich li { font-size: 17px; line-height: 26px; }
+  .qx-capmap .qx-rich h2 { font-size: 26px; line-height: 32px; }
+}
+
+/* The donor block never carried links inside its rich text, so give the
+   catalogue anchors a visible treatment in its own palette, and restore the
+   donor's 24px rhythm where a paragraph follows the bullet list. */
+.qx-capmap .qx-rich a { color: #fdfcfc; text-decoration: underline; text-underline-offset: 3px;
+  text-decoration-color: rgba(253, 252, 252, .35); }
+.qx-capmap .qx-rich a:hover { text-decoration-color: #fe6512; color: #fe6512; }
+.qx-capmap .qx-rich ul + p { margin-top: 24px; }
+
+/* The donor's labels are single words ("Overview", "Deliveries"), so it never
+   needed them to wrap. Ours are outcome sentences: below the donor's 1280px
+   switch, where the row already stacks, let the label take the full width and
+   wrap instead of running past the edge. */
+@media (max-width: 1279px) {
+  .qx-capmap .qx-label { flex: 1 1 100%; }
+}
