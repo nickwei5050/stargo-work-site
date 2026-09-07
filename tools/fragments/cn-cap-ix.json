@@ -1,0 +1,2524 @@
+{
+ "events": {
+  "cn-e-227": {
+   "id": "cn-e-227",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "SCROLLING_IN_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_CONTINUOUS_ACTION",
+    "config": {
+     "actionListId": "cn-a-34",
+     "affectedElements": {},
+     "duration": 0
+    }
+   },
+   "mediaQueries": [
+    "main"
+   ],
+   "target": {
+    "id": "fb6f08c0-bccf-aeab-a33d-45198963fea4",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "fb6f08c0-bccf-aeab-a33d-45198963fea4",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": [
+    {
+     "continuousParameterGroupId": "cn-a-34-p",
+     "smoothing": 90,
+     "startsEntering": true,
+     "addStartOffset": false,
+     "addOffsetValue": 50,
+     "startsExiting": false,
+     "addEndOffset": false,
+     "endOffsetValue": 50
+    }
+   ],
+   "createdOn": 1759754306352
+  },
+  "cn-e-228": {
+   "id": "cn-e-228",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_OVER",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-35",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-229"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "fb6f08c0-bccf-aeab-a33d-45198963fe6f",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "fb6f08c0-bccf-aeab-a33d-45198963fe6f",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1759754040531
+  },
+  "cn-e-229": {
+   "id": "cn-e-229",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_OUT",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-36",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-228"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "fb6f08c0-bccf-aeab-a33d-45198963fe6f",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "fb6f08c0-bccf-aeab-a33d-45198963fe6f",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1759754040531
+  },
+  "cn-e-230": {
+   "id": "cn-e-230",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_OVER",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-35",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-231"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "fb6f08c0-bccf-aeab-a33d-45198963fe8b",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "fb6f08c0-bccf-aeab-a33d-45198963fe8b",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767818722090
+  },
+  "cn-e-231": {
+   "id": "cn-e-231",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_OUT",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-36",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-230"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "fb6f08c0-bccf-aeab-a33d-45198963fe8b",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "fb6f08c0-bccf-aeab-a33d-45198963fe8b",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767818722090
+  },
+  "cn-e-232": {
+   "id": "cn-e-232",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_OVER",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-35",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-233"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "fb6f08c0-bccf-aeab-a33d-45198963fea9",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "fb6f08c0-bccf-aeab-a33d-45198963fea9",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767818782610
+  },
+  "cn-e-233": {
+   "id": "cn-e-233",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_OUT",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-36",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-232"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "fb6f08c0-bccf-aeab-a33d-45198963fea9",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "fb6f08c0-bccf-aeab-a33d-45198963fea9",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767818782610
+  },
+  "cn-e-234": {
+   "id": "cn-e-234",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_OVER",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-35",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-235"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "fb6f08c0-bccf-aeab-a33d-45198963fec5",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "fb6f08c0-bccf-aeab-a33d-45198963fec5",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767818817206
+  },
+  "cn-e-235": {
+   "id": "cn-e-235",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_OUT",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-36",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-234"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "fb6f08c0-bccf-aeab-a33d-45198963fec5",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "fb6f08c0-bccf-aeab-a33d-45198963fec5",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767818817206
+  },
+  "cn-e-236": {
+   "id": "cn-e-236",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-33",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-237"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "eb7233a9-2256-2e88-f36a-0cb6ca0392d1",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "eb7233a9-2256-2e88-f36a-0cb6ca0392d1",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": true,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767820436284
+  },
+  "cn-e-238": {
+   "id": "cn-e-238",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_OVER",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-37",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-239"
+    }
+   },
+   "mediaQueries": [
+    "main"
+   ],
+   "target": {
+    "id": "572ae8d9-c9c6-18a4-c147-84fb3d3895ed",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "572ae8d9-c9c6-18a4-c147-84fb3d3895ed",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767892826939
+  },
+  "cn-e-239": {
+   "id": "cn-e-239",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_OUT",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-38",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-238"
+    }
+   },
+   "mediaQueries": [
+    "main"
+   ],
+   "target": {
+    "id": "572ae8d9-c9c6-18a4-c147-84fb3d3895ed",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "572ae8d9-c9c6-18a4-c147-84fb3d3895ed",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767892826939
+  },
+  "cn-e-240": {
+   "id": "cn-e-240",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_OVER",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-39",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-241"
+    }
+   },
+   "mediaQueries": [
+    "main"
+   ],
+   "target": {
+    "id": "572ae8d9-c9c6-18a4-c147-84fb3d3895fc",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "572ae8d9-c9c6-18a4-c147-84fb3d3895fc",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767892826939
+  },
+  "cn-e-241": {
+   "id": "cn-e-241",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_OUT",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-40",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-240"
+    }
+   },
+   "mediaQueries": [
+    "main"
+   ],
+   "target": {
+    "id": "572ae8d9-c9c6-18a4-c147-84fb3d3895fc",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "572ae8d9-c9c6-18a4-c147-84fb3d3895fc",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767892826939
+  },
+  "cn-e-242": {
+   "id": "cn-e-242",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_OVER",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-41",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-243"
+    }
+   },
+   "mediaQueries": [
+    "main"
+   ],
+   "target": {
+    "id": "572ae8d9-c9c6-18a4-c147-84fb3d38960b",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "572ae8d9-c9c6-18a4-c147-84fb3d38960b",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767892826939
+  },
+  "cn-e-243": {
+   "id": "cn-e-243",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_OUT",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-42",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-242"
+    }
+   },
+   "mediaQueries": [
+    "main"
+   ],
+   "target": {
+    "id": "572ae8d9-c9c6-18a4-c147-84fb3d38960b",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "572ae8d9-c9c6-18a4-c147-84fb3d38960b",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767892826939
+  },
+  "cn-e-244": {
+   "id": "cn-e-244",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_OVER",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-43",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-245"
+    }
+   },
+   "mediaQueries": [
+    "main"
+   ],
+   "target": {
+    "id": "572ae8d9-c9c6-18a4-c147-84fb3d38961a",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "572ae8d9-c9c6-18a4-c147-84fb3d38961a",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767892826939
+  },
+  "cn-e-245": {
+   "id": "cn-e-245",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_OUT",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-44",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-244"
+    }
+   },
+   "mediaQueries": [
+    "main"
+   ],
+   "target": {
+    "id": "572ae8d9-c9c6-18a4-c147-84fb3d38961a",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "572ae8d9-c9c6-18a4-c147-84fb3d38961a",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767892826939
+  }
+ },
+ "actionLists": {
+  "cn-a-34": {
+   "id": "cn-a-34",
+   "title": "Case Study Scroll",
+   "continuousParameterGroups": [
+    {
+     "id": "cn-a-34-p",
+     "type": "SCROLL_PROGRESS",
+     "parameterLabel": "Scroll",
+     "continuousActionGroups": [
+      {
+       "keyframe": 0,
+       "actionItems": [
+        {
+         "id": "cn-a-34-n",
+         "actionTypeId": "TRANSFORM_MOVE",
+         "config": {
+          "delay": 0,
+          "easing": "",
+          "duration": 500,
+          "target": {
+           "useEventTarget": true,
+           "id": "4e10e7e1-6e88-ab05-1c88-1dff6216af41"
+          },
+          "yValue": -40,
+          "zValue": -10,
+          "xUnit": "PX",
+          "yUnit": "%",
+          "zUnit": "vw"
+         }
+        }
+       ]
+      },
+      {
+       "keyframe": 40,
+       "actionItems": [
+        {
+         "id": "cn-a-34-n-2",
+         "actionTypeId": "TRANSFORM_MOVE",
+         "config": {
+          "delay": 0,
+          "easing": "",
+          "duration": 500,
+          "target": {
+           "useEventTarget": true,
+           "id": "4e10e7e1-6e88-ab05-1c88-1dff6216af41"
+          },
+          "yValue": 0,
+          "zValue": 0,
+          "xUnit": "PX",
+          "yUnit": "%",
+          "zUnit": "vw"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "createdOn": 1758986410563
+  },
+  "cn-a-35": {
+   "id": "cn-a-35",
+   "title": "Case Study - Hover In",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "cn-a-35-n",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-case-logo",
+         "selectorGuids": [
+          "46295d49-8b0c-0e56-922f-790a174e2f74"
+         ]
+        },
+        "yValue": 0,
+        "xUnit": "PX",
+        "yUnit": "%",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "cn-a-35-n-2",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-case-arrow.cn-_01",
+         "selectorGuids": [
+          "46295d49-8b0c-0e56-922f-790a174e2f71",
+          "46295d49-8b0c-0e56-922f-790a174e2f80"
+         ]
+        },
+        "xValue": 0,
+        "xUnit": "%",
+        "yUnit": "PX",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "cn-a-35-n-3",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-case-arrow.cn-_02",
+         "selectorGuids": [
+          "46295d49-8b0c-0e56-922f-790a174e2f71",
+          "46295d49-8b0c-0e56-922f-790a174e2f81"
+         ]
+        },
+        "xValue": -100,
+        "xUnit": "%",
+        "yUnit": "PX",
+        "zUnit": "PX"
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "cn-a-35-n-4",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "outCubic",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-case-logo",
+         "selectorGuids": [
+          "46295d49-8b0c-0e56-922f-790a174e2f74"
+         ]
+        },
+        "yValue": -100,
+        "xUnit": "PX",
+        "yUnit": "%",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "cn-a-35-n-5",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "outCubic",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-case-arrow.cn-_01",
+         "selectorGuids": [
+          "46295d49-8b0c-0e56-922f-790a174e2f71",
+          "46295d49-8b0c-0e56-922f-790a174e2f80"
+         ]
+        },
+        "xValue": 100,
+        "xUnit": "%",
+        "yUnit": "PX",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "cn-a-35-n-6",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "outCubic",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-case-arrow.cn-_02",
+         "selectorGuids": [
+          "46295d49-8b0c-0e56-922f-790a174e2f71",
+          "46295d49-8b0c-0e56-922f-790a174e2f81"
+         ]
+        },
+        "xValue": 0,
+        "xUnit": "%",
+        "yUnit": "PX",
+        "zUnit": "PX"
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": true,
+   "createdOn": 1759747616926
+  },
+  "cn-a-36": {
+   "id": "cn-a-36",
+   "title": "Case Study - Hover Out",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "cn-a-36-n",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "outCubic",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-case-logo",
+         "selectorGuids": [
+          "46295d49-8b0c-0e56-922f-790a174e2f74"
+         ]
+        },
+        "yValue": 0,
+        "xUnit": "PX",
+        "yUnit": "%",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "cn-a-36-n-2",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "outCubic",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-case-arrow.cn-_01",
+         "selectorGuids": [
+          "46295d49-8b0c-0e56-922f-790a174e2f71",
+          "46295d49-8b0c-0e56-922f-790a174e2f80"
+         ]
+        },
+        "xValue": 0,
+        "xUnit": "%",
+        "yUnit": "PX",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "cn-a-36-n-3",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "outCubic",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-case-arrow.cn-_02",
+         "selectorGuids": [
+          "46295d49-8b0c-0e56-922f-790a174e2f71",
+          "46295d49-8b0c-0e56-922f-790a174e2f81"
+         ]
+        },
+        "xValue": -100,
+        "xUnit": "%",
+        "yUnit": "PX",
+        "zUnit": "PX"
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": false,
+   "createdOn": 1759747645439
+  },
+  "cn-a-33": {
+   "id": "cn-a-33",
+   "title": "Subtitle Animation",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "cn-a-33-n",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "selector": ".cn-subtitle-blur",
+         "selectorGuids": [
+          "9d21ed5f-93ee-804e-ccd9-13ff87757f00"
+         ]
+        },
+        "xValue": -400,
+        "yValue": null,
+        "xUnit": "%",
+        "yUnit": "px",
+        "zUnit": "PX"
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "cn-a-33-n-2",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 1500,
+        "target": {
+         "selector": ".cn-subtitle-blur",
+         "selectorGuids": [
+          "9d21ed5f-93ee-804e-ccd9-13ff87757f00"
+         ]
+        },
+        "xValue": 400,
+        "xUnit": "%",
+        "yUnit": "PX",
+        "zUnit": "PX"
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "cn-a-33-n-3",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 4000,
+        "easing": "",
+        "duration": 0,
+        "target": {
+         "selector": ".cn-subtitle-blur",
+         "selectorGuids": [
+          "9d21ed5f-93ee-804e-ccd9-13ff87757f00"
+         ]
+        },
+        "xValue": -400,
+        "xUnit": "%",
+        "yUnit": "PX",
+        "zUnit": "PX"
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": true,
+   "createdOn": 1762087348632
+  },
+  "cn-a-37": {
+   "id": "cn-a-37",
+   "title": "Service 01 - Hover In",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "cn-a-37-n",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "selector": ".cn-service-bg-image.cn-_01",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c0e",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c22"
+         ]
+        },
+        "value": 0,
+        "unit": ""
+       }
+      },
+      {
+       "id": "cn-a-37-n-2",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-title.cn-_01",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c0d",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c23"
+         ]
+        },
+        "yValue": -200,
+        "xUnit": "PX",
+        "yUnit": "%",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "cn-a-37-n-3",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-description.cn-_01",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c12",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c21"
+         ]
+        },
+        "globalSwatchId": "--neutral-color--primary-neutral",
+        "rValue": 128,
+        "bValue": 128,
+        "gValue": 128,
+        "aValue": 1
+       }
+      },
+      {
+       "id": "cn-a-37-n-4",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-subitle.cn-_01",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c18",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c26"
+         ]
+        },
+        "globalSwatchId": "--neutral-color--primary-neutral",
+        "rValue": 128,
+        "bValue": 128,
+        "gValue": 128,
+        "aValue": 1
+       }
+      },
+      {
+       "id": "cn-a-37-n-9",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-image-item.cn-_01",
+         "selectorGuids": [
+          "c5ceff8e-fa3a-2a95-d21e-e02fa47dc4cd",
+          "ab5d99b7-2fd2-ca26-8272-2498bc6cc14e"
+         ]
+        },
+        "xValue": 0,
+        "yValue": 0,
+        "locked": true
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "cn-a-37-n-5",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "selector": ".cn-service-bg-image.cn-_01",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c0e",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c22"
+         ]
+        },
+        "value": 1,
+        "unit": ""
+       }
+      },
+      {
+       "id": "cn-a-37-n-6",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "outExpo",
+        "duration": 1000,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-title.cn-_01",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c0d",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c23"
+         ]
+        },
+        "yValue": 0,
+        "xUnit": "PX",
+        "yUnit": "%",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "cn-a-37-n-7",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-description.cn-_01",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c12",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c21"
+         ]
+        },
+        "globalSwatchId": "--primary-color--white",
+        "rValue": 250,
+        "bValue": 250,
+        "gValue": 250,
+        "aValue": 1
+       }
+      },
+      {
+       "id": "cn-a-37-n-8",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-subitle.cn-_01",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c18",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c26"
+         ]
+        },
+        "globalSwatchId": "--primary-color--white",
+        "rValue": 250,
+        "bValue": 250,
+        "gValue": 250,
+        "aValue": 1
+       }
+      },
+      {
+       "id": "cn-a-37-n-10",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "outExpo",
+        "duration": 1000,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-image-item.cn-_01",
+         "selectorGuids": [
+          "c5ceff8e-fa3a-2a95-d21e-e02fa47dc4cd",
+          "ab5d99b7-2fd2-ca26-8272-2498bc6cc14e"
+         ]
+        },
+        "xValue": 1,
+        "yValue": 1,
+        "locked": true
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": true,
+   "createdOn": 1756460987779
+  },
+  "cn-a-38": {
+   "id": "cn-a-38",
+   "title": "Service 01 - Hover Out",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "cn-a-38-n",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "selector": ".cn-service-bg-image.cn-_01",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c0e",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c22"
+         ]
+        },
+        "value": 0,
+        "unit": ""
+       }
+      },
+      {
+       "id": "cn-a-38-n-2",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "outExpo",
+        "duration": 1000,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-title.cn-_01",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c0d",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c23"
+         ]
+        },
+        "yValue": -200,
+        "xUnit": "PX",
+        "yUnit": "%",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "cn-a-38-n-3",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-description.cn-_01",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c12",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c21"
+         ]
+        },
+        "globalSwatchId": "--neutral-color--primary-neutral",
+        "rValue": 128,
+        "bValue": 128,
+        "gValue": 128,
+        "aValue": 1
+       }
+      },
+      {
+       "id": "cn-a-38-n-4",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-subitle.cn-_01",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c18",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c26"
+         ]
+        },
+        "globalSwatchId": "--neutral-color--primary-neutral",
+        "rValue": 128,
+        "bValue": 128,
+        "gValue": 128,
+        "aValue": 1
+       }
+      },
+      {
+       "id": "cn-a-38-n-5",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "outExpo",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-image-item.cn-_01",
+         "selectorGuids": [
+          "c5ceff8e-fa3a-2a95-d21e-e02fa47dc4cd",
+          "ab5d99b7-2fd2-ca26-8272-2498bc6cc14e"
+         ]
+        },
+        "xValue": 0,
+        "yValue": 0,
+        "locked": true
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": false,
+   "createdOn": 1756461026746
+  },
+  "cn-a-39": {
+   "id": "cn-a-39",
+   "title": "Service 02 - Hover In",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "cn-a-39-n",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "selector": ".cn-service-bg-image.cn-_02",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c0e",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c2a"
+         ]
+        },
+        "value": 0,
+        "unit": ""
+       }
+      },
+      {
+       "id": "cn-a-39-n-2",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-title.cn-_02",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c0d",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c1f"
+         ]
+        },
+        "yValue": -200,
+        "xUnit": "PX",
+        "yUnit": "%",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "cn-a-39-n-3",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-description.cn-_02",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c12",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c1e"
+         ]
+        },
+        "globalSwatchId": "--neutral-color--primary-neutral",
+        "rValue": 128,
+        "bValue": 128,
+        "gValue": 128,
+        "aValue": 1
+       }
+      },
+      {
+       "id": "cn-a-39-n-4",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-subitle.cn-_02",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c18",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c25"
+         ]
+        },
+        "globalSwatchId": "--neutral-color--primary-neutral",
+        "rValue": 128,
+        "bValue": 128,
+        "gValue": 128,
+        "aValue": 1
+       }
+      },
+      {
+       "id": "cn-a-39-n-9",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-image-item.cn-_02",
+         "selectorGuids": [
+          "c5ceff8e-fa3a-2a95-d21e-e02fa47dc4cd",
+          "0186b933-100e-aa70-2f7c-219c6112b8c8"
+         ]
+        },
+        "xValue": 0,
+        "yValue": 0,
+        "locked": true
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "cn-a-39-n-5",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "selector": ".cn-service-bg-image.cn-_02",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c0e",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c2a"
+         ]
+        },
+        "value": 1,
+        "unit": ""
+       }
+      },
+      {
+       "id": "cn-a-39-n-6",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "outExpo",
+        "duration": 1000,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-title.cn-_02",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c0d",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c1f"
+         ]
+        },
+        "yValue": 0,
+        "xUnit": "PX",
+        "yUnit": "%",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "cn-a-39-n-7",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-description.cn-_02",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c12",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c1e"
+         ]
+        },
+        "globalSwatchId": "--primary-color--white",
+        "rValue": 250,
+        "bValue": 250,
+        "gValue": 250,
+        "aValue": 1
+       }
+      },
+      {
+       "id": "cn-a-39-n-8",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-subitle.cn-_02",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c18",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c25"
+         ]
+        },
+        "globalSwatchId": "--primary-color--white",
+        "rValue": 250,
+        "bValue": 250,
+        "gValue": 250,
+        "aValue": 1
+       }
+      },
+      {
+       "id": "cn-a-39-n-10",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "outExpo",
+        "duration": 1000,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-image-item.cn-_02",
+         "selectorGuids": [
+          "c5ceff8e-fa3a-2a95-d21e-e02fa47dc4cd",
+          "0186b933-100e-aa70-2f7c-219c6112b8c8"
+         ]
+        },
+        "xValue": 1,
+        "yValue": 1,
+        "locked": true
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": true,
+   "createdOn": 1756461127110
+  },
+  "cn-a-40": {
+   "id": "cn-a-40",
+   "title": "Service 02 - Hover Out",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "cn-a-40-n",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "selector": ".cn-service-bg-image.cn-_02",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c0e",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c2a"
+         ]
+        },
+        "value": 0,
+        "unit": ""
+       }
+      },
+      {
+       "id": "cn-a-40-n-2",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "outExpo",
+        "duration": 1000,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-title.cn-_02",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c0d",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c1f"
+         ]
+        },
+        "yValue": -200,
+        "xUnit": "PX",
+        "yUnit": "%",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "cn-a-40-n-3",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-description.cn-_02",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c12",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c1e"
+         ]
+        },
+        "globalSwatchId": "--neutral-color--primary-neutral",
+        "rValue": 128,
+        "bValue": 128,
+        "gValue": 128,
+        "aValue": 1
+       }
+      },
+      {
+       "id": "cn-a-40-n-4",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-subitle.cn-_02",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c18",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c25"
+         ]
+        },
+        "globalSwatchId": "--neutral-color--primary-neutral",
+        "rValue": 128,
+        "bValue": 128,
+        "gValue": 128,
+        "aValue": 1
+       }
+      },
+      {
+       "id": "cn-a-40-n-5",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "outExpo",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-image-item.cn-_02",
+         "selectorGuids": [
+          "c5ceff8e-fa3a-2a95-d21e-e02fa47dc4cd",
+          "0186b933-100e-aa70-2f7c-219c6112b8c8"
+         ]
+        },
+        "xValue": 0,
+        "yValue": 0,
+        "locked": true
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": false,
+   "createdOn": 1756461158822
+  },
+  "cn-a-41": {
+   "id": "cn-a-41",
+   "title": "Service 03 - Hover In",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "cn-a-41-n",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "selector": ".cn-service-bg-image.cn-_03",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c0e",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c2f"
+         ]
+        },
+        "value": 0,
+        "unit": ""
+       }
+      },
+      {
+       "id": "cn-a-41-n-2",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-title.cn-_03",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c0d",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c2c"
+         ]
+        },
+        "yValue": -200,
+        "xUnit": "PX",
+        "yUnit": "%",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "cn-a-41-n-3",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-description.cn-_03",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c12",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c2e"
+         ]
+        },
+        "globalSwatchId": "--neutral-color--primary-neutral",
+        "rValue": 128,
+        "bValue": 128,
+        "gValue": 128,
+        "aValue": 1
+       }
+      },
+      {
+       "id": "cn-a-41-n-4",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-subitle.cn-_03",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c18",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c29"
+         ]
+        },
+        "globalSwatchId": "--neutral-color--primary-neutral",
+        "rValue": 128,
+        "bValue": 128,
+        "gValue": 128,
+        "aValue": 1
+       }
+      },
+      {
+       "id": "cn-a-41-n-9",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-image-item.cn-_03",
+         "selectorGuids": [
+          "c5ceff8e-fa3a-2a95-d21e-e02fa47dc4cd",
+          "f79de759-3e06-4161-c2aa-76e9d922432d"
+         ]
+        },
+        "xValue": 0,
+        "yValue": 0,
+        "locked": true
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "cn-a-41-n-5",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "selector": ".cn-service-bg-image.cn-_03",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c0e",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c2f"
+         ]
+        },
+        "value": 1,
+        "unit": ""
+       }
+      },
+      {
+       "id": "cn-a-41-n-6",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "outExpo",
+        "duration": 1000,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-title.cn-_03",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c0d",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c2c"
+         ]
+        },
+        "yValue": 0,
+        "xUnit": "PX",
+        "yUnit": "%",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "cn-a-41-n-7",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-description.cn-_03",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c12",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c2e"
+         ]
+        },
+        "globalSwatchId": "--primary-color--white",
+        "rValue": 250,
+        "bValue": 250,
+        "gValue": 250,
+        "aValue": 1
+       }
+      },
+      {
+       "id": "cn-a-41-n-8",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-subitle.cn-_03",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c18",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c29"
+         ]
+        },
+        "globalSwatchId": "--primary-color--white",
+        "rValue": 250,
+        "bValue": 250,
+        "gValue": 250,
+        "aValue": 1
+       }
+      },
+      {
+       "id": "cn-a-41-n-10",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "outExpo",
+        "duration": 1000,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-image-item.cn-_03",
+         "selectorGuids": [
+          "c5ceff8e-fa3a-2a95-d21e-e02fa47dc4cd",
+          "f79de759-3e06-4161-c2aa-76e9d922432d"
+         ]
+        },
+        "xValue": 1,
+        "yValue": 1,
+        "locked": true
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": true,
+   "createdOn": 1756461194648
+  },
+  "cn-a-42": {
+   "id": "cn-a-42",
+   "title": "Service 03 - Hover Out",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "cn-a-42-n",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "selector": ".cn-service-bg-image.cn-_03",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c0e",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c2f"
+         ]
+        },
+        "value": 0,
+        "unit": ""
+       }
+      },
+      {
+       "id": "cn-a-42-n-2",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "outExpo",
+        "duration": 1000,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-title.cn-_03",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c0d",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c2c"
+         ]
+        },
+        "yValue": -200,
+        "xUnit": "PX",
+        "yUnit": "%",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "cn-a-42-n-3",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-description.cn-_03",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c12",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c2e"
+         ]
+        },
+        "globalSwatchId": "--neutral-color--primary-neutral",
+        "rValue": 128,
+        "bValue": 128,
+        "gValue": 128,
+        "aValue": 1
+       }
+      },
+      {
+       "id": "cn-a-42-n-4",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-subitle.cn-_03",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c18",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c29"
+         ]
+        },
+        "globalSwatchId": "--neutral-color--primary-neutral",
+        "rValue": 128,
+        "bValue": 128,
+        "gValue": 128,
+        "aValue": 1
+       }
+      },
+      {
+       "id": "cn-a-42-n-5",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "outExpo",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-image-item.cn-_03",
+         "selectorGuids": [
+          "c5ceff8e-fa3a-2a95-d21e-e02fa47dc4cd",
+          "f79de759-3e06-4161-c2aa-76e9d922432d"
+         ]
+        },
+        "xValue": 0,
+        "yValue": 0,
+        "locked": true
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": false,
+   "createdOn": 1756461219007
+  },
+  "cn-a-43": {
+   "id": "cn-a-43",
+   "title": "Service 04 - Hover In",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "cn-a-43-n",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "selector": ".cn-service-bg-image.cn-_04",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c0e",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c20"
+         ]
+        },
+        "value": 0,
+        "unit": ""
+       }
+      },
+      {
+       "id": "cn-a-43-n-2",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-title.cn-_04",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c0d",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c2d"
+         ]
+        },
+        "yValue": -200,
+        "xUnit": "PX",
+        "yUnit": "%",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "cn-a-43-n-3",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-description.cn-_04",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c12",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c27"
+         ]
+        },
+        "globalSwatchId": "--neutral-color--primary-neutral",
+        "rValue": 128,
+        "bValue": 128,
+        "gValue": 128,
+        "aValue": 1
+       }
+      },
+      {
+       "id": "cn-a-43-n-4",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-subitle.cn-_04",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c18",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c24"
+         ]
+        },
+        "globalSwatchId": "--neutral-color--primary-neutral",
+        "rValue": 128,
+        "bValue": 128,
+        "gValue": 128,
+        "aValue": 1
+       }
+      },
+      {
+       "id": "cn-a-43-n-9",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-image-item.cn-_04",
+         "selectorGuids": [
+          "c5ceff8e-fa3a-2a95-d21e-e02fa47dc4cd",
+          "e7c593fd-12b8-c7ce-8db3-db7f8da9ad2d"
+         ]
+        },
+        "xValue": 0,
+        "yValue": 0,
+        "locked": true
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "cn-a-43-n-5",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "selector": ".cn-service-bg-image.cn-_04",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c0e",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c20"
+         ]
+        },
+        "value": 1,
+        "unit": ""
+       }
+      },
+      {
+       "id": "cn-a-43-n-6",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "outExpo",
+        "duration": 1000,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-title.cn-_04",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c0d",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c2d"
+         ]
+        },
+        "yValue": 0,
+        "xUnit": "PX",
+        "yUnit": "%",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "cn-a-43-n-7",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-description.cn-_04",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c12",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c27"
+         ]
+        },
+        "globalSwatchId": "--primary-color--white",
+        "rValue": 250,
+        "bValue": 250,
+        "gValue": 250,
+        "aValue": 1
+       }
+      },
+      {
+       "id": "cn-a-43-n-8",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-subitle.cn-_04",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c18",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c24"
+         ]
+        },
+        "globalSwatchId": "--primary-color--white",
+        "rValue": 250,
+        "bValue": 250,
+        "gValue": 250,
+        "aValue": 1
+       }
+      },
+      {
+       "id": "cn-a-43-n-10",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "outExpo",
+        "duration": 1000,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-image-item.cn-_04",
+         "selectorGuids": [
+          "c5ceff8e-fa3a-2a95-d21e-e02fa47dc4cd",
+          "e7c593fd-12b8-c7ce-8db3-db7f8da9ad2d"
+         ]
+        },
+        "xValue": 1,
+        "yValue": 1,
+        "locked": true
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": true,
+   "createdOn": 1756461253474
+  },
+  "cn-a-44": {
+   "id": "cn-a-44",
+   "title": "Service 04 - Hover Out",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "cn-a-44-n",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "selector": ".cn-service-bg-image.cn-_04",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c0e",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c20"
+         ]
+        },
+        "value": 0,
+        "unit": ""
+       }
+      },
+      {
+       "id": "cn-a-44-n-2",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "outExpo",
+        "duration": 1000,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-title.cn-_04",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c0d",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c2d"
+         ]
+        },
+        "yValue": -200,
+        "xUnit": "PX",
+        "yUnit": "%",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "cn-a-44-n-3",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-description.cn-_04",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c12",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c27"
+         ]
+        },
+        "globalSwatchId": "--neutral-color--primary-neutral",
+        "rValue": 128,
+        "bValue": 128,
+        "gValue": 128,
+        "aValue": 1
+       }
+      },
+      {
+       "id": "cn-a-44-n-4",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-subitle.cn-_04",
+         "selectorGuids": [
+          "a5b89369-cbc8-394f-a3f4-1c8144870c18",
+          "a5b89369-cbc8-394f-a3f4-1c8144870c24"
+         ]
+        },
+        "globalSwatchId": "--neutral-color--primary-neutral",
+        "rValue": 128,
+        "bValue": 128,
+        "gValue": 128,
+        "aValue": 1
+       }
+      },
+      {
+       "id": "cn-a-44-n-5",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "outExpo",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-service-image-item.cn-_04",
+         "selectorGuids": [
+          "c5ceff8e-fa3a-2a95-d21e-e02fa47dc4cd",
+          "e7c593fd-12b8-c7ce-8db3-db7f8da9ad2d"
+         ]
+        },
+        "xValue": 0,
+        "yValue": 0,
+        "locked": true
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": false,
+   "createdOn": 1756461882712
+  }
+ }
+}

@@ -1,0 +1,56 @@
+/* rk-stats — hand-written rules the extraction could not know.
+   Everything is scoped under .rk-stats, exactly as the extractor scopes its own. */
+
+/* renok keeps its typeface on `body`, and a `body` rule does not travel with a
+   cut section. Most of this block names the face through a class, but the two
+   display faces — `.rt-big-text` (the 03) and `.rt-medium-text` (every counter
+   digit) — set only a size and inherit the family, so on this page they were
+   being drawn in the host's Inter while the headline beside them was Inter
+   Tight. The reels are the block, so they have to be in the block's face. */
+.rk-stats { font-family: var(--_font-family---primary-font, "Inter Tight", Inter, sans-serif); }
+
+/* The counter window has to be EXACTLY one digit tall.
+   A `.rt-counter-train` cell is a `.rt-medium-text` line box at
+   `line-height: 100%`, so its height is precisely the medium-text size; the
+   window is `.rt-counter-box`, and any disagreement between the two shows the
+   top of the next digit under the one the reel landed on. renok wrote both
+   sides as separate literals (2.4rem / 3.5rem / 3.75rem against a clamped
+   size) and they only coincide at its own top breakpoint, so the window is
+   tied to the type size instead and the pair can no longer drift. */
+.rk-stats .rk-rt-counter-box { height: var(--_font-details---font-size--medium-text); }
+
+/* The narrow-screen half of that pair: renok drops the medium-text size to
+   `5vw` under 767px so three digits still fit a phone column, and that
+   declaration lives on a `:root` inside the breakpoint, which the extraction
+   does not carry. Without it the reels stay at the 15vw ramp and a
+   three-digit figure runs into its own neighbours. */
+@media screen and (max-width: 767px) {
+  .rk-stats { --_font-details---font-size--medium-text: clamp(35px, 5vw, 60px); }
+}
+
+/* The photograph keeps its own proportions.
+   `.rt-statistics-right` stretches its two children to equal height, and renok
+   undoes that at 1280px with `align-items: center`. Below 1280 the counter
+   column is the taller child — more so here, where each counter is labelled
+   with a capability group's full name over two lines instead of renok's
+   "Awards" — so the picture was being stretched into a 260x641 slot and
+   `object-fit: cover` was throwing away two thirds of the frame. renok's own
+   centring is simply brought down to where the row still is a row; at 479px
+   and below the row becomes a column and stretch is what makes the picture
+   full-width, so that breakpoint is left alone. */
+@media screen and (min-width: 480px) and (max-width: 1279px) {
+  .rk-stats .rk-rt-statistics-right { align-items: center; }
+}
+
+/* The block is a link target — the outcome strip above it carries
+   `href="#story-3"` — and its reveals are renok's own SCROLL_INTO_VIEW with
+   `scrollOffsetValue: 12%`, which counts the top and bottom twelfths of the
+   viewport as NOT in view. A hash that lands the section flush with the
+   viewport top therefore parks the 03 (48px down on a phone, inside that dead
+   band) at the inline `opacity:0` it ships with, and it stays blank until the
+   reader scrolls. Landing the section a band lower puts the 03 past the
+   threshold, so the interaction fires on arrival; scrolling to it normally is
+   unaffected, and the site already anchors this way (`scroll-margin-top` on the
+   lifelogx sections). Stated in vh because the dead band is a share of the
+   viewport, not a fixed height. */
+.rk-stats { scroll-margin-top: 12vh; }

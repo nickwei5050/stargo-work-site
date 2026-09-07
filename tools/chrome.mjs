@@ -129,7 +129,7 @@ function overlayMenu(html, L, current) {
   const item = findByClass(flex.text, 'div', 'menu-item');
   const linkTpl = firstLink(item.text);
   const items = [...L.nav, ...L.more, L.swap].map((n, i) =>
-    `<div class="menu-item _0${i + 1}">${renderLink(linkTpl, n, isCurrent(n.href, current))}</div>`).join('');
+    `<div class="menu-item _${String(i + 1).padStart(2, '0')}">${renderLink(linkTpl, n, isCurrent(n.href, current))}</div>`).join('');
   return replaceInner(html, flex, items);
 }
 
@@ -273,15 +273,31 @@ function scripts(html) {
     .replace(/data-wf-page="699b6466d5f19893993a4[0-9a-f]{3}"/g, 'data-wf-page="699b6466d5f19893993a4bf1"')
     .replace(/data-wf-page-id="699b6466d5f19893993a4[0-9a-f]{3}"/g, 'data-wf-page-id="699b6466d5f19893993a4bf1"')
     .replace(/\[\[\[&quot;699b6466d5f19893993a4[0-9a-f]{3}&quot;,/g, '[[[&quot;699b6466d5f19893993a4bf1&quot;,');
-  // Site overrides load on every page, after the template stylesheets.
+  /* Site overrides load on every page, after the template stylesheets — and
+     that means after ALL of them, not just after Mono's. A donor block brings
+     its own sheet, and its rules land at the same specificity as ours (both
+     write `.cn-service .cn-service-title`), so whichever loads last wins.
+     Anchored to the Mono link, this sheet slipped in front of the donor sheets
+     and every fusion rule written against a transplanted block was inert. */
   if (!out.includes('css/stargo-fusion.css')) {
-    out = out.replace(/(<link href="css\/monof-template\.app\.shared\.[a-f0-9]+\.css" rel="stylesheet" type="text\/css"\/>)/, '$1\n<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>');
-    if (!out.includes('css/stargo-fusion.css')) throw new Error('chrome: could not attach stargo-fusion.css');
+    const links = [...out.matchAll(/<link href="css\/[^"]+\.css" rel="stylesheet" type="text\/css"\/>/g)];
+    if (!links.length) throw new Error('chrome: no template stylesheet to attach stargo-fusion.css after');
+    const last = links[links.length - 1];
+    const at = last.index + last[0].length;
+    out = `${out.slice(0, at)}\n<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>${out.slice(at)}`;
   }
   // Chinese word segmentation for SplitText; must sit between SplitText and the engine's DOM-ready run.
   if (!out.includes('js/stargo-splittext-cjk.js')) {
     out = out.replace('<script src="js/SplitText.min.js" type="text/javascript"></script>', '<script src="js/SplitText.min.js" type="text/javascript"></script><script src="js/stargo-splittext-cjk.js"></script>');
     if (!out.includes('js/stargo-splittext-cjk.js')) throw new Error('chrome: SplitText script tag not found');
+  }
+  /* Elements Webflow animates on scroll ship at inline opacity:0, so arriving on
+     an anchor — which the floating pill and the hero button both do — leaves
+     everything above the landing point invisible for good. Runs after the
+     runtime, so it must load after the bundle. */
+  if (!out.includes('js/stargo-ix-arrival.js')) {
+    out = out.replace('<script src="js/app.fused.js"', '<script src="js/stargo-ix-arrival.js" defer></script><script src="js/app.fused.js"');
+    if (!out.includes('js/stargo-ix-arrival.js')) throw new Error('chrome: page bundle script tag not found');
   }
   // Shorter copy on phones must be in place before the page bundle splits the text.
   if (!out.includes('js/stargo-mobile-copy.js')) {

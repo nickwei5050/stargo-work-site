@@ -1,0 +1,1759 @@
+/* qubix — capability-page blocks.
+   Written by tools/capability-donors.mjs out of qubix: only the
+   rules the transplanted blocks use, class names prefixed with `qx-`, every
+   selector scoped under the block's own root class. Do not edit by hand. */
+.qx-statement {
+  --_color---normal-color--black: black;
+  --_base---font-family--your-font: Interdisplay, Arial, sans-serif;
+  --_color---normal-color--medium-gray: #a1a1a1;
+  --_base---font-size--font-size-sm: 16px;
+  --_base---font-weight--regular: 400;
+  --_common-spacing---spacing-9xl-large: 32px;
+  --_common-spacing---spacing-2xl-large: 16px;
+  --h1--font-family: var(--_base---font-family--your-font);
+  --_color---normal-color--snow-white: #fdfcfc;
+  --h1--font-size: 128px;
+  --h1--line-height: var(--_base---line-height--line-height-2xl);
+  --h1--font-weight: var(--_base---font-weight--medium);
+  --h1--letter-spacing: var(--_base---spacing-letter--spacing-letter-tightest);
+  --h2--font-family: var(--_base---font-family--your-font);
+  --_color---text-color--text-color: var(--_color---normal-color--snow-white);
+  --h2--font-size: 58px;
+  --h2--line-height: var(--_base---line-height--line-height-relaxed);
+  --h2--font-weight: var(--_base---font-weight--medium);
+  --h2--letter-spacing: var(--_base---spacing-letter--spacing-letter-ultra);
+  --h3--font-family: var(--_base---font-family--your-font);
+  --h3--font-size: 44px;
+  --h3--line-height: var(--_base---line-height--line-height-relaxed);
+  --h3--font-weight: var(--_base---font-weight--medium);
+  --h3--letter-spacing: var(--_base---spacing-letter--spacing-letter-tighter);
+  --_common-spacing---spacing-6xl-large: 24px;
+  --_common-spacing---spacing-medium: 10px;
+  --h4--font-family: var(--_base---font-family--your-font);
+  --h4--font-size: 32px;
+  --h4--line-height: var(--_base---line-height--line-height-base);
+  --h4--font-weight: var(--_base---font-weight--medium);
+  --h4--letter-spacing: var(--_base---global-size--none);
+  --h5--font-family: var(--_base---font-family--your-font);
+  --h5--font-size: 24px;
+  --h5--line-height: var(--_base---line-height--line-height-relaxed);
+  --h5--font-weight: var(--_base---font-weight--medium);
+  --h5--letter-spacing: var(--_base---spacing-letter--spacing-letter-tighter);
+  --h6--font-family: var(--_base---font-family--your-font);
+  --h6--font-size: 20px;
+  --h6--line-height: var(--_base---line-height--line-height-md);
+  --h6--font-weight: var(--_base---font-weight--medium);
+  --h6--letter-spacing: var(--_base---spacing-letter--spacing-letter-ultra);
+  --_common-spacing---spacing-extra-tiny: 0px;
+  --_base---font-size--font-size-lg: 20px;
+  --_base---line-height--line-height-md: 134%;
+  --_base---spacing-letter--spacing-letter-tighter: -.02em;
+  --_color---text-color--paragraph-color: var(--_color---normal-color--medium-gray);
+  --_base---line-height--line-height-base: 122%;
+  --_common-spacing---spacing-extra-small: 6px;
+  --_common-spacing---spacing-small: 8px;
+  --_base---line-height--line-height-2xl: 154%;
+  --_base---font-weight--semi-bold: 600;
+  --_color---accent-color--accent-one: var(--_color---normal-color--black);
+  --_color---normal-color--deep-charcoal: #0f0f0f;
+  --_base---global-size--global-full: 100%;
+  --_ui---container--padding: 40px;
+  --_base---global-size--none: 0px;
+  --_common-spacing---spacing-33xl-large: 110px;
+  --_base---line-height--line-height-tightest: 100%;
+  --_color---normal-color--vivid-orange: #fe6512;
+  --text-regular--font-family: var(--_base---font-family--your-font);
+  --_color---normal-color--white: white;
+  --text-regular--font-size: 18px;
+  --text-regular--line-height: var(--_base---line-height--line-height-2xl);
+  --text-regular--font-weight: var(--_base---font-weight--regular);
+  --text-regular--letter-spacing: var(--_base---spacing-letter--spacing-letter-ultra);
+  --text-extra-small--font-family: var(--_base---font-family--your-font);
+  --text-extra-small--font-size: 16px;
+  --text-extra-small--line-height: var(--_base---line-height--line-height-lg);
+  --text-extra-small--font-weight: var(--_base---font-weight--regular);
+  --text-extra-small--letter-spacing: var(--_base---spacing-letter--spacing-letter-tighter);
+  --_ui---container--max-width: 1360px;
+  --body--font-family: var(--_base---font-family--your-font);
+  --body--font-size: 16px;
+  --body--line-height: var(--_base---line-height--line-height-xl);
+  --body--font-weight: var(--_base---font-weight--regular);
+  --body--letter-spacing: var(--_base---spacing-letter--spacing-letter-tighter);
+  --_color---normal-color--near-black: #222;
+  --_color---normal-color--transparent-white: #ffffff42;
+  --_common-spacing---spacing-15xl-large: 48px;
+  --_color---normal-color--soft-white-layer: #ffffff42;
+  --_base---bordar-radius--r-xl: 12px;
+  --_color---normal-color--frosted-white: #ffffff42;
+  --_color---normal-color--gunmetal: #1d1d1d;
+  --_common-spacing---spacing-22xl-large: 64px;
+  --_common-spacing---spacing-tiny: 4px;
+  --_base---font-size--font-size-xs: 14px;
+  --_base---line-height--line-height-lg: 136%;
+  --_common-spacing---spacing-13xl-large: 40px;
+  --_common-spacing---spacing-4xl-large: 20px;
+  --_common-spacing---spacing-34xl-large: 120px;
+  --_common-spacing---spacing-30xl-large: 100px;
+  --_common-spacing---spacing-large: 12px;
+  --_common-spacing---spacing-5xl-large: 22px;
+  --_common-spacing---spacing-27xl-large: 80px;
+  --_common-spacing---spacing-20xl-large: 60px;
+  --_base---line-height--line-height-xl: 144%;
+  --_common-spacing---spacing-26xl-large: 78px;
+  --_base---bordar-radius--pill: 200px;
+  --_common-spacing---spacing-12xl-large: 38px;
+  --_base---bordar-radius--r-7xl: 32px;
+  --_base---font-size--font-size-2xl: 24px;
+  --_base---font-size--font-size-md: 18px;
+  --_base---font-weight--medium: 500;
+  --_common-spacing---spacing-25xl-large: 74px;
+  --_common-spacing---spacing-29xl-large: 94px;
+  --_common-spacing---spacing-35xl-large: 140px;
+  --_common-spacing---spacing-37xl-large: 200px;
+  --_base---bordar-radius--r-5xl: 22px;
+  --_base---bordar-radius--r-m: 4px;
+  --_base---bordar-radius--round: 100%;
+  --_base---font-size--font-size-10xl: 64px;
+  --_base---line-height--line-height-normal: 124%;
+  --_base---font-size--font-size-6xl: 40px;
+  --_base---font-size--font-size-4xl: 28px;
+  --_common-spacing---spacing-3xl-large: 18px;
+  --_base---bordar-radius--r-l: 6px;
+  --_base---bordar-radius--r-8xl: 40px;
+  --_common-spacing---spacing-32xl-large: 108px;
+  --_common-spacing---spacing-17xl-large: 52px;
+  --_common-spacing---spacing-11xl-large: 36px;
+  --_base---bordar-radius--r-4xl: 20px;
+  --_base---bordar-radius--r-2xl: 14px;
+  --_base---bordar-radius--r-3xl: 16px;
+  --_base---font-size--font-size-13xl: 76px;
+  --_base---spacing-letter--spacing-letter-tightest: -.03em;
+  --_base---font-size--font-size-7xl: 48px;
+  --_base---font-size--font-size-5xl: 36px;
+  --_common-spacing---spacing-14xl-large: 45px;
+  --_common-spacing---margin-style--margin-plus-spacer-service: 215vh;
+  --_base---line-height--line-height-3xl: 170%;
+  --_base---spacing-letter--spacing-letter-tight: -.01em;
+  --_common-spacing---spacing-23xl-large: 68px;
+  --_common-spacing---spacing-8xl-large: 26px;
+  --_base---line-height--line-height-relaxed: 132%;
+  --_color---normal-color--transparent: transparent;
+  --_common-spacing---spacing-extra-large: 14px;
+  --_common-spacing---spacing-10xl-large: 34px;
+  --_base---bordar-radius--r-x: 8px;
+  --_common-spacing---spacing-7xl-large: 25px;
+  --_common-spacing---spacing-36xl-large: 160px;
+  --_base---bordar-radius--r-6xl: 24px;
+  --_base---bordar-radius--r-9xl: 42px;
+  --_color---normal-color--soft-black: #1c1c1c;
+  --_common-spacing---spacing-21xl-large: 62px;
+  --_common-spacing---spacing-31xl-large: 106px;
+  --_common-spacing---spacing-28xl-large: 82px;
+  --_common-spacing---spacing-16xl-large: 50px;
+  --_base---font-size--font-size-15xl: 280px;
+  --_base---font-size--font-size-14xl: 80px;
+  --_common-spacing---spacing-19xl-large: 58px;
+  --_base---global-size--global-half: 0px;
+  --_ui---primary-button--font-family: var(--_base---font-family--your-font);
+  --_ui---primary-button--font-weight: var(--_base---font-weight--regular);
+  --text-extra-large--font-family: var(--_base---font-family--your-font);
+  --text-extra-large--font-weight: var(--_base---font-weight--regular);
+  --text-extra-large--font-size: 22px;
+  --_ui---primary-button--font-size: var(--_base---font-size--font-size-md);
+  --text-extra-large--line-height: var(--_base---line-height--line-height-xl);
+  --_base---font-weight--thin: 100;
+  --text-extra-large--letter-spacing: var(--_base---spacing-letter--spacing-letter-ultra);
+  --_ui---primary-button--line-height: var(--_base---line-height--line-height-relaxed);
+  --_ui---primary-button--letter-spacing: var(--_base---global-size--none);
+  --_base---font-weight--extra-light: 200;
+  --_base---font-weight--light: 300;
+  --_ui---secondary-button--font-family: var(--_base---font-family--your-font);
+  --_ui---secondary-button--font-weight: var(--_base---font-weight--regular);
+  --_ui---secondary-button--font-size: var(--_base---font-size--font-size-md);
+  --_base---font-weight--bold: 700;
+  --_ui---secondary-button--line-height: var(--_base---line-height--line-height-relaxed);
+  --_ui---secondary-button--letter-spacing: var(--_base---global-size--none);
+  --_base---font-weight--extra-bold: 800;
+  --_base---font-weight--black: 900;
+  --text-learge--font-family: var(--_base---font-family--your-font);
+  --text-learge--font-weight: var(--_base---font-weight--regular);
+  --text-learge--font-size: 20px;
+  --text-learge--line-height: var(--_base---line-height--line-height-xl);
+  --_base---font-size--font-size-xl: 22px;
+  --text-learge--letter-spacing: var(--_base---spacing-letter--spacing-letter-ultra);
+  --_base---font-size--font-size-3xl: 26px;
+  --_base---font-size--font-size-8xl: 52px;
+  --_base---font-size--font-size-9xl: 60px;
+  --_base---font-size--font-size-11xl: 68px;
+  --_base---font-size--font-size-12xl: 72px;
+  --_base---line-height--line-height-tighter: 105%;
+  --_base---line-height--line-height-tight: 110%;
+  --_common-spacing---spacing-18xl-large: 56px;
+  --_common-spacing---spacing-24xl-large: 70px;
+  --_base---spacing-letter--spacing-letter-ultra: -.04em;
+  --_common-spacing---spacing-38xl-large: 240px;
+}
+.qx-statement h1, .qx-statement h2, .qx-statement h3, .qx-statement h4, .qx-statement h5, .qx-statement h6 { margin-bottom: 10px;
+  font-weight: bold; }
+.qx-statement h2 { margin-top: 20px;
+  font-size: 32px;
+  line-height: 36px; }
+.qx-statement .w-container { max-width: 940px;
+  margin-left: auto;
+  margin-right: auto; }
+.qx-statement .w-container:before, .qx-statement .w-container:after { content: " ";
+  grid-area: 1 / 1 / 2 / 2;
+  display: table; }
+.qx-statement .w-container:after { clear: both; }
+.qx-statement .w-container .w-row { margin-left: -10px;
+  margin-right: -10px; }
+@media screen and (max-width: 991px) {
+  .qx-statement .w-container { max-width: 728px; }
+}
+@media screen and (max-width: 767px) {
+  .qx-statement .w-row, .qx-statement .w-container .w-row { margin-left: 0;
+    margin-right: 0; }
+}
+@media screen and (max-width: 479px) {
+  .qx-statement .w-container { max-width: none; }
+}
+.qx-statement .w-layout-blockcontainer { max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block; }
+@media screen and (max-width: 991px) {
+  .qx-statement .w-layout-blockcontainer { max-width: 728px; }
+}
+@media screen and (max-width: 767px) {
+  .qx-statement .w-layout-blockcontainer { max-width: none; }
+}
+.qx-statement h2 { margin-top: var(--_common-spacing---spacing-9xl-large);
+  margin-bottom: var(--_common-spacing---spacing-2xl-large);
+  font-family: var(--h2--font-family);
+  color: var(--_color---text-color--text-color);
+  font-size: var(--h2--font-size);
+  line-height: var(--h2--line-height);
+  font-weight: var(--h2--font-weight);
+  letter-spacing: var(--h2--letter-spacing); }
+.qx-statement .qx-h2 { margin-top: var(--_base---global-size--none);
+  margin-bottom: var(--_base---global-size--none);
+  font-family: var(--h2--font-family);
+  color: var(--_color---text-color--text-color);
+  font-size: var(--h2--font-size);
+  line-height: var(--h2--line-height);
+  font-weight: var(--h2--font-weight);
+  letter-spacing: var(--h2--letter-spacing);
+  text-transform: capitalize; }
+.qx-statement .qx-h2.marquee-position { position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-200%, 200%); }
+.qx-statement .qx-h2.project-title-mw { width: var(--_base---global-size--global-full);
+  max-width: 440px; }
+.qx-statement .qx-h2.qx-vali-title-mw { width: var(--_base---global-size--global-full);
+  max-width: 622px; }
+.qx-statement .qx-container { max-width: var(--_ui---container--max-width);
+  padding-right: var(--_ui---container--padding);
+  padding-left: var(--_ui---container--padding);
+  margin-left: auto;
+  margin-right: auto;
+  display: block; }
+.qx-statement .qx-body { font-family: var(--body--font-family);
+  color: var(--_color---normal-color--medium-gray);
+  font-size: var(--body--font-size);
+  line-height: var(--body--line-height);
+  font-weight: var(--body--font-weight);
+  letter-spacing: var(--body--letter-spacing); }
+.qx-statement .qx-body.white { color: var(--_color---normal-color--white); }
+.qx-statement .qx-body.snow-white { color: var(--_color---normal-color--snow-white); }
+.qx-statement .qx-body.text-end { text-align: right; }
+.qx-statement .qx-body.qx-valu-des-mw { width: var(--_base---global-size--global-full);
+  max-width: 340px;
+  margin-left: auto; }
+.qx-statement .qx-body.black { color: var(--_color---normal-color--black); }
+.qx-statement .qx-body.near-black { color: var(--_color---normal-color--near-black); }
+.qx-statement .qx-body.transparent-white { color: var(--_color---normal-color--transparent-white); }
+.qx-statement .qx-body.error-des { max-width: 358px; }
+.qx-statement .qx-body.utility-note-des { width: var(--_base---global-size--global-full);
+  max-width: 620px; }
+.qx-statement .qx-values-section { padding-top: var(--_common-spacing---spacing-34xl-large);
+  padding-bottom: var(--_common-spacing---spacing-34xl-large);
+  background-color: var(--_color---normal-color--deep-charcoal); }
+.qx-statement .qx-values-title-box { padding-bottom: var(--_common-spacing---spacing-17xl-large);
+  border-bottom: 1px solid var(--_color---normal-color--soft-white-layer); }
+.qx-statement .qx-values-des-box { margin-top: var(--_common-spacing---spacing-9xl-large); }
+@media screen and (max-width: 767px) {
+  .qx-statement .qx-h2.marquee-position { left: 75%; }
+}
+@media screen and (max-width: 479px) {
+  .qx-statement .qx-h2.marquee-position { top: 0%;
+    left: 80%; }
+  .qx-statement .qx-body.qx-valu-des-mw { max-width: 100%; }
+}
+/* ---- qx-statement: hand-written, from tools/blocks/qx-statement.css ---- */
+/* qx-statement — hand-written rules for the statement that opens 一个外贸闭环.
+   Scoped under .qx-statement, appended after the extracted qubix rules.
+
+   Both fixes here are the same trap: qubix keeps things on `body` that a cut
+   block cannot inherit, and names a typeface this page does not serve. */
+
+/* ---------------------------------------------------------------- typeface --
+   The donor draws this block in InterDisplay. That face is declared only in
+   css/scalora-modules.sc.css, which the capability page does not load, so the
+   whole stack collapsed to its Arial fallback: measured in the page at 58px,
+   `Interdisplay, Arial, sans-serif` set the same string 1269.89px wide —
+   exactly Arial's 1269.89px, against Inter's 1300.7px. The block was therefore
+   set in Arial while the page around it is set in Inter (the mono template's
+   --font--primary-font), which the site does serve.
+
+   Inter is InterDisplay's text cut, so it is both the closest substitute for
+   the donor's face and the face this page already uses. It goes into the stack
+   behind Interdisplay, so a page that does load the donor's face still gets it,
+   and ahead of the donor's own Arial fallback. Chinese still falls past both to
+   the system CJK face, exactly as the rest of the page does. */
+.qx-statement {
+  --_base---font-family--your-font: Interdisplay, Inter, Arial, sans-serif;
+}
+
+/* ------------------------------------------------------- responsive scale --
+   qubix's whole responsive type and spacing scale is a set of custom properties
+   redefined on `body` inside three media queries, and a `body` rule does not
+   travel with a cut section. Without them the block held its 58px desktop
+   heading and its 40px container padding all the way down to 390px, where only
+   310px of width was left: 一个外贸闭环 broke after five characters and
+   "One closed loop" ran to two lines of 58px type.
+
+   These restore, for this block only, exactly the values the donor's body rules
+   carry at each of its three breakpoints — the ones this block actually reads:
+   the h2 size, the container's width and padding, the section's vertical
+   padding, and the gap above the paragraph. Everything else in those blocks
+   (h1/h3–h6, buttons, the text-* scales) this block never uses. */
+@media screen and (max-width: 991px) {
+  .qx-statement {
+    --h2--font-size: 42px;
+    --_ui---container--max-width: 767px;
+    --_ui---container--padding: 32px;
+    --_common-spacing---spacing-34xl-large: 100px;
+    --_common-spacing---spacing-9xl-large: 24px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .qx-statement {
+    --h2--font-size: 36px;
+    --_ui---container--max-width: 540px;
+    --_ui---container--padding: 24px;
+    --_common-spacing---spacing-34xl-large: 80px;
+    --_common-spacing---spacing-9xl-large: 16px;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  .qx-statement {
+    --h2--font-size: 32px;
+    --_ui---container--max-width: 100%;
+    --_ui---container--padding: 16px;
+    --_common-spacing---spacing-34xl-large: 60px;
+    --_common-spacing---spacing-9xl-large: 16px;
+  }
+}
+
+/* qubix sets `text-transform: capitalize` on its h2. Applied to this site's
+   own sentence-case copy that rewrites the words themselves — "Run the work
+   with an AI team" is published by tools/copy.mjs and was rendering as "Run The
+   Work With An AI Team". The donor's type stays; only the case goes back to
+   what the copy says. All three qubix headings on this page do the same, so
+   they stay in one case. Chinese is unaffected either way. */
+.qx-statement .qx-h2 { text-transform: none; }
+
+.qx-cards {
+  --_color---normal-color--black: black;
+  --_base---font-family--your-font: Interdisplay, Arial, sans-serif;
+  --_color---normal-color--medium-gray: #a1a1a1;
+  --_base---font-size--font-size-sm: 16px;
+  --_base---font-weight--regular: 400;
+  --_common-spacing---spacing-9xl-large: 32px;
+  --_common-spacing---spacing-2xl-large: 16px;
+  --h1--font-family: var(--_base---font-family--your-font);
+  --_color---normal-color--snow-white: #fdfcfc;
+  --h1--font-size: 128px;
+  --h1--line-height: var(--_base---line-height--line-height-2xl);
+  --h1--font-weight: var(--_base---font-weight--medium);
+  --h1--letter-spacing: var(--_base---spacing-letter--spacing-letter-tightest);
+  --h2--font-family: var(--_base---font-family--your-font);
+  --_color---text-color--text-color: var(--_color---normal-color--snow-white);
+  --h2--font-size: 58px;
+  --h2--line-height: var(--_base---line-height--line-height-relaxed);
+  --h2--font-weight: var(--_base---font-weight--medium);
+  --h2--letter-spacing: var(--_base---spacing-letter--spacing-letter-ultra);
+  --h3--font-family: var(--_base---font-family--your-font);
+  --h3--font-size: 44px;
+  --h3--line-height: var(--_base---line-height--line-height-relaxed);
+  --h3--font-weight: var(--_base---font-weight--medium);
+  --h3--letter-spacing: var(--_base---spacing-letter--spacing-letter-tighter);
+  --_common-spacing---spacing-6xl-large: 24px;
+  --_common-spacing---spacing-medium: 10px;
+  --h4--font-family: var(--_base---font-family--your-font);
+  --h4--font-size: 32px;
+  --h4--line-height: var(--_base---line-height--line-height-base);
+  --h4--font-weight: var(--_base---font-weight--medium);
+  --h4--letter-spacing: var(--_base---global-size--none);
+  --h5--font-family: var(--_base---font-family--your-font);
+  --h5--font-size: 24px;
+  --h5--line-height: var(--_base---line-height--line-height-relaxed);
+  --h5--font-weight: var(--_base---font-weight--medium);
+  --h5--letter-spacing: var(--_base---spacing-letter--spacing-letter-tighter);
+  --h6--font-family: var(--_base---font-family--your-font);
+  --h6--font-size: 20px;
+  --h6--line-height: var(--_base---line-height--line-height-md);
+  --h6--font-weight: var(--_base---font-weight--medium);
+  --h6--letter-spacing: var(--_base---spacing-letter--spacing-letter-ultra);
+  --_common-spacing---spacing-extra-tiny: 0px;
+  --_base---font-size--font-size-lg: 20px;
+  --_base---line-height--line-height-md: 134%;
+  --_base---spacing-letter--spacing-letter-tighter: -.02em;
+  --_color---text-color--paragraph-color: var(--_color---normal-color--medium-gray);
+  --_base---line-height--line-height-base: 122%;
+  --_common-spacing---spacing-extra-small: 6px;
+  --_common-spacing---spacing-small: 8px;
+  --_base---line-height--line-height-2xl: 154%;
+  --_base---font-weight--semi-bold: 600;
+  --_color---accent-color--accent-one: var(--_color---normal-color--black);
+  --_color---normal-color--deep-charcoal: #0f0f0f;
+  --_base---global-size--global-full: 100%;
+  --_ui---container--padding: 40px;
+  --_base---global-size--none: 0px;
+  --_common-spacing---spacing-33xl-large: 110px;
+  --_base---line-height--line-height-tightest: 100%;
+  --_color---normal-color--vivid-orange: #fe6512;
+  --text-regular--font-family: var(--_base---font-family--your-font);
+  --_color---normal-color--white: white;
+  --text-regular--font-size: 18px;
+  --text-regular--line-height: var(--_base---line-height--line-height-2xl);
+  --text-regular--font-weight: var(--_base---font-weight--regular);
+  --text-regular--letter-spacing: var(--_base---spacing-letter--spacing-letter-ultra);
+  --text-extra-small--font-family: var(--_base---font-family--your-font);
+  --text-extra-small--font-size: 16px;
+  --text-extra-small--line-height: var(--_base---line-height--line-height-lg);
+  --text-extra-small--font-weight: var(--_base---font-weight--regular);
+  --text-extra-small--letter-spacing: var(--_base---spacing-letter--spacing-letter-tighter);
+  --_ui---container--max-width: 1360px;
+  --body--font-family: var(--_base---font-family--your-font);
+  --body--font-size: 16px;
+  --body--line-height: var(--_base---line-height--line-height-xl);
+  --body--font-weight: var(--_base---font-weight--regular);
+  --body--letter-spacing: var(--_base---spacing-letter--spacing-letter-tighter);
+  --_color---normal-color--near-black: #222;
+  --_color---normal-color--transparent-white: #ffffff42;
+  --_common-spacing---spacing-15xl-large: 48px;
+  --_color---normal-color--soft-white-layer: #ffffff42;
+  --_base---bordar-radius--r-xl: 12px;
+  --_color---normal-color--frosted-white: #ffffff42;
+  --_color---normal-color--gunmetal: #1d1d1d;
+  --_common-spacing---spacing-22xl-large: 64px;
+  --_common-spacing---spacing-tiny: 4px;
+  --_base---font-size--font-size-xs: 14px;
+  --_base---line-height--line-height-lg: 136%;
+  --_common-spacing---spacing-13xl-large: 40px;
+  --_common-spacing---spacing-4xl-large: 20px;
+  --_common-spacing---spacing-34xl-large: 120px;
+  --_common-spacing---spacing-30xl-large: 100px;
+  --_common-spacing---spacing-large: 12px;
+  --_common-spacing---spacing-5xl-large: 22px;
+  --_common-spacing---spacing-27xl-large: 80px;
+  --_common-spacing---spacing-20xl-large: 60px;
+  --_base---line-height--line-height-xl: 144%;
+  --_common-spacing---spacing-26xl-large: 78px;
+  --_base---bordar-radius--pill: 200px;
+  --_common-spacing---spacing-12xl-large: 38px;
+  --_base---bordar-radius--r-7xl: 32px;
+  --_base---font-size--font-size-2xl: 24px;
+  --_base---font-size--font-size-md: 18px;
+  --_base---font-weight--medium: 500;
+  --_common-spacing---spacing-25xl-large: 74px;
+  --_common-spacing---spacing-29xl-large: 94px;
+  --_common-spacing---spacing-35xl-large: 140px;
+  --_common-spacing---spacing-37xl-large: 200px;
+  --_base---bordar-radius--r-5xl: 22px;
+  --_base---bordar-radius--r-m: 4px;
+  --_base---bordar-radius--round: 100%;
+  --_base---font-size--font-size-10xl: 64px;
+  --_base---line-height--line-height-normal: 124%;
+  --_base---font-size--font-size-6xl: 40px;
+  --_base---font-size--font-size-4xl: 28px;
+  --_common-spacing---spacing-3xl-large: 18px;
+  --_base---bordar-radius--r-l: 6px;
+  --_base---bordar-radius--r-8xl: 40px;
+  --_common-spacing---spacing-32xl-large: 108px;
+  --_common-spacing---spacing-17xl-large: 52px;
+  --_common-spacing---spacing-11xl-large: 36px;
+  --_base---bordar-radius--r-4xl: 20px;
+  --_base---bordar-radius--r-2xl: 14px;
+  --_base---bordar-radius--r-3xl: 16px;
+  --_base---font-size--font-size-13xl: 76px;
+  --_base---spacing-letter--spacing-letter-tightest: -.03em;
+  --_base---font-size--font-size-7xl: 48px;
+  --_base---font-size--font-size-5xl: 36px;
+  --_common-spacing---spacing-14xl-large: 45px;
+  --_common-spacing---margin-style--margin-plus-spacer-service: 215vh;
+  --_base---line-height--line-height-3xl: 170%;
+  --_base---spacing-letter--spacing-letter-tight: -.01em;
+  --_common-spacing---spacing-23xl-large: 68px;
+  --_common-spacing---spacing-8xl-large: 26px;
+  --_base---line-height--line-height-relaxed: 132%;
+  --_color---normal-color--transparent: transparent;
+  --_common-spacing---spacing-extra-large: 14px;
+  --_common-spacing---spacing-10xl-large: 34px;
+  --_base---bordar-radius--r-x: 8px;
+  --_common-spacing---spacing-7xl-large: 25px;
+  --_common-spacing---spacing-36xl-large: 160px;
+  --_base---bordar-radius--r-6xl: 24px;
+  --_base---bordar-radius--r-9xl: 42px;
+  --_color---normal-color--soft-black: #1c1c1c;
+  --_common-spacing---spacing-21xl-large: 62px;
+  --_common-spacing---spacing-31xl-large: 106px;
+  --_common-spacing---spacing-28xl-large: 82px;
+  --_common-spacing---spacing-16xl-large: 50px;
+  --_base---font-size--font-size-15xl: 280px;
+  --_base---font-size--font-size-14xl: 80px;
+  --_common-spacing---spacing-19xl-large: 58px;
+  --_base---global-size--global-half: 0px;
+  --_ui---primary-button--font-family: var(--_base---font-family--your-font);
+  --_ui---primary-button--font-weight: var(--_base---font-weight--regular);
+  --text-extra-large--font-family: var(--_base---font-family--your-font);
+  --text-extra-large--font-weight: var(--_base---font-weight--regular);
+  --text-extra-large--font-size: 22px;
+  --_ui---primary-button--font-size: var(--_base---font-size--font-size-md);
+  --text-extra-large--line-height: var(--_base---line-height--line-height-xl);
+  --_base---font-weight--thin: 100;
+  --text-extra-large--letter-spacing: var(--_base---spacing-letter--spacing-letter-ultra);
+  --_ui---primary-button--line-height: var(--_base---line-height--line-height-relaxed);
+  --_ui---primary-button--letter-spacing: var(--_base---global-size--none);
+  --_base---font-weight--extra-light: 200;
+  --_base---font-weight--light: 300;
+  --_ui---secondary-button--font-family: var(--_base---font-family--your-font);
+  --_ui---secondary-button--font-weight: var(--_base---font-weight--regular);
+  --_ui---secondary-button--font-size: var(--_base---font-size--font-size-md);
+  --_base---font-weight--bold: 700;
+  --_ui---secondary-button--line-height: var(--_base---line-height--line-height-relaxed);
+  --_ui---secondary-button--letter-spacing: var(--_base---global-size--none);
+  --_base---font-weight--extra-bold: 800;
+  --_base---font-weight--black: 900;
+  --text-learge--font-family: var(--_base---font-family--your-font);
+  --text-learge--font-weight: var(--_base---font-weight--regular);
+  --text-learge--font-size: 20px;
+  --text-learge--line-height: var(--_base---line-height--line-height-xl);
+  --_base---font-size--font-size-xl: 22px;
+  --text-learge--letter-spacing: var(--_base---spacing-letter--spacing-letter-ultra);
+  --_base---font-size--font-size-3xl: 26px;
+  --_base---font-size--font-size-8xl: 52px;
+  --_base---font-size--font-size-9xl: 60px;
+  --_base---font-size--font-size-11xl: 68px;
+  --_base---font-size--font-size-12xl: 72px;
+  --_base---line-height--line-height-tighter: 105%;
+  --_base---line-height--line-height-tight: 110%;
+  --_common-spacing---spacing-18xl-large: 56px;
+  --_common-spacing---spacing-24xl-large: 70px;
+  --_base---spacing-letter--spacing-letter-ultra: -.04em;
+  --_common-spacing---spacing-38xl-large: 240px;
+}
+.qx-cards .w-container { max-width: 940px;
+  margin-left: auto;
+  margin-right: auto; }
+.qx-cards .w-container:before, .qx-cards .w-container:after { content: " ";
+  grid-area: 1 / 1 / 2 / 2;
+  display: table; }
+.qx-cards .w-container:after { clear: both; }
+.qx-cards .w-container .w-row { margin-left: -10px;
+  margin-right: -10px; }
+@media screen and (max-width: 991px) {
+  .qx-cards .w-container { max-width: 728px; }
+}
+@media screen and (max-width: 767px) {
+  .qx-cards .w-row, .qx-cards .w-container .w-row { margin-left: 0;
+    margin-right: 0; }
+}
+@media screen and (max-width: 479px) {
+  .qx-cards .w-container { max-width: none; }
+}
+.qx-cards .w-layout-blockcontainer { max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block; }
+@media screen and (max-width: 991px) {
+  .qx-cards .w-layout-blockcontainer { max-width: 728px; }
+}
+@media screen and (max-width: 767px) {
+  .qx-cards .w-layout-blockcontainer { max-width: none; }
+}
+.qx-cards .qx-h4 { margin-top: var(--_base---global-size--none);
+  margin-bottom: var(--_base---global-size--none);
+  font-family: var(--h4--font-family);
+  color: var(--_color---text-color--text-color);
+  font-size: var(--h4--font-size);
+  line-height: var(--h4--line-height);
+  font-weight: var(--h4--font-weight);
+  letter-spacing: var(--h4--letter-spacing);
+  text-decoration: none; }
+.qx-cards .qx-h4.footer-title-mw { width: var(--_base---global-size--global-full);
+  max-width: 482px; }
+.qx-cards .qx-h4.qx-medium-gray { color: var(--_color---normal-color--medium-gray); }
+.qx-cards .h5.qx-medium-gray { color: var(--_color---normal-color--medium-gray); }
+.qx-cards .qx-h6 { margin-top: var(--_base---global-size--none);
+  margin-bottom: var(--_base---global-size--none);
+  font-family: var(--h6--font-family);
+  color: var(--_color---text-color--text-color);
+  font-size: var(--h6--font-size);
+  line-height: var(--h6--line-height);
+  font-weight: var(--h6--font-weight);
+  letter-spacing: var(--h6--letter-spacing); }
+.qx-cards .qx-h6.qx-medium-gray { color: var(--_color---normal-color--medium-gray); }
+.qx-cards .qx-h6.black { color: var(--_color---normal-color--black); }
+.qx-cards .qx-h6.vivid-orange { color: var(--_color---normal-color--vivid-orange); }
+.qx-cards .text-regular.qx-medium-gray { color: var(--_color---normal-color--medium-gray); }
+.qx-cards .text-regular.qx-medium-gray.blog-banner-mw { width: var(--_base---global-size--global-full);
+  max-width: 410px; }
+.qx-cards .qx-container { max-width: var(--_ui---container--max-width);
+  padding-right: var(--_ui---container--padding);
+  padding-left: var(--_ui---container--padding);
+  margin-left: auto;
+  margin-right: auto;
+  display: block; }
+.qx-cards .qx-body { font-family: var(--body--font-family);
+  color: var(--_color---normal-color--medium-gray);
+  font-size: var(--body--font-size);
+  line-height: var(--body--line-height);
+  font-weight: var(--body--font-weight);
+  letter-spacing: var(--body--letter-spacing); }
+.qx-cards .qx-body.white { color: var(--_color---normal-color--white); }
+.qx-cards .qx-body.qx-snow-white { color: var(--_color---normal-color--snow-white); }
+.qx-cards .qx-body.text-end { text-align: right; }
+.qx-cards .qx-body.valu-des-mw { width: var(--_base---global-size--global-full);
+  max-width: 340px;
+  margin-left: auto; }
+.qx-cards .qx-body.black { color: var(--_color---normal-color--black); }
+.qx-cards .qx-body.near-black { color: var(--_color---normal-color--near-black); }
+.qx-cards .qx-body.transparent-white { color: var(--_color---normal-color--transparent-white); }
+.qx-cards .qx-body.error-des { max-width: 358px; }
+.qx-cards .qx-body.utility-note-des { width: var(--_base---global-size--global-full);
+  max-width: 620px; }
+.qx-cards .qx-section-tag { padding: var(--_common-spacing---spacing-medium) var(--_common-spacing---spacing-2xl-large);
+  grid-column-gap: 16px;
+  grid-row-gap: 16px;
+  border: 1px solid var(--_color---normal-color--soft-white-layer);
+  border-radius: 128px;
+  flex-flow: column;
+  grid-template-rows: auto auto;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-columns: 1fr;
+  display: inline-flex; }
+.qx-cards .qx-values-section { padding-top: var(--_common-spacing---spacing-34xl-large);
+  padding-bottom: var(--_common-spacing---spacing-34xl-large);
+  background-color: var(--_color---normal-color--deep-charcoal); }
+.qx-cards .qx-values-card-main-box { margin-top: var(--_common-spacing---spacing-22xl-large); }
+.qx-cards .qx-values-card-box { margin-top: var(--_common-spacing---spacing-27xl-large);
+  display: flex; }
+.qx-cards .qx-values-item-box { width: var(--_base---global-size--global-full);
+  flex-flow: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  max-width: 304px;
+  height: 225px;
+  display: flex; }
+.qx-cards .qx-values-item-box.qx-values-item-border { margin-right: var(--_common-spacing---spacing-10xl-large);
+  padding-right: var(--_common-spacing---spacing-10xl-large);
+  border-right: 1px solid var(--_color---normal-color--soft-white-layer); }
+.qx-cards .qx-values-item-info-box { grid-column-gap: var(--_common-spacing---spacing-medium);
+  grid-row-gap: var(--_common-spacing---spacing-medium);
+  flex-flow: column;
+  display: flex; }
+@media screen and (max-width: 991px) {
+  .qx-cards .qx-values-card-box { grid-column-gap: var(--_common-spacing---spacing-6xl-large);
+    grid-row-gap: var(--_common-spacing---spacing-6xl-large);
+    flex-flow: wrap; }
+  .qx-cards .qx-values-item-box.qx-responsibe-border { border-right: 1px solid var(--_color---normal-color--soft-white-layer); }
+}
+@media screen and (max-width: 767px) {
+  .qx-cards .qx-values-card-box { grid-column-gap: var(--_common-spacing---spacing-27xl-large);
+    grid-row-gap: var(--_common-spacing---spacing-27xl-large); }
+  .qx-cards .qx-values-item-box { height: 150px;
+    max-width: var(--_base---global-size--global-full); }
+  .qx-cards .qx-values-item-box.qx-values-item-border { max-width: var(--_base---global-size--global-full);
+    margin-right: var(--_common-spacing---spacing-extra-tiny);
+    border-right-color: var(--_color---normal-color--transparent); }
+  .qx-cards .qx-values-item-box.qx-responsibe-border { border-right-color: var(--_color---normal-color--transparent); }
+}
+@media screen and (max-width: 479px) {
+  .qx-cards .qx-body.valu-des-mw { max-width: 100%; }
+  .qx-cards .qx-values-item-box { height: auto; }
+  .qx-cards .qx-values-item-info-box { margin-top: var(--_common-spacing---spacing-2xl-large); }
+}
+/* ---- qx-cards: hand-written, from tools/blocks/qx-cards.css ---- */
+/* qx-cards — the four foundation cards.
+
+   qubix drew this row for four two-word English values with two short lines
+   under each, and pinned every card to a fixed height (225px, 150px on tablet).
+   This site puts a full sentence, a capability's name and its gloss in the same
+   box, in Chinese and in much longer English, so the copy runs past the height
+   the donor drew. Everything below is about giving the card back its own
+   height, and about the four-across row that has nowhere to go on a container
+   narrower than about 1200px. Nothing here invents type, colour or spacing: every value below is
+   either a donor value the cut left behind or a measured consequence of this
+   site's copy. */
+
+/* 0a. ------------------------------------------------------------ typeface --
+   qubix draws this block in InterDisplay, a face this page does not serve, so
+   the stack collapsed to its own Arial fallback: measured in the page, 16px
+   `Interdisplay, Arial, sans-serif` set the same string at 211.72px — Arial's
+   211.72px exactly, against Inter's 224.28px. Every other block on the
+   capability page is set in Inter or Inter Tight, both of which the site does
+   load, so these four cards were the odd paragraph in Arial. Inter is
+   InterDisplay's text cut: it goes behind the donor's own face (a page that
+   serves InterDisplay still gets it) and ahead of the donor's Arial fallback.
+   Chinese falls past all three to the system CJK face, as it does elsewhere.
+   The same repair is already in tools/blocks/qx-statement.css. */
+.qx-cards { --_base---font-family--your-font: Interdisplay, Inter, Arial, sans-serif; }
+
+/* 0b. -------------------------------------------------- responsive scale --
+   qubix keeps its whole responsive scale in custom properties redefined on
+   `body` inside three media queries, and a `body` rule does not survive a cut
+   section. Without them this block held its desktop values all the way down:
+   at 390 it kept a 40px container padding while the page around it sits on
+   15-22px (rk-hero 15, qx-statement 16, cn-capmap 22), so the cards stood
+   inset from every block above and below them, under 120px of section padding
+   drawn for a 1440 screen.
+
+   These restore, for this block only, exactly what the donor's body carries at
+   each of its three breakpoints, and only the properties this block reads: the
+   container, the section's vertical padding, the two margins that space the
+   row, the card gutter and gaps, the tag's padding, and the h4/h6/body sizes.
+   Everything else in those body blocks (h1-h3, h5, buttons, text-* scales)
+   this block never touches. */
+@media screen and (max-width: 991px) {
+  .qx-cards {
+    --h4--font-size: 28px;
+    --h6--font-size: 22px;
+    --body--font-size: 16px;
+    --_ui---container--padding: 32px;
+    --_ui---container--max-width: 767px;
+    --_common-spacing---spacing-34xl-large: 100px;
+    --_common-spacing---spacing-22xl-large: 48px;
+    --_common-spacing---spacing-27xl-large: 64px;
+    --_common-spacing---spacing-15xl-large: 32px;
+    --_common-spacing---spacing-6xl-large: 24px;
+    --_common-spacing---spacing-2xl-large: 12px;
+  }
+}
+@media screen and (max-width: 767px) {
+  .qx-cards {
+    --h4--font-size: 26px;
+    --h6--font-size: 20px;
+    --_ui---container--padding: 24px;
+    --_ui---container--max-width: 540px;
+    --_common-spacing---spacing-34xl-large: 80px;
+    --_common-spacing---spacing-22xl-large: 32px;
+    --_common-spacing---spacing-27xl-large: 48px;
+    --_common-spacing---spacing-15xl-large: 24px;
+  }
+}
+@media screen and (max-width: 479px) {
+  .qx-cards {
+    --h4--font-size: 24px;
+    --h6--font-size: 16px;
+    --_ui---container--padding: 16px;
+    --_ui---container--max-width: 100%;
+    --_common-spacing---spacing-34xl-large: 60px;
+    --_common-spacing---spacing-6xl-large: 20px;
+  }
+}
+
+/* 1. The card takes its content, with the donor's 225px kept as the floor so a
+   short card still has the drawn proportion. Measured before this rule: at
+   1440 and 1920 the English cards 01 and 04 ran 237px of text through a 225px
+   box, so their last line fell below the hairline divider; at 992 the whole
+   block overflowed its own section by 11px; at 480-767 every card ran 18-41px
+   past the donor's 150px. Equal-height flex lines keep all four dividers the
+   same length and the four texts bottom-aligned, which is how the donor's
+   space-between card is meant to read. */
+.qx-cards .qx-values-item-box { height: auto; min-height: 225px; }
+@media screen and (max-width: 767px) {
+  .qx-cards .qx-values-item-box { height: auto; min-height: 0; }
+}
+
+/* 2. Between 768 and 991px the donor wraps the row, but each card still
+   reserves 304px plus a 34px gutter, so at 768 the four cards fell 1 / 1 / 2:
+   two lines with a lone card and a dangling hairline, then a pair. Give the
+   line exactly two even columns, and let the divider fall between them rather
+   than at the outer edge of the row. Widths are set on the flex item, so the
+   donor's own margins are folded into the column gap instead of fighting it.
+
+   The same two columns run up to 1199px. Above the donor's own 991px the row
+   stays four across on a container that has not grown with it, and the four
+   English paragraphs were measured at 175px of text at 992 and 226px at 1200 —
+   about 24 and 33 characters a line, against 42 at 1440, where the donor's
+   four-across is drawn. Two columns hold 60-70 characters there instead. At
+   1200 and up the block is back to the one row of four it is. */
+@media screen and (min-width: 768px) and (max-width: 1199px) {
+  .qx-cards .qx-values-card-box { flex-flow: row wrap;
+    column-gap: var(--_common-spacing---spacing-15xl-large);
+    row-gap: var(--_common-spacing---spacing-27xl-large); }
+  .qx-cards .qx-values-item-box,
+  .qx-cards .qx-values-item-box.qx-values-item-border {
+    flex: 0 1 auto;
+    width: calc(50% - var(--_common-spacing---spacing-15xl-large) / 2);
+    max-width: calc(50% - var(--_common-spacing---spacing-15xl-large) / 2);
+    margin-right: var(--_base---global-size--none);
+  }
+  /* In two columns the second and fourth cards' right borders fall on the
+     outer edge of the row, where a rule is not a divider between anything (up
+     to 991px the donor gives the fourth one too). Only the left column keeps
+     its border; the 1px stays in place so no column shifts. */
+  .qx-cards .qx-values-item-box:nth-child(2n) { border-right-color: transparent; }
+  /* The fourth card is the one the donor drew without a gutter, because it
+     ended the row. In two columns it sits under the second, which has one, so
+     without this its paragraph measured 319px against everyone else's 285. */
+  .qx-cards .qx-values-item-box.qx-responsibe-border { padding-right: var(--_common-spacing---spacing-10xl-large); }
+}
+
+/* 3. Below 768 the donor makes both dividers transparent but leaves the 34px
+   gutter that held them, so cards 01-03 measured 275px of text against card
+   04's 309px — one paragraph in four set to a different width. With no rule to
+   sit beside, the gutter goes too and all four wrap alike. */
+@media screen and (max-width: 767px) {
+  .qx-cards .qx-values-item-box.qx-values-item-border { padding-right: var(--_base---global-size--none); }
+}
+
+.qx-founder {
+  --_color---normal-color--black: black;
+  --_base---font-family--your-font: Interdisplay, Arial, sans-serif;
+  --_color---normal-color--medium-gray: #a1a1a1;
+  --_base---font-size--font-size-sm: 16px;
+  --_base---font-weight--regular: 400;
+  --_common-spacing---spacing-9xl-large: 32px;
+  --_common-spacing---spacing-2xl-large: 16px;
+  --h1--font-family: var(--_base---font-family--your-font);
+  --_color---normal-color--snow-white: #fdfcfc;
+  --h1--font-size: 128px;
+  --h1--line-height: var(--_base---line-height--line-height-2xl);
+  --h1--font-weight: var(--_base---font-weight--medium);
+  --h1--letter-spacing: var(--_base---spacing-letter--spacing-letter-tightest);
+  --h2--font-family: var(--_base---font-family--your-font);
+  --_color---text-color--text-color: var(--_color---normal-color--snow-white);
+  --h2--font-size: 58px;
+  --h2--line-height: var(--_base---line-height--line-height-relaxed);
+  --h2--font-weight: var(--_base---font-weight--medium);
+  --h2--letter-spacing: var(--_base---spacing-letter--spacing-letter-ultra);
+  --h3--font-family: var(--_base---font-family--your-font);
+  --h3--font-size: 44px;
+  --h3--line-height: var(--_base---line-height--line-height-relaxed);
+  --h3--font-weight: var(--_base---font-weight--medium);
+  --h3--letter-spacing: var(--_base---spacing-letter--spacing-letter-tighter);
+  --_common-spacing---spacing-6xl-large: 24px;
+  --_common-spacing---spacing-medium: 10px;
+  --h4--font-family: var(--_base---font-family--your-font);
+  --h4--font-size: 32px;
+  --h4--line-height: var(--_base---line-height--line-height-base);
+  --h4--font-weight: var(--_base---font-weight--medium);
+  --h4--letter-spacing: var(--_base---global-size--none);
+  --h5--font-family: var(--_base---font-family--your-font);
+  --h5--font-size: 24px;
+  --h5--line-height: var(--_base---line-height--line-height-relaxed);
+  --h5--font-weight: var(--_base---font-weight--medium);
+  --h5--letter-spacing: var(--_base---spacing-letter--spacing-letter-tighter);
+  --h6--font-family: var(--_base---font-family--your-font);
+  --h6--font-size: 20px;
+  --h6--line-height: var(--_base---line-height--line-height-md);
+  --h6--font-weight: var(--_base---font-weight--medium);
+  --h6--letter-spacing: var(--_base---spacing-letter--spacing-letter-ultra);
+  --_common-spacing---spacing-extra-tiny: 0px;
+  --_base---font-size--font-size-lg: 20px;
+  --_base---line-height--line-height-md: 134%;
+  --_base---spacing-letter--spacing-letter-tighter: -.02em;
+  --_color---text-color--paragraph-color: var(--_color---normal-color--medium-gray);
+  --_base---line-height--line-height-base: 122%;
+  --_common-spacing---spacing-extra-small: 6px;
+  --_common-spacing---spacing-small: 8px;
+  --_base---line-height--line-height-2xl: 154%;
+  --_base---font-weight--semi-bold: 600;
+  --_color---accent-color--accent-one: var(--_color---normal-color--black);
+  --_color---normal-color--deep-charcoal: #0f0f0f;
+  --_base---global-size--global-full: 100%;
+  --_ui---container--padding: 40px;
+  --_base---global-size--none: 0px;
+  --_common-spacing---spacing-33xl-large: 110px;
+  --_base---line-height--line-height-tightest: 100%;
+  --_color---normal-color--vivid-orange: #fe6512;
+  --text-regular--font-family: var(--_base---font-family--your-font);
+  --_color---normal-color--white: white;
+  --text-regular--font-size: 18px;
+  --text-regular--line-height: var(--_base---line-height--line-height-2xl);
+  --text-regular--font-weight: var(--_base---font-weight--regular);
+  --text-regular--letter-spacing: var(--_base---spacing-letter--spacing-letter-ultra);
+  --text-extra-small--font-family: var(--_base---font-family--your-font);
+  --text-extra-small--font-size: 16px;
+  --text-extra-small--line-height: var(--_base---line-height--line-height-lg);
+  --text-extra-small--font-weight: var(--_base---font-weight--regular);
+  --text-extra-small--letter-spacing: var(--_base---spacing-letter--spacing-letter-tighter);
+  --_ui---container--max-width: 1360px;
+  --body--font-family: var(--_base---font-family--your-font);
+  --body--font-size: 16px;
+  --body--line-height: var(--_base---line-height--line-height-xl);
+  --body--font-weight: var(--_base---font-weight--regular);
+  --body--letter-spacing: var(--_base---spacing-letter--spacing-letter-tighter);
+  --_color---normal-color--near-black: #222;
+  --_color---normal-color--transparent-white: #ffffff42;
+  --_common-spacing---spacing-15xl-large: 48px;
+  --_color---normal-color--soft-white-layer: #ffffff42;
+  --_base---bordar-radius--r-xl: 12px;
+  --_color---normal-color--frosted-white: #ffffff42;
+  --_color---normal-color--gunmetal: #1d1d1d;
+  --_common-spacing---spacing-22xl-large: 64px;
+  --_common-spacing---spacing-tiny: 4px;
+  --_base---font-size--font-size-xs: 14px;
+  --_base---line-height--line-height-lg: 136%;
+  --_common-spacing---spacing-13xl-large: 40px;
+  --_common-spacing---spacing-4xl-large: 20px;
+  --_common-spacing---spacing-34xl-large: 120px;
+  --_common-spacing---spacing-30xl-large: 100px;
+  --_common-spacing---spacing-large: 12px;
+  --_common-spacing---spacing-5xl-large: 22px;
+  --_common-spacing---spacing-27xl-large: 80px;
+  --_common-spacing---spacing-20xl-large: 60px;
+  --_base---line-height--line-height-xl: 144%;
+  --_common-spacing---spacing-26xl-large: 78px;
+  --_base---bordar-radius--pill: 200px;
+  --_common-spacing---spacing-12xl-large: 38px;
+  --_base---bordar-radius--r-7xl: 32px;
+  --_base---font-size--font-size-2xl: 24px;
+  --_base---font-size--font-size-md: 18px;
+  --_base---font-weight--medium: 500;
+  --_common-spacing---spacing-25xl-large: 74px;
+  --_common-spacing---spacing-29xl-large: 94px;
+  --_common-spacing---spacing-35xl-large: 140px;
+  --_common-spacing---spacing-37xl-large: 200px;
+  --_base---bordar-radius--r-5xl: 22px;
+  --_base---bordar-radius--r-m: 4px;
+  --_base---bordar-radius--round: 100%;
+  --_base---font-size--font-size-10xl: 64px;
+  --_base---line-height--line-height-normal: 124%;
+  --_base---font-size--font-size-6xl: 40px;
+  --_base---font-size--font-size-4xl: 28px;
+  --_common-spacing---spacing-3xl-large: 18px;
+  --_base---bordar-radius--r-l: 6px;
+  --_base---bordar-radius--r-8xl: 40px;
+  --_common-spacing---spacing-32xl-large: 108px;
+  --_common-spacing---spacing-17xl-large: 52px;
+  --_common-spacing---spacing-11xl-large: 36px;
+  --_base---bordar-radius--r-4xl: 20px;
+  --_base---bordar-radius--r-2xl: 14px;
+  --_base---bordar-radius--r-3xl: 16px;
+  --_base---font-size--font-size-13xl: 76px;
+  --_base---spacing-letter--spacing-letter-tightest: -.03em;
+  --_base---font-size--font-size-7xl: 48px;
+  --_base---font-size--font-size-5xl: 36px;
+  --_common-spacing---spacing-14xl-large: 45px;
+  --_common-spacing---margin-style--margin-plus-spacer-service: 215vh;
+  --_base---line-height--line-height-3xl: 170%;
+  --_base---spacing-letter--spacing-letter-tight: -.01em;
+  --_common-spacing---spacing-23xl-large: 68px;
+  --_common-spacing---spacing-8xl-large: 26px;
+  --_base---line-height--line-height-relaxed: 132%;
+  --_color---normal-color--transparent: transparent;
+  --_common-spacing---spacing-extra-large: 14px;
+  --_common-spacing---spacing-10xl-large: 34px;
+  --_base---bordar-radius--r-x: 8px;
+  --_common-spacing---spacing-7xl-large: 25px;
+  --_common-spacing---spacing-36xl-large: 160px;
+  --_base---bordar-radius--r-6xl: 24px;
+  --_base---bordar-radius--r-9xl: 42px;
+  --_color---normal-color--soft-black: #1c1c1c;
+  --_common-spacing---spacing-21xl-large: 62px;
+  --_common-spacing---spacing-31xl-large: 106px;
+  --_common-spacing---spacing-28xl-large: 82px;
+  --_common-spacing---spacing-16xl-large: 50px;
+  --_base---font-size--font-size-15xl: 280px;
+  --_base---font-size--font-size-14xl: 80px;
+  --_common-spacing---spacing-19xl-large: 58px;
+  --_base---global-size--global-half: 0px;
+  --_ui---primary-button--font-family: var(--_base---font-family--your-font);
+  --_ui---primary-button--font-weight: var(--_base---font-weight--regular);
+  --text-extra-large--font-family: var(--_base---font-family--your-font);
+  --text-extra-large--font-weight: var(--_base---font-weight--regular);
+  --text-extra-large--font-size: 22px;
+  --_ui---primary-button--font-size: var(--_base---font-size--font-size-md);
+  --text-extra-large--line-height: var(--_base---line-height--line-height-xl);
+  --_base---font-weight--thin: 100;
+  --text-extra-large--letter-spacing: var(--_base---spacing-letter--spacing-letter-ultra);
+  --_ui---primary-button--line-height: var(--_base---line-height--line-height-relaxed);
+  --_ui---primary-button--letter-spacing: var(--_base---global-size--none);
+  --_base---font-weight--extra-light: 200;
+  --_base---font-weight--light: 300;
+  --_ui---secondary-button--font-family: var(--_base---font-family--your-font);
+  --_ui---secondary-button--font-weight: var(--_base---font-weight--regular);
+  --_ui---secondary-button--font-size: var(--_base---font-size--font-size-md);
+  --_base---font-weight--bold: 700;
+  --_ui---secondary-button--line-height: var(--_base---line-height--line-height-relaxed);
+  --_ui---secondary-button--letter-spacing: var(--_base---global-size--none);
+  --_base---font-weight--extra-bold: 800;
+  --_base---font-weight--black: 900;
+  --text-learge--font-family: var(--_base---font-family--your-font);
+  --text-learge--font-weight: var(--_base---font-weight--regular);
+  --text-learge--font-size: 20px;
+  --text-learge--line-height: var(--_base---line-height--line-height-xl);
+  --_base---font-size--font-size-xl: 22px;
+  --text-learge--letter-spacing: var(--_base---spacing-letter--spacing-letter-ultra);
+  --_base---font-size--font-size-3xl: 26px;
+  --_base---font-size--font-size-8xl: 52px;
+  --_base---font-size--font-size-9xl: 60px;
+  --_base---font-size--font-size-11xl: 68px;
+  --_base---font-size--font-size-12xl: 72px;
+  --_base---line-height--line-height-tighter: 105%;
+  --_base---line-height--line-height-tight: 110%;
+  --_common-spacing---spacing-18xl-large: 56px;
+  --_common-spacing---spacing-24xl-large: 70px;
+  --_base---spacing-letter--spacing-letter-ultra: -.04em;
+  --_common-spacing---spacing-38xl-large: 240px;
+}
+.qx-founder img { border: 0; }
+.qx-founder img { vertical-align: middle;
+  max-width: 100%;
+  display: inline-block; }
+.qx-founder h1, .qx-founder h2, .qx-founder h3, .qx-founder h4, .qx-founder h5, .qx-founder h6 { margin-bottom: 10px;
+  font-weight: bold; }
+.qx-founder h2 { margin-top: 20px;
+  font-size: 32px;
+  line-height: 36px; }
+.qx-founder .w-container { max-width: 940px;
+  margin-left: auto;
+  margin-right: auto; }
+.qx-founder .w-container:before, .qx-founder .w-container:after { content: " ";
+  grid-area: 1 / 1 / 2 / 2;
+  display: table; }
+.qx-founder .w-container:after { clear: both; }
+.qx-founder .w-container .w-row { margin-left: -10px;
+  margin-right: -10px; }
+@media screen and (max-width: 991px) {
+  .qx-founder .w-container { max-width: 728px; }
+}
+@media screen and (max-width: 767px) {
+  .qx-founder .w-row, .qx-founder .w-container .w-row { margin-left: 0;
+    margin-right: 0; }
+}
+@media screen and (max-width: 479px) {
+  .qx-founder .w-container { max-width: none; }
+}
+.qx-founder .w-layout-blockcontainer { max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block; }
+@media screen and (max-width: 991px) {
+  .qx-founder .w-layout-blockcontainer { max-width: 728px; }
+}
+@media screen and (max-width: 767px) {
+  .qx-founder .w-layout-blockcontainer { max-width: none; }
+}
+.qx-founder h2 { margin-top: var(--_common-spacing---spacing-9xl-large);
+  margin-bottom: var(--_common-spacing---spacing-2xl-large);
+  font-family: var(--h2--font-family);
+  color: var(--_color---text-color--text-color);
+  font-size: var(--h2--font-size);
+  line-height: var(--h2--line-height);
+  font-weight: var(--h2--font-weight);
+  letter-spacing: var(--h2--letter-spacing); }
+.qx-founder .qx-h2 { margin-top: var(--_base---global-size--none);
+  margin-bottom: var(--_base---global-size--none);
+  font-family: var(--h2--font-family);
+  color: var(--_color---text-color--text-color);
+  font-size: var(--h2--font-size);
+  line-height: var(--h2--line-height);
+  font-weight: var(--h2--font-weight);
+  letter-spacing: var(--h2--letter-spacing);
+  text-transform: capitalize; }
+.qx-founder .qx-h2.marquee-position { position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-200%, 200%); }
+.qx-founder .qx-h2.project-title-mw { width: var(--_base---global-size--global-full);
+  max-width: 440px; }
+.qx-founder .qx-h2.vali-title-mw { width: var(--_base---global-size--global-full);
+  max-width: 622px; }
+.qx-founder .qx-h6 { margin-top: var(--_base---global-size--none);
+  margin-bottom: var(--_base---global-size--none);
+  font-family: var(--h6--font-family);
+  color: var(--_color---text-color--text-color);
+  font-size: var(--h6--font-size);
+  line-height: var(--h6--line-height);
+  font-weight: var(--h6--font-weight);
+  letter-spacing: var(--h6--letter-spacing); }
+.qx-founder .qx-h6.medium-gray { color: var(--_color---normal-color--medium-gray); }
+.qx-founder .qx-h6.black { color: var(--_color---normal-color--black); }
+.qx-founder .qx-h6.vivid-orange { color: var(--_color---normal-color--vivid-orange); }
+.qx-founder .qx-container { max-width: var(--_ui---container--max-width);
+  padding-right: var(--_ui---container--padding);
+  padding-left: var(--_ui---container--padding);
+  margin-left: auto;
+  margin-right: auto;
+  display: block; }
+.qx-founder .qx-body { font-family: var(--body--font-family);
+  color: var(--_color---normal-color--medium-gray);
+  font-size: var(--body--font-size);
+  line-height: var(--body--line-height);
+  font-weight: var(--body--font-weight);
+  letter-spacing: var(--body--letter-spacing); }
+.qx-founder .qx-body.white { color: var(--_color---normal-color--white); }
+.qx-founder .qx-body.snow-white { color: var(--_color---normal-color--snow-white); }
+.qx-founder .qx-body.text-end { text-align: right; }
+.qx-founder .qx-body.valu-des-mw { width: var(--_base---global-size--global-full);
+  max-width: 340px;
+  margin-left: auto; }
+.qx-founder .qx-body.black { color: var(--_color---normal-color--black); }
+.qx-founder .qx-body.near-black { color: var(--_color---normal-color--near-black); }
+.qx-founder .qx-body.transparent-white { color: var(--_color---normal-color--transparent-white); }
+.qx-founder .qx-body.error-des { max-width: 358px; }
+.qx-founder .qx-body.utility-note-des { width: var(--_base---global-size--global-full);
+  max-width: 620px; }
+.qx-founder .qx-all-image-cover { width: var(--_base---global-size--global-full);
+  height: var(--_base---global-size--global-full);
+  object-fit: cover; }
+.qx-founder .qx-values-section { padding-top: var(--_common-spacing---spacing-34xl-large);
+  padding-bottom: var(--_common-spacing---spacing-34xl-large);
+  background-color: var(--_color---normal-color--deep-charcoal); }
+.qx-founder .qx-section-founder-profile-grid { margin-top: var(--_common-spacing---spacing-22xl-large);
+  grid-column-gap: var(--_common-spacing---spacing-2xl-large);
+  grid-row-gap: var(--_common-spacing---spacing-2xl-large);
+  grid-template-rows: auto;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-columns: 1fr;
+  display: grid; }
+.qx-founder .qx-section-founder-profile-img { border-radius: var(--_base---bordar-radius--r-3xl);
+  height: 534px;
+  overflow: hidden; }
+.qx-founder .qx-section-founder-profile-info { margin-top: var(--_common-spacing---spacing-2xl-large);
+  justify-content: space-between;
+  display: flex; }
+@media screen and (max-width: 991px) {
+  .qx-founder .qx-section-founder-profile-grid { grid-template-columns: 1fr 1fr; }
+  .qx-founder .qx-section-founder-profile-img { height: auto; }
+  .qx-founder .qx-section-founder-profile-info { grid-column-gap: var(--_common-spacing---spacing-small);
+    grid-row-gap: var(--_common-spacing---spacing-small);
+    flex-flow: column; }
+}
+@media screen and (max-width: 767px) {
+  .qx-founder .qx-h2.marquee-position { left: 75%; }
+  .qx-founder .qx-section-founder-profile-grid { grid-template-columns: 1fr; }
+}
+@media screen and (max-width: 479px) {
+  .qx-founder .qx-h2.marquee-position { top: 0%;
+    left: 80%; }
+  .qx-founder .qx-body.valu-des-mw { max-width: 100%; }
+  .qx-founder .qx-section-founder-profile-grid { grid-column-gap: var(--_common-spacing---spacing-7xl-large);
+    grid-row-gap: var(--_common-spacing---spacing-7xl-large); }
+  .qx-founder .qx-section-founder-profile-info { margin-top: var(--_common-spacing---spacing-2xl-large);
+    grid-column-gap: var(--_common-spacing---spacing-tiny);
+    grid-row-gap: var(--_common-spacing---spacing-tiny); }
+}
+/* ---- qx-founder: hand-written, from tools/blocks/qx-founder.css ---- */
+/* qx-founder — the six portrait cards of 用一支 AI 团队把活干完.
+   Scoped under .qx-founder, appended after the extracted qubix rules.
+
+   Everything here is either a donor value the cut left behind (qubix keeps its
+   typeface and its whole responsive scale on `body`, and a `body` rule does not
+   travel with a cut section) or a measured consequence of this site's own art
+   and copy. Nothing below invents type, colour or spacing. */
+
+/* ---------------------------------------------------------------- typeface --
+   qubix draws this block in InterDisplay, a face declared only in
+   css/scalora-modules.sc.css, which the capability page does not load, so the
+   whole stack collapsed to its own Arial fallback and these six cards were the
+   one paragraph on the page set in Arial. Measured in the page: the heading and
+   both card lines reported `Interdisplay, Arial, sans-serif` and rendered
+   Arial, while every neighbouring block reported Inter or Inter Tight.
+
+   Inter is InterDisplay's text cut, so it is both the closest substitute for the
+   donor's face and the face this page already serves. It goes behind the donor's
+   own face (a page that does serve InterDisplay still gets it) and ahead of the
+   donor's Arial fallback. Chinese falls past all three to the system CJK face,
+   as it does everywhere else on this page. The same repair is already in
+   tools/blocks/qx-statement.css and tools/blocks/qx-cards.css. */
+.qx-founder { --_base---font-family--your-font: Interdisplay, Inter, Arial, sans-serif; }
+
+/* -------------------------------------------------------- responsive scale --
+   qubix's responsive type and spacing scale is a set of custom properties
+   redefined on `body` inside three media queries. Without them this block held
+   every desktop value all the way down: measured at 390 it kept a 58px heading
+   (three lines of "Run the work with an AI team", 230px tall, against the 32px
+   qx-statement sets beside it), a 40px container padding while the page around
+   it sits on 15-20px (rk-hero 15, qx-statement 16, cn-service 20), and 120px of
+   section padding drawn for a 1440 screen. At 768 it was still 58px and 40px
+   against qx-statement's 42px and 33px.
+
+   These restore, for this block only, exactly what the donor's body carries at
+   each of its three breakpoints, and only the properties this block reads: the
+   h2/h6/body sizes, the container's width and padding, the section's vertical
+   padding, the margin above the grid, the grid gutter, and the gap inside the
+   name/role box. Everything else in those body blocks (h1, h3-h5, buttons, the
+   text-* scales) this block never touches. Two the block does read are the same
+   at every breakpoint and so are left alone: spacing-7xl-large (25px, the ≤479
+   grid gutter) and spacing-tiny (4px, the ≤479 name/role gap). */
+@media screen and (max-width: 991px) {
+  .qx-founder {
+    --h2--font-size: 42px;
+    --h6--font-size: 22px;
+    --body--font-size: 16px;
+    --_ui---container--padding: 32px;
+    --_ui---container--max-width: 767px;
+    --_common-spacing---spacing-34xl-large: 100px;
+    --_common-spacing---spacing-22xl-large: 48px;
+    --_common-spacing---spacing-2xl-large: 12px;
+    --_common-spacing---spacing-small: 8px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .qx-founder {
+    --h2--font-size: 36px;
+    --h6--font-size: 20px;
+    --_ui---container--padding: 24px;
+    --_ui---container--max-width: 540px;
+    --_common-spacing---spacing-34xl-large: 80px;
+    --_common-spacing---spacing-22xl-large: 32px;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  .qx-founder {
+    --h2--font-size: 32px;
+    --h6--font-size: 16px;
+    --_ui---container--padding: 16px;
+    --_ui---container--max-width: 100%;
+    --_common-spacing---spacing-34xl-large: 60px;
+    --_common-spacing---spacing-22xl-large: 32px;
+    --_common-spacing---spacing-6xl-large: 20px;
+  }
+}
+
+/* ----------------------------------------------------------- portrait frame --
+   qubix drew this frame 534px tall for a 632px-wide column, because its own
+   portraits are landscape photographs. This site's avatars are square — every
+   one of them is a 256x256 render of a single centred object on its own near
+   black ground. Squeezed into 632x534 by `object-fit: cover` they were scaled
+   to 632 wide and then had 98px, a seventh of their height, cropped away: the
+   fourth card's lower arm, the fifth card's gear base and the sixth card's
+   plinth all ran off the bottom edge of their frame.
+
+   The donor already lets this frame take its image's own height below 992px —
+   `height: auto` is qubix's own value in its max-width:991px block, and it is
+   why the cards are uncropped on a phone. Carrying that one value up to every
+   width gives a square 256x256 render a square frame, so nothing is cropped and
+   nothing is stretched (`cover` on matching ratios is a no-op), and the block
+   reads the same at 390 as it does at 1920 instead of changing shape at 992. */
+.qx-founder .qx-section-founder-profile-img { height: auto; }
+
+/* --------------------------------------------------------- the name subtitle --
+   On the Chinese page the product name rides under the Chinese name in
+   `.cap-en`, which the fusion sheet sets at .72em of whatever it sits in. The
+   donor's h6 is 16px at ≤479 — a size drawn for "Daniel Carter" — which put
+   "Task Delegation · Handoff · Parallel Execution" at 11.5px, the smallest type
+   anywhere on this page (the capability map's own subtitle is 12px). Hold that
+   12px floor, and no more: at every other width .72em is already above it. */
+.qx-founder .cap-en { font-size: max(12px, .72em); }
+
+/* qubix sets `text-transform: capitalize` on its h2. Applied to this site's
+   own sentence-case copy that rewrites the words themselves — "Run the work
+   with an AI team" is published by tools/copy.mjs and was rendering as "Run The
+   Work With An AI Team". The donor's type stays; only the case goes back to
+   what the copy says. All three qubix headings on this page do the same, so
+   they stay in one case. Chinese is unaffected either way. */
+.qx-founder .qx-h2 { text-transform: none; }
+
+.qx-news {
+  --_color---normal-color--black: black;
+  --_base---font-family--your-font: Interdisplay, Arial, sans-serif;
+  --_color---normal-color--medium-gray: #a1a1a1;
+  --_base---font-size--font-size-sm: 16px;
+  --_base---font-weight--regular: 400;
+  --_common-spacing---spacing-9xl-large: 32px;
+  --_common-spacing---spacing-2xl-large: 16px;
+  --h1--font-family: var(--_base---font-family--your-font);
+  --_color---normal-color--snow-white: #fdfcfc;
+  --h1--font-size: 128px;
+  --h1--line-height: var(--_base---line-height--line-height-2xl);
+  --h1--font-weight: var(--_base---font-weight--medium);
+  --h1--letter-spacing: var(--_base---spacing-letter--spacing-letter-tightest);
+  --h2--font-family: var(--_base---font-family--your-font);
+  --_color---text-color--text-color: var(--_color---normal-color--snow-white);
+  --h2--font-size: 58px;
+  --h2--line-height: var(--_base---line-height--line-height-relaxed);
+  --h2--font-weight: var(--_base---font-weight--medium);
+  --h2--letter-spacing: var(--_base---spacing-letter--spacing-letter-ultra);
+  --h3--font-family: var(--_base---font-family--your-font);
+  --h3--font-size: 44px;
+  --h3--line-height: var(--_base---line-height--line-height-relaxed);
+  --h3--font-weight: var(--_base---font-weight--medium);
+  --h3--letter-spacing: var(--_base---spacing-letter--spacing-letter-tighter);
+  --_common-spacing---spacing-6xl-large: 24px;
+  --_common-spacing---spacing-medium: 10px;
+  --h4--font-family: var(--_base---font-family--your-font);
+  --h4--font-size: 32px;
+  --h4--line-height: var(--_base---line-height--line-height-base);
+  --h4--font-weight: var(--_base---font-weight--medium);
+  --h4--letter-spacing: var(--_base---global-size--none);
+  --h5--font-family: var(--_base---font-family--your-font);
+  --h5--font-size: 24px;
+  --h5--line-height: var(--_base---line-height--line-height-relaxed);
+  --h5--font-weight: var(--_base---font-weight--medium);
+  --h5--letter-spacing: var(--_base---spacing-letter--spacing-letter-tighter);
+  --h6--font-family: var(--_base---font-family--your-font);
+  --h6--font-size: 20px;
+  --h6--line-height: var(--_base---line-height--line-height-md);
+  --h6--font-weight: var(--_base---font-weight--medium);
+  --h6--letter-spacing: var(--_base---spacing-letter--spacing-letter-ultra);
+  --_common-spacing---spacing-extra-tiny: 0px;
+  --_base---font-size--font-size-lg: 20px;
+  --_base---line-height--line-height-md: 134%;
+  --_base---spacing-letter--spacing-letter-tighter: -.02em;
+  --_color---text-color--paragraph-color: var(--_color---normal-color--medium-gray);
+  --_base---line-height--line-height-base: 122%;
+  --_common-spacing---spacing-extra-small: 6px;
+  --_common-spacing---spacing-small: 8px;
+  --_base---line-height--line-height-2xl: 154%;
+  --_base---font-weight--semi-bold: 600;
+  --_color---accent-color--accent-one: var(--_color---normal-color--black);
+  --_color---normal-color--deep-charcoal: #0f0f0f;
+  --_base---global-size--global-full: 100%;
+  --_ui---container--padding: 40px;
+  --_base---global-size--none: 0px;
+  --_common-spacing---spacing-33xl-large: 110px;
+  --_base---line-height--line-height-tightest: 100%;
+  --_color---normal-color--vivid-orange: #fe6512;
+  --text-regular--font-family: var(--_base---font-family--your-font);
+  --_color---normal-color--white: white;
+  --text-regular--font-size: 18px;
+  --text-regular--line-height: var(--_base---line-height--line-height-2xl);
+  --text-regular--font-weight: var(--_base---font-weight--regular);
+  --text-regular--letter-spacing: var(--_base---spacing-letter--spacing-letter-ultra);
+  --text-extra-small--font-family: var(--_base---font-family--your-font);
+  --text-extra-small--font-size: 16px;
+  --text-extra-small--line-height: var(--_base---line-height--line-height-lg);
+  --text-extra-small--font-weight: var(--_base---font-weight--regular);
+  --text-extra-small--letter-spacing: var(--_base---spacing-letter--spacing-letter-tighter);
+  --_ui---container--max-width: 1360px;
+  --body--font-family: var(--_base---font-family--your-font);
+  --body--font-size: 16px;
+  --body--line-height: var(--_base---line-height--line-height-xl);
+  --body--font-weight: var(--_base---font-weight--regular);
+  --body--letter-spacing: var(--_base---spacing-letter--spacing-letter-tighter);
+  --_color---normal-color--near-black: #222;
+  --_color---normal-color--transparent-white: #ffffff42;
+  --_common-spacing---spacing-15xl-large: 48px;
+  --_color---normal-color--soft-white-layer: #ffffff42;
+  --_base---bordar-radius--r-xl: 12px;
+  --_color---normal-color--frosted-white: #ffffff42;
+  --_color---normal-color--gunmetal: #1d1d1d;
+  --_common-spacing---spacing-22xl-large: 64px;
+  --_common-spacing---spacing-tiny: 4px;
+  --_base---font-size--font-size-xs: 14px;
+  --_base---line-height--line-height-lg: 136%;
+  --_common-spacing---spacing-13xl-large: 40px;
+  --_common-spacing---spacing-4xl-large: 20px;
+  --_common-spacing---spacing-34xl-large: 120px;
+  --_common-spacing---spacing-30xl-large: 100px;
+  --_common-spacing---spacing-large: 12px;
+  --_common-spacing---spacing-5xl-large: 22px;
+  --_common-spacing---spacing-27xl-large: 80px;
+  --_common-spacing---spacing-20xl-large: 60px;
+  --_base---line-height--line-height-xl: 144%;
+  --_common-spacing---spacing-26xl-large: 78px;
+  --_base---bordar-radius--pill: 200px;
+  --_common-spacing---spacing-12xl-large: 38px;
+  --_base---bordar-radius--r-7xl: 32px;
+  --_base---font-size--font-size-2xl: 24px;
+  --_base---font-size--font-size-md: 18px;
+  --_base---font-weight--medium: 500;
+  --_common-spacing---spacing-25xl-large: 74px;
+  --_common-spacing---spacing-29xl-large: 94px;
+  --_common-spacing---spacing-35xl-large: 140px;
+  --_common-spacing---spacing-37xl-large: 200px;
+  --_base---bordar-radius--r-5xl: 22px;
+  --_base---bordar-radius--r-m: 4px;
+  --_base---bordar-radius--round: 100%;
+  --_base---font-size--font-size-10xl: 64px;
+  --_base---line-height--line-height-normal: 124%;
+  --_base---font-size--font-size-6xl: 40px;
+  --_base---font-size--font-size-4xl: 28px;
+  --_common-spacing---spacing-3xl-large: 18px;
+  --_base---bordar-radius--r-l: 6px;
+  --_base---bordar-radius--r-8xl: 40px;
+  --_common-spacing---spacing-32xl-large: 108px;
+  --_common-spacing---spacing-17xl-large: 52px;
+  --_common-spacing---spacing-11xl-large: 36px;
+  --_base---bordar-radius--r-4xl: 20px;
+  --_base---bordar-radius--r-2xl: 14px;
+  --_base---bordar-radius--r-3xl: 16px;
+  --_base---font-size--font-size-13xl: 76px;
+  --_base---spacing-letter--spacing-letter-tightest: -.03em;
+  --_base---font-size--font-size-7xl: 48px;
+  --_base---font-size--font-size-5xl: 36px;
+  --_common-spacing---spacing-14xl-large: 45px;
+  --_common-spacing---margin-style--margin-plus-spacer-service: 215vh;
+  --_base---line-height--line-height-3xl: 170%;
+  --_base---spacing-letter--spacing-letter-tight: -.01em;
+  --_common-spacing---spacing-23xl-large: 68px;
+  --_common-spacing---spacing-8xl-large: 26px;
+  --_base---line-height--line-height-relaxed: 132%;
+  --_color---normal-color--transparent: transparent;
+  --_common-spacing---spacing-extra-large: 14px;
+  --_common-spacing---spacing-10xl-large: 34px;
+  --_base---bordar-radius--r-x: 8px;
+  --_common-spacing---spacing-7xl-large: 25px;
+  --_common-spacing---spacing-36xl-large: 160px;
+  --_base---bordar-radius--r-6xl: 24px;
+  --_base---bordar-radius--r-9xl: 42px;
+  --_color---normal-color--soft-black: #1c1c1c;
+  --_common-spacing---spacing-21xl-large: 62px;
+  --_common-spacing---spacing-31xl-large: 106px;
+  --_common-spacing---spacing-28xl-large: 82px;
+  --_common-spacing---spacing-16xl-large: 50px;
+  --_base---font-size--font-size-15xl: 280px;
+  --_base---font-size--font-size-14xl: 80px;
+  --_common-spacing---spacing-19xl-large: 58px;
+  --_base---global-size--global-half: 0px;
+  --_ui---primary-button--font-family: var(--_base---font-family--your-font);
+  --_ui---primary-button--font-weight: var(--_base---font-weight--regular);
+  --text-extra-large--font-family: var(--_base---font-family--your-font);
+  --text-extra-large--font-weight: var(--_base---font-weight--regular);
+  --text-extra-large--font-size: 22px;
+  --_ui---primary-button--font-size: var(--_base---font-size--font-size-md);
+  --text-extra-large--line-height: var(--_base---line-height--line-height-xl);
+  --_base---font-weight--thin: 100;
+  --text-extra-large--letter-spacing: var(--_base---spacing-letter--spacing-letter-ultra);
+  --_ui---primary-button--line-height: var(--_base---line-height--line-height-relaxed);
+  --_ui---primary-button--letter-spacing: var(--_base---global-size--none);
+  --_base---font-weight--extra-light: 200;
+  --_base---font-weight--light: 300;
+  --_ui---secondary-button--font-family: var(--_base---font-family--your-font);
+  --_ui---secondary-button--font-weight: var(--_base---font-weight--regular);
+  --_ui---secondary-button--font-size: var(--_base---font-size--font-size-md);
+  --_base---font-weight--bold: 700;
+  --_ui---secondary-button--line-height: var(--_base---line-height--line-height-relaxed);
+  --_ui---secondary-button--letter-spacing: var(--_base---global-size--none);
+  --_base---font-weight--extra-bold: 800;
+  --_base---font-weight--black: 900;
+  --text-learge--font-family: var(--_base---font-family--your-font);
+  --text-learge--font-weight: var(--_base---font-weight--regular);
+  --text-learge--font-size: 20px;
+  --text-learge--line-height: var(--_base---line-height--line-height-xl);
+  --_base---font-size--font-size-xl: 22px;
+  --text-learge--letter-spacing: var(--_base---spacing-letter--spacing-letter-ultra);
+  --_base---font-size--font-size-3xl: 26px;
+  --_base---font-size--font-size-8xl: 52px;
+  --_base---font-size--font-size-9xl: 60px;
+  --_base---font-size--font-size-11xl: 68px;
+  --_base---font-size--font-size-12xl: 72px;
+  --_base---line-height--line-height-tighter: 105%;
+  --_base---line-height--line-height-tight: 110%;
+  --_common-spacing---spacing-18xl-large: 56px;
+  --_common-spacing---spacing-24xl-large: 70px;
+  --_base---spacing-letter--spacing-letter-ultra: -.04em;
+  --_common-spacing---spacing-38xl-large: 240px;
+}
+.qx-news article, .qx-news aside, .qx-news details, .qx-news figcaption, .qx-news figure, .qx-news footer, .qx-news header, .qx-news hgroup, .qx-news main, .qx-news menu, .qx-news nav, .qx-news section, .qx-news summary { display: block; }
+.qx-news a { background-color: #0000; }
+.qx-news img { border: 0; }
+.qx-news img { vertical-align: middle;
+  max-width: 100%;
+  display: inline-block; }
+.qx-news .w-inline-block { max-width: 100%;
+  display: inline-block; }
+.qx-news h1, .qx-news h2, .qx-news h3, .qx-news h4, .qx-news h5, .qx-news h6 { margin-bottom: 10px;
+  font-weight: bold; }
+.qx-news h2 { margin-top: 20px;
+  font-size: 32px;
+  line-height: 36px; }
+.qx-news p { margin-top: 0;
+  margin-bottom: 10px; }
+.qx-news .w-embed:before, .qx-news .w-embed:after { content: " ";
+  grid-area: 1 / 1 / 2 / 2;
+  display: table; }
+.qx-news .w-embed:after { clear: both; }
+.qx-news .w-container { max-width: 940px;
+  margin-left: auto;
+  margin-right: auto; }
+.qx-news .w-container:before, .qx-news .w-container:after { content: " ";
+  grid-area: 1 / 1 / 2 / 2;
+  display: table; }
+.qx-news .w-container:after { clear: both; }
+.qx-news .w-container .w-row { margin-left: -10px;
+  margin-right: -10px; }
+@media screen and (max-width: 991px) {
+  .qx-news .w-container { max-width: 728px; }
+}
+@media screen and (max-width: 767px) {
+  .qx-news .w-row, .qx-news .w-container .w-row { margin-left: 0;
+    margin-right: 0; }
+}
+@media screen and (max-width: 479px) {
+  .qx-news .w-container { max-width: none; }
+}
+.qx-news .w-layout-blockcontainer { max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block; }
+@media screen and (max-width: 991px) {
+  .qx-news .w-layout-blockcontainer { max-width: 728px; }
+}
+@media screen and (max-width: 767px) {
+  .qx-news .w-layout-blockcontainer { max-width: none; }
+}
+.qx-news h2 { margin-top: var(--_common-spacing---spacing-9xl-large);
+  margin-bottom: var(--_common-spacing---spacing-2xl-large);
+  font-family: var(--h2--font-family);
+  color: var(--_color---text-color--text-color);
+  font-size: var(--h2--font-size);
+  line-height: var(--h2--line-height);
+  font-weight: var(--h2--font-weight);
+  letter-spacing: var(--h2--letter-spacing); }
+.qx-news p { margin-top: var(--_common-spacing---spacing-extra-tiny);
+  margin-bottom: var(--_common-spacing---spacing-extra-tiny);
+  font-size: var(--_base---font-size--font-size-lg);
+  line-height: var(--_base---line-height--line-height-md);
+  letter-spacing: var(--_base---spacing-letter--spacing-letter-tighter); }
+.qx-news a { color: var(--_color---text-color--paragraph-color);
+  line-height: var(--_base---line-height--line-height-base);
+  text-underline-offset: 4px;
+  text-decoration: underline; }
+.qx-news .qx-h2 { margin-top: var(--_base---global-size--none);
+  margin-bottom: var(--_base---global-size--none);
+  font-family: var(--h2--font-family);
+  color: var(--_color---text-color--text-color);
+  font-size: var(--h2--font-size);
+  line-height: var(--h2--line-height);
+  font-weight: var(--h2--font-weight);
+  letter-spacing: var(--h2--letter-spacing);
+  text-transform: capitalize; }
+.qx-news .qx-h2.marquee-position { position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-200%, 200%); }
+.qx-news .qx-h2.project-title-mw { width: var(--_base---global-size--global-full);
+  max-width: 440px; }
+.qx-news .qx-h2.vali-title-mw { width: var(--_base---global-size--global-full);
+  max-width: 622px; }
+.qx-news .qx-container { max-width: var(--_ui---container--max-width);
+  padding-right: var(--_ui---container--padding);
+  padding-left: var(--_ui---container--padding);
+  margin-left: auto;
+  margin-right: auto;
+  display: block; }
+.qx-news .qx-body { font-family: var(--body--font-family);
+  color: var(--_color---normal-color--medium-gray);
+  font-size: var(--body--font-size);
+  line-height: var(--body--line-height);
+  font-weight: var(--body--font-weight);
+  letter-spacing: var(--body--letter-spacing); }
+.qx-news .qx-body.white { color: var(--_color---normal-color--white); }
+.qx-news .qx-body.snow-white { color: var(--_color---normal-color--snow-white); }
+.qx-news .qx-body.text-end { text-align: right; }
+.qx-news .qx-body.valu-des-mw { width: var(--_base---global-size--global-full);
+  max-width: 340px;
+  margin-left: auto; }
+.qx-news .qx-body.black { color: var(--_color---normal-color--black); }
+.qx-news .qx-body.near-black { color: var(--_color---normal-color--near-black); }
+.qx-news .qx-body.transparent-white { color: var(--_color---normal-color--transparent-white); }
+.qx-news .qx-body.error-des { max-width: 358px; }
+.qx-news .qx-body.utility-note-des { width: var(--_base---global-size--global-full);
+  max-width: 620px; }
+.qx-news .qx-main-button { grid-column-gap: 8px;
+  grid-row-gap: 8px;
+  color: #000;
+  white-space: nowrap;
+  filter: url("#buttonFilter");
+  justify-content: flex-start;
+  align-items: center;
+  text-decoration: none;
+  transition-property: opacity;
+  transition-duration: .9s;
+  transition-timing-function: cubic-bezier(.135, .9, .15, 1);
+  display: flex;
+  position: relative; }
+.qx-news .qx-svg-filter_embed { display: none; }
+.qx-news .qx-button-content-wrap { padding: var(--_common-spacing---spacing-2xl-large) var(--_common-spacing---spacing-6xl-large);
+  background-color: var(--_color---normal-color--near-black);
+  box-shadow: none;
+  color: var(--_color---normal-color--snow-white);
+  border-radius: 70px; }
+.qx-news .qx-button-content-wrap.qx-button-content-wrap-two { background-color: var(--_color---normal-color--snow-white);
+  color: var(--_color---normal-color--deep-charcoal); }
+.qx-news .qx-button-arrow-wrapper { width: 50px;
+  height: 50px;
+  padding: var(--_common-spacing---spacing-large);
+  border: 1px solid var(--_color---normal-color--black);
+  background-color: var(--_color---normal-color--snow-white);
+  border-radius: 10rem;
+  justify-content: center;
+  align-items: center;
+  display: flex; }
+.qx-news .qx-button-content-wrap-child { background-image: linear-gradient(#fff, #0f0f0f 85%);
+  border-radius: 70px;
+  padding: 1px; }
+.qx-news .qx-button-content-wrap-child.qx-button-content-wrap-child-two { background-image: linear-gradient(#fff, #0f0f0f 86%); }
+.qx-news .qx-all-image-cover { width: var(--_base---global-size--global-full);
+  height: var(--_base---global-size--global-full);
+  object-fit: cover; }
+.qx-news .header-btn.qx-display-none { display: block; }
+.qx-news .qx-home-blog-section { padding-top: var(--_common-spacing---spacing-34xl-large);
+  padding-bottom: var(--_common-spacing---spacing-34xl-large); }
+.qx-news .qx-home-blog-wrap { grid-column-gap: var(--_common-spacing---spacing-6xl-large);
+  grid-row-gap: var(--_common-spacing---spacing-6xl-large);
+  justify-content: space-between;
+  align-items: flex-start;
+  display: flex; }
+.qx-news .qx-home-blog-left { width: var(--_base---global-size--global-full);
+  max-width: 448px;
+  position: sticky;
+  top: 14vh; }
+.qx-news .qx-home-blog-right { width: var(--_base---global-size--global-full);
+  max-width: 695px; }
+.qx-news .qx-home-blog-left-top { grid-column-gap: var(--_common-spacing---spacing-large);
+  grid-row-gap: var(--_common-spacing---spacing-large);
+  flex-flow: column;
+  display: flex; }
+.qx-news .qx-home-blog-left-bottom { margin-top: var(--_common-spacing---spacing-23xl-large);
+  display: inline-flex; }
+.qx-news .qx-blog-item { padding-top: var(--_common-spacing---spacing-6xl-large);
+  padding-bottom: var(--_common-spacing---spacing-6xl-large);
+  grid-column-gap: var(--_common-spacing---spacing-8xl-large);
+  grid-row-gap: var(--_common-spacing---spacing-8xl-large);
+  background-color: var(--_color---normal-color--black);
+  border-top: 1px solid #222;
+  display: flex; }
+.qx-news .qx-blog-item-image { width: var(--_base---global-size--global-full);
+  border-radius: 10px;
+  max-width: 350px;
+  height: 244px;
+  overflow: hidden; }
+.qx-news .qx-blog-item-info { width: var(--_base---global-size--global-full);
+  flex-flow: column;
+  justify-content: space-between;
+  align-items: stretch;
+  max-width: 320px;
+  display: flex; }
+.qx-news .qx-blog-item-title-box { grid-column-gap: var(--_common-spacing---spacing-large);
+  grid-row-gap: var(--_common-spacing---spacing-large);
+  flex-flow: column;
+  display: flex; }
+.qx-news .qx-blog-title { color: var(--_color---normal-color--snow-white);
+  font-size: var(--_base---font-size--font-size-2xl);
+  line-height: var(--_base---line-height--line-height-relaxed);
+  font-weight: var(--_base---font-weight--semi-bold);
+  text-decoration: none;
+  transition: all .3s; }
+.qx-news .qx-blog-title:hover { color: var(--_color---normal-color--vivid-orange); }
+.qx-news .qx-collection-item { position: sticky;
+  bottom: 14vh; }
+.qx-news .qx-blog-item-section { margin-top: var(--_common-spacing---spacing-22xl-large);
+  margin-bottom: var(--_common-spacing---spacing-34xl-large); }
+.qx-news .qx-blog-item-wrap { grid-column-gap: var(--_common-spacing---spacing-28xl-large);
+  grid-row-gap: var(--_common-spacing---spacing-28xl-large);
+  grid-template-rows: auto;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-columns: 1fr; }
+.qx-news .qx-blog-item-image-two { width: var(--_base---global-size--global-full);
+  border-radius: 10px;
+  max-width: 240px;
+  height: 244px;
+  overflow: hidden; }
+.qx-news .qx-blog-item-info-two { width: var(--_base---global-size--global-full);
+  flex-flow: column;
+  justify-content: space-between;
+  align-items: stretch;
+  max-width: 338px;
+  display: flex; }
+.qx-news .qx-blog-item-two { padding-top: var(--_common-spacing---spacing-6xl-large);
+  grid-column-gap: var(--_common-spacing---spacing-8xl-large);
+  grid-row-gap: var(--_common-spacing---spacing-8xl-large);
+  background-color: var(--_color---normal-color--black);
+  border-top: 1px solid #222;
+  display: flex; }
+.qx-news .qx-blog-title-banner { text-decoration: none; }
+.qx-news .qx-display-none { display: none; }
+@media screen and (max-width: 991px) {
+  .qx-news .qx-button-arrow-wrapper { width: 40px;
+    height: 40px; }
+  .qx-news .qx-home-blog-wrap { flex-flow: column; }
+  .qx-news .qx-blog-item-title-box { margin-bottom: var(--_common-spacing---spacing-2xl-large); }
+  .qx-news .qx-blog-item-image-two { max-width: var(--_base---global-size--global-full); }
+  .qx-news .qx-blog-item-two { flex-flow: column; }
+}
+@media screen and (max-width: 767px) {
+  .qx-news .qx-h2.marquee-position { left: 75%; }
+  .qx-news .header-btn.qx-display-none { display: none; }
+  .qx-news .qx-blog-item { grid-column-gap: var(--_common-spacing---spacing-4xl-large);
+    grid-row-gap: var(--_common-spacing---spacing-4xl-large); }
+  .qx-news .qx-blog-item-image { max-width: 300px;
+    height: 200px; }
+  .qx-news .image, .qx-news .qx-blog-item-image-two { height: auto; }
+}
+@media screen and (max-width: 479px) {
+  .qx-news .qx-h2.marquee-position { top: 0%;
+    left: 80%; }
+  .qx-news .qx-body.valu-des-mw { max-width: 100%; }
+  .qx-news .qx-home-blog-left { position: static; }
+  .qx-news .qx-home-blog-right { max-width: var(--_base---global-size--global-full); }
+  .qx-news .qx-blog-item { flex-flow: column; }
+  .qx-news .qx-blog-item-image { height: auto;
+    max-width: var(--_base---global-size--global-full); }
+  .qx-news .qx-blog-item-info { max-width: var(--_base---global-size--global-full); }
+  .qx-news .qx-collection-list-wrapper { width: var(--_base---global-size--global-full); }
+  .qx-news .qx-collection-item { position: static; }
+  .qx-news .qx-text-block-3 { font-size: var(--_base---font-size--font-size-sm); }
+}
+/* qx-news: the donor painted this ground on <body>; the block needs it itself. */
+.qx-news { background-color: #000; }
+/* ---- qx-news: hand-written, from tools/blocks/qx-news.css ---- */
+/* qx-news — hand-written rules for the "把对话变成对客户的理解" block.
+   Appended after the extracted qubix rules, so equal specificity wins here.
+   Every rule is scoped under .qx-news. */
+
+/* 1. Two element rules from the shared Mono stylesheet (the one this page's
+      own chrome is drawn from) reach into the transplanted block, because a
+      bare `p` / `a` selector matches anywhere:
+
+        p { opacity: .7 }      dims the lead under .qx-body's own #a1a1a1,
+                               taking it from 8.1:1 on black down to 4.3:1;
+        a { cursor: none }     Mono hides the pointer and draws its own
+                               crosshair, which this page does not.
+
+      css/stargo-fusion.css already undoes exactly these two inside the other
+      imported scopes (`:where(.lx-scope) :is(p, li) { opacity: 1 }` and
+      `.sc-scope a { cursor: pointer }`); this block needs the same. */
+.qx-news p { opacity: 1; }
+.qx-news a { cursor: pointer; }
+
+/* 2. Below 992px the donor stacks the two halves into one column, but leaves
+      the left half `position: sticky; top: 14vh`. Full-width row cards then
+      scroll up over the pinned heading and slice it through the middle — at
+      768 the English heading's last line and the pill button are both cut in
+      half by an opaque card. The donor already drops the sticky at 479; the
+      column layout begins at 991, so it has to go at 991. */
+@media screen and (max-width: 991px) {
+  .qx-news .qx-home-blog-left { position: static; }
+}
+
+/* 3. The donor's h2 is 58px at every width because its own heading was the two
+      words "Latest news". This story's heading is a sentence: in English
+      "Understanding" alone measures 347px at 58px type, against a 310px column
+      at 390 — the word ran out of the container and up to the viewport edge.
+      Step the heading down where the column gets narrow. */
+@media screen and (max-width: 479px) {
+  .qx-news { --h2--font-size: 40px; }
+}
+
+/* qubix sets `text-transform: capitalize` on its h2. Applied to this site's
+   own sentence-case copy that rewrites the words themselves — "Run the work
+   with an AI team" is published by tools/copy.mjs and was rendering as "Run The
+   Work With An AI Team". The donor's type stays; only the case goes back to
+   what the copy says. All three qubix headings on this page do the same, so
+   they stay in one case. Chinese is unaffected either way. */
+.qx-news .qx-h2 { text-transform: none; }
+

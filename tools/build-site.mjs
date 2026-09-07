@@ -20,8 +20,12 @@ import { makeSub, findByClass, removeByClass, elementContaining, extractElement,
 import { applyChrome, remapLinks, relocateAssets, relocateLinks, assertInternalLinks, stillImage, WORDMARK } from './chrome.mjs';
 import * as C from './copy.mjs';
 import { POSTS, BLOG_UI, postPath, featured, others, coverSrc, coverSrcset, formatDate } from './blog.mjs';
+import { loadBlocks, art, capTitle, DONORS } from './block-lib.mjs';
 
 const SITE = 'F:/stargo 网站/stargo-site';
+
+/** The capability page's donor blocks, one module each in tools/blocks. */
+const CAP_BLOCKS = await loadBlocks();
 const TPL = `${SITE}/tools/templates`;
 const FRAG = `${SITE}/tools/fragments`;
 const tpl = (f) => readFileSync(`${TPL}/${f}`, 'utf8');
@@ -807,6 +811,92 @@ PAGES['capabilities.html'] = (lang) => {
   h = setLink(h, 'Contact us', { href: 'contact.html', text: t(K.moreButton) });
 
 
+/* capabilityShowcase() builds the page's opening hero as well as the map; the
+   page builder puts it where Mono's inner hero used to be. */
+/**
+ * 一个外贸闭环 — the nine stages, opened by a statement.
+ *
+ * Two donors, composed the way each was drawn. The opening is qubix's "Our
+ * Values" statement (tools/capability-donors.mjs cuts it without the card row
+ * below it): an oversized heading with the paragraph set to its right, each
+ * sliding up on its own scroll trigger. The stages are renok's "Insights" rows:
+ * a number, a line of description and a large title, revealing bottom-up as
+ * each row arrives, with the row art fading in behind it on hover.
+ *
+ * renok ships three rows and nine are needed, so the three are cycled. That is
+ * safe because the hover interactions address their targets with
+ * `useEventTarget: CHILDREN` — a row's hover only ever reaches that row's own
+ * children — so rows sharing an interaction id still animate independently.
+ *
+ * The stage word stays Latin in both languages: it is the process vocabulary
+ * this site has used for these nine steps since the table this replaces.
+ */
+function loopSection(C, lang) {
+  const t = (v) => (typeof v === 'string' ? v : v[lang]);
+  const L = C.HOME_LOOP_TABLE;
+
+  const statement = readFileSync(`${SITE}/tools/fragments/qx-statement.html`, 'utf8')
+    .replace(/<h2 class="qx-h2 qx-vali-title-mw">[\s\S]*?<\/h2>/,
+      `<h2 class="qx-h2 qx-vali-title-mw">${escapeHtml(t(L.title))}</h2>`)
+    .replace(/<div class="qx-body qx-valu-des-mw">[\s\S]*?<\/div>/,
+      `<div class="qx-body qx-valu-des-mw">${escapeHtml(t(L.lede))}</div>`);
+
+  const frag = readFileSync(`${SITE}/tools/fragments/rk-insight.html`, 'utf8');
+  const starts = [...frag.matchAll(/<a data-w-id=/g)].map((m) => m.index);
+  const close = frag.lastIndexOf('</a>') + 4;
+  if (starts.length !== 3) throw new Error('loop: renok no longer ships three insight rows');
+  const head = frag.slice(0, starts[0]);
+  const tail = frag.slice(close);
+
+  /* renok gives two of its three rows a hover interaction and the third none.
+     On a page of nine that difference shows: a row with the interaction keeps
+     its art scaled to nothing until the pointer arrives, while the row without
+     one has its art sitting at full size over the number and the description.
+     So only the rows that carry the whole interaction are used as templates. */
+  const hovered = new Set(Object.values(JSON.parse(readFileSync(`${SITE}/tools/fragments/rk-cap-ix.json`, 'utf8')).events)
+    .filter((e) => e.eventTypeId === 'MOUSE_OVER').map((e) => e.target?.id));
+  const rowTpl = starts
+    .map((at, i) => frag.slice(at, starts[i + 1] ?? close))
+    .filter((row) => hovered.has(/<a data-w-id="([^"]+)"/.exec(row)?.[1]));
+  if (!rowTpl.length) throw new Error('loop: no renok insight row carries a hover interaction');
+
+  const rows = L.rows.map(([key, what], i) => {
+    const [num, name] = key.split(' · ');
+    if (!name) throw new Error(`loop: stage "${key}" is not "NN · NAME"`);
+    return rowTpl[i % rowTpl.length]
+      .replace(/<div class="rk-rt-text-color-black">[\s\S]*?<\/div>/,
+        `<div class="rk-rt-text-color-black">${escapeHtml(num)}</div>`)
+      .replace(/<div class="rk-rt-insights-text"><div class="rk-rt-text-color-black">[\s\S]*?<\/div><\/div>/,
+        `<div class="rk-rt-insights-text"><div class="rk-rt-text-color-black">${escapeHtml(t(what))}</div></div>`)
+      .replace(/<div class="rk-rt-text-style-h1 rk-rt-text-color-black">[\s\S]*?<\/div>/,
+        `<div class="rk-rt-text-style-h1 rk-rt-text-color-black">${escapeHtml(name)}</div>`)
+      .replace(/href="[^"]*"/, 'href="#atlas"');
+  });
+
+  return `<div id="loop" class="qx-statement">${statement}</div>`
+    + `<div class="rk-insight">${head}${rows.join('')}${tail}</div>`;
+}
+
+/**
+ * The capability page's donor blocks, one module each in tools/blocks.
+ *
+ * Each module knows how to cut its block out of its donor template (used by
+ * tools/capability-donors.mjs) and how to fill it with this site's words. Here
+ * we only compose them: read the fragment the extraction wrote, hand it the
+ * copy, and put it inside the root class its stylesheet is scoped under.
+ */
+
+function renderBlock(id, lang, extra) {
+  const mod = CAP_BLOCKS.get(id);
+  if (!mod) throw new Error(`capabilities: no block module ${id}`);
+  const frag = readFileSync(`${SITE}/tools/fragments/${id}.html`, 'utf8');
+  const t = (v) => (typeof v === 'string' ? v : v[lang]);
+  const html = mod.render(frag, { C, lang, t, escapeHtml, capTitle: capTitle(lang), art, ...extra });
+  return `<div class="${mod.donor.scope.replace(/^\./, '')}">${html}</div>`;
+}
+
+let showcaseHero = '';
+
 /**
  * The Capability map.
  *
@@ -832,72 +922,47 @@ function capabilityShowcase(C, lang) {
 
   const cnFrag = readFileSync(`${SITE}/tools/fragments/cn-capmap.html`, 'utf8');
   const lmCard = readFileSync(`${SITE}/tools/fragments/lm-card.html`, 'utf8');
+  const rkHero = readFileSync(`${SITE}/tools/fragments/rk-hero.html`, 'utf8');
 
-  /* ---- the lumenis card, split into its repeatable pieces ---- */
-  const listOpen = '<div class="lm-services-list">';
-  const holderOpen = '<div class="lm-services-list-holder">';
-  const holderAt = lmCard.indexOf(holderOpen) + holderOpen.length;
-  const firstList = lmCard.indexOf(listOpen, holderAt);
-  const secondList = lmCard.indexOf(listOpen, firstList + 10);
-  const listUnit = lmCard.slice(firstList, secondList);
-  const holderEnd = lmCard.indexOf('<div class="lm-services-footer">');
-  const cardHead = lmCard.slice(0, holderAt);
-  const cardTail = lmCard.slice(holderEnd);
-  if (!listUnit.includes('lm-question-text') || !cardTail.includes('lm-services-image-full')) {
-    throw new Error('capmap: the lumenis card did not split into head / item / tail');
-  }
+  /* renok's hero opens the page: a centred headline with one italic accent, a
+     paragraph and a pill button, each fading up on load through the donor's own
+     interactions. Only the words change. */
+  const hero = rkHero
+    .replace(/<h1([^>]*)>[\s\S]*?<\/h1>/, (m, attrs) =>
+      `<h1${attrs}>${escapeHtml(t(S.heroLead))} <span class="rk-rt-italic-text rk-rt-change">${escapeHtml(t(S.heroAccent))}</span> ${escapeHtml(t(S.heroTail))}</h1>`)
+    .replace(/<p([^>]*)>[\s\S]*?<\/p>/, (m, attrs) => `<p${attrs}>${escapeHtml(t(S.heroBody))}</p>`)
+    .replace(/<a href="[^"]*"/, '<a href="#atlas"')
+    .replace(/<div class="rk-rt-button-text rk-rt-text-one">[\s\S]*?<\/div>/,
+      `<div class="rk-rt-button-text rk-rt-text-one">${escapeHtml(t(S.heroButton))}</div>`)
+    .replace(/<div class="rk-rt-button-text rk-rt-text-two">[\s\S]*?<\/div>/,
+      `<div class="rk-rt-button-text rk-rt-text-two">${escapeHtml(t(S.heroButton))}</div>`);
 
-  const byName = new Map();
-  for (const g of C.CAPABILITY_GROUPS) for (const [name, gloss, zhName] of g.items) byName.set(name, { g, gloss, zhName });
+  /* ---- the chapters, each on the donor block the review named for it ----
 
-  /* On the Chinese page a capability leads with its Chinese name and carries the
-     product name as a small subtitle; on the English page the product name is the
-     name. A visitor should never have to read the other language to follow this. */
-  const capTitle = (name, zhName) => lang === 'zh'
-    ? `${escapeHtml(zhName)}<span class="lm-cap-en">${escapeHtml(name)}</span>`
-    : escapeHtml(name);
+     The review went through the page section by section and named which of the
+     four templates each one should be built from. That mapping is this list.
+     A block knows how to fill itself (tools/blocks/<id>.mjs); here we only put
+     them in order and hang the anchors the nav and the floating pill jump to.
 
-  const item = (name, gloss, zhName) => listUnit
-    .replace(/<div class="lm-question-text lm-white">[\s\S]*?<\/div>/,
-      `<div class="lm-question-text lm-white">${capTitle(name, zhName)}</div>`)
-    .replace(/<p class="lm-answer-text lm-white-text">[\s\S]*?<\/p>/,
-      `<p class="lm-answer-text lm-white-text">${escapeHtml(gloss)}</p>`);
-
-  /** One outcome or foundation, on the donor's card. */
-  const card = (n, x, footer, anchor) => {
-    const items = x.picks.map((name) => {
-      const hit = byName.get(name);
-      if (!hit) throw new Error(`capability showcase: "${name}" (${t(x.label)}) is not in CAPABILITY_GROUPS`);
-      return item(name, t(hit.gloss), hit.zhName);
-    }).join('');
-    const groups = x.groups
-      ? x.groups.map((g) => `${g} ${t(C.CAPABILITY_GROUPS.find((q) => q.n === g).name)}`).join(' · ')
-      : '';
-    const head = cardHead
-      .replace(/<div class="lm-number"><div>[\s\S]*?<\/div><\/div>/,
-        `<div class="lm-number"><div>${n}</div></div>`)
-      .replace(/<div class="lm-h2-style lm-white-text">[\s\S]*?<\/div>/,
-        `<div class="lm-h2-style lm-white-text">${escapeHtml(t(x.label))}</div>`)
-      .replace(/<p class="lm-white-text">[\s\S]*?<\/p>/,
-        `<p class="lm-white-text">${escapeHtml(t(x.promise))}</p>`);
-    const tail = cardTail
-      .replace(/<p class="lm-white-text">[\s\S]*?<\/p>/, `<p class="lm-white-text">${footer}</p>`)
-      .replace(/<div class="lm-button-text">[\s\S]*?<\/div><div class="lm-button-text">[\s\S]*?<\/div>/,
-        `<div class="lm-button-text">${escapeHtml(t(S.cardButton))}</div><div class="lm-button-text">${escapeHtml(t(S.cardButton))}</div>`)
-      .replace(/<img([^>]*?)class="lm-services-image-full"([^>]*)>/,
-        `<img src="assets/stargo-editorial/${x.image}.webp" alt="${escapeHtml(t(x.label))}" class="lm-services-image-full"/>`)
-      + (groups ? `<div class="lm-capmap-groups">${escapeHtml(`${t(S.inCatalogue)}: ${groups}`)}</div>` : '');
-    return (anchor ? head.replace('<div class="lm-services-perspective"', `<div id="${anchor}" class="lm-services-perspective"`) : head)
-      + items + '</div>' + tail;
-  };
-
-  const outcomes = S.stories.map((x, i) => card(String(i + 1).padStart(2, '0'), x,
-    `<strong>${escapeHtml(t(S.outputLabel))}</strong> ${escapeHtml(t(x.output))}` +
-    ` <strong>${escapeHtml(t(S.connectionLabel))}</strong> ${escapeHtml(t(x.connection))}` +
-    (x.caveat ? ` ${escapeHtml(t(x.caveat))}` : ''), `story-${i + 1}`));
-
-  const foundations = S.foundations.map((x, i) => card(String(i + 1).padStart(2, '0'), x,
-    x.caveat ? escapeHtml(t(x.caveat)) : escapeHtml(t(S.foundationsNote)), `foundation-${i + 1}`));
+     The two marquee strips are the same block twice, carrying different words:
+     they are the beat between chapters, and the module keeps both lines. */
+  const CHAPTERS = [
+    { id: 'cn-service', anchor: 'story-1' },      // 找到买家
+    { id: 'qx-news', anchor: 'story-2' },         // 把对话变成理解
+    { id: 'rk-stats', anchor: 'story-3' },        // 报价
+    { id: 'rk-marquee', variant: 0 },
+    { id: 'rk-portfolio', anchor: 'story-4' },    // 订单
+    { id: 'cn-casestudy', anchor: 'story-5' },    // 内容
+    { id: 'rk-marquee', variant: 1 },
+    { id: 'qx-founder', anchor: 'story-6' },      // AI 团队
+    { id: 'qx-cards', anchor: 'foundations' },    // 四个基础板块
+  ];
+  const chapters = CHAPTERS.map(({ id, anchor, variant }) => {
+    const html = renderBlock(id, lang, { variant });
+    if (!anchor) return html;
+    if (!html.startsWith('<div class="')) throw new Error(`capabilities: ${id} did not come back wrapped in its scope`);
+    return html.replace('<div class="', `<div id="${anchor}" class="`);
+  }).join('');
 
   /* ---- the catalogue keeps cinery's accordion ---- */
   const rowTpl = cnFrag.slice(cnFrag.indexOf('<!-- row -->') + 12).trim();
@@ -914,16 +979,18 @@ function capabilityShowcase(C, lang) {
     `<div class="cn-band"><div class="cn-band-label">${escapeHtml(label)}</div>` +
     `<div class="cn-band-note">${escapeHtml(note)}</div></div>`;
 
-  return `<section id="atlas" class="lm-capmap cn-capmap"><div class="cn-capmap-inner">` +
-    `<div class="cn-capmap-head"><div class="cn-capmap-eyebrow">${escapeHtml(t(S.eyebrow))}</div>` +
-    `<div class="cn-capmap-count">(${C.CAPABILITY_GROUPS.length})</div></div>` +
-    `<h2 class="cn-capmap-title">${escapeHtml(t(S.headline))}</h2>` +
+  showcaseHero = `<div class="rk-hero">${hero}</div>`;
+
+  /* The chapters open themselves -- cinery's gradient split heading is the first
+     one -- so what is left for this frame is the two paragraphs that set up the
+     whole page, and the catalogue that closes it. `#atlas` stays here because
+     the hero button and every stage row jump to it. */
+  return `<section id="atlas" class="cn-capmap"><div class="cn-capmap-inner">` +
     `<p class="cn-capmap-lede">${escapeHtml(t(S.body))}</p>` +
     `<p class="cn-capmap-scope">${escapeHtml(t(S.scopeNote))}</p>` +
-    band(t(S.storiesLabel), t(S.storiesNote)) +
-    `<div class="lm-capmap-cards">${outcomes.join('')}</div>` +
-    band(t(S.foundationsLabel), t(S.foundationsNote)) +
-    `<div class="lm-capmap-cards">${foundations.join('')}</div>` +
+    `</div></section>` +
+    chapters +
+    `<section class="cn-capmap"><div class="cn-capmap-inner">` +
     band(t(S.catalogueLabel), `${t(S.catalogueNote)} ${C.CAPABILITY_GROUPS.length} ${lang === 'zh' ? '个能力组 · ' : 'groups · '}${total}${lang === 'zh' ? ' 项能力。' : ' capabilities.'}`) +
     `<div class="cn-faq-container">${catalogue.join('')}</div>` +
     `</div></section>`;
@@ -938,18 +1005,36 @@ function capabilityShowcase(C, lang) {
   const anchor = '<div data-w-id="f7fb6f0b-16b8-25a9-4160-54883563ff75" class="rounder-wrapper">';
   if (!h.includes(anchor)) throw new Error('capabilities: insertion anchor missing');
   // The nine-stage loop sits above the capability map: business mainline first, then the 14 groups.
-  const L = C.HOME_LOOP_TABLE;
-  const loop = awardsTable({
-    id: 'loop', caption: t(L.caption), title: t(L.title), total: L.rows.length,
-    button: { label: t(L.button), href: '#atlas' }, headers: L.headers.map(t),
-    rows: L.rows.map(([a, b, c]) => [a, escapeHtml(t(b)), escapeHtml(t(c))]),
-  });
+  const loop = loopSection(C, lang);
   h = h.replace(anchor, `${loop}\n${table}\n${anchor}`);
+  /* renok's hero opens the page in place of Mono's inner hero, as the review asked. */
+  {
+    /* Its black ground would swallow the nav, which is drawn in the page's own
+       black. The nav scrolls away with the hero, so whitening it here costs
+       the light sections below nothing. */
+    if (!h.includes('<body>')) throw new Error('capabilities: body tag not where the dark-nav class goes');
+    h = h.replace('<body>', '<body class="stargo-dark-nav">');
+    const inner = findByClass(h, 'div', 'for-inner', 0);
+    if (!inner) throw new Error('capabilities: Mono inner hero not found');
+    if (!showcaseHero) throw new Error('capabilities: the showcase hero was not built');
+    h = h.slice(0, inner.start) + showcaseHero + h.slice(inner.end);
+  }
   {
     // the transplanted cinery block brings its own scoped stylesheet
     const monoLink = /<link href="css\/monof-template\.app\.shared\.[a-f0-9]+\.css" rel="stylesheet" type="text\/css"\/>/;
     if (!monoLink.test(h)) throw new Error('capabilities: Mono stylesheet link not found');
-    h = h.replace(monoLink, (m) => `${m}\n<link href="css/lumenis.lm.css" rel="stylesheet" type="text/css"/>\n<link href="css/cinery.cn.css" rel="stylesheet" type="text/css"/>`);
+    /* One sheet per donor, taken from the donor table rather than listed here,
+       so adding a block never means remembering to link its styles — that is
+       exactly how the new cinery blocks first rendered unstyled. `cinery.cn.css`
+       is the older sheet for the catalogue accordion, which still comes from its
+       own prepare script. */
+    const sheets = [...new Set([...Object.values(DONORS).map((d) => d.sheet), 'cinery.cn.css'])]
+      .filter((f) => existsSync(`${SITE}/css/${f}`))
+      .map((f) => `<link href="css/${f}" rel="stylesheet" type="text/css"/>`)
+      .join('\n');
+    /* chrome.mjs attaches css/stargo-fusion.css after the last stylesheet on the
+       page, so the donor sheets added here still load before the overrides. */
+    h = h.replace(monoLink, (m) => `${m}\n${sheets}`);
   }
   // Assign by buyer meaning, not image sequence: growth, customer context,
   // commercial fulfilment, workforce/governance. Parallel-team art belongs

@@ -362,6 +362,11 @@ export const HOME_LOOP_TABLE = {
   title: B('一个外贸闭环', 'One closed loop'),
   headers: [B('(阶段)', '(Stage)'), B('(发生什么)', '(What happens)'), B('(要点)', '(The point)')],
   button: B('看每一步背后的能力', 'See the capabilities behind each step'),
+  /* The capability page opens this section with a statement rather than a table
+     caption; the nine rows follow underneath. */
+  lede: B(
+    '从发现机会到成交复盘，外贸的九个阶段本来分散在不同的人、系统和表格里。STARGO WORK 把它们放在同一条工作流上，让每一步的结果成为下一步的输入。',
+    'Nine stages, from spotting an opportunity to reviewing what closed — normally scattered across different people, systems and spreadsheets. STARGO WORK puts them on one workflow, so each step\'s result becomes the next step\'s input.'),
   rows: [
     ['01 · DISCOVER', B('发现市场机会。AI 持续从公开市场、搜索、社交平台、贸易数据、经销商网络和企业信号中寻找潜在机会。', 'Find market opportunities. AI keeps looking through public markets, search, social platforms, trade data, dealer networks and company signals.'), B('不是等询盘，而是主动寻找正在发生的需求。', 'Not waiting for inquiries — looking for demand as it happens.')],
     ['02 · QUALIFY', B('判断谁真正值得跟进。Growth OS 综合企业背景、采购信号、目标市场、产品匹配度、决策链和历史行为评分。', 'Decide who is worth following. Growth OS scores company background, buying signals, target market, product fit, decision chain and past behaviour.'), B('让业务员把时间留给真正可能成交的人。', 'Sales time goes to the people who can actually close.')],
@@ -993,6 +998,14 @@ export const ABOUT = {
 export const CAPABILITY_SHOWCASE = {
   // The donor sets these two lines at 192px and never wraps them, so each has to
   // fit the 1180px column: "Connected" measures 1216px and does not.
+  /* The page opens on renok's hero. Its accent word is set in an italic serif,
+     which has no CJK glyphs, so the accent stays a Latin fragment in both
+     languages rather than a synthesised slant. */
+  heroLead: B('把外贸做成', 'Everything a trade team'),
+  heroAccent: B('/one system', '/does'),
+  heroTail: B('的一套系统', 'in one place'),
+  heroBody: B('客户研究、沟通、报价、订单与内容，落在同一条工作流上。288 位专业 AI 员工推进，决策权在你的团队。', 'Customer research, conversations, quotations, orders and content on one workflow — carried by 288 specialized AI employees, with the decisions still yours.'),
+  heroButton: B('看能力图谱', 'See the capability map'),
   eyebrow: B('能力图谱', 'CAPABILITY MAP'),
   headlineTop: B('每一项', 'Every'),
   headlineBottom: B('工作', 'Job'),

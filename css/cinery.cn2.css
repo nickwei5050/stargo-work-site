@@ -1,0 +1,1078 @@
+/* cinery — capability-page blocks.
+   Written by tools/capability-donors.mjs out of cinery: only the
+   rules the transplanted blocks use, class names prefixed with `cn-`, every
+   selector scoped under the block's own root class. Do not edit by hand. */
+.cn-casestudy {
+  --background-color--primary-background: #000;
+  --_typography---font-family--primary: "Overused Grotesk", Arial, sans-serif;
+  --primary-color--white: white;
+  --_sizes---fixed--small: 1rem;
+  --_typography---font-weight--regular: 400;
+  --_typography---h1--h1-font-size: var(--_sizes---fixed--xhuge-04);
+  --_typography---h1--h1-font-weight: var(--_typography---font-weight--semibold);
+  --_typography---h2--h2-font-size: var(--_sizes---fixed--xhuge-03);
+  --_typography---h2--h2-font-weight: var(--_typography---font-weight--semibold);
+  --_typography---h3--h3-font-size: var(--_sizes---fixed--xxlarge-01);
+  --_typography---h3--h3-font-weight: var(--_typography---font-weight--semibold);
+  --_typography---h4--h4-font-size: var(--_sizes---fixed--large-01);
+  --_typography---h4--h4-font-weight: var(--_typography---font-weight--semibold);
+  --_typography---h5--h5-font-size: var(--_sizes---fixed--medium-01);
+  --_typography---h5--h5-font-weight: var(--_typography---font-weight--semibold);
+  --_typography---h6--h6-font-size: var(--_sizes---fixed--small);
+  --_typography---h6--h6-font-weight: var(--_typography---font-weight--semibold);
+  --_typography---font-weight--medium: 500;
+  --primary-color--dark: #232324;
+  --_sizes---fixed--medium-01: 2rem;
+  --primary-color--dark-02: #444;
+  --_typography---h3--h3-font-family: var(--_typography---font-family--primary);
+  --_typography---h3--h3-letter-spacing: .1rem;
+  --_typography---font-weight--semibold: 600;
+  --neutral-color--secondary-neutral: #bbb;
+  --_typography---h5--h5-font-family: var(--_typography---font-family--primary);
+  --_typography---h5--h5-letter-spacing: .025rem;
+  --background-color--secondary-background: white;
+  --primary-color--black: #000;
+  --_typography---h2--h2-font-family: var(--_typography---font-family--primary);
+  --_typography---h2--h2-letter-spacing: .1rem;
+  --_sizes---fixed--small-02: 1.25rem;
+  --border-color--primary-border: #ffffff1a;
+  --_sizes---border-radius--large: 1.5rem;
+  --primary-color--dark-03: #4b4b4b;
+  --_sizes---border-radius--xlarge: 2rem;
+  --_typography---h6--h6-font-family: var(--_typography---font-family--primary);
+  --_typography---h6--h6-letter-spacing: .025rem;
+  --_sizes---fixed--xsmall-04: .75rem;
+  --border-color--transparent: #0000;
+  --_sizes---fixed--small-05: 1.625rem;
+  --_sizes---fixed--small-04: 1.5rem;
+  --_sizes---fixed--small-03: 1.375rem;
+  --neutral-color--primary-neutral: gray;
+  --_sizes---fixed--xsmall-05: .875rem;
+  --_typography---h1--h1-font-family: var(--_typography---font-family--primary);
+  --_typography---h1--h1-letter-spacing: .1rem;
+  --border-color--secondary-border: #fff3;
+  --_typography---h4--h4-font-family: var(--_typography---font-family--primary);
+  --_typography---h4--h4-letter-spacing: .1rem;
+  --_sizes---border-radius--medium: 1rem;
+  --_sizes---border-radius--100: 100%;
+  --_sizes---border-radius--xxlarge: 2.5rem;
+  --_sizes---spacer--xlarge: 4rem;
+  --_typography---font-weight--bold: 700;
+  --_sizes---fixed--medium-02: 2.25rem;
+  --_sizes---fixed--small-07: 1.875rem;
+  --_sizes---spacer--large: 3rem;
+  --_sizes---spacer--medium: 2rem;
+  --_sizes---border-radius--xhuge: 4rem;
+  --_sizes---fixed--small-01: 1.125rem;
+  --_sizes---spacer--tiny: .125rem;
+  --_sizes---spacer--xxsmall: .25rem;
+  --_typography---font-weight--thin: 100;
+  --_typography---font-weight--extra-light: 200;
+  --_typography---font-weight--light: 300;
+  --_typography---font-weight--extra-bold: 800;
+  --_typography---font-weight--black: 900;
+  --_sizes---spacer--xsmall: .5rem;
+  --_sizes---spacer--small: 1rem;
+  --_sizes---spacer--xxlarge: 5rem;
+  --_sizes---spacer--huge: 6rem;
+  --_sizes---spacer--xhuge: 8rem;
+  --_sizes---spacer--xxhuge: 10rem;
+  --_sizes---border-radius--tiny: .125rem;
+  --_sizes---border-radius--xxsmall: .25rem;
+  --_sizes---border-radius--small: .5rem;
+  --_sizes---border-radius--huge: 3rem;
+  --_sizes---border-radius--xxhuge: 5rem;
+  --_sizes---section--small: 3rem;
+  --_sizes---fixed--zero: 0rem;
+  --_sizes---fixed--xsmall-01: .125rem;
+  --_sizes---fixed--xsmall-02: .25rem;
+  --_sizes---fixed--xsmall-03: .5rem;
+  --_sizes---fixed--small-06: 1.75rem;
+  --_sizes---fixed--medium-03: 2.5rem;
+  --_sizes---fixed--medium-04: 2.75rem;
+  --_sizes---fixed--large-01: 3rem;
+  --_sizes---fixed--large-02: 3.25rem;
+  --_sizes---fixed--large-03: 3.5rem;
+  --_sizes---fixed--large-04: 3.75rem;
+  --_sizes---fixed--xlarge-01: 4rem;
+  --_sizes---fixed--xlarge-02: 4.25rem;
+  --_sizes---fixed--xlarge-03: 4.5rem;
+  --_sizes---fixed--xlarge-04: 4.75rem;
+  --_sizes---fixed--xxlarge-01: 5rem;
+  --_sizes---fixed--xxlarge-02: 5.5rem;
+  --_sizes---fixed--xxlarge-03: 6rem;
+  --_sizes---fixed--xxlarge-04: 6.5rem;
+  --_sizes---fixed--huge-01: 7rem;
+  --_sizes---fixed--huge-02: 7.5rem;
+  --_sizes---fixed--huge-03: 8rem;
+  --_sizes---fixed--huge-04: 8.5rem;
+  --_sizes---fixed--xhuge-01: 9rem;
+  --_sizes---fixed--xhuge-02: 9.5rem;
+  --_sizes---fixed--xhuge-03: 10rem;
+  --_sizes---fixed--xhuge-04: 12rem;
+  --_sizes---fixed--xhuge-05: 14rem;
+  --_sizes---fixed--xxhuge-01: 16rem;
+  --_sizes---fixed--xxhuge-02: 18rem;
+  --_sizes---fixed--xxhuge-03: 20rem;
+  --_sizes---section--medium: 5rem;
+  --_sizes---section--large: 8rem;
+  --_sizes---section--xlarge: 10rem;
+  --_sizes---section--huge: 12rem;
+}
+.cn-casestudy audio, .cn-casestudy canvas, .cn-casestudy progress, .cn-casestudy video { vertical-align: baseline;
+  display: inline-block; }
+.cn-casestudy a { background-color: #0000; }
+.cn-casestudy img { border: 0; }
+.cn-casestudy img { vertical-align: middle;
+  max-width: 100%;
+  display: inline-block; }
+.cn-casestudy .w-inline-block { max-width: 100%;
+  display: inline-block; }
+.cn-casestudy .w-embed:before, .cn-casestudy .w-embed:after { content: " ";
+  grid-area: 1 / 1 / 2 / 2;
+  display: table; }
+.cn-casestudy .w-embed:after { clear: both; }
+.cn-casestudy .w-background-video { color: #fff;
+  height: 500px;
+  position: relative;
+  overflow: hidden; }
+.cn-casestudy .w-background-video > video { object-fit: cover;
+  z-index: -100;
+  background-position: 50%;
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  position: absolute;
+  inset: -100%; }
+.cn-casestudy .w-background-video > video::-webkit-media-controls-start-playback-button { -webkit-appearance: none;
+  display: none !important; }
+.cn-casestudy .w-background-video--control { background-color: #0000;
+  padding: 0;
+  position: absolute;
+  bottom: 1em;
+  right: 1em; }
+.cn-casestudy .w-background-video--control > [hidden] { display: none !important; }
+.cn-casestudy .w-layout-grid { grid-row-gap: 16px;
+  grid-column-gap: 16px;
+  grid-template-rows: auto auto;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-columns: 1fr;
+  display: grid; }
+.cn-casestudy a { color: var(--primary-color--white);
+  font-size: var(--_sizes---fixed--small);
+  font-weight: var(--_typography---font-weight--medium);
+  text-decoration: none; }
+.cn-casestudy img { max-width: 100%;
+  display: inline-block; }
+.cn-casestudy .cn-padding-bottom, .cn-casestudy .cn-padding-bottom.cn-padding-xhuge { padding-top: 0;
+  padding-left: 0;
+  padding-right: 0; }
+.cn-casestudy .cn-text-color-secondary { color: var(--neutral-color--secondary-neutral); }
+.cn-casestudy .cn-text-size-medium { font-size: var(--_sizes---fixed--small-02);
+  line-height: 1.5; }
+.cn-casestudy .cn-text-style-allcaps { text-transform: uppercase; }
+.cn-casestudy .cn-container-large { width: 100%;
+  max-width: 100rem;
+  margin-left: auto;
+  margin-right: auto; }
+.cn-casestudy .cn-padding-global { padding-left: 2.5rem;
+  padding-right: 2.5rem; }
+.cn-casestudy .padding-top, .cn-casestudy .padding-top.cn-padding-xhuge { padding-bottom: 0;
+  padding-left: 0;
+  padding-right: 0; }
+.cn-casestudy .cn-padding-xhuge { padding: 8rem; }
+.cn-casestudy .number-block.cn-_02 { justify-content: flex-start;
+  align-items: flex-end; }
+.cn-casestudy .cn-case-study-component { grid-column-gap: 2rem;
+  grid-row-gap: 2rem;
+  perspective: 1000px;
+  flex-flow: column;
+  display: flex;
+  position: relative; }
+.cn-casestudy .cn-case-study-block { position: relative; }
+.cn-casestudy .cn-case-study-block.cn-_01 { z-index: 4; }
+.cn-casestudy .cn-case-study-block.cn-_02 { z-index: 3; }
+.cn-casestudy .cn-case-study-component-grid { grid-column-gap: 2rem;
+  grid-row-gap: 2rem;
+  grid-template-rows: auto;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-columns: 1fr;
+  width: 100%;
+  display: grid; }
+.cn-casestudy .cn-case-arrow-wrap { z-index: 10;
+  cursor: pointer;
+  background-color: #ffffff1a;
+  border: 1px solid #ffffff1a;
+  border-radius: 100px;
+  justify-content: center;
+  align-items: center;
+  width: 4rem;
+  height: 2.5rem;
+  transition: all .35s;
+  display: flex; }
+.cn-casestudy .cn-case-arrow-wrap:hover { transform: scale(1.1); }
+.cn-casestudy .cn-case-study-wrapper { border-radius: 1.5rem;
+  position: relative;
+  overflow: hidden; }
+.cn-casestudy .cn-case-arrow-block { justify-content: flex-start;
+  align-items: center;
+  width: 1rem;
+  height: 1rem;
+  display: flex;
+  position: relative;
+  overflow: hidden; }
+.cn-casestudy .cn-case-study-item { grid-column-gap: 8px;
+  grid-row-gap: 8px;
+  color: #fff;
+  justify-content: flex-start;
+  align-items: center;
+  display: flex; }
+.cn-casestudy .cn-case-study-overlay { background-color: #0a0a0a4d;
+  border-radius: 1.25rem;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0%; }
+.cn-casestudy .cn-video-wrapper { border-radius: 1.25rem;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden; }
+.cn-casestudy .cn-case-arrow { color: #fff;
+  justify-content: center;
+  align-items: center;
+  width: 1rem;
+  height: 1rem;
+  display: flex;
+  position: absolute; }
+.cn-casestudy .cn-case-study-link { border-radius: 1.5rem;
+  width: 100%; }
+.cn-casestudy .cn-case-study-content-grid { background-color: #70707026;
+  border: 1px solid #70707026;
+  border-radius: 100px;
+  grid-template-rows: auto;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 10px 10px 10px 20px; }
+.cn-casestudy .cn-case-logo { z-index: 10;
+  height: 2.5rem;
+  position: relative; }
+.cn-casestudy .cn-case-logo-block { flex-flow: column;
+  height: 2.5rem;
+  display: flex;
+  overflow: hidden; }
+.cn-casestudy .cn-background-glass { grid-column-gap: 2.5rem;
+  grid-row-gap: 2.5rem;
+  -webkit-backdrop-filter: blur(30px);
+  backdrop-filter: blur(30px);
+  background-color: #5c5c5c1a;
+  border: 1px solid #ffffff14;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
+  position: absolute; }
+.cn-casestudy .cn-background-glass.cn-case-study { border-radius: 1.5rem; }
+.cn-casestudy .cn-case-study-container { z-index: 2;
+  background-color: var(--border-color--primary-border);
+  border-radius: 1.5rem;
+  padding: 1rem;
+  position: relative;
+  overflow: hidden; }
+.cn-casestudy .cn-case-logo-wrap { z-index: 5;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  position: absolute;
+  inset: 0%;
+  overflow: hidden; }
+.cn-casestudy .cn-case-video { border-radius: 1.25rem;
+  width: 100%;
+  height: 25rem;
+  min-height: 25rem; }
+.cn-casestudy .client-avatar._03, .cn-casestudy .client-avatar._05, .cn-casestudy .client-avatar.cn-_02 { margin-left: -10px; }
+.cn-casestudy .cta-circle-wrapper.cn-_02 { height: 96.875rem;
+  margin-top: -1.563rem;
+  transform: scaleX(-1); }
+.cn-casestudy .cta-video-item.cn-_02 { transform: rotate(15deg)translate(24.375rem, -3.125rem); }
+.cn-casestudy .cta-button-background.cn-_01 { background-image: radial-gradient(circle, #000, #ffffff26); }
+.cn-casestudy .cta-button-background.cn-_02 { background-image: radial-gradient(circle, #000, #ffffff40); }
+.cn-casestudy .scroll-down-background.cn-_02 { background-image: linear-gradient(180deg, var(--border-color--transparent), var(--primary-color--dark-03)); }
+.cn-casestudy .service-content-block.cn-_02 { background-image: none; }
+.cn-casestudy .cn-case-video-wrapper { border: 1px solid var(--border-color--primary-border);
+  background-color: var(--border-color--primary-border);
+  border-radius: 2rem;
+  width: 100%;
+  height: 100%;
+  padding: 5px;
+  position: relative;
+  overflow: hidden; }
+.cn-casestudy .cn-case-video-item { object-fit: cover;
+  background-color: #0000;
+  border-radius: 2rem;
+  width: 100%;
+  height: 102%;
+  padding-bottom: 0;
+  display: block;
+  top: -2px; }
+.cn-casestudy .cn-case-study-grid { grid-column-gap: 1rem;
+  grid-row-gap: 1rem;
+  grid-template-rows: auto;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  width: 100%; }
+.cn-casestudy .cn-case-study-content-wrap { border: 1px solid var(--border-color--primary-border);
+  background-color: var(--border-color--primary-border);
+  border-radius: 1.5rem;
+  padding: 5px; }
+.cn-casestudy .cn-case-study-content-item { background-color: var(--primary-color--dark);
+  border-radius: 1.25rem;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem;
+  display: flex; }
+.cn-casestudy .cn-case-study-content-block { grid-column-gap: 10px;
+  grid-row-gap: 10px;
+  text-align: center;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
+  display: flex; }
+.cn-casestudy .cn-case-study-image-wrap { border-radius: 2.25rem;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden; }
+@media screen and (min-width: 1280px) {
+  .cn-casestudy .cn-case-logo, .cn-casestudy .cn-case-logo-block { height: 4.5rem; }
+  .cn-casestudy .cn-case-video { height: 28rem;
+    min-height: 28rem; }
+}
+@media screen and (min-width: 1440px) {
+  .cn-casestudy .cn-case-logo, .cn-casestudy .cn-case-logo-block { height: 3rem; }
+  .cn-casestudy .cn-case-video { height: 34rem;
+    min-height: 34rem; }
+}
+@media screen and (min-width: 1920px) {
+  .cn-casestudy .cn-case-video { height: 35rem;
+    min-height: 35rem; }
+}
+@media screen and (max-width: 991px) {
+  .cn-casestudy .cn-padding-bottom { padding-top: 0;
+    padding-left: 0;
+    padding-right: 0; }
+  .cn-casestudy .cn-padding-bottom.cn-padding-xhuge { padding-bottom: 6rem; }
+  .cn-casestudy .cn-case-study-component-grid { grid-template-columns: 1fr; }
+  .cn-casestudy .cn-case-video { height: 30rem;
+    min-height: 30rem; }
+  .cn-casestudy .service-bg-image._04, .cn-casestudy .service-bg-image.cn-_02, .cn-casestudy .service-bg-image._03 { display: none; }
+  .cn-casestudy .cn-case-study-grid { grid-template-columns: 1fr 1fr; }
+}
+@media screen and (max-width: 767px) {
+  .cn-casestudy .cn-padding-bottom { padding-top: 0;
+    padding-left: 0;
+    padding-right: 0; }
+  .cn-casestudy .cn-padding-bottom.cn-padding-xhuge { padding-bottom: 5rem; }
+  .cn-casestudy .cn-padding-global { padding-left: 1.25rem;
+    padding-right: 1.25rem; }
+  .cn-casestudy .padding-top.cn-padding-xhuge { padding-top: 6rem; }
+  .cn-casestudy .number-block.cn-_02, .cn-casestudy .number-block.cn-_01 { justify-content: flex-start;
+    align-items: center; }
+  .cn-casestudy .cn-case-logo, .cn-casestudy .cn-case-logo-block { height: 2rem; }
+  .cn-casestudy .cn-case-video { height: 22rem;
+    min-height: 22rem; }
+  .cn-casestudy .cta-circle-wrapper.cn-_02 { height: 856px; }
+  .cn-casestudy .cta-video-item.cn-_02 { transform: rotate(15deg)translate(13.438rem, -1.563rem); }
+  .cn-casestudy .cn-case-video-wrapper, .cn-casestudy .cn-case-video-item { border-radius: 1.25rem; }
+  .cn-casestudy .client-image, .cn-casestudy .cn-case-study-image-wrap { border-radius: 1.75rem; }
+}
+@media screen and (max-width: 479px) {
+  .cn-casestudy .cn-padding-bottom { padding-top: 0;
+    padding-left: 0;
+    padding-right: 0; }
+  .cn-casestudy .padding-top.cn-padding-xhuge { padding-top: 5rem; }
+  .cn-casestudy .roll-number.cn-_02, .cn-casestudy .roll-number.cn-_01 { height: 20vw;
+    min-height: 20vw; }
+  .cn-casestudy .cn-case-study-component, .cn-casestudy .cn-case-study-component-grid { grid-column-gap: 1.5rem;
+    grid-row-gap: 1.5rem; }
+  .cn-casestudy .cn-case-logo, .cn-casestudy .cn-case-logo-block { height: 2rem; }
+  .cn-casestudy .cn-background-glass { grid-row-gap: 1.5rem;
+    border-radius: 1.75rem;
+    min-width: 0; }
+  .cn-casestudy .cn-case-study-container { padding: .75rem; }
+  .cn-casestudy .cn-case-video { height: 12rem;
+    min-height: 12rem; }
+  .cn-casestudy .cn-case-video-wrapper { border-radius: 1rem; }
+  .cn-casestudy .cn-case-video-item, .cn-casestudy .video-wrap { border-radius: .875rem; }
+  .cn-casestudy .cn-case-study-grid { grid-template-columns: 1fr; }
+}
+/* cn-casestudy: the donor painted this ground on <body>; the block needs it itself. */
+.cn-casestudy { background-color: #000; }
+/* ---- cn-casestudy: hand-written, from tools/blocks/cn-casestudy.css ---- */
+/* Webflow writes grid placement against generated node ids (`#w-node-…`), which
+   are not classes and so are not extracted. Without them the case-study pill
+   loses its two-column layout: the arrow sat 249px short of the pill's right
+   edge and the pills ran to 180px tall. The first rule is not a restoration —
+   a capability name with its subtitle is longer than cinery's "VISAGE • 2025". */
+.cn-casestudy .cn-case-study-content-grid { grid-template-columns: 1fr auto; }
+.cn-casestudy .cn-case-study-content-grid > .cn-case-study-item:first-child { place-self: center start; }
+.cn-casestudy .cn-case-study-content-grid > .cn-case-study-item:last-child { place-self: center end; }
+
+/* cinery's <body> carried `color: var(--primary-color--white)`, and a body rule
+   does not travel with a cut section: the block root inherits this site's black
+   body colour instead, over the #000 ground the block paints for itself. Every
+   string in here is re-coloured by a descendant rule today — measured white or
+   #bbb on #262626, 6.7:1 at worst — but the inherited value under them is black
+   on black, so put the donor's own text colour back on the root. (The typeface
+   is deliberately not restored: "Overused Grotesk" is not one of the fonts this
+   site ships, so the donor's stack would fall through to Arial, while the page
+   body already hands the block Inter.) */
+.cn-casestudy { color: var(--primary-color--white); }
+
+/* The pill was drawn for "VISAGE • 2025": three short strings on one nowrap flex
+   row that never had to break. It now carries a capability name, its product
+   name as a subtitle, and a sentence of gloss. On a 390px screen the row gave
+   each cell its own min-content column — the Chinese name broke to two
+   characters a line and the English gloss to one word a line, 158-240px of
+   stacked text inside a 100px-radius pill — and the row's min-content (336px)
+   sized the grid track wider than the 350px container, pushing the two English
+   tiles of the second row out to a 10px right gutter against a 20px left one.
+   Below the tablet breakpoint let the row wrap instead, and give it a line
+   break it can predict: the name is laid out from a zero basis so it never
+   claims a whole flex line on its own and the donor's separator stays beside it,
+   and the gloss is given a full-width basis so it always drops to the line
+   under them. That is the same reading order the pill has at every other width
+   — name, separator, gloss — and with the name's contribution no longer its
+   min-content the cell shrinks with its track again. */
+@media screen and (max-width: 767px) {
+  .cn-casestudy .cn-case-study-content-grid > .cn-case-study-item:first-child {
+    flex-wrap: wrap;
+    min-width: 0; }
+  .cn-casestudy .cn-case-study-content-grid > .cn-case-study-item:first-child > .cn-text-style-allcaps {
+    flex: 1 1 0;
+    min-width: 0; }
+  .cn-casestudy .cn-case-study-content-grid > .cn-case-study-item:first-child > .cn-text-color-secondary {
+    flex: 1 0 100%;
+    min-width: 0; }
+}
+/* At phone width the pill's own 20px type still wants four lines for a gloss.
+   One step down — the donor's own `small`, the size its body text was set in —
+   holds a capability name and its gloss in two. */
+@media screen and (max-width: 479px) {
+  .cn-casestudy .cn-case-study-content-grid .cn-text-size-medium {
+    font-size: var(--_sizes---fixed--small); }
+}
+
+.cn-service {
+  --background-color--primary-background: #000;
+  --_typography---font-family--primary: "Overused Grotesk", Arial, sans-serif;
+  --primary-color--white: white;
+  --_sizes---fixed--small: 1rem;
+  --_typography---font-weight--regular: 400;
+  --_typography---h1--h1-font-size: var(--_sizes---fixed--xhuge-04);
+  --_typography---h1--h1-font-weight: var(--_typography---font-weight--semibold);
+  --_typography---h2--h2-font-size: var(--_sizes---fixed--xhuge-03);
+  --_typography---h2--h2-font-weight: var(--_typography---font-weight--semibold);
+  --_typography---h3--h3-font-size: var(--_sizes---fixed--xxlarge-01);
+  --_typography---h3--h3-font-weight: var(--_typography---font-weight--semibold);
+  --_typography---h4--h4-font-size: var(--_sizes---fixed--large-01);
+  --_typography---h4--h4-font-weight: var(--_typography---font-weight--semibold);
+  --_typography---h5--h5-font-size: var(--_sizes---fixed--medium-01);
+  --_typography---h5--h5-font-weight: var(--_typography---font-weight--semibold);
+  --_typography---h6--h6-font-size: var(--_sizes---fixed--small);
+  --_typography---h6--h6-font-weight: var(--_typography---font-weight--semibold);
+  --_typography---font-weight--medium: 500;
+  --primary-color--dark: #232324;
+  --_sizes---fixed--medium-01: 2rem;
+  --primary-color--dark-02: #444;
+  --_typography---h3--h3-font-family: var(--_typography---font-family--primary);
+  --_typography---h3--h3-letter-spacing: .1rem;
+  --_typography---font-weight--semibold: 600;
+  --neutral-color--secondary-neutral: #bbb;
+  --_typography---h5--h5-font-family: var(--_typography---font-family--primary);
+  --_typography---h5--h5-letter-spacing: .025rem;
+  --background-color--secondary-background: white;
+  --primary-color--black: #000;
+  --_typography---h2--h2-font-family: var(--_typography---font-family--primary);
+  --_typography---h2--h2-letter-spacing: .1rem;
+  --_sizes---fixed--small-02: 1.25rem;
+  --border-color--primary-border: #ffffff1a;
+  --_sizes---border-radius--large: 1.5rem;
+  --primary-color--dark-03: #4b4b4b;
+  --_sizes---border-radius--xlarge: 2rem;
+  --_typography---h6--h6-font-family: var(--_typography---font-family--primary);
+  --_typography---h6--h6-letter-spacing: .025rem;
+  --_sizes---fixed--xsmall-04: .75rem;
+  --border-color--transparent: #0000;
+  --_sizes---fixed--small-05: 1.625rem;
+  --_sizes---fixed--small-04: 1.5rem;
+  --_sizes---fixed--small-03: 1.375rem;
+  --neutral-color--primary-neutral: gray;
+  --_sizes---fixed--xsmall-05: .875rem;
+  --_typography---h1--h1-font-family: var(--_typography---font-family--primary);
+  --_typography---h1--h1-letter-spacing: .1rem;
+  --border-color--secondary-border: #fff3;
+  --_typography---h4--h4-font-family: var(--_typography---font-family--primary);
+  --_typography---h4--h4-letter-spacing: .1rem;
+  --_sizes---border-radius--medium: 1rem;
+  --_sizes---border-radius--100: 100%;
+  --_sizes---border-radius--xxlarge: 2.5rem;
+  --_sizes---spacer--xlarge: 4rem;
+  --_typography---font-weight--bold: 700;
+  --_sizes---fixed--medium-02: 2.25rem;
+  --_sizes---fixed--small-07: 1.875rem;
+  --_sizes---spacer--large: 3rem;
+  --_sizes---spacer--medium: 2rem;
+  --_sizes---border-radius--xhuge: 4rem;
+  --_sizes---fixed--small-01: 1.125rem;
+  --_sizes---spacer--tiny: .125rem;
+  --_sizes---spacer--xxsmall: .25rem;
+  --_typography---font-weight--thin: 100;
+  --_typography---font-weight--extra-light: 200;
+  --_typography---font-weight--light: 300;
+  --_typography---font-weight--extra-bold: 800;
+  --_typography---font-weight--black: 900;
+  --_sizes---spacer--xsmall: .5rem;
+  --_sizes---spacer--small: 1rem;
+  --_sizes---spacer--xxlarge: 5rem;
+  --_sizes---spacer--huge: 6rem;
+  --_sizes---spacer--xhuge: 8rem;
+  --_sizes---spacer--xxhuge: 10rem;
+  --_sizes---border-radius--tiny: .125rem;
+  --_sizes---border-radius--xxsmall: .25rem;
+  --_sizes---border-radius--small: .5rem;
+  --_sizes---border-radius--huge: 3rem;
+  --_sizes---border-radius--xxhuge: 5rem;
+  --_sizes---section--small: 3rem;
+  --_sizes---fixed--zero: 0rem;
+  --_sizes---fixed--xsmall-01: .125rem;
+  --_sizes---fixed--xsmall-02: .25rem;
+  --_sizes---fixed--xsmall-03: .5rem;
+  --_sizes---fixed--small-06: 1.75rem;
+  --_sizes---fixed--medium-03: 2.5rem;
+  --_sizes---fixed--medium-04: 2.75rem;
+  --_sizes---fixed--large-01: 3rem;
+  --_sizes---fixed--large-02: 3.25rem;
+  --_sizes---fixed--large-03: 3.5rem;
+  --_sizes---fixed--large-04: 3.75rem;
+  --_sizes---fixed--xlarge-01: 4rem;
+  --_sizes---fixed--xlarge-02: 4.25rem;
+  --_sizes---fixed--xlarge-03: 4.5rem;
+  --_sizes---fixed--xlarge-04: 4.75rem;
+  --_sizes---fixed--xxlarge-01: 5rem;
+  --_sizes---fixed--xxlarge-02: 5.5rem;
+  --_sizes---fixed--xxlarge-03: 6rem;
+  --_sizes---fixed--xxlarge-04: 6.5rem;
+  --_sizes---fixed--huge-01: 7rem;
+  --_sizes---fixed--huge-02: 7.5rem;
+  --_sizes---fixed--huge-03: 8rem;
+  --_sizes---fixed--huge-04: 8.5rem;
+  --_sizes---fixed--xhuge-01: 9rem;
+  --_sizes---fixed--xhuge-02: 9.5rem;
+  --_sizes---fixed--xhuge-03: 10rem;
+  --_sizes---fixed--xhuge-04: 12rem;
+  --_sizes---fixed--xhuge-05: 14rem;
+  --_sizes---fixed--xxhuge-01: 16rem;
+  --_sizes---fixed--xxhuge-02: 18rem;
+  --_sizes---fixed--xxhuge-03: 20rem;
+  --_sizes---section--medium: 5rem;
+  --_sizes---section--large: 8rem;
+  --_sizes---section--xlarge: 10rem;
+  --_sizes---section--huge: 12rem;
+}
+.cn-service article, .cn-service aside, .cn-service details, .cn-service figcaption, .cn-service figure, .cn-service footer, .cn-service header, .cn-service hgroup, .cn-service main, .cn-service menu, .cn-service nav, .cn-service section, .cn-service summary { display: block; }
+.cn-service a { background-color: #0000; }
+.cn-service img { border: 0; }
+.cn-service img { vertical-align: middle;
+  max-width: 100%;
+  display: inline-block; }
+.cn-service .w-inline-block { max-width: 100%;
+  display: inline-block; }
+.cn-service h1, .cn-service h2, .cn-service h3, .cn-service h4, .cn-service h5, .cn-service h6 { margin-bottom: 10px;
+  font-weight: bold; }
+.cn-service h2 { margin-top: 20px;
+  font-size: 32px;
+  line-height: 36px; }
+.cn-service p { margin-top: 0;
+  margin-bottom: 10px; }
+.cn-service .w-layout-grid { grid-row-gap: 16px;
+  grid-column-gap: 16px;
+  grid-template-rows: auto auto;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-columns: 1fr;
+  display: grid; }
+.cn-service h2 { color: var(--primary-color--white);
+  font-size: var(--_typography---h2--h2-font-size);
+  line-height: var(--_typography---h2--h2-line-height\<deleted\|variable-dce8260e-414c-a934-1b6e-a3323274e042\>);
+  font-weight: var(--_typography---h2--h2-font-weight);
+  text-transform: uppercase;
+  margin-top: 0;
+  margin-bottom: 0; }
+.cn-service p { font-size: var(--_sizes---fixed--small);
+  margin-bottom: 10px;
+  line-height: 1.5; }
+.cn-service a { color: var(--primary-color--white);
+  font-size: var(--_sizes---fixed--small);
+  font-weight: var(--_typography---font-weight--medium);
+  text-decoration: none; }
+.cn-service img { max-width: 100%;
+  display: inline-block; }
+.cn-service .padding-bottom, .cn-service .padding-bottom.cn-padding-xhuge { padding-top: 0;
+  padding-left: 0;
+  padding-right: 0; }
+.cn-service .cn-heading-style-h2 { background-image: linear-gradient(180deg, var(--primary-color--white) 40%, #000 100%, var(--primary-color--black));
+  font-family: var(--_typography---h2--h2-font-family);
+  font-size: var(--_typography---h2--h2-font-size);
+  line-height: var(--_typography---h2--h2-line-height\<deleted\|variable-dce8260e-414c-a934-1b6e-a3323274e042\>);
+  font-weight: var(--_typography---h2--h2-font-weight);
+  letter-spacing: var(--_typography---h2--h2-letter-spacing);
+  text-transform: uppercase;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text; }
+.cn-service .cn-container-large { width: 100%;
+  max-width: 100rem;
+  margin-left: auto;
+  margin-right: auto; }
+.cn-service .cn-padding-global { padding-left: 2.5rem;
+  padding-right: 2.5rem; }
+.cn-service .cn-padding-top, .cn-service .cn-padding-top.cn-padding-xhuge { padding-bottom: 0;
+  padding-left: 0;
+  padding-right: 0; }
+.cn-service .cn-padding-xhuge { padding: 8rem; }
+.cn-service .cn-spacer-medium { width: 100%;
+  padding-top: 2rem; }
+.cn-service .cn-padding-top-header { padding-top: 10rem; }
+.cn-service .cn-dividing-line { background-color: var(--border-color--primary-border);
+  width: 100%;
+  height: 1px; }
+.cn-service .number-block.cn-_02 { justify-content: flex-start;
+  align-items: flex-end; }
+.cn-service .cn-main-button { background-color: var(--primary-color--dark);
+  color: #c7c7c7;
+  border-radius: .875rem;
+  padding: 1rem 2rem;
+  text-decoration: none;
+  transition: all .35s;
+  position: relative;
+  overflow: hidden; }
+.cn-service .cn-main-button:where(.w-variant-fca1516f-e250-7cd2-f02b-aee258111517) { width: 100%;
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem; }
+.cn-service .cn-main-button:where(.w-variant-04f0ffc5-0a59-22fd-33f5-f2c941ea7720) { border-radius: 100%;
+  width: 6rem;
+  height: 6rem; }
+.cn-service .cn-main-button:hover { transform: scale(.95); }
+.cn-service .cn-button-border { background-color: var(--primary-color--dark);
+  border-radius: .875rem;
+  position: absolute;
+  inset: 0%; }
+.cn-service .cn-button-border:where(.w-variant-04f0ffc5-0a59-22fd-33f5-f2c941ea7720) { border-radius: 100%; }
+.cn-service .cn-border-wrap { justify-content: center;
+  align-items: center;
+  display: flex;
+  position: absolute;
+  inset: 0%; }
+.cn-service .cn-glow-border { filter: blur(10px);
+  background-color: #b0b0b0;
+  width: 100%;
+  height: 100%; }
+.cn-service .cn-glow-border.scroll-down { width: 50%; }
+.cn-service .cn-button-background-01 { background-color: var(--primary-color--dark);
+  border-radius: .875rem;
+  margin: 1px;
+  position: absolute;
+  inset: 0%; }
+.cn-service .cn-button-background-01:where(.w-variant-04f0ffc5-0a59-22fd-33f5-f2c941ea7720) { border-radius: 100%;
+  margin-top: 0;
+  margin-bottom: 0; }
+.cn-service .cn-button-background-02 { background-image: linear-gradient(180deg, transparent, var(--primary-color--dark-03));
+  filter: blur(5px);
+  position: absolute;
+  inset: 0%; }
+.cn-service .cn-button-background-02:where(.w-variant-04f0ffc5-0a59-22fd-33f5-f2c941ea7720) { border-radius: 100%; }
+.cn-service .cn-button-text-wrap { flex-flow: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: 1.125rem;
+  display: flex;
+  position: relative;
+  overflow: hidden; }
+.cn-service .cn-button-text-wrap:where(.w-variant-04f0ffc5-0a59-22fd-33f5-f2c941ea7720) { display: none; }
+.cn-service .cn-button-text { z-index: 5;
+  color: var(--primary-color--white);
+  font-size: 1rem;
+  line-height: 1.2;
+  font-weight: var(--_typography---font-weight--medium);
+  text-transform: uppercase;
+  white-space: nowrap;
+  margin-bottom: 0;
+  position: relative; }
+.cn-service .cn-subtitle-wrap { justify-content: center;
+  align-items: flex-start;
+  margin-bottom: 3.5rem;
+  display: flex; }
+.cn-service .cn-heading-wrap { z-index: 5;
+  flex-flow: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  display: flex;
+  position: relative; }
+.cn-service .cn-heading-wrap.is-center { justify-content: flex-start;
+  align-items: center; }
+.cn-service .cn-top-content-grid { grid-column-gap: 2rem;
+  grid-row-gap: 2rem;
+  grid-template-rows: auto;
+  width: 100%; }
+.cn-service .cn-subtitle-block { border-style: solid none none solid;
+  border-width: 1px;
+  border-color: var(--primary-color--dark-02);
+  background-color: var(--primary-color--dark);
+  border-radius: 8px;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: .5rem 1rem;
+  display: flex;
+  position: relative;
+  overflow: hidden; }
+.cn-service .cn-subtitle { color: var(--neutral-color--secondary-neutral);
+  font-size: var(--_sizes---fixed--xsmall-04);
+  letter-spacing: .025rem;
+  text-transform: uppercase;
+  line-height: 1; }
+.cn-service .cn-subtitle-blur { filter: blur(8px);
+  background-color: #232324;
+  width: 1.5rem;
+  height: 1.5rem;
+  position: absolute; }
+.cn-service .case-study-block.cn-_01 { z-index: 4; }
+.cn-service .case-study-block.cn-_02 { z-index: 3; }
+.cn-service .cn-service-title-wrap { flex-flow: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  height: 8vw;
+  display: flex;
+  position: relative;
+  overflow: hidden; }
+.cn-service .cn-service-title { text-transform: uppercase;
+  white-space: nowrap;
+  font-size: 8vw;
+  font-weight: 600;
+  line-height: 1; }
+.cn-service .cn-service-bg-image { z-index: 1;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0%; }
+.cn-service .cn-service-image-wrapper { z-index: -1;
+  position: absolute;
+  inset: 0%; }
+.cn-service .cn-service-image-opacity { z-index: 5;
+  background-image: linear-gradient(180deg, var(--background-color--primary-background), #0000);
+  height: 6rem;
+  position: absolute;
+  inset: 0% 0% auto; }
+.cn-service .cn-service-image-opacity.cn-bottom-opacity { background-image: linear-gradient(180deg, #0000, var(--background-color--primary-background));
+  inset: auto 0% 0%; }
+.cn-service .cn-service-description { color: var(--neutral-color--primary-neutral);
+  font-size: var(--_sizes---fixed--small-02);
+  text-align: right;
+  margin-bottom: 0;
+  font-weight: 400;
+  line-height: 1.5; }
+.cn-service .cn-service-image-block { width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0%; }
+.cn-service .cn-service-content-grid { z-index: 2;
+  grid-column-gap: 1rem;
+  grid-row-gap: 1rem;
+  grid-template-rows: auto;
+  grid-template-columns: 1fr .75fr;
+  width: 100%;
+  position: relative; }
+.cn-service .cn-service-wrapper { grid-column-gap: 4rem;
+  grid-row-gap: 4rem;
+  flex-flow: column;
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+  display: flex; }
+.cn-service .cn-service-image-wrap { width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0%; }
+.cn-service .cn-service-container { position: relative;
+  overflow: clip; }
+.cn-service .cn-service-subitle { color: var(--neutral-color--primary-neutral);
+  font-size: var(--_sizes---fixed--small);
+  text-align: right;
+  text-transform: uppercase;
+  margin-bottom: 1rem; }
+.cn-service .cn-service-overlay-image { z-index: 5;
+  background-color: #000000a6;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0%; }
+.cn-service .cn-service-content-item { justify-content: center;
+  align-items: center;
+  display: flex;
+  position: relative; }
+.cn-service .cn-service-description-wrap { flex-flow: column;
+  justify-content: flex-start;
+  align-items: flex-end;
+  width: 100%;
+  max-width: 25rem;
+  padding-top: 5px;
+  display: flex; }
+.cn-service .cn-text-color-grey { color: var(--neutral-color--primary-neutral); }
+.cn-service .cn-service-icon { font-size: 7vw; }
+.cn-service .cn-service-image-item { z-index: 5;
+  border: 1px solid var(--border-color--primary-border);
+  border-radius: var(--_sizes---border-radius--large);
+  background-color: var(--border-color--primary-border);
+  width: 12rem;
+  height: 10rem;
+  padding: 3px;
+  position: absolute;
+  right: 26rem;
+  overflow: hidden; }
+.cn-service .cn-service-thumbnail { object-fit: cover;
+  border-radius: 1.25rem;
+  width: 100%;
+  height: 100%; }
+.cn-service .client-avatar.cn-_03, .cn-service .client-avatar._05, .cn-service .client-avatar.cn-_02 { margin-left: -10px; }
+.cn-service .cta-circle-wrapper.cn-_02 { height: 96.875rem;
+  margin-top: -1.563rem;
+  transform: scaleX(-1); }
+.cn-service .cta-video-item.cn-_03 { transform: rotate(-15deg)translate(-24.375rem, -3.125rem); }
+.cn-service .cta-video-item.cn-_02 { transform: rotate(15deg)translate(24.375rem, -3.125rem); }
+.cn-service .cta-video-item.cn-_04 { transform: translate(47.188rem, 12.5rem)rotate(30deg); }
+.cn-service .cn-title-wrapper { position: relative;
+  overflow: hidden; }
+.cn-service .cta-button-background.cn-_01 { background-image: radial-gradient(circle, #000, #ffffff26); }
+.cn-service .cta-button-background.cn-_02 { background-image: radial-gradient(circle, #000, #ffffff40); }
+.cn-service .scroll-down-background.cn-_02 { background-image: linear-gradient(180deg, var(--border-color--transparent), var(--primary-color--dark-03)); }
+.cn-service .service-content-block.cn-_02 { background-image: url("assets/stargo-editorial/os-sales-desk.webp"); }
+.cn-service .service-content-block.cn-_03 { background-image: url("assets/stargo-editorial/os-inquiries.webp"); }
+.cn-service .service-content-block.cn-_04 { background-image: url("assets/stargo-editorial/os-desktop.webp"); }
+.cn-service .cn-service-container-wrap { z-index: 10;
+  border: 1px solid var(--border-color--primary-border);
+  background-color: var(--border-color--primary-border);
+  border-radius: 3rem;
+  width: 100%;
+  max-width: 50rem;
+  padding: 5px;
+  position: relative; }
+@media screen and (min-width: 1440px) {
+  .cn-service .cn-heading-style-h2 { font-size: 12rem; }
+  .cn-service .cn-service-title-wrap { height: 7rem; }
+  .cn-service .cn-service-title { font-size: 7rem; }
+  .cn-service .cn-service-icon { font-size: 6rem; }
+  .cn-service .cn-service-image-item { width: 16rem;
+    height: 12rem;
+    right: 30rem; }
+}
+@media screen and (min-width: 1920px) {
+  .cn-service .cn-service-image-item { right: 34rem; }
+}
+@media screen and (max-width: 991px) {
+  .cn-service .padding-bottom.cn-padding-xhuge { padding-bottom: 6rem; }
+  .cn-service .cn-padding-top { padding-bottom: 0;
+    padding-left: 0;
+    padding-right: 0; }
+  .cn-service .cn-service-title-wrap { height: 6vw; }
+  .cn-service .cn-service-title { font-size: 6vw; }
+  .cn-service .cn-service-bg-image.cn-_04, .cn-service .cn-service-bg-image.cn-_02, .cn-service .cn-service-bg-image.cn-_03 { display: none; }
+  .cn-service .cn-service-description { color: #fafafa; }
+  .cn-service .cn-service-content-grid { grid-column-gap: 0rem;
+    grid-row-gap: 0rem;
+    grid-template-columns: 1fr .75fr; }
+  .cn-service .cn-service-wrapper { grid-column-gap: 3rem;
+    grid-row-gap: 3rem;
+    padding-top: 4rem;
+    padding-bottom: 4rem; }
+  .cn-service .cn-service-subitle { color: #fafafa; }
+  .cn-service .cn-service-icon { font-size: 6vw; }
+  .cn-service .cn-service-image-item { display: none; }
+  .cn-service .cn-service-container-wrap { width: 90%;
+    max-width: none; }
+}
+@media screen and (max-width: 767px) {
+  .cn-service h1, .cn-service h2 { font-size: 2rem; }
+  .cn-service .padding-bottom.cn-padding-xhuge { padding-bottom: 5rem; }
+  .cn-service .cn-padding-global { padding-left: 1.25rem;
+    padding-right: 1.25rem; }
+  .cn-service .cn-padding-top { padding-bottom: 0;
+    padding-left: 0;
+    padding-right: 0; }
+  .cn-service .cn-padding-top.cn-padding-xhuge { padding-top: 6rem; }
+  .cn-service .number-block.cn-_02, .cn-service .number-block.cn-_01 { justify-content: flex-start;
+    align-items: center; }
+  .cn-service .cn-service-title-wrap { height: 8vw; }
+  .cn-service .cn-service-title { font-size: 8vw; }
+  .cn-service .cn-service-description { text-align: left; }
+  .cn-service .cn-service-content-grid { grid-column-gap: 2rem;
+    grid-row-gap: 2rem; }
+  .cn-service .cn-service-wrapper { padding-top: 6rem;
+    padding-bottom: 6rem; }
+  .cn-service .cn-service-subitle { text-align: left; }
+  .cn-service .cn-service-description-wrap { justify-content: flex-start;
+    align-items: flex-start;
+    max-width: none; }
+  .cn-service .cta-circle-wrapper.cn-_02 { height: 856px; }
+  .cn-service .cta-video-item.cn-_03 { transform: rotate(-15deg)translate(-13.438rem, -1.75rem); }
+  .cn-service .cta-video-item.cn-_02 { transform: rotate(15deg)translate(13.438rem, -1.563rem); }
+  .cn-service .cta-video-item.cn-_04 { transform: translate(25.875rem, 7.313rem)rotate(30deg); }
+}
+@media screen and (max-width: 479px) {
+  .cn-service h2 { font-size: 1.75rem; }
+  .cn-service .cn-padding-top { padding-bottom: 0;
+    padding-left: 0;
+    padding-right: 0; }
+  .cn-service .cn-padding-top.cn-padding-xhuge { padding-top: 5rem; }
+  .cn-service .cn-padding-top-header { padding-top: 8rem; }
+  .cn-service .roll-number.cn-_02, .cn-service .roll-number.cn-_01 { height: 20vw;
+    min-height: 20vw; }
+  .cn-service .cn-service-title-wrap { height: 10vw; }
+  .cn-service .cn-service-title { font-size: 10vw; }
+  .cn-service .cn-service-wrapper { padding-top: 4rem;
+    padding-bottom: 4rem; }
+}
+/* cn-service: the donor painted this ground on <body>; the block needs it itself. */
+.cn-service { background-color: #000; }
+/* ---- cn-service: hand-written, from tools/blocks/cn-service.css ---- */
+/* cn-service — hand-written rules for the gradient split heading and the four
+   big-title rows. Everything here is scoped under `.cn-service`, and every
+   number in it was measured in Chrome at 390 / 768 / 1440 / 1920 in both
+   languages against the copy this block actually ships.
+
+   The donor (cinery) drew this section for one English word per line — "Video",
+   "Services", "Production", "Editing". This site puts a capability's full name
+   in each of those slots, in two languages, and that is what every rule below
+   is about. */
+
+/* ---------------------------------------------------------- the heading -- */
+
+/* cinery sets the split heading from `--_typography---h2--h2-font-size`, which
+   is a flat 160px below 1440 and never responds to the viewport: the donor's
+   headline is one short word, so it never had to. "Every" measures 544px at
+   that size, which is wider than the 350px a 390px phone has to give it, and
+   "每一项" wraps to three lines. Both are fatal here, because the gradient is
+   `background-clip: text` painted over the whole element box — white at 40%,
+   black at 100% — so a second line lands in the grey and a third line lands in
+   pure black on a pure black ground and simply disappears.
+
+   Scaling the type so each line stays a single line is what keeps the gradient
+   a designed fade instead of a vanishing act. The donor's own rule at 1440 and
+   up is left alone — 192px measures 652px against a 664px column and was
+   verified not to clip — so this only replaces the flat 160px below it. 11.5vw
+   holds "Every" inside the narrowest column the two-track grid ever makes
+   (387px against 440px at 992), and the 3rem floor keeps the headline a
+   headline on a phone.
+
+   The gradient is then pinned to one line box rather than to the element, so
+   that if a longer headline ever does wrap, every line gets the same white-to-
+   black fade instead of the second one landing in the black. At one line — what
+   the sizing above guarantees — the two are the same box and nothing changes. */
+@media screen and (max-width: 1439px) {
+  .cn-service .cn-heading-style-h2 { font-size: clamp(3rem, 11.5vw, 11rem); }
+}
+.cn-service .cn-heading-style-h2 { line-height: 1.12;
+  background-size: 100% calc(1.12 * 1em);
+  background-repeat: repeat; }
+
+/* Both cells of the opening grid contain unbreakable content — a 544px word in
+   one, a `white-space: nowrap` button in the other — and Webflow's
+   `.w-layout-grid` default of `1fr 1fr` sizes a `1fr` track from its content's
+   min-content width when the item can overflow. The row therefore grew to
+   849px inside a 350px page: at 390 and 768 in English the headline was cut off
+   mid-word and the CTA sat entirely outside the viewport. Let the tracks shrink,
+   and below the donor's own tablet breakpoint stack them, where 1fr 1fr cannot
+   give either one enough room. */
+.cn-service .cn-heading-wrap,
+.cn-service .cn-content-item { min-width: 0; }
+
+@media screen and (max-width: 991px) {
+  .cn-service .cn-top-content-grid { grid-template-columns: 1fr; }
+}
+
+/* The eyebrow now carries the chapter's name and the story's label together —
+   "CAPABILITY MAP · FIND THE BUYERS WORTH PURSUING" is 350px of text, and the
+   pill it sits in is `overflow: hidden`. Let the pill give way to the column
+   and let the line wrap inside it; the donor's `line-height: 1` sets two
+   wrapped lines solid and clips the descenders of the first, so the pill gets
+   a real line height as soon as it can hold more than one line. */
+.cn-service .cn-subtitle-block { max-width: 100%; }
+.cn-service .cn-subtitle { line-height: 1.35; }
+
+/* Two copies of the button's word roll through a window the donor cut to
+   1.125rem while the word's own line box is 1.2rem, so each copy lost 1.2px off
+   the bottom. The window has to be exactly one line for the roll to land. */
+.cn-service .cn-button-text-wrap { height: 1.2rem; }
+
+/* ------------------------------------------------------------- the rows -- */
+
+/* cinery's big service titles are `white-space: nowrap` at 8vw (112px at 1440).
+   That fits "Production"; it does not fit "Buying Committee Intelligence",
+   which measured about 2165px against a 759px column and was clipped mid-word
+   in both languages. The row's window height has to move with the type size —
+   the hover roll swaps three stacked copies of the title by translating each
+   one -200% of its own height, and it only lands on a copy boundary while the
+   window and one copy are the same height.
+
+   The ceiling is set by the widest title against the narrowest column it ever
+   gets: `1fr` of a `1fr .75fr` grid inside a 100rem container is 905px at 1920,
+   and the longest name measures 18.7 × the font size, so 2.4rem is the most
+   that fits. 2.6vw reaches that at 1477px and stays under the column below it
+   (768px column at 1440 against a 699px title).
+
+   Size and window come from the same two custom properties on purpose: the
+   donor's `line-height: 1` leaves no room under the baseline, and the Chinese
+   page now sets a product name in lower case on this line, so the row needs a
+   little descender room — and the moment the window and one copy stop being the
+   same height, the roll stops landing on a copy. */
+.cn-service { --cn-title-size: clamp(1.1rem, 2.6vw, 2.4rem); --cn-title-lh: 1.1; }
+.cn-service .cn-service-title { font-size: var(--cn-title-size);
+  line-height: var(--cn-title-lh); }
+.cn-service .cn-service-title-wrap { font-size: var(--cn-title-size);
+  height: calc(var(--cn-title-size) * var(--cn-title-lh)); }
+
+/* The bullet the donor leads each title with was a flat 7vw, sized against a
+   112px title; tie it to the type it precedes instead. */
+.cn-service .cn-service-icon { font-size: .8em; }
+
+/* On the Chinese page a capability leads with its Chinese name and carries the
+   product name as `.cap-en`, which the rest of the site draws as a block-level
+   subtitle. Inside these rows that is wrong twice over: the title's window is
+   exactly one line tall, so the English name was clipped away at every width
+   and never appeared on the Chinese page at all; and it made each copy two
+   lines tall while the roll still moved -200% of a copy, so the hover landed
+   mid-title. Set on the same line, the way the catalogue's own answer text
+   already sets it.
+
+   `.cap-en` also carries `opacity: .62`, which is right where it sits under a
+   white name elsewhere on the page. Here the copy on show at rest is the grey
+   one the roll parks in the window, so the two dims compounded: rgb(128,128,128)
+   at .62 lands on rgb(79,79,79), a 2.58:1 contrast against this block's black.
+   Take the opacity off and let size and weight carry the hierarchy — the name
+   and its product name then read at the same 5.32:1 at rest and 21:1 hovered. */
+.cn-service .cn-service-title .cap-en { display: inline; margin: 0 0 0 .45em;
+  font-size: .62em; opacity: 1; }
+
+/* Below the donor's phone breakpoint the row keeps a `1fr .75fr` split, which
+   leaves 182px for a title at 390 — a quarter of what the shortest of these
+   four names needs. Give the title the width of the page and let the kicker and
+   the sentence sit under it, and scale the type to the page rather than to a
+   column that no longer exists. 4.4vw holds the longest name (18.7em wide) at
+   320px of text against 350px of page at 390. */
+@media screen and (max-width: 767px) {
+  .cn-service .cn-service-content-grid { grid-template-columns: 1fr; }
+  .cn-service { --cn-title-size: clamp(.9rem, 4.4vw, 2.4rem); }
+}
+

@@ -1,0 +1,73 @@
+/* rk-portfolio — hand-written rules for the cut block.
+   Every rule is scoped under .rk-portfolio, exactly as the extractor scopes
+   renok's own. Measured in Chromium at 390 / 768 / 1440 / 1920 in both
+   languages before and after. */
+
+/* ---------------------------------------------------------------- type ----
+   Three text nodes in this block carry no class and no #w-node rule: the
+   paragraph under the heading (addressed only by its interaction id), each
+   card's body line inside .rk-rt-home-v1-protfolio-text, and the label in the
+   hover chip. In renok they were typed by the donor's `body` rule, which does
+   not travel with a cut section — here they fell through to this site's page
+   body and rendered at 14px/15.4px, a 1.1 line-height that makes Chinese lines
+   touch. Put them back on the donor's own body type, which is what every
+   classed element in the block already uses. */
+.rk-portfolio .rk-rt-home-v1-protfolio-paragraph > .rk-rt-overflow-hidden > div,
+.rk-portfolio .rk-rt-home-v1-protfolio-text > div {
+  font-family: var(--_font-family---primary-font);
+  font-size: var(--_font-details---font-size--body);
+  line-height: var(--_font-details---font-line-height--body);
+  font-weight: var(--_font-details---font-weight--regular);
+  letter-spacing: var(--_font-details---font-letter-spacing--body);
+  color: var(--white);
+}
+
+/* The chip revealed over a photograph is drawn 5.25rem wide and 1.5625rem
+   high with overflow visible, so its label has to stay on one short line:
+   "Capabilities" measures 78px of the 84px box at .875rem and would wrap out
+   of the chip at the body size, or if Inter Tight is ever missing. Keep it at
+   sub-text size, in the block's typeface, and never let it wrap. */
+.rk-portfolio .rk-rt-portfoilo-v3-item-view > div {
+  font-family: var(--_font-family---primary-font);
+  font-size: var(--_font-details---font-size--sub-text);
+  line-height: var(--_font-details---font-line-height--sub-text);
+  color: var(--white);
+  white-space: nowrap;
+}
+
+/* -------------------------------------------------------------- button ----
+   The pill is a fixed 2.25rem high with overflow:hidden, because the hover
+   rolls a second copy of the label up through it. A label that wraps is
+   therefore not just tight, it is cut: at 390 the English "Discuss your
+   workflow" broke into three lines inside a 34px window and the button read
+   "your". The label is one line by construction; say so. */
+.rk-portfolio .rk-rt-button-text { white-space: nowrap; }
+
+/* ---------------------------------------------------------------- rail ----
+   Below 480 the donor lays the rail out horizontally, and .rk-rt-text-no-wrap
+   keeps it on one line. "IN THE CATALOGUE" + "08" is 182px of min-content,
+   which is wider than the 170px grid track the cards sit in, so the right-hand
+   column pushed 12px past the container's gutter (.rk-rt-home-v1-protfolio-main
+   scrollWidth 372 against clientWidth 360) and sat 3px from the viewport edge.
+   Let the rail wrap there instead; the Chinese label fits on one line either
+   way. */
+@media screen and (max-width: 479px) {
+  .rk-portfolio .rk-rt-portfolio-date-wrapper { flex-flow: row wrap; }
+  .rk-portfolio .rk-rt-portfolio-date-wrapper .rk-rt-text-no-wrap { white-space: normal; }
+}
+
+/* ------------------------------------------------------------- top row ----
+   The heading and the paragraph-plus-pill sit side by side. On a phone that
+   leaves each about 170–210px, which is narrower than the pill needs in
+   English, and the heading loses a word to a line of its own six times over.
+   Stack them under 768 — the donor already gives the paragraph `max-width:
+   none` there, so it was drawn to be able to run full width. Two rules,
+   because below 480 the donor swaps this row from flex to grid. */
+@media screen and (max-width: 767px) {
+  .rk-portfolio .rk-rt-home-v1-protfolio-top { flex-flow: column; align-items: stretch; }
+  .rk-portfolio .rk-rt-home-v1-protfolio-top-left,
+  .rk-portfolio .rk-rt-home-v1-protfolio-top-right { flex: 0 0 auto; }
+}
+@media screen and (max-width: 479px) {
+  .rk-portfolio .rk-rt-home-v1-protfolio-top { grid-template-columns: 1fr; }
+}

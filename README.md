@@ -25,7 +25,9 @@ interactions kept intact; the words and the information architecture are STARGO'
 node tools/imagegen/prepare-assets.mjs # only after new generated originals: encode responsive artwork + manifest
 NODE_USE_ENV_PROXY=1 node tools/lifelogx-prepare.mjs   # only after changing tools/templates/lifelogx: mirrors assets, namespaces CSS, cuts five page fragments plus two snippets (the closing wordmark, the pricing block), exports interactions
 node tools/blog-covers.mjs           # only after adding an article: re-encodes its cover into assets/blog/
-node tools/fuse-ix.mjs               # the one Webflow bundle every page loads (Mono + Scalora + lifelogx interaction data)
+node tools/capability-donors.mjs     # only after changing a capability-page block: cuts each block out of its donor template (tools/blocks/*.mjs say which), writes tools/fragments/<id>.html, the reduced per-donor stylesheet, and the interaction payload
+node tools/try-block.mjs <id>        # one capability-page block on its own: extract, render both languages, report unfilled slots
+node tools/fuse-ix.mjs               # the one Webflow bundle every page loads (Mono + Scalora + every donor's interaction data)
 node tools/build-site.mjs            # all 38 pages from tools/templates + tools/fragments + tools/copy.mjs + tools/blog.mjs
 node tools/verify-site.mjs           # loads every page in Chromium: JS errors, failed/external requests, dead links, leftover English
 node tools/verify-restore.mjs        # every page × 320…1920 × both languages, scroll states of the sticky sections, clipped/covered text, new-page SEO; ORIG_LX/ORIG_MONO add side-by-side sheets against the original templates; ENGINE=webkit; BASE_URL/BROWSER_PROXY/WIDTHS/NAV_TIMEOUT for a production run

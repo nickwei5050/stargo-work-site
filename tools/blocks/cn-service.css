@@ -1,0 +1,128 @@
+/* cn-service — hand-written rules for the gradient split heading and the four
+   big-title rows. Everything here is scoped under `.cn-service`, and every
+   number in it was measured in Chrome at 390 / 768 / 1440 / 1920 in both
+   languages against the copy this block actually ships.
+
+   The donor (cinery) drew this section for one English word per line — "Video",
+   "Services", "Production", "Editing". This site puts a capability's full name
+   in each of those slots, in two languages, and that is what every rule below
+   is about. */
+
+/* ---------------------------------------------------------- the heading -- */
+
+/* cinery sets the split heading from `--_typography---h2--h2-font-size`, which
+   is a flat 160px below 1440 and never responds to the viewport: the donor's
+   headline is one short word, so it never had to. "Every" measures 544px at
+   that size, which is wider than the 350px a 390px phone has to give it, and
+   "每一项" wraps to three lines. Both are fatal here, because the gradient is
+   `background-clip: text` painted over the whole element box — white at 40%,
+   black at 100% — so a second line lands in the grey and a third line lands in
+   pure black on a pure black ground and simply disappears.
+
+   Scaling the type so each line stays a single line is what keeps the gradient
+   a designed fade instead of a vanishing act. The donor's own rule at 1440 and
+   up is left alone — 192px measures 652px against a 664px column and was
+   verified not to clip — so this only replaces the flat 160px below it. 11.5vw
+   holds "Every" inside the narrowest column the two-track grid ever makes
+   (387px against 440px at 992), and the 3rem floor keeps the headline a
+   headline on a phone.
+
+   The gradient is then pinned to one line box rather than to the element, so
+   that if a longer headline ever does wrap, every line gets the same white-to-
+   black fade instead of the second one landing in the black. At one line — what
+   the sizing above guarantees — the two are the same box and nothing changes. */
+@media screen and (max-width: 1439px) {
+  .cn-service .cn-heading-style-h2 { font-size: clamp(3rem, 11.5vw, 11rem); }
+}
+.cn-service .cn-heading-style-h2 { line-height: 1.12;
+  background-size: 100% calc(1.12 * 1em);
+  background-repeat: repeat; }
+
+/* Both cells of the opening grid contain unbreakable content — a 544px word in
+   one, a `white-space: nowrap` button in the other — and Webflow's
+   `.w-layout-grid` default of `1fr 1fr` sizes a `1fr` track from its content's
+   min-content width when the item can overflow. The row therefore grew to
+   849px inside a 350px page: at 390 and 768 in English the headline was cut off
+   mid-word and the CTA sat entirely outside the viewport. Let the tracks shrink,
+   and below the donor's own tablet breakpoint stack them, where 1fr 1fr cannot
+   give either one enough room. */
+.cn-service .cn-heading-wrap,
+.cn-service .cn-content-item { min-width: 0; }
+
+@media screen and (max-width: 991px) {
+  .cn-service .cn-top-content-grid { grid-template-columns: 1fr; }
+}
+
+/* The eyebrow now carries the chapter's name and the story's label together —
+   "CAPABILITY MAP · FIND THE BUYERS WORTH PURSUING" is 350px of text, and the
+   pill it sits in is `overflow: hidden`. Let the pill give way to the column
+   and let the line wrap inside it; the donor's `line-height: 1` sets two
+   wrapped lines solid and clips the descenders of the first, so the pill gets
+   a real line height as soon as it can hold more than one line. */
+.cn-service .cn-subtitle-block { max-width: 100%; }
+.cn-service .cn-subtitle { line-height: 1.35; }
+
+/* Two copies of the button's word roll through a window the donor cut to
+   1.125rem while the word's own line box is 1.2rem, so each copy lost 1.2px off
+   the bottom. The window has to be exactly one line for the roll to land. */
+.cn-service .cn-button-text-wrap { height: 1.2rem; }
+
+/* ------------------------------------------------------------- the rows -- */
+
+/* cinery's big service titles are `white-space: nowrap` at 8vw (112px at 1440).
+   That fits "Production"; it does not fit "Buying Committee Intelligence",
+   which measured about 2165px against a 759px column and was clipped mid-word
+   in both languages. The row's window height has to move with the type size —
+   the hover roll swaps three stacked copies of the title by translating each
+   one -200% of its own height, and it only lands on a copy boundary while the
+   window and one copy are the same height.
+
+   The ceiling is set by the widest title against the narrowest column it ever
+   gets: `1fr` of a `1fr .75fr` grid inside a 100rem container is 905px at 1920,
+   and the longest name measures 18.7 × the font size, so 2.4rem is the most
+   that fits. 2.6vw reaches that at 1477px and stays under the column below it
+   (768px column at 1440 against a 699px title).
+
+   Size and window come from the same two custom properties on purpose: the
+   donor's `line-height: 1` leaves no room under the baseline, and the Chinese
+   page now sets a product name in lower case on this line, so the row needs a
+   little descender room — and the moment the window and one copy stop being the
+   same height, the roll stops landing on a copy. */
+.cn-service { --cn-title-size: clamp(1.1rem, 2.6vw, 2.4rem); --cn-title-lh: 1.1; }
+.cn-service .cn-service-title { font-size: var(--cn-title-size);
+  line-height: var(--cn-title-lh); }
+.cn-service .cn-service-title-wrap { font-size: var(--cn-title-size);
+  height: calc(var(--cn-title-size) * var(--cn-title-lh)); }
+
+/* The bullet the donor leads each title with was a flat 7vw, sized against a
+   112px title; tie it to the type it precedes instead. */
+.cn-service .cn-service-icon { font-size: .8em; }
+
+/* On the Chinese page a capability leads with its Chinese name and carries the
+   product name as `.cap-en`, which the rest of the site draws as a block-level
+   subtitle. Inside these rows that is wrong twice over: the title's window is
+   exactly one line tall, so the English name was clipped away at every width
+   and never appeared on the Chinese page at all; and it made each copy two
+   lines tall while the roll still moved -200% of a copy, so the hover landed
+   mid-title. Set on the same line, the way the catalogue's own answer text
+   already sets it.
+
+   `.cap-en` also carries `opacity: .62`, which is right where it sits under a
+   white name elsewhere on the page. Here the copy on show at rest is the grey
+   one the roll parks in the window, so the two dims compounded: rgb(128,128,128)
+   at .62 lands on rgb(79,79,79), a 2.58:1 contrast against this block's black.
+   Take the opacity off and let size and weight carry the hierarchy — the name
+   and its product name then read at the same 5.32:1 at rest and 21:1 hovered. */
+.cn-service .cn-service-title .cap-en { display: inline; margin: 0 0 0 .45em;
+  font-size: .62em; opacity: 1; }
+
+/* Below the donor's phone breakpoint the row keeps a `1fr .75fr` split, which
+   leaves 182px for a title at 390 — a quarter of what the shortest of these
+   four names needs. Give the title the width of the page and let the kicker and
+   the sentence sit under it, and scale the type to the page rather than to a
+   column that no longer exists. 4.4vw holds the longest name (18.7em wide) at
+   320px of text against 350px of page at 390. */
+@media screen and (max-width: 767px) {
+  .cn-service .cn-service-content-grid { grid-template-columns: 1fr; }
+  .cn-service { --cn-title-size: clamp(.9rem, 4.4vw, 2.4rem); }
+}

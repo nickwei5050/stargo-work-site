@@ -1,0 +1,112 @@
+/* qx-founder — the six portrait cards of 用一支 AI 团队把活干完.
+   Scoped under .qx-founder, appended after the extracted qubix rules.
+
+   Everything here is either a donor value the cut left behind (qubix keeps its
+   typeface and its whole responsive scale on `body`, and a `body` rule does not
+   travel with a cut section) or a measured consequence of this site's own art
+   and copy. Nothing below invents type, colour or spacing. */
+
+/* ---------------------------------------------------------------- typeface --
+   qubix draws this block in InterDisplay, a face declared only in
+   css/scalora-modules.sc.css, which the capability page does not load, so the
+   whole stack collapsed to its own Arial fallback and these six cards were the
+   one paragraph on the page set in Arial. Measured in the page: the heading and
+   both card lines reported `Interdisplay, Arial, sans-serif` and rendered
+   Arial, while every neighbouring block reported Inter or Inter Tight.
+
+   Inter is InterDisplay's text cut, so it is both the closest substitute for the
+   donor's face and the face this page already serves. It goes behind the donor's
+   own face (a page that does serve InterDisplay still gets it) and ahead of the
+   donor's Arial fallback. Chinese falls past all three to the system CJK face,
+   as it does everywhere else on this page. The same repair is already in
+   tools/blocks/qx-statement.css and tools/blocks/qx-cards.css. */
+.qx-founder { --_base---font-family--your-font: Interdisplay, Inter, Arial, sans-serif; }
+
+/* -------------------------------------------------------- responsive scale --
+   qubix's responsive type and spacing scale is a set of custom properties
+   redefined on `body` inside three media queries. Without them this block held
+   every desktop value all the way down: measured at 390 it kept a 58px heading
+   (three lines of "Run the work with an AI team", 230px tall, against the 32px
+   qx-statement sets beside it), a 40px container padding while the page around
+   it sits on 15-20px (rk-hero 15, qx-statement 16, cn-service 20), and 120px of
+   section padding drawn for a 1440 screen. At 768 it was still 58px and 40px
+   against qx-statement's 42px and 33px.
+
+   These restore, for this block only, exactly what the donor's body carries at
+   each of its three breakpoints, and only the properties this block reads: the
+   h2/h6/body sizes, the container's width and padding, the section's vertical
+   padding, the margin above the grid, the grid gutter, and the gap inside the
+   name/role box. Everything else in those body blocks (h1, h3-h5, buttons, the
+   text-* scales) this block never touches. Two the block does read are the same
+   at every breakpoint and so are left alone: spacing-7xl-large (25px, the ≤479
+   grid gutter) and spacing-tiny (4px, the ≤479 name/role gap). */
+@media screen and (max-width: 991px) {
+  .qx-founder {
+    --h2--font-size: 42px;
+    --h6--font-size: 22px;
+    --body--font-size: 16px;
+    --_ui---container--padding: 32px;
+    --_ui---container--max-width: 767px;
+    --_common-spacing---spacing-34xl-large: 100px;
+    --_common-spacing---spacing-22xl-large: 48px;
+    --_common-spacing---spacing-2xl-large: 12px;
+    --_common-spacing---spacing-small: 8px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .qx-founder {
+    --h2--font-size: 36px;
+    --h6--font-size: 20px;
+    --_ui---container--padding: 24px;
+    --_ui---container--max-width: 540px;
+    --_common-spacing---spacing-34xl-large: 80px;
+    --_common-spacing---spacing-22xl-large: 32px;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  .qx-founder {
+    --h2--font-size: 32px;
+    --h6--font-size: 16px;
+    --_ui---container--padding: 16px;
+    --_ui---container--max-width: 100%;
+    --_common-spacing---spacing-34xl-large: 60px;
+    --_common-spacing---spacing-22xl-large: 32px;
+    --_common-spacing---spacing-6xl-large: 20px;
+  }
+}
+
+/* ----------------------------------------------------------- portrait frame --
+   qubix drew this frame 534px tall for a 632px-wide column, because its own
+   portraits are landscape photographs. This site's avatars are square — every
+   one of them is a 256x256 render of a single centred object on its own near
+   black ground. Squeezed into 632x534 by `object-fit: cover` they were scaled
+   to 632 wide and then had 98px, a seventh of their height, cropped away: the
+   fourth card's lower arm, the fifth card's gear base and the sixth card's
+   plinth all ran off the bottom edge of their frame.
+
+   The donor already lets this frame take its image's own height below 992px —
+   `height: auto` is qubix's own value in its max-width:991px block, and it is
+   why the cards are uncropped on a phone. Carrying that one value up to every
+   width gives a square 256x256 render a square frame, so nothing is cropped and
+   nothing is stretched (`cover` on matching ratios is a no-op), and the block
+   reads the same at 390 as it does at 1920 instead of changing shape at 992. */
+.qx-founder .qx-section-founder-profile-img { height: auto; }
+
+/* --------------------------------------------------------- the name subtitle --
+   On the Chinese page the product name rides under the Chinese name in
+   `.cap-en`, which the fusion sheet sets at .72em of whatever it sits in. The
+   donor's h6 is 16px at ≤479 — a size drawn for "Daniel Carter" — which put
+   "Task Delegation · Handoff · Parallel Execution" at 11.5px, the smallest type
+   anywhere on this page (the capability map's own subtitle is 12px). Hold that
+   12px floor, and no more: at every other width .72em is already above it. */
+.qx-founder .cap-en { font-size: max(12px, .72em); }
+
+/* qubix sets `text-transform: capitalize` on its h2. Applied to this site's
+   own sentence-case copy that rewrites the words themselves — "Run the work
+   with an AI team" is published by tools/copy.mjs and was rendering as "Run The
+   Work With An AI Team". The donor's type stays; only the case goes back to
+   what the copy says. All three qubix headings on this page do the same, so
+   they stay in one case. Chinese is unaffected either way. */
+.qx-founder .qx-h2 { text-transform: none; }

@@ -1,0 +1,84 @@
+/* rk-insight — renok's numbered "Insights" rows, holding the nine export
+   stages. Only what the extraction could not know: what renok kept on <body>,
+   and type drawn for one short English caption that now carries a stage
+   description in two languages. */
+
+/* renok drew this block inside a page whose <body> supplied the typeface, the
+   size, the leading, the weight, the colour and the ground. A cut section
+   leaves all of that behind, so the rows were inheriting the host page's body
+   instead — Inter 500 at 14px on a 15.4px line — standing on whatever the host
+   page happened to paint. Put renok's own body rule back on the block's root,
+   where the numbers and the descriptions inherit it and the row title, which
+   declares its own type, still overrides it. */
+.rk-insight {
+  /* renok's primary face is Inter Tight; this site ships Inter and no Inter
+     Tight, so the 100px stage titles were falling all the way through to Arial
+     on the English page and to Microsoft YaHei on the Chinese one. Naming the
+     face the site actually loads keeps the whole block on one typeface. */
+  --_font-family---primary-font: "Inter Tight", Inter, sans-serif;
+  font-family: var(--_font-family---primary-font);
+  font-size: var(--_font-details---font-size--body);
+  line-height: var(--_font-details---font-line-height--body);
+  font-weight: var(--_font-details---font-weight--regular);
+  letter-spacing: var(--_font-details---font-letter-spacing--body);
+  color: var(--black);
+  /* renok re-declared this ground on the section itself only under 992px;
+     above that its black rows were legible purely by the donor's body. */
+  background-color: var(--white);
+}
+
+/* 14.375rem was drawn for renok's one-line caption. A stage description runs to
+   about 50 Chinese characters and to 215 in English, which at that width is
+   eight lines and a row twice the height of its neighbours. The left column has
+   the room to spare: the number keeps its place at the far left and the
+   paragraph takes what is left, up to a comfortable measure. Left alone below
+   768px: there the column is 45% of a narrow viewport and is itself narrower
+   than 14.375rem, so the paragraph is already taking everything it can get. */
+@media screen and (min-width: 768px) {
+  .rk-insight .rk-rt-insights-text {
+    max-width: min(32rem, calc(100% - 4rem));
+  }
+}
+
+/* The row arrow is a flex item beside a word set at 7vw, and it was the one
+   that gave: at 480px it was squeezed to 0x0 and at 768px to 20.6px square.
+   It is a 24px icon and it keeps its 24px. */
+.rk-insight .rk-rt-insight-arrow-warpper {
+  flex: 0 0 auto;
+}
+
+/* renok drew 7vw for words like "Branding" and "Design". A stage name is longer
+   -- "UNDERSTAND" is ten characters -- and from 480px to about 1500px a 7vw
+   stage name is wider than the column it shares with that arrow, so the two
+   collided (0px between them at 768px and 900px). Scale the name to the column
+   it actually has: 50.89% of the container above 768px, 55% below it, less the
+   arrow and a gap to keep off it. Above ~1520px renok's own 100px ceiling is
+   already inside the column, so the clamp hands the size back unchanged, and
+   under 480px the row stacks and the name has the full width. */
+@media screen and (min-width: 768px) {
+  .rk-insight .rk-rt-text-style-h1 { font-size: clamp(35px, 7.33vw - 9.1px, 100px); }
+}
+@media screen and (min-width: 480px) and (max-width: 767px) {
+  .rk-insight .rk-rt-text-style-h1 { font-size: clamp(24px, 7.9vw - 11px, 100px); }
+}
+
+/* Nine rows read as one table only if they are one height, and the descriptions
+   are what pull them apart. Give the row the height its tallest neighbour needs
+   as a floor rather than letting each row size to its own paragraph. */
+.rk-insight .rk-rt-insights-item {
+  min-height: 12.5rem;
+}
+
+@media screen and (max-width: 991px) {
+  .rk-insight .rk-rt-insights-item { min-height: 11rem; }
+}
+
+/* At 1920 renok pins the row to a fixed 15.25rem and the row wrapper clips what
+   does not fit, so an English description that needed one more line would have
+   been cut off rather than shown. Keep the height renok drew, as a floor. */
+@media screen and (min-width: 1920px) {
+  .rk-insight .rk-rt-insights-item {
+    height: auto;
+    min-height: 15.25rem;
+  }
+}

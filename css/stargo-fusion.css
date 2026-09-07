@@ -291,8 +291,15 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 
 /* Audit fixes: retain each template's motion, make content legible at rest. */
 body.stargo-dark-page { background: #1b1a19; }
-body.stargo-dark-page .navigation-top .navigation-text-main { color: #fff; }
-body.stargo-dark-page .navigation-top .line-divider-menu { background-color: #fff; }
+/* The nav is drawn in the page's own black, which disappears against a dark
+   hero. A whole-page dark treatment is the wrong tool where only the top of
+   the page is dark -- the capability page opens on renok's black hero and
+   turns light below the curve -- so the nav half of it stands on its own. The
+   nav scrolls away with the hero, so it never meets the light section. */
+body.stargo-dark-page .navigation-top .navigation-text-main,
+body.stargo-dark-nav .navigation-top .navigation-text-main { color: #fff; }
+body.stargo-dark-page .navigation-top .line-divider-menu,
+body.stargo-dark-nav .navigation-top .line-divider-menu { background-color: #fff; }
 @media (max-width: 991px) {
   body .navigation-top .menu-button,
   body .navigation-top .menu-button.w--open { background: #f4f4f4; min-width: 44px; min-height: 44px; }
@@ -656,6 +663,12 @@ body.stargo-pricing-lx .stargo-plan-badge {
 /* On the Chinese capability page each capability leads with its Chinese name and
    keeps the product name beneath it as a small subtitle, so a Chinese reader
    never has to parse English to follow the list. */
+/* A capability's product name, carried as a small subtitle under its Chinese
+   name on the Chinese page. The donor blocks of the capability page all use the
+   plain `.cap-en`; `.lm-cap-en` is the older lumenis-only spelling. */
+.cap-en { display: block; margin-top: 3px;
+  font-size: .72em; letter-spacing: .06em; font-weight: 400; opacity: .62; text-transform: none; }
+
 .lm-capmap .lm-cap-en, .cn-capmap .lm-cap-en { display: block; margin-top: 3px;
   font-size: 12px; letter-spacing: .06em; font-weight: 400; color: #8d8d8d; text-transform: none; }
 .cn-capmap .cn-accordion-answer-text .lm-cap-en { display: inline; margin: 0 0 0 8px; }
@@ -677,3 +690,16 @@ body.stargo-pricing-lx .stargo-plan-badge {
   grid-template-columns: max-content max-content max-content;
   width: max-content; max-width: calc(100vw - 40px);
 }
+
+/* ---------------------------------------------------------------------------
+   The capability page's donor blocks style themselves.
+
+   Each block arrives with its donor's own stylesheet, reduced to the rules it
+   uses and scoped to its own root class (css/renok.rk.css, qubix.qx.css,
+   cinery.cn2.css — written by tools/capability-donors.mjs, never by hand), and
+   any hand-written rule a block needs lives beside its module in
+   tools/blocks/<id>.css. Nothing block-specific belongs in this file: those
+   sheets load before this one, so a rule here would silently override the block
+   that owns it. See tools/blocks/README.md.
+   --------------------------------------------------------------------------- */
+

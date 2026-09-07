@@ -1,0 +1,904 @@
+{
+ "events": {
+  "qx-e-270": {
+   "id": "qx-e-270",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "SLIDE_EFFECT",
+    "instant": false,
+    "config": {
+     "actionListId": "qx-slideInBottom",
+     "autoStopEventId": "qx-e-271"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "d30dd310-93d2-c5e4-d954-743e5326e9dd",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "d30dd310-93d2-c5e4-d954-743e5326e9dd",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": 400,
+    "direction": "BOTTOM",
+    "effectIn": true
+   },
+   "createdOn": 1774763098177
+  },
+  "qx-e-272": {
+   "id": "qx-e-272",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "SLIDE_EFFECT",
+    "instant": false,
+    "config": {
+     "actionListId": "qx-slideInBottom",
+     "autoStopEventId": "qx-e-273"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "19330a7e-cce5-6988-a8df-078f4c93fd4a",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "19330a7e-cce5-6988-a8df-078f4c93fd4a",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": 500,
+    "direction": "BOTTOM",
+    "effectIn": true
+   },
+   "createdOn": 1774763109752
+  },
+  "qx-e-274": {
+   "id": "qx-e-274",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "SLIDE_EFFECT",
+    "instant": false,
+    "config": {
+     "actionListId": "qx-slideInBottom",
+     "autoStopEventId": "qx-e-275"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "3c3263bf-57e2-41a5-60ae-a083ccbba0a0",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "3c3263bf-57e2-41a5-60ae-a083ccbba0a0",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": 600,
+    "direction": "BOTTOM",
+    "effectIn": true
+   },
+   "createdOn": 1774763128434
+  },
+  "qx-e-280": {
+   "id": "qx-e-280",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "SLIDE_EFFECT",
+    "instant": false,
+    "config": {
+     "actionListId": "qx-slideInBottom",
+     "autoStopEventId": "qx-e-281"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "acf28661-3357-9f17-8bd7-2c089db73b4c",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "acf28661-3357-9f17-8bd7-2c089db73b4c",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": 400,
+    "direction": "BOTTOM",
+    "effectIn": true
+   },
+   "createdOn": 1774763502300
+  },
+  "qx-e-282": {
+   "id": "qx-e-282",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "SLIDE_EFFECT",
+    "instant": false,
+    "config": {
+     "actionListId": "qx-slideInBottom",
+     "autoStopEventId": "qx-e-283"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "283fc0b0-65b2-43f4-e0c1-466808df813f",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "283fc0b0-65b2-43f4-e0c1-466808df813f",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": 500,
+    "direction": "BOTTOM",
+    "effectIn": true
+   },
+   "createdOn": 1774763514721
+  },
+  "qx-e-69": {
+   "id": "qx-e-69",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "MOUSE_OVER",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "qx-a-6",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "qx-e-70"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "selector": ".qx-main-button",
+    "originalId": "a2c0ae59-63de-ba23-f502-a8f85b82835e",
+    "appliesTo": "CLASS"
+   },
+   "targets": [
+    {
+     "selector": ".qx-main-button",
+     "originalId": "a2c0ae59-63de-ba23-f502-a8f85b82835e",
+     "appliesTo": "CLASS"
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1726349905279
+  },
+  "qx-e-70": {
+   "id": "qx-e-70",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "MOUSE_OUT",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "qx-a-7",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "qx-e-69"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "selector": ".qx-main-button",
+    "originalId": "a2c0ae59-63de-ba23-f502-a8f85b82835e",
+    "appliesTo": "CLASS"
+   },
+   "targets": [
+    {
+     "selector": ".qx-main-button",
+     "originalId": "a2c0ae59-63de-ba23-f502-a8f85b82835e",
+     "appliesTo": "CLASS"
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1726349905279
+  },
+  "qx-e-97": {
+   "id": "qx-e-97",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "SCROLLING_IN_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_CONTINUOUS_ACTION",
+    "config": {
+     "actionListId": "qx-a-26",
+     "affectedElements": {},
+     "duration": 0
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "03d0ff94-81ff-2e2d-31f1-b89b61d5aa44",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "03d0ff94-81ff-2e2d-31f1-b89b61d5aa44",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": [
+    {
+     "continuousParameterGroupId": "qx-a-26-p",
+     "smoothing": 50,
+     "startsEntering": true,
+     "addStartOffset": false,
+     "addOffsetValue": 50,
+     "startsExiting": false,
+     "addEndOffset": false,
+     "endOffsetValue": 50
+    }
+   ],
+   "createdOn": 1773222640419
+  },
+  "qx-e-266": {
+   "id": "qx-e-266",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "MOUSE_OVER",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "qx-a-55",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "qx-e-267"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "03d0ff94-81ff-2e2d-31f1-b89b61d5aa45",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "03d0ff94-81ff-2e2d-31f1-b89b61d5aa45",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1774760593546
+  },
+  "qx-e-267": {
+   "id": "qx-e-267",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "MOUSE_OUT",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "qx-a-56",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "qx-e-266"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "03d0ff94-81ff-2e2d-31f1-b89b61d5aa45",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "03d0ff94-81ff-2e2d-31f1-b89b61d5aa45",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1774760593547
+  },
+  "qx-e-350": {
+   "id": "qx-e-350",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "SLIDE_EFFECT",
+    "instant": false,
+    "config": {
+     "actionListId": "qx-slideInBottom",
+     "autoStopEventId": "qx-e-351"
+    }
+   },
+   "mediaQueries": [
+    "tiny"
+   ],
+   "target": {
+    "id": "b9a90707-0e37-b731-76fd-2a01f45732a1",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "b9a90707-0e37-b731-76fd-2a01f45732a1",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": 400,
+    "direction": "BOTTOM",
+    "effectIn": true
+   },
+   "createdOn": 1774958895635
+  },
+  "qx-e-352": {
+   "id": "qx-e-352",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "SLIDE_EFFECT",
+    "instant": false,
+    "config": {
+     "actionListId": "qx-slideInBottom",
+     "autoStopEventId": "qx-e-353"
+    }
+   },
+   "mediaQueries": [
+    "tiny"
+   ],
+   "target": {
+    "id": "03d0ff94-81ff-2e2d-31f1-b89b61d5aa44",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "03d0ff94-81ff-2e2d-31f1-b89b61d5aa44",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": 500,
+    "direction": "BOTTOM",
+    "effectIn": true
+   },
+   "createdOn": 1774958920935
+  }
+ },
+ "actionLists": {
+  "qx-slideInBottom": {
+   "id": "qx-slideInBottom",
+   "useFirstGroupAsInitialState": true,
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "duration": 0,
+        "target": {
+         "id": "N/A",
+         "appliesTo": "TRIGGER_ELEMENT",
+         "useEventTarget": true
+        },
+        "value": 0
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "duration": 0,
+        "target": {
+         "id": "N/A",
+         "appliesTo": "TRIGGER_ELEMENT",
+         "useEventTarget": true
+        },
+        "xValue": 0,
+        "yValue": 100,
+        "xUnit": "PX",
+        "yUnit": "PX",
+        "zUnit": "PX"
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "outQuart",
+        "duration": 1000,
+        "target": {
+         "id": "N/A",
+         "appliesTo": "TRIGGER_ELEMENT",
+         "useEventTarget": true
+        },
+        "xValue": 0,
+        "yValue": 0,
+        "xUnit": "PX",
+        "yUnit": "PX",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "outQuart",
+        "duration": 1000,
+        "target": {
+         "id": "N/A",
+         "appliesTo": "TRIGGER_ELEMENT",
+         "useEventTarget": true
+        },
+        "value": 1
+       }
+      }
+     ]
+    }
+   ]
+  },
+  "qx-a-6": {
+   "id": "qx-a-6",
+   "title": "Button [Hover In]",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "qx-a-6-n",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".qx-button-arrow-wrapper",
+         "selectorGuids": [
+          "4686602d-28dc-bdc7-f6df-fb6eb6f83f0b"
+         ]
+        },
+        "xValue": 0,
+        "xUnit": "px",
+        "yUnit": "PX",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "qx-a-6-n-2",
+       "actionTypeId": "TRANSFORM_ROTATE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".qx-button-arrow-wrapper",
+         "selectorGuids": [
+          "4686602d-28dc-bdc7-f6df-fb6eb6f83f0b"
+         ]
+        },
+        "zValue": 0,
+        "xUnit": "DEG",
+        "yUnit": "DEG",
+        "zUnit": "deg"
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "qx-a-6-n-3",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "outBack",
+        "duration": 800,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".qx-button-arrow-wrapper",
+         "selectorGuids": [
+          "4686602d-28dc-bdc7-f6df-fb6eb6f83f0b"
+         ]
+        },
+        "xValue": -1,
+        "xUnit": "rem",
+        "yUnit": "PX",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "qx-a-6-n-4",
+       "actionTypeId": "TRANSFORM_ROTATE",
+       "config": {
+        "delay": 0,
+        "easing": "outBack",
+        "duration": 800,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".qx-button-arrow-wrapper",
+         "selectorGuids": [
+          "4686602d-28dc-bdc7-f6df-fb6eb6f83f0b"
+         ]
+        },
+        "zValue": -45,
+        "xUnit": "DEG",
+        "yUnit": "DEG",
+        "zUnit": "deg"
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": true,
+   "createdOn": 1726349908581
+  },
+  "qx-a-7": {
+   "id": "qx-a-7",
+   "title": "Button [Hover Out]",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "qx-a-7-n",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "outBack",
+        "duration": 800,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".qx-button-arrow-wrapper",
+         "selectorGuids": [
+          "4686602d-28dc-bdc7-f6df-fb6eb6f83f0b"
+         ]
+        },
+        "xValue": 0,
+        "xUnit": "rem",
+        "yUnit": "PX",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "qx-a-7-n-2",
+       "actionTypeId": "TRANSFORM_ROTATE",
+       "config": {
+        "delay": 0,
+        "easing": "outBack",
+        "duration": 800,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".qx-button-arrow-wrapper",
+         "selectorGuids": [
+          "4686602d-28dc-bdc7-f6df-fb6eb6f83f0b"
+         ]
+        },
+        "zValue": 0,
+        "xUnit": "DEG",
+        "yUnit": "DEG",
+        "zUnit": "deg"
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": false,
+   "createdOn": 1726349908581
+  },
+  "qx-a-26": {
+   "id": "qx-a-26",
+   "title": "New Scroll Animation",
+   "continuousParameterGroups": [
+    {
+     "id": "qx-a-26-p",
+     "type": "SCROLL_PROGRESS",
+     "parameterLabel": "Scroll",
+     "continuousActionGroups": [
+      {
+       "keyframe": 0,
+       "actionItems": [
+        {
+         "id": "qx-a-26-n",
+         "actionTypeId": "TRANSFORM_MOVE",
+         "config": {
+          "delay": 0,
+          "easing": "",
+          "duration": 500,
+          "target": {
+           "useEventTarget": true,
+           "id": "49f4489b-71e1-901d-5f11-385fc05d0b4d"
+          },
+          "xUnit": "PX",
+          "yUnit": "PX",
+          "zUnit": "PX"
+         }
+        }
+       ]
+      },
+      {
+       "keyframe": 100,
+       "actionItems": [
+        {
+         "id": "qx-a-26-n-2",
+         "actionTypeId": "TRANSFORM_MOVE",
+         "config": {
+          "delay": 0,
+          "easing": "",
+          "duration": 500,
+          "target": {
+           "useEventTarget": true,
+           "id": "49f4489b-71e1-901d-5f11-385fc05d0b4d"
+          },
+          "xUnit": "PX",
+          "yUnit": "PX",
+          "zUnit": "PX"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "createdOn": 1773222357356
+  },
+  "qx-a-55": {
+   "id": "qx-a-55",
+   "title": "Blog Image Hover",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "qx-a-55-n",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".qx-all-image-cover",
+         "selectorGuids": [
+          "adaefae3-fd9d-8184-8d85-5a41126fd41c"
+         ]
+        },
+        "xValue": 1,
+        "yValue": 1,
+        "locked": true
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "qx-a-55-n-2",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "outQuad",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".qx-all-image-cover",
+         "selectorGuids": [
+          "adaefae3-fd9d-8184-8d85-5a41126fd41c"
+         ]
+        },
+        "xValue": 1.1,
+        "yValue": 1.1,
+        "locked": true
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": true,
+   "createdOn": 1774760596265
+  },
+  "qx-a-56": {
+   "id": "qx-a-56",
+   "title": "Blog Image Hover Out",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "qx-a-56-n-2",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "outQuad",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".qx-all-image-cover",
+         "selectorGuids": [
+          "adaefae3-fd9d-8184-8d85-5a41126fd41c"
+         ]
+        },
+        "xValue": 1,
+        "yValue": 1,
+        "locked": true
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": false,
+   "createdOn": 1774760596265
+  }
+ }
+}

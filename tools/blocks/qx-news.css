@@ -1,0 +1,45 @@
+/* qx-news — hand-written rules for the "把对话变成对客户的理解" block.
+   Appended after the extracted qubix rules, so equal specificity wins here.
+   Every rule is scoped under .qx-news. */
+
+/* 1. Two element rules from the shared Mono stylesheet (the one this page's
+      own chrome is drawn from) reach into the transplanted block, because a
+      bare `p` / `a` selector matches anywhere:
+
+        p { opacity: .7 }      dims the lead under .qx-body's own #a1a1a1,
+                               taking it from 8.1:1 on black down to 4.3:1;
+        a { cursor: none }     Mono hides the pointer and draws its own
+                               crosshair, which this page does not.
+
+      css/stargo-fusion.css already undoes exactly these two inside the other
+      imported scopes (`:where(.lx-scope) :is(p, li) { opacity: 1 }` and
+      `.sc-scope a { cursor: pointer }`); this block needs the same. */
+.qx-news p { opacity: 1; }
+.qx-news a { cursor: pointer; }
+
+/* 2. Below 992px the donor stacks the two halves into one column, but leaves
+      the left half `position: sticky; top: 14vh`. Full-width row cards then
+      scroll up over the pinned heading and slice it through the middle — at
+      768 the English heading's last line and the pill button are both cut in
+      half by an opaque card. The donor already drops the sticky at 479; the
+      column layout begins at 991, so it has to go at 991. */
+@media screen and (max-width: 991px) {
+  .qx-news .qx-home-blog-left { position: static; }
+}
+
+/* 3. The donor's h2 is 58px at every width because its own heading was the two
+      words "Latest news". This story's heading is a sentence: in English
+      "Understanding" alone measures 347px at 58px type, against a 310px column
+      at 390 — the word ran out of the container and up to the viewport edge.
+      Step the heading down where the column gets narrow. */
+@media screen and (max-width: 479px) {
+  .qx-news { --h2--font-size: 40px; }
+}
+
+/* qubix sets `text-transform: capitalize` on its h2. Applied to this site's
+   own sentence-case copy that rewrites the words themselves — "Run the work
+   with an AI team" is published by tools/copy.mjs and was rendering as "Run The
+   Work With An AI Team". The donor's type stays; only the case goes back to
+   what the copy says. All three qubix headings on this page do the same, so
+   they stay in one case. Chinese is unaffected either way. */
+.qx-news .qx-h2 { text-transform: none; }
