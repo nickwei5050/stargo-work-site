@@ -836,9 +836,9 @@ function capabilityShowcase(C, lang) {
   const headWrap = headingTpl.slice(0, headingTpl.indexOf('<div id="w-node-_7b6f59d4-613e-4d1d-1c00-f836bb437715'));
   const counter = headingTpl.slice(headingTpl.indexOf('<div id="w-node-_7b6f59d4-613e-4d1d-1c00-f836bb437715'));
   const heading = (headWrap
-    .replace('>FAQ<', `>${escapeHtml(S.eyebrow)}<`)
-    .replace('>Quick<', `>${escapeHtml(S.headlineTop)}<`)
-    .replace('>Answers<', `>${escapeHtml(S.headlineBottom)}<`))
+    .replace('>FAQ<', `>${escapeHtml(t(S.eyebrow))}<`)
+    .replace('>Quick<', `>${escapeHtml(t(S.headlineTop))}<`)
+    .replace('>Answers<', `>${escapeHtml(t(S.headlineBottom))}<`))
     + counter.replace('>(05)<', `>(${String(C.CAPABILITY_GROUPS.length).padStart(2, '0')})<`)
       .replace(/<\/div>\s*$/, '');
 
@@ -859,15 +859,15 @@ function capabilityShowcase(C, lang) {
   const storyRows = S.stories.map((x, i) => {
     const bullets = x.picks.map((name) => {
       const hit = byName.get(name);
-      if (!hit) throw new Error(`capability showcase: "${name}" (${x.label}) is not in CAPABILITY_GROUPS`);
+      if (!hit) throw new Error(`capability showcase: "${name}" (${t(x.label)}) is not in CAPABILITY_GROUPS`);
       return line(name, t(hit.gloss));
     }).join('');
     const groups = x.groups.map((n) => `${n} ${t(C.CAPABILITY_GROUPS.find((g) => g.n === n).name)}`).join(' · ');
-    return row(`story-${i + 1}`, x.label,
-      `<p class="cn-accordion-answer-text cn-lede">${escapeHtml(x.promise)}</p>${bullets}` +
-      `<p class="cn-accordion-answer-text cn-out"><strong>${escapeHtml(S.outputLabel)}</strong> ${escapeHtml(x.output)}</p>` +
-      `<p class="cn-accordion-answer-text cn-out"><strong>${escapeHtml(S.connectionLabel)}</strong> ${escapeHtml(x.connection)}</p>` +
-      (x.caveat ? `<p class="cn-accordion-answer-text cn-note">${escapeHtml(x.caveat)}</p>` : '') +
+    return row(`story-${i + 1}`, t(x.label),
+      `<p class="cn-accordion-answer-text cn-lede">${escapeHtml(t(x.promise))}</p>${bullets}` +
+      `<p class="cn-accordion-answer-text cn-out"><strong>${escapeHtml(t(S.outputLabel))}</strong> ${escapeHtml(t(x.output))}</p>` +
+      `<p class="cn-accordion-answer-text cn-out"><strong>${escapeHtml(t(S.connectionLabel))}</strong> ${escapeHtml(t(x.connection))}</p>` +
+      (x.caveat ? `<p class="cn-accordion-answer-text cn-note">${escapeHtml(t(x.caveat))}</p>` : '') +
       `<p class="cn-accordion-answer-text cn-note">${escapeHtml(`In the catalogue: ${groups}`)}</p>`);
   });
 
@@ -875,12 +875,12 @@ function capabilityShowcase(C, lang) {
   const foundationRows = S.foundations.map((x, i) => {
     const bullets = x.picks.map((name) => {
       const hit = byName.get(name);
-      if (!hit) throw new Error(`capability showcase: "${name}" (${x.label}) is not in CAPABILITY_GROUPS`);
+      if (!hit) throw new Error(`capability showcase: "${name}" (${t(x.label)}) is not in CAPABILITY_GROUPS`);
       return line(name, t(hit.gloss));
     }).join('');
-    return row(`foundation-${i + 1}`, x.label,
-      `<p class="cn-accordion-answer-text cn-lede">${escapeHtml(x.promise)}</p>${bullets}` +
-      (x.caveat ? `<p class="cn-accordion-answer-text cn-note">${escapeHtml(x.caveat)}</p>` : ''));
+    return row(`foundation-${i + 1}`, t(x.label),
+      `<p class="cn-accordion-answer-text cn-lede">${escapeHtml(t(x.promise))}</p>${bullets}` +
+      (x.caveat ? `<p class="cn-accordion-answer-text cn-note">${escapeHtml(t(x.caveat))}</p>` : ''));
   });
 
   /* Then the complete catalogue, one row per group. */
@@ -895,13 +895,13 @@ function capabilityShowcase(C, lang) {
 
   return `<section id="atlas" class="cn-capmap"><div class="cn-capmap-inner">` +
     `<div class="cn-capmap-head">${heading}</div>` +
-    `<p class="cn-capmap-lede">${escapeHtml(S.body)}</p>` +
-    `<p class="cn-capmap-scope">${escapeHtml(S.scopeNote)}</p>` +
-    band(S.storiesLabel, S.storiesNote) +
+    `<p class="cn-capmap-lede">${escapeHtml(t(S.body))}</p>` +
+    `<p class="cn-capmap-scope">${escapeHtml(t(S.scopeNote))}</p>` +
+    band(t(S.storiesLabel), t(S.storiesNote)) +
     `<div class="cn-faq-container">${storyRows.join('')}</div>` +
-    band(S.foundationsLabel, S.foundationsNote) +
+    band(t(S.foundationsLabel), t(S.foundationsNote)) +
     `<div class="cn-faq-container">${foundationRows.join('')}</div>` +
-    band(S.catalogueLabel, `${S.catalogueNote} ${C.CAPABILITY_GROUPS.length} groups · ${total} capabilities.`) +
+    band(t(S.catalogueLabel), `${t(S.catalogueNote)} ${C.CAPABILITY_GROUPS.length} ${lang === "zh" ? "个能力组 · " : "groups · "}${total}${lang === "zh" ? " 项能力。" : " capabilities."}`) +
     `<div class="cn-faq-container">${catalogueRows.join('')}</div>` +
     `</div></section>`;
 }
@@ -911,12 +911,7 @@ function capabilityShowcase(C, lang) {
     escapeHtml(item),
     escapeHtml(t(gloss)),
   ]));
-  const table = lang === 'en'
-    ? capabilityShowcase(C, lang)
-    : awardsTable({
-        id: 'atlas', caption: t(K.table.caption), title: t(K.table.title), total: rows.length,
-        button: { label: t(K.table.button.label), href: K.table.button.href }, headers: K.table.headers.map(t), rows,
-      });
+  const table = capabilityShowcase(C, lang);
   const anchor = '<div data-w-id="f7fb6f0b-16b8-25a9-4160-54883563ff75" class="rounder-wrapper">';
   if (!h.includes(anchor)) throw new Error('capabilities: insertion anchor missing');
   // The nine-stage loop sits above the capability map: business mainline first, then the 14 groups.
@@ -927,7 +922,7 @@ function capabilityShowcase(C, lang) {
     rows: L.rows.map(([a, b, c]) => [a, escapeHtml(t(b)), escapeHtml(t(c))]),
   });
   h = h.replace(anchor, `${loop}\n${table}\n${anchor}`);
-  if (lang === 'en') {
+  {
     // the transplanted cinery block brings its own scoped stylesheet
     const monoLink = /<link href="css\/monof-template\.app\.shared\.[a-f0-9]+\.css" rel="stylesheet" type="text\/css"\/>/;
     if (!monoLink.test(h)) throw new Error('capabilities: Mono stylesheet link not found');
