@@ -27,7 +27,7 @@ const MONO_BASE = `${BUNDLES}/app.6e875794.53d57b6d7b6754cb.js`;
 const SCALORA_BUNDLE = process.argv[2] ?? `${BUNDLES}/scalora.app.e1bb07ef.d077b7f57348968e.js`;
 /* Further donors, already renamed and rescoped by their own prepare script
    (tools/lifelogx-prepare.mjs writes tools/fragments/lx-ix.json). */
-const DONORS = [`${SITE}/tools/fragments/lx-ix.json`, `${SITE}/tools/fragments/cn-ix.json`].filter((f) => existsSync(f));
+const DONORS = [`${SITE}/tools/fragments/lx-ix.json`, `${SITE}/tools/fragments/cn-ix.json`, `${SITE}/tools/fragments/lm-ix.json`].filter((f) => existsSync(f));
 const OUT_BUNDLE = `${JS}/app.fused.js`;
 
 const MONO_PAGE = '699b6466d5f19893993a4bf1';     // homepage id; imported Scalora ix3 is rescoped to it

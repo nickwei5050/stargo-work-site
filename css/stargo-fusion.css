@@ -640,3 +640,15 @@ body.stargo-pricing-lx .stargo-plan-badge {
 @media (max-width: 991px)  { .cn-capmap .cn-heading-style-h2 { font-size: 128px; } }
 @media (max-width: 767px)  { .cn-capmap .cn-heading-style-h2 { font-size: 96px; } }
 @media (max-width: 479px)  { .cn-capmap .cn-heading-style-h2 { font-size: 56px; } }
+
+/* The capability map's ten narrative blocks are lumenis service cards; the
+   fourteen-group catalogue below them is cinery's accordion. Both donors keep
+   their own look. These rules only stack the cards and dress the three band
+   headings and the module's own opening, which no donor supplies. */
+.lm-capmap-cards { display: flex; flex-flow: column; gap: 28px; }
+.cn-capmap-eyebrow { font-size: 13px; letter-spacing: .16em; text-transform: uppercase; color: #8d8d8d; }
+.cn-capmap-count { font-size: 44px; line-height: 1; color: #4b4b4b; }
+.cn-capmap-title { margin: 26px 0 0; font-size: clamp(30px, 4.4vw, 60px); line-height: 1.08;
+  letter-spacing: -.02em; color: #fdfcfc; max-width: 16ch; }
+.lm-capmap .lm-capmap-groups { margin-top: 14px; font-size: 14px; line-height: 22px; color: #8d8d8d; }
+@media (max-width: 767px) { .lm-capmap-cards { gap: 18px; } .cn-capmap-count { font-size: 32px; } }

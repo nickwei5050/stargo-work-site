@@ -810,99 +810,114 @@ PAGES['capabilities.html'] = (lang) => {
 /**
  * The Capability map.
  *
- * Donor: cinery's "Quick / Answers" FAQ block (tools/templates/cinery), lifted
- * by tools/cinery-prepare.mjs — a gradient split heading with a blur sweep, a
- * section counter, and rows that expand on click while their plus rotates. The
- * motion is the donor's own Webflow IX2, merged into js/app.fused.js; the
- * styles are the donor's own rules, scoped under `.cn-capmap`. Only the words
- * are ours.
+ * Ten blocks carry the story, each one a lumenis service card lifted whole by
+ * tools/lumenis-prepare.mjs: a numbered heading, a paragraph, sub-items that
+ * expand on click while their plus rotates, a closing line with a button, and a
+ * full-height image beside it. Six are business outcomes, four are the
+ * foundations they share. Beneath them the fourteen capability groups sit on
+ * cinery's accordion (tools/cinery-prepare.mjs) as the complete catalogue.
  *
- * Fourteen rows, one per capability group, each opening onto that group's
- * capabilities. Every capability the register holds keeps a place, and the
- * six business stories that lead the module draw their bullets from the same
- * register entries, so the narrative cannot drift from the catalogue.
+ * Both donors keep their own motion — Webflow IX2, merged into js/app.fused.js —
+ * and their own styles, scoped under `.lm-capmap` and `.cn-capmap`. Only the
+ * words and the images are ours; the images are this site's own editorial
+ * artwork, one chosen for what each block is about.
+ *
+ * Every capability a block names is resolved against CAPABILITY_GROUPS and
+ * printed with the register's own gloss, so the narrative cannot drift from the
+ * catalogue and a renamed capability fails the build instead of disappearing.
  */
 function capabilityShowcase(C, lang) {
   const t = (v) => (typeof v === 'string' ? v : v[lang]);
   const S = C.CAPABILITY_SHOWCASE;
-  const frag = readFileSync(`${SITE}/tools/fragments/cn-capmap.html`, 'utf8');
 
-  const headingTpl = frag.slice(frag.indexOf('<!-- heading -->') + 16, frag.indexOf('<!-- row -->')).trim();
-  const rowTpl = frag.slice(frag.indexOf('<!-- row -->') + 12).trim();
-  if (!rowTpl.includes('data-w-id="cn-capmap-row"')) throw new Error('capmap: donor row lost its interaction id');
+  const cnFrag = readFileSync(`${SITE}/tools/fragments/cn-capmap.html`, 'utf8');
+  const lmCard = readFileSync(`${SITE}/tools/fragments/lm-card.html`, 'utf8');
 
-  /* The heading: subtitle chip, two gradient lines, the counter. The donor's cut
-     carries one closing div too many; take the two halves apart and reassemble. */
-  const headWrap = headingTpl.slice(0, headingTpl.indexOf('<div id="w-node-_7b6f59d4-613e-4d1d-1c00-f836bb437715'));
-  const counter = headingTpl.slice(headingTpl.indexOf('<div id="w-node-_7b6f59d4-613e-4d1d-1c00-f836bb437715'));
-  const heading = (headWrap
-    .replace('>FAQ<', `>${escapeHtml(t(S.eyebrow))}<`)
-    .replace('>Quick<', `>${escapeHtml(t(S.headlineTop))}<`)
-    .replace('>Answers<', `>${escapeHtml(t(S.headlineBottom))}<`))
-    + counter.replace('>(05)<', `>(${String(C.CAPABILITY_GROUPS.length).padStart(2, '0')})<`)
-      .replace(/<\/div>\s*$/, '');
+  /* ---- the lumenis card, split into its repeatable pieces ---- */
+  const listOpen = '<div class="lm-services-list">';
+  const holderOpen = '<div class="lm-services-list-holder">';
+  const holderAt = lmCard.indexOf(holderOpen) + holderOpen.length;
+  const firstList = lmCard.indexOf(listOpen, holderAt);
+  const secondList = lmCard.indexOf(listOpen, firstList + 10);
+  const listUnit = lmCard.slice(firstList, secondList);
+  const holderEnd = lmCard.indexOf('<div class="lm-services-footer">');
+  const cardHead = lmCard.slice(0, holderAt);
+  const cardTail = lmCard.slice(holderEnd);
+  if (!listUnit.includes('lm-question-text') || !cardTail.includes('lm-services-image-full')) {
+    throw new Error('capmap: the lumenis card did not split into head / item / tail');
+  }
 
   const byName = new Map();
   for (const g of C.CAPABILITY_GROUPS) for (const [name, gloss] of g.items) byName.set(name, { g, gloss });
 
-  /** One accordion row, built from the donor's own markup. */
-  const row = (id, title, bodyHtml) => rowTpl
+  const item = (name, gloss) => listUnit
+    .replace(/<div class="lm-question-text lm-white">[\s\S]*?<\/div>/,
+      `<div class="lm-question-text lm-white">${escapeHtml(name)}</div>`)
+    .replace(/<p class="lm-answer-text lm-white-text">[\s\S]*?<\/p>/,
+      `<p class="lm-answer-text lm-white-text">${escapeHtml(gloss)}</p>`);
+
+  /** One outcome or foundation, on the donor's card. */
+  const card = (n, x, footer) => {
+    const items = x.picks.map((name) => {
+      const hit = byName.get(name);
+      if (!hit) throw new Error(`capability showcase: "${name}" (${t(x.label)}) is not in CAPABILITY_GROUPS`);
+      return item(name, t(hit.gloss));
+    }).join('');
+    const groups = x.groups
+      ? x.groups.map((g) => `${g} ${t(C.CAPABILITY_GROUPS.find((q) => q.n === g).name)}`).join(' · ')
+      : '';
+    const head = cardHead
+      .replace(/<div class="lm-number"><div>[\s\S]*?<\/div><\/div>/,
+        `<div class="lm-number"><div>${n}</div></div>`)
+      .replace(/<div class="lm-h2-style lm-white-text">[\s\S]*?<\/div>/,
+        `<div class="lm-h2-style lm-white-text">${escapeHtml(t(x.label))}</div>`)
+      .replace(/<p class="lm-white-text">[\s\S]*?<\/p>/,
+        `<p class="lm-white-text">${escapeHtml(t(x.promise))}</p>`);
+    const tail = cardTail
+      .replace(/<p class="lm-white-text">[\s\S]*?<\/p>/, `<p class="lm-white-text">${footer}</p>`)
+      .replace(/<div class="lm-button-text">[\s\S]*?<\/div><div class="lm-button-text">[\s\S]*?<\/div>/,
+        `<div class="lm-button-text">${escapeHtml(t(S.cardButton))}</div><div class="lm-button-text">${escapeHtml(t(S.cardButton))}</div>`)
+      .replace(/<img([^>]*?)class="lm-services-image-full"([^>]*)>/,
+        `<img src="assets/stargo-editorial/${x.image}.webp" alt="${escapeHtml(t(x.label))}" class="lm-services-image-full"/>`)
+      + (groups ? `<div class="lm-capmap-groups">${escapeHtml(`${t(S.inCatalogue)}: ${groups}`)}</div>` : '');
+    return head + items + '</div>' + tail;
+  };
+
+  const outcomes = S.stories.map((x, i) => card(String(i + 1).padStart(2, '0'), x,
+    `<strong>${escapeHtml(t(S.outputLabel))}</strong> ${escapeHtml(t(x.output))}` +
+    ` <strong>${escapeHtml(t(S.connectionLabel))}</strong> ${escapeHtml(t(x.connection))}` +
+    (x.caveat ? ` ${escapeHtml(t(x.caveat))}` : '')));
+
+  const foundations = S.foundations.map((x, i) => card(String(i + 1).padStart(2, '0'), x,
+    x.caveat ? escapeHtml(t(x.caveat)) : escapeHtml(t(S.foundationsNote))));
+
+  /* ---- the catalogue keeps cinery's accordion ---- */
+  const rowTpl = cnFrag.slice(cnFrag.indexOf('<!-- row -->') + 12).trim();
+  const catRow = (id, title, body) => rowTpl
     .replace('<div data-w-id="cn-capmap-row"', `<div id="${id}" data-w-id="cn-capmap-row"`)
     .replace(/<h2 class="cn-accordion-heading">[\s\S]*?<\/h2>/, `<h2 class="cn-accordion-heading">${escapeHtml(title)}</h2>`)
-    .replace(/<div class="cn-accordion-content-block">[\s\S]*?<\/div><\/div><\/div>$/, `<div class="cn-accordion-content-block">${bodyHtml}</div></div></div>`);
-
-  const line = (name, gloss) =>
-    `<p class="cn-accordion-answer-text"><strong>${escapeHtml(name)}</strong> ${escapeHtml(gloss)}</p>`;
-
-  /* Six business stories first: what a buyer can get done, each drawing its
-     bullets from the register so the two can never disagree. */
-  const storyRows = S.stories.map((x, i) => {
-    const bullets = x.picks.map((name) => {
-      const hit = byName.get(name);
-      if (!hit) throw new Error(`capability showcase: "${name}" (${t(x.label)}) is not in CAPABILITY_GROUPS`);
-      return line(name, t(hit.gloss));
-    }).join('');
-    const groups = x.groups.map((n) => `${n} ${t(C.CAPABILITY_GROUPS.find((g) => g.n === n).name)}`).join(' · ');
-    return row(`story-${i + 1}`, t(x.label),
-      `<p class="cn-accordion-answer-text cn-lede">${escapeHtml(t(x.promise))}</p>${bullets}` +
-      `<p class="cn-accordion-answer-text cn-out"><strong>${escapeHtml(t(S.outputLabel))}</strong> ${escapeHtml(t(x.output))}</p>` +
-      `<p class="cn-accordion-answer-text cn-out"><strong>${escapeHtml(t(S.connectionLabel))}</strong> ${escapeHtml(t(x.connection))}</p>` +
-      (x.caveat ? `<p class="cn-accordion-answer-text cn-note">${escapeHtml(t(x.caveat))}</p>` : '') +
-      `<p class="cn-accordion-answer-text cn-note">${escapeHtml(`In the catalogue: ${groups}`)}</p>`);
-  });
-
-  /* Then the four shared foundations. */
-  const foundationRows = S.foundations.map((x, i) => {
-    const bullets = x.picks.map((name) => {
-      const hit = byName.get(name);
-      if (!hit) throw new Error(`capability showcase: "${name}" (${t(x.label)}) is not in CAPABILITY_GROUPS`);
-      return line(name, t(hit.gloss));
-    }).join('');
-    return row(`foundation-${i + 1}`, t(x.label),
-      `<p class="cn-accordion-answer-text cn-lede">${escapeHtml(t(x.promise))}</p>${bullets}` +
-      (x.caveat ? `<p class="cn-accordion-answer-text cn-note">${escapeHtml(t(x.caveat))}</p>` : ''));
-  });
-
-  /* Then the complete catalogue, one row per group. */
-  const catalogueRows = C.CAPABILITY_GROUPS.map((g) => row(
-    `g${g.n}`, `${g.n} ${t(g.name)}`,
-    g.items.map(([name, gloss]) => line(name, t(gloss))).join('')));
+    .replace(/<div class="cn-accordion-content-block">[\s\S]*?<\/div><\/div><\/div>$/, `<div class="cn-accordion-content-block">${body}</div></div></div>`);
+  const catalogue = C.CAPABILITY_GROUPS.map((g) => catRow(`g${g.n}`, `${g.n} ${t(g.name)}`,
+    g.items.map(([name, gloss]) =>
+      `<p class="cn-accordion-answer-text"><strong>${escapeHtml(name)}</strong> ${escapeHtml(t(gloss))}</p>`).join('')));
 
   const total = C.CAPABILITY_GROUPS.reduce((n, g) => n + g.items.length, 0);
   const band = (label, note) =>
     `<div class="cn-band"><div class="cn-band-label">${escapeHtml(label)}</div>` +
     `<div class="cn-band-note">${escapeHtml(note)}</div></div>`;
 
-  return `<section id="atlas" class="cn-capmap"><div class="cn-capmap-inner">` +
-    `<div class="cn-capmap-head">${heading}</div>` +
+  return `<section id="atlas" class="lm-capmap cn-capmap"><div class="cn-capmap-inner">` +
+    `<div class="cn-capmap-head"><div class="cn-capmap-eyebrow">${escapeHtml(t(S.eyebrow))}</div>` +
+    `<div class="cn-capmap-count">(${C.CAPABILITY_GROUPS.length})</div></div>` +
+    `<h2 class="cn-capmap-title">${escapeHtml(t(S.headline))}</h2>` +
     `<p class="cn-capmap-lede">${escapeHtml(t(S.body))}</p>` +
     `<p class="cn-capmap-scope">${escapeHtml(t(S.scopeNote))}</p>` +
     band(t(S.storiesLabel), t(S.storiesNote)) +
-    `<div class="cn-faq-container">${storyRows.join('')}</div>` +
+    `<div class="lm-capmap-cards">${outcomes.join('')}</div>` +
     band(t(S.foundationsLabel), t(S.foundationsNote)) +
-    `<div class="cn-faq-container">${foundationRows.join('')}</div>` +
-    band(t(S.catalogueLabel), `${t(S.catalogueNote)} ${C.CAPABILITY_GROUPS.length} ${lang === "zh" ? "个能力组 · " : "groups · "}${total}${lang === "zh" ? " 项能力。" : " capabilities."}`) +
-    `<div class="cn-faq-container">${catalogueRows.join('')}</div>` +
+    `<div class="lm-capmap-cards">${foundations.join('')}</div>` +
+    band(t(S.catalogueLabel), `${t(S.catalogueNote)} ${C.CAPABILITY_GROUPS.length} ${lang === 'zh' ? '个能力组 · ' : 'groups · '}${total}${lang === 'zh' ? ' 项能力。' : ' capabilities.'}`) +
+    `<div class="cn-faq-container">${catalogue.join('')}</div>` +
     `</div></section>`;
 }
 
@@ -926,7 +941,7 @@ function capabilityShowcase(C, lang) {
     // the transplanted cinery block brings its own scoped stylesheet
     const monoLink = /<link href="css\/monof-template\.app\.shared\.[a-f0-9]+\.css" rel="stylesheet" type="text\/css"\/>/;
     if (!monoLink.test(h)) throw new Error('capabilities: Mono stylesheet link not found');
-    h = h.replace(monoLink, (m) => `${m}\n<link href="css/cinery.cn.css" rel="stylesheet" type="text/css"/>`);
+    h = h.replace(monoLink, (m) => `${m}\n<link href="css/lumenis.lm.css" rel="stylesheet" type="text/css"/>\n<link href="css/cinery.cn.css" rel="stylesheet" type="text/css"/>`);
   }
   // Assign by buyer meaning, not image sequence: growth, customer context,
   // commercial fulfilment, workforce/governance. Parallel-team art belongs

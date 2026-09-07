@@ -985,12 +985,15 @@ export const CAPABILITY_SHOWCASE = {
   storiesNote: B('六件相互衔接的事。点开看背后的工作。', 'Six connected outcomes. Open one to see the work behind it.'),
   foundationsNote: B('上面每一件事都依赖的四样东西。', 'Four things every outcome above depends on.'),
   body: B('看 STARGO 如何把客户研究、沟通、报价、贸易执行与内容创作连成一条工作流——共享同一份业务上下文，由 288 位专业 AI 员工推进。', 'Explore how STARGO brings customer research, conversations, quotations, trade operations and creative work together — with shared business context and 288 specialized AI employees.'),
+  cardButton: B('聊聊你的流程', 'Discuss your workflow'),
+  inCatalogue: B('对应能力组', 'In the catalogue'),
   outputLabel: B('产出', 'Useful output'),
   connectionLabel: B('接到哪里', 'Connects to'),
   scopeNote: B('这里展示的是能力登记范围。你公司实际可用的部分在方案沟通时确认——登记在册不等于已经部署。', 'Scope shown here is the capability register. Availability for your company is confirmed during scoping — a documented capability is not by itself a deployed one.'),
 
   stories: [
     {
+      image: 'os-cockpit',
       label: B('找出值得跟进的买家', 'Find the buyers worth pursuing'),
       groups: ['02', '03'],
       promise: B('从你的产品和目标市场出发。公司研究、可得的贸易记录和采购信号汇到一起，得到的是一个你能判断的客户，而不是一份联系人名单。', 'Start with your products and target markets. Company research, available trade records and buying signals come together into an account you can judge, not a contact list.'),
@@ -999,6 +1002,7 @@ export const CAPABILITY_SHOWCASE = {
       connection: B('同一份客户上下文，直接进入下一次沟通和报价。', 'The same account context carries into the next conversation and quotation.'),
     },
     {
+      image: 'os-sales-desk',
       label: B('把对话变成对客户的理解', 'Turn conversations into customer understanding'),
       groups: ['04', '05'],
       promise: B('询盘从已接入的渠道进来，落到同一条客户时间线上。需求从来信里读出来，答案取自企业已审核的知识，敏感的部分等人决定。', 'Inquiries arrive from connected channels and land on one customer timeline. Requirements are read out of the message, answered from approved company knowledge, and anything sensitive waits for a person.'),
@@ -1007,6 +1011,7 @@ export const CAPABILITY_SHOWCASE = {
       connection: B('谈定的需求就是报价的起点。', 'The agreed requirement becomes the starting point of the quotation.'),
     },
     {
+      image: 'os-quote-studio',
       label: B('在商务可控的前提下出报价', 'Prepare quotations with commercial control'),
       groups: ['07', '06'],
       promise: B('报价从询盘、已审核的产品资料和你配置的价格规则开始，而不是从一张空表格开始。AI 负责准备，承诺由有权限的人做出。', 'A quotation starts from the inquiry, the approved product information and your configured pricing rules — not a blank spreadsheet. AI prepares; authorized people commit.'),
@@ -1015,6 +1020,7 @@ export const CAPABILITY_SHOWCASE = {
       connection: B('批准的商务细节直接进入订单，不用重新录入。', 'Approved commercial detail passes into the order without re-entry.'),
     },
     {
+      image: 'os-trade-execution',
       label: B('把订单一路协调到交付与复购', 'Coordinate orders through fulfilment and follow-up'),
       groups: ['08'],
       promise: B('付款节点、生产进度、包装与出运在同一个订单对象里，商务单据用批准过的订单数据生成。', 'The order carries payment milestones, production status, packing and shipment in one place, and the commercial paperwork is prepared from approved order data.'),
@@ -1024,6 +1030,7 @@ export const CAPABILITY_SHOWCASE = {
       caveat: B('单据准备与流程支持不替代正式签发、清关决定或专业合规审查。', 'Document preparation and workflow support do not replace official issuance, customs decisions or professional compliance review.'),
     },
     {
+      image: 'brand-family-01',
       label: B('为产品和市场做内容', 'Create content for products and markets'),
       groups: ['09', '03'],
       promise: B('产品与销售素材取自销售流程用的同一份已审核产品资料，再按买家和答案引擎能找到的方式组织。', 'Product and sales material is produced from the same approved product information the sales workflow uses, then structured so buyers and answer engines can find it.'),
@@ -1032,6 +1039,7 @@ export const CAPABILITY_SHOWCASE = {
       connection: B('发布出去的内容又回到上面的买家研究与询盘处理。', 'Published material feeds the buyer research and inquiry handling above.'),
     },
     {
+      image: 'os-agent-center',
       label: B('用一支 AI 团队把活干完', 'Run the work with an AI team'),
       groups: ['01', '10'],
       promise: B('交出去的是目标，不是提示词。相关岗位接手，彼此之间传递上下文，交回一份可复核的结果，决定权仍在你手里。', 'Assign a goal, not a prompt. The relevant specialists take it up, exchange context between themselves and return something reviewable, with the decisions still yours.'),
@@ -1044,12 +1052,14 @@ export const CAPABILITY_SHOWCASE = {
   foundationsLabel: B('每件事共同依赖的底座', 'What every story runs on'),
   foundations: [
     {
+      image: 'brand-ontology',
       label: B('业务上下文', 'Business context'),
       groups: ['06', '12'],
       promise: B('客户、报价、订单是带关系和规则的对象；答案取自企业资料，而不是临场编出来的。', 'Customers, quotes and orders are objects with relationships and rules, and answers are retrieved from company sources rather than improvised.'),
       picks: ['Operational Ontology', 'Customer · Product · Inquiry · Opportunity Objects', 'Enterprise Brain', 'Enterprise RAG', 'Source-Grounded Answers'],
     },
     {
+      image: 'os-desktop',
       label: B('工具与连接', 'Tools and connections'),
       groups: ['11'],
       promise: B('AI 员工通过正式接口接到现有系统，也能操作那些根本没有接口的工具。', 'Agents reach existing systems through documented interfaces, and work the tools that have no interface at all.'),
@@ -1057,12 +1067,14 @@ export const CAPABILITY_SHOWCASE = {
       caveat: B('登记在册的连接器，在完成配置与授权之前，不等于你公司已经接通。', 'A connector in the register is not a live integration for your company until it is configured and authorized.'),
     },
     {
+      image: 'os-login',
       label: B('权限与证据', 'Authority and evidence'),
       groups: ['13'],
       promise: B('企业决定哪些可以自己跑、哪些要复核、哪些要审批；每个重要动作都留下人能回看的记录。', 'The company sets what may run alone, what needs review and what needs approval; every important action leaves a record a person can read back.'),
       picks: ['Human-in-the-Loop', 'Approval Service', 'Permission Control · Identity', 'Audit Ledger · Agent Evidence · Action History', 'Failure Handling · Rollback'],
     },
     {
+      image: 'brand-loop',
       label: B('可核查的改进', 'Improvement you can check'),
       groups: ['14'],
       promise: B('记录下来的结果变成对知识、提示词、技能和流程的候选改动——先评测、再批准才发布，不成立就回滚。', 'Recorded outcomes become candidate changes to knowledge, prompts, skills and workflows — evaluated and approved before release, rolled back when they do not hold.'),

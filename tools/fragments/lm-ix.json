@@ -1,0 +1,361 @@
+{
+ "events": {
+  "lm-e-574": {
+   "id": "lm-e-574",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "MOUSE_CLICK",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "lm-a-79",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "lm-e-575"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "selector": ".lm-services-list",
+    "originalId": "68efdd024504e5b08c9b6b9d|093dcc44-e5e6-39c1-1ae5-a41b704b3999",
+    "appliesTo": "CLASS"
+   },
+   "targets": [
+    {
+     "selector": ".lm-services-list",
+     "originalId": "68efdd024504e5b08c9b6b9d|093dcc44-e5e6-39c1-1ae5-a41b704b3999",
+     "appliesTo": "CLASS"
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1762437020841
+  },
+  "lm-e-575": {
+   "id": "lm-e-575",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "MOUSE_SECOND_CLICK",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "lm-a-80",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "lm-e-574"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "selector": ".lm-services-list",
+    "originalId": "68efdd024504e5b08c9b6b9d|093dcc44-e5e6-39c1-1ae5-a41b704b3999",
+    "appliesTo": "CLASS"
+   },
+   "targets": [
+    {
+     "selector": ".lm-services-list",
+     "originalId": "68efdd024504e5b08c9b6b9d|093dcc44-e5e6-39c1-1ae5-a41b704b3999",
+     "appliesTo": "CLASS"
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1762437020842
+  }
+ },
+ "actionLists": {
+  "lm-a-79": {
+   "id": "lm-a-79",
+   "title": "FAQ -> Open",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "lm-a-79-n",
+       "actionTypeId": "STYLE_SIZE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".lm-answer-holder",
+         "selectorGuids": [
+          "dad8c9ed-bcbd-f3e6-759e-6f6741dbde7a"
+         ]
+        },
+        "heightValue": 0,
+        "widthUnit": "PX",
+        "heightUnit": "px",
+        "locked": false
+       }
+      },
+      {
+       "id": "lm-a-79-n-7",
+       "actionTypeId": "TRANSFORM_ROTATE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".lm-question-icon",
+         "selectorGuids": [
+          "dad8c9ed-bcbd-f3e6-759e-6f6741dbde71"
+         ]
+        },
+        "zValue": 0,
+        "xUnit": "DEG",
+        "yUnit": "DEG",
+        "zUnit": "deg"
+       }
+      },
+      {
+       "id": "lm-a-79-n-5",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".lm-answer-holder",
+         "selectorGuids": [
+          "dad8c9ed-bcbd-f3e6-759e-6f6741dbde7a"
+         ]
+        },
+        "yValue": 0,
+        "xUnit": "PX",
+        "yUnit": "px",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "lm-a-79-n-3",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".lm-answer-holder",
+         "selectorGuids": [
+          "dad8c9ed-bcbd-f3e6-759e-6f6741dbde7a"
+         ]
+        },
+        "value": 0,
+        "unit": ""
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "lm-a-79-n-2",
+       "actionTypeId": "STYLE_SIZE",
+       "config": {
+        "delay": 0,
+        "easing": "outExpo",
+        "duration": 800,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".lm-answer-holder",
+         "selectorGuids": [
+          "dad8c9ed-bcbd-f3e6-759e-6f6741dbde7a"
+         ]
+        },
+        "widthUnit": "PX",
+        "heightUnit": "AUTO",
+        "locked": false
+       }
+      },
+      {
+       "id": "lm-a-79-n-4",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "outExpo",
+        "duration": 800,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".lm-answer-holder",
+         "selectorGuids": [
+          "dad8c9ed-bcbd-f3e6-759e-6f6741dbde7a"
+         ]
+        },
+        "value": 1,
+        "unit": ""
+       }
+      },
+      {
+       "id": "lm-a-79-n-6",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "outExpo",
+        "duration": 800,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".lm-answer-holder",
+         "selectorGuids": [
+          "dad8c9ed-bcbd-f3e6-759e-6f6741dbde7a"
+         ]
+        },
+        "yValue": 0,
+        "xUnit": "PX",
+        "yUnit": "px",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "lm-a-79-n-8",
+       "actionTypeId": "TRANSFORM_ROTATE",
+       "config": {
+        "delay": 0,
+        "easing": "outExpo",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".lm-question-icon",
+         "selectorGuids": [
+          "dad8c9ed-bcbd-f3e6-759e-6f6741dbde71"
+         ]
+        },
+        "zValue": 45,
+        "xUnit": "DEG",
+        "yUnit": "DEG",
+        "zUnit": "deg"
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": true,
+   "createdOn": 1758823100019
+  },
+  "lm-a-80": {
+   "id": "lm-a-80",
+   "title": "FAQ -> Close",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "lm-a-80-n",
+       "actionTypeId": "STYLE_SIZE",
+       "config": {
+        "delay": 0,
+        "easing": "outExpo",
+        "duration": 600,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".lm-answer-holder",
+         "selectorGuids": [
+          "dad8c9ed-bcbd-f3e6-759e-6f6741dbde7a"
+         ]
+        },
+        "heightValue": 0,
+        "widthUnit": "PX",
+        "heightUnit": "px",
+        "locked": false
+       }
+      },
+      {
+       "id": "lm-a-80-n-2",
+       "actionTypeId": "TRANSFORM_ROTATE",
+       "config": {
+        "delay": 0,
+        "easing": "outExpo",
+        "duration": 600,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".lm-question-icon",
+         "selectorGuids": [
+          "dad8c9ed-bcbd-f3e6-759e-6f6741dbde71"
+         ]
+        },
+        "zValue": 0,
+        "xUnit": "DEG",
+        "yUnit": "DEG",
+        "zUnit": "deg"
+       }
+      },
+      {
+       "id": "lm-a-80-n-3",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "outExpo",
+        "duration": 600,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".lm-answer-holder",
+         "selectorGuids": [
+          "dad8c9ed-bcbd-f3e6-759e-6f6741dbde7a"
+         ]
+        },
+        "yValue": 0,
+        "xUnit": "PX",
+        "yUnit": "px",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "lm-a-80-n-4",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "outExpo",
+        "duration": 600,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".lm-answer-holder",
+         "selectorGuids": [
+          "dad8c9ed-bcbd-f3e6-759e-6f6741dbde7a"
+         ]
+        },
+        "value": 0,
+        "unit": ""
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": false,
+   "createdOn": 1758823100019
+  }
+ }
+}
