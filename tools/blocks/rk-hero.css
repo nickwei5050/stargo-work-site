@@ -1,57 +1,36 @@
-/* rk-hero — hand-written rules the extraction could not know.
+/* rk-hero — hand-written rules the extraction could not carry.
    Everything is scoped under .rk-hero, exactly as the extractor scopes its own.
 
-   All three fixes below come from the same two facts: renok keeps things on
-   `body` and in font files this site does not serve, and the hero's CDN
-   backdrop was dropped because it was off-origin. */
+   One thing only: the face the italic accent is actually drawn in.
 
-/* ------------------------------------------------------------- typefaces --
-   renok names two faces this site never serves. Neither has an @font-face
-   anywhere in css/ — only Inter and webflow-icons are loaded — and the donor's
-   own fallback for BOTH stacks is the generic `sans-serif`, so both collapsed
-   to Arial.
+   renok asks for the accent with `font-family: var(--_font-family---secondary-font);
+   font-style: italic` (.rt-italic-text, index.html), and the extractor already
+   carries that variable onto .rk-hero with the donor's own value — so nothing
+   about the *declaration* is missing. What is missing is which files the donor
+   loads: its index.html calls
+     WebFont.load({ google: { families: ["Instrument Serif:300,400,500,600,700", …] }})
+   — roman weights only, no italic. So on renok the browser has no italic face
+   to bind and draws a synthesised oblique of the roman: upright serif shapes,
+   simply slanted (see the review screenshot, image2.png, "/websites" — a roman
+   two-stroke w). This site's shared css/donor-fonts.css, which serves every
+   donor at once, also ships InstrumentSerif-400i.woff2; that real italic is a
+   cursive cut with quite different letterforms (a looped w, a curved-exit t)
+   and it wins over the roman here, which the donor never shows.
 
-   Measured in the page at 1440, with the h1's own -1.6px letter-spacing:
-   "Everything" at 100px/600 rendered 500.81px wide. Arial: 500.81px. Inter:
-   508.88px. The headline, the paragraph and the button label were therefore set
-   in Arial while every other block on the page is set in Inter.
-
-   Worse for the italic accent: "/does" at 100px italic rendered 236.64px —
-   again exactly Arial's 236.64px, against 203.09px for the generic `serif`.
-   The accent is the hero's one typographic gesture, a serif italic cut against
-   the grotesque headline (tools/copy.mjs keeps the accent a Latin fragment in
-   both languages for exactly that reason), and it was arriving as a slanted
-   Arial: no serifs, no contrast, just the headline face on a lean.
-
-   Both stacks keep the donor's own face in front, so a page that does serve it
-   still gets it. Behind it goes what this page actually has: Inter for the
-   text face — it is Inter Tight's normal-width sibling and the face the rest of
-   this page uses — and a real serif for the accent, so the contrast survives
-   even where Instrument Serif does not. Chinese falls past all of them to the
-   system CJK face, exactly as the rest of the page does. */
-.rk-hero {
-  --_font-family---primary-font: "Inter Tight", "Inter", system-ui, sans-serif;
-  --_font-family---secondary-font: "Instrument Serif", Georgia, "Times New Roman", serif;
+   Binding the accent to a roman-only family restores renok's own rendering:
+   the browser falls back to synthesising the slant, as it does on the donor.
+   Same file the site already serves, same fallback the donor declares
+   ("Instrument Serif", sans-serif), and the family name is unique to this
+   block so nothing else on the page can pick it up. No size, weight, colour,
+   spacing or layout is touched. */
+@font-face {
+  font-family: "Instrument Serif Roman";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/donor/InstrumentSerif-400.woff2") format("woff2");
 }
 
-/* ------------------------------------------------------- the hero's floor --
-   The donor's base rule gives this section `padding-bottom:
-   var(--_gap---section-gap-small)`, and the `.rt-change` variant on the home
-   hero zeroes it. It could: in renok's index.html the hero is immediately
-   followed, inside the same black wrapper, by the `.rt-project-three` row of
-   rotating cards, and behind both sat the full-bleed silk photograph the hero
-   carried as its own `background-image`. Neither travelled — the card row is
-   not part of this block, and the photograph was on Webflow's CDN and was
-   replaced with `none` — so the zero was left holding nothing up.
-
-   Measured on the built page, the button's bottom edge and the hero's bottom
-   edge were the same number at every width in both languages: 331.77 at 390,
-   343.38 / 369.30 at 768, 552.84 / 652.84 at 1440 and 1920. A 0px gap, with
-   the next block's white curve rising directly off the CTA.
-
-   This is not a new value: it is the padding-bottom the donor's own
-   `.rt-home-v1-hero` rule declares, put back now that nothing else fills the
-   space. */
-.rk-hero .rk-rt-home-v1-hero.rk-rt-overflow-hidden.rk-rt-change {
-  padding-bottom: var(--_gap---section-gap-small);
+.rk-hero {
+  --_font-family---secondary-font: "Instrument Serif Roman", sans-serif;
 }

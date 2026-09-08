@@ -22,75 +22,9 @@ import { DONORS, loadBlocks } from './block-lib.mjs';
 
 const SITE = 'F:/stargo 网站/stargo-site';
 
-/* qubix's own layout chain. Its blocks are inner boxes; cut on their own they
-   lose the section padding and the centred container they were drawn inside,
-   so each one is put back into the same three wrappers the donor uses. */
-const QX_FRAME = ['values-section', 'w-layout-blockcontainer container w-container', 'values-wrap'];
-
-/** One entry per block on the page, in the order the page uses them. */
-const BLOCKS = [
-  {
-    id: 'rk-hero',
-    donor: 'renok',
-    scope: '.rk-hero',
-    page: 'index.html',
-    /* The centred headline with one italic accent word, a paragraph and a pill
-       button, each fading up through the donor's own scroll interactions. */
-    start: '<section class="rt-home-v1-hero',
-    end: '</section>',
-    /* Its ground: the hero sets white type, and this is the parent that makes
-       that legible. */
-    wrap: 'rt-position-relative rt-background-black',
-    /* renok draws the hero on a flowing silk photograph served from Webflow's
-       CDN. Webflow exports never bundle their images, so keeping it would mean
-       every visitor fetching an asset from someone else's origin on every load
-       -- which this site does not do. The hero keeps the black ground the
-       artwork sat on; the artwork itself needs a local replacement before it
-       can come back. */
-    cssImages: {
-      'https://cdn.prod.website-files.com/698421329bbd4ad2d6ec9fa7/6984740bccbd8094497d2ea9_home-one-hero-banner-background.webp': 'none',
-    },
-  },
-
-  /* ---- 一个外贸闭环: a qubix statement over renok's numbered rows ---- */
-  {
-    id: 'qx-statement',
-    donor: 'qubix',
-    scope: '.qx-statement',
-    page: 'about.html',
-    /* The chapter opening from qubix's "Our Values" section: an oversized
-       statement heading with a right-set paragraph beside it, each sliding up
-       on its own scroll trigger. Cut without the card row below it so the same
-       opening can introduce two different sections. */
-    start: '<div class="values-title-des-box">',
-    end: 'that connect brands with people.</div></div></div>',
-    wrap: QX_FRAME,
-  },
-  {
-    id: 'rk-insight',
-    donor: 'renok',
-    scope: '.rk-insight',
-    page: 'index.html',
-    /* renok's "Insights" list: numbered rows, each a number, a one-line
-       description and a large title, revealing bottom-up as the row arrives.
-       The nine export stages go here. */
-    start: '<section class="rt-insight rt-overflow-hidden"><div class="rt-insights-main">',
-    end: 'rt-insights-item-line rt-line-three rt-tab-display-off"></div></a></div></section>',
-    /* The donor's row art lives on Webflow's CDN and this site makes no
-       off-origin requests, so each row gets one of the site's own product
-       images and the row arrow is redrawn locally. Responsive variants point at
-       the same file: these render at a few hundred pixels either way. */
-    images: {
-      'https://cdn.prod.website-files.com/698421329bbd4ad2d6ec9fa7/6984882f1c5830dd993f1338_home-one-insights-arrow-icon.svg': 'assets/renok/insights-arrow.svg',
-      'https://cdn.prod.website-files.com/698421329bbd4ad2d6ec9fa7/6989bf533245fae29d2aeda5_home-one-insights-p-500.webp': 'assets/stargo-editorial/os-cockpit.webp',
-      'https://cdn.prod.website-files.com/698421329bbd4ad2d6ec9fa7/6989bf533245fae29d2aeda5_home-one-insights.webp': 'assets/stargo-editorial/os-cockpit.webp',
-      'https://cdn.prod.website-files.com/698421329bbd4ad2d6ec9fa7/6989a3d6fa214020a33d3676_home-one-optimization-p-500.webp': 'assets/stargo-editorial/os-quote-studio.webp',
-      'https://cdn.prod.website-files.com/698421329bbd4ad2d6ec9fa7/6989a3d6fa214020a33d3676_home-one-optimization.webp': 'assets/stargo-editorial/os-quote-studio.webp',
-      'https://cdn.prod.website-files.com/698421329bbd4ad2d6ec9fa7/6989bf53180d1f3293b6aee3_home-one-analytics.avif': 'assets/stargo-editorial/os-trade-execution.webp',
-    },
-  },
-
-];
+/* Every block is a module in tools/blocks; nothing is configured inline any
+   more. See tools/blocks/README.md. */
+const BLOCKS = [];
 
 /* ------------------------------------------------------------------ run -- */
 
@@ -99,6 +33,8 @@ mkdirSync(`${SITE}/tools/fragments`, { recursive: true });
 const sheets = new Map();     // donor -> [rule text]
 const payloads = new Map();   // donor -> {events, actionLists}
 const report = [];
+const assets = {};        // donor url -> local path, across every block
+const scripts = [];       // hand-written block scripts, in page order
 
 /* Blocks written as their own module in tools/blocks come along too; see the
    README there. Keeping both lets a block be built and reviewed on its own
@@ -115,7 +51,9 @@ for (const b of ALL) {
     srcDir: d.dir, page: b.page, css: b.css, ns: d.ns, scope: b.scope,
     start: b.start, end: b.end, wrap: b.wrap,
     images: b.images, imageStems: b.imageStems, cssImages: b.cssImages,
+    mirror: b.mirror ?? `assets/${b.donor}`,
   });
+  Object.assign(assets, out.assets);
 
   writeFileSync(`${SITE}/tools/fragments/${b.id}.html`, out.html, 'utf8');
 
@@ -138,6 +76,15 @@ for (const b of ALL) {
      word that now holds a capability's full name. They are appended after the
      extracted rules so they win at equal specificity, and they live with the
      block so two blocks are never edited in the same file. */
+  /* A block may also ship a small script beside its module, for behaviour the
+     donor did not author (the review asked for click-to-expand nodes on the
+     foundations block). Concatenated into js/capability-blocks.js, loaded on
+     the capability page after the Webflow bundle. */
+  const ownJs = `${SITE}/tools/blocks/${b.id}.js`;
+  if (existsSync(ownJs)) scripts.push(`/* ---- ${b.id}: tools/blocks/${b.id}.js ---- */
+${readFileSync(ownJs, 'utf8')}
+`);
+
   const own = `${SITE}/tools/blocks/${b.id}.css`;
   if (existsSync(own)) {
     sheets.get(b.donor).push(`/* ---- ${b.id}: hand-written, from tools/blocks/${b.id}.css ---- */\n${readFileSync(own, 'utf8')}\n`);
@@ -178,4 +125,20 @@ for (const [donor, p] of payloads) {
   writeFileSync(`${SITE}/tools/fragments/${d.ns}cap-ix.json`, JSON.stringify(p, null, 1), 'utf8');
 }
 
+/* Every donor asset the page now points at. tools/mirror-donor-assets.mjs
+   fetches the ones not yet on disk; the build refuses to ship a reference to a
+   file that is not there. */
+writeFileSync(`${SITE}/js/capability-blocks.js`,
+  `/* Capability-page block scripts. Written by tools/capability-donors.mjs from tools/blocks/<id>.js. Do not edit by hand. */
+(function(){
+${scripts.join('\n')}
+})();
+`, 'utf8');
+writeFileSync(`${SITE}/tools/fragments/donor-assets.json`, JSON.stringify(assets, null, 1), 'utf8');
+const missing = Object.values(assets).filter((p) => !existsSync(`${SITE}/${p}`));
 console.log(JSON.stringify(report, null, 1));
+if (missing.length) {
+  console.error(`
+${missing.length} donor asset(s) not mirrored yet — run: node tools/mirror-donor-assets.mjs`);
+  if (!process.argv.includes('--allow-missing')) process.exit(2);
+}

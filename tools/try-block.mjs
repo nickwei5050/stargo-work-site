@@ -8,7 +8,8 @@
  *
  * With no id it lists the blocks that exist.
  */
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
+import { dirname } from 'node:path';
 import { extractBlock } from './donor-lib.mjs';
 import { loadBlocks, art, escapeHtml, capTitle, DONORS } from './block-lib.mjs';
 import * as C from './copy.mjs';
@@ -30,8 +31,23 @@ if (!d) throw new Error(`${id}: unknown donor ${b.donor}`);
 
 const out = extractBlock({
   srcDir: d.dir, page: b.page, css: b.css, ns: d.ns, scope: b.scope,
-  start: b.start, end: b.end, wrap: b.wrap, images: b.images, imageStems: b.imageStems,
+  start: b.start, end: b.end, wrap: b.wrap, images: b.images, imageStems: b.imageStems, cssImages: b.cssImages,
+  mirror: b.mirror ?? `assets/${b.donor}`,
 });
+
+/* The donor's own artwork, fetched into place so the block can be looked at.
+   Idempotent: files already on disk are skipped. */
+{
+  const todo = Object.entries(out.assets).filter(([, local]) => !existsSync(`${SITE}/${local}`));
+  if (todo.length) console.log(`mirroring ${todo.length} donor asset(s) into assets/${b.donor}/ ...`);
+  for (const [url, local] of todo) {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`${id}: could not mirror ${url} (HTTP ${res.status})`);
+    mkdirSync(dirname(`${SITE}/${local}`), { recursive: true });
+    writeFileSync(`${SITE}/${local}`, Buffer.from(await res.arrayBuffer()));
+  }
+  console.log('assets', JSON.stringify({ referenced: Object.keys(out.assets).length, fetchedNow: todo.length }));
+}
 
 mkdirSync(`${SITE}/tools/fragments`, { recursive: true });
 writeFileSync(`${SITE}/tools/fragments/${id}.html`, out.html, 'utf8');

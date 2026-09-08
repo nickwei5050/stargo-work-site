@@ -120,17 +120,32 @@ const foldPages = (node) => {
   return node;
 };
 const donorEvents = {};
+const donorEventSource = {};
 const donorLists = {};
 const donorIx3 = [];
 const donorTl = [];
 for (const f of DONORS) {
   const d = JSON.parse(readFileSync(f, 'utf8'));
+  /* Two payload files can carry the same donor interaction when two blocks
+     were cut from one donor page; that is fine as long as they agree. */
+  const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+  /* The older per-donor prepare scripts rewrote an event's target to a hand
+     id ("cn-capmap-row"); tools/donor-lib.mjs keeps the donor's own node id.
+     Where the two disagree the donor-lib payload (`*-cap-ix.json`) wins and the
+     older markup is built with the donor id -- see the catalogue in
+     build-site.mjs -- so one event drives both. */
+  const authoritative = /-cap-ix\.json$/.test(f);
   for (const [k, v] of Object.entries(d.events ?? {})) {
-    if (k in mono.ix2Payload.events || k in scaEvents || k in donorEvents) throw new Error(`donor event id collides: ${k}`);
-    donorEvents[k] = v;
+    if (k in mono.ix2Payload.events || k in scaEvents) throw new Error(`donor event id collides with the host: ${k}`);
+    if (k in donorEvents && !same(donorEvents[k], v)) {
+      if (!authoritative && donorEventSource[k]?.endsWith('-cap-ix.json')) continue;
+      if (!authoritative) throw new Error(`donor event ${k} differs between two payload files`);
+    }
+    donorEvents[k] = v; donorEventSource[k] = f;
   }
   for (const [k, v] of Object.entries(d.actionLists ?? {})) {
-    if (k in mono.ix2Payload.actionLists || k in scaLists || k in donorLists) throw new Error(`donor action list id collides: ${k}`);
+    if (k in mono.ix2Payload.actionLists || k in scaLists) throw new Error(`donor action list id collides with the host: ${k}`);
+    if (k in donorLists && !same(donorLists[k], v)) throw new Error(`donor action list ${k} differs between two payload files`);
     donorLists[k] = v;
   }
   donorIx3.push(...(d.interactions ?? []));

@@ -45,8 +45,9 @@ export const donor = {
   start: '<section class="rt-statistics rt-overflow-hidden"><div class="w-layout-blockcontainer rt-container-xl w-container">',
   end: '40 countries and millions of users worldwide.</p></div></div></div></div></section>',
   /* One photograph, shipped by Webflow as five responsive variants of one stem.
-     The quote studio is what this outcome is about. */
-  imageStems: { 'home-one-branding-identity': 'assets/stargo-editorial/os-quote-studio.webp' },
+     It is renok's own (the visor portrait in the review screenshot) and it stays:
+     `mirror` defaults to assets/renok and try-block fetches every variant. The
+     brief is a perfect port with only the words changed, so no imageStems here. */
   /* Every word in this block is `rt-text-color-black`; the ground that made that
      legible was the donor's own white `body`, which does not travel with a cut
      section. Painted on the scope root so the band is readable wherever it is
@@ -143,7 +144,7 @@ function reel(box, value) {
 /* --------------------------------------------------------------- render --- */
 
 export function render(frag, ctx) {
-  const { C, t, lang, escapeHtml } = ctx;
+  const { C, t, escapeHtml } = ctx;
   const S = C.CAPABILITY_SHOWCASE;
   const n = 2;                                     // outcome 03, "quote with commercial control"
   const story = S.stories[n];
@@ -163,19 +164,20 @@ export function render(frag, ctx) {
 
   /* Three counts, three labels, in the order the donor draws them.
 
-     Each label has to say what its figure counts, and say it in the catalogue's
-     own words. Without the unit the reels read as bare achievements ("10 |
-     Quote & Commercial"), which on a page that publishes no unverified metric
-     is exactly the wrong impression; and without the group number the same
-     group is called "10" here and "07" in the accordion further down the page. */
-  const unit = lang === 'zh' ? '项能力' : 'capabilities';
-  const inGroup = (g) => (lang === 'zh'
-    ? `${g.n} ${t(g.name)} · ${unit}`
-    : `${unit} in ${g.n} ${t(g.name)}`);
+     Each label names, in the catalogue's own words, the set its figure counts,
+     and carries the group number so the same group is not called "10" here and
+     "07" in the accordion further down the page. It is the group's label and
+     nothing else because the slot is one line of 24px type 296px wide, which
+     renok fills with "Project completed" (184px): "07 Quote & Commercial"
+     measures 239px and holds that line, while the earlier "capabilities in 07
+     Quote & Commercial" measured 379px and wrapped every label onto two, which
+     grew the band 138px past renok's and pushed the photograph off the top of
+     its row. What the figures count is said once, in the sentence under them. */
+  const inGroup = (g) => `${g.n} ${t(g.name)}`;
   const figures = [
     [home.items.length, inGroup(home)],
     [other.items.length, inGroup(other)],
-    [total, lang === 'zh' ? `${t(S.catalogueLabel)} · ${unit}` : `${unit} in ${t(S.catalogueLabel).toLowerCase()}`],
+    [total, t(S.catalogueLabel)],
   ];
   for (const [v] of figures) {
     if (!Number.isInteger(v) || v < 1 || v > 999) throw new Error(`rk-stats: ${v} does not fit a counter`);

@@ -814,67 +814,15 @@ PAGES['capabilities.html'] = (lang) => {
 /* capabilityShowcase() builds the page's opening hero as well as the map; the
    page builder puts it where Mono's inner hero used to be. */
 /**
- * 一个外贸闭环 — the nine stages, opened by a statement.
+ * 一个外贸闭环 — the nine stages, as the review drew them.
  *
- * Two donors, composed the way each was drawn. The opening is qubix's "Our
- * Values" statement (tools/capability-donors.mjs cuts it without the card row
- * below it): an oversized heading with the paragraph set to its right, each
- * sliding up on its own scroll trigger. The stages are renok's "Insights" rows:
- * a number, a line of description and a large title, revealing bottom-up as
- * each row arrives, with the row art fading in behind it on hover.
- *
- * renok ships three rows and nine are needed, so the three are cycled. That is
- * safe because the hover interactions address their targets with
- * `useEventTarget: CHILDREN` — a row's hover only ever reaches that row's own
- * children — so rows sharing an interaction id still animate independently.
- *
- * The stage word stays Latin in both languages: it is the process vocabulary
- * this site has used for these nine steps since the table this replaces.
+ * Three template blocks in a row, each with its own imagery and motion kept:
+ * renok's "Award winning /Studio" heading carries the section title, qubix's
+ * orbit hero carries the intro with the nine stage words rolling through its
+ * tag list, and renok's insight list carries the nine stages themselves.
  */
 function loopSection(C, lang) {
-  const t = (v) => (typeof v === 'string' ? v : v[lang]);
-  const L = C.HOME_LOOP_TABLE;
-
-  const statement = readFileSync(`${SITE}/tools/fragments/qx-statement.html`, 'utf8')
-    .replace(/<h2 class="qx-h2 qx-vali-title-mw">[\s\S]*?<\/h2>/,
-      `<h2 class="qx-h2 qx-vali-title-mw">${escapeHtml(t(L.title))}</h2>`)
-    .replace(/<div class="qx-body qx-valu-des-mw">[\s\S]*?<\/div>/,
-      `<div class="qx-body qx-valu-des-mw">${escapeHtml(t(L.lede))}</div>`);
-
-  const frag = readFileSync(`${SITE}/tools/fragments/rk-insight.html`, 'utf8');
-  const starts = [...frag.matchAll(/<a data-w-id=/g)].map((m) => m.index);
-  const close = frag.lastIndexOf('</a>') + 4;
-  if (starts.length !== 3) throw new Error('loop: renok no longer ships three insight rows');
-  const head = frag.slice(0, starts[0]);
-  const tail = frag.slice(close);
-
-  /* renok gives two of its three rows a hover interaction and the third none.
-     On a page of nine that difference shows: a row with the interaction keeps
-     its art scaled to nothing until the pointer arrives, while the row without
-     one has its art sitting at full size over the number and the description.
-     So only the rows that carry the whole interaction are used as templates. */
-  const hovered = new Set(Object.values(JSON.parse(readFileSync(`${SITE}/tools/fragments/rk-cap-ix.json`, 'utf8')).events)
-    .filter((e) => e.eventTypeId === 'MOUSE_OVER').map((e) => e.target?.id));
-  const rowTpl = starts
-    .map((at, i) => frag.slice(at, starts[i + 1] ?? close))
-    .filter((row) => hovered.has(/<a data-w-id="([^"]+)"/.exec(row)?.[1]));
-  if (!rowTpl.length) throw new Error('loop: no renok insight row carries a hover interaction');
-
-  const rows = L.rows.map(([key, what], i) => {
-    const [num, name] = key.split(' · ');
-    if (!name) throw new Error(`loop: stage "${key}" is not "NN · NAME"`);
-    return rowTpl[i % rowTpl.length]
-      .replace(/<div class="rk-rt-text-color-black">[\s\S]*?<\/div>/,
-        `<div class="rk-rt-text-color-black">${escapeHtml(num)}</div>`)
-      .replace(/<div class="rk-rt-insights-text"><div class="rk-rt-text-color-black">[\s\S]*?<\/div><\/div>/,
-        `<div class="rk-rt-insights-text"><div class="rk-rt-text-color-black">${escapeHtml(t(what))}</div></div>`)
-      .replace(/<div class="rk-rt-text-style-h1 rk-rt-text-color-black">[\s\S]*?<\/div>/,
-        `<div class="rk-rt-text-style-h1 rk-rt-text-color-black">${escapeHtml(name)}</div>`)
-      .replace(/href="[^"]*"/, 'href="#atlas"');
-  });
-
-  return `<div id="loop" class="qx-statement">${statement}</div>`
-    + `<div class="rk-insight">${head}${rows.join('')}${tail}</div>`;
+  return `<div id="loop"></div>` + renderBlock('rk-award', lang) + renderBlock('qx-orbit', lang) + renderBlock('rk-insight', lang);
 }
 
 /**
@@ -921,44 +869,30 @@ function capabilityShowcase(C, lang) {
   const S = C.CAPABILITY_SHOWCASE;
 
   const cnFrag = readFileSync(`${SITE}/tools/fragments/cn-capmap.html`, 'utf8');
-  const lmCard = readFileSync(`${SITE}/tools/fragments/lm-card.html`, 'utf8');
-  const rkHero = readFileSync(`${SITE}/tools/fragments/rk-hero.html`, 'utf8');
 
-  /* renok's hero opens the page: a centred headline with one italic accent, a
-     paragraph and a pill button, each fading up on load through the donor's own
-     interactions. Only the words change. */
-  const hero = rkHero
-    .replace(/<h1([^>]*)>[\s\S]*?<\/h1>/, (m, attrs) =>
-      `<h1${attrs}>${escapeHtml(t(S.heroLead))} <span class="rk-rt-italic-text rk-rt-change">${escapeHtml(t(S.heroAccent))}</span> ${escapeHtml(t(S.heroTail))}</h1>`)
-    .replace(/<p([^>]*)>[\s\S]*?<\/p>/, (m, attrs) => `<p${attrs}>${escapeHtml(t(S.heroBody))}</p>`)
-    .replace(/<a href="[^"]*"/, '<a href="#atlas"')
-    .replace(/<div class="rk-rt-button-text rk-rt-text-one">[\s\S]*?<\/div>/,
-      `<div class="rk-rt-button-text rk-rt-text-one">${escapeHtml(t(S.heroButton))}</div>`)
-    .replace(/<div class="rk-rt-button-text rk-rt-text-two">[\s\S]*?<\/div>/,
-      `<div class="rk-rt-button-text rk-rt-text-two">${escapeHtml(t(S.heroButton))}</div>`);
+  /* ---- the chapters, each on the block the review's screenshot named ----
 
-  /* ---- the chapters, each on the donor block the review named for it ----
-
-     The review went through the page section by section and named which of the
-     four templates each one should be built from. That mapping is this list.
-     A block knows how to fill itself (tools/blocks/<id>.mjs); here we only put
-     them in order and hang the anchors the nav and the floating pill jump to.
-
-     The two marquee strips are the same block twice, carrying different words:
-     they are the beat between chapters, and the module keeps both lines. */
+     The review went through the page section by section and pasted a screenshot
+     of the template block each one should be. That mapping is this list; the
+     screenshots are in F:/stargo 网站/.docx/word/media. A block knows how to
+     fill itself (tools/blocks/<id>.mjs); here we only put them in order and hang
+     the anchors the nav and the floating pill jump to. */
   const CHAPTERS = [
-    { id: 'cn-service', anchor: 'story-1' },      // 找到买家
-    { id: 'qx-news', anchor: 'story-2' },         // 把对话变成理解
-    { id: 'rk-stats', anchor: 'story-3' },        // 报价
-    { id: 'rk-marquee', variant: 0 },
-    { id: 'rk-portfolio', anchor: 'story-4' },    // 订单
-    { id: 'cn-casestudy', anchor: 'story-5' },    // 内容
-    { id: 'rk-marquee', variant: 1 },
-    { id: 'qx-founder', anchor: 'story-6' },      // AI 团队
-    { id: 'qx-cards', anchor: 'foundations' },    // 四个基础板块
+    { id: 'cn-service', anchor: 'atlas' },        // 找到买家 heading + 01 (image9, image11)
+    { id: 'qx-news', anchor: 'story-2' },         // 02 把对话变成理解 (image13)
+    { id: 'rk-stats', anchor: 'story-3' },        // 03 报价 (image15)
+    /* image17 (the break: a small circle in a white band) and image18 (the cards
+       over the marquee) are two frames of ONE renok section, its circular mask
+       growing with scroll. The testimonials block is that whole section, so it
+       is the break as well; a separate break block played it twice. */
+    { id: 'rk-testimonials', anchor: 'story-4' }, // 04 订单, opened by the break (image17 → image18)
+    { id: 'cn-faq', anchor: 'story-5' },          // 05 内容 (image20)
+    { id: 'cn-produce' },                         // break (image21)
+    { id: 'qx-projects', anchor: 'story-6' },     // 06 AI 团队 (image23)
+    { id: 'qx-whatwedo', anchor: 'foundations' }, // 四个基础板块 (image28)
   ];
-  const chapters = CHAPTERS.map(({ id, anchor, variant }) => {
-    const html = renderBlock(id, lang, { variant });
+  const chapters = CHAPTERS.map(({ id, anchor }) => {
+    const html = renderBlock(id, lang);
     if (!anchor) return html;
     if (!html.startsWith('<div class="')) throw new Error(`capabilities: ${id} did not come back wrapped in its scope`);
     return html.replace('<div class="', `<div id="${anchor}" class="`);
@@ -967,7 +901,10 @@ function capabilityShowcase(C, lang) {
   /* ---- the catalogue keeps cinery's accordion ---- */
   const rowTpl = cnFrag.slice(cnFrag.indexOf('<!-- row -->') + 12).trim();
   const catRow = (id, title, body) => rowTpl
-    .replace('<div data-w-id="cn-capmap-row"', `<div id="${id}" data-w-id="cn-capmap-row"`)
+    /* The row binds to cinery's accordion interaction by the donor's own node
+       id: the cn-faq block on this page carries the same interaction under that
+       id (tools/donor-lib.mjs keeps donor ids), and one event drives both. */
+    .replace('<div data-w-id="cn-capmap-row"', `<div id="${id}" data-w-id="e9dfc491-ce9f-1abc-547e-929be71d3026"`)
     .replace(/<h2 class="cn-accordion-heading">[\s\S]*?<\/h2>/, `<h2 class="cn-accordion-heading">${escapeHtml(title)}</h2>`)
     .replace(/<div class="cn-accordion-content-block">[\s\S]*?<\/div><\/div><\/div>$/, `<div class="cn-accordion-content-block">${body}</div></div></div>`);
   const catalogue = C.CAPABILITY_GROUPS.map((g) => catRow(`g${g.n}`, `${g.n} ${t(g.name)}`,
@@ -979,17 +916,11 @@ function capabilityShowcase(C, lang) {
     `<div class="cn-band"><div class="cn-band-label">${escapeHtml(label)}</div>` +
     `<div class="cn-band-note">${escapeHtml(note)}</div></div>`;
 
-  showcaseHero = `<div class="rk-hero">${hero}</div>`;
+  showcaseHero = renderBlock('rk-hero', lang);
 
-  /* The chapters open themselves -- cinery's gradient split heading is the first
-     one -- so what is left for this frame is the two paragraphs that set up the
-     whole page, and the catalogue that closes it. `#atlas` stays here because
-     the hero button and every stage row jump to it. */
-  return `<section id="atlas" class="cn-capmap"><div class="cn-capmap-inner">` +
-    `<p class="cn-capmap-lede">${escapeHtml(t(S.body))}</p>` +
-    `<p class="cn-capmap-scope">${escapeHtml(t(S.scopeNote))}</p>` +
-    `</div></section>` +
-    chapters +
+  /* The first chapter carries both #atlas (hero button, stage rows) and #story-1
+     (the floating pill); a zero-size anchor takes the second name. */
+  return `<span id="story-1"></span>` + chapters +
     `<section class="cn-capmap"><div class="cn-capmap-inner">` +
     band(t(S.catalogueLabel), `${t(S.catalogueNote)} ${C.CAPABILITY_GROUPS.length} ${lang === 'zh' ? '个能力组 · ' : 'groups · '}${total}${lang === 'zh' ? ' 项能力。' : ' capabilities.'}`) +
     `<div class="cn-faq-container">${catalogue.join('')}</div>` +
@@ -1034,7 +965,30 @@ function capabilityShowcase(C, lang) {
       .join('\n');
     /* chrome.mjs attaches css/stargo-fusion.css after the last stylesheet on the
        page, so the donor sheets added here still load before the overrides. */
-    h = h.replace(monoLink, (m) => `${m}\n${sheets}`);
+    h = h.replace(monoLink, (m) => `${m}\n${sheets}\n<link href="css/donor-fonts.css" rel="stylesheet" type="text/css"/>`);
+    /* A donor block's video is fetched only once the reader is near it. cinery's
+       break band is 27 `<video autoplay preload="metadata">` cards — 32 MB on
+       first paint, before anyone has scrolled to them. Holding the url in
+       `data-src` until js/stargo-video-defer.js restores it changes no element,
+       class, interaction id or poster: the band is the template's band, it just
+       does not arrive before the page does. */
+    {
+      const sources = (h.match(/<source /g) ?? []).length;
+      h = h.replace(/<video\b[^>]*>[\s\S]*?<\/video>/g, (v) => (v.includes('<source ') ? v
+        .replace('<video', '<video data-defer')
+        .replace(/\spreload="[^"]*"/, ' preload="none"')
+        .replace(/(<source[^>]*?)\ssrc=/g, '$1 data-src=') : v));
+      if (sources && !(h.match(/<source[^>]* data-src=/g) ?? []).length) {
+        throw new Error('capabilities: video sources were not deferred');
+      }
+    }
+
+    /* Hand-written block behaviour (tools/blocks/<id>.js), after the Webflow bundle.
+       At this point the page still carries Mono's own bundle name; chrome.mjs
+       renames it to app.fused.js later, and the tags added here follow it. */
+    const bundleTag = /(<script src="js\/app\.[0-9a-f]{8}\.[0-9a-f]{16}\.js"[^>]*><\/script>)/;
+    if (!bundleTag.test(h)) throw new Error('capabilities: page bundle script tag not found');
+    h = h.replace(bundleTag, '$1<script src="js/stargo-video-defer.js" defer></script><script src="js/capability-blocks.js" defer></script>');
   }
   // Assign by buyer meaning, not image sequence: growth, customer context,
   // commercial fulfilment, workforce/governance. Parallel-team art belongs

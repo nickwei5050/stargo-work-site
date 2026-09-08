@@ -1,0 +1,101 @@
+/* qx-whatwedo — hand-written rules for the four-foundation "What We Do" stage.
+   Appended after the extracted qubix rules, so equal specificity wins here.
+   Every rule is scoped under .qx-whatwedo. Nothing here resizes, recolours or
+   re-spaces a donor element: the rules restore what a cut section cannot
+   carry, place the one node the donor never had, and style the expandable
+   panel that is this block's own addition. */
+
+/* 1. qubix's own `body` rule. It never travels with a cut section, so on this
+      page the block root inherited the site body instead (Inter 14px/15.4px,
+      #000 — measured), where the donor's own root is Interdisplay 16px/20px in
+      medium gray. Same tokens, same values, moved onto the scope root; the
+      background half of that `body` rule is already applied by donor.ground. */
+.qx-whatwedo {
+  font-family: var(--_base---font-family--your-font);
+  color: var(--_color---normal-color--medium-gray);
+  font-size: var(--_base---font-size--font-size-sm);
+  line-height: 20px;
+  font-weight: var(--_base---font-weight--regular);
+}
+
+/* 2. The fourth node. The donor positions three nodes absolutely — top-left
+      (`inset: 2vw auto auto 0%`), upper-right, and bottom (`inset: auto 50%
+      50px 46%`). The fourth is a clone of the bottom node, so it arrives with
+      the bottom node's inset; this puts it on the bottom line beside it, in
+      the top-left node's own column (`left: 0%`), keeping the donor's own
+      50px bottom offset. Same specificity as the donor's `.wrapper-main-
+      services.wrapper-main-services-three` rule and later in the sheet, so it
+      wins. The donor has no fourth position to borrow — this is the only place
+      in this file that positions anything. */
+.qx-whatwedo .qx-wrapper-main-services.qx-whatwedo-four { inset: auto auto 50px 0%; }
+
+/* 3. Below 767 the donor makes every node full width and drops the bottom node
+      to `left: 0%`, so the clone would land exactly on top of the node it was
+      cloned from (measured: both at [104,908,492,85] in a 700px viewport).
+      Lift it clear by its own height plus the donor's own node gap — no new
+      length is introduced, and the node it clones stays exactly where the
+      donor's rules put it. This uses the independent `translate` property, not
+      `transform`: the donor's scroll action writes `transform` inline on every
+      node and would otherwise overwrite it. Below 479 the donor lets `-three`
+      flow statically and the clone flows after it, so the lift is handed back
+      — the same two-step the donor's own `-three` rules make across these two
+      breakpoints. */
+@media screen and (max-width: 767px) {
+  .qx-whatwedo .qx-wrapper-main-services.qx-whatwedo-four {
+    translate: 0 calc(-100% - var(--_common-spacing---spacing-medium));
+  }
+}
+@media screen and (max-width: 479px) {
+  .qx-whatwedo .qx-wrapper-main-services.qx-whatwedo-four { translate: none; }
+}
+
+/* 4. qubix sets `text-transform: capitalize` on `.h2`, drawn for the single
+      word "What"; on its own words the transform is a no-op. Our half-phrase
+      is sentence case ("What every"), and the other half of the same sentence
+      sits in `.text-heading-servie`, which the donor never capitalises — so
+      capitalize would print "What Every / story runs on", two halves of one
+      sentence in different cases, a rendering the donor never produces. This
+      cannot be fixed in the words: the only split whose first half is already
+      capitalised ("What" | "every story runs on") lands the ticked ring 163.7px
+      off the sphere's centre, where the donor's own split lands it 2.9px off
+      and ours 7.6px. Chinese is unaffected either way. */
+.qx-whatwedo .qx-h2 { text-transform: none; }
+
+/* 5. Each node opens on click (tools/blocks/qx-whatwedo.js) — the owner's
+      "点击可以分别展开介绍01、02、03、04的功能". The node is the control, so it
+      takes the pointer and a focus ring, and an open node comes forward so its
+      list reads over the orb and the split heading. No donor element is
+      resized, recoloured or moved by these. */
+.qx-whatwedo .qx-wrapper-main-services { cursor: pointer; }
+.qx-whatwedo .qx-wrapper-main-services[aria-expanded="true"] { z-index: 5; }
+.qx-whatwedo .qx-wrapper-main-services:focus-visible { outline: 1px solid var(--_color---normal-color--snow-white); outline-offset: 6px; }
+
+/* 6. The panel — this block's own markup, so the donor has no rule to restore.
+      It hangs off the node as an overlay so the donor's node stays exactly
+      where the donor put it (measured: opening one moves no node by more than
+      the 0.4px the scroll animation itself moves them), and it opens toward
+      the centre of the stage — over the orb and the split heading, never over
+      a neighbouring node — because that is the only room the donor's
+      composition has (the sticky stage is `overflow: hidden`):
+        node 1 (top-left)      → to its right
+        node 2 (right)         → below it, into the empty bottom-right
+        node 3 (bottom)        → above it
+        node 4 (bottom-left)   → above and to its right
+      Painted in the donor's own black so the list reads over what it crosses,
+      spaced on the donor's own node gap; picks are `.qx-body` and keep the
+      donor's body type and colour. Below 479 the donor lets everything flow,
+      and so does the panel. */
+.qx-whatwedo .qx-whatwedo-panel { --qx-gap: var(--_common-spacing---spacing-medium);
+  display: flex; flex-flow: column; gap: var(--qx-gap);
+  position: absolute; width: 100%; top: 0; left: calc(100% + var(--qx-gap));
+  background: var(--_color---normal-color--black); }
+.qx-whatwedo .qx-wrapper-main-services-two .qx-whatwedo-panel { left: 0; top: calc(100% + var(--qx-gap)); }
+.qx-whatwedo .qx-wrapper-main-services-three .qx-whatwedo-panel { left: 0; top: auto; bottom: calc(100% + var(--qx-gap)); }
+.qx-whatwedo .qx-whatwedo-four .qx-whatwedo-panel { left: calc(100% + var(--qx-gap)); }
+.qx-whatwedo .qx-whatwedo-panel[hidden] { display: none; }
+@media screen and (max-width: 479px) {
+  .qx-whatwedo .qx-whatwedo-panel,
+  .qx-whatwedo .qx-wrapper-main-services-two .qx-whatwedo-panel,
+  .qx-whatwedo .qx-wrapper-main-services-three .qx-whatwedo-panel,
+  .qx-whatwedo .qx-whatwedo-four .qx-whatwedo-panel { position: static; width: auto; margin-top: var(--qx-gap); }
+}

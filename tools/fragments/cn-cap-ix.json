@@ -1,80 +1,34 @@
 {
  "events": {
-  "cn-e-227": {
-   "id": "cn-e-227",
+  "cn-e": {
+   "id": "e",
    "name": "",
-   "animationType": "custom",
-   "eventTypeId": "SCROLLING_IN_VIEW",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_OVER",
    "action": {
     "id": "",
-    "actionTypeId": "GENERAL_CONTINUOUS_ACTION",
+    "actionTypeId": "GENERAL_START_ACTION",
     "config": {
-     "actionListId": "cn-a-34",
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-3",
      "affectedElements": {},
-     "duration": 0
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-16"
     }
    },
    "mediaQueries": [
     "main"
    ],
    "target": {
-    "id": "fb6f08c0-bccf-aeab-a33d-45198963fea4",
+    "id": "e9dfc491-ce9f-1abc-547e-929be71d3053",
     "appliesTo": "ELEMENT",
     "styleBlockIds": []
    },
    "targets": [
     {
-     "id": "fb6f08c0-bccf-aeab-a33d-45198963fea4",
-     "appliesTo": "ELEMENT",
-     "styleBlockIds": []
-    }
-   ],
-   "config": [
-    {
-     "continuousParameterGroupId": "cn-a-34-p",
-     "smoothing": 90,
-     "startsEntering": true,
-     "addStartOffset": false,
-     "addOffsetValue": 50,
-     "startsExiting": false,
-     "addEndOffset": false,
-     "endOffsetValue": 50
-    }
-   ],
-   "createdOn": 1759754306352
-  },
-  "cn-e-228": {
-   "id": "cn-e-228",
-   "name": "",
-   "animationType": "preset",
-   "eventTypeId": "MOUSE_OVER",
-   "action": {
-    "id": "",
-    "actionTypeId": "GENERAL_START_ACTION",
-    "config": {
-     "delay": 0,
-     "easing": "",
-     "duration": 0,
-     "actionListId": "cn-a-35",
-     "affectedElements": {},
-     "playInReverse": false,
-     "autoStopEventId": "cn-e-229"
-    }
-   },
-   "mediaQueries": [
-    "main",
-    "medium",
-    "small",
-    "tiny"
-   ],
-   "target": {
-    "id": "fb6f08c0-bccf-aeab-a33d-45198963fe6f",
-    "appliesTo": "ELEMENT",
-    "styleBlockIds": []
-   },
-   "targets": [
-    {
-     "id": "fb6f08c0-bccf-aeab-a33d-45198963fe6f",
+     "id": "e9dfc491-ce9f-1abc-547e-929be71d3053",
      "appliesTo": "ELEMENT",
      "styleBlockIds": []
     }
@@ -88,10 +42,10 @@
     "direction": null,
     "effectIn": null
    },
-   "createdOn": 1759754040531
+   "createdOn": 1726763769888
   },
-  "cn-e-229": {
-   "id": "cn-e-229",
+  "cn-e-3": {
+   "id": "cn-e-3",
    "name": "",
    "animationType": "preset",
    "eventTypeId": "MOUSE_OUT",
@@ -102,26 +56,23 @@
      "delay": 0,
      "easing": "",
      "duration": 0,
-     "actionListId": "cn-a-36",
+     "actionListId": "cn-a-4",
      "affectedElements": {},
      "playInReverse": false,
-     "autoStopEventId": "cn-e-228"
+     "autoStopEventId": "cn-e-18"
     }
    },
    "mediaQueries": [
-    "main",
-    "medium",
-    "small",
-    "tiny"
+    "main"
    ],
    "target": {
-    "id": "fb6f08c0-bccf-aeab-a33d-45198963fe6f",
+    "id": "e9dfc491-ce9f-1abc-547e-929be71d3026",
     "appliesTo": "ELEMENT",
     "styleBlockIds": []
    },
    "targets": [
     {
-     "id": "fb6f08c0-bccf-aeab-a33d-45198963fe6f",
+     "id": "e9dfc491-ce9f-1abc-547e-929be71d3026",
      "appliesTo": "ELEMENT",
      "styleBlockIds": []
     }
@@ -135,13 +86,13 @@
     "direction": null,
     "effectIn": null
    },
-   "createdOn": 1759754040531
+   "createdOn": 1724029916338
   },
-  "cn-e-230": {
-   "id": "cn-e-230",
+  "cn-e-8": {
+   "id": "cn-e-8",
    "name": "",
    "animationType": "preset",
-   "eventTypeId": "MOUSE_OVER",
+   "eventTypeId": "MOUSE_SECOND_CLICK",
    "action": {
     "id": "",
     "actionTypeId": "GENERAL_START_ACTION",
@@ -149,10 +100,10 @@
      "delay": 0,
      "easing": "",
      "duration": 0,
-     "actionListId": "cn-a-35",
+     "actionListId": "cn-a-6",
      "affectedElements": {},
      "playInReverse": false,
-     "autoStopEventId": "cn-e-231"
+     "autoStopEventId": "cn-e-15"
     }
    },
    "mediaQueries": [
@@ -162,13 +113,13 @@
     "tiny"
    ],
    "target": {
-    "id": "fb6f08c0-bccf-aeab-a33d-45198963fe8b",
+    "id": "e9dfc491-ce9f-1abc-547e-929be71d3026",
     "appliesTo": "ELEMENT",
     "styleBlockIds": []
    },
    "targets": [
     {
-     "id": "fb6f08c0-bccf-aeab-a33d-45198963fe8b",
+     "id": "e9dfc491-ce9f-1abc-547e-929be71d3026",
      "appliesTo": "ELEMENT",
      "styleBlockIds": []
     }
@@ -182,10 +133,10 @@
     "direction": null,
     "effectIn": null
    },
-   "createdOn": 1767818722090
+   "createdOn": 1724029916338
   },
-  "cn-e-231": {
-   "id": "cn-e-231",
+  "cn-e-12": {
+   "id": "cn-e-12",
    "name": "",
    "animationType": "preset",
    "eventTypeId": "MOUSE_OUT",
@@ -196,26 +147,23 @@
      "delay": 0,
      "easing": "",
      "duration": 0,
-     "actionListId": "cn-a-36",
+     "actionListId": "cn-a-4",
      "affectedElements": {},
      "playInReverse": false,
-     "autoStopEventId": "cn-e-230"
+     "autoStopEventId": "cn-e-19"
     }
    },
    "mediaQueries": [
-    "main",
-    "medium",
-    "small",
-    "tiny"
+    "main"
    ],
    "target": {
-    "id": "fb6f08c0-bccf-aeab-a33d-45198963fe8b",
+    "id": "e9dfc491-ce9f-1abc-547e-929be71d3035",
     "appliesTo": "ELEMENT",
     "styleBlockIds": []
    },
    "targets": [
     {
-     "id": "fb6f08c0-bccf-aeab-a33d-45198963fe8b",
+     "id": "e9dfc491-ce9f-1abc-547e-929be71d3035",
      "appliesTo": "ELEMENT",
      "styleBlockIds": []
     }
@@ -229,13 +177,13 @@
     "direction": null,
     "effectIn": null
    },
-   "createdOn": 1767818722090
+   "createdOn": 1726763774176
   },
-  "cn-e-232": {
-   "id": "cn-e-232",
+  "cn-e-14": {
+   "id": "cn-e-14",
    "name": "",
    "animationType": "preset",
-   "eventTypeId": "MOUSE_OVER",
+   "eventTypeId": "MOUSE_SECOND_CLICK",
    "action": {
     "id": "",
     "actionTypeId": "GENERAL_START_ACTION",
@@ -243,10 +191,10 @@
      "delay": 0,
      "easing": "",
      "duration": 0,
-     "actionListId": "cn-a-35",
+     "actionListId": "cn-a-6",
      "affectedElements": {},
      "playInReverse": false,
-     "autoStopEventId": "cn-e-233"
+     "autoStopEventId": "cn-e-261"
     }
    },
    "mediaQueries": [
@@ -256,13 +204,13 @@
     "tiny"
    ],
    "target": {
-    "id": "fb6f08c0-bccf-aeab-a33d-45198963fea9",
+    "id": "e9dfc491-ce9f-1abc-547e-929be71d3053",
     "appliesTo": "ELEMENT",
     "styleBlockIds": []
    },
    "targets": [
     {
-     "id": "fb6f08c0-bccf-aeab-a33d-45198963fea9",
+     "id": "e9dfc491-ce9f-1abc-547e-929be71d3053",
      "appliesTo": "ELEMENT",
      "styleBlockIds": []
     }
@@ -276,13 +224,13 @@
     "direction": null,
     "effectIn": null
    },
-   "createdOn": 1767818782610
+   "createdOn": 1726763769888
   },
-  "cn-e-233": {
-   "id": "cn-e-233",
+  "cn-e-15": {
+   "id": "cn-e-15",
    "name": "",
    "animationType": "preset",
-   "eventTypeId": "MOUSE_OUT",
+   "eventTypeId": "MOUSE_CLICK",
    "action": {
     "id": "",
     "actionTypeId": "GENERAL_START_ACTION",
@@ -290,10 +238,10 @@
      "delay": 0,
      "easing": "",
      "duration": 0,
-     "actionListId": "cn-a-36",
+     "actionListId": "cn-a-5",
      "affectedElements": {},
      "playInReverse": false,
-     "autoStopEventId": "cn-e-232"
+     "autoStopEventId": "cn-e-223"
     }
    },
    "mediaQueries": [
@@ -303,13 +251,13 @@
     "tiny"
    ],
    "target": {
-    "id": "fb6f08c0-bccf-aeab-a33d-45198963fea9",
+    "id": "e9dfc491-ce9f-1abc-547e-929be71d3026",
     "appliesTo": "ELEMENT",
     "styleBlockIds": []
    },
    "targets": [
     {
-     "id": "fb6f08c0-bccf-aeab-a33d-45198963fea9",
+     "id": "e9dfc491-ce9f-1abc-547e-929be71d3026",
      "appliesTo": "ELEMENT",
      "styleBlockIds": []
     }
@@ -323,57 +271,10 @@
     "direction": null,
     "effectIn": null
    },
-   "createdOn": 1767818782610
+   "createdOn": 1724029916338
   },
-  "cn-e-234": {
-   "id": "cn-e-234",
-   "name": "",
-   "animationType": "preset",
-   "eventTypeId": "MOUSE_OVER",
-   "action": {
-    "id": "",
-    "actionTypeId": "GENERAL_START_ACTION",
-    "config": {
-     "delay": 0,
-     "easing": "",
-     "duration": 0,
-     "actionListId": "cn-a-35",
-     "affectedElements": {},
-     "playInReverse": false,
-     "autoStopEventId": "cn-e-235"
-    }
-   },
-   "mediaQueries": [
-    "main",
-    "medium",
-    "small",
-    "tiny"
-   ],
-   "target": {
-    "id": "fb6f08c0-bccf-aeab-a33d-45198963fec5",
-    "appliesTo": "ELEMENT",
-    "styleBlockIds": []
-   },
-   "targets": [
-    {
-     "id": "fb6f08c0-bccf-aeab-a33d-45198963fec5",
-     "appliesTo": "ELEMENT",
-     "styleBlockIds": []
-    }
-   ],
-   "config": {
-    "loop": false,
-    "playInReverse": false,
-    "scrollOffsetValue": null,
-    "scrollOffsetUnit": null,
-    "delay": null,
-    "direction": null,
-    "effectIn": null
-   },
-   "createdOn": 1767818817206
-  },
-  "cn-e-235": {
-   "id": "cn-e-235",
+  "cn-e-16": {
+   "id": "cn-e-16",
    "name": "",
    "animationType": "preset",
    "eventTypeId": "MOUSE_OUT",
@@ -384,26 +285,23 @@
      "delay": 0,
      "easing": "",
      "duration": 0,
-     "actionListId": "cn-a-36",
+     "actionListId": "cn-a-4",
      "affectedElements": {},
      "playInReverse": false,
-     "autoStopEventId": "cn-e-234"
+     "autoStopEventId": "cn-e-224"
     }
    },
    "mediaQueries": [
-    "main",
-    "medium",
-    "small",
-    "tiny"
+    "main"
    ],
    "target": {
-    "id": "fb6f08c0-bccf-aeab-a33d-45198963fec5",
+    "id": "e9dfc491-ce9f-1abc-547e-929be71d3053",
     "appliesTo": "ELEMENT",
     "styleBlockIds": []
    },
    "targets": [
     {
-     "id": "fb6f08c0-bccf-aeab-a33d-45198963fec5",
+     "id": "e9dfc491-ce9f-1abc-547e-929be71d3053",
      "appliesTo": "ELEMENT",
      "styleBlockIds": []
     }
@@ -417,7 +315,970 @@
     "direction": null,
     "effectIn": null
    },
-   "createdOn": 1767818817206
+   "createdOn": 1726763769888
+  },
+  "cn-e-17": {
+   "id": "cn-e-17",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_OVER",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-3",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-30"
+    }
+   },
+   "mediaQueries": [
+    "main"
+   ],
+   "target": {
+    "id": "e9dfc491-ce9f-1abc-547e-929be71d3044",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "e9dfc491-ce9f-1abc-547e-929be71d3044",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1726763771996
+  },
+  "cn-e-18": {
+   "id": "cn-e-18",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_OVER",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-3",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-43"
+    }
+   },
+   "mediaQueries": [
+    "main"
+   ],
+   "target": {
+    "id": "e9dfc491-ce9f-1abc-547e-929be71d3026",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "e9dfc491-ce9f-1abc-547e-929be71d3026",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1724029916338
+  },
+  "cn-e-19": {
+   "id": "cn-e-19",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_OVER",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-3",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-54"
+    }
+   },
+   "mediaQueries": [
+    "main"
+   ],
+   "target": {
+    "id": "e9dfc491-ce9f-1abc-547e-929be71d3035",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "e9dfc491-ce9f-1abc-547e-929be71d3035",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1726763774176
+  },
+  "cn-e-22": {
+   "id": "cn-e-22",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_CLICK",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-5",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-267"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "e9dfc491-ce9f-1abc-547e-929be71d3035",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "e9dfc491-ce9f-1abc-547e-929be71d3035",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1726763774176
+  },
+  "cn-e-28": {
+   "id": "cn-e-28",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_CLICK",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-5",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-33"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "e9dfc491-ce9f-1abc-547e-929be71d3044",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "e9dfc491-ce9f-1abc-547e-929be71d3044",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1726763771996
+  },
+  "cn-e-30": {
+   "id": "cn-e-30",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_OUT",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-4",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-90"
+    }
+   },
+   "mediaQueries": [
+    "main"
+   ],
+   "target": {
+    "id": "e9dfc491-ce9f-1abc-547e-929be71d3044",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "e9dfc491-ce9f-1abc-547e-929be71d3044",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1726763771996
+  },
+  "cn-e-31": {
+   "id": "cn-e-31",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_SECOND_CLICK",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-6",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-89"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "e9dfc491-ce9f-1abc-547e-929be71d3035",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "e9dfc491-ce9f-1abc-547e-929be71d3035",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1726763774176
+  },
+  "cn-e-32": {
+   "id": "cn-e-32",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_CLICK",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-5",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-14"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "e9dfc491-ce9f-1abc-547e-929be71d3053",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "e9dfc491-ce9f-1abc-547e-929be71d3053",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1726763769888
+  },
+  "cn-e-33": {
+   "id": "cn-e-33",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_SECOND_CLICK",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-6",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-28"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "e9dfc491-ce9f-1abc-547e-929be71d3044",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "e9dfc491-ce9f-1abc-547e-929be71d3044",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1726763771996
+  },
+  "cn-e-254": {
+   "id": "cn-e-254",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-33",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-255"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "73007bf9-a6a5-b8c1-d09b-e685e82f269a",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "73007bf9-a6a5-b8c1-d09b-e685e82f269a",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": true,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767967876351
+  },
+  "cn-e-256": {
+   "id": "cn-e-256",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_CLICK",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-5",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-257"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "54e7d8df-d6e9-60e6-7bc7-79625298ac34",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "54e7d8df-d6e9-60e6-7bc7-79625298ac34",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767969190054
+  },
+  "cn-e-257": {
+   "id": "cn-e-257",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_SECOND_CLICK",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-6",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-256"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "54e7d8df-d6e9-60e6-7bc7-79625298ac34",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "54e7d8df-d6e9-60e6-7bc7-79625298ac34",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767969190054
+  },
+  "cn-e-258": {
+   "id": "cn-e-258",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_OVER",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-3",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-266"
+    }
+   },
+   "mediaQueries": [
+    "main"
+   ],
+   "target": {
+    "id": "54e7d8df-d6e9-60e6-7bc7-79625298ac34",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "54e7d8df-d6e9-60e6-7bc7-79625298ac34",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767969190054
+  },
+  "cn-e-259": {
+   "id": "cn-e-259",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_OUT",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-4",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-258"
+    }
+   },
+   "mediaQueries": [
+    "main"
+   ],
+   "target": {
+    "id": "54e7d8df-d6e9-60e6-7bc7-79625298ac34",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "54e7d8df-d6e9-60e6-7bc7-79625298ac34",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767969190054
+  },
+  "cn-e-345": {
+   "id": "cn-e-345",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "MOUSE_CLICK",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-5",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-346"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "54e7d8df-d6e9-60e6-7bc7-79625298ac34",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "54e7d8df-d6e9-60e6-7bc7-79625298ac34",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1768058804512
+  },
+  "cn-e-346": {
+   "id": "cn-e-346",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "MOUSE_SECOND_CLICK",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-6",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-345"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "54e7d8df-d6e9-60e6-7bc7-79625298ac34",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "54e7d8df-d6e9-60e6-7bc7-79625298ac34",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1768058804513
+  },
+  "cn-e-347": {
+   "id": "cn-e-347",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "MOUSE_OVER",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-3",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-348"
+    }
+   },
+   "mediaQueries": [
+    "main"
+   ],
+   "target": {
+    "id": "54e7d8df-d6e9-60e6-7bc7-79625298ac34",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "54e7d8df-d6e9-60e6-7bc7-79625298ac34",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1768058825078
+  },
+  "cn-e-348": {
+   "id": "cn-e-348",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "MOUSE_OUT",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-4",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-347"
+    }
+   },
+   "mediaQueries": [
+    "main"
+   ],
+   "target": {
+    "id": "54e7d8df-d6e9-60e6-7bc7-79625298ac34",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "54e7d8df-d6e9-60e6-7bc7-79625298ac34",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1768058825079
+  },
+  "cn-e-262": {
+   "id": "cn-e-262",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-33",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-263"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "883ab066-dd39-71d8-e308-0e0f4d18fa6f",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "883ab066-dd39-71d8-e308-0e0f4d18fa6f",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": true,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767978305858
+  },
+  "cn-e-266": {
+   "id": "cn-e-266",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "MOUSE_OVER",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-51",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-267"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "883ab066-dd39-71d8-e308-0e0f4d18fab6",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "883ab066-dd39-71d8-e308-0e0f4d18fab6",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1764629454686
+  },
+  "cn-e-267": {
+   "id": "cn-e-267",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "MOUSE_OUT",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "cn-a-52",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "cn-e-266"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "883ab066-dd39-71d8-e308-0e0f4d18fab6",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "883ab066-dd39-71d8-e308-0e0f4d18fab6",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1764629454687
   },
   "cn-e-236": {
    "id": "cn-e-236",
@@ -820,74 +1681,14 @@
   }
  },
  "actionLists": {
-  "cn-a-34": {
-   "id": "cn-a-34",
-   "title": "Case Study Scroll",
-   "continuousParameterGroups": [
-    {
-     "id": "cn-a-34-p",
-     "type": "SCROLL_PROGRESS",
-     "parameterLabel": "Scroll",
-     "continuousActionGroups": [
-      {
-       "keyframe": 0,
-       "actionItems": [
-        {
-         "id": "cn-a-34-n",
-         "actionTypeId": "TRANSFORM_MOVE",
-         "config": {
-          "delay": 0,
-          "easing": "",
-          "duration": 500,
-          "target": {
-           "useEventTarget": true,
-           "id": "4e10e7e1-6e88-ab05-1c88-1dff6216af41"
-          },
-          "yValue": -40,
-          "zValue": -10,
-          "xUnit": "PX",
-          "yUnit": "%",
-          "zUnit": "vw"
-         }
-        }
-       ]
-      },
-      {
-       "keyframe": 40,
-       "actionItems": [
-        {
-         "id": "cn-a-34-n-2",
-         "actionTypeId": "TRANSFORM_MOVE",
-         "config": {
-          "delay": 0,
-          "easing": "",
-          "duration": 500,
-          "target": {
-           "useEventTarget": true,
-           "id": "4e10e7e1-6e88-ab05-1c88-1dff6216af41"
-          },
-          "yValue": 0,
-          "zValue": 0,
-          "xUnit": "PX",
-          "yUnit": "%",
-          "zUnit": "vw"
-         }
-        }
-       ]
-      }
-     ]
-    }
-   ],
-   "createdOn": 1758986410563
-  },
-  "cn-a-35": {
-   "id": "cn-a-35",
-   "title": "Case Study - Hover In",
+  "cn-a-3": {
+   "id": "cn-a-3",
+   "title": "Accordion - Hover In",
    "actionItemGroups": [
     {
      "actionItems": [
       {
-       "id": "cn-a-35-n",
+       "id": "cn-a-3-n",
        "actionTypeId": "TRANSFORM_MOVE",
        "config": {
         "delay": 0,
@@ -895,40 +1696,19 @@
         "duration": 500,
         "target": {
          "useEventTarget": "CHILDREN",
-         "selector": ".cn-case-logo",
+         "selector": ".cn-accordion-heading",
          "selectorGuids": [
-          "46295d49-8b0c-0e56-922f-790a174e2f74"
-         ]
-        },
-        "yValue": 0,
-        "xUnit": "PX",
-        "yUnit": "%",
-        "zUnit": "PX"
-       }
-      },
-      {
-       "id": "cn-a-35-n-2",
-       "actionTypeId": "TRANSFORM_MOVE",
-       "config": {
-        "delay": 0,
-        "easing": "",
-        "duration": 500,
-        "target": {
-         "useEventTarget": "CHILDREN",
-         "selector": ".cn-case-arrow.cn-_01",
-         "selectorGuids": [
-          "46295d49-8b0c-0e56-922f-790a174e2f71",
-          "46295d49-8b0c-0e56-922f-790a174e2f80"
+          "8a9a6b02-557b-d46a-c856-1968bb6666a2"
          ]
         },
         "xValue": 0,
-        "xUnit": "%",
+        "xUnit": "rem",
         "yUnit": "PX",
         "zUnit": "PX"
        }
       },
       {
-       "id": "cn-a-35-n-3",
+       "id": "cn-a-3-n-2",
        "actionTypeId": "TRANSFORM_MOVE",
        "config": {
         "delay": 0,
@@ -936,15 +1716,62 @@
         "duration": 500,
         "target": {
          "useEventTarget": "CHILDREN",
-         "selector": ".cn-case-arrow.cn-_02",
+         "selector": ".cn-accordion-title-item",
          "selectorGuids": [
-          "46295d49-8b0c-0e56-922f-790a174e2f71",
-          "46295d49-8b0c-0e56-922f-790a174e2f81"
+          "8a9a6b02-557b-d46a-c856-1968bb6666b7"
          ]
         },
-        "xValue": -100,
-        "xUnit": "%",
+        "xValue": 0,
+        "xUnit": "rem",
         "yUnit": "PX",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "cn-a-3-n-3",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-plus-block",
+         "selectorGuids": [
+          "8a9a6b02-557b-d46a-c856-1968bb6666af"
+         ]
+        },
+        "xValue": 0,
+        "xUnit": "rem",
+        "yUnit": "PX",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "cn-a-3-n-4",
+       "actionTypeId": "STYLE_SIZE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {},
+        "widthValue": 0,
+        "widthUnit": "%",
+        "heightUnit": "PX",
+        "locked": false
+       }
+      },
+      {
+       "id": "cn-a-3-n-5",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {},
+        "yValue": 0,
+        "xUnit": "PX",
+        "yUnit": "%",
         "zUnit": "PX"
        }
       }
@@ -953,64 +1780,90 @@
     {
      "actionItems": [
       {
-       "id": "cn-a-35-n-4",
+       "id": "cn-a-3-n-6",
+       "actionTypeId": "STYLE_SIZE",
+       "config": {
+        "delay": 0,
+        "easing": "inOutQuint",
+        "duration": 800,
+        "target": {},
+        "widthValue": 100,
+        "widthUnit": "%",
+        "heightUnit": "PX",
+        "locked": false
+       }
+      },
+      {
+       "id": "cn-a-3-n-7",
        "actionTypeId": "TRANSFORM_MOVE",
        "config": {
         "delay": 0,
-        "easing": "outCubic",
-        "duration": 500,
+        "easing": "inOutQuint",
+        "duration": 800,
         "target": {
          "useEventTarget": "CHILDREN",
-         "selector": ".cn-case-logo",
+         "selector": ".cn-accordion-title-item",
          "selectorGuids": [
-          "46295d49-8b0c-0e56-922f-790a174e2f74"
+          "8a9a6b02-557b-d46a-c856-1968bb6666b7"
          ]
         },
+        "xValue": 1.5,
+        "xUnit": "rem",
+        "yUnit": "PX",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "cn-a-3-n-8",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "inOutQuint",
+        "duration": 600,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-plus-block",
+         "selectorGuids": [
+          "8a9a6b02-557b-d46a-c856-1968bb6666af"
+         ]
+        },
+        "xValue": -1.5,
+        "xUnit": "rem",
+        "yUnit": "PX",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "cn-a-3-n-9",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "inOutQuint",
+        "duration": 600,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-accordion-answer-text",
+         "selectorGuids": [
+          "8a9a6b02-557b-d46a-c856-1968bb6666b0"
+         ]
+        },
+        "xValue": 1.5,
+        "xUnit": "rem",
+        "yUnit": "PX",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "cn-a-3-n-10",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 100,
+        "easing": "inOutQuint",
+        "duration": 600,
+        "target": {},
         "yValue": -100,
         "xUnit": "PX",
         "yUnit": "%",
-        "zUnit": "PX"
-       }
-      },
-      {
-       "id": "cn-a-35-n-5",
-       "actionTypeId": "TRANSFORM_MOVE",
-       "config": {
-        "delay": 0,
-        "easing": "outCubic",
-        "duration": 500,
-        "target": {
-         "useEventTarget": "CHILDREN",
-         "selector": ".cn-case-arrow.cn-_01",
-         "selectorGuids": [
-          "46295d49-8b0c-0e56-922f-790a174e2f71",
-          "46295d49-8b0c-0e56-922f-790a174e2f80"
-         ]
-        },
-        "xValue": 100,
-        "xUnit": "%",
-        "yUnit": "PX",
-        "zUnit": "PX"
-       }
-      },
-      {
-       "id": "cn-a-35-n-6",
-       "actionTypeId": "TRANSFORM_MOVE",
-       "config": {
-        "delay": 0,
-        "easing": "outCubic",
-        "duration": 500,
-        "target": {
-         "useEventTarget": "CHILDREN",
-         "selector": ".cn-case-arrow.cn-_02",
-         "selectorGuids": [
-          "46295d49-8b0c-0e56-922f-790a174e2f71",
-          "46295d49-8b0c-0e56-922f-790a174e2f81"
-         ]
-        },
-        "xValue": 0,
-        "xUnit": "%",
-        "yUnit": "PX",
         "zUnit": "PX"
        }
       }
@@ -1018,73 +1871,100 @@
     }
    ],
    "useFirstGroupAsInitialState": true,
-   "createdOn": 1759747616926
+   "createdOn": 1651585993348
   },
-  "cn-a-36": {
-   "id": "cn-a-36",
-   "title": "Case Study - Hover Out",
+  "cn-a-4": {
+   "id": "cn-a-4",
+   "title": "Accordion - Hover Out",
    "actionItemGroups": [
     {
      "actionItems": [
       {
-       "id": "cn-a-36-n",
-       "actionTypeId": "TRANSFORM_MOVE",
+       "id": "cn-a-4-n",
+       "actionTypeId": "STYLE_SIZE",
        "config": {
         "delay": 0,
-        "easing": "outCubic",
-        "duration": 500,
-        "target": {
-         "useEventTarget": "CHILDREN",
-         "selector": ".cn-case-logo",
-         "selectorGuids": [
-          "46295d49-8b0c-0e56-922f-790a174e2f74"
-         ]
-        },
-        "yValue": 0,
-        "xUnit": "PX",
-        "yUnit": "%",
-        "zUnit": "PX"
+        "easing": "inOutQuint",
+        "duration": 800,
+        "target": {},
+        "widthValue": 0,
+        "widthUnit": "%",
+        "heightUnit": "PX",
+        "locked": false
        }
       },
       {
-       "id": "cn-a-36-n-2",
+       "id": "cn-a-4-n-2",
        "actionTypeId": "TRANSFORM_MOVE",
        "config": {
         "delay": 0,
-        "easing": "outCubic",
-        "duration": 500,
+        "easing": "inOutQuint",
+        "duration": 800,
         "target": {
          "useEventTarget": "CHILDREN",
-         "selector": ".cn-case-arrow.cn-_01",
+         "selector": ".cn-accordion-title-item",
          "selectorGuids": [
-          "46295d49-8b0c-0e56-922f-790a174e2f71",
-          "46295d49-8b0c-0e56-922f-790a174e2f80"
+          "8a9a6b02-557b-d46a-c856-1968bb6666b7"
          ]
         },
         "xValue": 0,
-        "xUnit": "%",
+        "xUnit": "rem",
         "yUnit": "PX",
         "zUnit": "PX"
        }
       },
       {
-       "id": "cn-a-36-n-3",
+       "id": "cn-a-4-n-3",
        "actionTypeId": "TRANSFORM_MOVE",
        "config": {
         "delay": 0,
-        "easing": "outCubic",
-        "duration": 500,
+        "easing": "inOutQuint",
+        "duration": 600,
         "target": {
          "useEventTarget": "CHILDREN",
-         "selector": ".cn-case-arrow.cn-_02",
+         "selector": ".cn-plus-block",
          "selectorGuids": [
-          "46295d49-8b0c-0e56-922f-790a174e2f71",
-          "46295d49-8b0c-0e56-922f-790a174e2f81"
+          "8a9a6b02-557b-d46a-c856-1968bb6666af"
          ]
         },
-        "xValue": -100,
-        "xUnit": "%",
+        "xValue": 0,
+        "xUnit": "rem",
         "yUnit": "PX",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "cn-a-4-n-4",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "inOutQuint",
+        "duration": 600,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-accordion-answer-text",
+         "selectorGuids": [
+          "8a9a6b02-557b-d46a-c856-1968bb6666b0"
+         ]
+        },
+        "xValue": 0,
+        "xUnit": "rem",
+        "yUnit": "PX",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "cn-a-4-n-5",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 100,
+        "easing": "inOutQuint",
+        "duration": 600,
+        "target": {},
+        "xValue": null,
+        "yValue": 0,
+        "xUnit": "px",
+        "yUnit": "%",
         "zUnit": "PX"
        }
       }
@@ -1092,7 +1972,178 @@
     }
    ],
    "useFirstGroupAsInitialState": false,
-   "createdOn": 1759747645439
+   "createdOn": 1651585993348
+  },
+  "cn-a-6": {
+   "id": "cn-a-6",
+   "title": "Accordion Closes",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "cn-a-6-n",
+       "actionTypeId": "STYLE_SIZE",
+       "config": {
+        "delay": 0,
+        "easing": "inOutQuart",
+        "duration": 600,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-accordion-content-wrap",
+         "selectorGuids": [
+          "8a9a6b02-557b-d46a-c856-1968bb6666a9"
+         ]
+        },
+        "widthValue": 100,
+        "heightValue": 0,
+        "widthUnit": "%",
+        "heightUnit": "px",
+        "locked": false
+       }
+      },
+      {
+       "id": "cn-a-6-n-2",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "inOutQuad",
+        "duration": 600,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-plus-line.cn-vertical",
+         "selectorGuids": [
+          "8a9a6b02-557b-d46a-c856-1968bb6666ac",
+          "8a9a6b02-557b-d46a-c856-1968bb6666bc"
+         ]
+        },
+        "xValue": 1,
+        "yValue": 1,
+        "locked": true
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": false,
+   "createdOn": 1652105873759
+  },
+  "cn-a-5": {
+   "id": "cn-a-5",
+   "title": "Accordion Opens",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "cn-a-5-n",
+       "actionTypeId": "STYLE_SIZE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-accordion-content-wrap",
+         "selectorGuids": [
+          "8a9a6b02-557b-d46a-c856-1968bb6666a9"
+         ]
+        },
+        "widthValue": 100,
+        "heightValue": 0,
+        "widthUnit": "%",
+        "heightUnit": "px",
+        "locked": false
+       }
+      },
+      {
+       "id": "cn-a-5-n-2",
+       "actionTypeId": "TRANSFORM_ROTATE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-plus-line.cn-vertical",
+         "selectorGuids": [
+          "8a9a6b02-557b-d46a-c856-1968bb6666ac",
+          "8a9a6b02-557b-d46a-c856-1968bb6666bc"
+         ]
+        },
+        "zValue": 90,
+        "xUnit": "DEG",
+        "yUnit": "DEG",
+        "zUnit": "deg"
+       }
+      },
+      {
+       "id": "cn-a-5-n-3",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-plus-line.cn-vertical",
+         "selectorGuids": [
+          "8a9a6b02-557b-d46a-c856-1968bb6666ac",
+          "8a9a6b02-557b-d46a-c856-1968bb6666bc"
+         ]
+        },
+        "xValue": 1,
+        "yValue": 1,
+        "locked": true
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "cn-a-5-n-4",
+       "actionTypeId": "STYLE_SIZE",
+       "config": {
+        "delay": 0,
+        "easing": "inOutQuart",
+        "duration": 800,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-accordion-content-wrap",
+         "selectorGuids": [
+          "8a9a6b02-557b-d46a-c856-1968bb6666a9"
+         ]
+        },
+        "widthValue": 100,
+        "widthUnit": "%",
+        "heightUnit": "AUTO",
+        "locked": false
+       }
+      },
+      {
+       "id": "cn-a-5-n-5",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "inOutQuad",
+        "duration": 800,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-plus-line.cn-vertical",
+         "selectorGuids": [
+          "8a9a6b02-557b-d46a-c856-1968bb6666ac",
+          "8a9a6b02-557b-d46a-c856-1968bb6666bc"
+         ]
+        },
+        "xValue": 0,
+        "yValue": 0,
+        "locked": true
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": true,
+   "createdOn": 1652105873759
   },
   "cn-a-33": {
    "id": "cn-a-33",
@@ -1172,6 +2223,139 @@
    "useFirstGroupAsInitialState": true,
    "createdOn": 1762087348632
   },
+  "cn-a-51": {
+   "id": "cn-a-51",
+   "title": "CTA Button - Hover In",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "cn-a-51-n",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-cta-button-background.cn-_02",
+         "selectorGuids": [
+          "8af2328c-f1f6-70c0-1e07-8be4f12c3f92",
+          "8af2328c-f1f6-70c0-1e07-8be4f12c3f9c"
+         ]
+        },
+        "value": 0,
+        "unit": ""
+       }
+      },
+      {
+       "id": "cn-a-51-n-2",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "883ab066-dd39-71d8-e308-0e0f4d18fab6"
+        },
+        "xValue": 1,
+        "yValue": 1,
+        "locked": true
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "cn-a-51-n-3",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 1000,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-cta-button-background.cn-_02",
+         "selectorGuids": [
+          "8af2328c-f1f6-70c0-1e07-8be4f12c3f92",
+          "8af2328c-f1f6-70c0-1e07-8be4f12c3f9c"
+         ]
+        },
+        "value": 1,
+        "unit": ""
+       }
+      },
+      {
+       "id": "cn-a-51-n-4",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "883ab066-dd39-71d8-e308-0e0f4d18fab6"
+        },
+        "xValue": 0.95,
+        "yValue": 0.95,
+        "locked": true
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": true,
+   "createdOn": 1764629456528
+  },
+  "cn-a-52": {
+   "id": "cn-a-52",
+   "title": "CTA Button - Hover Out",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "cn-a-52-n",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 1000,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".cn-cta-button-background.cn-_02",
+         "selectorGuids": [
+          "8af2328c-f1f6-70c0-1e07-8be4f12c3f92",
+          "8af2328c-f1f6-70c0-1e07-8be4f12c3f9c"
+         ]
+        },
+        "value": 0,
+        "unit": ""
+       }
+      },
+      {
+       "id": "cn-a-52-n-2",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "883ab066-dd39-71d8-e308-0e0f4d18fab6"
+        },
+        "xValue": 1,
+        "yValue": 1,
+        "locked": true
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": false,
+   "createdOn": 1764629497233
+  },
   "cn-a-37": {
    "id": "cn-a-37",
    "title": "Service 01 - Hover In",
@@ -1232,7 +2416,6 @@
           "a5b89369-cbc8-394f-a3f4-1c8144870c21"
          ]
         },
-        "globalSwatchId": "--neutral-color--primary-neutral",
         "rValue": 128,
         "bValue": 128,
         "gValue": 128,
@@ -1254,7 +2437,6 @@
           "a5b89369-cbc8-394f-a3f4-1c8144870c26"
          ]
         },
-        "globalSwatchId": "--neutral-color--primary-neutral",
         "rValue": 128,
         "bValue": 128,
         "gValue": 128,
@@ -1339,7 +2521,6 @@
           "a5b89369-cbc8-394f-a3f4-1c8144870c21"
          ]
         },
-        "globalSwatchId": "--primary-color--white",
         "rValue": 250,
         "bValue": 250,
         "gValue": 250,
@@ -1361,7 +2542,6 @@
           "a5b89369-cbc8-394f-a3f4-1c8144870c26"
          ]
         },
-        "globalSwatchId": "--primary-color--white",
         "rValue": 250,
         "bValue": 250,
         "gValue": 250,
@@ -1454,7 +2634,6 @@
           "a5b89369-cbc8-394f-a3f4-1c8144870c21"
          ]
         },
-        "globalSwatchId": "--neutral-color--primary-neutral",
         "rValue": 128,
         "bValue": 128,
         "gValue": 128,
@@ -1476,7 +2655,6 @@
           "a5b89369-cbc8-394f-a3f4-1c8144870c26"
          ]
         },
-        "globalSwatchId": "--neutral-color--primary-neutral",
         "rValue": 128,
         "bValue": 128,
         "gValue": 128,
@@ -1569,7 +2747,6 @@
           "a5b89369-cbc8-394f-a3f4-1c8144870c1e"
          ]
         },
-        "globalSwatchId": "--neutral-color--primary-neutral",
         "rValue": 128,
         "bValue": 128,
         "gValue": 128,
@@ -1591,7 +2768,6 @@
           "a5b89369-cbc8-394f-a3f4-1c8144870c25"
          ]
         },
-        "globalSwatchId": "--neutral-color--primary-neutral",
         "rValue": 128,
         "bValue": 128,
         "gValue": 128,
@@ -1676,7 +2852,6 @@
           "a5b89369-cbc8-394f-a3f4-1c8144870c1e"
          ]
         },
-        "globalSwatchId": "--primary-color--white",
         "rValue": 250,
         "bValue": 250,
         "gValue": 250,
@@ -1698,7 +2873,6 @@
           "a5b89369-cbc8-394f-a3f4-1c8144870c25"
          ]
         },
-        "globalSwatchId": "--primary-color--white",
         "rValue": 250,
         "bValue": 250,
         "gValue": 250,
@@ -1791,7 +2965,6 @@
           "a5b89369-cbc8-394f-a3f4-1c8144870c1e"
          ]
         },
-        "globalSwatchId": "--neutral-color--primary-neutral",
         "rValue": 128,
         "bValue": 128,
         "gValue": 128,
@@ -1813,7 +2986,6 @@
           "a5b89369-cbc8-394f-a3f4-1c8144870c25"
          ]
         },
-        "globalSwatchId": "--neutral-color--primary-neutral",
         "rValue": 128,
         "bValue": 128,
         "gValue": 128,
@@ -1906,7 +3078,6 @@
           "a5b89369-cbc8-394f-a3f4-1c8144870c2e"
          ]
         },
-        "globalSwatchId": "--neutral-color--primary-neutral",
         "rValue": 128,
         "bValue": 128,
         "gValue": 128,
@@ -1928,7 +3099,6 @@
           "a5b89369-cbc8-394f-a3f4-1c8144870c29"
          ]
         },
-        "globalSwatchId": "--neutral-color--primary-neutral",
         "rValue": 128,
         "bValue": 128,
         "gValue": 128,
@@ -2013,7 +3183,6 @@
           "a5b89369-cbc8-394f-a3f4-1c8144870c2e"
          ]
         },
-        "globalSwatchId": "--primary-color--white",
         "rValue": 250,
         "bValue": 250,
         "gValue": 250,
@@ -2035,7 +3204,6 @@
           "a5b89369-cbc8-394f-a3f4-1c8144870c29"
          ]
         },
-        "globalSwatchId": "--primary-color--white",
         "rValue": 250,
         "bValue": 250,
         "gValue": 250,
@@ -2128,7 +3296,6 @@
           "a5b89369-cbc8-394f-a3f4-1c8144870c2e"
          ]
         },
-        "globalSwatchId": "--neutral-color--primary-neutral",
         "rValue": 128,
         "bValue": 128,
         "gValue": 128,
@@ -2150,7 +3317,6 @@
           "a5b89369-cbc8-394f-a3f4-1c8144870c29"
          ]
         },
-        "globalSwatchId": "--neutral-color--primary-neutral",
         "rValue": 128,
         "bValue": 128,
         "gValue": 128,
@@ -2243,7 +3409,6 @@
           "a5b89369-cbc8-394f-a3f4-1c8144870c27"
          ]
         },
-        "globalSwatchId": "--neutral-color--primary-neutral",
         "rValue": 128,
         "bValue": 128,
         "gValue": 128,
@@ -2265,7 +3430,6 @@
           "a5b89369-cbc8-394f-a3f4-1c8144870c24"
          ]
         },
-        "globalSwatchId": "--neutral-color--primary-neutral",
         "rValue": 128,
         "bValue": 128,
         "gValue": 128,
@@ -2350,7 +3514,6 @@
           "a5b89369-cbc8-394f-a3f4-1c8144870c27"
          ]
         },
-        "globalSwatchId": "--primary-color--white",
         "rValue": 250,
         "bValue": 250,
         "gValue": 250,
@@ -2372,7 +3535,6 @@
           "a5b89369-cbc8-394f-a3f4-1c8144870c24"
          ]
         },
-        "globalSwatchId": "--primary-color--white",
         "rValue": 250,
         "bValue": 250,
         "gValue": 250,
@@ -2465,7 +3627,6 @@
           "a5b89369-cbc8-394f-a3f4-1c8144870c27"
          ]
         },
-        "globalSwatchId": "--neutral-color--primary-neutral",
         "rValue": 128,
         "bValue": 128,
         "gValue": 128,
@@ -2487,7 +3648,6 @@
           "a5b89369-cbc8-394f-a3f4-1c8144870c24"
          ]
         },
-        "globalSwatchId": "--neutral-color--primary-neutral",
         "rValue": 128,
         "bValue": 128,
         "gValue": 128,

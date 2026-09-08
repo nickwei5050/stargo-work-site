@@ -1,45 +1,41 @@
 /* qx-news — hand-written rules for the "把对话变成对客户的理解" block.
    Appended after the extracted qubix rules, so equal specificity wins here.
-   Every rule is scoped under .qx-news. */
+   Every rule is scoped under .qx-news. Nothing here changes a size, colour,
+   font or layout the donor set: it only restores what a cut section cannot
+   carry and undoes what the host page leaks in. */
 
-/* 1. Two element rules from the shared Mono stylesheet (the one this page's
-      own chrome is drawn from) reach into the transplanted block, because a
-      bare `p` / `a` selector matches anywhere:
+/* 1. qubix's own `body` rule. It never travels with a cut section, and it is
+      what colours the one unclassed line under each row title (medium gray in
+      the donor) and sets the block's base typeface. Same tokens, same values,
+      moved onto the scope root. */
+.qx-news {
+  font-family: var(--_base---font-family--your-font);
+  color: var(--_color---normal-color--medium-gray);
+  font-size: var(--_base---font-size--font-size-sm);
+  line-height: 20px;
+  font-weight: var(--_base---font-weight--regular);
+}
 
-        p { opacity: .7 }      dims the lead under .qx-body's own #a1a1a1,
-                               taking it from 8.1:1 on black down to 4.3:1;
-        a { cursor: none }     Mono hides the pointer and draws its own
-                               crosshair, which this page does not.
+/* 2. Rules from the shared Mono stylesheet (the one this page's own chrome is
+      drawn from) reach into the transplanted block, because a bare `p` / `a`
+      selector — or a rule on an ancestor of every block — matches anywhere:
 
-      css/stargo-fusion.css already undoes exactly these two inside the other
-      imported scopes (`:where(.lx-scope) :is(p, li) { opacity: 1 }` and
-      `.sc-scope a { cursor: pointer }`); this block needs the same. */
+        p { opacity: .7 }             dims the lead under .qx-body's own
+                                      medium gray (Mono line 2164);
+        body { cursor: none }         line 2119, inherited by everything;
+        .main-content { cursor: none }  line 3408, an ancestor of every
+                                      block on this page;
+        a { cursor: none }            line 2175.
+
+      Mono hides the pointer because it draws its own crosshair; this page
+      never builds one (no fixed pointer-events:none node exists at runtime),
+      so inside the block the pointer simply disappears. Measured against the
+      donor at 1440×900: every element of qubix's section computes
+      `cursor: auto` and its links `pointer`; before the line below every
+      non-link node of ours computed `none`. The three lines restore the donor's
+      computed values and nothing else — no size, colour, spacing or layout is
+      touched. css/stargo-fusion.css already undoes the same inside .sc-scope,
+      and qx-projects inside .qx-projects. */
 .qx-news p { opacity: 1; }
+.qx-news { cursor: auto; }
 .qx-news a { cursor: pointer; }
-
-/* 2. Below 992px the donor stacks the two halves into one column, but leaves
-      the left half `position: sticky; top: 14vh`. Full-width row cards then
-      scroll up over the pinned heading and slice it through the middle — at
-      768 the English heading's last line and the pill button are both cut in
-      half by an opaque card. The donor already drops the sticky at 479; the
-      column layout begins at 991, so it has to go at 991. */
-@media screen and (max-width: 991px) {
-  .qx-news .qx-home-blog-left { position: static; }
-}
-
-/* 3. The donor's h2 is 58px at every width because its own heading was the two
-      words "Latest news". This story's heading is a sentence: in English
-      "Understanding" alone measures 347px at 58px type, against a 310px column
-      at 390 — the word ran out of the container and up to the viewport edge.
-      Step the heading down where the column gets narrow. */
-@media screen and (max-width: 479px) {
-  .qx-news { --h2--font-size: 40px; }
-}
-
-/* qubix sets `text-transform: capitalize` on its h2. Applied to this site's
-   own sentence-case copy that rewrites the words themselves — "Run the work
-   with an AI team" is published by tools/copy.mjs and was rendering as "Run The
-   Work With An AI Team". The donor's type stays; only the case goes back to
-   what the copy says. All three qubix headings on this page do the same, so
-   they stay in one case. Chinese is unaffected either way. */
-.qx-news .qx-h2 { text-transform: none; }

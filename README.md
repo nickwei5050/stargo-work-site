@@ -25,6 +25,7 @@ interactions kept intact; the words and the information architecture are STARGO'
 node tools/imagegen/prepare-assets.mjs # only after new generated originals: encode responsive artwork + manifest
 NODE_USE_ENV_PROXY=1 node tools/lifelogx-prepare.mjs   # only after changing tools/templates/lifelogx: mirrors assets, namespaces CSS, cuts five page fragments plus two snippets (the closing wordmark, the pricing block), exports interactions
 node tools/blog-covers.mjs           # only after adding an article: re-encodes its cover into assets/blog/
+node tools/mirror-donor-assets.mjs   # fetches the donor templates' own photography/video into assets/<donor>/ (Webflow exports never bundle images); idempotent, driven by tools/fragments/donor-assets.json
 node tools/capability-donors.mjs     # only after changing a capability-page block: cuts each block out of its donor template (tools/blocks/*.mjs say which), writes tools/fragments/<id>.html, the reduced per-donor stylesheet, and the interaction payload
 node tools/try-block.mjs <id>        # one capability-page block on its own: extract, render both languages, report unfilled slots
 node tools/fuse-ix.mjs               # the one Webflow bundle every page loads (Mono + Scalora + every donor's interaction data)

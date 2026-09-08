@@ -24,14 +24,13 @@ export const DONORS = {
 };
 
 /**
- * A capability's name as this site writes it: the Chinese page leads with the
- * Chinese name and carries the product name as a small subtitle, the English
- * page uses the product name alone. A reader should never have to know the
- * other language to follow a block.
+ * A capability's name as this site writes it. The review was explicit: the
+ * Chinese page carries Chinese only and the English page English only —
+ * "不是所有的观众都能看得懂英文" — so no bilingual subtitle. A capability
+ * with no Chinese name yet falls back to its product name rather than to
+ * nothing.
  */
-export const capTitle = (lang) => (name, zhName) => (lang === 'zh' && zhName
-  ? `${zhName}<span class="cap-en">${name}</span>`
-  : name);
+export const capTitle = (lang) => (name, zhName) => (lang === 'zh' ? (zhName || name) : name);
 
 /**
  * Resolve a capability name against the register, so a block can print the

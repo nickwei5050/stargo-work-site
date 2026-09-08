@@ -146,3 +146,107 @@ case tile slides its logo while the two arrows swap.
 - The avatar set is 228×228 at source, so the workforce grid uses the site's
   full-size artwork instead; if portraits are wanted there, they need to be
   regenerated at about 1264px.
+
+## 2026-09-08 — rebuilt again, against the review's own screenshots
+
+The owner rejected the first port: "改的面目全非…要求完美复刻移植，仅仅针对文字进行
+改动". Two things had gone wrong, and both were mine.
+
+**The wrong blocks.** I had mapped sections to donor blocks from the review's
+text; the review's *screenshots* (`.docx/word/media/image2…31.png`) name
+different ones. Read against them, the page is now:
+
+| Section | Screenshot | Block |
+| --- | --- | --- |
+| 页面开头 | image2 | renok hero **with its 3D product-card row** and silk backdrop |
+| 一个外贸闭环 (title) | image4 | renok "Award winning /Studio" heading, chips and cursor |
+| 一个外贸闭环 (intro) | image6 | qubix orbit hero: ring, orbiting photos, rolling stage tags |
+| 九个阶段 | image7 | renok insight list, thumbnails visible as the donor shows them |
+| 找到买家 + 01 | image9, 11 | cinery gradient heading + big-title rows, clapperboard photography |
+| 02 | image13 | qubix Latest News, its wooden-balls and paper-box photos |
+| 03 | image15 | renok Awards, its VR-visor photograph |
+| 04 (+ break) | image17→18 | renok testimonials — one 300vh section whose growing circle *is* the break |
+| 05 | image20 | cinery Quick Answers: gradient heading, accordion, portrait |
+| break | image21 | cinery LET'S PRODUCE: gradient heading over fanned video cards |
+| 06 | image23 | qubix Recent Projects grid |
+| 四个基础板块 | image28 | qubix What We Do orb, extended from three nodes to four, click-to-expand |
+
+**Substituted images.** The "no off-origin request" rule had led me to swap the
+templates' photography for this site's artwork. The owner wants the templates'
+own images. They are now **mirrored**: `tools/donor-lib.mjs` has a `mirror`
+mode that rewrites every CDN reference (markup and CSS) to `assets/<donor>/…`,
+`tools/mirror-donor-assets.mjs` fetches what is missing once, and the build
+refuses to ship a reference to a file that is not on disk. 150 files, about
+80 MB, most of it the cinery video cards (the largest single file is 5.7 MB,
+under Cloudflare's 25 MiB limit). Runtime requests off-origin remain zero.
+
+Typefaces went the same way: renok sets Inter Tight and Instrument Serif,
+neither served here, so the headline fell to Arial and the italic accent to
+oblique Arial. Both are now self-hosted under `assets/fonts/donor/`
+(`css/donor-fonts.css`, OFL) and the notices page lists them.
+
+**Language.** "中文界面就只有中文的解释" — the Chinese page now carries Chinese
+only: `capTitle` no longer appends the English product name, and the nine
+stage words have Chinese names (`HOME_LOOP_TABLE.stageNames`) wherever they are
+the block's largest type. The hero's italic accent stays Latin by design (the
+serif has no CJK glyphs).
+
+**Method.** Thirteen agents built one block each against its screenshot, and
+thirteen more verified them adversarially; the verifiers caught a renok
+interaction (`growIn`) the extractor could not namespace, breakpoint `:root`
+overrides it did not carry, and the duplicated break. Both extractor gaps are
+fixed in `donor-lib.mjs`.
+
+**Left as reported by the blocks.** The donor's slots hold fewer items than
+some stories name: testimonials draws six cards for seven capabilities, the
+project grid three, the award heading two chips. What did not fit was left out
+rather than resized. On the English page cinery's one-word titles take a second
+line for our multi-word product names, at the donor's size.
+
+### Page weight
+
+Mirroring the templates' own media made the capability page 43 MB on first
+paint: cinery's break band is 27 `<video autoplay preload="metadata">` cards and
+every one began downloading before a reader had scrolled anywhere near them.
+The build now writes each `<source src>` as `<source data-src>` and
+`js/stargo-video-defer.js` restores it a screen ahead of the band. Nothing else
+changes — same elements, classes, interaction ids and autoplay — and the band is
+the template's band once you reach it. First paint is 9.7 MB, and a full
+scroll through the whole page 20 MB, against 43 MB before. 140 of the page's
+148 images were already `loading="lazy"` from the Webflow exports; the eight
+eager ones are the hero cards above the fold.
+
+### The donors' own typefaces
+
+A comparison pass against the live donor pages found cinery's blocks set in
+Arial: the template names `"Overused Grotesk", Arial, sans-serif` and nothing on
+this site served the first entry, so every cinery title drew about 15% wider
+than the template's — which is why they would not fit their column and had been
+scaled down. Webflow serves a template's fonts from the same CDN as its
+photography, so `tools/donor-lib.mjs` now carries each donor's `@font-face`
+rules and mirrors their sources alongside the images (13 files, 1.7 MB:
+Overused Grotesk 300–900 and InterDisplay 400–700).
+
+Measured after: the same string in the same face is 773px on our page and 773px
+on the donor's. Three of the four Chinese rows now render at the template's full
+112px where all four had been halved; only 进口商补货雷达, which needs about
+888px against a 768px column, is still set two-line at half size, and the four
+English product names likewise — `Account Research`, the shortest, still needs
+about 1160px at the donor's size. Those are the words being longer than the
+template's one-word titles, not the design being changed.
+
+### Colours that resolved to the wrong value
+
+cinery's service rows are grey at rest and turn white on hover. On our page they
+were white at rest, so the hover did nothing visible. The interaction data was
+the donor's, unchanged, and its flag correct — but a Webflow colour step names a
+global swatch (`--neutral-color--primary-neutral`) *and* carries the rgb that
+swatch resolved to. The name is looked up in the payload's `site` table, which
+on this page is the host template's; a donor's swatch id is not in it, the
+lookup fails, and the step lands on the wrong colour.
+
+`tools/donor-lib.mjs` now drops `globalSwatchId` from any step that also carries
+literal `rValue/gValue/bValue`, leaving the donor's own resolved values — which
+are what the swatch meant. Measured after: rest 128,128,128 → hover 250,250,250
+→ back to 128,128,128, on both the kicker and the description, exactly as the
+donor. This applies to every donor block, not just this one.

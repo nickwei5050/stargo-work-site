@@ -75,6 +75,9 @@ function donorBundles(srcDir) {
  * @param {Record<string,string>} [o.images]      exact donor src -> local path
  * @param {Record<string,string>} [o.imageStems]  filename stem -> local path, for
  *   a photograph and all of its responsive variants at once
+ * @param {string} [o.mirror]  local directory (e.g. 'assets/renok') that keeps the
+ *   donor's own artwork; every CDN url not otherwise mapped is rewritten there
+ *   and listed in the returned `assets` for tools/mirror-donor-assets.mjs
  */
 export function extractBlock(o) {
   const html = readFileSync(`${o.srcDir}/${o.page}`, 'utf8');
@@ -110,18 +113,70 @@ export function extractBlock(o) {
     .filter((c) => c && !c.startsWith(o.ns) && !c.startsWith('w-'));
   if (leaked.length) throw new Error(`donor ${o.page}: un-namespaced classes survive: ${[...new Set(leaked)].join(', ')}`);
 
-  /* Off-origin assets: this site makes none, so every one must be accounted for.
-     Webflow ships each photograph five times (-p-500, -p-800, -p-1080, -p-1600
-     and the original) across src and srcset, so matching on the stem replaces a
-     whole family at once instead of listing every variant. */
+  /* Off-origin assets: this site makes none at runtime, so every one must end up
+     local. Two ways to get there:
+
+       `images` / `imageStems` / `cssImages` substitute a specific file (or drop
+       a declaration with 'none'). Webflow ships each photograph five times
+       (-p-500, -p-800, -p-1080, -p-1600 and the original) across src and srcset,
+       so a stem replaces the whole family at once.
+
+       `mirror` keeps the donor's own artwork: every remaining CDN url is rewritten
+       to `<mirror>/<file>` and recorded in `assets`, and tools/mirror-donor-
+       assets.mjs fetches the files into place. This is what "只改文字，图片都
+       要保留" requires — the review's screenshots are the templates' own photos. */
+  const assets = {};
+  const localName = (url) => {
+    const file = decodeURIComponent(url.split('?')[0].split('/').pop()).replace(/[^\w.\-]+/g, '_');
+    return `${o.mirror}/${file}`;
+  };
+  const rewrite = (url) => {
+    if (!o.mirror) return url;
+    const to = localName(url);
+    assets[url] = to;
+    return to;
+  };
+
   for (const [from, to] of Object.entries(o.images ?? {})) frag = frag.split(from).join(to);
   for (const [stem, to] of Object.entries(o.imageStems ?? {})) {
     frag = frag.replace(/https?:\/\/[^\s"]+/g, (url) => (url.includes(stem) ? to : url));
   }
-  const remote = [...frag.matchAll(/(?:src|srcset|href)="(https?:\/\/[^"]+)"/g)].map((m) => m[1]);
-  if (remote.length) throw new Error(`donor ${o.page}: unmapped off-origin assets:\n  ${[...new Set(remote)].join('\n  ')}`);
+  frag = frag.replace(/https?:\/\/cdn\.prod\.website-files\.com\/[^\s"')]+/g, rewrite);
+  const remote = [...frag.matchAll(/(?:src|srcset|href|poster|data-src)="(https?:\/\/[^"]+)"/g)].map((m) => m[1]);
+  if (remote.length) throw new Error(`donor ${o.page}: unmapped off-origin assets (set mirror, or map them):\n  ${[...new Set(remote)].join('\n  ')}`);
 
   /* --------------------------------------------------------------- css -- */
+
+  /* Stylesheets reference the donor's CDN too, and a background-image or a
+     webfont there is just as much an off-origin request as an <img>. The renok
+     hero's backdrop hid here for a while: the markup was clean and the page
+     still fetched from Webflow on every load. Same maps as the markup; `none`
+     drops a declaration the site has no artwork for. */
+  const cssMap = { ...(o.images ?? {}), ...(o.cssImages ?? {}) };
+  const paint = (url) => {
+    if (cssMap[url] !== undefined) return cssMap[url];
+    for (const [stem, to] of Object.entries(o.imageStems ?? {})) if (url.includes(stem)) return to;
+    return null;
+  };
+  /* A stylesheet lives in css/, so a site-relative path needs one step up. */
+  const cssUrl = (url) => {
+    let to = paint(url);
+    if (to === null && o.mirror && /cdn\.prod\.website-files\.com/.test(url)) to = rewrite(url);
+    if (to === null) throw new Error(`donor ${o.page}: unmapped off-origin asset in css: ${url}\n  set mirror, map it in images/cssImages/imageStems, or map it to 'none' to drop the declaration`);
+    return to === 'none' ? 'none' : `url("${/^(\/|\.\.\/|https?:|data:)/.test(to) ? to : `../${to}`}")`;
+  };
+
+  /* The donor's own typefaces. Webflow serves them from the same CDN as its
+     photography, so they mirror the same way — and without them a block falls
+     back to whatever the host page happens to load: cinery's Overused Grotesk
+     became Arial, which draws its titles 15% wider, which is why they would not
+     fit their slot. `@font-face` is not a scoped rule — it only declares a
+     family — so these are emitted as they are, above the scoped rules. */
+  const faces = [];
+  for (const m of css.matchAll(/@font-face\s*\{([^{}]*)\}/g)) {
+    faces.push(`@font-face {${m[1].replace(/url\((["']?)(https?:\/\/[^"')]+)\1\)/g, (u, q, url) => cssUrl(url))}}`);
+  }
+
   const rootBlock = /(?:^|\})\s*:root[^{]*\{([^{}]*)\}/.exec(css);
   const vars = rootBlock
     ? [...rootBlock[1].matchAll(/(--[\w-]+)\s*:\s*([^;]+)/g)].map((m) => `  ${m[1]}: ${m[2].trim()};`).join('\n')
@@ -141,6 +196,15 @@ export function extractBlock(o) {
     const sel = (m[2] || '').trim();
     const body = (m[3] || '').trim();
     if (!sel || !body || sel.startsWith('@')) continue;
+    /* A donor re-tunes its custom properties per breakpoint on `:root` or
+       `body` -- renok's extra-big-text is 10vw as a base and 15vw from 1280px
+       up. The base :root is carried above; without these the block draws at
+       the base value at every width. They go onto the scope root. */
+    if (media && /^(:root|body|html)(\s*,\s*(:root|body|html))*$/.test(sel)) {
+      const vars = [...body.matchAll(/(--[\w-]+)\s*:\s*([^;]+)/g)].map((m) => `${m[1]}: ${m[2].trim()};`);
+      if (vars.length) rules.push({ media, css: `${o.scope} { ${vars.join(' ')} }` });
+      continue;
+    }
     if (!(wanted.test(sel) || isElementRule(sel) || isRuntimeRule(sel))) continue;
     const scoped = sel.split(',').map((s) => {
       let t = s.trim();
@@ -150,26 +214,11 @@ export function extractBlock(o) {
     rules.push({ media, css: `${scoped} { ${body} }` });
   }
 
-  /* Stylesheets reference the donor's CDN too, and a background-image there is
-     just as much an off-origin request as an <img>. The renok hero's backdrop
-     hid here for a while: the markup was clean and the page still fetched from
-     Webflow on every load. Same maps as the markup; `none` drops a declaration
-     the site has no artwork for. */
-  const cssMap = { ...(o.images ?? {}), ...(o.cssImages ?? {}) };
-  const paint = (url) => {
-    if (cssMap[url] !== undefined) return cssMap[url];
-    for (const [stem, to] of Object.entries(o.imageStems ?? {})) if (url.includes(stem)) return to;
-    return null;
-  };
   for (const r of rules) {
-    r.css = r.css.replace(/url\((["']?)(https?:\/\/[^"')]+)\1\)/g, (m, q, url) => {
-      const to = paint(url);
-      if (to === null) throw new Error(`donor ${o.page}: unmapped off-origin asset in css: ${url}\n  map it in images/cssImages/imageStems, or map it to 'none' to drop the declaration`);
-      return to === 'none' ? 'none' : `url("${to}")`;
-    });
+    r.css = r.css.replace(/url\((["']?)(https?:\/\/[^"')]+)\1\)/g, (m, q, url) => cssUrl(url));
   }
 
-  let sheet = `${o.scope} {\n${vars}\n}\n`;
+  let sheet = `${faces.join('\n')}${faces.length ? '\n' : ''}${o.scope} {\n${vars}\n}\n`;
   let open = null;
   for (const r of rules) {
     if (r.media !== open) {
@@ -212,19 +261,42 @@ export function extractBlock(o) {
       const scoped = PAGE_SCOPED_ID.exec(t);
       if (scoped) { scopesStripped.add(scoped[1]); t = scoped[2]; }
       for (const c of CLASSES) t = t.replace(new RegExp(`\\.${esc(c)}\\b`, 'g'), `.${o.ns}${c}`);
-      if (/^(e|a)-\d+/.test(t) || PRESETS.has(t)) t = o.ns + t;
+      if (/^(e|a)-\d+/.test(t)) t = o.ns + t;
       return t;
     };
     const deep = (n) => {
       if (typeof n === 'string') return rename(n);
       if (Array.isArray(n)) return n.map(deep);
-      if (n && typeof n === 'object') return Object.fromEntries(Object.entries(n).map(([k, v]) => [k, deep(v)]));
+      if (n && typeof n === 'object') {
+        const out = Object.fromEntries(Object.entries(n).map(([k, v]) => [k, deep(v)]));
+        /* A colour step names a global swatch *and* carries the literal rgb it
+           resolved to. The swatch is looked up in the payload's `site` table,
+           which on this page is the host template's — a donor's swatch id is not
+           in it, the lookup fails, and the step lands on the wrong colour. That
+           is what left cinery's rows white at rest instead of grey, so its
+           grey→white hover did nothing visible. Dropping the name leaves the
+           donor's own resolved values, which are what the swatch meant. */
+        if (out.globalSwatchId && ['rValue', 'gValue', 'bValue'].every((k) => typeof out[k] === 'number')) {
+          delete out.globalSwatchId;
+        }
+        return out;
+      }
       return n;
     };
 
-    for (const [k, v] of hits) events[o.ns + k] = deep(v);
+    for (const [k, v] of hits) {
+      const ev = deep(v);
+      /* The list an event runs is referenced by name, and a donor may call one
+         anything -- renok ships `growIn`, `slideInBottom`, even `a`. Whatever the
+         name, if the donor defines it the copy travels with the block under the
+         namespace, and the reference follows; only a name the donor does NOT
+         define is left alone, to resolve against the host runtime's presets. */
+      const id = v.action?.config?.actionListId;
+      if (id && id in P.actionLists) ev.action.config.actionListId = o.ns + id;
+      events[o.ns + k] = ev;
+    }
     for (const [k, v] of Object.entries(P.actionLists)) {
-      if (hits.some(([, e]) => JSON.stringify(e).includes(`"${k}"`))) actionLists[o.ns + k] = deep(v);
+      if (hits.some(([, e]) => e.action?.config?.actionListId === k || JSON.stringify(e).includes(`"${k}"`))) actionLists[o.ns + k] = deep(v);
     }
   }
 
@@ -238,6 +310,7 @@ export function extractBlock(o) {
     html: frag,
     css: sheet,
     ix: { events, actionLists },
+    assets,
     stats: {
       bytes: frag.length,
       classes: CLASSES.length,

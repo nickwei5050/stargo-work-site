@@ -14,9 +14,21 @@
  * keeps its own data-w-id, its `_0N` class and its inline transforms — the
  * roll, the crossfade and the scroll reveal are all bound to exactly those.
  *
+ * The photographs are cinery's own — the clapperboard and the lenses in the
+ * review screenshot. Nothing is mapped, so `mirror` (the default,
+ * assets/cinery) keeps every thumbnail and every crossfade background and
+ * try-block fetches them into place. The brief is a perfect port with only the
+ * words changed, so each title slot gets the shortest name the register has —
+ * the Chinese name on the Chinese page, the product name on the English page —
+ * and the type stays at the donor's 8vw nowrap wherever that name fits it.
+ *
  * The block paints no ground of its own: every word in it is white and only
  * cinery's `body { background-color: #000 }` stood behind it, so the ground is
- * declared in the donor config below and written onto `.cn-service`.
+ * declared in the donor config below and written onto `.cn-service`. The rest
+ * of what <body> supplied — the typeface, the leading, the text colour — is
+ * restated in tools/blocks/cn-service.css, together with the `#w-node-…` grid
+ * placement Webflow keeps off the class list and the isolation the moved ground
+ * needs so the four photographs still sit above it.
  */
 import { setText, setTextAll, capability } from '../block-lib.mjs';
 
@@ -32,21 +44,6 @@ export const donor = {
      The two `.service-image-opacity` gradients fade to the same value, so the
      section still dissolves into its own ground at top and bottom. */
   ground: '#000',
-
-  /* Four photographs, each shipped five times (-p-500/-800/-1080/-1600 and the
-     original) across src and srcset, and each used twice — once as the row's
-     thumbnail, once as the full-bleed background that row crossfades in. One
-     stem replaces a whole family, which collapses the five candidates onto one
-     file — so the 1200px rendition is the one to hand over, not the 1586px
-     original a phone would otherwise pull for a background it draws behind a
-     65% black overlay. The story's own art leads; the three that follow are the
-     screens this outcome actually runs on. */
-  imageStems: {
-    'pexels-gioele-fazzeri-2735282-5627838': 'assets/stargo-editorial/os-cockpit.webp',
-    'pexels-23515909-6664782': 'assets/stargo-editorial/os-sales-desk.webp',
-    'pexels-israyosoy-31011456': 'assets/stargo-editorial/os-inquiries.webp',
-    'pexels-23515909-6685891': 'assets/stargo-editorial/os-desktop.webp',
-  },
 };
 
 /** Every image in the cut carries this one alt string. */
@@ -58,6 +55,7 @@ export function render(frag, ctx) {
   const { C, lang, t, escapeHtml, capTitle } = ctx;
   const S = C.CAPABILITY_SHOWCASE;
   const story = S.stories[0];
+  if (!story) throw new Error('cn-service: CAPABILITY_SHOWCASE.stories has no entry 0');
 
   /* ------------------------------------------------------------ the cut -- */
 
@@ -88,10 +86,11 @@ export function render(frag, ctx) {
   let open = setText(head.slice(0, splitAt), 'cn-heading-style-h2', escapeHtml(t(S.headlineTop)))
     + setText(head.slice(splitAt), 'cn-heading-style-h2', escapeHtml(t(S.headlineBottom)));
 
-  /* The pill is the only line in the block that can name both what this chapter
-     is and which outcome opens it, so it carries the register's own eyebrow and
-     the story's label, joined the way this site joins labels elsewhere. */
-  open = setText(open, 'cn-subtitle', `${escapeHtml(t(S.eyebrow))} · ${escapeHtml(t(story.label))}`);
+  /* cinery's pill holds two words ("OU SOLUTIONS", 81px) inside an
+     `overflow: hidden` box set solid at `line-height: 1`, so it holds one short
+     line and nothing more. The chapter's own eyebrow is that line; the story's
+     label is 350px of text and would need the pill rebuilt to carry it. */
+  open = setText(open, 'cn-subtitle', escapeHtml(t(S.eyebrow)));
 
   /* A roll-over button: two copies of the word, kept in step. */
   open = setTextAll(open, 'cn-button-text', escapeHtml(t(S.cardButton)));
@@ -101,12 +100,15 @@ export function render(frag, ctx) {
 
   /* ----------------------------------------------------------- the rows -- */
 
-  /* The plain name each row is about, for the alt text of its two photographs. */
+  /* The one name each row is about — Chinese on the Chinese page, the product
+     name on the English page — for the title and for the alt text of the row's
+     two photographs. */
   const plain = [];
 
   const filled = units.map((unit, i) => {
     const cap = capability(C, story.picks[i]);
-    plain.push(lang === 'zh' && cap.zhName ? cap.zhName : cap.name);
+    const title = capTitle(cap.name, cap.zhName ?? '');
+    plain.push(title);
 
     /* Every title begins with the donor's own bullet; it is copied out of the
        row rather than retyped, so the glyph and its class travel unchanged. */
@@ -115,9 +117,27 @@ export function render(frag, ctx) {
 
     /* Three copies of the title stack inside one `overflow:hidden` wrap and the
        hover rolls them past the viewport, so all three say the same thing —
-       two white, the third grey. Write one and the hover shows the donor word. */
-    const name = `${icon[0]} ${capTitle(escapeHtml(cap.name), escapeHtml(cap.zhName ?? ''))}`;
-    let u = setTextAll(unit, 'cn-service-title', name);
+       two white, the third grey. Write one and the hover shows the donor word.
+       The slot is the donor's: 8vw, nowrap, uppercase. Only the words change. */
+    let u = setTextAll(unit, 'cn-service-title', `${icon[0]} ${escapeHtml(title)}`);
+    /* cinery draws one-word titles at 7rem, nowrap. A name that cannot fit the
+       column at that size -- "BUYING COMMITTEE INTELLIGENCE", 进口商补货雷达 -- is
+       set as two lines at half the size inside the same 7rem window, so the
+       row keeps the donor's geometry and the three-copy hover roll (which moves
+       by -200% of a copy's own height) still lands on a copy.
+       The thresholds are measured against the donor's own column. At 1440 the
+       `◉` and its space cost 127px of the 768px on offer, a Chinese name runs
+       at the full 112px per character (6 characters = 799px, over) and an
+       uppercase Latin name at about 63px (11 characters = 823px, over): that is
+       where a name stops fitting the two-column band, and `cn-long-title-wide`
+       halves it there and nowhere else. Below 992 the donor gives the title the
+       whole grid — 350px at 10vw on a 390px phone — which still holds eight
+       Chinese characters (345px) or fourteen Latin ones, so only a name past
+       those takes `cn-long-title`, which is halved at every width. */
+    const chars = lang === 'zh' ? [...title].length : title.length;
+    const overWide = lang === 'zh' ? chars >= 6 : chars >= 11;
+    const overNarrow = lang === 'zh' ? chars >= 9 : chars >= 15;
+    if (overWide) u = u.replace(/class="cn-service-title-wrap/g, `class="cn-service-title-wrap ${overNarrow ? 'cn-long-title' : 'cn-long-title-wide'}`);
 
     /* The kicker's `▶︎` is part of the donor's copy, not of its markup; keep the
        marker and its spacing exactly as drawn and change only the words after
@@ -146,5 +166,8 @@ export function render(frag, ctx) {
 
   const html = open + filled.join('') + back;
   if (html.includes('Cinery')) throw new Error('cn-service: donor copy survives in the rendered block');
+  if (lang === 'zh' && /[A-Za-z]{3,}/.test(html.replace(/<[^>]+>/g, ' '))) {
+    throw new Error('cn-service: Latin words on the Chinese page — a capability without a zhName leaked its product name');
+  }
   return html;
 }

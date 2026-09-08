@@ -41,7 +41,28 @@ export function render(frag, ctx) { … }
 | `capTitle(name, zhName)` | a capability's name, Chinese-first on the Chinese page |
 | `art(name)` | `assets/stargo-editorial/<name>.webp` |
 
-## Rules
+## Rules — read these before anything else
+
+The owner's brief, verbatim: **"要求完美复刻移植，仅仅针对文字进行改动"** — a
+perfect port of the template block, changing the words and nothing else. The
+review document (F:/stargo 网站/.docx/word/media/imageN.png) shows exactly which
+block each section is, with the template's own photographs in place.
+
+- **The template's images stay.** Do NOT substitute this site's artwork. Leave
+  `donor.mirror` at its default (`assets/<donor>`): every CDN photo, poster, clip
+  and icon the block uses is rewritten to a local copy and fetched by
+  `node tools/try-block.mjs <id>`. Use `images`/`imageStems`/`cssImages` only to
+  *drop* something that cannot ship (map to `'none'`), never to swap a picture.
+- **The template's type, sizes, colours and layout stay.** Do not add CSS that
+  changes a font-size, a width, a colour or a layout the donor set. If our words
+  do not fit a slot, change the words — use the shorter form (a capability's
+  Chinese name, a shorter label from copy.mjs) — or report it in `copyDropped`.
+  `tools/blocks/<id>.css` exists only for what an extraction cannot carry: a
+  colour or typeface the donor kept on `body`, a rule written against a Webflow
+  node id. Nothing else.
+- **One language per page.** The Chinese page shows Chinese only, the English
+  page English only ("不是所有的观众都能看得懂英文"). `capTitle(lang)` already
+  does this; never print the English product name on the Chinese page.
 
 - **Change words, never structure.** Replace text between existing tags. Do not
   add, remove or reorder elements, and never strip a `data-w-id`, an inline
