@@ -26,3 +26,24 @@ assets/renok/** linguist-vendored=true
 assets/qubix/** linguist-vendored=true
 assets/cinery/** linguist-vendored=true
 assets/fonts/donor/** linguist-vendored=true
+
+# Binary media. Without this git treats them as text and review tools try to
+# diff them: the donor videos alone are ~50 MB, which is what pushed this
+# repository's pull request past Bugbot's 4,000,000-character review ceiling.
+*.webm binary
+*.mp4 binary
+*.mov binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.avif binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+
+# Every asset directory is fetched or generated, never hand-edited.
+assets/** linguist-generated=true
