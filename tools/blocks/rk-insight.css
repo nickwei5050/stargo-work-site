@@ -17,3 +17,42 @@
   font-weight: var(--_font-details---font-weight--regular);
   letter-spacing: var(--_font-details---font-letter-spacing--body);
 }
+
+/* The description on the left, on the English page only.
+   ------------------------------------------------------
+   renok draws it at body size in a `max-width: 14.375rem` box, beside a title
+   that is 100px from 1280px up: 16px against 100px. It reads as one short
+   sentence in Chinese, where the box holds ~15 characters a line; in English
+   the same box holds ~21 characters and the sentence runs three and four
+   lines, and at that width and weight the column stopped reading as copy —
+   "左边英文的显示太小了". So on the English page the sentence is set a quarter
+   larger, 1.25em (20px), from 992px up, where that 100px title is.
+
+   Two measured constraints shape the rest of this rule, and both are the
+   template's own:
+
+     The thumbnail is `position: absolute; inset: 0 auto 0 0` on the row, so it
+     paints over the row's left edge whenever it is showing — renok lets it
+     cover the row number. The sentence must clear it. Measured at 992px, where
+     the column is tightest: the picture ends at 200px and the column ends at
+     448px, so the box may be 248px before the two touch. 15rem (240px) keeps
+     8px of air there and 34px at 1440px, and is the only widening — one rem
+     over renok's 14.375rem — that lets the larger type keep the donor's line
+     count instead of adding a line to every row.
+
+     Leading is left alone deliberately. renok sets 162.5% on the block, which
+     computes to 25.92px there and is inherited by every text node as a length,
+     not a ratio; the larger sentence therefore sits in renok's own leading and
+     no row changes height. Restating it as a ratio would make the longest row
+     130px tall, and at 1920px up, where `.rt-insights-item` is a fixed
+     15.25rem inside an `overflow: hidden` wrapper with only 144px to spare, a
+     taller row also makes the (aspect-locked) thumbnail wider — wide enough to
+     cover the sentence it was widened for.
+
+   The Chinese page is untouched: it is `lang="zh-CN"`, and below 992px both
+   pages keep renok's own sizes, where the title is 53.76px or 35px and the
+   16px:100px mismatch this fixes does not exist. */
+@media screen and (min-width: 992px) {
+  .rk-insight:lang(en) .rk-rt-insights-text { max-width: 15rem; }
+  .rk-insight:lang(en) .rk-rt-insights-text > .rk-rt-text-color-black { font-size: 1.25em; }
+}

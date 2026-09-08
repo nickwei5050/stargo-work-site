@@ -1130,6 +1130,101 @@
   --_typography---h2--h2-line-height\<deleted\|variable-dce8260e-414c-a934-1b6e-a3323274e042\>: 100%;
 }
 
+/* ------------------------------------------- the motion the cut leaves behind
+
+   cinery drives three more things in this section, and none of the three can
+   reach us through tools/donor-lib.mjs. What they are, and why:
+
+   1. `a-49` "Rotate Circle" — the wheel. `.cta-component` starts at
+      rotateZ 0 + translateX -50% (its own css already says translate(-50%)),
+      then turns 360deg over 80000ms, then snaps back to 0 in 0ms; the event
+      loops, so the fan of thirteen clips turns for ever.
+   2. `a-50` "CTA Button Loop" — the marquee. `.cta-text-item` runs from
+      x 0% to -100% over 30000ms, then back to 0% over another 30000ms, on a
+      loop; two identical rows side by side make the roll read as continuous.
+   3. `t-864fc814` (ix3, fired by `i-9f439e20` on `.heading-wrap` at
+      "top 85%", play once) — the heading. `.top-title` and `.bottom-title`
+      each come up from y 110% to 0% behind the `.title-wrapper` mask,
+      duration 0.5s (the ix3 default), ease index 6 = gsap `power2.inOut`,
+      the bottom line 0.3s behind the top one.
+
+   Why they are re-declared here instead of carried. (1) and (2) hang on
+   PAGE_START events (`e-260`, `e-268`) whose target is cinery's page id with
+   `appliesTo: "PAGE"`. donor-lib matches an event by the block's `data-w-id`s
+   or by a selector written on the EVENT, and a PAGE_START event carries
+   neither — the selector lives on the action list — so neither is picked up;
+   and measured in the browser, a PAGE_START event whose target id is not this
+   document's `data-wf-page` never fires even when the payload does carry it,
+   so the id would have to be folded onto the host page as well. (3) is ix3
+   data, which donor-lib does not return at all, though tools/fuse-ix.mjs
+   already merges a donor payload's `interactions`/`timelines` when one has
+   them. All three are fixes in tools/donor-lib.mjs and tools/fuse-ix.mjs,
+   shared files this block may not edit; the patches are written out in the fix
+   report. Every number below is the donor's own.
+
+   Measured on the built page at 1440 before these rules existed: the wheel sat
+   at matrix(1,0,0,1,-1696,0) and the marquee at `none` for as long as the page
+   was watched (0.000 deg/s, 0.00 px/s over 7s); with these rules the wheel
+   turns 4.48 deg/s (360/80s = 4.5) and the marquee runs -80.8 px/s against the
+   -81.13 px/s its 2434px row asks for. */
+
+@keyframes cn-produce-wheel {
+  from { transform: translate(-50%) rotate(0deg); }
+  to   { transform: translate(-50%) rotate(360deg); }
+}
+.cn-produce .cn-cta-component {
+  animation: cn-produce-wheel 80s linear infinite;
+}
+
+@keyframes cn-produce-cta-roll {
+  0%   { transform: translateX(0%); }
+  50%  { transform: translateX(-100%); }
+  100% { transform: translateX(0%); }
+}
+.cn-produce .cn-cta-text-item {
+  animation: cn-produce-cta-roll 60s linear infinite;
+}
+
+/* The heading's two line boxes. `.cn-title-wrapper` is the donor's own mask
+   (`position: relative; overflow: hidden`, and measured here it is exactly as
+   tall as the line it holds: 56/128/192px at 390/768/1440), so 110% puts the
+   line clear of it — measured 6/13/19px of clearance below the mask.
+
+   The resting page is the one without either class: tools/blocks/cn-produce.js
+   adds `cn-produce-armed` only once its observer is watching, and swaps it for
+   `cn-produce-reveal` when the heading arrives. No JS, no observer, or a
+   reader who asked for less motion, and the heading simply stands there — it
+   is never hidden by a rule that has nothing to un-hide it. `backwards` fill
+   holds the bottom line down through its 0.3s offset and lets both lines
+   return to the page's own state when the animation ends. */
+@keyframes cn-produce-title-rise {
+  from { transform: translateY(110%); }
+  to   { transform: translateY(0%); }
+}
+.cn-produce.cn-produce-armed .cn-top-title,
+.cn-produce.cn-produce-armed .cn-bottom-title {
+  transform: translateY(110%);
+}
+.cn-produce.cn-produce-reveal .cn-top-title,
+.cn-produce.cn-produce-reveal .cn-bottom-title {
+  animation: cn-produce-title-rise .5s cubic-bezier(.65, 0, .35, 1) backwards;
+}
+.cn-produce.cn-produce-reveal .cn-bottom-title {
+  animation-delay: .3s;
+}
+
+/* A reader who has asked their system for less motion gets the block as it is
+   drawn — every clip, colour and word in place, nothing turning. This is the
+   same line js/stargo-pricing.js and js/stargo-media.js already take. */
+@media (prefers-reduced-motion: reduce) {
+  .cn-produce .cn-cta-component,
+  .cn-produce .cn-cta-text-item,
+  .cn-produce.cn-produce-reveal .cn-top-title,
+  .cn-produce.cn-produce-reveal .cn-bottom-title {
+    animation: none;
+  }
+}
+
 @font-face {
   font-family: webflow-icons;
   src: url("data:application/x-font-ttf;charset=utf-8;base64,AAEAAAALAIAAAwAwT1MvMg8SBiUAAAC8AAAAYGNtYXDpP+a4AAABHAAAAFxnYXNwAAAAEAAAAXgAAAAIZ2x5ZmhS2XEAAAGAAAADHGhlYWQTFw3HAAAEnAAAADZoaGVhCXYFgQAABNQAAAAkaG10eCe4A1oAAAT4AAAAMGxvY2EDtALGAAAFKAAAABptYXhwABAAPgAABUQAAAAgbmFtZSoCsMsAAAVkAAABznBvc3QAAwAAAAAHNAAAACAAAwP4AZAABQAAApkCzAAAAI8CmQLMAAAB6wAzAQkAAAAAAAAAAAAAAAAAAAABEAAAAAAAAAAAAAAAAAAAAABAAADpAwPA/8AAQAPAAEAAAAABAAAAAAAAAAAAAAAgAAAAAAADAAAAAwAAABwAAQADAAAAHAADAAEAAAAcAAQAQAAAAAwACAACAAQAAQAg5gPpA//9//8AAAAAACDmAOkA//3//wAB/+MaBBcIAAMAAQAAAAAAAAAAAAAAAAABAAH//wAPAAEAAAAAAAAAAAACAAA3OQEAAAAAAQAAAAAAAAAAAAIAADc5AQAAAAABAAAAAAAAAAAAAgAANzkBAAAAAAEBIAAAAyADgAAFAAAJAQcJARcDIP5AQAGA/oBAAcABwED+gP6AQAABAOAAAALgA4AABQAAEwEXCQEH4AHAQP6AAYBAAcABwED+gP6AQAAAAwDAAOADQALAAA8AHwAvAAABISIGHQEUFjMhMjY9ATQmByEiBh0BFBYzITI2PQE0JgchIgYdARQWMyEyNj0BNCYDIP3ADRMTDQJADRMTDf3ADRMTDQJADRMTDf3ADRMTDQJADRMTAsATDSANExMNIA0TwBMNIA0TEw0gDRPAEw0gDRMTDSANEwAAAAABAJ0AtAOBApUABQAACQIHCQEDJP7r/upcAXEBcgKU/usBFVz+fAGEAAAAAAL//f+9BAMDwwAEAAkAABcBJwEXAwE3AQdpA5ps/GZsbAOabPxmbEMDmmz8ZmwDmvxmbAOabAAAAgAA/8AEAAPAAB0AOwAABSInLgEnJjU0Nz4BNzYzMTIXHgEXFhUUBw4BBwYjNTI3PgE3NjU0Jy4BJyYjMSIHDgEHBhUUFx4BFxYzAgBqXV6LKCgoKIteXWpqXV6LKCgoKIteXWpVSktvICEhIG9LSlVVSktvICEhIG9LSlVAKCiLXl1qal1eiygoKCiLXl1qal1eiygoZiEgb0tKVVVKS28gISEgb0tKVVVKS28gIQABAAABwAIAA8AAEgAAEzQ3PgE3NjMxFSIHDgEHBhUxIwAoKIteXWpVSktvICFmAcBqXV6LKChmISBvS0pVAAAAAgAA/8AFtgPAADIAOgAAARYXHgEXFhUUBw4BBwYHIxUhIicuAScmNTQ3PgE3NjMxOAExNDc+ATc2MzIXHgEXFhcVATMJATMVMzUEjD83NlAXFxYXTjU1PQL8kz01Nk8XFxcXTzY1PSIjd1BQWlJJSXInJw3+mdv+2/7c25MCUQYcHFg5OUA/ODlXHBwIAhcXTzY1PTw1Nk8XF1tQUHcjIhwcYUNDTgL+3QFt/pOTkwABAAAAAQAAmM7nP18PPPUACwQAAAAAANciZKUAAAAA1yJkpf/9/70FtgPDAAAACAACAAAAAAAAAAEAAAPA/8AAAAW3//3//QW2AAEAAAAAAAAAAAAAAAAAAAAMBAAAAAAAAAAAAAAAAgAAAAQAASAEAADgBAAAwAQAAJ0EAP/9BAAAAAQAAAAFtwAAAAAAAAAKABQAHgAyAEYAjACiAL4BFgE2AY4AAAABAAAADAA8AAMAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAADgCuAAEAAAAAAAEADQAAAAEAAAAAAAIABwCWAAEAAAAAAAMADQBIAAEAAAAAAAQADQCrAAEAAAAAAAUACwAnAAEAAAAAAAYADQBvAAEAAAAAAAoAGgDSAAMAAQQJAAEAGgANAAMAAQQJAAIADgCdAAMAAQQJAAMAGgBVAAMAAQQJAAQAGgC4AAMAAQQJAAUAFgAyAAMAAQQJAAYAGgB8AAMAAQQJAAoANADsd2ViZmxvdy1pY29ucwB3AGUAYgBmAGwAbwB3AC0AaQBjAG8AbgBzVmVyc2lvbiAxLjAAVgBlAHIAcwBpAG8AbgAgADEALgAwd2ViZmxvdy1pY29ucwB3AGUAYgBmAGwAbwB3AC0AaQBjAG8AbgBzd2ViZmxvdy1pY29ucwB3AGUAYgBmAGwAbwB3AC0AaQBjAG8AbgBzUmVndWxhcgBSAGUAZwB1AGwAYQByd2ViZmxvdy1pY29ucwB3AGUAYgBmAGwAbwB3AC0AaQBjAG8AbgBzRm9udCBnZW5lcmF0ZWQgYnkgSWNvTW9vbi4ARgBvAG4AdAAgAGcAZQBuAGUAcgBhAHQAZQBkACAAYgB5ACAASQBjAG8ATQBvAG8AbgAuAAAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==") format("truetype");

@@ -573,8 +573,7 @@ PAGES['about.html'] = (lang) => {
   [['Product Design', 'Remote | Full Time'], ['Web Developer', 'NYC | Full Time'], ['Data Analyst', 'Chicago | Part Time'], ['UX Researcher', 'San Francisco | Contract'], ['Marketing Specialist', 'Remote | Full Time']]
     .forEach(([job, place], i) => { b = s(b, `<div>${job}</div>`, `<div>${t(A.starts[i].name)}</div>`, { count: 1 }); b = s(b, `>${place}<`, `>${t(A.starts[i].sub)}<`, { nth: 0 }); });
   b = s(b, '<a href="#" class="lx-careers_01-item w-inline-block">', '<a href="contact.html" class="lx-careers_01-item w-inline-block">', { count: 5 });
-  b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt="');
-  b = b.replace(/alt="(?=[^"]*$)/g, 'alt=""');
+  b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
   if (/Lifelogx|Lina Elsen|Amira|Mila Eron|Oren|Full Time|Part Time|Contract<|>Download</.test(b)) throw new Error('about: template copy survives');
   return inMonoShell(b + bigMark(), ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
 };

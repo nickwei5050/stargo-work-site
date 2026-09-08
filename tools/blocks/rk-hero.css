@@ -1,7 +1,8 @@
 /* rk-hero — hand-written rules the extraction could not carry.
    Everything is scoped under .rk-hero, exactly as the extractor scopes its own.
 
-   One thing only: the face the italic accent is actually drawn in.
+   Two things: the face the italic accent is actually drawn in, and a
+   maximum size for the 3D card stage above 1920.
 
    renok asks for the accent with `font-family: var(--_font-family---secondary-font);
    font-style: italic` (.rt-italic-text, index.html), and the extractor already
@@ -33,4 +34,67 @@
 
 .rk-hero {
   --_font-family---secondary-font: "Instrument Serif Roman", sans-serif;
+}
+
+/* ---------------------------------------------------------------------------
+   Second thing: the 3D card stage stops growing at 1920.
+
+   renok stands the six photographs in real 3D. The stage
+   (`.rt-project-three-main`) carries `perspective: 100rem` — a camera 1600px
+   in front of the plane — and each card is pushed toward or away from that
+   camera with `translate3d(0, 0, ±Nvw)`: 40vw below 1440, 30vw from 1440,
+   35vw from 1920. The depth is viewport-relative; the camera distance is not.
+   So the projection factor is 100rem / (100rem - depth), and above the
+   donor's top breakpoint it does not scale with the window, it runs away with
+   it. Measured on capabilities.html (block 30rem x 28.875rem, widest card
+   face-on, both languages):
+
+     width  depth       factor   card painted     stage box
+     1440    30vw  432px  1.37    438 x  649     242 .. 1198
+     1728    30vw  518px  1.48    473 x  699     292 .. 1436
+     1919    30vw  576px  1.56    500 x  736     317 .. 1602
+     1920    35vw  672px  1.72    828 x  834     164 .. 1756
+     2560    35vw  896px  2.27   1091 x 1094     142 .. 2418
+     3440    35vw 1204px  4.04   1939 x 1912    -148 .. 3588
+     3840    35vw 1344px  6.25   3000 x 2899    -696 .. 4536
+     5120    35vw 1792px    —   723617 x 400793  (past the camera plane)
+
+   At 3440 the front photograph is 1939px wide and its painted box starts at
+   y=81 — the headline sits at y=200..402 and the paragraph's left edge at
+   x=1345, so the picture is behind the words, which is exactly what the
+   review reported; it also spills 148px past the left edge and 148px past the
+   right. At 4571 the depth reaches the camera plane and the projection is
+   unbounded. The donor's own sheet writes the same vw depths, so this is
+   inherited arithmetic, not something the transplant introduced — it only
+   shows on a monitor wider than the 1920 breakpoint Webflow designs to.
+
+   Everything else in this hero is already given a ceiling by renok itself:
+   the headline at `clamp(35px, 15vw, 100px)`, its column at 54.7331rem, the
+   three hairlines at 91.0625rem. The card stage is the one thing left with
+   no maximum, so it gets the same treatment — it stops at the size it has at
+   1920 and stays centred.
+
+   35vw at 1920 is exactly 672px, and 672px is exactly 42rem, so inside
+   renok's own `min-width: 1920px` block the two are the same length at 1920
+   and can only differ above it: below 1920 and at 1920 nothing changes at
+   all (verified identical at 390, 768, 991, 992, 1280, 1440, 1600, 1728,
+   1919 and 1920, both languages — same depths, same painted boxes to the
+   pixel), and from 1921 up the stage renders as it does at 1920. rem rather
+   than px because the length is divided by a perspective written in rem:
+   keeping both font-relative holds the factor at 100/(100-42) = 1.724
+   whatever the root size is.
+
+   Only the six depths change. Every rotation angle, the perspective, the
+   `preserve-3d` chain, the stage heights, the card artwork and the IX2
+   carousel that turns the block (action list "Hero banner 3d rotation",
+   -360deg over 50s, looping) are the donor's own and are untouched. The
+   `.rt-v2` variants of these six rules are not overridden because this
+   fragment's cards do not carry that class. */
+@media screen and (min-width: 1920px) {
+  .rk-hero .rk-rt-project-three-card-one { transform: rotate(0)translate3d(0, 0, 42rem); }
+  .rk-hero .rk-rt-project-three-card-two { transform: rotate(0)translate3d(0, 0, -42rem); }
+  .rk-hero .rk-rt-project-three-card-three { transform: rotateX(0)rotateY(60deg)rotateZ(0)translate3d(0, 0, 42rem); }
+  .rk-hero .rk-rt-project-three-card-four { transform: rotateX(0)rotateY(60deg)rotateZ(0)translate3d(0, 0, -42rem); }
+  .rk-hero .rk-rt-project-three-card-five { transform: rotateX(0)rotateY(-60deg)rotateZ(0)translate3d(0, 0, -42rem); }
+  .rk-hero .rk-rt-project-three-card-six-last { transform: rotateX(0)rotateY(-60deg)rotateZ(0)translate3d(0, 0, 42rem); }
 }

@@ -597,15 +597,6 @@ body.stargo-pricing-lx .stargo-plan-badge {
   .cn-capmap .cn-band { margin: 52px 0 20px; }
 }
 
-/* The "no writing" band sits left of centre: the words and the phone share one
-   grid, and its left margin is consistently 64px tighter than its right (32 vs
-   96 at 1280, 80 vs 144 at 1440, 320 vs 384 at 1920). Move the whole grid — the
-   two words and the phone between them — half that distance right, which
-   balances the margins without changing any spacing inside the band. */
-@media (min-width: 992px) {
-  .lx-scope .lx-gradient-grid { transform: translateX(32px); }
-}
-
 /* ======================================================= pricing palette
    Scalora writes a few of its accent colours as literal hex rather than
    through the token this site rebinds, so they survived the recolour at 12%
@@ -689,6 +680,291 @@ body.stargo-pricing-lx .stargo-plan-badge {
 .menu-bottom:has(.menu-first-bottom.caps) {
   grid-template-columns: max-content max-content max-content;
   width: max-content; max-width: calc(100vw - 40px);
+}
+
+/* Homepage comparison headline (#compare) — reserve the headline's own height.
+   The Mono template stacks three <h2 class="pricing-txt"> inside
+   .pricing-txt-wrapper with `position: absolute`, so the wrapper carries no
+   content height at all: it is only its own padding (60+60px desktop,
+   35+35px <=991px). The template's own strings are always one line, so the
+   headline fitted inside that padding. The English copy
+   "The difference is the loop." wraps to two lines at --button--cta-title
+   (96px inside the 800px .max-w-center column), measures 211px tall, and so
+   spilled 45.6px out of the 120px wrapper in both directions — painting over
+   the "(Two ways to run trade)" eyebrow above it and the
+   "Every step of growth…" paragraph below it (measured overlap 35.6px on both
+   sides at 1440/1920/2560).
+
+   Fix: stack the three headings in a single CSS grid cell instead of taking
+   them out of flow. They still overlap each other exactly as before, so the
+   Webflow cross-fade (opacity + yPercent per split character) is untouched,
+   but the grid row now auto-sizes to the tallest of the three at every width
+   and in both languages, and nothing can reach the paragraphs again. The
+   template's padding is folded into `min-height` (120px / 70px = exactly the
+   padding it replaces) so every case that already fitted — the whole Chinese
+   page, English at 768/991 — keeps the template's spacing to the pixel; only
+   the two-line English case grows. Font, weight, letter-spacing, colour and
+   centring are all left to the template. Scoped to #compare so the identical
+   block on capabilities.html (#start) is not touched. */
+
+#compare .pricing-txt-wrapper {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  place-items: center;
+  align-content: center;
+  padding-top: 0;
+  padding-bottom: 0;
+  min-height: 120px;
+}
+
+#compare .pricing-txt-wrapper > .pricing-txt {
+  grid-area: 1 / 1;
+  position: static;
+  max-width: 100%;
+}
+
+@media screen and (max-width: 991px) {
+  #compare .pricing-txt-wrapper {
+    min-height: 70px;
+  }
+}
+
+/* ============================= "No / prompting / waiting / forgetting" band
+   (intelligence.html and en/intelligence.html, .lx-section.lx-no-writing)
+
+   Lifelogx lays this band out as one grid, `1fr 2.5fr 1fr`: a word on the left,
+   the cut-out photograph of the handset in the middle, the three cross-fading
+   words on the right — and it pulls the right-hand column 4rem back towards the
+   middle (`.lx-gradient-grid-item.lx-hide-landscape { left: -4rem }`), so that
+   column starts 64px inside the photograph's own track. The outer tracks are
+   min-content sized, so a track is exactly as wide as its longest word and has
+   no slack to absorb that pull: the first 64px of the word sits under the image,
+   which carries `z-index: 1`, and is painted over. The template's own words
+   ("Writing / Waiting / Saving") were narrow enough that the pull landed in the
+   transparent margin of the cut-out; ours are not, and past a certain viewport
+   height `object-fit: cover` crops the photograph straight through the handset,
+   so those 64px become solid pixels — at 2560x1440 the "p" of "prompting" and
+   the left half of "丢" vanish behind a hard image edge.
+
+   Two changes, both size and position only. The gradient clipped to the glyphs,
+   the photograph, and the IX2 fade/translate that brings each word in on scroll
+   are all untouched (measured: every word still runs opacity 0 -> 1 and the
+   image still steps through its scroll transform at every width). */
+
+@media (min-width: 992px) {
+  /* Let the right-hand words start where their own grid track starts, so no
+     glyph is ever under the image. The 32px nudge on this grid earlier in this
+     file was re-balancing the margin that the pull left on the right; with the
+     pull gone the grid is centred already, and the nudge would unbalance it
+     (112/48 instead of 80/80 at 1440). See the report: that rule can be
+     deleted. */
+  .lx-scope .lx-no-writing .lx-gradient-grid { transform: none; }
+  .lx-scope .lx-no-writing .lx-gradient-grid-item.lx-hide-landscape { left: 0; }
+}
+
+/* English. "prompting" is 37% wider than the template's widest word ("Waiting")
+   set at the same size, and the min-content tracks take that width out of the
+   handset's: 481px instead of 598px at 1440, and only 112px at 768, where the
+   phone was reduced to a sliver. At 390 the words were 455px wide in 358px of
+   room and were cut off by main-content's `overflow: clip` ("forgettin").
+   These sizes make the longest English word exactly as wide as the template's
+   longest word at each breakpoint, so the band keeps the template's own
+   composition rather than English's. Ranges do not overlap, so the block is
+   order-independent wherever it is pasted. */
+
+@media (min-width: 1440px) {                          /* template: 7.8rem */
+  html[lang="en"] .lx-scope .lx-no-writing .lx-big-gradient-text { font-size: 5.7rem; }
+}
+
+@media (min-width: 992px) and (max-width: 1439px) {   /* template: 9vw */
+  html[lang="en"] .lx-scope .lx-no-writing .lx-big-gradient-text { font-size: 6.55vw; }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {    /* template: 6rem */
+  html[lang="en"] .lx-scope .lx-no-writing .lx-big-gradient-text { font-size: 4.4rem; }
+}
+
+@media (min-width: 480px) and (max-width: 767px) {    /* template: 17vw */
+  html[lang="en"] .lx-scope .lx-no-writing .lx-big-gradient-text { font-size: 12.4vw; }
+}
+
+@media (max-width: 479px) {                           /* template: 24vw */
+  html[lang="en"] .lx-scope .lx-no-writing .lx-big-gradient-text { font-size: 17.5vw; }
+}
+
+/* About hero — gather the four metal orbs in from the viewport edges.
+ * (STARGO WORK, defect F. Append to css/stargo-fusion.css.)
+ *
+ * Lifelogx positions the four `.lx-about-image-holder` orbs with percentage insets
+ * (top:-70%, inset:-80% -3%, inset:auto auto -130% -3%, inset:auto 10% -130% auto)
+ * resolved against `.lx-feature-hero-text-holder` — a shrink-to-fit flex item whose
+ * width and height are set by the headline and the paragraph. STARGO's copy is much
+ * longer than the donor's, so that box swells to the FULL viewport width between
+ * ~992px and ~1900px and runs ~70px taller, and the negative percentages then resolve
+ * to hundreds of pixels outside the viewport; the hero's `overflow:hidden` cuts the
+ * orbs off — 164px of orb _1 past the left edge at 1440x900 EN, 188px of orb _3
+ * below the fold at 390x844 EN, 155/110/60px at the 1351px width the owner reported.
+ *
+ * The fix keeps the template's four-corner composition, its artwork, its labels and
+ * its IX2 float loop untouched — only top/right/bottom/left are changed, never
+ * `transform`, which the interaction owns — but re-anchors the insets so they no
+ * longer depend on the length of the copy:
+ *
+ *   - horizontally to the box's own centre, which is always the viewport centre
+ *     (the text holder is flex-centred inside a full-bleed `.lx-_100-height`
+ *     container), clamped with min() so an orb's outer edge can never reach the
+ *     viewport edge, with room left for the float loop's own travel;
+ *   - vertically to the text block's top / bottom edge, so the orbs stay clear of
+ *     the headline and the paragraph however those wrap, with a vh clamp that keeps
+ *     them inside the viewport when the text block is unusually tall.
+ *
+ * The travel allowed for is lx-a-52 ("about-hero-images") in tools/fragments/lx-ix.json:
+ *   _1 x -20..+30  y -30..+30      _2 x -20..+70  y -20..+60
+ *   _3 x -20..+30  y -40..+30      _4 x -20..+70  y -20..+40
+ */
+
+.lx-scope .lx-hero-about .lx-about-image-holder {
+  --orb-w: 10.5rem;                       /* the template's own diameter, unchanged */
+
+  /* viewport centre -> the orb's outer edge */
+  --orb-x1: min(550px, 50vw - 100px);
+  --orb-x2: min(486px, 50vw - 100px);
+  --orb-x3: min(486px, 50vw - 100px);
+  --orb-x4: min(367px, 50vw - 110px);
+
+  /* clearance kept between the orb and the text block */
+  --orb-g1: 38px;
+  --orb-g2: 66px;
+  --orb-g3: 60px;
+  --orb-g4: 60px;
+
+  /* viewport clamps: the float loop has to stay on screen */
+  --orb-z1: calc(44vh - var(--orb-w) - 34px);
+  --orb-z2: calc(44vh - var(--orb-w) - 22px);
+  --orb-z3: calc(55vh - var(--orb-w) - 42px);
+  --orb-z4: calc(55vh - var(--orb-w) - 52px);
+}
+
+.lx-scope .lx-hero-about .lx-about-image-holder.lx-_1 {
+  top: auto;
+  right: auto;
+  bottom: min(calc(100% + var(--orb-g1)), calc(50% + var(--orb-z1)));
+  left: calc(50% - var(--orb-x1));
+}
+
+.lx-scope .lx-hero-about .lx-about-image-holder.lx-_2 {
+  top: auto;
+  right: calc(50% - var(--orb-x2));
+  bottom: min(calc(100% + var(--orb-g2)), calc(50% + var(--orb-z2)));
+  left: auto;
+}
+
+.lx-scope .lx-hero-about .lx-about-image-holder.lx-_3 {
+  top: min(calc(100% + var(--orb-g3)), calc(50% + var(--orb-z3)));
+  right: auto;
+  bottom: auto;
+  left: calc(50% - var(--orb-x3));
+}
+
+.lx-scope .lx-hero-about .lx-about-image-holder.lx-_4 {
+  top: min(calc(100% + var(--orb-g4)), calc(50% + var(--orb-z4)));
+  right: calc(50% - var(--orb-x4));
+  bottom: auto;
+  left: auto;
+}
+
+@media screen and (max-width: 767px) {
+  .lx-scope .lx-hero-about .lx-about-image-holder {
+    --orb-w: 8rem;                        /* the template's own tablet diameter */
+    --orb-x1: min(550px, 50vw - 64px);
+    --orb-x2: min(486px, 50vw - 92px);
+    --orb-x3: min(486px, 50vw - 56px);
+    --orb-x4: min(367px, 50vw - 92px);
+    /* clear the "Book a demo" button, which sits right under the text block here */
+    --orb-g3: 100px;
+    --orb-g4: 100px;
+    /* this band centres the hero content slightly higher than the desktop one */
+    --orb-z1: calc(42vh - var(--orb-w) - 34px);
+    --orb-z2: calc(42vh - var(--orb-w) - 22px);
+  }
+}
+
+@media screen and (max-width: 479px) {
+  .lx-scope .lx-hero-about .lx-about-image-holder {
+    --orb-w: 5.8rem;                      /* the template's own phone diameter */
+    --orb-x1: min(550px, 50vw - 30px);
+    --orb-x2: min(486px, 50vw - 78px);
+    --orb-x3: min(486px, 50vw - 22px);
+    --orb-x4: min(367px, 50vw - 78px);
+    --orb-g3: 110px;
+    --orb-g4: 110px;
+    /* the phone hero centres its content differently, so the clamps shift with it */
+    --orb-z1: calc(52vh - var(--orb-w) - 34px);
+    --orb-z2: calc(52vh - var(--orb-w) - 22px);
+    --orb-z3: calc(45.5vh - var(--orb-w) - 30px);
+    --orb-z4: calc(45.5vh - var(--orb-w) - 34px);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   About page, "our values" cards — show each graphic inside the card.
+
+   .lx-our-values-holder is a square (aspect-ratio:1) with overflow:hidden, and
+   .lx-our-values-text-image inside it is an absolutely-positioned flex column
+   with justify-content:space-between and padding 1.7rem 1.2rem 0 — note the
+   zero bottom padding. So the graphic, being the last flex child, is pinned
+   flush against the card's bottom edge and bleeds off it; and because an <img>
+   is a non-shrinking flex item, a heading that wraps onto another line pushes
+   the graphic straight past that edge, where overflow:hidden cuts it away.
+   Measured on the built pages: 69px of the crosshair cut off at 992w EN,
+   22px at 1024w, 15px at 768w, and 4px still gone at 1280w — the Chinese
+   headings are shorter, so the same cards lose only 24px / 22px / 15px / 4px.
+
+   Two rules, both in the template's own idiom:
+     1. give the flex column a bottom padding mirroring its horizontal padding,
+        at each of the three widths the template sets that padding, so the
+        graphic sits inside the card instead of bleeding off it;
+     2. let the graphic shrink rather than overflow, keeping its aspect ratio
+        (object-fit:contain, which also removes the 0.4% vertical stretch the
+        default object-fit:fill was applying) and staying bottom-anchored the
+        way the template composes the card.
+
+   Card geometry, colours, artwork and the IX2 entrance animation on
+   .lx-our-values-grid-item.lx-_1/_2/_3 (opacity 0→1, scale 0.9→1, staggered)
+   are all untouched; the cards stay square and equal-height.
+
+   The <img> is matched structurally as well as by class on purpose: the build
+   currently emits a malformed `alt=" class="lx-our-values-icon"` attribute, so
+   these images carry no class at all in the DOM. The structural selector holds
+   both before and after that build bug is fixed.
+   --------------------------------------------------------------------------- */
+
+.lx-our-values-text-image {
+  padding-bottom: 1.2rem;
+}
+
+.lx-our-values-text-image > img,
+.lx-our-values-icon {
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  flex: 0 1 auto;
+  object-fit: contain;
+  object-position: center bottom;
+}
+
+/* The template widens this padding to 3rem below 768px … */
+@media screen and (max-width: 767px) {
+  .lx-our-values-text-image {
+    padding-bottom: 3rem;
+  }
+}
+
+/* … and narrows it to 1.5rem below 480px. Mirror both. */
+@media screen and (max-width: 479px) {
+  .lx-our-values-text-image {
+    padding-bottom: 1.5rem;
+  }
 }
 
 /* ---------------------------------------------------------------------------

@@ -16,11 +16,29 @@
  * and draws `.rt-line-two` at 100% width. So at rest the middle row's picture
  * is the one showing, and hovering row 1 (or 3) swaps: its own picture grows
  * to 1, the middle row's shrinks to 0, and its own black line draws across the
- * bottom. The review screenshot is exactly that moment on row 01. The image
- * targets are addressed under `useEventTarget: CHILDREN`, so a clone that
- * shares an id animates its own picture; `.rt-image-two` is addressed by bare
- * selector, so every row-2 clone reacts together — which is the donor's own
- * mechanism, simply repeated. Nothing here hides a thumbnail.
+ * bottom. The review screenshot is exactly that moment on row 01. renok's own
+ * design is therefore "exactly one thumbnail on screen at a time".
+ *
+ * That is what the rotation broke, and what `hoverHooks` below repairs. The
+ * steps that address a row's OWN picture and line carry
+ * `useEventTarget: CHILDREN`, so a clone that shares a `data-w-id` animates its
+ * own picture and nobody else's. The steps that address the middle row are bare
+ * global selectors — `.rt-image-two`, `.rt-line-two`, no event target — because
+ * in a three-row list there is only one middle row to address. Cloned to nine,
+ * three rows answer that selector, so every hover lit and dimmed rows 2, 5 and 8
+ * together and leaving row 1 brought all three back at once. The owner saw it:
+ * "点击到第二栏的时候第五栏也会跟着显示，应该是一个接着一个显示".
+ *
+ * The repair is to leave exactly one row wearing the middle row's hooks, and to
+ * re-hook the other two onto the FIRST row's pair — its `data-w-id`, its
+ * `.rt-image-one` / `.rt-line-one` classes — so their hover drives their own
+ * subtree through the CHILDREN-scoped steps. The bare selectors then match one
+ * element again and renok's "one at a time" reading is restored across nine
+ * rows. Nothing visual moves: `.rt-image-*` and `.rt-line-*` carry no
+ * declarations anywhere in renok's stylesheet, they exist only as interaction
+ * hooks, and the first row's entrance (e-156, slideInBottom) is byte-identical
+ * to the middle row's (e-158) apart from its target. Every picture stays where
+ * it was; nothing here hides or swaps a thumbnail.
  *
  * Copy: the description slot is `.rt-insights-text`, `max-width: 14.375rem`
  * (230px). renok fills it with one ~60-character sentence over two lines. The
@@ -53,6 +71,22 @@ export const donor = {
 
 /** How many rows renok draws; the stage list is laid over them in rotation. */
 const DONOR_ROWS = 3;
+
+/** The donor row whose hover list drives its own subtree (CHILDREN-scoped). */
+const HOVER_ROW = 0;
+
+/** The donor row addressed by bare selector — the picture showing at rest.
+ *  Exactly one row in the built list may wear its hooks; see the header. */
+const RESTING_ROW = 1;
+
+/** The `.rt-image-N` / `.rt-line-N` pair a donor row's interactions address. */
+function hooks(unit, which) {
+  const image = /class="rk-rt-insights-item-image (rk-rt-image-\w+)/.exec(unit);
+  const line = /class="rk-rt-insights-item-line (rk-rt-line-\w+)/.exec(unit);
+  const id = /^<a data-w-id="([0-9a-f-]+)"/.exec(unit);
+  if (!image || !line || !id) throw new Error(`rk-insight: donor row ${which} lost an interaction hook`);
+  return { id: id[1], image: image[1], line: line[1] };
+}
 
 /** renok's own "not the first row" class, and the first-row class it replaces. */
 const FIRST = 'rk-rt-top-border';
@@ -94,6 +128,9 @@ export function render(frag, ctx) {
     throw new Error('rk-insight: the first donor row no longer carries rt-top-border');
   }
 
+  const hoverHooks = hooks(units[HOVER_ROW], HOVER_ROW + 1);
+  const restHooks = hooks(units[RESTING_ROW], RESTING_ROW + 1);
+
   /* --------------------------------------------------------------- rows --- */
   const rows = L.rows.map((r, i) => {
     const [key, , point] = r;
@@ -108,6 +145,19 @@ export function render(frag, ctx) {
        first takes the class renok gives its own non-first rows. */
     if (i >= DONOR_ROWS && row.includes(FIRST)) {
       row = row.replace(`class="rk-rt-insights-item-wrapper ${FIRST} w-inline-block"`, `class="rk-rt-insights-item-wrapper ${NEXT} w-inline-block"`);
+    }
+
+    /* Only one row may wear the hooks renok addresses by bare selector; the
+       other clones of its template take the first row's, whose steps are
+       CHILDREN-scoped and so animate the row they are hovered on. See the
+       header for why, and what it fixes. */
+    if (i !== RESTING_ROW && i % DONOR_ROWS === RESTING_ROW) {
+      row = row.replace(/^(<a data-w-id=")[0-9a-f-]+/, `$1${hoverHooks.id}`)
+        .replace(restHooks.image, hoverHooks.image)
+        .replace(restHooks.line, hoverHooks.line);
+      if (row.includes(restHooks.image) || row.includes(restHooks.line) || !row.startsWith(`<a data-w-id="${hoverHooks.id}"`)) {
+        throw new Error(`rk-insight: row ${i + 1} could not be re-hooked onto the first row's hover pair`);
+      }
     }
 
     /* The number: the first `.rt-text-color-black` in the row is the bare
@@ -140,6 +190,13 @@ export function render(frag, ctx) {
   });
 
   const html = head + rows.join('') + tail;
+
+  /* The bug this block shipped once: three rows answering a step that was
+     written for one. Count them, so it cannot come back unnoticed. */
+  for (const hook of [restHooks.image, restHooks.line]) {
+    const n = html.split(hook).length - 1;
+    if (n !== 1) throw new Error(`rk-insight: ${n} rows answer the bare \`.${hook}\` selector; exactly one may`);
+  }
 
   /* Fail loudly rather than ship a slot that quietly missed. */
   const donorWords = ['Branding', 'Photography', 'Design', 'Insights reveal', 'Optimization improves',
