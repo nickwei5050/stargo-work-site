@@ -581,7 +581,7 @@ PAGES['about.html'] = (lang) => {
   b = s(b, '<a href="contact.html" class="lx-button lx-is-secondary w-button">Download</a>', `<a href="${A.button.href}" class="lx-button lx-is-secondary w-button">${t(A.button.label)}</a>`, { count: 1 });
   // Four circles: the template's four named people → four AI-employee roles with the template's illustrated avatars.
   [['Lina Elsen', '6943d80451564405defffaed_Vibrant'], ['Amira Brik', '6943d80f46f426e739f71ec5_Stylish'], ['Mila Eron', '6943d84a7b3093c6e962c7dd_Futuristic'], ['Oren Solis', '6943d8308925855adc2bcb5c_Stylish']]
-    .forEach(([person, key], i) => { b = s(b, `>${person}<`, `>${A.circles[i].label}<`, { count: 1 }); b = swapImg(b, key, A.circles[i].image); });
+    .forEach(([person, key], i) => { b = s(b, `>${person}<`, `>${escapeHtml(t(A.circles[i].label))}<`, { count: 1 }); b = swapImg(b, key, A.circles[i].image); });
   b = swapImg(b, '6943f43d1ea90943e43a09be_Rectangle', A.bigImage.src, { alt: t(A.bigImage.alt) });
   b = s(b, '>Our Story<', `>${t(A.storyTitle)}<`);
   b = setInner(b, '<div class="lx-about-rich-text w-richtext">', t(A.story).trim());
@@ -925,7 +925,7 @@ function capabilityShowcase(C, lang) {
     .replace(/<div class="cn-accordion-content-block">[\s\S]*?<\/div><\/div><\/div>$/, `<div class="cn-accordion-content-block">${body}</div></div></div>`);
   const catalogue = C.CAPABILITY_GROUPS.map((g) => catRow(`g${g.n}`, `${g.n} ${t(g.name)}`,
     g.items.map(([name, gloss, zhName]) =>
-      `<p class="cn-accordion-answer-text"><strong>${capTitle(name, zhName)}</strong> ${escapeHtml(t(gloss))}</p>`).join('')));
+      `<p class="cn-accordion-answer-text"><strong>${capTitle(lang)(name, zhName)}</strong> ${escapeHtml(t(gloss))}</p>`).join('')));
 
   const total = C.CAPABILITY_GROUPS.reduce((n, g) => n + g.items.length, 0);
   const band = (label, note) =>
