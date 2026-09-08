@@ -16,9 +16,12 @@ js/app.fused.js linguist-generated=true
 js/capability-blocks.js linguist-generated=true
 tools/fragments/** linguist-generated=true
 
-# Vendored: the parts of the licensed Webflow templates the build reads.
-tools/templates/** linguist-vendored=true
-tools/bundles/** linguist-vendored=true
+# Vendored: the parts of the licensed Webflow templates the build reads. Also
+# marked generated, because review tools skip generated paths but not vendored
+# ones, and a 11k-line Webflow stylesheet export is not something a reviewer
+# should be handed — it is input to the build, not our code.
+tools/templates/** linguist-vendored=true linguist-generated=true
+tools/bundles/** linguist-vendored=true linguist-generated=true
 assets/renok/** linguist-vendored=true
 assets/qubix/** linguist-vendored=true
 assets/cinery/** linguist-vendored=true
