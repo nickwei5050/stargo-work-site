@@ -384,6 +384,15 @@ PAGES['index.html'] = (lang) => {
   hero = hero.replace(/<div class="hero-description-block"><div>/, `<div class="hero-description-block"><div data-mobile-text="${escapeHtml(t(C.HOME_MOBILE.scHero))}">`);
   let products = addRootClass(sub('sc-products', frag('products.html'), C.HOME_SC_PRODUCTS), 'sc-scope');
   {
+    // The section heading is eight characters a line on desktop and ten on
+    // phones; the two languages' strings are shaped for those widths, and the
+    // phone form travels the same data-mobile-text route as the hero copy.
+    const title = t(C.HOME_SC_PRODUCTS[1][1]);
+    const before = products;
+    products = products.replace(`<h2>${title}</h2>`, `<h2 data-mobile-text="${escapeHtml(t(C.HOME_MOBILE.products))}">${title}</h2>`);
+    if (products === before) throw new Error('index: core-systems heading not found for the mobile variant');
+  }
+  {
     // four Scalora dashboard drawings → the four STARGO OS systems, desktop and mobile variants alike
     // Keyed on both languages' product names: the Chinese page names them in
     // Chinese (增长系统 / 客户全景 / 报价工作台 / 贸易执行), so matching only the

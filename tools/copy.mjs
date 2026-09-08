@@ -157,6 +157,11 @@ export const HOME_HERO_LIST = [
 export const HOME_MOBILE = {
   heroSupport: B('面向制造业与外贸团队的云端 AI 工作系统：买家研究、客户回复、报价、订单、出口单证，连成一条工作流。', 'Cloud AI for manufacturers and export teams: buyer research, replies, quotes, orders and export paperwork in one connected workflow.'),
   scHero: B('客户、产品、询盘、报价、订单、文件、任务和 AI 员工，第一次在同一个系统里。', 'Customers, products, inquiries, quotes, orders, documents, tasks and AI employees — in one system for the first time.'),
+  // The core-systems heading sits in a 421px box at 48px type — exactly eight
+  // characters a line on desktop, so the desktop string is built to break on
+  // its comma. Below 768px the box holds ten, so phones get this nine-character
+  // form instead of a mid-word wrap.
+  products: B('一套系统，四大核心', 'Four core systems, one OS'),
   ladder: B('AI 产能逐级加：先打底座，再跑运营，再建增长引擎，最后开启主动获客。', 'AI operating capacity, level by level: foundation, operation, growth engine, then AI acquisition.'),
 };
 export const HOME_THEATRE = B('STARGO OS ©2026', 'STARGO OS ©2026');
@@ -409,7 +414,7 @@ export const HOME_SC_HERO = [
 ];
 export const HOME_SC_PRODUCTS = [
   ['Our products', B('(核心系统)', '(Core systems)')],
-  ['Meet the Scalora product ecosystem', B('一个操作系统，四个核心系统', 'Four core systems in one operating system')],
+  ['Meet the Scalora product ecosystem', B('同一个操作系统，四个核心系统', 'Four core systems in one operating system')],
   ['Scalora CRM', B('增长系统 · 获客', 'Growth OS · Acquisition')],
   ['Scalora Marketing', B('客户全景 · 客户', 'Customer 360 · Customers')],
   ['Scalora Docs', B('报价工作台 · 报价', 'Quote Studio · Quoting')],
