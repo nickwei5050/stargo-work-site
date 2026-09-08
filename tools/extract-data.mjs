@@ -2,7 +2,7 @@
  * Pull the verified, owner-reviewed content out of the Next.js site repository
  * into JSON that the static page builder can consume.
  *
- * The Next.js repository (F:/stargo 网站/stargo-work-website/content/*.ts) is
+ * The Next.js repository (STARGO_SITE_CONTENT, a sibling checkout's content/) is
  * where every claim on this site was checked against the STARGO registries
  * and pinned by tests. This static site must not become a second, looser
  * copy of those facts, so it does not retype them: it reads them from the
@@ -10,9 +10,12 @@
  * fails the build instead of shipping an empty roster.
  */
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { SITE } from './paths.mjs';
 
-const SRC = process.env.STARGO_SITE_CONTENT ?? 'F:/stargo 网站/stargo-work-website/content';
-const OUT = 'F:/stargo 网站/stargo-site/tools/data';
+/* The sibling Next.js checkout is not part of this repository; say where it is.
+   Default: a sibling directory next to this one. */
+const SRC = process.env.STARGO_SITE_CONTENT ?? `${SITE}/../stargo-work-website/content`;
+const OUT = `${SITE}/tools/data`;
 mkdirSync(OUT, { recursive: true });
 
 const read = (f) => readFileSync(`${SRC}/${f}`, 'utf8');

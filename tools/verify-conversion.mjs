@@ -1,7 +1,7 @@
 /** Client-only fixtures: NEVER evidence of real email delivery. */
 import assert from 'node:assert/strict';
-import { createRequire } from 'node:module';
-const { chromium } = createRequire('F:/stargo 网站/stargo-work-website/package.json')('@playwright/test');
+import { req } from './paths.mjs';
+const { chromium } = req('@playwright/test');
 const BASE = process.env.BASE_URL || 'http://127.0.0.1:4200';
 const browser = await chromium.launch();
 let count = 0;

@@ -8,15 +8,13 @@
  * with a device scale factor of 2, screenshotted, then resized/encoded with
  * sharp. Idempotent; outputs are overwritten.
  */
-import { createRequire } from 'node:module';
 import { mkdirSync, statSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
+import { SITE, req } from '../paths.mjs';
 
-const require = createRequire('F:/stargo 网站/stargo-work-website/package.json');
-const { chromium } = require('@playwright/test');
-const sharp = require('sharp');
-
-const SITE = 'F:/stargo 网站/stargo-site';
+const { chromium } = req('@playwright/test');
+/* sharp is not installed by this repository; see tools/paths.mjs. */
+const sharp = req('sharp');
 const SRC = `${SITE}/tools/visuals`;
 const OUT = `${SITE}/assets/stargo`;
 mkdirSync(OUT, { recursive: true });

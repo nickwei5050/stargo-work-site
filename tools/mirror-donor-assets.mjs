@@ -18,7 +18,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync, statSync } from 'node:fs';
 import { dirname } from 'node:path';
 
-const SITE = 'F:/stargo 网站/stargo-site';
+import { SITE } from './paths.mjs';
 const list = process.argv.includes('--list');
 
 const assets = JSON.parse(readFileSync(`${SITE}/tools/fragments/donor-assets.json`, 'utf8'));

@@ -7,9 +7,10 @@
  * extracts) and tools/build-site.mjs (which renders) agree on one contract.
  */
 import { readdirSync } from 'node:fs';
+import { pathToFileURL } from 'node:url';
 export { escapeHtml } from './lib-html.mjs';
 
-const SITE = 'F:/stargo 网站/stargo-site';
+import { SITE } from './paths.mjs';
 const TPL = `${SITE}/tools/templates`;
 
 /**
@@ -48,7 +49,7 @@ export function capability(C, name) {
 export async function loadBlocks() {
   const out = new Map();
   for (const f of readdirSync(`${SITE}/tools/blocks`).filter((n) => n.endsWith('.mjs')).sort()) {
-    const m = await import(`file:///${encodeURI(`${SITE}/tools/blocks/${f}`)}`);
+    const m = await import(pathToFileURL(`${SITE}/tools/blocks/${f}`).href);
     if (!m.donor?.id) throw new Error(`tools/blocks/${f}: no donor.id export`);
     if (typeof m.render !== 'function') throw new Error(`tools/blocks/${f}: no render export`);
     if (out.has(m.donor.id)) throw new Error(`two block modules claim id ${m.donor.id}`);

@@ -12,15 +12,13 @@
  * Exits non-zero if any page could not be loaded: "nothing verified" is a
  * failure, not a pass.
  */
-import { createRequire } from 'node:module';
+import { SITE, req } from './paths.mjs';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { SITE_PAGES } from './chrome.mjs';
 
-const require = createRequire('F:/stargo 网站/stargo-work-website/package.json');
-const { chromium } = require('@playwright/test');
+const { chromium } = req('@playwright/test');
 
 const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:4200';
-const SITE = 'F:/stargo 网站/stargo-site';
 const SHOTS = process.env.SHOTS ?? `${SITE}/.wrangler/site-qa/shots`;
 mkdirSync(SHOTS, { recursive: true });
 

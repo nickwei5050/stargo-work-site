@@ -21,7 +21,7 @@ import { readdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { readBundle, evalLiteral } from './ix-lib.mjs';
 import { NAV, MORE } from './copy.mjs';
 
-const SITE = 'F:/stargo 网站/stargo-site';
+import { SITE } from './paths.mjs';
 const JS = `${SITE}/js`;
 const BUNDLES = `${SITE}/tools/bundles`;          // the six Mono page bundles, kept as sources only
 const MONO_BASE = `${BUNDLES}/app.6e875794.53d57b6d7b6754cb.js`;
@@ -229,7 +229,10 @@ const addIx3 = (b, rescope) => {
     timelines.set(t.id, j);
   }
 };
-const monoBundles = readdirSync(BUNDLES).filter((f) => /^app\.[0-9a-f]{8}\.[0-9a-f]+\.js$/.test(f));
+/* Sorted: readdir order is the filesystem's, and the union is written out in
+   insertion order, so an unsorted read makes the bundle differ between an NTFS
+   and an ext4 checkout. */
+const monoBundles = readdirSync(BUNDLES).filter((f) => /^app\.[0-9a-f]{8}\.[0-9a-f]+\.js$/.test(f)).sort();
 for (const f of monoBundles) addIx3(readBundle(readFileSync(`${BUNDLES}/${f}`, 'utf8')), true);
 const beforeScalora = interactions.size;
 addIx3(scalora, true);

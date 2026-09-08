@@ -14,10 +14,12 @@
  *   node tools/blog-covers.mjs        # idempotent; skips covers that exist
  */
 import { existsSync, mkdirSync } from 'node:fs';
-import { createRequire } from 'node:module';
-const sharp = createRequire('F:/stargo 网站/stargo-work-website/package.json')('sharp');
+import { SITE, req } from './paths.mjs';
 
-const SITE = 'F:/stargo 网站/stargo-site';
+/* sharp is not installed by this repository (native, ~30 MB, and only the
+   re-encode steps need it). Install it here, or point STARGO_TOOL_PACKAGE at
+   an install that has it. */
+const sharp = req('sharp');
 const SRC = `${SITE}/assets/stargo-editorial`;
 const OUT = `${SITE}/assets/blog`;
 const COVERS = {

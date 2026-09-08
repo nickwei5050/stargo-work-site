@@ -16,10 +16,13 @@
  */
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { NS, COLLIDE } from './fuse-css.mjs';
+import { SITE } from './paths.mjs';
 
-const SRC_DIR = process.argv[2]
-  ?? 'C:/Users/1/AppData/Local/Temp/claude/F--stargo---/b31df949-b6bc-4f89-9d0e-7fa0dc333312/scratchpad/scalora';
-const OUT_DIR = 'F:/stargo 网站/stargo-site/tools/fragments';
+/* One-off extraction from the Scalora export, which is not vendored here:
+   pass the unpacked export directory as argv[2] (or set SCALORA_EXPORT). */
+const SRC_DIR = process.argv[2] ?? process.env.SCALORA_EXPORT;
+if (!SRC_DIR) throw new Error('usage: node tools/extract-modules.mjs <scalora export dir>  (or SCALORA_EXPORT=...)');
+const OUT_DIR = `${SITE}/tools/fragments`;
 
 const CDN_RE = /https:\/\/cdn\.prod\.website-files\.com\/[^\s"'<>\\,)]+/g;
 

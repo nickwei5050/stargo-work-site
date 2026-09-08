@@ -1,9 +1,11 @@
 /** Verify deployed bytes against the reviewed local build, then browser smoke. */
 import assert from 'node:assert/strict';
-import { createRequire } from 'node:module';
 import { readFileSync, readdirSync, mkdirSync, writeFileSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-const { chromium, request } = createRequire('F:/stargo 网站/stargo-work-website/package.json')('@playwright/test');
+import { SITE, req } from './paths.mjs';
+const { chromium, request } = req('@playwright/test');
+/* Repo-relative paths below; run from anywhere. */
+process.chdir(SITE);
 const BASE = process.env.BASE_URL || 'https://stargo.pages.dev';
 const proxy = process.env.BROWSER_PROXY ? { server: process.env.BROWSER_PROXY } : undefined;
 const NAV = +(process.env.NAV_TIMEOUT || 30000);   // browser navigation budget; raise it for a run through a slow proxy

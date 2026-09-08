@@ -50,7 +50,7 @@ const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 /** The one css file in a donor's css/ directory, unless one is named. */
 function donorCss(srcDir, name) {
   if (name) return `${srcDir}/css/${name}`;
-  const files = readdirSync(`${srcDir}/css`).filter((f) => f.endsWith('.css'));
+  const files = readdirSync(`${srcDir}/css`).filter((f) => f.endsWith('.css')).sort();
   if (files.length !== 1) throw new Error(`donor: name the stylesheet, ${files.length} found in ${srcDir}/css`);
   return `${srcDir}/css/${files[0]}`;
 }
@@ -58,13 +58,13 @@ function donorCss(srcDir, name) {
 /** Every Webflow bundle in a donor's js/ directory. */
 function donorBundles(srcDir) {
   let files;
-  try { files = readdirSync(`${srcDir}/js`); } catch { return []; }
+  try { files = readdirSync(`${srcDir}/js`).sort(); } catch { return []; }   // sorted: readdir order is the filesystem's
   return files.filter((f) => /^app[.\w]*\.js$/.test(f)).map((f) => `${srcDir}/js/${f}`);
 }
 
 /**
  * @param {object} o
- * @param {string} o.srcDir   donor root, e.g. F:/stargo 网站/tpl4/renok
+ * @param {string} o.srcDir   donor root, e.g. <repo>/tools/templates/renok
  * @param {string} o.page     html file inside it
  * @param {string} [o.css]    stylesheet name; inferred when the donor ships one
  * @param {string} o.ns       class prefix, e.g. 'qx-'

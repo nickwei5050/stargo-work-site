@@ -1,11 +1,12 @@
 /** Focused audit regressions: real rendering and actual local form handler.
  * Only Resend's network boundary is mocked. Never sends email. */
 import assert from 'node:assert/strict';
-import { createRequire } from 'node:module';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { onRequestPost } from '../functions/api/contact.js';
-const require = createRequire('F:/stargo 网站/stargo-work-website/package.json');
-const { chromium } = require('@playwright/test');
+import { SITE, req } from './paths.mjs';
+const { chromium } = req('@playwright/test');
+/* Repo-relative paths below; run from anywhere. */
+process.chdir(SITE);
 const BASE = process.env.BASE_URL || 'http://127.0.0.1:4200';
 const OUT = process.env.QA_OUT || '.wrangler/fix-qa-20260905';
 mkdirSync(OUT, { recursive: true });

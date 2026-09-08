@@ -10,8 +10,9 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { readBundle } from './ix-lib.mjs';
 
-const dir = 'F:/stargo 网站/stargo-site/tools/bundles/';
-const files = readdirSync(dir).filter((f) => /^app\.[0-9a-f]{8}\.[0-9a-f]+\.js$/.test(f));
+import { SITE } from './paths.mjs';
+const dir = `${SITE}/tools/bundles/`;
+const files = readdirSync(dir).filter((f) => /^app\.[0-9a-f]{8}\.[0-9a-f]+\.js$/.test(f)).sort();
 
 const events = new Map();
 const lists = new Map();

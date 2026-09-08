@@ -29,7 +29,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { readBundle } from './ix-lib.mjs';
 
-const SITE = 'F:/stargo 网站/stargo-site';
+import { SITE } from './paths.mjs';
 const SRC = `${SITE}/tools/templates/cinery`;
 const MONO_PAGE = '699b6466d5f19893993a4bf1';
 const NS = 'cn-';

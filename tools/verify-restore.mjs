@@ -14,13 +14,14 @@
  * Exits non-zero on any failure. Screenshots and report: .wrangler/restore-qa/<engine>/.
  */
 import assert from 'node:assert/strict';
-import { createRequire } from 'node:module';
 import { mkdirSync, writeFileSync, readFileSync, existsSync } from 'node:fs';
 import { SITE_PAGES } from './chrome.mjs';
 import { POSTS, postPath } from './blog.mjs';
 
-const require = createRequire('F:/stargo 网站/stargo-work-website/package.json');
-const pw = require('@playwright/test');
+import { SITE, req } from './paths.mjs';
+const pw = req('@playwright/test');
+/* Repo-relative paths below; run from anywhere. */
+process.chdir(SITE);
 const ENGINE = process.env.ENGINE || 'chromium';
 const BASE = process.env.BASE_URL || 'http://127.0.0.1:4200';
 const ORIG_LX = process.env.ORIG_LX || '';
@@ -407,7 +408,7 @@ for (const lang of ['', 'en/']) {
 
 /* ------------------------------------------------------------ 6. side-by-side with the originals */
 if (ORIG_LX || ORIG_MONO) {
-  const sharp = require('sharp');
+  const sharp = req('sharp');
   const pair = async (label, a, b, width, height, setup) => {
     const shots = [];
     for (const [url, tag] of [[a, 'original'], [b, 'stargo']]) {

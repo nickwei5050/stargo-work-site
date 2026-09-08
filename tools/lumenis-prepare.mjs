@@ -28,7 +28,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { readBundle } from './ix-lib.mjs';
 
-const SITE = 'F:/stargo 网站/stargo-site';
+import { SITE } from './paths.mjs';
 const SRC = `${SITE}/tools/templates/lumenis`;
 const NS = 'lm-';
 

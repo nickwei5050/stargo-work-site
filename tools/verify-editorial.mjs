@@ -1,8 +1,10 @@
 /** Static asset coverage + real-browser responsive/image/navigation regression. */
 import assert from 'node:assert/strict';
-import { createRequire } from 'node:module';
 import { readFileSync, readdirSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
-const { chromium } = createRequire('F:/stargo 网站/stargo-work-website/package.json')('@playwright/test');
+import { SITE, req } from './paths.mjs';
+const { chromium } = req('@playwright/test');
+/* Repo-relative paths below; run from anywhere. */
+process.chdir(SITE);
 const manifest = JSON.parse(readFileSync('tools/imagegen/assets-manifest.json', 'utf8'));
 const files = [...readdirSync('.').filter(f => f.endsWith('.html')), ...readdirSync('en').filter(f => f.endsWith('.html')).map(f => 'en/' + f), ...readdirSync('blog').map(f => 'blog/' + f), ...readdirSync('en/blog').map(f => 'en/blog/' + f)];
 const all = [...files, 'css/stargo-fusion.css'].map(f => readFileSync(f, 'utf8')).join('\n');

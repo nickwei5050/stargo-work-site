@@ -31,7 +31,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { readBundle } from './ix-lib.mjs';
 
-const SITE = 'F:/stargo 网站/stargo-site';
+import { SITE } from './paths.mjs';
 const SRC = process.env.LIFELOGX_SRC ?? `${SITE}/tools/templates/lifelogx`;
 const NS = 'lx-';
 const SCOPE = 'lx-scope';

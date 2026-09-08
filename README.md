@@ -40,6 +40,38 @@ node tools/verify-release.mjs       # production: byte matches for every page an
 
 Serve the folder with any static server (for example `python -m http.server 4200`).
 
+## npm scripts and CI
+
+The chain above also has npm scripts, which is what CI calls and what keeps the
+two in step:
+
+```bash
+npm ci                 # install (pinned: @playwright/test, axe-core)
+npm run browsers       # one-off: download the Chromium the verifiers drive
+npm run build          # mirror-donor-assets -> capability-donors -> fuse-ix -> build-site
+npm run serve          # static server on 127.0.0.1:4200 serving the repo root (PORT/HOST/ROOT env)
+npm run verify         # verify-site -> verify-integrity -> verify-interactions, against BASE_URL
+npm run verify:ci      # the same three, but runs all of them even if one fails
+```
+
+Every script resolves its own location, so the repository builds from any
+checkout directory on Windows, macOS or Linux. Nothing depends on a sibling
+project any more; `tools/paths.mjs` is the single place that answers "where is
+the site".
+
+`.github/workflows/site-verification.yml` runs on every pull request to `main`
+and every push to a `release/**` branch. It rebuilds all 38 pages and asserts
+the rebuild is byte-identical to what the branch committed, then serves the tree
+and loads every page in Chromium. **Green means the committed pages are exactly
+what the build produces and a browser found nothing wrong with them.** A check
+that runs but verifies nothing is deliberately red, not green — see
+`.github/workflows/README.md`, which explains each failure in plain language.
+The workflow deploys nothing and uses no secret; deployment stays manual.
+
+Because the built pages are committed and served from the repo root, the
+reproducibility assertion is the check that matters most here: it catches a page
+edited by hand, and a source change that was never rebuilt.
+
 ## Release process
 
 Every change to this site goes the same way. Nothing is deployed straight from a

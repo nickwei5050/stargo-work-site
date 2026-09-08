@@ -20,7 +20,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { extractBlock } from './donor-lib.mjs';
 import { DONORS, loadBlocks } from './block-lib.mjs';
 
-const SITE = 'F:/stargo 网站/stargo-site';
+import { SITE } from './paths.mjs';
 
 /* Every block is a module in tools/blocks; nothing is configured inline any
    more. See tools/blocks/README.md. */

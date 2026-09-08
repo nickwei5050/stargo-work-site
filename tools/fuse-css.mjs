@@ -29,6 +29,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { SITE } from './paths.mjs';
 
 export const NS = 'sc-';
 
@@ -174,20 +175,20 @@ if (!RUN_DIRECTLY) {
   // exported constants only
 } else {
 
-const SCALORA_CSS = process.argv[2]
-  ?? 'C:/Users/1/AppData/Local/Temp/claude/F--stargo---/b31df949-b6bc-4f89-9d0e-7fa0dc333312/scratchpad/scalora/css/scalora-startup.app.shared.95e8543df.css';
-const MONO_CSS = 'F:/stargo 网站/stargo-site/css/monof-template.app.shared.ed8969994.css';
-const OUT = 'F:/stargo 网站/stargo-site/css/scalora-modules.sc.css';
+/* One-off fusion from the Scalora export, which is not vendored here: pass its
+   stylesheet as argv[2] (or SCALORA_CSS), and the untouched Mono stylesheet it
+   is measured against as PRISTINE_MONO_CSS. */
+const SCALORA_CSS = process.argv[2] ?? process.env.SCALORA_CSS;
+if (!SCALORA_CSS) throw new Error('usage: node tools/fuse-css.mjs <scalora stylesheet>  (or SCALORA_CSS=...)');
+const MONO_CSS = `${SITE}/css/monof-template.app.shared.ed8969994.css`;
+const OUT = `${SITE}/css/scalora-modules.sc.css`;
 
 const scaloraFull = readFileSync(SCALORA_CSS, 'utf8');
 const monoFull = readFileSync(MONO_CSS, 'utf8');
 
 // Guard the assumption the whole approach rests on. A re-export that changes
 // the framework layer must stop the build, not silently duplicate 36 KB.
-const pristineMono = readFileSync(
-  'C:/Users/1/AppData/Local/Temp/claude/F--stargo---/b31df949-b6bc-4f89-9d0e-7fa0dc333312/scratchpad/tpl/css/monof-template.app.shared.ed8969994.css',
-  'utf8',
-);
+const pristineMono = readFileSync(process.env.PRISTINE_MONO_CSS ?? MONO_CSS, 'utf8');
 if (pristineMono.slice(0, SHARED_PREFIX_LEN) !== scaloraFull.slice(0, SHARED_PREFIX_LEN)) {
   console.error('FAIL: the two stylesheets no longer share the framework prefix. Re-measure before building.');
   process.exit(1);

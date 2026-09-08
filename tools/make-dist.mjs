@@ -20,7 +20,7 @@ import { SITE_URL } from './copy.mjs';
 import { SITE_PAGES } from './chrome.mjs';
 import { POSTS, postPath } from './blog.mjs';
 
-const SITE = 'F:/stargo 网站/stargo-site';
+import { SITE } from './paths.mjs';
 const DIST = `${SITE}/dist`;
 mkdirSync(DIST, { recursive: true });
 
@@ -73,7 +73,9 @@ writeFileSync(`${DIST}/_headers`, [
 // robots + sitemap (clean URLs, both languages, hreflang alternates).
 const pages = SITE_PAGES;
 const clean = (lang, p) => `${SITE_URL}/${lang === 'en' ? 'en/' : ''}${p === 'index.html' ? '' : p.replace(/\.html$/, '')}`;
-const today = new Date().toISOString().slice(0, 10);
+/* SOURCE_DATE_EPOCH (the reproducible-builds convention) pins the fallback
+   lastmod, so two runs of make-dist can be compared byte for byte. */
+const today = new Date(process.env.SOURCE_DATE_EPOCH ? +process.env.SOURCE_DATE_EPOCH * 1000 : Date.now()).toISOString().slice(0, 10);
 const postDate = Object.fromEntries(POSTS.map((post) => [postPath(post), post.modified ?? post.date]));
 const urls = [];
 for (const p of pages) {

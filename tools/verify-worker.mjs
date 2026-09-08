@@ -3,6 +3,9 @@
 import assert from 'node:assert/strict';
 import {mkdirSync,writeFileSync} from 'node:fs';
 import {SITE_PAGES} from './chrome.mjs';
+import { SITE } from './paths.mjs';
+/* Repo-relative paths below; run from anywhere. */
+process.chdir(SITE);
 const base=process.env.WORKER_URL||'http://127.0.0.1:4201';const results=[];
 async function check(name,fn){try{await fn();results.push({name,pass:true});console.log('PASS',name);}catch(e){results.push({name,pass:false,error:e.message});console.log('FAIL',name,e.message);}}
 for(const path of SITE_PAGES.flatMap(p=>{const c=p==='index.html'?'':p.replace(/\.html$/,'');return ['/'+c,'/en/'+c];}))await check(path,async()=>{const r=await fetch(base+path);assert.equal(r.status,200);assert.equal(r.headers.get('x-content-type-options'),'nosniff');assert((await r.text()).includes('STARGO'));});

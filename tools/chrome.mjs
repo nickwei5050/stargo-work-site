@@ -452,8 +452,21 @@ export function applyChrome(html, { lang, current }) {
   out = editorialImages(out, lang);
   // Unhashed local runtimes used to stay stale for a day after deployments.
   // Version the URL while retaining the original file and script ordering.
+  //
+  // The hash is taken over the file with CRLF folded to LF, not over the bytes
+  // as they happen to sit in this working tree. Git checks these stylesheets
+  // and scripts out with the platform's line endings (CRLF under Windows'
+  // core.autocrlf, LF everywhere else), so hashing the raw bytes made twelve of
+  // them — every hand-written script, and the donor sheets — hash differently
+  // on Windows and on Linux. The pages then differed by their ?v= tokens alone,
+  // from identical sources, which is precisely the thing a rebuild-and-diff
+  // check in CI exists to catch. Folding first makes the token depend on the
+  // file's content and nothing else, so the build is reproducible on any
+  // checkout. The value is a cache key; what the browser loads is unchanged.
   out = out.replace(/((?:src|href)=")((?:css|js)\/[^"?]+\.(?:css|js))"/g, (_, attr, path) => {
-    const hash = createHash('sha256').update(readFileSync(new URL(`../${path}`, import.meta.url))).digest('hex').slice(0, 12);
+    const raw = readFileSync(new URL(`../${path}`, import.meta.url));
+    const content = Buffer.from(raw.toString('latin1').replace(/\r\n/g, '\n'), 'latin1');
+    const hash = createHash('sha256').update(content).digest('hex').slice(0, 12);
     return `${attr}${path}?v=${hash}"`;
   });
   if (/monostudio|Mōno™ Studio/i.test(out)) throw new Error(`chrome: template brand survives in ${current}`);

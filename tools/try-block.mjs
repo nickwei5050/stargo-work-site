@@ -14,7 +14,7 @@ import { extractBlock } from './donor-lib.mjs';
 import { loadBlocks, art, escapeHtml, capTitle, DONORS } from './block-lib.mjs';
 import * as C from './copy.mjs';
 
-const SITE = 'F:/stargo 网站/stargo-site';
+import { SITE } from './paths.mjs';
 const id = process.argv[2];
 
 const blocks = await loadBlocks();
