@@ -93,11 +93,23 @@ jobs:
         # could not tell what the build wrote from what checkout itself changed.
         run: |
           set -uo pipefail
-          # If git itself fails, treat that as red — never as "nothing changed".
-          if ! dirty="$(git status --porcelain=v1 --untracked-files=all)"; then
-            echo "RED LIGHT — git status failed, so the tree could not be checked."
+          # `git diff` for tracked files plus `ls-files --others` for new ones,
+          # rather than `git status --porcelain`. On a working tree where git is
+          # converting line endings (core.autocrlf on Windows), status reports
+          # files as modified whose content is byte-identical to the index —
+          # measured on this repository: status said 46 modified while
+          # `git diff --exit-code` exited 0 and `cmp` found the blobs identical.
+          # A gate that cries wolf gets ignored, so use the accurate signals.
+          git update-index -q --really-refresh || true
+          if ! tracked="$(git diff --name-only)"; then
+            echo "RED LIGHT — git diff failed, so the tree could not be checked."
             exit 1
           fi
+          if ! untracked="$(git ls-files --others --exclude-standard)"; then
+            echo "RED LIGHT — git ls-files failed, so the tree could not be checked."
+            exit 1
+          fi
+          dirty="$(printf '%s\n%s' "$tracked" "$untracked" | sed '/^$/d')"
           if [ -n "$dirty" ]; then
             {
               echo "### RED LIGHT — the checkout was already dirty before the build"
@@ -125,11 +137,20 @@ jobs:
         # that no longer match their source. That must be red.
         run: |
           set -uo pipefail
-          # If git itself fails, treat that as red — never as "nothing changed".
-          if ! changed="$(git status --porcelain=v1 --untracked-files=all)"; then
-            echo "RED LIGHT — git status failed, so reproducibility could not be checked."
+          # See the note on the pre-build step: `git diff` is the accurate signal
+          # for modified tracked files, `ls-files --others` for files the build
+          # produced that nobody committed. `git status --porcelain` reports
+          # line-ending churn as modification and would give a false red here.
+          git update-index -q --really-refresh || true
+          if ! modified="$(git diff --name-status)"; then
+            echo "RED LIGHT — git diff failed, so reproducibility could not be checked."
             exit 1
           fi
+          if ! untracked="$(git ls-files --others --exclude-standard)"; then
+            echo "RED LIGHT — git ls-files failed, so reproducibility could not be checked."
+            exit 1
+          fi
+          changed="$(printf '%s\n%s' "$modified" "$untracked" | sed '/^$/d')"
           if [ -z "$changed" ]; then
             echo "Reproducible: a fresh build produced exactly the committed files."
             echo '### Build is reproducible' >> "$GITHUB_STEP_SUMMARY"

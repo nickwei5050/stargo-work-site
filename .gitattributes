@@ -47,3 +47,17 @@ assets/fonts/donor/** linguist-vendored=true
 
 # Every asset directory is fetched or generated, never hand-edited.
 assets/** linguist-generated=true
+
+# The build writes LF. Store and check out LF for everything it generates, so a
+# Windows working tree matches what the build produces and `git status` does not
+# report 46 phantom modifications after a checkout. Without this, core.autocrlf
+# rewrites these files to CRLF on checkout, the build rewrites them back to LF,
+# and the CI reproducibility gate reads that churn as a failure.
+*.html text eol=lf
+*.css  text eol=lf
+*.js   text eol=lf
+*.mjs  text eol=lf
+*.json text eol=lf
+*.md   text eol=lf
+*.yml  text eol=lf
+*.txt  text eol=lf
