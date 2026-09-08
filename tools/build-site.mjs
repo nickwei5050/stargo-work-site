@@ -384,8 +384,25 @@ PAGES['index.html'] = (lang) => {
   hero = hero.replace(/<div class="hero-description-block"><div>/, `<div class="hero-description-block"><div data-mobile-text="${escapeHtml(t(C.HOME_MOBILE.scHero))}">`);
   let products = addRootClass(sub('sc-products', frag('products.html'), C.HOME_SC_PRODUCTS), 'sc-scope');
   {
+    // The section heading is eight characters a line on desktop and ten on
+    // phones; the two languages' strings are shaped for those widths, and the
+    // phone form travels the same data-mobile-text route as the hero copy.
+    const title = t(C.HOME_SC_PRODUCTS[1][1]);
+    const before = products;
+    products = products.replace(`<h2>${title}</h2>`, `<h2 data-mobile-text="${escapeHtml(t(C.HOME_MOBILE.products))}">${title}</h2>`);
+    if (products === before) throw new Error('index: core-systems heading not found for the mobile variant');
+  }
+  {
     // four Scalora dashboard drawings → the four STARGO OS systems, desktop and mobile variants alike
-    const bySystem = { 'Growth OS': OS.desk, 'Customer 360': OS.inquiries, 'Quote Studio': OS.quote, 'Trade Execution': OS.trade };
+    // Keyed on both languages' product names: the Chinese page names them in
+    // Chinese (增长系统 / 客户全景 / 报价工作台 / 贸易执行), so matching only the
+    // English prefix would throw on the very page this map exists to fill.
+    const bySystem = {
+      'Growth OS': OS.desk, '增长系统': OS.desk,
+      'Customer 360': OS.inquiries, '客户全景': OS.inquiries,
+      'Quote Studio': OS.quote, '报价工作台': OS.quote,
+      'Trade Execution': OS.trade, '贸易执行': OS.trade,
+    };
     products = products.replace(/<div class="products-cards-dashboard-block[^"]*">[\s\S]*?<h3 class="heading-style-h4">([^<]*)<\/h3>/g, (block, title) => {
       const key = Object.keys(bySystem).find((k) => title.startsWith(k));
       if (!key) throw new Error(`index: unknown system ${title}`);
@@ -564,7 +581,7 @@ PAGES['about.html'] = (lang) => {
   b = s(b, '<a href="contact.html" class="lx-button lx-is-secondary w-button">Download</a>', `<a href="${A.button.href}" class="lx-button lx-is-secondary w-button">${t(A.button.label)}</a>`, { count: 1 });
   // Four circles: the template's four named people → four AI-employee roles with the template's illustrated avatars.
   [['Lina Elsen', '6943d80451564405defffaed_Vibrant'], ['Amira Brik', '6943d80f46f426e739f71ec5_Stylish'], ['Mila Eron', '6943d84a7b3093c6e962c7dd_Futuristic'], ['Oren Solis', '6943d8308925855adc2bcb5c_Stylish']]
-    .forEach(([person, key], i) => { b = s(b, `>${person}<`, `>${A.circles[i].label}<`, { count: 1 }); b = swapImg(b, key, A.circles[i].image); });
+    .forEach(([person, key], i) => { b = s(b, `>${person}<`, `>${escapeHtml(t(A.circles[i].label))}<`, { count: 1 }); b = swapImg(b, key, A.circles[i].image); });
   b = swapImg(b, '6943f43d1ea90943e43a09be_Rectangle', A.bigImage.src, { alt: t(A.bigImage.alt) });
   b = s(b, '>Our Story<', `>${t(A.storyTitle)}<`);
   b = setInner(b, '<div class="lx-about-rich-text w-richtext">', t(A.story).trim());
@@ -908,7 +925,7 @@ function capabilityShowcase(C, lang) {
     .replace(/<div class="cn-accordion-content-block">[\s\S]*?<\/div><\/div><\/div>$/, `<div class="cn-accordion-content-block">${body}</div></div></div>`);
   const catalogue = C.CAPABILITY_GROUPS.map((g) => catRow(`g${g.n}`, `${g.n} ${t(g.name)}`,
     g.items.map(([name, gloss, zhName]) =>
-      `<p class="cn-accordion-answer-text"><strong>${capTitle(name, zhName)}</strong> ${escapeHtml(t(gloss))}</p>`).join('')));
+      `<p class="cn-accordion-answer-text"><strong>${capTitle(lang)(name, zhName)}</strong> ${escapeHtml(t(gloss))}</p>`).join('')));
 
   const total = C.CAPABILITY_GROUPS.reduce((n, g) => n + g.items.length, 0);
   const band = (label, note) =>
