@@ -40,6 +40,31 @@ node tools/verify-release.mjs       # production: byte matches for every page an
 
 Serve the folder with any static server (for example `python -m http.server 4200`).
 
+## Release process
+
+Every change to this site goes the same way. Nothing is deployed straight from a
+working tree.
+
+1. **Build and verify locally.** Run the build chain above, then serve the folder
+   and look at the pages that changed:
+   `python -m http.server 4200 --protocol HTTP/1.1` → http://127.0.0.1:4200/.
+   `verify-site`, `verify-integrity` and `verify-interactions` must all be clean.
+2. **Commit and push the branch** to `origin`
+   (github.com/nickwei5050/stargo-work-site).
+3. **Open a pull request against `main`** and let the code scanner review it.
+   The PR body says what changed, what a reviewer should look at, what was
+   checked, and what is a known deliberate compromise.
+4. **Read the scan.** Fix what it finds; push again; let it re-scan.
+5. **Only when the scan is clean, deploy** — `node tools/make-dist.mjs` then
+   `wrangler pages deploy dist --project-name stargo --branch main`, and verify
+   production with `BASE_URL=https://stargo.pages.dev node tools/verify-release.mjs`
+   (byte-for-byte comparison of every page and asset, plus browser scenarios).
+
+Note that `stargo.pages.dev` is where this site is published. `stargomoto.com`
+currently serves a different application (a Vercel/Supabase app) and is not
+attached to this Cloudflare Pages project; pointing it here would replace what
+is live there, so it is the owner's call, not the build's.
+
 ## Where things live
 
 - **All copy, both languages:** `tools/copy.mjs`. Every entry is keyed by the template string it replaces; a key that no longer matches fails the build instead of leaving the template's own words on the page. The homepage narrative and the legal pages are at the top and bottom of that file; the About page content is `ABOUT` at the end.
