@@ -24,8 +24,11 @@ on:
   pull_request:
     branches: [main]
   push:
-    # Covers release/website-qa-fixes-20260905 and any later release branch.
-    branches: ['release/**']
+    # main so the branch that gets deployed is itself checked — a change can
+    # reach main by a direct push as well as by a pull request, and an unchecked
+    # main is the one branch it would be worst to be unsure about.
+    # release/** covers release/website-qa-fixes-20260905 and later ones.
+    branches: [main, 'release/**']
   workflow_dispatch:
 
 # A new push to the same branch cancels the run still in flight.
