@@ -385,7 +385,15 @@ PAGES['index.html'] = (lang) => {
   let products = addRootClass(sub('sc-products', frag('products.html'), C.HOME_SC_PRODUCTS), 'sc-scope');
   {
     // four Scalora dashboard drawings → the four STARGO OS systems, desktop and mobile variants alike
-    const bySystem = { 'Growth OS': OS.desk, 'Customer 360': OS.inquiries, 'Quote Studio': OS.quote, 'Trade Execution': OS.trade };
+    // Keyed on both languages' product names: the Chinese page names them in
+    // Chinese (增长系统 / 客户全景 / 报价工作台 / 贸易执行), so matching only the
+    // English prefix would throw on the very page this map exists to fill.
+    const bySystem = {
+      'Growth OS': OS.desk, '增长系统': OS.desk,
+      'Customer 360': OS.inquiries, '客户全景': OS.inquiries,
+      'Quote Studio': OS.quote, '报价工作台': OS.quote,
+      'Trade Execution': OS.trade, '贸易执行': OS.trade,
+    };
     products = products.replace(/<div class="products-cards-dashboard-block[^"]*">[\s\S]*?<h3 class="heading-style-h4">([^<]*)<\/h3>/g, (block, title) => {
       const key = Object.keys(bySystem).find((k) => title.startsWith(k));
       if (!key) throw new Error(`index: unknown system ${title}`);
