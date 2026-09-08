@@ -1,0 +1,19 @@
+/* rk-insight — hand-written rules the extraction could not know.
+   Everything is scoped under .rk-insight, exactly as the extractor scopes its own. */
+
+/* renok keeps its body type on `body`, and a `body` rule does not travel with a
+   cut section. The title names its face through `.rt-text-style-h1`, but the
+   row number and the two-line description are bare `.rt-text-color-black` divs
+   that set only a colour and inherit everything else — on this page they were
+   drawn in the host's own body type. These are the six declarations of renok's
+   own `body` rule, through renok's own tokens, and nothing more — including its
+   inherited `color`, which every text node in the block overrides with
+   `.rt-text-color-black` exactly as it does on renok. */
+.rk-insight {
+  font-family: var(--_font-family---primary-font);
+  color: var(--white);
+  font-size: var(--_font-details---font-size--body);
+  line-height: var(--_font-details---font-line-height--body);
+  font-weight: var(--_font-details---font-weight--regular);
+  letter-spacing: var(--_font-details---font-letter-spacing--body);
+}

@@ -1,0 +1,190 @@
+/* cn-service — only what the cut could not carry out of cinery.
+
+   Four kinds of thing live here, and nothing else:
+
+     1. the grid placement cinery wrote against Webflow's generated `#w-node-…`
+        ids, which are not classes and so are invisible to a class-driven
+        extractor;
+     2. cinery's <body> declarations, which never travel with a cut section —
+        including the one heading token whose name Webflow left escaped;
+     3. the paint order that `donor.ground` displaced when it moved cinery's
+        body black onto the block root, which was hiding the block's four
+        photographs completely;
+     4. one slot where our words are longer than the donor's, set inside the
+        donor's own window so its geometry and its hover roll still hold.
+
+   Every value in 1 and 2 is copied verbatim from
+   tools/templates/cinery/css/cinery.app.shared.3e3418b8f.css and scoped under
+   the block root exactly as the extractor scopes its own output; 3 sets no
+   value at all. Nothing in 1–3 sets a size, colour, spacing or layout the donor
+   did not already set. */
+
+/* ------------------------------------------- 1. the #w-node grid rules -- */
+
+/* Webflow puts an element's grid position on a generated `#w-node-…` id, not on
+   a class, so the extractor never sees these. Without them the whole right-hand
+   column of the block is misplaced: the "ALL SERVICES" button sat at the top
+   left of its cell instead of bottom right (x 768 / top, against the donor's
+   1270 / bottom), and all four `▶︎` kickers and descriptions sat at the left
+   edge of their 576px cell instead of its right edge (x 824 against the donor's
+   1000) — the donor's right-aligned column of type simply was not right
+   aligned. The first row's title wrap also lost its `place-self: start`, which
+   is what keeps that one wrap fit-content instead of stretched.
+
+   Donor rules, in donor order, at the donor's own breakpoints. */
+.cn-service #w-node-_41c40c61-fc21-de03-d653-91a5d71e76a4-805165a1 { place-self: end; }
+.cn-service #w-node-_572ae8d9-c9c6-18a4-c147-84fb3d3895ef-805165a1 { grid-area: 1 / 1 / 2 / 2; place-self: start; }
+.cn-service #w-node-_572ae8d9-c9c6-18a4-c147-84fb3d3895f7-805165a1 { grid-area: 1 / 2 / 2 / 3; place-self: start end; }
+.cn-service #w-node-_572ae8d9-c9c6-18a4-c147-84fb3d3895fe-805165a1 { align-self: start; }
+.cn-service #w-node-_572ae8d9-c9c6-18a4-c147-84fb3d389606-805165a1 { place-self: start end; }
+.cn-service #w-node-_572ae8d9-c9c6-18a4-c147-84fb3d38960d-805165a1 { align-self: start; }
+.cn-service #w-node-_572ae8d9-c9c6-18a4-c147-84fb3d389615-805165a1 { place-self: start end; }
+.cn-service #w-node-_572ae8d9-c9c6-18a4-c147-84fb3d38961c-805165a1 { align-self: start; }
+.cn-service #w-node-_572ae8d9-c9c6-18a4-c147-84fb3d389624-805165a1 { place-self: start end; }
+
+@media screen and (max-width: 991px) {
+  .cn-service #w-node-eb7233a9-2256-2e88-f36a-0cb6ca0392d0-805165a1 { grid-area: 1 / 1 / 2 / 3; }
+  .cn-service #w-node-_41c40c61-fc21-de03-d653-91a5d71e76a4-805165a1 { grid-area: 2 / 1 / 3 / 3; justify-self: start; }
+}
+
+@media screen and (max-width: 767px) {
+  .cn-service #w-node-_572ae8d9-c9c6-18a4-c147-84fb3d3895ef-805165a1 { grid-column-end: 3; }
+  .cn-service #w-node-_572ae8d9-c9c6-18a4-c147-84fb3d3895f7-805165a1 { grid-row: 2 / 3; grid-column-start: 1; justify-self: start; }
+  .cn-service #w-node-_572ae8d9-c9c6-18a4-c147-84fb3d3895fe-805165a1 { grid-area: 1 / 1 / 2 / 3; }
+  .cn-service #w-node-_572ae8d9-c9c6-18a4-c147-84fb3d389606-805165a1 { grid-area: 2 / 1 / 3 / 3; }
+  .cn-service #w-node-_572ae8d9-c9c6-18a4-c147-84fb3d38960d-805165a1 { grid-area: 1 / 1 / 2 / 3; }
+  .cn-service #w-node-_572ae8d9-c9c6-18a4-c147-84fb3d389615-805165a1 { grid-area: 2 / 1 / 3 / 3; }
+  .cn-service #w-node-_572ae8d9-c9c6-18a4-c147-84fb3d38961c-805165a1 { grid-area: 1 / 1 / 2 / 3; }
+  .cn-service #w-node-_572ae8d9-c9c6-18a4-c147-84fb3d389624-805165a1 { grid-area: 2 / 1 / 3 / 3; }
+}
+
+@media screen and (max-width: 479px) {
+  .cn-service #w-node-eb7233a9-2256-2e88-f36a-0cb6ca0392d0-805165a1 { grid-area: 1 / 1 / 2 / 3; }
+  .cn-service #w-node-_41c40c61-fc21-de03-d653-91a5d71e76a4-805165a1 { grid-area: 2 / 1 / 3 / 3; justify-self: start; }
+}
+
+/* --------------------------------------------- 2. what <body> supplied -- */
+
+/* The h2 line-height token whose name Webflow left escaped
+   (`--_typography---h2--h2-line-height\<deleted\|variable-…\>`). The extractor's
+   variable scan reads `--[\w-]+` names only, so it never arrives and
+   `.heading-style-h2`'s `line-height: var(…)` falls back to the inherited
+   leading: the split heading's two line boxes measured 215px instead of the
+   donor's 192px, and the gradient — `background-clip: text` painted over the
+   element box, white at 40%, black at 100% — was stretched over the taller box.
+   cinery declares it `100%`, and restates it at every breakpoint as `100%`, so
+   one unconditional declaration is the whole repair. The block has no h1, h3,
+   h4, h5 or h6, so the five tokens cinery escapes the same way are not
+   restored. */
+.cn-service {
+  --_typography---h2--h2-line-height\<deleted\|variable-dce8260e-414c-a934-1b6e-a3323274e042\>: 100%;
+}
+
+/* cinery's own `body` rule, restated on the block root. A cut section never
+   brings <body> along, so the block inherited this site's Inter / 14px / 1.1 /
+   500 / #000 instead: every one of the four giant titles, the `◉` glyph that
+   leads them, the pill, the `▶︎` kickers, the descriptions and the button label
+   was set in the wrong typeface, and the leading under it was 1.1 where cinery
+   sets 1.4 (the kickers measured 17.6px against the donor's 22.4px). Only
+   `.cn-heading-style-h2` names a font of its own. Donor rule, verbatim:
+
+     body { background-color: var(--background-color--primary-background);
+            font-family: var(--_typography---font-family--primary);
+            color: var(--primary-color--white);
+            font-size: var(--_sizes---fixed--small);
+            line-height: 1.4;
+            font-weight: var(--_typography---font-weight--regular); }
+
+   `background-color` is left out because `donor.ground` already paints the
+   block root with the same `#000` that variable resolves to. */
+.cn-service {
+  font-family: var(--_typography---font-family--primary);
+  color: var(--primary-color--white);
+  font-size: var(--_sizes---fixed--small);
+  line-height: 1.4;
+  font-weight: var(--_typography---font-weight--regular);
+}
+
+/* cinery's `p` rule is `{ font-size; margin-bottom; line-height }` and nothing
+   else, so a cinery paragraph is opaque and tracks normally. This site's own
+   `p` rule adds `opacity: .7` and `letter-spacing: -.5px`, and those two
+   properties are not in the extracted `.cn-service p`, so they leaked through
+   onto the block's descriptions and its button label. Put back what the donor
+   computes. */
+.cn-service p { opacity: 1; letter-spacing: normal; }
+
+/* ---------------------------------------------------- 3. the paint order -- */
+
+/* cinery's black is `body`'s, and the block's four crossfade photographs sit in
+   a `.service-image-wrapper` at `z-index: -1`, i.e. behind the section but in
+   front of the page. `donor.ground` moves that black onto `.cn-service`, which
+   is not a stacking context — so the negative-z layer escaped to the root and
+   the block's own background painted straight over it: all four photographs,
+   and the hover crossfade between them, were invisible, and the section
+   rendered as flat black. Isolating the root restores cinery's own order
+   (ground, then the photographs, then the type) without moving anything. */
+.cn-service { isolation: isolate; }
+
+/* --------------------------------------------- 4. a title that is longer -- */
+
+/* cinery's four titles are single words — PRODUCTION, EDITING, DIRECTION,
+   FILMING — drawn at 8vw (7rem at 1440 and up), `nowrap`, inside a
+   `.service-title-wrap` of exactly that height. Our names are longer, and
+   nothing shorter exists: this block prints the capability's Chinese name on
+   the Chinese page (客户研究, 贸易情报) and its product name on the English page,
+   and both come from the catalogue. Measured at 1440 the donor's own
+   `◉ PRODUCTION` is 759px in a 768px column; `◉ 进口商补货雷达` is 911px and
+   `◉ BUYING COMMITTEE INTELLIGENCE` is about 1900px, so those rows would be cut
+   off mid-word by the wrap's `overflow: hidden`.
+
+   `.cn-long-title`, which the module puts on a wrap whose name cannot hold the
+   line, sets that name as two lines at half the donor's size inside the donor's
+   own window: 7rem stays 7rem, the row keeps its geometry, and — this is why
+   the rule cannot simply be dropped — every copy in the hover roll stays
+   exactly one window high, so the roll's -200% still lands on a copy and no
+   neighbour bleeds into the window. Sizes are the donor's own per-breakpoint
+   values, halved; the heights are the donor's, unchanged.
+
+   `.cn-long-title-wide` is the same treatment held to the widths that need it.
+   Below 992 the donor gives the title the whole grid (`grid-column-end: 3` on
+   its `#w-node-…` rule at 767, and a wider 1fr track below 992), and a Chinese
+   name of six or seven characters fits there at the donor's own size — at 768
+   `◉ 进口商补货雷达` measures 380px in a 393px wrap. Only the two-column band
+   above it is short, so only there is the type halved, and the Chinese page
+   keeps cinery's full-size title on tablet and phone.
+
+   `white-space` is the donor's `nowrap` released so the name can take the second
+   line; `overflow`/`flex` are the pair that holds a copy to exactly one window
+   (an `overflow` other than visible drops a flex item's automatic minimum size,
+   so without `flex: none` three copies would shrink to fit their own column and
+   the roll would stop landing on one); and the icon is given the donor's own
+   icon-to-title ratio at each of its breakpoints — 7/8 at base, 6/7 above 1440,
+   6/6 below 992, 6/8 below 768, 6/10 below 480 — so halving the type does not
+   change the size of the `◉` against its letters. */
+.cn-service .cn-long-title .cn-service-title { white-space: normal; overflow: hidden; flex: none; font-size: 4vw; height: 8vw; }
+.cn-service .cn-long-title .cn-service-icon { font-size: .875em; }
+@media screen and (min-width: 1440px) {
+  .cn-service .cn-long-title .cn-service-title { font-size: 3.5rem; height: 7rem; }
+  .cn-service .cn-long-title .cn-service-icon { font-size: .857em; }
+}
+@media screen and (max-width: 991px) {
+  .cn-service .cn-long-title .cn-service-title { font-size: 3vw; height: 6vw; }
+  .cn-service .cn-long-title .cn-service-icon { font-size: 1em; }
+}
+@media screen and (max-width: 767px) {
+  .cn-service .cn-long-title .cn-service-title { font-size: 4vw; height: 8vw; }
+  .cn-service .cn-long-title .cn-service-icon { font-size: .75em; }
+}
+@media screen and (max-width: 479px) {
+  .cn-service .cn-long-title .cn-service-title { font-size: 5vw; height: 10vw; }
+  .cn-service .cn-long-title .cn-service-icon { font-size: .6em; }
+}
+
+@media screen and (min-width: 992px) {
+  .cn-service .cn-long-title-wide .cn-service-title { white-space: normal; overflow: hidden; flex: none; font-size: 4vw; height: 8vw; }
+  .cn-service .cn-long-title-wide .cn-service-icon { font-size: .875em; }
+}
+@media screen and (min-width: 1440px) {
+  .cn-service .cn-long-title-wide .cn-service-title { font-size: 3.5rem; height: 7rem; }
+  .cn-service .cn-long-title-wide .cn-service-icon { font-size: .857em; }
+}

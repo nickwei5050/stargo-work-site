@@ -1,0 +1,54 @@
+/* cn-produce — only what the cut cannot carry.
+
+   cinery set its typeface, text colour, text size, leading and regular weight
+   on <body>, and a cut section never brings <body> rules along. The two h2s and
+   the marquee name their own font through `.cn-heading-style-h2` /
+   `.cn-cta-text`, but the pill (`.cn-subtitle`) and every box that sizes in `em`
+   inherit, so the donor's body-level values are restated on the block's root.
+
+   Verbatim from cinery's own `body` rule
+   (tools/templates/cinery/css/cinery.app.shared.3e3418b8f.css):
+
+     body { background-color: var(--background-color--primary-background);
+            font-family: var(--_typography---font-family--primary);
+            color: var(--primary-color--white);
+            font-size: var(--_sizes---fixed--small);
+            line-height: 1.4;
+            font-weight: var(--_typography---font-weight--regular); }
+
+   (the background is the one `donor.ground` already paints). Measured against
+   the donor at 1440: the block root now computes 16px / 22.4px like cinery's,
+   where our page's own body had it inheriting 14px / 15.4px. No size, colour,
+   spacing or layout the donor set is changed. */
+.cn-produce {
+  font-family: var(--_typography---font-family--primary);
+  color: var(--primary-color--white);
+  font-size: var(--_sizes---fixed--small);
+  line-height: 1.4;
+  font-weight: var(--_typography---font-weight--regular);
+}
+
+/* The heading's leading, which is a token the extractor cannot read.
+
+   Webflow left this variable's name escaped —
+   `--_typography---h2--h2-line-height\<deleted\|variable-dce8260e-…\>` — and the
+   extractor's `:root` scan matches `--[\w-]+` only, so the one token both of
+   this block's heading rules ask for never arrives:
+
+     .heading-style-h2 { line-height: var(--_typography---h2--h2-line-height\<…\>); }
+     h2               { line-height: var(--_typography---h2--h2-line-height\<…\>); }
+
+   With it undefined the declaration is invalid at computed-value time and the
+   h2 falls back to our page's inherited leading: measured at 1440 the donor's
+   h2 line box is 192px (100% of its 192px type) and ours was 211.2px (1.1×) —
+   +19.2px per line, which pushed the whole 3456px card wheel 38.4px down inside
+   a section that is clipped to a fixed 1350px, and widened the two
+   `.title-wrapper` roll windows (`overflow: hidden`) that must equal the type
+   size for the donor's line-reveal to sit right. cinery declares it `100%` on
+   `:root` and again at each of its three breakpoints, always `100%`, so one
+   unconditional declaration here is exactly what the donor computes at every
+   width. The other five heading tokens cinery escapes the same way are not
+   restored: this block has no h1, h3, h4, h5 or h6. */
+.cn-produce {
+  --_typography---h2--h2-line-height\<deleted\|variable-dce8260e-414c-a934-1b6e-a3323274e042\>: 100%;
+}

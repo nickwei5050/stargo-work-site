@@ -1,0 +1,90 @@
+/* cn-faq — only what the cut could not carry out of cinery.
+
+   Two kinds of thing live here, and nothing else:
+
+     1. the grid placement cinery wrote against Webflow's generated node ids,
+        which are not classes and so are invisible to a class-driven extractor;
+     2. cinery's <body> declarations, which never travel with a cut section.
+
+   Every value below is copied verbatim from
+   tools/templates/cinery/css/cinery.app.shared.3e3418b8f.css and scoped under
+   the block root exactly as the extractor scopes its own output. Nothing here
+   sets a size, colour, spacing or layout the donor did not already set. */
+
+/* ------------------------------------------- 1. the #w-node grid rules -- */
+
+/* Webflow puts an element's grid position on a generated `#w-node-…` id, not on
+   a class, so the extractor never sees these. Without them the "(05)" counter
+   sits at the top-left of its cell instead of bottom-right, the question block
+   floats to the top of its cell, and on tablet the photo card stops spanning.
+   Donor rules, in donor order, at the donor's own breakpoints:
+     `#w-node-…f26a2 { place-self: end }` (shared with `…ef92d`, base)
+     `#w-node-…e542  { align-self: start }` (base)
+     `#w-node-…a3d8e { grid-area: span 1 …; align-self: end }` (base)
+     the four `grid-area` rules below, at 991 and 479. */
+.cn-faq #w-node-_73007bf9-a6a5-b8c1-d09b-e685e82f26a2-805165a1 { place-self: end; }
+.cn-faq #w-node-_270e5455-6755-e850-480f-06df2889e542-805165a1 { align-self: start; }
+.cn-faq #w-node-d06d764a-ce0a-76de-ae95-dfdb00da3d8e-805165a1 { grid-area: span 1 / span 1 / span 1 / span 1; align-self: end; }
+
+@media screen and (max-width: 991px) {
+  .cn-faq #w-node-_73007bf9-a6a5-b8c1-d09b-e685e82f26a2-805165a1 { grid-area: 2 / 1 / 3 / 3; justify-self: start; }
+  .cn-faq #w-node-_80cdd5d4-83de-212e-7301-7549c244ec6a-805165a1 { grid-area: 2 / 1 / 3 / 3; }
+  .cn-faq #w-node-f5a565df-c147-ec12-4eaf-8f97c7c9d0ab-805165a1 { grid-area: 1 / 1 / 2 / 3; }
+}
+
+@media screen and (max-width: 479px) {
+  .cn-faq #w-node-_73007bf9-a6a5-b8c1-d09b-e685e82f2699-805165a1 { grid-area: 1 / 1 / 2 / 3; }
+}
+
+/* --------------------------------------------- 2. what <body> supplied -- */
+
+/* Six heading line-height tokens whose names Webflow left escaped
+   (`--…-line-height\<deleted\|variable-…\>`). The extractor's variable scan
+   reads `--[\w-]+` names only, so these six never arrive and every
+   `line-height: var(…)` that names them falls back to `normal` — measured, each
+   line of the split heading then boxes 221px instead of the donor's 192px, and
+   the gradient, which is `background-clip: text` painted over the element box,
+   paints over the taller box. cinery declares all six as `100%`; the responsive
+   var blocks the extractor *does* carry restate them at every breakpoint, so a
+   single set here is the whole repair. */
+.cn-faq {
+  --_typography---h1--h1-line-height\<deleted\|variable-3d5fc319-7a1b-9030-0bf8-9761286e7188\>: 100%;
+  --_typography---h2--h2-line-height\<deleted\|variable-dce8260e-414c-a934-1b6e-a3323274e042\>: 100%;
+  --_typography---h3--h3-line-height\<deleted\|variable-3df79d6a-a66d-cc63-df1a-2ff5d85c684c\>: 100%;
+  --_typography---h4--h4-line-height\<deleted\|variable-7b12373a-e242-0621-ff97-7d0578c83c53\>: 100%;
+  --_typography---h5--h5-line-height\<deleted\|variable-a45a71cc-4699-8b19-f68a-2fad587f2ee0\>: 100%;
+  --_typography---h6--h6-line-height\<deleted\|variable-8cda18b2-2be9-8500-2f9e-3cbd5c8adc28\>: 100%;
+}
+
+/* cinery's own `body` rule, restated on the block root. A cut section never
+   brings <body> along, so on this site the block inherited the host page's
+   Inter / 14px / 1.1 / 500 / #000 instead. Only `.cn-heading-style-h2` names a
+   font of its own; the "(05)" counter, the pill, every accordion question and
+   answer, the "◉" line and the button label all inherit, so they were being
+   set in Inter at the host's weight. Donor rule, verbatim:
+
+     body { background-color: var(--background-color--primary-background);
+            font-family: var(--_typography---font-family--primary);
+            color: var(--primary-color--white);
+            font-size: var(--_sizes---fixed--small);
+            line-height: 1.4;
+            font-weight: var(--_typography---font-weight--regular); }
+
+   `background-color` is left out because `donor.ground` already paints the
+   block root with the same `#000` that variable resolves to. */
+.cn-faq {
+  font-family: var(--_typography---font-family--primary);
+  color: var(--primary-color--white);
+  font-size: var(--_sizes---fixed--small);
+  line-height: 1.4;
+  font-weight: var(--_typography---font-weight--regular);
+}
+
+/* cinery's `p` rule is `{ font-size; margin-bottom; line-height }` and nothing
+   else, so a cinery paragraph is fully opaque and tracks normally. This site's
+   own `p` rule adds `opacity: .7` and `letter-spacing: -.5px`; neither is in
+   the extracted `.cn-faq p`, so both leaked onto the two paragraphs this block
+   has — the seven accordion answers and the button's two labels. Measured: the
+   answers came out at 0.7 opacity and -0.5px against the donor's 1 and normal.
+   Put back what the donor computes. */
+.cn-faq p { opacity: 1; letter-spacing: normal; }

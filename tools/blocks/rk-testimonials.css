@@ -1,0 +1,73 @@
+/* rk-testimonials — hand-written rules the extraction could not know.
+   Everything is scoped under .rk-testimonials, exactly as the extractor scopes
+   its own. Nothing here changes a size, colour, spacing or layout renok set;
+   each rule restores one renok DID set, on a node the extraction cannot see. */
+
+/* renok writes its whole body type on `body`, and a `body` rule does not travel
+   with a cut section — only the variables it declares do (the extractor already
+   copied those onto `.rk-testimonials`). The card paragraph (`p`) and the name
+   (`.rt-text-style-h4`) restate face, size and colour themselves, but the role
+   line (`.rt-text-color-light-gray`) sets only a colour and the marquee word
+   (`.rt-extra-big-text`) only a size, so both inherit the rest from `body`.
+   Without this the marquee is drawn in the host's face and the host's `color`
+   (black on black) and the role line falls to the host's 14px/15.4px/500
+   instead of renok's 16px/25.92px/400.
+   These six declarations are renok's `body` rule verbatim, minus the page-level
+   `margin`, `min-height` and `background-color`:
+     body { font-family: var(--_font-family---primary-font);
+            color: var(--white);
+            font-size: var(--_font-details---font-size--body);
+            line-height: var(--_font-details---font-line-height--body);
+            font-weight: var(--_font-details---font-weight--regular);
+            letter-spacing: var(--_font-details---font-letter-spacing--body); } */
+.rk-testimonials {
+  font-family: var(--_font-family---primary-font, "Inter Tight", Inter, sans-serif);
+  color: var(--white, #fff);
+  font-size: var(--_font-details---font-size--body, 1rem);
+  line-height: var(--_font-details---font-line-height--body, 162.5%);
+  font-weight: var(--_font-details---font-weight--regular, 400);
+  letter-spacing: var(--_font-details---font-letter-spacing--body, 0rem);
+}
+
+/* The host page hides every paragraph behind `p { opacity: .7 }` (its own body
+   type, css/monof-template.app.shared…css line 2164). renok writes no opacity
+   at all, so its card paragraph is drawn at full strength — measured: donor
+   opacity 1, ours .7, at every width. The extractor carried renok's `p` rule
+   (face, colour, size, line-height), but there was no opacity in it to carry,
+   so nothing countered the host's. This restores renok's rendering, not a new
+   value: 1 is what `.rt-testimonial-card p` computes to on the donor page. */
+.rk-testimonials p { opacity: 1; }
+
+/* The second row's right-hand column carries a Webflow node id, and renok's one
+   rule for it lives under 992px, where the two columns stack and the single
+   card has to fall below the pair. An id is not a class, so the extractor does
+   not carry the rule. renok's own rule, media query included:
+     @media screen and (max-width: 991px) {
+       #w-node-_0b4df35c-c6e0-c323-cb9d-fdfb9f0c64da-d6ec9fdd { order: 9999; } }
+   Above 991px renok sets no order at all: the second row keeps its DOM order —
+   the single card on the left, the stacked pair on the right — which is the
+   stagger that makes it mirror the row above. */
+@media screen and (max-width: 991px) {
+  .rk-testimonials #w-node-_0b4df35c-c6e0-c323-cb9d-fdfb9f0c64da-d6ec9fdd { order: 9999; }
+}
+
+/* The logo cell keeps the donor logo's footprint.
+   renok's client logo is an svg with an intrinsic width of 78px, and that
+   file — not a rule — is what sized `.rt-carlo-logo` on desktop (the donor
+   only writes a max-width for it under 992px: 3rem, and under 480px: 3.5rem).
+   The logo is the one image this block must replace (a client logo asserts a
+   customer we do not have), and the wordmark that stands in is 1889px wide.
+   Measured at 1440 with the rule lifted: the logo takes 220px instead of 78,
+   and the donor's `flex: 0 69%` details column is squeezed from 294px to 187px
+   and the name column from 194px to 147px. 4.875rem is 78px — the width the
+   donor's own file gave the cell — and with it the row measures 78 / 294 / 194,
+   the donor's own three numbers. It restores the donor's geometry, it does not
+   set a new one.
+   Gated to 992px and up: below that renok DOES write the cell's width itself
+   (max-width: 3rem under 991px, 3.5rem under 479px) and this rule, appended
+   after the extracted sheet, would otherwise beat both — measured at 991px and
+   479px it did: donor 48px / 56px against our 78px. Above 992px renok writes
+   nothing, so nothing of renok's is overridden here. */
+@media screen and (min-width: 992px) {
+  .rk-testimonials .rk-rt-carlo-logo { max-width: 4.875rem; }
+}

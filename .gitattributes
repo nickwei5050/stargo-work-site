@@ -1,0 +1,25 @@
+# Generated output, committed because a static site serves from the repo root —
+# but not written by hand and not worth a reviewer's attention. Marking it
+# collapses it in GitHub diffs and keeps review tools pointed at the source.
+*.html linguist-generated=true
+en/** linguist-generated=true
+blog/** linguist-generated=true
+css/renok.rk.css linguist-generated=true
+css/qubix.qx.css linguist-generated=true
+css/cinery.cn2.css linguist-generated=true
+css/cinery.cn.css linguist-generated=true
+css/lumenis.lm.css linguist-generated=true
+css/lifelogx.lx.css linguist-generated=true
+css/scalora-modules.sc.css linguist-generated=true
+css/donor-fonts.css linguist-generated=true
+js/app.fused.js linguist-generated=true
+js/capability-blocks.js linguist-generated=true
+tools/fragments/** linguist-generated=true
+
+# Vendored: the parts of the licensed Webflow templates the build reads.
+tools/templates/** linguist-vendored=true
+tools/bundles/** linguist-vendored=true
+assets/renok/** linguist-vendored=true
+assets/qubix/** linguist-vendored=true
+assets/cinery/** linguist-vendored=true
+assets/fonts/donor/** linguist-vendored=true

@@ -1,0 +1,36 @@
+/* rk-hero — hand-written rules the extraction could not carry.
+   Everything is scoped under .rk-hero, exactly as the extractor scopes its own.
+
+   One thing only: the face the italic accent is actually drawn in.
+
+   renok asks for the accent with `font-family: var(--_font-family---secondary-font);
+   font-style: italic` (.rt-italic-text, index.html), and the extractor already
+   carries that variable onto .rk-hero with the donor's own value — so nothing
+   about the *declaration* is missing. What is missing is which files the donor
+   loads: its index.html calls
+     WebFont.load({ google: { families: ["Instrument Serif:300,400,500,600,700", …] }})
+   — roman weights only, no italic. So on renok the browser has no italic face
+   to bind and draws a synthesised oblique of the roman: upright serif shapes,
+   simply slanted (see the review screenshot, image2.png, "/websites" — a roman
+   two-stroke w). This site's shared css/donor-fonts.css, which serves every
+   donor at once, also ships InstrumentSerif-400i.woff2; that real italic is a
+   cursive cut with quite different letterforms (a looped w, a curved-exit t)
+   and it wins over the roman here, which the donor never shows.
+
+   Binding the accent to a roman-only family restores renok's own rendering:
+   the browser falls back to synthesising the slant, as it does on the donor.
+   Same file the site already serves, same fallback the donor declares
+   ("Instrument Serif", sans-serif), and the family name is unique to this
+   block so nothing else on the page can pick it up. No size, weight, colour,
+   spacing or layout is touched. */
+@font-face {
+  font-family: "Instrument Serif Roman";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/donor/InstrumentSerif-400.woff2") format("woff2");
+}
+
+.rk-hero {
+  --_font-family---secondary-font: "Instrument Serif Roman", sans-serif;
+}

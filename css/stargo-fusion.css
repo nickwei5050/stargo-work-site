@@ -134,7 +134,7 @@
 .stargo-wordmark.in-card { height: 18px; }
 
 /* lifelogx body: dark, its own tokens; pointer restored (Mono hides the cursor). */
-.lx-scope { display: block; width: 100%; background: #0d0d0d; }
+.lx-scope { display: block; width: 100%; background: #000002; }
 .lx-scope a, .lx-scope button, .lx-scope [role="button"] { cursor: pointer; }
 .lx-scope .lx-hero-text { word-break: keep-all; }
 
@@ -150,7 +150,7 @@
 /* Pages whose body is the dark lifelogx template: Mono's nav is drawn in
    black for its white pages, so it is turned white here (the hamburger is a
    white Lottie that Mono inverts; un-invert it). */
-body.lx-page { background: #0d0d0d; }
+body.lx-page { background: #000002; }
 body.lx-page .navigation-top .navigation-text-main { color: #fff; }
 body.lx-page .navigation-top .line-divider-menu { background-color: #fff; }
 body.lx-page .navigation-top .lottie-white { filter: none; }
@@ -229,31 +229,26 @@ body.lx-page .navigation-top .lottie-white { filter: none; }
   .stargo-switcher [role="tabpanel"], .stargo-switcher .products-card-name-inner-block { transition: none !important; }
 }
 
-/* 4. Template stock photography that is set in CSS → STARGO imagery. */
+/* 4. Template stock photography that is set in CSS → STARGO imagery (enterprise
+      page hero backgrounds and the homepage vision band). The homepage contact
+      band keeps the template's group photograph behind its glass form. */
 .image-about, .image-about._01 { background-image: url("../assets/stargo-editorial/os-cockpit.webp"); }
 .image-about._02 { background-image: url("../assets/stargo-editorial/os-agent-center.webp"); }
 .image-about._03 { background-image: url("../assets/stargo-editorial/os-login.webp"); }
 .image-about._04 { background-image: url("../assets/stargo-editorial/os-trade-execution.webp"); }
-.photo-section { background-image: url("../assets/stargo-editorial/brand-glow-wide.webp"); opacity: .95; }
 .absolute-photo { background-image: url("../assets/stargo-editorial/os-cockpit.webp"); }
 .team-small-card { background-image: url("../assets/stargo-editorial/avatar-01.png"); }
 .team-small-card._02 { background-image: url("../assets/stargo-editorial/avatar-04.png"); }
 .team-small-card._03 { background-image: url("../assets/stargo-editorial/avatar-06.png"); }
 .team-small-card._04 { background-image: url("../assets/stargo-editorial/avatar-09.png"); }
 
-/* 5. lifelogx pages (Intelligence, AI Workforce): the STARGO copper palette
-      instead of the template's pink, and a hero that clears the Mono nav. */
-.lx-scope {
-  --_primitives---primary--primary: #f2a35b;
-  --_primitives---primary--secondary: #e8823a;
-  --_primitives---primary--tertiary: #3a1a0c;
-  --_semantics---gradient-4th: #c4622a;
-}
-.lx-scope .lx-main-items-home { padding-top: 12vh; }
-.lx-scope .lx-text-size-regular.lx-text-color { color: #f2c9a6; }
-.lx-scope .lx-gradient-section-image-bg { background-image: linear-gradient(#000, #3a1a0c 56%, #e8823a); }
-.lx-scope .lx-cta-card { background-color: #3a1a0c; background-image: linear-gradient(90deg, #e8823a, rgba(232, 130, 58, 0) 45%); box-shadow: inset 0 0 110px 10px #e8823a, inset 0 0 80px 10px #c4622a; }
-@media (max-width: 767px) { .lx-scope .lx-main-items-home { padding-top: 14vh; } }
+/* 5. lifelogx pages (Intelligence, AI Workforce, About, Blog, articles) keep the
+      template's own palette, gradients and imagery (owner decision, 2026-09-06).
+      The template's navigation is in normal flow and 80px tall (72px on
+      phones); Mono's floats over the page, so the page bodies start that far
+      down to reproduce the template's composition exactly. */
+body.lx-page .lx-scope { padding-top: 80px; }
+@media (max-width: 767px) { body.lx-page .lx-scope { padding-top: 72px; } }
 
 /* 6. The core-system switcher's four names are buttons as well as scroll stops. */
 .sc-scope.products .products-card-name-block { cursor: pointer; }
@@ -270,25 +265,13 @@ form[data-stargo-busy] input[type="submit"] { opacity: .6; pointer-events: none;
 .w-richtext p, .w-richtext li { line-height: 1.7; }
 .w-richtext ul { padding-left: 20px; }
 
-/* 9. Quote/author avatars are template portraits set in CSS → STARGO avatars. */
-.author-circle { background-image: url("../assets/stargo-editorial/avatar-01.png"); }
-.author-circle._01 { background-image: url("../assets/stargo-editorial/avatar-02.png"); }
-.author-circle._02 { background-image: url("../assets/stargo-editorial/avatar-03.png"); }
-.author-circle._03 { background-image: url("../assets/stargo-editorial/avatar-04.png"); }
-.author-circle._04 { background-image: url("../assets/stargo-editorial/avatar-05.png"); }
-.author-circle.small { background-image: url("../assets/stargo-editorial/avatar-07.png"); }
-.author-circle.small._01 { background-image: url("../assets/stargo-editorial/avatar-08.png"); }
-.author-circle.small._02 { background-image: url("../assets/stargo-editorial/avatar-10.png"); }
-.author-circle.small._03 { background-image: url("../assets/stargo-editorial/avatar-11.png"); }
+/* 9. The scenario cards keep the template's portraits (CSS backgrounds). The
+      pricing-ladder flip cards quote a plan, not a person: no portrait there. */
+.card-author.third .author-circle { display: none; }
 
-/* 10. lifelogx hero: the giant word is absolutely positioned; anchor it to
-       its own holder (after the padding that clears the Mono nav), and turn
-       the two remaining hard-coded pink gradients copper. */
-.lx-scope .lx-gradient-text-holder { position: relative; }
-.lx-scope .lx-main-items-home { padding-top: 5vh; }
-@media (max-width: 767px) { .lx-scope .lx-main-items-home { padding-top: 7vh; } }
-.lx-scope .lx-gradient-no-writing { background-image: linear-gradient(180deg, #000, #3a1a0c 46%, #e8823a); }
-.lx-scope .lx-bg-gradient-image { background-image: url("../assets/stargo-editorial/brand-glow-wide.webp"); }
+/* 10. lifelogx hero: the giant word is absolutely positioned against the page
+       container in the template, and stays so — the offset above puts that
+       container exactly where the template's in-flow nav left it. */
 
 /* 11. Floating pill: English labels are longer than the template's; give the
        pill room instead of clipping "Capabilities" / "AI Workforce". */
@@ -305,3 +288,418 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   .w-nav-overlay .nav-menu .button-link { min-height: 44px; padding-top: 8px; padding-bottom: 8px; align-items: center; }
   body:has(.w-nav-button.w--open) { overflow: hidden; }
 }
+
+/* Audit fixes: retain each template's motion, make content legible at rest. */
+body.stargo-dark-page { background: #1b1a19; }
+/* The nav is drawn in the page's own black, which disappears against a dark
+   hero. A whole-page dark treatment is the wrong tool where only the top of
+   the page is dark -- the capability page opens on renok's black hero and
+   turns light below the curve -- so the nav half of it stands on its own. The
+   nav scrolls away with the hero, so it never meets the light section. */
+body.stargo-dark-page .navigation-top .navigation-text-main,
+body.stargo-dark-nav .navigation-top .navigation-text-main { color: #fff; }
+body.stargo-dark-page .navigation-top .line-divider-menu,
+body.stargo-dark-nav .navigation-top .line-divider-menu { background-color: #fff; }
+@media (max-width: 991px) {
+  body .navigation-top .menu-button,
+  body .navigation-top .menu-button.w--open { background: #f4f4f4; min-width: 44px; min-height: 44px; }
+  body .navigation-top .menu-button .lottie-white { filter: invert(1); }
+  /* Webflow moves the links into its light overlay on mobile. */
+  body .navigation-top .w-nav-overlay .navigation-text-main { color: #111; }
+}
+/* The template sets "Lifelogx" at 16rem (20rem from 1440px). Its Latin glyphs
+   end at the baseline, so the animated phone rising into the word only meets the
+   descender of the g. CJK glyphs fill the whole em box: at 0.9× the Latin size
+   their visible bottom lands where the Latin baseline was, and the three- or
+   four-character words stay narrower than the container at every width. From
+   1440px the template's phone rests 318px from the top whatever the width, so
+   the CJK word is capped at 226px: the ink height of "Lifelogx" at 20rem. English
+   words here are longer than "Lifelogx" and are sized by viewport instead. */
+.lx-scope .lx-hero-text { font-size: clamp(56px, 18vw, 226px); letter-spacing: -.045em; white-space: nowrap; }
+html[lang="en"] .lx-scope .lx-hero-text { font-size: clamp(40px, 14.2vw, 210px); letter-spacing: -.03em; }
+#lx-ontology, #lx-teams, #lx-more, #lx-evolution { scroll-margin-top: 100px; }
+.stargo-contact-page .grid-form { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.stargo-contact-page .grid-form > div { min-width: 0; }
+.stargo-contact-page .text-field-2 { width: 100%; min-height: 48px; }
+.stargo-contact-page textarea.text-field-2 { min-height: 140px; resize: vertical; }
+@media (max-width: 991px) {
+  .stargo-contact-page .grid-form { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .stargo-contact-page .text-field-2 { font-size: 16px; }
+  .stargo-contact-page .form-amin { padding-inline: 16px; }
+}
+/* Contact band: the template's glass card over its photograph. 16px inputs stop
+   iOS zooming the form; nothing else about the card changes. */
+.section.ctc .contact-card .text-field { font-size: 16px; }
+.section.ctc .contact-card .text-field::placeholder { font-size: 16px; }
+.stargo-form-consent { margin: 16px 0; font-size: 13px; line-height: 1.6; }
+.stargo-form-consent a { color: inherit; text-decoration: underline; }
+.sc-scope .pricing-tab-link.w--current { color: #17110c; }
+.top-text.big.gray.sm { color: #999; opacity: 1; }
+button.toggle-header { width: 100%; border: 0; border-radius: 0; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+/* Cloned template grid nodes need unique IDs, but keep the donor placement. */
+[data-stargo-grid="w-node-f4f6d413-6968-d40f-07ed-7736cdf55b9b-cdf55b9b"],
+[data-stargo-grid="w-node-f4f6d413-6968-d40f-07ed-7736cdf55b9c-cdf55b9b"] { grid-area: 1 / 1 / 2 / 5; }
+[data-stargo-grid="w-node-f4f6d413-6968-d40f-07ed-7736cdf55b9f-cdf55b9b"] { grid-area: 1 / 4 / 2 / 5; }
+[data-stargo-grid="w-node-_8fd1d186-4590-97f8-ca96-eaab35b924c9-993a4d49"],
+[data-stargo-grid="w-node-_8fd1d186-4590-97f8-ca96-eaab35b924cb-993a4d49"] { justify-self: start; }
+[data-stargo-grid="w-node-_8fd1d186-4590-97f8-ca96-eaab35b924cd-993a4d49"] { justify-self: end; }
+[data-stargo-grid="w-node-_8a43d27d-b7fc-1aa9-5720-a9b126877931-993a4d49"] { grid-area: 1 / 2 / 2 / 4; }
+[data-stargo-grid="w-node-_8fd1d186-4590-97f8-ca96-eaab35b924c2-993a4d49"] { justify-self: center; }
+[data-stargo-grid="w-node-_8fd1d186-4590-97f8-ca96-eaab35b924c4-993a4d49"] { grid-area: 1 / 3 / 2 / 4; justify-self: end; }
+@media (max-width: 991px) { [data-stargo-grid="w-node-_8fd1d186-4590-97f8-ca96-eaab35b924c2-993a4d49"] { justify-self: end; } }
+@media (max-width: 479px) {
+  [data-stargo-grid="w-node-_8fd1d186-4590-97f8-ca96-eaab35b924c0-993a4d49"] { justify-self: start; }
+  [data-stargo-grid="w-node-_8fd1d186-4590-97f8-ca96-eaab35b924c2-993a4d49"] { justify-self: center; }
+}
+@media (max-width: 767px) {
+  /* The donor had four categories; STARGO has two. Don't retain empty tracks. */
+  .sc-scope .pricing-tabs-menu { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sc-scope .pricing-tab-link { display: flex; align-items: center; justify-content: center; min-height: 52px; }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  /* Match the three columns of the animated phone below. The donor's 1:2.5:1
+     intro grid squeezed copy; a full-width row would intersect the phone's
+     retained upward entrance. Equal columns preserve its clear centre lane. */
+  .lx-scope .lx-hero-home-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .lx-scope .lx-hero-home-mobile { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  /* The retained entrance scales the holder to 1.5. Size its content for that
+     largest state; do not override the animation's transform or timing. */
+  .lx-scope .lx-home-hero-mobile-wrapper .lx-integrations_06-app { width: calc(100% / 1.5); }
+  .lx-scope .lx-hero-desc { width: 100%; font-size: 24px; }
+}
+
+/* ======================================================================
+   Template restore, 2026-09-06: original imagery and composition back,
+   STARGO copy adapted to the containers. No interaction data changed.
+   ====================================================================== */
+
+/* Pricing-ladder title: the orb sits inline before the first character (build
+   moves it inside the heading), so it travels with the centred first line in
+   both languages instead of being pinned 50px from the block's left edge. */
+.h2.for-stats { text-indent: 0; }
+.h2.for-stats .video-logo.for-sct.stargo-inline-orb { position: static; display: inline-flex; vertical-align: -0.14em; margin: 0 .18em 0 0; inset: auto; }
+
+/* The template's client marks on the scenario and ladder cards → the STARGO wordmark. */
+.logo-testi-1.stargo-card-mark { width: auto; height: 16px; }
+.card-stats-side .logo-testi-1.stargo-card-mark { height: 12px; }
+
+/* Blog and article pages (lifelogx design) */
+.lx-scope .lx-post-meta { margin: 1rem 0 0; color: var(--_primitives---primary--text-grey, #989898); font-size: .95rem; }
+.lx-scope .lx-post-meta a { color: inherit; text-decoration: underline; }
+.lx-scope .lx-post-date { display: block; margin-top: .4rem; font-size: .85rem; color: var(--_primitives---primary--text-dark-grey, #717171); }
+.lx-scope a.lx-related-item { color: inherit; text-decoration: none; transition: opacity .3s; }
+.lx-scope a.lx-related-item:hover { opacity: .75; }
+.lx-scope .lx-text-rich-text h3 { margin-top: 2.5rem; }
+.lx-scope .lx-text-rich-text a { color: var(--_semantics---primary, #e393bd); }
+.lx-scope .lx-blog-details-image-holder .lx-blog-image.lx-details { width: 100%; }
+@media (max-width: 991px) {
+  .lx-scope .lx-blog-details-grid { grid-template-columns: 1fr; }
+  .lx-scope .lx-blog-list { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 767px) {
+  .lx-scope .lx-blog-list { grid-template-columns: 1fr; }
+}
+/* About: the four hero circles are AI-employee roles, not people. */
+.lx-scope .lx-about-name { white-space: nowrap; }
+
+/* Mono's element-level typography (p/li at .7 opacity, -.5px tracking, 500
+   weight, its own sizes; h4 tracking; blockquote colour) reaches into the
+   lifelogx scope because both stylesheets share the page. The lifelogx layer
+   scopes its own element rules with :where(), so this reset carries the same
+   specificity, loads last, and still loses to every lifelogx class rule. */
+:where(.lx-scope) :is(p, li) { opacity: 1; font-size: inherit; line-height: inherit; font-weight: inherit; letter-spacing: normal; }
+:where(.lx-scope) :is(h1, h2, h3, h4, h5, h6) { letter-spacing: normal; }
+:where(.lx-scope) blockquote { color: inherit; font-weight: inherit; }
+
+/* Navigation labels. Mono's .button-link is a wrapping flex row (moon icon + label,
+   slid 16px left so the icon hides until hover) and its labels were short.
+   STARGO's English labels are longer, so at 992-1279px the label wrapped under
+   the icon and the slide clipped its first letters; in the closed overlay menu
+   the wider English items reached past the viewport and the page could be
+   scrolled sideways at 1024-1100px. Keep icon and label on one line, give the
+   English row a slightly smaller size where the template's 49% column cannot
+   hold it, and size the overlay labels to the viewport in that range. */
+.button-link { flex-wrap: nowrap; }                 /* top nav, pill and footer grid: icon and label on one line */
+.navigation-text-main { white-space: nowrap; }
+@media (min-width: 992px) {
+  .navigation-top .nav-menu.first .button-link { flex-shrink: 0; }
+}
+@media (min-width: 992px) and (max-width: 1439px) {
+  html[lang="en"] .navigation-top .nav-menu.first { grid-column-gap: 10px; }
+  html[lang="en"] .navigation-top .navigation-text-main { font-size: 15px; }
+  /* Overlay menu (desktop drawer): the template's 48px labels in a ~22vw column.
+     "AI Workforce" and the legal row are wider than "Home"/"Work (4)" were. */
+  html[lang="en"] .menu-wrapper .menu-item .button-with-line { font-size: min(var(--font--h2), 3.1vw); }
+  html[lang="en"] .menu-wrapper .menu-item .button-text { white-space: nowrap; }
+  html[lang="en"] .menu-wrapper .flex-bottom { flex-wrap: wrap; }
+}
+@media (min-width: 992px) and (max-width: 1279px) {
+  html[lang="en"] .navigation-top .nav-menu.first { grid-column-gap: 8px; }
+  html[lang="en"] .navigation-top .navigation-text-main { font-size: 14px; }
+}
+
+/* "No writing" words: CJK text may break between any two characters, so the
+   template's 1fr / 2.5fr / 1fr grid gave "等提示" a column narrower than the word
+   and wrapped it into two lines. Keep each word on one line, as the template's
+   Latin words are, and let the column size itself to the word. */
+.lx-scope .lx-big-gradient-text { white-space: nowrap; }
+
+/* Feature cards. The template's fixed-height cards (24rem / 21.5rem) sit in
+   three 224px columns at tablet width, where four lines of 2rem no longer fit
+   (the template's own English copy is clipped there as well): 1.5rem holds the
+   four lines. Between 992 and 1279px the English titles need 1.8rem to stay on
+   one line beside their icon; at 2rem "Works anywhere" wrapped and pushed the
+   copy out through the top of the card. */
+@media (min-width: 768px) and (max-width: 991px) {
+  .lx-scope .lx-expandable-text { font-size: 1.5rem; }
+}
+@media (min-width: 992px) and (max-width: 1279px) {
+  html[lang="en"] .lx-scope .lx-expandable-icon-text .lx-expandable-text { font-size: 1.6rem; }
+}
+
+/* Footer grids. The template's "Pages" grid has four equal columns for five
+   one-word links; STARGO's has three columns of longer labels, so it gets three.
+   The contact grid keeps the template's own two-column spans (e-mail + WhatsApp,
+   website), but a footer link hides its icon by sliding 16px left inside an
+   overflow-hidden box, so a label must be 17px narrower than its column: below
+   1280px the footer links are set at 15px and the WhatsApp label drops its
+   prefix. */
+.footer .footer-small-grid:not(.sec):has(> .flex-item > a.button-link) { grid-template-columns: repeat(3, 1fr); }
+/* .navigation-text-main is a flex container, so the prefix span is a flex item
+   and the space after "WhatsApp" is trimmed: put that gap back as a margin. */
+.footer .stargo-wa { margin-right: .3em; }
+@media (max-width: 1279px) {
+  .footer .navigation-text-main { font-size: 15px; }
+  .footer .stargo-wa { display: none; }
+}
+@media (max-width: 479px) {
+  .footer .footer-small-grid:not(.sec):has(> .flex-item > a.button-link) { grid-template-columns: 1fr 1fr; }
+}
+
+/* ---------------------------------------------------------------------------
+   Intrinsic image dimensions.
+
+   Generated imagery carries width/height attributes so the browser can reserve
+   the right box before the file arrives (no layout shift). The templates only
+   ever set `max-width: 100%`, so a constrained image kept the attribute's
+   *pixel* height while its width shrank to the column: a 1586x992 screenshot
+   rendered 295px wide and 992px tall, i.e. squeezed to a ribbon. This was
+   visible on the enterprise team grid and the homepage OS scenes.
+
+   `height: auto` restores the attribute's aspect ratio. It sits at zero
+   specificity, so every template class that sets a genuine height
+   (.work-image-cover, .team-image children, the sticky card art) still wins. */
+:where(img[width][height]) { height: auto; }
+
+/* The wordmark is a fixed-height logo dropped into containers the template
+   sized for its own square mark. Let it letterbox instead of squashing. */
+.stargo-wordmark,
+.logo-testi-1.stargo-card-mark { width: auto; object-fit: contain; }
+
+/* ---------------------------------------------------------------------------
+   Top navigation: nine items.
+
+   Mono lays the bar out as four equal grid columns — logo, then the menu across
+   columns 2-3, then the burger — so the menu had a fixed 629px at 1280 and 685px
+   at 1920 no matter how many items it held. Six product pages plus About, Blog and
+   the language switch need 740px in English, so the last items ran out of their
+   column and into the burger.
+
+   Give the middle column exactly the width the menu needs and split what is left
+   evenly between the two sides: the group stays centred, the burger keeps its
+   corner, and the row can no longer overflow. Below 992px the menu is the
+   template's own dropdown and this does not apply. */
+@media (min-width: 992px) {
+  .navigation-top .navbar { grid-template-columns: 1fr auto 1fr; }
+  .navigation-top .navbar > .make-grid { grid-column: 2 / 3; width: max-content; }
+  .navigation-top .navbar > .last-part { grid-column: 3 / 4; }
+  /* The menu is width:100% inside its column, which contributes nothing to an
+     auto track: size it to its content so the track can ask for what it needs. */
+  .navigation-top .navbar > .make-grid > .nav-menu.first { width: max-content; justify-content: center; }
+}
+
+/* ---------------------------------------------------------------------------
+   Pricing page in the Lifelogx palette.
+
+   The plan ladder is Scalora's, and Scalora's accent is a copper orange that
+   reaches almost everything through one token. Rebind that token to Lifelogx's
+   magenta on this page and restate the three rules that hard-code the orange,
+   and the badge, the active tab, the plan icons, the promoted card and its top
+   border all read pink-purple. Nothing else about the layout moves. */
+body.stargo-pricing-lx,
+body.stargo-pricing-lx .sc-scope { --border-color--border-color-03: #f938a1; }
+
+body.stargo-pricing-lx .top-border { background-image: linear-gradient(#f938a1, #f938a100); }
+
+body.stargo-pricing-lx .sc-pricing-card.growth {
+  background-image:
+    linear-gradient(117deg, #f938a12e .96%, #500b3800 95.98%),
+    url("../assets/69a01660589c516ba5f0f917/69a2a0d626d85bfe3d20a9ed_number-card-big-img.svg");
+  box-shadow: 0 0 0 1px #f938a133, 0 24px 70px -30px #f938a159;
+}
+
+body.stargo-pricing-lx .button-primary {
+  box-shadow: 0 0 0 3px var(--beckground-color--white), 0 2px 5px 0 #0003,
+    0 0 0 2px #f8eaf0, 0 3.714px 4.846px 0 #f938a11c, 0 10.2px 13.3px 0 #f938a114;
+}
+
+/* Scalora's eyebrow icon is an orange SVG, so it cannot follow the token: turn
+   its hue to the same magenta rather than ship a second copy of the asset. */
+body.stargo-pricing-lx .caption-icon { filter: hue-rotate(300deg) saturate(1.3); }
+
+/* The plan STARGO promotes says so, in the template's own eyebrow type. It takes
+   its own line above the plan name so a two-word name is not squeezed. */
+body.stargo-pricing-lx .growth-card .pricing-card-top-block { flex-wrap: wrap; }
+body.stargo-pricing-lx .stargo-plan-badge {
+  order: -1;
+  align-self: flex-start;
+  /* margin-right:100% pushes the plan name onto the next row while the badge
+     itself stays the width of its words. */
+  margin: 0 100% 12px 0;
+  border: 1px solid #f938a159;
+  border-radius: 999px;
+  padding: 4px 10px;
+  color: #ffe3f2;
+  background: #f938a11f;
+  font-size: 12px;
+  letter-spacing: .04em;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* ======================================================= capability map
+   Wrapper for the transplanted cinery FAQ block. The block's own look —
+   gradient split heading, blur sweep, rounded rows, plus rotation, expand
+   animation — comes from css/cinery.cn.css and js/app.fused.js untouched.
+   These rules only give it a place to sit on our page and space the bands
+   between its three groups of rows. */
+.cn-capmap { background: #000; padding: 140px 5vw; }
+.cn-capmap-inner { max-width: 1180px; margin: 0 auto; }
+.cn-capmap-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 32px; }
+.cn-capmap-lede { max-width: 720px; margin: 40px 0 0; font-size: 20px; line-height: 30px; color: #b9b9b9; }
+.cn-capmap-scope { max-width: 720px; margin: 16px 0 0; font-size: 15px; line-height: 24px; color: #6f6f6f; }
+.cn-capmap .cn-band { display: flex; align-items: baseline; gap: 20px; flex-wrap: wrap;
+  margin: 76px 0 28px; padding-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,.14); }
+.cn-capmap .cn-band-label { font-size: 22px; line-height: 28px; color: #fff; letter-spacing: -.3px; }
+.cn-capmap .cn-band-note { font-size: 15px; line-height: 24px; color: #7d7d7d; }
+.cn-capmap .cn-faq-container { display: flex; flex-flow: column; gap: 14px; }
+/* the donor answers one question with one paragraph; a capability group
+   answers with many, so give consecutive paragraphs a rhythm */
+.cn-capmap .cn-accordion-answer-text + .cn-accordion-answer-text { margin-top: 12px; }
+.cn-capmap .cn-accordion-answer-text strong { color: #fff; font-weight: 500; }
+.cn-capmap .cn-accordion-answer-text.cn-lede { color: #cfcfcf; margin-bottom: 20px; }
+.cn-capmap .cn-accordion-answer-text.cn-out { margin-top: 20px; }
+.cn-capmap .cn-accordion-answer-text.cn-note { color: #6f6f6f; font-size: 15px; margin-top: 16px; }
+@media (max-width: 767px) {
+  .cn-capmap { padding: 80px 22px; }
+  .cn-capmap-head { flex-flow: column; gap: 12px; }
+  .cn-capmap-lede { font-size: 17px; line-height: 26px; }
+  .cn-capmap .cn-band { margin: 52px 0 20px; }
+}
+
+/* The "no writing" band sits left of centre: the words and the phone share one
+   grid, and its left margin is consistently 64px tighter than its right (32 vs
+   96 at 1280, 80 vs 144 at 1440, 320 vs 384 at 1920). Move the whole grid — the
+   two words and the phone between them — half that distance right, which
+   balances the margins without changing any spacing inside the band. */
+@media (min-width: 992px) {
+  .lx-scope .lx-gradient-grid { transform: translateX(32px); }
+}
+
+/* ======================================================= pricing palette
+   Scalora writes a few of its accent colours as literal hex rather than
+   through the token this site rebinds, so they survived the recolour at 12%
+   alpha: the caption chip's fill and hairline, its divider, and the CTA icon
+   block's border and wash. Rebind them to the Lifelogx magenta the rest of the
+   page now uses. No orange remains on the page. */
+.hero-section-caption-block { background-color: rgba(249, 56, 161, .12) !important;
+  border-color: rgba(249, 56, 161, .22) !important; }
+.hero-caption-devider { background-color: rgba(249, 56, 161, .35) !important; }
+.cta-icon-block { border-color: rgba(249, 56, 161, .22) !important;
+  background-image: linear-gradient(90deg, rgba(249, 56, 161, .12), rgba(249, 56, 161, .40) 54.55%, rgba(249, 56, 161, .08)) !important; }
+
+/* The pricing headline gets the Intelligence page's treatment: white type
+   fading downward, so the two big statements on the site read as one family.
+   Intelligence clips a gradient to its glyphs, but this headline is split into
+   per-character spans by SplitText, and a clipped background lives on the h1
+   while the glyphs live in the spans — the text disappears. A mask fades the
+   rendered result instead, which the split spans pass through untouched. */
+.pricing-hero-title-block h1 {
+  color: #fffffe;
+  -webkit-mask-image: linear-gradient(180deg, #000 22%, rgba(0, 0, 0, .28));
+  mask-image: linear-gradient(180deg, #000 22%, rgba(0, 0, 0, .28));
+}
+.pricing-hero-title-block h1 .sub-title-text { color: #f938a1; }
+
+/* Scalora accents one word of the headline in Instrument Serif Italic. That
+   reads well in Latin, but the accent here contains Chinese, and a Latin italic
+   serif has no CJK glyphs — the browser synthesises a slanted fallback and the
+   two halves of the phrase stop matching. Let the accent take the headline's
+   own face; the magenta gradient above already marks it out. */
+.pricing-hero-title-block h1 .sub-title-text { font-family: inherit; font-style: normal; }
+
+/* The donor scales this headline 192 / 160 / 128 / 96 / 56px across its own
+   breakpoints, but only the first two sizes sit in a media block the extractor
+   in tools/cinery-prepare.mjs can read; the rest are nested deeper. These are
+   the donor's own values, recovered by measuring its page at each width, so the
+   transplant scales exactly as the original does. */
+@media (max-width: 1279px) { .cn-capmap .cn-heading-style-h2 { font-size: 160px; } }
+@media (max-width: 991px)  { .cn-capmap .cn-heading-style-h2 { font-size: 128px; } }
+@media (max-width: 767px)  { .cn-capmap .cn-heading-style-h2 { font-size: 96px; } }
+@media (max-width: 479px)  { .cn-capmap .cn-heading-style-h2 { font-size: 56px; } }
+
+/* The capability map's ten narrative blocks are lumenis service cards; the
+   fourteen-group catalogue below them is cinery's accordion. Both donors keep
+   their own look. These rules only stack the cards and dress the three band
+   headings and the module's own opening, which no donor supplies. */
+.lm-capmap-cards { display: flex; flex-flow: column; gap: 28px; }
+.cn-capmap-eyebrow { font-size: 13px; letter-spacing: .16em; text-transform: uppercase; color: #8d8d8d; }
+.cn-capmap-count { font-size: 44px; line-height: 1; color: #4b4b4b; }
+.cn-capmap-title { margin: 26px 0 0; font-size: clamp(30px, 4.4vw, 60px); line-height: 1.08;
+  letter-spacing: -.02em; color: #fdfcfc; max-width: 16ch; }
+.lm-capmap .lm-capmap-groups { margin-top: 14px; font-size: 14px; line-height: 22px; color: #8d8d8d; }
+@media (max-width: 767px) { .lm-capmap-cards { gap: 18px; } .cn-capmap-count { font-size: 32px; } }
+
+/* On the Chinese capability page each capability leads with its Chinese name and
+   keeps the product name beneath it as a small subtitle, so a Chinese reader
+   never has to parse English to follow the list. */
+/* A capability's product name, carried as a small subtitle under its Chinese
+   name on the Chinese page. The donor blocks of the capability page all use the
+   plain `.cap-en`; `.lm-cap-en` is the older lumenis-only spelling. */
+.cap-en { display: block; margin-top: 3px;
+  font-size: .72em; letter-spacing: .06em; font-weight: 400; opacity: .62; text-transform: none; }
+
+.lm-capmap .lm-cap-en, .cn-capmap .lm-cap-en { display: block; margin-top: 3px;
+  font-size: 12px; letter-spacing: .06em; font-weight: 400; color: #8d8d8d; text-transform: none; }
+.cn-capmap .cn-accordion-answer-text .lm-cap-en { display: inline; margin: 0 0 0 8px; }
+
+/* The pill's middle cell used to hold one wordmark, so it has no layout of its
+   own; four capability jumps dropped into it overlapped. Lay them out as a row
+   and let the cell size itself to them. */
+.menu-bottom .menu-first-bottom.caps { display: flex; align-items: center; gap: 20px;
+  justify-content: center; white-space: nowrap; }
+/* Keep the template's own link structure: the label sits 16px left of centre to
+   cover the icon it hides, so the icon has to stay in the box or the first
+   character is clipped out of it. */
+.menu-bottom .menu-first-bottom.caps .button-link { flex: 0 0 auto; }
+
+/* The pill's middle column was sized for one wordmark (84px). Four capability
+   jumps need their own width, so let that column take its content and the pill
+   grow with it, still centred. */
+.menu-bottom:has(.menu-first-bottom.caps) {
+  grid-template-columns: max-content max-content max-content;
+  width: max-content; max-width: calc(100vw - 40px);
+}
+
+/* ---------------------------------------------------------------------------
+   The capability page's donor blocks style themselves.
+
+   Each block arrives with its donor's own stylesheet, reduced to the rules it
+   uses and scoped to its own root class (css/renok.rk.css, qubix.qx.css,
+   cinery.cn2.css — written by tools/capability-donors.mjs, never by hand), and
+   any hand-written rule a block needs lives beside its module in
+   tools/blocks/<id>.css. Nothing block-specific belongs in this file: those
+   sheets load before this one, so a rule here would silently override the block
+   that owns it. See tools/blocks/README.md.
+   --------------------------------------------------------------------------- */
+
