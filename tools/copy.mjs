@@ -157,7 +157,7 @@ export const HOME_HERO_LIST = [
 export const HOME_MOBILE = {
   heroSupport: B('面向制造业与外贸团队的云端 AI 工作系统。买家研究、客户回复、报价、订单与出口单证连成一条工作流。', 'Cloud AI for manufacturers and export teams: buyer research, replies, quotes, orders and export paperwork in one connected workflow.'),
   scHero: B('客户、产品、询盘、报价、订单、文件、任务和 AI 员工，第一次在同一个系统里。', 'Customers, products, inquiries, quotes, orders, documents, tasks and AI employees — in one system for the first time.'),
-  ladder: B('AI 运营能力一级一级往上加：先建底座，再启动运营，再建增长引擎，再打开主动获客。', 'AI operating capacity, level by level: foundation, operation, growth engine, then AI acquisition.'),
+  ladder: B('AI 运营产能一级一级往上加：先建底座，再启动运营，再建增长引擎，再打开主动获客。', 'AI operating capacity, level by level: foundation, operation, growth engine, then AI acquisition.'),
 };
 export const HOME_THEATRE = B('STARGO OS ©2026', 'STARGO OS ©2026');
 
