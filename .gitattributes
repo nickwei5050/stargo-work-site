@@ -1,0 +1,49 @@
+# Generated output, committed because a static site serves from the repo root —
+# but not written by hand and not worth a reviewer's attention. Marking it
+# collapses it in GitHub diffs and keeps review tools pointed at the source.
+*.html linguist-generated=true
+en/** linguist-generated=true
+blog/** linguist-generated=true
+css/renok.rk.css linguist-generated=true
+css/qubix.qx.css linguist-generated=true
+css/cinery.cn2.css linguist-generated=true
+css/cinery.cn.css linguist-generated=true
+css/lumenis.lm.css linguist-generated=true
+css/lifelogx.lx.css linguist-generated=true
+css/scalora-modules.sc.css linguist-generated=true
+css/donor-fonts.css linguist-generated=true
+js/app.fused.js linguist-generated=true
+js/capability-blocks.js linguist-generated=true
+tools/fragments/** linguist-generated=true
+
+# Vendored: the parts of the licensed Webflow templates the build reads. Also
+# marked generated, because review tools skip generated paths but not vendored
+# ones, and a 11k-line Webflow stylesheet export is not something a reviewer
+# should be handed — it is input to the build, not our code.
+tools/templates/** linguist-vendored=true linguist-generated=true
+tools/bundles/** linguist-vendored=true linguist-generated=true
+assets/renok/** linguist-vendored=true
+assets/qubix/** linguist-vendored=true
+assets/cinery/** linguist-vendored=true
+assets/fonts/donor/** linguist-vendored=true
+
+# Binary media. Without this git treats them as text and review tools try to
+# diff them: the donor videos alone are ~50 MB, which is what pushed this
+# repository's pull request past Bugbot's 4,000,000-character review ceiling.
+*.webm binary
+*.mp4 binary
+*.mov binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.avif binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+
+# Every asset directory is fetched or generated, never hand-edited.
+assets/** linguist-generated=true

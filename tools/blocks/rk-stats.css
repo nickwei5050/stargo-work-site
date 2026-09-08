@@ -1,0 +1,34 @@
+/* rk-stats — hand-written rules the extraction could not know.
+   Everything is scoped under .rk-stats, exactly as the extractor scopes its own. */
+
+/* renok keeps its type on `body`, and a `body` rule does not travel with a cut
+   section, so the block was inheriting the host page's own body type instead:
+   measured against renok, 14px/15.4px/500 where renok gives 16px/25.92px/400,
+   and Inter where renok gives Inter Tight. Most of this block names its face
+   through a class, but the two display faces — `.rt-big-text` (the 03) and
+   `.rt-medium-text` (every counter digit) — set only a size and inherit the
+   family, so the reels were being drawn in the wrong typeface. These are the
+   six declarations of renok's own `body` rule, through renok's own tokens and
+   nothing more — including its inherited `color`, which every text node in this
+   block overrides with `.rt-text-color-black` exactly as it does on renok. */
+.rk-stats {
+  font-family: var(--_font-family---primary-font);
+  color: var(--white);
+  font-size: var(--_font-details---font-size--body);
+  line-height: var(--_font-details---font-line-height--body);
+  font-weight: var(--_font-details---font-weight--regular);
+  letter-spacing: var(--_font-details---font-letter-spacing--body);
+}
+
+/* The block is a link target — the outcome strip above it carries
+   `href="#story-3"` and the id sits on this scope root — and its reveals are
+   renok's own SCROLL_INTO_VIEW with `scrollOffsetValue: 12%`, which counts the
+   top and bottom twelfths of the viewport as NOT in view. renok's own page
+   never makes this section a hash target, so a hash that lands it flush with
+   the viewport top parks the 03 at the inline `opacity:0` it ships with:
+   measured on a 390px viewport, arriving at #story-3 without this rule leaves
+   `.rt-big-text` at opacity 0, and with it at opacity 1. It sets nothing that
+   is painted or laid out — only where a hash jump stops — and the site already
+   anchors this way (`scroll-margin-top` on the lifelogx sections). Stated in
+   vh because the dead band is a share of the viewport, not a fixed height. */
+.rk-stats { scroll-margin-top: 12vh; }

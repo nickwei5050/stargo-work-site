@@ -1,0 +1,71 @@
+/* rk-award — hand-written rules the extraction could not carry.
+   Everything is scoped under .rk-award, exactly as the extractor scopes its own.
+
+   Two rules only. The first puts back the six declarations renok keeps on
+   `body`; the second puts back the ground the donor paints behind this block,
+   which the cut shortened. Nothing here invents a size, a weight, a spacing or
+   a position: every number below is renok's own, quoted from its stylesheet or
+   measured off its own page at 1440x900. The responsive rules this file used to
+   carry (the 1280/991/767 `--_font-details---*` variables) are gone: the
+   extractor already rewrites renok's `body` media blocks onto `.rk-award`
+   (css/renok.rk.css lines 193, 243, 274, 289), so they were duplicates. */
+
+/* 1. renok's `body` rule (renok.app.shared.b851cf614.css:2147) sets six things.
+      The extractor carried that rule's custom properties onto `.rk-award` but
+      not the six declarations themselves, and a `body` rule does not travel
+      with a cut section — so the block was inheriting this site's own body type
+      instead of renok's: measured on `.rk-rt-awards`, 14px/15.4px/500 against
+      renok's 16px/25.92px/400, and the host's black Arial where renok has white
+      Inter Tight. These are the six, through renok's own tokens, exactly as
+      rk-insight.css restores them for the same reason. Only the typeface and
+      the colour are visible here (`.rt-extra-big-text` sets its own size,
+      line-height, weight and tracking, and every length in the block is rem),
+      but all six are what renok sets.
+
+      The fallbacks behind renok's two faces are the ones rk-hero.css uses, for
+      the same reason: renok's own fallback for both stacks is the generic
+      `sans-serif`, which would turn the accent — this block's one typographic
+      gesture, a serif italic cut against the grotesque — into slanted Arial in
+      the moment before the woff2 arrives. Both donor faces are still first in
+      their stack and win on the built page; measured at 1440x900, this changes
+      no rendered glyph. */
+.rk-award {
+  --_font-family---primary-font: "Inter Tight", "Inter", system-ui, sans-serif;
+  --_font-family---secondary-font: "Instrument Serif", Georgia, "Times New Roman", serif;
+  font-family: var(--_font-family---primary-font);
+  color: var(--white);
+  font-size: var(--_font-details---font-size--body);
+  line-height: var(--_font-details---font-line-height--body);
+  font-weight: var(--_font-details---font-weight--regular);
+  letter-spacing: var(--_font-details---font-letter-spacing--body);
+}
+
+/* 2. The ground. renok paints it with
+        .rt-wave-vector-main-wrapper.rt-v2 { background-image: linear-gradient(#000 18%, #fff) }
+      (renok.app.shared.b851cf614.css:3680) — but on a section that also holds
+      `.rt-insight` and the `.rt-wave-vector-wrapper` glow, so the box that
+      gradient paints is 1345.39px tall at 1440x900. This block is the section's
+      first child only, and the cut leaves the box 733.63px: the same two
+      percentages then finish the ramp 611.76px early, and the block ends at
+      #fefefe where renok's own ramp is at #727272. Measured down the left edge,
+      ours against renok's, at the same rows: y300 71/14, y400 114/37, y500
+      156/60, y600 199/83, y700 241/106, y732 254/114.
+
+      So the stops are restated at the lengths they have on renok's own page —
+      18% of 1345.39px = 242px, and 100% = 1345px — which reproduces renok's
+      ground colour at every row of this block instead of a ramp 1.83x too fast.
+      Bounded to the widths where renok's `#000 18%, #fff` is the recipe in
+      force: below 992px renok sets `background-image: none` on this element
+      (css/renok.rk.css:256) and from 1920px it sets `#000 83%, #fff`
+      (css/renok.rk.css:230); both are left exactly as they are. 1920 is left
+      alone on measurement, not on principle: there renok's ramp is still solid
+      black for the block's whole height (0 at every row of it), and everything
+      visible in renok's ground is the `.rt-wave-vector-wrapper` glow the cut
+      cannot carry — 137/172/183 down the left edge at y800/900/944 — so
+      restating the ramp there would move this block further from renok
+      (0 against 183), not closer. */
+@media screen and (min-width: 992px) and (max-width: 1919px) {
+  .rk-award .rk-rt-wave-vector-main-wrapper.rk-rt-v2 {
+    background-image: linear-gradient(#000 242px, #fff 1345px);
+  }
+}

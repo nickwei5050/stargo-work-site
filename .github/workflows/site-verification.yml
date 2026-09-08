@@ -1,0 +1,265 @@
+name: Site verification
+
+# The release gate for the STARGO WORK site.
+#
+# Plain terms: this job rebuilds all 38 pages from source, checks the rebuilt
+# pages are byte-identical to the pages committed in the branch, serves the
+# repository root, and then loads every page in a real Chromium to check for
+# JavaScript errors, failed requests, off-origin requests, dead links,
+# untranslated English on the Chinese pages, accessibility violations and the
+# keyboard/menu/form interactions.
+#
+# Green = the branch's committed pages are exactly what the build produces, and
+# a browser found nothing wrong with them.
+# Red   = something in the list above failed, OR a check could not run at all.
+# "Nothing was verified" is deliberately a red light, never a green one.
+#
+# .github/workflows/README.md explains each failure in plain language (中文/EN).
+#
+# This workflow deploys nothing. Deployment stays the owner's manual decision,
+# so there is no wrangler step and no secret is used or needed here. The token
+# is read-only and no third-party action is used: only official actions/*.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    # Covers release/website-qa-fixes-20260905 and any later release branch.
+    branches: ['release/**']
+  workflow_dispatch:
+
+# A new push to the same branch cancels the run still in flight.
+concurrency:
+  group: site-verification-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  BASE_URL: http://127.0.0.1:4200
+  # verify-site.mjs honours SHOTS; pinning it to an absolute path inside the
+  # workspace keeps the screenshots collectable no matter where the script
+  # thinks the site lives.
+  SHOTS: ${{ github.workspace }}/.wrangler/site-qa/shots
+
+jobs:
+  verify:
+    name: Build, reproduce and verify
+    runs-on: ubuntu-latest
+    # A hung browser is killed here, not after GitHub's six-hour default.
+    timeout-minutes: 40
+
+    steps:
+      - name: Check out the branch (for a PR, the merged result)
+        uses: actions/checkout@v4
+
+      - name: Check the build contract is present
+        # Runs before setup-node on purpose: ubuntu-latest ships Node, and a
+        # missing package-lock.json reported here reads as a sentence instead of
+        # as an obscure cache error out of setup-node.
+        run: node .github/scripts/check-contract.mjs
+
+      - name: Install Node.js 22 and cache npm downloads
+        # Node 22 is the choice: Node 20 reached end of life in April 2026, so it
+        # would be an unsupported runtime for the owner's release gate. 22 is the
+        # supported LTS line and runs the tools' top-level await and modern
+        # syntax without flags.
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies from the lockfile
+        run: npm ci
+
+      - name: Restore the Chromium download from cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            playwright-${{ runner.os }}-
+
+      - name: Install the Chromium the verifiers drive
+        run: npx playwright install --with-deps chromium
+
+      - name: Confirm the checked-out tree is clean before building
+        # If this is dirty, the diff after the build would be meaningless: we
+        # could not tell what the build wrote from what checkout itself changed.
+        run: |
+          set -uo pipefail
+          # If git itself fails, treat that as red — never as "nothing changed".
+          if ! dirty="$(git status --porcelain=v1 --untracked-files=all)"; then
+            echo "RED LIGHT — git status failed, so the tree could not be checked."
+            exit 1
+          fi
+          if [ -n "$dirty" ]; then
+            {
+              echo "### RED LIGHT — the checkout was already dirty before the build"
+              echo
+              echo 'This is a repository or line-ending problem, not a content problem.'
+              echo
+              echo '```'
+              echo "$dirty"
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "The tree was not clean straight after checkout:"
+            echo "$dirty"
+            exit 1
+          fi
+          echo "Clean. Everything the next diff shows will have been written by the build."
+
+      - name: Rebuild all 38 pages from source
+        timeout-minutes: 15
+        run: npm run build
+
+      - name: Assert the committed pages match a fresh build
+        # The most valuable check in this repository: the built pages are
+        # committed and served from the repo root, so a PR that edits a page by
+        # hand, or forgets to rebuild after editing tools/copy.mjs, ships pages
+        # that no longer match their source. That must be red.
+        run: |
+          set -uo pipefail
+          # If git itself fails, treat that as red — never as "nothing changed".
+          if ! changed="$(git status --porcelain=v1 --untracked-files=all)"; then
+            echo "RED LIGHT — git status failed, so reproducibility could not be checked."
+            exit 1
+          fi
+          if [ -z "$changed" ]; then
+            echo "Reproducible: a fresh build produced exactly the committed files."
+            echo '### Build is reproducible' >> "$GITHUB_STEP_SUMMARY"
+            echo 'A fresh build reproduced every committed page byte for byte.' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          modified="$(git diff --name-status || true)"
+          untracked="$(git ls-files --others --exclude-standard || true)"
+          {
+            echo "### RED LIGHT — the committed pages are not what the build produces"
+            echo
+            echo 'Someone edited generated output by hand, or changed the source'
+            echo '(tools/copy.mjs, tools/blog.mjs, a template) without rebuilding —'
+            echo 'or the build is not deterministic. Fix: run the build chain from'
+            echo 'README.md "Build", commit the result, and push again.'
+            echo
+            if [ -n "$modified" ]; then
+              echo '**Committed files a fresh build changed:**'
+              echo
+              echo '```'
+              echo "$modified"
+              echo '```'
+            fi
+            if [ -n "$untracked" ]; then
+              echo '**Files the build produced that nobody committed:**'
+              echo
+              echo '```'
+              echo "$untracked"
+              echo '```'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "The build did not reproduce the committed tree:"
+          echo "$changed"
+          echo
+          git --no-pager diff --stat || true
+          exit 1
+
+      - name: Start the static server on 127.0.0.1:4200
+        run: |
+          set -uo pipefail
+          # .wrangler/ is git-ignored, so the log neither dirties the tree nor
+          # needs a separate artifact path.
+          mkdir -p .wrangler/ci
+          nohup npm run serve > .wrangler/ci/server.log 2>&1 &
+          echo "SERVER_PID=$!" >> "$GITHUB_ENV"
+          echo "Started 'npm run serve' as PID $! — output in .wrangler/ci/server.log"
+
+      - name: Wait until the server answers, and serves this repository's root
+        run: |
+          set -uo pipefail
+          answered=0
+          for i in $(seq 1 60); do
+            if curl -fsS --max-time 5 -o /dev/null "$BASE_URL/index.html"; then
+              answered=1
+              echo "The server answered after ${i}s."
+              break
+            fi
+            sleep 1
+          done
+          if [ "$answered" -ne 1 ]; then
+            echo "RED LIGHT — nothing answered on $BASE_URL after 60s."
+            echo '### RED LIGHT — the static server never came up' >> "$GITHUB_STEP_SUMMARY"
+            echo 'Nothing answered on 127.0.0.1:4200 within 60s, so no page could be verified.' >> "$GITHUB_STEP_SUMMARY"
+            echo "--- .wrangler/ci/server.log ---"
+            cat .wrangler/ci/server.log || true
+            exit 1
+          fi
+          # It must be serving the repository root, not dist/ and not a stale
+          # copy — otherwise the verifiers would pass on pages nobody reviewed.
+          served="$(curl -fsS "$BASE_URL/index.html" | wc -c)"
+          on_disk="$(wc -c < index.html)"
+          if [ "$served" != "$on_disk" ]; then
+            echo "RED LIGHT — the server is not serving this repository's root."
+            echo "  $BASE_URL/index.html is $served bytes; ./index.html is $on_disk bytes."
+            echo '### RED LIGHT — the server served the wrong directory' >> "$GITHUB_STEP_SUMMARY"
+            echo 'What was served did not match the repository root, so the verifiers would have checked the wrong files.' >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          for page in en/index.html pricing.html en/pricing.html 404.html; do
+            curl -fsS --max-time 10 -o /dev/null "$BASE_URL/$page" \
+              || { echo "RED LIGHT — $BASE_URL/$page did not answer."; exit 1; }
+          done
+          echo "Serving the repository root: Chinese and English pages both answer."
+
+      - name: Verify every page in a real browser
+        # verify-site + verify-integrity + verify-interactions, all against
+        # BASE_URL. `npm run verify` chains them with &&, so it stops at the
+        # first verifier that fails. If package.json keeps its `verify:ci`
+        # script (tools/verify-all.mjs), switching this line to
+        # `npm run verify:ci` would run all three even when one fails, so one
+        # red run shows every problem instead of one per push — and because
+        # BASE_URL is set above, it reuses this server rather than starting a
+        # second one. Left on the contracted `npm run verify` deliberately.
+        timeout-minutes: 30
+        run: npm run verify
+
+      - name: Assert the verifiers actually verified all 38 pages
+        # The verifiers exit non-zero when they find a problem, but a run that
+        # checked nothing at all would still exit zero. This step refuses that:
+        # every committed page must appear in the report, with a real result.
+        run: node .github/scripts/assert-verified.mjs
+
+      - name: Stop the static server
+        if: always()
+        run: |
+          set +e
+          if [ -n "${SERVER_PID:-}" ]; then
+            pkill -P "$SERVER_PID" 2>/dev/null
+            kill "$SERVER_PID" 2>/dev/null
+          fi
+          sleep 2
+          # Whatever still holds port 4200, release it. Never fails the job.
+          if command -v lsof >/dev/null 2>&1; then
+            lsof -ti tcp:4200 | xargs -r kill -9 2>/dev/null
+          elif command -v fuser >/dev/null 2>&1; then
+            fuser -k -n tcp 4200 2>/dev/null
+          fi
+          echo "Static server stopped."
+          exit 0
+
+      - name: Upload screenshots and verifier reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-verification-${{ github.run_id }}
+          # .wrangler holds the full-page screenshots (site-qa/shots), the axe
+          # accessibility JSON, the integrity/interaction result files and the
+          # server log. It starts with a dot, so hidden files must be included
+          # explicitly.
+          path: .wrangler/
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 14

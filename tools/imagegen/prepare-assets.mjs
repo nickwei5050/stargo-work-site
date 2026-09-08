@@ -1,11 +1,11 @@
 /** Mechanical web encoding of the 43 built-in generations; never draws artwork. */
-import { createRequire } from 'node:module';
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import { catalog } from './catalog.mjs';
-const require = createRequire(process.env.STARGO_TOOL_PACKAGE || 'F:/stargo 网站/stargo-work-website/package.json');
-const sharp = require('sharp');
+import { req } from '../paths.mjs';
+/* STARGO_TOOL_PACKAGE still borrows another install; see tools/paths.mjs. */
+const sharp = req('sharp');
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const target = 'assets/stargo-editorial';
 mkdirSync(`${root}${target}`, { recursive: true });

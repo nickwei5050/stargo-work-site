@@ -19,20 +19,29 @@
  */
 import { readdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { readBundle, evalLiteral } from './ix-lib.mjs';
+import { NAV, MORE } from './copy.mjs';
 
-const SITE = 'F:/stargo 网站/stargo-site';
+import { SITE } from './paths.mjs';
 const JS = `${SITE}/js`;
 const BUNDLES = `${SITE}/tools/bundles`;          // the six Mono page bundles, kept as sources only
 const MONO_BASE = `${BUNDLES}/app.6e875794.53d57b6d7b6754cb.js`;
 const SCALORA_BUNDLE = process.argv[2] ?? `${BUNDLES}/scalora.app.e1bb07ef.d077b7f57348968e.js`;
 /* Further donors, already renamed and rescoped by their own prepare script
    (tools/lifelogx-prepare.mjs writes tools/fragments/lx-ix.json). */
-const DONORS = [`${SITE}/tools/fragments/lx-ix.json`].filter((f) => existsSync(f));
+/* Every donor fragment in tools/fragments. Each block's prepare script writes
+   one `<ns>-ix.json` there; picking them up by directory means adding a block
+   never means remembering to edit this list. Sorted so the merge order, and so
+   the bundle, is the same on every machine. */
+const DONORS = readdirSync(`${SITE}/tools/fragments`)
+  .filter((f) => f.endsWith('-ix.json')).sort().map((f) => `${SITE}/tools/fragments/${f}`);
 const OUT_BUNDLE = `${JS}/app.fused.js`;
 
 const MONO_PAGE = '699b6466d5f19893993a4bf1';     // homepage id; imported Scalora ix3 is rescoped to it
 const SCALORA_PAGE = '69a01661589c516ba5f0f92f';
 const NS = 'sc-';
+
+/** How many overlay-menu items the clone step below had to reach. */
+let menuItemsExtended = 0;
 
 /** Runtime built-ins present in both payloads; renaming them breaks both. */
 const BUILTIN = new Set(['fadeIn', 'fadeOut', 'slideInBottom', 'slideInTop', 'slideInLeft', 'slideInRight']);
@@ -111,17 +120,32 @@ const foldPages = (node) => {
   return node;
 };
 const donorEvents = {};
+const donorEventSource = {};
 const donorLists = {};
 const donorIx3 = [];
 const donorTl = [];
 for (const f of DONORS) {
   const d = JSON.parse(readFileSync(f, 'utf8'));
+  /* Two payload files can carry the same donor interaction when two blocks
+     were cut from one donor page; that is fine as long as they agree. */
+  const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+  /* The older per-donor prepare scripts rewrote an event's target to a hand
+     id ("cn-capmap-row"); tools/donor-lib.mjs keeps the donor's own node id.
+     Where the two disagree the donor-lib payload (`*-cap-ix.json`) wins and the
+     older markup is built with the donor id -- see the catalogue in
+     build-site.mjs -- so one event drives both. */
+  const authoritative = /-cap-ix\.json$/.test(f);
   for (const [k, v] of Object.entries(d.events ?? {})) {
-    if (k in mono.ix2Payload.events || k in scaEvents || k in donorEvents) throw new Error(`donor event id collides: ${k}`);
-    donorEvents[k] = v;
+    if (k in mono.ix2Payload.events || k in scaEvents) throw new Error(`donor event id collides with the host: ${k}`);
+    if (k in donorEvents && !same(donorEvents[k], v)) {
+      if (!authoritative && donorEventSource[k]?.endsWith('-cap-ix.json')) continue;
+      if (!authoritative) throw new Error(`donor event ${k} differs between two payload files`);
+    }
+    donorEvents[k] = v; donorEventSource[k] = f;
   }
   for (const [k, v] of Object.entries(d.actionLists ?? {})) {
-    if (k in mono.ix2Payload.actionLists || k in scaLists || k in donorLists) throw new Error(`donor action list id collides: ${k}`);
+    if (k in mono.ix2Payload.actionLists || k in scaLists) throw new Error(`donor action list id collides with the host: ${k}`);
+    if (k in donorLists && !same(donorLists[k], v)) throw new Error(`donor action list ${k} differs between two payload files`);
     donorLists[k] = v;
   }
   donorIx3.push(...(d.interactions ?? []));
@@ -142,6 +166,53 @@ if (mergedPayload.events['sc-e-133']?.action?.config?.actionListId !== 'sc-a-48'
 }
 delete mergedPayload.events['sc-e-133'];
 
+/* Mono's overlay menu was built for a four-item nav and its open interaction
+   a-190 names them one at a time: `.menu-item._01`, `._02`, `._03`, `._05`
+   (`._04` was skipped in the template itself). Group 0 of that list is not
+   decoration -- it is the CLOSED state, the one Webflow applies on load. Our
+   nav carries ten items, so `._04` and everything from `._06` up were never
+   given it and sat at full opacity behind the page: invisible while every page
+   was light, and plainly visible the moment the capability page opened on a
+   black hero. They were missing from the reveal too, so they would have popped
+   in without the stagger the others animate with.
+
+   Every uncovered item is cloned from `._05`, the last one the template
+   animates, keeping its transforms and durations; the reveal delays are then
+   dealt out evenly down the whole list so ten items stagger the way four did. */
+{
+  const items = NAV.length + MORE.length + 1;          // chrome.mjs: [...nav, ...more, swap]
+  const list = mergedPayload.actionLists['a-190'];
+  if (!list?.actionItemGroups) throw new Error('overlay menu: a-190 is not the open interaction any more');
+
+  const indexOf = (a) => Number((/\.menu-item\._(\d+)\b/.exec(a.config?.target?.selector ?? '') ?? [])[1]);
+  const MODEL = 5;
+  let cloned = 0;
+  for (const group of list.actionItemGroups) {
+    const model = group.actionItems.filter((a) => indexOf(a) === MODEL);
+    if (!model.length) continue;
+    const covered = new Set(group.actionItems.map(indexOf).filter(Boolean));
+    for (let n = 1; n <= items; n++) {
+      if (covered.has(n)) continue;
+      for (const a of model) {
+        const copy = JSON.parse(JSON.stringify(a));
+        copy.id = `${a.id}-${n}`;
+        copy.config = { ...copy.config, target: { ...a.config.target, selector: `.menu-item._${String(n).padStart(2, '0')}` } };
+        group.actionItems.push(copy);
+        cloned++;
+      }
+    }
+    /* One even stagger down the list. The template's own four sat 100ms apart
+       starting at 800; keeping that step and re-dealing it by position leaves
+       the first items where they were and gives the rest their own beat. */
+    const menu = group.actionItems.filter((a) => indexOf(a));
+    const base = Math.min(...menu.map((a) => a.config.delay));
+    const step = base > 0 ? 100 : 0;                   // group 0 is the closed state: everything at once
+    for (const a of menu) a.config.delay = base + step * (indexOf(a) - 1);
+  }
+  if (!cloned) throw new Error('overlay menu: nothing cloned -- a-190 no longer targets .menu-item._05');
+  menuItemsExtended = cloned;
+}
+
 /* IX3: union of every Mono page bundle, plus Scalora's rescoped to this site. */
 const interactions = new Map();
 const timelines = new Map();
@@ -158,7 +229,10 @@ const addIx3 = (b, rescope) => {
     timelines.set(t.id, j);
   }
 };
-const monoBundles = readdirSync(BUNDLES).filter((f) => /^app\.[0-9a-f]{8}\.[0-9a-f]+\.js$/.test(f));
+/* Sorted: readdir order is the filesystem's, and the union is written out in
+   insertion order, so an unsorted read makes the bundle differ between an NTFS
+   and an ext4 checkout. */
+const monoBundles = readdirSync(BUNDLES).filter((f) => /^app\.[0-9a-f]{8}\.[0-9a-f]+\.js$/.test(f)).sort();
 for (const f of monoBundles) addIx3(readBundle(readFileSync(`${BUNDLES}/${f}`, 'utf8')), true);
 const beforeScalora = interactions.size;
 addIx3(scalora, true);
@@ -196,6 +270,7 @@ console.log(JSON.stringify({
   donorEventsAdded: Object.keys(donorEvents).length,
   mergedEvents: Object.keys(mergedPayload.events).length,
   mergedActionLists: Object.keys(mergedPayload.actionLists).length,
+  menuItemsExtended,
   idsRenamed: map.size,
   stringsRewritten: stats.strings,
   ix3FromMono: beforeScalora,

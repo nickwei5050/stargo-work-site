@@ -1,0 +1,39 @@
+{
+  "name": "stargo-work-site",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "STARGO WORK bilingual static site. The pages are build output committed to the repository; these scripts regenerate and verify them.",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "npm run build:assets && npm run build:donors && npm run build:ix && npm run build:pages",
+    "build:assets": "node tools/mirror-donor-assets.mjs",
+    "build:donors": "node tools/capability-donors.mjs",
+    "build:ix": "node tools/fuse-ix.mjs",
+    "build:pages": "node tools/build-site.mjs",
+    "dist": "node tools/make-dist.mjs",
+    "serve": "node tools/serve.mjs",
+    "verify": "npm run verify:site && npm run verify:integrity && npm run verify:interactions",
+    "verify:ci": "node tools/verify-all.mjs",
+    "verify:site": "node tools/verify-site.mjs",
+    "verify:integrity": "node tools/verify-integrity.mjs",
+    "verify:interactions": "node tools/verify-interactions.mjs",
+    "verify:conversion": "node tools/verify-conversion.mjs",
+    "verify:editorial": "node tools/verify-editorial.mjs",
+    "verify:restore": "node tools/verify-restore.mjs",
+    "verify:visual": "node tools/verify-visual-upgrade.mjs",
+    "verify:release": "node tools/verify-release.mjs",
+    "verify:worker": "node tools/verify-worker.mjs",
+    "verify:contact": "node --test tools/verify-contact-backend.mjs",
+    "check:slots": "node tools/check-slots.mjs",
+    "check:ix-union": "node tools/ix-union-check.mjs",
+    "browsers": "playwright install --with-deps chromium"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.62.1",
+    "axe-core": "4.13.0"
+  }
+}

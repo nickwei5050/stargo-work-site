@@ -5,7 +5,7 @@
  *   Mono      — shell (nav, footer), homepage skeleton, capabilities,
  *               enterprise, contact, notices, 404
  *   Scalora   — three homepage modules and the pricing page
- *   lifelogx  — the Intelligence and AI Workforce pages
+ *   lifelogx  — the Intelligence and AI Workforce pages, About, Blog and the articles
  *
  *   node tools/lifelogx-prepare.mjs   # once per template change
  *   node tools/fuse-ix.mjs            # the one bundle every page loads
@@ -17,17 +17,43 @@
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 'node:fs';
 import { makeSub, findByClass, removeByClass, elementContaining, extractElement, setInner, setEachInner, setLink, escapeHtml } from './lib-html.mjs';
-import { applyChrome, remapLinks, relocateAssets, assertInternalLinks, stillImage } from './chrome.mjs';
+import { applyChrome, remapLinks, relocateAssets, relocateLinks, assertInternalLinks, stillImage, WORDMARK } from './chrome.mjs';
 import * as C from './copy.mjs';
+import { POSTS, BLOG_UI, postPath, featured, others, coverSrc, coverSrcset, formatDate } from './blog.mjs';
+import { loadBlocks, art, capTitle, DONORS } from './block-lib.mjs';
 
-const SITE = 'F:/stargo 网站/stargo-site';
+import { SITE } from './paths.mjs';
+
+/** The capability page's donor blocks, one module each in tools/blocks. */
+const CAP_BLOCKS = await loadBlocks();
 const TPL = `${SITE}/tools/templates`;
 const FRAG = `${SITE}/tools/fragments`;
 const tpl = (f) => readFileSync(`${TPL}/${f}`, 'utf8');
 const frag = (f) => readFileSync(`${FRAG}/${f}`, 'utf8');
 
-const SCALORA_CDN = /https:\/\/cdn\.prod\.website-files\.com\/([^"'\s]+)/g;
-const localise = (s) => s.replace(SCALORA_CDN, (_, rel) => `assets/${rel}`);
+/**
+ * Lifelogx closes every page with a full-bleed wordmark above its footer: a filled
+ * headline, a gradient wash over it and a stroked copy that slides across on scroll
+ * (two SCROLL_INTO_VIEW interactions, kept as the template wrote them). We use Mono's
+ * footer, so tools/lifelogx-prepare.mjs rescues the block on its own; here it goes
+ * back where it belongs — the last thing in the body, directly above the footer —
+ * carrying STARGO's name.
+ */
+const bigMark = () => {
+  let b = frag('lx-bigmark.html').split('>Lifelogx</h1>').join('>STARGO</h1>');
+  if (/Lifelogx/.test(b)) throw new Error('bigmark: template brand survives');
+  if ((b.match(/>STARGO<\/h1>/g) ?? []).length !== 2) throw new Error('bigmark: expected the filled and the stroked headline');
+  // Lifelogx tags both copies of the wordmark as <h1>. On its own pages that is the page's
+  // only heading; here it closes an article or an About page that already has one, and two
+  // more "STARGO" level-one headings would compete with it. The type, the gradient wash and
+  // both scroll interactions are class- and data-w-id-driven, so the tag can go.
+  b = b.replace(/<h1(?=[ >])/g, '<div').replace(/<\/h1>/g, '</div>');
+  if (/<h1/.test(b)) throw new Error('bigmark: heading tags remain');
+  return b;
+};
+
+const SCALORA_CDN = /https:\/\/cdn\.prod\.website-files\.com\/([^"'\s,]+)/g;
+const localise = (s) => s.replace(SCALORA_CDN, (_, rel) => `assets/${rel.replace(/%2F/g, '/')}`);
 /** Scalora classes renamed when its stylesheet was namespaced (see css/scalora-modules.sc.css). */
 const SC_RENAME = new Set(['container', 'hero', 'navbar', 'menu-button', 'footer', 'white', 'faq-item', 'error-message', 'contact-card', 'button-text', 'pricing-card', 'color-block', 'utility-page-wrap', 'utility-page-content']);
 const scClasses = (html) => html.replace(/class="([^"]*)"/g, (_, v) => `class="${v.split(/\s+/).filter(Boolean).map((c) => (SC_RENAME.has(c) ? 'sc-' + c : c)).join(' ')}"`);
@@ -156,6 +182,46 @@ function fromStudio(spec, lang) {
   return h;
 }
 
+/**
+ * Fill a template card list with articles. `list`/`item` are class tokens of the
+ * list and its repeated item; the item's image, date and title are located by
+ * class. Extra template items are dropped, missing ones cloned from the first.
+ */
+function blogCards(html, list, item, posts, lang, cls) {
+  const t = (p) => (typeof p === 'string' ? p : p[lang]);
+  const wrap = findByClass(html, 'div', list);
+  if (!wrap) throw new Error(`cards: list ${list} not found`);
+  const first = findByClass(wrap.text, 'div', item, 0);
+  if (!first) throw new Error(`cards: item ${item} not found`);
+  let last = first;
+  for (let n = 1; ; n++) { const el = findByClass(wrap.text, 'div', item, n); if (!el) break; last = el; }
+  const imgRe = new RegExp(`<img[^>]*class="${cls.image}"[^>]*/>`);
+  const render = (p) => {
+    let x = first.text;
+    x = x.replace(/href="[^"]*"/, `href="${postPath(p)}"`);
+    if (!imgRe.test(x)) throw new Error(`cards: image ${cls.image}`);
+    // Keep the tag's own attributes (data-w-id and the interaction's initial inline state); swap only the image.
+    x = x.replace(imgRe, (tag) => tag.replace(/\s*srcset="[^"]*"/g, '').replace(/\s*sizes="[^"]*"/g, '').replace(/\s*width="[^"]*"|\s*height="[^"]*"/g, '')
+      .replace(/src="[^"]*"/, `src="${coverSrc(p)}" srcset="${coverSrcset(p)}" sizes="${cls.sizes}"`));   // no width/height: the template sizes these by CSS aspect-ratio
+    const titleRe = new RegExp(`(<(h4|div)[^>]*class="${cls.title}">)[^<]*(</\\2>)`);
+    if (!titleRe.test(x)) throw new Error(`cards: title ${cls.title}`);
+    x = x.replace(titleRe, `$1${escapeHtml(t(p.title))}$3`);
+    if (cls.date) {
+      const dateRe = new RegExp(`(<p[^>]*class="${cls.date}">)[^<]*(</p>)`);
+      if (!dateRe.test(x)) throw new Error(`cards: date ${cls.date}`);
+      x = x.replace(dateRe, `$1<time datetime="${p.date}">${formatDate(p.date, lang)}</time>$2`);
+    }
+    if (cls.description) {
+      const descRe = new RegExp(`(<div[^>]*class="${cls.description}">)[^<]*(</div>)`);
+      if (!descRe.test(x)) throw new Error(`cards: description ${cls.description}`);
+      x = x.replace(descRe, `$1${escapeHtml(t(p.description))}<span class="lx-post-date"><time datetime="${p.date}">${formatDate(p.date, lang)}</time></span>$2`);
+    }
+    return x;
+  };
+  const inner = wrap.text.slice(0, first.start) + posts.map(render).join('') + wrap.text.slice(last.end);
+  return html.slice(0, wrap.start) + inner + html.slice(wrap.end);
+}
+
 /** Mono page shell (nav … footer) with a foreign body dropped in. */
 function inMonoShell(body, extraCss) {
   const studio = tpl('studio.html');
@@ -210,8 +276,8 @@ PAGES['index.html'] = (lang) => {
     h = h.slice(0, nav.start) + h.slice(nav.end);
     if (/template-navigator|Get Template/.test(h)) throw new Error('index: template navigator survives');
   }
-  // Client logos on the sticky cards and the flip cards are the template's; STARGO has none to show there.
-  h = h.replace(/<img[^>]*class="logo-testi-1"[^>]*\/>/g, '');
+  // The template's client logos on the sticky cards and the flip cards → the STARGO mark; the image card's logo goes.
+  h = h.replace(/<img[^>]*class="logo-testi-1"[^>]*\/>/g, `<img src="${WORDMARK}" loading="lazy" alt="STARGO WORK" class="logo-testi-1 stargo-card-mark"/>`);
   h = h.replace(/<img[^>]*class="logo-absolute"[^>]*\/>/g, '');
   // "Meet the AI workforce" goes to the workforce page, not to a pricing anchor.
   h = s(h, 'href="#Pricing"', 'href="workforce.html"', { count: 1 });
@@ -225,6 +291,17 @@ PAGES['index.html'] = (lang) => {
     sec = setLink(sec, label, { href: 'pricing.html', text: lang === 'zh' ? '查看定价' : 'See pricing' });
     sec = sec.replace('<p class="top-text half">', `<p class="top-text half" data-mobile-text="${escapeHtml(t(C.HOME_MOBILE.ladder))}">`);
     if (!sec.includes('data-mobile-text')) throw new Error('index: ladder paragraph');
+    // The template pins its orb 50px from the left of a centred title and indents the first line
+    // past it, which only works for the first line the template happened to have. Inline the orb
+    // before the first character so it travels with the text in both languages and at every width.
+    const orbOpen = '<div class="video-logo for-sct">';
+    const orbAt = sec.indexOf(orbOpen);
+    if (orbAt === -1) throw new Error('index: ladder orb');
+    const orb = extractElement(sec, orbAt, 'div');
+    sec = sec.slice(0, orb.start) + sec.slice(orb.end);
+    const inline = `<span class="video-logo for-sct stargo-inline-orb">${orb.text.slice(orbOpen.length, -'</div>'.length)}</span>`;
+    sec = sec.replace(/(<h2 id="[^"]*" class="h2 for-stats">)/, (m) => m + inline);
+    if (!sec.includes('stargo-inline-orb')) throw new Error('index: ladder orb placement');
     h = h.slice(0, a) + sec + h.slice(z);
   }
 
@@ -253,18 +330,14 @@ PAGES['index.html'] = (lang) => {
     const play = elementContaining(h, 'class="play-video w-inline-block w-lightbox"', 'a');
     h = h.slice(0, play.start) + h.slice(play.end);
     if (/youtube|embedly|w-lightbox/.test(h)) throw new Error('index: lightbox survives');
-    // the sticky "Proactive" card's video → orb still; the Enterprise card's photo → orb; the four doors
+    // The sticky card's portrait film and the contact band's group photograph stay as the
+    // template designed them (licensed template assets; the copy marks the cards as scenarios).
     const stickyVideo = [...h.matchAll(/<video id="([^"]+)-video"/g)].map((m) => m[1]).find((id) => h.slice(h.indexOf('<section class="testimonials-section"'), h.indexOf('<section class="section drk"')).includes(`id="${id}-video"`));
     if (!stickyVideo) throw new Error('index: sticky card video');
-    h = stillImage(h, stickyVideo, BRAND.square, '');
     h = swapImg(h, '699b6466d5f19893993a4f1a_Sunset-Serenity', BRAND.square);
-    const doors = [['699b6466d5f19893993a4dca_Sleek', BRAND.ontology], ['699b6466d5f19893993a4d64_blog-2', BRAND.loop], ['699b6466d5f19893993a4e03_Futuristic', BRAND.family(3)], ['699b6466d5f19893993a4de3_blog-1', OS.login]];
-    doors.forEach(([k, src]) => { h = swapImg(h, k, src); });
     h = swapImg(h, '699b6466d5f19893993a4efc_Smiling%20Bearded', IMG('avatar-core.png'));   // the chat card's bearded-man avatar → the core orb
-    const doorHrefs = ['intelligence.html', 'capabilities.html', 'workforce.html', 'enterprise.html'];
-    ['post_the-power-of-simplicity-in-modern-brand-design.html', 'post_from-idea-to-execution-building-products-that-last.html', 'post_why-great-brands-are-built-on-clarity-not-complexity.html', 'post_designing-digital-systems-that-scale-with-your-business.html']
-      .forEach((p, i) => { h = s(h, `href="${p}"`, `href="${doorHrefs[i]}"`, { count: 1 }); });
-    // the contact band's background photo (a CSS background) is overridden in stargo-fusion.css
+    // The blog grid: the template's four cards, filled with the four newest articles.
+    h = blogCards(h, 'blog-grid', 'w-dyn-item', featured(4), lang, { image: 'testimonials-photo', date: 'data-text ab', title: 'blog-txt', sizes: '(max-width: 767px) 100vw, (max-width: 991px) 50vw, 25vw' });
   }
   const D = C.HOME_DUP_DESC;
   h = s(h, D.original, t(D.first), { nth: 0 });
@@ -289,8 +362,8 @@ PAGES['index.html'] = (lang) => {
     h = h.slice(0, grid.start) + rebuilt + h.slice(grid.end);
     h = s(h, '(Partners)', t(C.HOME_BRAND_WALL.caption));
   } else {
-    h = h.slice(0, grid.start) + h.slice(grid.end);
-    h = s(h, '(Partners)', t(C.HOME_BRAND_WALL.captionNoLogos));
+    // Template wall kept (flip animation and all), labelled as a sample.
+    h = s(h, '(Partners)', t(C.HOME_BRAND_WALL.captionSample));
   }
 
   // The "work" cards point at the loop table below.
@@ -379,26 +452,178 @@ function lxPage(spec, lang, name) {
   b = s(b, 'class="lx-cta-logo-text">Lifelogx</div>', `class="lx-cta-logo-text">${t(spec.ctaLogo)}</div>`);
   b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
   b = s(b, 'The smartest friend you’ll ever have.', t(spec.ctaDesc));
-  // Imagery: the template's dating-app phone screens, people avatars and stock photos → STARGO OS.
-  {
-    const screens = spec.screens;                       // four phone screens per page, in the template's cycling order
-    const keys = ['692dab81598fb8b34428f59d_iPhone', '692daba0e37b1016cdc17929_iPhone', '692dabba95113ec093024ea5_iPhone', '6937f284d63295c8ccb5a176_iPhone'];
-    keys.forEach((k, i) => { b = swapImg(b, k, screens[i]); });
-    b = swapImg(b, '6932b116b7502585152c15b6_image%2024.png', BRAND.wide);
-    b = swapImg(b, '694d149575edcf4ee403b317_no-writing-sc.avif', spec.phoneStill);
-    b = swapImg(b, '6936e930338bd07695b687e0_image%2026.avif', BRAND.tall);
-    const faces = ['692edcecf6e2ae2fd9352460_Ellipse%202.png', '692edcec8af5a6c3b9f8d9a6_Ellipse%202-1.png', '692edcec737d3634fab06561_Ellipse%202-3.png', '692edcecd4a525cca3df2c2f_Ellipse%202-6.png', '692edcecd7175aab4589f1bc_Ellipse%202-7.png', '692edcec807cc992e4e0405c_Ellipse%202-8.png', '692edcec17bb278318484f4b_Ellipse%202-10.png', '692edcec6a013eb0a3d2a8bb_Ellipse%202-11.png', '692edcecae92036ffad3a8b7_Ellipse%202-13.png', '692ec0128bd0a6d48973c168_Team%20Image%201.avif', '692ec0128bd0a6d48973c170_Team%20Image%203.avif', '692ec0128bd0a6d48973c148_Team%20Image%204.avif', '692ec0128bd0a6d48973c160_Team%20Image%206.avif', '692ec0128bd0a6d48973c158_Team%20Image%207.avif', '692ec0128bd0a6d48973c150_Team%20Image%208.avif'];
-    faces.forEach((k, i) => { b = swapImg(b, k, AVATARS[i % AVATARS.length]); });
-    { const mm = b.match(/Ellipse%202|Team%20Image|iPhone%2013|iPhone%2016|image%2024|no-writing-sc|image%2026/); if (mm) throw new Error(`${name}: template imagery survives: ...${b.slice(Math.max(0, mm.index - 160), mm.index + 60)}...`); }
-  }
+  // Imagery stays the template's own (owner decision, 2026-09-06): the phone screens, the
+  // translucent overlays of the gradient and "no writing" sections, the closing card's image and
+  // the avatars in the scenario bubbles are all part of the composition the pink palette was
+  // designed around. Only their template alt text goes.
+  if ((b.match(/lx-author-image-medium/g) ?? []).length !== 48) throw new Error(`${name}: avatar bubbles changed`);
   b = b.replace(/<div([^>]*)class="([^"]*\blx-gradient-section\b[^"]*)"/, '<div id="lx-more"$1class="$2"');
   b = b.replace(/<div class="lx-cta-wrapper">/, '<div id="lx-evolution" class="lx-cta-wrapper">');
+  b = b.replace('class="lx-sitcky-section"', `id="${name === 'intelligence' ? 'lx-ontology' : 'lx-teams'}" class="lx-sitcky-section"`);
   if (!b.includes('id="lx-more"') || !b.includes('id="lx-evolution"')) throw new Error(`${name}: anchor ids`);
   if (/Lifelogx|Tomato|lifelog/i.test(b)) throw new Error(`${name}: template brand survives`);
-  return inMonoShell(b, ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
+  return inMonoShell(b + bigMark(), ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
 }
-PAGES['intelligence.html'] = (lang) => lxPage({ ...C.LX_INTELLIGENCE, screens: [MOBILE.core, MOBILE.agents, MOBILE.inquiry, MOBILE.approvals], phoneStill: MOBILE.phoneAgents }, lang, 'intelligence');
-PAGES['workforce.html'] = (lang) => lxPage({ ...C.LX_WORKFORCE, screens: [MOBILE.agents, MOBILE.approvals, MOBILE.core, MOBILE.inquiry], phoneStill: MOBILE.phoneApprovals }, lang, 'workforce');
+PAGES['intelligence.html'] = (lang) => lxPage(C.LX_INTELLIGENCE, lang, 'intelligence');
+/* ---- workforce.html — lifelogx feature page ----------------------------
+   Intelligence keeps the Lifelogx homepage. The workforce page is built from the
+   Lifelogx *feature* page instead, so the two no longer share a layout: a hero of
+   floating role cards, a capability section, the answers block and the article
+   strip, all with the template's own imagery and interactions. */
+PAGES['workforce.html'] = (lang) => {
+  const t = (p) => (typeof p === 'string' ? p : p[lang]);
+  const W = C.LX_FEATURE_WORKFORCE;
+  const { fn: s } = makeSub('workforce');
+  let b = frag('lx-feature.html');
+
+  /* hero */
+  b = s(b, '>Think it once<', `>${t(W.heroPink)}<`);
+  b = s(b, '>Remember it forever<', `>${t(W.heroWhite)}<`);
+  b = s(b, 'Each feature focuses on reducing friction between thought and action.', t(W.heroDesc));
+  b = s(b, '>Download<', `>${t(W.heroButton)}<`);
+
+  /* the five role cards, repeated once for the marquee loop */
+  const NAMES = ['Philip', 'Arlene', 'Marjorie', 'Collen', 'Greg'];
+  const FIGURES = ['99.6M', '88.3', '16.2M', '73.7M', '125.5M'];
+  NAMES.forEach((person, i) => {
+    b = s(b, `<div class="lx-name-text">${person}</div>`, `<div class="lx-name-text">${t(W.roles[i].name)}</div>`, { count: 2 });
+  });
+  FIGURES.forEach((fig, i) => {
+    b = b.split(`<div class="lx-text-size-tiny">${fig}</div>`).join(`<div class="lx-text-size-tiny">${t(W.roles[i].owns)}</div>`);
+  });
+  b = b.split('<div class="lx-text-size-tiny lx-text-color-grey">Views</div>')
+    .join(`<div class="lx-text-size-tiny lx-text-color-grey">${t(W.roles[0].dept)}</div>`);
+  // the template's cards link to the studio's own social accounts
+  b = b.replace(/href="https:\/\/(?:www\.)?(?:linkedin|instagram|facebook|x|twitter|tiktok|youtube)\.com[^"]*"/g, 'href="contact.html"');
+  // the fifth card and the panel button are placeholders in the template
+  b = b.split('href="#"').join('href="contact.html"');
+
+  /* what the team gets done */
+  b = s(b, '>Here is what you can get done with Us<', `>${t(W.doTitle)}<`);
+  [['Interaction', 'Instantly find what you need dates, notes, or activities without digging around.'],
+   ['Conversation', 'Chat freely with your AI, your friends, or even your thoughts.'],
+   ['Organized Mind', 'Stay on top of everything with a clear overview of your world.']]
+    .forEach(([title, text], i) => {
+      b = s(b, `>${title}<`, `>${t(W.abilities[i].title)}<`, { count: 1 });
+      b = s(b, text, t(W.abilities[i].text));
+    });
+  ['See priorities at a glance', 'Track projects and people', 'Stay focused on what matters', 'Keep distractions out']
+    .forEach((line, i) => { b = s(b, line, t(W.bullets[i])); });
+
+  /* the two feature cards over the pink panel */
+  b = s(b, '>Your Best Friend AI<', `>${t(W.cardA.title)}<`);
+  b = s(b, 'More than an assistant—it’s the friend who listens, remembers, and keeps life simple.', t(W.cardA.text));
+  b = s(b, '>Memory That Sticks<', `>${t(W.cardB.title)}<`);
+  b = s(b, 'From quick notes to deep thoughts, nothing slips through the cracks.', t(W.cardB.text));
+
+  /* the three rotating answer cards and the confirmation card they sit behind */
+  b = s(b, 'Ready‑made features your usersalready expect.', t(W.stackedCard));
+  b = s(b, '>Chatting on the fly with your AI companion<', `>${t(W.answersCards[0])}<`);
+  b = s(b, '>Quickly capture and share ideas<', `>${t(W.answersCards[1])}<`);
+  b = b.split('>An online account that means business<').join(`>${t(W.phoneTitle)}<`);
+  b = b.split('>An online account thatmeans business<').join(`>${t(W.phoneTitle)}<`);
+  b = s(b, '>Easy day-to-day banking<', `>${t(W.phoneSub)}<`);
+  b = s(b, 'Easy day-to-day banking: local IBAN, freeMastercards, instant &amp; international transfers,financing solutions. All included in your plan.', t(W.answersBody));
+  b = s(b, '<div class="lx-name-text">Dancing for you</div>', `<div class="lx-name-text">${t(W.extraRole.name)}</div>`);
+
+  /* the answers block */
+  b = s(b, '>All your answers here<', `>${t(W.answersTitle)}<`);
+  ['CARDS', 'transfers', 'financing'].forEach((tab, i) => { b = s(b, `>${tab}<`, `>${t(W.answerTabs[i])}<`, { count: 1 }); });
+  b = s(b, '>Get the app<', `>${t(W.answersButton)}<`);
+
+  /* the article strip: our own posts */
+  b = s(b, '>Stories<', `>${t(W.storiesTitle)}<`);
+  b = s(b, '>we write and share<', `>${t(W.storiesSub)}<`);
+  b = blogCards(b, 'lx-blog-list', 'lx-blog-item', POSTS.slice(0, 3), lang, LX_CARD);
+
+  // The template's big square tile has "2.4M" painted into the artwork: a follower
+  // count we have no basis for. STARGO's own brand image replaces it.
+  b = swapImg(b, '6942c157beb8f897be077c01_Group', W.tile.src, { alt: t(W.tile.alt) });
+
+  b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
+  b = b.replace(/<div([^>]*)class="([^"]*\blx-section\b[^"]*)"/, '<div id="lx-roles"$1class="$2"');
+  {
+    const leftovers = [/Lifelogx/i, /Philip/, /Arlene/, /Marjorie/, /Collen/, /Greg/, /99\.6M/, />Views</, /Tomato/i,
+      /Ready‑made/, /AI companion/i, /online account/i, /day-to-day banking/i, /Dancing for you/, /Organized Mind/, /your world/i]
+      .filter((re) => re.test(b)).map((re) => String(re));
+    if (leftovers.length) throw new Error(`workforce: template copy survives: ${leftovers.join(', ')}`);
+  }
+  return inMonoShell(b + bigMark(), ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
+};
+
+/* ---- about.html — lifelogx about page ---------------------------------- */
+PAGES['about.html'] = (lang) => {
+  const t = (p) => (typeof p === 'string' ? p : p[lang]);
+  const A = C.ABOUT;
+  const { fn: s } = makeSub('about');
+  let b = frag('lx-about.html');
+  b = s(b, '>Our approach<', `>${t(A.eyebrow)}<`);
+  b = s(b, '>Simple tools for real thinking<', `>${t(A.title)}<`);
+  b = s(b, 'We’re building tools that turn everyday conversations into clear, usable notes — so ideas don’t get lost and thinking feels effortless.', t(A.desc));
+  // A bare <a>Label</a>: setLink only relabels wrapped labels, so replace the whole link.
+  b = s(b, '<a href="contact.html" class="lx-button lx-is-secondary w-button">Download</a>', `<a href="${A.button.href}" class="lx-button lx-is-secondary w-button">${t(A.button.label)}</a>`, { count: 1 });
+  // Four circles: the template's four named people → four AI-employee roles with the template's illustrated avatars.
+  [['Lina Elsen', '6943d80451564405defffaed_Vibrant'], ['Amira Brik', '6943d80f46f426e739f71ec5_Stylish'], ['Mila Eron', '6943d84a7b3093c6e962c7dd_Futuristic'], ['Oren Solis', '6943d8308925855adc2bcb5c_Stylish']]
+    .forEach(([person, key], i) => { b = s(b, `>${person}<`, `>${A.circles[i].label}<`, { count: 1 }); b = swapImg(b, key, A.circles[i].image); });
+  b = swapImg(b, '6943f43d1ea90943e43a09be_Rectangle', A.bigImage.src, { alt: t(A.bigImage.alt) });
+  b = s(b, '>Our Story<', `>${t(A.storyTitle)}<`);
+  b = setInner(b, '<div class="lx-about-rich-text w-richtext">', t(A.story).trim());
+  ['Prioritize customers in everything you do.', 'Own your part, get things done.', 'Always do what’s right, and respect people.'].forEach((x, i) => { b = s(b, x, t(A.values[i]), { count: 1 }); });
+  b = s(b, '>We want to work with you<', `>${t(A.startTitle)}<`);
+  [['Product Design', 'Remote | Full Time'], ['Web Developer', 'NYC | Full Time'], ['Data Analyst', 'Chicago | Part Time'], ['UX Researcher', 'San Francisco | Contract'], ['Marketing Specialist', 'Remote | Full Time']]
+    .forEach(([job, place], i) => { b = s(b, `<div>${job}</div>`, `<div>${t(A.starts[i].name)}</div>`, { count: 1 }); b = s(b, `>${place}<`, `>${t(A.starts[i].sub)}<`, { nth: 0 }); });
+  b = s(b, '<a href="#" class="lx-careers_01-item w-inline-block">', '<a href="contact.html" class="lx-careers_01-item w-inline-block">', { count: 5 });
+  b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
+  if (/Lifelogx|Lina Elsen|Amira|Mila Eron|Oren|Full Time|Part Time|Contract<|>Download</.test(b)) throw new Error('about: template copy survives');
+  return inMonoShell(b + bigMark(), ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
+};
+
+/* ---- blog.html — lifelogx blog index ------------------------------------ */
+const LX_CARD = { image: 'lx-blog-image', title: 'lx-blog-title', description: 'lx-blog-description', sizes: '(max-width: 767px) 100vw, (max-width: 991px) 50vw, 33vw' };
+PAGES['blog.html'] = (lang) => {
+  const t = (p) => (typeof p === 'string' ? p : p[lang]);
+  const { fn: s } = makeSub('blog');
+  let b = frag('lx-blog.html');
+  b = s(b, '>Discover Our Featured Stories<', `>${t(BLOG_UI.heading)}<`);
+  b = blogCards(b, 'lx-blog-list', 'lx-blog-item', POSTS, lang, LX_CARD);
+  b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
+  if (/Lifelogx|Companion|Moments in Motion|Conversational AI/.test(b)) throw new Error('blog: template copy survives');
+  return inMonoShell(b + bigMark(), ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
+};
+
+/* ---- blog/<slug>.html — lifelogx article page --------------------------- */
+function postPage(post, lang) {
+  const t = (p) => (typeof p === 'string' ? p : p[lang]);
+  const { fn: s } = makeSub(`post:${post.slug}`);
+  let b = frag('lx-post.html');
+  // Lists first (they repeat the template's title), then the title itself.
+  b = blogCards(b, 'lx-blog-list', 'lx-blog-item', others(post, 3), lang, LX_CARD);
+  {
+    const list = findByClass(b, 'div', 'lx-related-list');
+    if (!list) throw new Error('post: related list');
+    const items = others(post, 5).map((p) => `<a role="listitem" href="${postPath(p)}" class="lx-related-item w-dyn-item"><div class="lx-text-size-regular">${escapeHtml(t(p.title))}</div><div class="lx-text-size-small lx-text-size-grey">${escapeHtml(t(p.description))}</div></a>`).join('');
+    b = b.slice(0, list.start) + list.text.replace(/>[\s\S]*<\/div>$/, `>${items}</div>`) + b.slice(list.end);
+  }
+  b = s(b, '>How AI Companions Can Transform Your Life<', `>${escapeHtml(t(post.title))}<`, { count: 1 });
+  b = s(b, '>Related Items<', `>${t(BLOG_UI.related)}<`, { count: 1 });
+  b = s(b, '>More from blog<', `>${t(BLOG_UI.more)}<`, { count: 1 });
+  b = swapImg(b, '6945522d9e13fa6b32ace3c9_Futuristic', coverSrc(post));
+  b = b.replace(/(<img[^>]*class="lx-blog-image lx-details")\/>/, (m, tag) => `${tag} srcset="${coverSrcset(post)}" sizes="(max-width: 991px) 100vw, 1180px"/>`);
+  if (!b.includes(coverSrcset(post))) throw new Error('post: hero image');
+  {
+    // The rich-text block carries the interaction's initial state inline (opacity 0, data-w-id): keep its tag, replace its content.
+    const rich = findByClass(b, 'div', 'lx-text-rich-text');
+    if (!rich) throw new Error('post: rich text block');
+    b = b.slice(0, rich.start) + rich.text.slice(0, rich.text.indexOf('>') + 1) + t(post.body).trim() + '</div>' + b.slice(rich.end);
+  }
+  // Date and byline under the title; the template's CMS page shows neither.
+  b = b.replace('<div class="lx-blog-details-image-holder">', `<p class="lx-post-meta"><time datetime="${post.date}">${formatDate(post.date, lang)}</time> · ${t(BLOG_UI.byline)} · <a href="blog.html">${t(BLOG_UI.all)}</a></p><div class="lx-blog-details-image-holder">`);
+  if (!b.includes('lx-post-meta')) throw new Error('post: meta line');
+  b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
+  if (/Lifelogx|Companion|Moments in Motion|Conversational AI|Small Support/.test(b)) throw new Error(`post ${post.slug}: template copy survives`);
+  return inMonoShell(b + bigMark(), ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
+}
+for (const post of POSTS) PAGES[postPath(post)] = (lang) => postPage(post, lang);
 
 /* ---- pricing.html — Scalora pricing page ------------------------------ */
 PAGES['pricing.html'] = (lang) => {
@@ -455,6 +680,32 @@ PAGES['pricing.html'] = (lang) => {
       if (!card) throw new Error(`pricing: card ${ci} in pane ${pi + 1}`);
       text = text.slice(0, card.start) + fillCard(card.text, cards[ci]) + text.slice(card.end);
     }
+    // Scalora hard-codes the raised card into the middle slot; STARGO promotes the
+    // dearest plan in each pane, which is not always the middle one. Move the
+    // treatment — the .growth-card frame, the .growth classes and the top border —
+    // onto the plan that carries `featured`, and leave the ladder in price order.
+    const want = cards.findIndex((c) => c.featured);
+    if (want === -1) throw new Error(`pricing: pane ${pi + 1} promotes no plan`);
+    const wrap = findByClass(text, 'div', 'pricing-cards-wrapper');
+    if (!wrap) throw new Error(`pricing: cards wrapper in pane ${pi + 1}`);
+    const slots = [];
+    for (let ci = 0, from = 0; ci < 3; ci++) {
+      const c = findByClass(wrap.text, 'div', 'pricing-card', ci);
+      if (!c) throw new Error(`pricing: slot ${ci} in pane ${pi + 1}`);
+      slots.push(c.text); from = c.end;
+    }
+    const rebuilt = slots.map((card, ci) => {
+      let inner = card
+        .replace(/class="pricing-card[^"]*"/, `class="pricing-card ${ci === want ? 'growth' : ci === 0 ? '_01' : '_03'}"`)
+        .replace(/class="pricing-card-icon-block[^"]*"/, `class="pricing-card-icon-block${ci === want ? ' growth' : ''}"`)
+        .replace(/<div class="top-border"><\/div>/g, '');
+      if (ci !== want) return inner;
+      const badge = `<div class="stargo-plan-badge">${t(P.featuredBadge)}</div>`;
+      inner = inner.replace(/(<div class="pricing-card-top-block">)/, `$1${badge}`);
+      return `<div class="growth-card">${inner.replace(/(<\/div>)$/, '<div class="top-border"></div>$1')}</div>`;
+    }).join('');
+    text = text.slice(0, wrap.start) + `<div class="pricing-cards-wrapper">${rebuilt}</div>` + text.slice(wrap.end);
+    if ((text.match(/class="growth-card"/g) ?? []).length !== 1) throw new Error(`pricing: pane ${pi + 1} promotes ${(text.match(/class="growth-card"/g) ?? []).length} plans`);
     hero = hero.slice(0, pane.start) + text + hero.slice(pane.end);
   });
   /* comparison table */
@@ -497,7 +748,9 @@ PAGES['pricing.html'] = (lang) => {
   body = body.replace(/alt="(Pricing Card Icon|Check Icon|Close Icon|Arrow Dowen)"/g, 'alt=""');
   if (/Scalora|\$\d/.test(body)) throw new Error('pricing: template copy or dollar price survives');
   body = `<div class="sc-scope sc-page">\n${body}\n</div>`;
-  return inMonoShell(body, ['scalora-modules.sc.css', 'stargo-fusion.css']);
+  return inMonoShell(body, ['scalora-modules.sc.css', 'stargo-fusion.css'])
+    .replace('<body ', '<body class="stargo-dark-page stargo-pricing-lx" ')
+    .replace('</body>', '<script src="js/stargo-pricing.js"></script></body>');
 };
 
 /* ---- enterprise.html — Mono studio ------------------------------------ */
@@ -556,25 +809,186 @@ PAGES['capabilities.html'] = (lang) => {
   h = s(h, 'Expand your scope with marketing, SEO, or content creation.', t(K.more));
   h = setLink(h, 'Contact us', { href: 'contact.html', text: t(K.moreButton) });
 
+
+/* capabilityShowcase() builds the page's opening hero as well as the map; the
+   page builder puts it where Mono's inner hero used to be. */
+/**
+ * 一个外贸闭环 — the nine stages, as the review drew them.
+ *
+ * Three template blocks in a row, each with its own imagery and motion kept:
+ * renok's "Award winning /Studio" heading carries the section title, qubix's
+ * orbit hero carries the intro with the nine stage words rolling through its
+ * tag list, and renok's insight list carries the nine stages themselves.
+ */
+function loopSection(C, lang) {
+  return `<div id="loop"></div>` + renderBlock('rk-award', lang) + renderBlock('qx-orbit', lang) + renderBlock('rk-insight', lang);
+}
+
+/**
+ * The capability page's donor blocks, one module each in tools/blocks.
+ *
+ * Each module knows how to cut its block out of its donor template (used by
+ * tools/capability-donors.mjs) and how to fill it with this site's words. Here
+ * we only compose them: read the fragment the extraction wrote, hand it the
+ * copy, and put it inside the root class its stylesheet is scoped under.
+ */
+
+function renderBlock(id, lang, extra) {
+  const mod = CAP_BLOCKS.get(id);
+  if (!mod) throw new Error(`capabilities: no block module ${id}`);
+  const frag = readFileSync(`${SITE}/tools/fragments/${id}.html`, 'utf8');
+  const t = (v) => (typeof v === 'string' ? v : v[lang]);
+  const html = mod.render(frag, { C, lang, t, escapeHtml, capTitle: capTitle(lang), art, ...extra });
+  return `<div class="${mod.donor.scope.replace(/^\./, '')}">${html}</div>`;
+}
+
+let showcaseHero = '';
+
+/**
+ * The Capability map.
+ *
+ * Ten blocks carry the story, each one a lumenis service card lifted whole by
+ * tools/lumenis-prepare.mjs: a numbered heading, a paragraph, sub-items that
+ * expand on click while their plus rotates, a closing line with a button, and a
+ * full-height image beside it. Six are business outcomes, four are the
+ * foundations they share. Beneath them the fourteen capability groups sit on
+ * cinery's accordion (tools/cinery-prepare.mjs) as the complete catalogue.
+ *
+ * Both donors keep their own motion — Webflow IX2, merged into js/app.fused.js —
+ * and their own styles, scoped under `.lm-capmap` and `.cn-capmap`. Only the
+ * words and the images are ours; the images are this site's own editorial
+ * artwork, one chosen for what each block is about.
+ *
+ * Every capability a block names is resolved against CAPABILITY_GROUPS and
+ * printed with the register's own gloss, so the narrative cannot drift from the
+ * catalogue and a renamed capability fails the build instead of disappearing.
+ */
+function capabilityShowcase(C, lang) {
+  const t = (v) => (typeof v === 'string' ? v : v[lang]);
+  const S = C.CAPABILITY_SHOWCASE;
+
+  const cnFrag = readFileSync(`${SITE}/tools/fragments/cn-capmap.html`, 'utf8');
+
+  /* ---- the chapters, each on the block the review's screenshot named ----
+
+     The review went through the page section by section and pasted a screenshot
+     of the template block each one should be. That mapping is this list; the
+     screenshots are in F:/stargo 网站/.docx/word/media. A block knows how to
+     fill itself (tools/blocks/<id>.mjs); here we only put them in order and hang
+     the anchors the nav and the floating pill jump to. */
+  const CHAPTERS = [
+    { id: 'cn-service', anchor: 'atlas' },        // 找到买家 heading + 01 (image9, image11)
+    { id: 'qx-news', anchor: 'story-2' },         // 02 把对话变成理解 (image13)
+    { id: 'rk-stats', anchor: 'story-3' },        // 03 报价 (image15)
+    /* image17 (the break: a small circle in a white band) and image18 (the cards
+       over the marquee) are two frames of ONE renok section, its circular mask
+       growing with scroll. The testimonials block is that whole section, so it
+       is the break as well; a separate break block played it twice. */
+    { id: 'rk-testimonials', anchor: 'story-4' }, // 04 订单, opened by the break (image17 → image18)
+    { id: 'cn-faq', anchor: 'story-5' },          // 05 内容 (image20)
+    { id: 'cn-produce' },                         // break (image21)
+    { id: 'qx-projects', anchor: 'story-6' },     // 06 AI 团队 (image23)
+    { id: 'qx-whatwedo', anchor: 'foundations' }, // 四个基础板块 (image28)
+  ];
+  const chapters = CHAPTERS.map(({ id, anchor }) => {
+    const html = renderBlock(id, lang);
+    if (!anchor) return html;
+    if (!html.startsWith('<div class="')) throw new Error(`capabilities: ${id} did not come back wrapped in its scope`);
+    return html.replace('<div class="', `<div id="${anchor}" class="`);
+  }).join('');
+
+  /* ---- the catalogue keeps cinery's accordion ---- */
+  const rowTpl = cnFrag.slice(cnFrag.indexOf('<!-- row -->') + 12).trim();
+  const catRow = (id, title, body) => rowTpl
+    /* The row binds to cinery's accordion interaction by the donor's own node
+       id: the cn-faq block on this page carries the same interaction under that
+       id (tools/donor-lib.mjs keeps donor ids), and one event drives both. */
+    .replace('<div data-w-id="cn-capmap-row"', `<div id="${id}" data-w-id="e9dfc491-ce9f-1abc-547e-929be71d3026"`)
+    .replace(/<h2 class="cn-accordion-heading">[\s\S]*?<\/h2>/, `<h2 class="cn-accordion-heading">${escapeHtml(title)}</h2>`)
+    .replace(/<div class="cn-accordion-content-block">[\s\S]*?<\/div><\/div><\/div>$/, `<div class="cn-accordion-content-block">${body}</div></div></div>`);
+  const catalogue = C.CAPABILITY_GROUPS.map((g) => catRow(`g${g.n}`, `${g.n} ${t(g.name)}`,
+    g.items.map(([name, gloss, zhName]) =>
+      `<p class="cn-accordion-answer-text"><strong>${capTitle(name, zhName)}</strong> ${escapeHtml(t(gloss))}</p>`).join('')));
+
+  const total = C.CAPABILITY_GROUPS.reduce((n, g) => n + g.items.length, 0);
+  const band = (label, note) =>
+    `<div class="cn-band"><div class="cn-band-label">${escapeHtml(label)}</div>` +
+    `<div class="cn-band-note">${escapeHtml(note)}</div></div>`;
+
+  showcaseHero = renderBlock('rk-hero', lang);
+
+  /* The first chapter carries both #atlas (hero button, stage rows) and #story-1
+     (the floating pill); a zero-size anchor takes the second name. */
+  return `<span id="story-1"></span>` + chapters +
+    `<section class="cn-capmap"><div class="cn-capmap-inner">` +
+    band(t(S.catalogueLabel), `${t(S.catalogueNote)} ${C.CAPABILITY_GROUPS.length} ${lang === 'zh' ? '个能力组 · ' : 'groups · '}${total}${lang === 'zh' ? ' 项能力。' : ' capabilities.'}`) +
+    `<div class="cn-faq-container">${catalogue.join('')}</div>` +
+    `</div></section>`;
+}
+
   const rows = C.CAPABILITY_GROUPS.flatMap((g) => g.items.map(([item, gloss], i) => [
     i === 0 ? `<span id="g${g.n}">${g.n} · ${escapeHtml(t(g.name))}</span>` : '',
     escapeHtml(item),
     escapeHtml(t(gloss)),
   ]));
-  const table = awardsTable({
-    id: 'atlas', caption: t(K.table.caption), title: t(K.table.title), total: rows.length,
-    button: { label: t(K.table.button.label), href: K.table.button.href }, headers: K.table.headers.map(t), rows,
-  });
+  const table = capabilityShowcase(C, lang);
   const anchor = '<div data-w-id="f7fb6f0b-16b8-25a9-4160-54883563ff75" class="rounder-wrapper">';
   if (!h.includes(anchor)) throw new Error('capabilities: insertion anchor missing');
   // The nine-stage loop sits above the capability map: business mainline first, then the 14 groups.
-  const L = C.HOME_LOOP_TABLE;
-  const loop = awardsTable({
-    id: 'loop', caption: t(L.caption), title: t(L.title), total: L.rows.length,
-    button: { label: t(L.button), href: '#atlas' }, headers: L.headers.map(t),
-    rows: L.rows.map(([a, b, c]) => [a, escapeHtml(t(b)), escapeHtml(t(c))]),
-  });
+  const loop = loopSection(C, lang);
   h = h.replace(anchor, `${loop}\n${table}\n${anchor}`);
+  /* renok's hero opens the page in place of Mono's inner hero, as the review asked. */
+  {
+    /* Its black ground would swallow the nav, which is drawn in the page's own
+       black. The nav scrolls away with the hero, so whitening it here costs
+       the light sections below nothing. */
+    if (!h.includes('<body>')) throw new Error('capabilities: body tag not where the dark-nav class goes');
+    h = h.replace('<body>', '<body class="stargo-dark-nav">');
+    const inner = findByClass(h, 'div', 'for-inner', 0);
+    if (!inner) throw new Error('capabilities: Mono inner hero not found');
+    if (!showcaseHero) throw new Error('capabilities: the showcase hero was not built');
+    h = h.slice(0, inner.start) + showcaseHero + h.slice(inner.end);
+  }
+  {
+    // the transplanted cinery block brings its own scoped stylesheet
+    const monoLink = /<link href="css\/monof-template\.app\.shared\.[a-f0-9]+\.css" rel="stylesheet" type="text\/css"\/>/;
+    if (!monoLink.test(h)) throw new Error('capabilities: Mono stylesheet link not found');
+    /* One sheet per donor, taken from the donor table rather than listed here,
+       so adding a block never means remembering to link its styles — that is
+       exactly how the new cinery blocks first rendered unstyled. `cinery.cn.css`
+       is the older sheet for the catalogue accordion, which still comes from its
+       own prepare script. */
+    const sheets = [...new Set([...Object.values(DONORS).map((d) => d.sheet), 'cinery.cn.css'])]
+      .filter((f) => existsSync(`${SITE}/css/${f}`))
+      .map((f) => `<link href="css/${f}" rel="stylesheet" type="text/css"/>`)
+      .join('\n');
+    /* chrome.mjs attaches css/stargo-fusion.css after the last stylesheet on the
+       page, so the donor sheets added here still load before the overrides. */
+    h = h.replace(monoLink, (m) => `${m}\n${sheets}\n<link href="css/donor-fonts.css" rel="stylesheet" type="text/css"/>`);
+    /* A donor block's video is fetched only once the reader is near it. cinery's
+       break band is 27 `<video autoplay preload="metadata">` cards — 32 MB on
+       first paint, before anyone has scrolled to them. Holding the url in
+       `data-src` until js/stargo-video-defer.js restores it changes no element,
+       class, interaction id or poster: the band is the template's band, it just
+       does not arrive before the page does. */
+    {
+      const sources = (h.match(/<source /g) ?? []).length;
+      h = h.replace(/<video\b[^>]*>[\s\S]*?<\/video>/g, (v) => (v.includes('<source ') ? v
+        .replace('<video', '<video data-defer')
+        .replace(/\spreload="[^"]*"/, ' preload="none"')
+        .replace(/(<source[^>]*?)\ssrc=/g, '$1 data-src=') : v));
+      if (sources && !(h.match(/<source[^>]* data-src=/g) ?? []).length) {
+        throw new Error('capabilities: video sources were not deferred');
+      }
+    }
+
+    /* Hand-written block behaviour (tools/blocks/<id>.js), after the Webflow bundle.
+       At this point the page still carries Mono's own bundle name; chrome.mjs
+       renames it to app.fused.js later, and the tags added here follow it. */
+    const bundleTag = /(<script src="js\/app\.[0-9a-f]{8}\.[0-9a-f]{16}\.js"[^>]*><\/script>)/;
+    if (!bundleTag.test(h)) throw new Error('capabilities: page bundle script tag not found');
+    h = h.replace(bundleTag, '$1<script src="js/stargo-video-defer.js" defer></script><script src="js/capability-blocks.js" defer></script>');
+  }
   // Assign by buyer meaning, not image sequence: growth, customer context,
   // commercial fulfilment, workforce/governance. Parallel-team art belongs
   // at the homepage Workforce door, not beneath the Commercial label.
@@ -592,8 +1006,9 @@ PAGES['contact.html'] = (lang) => {
   let h = tpl('contact_contact-1.html');
   h = s(h, '(Contact)', t(K.eyebrow));
   h = s(h, 'Let’s Connect', t(K.h1));
-  h = h.replace(/<img[^>]*class="logo-testi-1"[^>]*\/>/, '');
-  h = s(h, '>★★★★★<', '><');
+  // The quote card keeps the template design (portrait film, gradient, mark); the mark is STARGO's and the rating slot names the card.
+  h = h.replace(/<img[^>]*class="logo-testi-1"[^>]*\/>/, `<img src="${WORDMARK}" loading="lazy" alt="STARGO WORK" class="logo-testi-1 stargo-card-mark"/>`);
+  h = s(h, '>★★★★★<', `>${t(K.quoteLabel)}<`);
   h = s(h, '“Their ability to listen, challenge assumptions, and translate ideas into a clean digital system.”', t(K.quote));
   h = s(h, '>Joda Trump<br/>', `>${t(K.quoteWho)}<br/>`);
   h = s(h, '>Founder of Light\u00a0Studio®<br/>', `>${t(K.quoteWhere)}<br/>`);
@@ -610,19 +1025,17 @@ PAGES['contact.html'] = (lang) => {
   if (h.includes('First choice')) throw new Error('contact: select options');
   // five more fields, cloned from the company field
   const field = (id, label) => `<div><label for="${id}" class="field-name">${label}</label><input class="text-field-2 w-input" maxlength="256" name="${id}" data-name="${id}" placeholder="" type="text" id="${id}"/></div>`;
-  const extra = `<div class="grid-form _01">${field('whatsapp', t(K.fields.whatsapp))}${field('industry', t(K.fields.industry))}</div><div class="grid-form _01">${field('markets', t(K.fields.markets))}${field('team', t(K.fields.team))}</div><div class="grid-form _01">${field('systems', t(K.fields.systems))}<div></div></div>`;
+  const extra = ['whatsapp', 'industry', 'markets', 'team', 'systems'].map(id => field(id, t(K.fields[id]))).join('');
   const msgAt = h.indexOf('<label for="field-2"');
   if (msgAt === -1) throw new Error('contact: message field');
   const blockStart = h.lastIndexOf('<div>', msgAt);
   h = h.slice(0, blockStart) + extra + h.slice(blockStart);
   h = h.replace(/value="Contact Us"/, `value="${t(K.submit)}"`);
-  // The quote card's stock video → the orb; a honeypot field for the form endpoint.
-  const vid = h.match(/<video id="([^"]+)-video"/);
-  if (!vid) throw new Error('contact: quote card video');
-  h = stillImage(h, vid[1], BRAND.square, '');
+  // A honeypot field for the form endpoint. (The quote card's portrait film stays.)
+  if (!/<video id="[^"]+-video"/.test(h)) throw new Error('contact: quote card video');
   h = h.replace(/(<form id="email-form"[^>]*>)/, '$1<div class="stargo-hp" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"/></div>');
   if (!h.includes('stargo-hp')) throw new Error('contact: form not found');
-  return h;
+  return h.replace(/<body\b/, '<body class="stargo-contact-page"');
 };
 
 /* ---- privacy.html / terms.html — Mono post layout ---------------------- */
@@ -692,7 +1105,9 @@ const FORBIDDEN = [
   /Forma Digital/, /Nero Vision/, /One Step/, /Bold Moves/, /Auralis/, /Light[\s\u00a0]Studio/, /Joda Trump/, /Elena Rossi/, /Adrian Keller/, /Camila Verga/,
   /\$\s?\d/, /logoipsum/i, /Get Template/, /template-navigator/, /youtube\.com/, /embedly/,
   // stock photography that shipped with the templates
-  /Young%20Man%20Smiling/, /Sunset-Serenity/, /Joyful-Group/, /Red-Hat-Portrait/, /work-\d+\.webp/, /work7\.webp/, /Matcha-Latte/, /Party-Scene/, /Scene%20/, /Portrait-of-a-Man/, /Diverse-Group/, /Coding-Workspace/, /Sleek%20Container/, /Futuristic/, /blog-\d\.webp/, /about-6/, /Ellipse%202/, /Team%20Image/, /iPhone%2013/, /iPhone%2016/, /no-writing-sc/, /image%202[46]\./,
+  /Young%20Man%20Smiling/, /Sunset-Serenity/, /Joyful-Group/, /Red-Hat-Portrait/, /work-\d+\.webp/, /work7\.webp/, /Matcha-Latte/, /Party-Scene/, /Scene%20/, /Portrait-of-a-Man/, /Diverse-Group/, /Coding-Workspace/, /Sleek%20Container/, /Futuristic/, /blog-\d\.webp/, /about-6/,
+  // lifelogx template people, its CMS article images and its brand
+  /Vibrant%20Orange/, /Stylish%20Portrait/, /Metallic%20Jacket/, /Rectangle%2043/, /69417cf6925a82af26179b70/, /Lifelogx/i, /Lina Elsen/, /Amira Brik/, /Mila Eron/, /Oren Solis/,
 ];
 const ALLOWED = { 'notices.html': [/Mōno™ Studio/] };
 
@@ -718,8 +1133,19 @@ for (const lang of C.LANGS) {
       const rel = decodeURIComponent(m[1]).split('?')[0];
       if (!existsSync(`${SITE}/${rel}`) && !existsSync(`${SITE}/${m[1]}`)) throw new Error(`[${lang}/${name}] missing asset: ${m[1]}`);
     }
-    if (lang === 'en') html = relocateAssets(html);
+    for (const m of html.matchAll(/srcset="([^"]*)"/g)) {
+      for (const part of m[1].split(',')) {
+        const f = part.trim().split(/\s+/)[0];
+        if (f.startsWith('assets/') && !existsSync(`${SITE}/${decodeURIComponent(f)}`) && !existsSync(`${SITE}/${f}`)) throw new Error(`[${lang}/${name}] missing srcset asset: ${f}`);
+      }
+    }
+    // Pages in a folder (blog/) link and load one level up; English pages one more.
+    const depth = name.split('/').length - 1;
+    html = relocateLinks(html, '../'.repeat(depth));
+    const assetUp = '../'.repeat(depth + (lang === 'en' ? 1 : 0));
+    if (assetUp) html = relocateAssets(html, assetUp);
     const out = lang === 'zh' ? `${SITE}/${name}` : `${SITE}/en/${name}`;
+    mkdirSync(out.slice(0, out.lastIndexOf('/')), { recursive: true });
     writeFileSync(out, html.replace(/[\t ]+$/gm, ''), 'utf8');
     written.push(`${lang}/${name}`);
   }

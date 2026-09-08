@@ -1,0 +1,289 @@
+/* lumenis — Capability map outcome-card styles.
+   Extracted from tools/templates/lumenis/css by tools/lumenis-prepare.mjs:
+   only the rules the transplanted card uses, class names prefixed with `lm-`,
+   every selector scoped under `.lm-capmap`. Do not edit by hand. */
+.lm-capmap {
+  --tokens--background-base: white;
+  --_typrography---fonts--heading-font: "TASA Orbiter", sans-serif;
+  --text--font-color: var(--tokens--text-primary);
+  --_typrography---desktop--s-body-paragraph: 14px;
+  --_typrography---line-height--lineheighttight: 80%;
+  --_typrography---font-weight--fontweightregular: 400;
+  --_typrography---letter-spacing--letter-spacing-default: 0px;
+  --_typrography---desktop--heading-01: 52px;
+  --_typrography---line-height--lineheightsmall: 110%;
+  --_typrography---font-weight--fontweightmedium: 500;
+  --_typrography---desktop--heading-02: 48px;
+  --_typrography---desktop--heading-03: 42px;
+  --_typrography---desktop--heading-04: 38px;
+  --_typrography---desktop--heading-05: 30px;
+  --_typrography---desktop--heading-06: 24px;
+  --_typrography---fonts--paragraph-font: Inter, sans-serif;
+  --text--paragraph-font: var(--tokens--text-secondary);
+  --_typrography---desktop--m-body-paragraph: 16px;
+  --_typrography---line-height--lineheightbase: 140%;
+  --_spacings---radius--radius-m: var(--_spacings---tokens--space-sm);
+  --elements--cards-bento: var(--tokens--surface);
+  --_spacings---core--gird-gaps: var(--_spacings---tokens--space-m);
+  --_spacings---core--container-paddings: var(--_spacings---tokens--space-xxl);
+  --tokens--surface: #f6f6f6;
+  --tokens--border-strong: #000;
+  --_spacings---radius--radius-s: var(--_spacings---tokens--space-xs);
+  --elements--buttons: var(--tokens--text-primary);
+  --tokens--text-inverse: #fff;
+  --tokens--text-primary: #000;
+  --_typrography---desktop--l-body-paragraph: 18px;
+  --_typrography---font-weight--fontweightsemibold: 600;
+  --_typrography---font-weight--fontweightextrabold: 800;
+  --elements--border: var(--tokens--border);
+  --tokens--text-tertiary: #333;
+  --_spacings---tokens--space-xs: 8px;
+  --_spacings---tokens--space-sm: 16px;
+  --tokens--primary: #33321c;
+  --_spacings---core--section-space: var(--_spacings---tokens--space-lg);
+  --tokens--seondary-hover: transparent;
+  --_typrography---font-weight--fontweightlight: 300;
+  --_typrography---fonts--logo-font: "Oswald Variable", Arial, sans-serif;
+  --_typrography---font-weight--fontweightblack: 900;
+  --tokens--overlays: #0006;
+  --tokens--accent: #fffa8d;
+  --tokens--border: #ccc;
+  --tokens--surface-alt: white;
+  --_spacings---radius--radius-full-circle: 300px;
+  --_spacings---tokens--space-2xs: 4px;
+  --tokens--background-alt: #ececec;
+  --_spacings---tokens--space-m: 30px;
+  --_spacings---tokens--space-lg: 64px;
+  --tokens--text-secondary: #141414;
+  --tokens--primary-hover: #242414;
+  --tokens--secondary-not-used: transparent;
+  --_spacings---tokens--space-xl: 120px;
+  --_spacings---tokens--space-2xl: 240px;
+  --_spacings---tokens--space-tight: .5em;
+  --_spacings---tokens--space-base: 1em;
+  --_spacings---tokens--space-relaxed: 1.5em;
+  --_spacings---tokens--space-relaxed-l: 2em;
+  --_spacings---tokens--space-xxl: 3em;
+  --_spacings---tokens--space-xxxl: 4em;
+  --_spacings---core--container-max-width: 1200px;
+  --_spacings---core--block-spacing: var(--_spacings---tokens--space-sm);
+  --_spacings---radius--radius-l: var(--_spacings---tokens--space-m);
+  --text--captions: var(--tokens--text-tertiary);
+  --elements--section: var(--tokens--background-base);
+  --elements--buttons-text: var(--text--font-color);
+  --elements--links: var(--tokens--text-primary);
+  --elements--links-hover: var(--tokens--primary-hover);
+  --_typrography---general--button-text-size: 16px;
+  --_typrography---general--tag-badge: 12px;
+  --_typrography---general--legal: 13px;
+  --_typrography---letter-spacing--letter-spacing-narrow: -.5px;
+  --_typrography---line-height--lineheightrelaxed: 160%;
+  --_typrography---font-weight--fontweightthin: 100;
+  --_typrography---font-weight--fontweightextralight: 200;
+  --_typrography---font-weight--fontweightbold: 700;
+}
+.lm-capmap .lm-black-background { border-radius: var(--_spacings---radius--radius-m);
+  background-color: var(--elements--cards-bento); }
+.lm-capmap .lm-black-background-padding { padding: 40px; }
+.lm-capmap .lm-button { grid-column-gap: 12px;
+  grid-row-gap: 12px;
+  background-color: var(--elements--buttons);
+  font-family: var(--_typrography---fonts--paragraph-font);
+  color: var(--tokens--text-inverse);
+  font-size: var(--_typrography---desktop--m-body-paragraph);
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  padding: 14px 24px;
+  transition: transform .325s cubic-bezier(.175, .885, .32, 1.275), background-position .25s, background-color .45s;
+  display: flex;
+  overflow: hidden; }
+.lm-capmap .lm-button:hover { transform: scale(1.05); }
+.lm-capmap .lm-button.form-button { height: 42px;
+  padding-top: 11px;
+  padding-left: 20px;
+  padding-right: 20px;
+  position: absolute;
+  right: 5px; }
+.lm-capmap .lm-button.lm-secondary { border: 1px solid var(--tokens--border-strong);
+  background-color: var(--tokens--background-base);
+  color: var(--tokens--text-primary); }
+.lm-capmap .lm-button.small { font-size: var(--_typrography---desktop--s-body-paragraph);
+  padding: 8px 16px; }
+.lm-capmap .lm-button.link-button { background-color: #2563eb00;
+  border-style: none;
+  border-radius: 0;
+  padding: 0; }
+.lm-capmap .style-guide-box-holder.lm-white { background-color: var(--tokens--text-primary);
+  padding: 56px; }
+.lm-capmap .lm-button-container { grid-column-gap: 18px;
+  grid-row-gap: 18px;
+  border: 1px solid var(--tokens--border-strong);
+  border-radius: var(--_spacings---radius--radius-m);
+  background-color: var(--tokens--surface);
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 70%;
+  padding: 20px;
+  display: flex; }
+.lm-capmap .lm-black-text { color: var(--text--font-color); }
+.lm-capmap .lm-button-holder { grid-column-gap: 14px;
+  grid-row-gap: 14px;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  display: flex; }
+.lm-capmap .lm-button-holder.lm-services-buttons { justify-content: flex-start;
+  align-items: center; }
+.lm-capmap .lm-question-icon { filter: invert();
+  width: 18px;
+  min-width: 18px; }
+.lm-capmap .lm-question-icon.lm-invert { filter: none; }
+.lm-capmap .lm-answer-text { font-family: var(--_typrography---fonts--paragraph-font);
+  font-size: var(--_typrography---desktop--s-body-paragraph);
+  line-height: var(--_typrography---line-height--lineheightbase);
+  margin-bottom: 0;
+  padding-top: 2px; }
+.lm-capmap .lm-answer-text.lm-white-text { color: #fff9; }
+.lm-capmap .lm-question-text { font-size: var(--_typrography---desktop--l-body-paragraph);
+  line-height: var(--_typrography---line-height--lineheightsmall);
+  font-weight: var(--_typrography---font-weight--fontweightmedium); }
+.lm-capmap .lm-question-text.lm-white { font-family: var(--_typrography---fonts--paragraph-font);
+  color: var(--tokens--text-inverse);
+  font-weight: var(--_typrography---font-weight--fontweightsemibold);
+  text-transform: uppercase; }
+.lm-capmap .lm-answer-holder { justify-content: flex-start;
+  max-width: 100%;
+  display: flex;
+  overflow: hidden; }
+.lm-capmap .lm-question { grid-column-gap: 12px;
+  grid-row-gap: 12px;
+  flex-direction: row;
+  justify-content: space-between;
+  display: flex; }
+.lm-capmap .field-label.lm-white { color: var(--text--font-color);
+  margin-bottom: 0; }
+.lm-capmap .lm-button-wrapper { justify-content: space-between;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  display: flex; }
+.lm-capmap .lm-h2-style { font-size: var(--_typrography---desktop--heading-02);
+  line-height: var(--_typrography---line-height--lineheightsmall); }
+.lm-capmap .lm-h2-style.lm-white-text { font-weight: var(--_typrography---font-weight--fontweightsemibold); }
+.lm-capmap .lm-button-icon { width: 14px; }
+.lm-capmap .lm-button-icon.small { width: 16px; }
+.lm-capmap .lm-red-circle { z-index: 0;
+  background-color: var(--tokens--primary);
+  width: 6px;
+  height: 6px;
+  position: relative; }
+.lm-capmap .lm-red-circle.lm-black { background-color: var(--tokens--border-strong); }
+.lm-capmap .lm-white-text { color: var(--tokens--text-inverse); }
+.lm-capmap .lm-black-link { color: #000;
+  line-height: var(--_typrography---line-height--lineheightsmall);
+  font-weight: 500; }
+.lm-capmap .lm-button-text { z-index: 1;
+  line-height: var(--_typrography---line-height--lineheightsmall);
+  position: relative; }
+.lm-capmap .about-us-stats.lm-white-bg { grid-column-gap: 70px;
+  grid-row-gap: 70px;
+  border-style: solid solid solid none;
+  border-width: 1px;
+  border-color: var(--elements--border);
+  background-color: var(--tokens--background-base); }
+.lm-capmap .about-us-stats.lm-white-bg.left { border-left-style: solid; }
+.lm-capmap .lm-button-text-holder { grid-column-gap: 5px;
+  grid-row-gap: 5px;
+  flex-flow: column;
+  height: 19px;
+  display: flex;
+  overflow: hidden; }
+.lm-capmap .lm-services-wrapper { width: 100%;
+  height: 100%; }
+.lm-capmap .lm-services-container { z-index: 2;
+  flex-flow: column;
+  justify-content: space-between;
+  max-width: 550px;
+  height: 100%;
+  padding: 33px;
+  display: flex;
+  position: relative; }
+.lm-capmap .lm-services-heading { grid-column-gap: 8px;
+  grid-row-gap: 8px;
+  flex-flow: column;
+  display: flex; }
+.lm-capmap .lm-number { border: 1px solid var(--tokens--background-base);
+  border-radius: var(--_spacings---radius--radius-full-circle);
+  color: var(--tokens--text-inverse);
+  font-size: var(--_typrography---desktop--m-body-paragraph);
+  font-weight: var(--_typrography---font-weight--fontweightsemibold);
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  width: 31px;
+  height: 31px;
+  display: flex; }
+.lm-capmap .lm-services-list-holder { grid-column-gap: 24px;
+  grid-row-gap: 24px;
+  flex-flow: column;
+  margin-top: 20px;
+  display: flex; }
+.lm-capmap .lm-services-list { cursor: pointer;
+  border-bottom: 1px solid #cccccc80;
+  flex-direction: column;
+  padding: 0 0 12px;
+  transition: background-color .325s;
+  display: flex; }
+.lm-capmap .lm-services-image-holder { justify-content: flex-end;
+  align-items: center;
+  display: flex;
+  position: absolute;
+  inset: 0%; }
+.lm-capmap .lm-services-image-full { object-fit: cover;
+  width: 70%;
+  height: 100%; }
+.lm-capmap .lm-overlay-services { z-index: 1;
+  background-color: var(--tokens--overlays);
+  pointer-events: none;
+  background-image: linear-gradient(90deg, #070602 39%, #070602e6 49%, #07060200 61%);
+  position: absolute;
+  inset: 0%; }
+.lm-capmap .lm-services-perspective { perspective: 1500px;
+  height: 88vh;
+  position: sticky;
+  top: 80px; }
+@media screen and (min-width: 1440px) {
+  .lm-capmap .lm-question-icon { width: 24px;
+    min-width: 24px; }
+  .lm-capmap .lm-answer-text { font-size: var(--_typrography---desktop--m-body-paragraph);
+    padding-top: 6px; }
+  .lm-capmap .lm-question-text { font-size: var(--_typrography---desktop--heading-06); }
+}
+@media screen and (max-width: 767px) {
+  .lm-capmap .lm-black-background-padding { padding: 20px; }
+  .lm-capmap .lm-question-text { font-size: var(--_typrography---desktop--heading-06); }
+}
+@media screen and (max-width: 479px) {
+  .lm-capmap .lm-black-background-padding { padding: 7px; }
+  .lm-capmap .lm-button { -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    text-align: center; }
+  .lm-capmap .lm-button.form-button { position: static; }
+  .lm-capmap .lm-button-holder { flex-flow: column;
+    width: 100%; }
+  .lm-capmap .lm-button-holder.lm-services-buttons { align-items: stretch; }
+  .lm-capmap .lm-question-text { font-size: 18px; }
+  .lm-capmap .lm-question-text.lm-white { font-size: 16px;
+    font-weight: var(--_typrography---font-weight--fontweightregular); }
+  .lm-capmap .lm-answer-holder { max-width: 100%; }
+  .lm-capmap .lm-button-wrapper { grid-column-gap: 20px;
+    grid-row-gap: 20px;
+    flex-flow: column; }
+  .lm-capmap .lm-services-container { padding: 20px; }
+  .lm-capmap .lm-services-list-holder { margin-bottom: 20px; }
+  .lm-capmap .lm-services-list { padding: 0 0 12px; }
+  .lm-capmap .lm-overlay-services { background-image: linear-gradient(90deg, #070602 39%, #070602e6 49%, #07060269 61%); }
+  .lm-capmap .lm-services-perspective { height: auto;
+    position: static; }
+}

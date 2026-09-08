@@ -1,16 +1,19 @@
 # STARGO WORK — official site (static)
 
 Bilingual (中文 at `/`, English at `/en/`) marketing site for STARGO WORK, the
-AI Operating System for Global Trade. Eleven pages per language, built from
-three Webflow templates with their layouts, animations and interactions kept
-intact; the words, the imagery and the information architecture are STARGO's.
+AI Operating System for Global Trade. Nineteen pages per language (eleven
+product/legal pages, About, the blog index and six articles), built from three
+licensed Webflow templates with their layouts, palettes, imagery, animations and
+interactions kept intact; the words and the information architecture are STARGO's.
 
 | Page | Role in the story | Template used |
 |---|---|---|
 | `index.html` — Trade OS | one journey: OS → the problem → one loop → who runs it → five stages → four systems → channels → the interface → OS vs hiring → start with one workflow → what is underneath → pricing ladder → four doors → demo | Mono homepage + Scalora loop hero, core-system switcher, channel band |
 | `intelligence.html` | why it is not a chatbot: ontology → FDE → proactive → teams → long-horizon → governed evolution | Lifelogx homepage |
 | `capabilities.html` | the nine-stage loop, then 14 capability groups | Mono work page + two tables |
-| `workforce.html` | what 288 AI employees actually do | Lifelogx homepage |
+| `workforce.html` | who is on the AI team: roles, what each one owns, what the team gets done | Lifelogx **feature** page |
+| `about.html` | what STARGO WORK is, where it comes from, how it is built; five workflow entry points | Lifelogx about page |
+| `blog.html`, `blog/<slug>.html` | articles: the AI operating system, AI employees, inquiry-to-quote, approval gates, the ontology, starting with one workflow | Lifelogx blog and article pages |
 | `pricing.html` | the AI ladder: Foundation → Launch → Growth → Global Acquisition → Enterprise | Scalora pricing |
 | `enterprise.html` | delegate the work, keep the authority | Mono studio page |
 | `contact.html` | start with one workflow | Mono contact page |
@@ -20,26 +23,92 @@ intact; the words, the imagery and the information architecture are STARGO's.
 
 ```bash
 node tools/imagegen/prepare-assets.mjs # only after new generated originals: encode responsive artwork + manifest
-node tools/lifelogx-prepare.mjs      # only after changing the lifelogx template: mirrors assets, namespaces CSS, exports interactions
-node tools/fuse-ix.mjs               # the one Webflow bundle every page loads (Mono + Scalora + lifelogx interaction data)
-node tools/build-site.mjs            # all 22 pages from tools/templates + tools/fragments + tools/copy.mjs
+NODE_USE_ENV_PROXY=1 node tools/lifelogx-prepare.mjs   # only after changing tools/templates/lifelogx: mirrors assets, namespaces CSS, cuts five page fragments plus two snippets (the closing wordmark, the pricing block), exports interactions
+node tools/blog-covers.mjs           # only after adding an article: re-encodes its cover into assets/blog/
+node tools/mirror-donor-assets.mjs   # fetches the donor templates' own photography/video into assets/<donor>/ (Webflow exports never bundle images); idempotent, driven by tools/fragments/donor-assets.json
+node tools/capability-donors.mjs     # only after changing a capability-page block: cuts each block out of its donor template (tools/blocks/*.mjs say which), writes tools/fragments/<id>.html, the reduced per-donor stylesheet, and the interaction payload
+node tools/try-block.mjs <id>        # one capability-page block on its own: extract, render both languages, report unfilled slots
+node tools/fuse-ix.mjs               # the one Webflow bundle every page loads (Mono + Scalora + every donor's interaction data)
+node tools/build-site.mjs            # all 38 pages from tools/templates + tools/fragments + tools/copy.mjs + tools/blog.mjs
 node tools/verify-site.mjs           # loads every page in Chromium: JS errors, failed/external requests, dead links, leftover English
+node tools/verify-restore.mjs        # every page × 320…1920 × both languages, scroll states of the sticky sections, clipped/covered text, new-page SEO; ORIG_LX/ORIG_MONO add side-by-side sheets against the original templates; ENGINE=webkit; BASE_URL/BROWSER_PROXY/WIDTHS/NAV_TIMEOUT for a production run
 node tools/verify-visual-upgrade.mjs # bilingual 390/768/1440/1920: switcher, keyboard, video, reduced-motion
-node tools/verify-editorial.mjs     # 43 originals + 80 variants, 42 responsive page scenarios
+node tools/verify-editorial.mjs     # generated imagery still placed carries alt/size data; responsive page scenarios
 node tools/verify-conversion.mjs    # client fixtures, pricing and resize (no real mail)
-node tools/verify-release.mjs       # production: 151 byte matches and 6 browser smoke scenarios; optional BROWSER_PROXY
+node tools/verify-release.mjs       # production: byte matches for every page and referenced image, browser smoke scenarios; optional BROWSER_PROXY, NAV_TIMEOUT=120000 through a slow proxy
 ```
 
 Serve the folder with any static server (for example `python -m http.server 4200`).
 
+## npm scripts and CI
+
+The chain above also has npm scripts, which is what CI calls and what keeps the
+two in step:
+
+```bash
+npm ci                 # install (pinned: @playwright/test, axe-core)
+npm run browsers       # one-off: download the Chromium the verifiers drive
+npm run build          # mirror-donor-assets -> capability-donors -> fuse-ix -> build-site
+npm run serve          # static server on 127.0.0.1:4200 serving the repo root (PORT/HOST/ROOT env)
+npm run verify         # verify-site -> verify-integrity -> verify-interactions, against BASE_URL
+npm run verify:ci      # the same three, but runs all of them even if one fails
+```
+
+Every script resolves its own location, so the repository builds from any
+checkout directory on Windows, macOS or Linux. Nothing depends on a sibling
+project any more; `tools/paths.mjs` is the single place that answers "where is
+the site".
+
+`.github/workflows/site-verification.yml` runs on every pull request to `main`
+and every push to a `release/**` branch. It rebuilds all 38 pages and asserts
+the rebuild is byte-identical to what the branch committed, then serves the tree
+and loads every page in Chromium. **Green means the committed pages are exactly
+what the build produces and a browser found nothing wrong with them.** A check
+that runs but verifies nothing is deliberately red, not green — see
+`.github/workflows/README.md`, which explains each failure in plain language.
+The workflow deploys nothing and uses no secret; deployment stays manual.
+
+Because the built pages are committed and served from the repo root, the
+reproducibility assertion is the check that matters most here: it catches a page
+edited by hand, and a source change that was never rebuilt.
+
+## Release process
+
+Every change to this site goes the same way. Nothing is deployed straight from a
+working tree.
+
+1. **Build and verify locally.** Run the build chain above, then serve the folder
+   and look at the pages that changed:
+   `python -m http.server 4200 --protocol HTTP/1.1` → http://127.0.0.1:4200/.
+   `verify-site`, `verify-integrity` and `verify-interactions` must all be clean.
+2. **Commit and push the branch** to `origin`
+   (github.com/nickwei5050/stargo-work-site).
+3. **Open a pull request against `main`** and let the code scanner review it.
+   The PR body says what changed, what a reviewer should look at, what was
+   checked, and what is a known deliberate compromise.
+4. **Read the scan.** Fix what it finds; push again; let it re-scan.
+5. **Only when the scan is clean, deploy** — `node tools/make-dist.mjs` then
+   `wrangler pages deploy dist --project-name stargo --branch main`, and verify
+   production with `BASE_URL=https://stargo.pages.dev node tools/verify-release.mjs`
+   (byte-for-byte comparison of every page and asset, plus browser scenarios).
+
+Note that `stargo.pages.dev` is where this site is published. `stargomoto.com`
+currently serves a different application (a Vercel/Supabase app) and is not
+attached to this Cloudflare Pages project; pointing it here would replace what
+is live there, so it is the owner's call, not the build's.
+
 ## Where things live
 
-- **All copy, both languages:** `tools/copy.mjs`. Every entry is keyed by the template string it replaces; a key that no longer matches fails the build instead of leaving the template's own words on the page. The homepage narrative and the legal pages are at the top and bottom of that file.
+- **All copy, both languages:** `tools/copy.mjs`. Every entry is keyed by the template string it replaces; a key that no longer matches fails the build instead of leaving the template's own words on the page. The homepage narrative and the legal pages are at the top and bottom of that file; the About page content is `ABOUT` at the end.
+- **Articles:** `tools/blog.mjs` — one entry per article (slug, date, cover, bilingual title/description/body as HTML). The build writes `blog/<slug>.html` and `en/blog/<slug>.html`, fills the blog index, the four homepage cards (newest first), the sitemap, canonical/hreflang/Open Graph (`og:type` article, cover as image) and JSON-LD (`BlogPosting` with an Organization author, `BreadcrumbList`; the index carries a `Blog` node). To publish: add the entry, add its cover mapping in `tools/blog-covers.mjs`, run the two scripts, rebuild. Content rule: product explanation only — no invented customers, credentials or ranking claims.
 - **Navigation, footer, metadata (canonical, hreflang, Open Graph, JSON-LD), language switch, wordmark, link hygiene:** `tools/chrome.mjs`. Internal links never open a new tab; external ones carry `rel="noopener"`; placeholder `#` legal links are rewritten to the real pages.
-- **Imagery:** 43 distinct AI-generated editorial images in `assets/stargo-editorial/`, with responsive WebP sizes, small PNG role emblems and a 1200×630 Open Graph cover. `tools/editorial-images.mjs` maps all legacy image slots while preserving template elements and supplies bilingual conceptual-image alt text. Legacy HTML/CSS mocks in `assets/stargo/` are retained for rollback but no longer referenced by generated pages or computed CSS overrides.
+- **Imagery (owner decision, 2026-09-06):** the templates' own licensed imagery is kept wherever it carries the composition — the whole of the Lifelogx pages (phone screens, translucent overlays of the gradient and "no writing" sections, closing-card image, avatars in the scenario bubbles, pink palette), the Mono homepage partner wall (eight sample logos, labelled as a sample), the scenario cards (portraits and the portrait film), the contact band photograph behind the glass form, the contact page quote card, and the blog covers (Mono product photographs re-encoded into `assets/blog/`). The 30 AI-generated editorial images that remain placed (homepage silos/OS scenes/theatre, capabilities, enterprise, About role emblems) live in `assets/stargo-editorial/` with responsive sizes; `tools/editorial-images.mjs` maps them and supplies bilingual conceptual alt text. The 13 unused generated images are retained on disk and reported by `verify-editorial`.
 - **Generation provenance:** after the owner explicitly authorized the built-in image tool, all 43 images were generated individually. The exact model ID is not exposed by that tool. `tools/imagegen/generated-sources.json` records actual prompts and output filenames; `assets-manifest.json` records dimensions, variants and original hashes. Full-resolution originals are retained locally in ignored `output/imagegen/originals/`. `docs/visual-upgrade-brief.md` documents the art direction. No API key is required to build from committed web assets; only re-encoding requires the retained originals and Sharp.
+- **One repaired donor asset (2026-09-08):** `assets/6929b6c693cb856e01ef7c05/6943ffd9d600184a67b62dff_crosshair-simple-fill 1 (1).png` and its `-p-500` sibling differ deliberately from the copies on the Lifelogx CDN. The donor ships that icon at 768×609 with its ink box at y 72…608, x 72…695 — 72px of margin on the top, left and right and **zero** at the bottom, where the ring is sliced flat mid-arc. The ring is 624px wide, so a circle with those margins needs a 768px canvas: 159px of arc is missing from the file, which is why no CSS could show it whole. The glyph is symmetric about y = 383.5 (measured: mean channel difference 6.78 there against 19.5 one pixel either side — a clean minimum; alpha-only mean 1.57), so every missing row already exists in the file at `767 - y` and the arc was restored by mirroring, not redrawn. The join is cut at row 602 rather than at the file's own last row, because row 608 *is* the crop edge and carries antialiasing with no counterpart; at 602 the seam measures 12.07 against a local row-to-row baseline of 13.73, i.e. below the image's own variation. `tools/lifelogx-prepare.mjs` skips files already on disk (line 128), so a re-run will not undo this; delete the two files first if you ever want the donor's originals back. The crown and bar-chart icons in the same block are **not** touched — their bottoms are flat by design and nothing proves their canvas was ever taller.
 - **Restored video:** `assets/stargo-motion/` contains the fourth template's orbital film and a frame-derived poster; see its `SOURCE.md`. `js/stargo-media.js` controls lazy playback, pause/resume, offscreen suspension and reduced-motion preference, leaving the original grid/zoom structure intact.
-- **Site overrides:** `css/stargo-fusion.css` — the only hand-written stylesheet (full-bleed loop hero, lifelogx palette, still images in former video boxes, template CSS photos overridden, focus rings).
+- **Page scripts:** `js/stargo-forms.js` and `js/stargo-tabs.js` load everywhere; `js/stargo-pricing.js` loads only on the pricing page and adds GSAP scroll motion (headline and cards arrive, prices count up, the promoted plan breathes once, comparison rows fade in). All of it is skipped under `prefers-reduced-motion`.
+- **Which plan is promoted:** `featured: true` on a plan in `PRICING.panes` moves the raised card onto it. Scalora welds that treatment to the middle slot; the build relocates it, so the ladder can stay in price order. Today it sits on Growth and on Global Acquisition, the dearest plan.
+- **Site overrides:** `css/stargo-fusion.css` — the only hand-written stylesheet (full-bleed loop hero, the 80px offset that stands in for the Lifelogx in-flow navigation, CJK sizing of the Lifelogx hero word, the inline pricing-ladder orb, still images in former video boxes, focus rings). It no longer recolours the Lifelogx palette or its gradients. The Lifelogx author stylesheet is scoped with `:where(.lx-scope)` so its element rules keep the template's own specificity next to Mono's.
 - **Behaviour:** `js/stargo-tabs.js` (pricing tabs, period toggle, and the homepage core-system switcher — one ScrollTrigger controller for click/scroll with the original card design and crossfade; the conflicting IX2 event alone is removed by `fuse-ix.mjs`), `js/stargo-forms.js` (form submission), `js/stargo-mobile-copy.js` (shorter copy on phones, swapped in before the text animations split lines), `js/stargo-splittext-cjk.js` (Chinese word segmentation for SplitText).
 - **Forms:** submissions POST to `/api/contact` — `functions/api/contact.js`, a Cloudflare Pages Function that relays them by e-mail through Resend. It needs `RESEND_API_KEY` (and optionally `CONTACT_TO`, `CONTACT_FROM`) in the Pages project's environment variables. Until that key is set the endpoint answers 503 and the page falls back to the visitor's mail client, saying so — it never shows a fake "thank you". A honeypot field and a busy lock guard against bots and double submits.
 - **Brand wall on the homepage:** drop real logo files (svg/png/webp/jpg) into `assets/brands/` and rebuild. With the folder empty the wall is not rendered.
@@ -63,7 +132,7 @@ repository root: Wrangler compiles the root `functions/` directory separately
 into the backend. Function source files are not copied into the public site.
 
 Production URL: https://stargo.pages.dev (English at https://stargo.pages.dev/en/).
-Pages serves clean URLs, so `/pricing.html` redirects to `/pricing`. The
+Pages serves clean URLs, so `/pricing.html` redirects to `/pricing` and articles live at `/blog/<slug>`. The
 canonical origin used in metadata and the sitemap is `SITE_URL` in
 `tools/copy.mjs` — change it when a custom domain (for example
 `work.stargomoto.com`) is bound.

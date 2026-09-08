@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict';
-import { createRequire } from 'node:module';
 import { mkdirSync } from 'node:fs';
-const require = createRequire('F:/stargo 网站/stargo-work-website/package.json');
-const { chromium } = require('@playwright/test');
+import { SITE, req } from './paths.mjs';
+const { chromium } = req('@playwright/test');
+/* Repo-relative paths below; run from anywhere. */
+process.chdir(SITE);
 const BASE = process.env.BASE_URL || 'http://127.0.0.1:4200';
 const OUT = '.wrangler/visual-upgrade-qa';
 mkdirSync(OUT, { recursive: true });

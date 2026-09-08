@@ -1,0 +1,76 @@
+/* qx-projects — hand-written rules for the "用一支 AI 团队把活干完" block.
+   Appended after the extracted qubix rules, so equal specificity wins here.
+   Nothing below is this site's design: every value is copied out of qubix's
+   own stylesheet and is here only because a cut section cannot carry it. */
+
+/* 1. qubix's own `body` rule, verbatim, moved onto the scope root — a `body`
+      rule never travels with a cut section, and the host page's own `body`
+      (css/monof-template…css, line 2113) fills the gap with different values:
+      14px / 15.4px / 500 / #000 / Inter instead of qubix's 16px / 20px / 400 /
+      #a1a1a1 / Interdisplay. That reached everything in this block that sets
+      no type of its own — the hover pill (`.project-view-text`: 14px/23.8px
+      instead of 16px/27.2px) and each card's category line
+      (`.project-card-ctg`: 14px/20.16px black instead of 16px/23.04px gray).
+      Same tokens, same values, same order as the donor's rule; qx-news
+      restores the same one for the same reason. */
+.qx-projects {
+  font-family: var(--_base---font-family--your-font);
+  color: var(--_color---normal-color--medium-gray);
+  font-size: var(--_base---font-size--font-size-sm);
+  line-height: 20px;
+  font-weight: var(--_base---font-weight--regular);
+}
+
+/* 2. qubix's own @font-face block. The extractor keeps class rules, so the
+      four faces the donor declares (qubix-flowdevz.app.shared.0505778fd.css)
+      were left behind and `--_base---font-family--your-font: Interdisplay,
+      Arial, sans-serif` had nothing to resolve to: the donor page sets "A few
+      of our recent projects" 766.5px wide at 64px, this page set it 843.9px.
+      Same family name, same four weights, same order as the donor; the src is
+      the copy of InterDisplay this repo already vendors (assets/69a01660…,
+      referenced the same way by css/scalora-modules.sc.css) so the page still
+      makes no off-origin request. An @font-face cannot be scoped to a class —
+      this restores qubix's faces for every qubix block on the page, which is
+      what the donor does. */
+@font-face {
+  font-family: Interdisplay;
+  src: url("../assets/69a01660589c516ba5f0f917/69a022ff8119fed8127f02a7_InterDisplay-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: Interdisplay;
+  src: url("../assets/69a01660589c516ba5f0f917/69a022fe1781fa5c0193ad3f_InterDisplay-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: Interdisplay;
+  src: url("../assets/69a01660589c516ba5f0f917/69a022ffbb82bbae94bc63b4_InterDisplay-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: Interdisplay;
+  src: url("../assets/69a01660589c516ba5f0f917/69a022fe18c48956be155c1a_InterDisplay-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 3. The host's shared Mono stylesheet hides the pointer three times over:
+      `body { cursor: none }` (line 2119), `.main-content { cursor: none }`
+      (3408, an ancestor of every block on this page) and `a { cursor: none }`
+      (2175), because Mono draws its own crosshair instead — `.plus-line-wrapper`,
+      a fixed pointer-events:none layer at z-index 9998, which this page really
+      does build and track (measured at runtime). So the hidden pointer is the
+      page's, not a gap in the extraction, and it stays: restoring
+      `cursor: auto` here would draw the crosshair and a native arrow at once.
+      Only the links are put back, because the donor's links are
+      `cursor: pointer` and a link that does not say it is one is a defect at
+      any scale. css/stargo-fusion.css does exactly this inside .sc-scope and
+      .lx-scope, and qx-news inside .qx-news. */
+.qx-projects a { cursor: pointer; }

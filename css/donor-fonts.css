@@ -1,0 +1,9 @@
+/* renok typefaces, self-hosted (SIL Open Font License 1.1) so the capability page makes no off-origin request.
+   Fetched once from Google Fonts by the build; see docs/capability-page-rebuild-2026-09-07.md. */
+@font-face { font-family: "Instrument Serif"; font-style: italic; font-weight: 400; font-display: swap; src: url("../assets/fonts/donor/InstrumentSerif-400i.woff2") format("woff2"); }
+@font-face { font-family: "Instrument Serif"; font-style: normal; font-weight: 400; font-display: swap; src: url("../assets/fonts/donor/InstrumentSerif-400.woff2") format("woff2"); }
+@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 300; font-display: swap; src: url("../assets/fonts/donor/InterTight-300.woff2") format("woff2"); }
+@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 400; font-display: swap; src: url("../assets/fonts/donor/InterTight-400.woff2") format("woff2"); }
+@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 500; font-display: swap; src: url("../assets/fonts/donor/InterTight-500.woff2") format("woff2"); }
+@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 600; font-display: swap; src: url("../assets/fonts/donor/InterTight-600.woff2") format("woff2"); }
+@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 700; font-display: swap; src: url("../assets/fonts/donor/InterTight-700.woff2") format("woff2"); }

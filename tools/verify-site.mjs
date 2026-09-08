@@ -12,18 +12,17 @@
  * Exits non-zero if any page could not be loaded: "nothing verified" is a
  * failure, not a pass.
  */
-import { createRequire } from 'node:module';
-import { existsSync, mkdirSync, readFileSync } from 'node:fs';
+import { SITE, req } from './paths.mjs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { SITE_PAGES } from './chrome.mjs';
 
-const require = createRequire('F:/stargo 网站/stargo-work-website/package.json');
-const { chromium } = require('@playwright/test');
+const { chromium } = req('@playwright/test');
 
 const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:4200';
-const SITE = 'F:/stargo 网站/stargo-site';
-const SHOTS = process.env.SHOTS ?? 'C:/Users/1/AppData/Local/Temp/claude/F--stargo---/687100ad-32b2-402c-96c6-86b5b616cee0/scratchpad/shots-site';
+const SHOTS = process.env.SHOTS ?? `${SITE}/.wrangler/site-qa/shots`;
 mkdirSync(SHOTS, { recursive: true });
 
-const NAMES = ['index.html', 'intelligence.html', 'capabilities.html', 'workforce.html', 'pricing.html', 'enterprise.html', 'contact.html', 'notices.html', 'privacy.html', 'terms.html', '404.html'];
+const NAMES = [...SITE_PAGES, '404.html'];
 const PAGES = process.env.ONLY ? process.env.ONLY.split(',') : [...NAMES, ...NAMES.map((n) => `en/${n}`)];
 
 /** Latin tokens that are supposed to be there. */
@@ -59,7 +58,7 @@ for (const page of PAGES) {
   for (let y = 0; y < H; y += 600) { await p.evaluate((v) => scrollTo(0, v), y); await p.waitForTimeout(70); }
   await p.evaluate(() => scrollTo(0, 0));
   await p.waitForTimeout(800);
-  await p.screenshot({ path: `${SHOTS}/${page.replace('.html', '').replace('/', '-')}.png`, fullPage: true });
+  await p.screenshot({ path: `${SHOTS}/${page.replace('.html', '').replace(/\//g, '-')}.png`, fullPage: true });
 
   // Rendered text that still carries Latin words.
   const latin = await p.evaluate(() => {
@@ -78,7 +77,7 @@ for (const page of PAGES) {
 
   // Internal links must resolve to a file in the site root.
   const hrefs = await p.evaluate(() => [...document.querySelectorAll('a[href]')].map((a) => a.getAttribute('href')));
-  const dir = page.includes('/') ? `${SITE}/en` : SITE;
+  const dir = `${SITE}/${page.split('/').slice(0, -1).join('/')}`.replace(/\/$/, '');
   const broken = [...new Set(hrefs.filter((h) => /\.html(#.*)?$/.test(h) && !/^https?:/.test(h)).map((h) => h.split('#')[0]).filter((h) => !existsSync(`${dir}/${h}`)))];
   const dangling = [...new Set(hrefs.filter((h) => h === '#' || h === ''))].length;
 
@@ -88,6 +87,7 @@ for (const page of PAGES) {
   await ctx.close();
 }
 await browser.close();
+writeFileSync(`${SHOTS}/report.json`, JSON.stringify(summary, null, 2));
 
 for (const s of summary) console.log(JSON.stringify(s));
 console.log(failures ? `FAIL: ${failures} page(s) with problems` : `PASS: ${summary.length} pages loaded, 0 errors, 0 failed requests, 0 external requests, 0 broken links`);

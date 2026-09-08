@@ -1,0 +1,188 @@
+/* qx-orbit — hand-written rules for the orbit hero (the loop's intro).
+   Appended after the extracted qubix rules; every rule is scoped under
+   .qx-orbit. Nothing here is this site's design: every value below is copied
+   out of the donor's own stylesheet or interaction payload, and is here only
+   because the extractor cannot carry it (see tools/blocks/qx-orbit.mjs).
+
+   ------------------------------------------------------------------------
+   A. qubix's own `body` rule (qubix-flowdevz.app.shared.0505778fd.css, line
+      2305), verbatim, moved onto the scope root. A `body` rule never travels
+      with a cut section, and this page's own `body` (css/monof-template…css,
+      line 2113) filled the gap with different values — Inter / 14px / 15.4px /
+      500 / #000 instead of qubix's Interdisplay / 16px / 20px / 400 / #a1a1a1.
+      Everything in this block that sets no type of its own inherited the wrong
+      ones: the ring's big word and its second line were drawn in Inter (the
+      second line at weight 500 where the donor has 400), and every rolling tag
+      was 14px/15.4px Inter 500, which made each pill 37.4px tall against the
+      donor's 42px and the whole nine-tag column 416.5px against 458px. Same
+      tokens, same values, same order as the donor's rule; qx-news and
+      qx-projects restore the same one for the same reason, and qx-projects
+      also re-declares qubix's four Interdisplay @font-faces (an @font-face
+      cannot be scoped, so those already serve every qubix block on the page).
+      The rule's `background-color: var(--_color---normal-color--black)` is
+      omitted here only because `donor.ground` already paints it. */
+.qx-orbit {
+  font-family: var(--_base---font-family--your-font);
+  color: var(--_color---normal-color--medium-gray);
+  font-size: var(--_base---font-size--font-size-sm);
+  line-height: 20px;
+  font-weight: var(--_base---font-weight--regular);
+}
+
+/*    The same shared Mono stylesheet also hides the pointer for the whole page
+      (`body { cursor: none }`, the rule right above). qubix's own `.hero-mouse`
+      is `cursor: pointer`, so the block's one link needs the pointer back.
+      css/stargo-fusion.css does exactly this inside .sc-scope and .lx-scope,
+      and qx-news and qx-projects inside their own roots. */
+.qx-orbit a { cursor: pointer; }
+
+/* ------------------------------------------------------------------------
+   B. Rules Webflow wrote against generated node ids. Not classes, so not
+      extracted. They are the donor's tablet and phone layout of this grid:
+      below 992 the wrap becomes a flex column and the ring goes first; below
+      480 the wrap is a two-column grid, the ring spans both columns on its own
+      row, and the left cell centres itself. Copied verbatim from
+      qubix-flowdevz.app.shared.0505778fd.css, lines 7442–7456. */
+@media screen and (max-width: 991px) {
+  .qx-orbit #w-node-c6f775c5-7c0f-71f7-d2f8-5a653cea49f5-794fb793 { order: -9999; }
+}
+@media screen and (max-width: 479px) {
+  .qx-orbit #w-node-_95c2694c-a097-148d-d560-40e2eb648777-794fb793 { align-self: center; }
+  .qx-orbit #w-node-c6f775c5-7c0f-71f7-d2f8-5a653cea49f5-794fb793 {
+    order: -9999;
+    grid-area: span 1 / span 2 / span 1 / span 2;
+  }
+}
+
+/* ------------------------------------------------------------------------
+   C. The donor's breakpoint tokens. qubix redefines its custom properties per
+      breakpoint on `body` inside media queries; the extractor carries only the
+      base `:root`, and a `body` rule never travels with a cut. Without these
+      the second word stays 44px on a phone (the donor drops it to 28px), the
+      container keeps its 40px desktop padding, and the grid gaps stay at their
+      desktop values. Only the tokens this block's extracted rules resolve
+      through are listed, each with the donor's value at that breakpoint. */
+@media screen and (max-width: 991px) {
+  .qx-orbit {
+    --h3--font-size: 36px;
+    --_common-spacing---spacing-2xl-large: 12px;
+    --_common-spacing---spacing-15xl-large: 32px;
+    --_common-spacing---spacing-13xl-large: 32px;
+    --_common-spacing---spacing-30xl-large: 80px;
+    --_common-spacing---spacing-29xl-large: 80px;
+    --_common-spacing---spacing-35xl-large: 120px;
+    --_ui---container--padding: 32px;
+    --_ui---container--max-width: 767px;
+  }
+}
+@media screen and (max-width: 767px) {
+  .qx-orbit {
+    --h3--font-size: 32px;
+    --_common-spacing---spacing-15xl-large: 24px;
+    --_common-spacing---spacing-13xl-large: 24px;
+    --_common-spacing---spacing-30xl-large: 64px;
+    --_common-spacing---spacing-29xl-large: 70px;
+    --_common-spacing---spacing-35xl-large: 80px;
+    --_ui---container--padding: 24px;
+    --_ui---container--max-width: 540px;
+  }
+}
+@media screen and (max-width: 479px) {
+  .qx-orbit {
+    --h3--font-size: 28px;
+    --_common-spacing---spacing-29xl-large: 60px;
+    --_ui---container--padding: 16px;
+    --_ui---container--max-width: 100%;
+  }
+}
+
+/* ------------------------------------------------------------------------
+   D. The donor's motion. Neither piece of it can travel through the extractor.
+
+   1. The tag roll — qubix IX3 timeline t-9db874f5, fired on wf:load:
+        target  .ui-link-main-box (every match)
+        y       0% → -100%, duration 15, ease 0 (linear), repeat -1
+      Two identical marquee boxes sit one under the other inside the 245px
+      overflow-hidden window, so when the first has moved up by its own height
+      the second is exactly where the first started, and the loop is seamless.
+      This repo's fuse-ix only merges Mono's and Scalora's IX3, so the timeline
+      is written here as a CSS animation with the same target and values. */
+@keyframes qxo-roll {
+  from { transform: translate3d(0, 0%, 0); }
+  to   { transform: translate3d(0, -100%, 0); }
+}
+.qx-orbit .qx-ui-link-main-box { animation: qxo-roll 15s linear infinite; }
+
+/* ------------------------------------------------------------------------
+   2. The entrance — qubix IX2 action list a-54 "Hero Load Anim". Its event
+      e-264 is PAGE_START on the donor's own page id and its items address the
+      nodes as "<pageId>|<nodeId>", so the extractor (which keeps an event only
+      when it names one of the block's data-w-ids or classes) leaves it behind,
+      and everything the fragment ships at `opacity:0; filter:blur(20px)` would
+      stay invisible for good. The list is replayed here node for node with the
+      donor's values, delays, durations and easings. Webflow's easing table:
+      "" (default) = ease, inQuad = (.55,.085,.68,.53), outQuad = (.25,.46,.45,.94).
+
+      Group 0 is the initial state and matches the inline styles the markup
+      carries; group 1 is the motion. `both` holds each node at its "from"
+      state through its delay and at its "to" state afterwards. If e-264/a-54
+      are ever carried by the tooling, delete everything from here down.
+
+      cd6adfb6 — the big word: scale 1.5 → 1 and y 32% → 0, 500ms, delay 400. */
+@keyframes qxo-word {
+  from { transform: translate3d(0, 32%, 0) scale3d(1.5, 1.5, 1); }
+  to   { transform: translate3d(0, 0, 0) scale3d(1, 1, 1); }
+}
+.qx-orbit [data-w-id="cd6adfb6-9554-54e8-7105-cccaca2208a9"] {
+  animation: qxo-word .5s cubic-bezier(.25, .1, .25, 1) .4s both;
+}
+
+/*    fa9673e5 — the second word: y 100% → 0 over 600ms outQuad, and
+      opacity 0 → 1 with blur 20px → 0 over 500ms inQuad, all at delay 500. */
+@keyframes qxo-rise {
+  from { transform: translate3d(0, 100%, 0); }
+  to   { transform: translate3d(0, 0, 0); }
+}
+@keyframes qxo-unblur {
+  from { opacity: 0; filter: blur(20px); }
+  to   { opacity: 1; filter: blur(0px); }
+}
+.qx-orbit [data-w-id="fa9673e5-f62e-26f8-028d-f6fb36bd66af"] {
+  animation: qxo-rise .6s cubic-bezier(.25, .46, .45, .94) .5s both,
+             qxo-unblur .5s cubic-bezier(.55, .085, .68, .53) .5s both;
+}
+
+/*    74462d43 — the dotted ring: opacity 0 → 1 over 500ms and
+      rotateZ 15deg → 0 over 800ms, both at delay 400. The ring is centred by
+      its own translate(-50%, -50%), which the transform keyframes keep. */
+@keyframes qxo-ring-spin {
+  from { transform: translate3d(-50%, -50%, 0) rotateZ(15deg); }
+  to   { transform: translate3d(-50%, -50%, 0) rotateZ(0deg); }
+}
+@keyframes qxo-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.qx-orbit [data-w-id="74462d43-d6aa-97c4-747c-afcd9ae617f8"] {
+  animation: qxo-ring-spin .8s cubic-bezier(.25, .1, .25, 1) .4s both,
+             qxo-fade .5s cubic-bezier(.25, .1, .25, 1) .4s both;
+}
+
+/*    02564f77 (the orbit of photographs), bfb744ca (the tag column) and
+      95c2694c (the left cell): opacity 0 → 1, blur 20px → 0, 500ms, delay 1000. */
+.qx-orbit [data-w-id="02564f77-4e9e-f819-d97d-b018f7301623"],
+.qx-orbit [data-w-id="bfb744ca-f033-a95a-a5a1-a692c71ac55c"],
+.qx-orbit [data-w-id="95c2694c-a097-148d-d560-40e2eb648777"] {
+  animation: qxo-unblur .5s cubic-bezier(.25, .1, .25, 1) 1s both;
+}
+
+/* A reader who asked for less motion gets the resting state at once. The tag
+   roll is left running: it is the content of that column, not an entrance. */
+@media (prefers-reduced-motion: reduce) {
+  .qx-orbit [data-w-id="cd6adfb6-9554-54e8-7105-cccaca2208a9"],
+  .qx-orbit [data-w-id="fa9673e5-f62e-26f8-028d-f6fb36bd66af"],
+  .qx-orbit [data-w-id="74462d43-d6aa-97c4-747c-afcd9ae617f8"],
+  .qx-orbit [data-w-id="02564f77-4e9e-f819-d97d-b018f7301623"],
+  .qx-orbit [data-w-id="bfb744ca-f033-a95a-a5a1-a692c71ac55c"],
+  .qx-orbit [data-w-id="95c2694c-a097-148d-d560-40e2eb648777"] { animation-duration: 0s; animation-delay: 0s; }
+}

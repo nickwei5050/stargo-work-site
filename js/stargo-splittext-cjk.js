@@ -13,7 +13,7 @@
 (function () {
   var Orig = window.SplitText;
   if (!Orig) return;
-  if ((document.documentElement.getAttribute('lang') || '').indexOf('zh') !== 0) return;
+  var zh = (document.documentElement.getAttribute('lang') || '').indexOf('zh') === 0;
   var re;
   try {
     var IDEO = '\\u3040-\\u30ff\\u3400-\\u4dbf\\u4e00-\\u9fff\\uf900-\\ufaff';
@@ -28,10 +28,14 @@
   }
   function Patched(targets, vars) {
     var v = Object.assign({}, vars || {});
-    if (v.wordDelimiter == null) v.wordDelimiter = { delimiter: re, replaceWith: '' };
+    // The donor splits generic containers and paragraphs as well as headings.
+    // Auto aria-label is invalid on those containers and hides nested headings
+    // and links. Keep their original semantic text tree exposed in both languages.
+    v.aria = 'none';
+    if (zh && v.wordDelimiter == null) v.wordDelimiter = { delimiter: re, replaceWith: '' };
     // With a custom delimiter SplitText pops a trailing empty chunk and then
     // reads the first one; an empty text node would leave it nothing to read.
-    if (v.prepareText == null) v.prepareText = function (text) { return text === '' ? ' ' : text; };
+    if (zh && v.prepareText == null) v.prepareText = function (text) { return text === '' ? ' ' : text; };
     return new Orig(targets, v);
   }
   Patched.prototype = Orig.prototype;

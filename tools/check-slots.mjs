@@ -1,7 +1,7 @@
 // Diagnostic: which template strings in copy.mjs fail to match their template?
 import { readFileSync } from 'node:fs';
 import * as C from './copy.mjs';
-const SITE = 'F:/stargo 网站/stargo-site';
+import { SITE } from './paths.mjs';
 const idx = readFileSync(`${SITE}/tools/templates/index.en.html`, 'utf8');
 const miss = [];
 for (const [old] of C.HOME_MONO) { const n = idx.split(old).length - 1; if (n === 0) miss.push(['home', old]); }

@@ -1,18 +1,27 @@
 /** Verify deployed bytes against the reviewed local build, then browser smoke. */
 import assert from 'node:assert/strict';
-import { createRequire } from 'node:module';
-import { readFileSync, readdirSync, mkdirSync, writeFileSync } from 'node:fs';
+import { readFileSync, readdirSync, mkdirSync, writeFileSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-const { chromium, request } = createRequire('F:/stargo 网站/stargo-work-website/package.json')('@playwright/test');
+import { SITE, req } from './paths.mjs';
+const { chromium, request } = req('@playwright/test');
+/* Repo-relative paths below; run from anywhere. */
+process.chdir(SITE);
 const BASE = process.env.BASE_URL || 'https://stargo.pages.dev';
 const proxy = process.env.BROWSER_PROXY ? { server: process.env.BROWSER_PROXY } : undefined;
-const api = await request.newContext({ baseURL: BASE, proxy, timeout: 45000 });
+const NAV = +(process.env.NAV_TIMEOUT || 30000);   // browser navigation budget; raise it for a run through a slow proxy
+const api = await request.newContext({ baseURL: BASE, proxy, timeout: Math.max(45000, NAV) });
 const assets = JSON.parse(readFileSync('tools/imagegen/assets-manifest.json', 'utf8')).assets;
-const pages = [...readdirSync('.').filter(f => f.endsWith('.html')), ...readdirSync('en').filter(f => f.endsWith('.html')).map(f => 'en/' + f)];
-const files = [...pages, ...assets.flatMap(a => [a.src, ...a.variants.map(v => v.src)]), 'assets/stargo-motion/orbit.mp4', 'assets/stargo-motion/orbit-poster.webp', 'css/stargo-fusion.css', 'js/stargo-media.js', 'js/stargo-tabs.js', 'js/app.fused.js'];
+const pages = [...readdirSync('.').filter(f => f.endsWith('.html')), ...readdirSync('en').filter(f => f.endsWith('.html')).map(f => 'en/' + f), ...readdirSync('blog').map(f => 'blog/' + f), ...readdirSync('en/blog').map(f => 'en/blog/' + f)];
+const html = pages.map(f => readFileSync(f, 'utf8')).join('\n');
+// Every image a page references: the generated set that is still placed, the blog covers and the restored template assets.
+const referenced = new Set([...html.matchAll(/(?:src|srcset|data-poster-url|data-video-urls)="([^"]*)"/g)].flatMap(m => m[1].split(',').map(s => s.trim().split(/\s+/)[0]).filter(s => /^(\.\.\/)*assets\//.test(s)).map(s => decodeURIComponent(s.replace(/^(\.\.\/)+/, '')))));
+const imageFiles = [...referenced].filter(f => /\.(webp|png|jpg|jpeg|avif|svg|gif)$/i.test(f) && existsSync(f));
+for (const a of assets) if (html.includes(a.src)) for (const v of a.variants) if (!referenced.has(v.src)) imageFiles.push(v.src);
+const runtimes = ['css', 'js'].flatMap(dir => readdirSync(dir).filter(f => /\.(css|js|json)$/.test(f)).map(f => `${dir}/${f}`));
+const files = [...pages, ...imageFiles, 'assets/stargo-motion/orbit.mp4', 'assets/stargo-motion/orbit-poster.webp', ...runtimes];
 const hash = b => createHash('sha256').update(b).digest('hex');
 const queue = [...files], checked = [];
-const OUT = '.wrangler/release-qa';
+const OUT = process.env.QA_OUT || '.wrangler/release-qa';
 mkdirSync(OUT, { recursive: true });
 let transportRetries = 0;
 async function get(path, options) {
@@ -29,7 +38,9 @@ async function get(path, options) {
 async function verifyFiles() {
   while (queue.length) {
     const file = queue.shift();
-    const response = await get('/' + file, { headers: { 'Cache-Control': 'no-cache' } });
+    // Request the path the way a browser does: percent-encode the local file name (a Webflow
+    // responsive variant is stored with a literal "%20" and referenced double-encoded).
+    const response = await get('/' + encodeURI(file), { headers: { 'Cache-Control': 'no-cache' } });
     assert.equal(response.status(), 200, file);
     assert.equal(hash(await response.body()), hash(readFileSync(file)), `deployed bytes differ: ${file}`);
     checked.push(file);
@@ -38,7 +49,7 @@ async function verifyFiles() {
 }
 await Promise.all([verifyFiles(), verifyFiles(), verifyFiles(), verifyFiles()]);
 assert.equal((await get('/__stargo_qa_missing_page__')).status(), 404, 'custom missing route');
-console.log(`PASS deployed bytes: ${pages.length} pages, 123 image files, video/poster and 4 runtimes; custom route 404`);
+console.log(`PASS deployed bytes: ${pages.length} pages, ${imageFiles.length} image files, video/poster and ${runtimes.length} runtime files; custom route 404`);
 await api.dispose();
 const browser = await chromium.launch({ proxy });
 const scenarios = [];
@@ -48,7 +59,7 @@ try {
     const errors = [];
     page.on('pageerror', e => errors.push(e.message));
     page.on('response', r => { if (r.status() >= 400) errors.push(`${r.status()} ${r.url()}`); });
-    await page.goto(`${BASE}/${lang}`, { waitUntil: 'load' });
+    await page.goto(`${BASE}/${lang}`, { waitUntil: 'load', timeout: NAV });
     await page.waitForTimeout(5500);
     assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
     await page.screenshot({ path: `${OUT}/${lang ? 'en' : 'zh'}-${width}-hero.png` });
@@ -82,9 +93,9 @@ try {
   }
   for (const lang of ['', 'en/']) {
     const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
-    await page.goto(`${BASE}/${lang}capabilities`, { waitUntil: 'load' });
+    await page.goto(`${BASE}/${lang}capabilities`, { waitUntil: 'load', timeout: NAV });
     await page.waitForTimeout(1500);
-    const expected = ['brand-family-01', 'os-inquiries', 'brand-family-02', 'brand-family-04'];
+    const expected = ['brand-family-01', 'os-inquiries', 'brand-family-02', 'brand-family-04'];   // capabilities page keeps its generated art
     const actual = await page.locator('a[href="#g01"] img,a[href="#g04"] img,a[href="#g07"] img,a[href="#g10"] img').evaluateAll(imgs => imgs.map(i => i.getAttribute('src').split('/').pop().replace(/\.webp$/, '')));
     assert.deepEqual(actual, expected, 'capability image/meaning mapping');
     await page.locator('a[href="#g04"]').scrollIntoViewIfNeeded();

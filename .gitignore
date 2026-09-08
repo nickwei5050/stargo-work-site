@@ -6,3 +6,4 @@ dist/
 .wrangler/
 tmp/imagegen/
 output/imagegen/
+node_modules/

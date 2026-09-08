@@ -1,0 +1,41 @@
+/* qx-news — hand-written rules for the "把对话变成对客户的理解" block.
+   Appended after the extracted qubix rules, so equal specificity wins here.
+   Every rule is scoped under .qx-news. Nothing here changes a size, colour,
+   font or layout the donor set: it only restores what a cut section cannot
+   carry and undoes what the host page leaks in. */
+
+/* 1. qubix's own `body` rule. It never travels with a cut section, and it is
+      what colours the one unclassed line under each row title (medium gray in
+      the donor) and sets the block's base typeface. Same tokens, same values,
+      moved onto the scope root. */
+.qx-news {
+  font-family: var(--_base---font-family--your-font);
+  color: var(--_color---normal-color--medium-gray);
+  font-size: var(--_base---font-size--font-size-sm);
+  line-height: 20px;
+  font-weight: var(--_base---font-weight--regular);
+}
+
+/* 2. Rules from the shared Mono stylesheet (the one this page's own chrome is
+      drawn from) reach into the transplanted block, because a bare `p` / `a`
+      selector — or a rule on an ancestor of every block — matches anywhere:
+
+        p { opacity: .7 }             dims the lead under .qx-body's own
+                                      medium gray (Mono line 2164);
+        body { cursor: none }         line 2119, inherited by everything;
+        .main-content { cursor: none }  line 3408, an ancestor of every
+                                      block on this page;
+        a { cursor: none }            line 2175.
+
+      Mono hides the pointer because it draws its own crosshair; this page
+      never builds one (no fixed pointer-events:none node exists at runtime),
+      so inside the block the pointer simply disappears. Measured against the
+      donor at 1440×900: every element of qubix's section computes
+      `cursor: auto` and its links `pointer`; before the line below every
+      non-link node of ours computed `none`. The three lines restore the donor's
+      computed values and nothing else — no size, colour, spacing or layout is
+      touched. css/stargo-fusion.css already undoes the same inside .sc-scope,
+      and qx-projects inside .qx-projects. */
+.qx-news p { opacity: 1; }
+.qx-news { cursor: auto; }
+.qx-news a { cursor: pointer; }
