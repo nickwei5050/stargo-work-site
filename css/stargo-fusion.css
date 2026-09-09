@@ -968,6 +968,255 @@ body.stargo-pricing-lx .stargo-plan-badge {
 }
 
 /* ---------------------------------------------------------------------------
+   capabilities.html — the four macro-area cards ("四个板块")
+
+   Mono ships `.work-title-main` as a 16px white chip pinned to the bottom-right
+   corner of the photo (`inset: auto 20px 20px auto`). On the capability map that
+   chip IS the card's name — the four areas and their group counts — so at 16px
+   in a corner it read as a caption on a 1300x720 photograph.
+
+   This turns it into the card's headline: one frosted-glass panel centred over
+   the image, the area name at a display size, the group count as a subordinate
+   second line. Real text throughout — no `content:`, no image, so the DOM nodes
+   the screen reader and the CN/EN builds rely on are untouched.
+
+   Scope: `.wrok-wrapper` is this card stack, and it occurs exactly once on
+   index.html and once on capabilities.html — in both languages — and nowhere
+   else on the site, so these rules reach precisely the eight card sets and no
+   other use of the shared Mono `.work-title` class. The owner asked for the
+   same treatment on the homepage, whose four cards name the traditional way of
+   working (传统：询盘在邮箱 …) over much paler photographs than the capability
+   page's — which is why the scrim below is set from the worst backdrop pixel
+   rather than from how it looks on one image.
+   --------------------------------------------------------------------------- */
+
+/* The panel. Centred with `inset: 0 + margin: auto + fit-content` rather than a
+   translate, so the panel adds no transform of its own inside a subtree Webflow
+   IX2 is already transforming.
+   Its containing block is `.work-card` (position: sticky), and `.image-wrap`
+   fills that box, so centring on the card centres on the photograph. IX2's
+   card reveal (a-215) scales the whole `.work-card` from .70 up to 1 about its
+   centre as the stack shuffles; the panel is inside that box, so it scales with
+   the photo and stays centred the whole way through — measured offset from the
+   image centre is 0.0px horizontally and vertically at every width. */
+.wrok-wrapper .work-card .work-title-main {
+  inset: 0;
+  margin: auto;
+  width: -moz-fit-content;
+  width: fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  /* Wide enough that the longest English name ("Workforce & Governance") stays
+     on one line at every desktop width, never wider than four fifths of the
+     photo so the picture still reads as the card. */
+  max-width: min(80%, 52rem);
+
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(6px, 0.6vw, 12px);
+  padding: clamp(20px, 2vw, 34px) clamp(26px, 2.8vw, 48px);
+  text-align: center;
+
+  /* Frosted glass. The scrim alpha is set by measurement, not taste: the four
+     photographs run from a bright sunset port to a dark warehouse, and white
+     text needs the composited backdrop under it at relative luminance <= 0.183
+     to clear 4.5:1. Blur alone does not darken a bright sky, so the blur is
+     paired with a scrim that holds the worst case. */
+  background-color: rgba(10, 11, 13, 0.58);
+  -webkit-backdrop-filter: blur(22px) saturate(125%);
+  backdrop-filter: blur(22px) saturate(125%);
+  /* 14px sits in the same family as the 12px card radius. */
+  border-radius: 14px;
+  /* The hairline is what makes it read as glass rather than as a flat box. */
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+    0 18px 50px rgba(0, 0, 0, 0.28);
+
+  /* The panel now covers the middle of a card that is one big <a>. Letting the
+     pointer through keeps the whole photo the hit target and leaves any
+     hover/parallax on `.image-wrap` (a sibling, so a hovered panel would not
+     have hovered it) running exactly as before. */
+  pointer-events: none;
+  letter-spacing: normal;
+}
+
+/* No backdrop-filter (older Firefox, engines with it disabled): the blur is
+   simply absent, so the title would otherwise land as white text on a raw
+   photo. Trade translucency for a scrim that carries the contrast on its own. */
+@supports not ((-webkit-backdrop-filter: blur(4px)) or (backdrop-filter: blur(4px))) {
+  .wrok-wrapper .work-card .work-title-main {
+    background-color: rgba(10, 11, 13, 0.74);
+  }
+}
+
+/* The area name. Fluid so it fills the panel at every width without ever
+   needing a per-breakpoint font size; the ceiling stops it growing past the
+   panel on very wide screens. `text-wrap: balance` is what keeps the longer
+   English names ("Workforce & Governance") from breaking to a lone word. */
+.wrok-wrapper .work-card .work-title-main .work-title.b {
+  color: #fff;
+  font-size: clamp(2.2rem, 3.8vw, 3.6rem);
+  line-height: 1.06;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+/* The count ("3 组" / "5 groups"). Subordinate by size and weight, not by the
+   0.36 opacity Mono uses for the corner chip — at that opacity the second line
+   would sit near 2:1 against the frosted backdrop. */
+.wrok-wrapper .work-card .work-title-main .copy-flex {
+  opacity: 1;
+  /* Mono glues the number and the unit together (`3组`, `3groups`); a small
+     optical gap is what the pair needs at this size, and it is also the CN
+     convention for a digit next to a Chinese character. */
+  gap: 0.3em;
+  align-items: baseline;
+}
+
+.wrok-wrapper .work-card .work-title-main .copy-flex .work-title {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: clamp(1rem, 1.05vw, 1.25rem);
+  font-weight: var(--font-weight--400, 400);
+  line-height: 1.25;
+  letter-spacing: 0.04em;
+}
+
+/* Tablet and below: the photo is a much smaller box (450px, then 320px, then
+   240px tall), so the ceiling comes down with it and the padding tightens.
+   Values chosen so the CN name stays on one line everywhere and the longest
+   English name never breaks to a single word. */
+@media screen and (max-width: 991px) {
+  .wrok-wrapper .work-card .work-title-main {
+    /* 34rem left "Workforce & Governance" 8px short of one line at 991 and
+       broke it after the ampersand; 38rem clears it with room to spare and is
+       still under two thirds of the photo's width. */
+    max-width: min(88%, 38rem);
+    padding: clamp(16px, 2.2vw, 26px) clamp(20px, 3vw, 34px);
+  }
+
+  .wrok-wrapper .work-card .work-title-main .work-title.b {
+    font-size: clamp(1.9rem, 5vw, 2.9rem);
+  }
+
+  .wrok-wrapper .work-card .work-title-main .copy-flex .work-title {
+    font-size: clamp(0.95rem, 1.9vw, 1.15rem);
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .wrok-wrapper .work-card .work-title-main {
+    max-width: 86%;
+    padding: 16px 20px;
+    border-radius: 12px;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+      0 12px 30px rgba(0, 0, 0, 0.26);
+  }
+
+  .wrok-wrapper .work-card .work-title-main .work-title.b {
+    font-size: clamp(1.55rem, 6.4vw, 2.4rem);
+  }
+
+  .wrok-wrapper .work-card .work-title-main .copy-flex .work-title {
+    font-size: clamp(0.9rem, 3.4vw, 1.05rem);
+  }
+}
+
+/* ======================================================================
+   Owner review: 「文字单独一个字在一行这样进来不要出现，会感觉很奇怪」
+   — a heading must never drop a single character onto a line by itself.
+
+   Reported case: capabilities.html, the qx-projects mission heading
+   `<h2 class="qx-h2 qx-project-title-mw">让 AI 团队把活干完</h2>`, which broke
+   as 「让 AI 团队把活干」/「完」 at every width from 1024 up.
+
+   The sweep behind these rules: every h1–h4 on all 13 Chinese pages was
+   measured in Chromium at 21 viewport widths (360, 390, 414, 480, 540, 600,
+   700, 768, 834, 900, 960, 991, 1024, 1100, 1200, 1280, 1366, 1440, 1600,
+   1728, 1920) by walking each heading's text nodes with a Range and grouping
+   the per-character client rects into real line boxes. 41 heading/width
+   combinations stranded a single character (or a lone 。) on a line. The
+   selectors below are exactly the classes those headings carry — nothing
+   broader, because these pages stack four donors' stylesheets and a bare
+   element rule would leak across all of them.
+
+   Line-breaking only. No font-size, weight, colour, letter-spacing, tracking
+   or copy is touched, and across all 21 widths not one heading changed its
+   LINE COUNT — only where inside the heading the break falls. Nothing here
+   animates, so prefers-reduced-motion has nothing to answer for.
+
+   Scoped to `html[lang^="zh"]`: the defect is a CJK one, and the English
+   pages (lang="en") are left byte-identical in layout — measured, 0 wrapping
+   changes on all 13 English pages at the same 21 widths.
+   ====================================================================== */
+
+/* `text-wrap: balance` — the tool for the short display headings. It is
+   supported for CJK in every engine that has it (verified in Chromium here:
+   「让 AI 团队把活干完」 goes from 「…把活干」/「完」 to 「让 AI 团队」/
+   「把活干完」), and where it is not supported the heading simply keeps the
+   break it has today, so there is no fallback to get wrong.
+
+   The Mono headings are split per letter by GSAP into inline-block masks;
+   balance still resolves their line boxes correctly and the reveal animation
+   is unchanged — checked on screen, not just in the numbers. */
+html[lang^="zh"] .qx-projects .qx-h2,
+html[lang^="zh"] .cn-faq .cn-accordion-heading,
+html[lang^="zh"] .cn-produce .cn-accordion-heading,
+html[lang^="zh"] .cn-service .cn-accordion-heading,
+html[lang^="zh"] .lx-scope .lx-heading-style-h1,
+html[lang^="zh"] .lx-scope .lx-heading-style-h2,
+html[lang^="zh"] .lx-scope .lx-heading-style-h3,
+html[lang^="zh"] .lx-scope .lx-heading-style-h4,
+html[lang^="zh"] .lx-scope .lx-big-text,
+html[lang^="zh"] .lx-scope .lx-cta-text,
+html[lang^="zh"] h2.h2,
+html[lang^="zh"] h1.inner-title,
+html[lang^="zh"] h2.inner-title,
+html[lang^="zh"] .title-text-animattion h1,
+html[lang^="zh"] .title-text-animattion h2 {
+  text-wrap: balance;
+}
+
+/* `text-wrap: pretty` for the three places balance cannot or should not do
+   the job. Higher specificity than the block above, so these win.
+
+   1. `.h2._01.sm._600` is Mono's long body copy marked up as a heading —
+      enterprise.html runs to seven lines and ended 「…再定下一」/「条。」.
+      A balancer is defined to give up past the UA's line limit, and it does:
+      the seven lines came back unchanged. `pretty` only reworks the tail and
+      lands on 「…再定下一条。」. It also leaves the other `_600` paragraphs
+      on index/capabilities exactly as the template breaks them, which
+      balance did not.
+
+   2. `.lx-blog-title` is a list of six card titles. Balance re-broke all six
+      to fix the two that were wrong; `pretty` fixes the two
+      (「…AI 操作系」/「统」 → 「…AI 操作」/「系统」) and leaves the rest
+      alone — the smaller deviation from the donor.
+
+   3. A heading carrying <br> has forced breaks, and balance is a no-op on it.
+      intelligence.html's story card 「长任务执行 / 数小时、数天、数周 /
+      中断后仍知道下一步」 stranded BOTH 「周」 and 「步」; pretty fixes both
+      segments. `:has(br)` is how the forced-break case is selected without
+      touching the other lx h4s, which balance handles better. */
+html[lang^="zh"] h2.h2._01.sm._600,
+html[lang^="zh"] .lx-scope .lx-blog-title,
+html[lang^="zh"] .lx-scope .lx-heading-style-h4:has(br) {
+  text-wrap: pretty;
+}
+
+/* NOT fixed here, and deliberately so: capabilities.html
+   `.cn-service .cn-top-title .cn-heading-style-h2` = 「每一项」, between
+   992px and roughly 1089px viewport. The donor steps that heading from 8rem
+   to 10rem at the 992px breakpoint while its grid column is still half of a
+   ~944px container, so the three characters need 484.8px and get 440–470px.
+   No line-breaking value can help: the text does not fit on one line, and at
+   three characters any break leaves one of them alone. `word-break: keep-all`
+   would only push the overflow into `.cn-title-wrapper`'s `overflow: hidden`
+   and clip 「项」. It needs either a font-size step for that window or a
+   different word — an owner decision, not a CSS one. */
+
+/* ---------------------------------------------------------------------------
    The capability page's donor blocks style themselves.
 
    Each block arrives with its donor's own stylesheet, reduced to the rules it

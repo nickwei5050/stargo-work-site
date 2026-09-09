@@ -105,6 +105,24 @@ export function render(frag, ctx) {
      two photographs. */
   const plain = [];
 
+  /* Do the four rows agree on whether their names fit? Decided here, before any
+     row is drawn, because the answer belongs to the block and not to a row: see
+     the note at the `uniform` branch below. `cn-uniform-title` only has to cover
+     992 and up — below that the donor hands the title the whole grid and all
+     four names fit at its own size — so a split that appears only below 992
+     would need a second treatment; assert rather than ship it silently. */
+  const names = units.map((_, i) => {
+    const cap = capability(C, story.picks[i]);
+    return capTitle(cap.name, cap.zhName ?? '');
+  });
+  const len = (s) => (lang === 'zh' ? [...s].length : s.length);
+  const wideFlags = names.map((s) => (lang === 'zh' ? len(s) >= 6 : len(s) >= 11));
+  const narrowFlags = names.map((s) => (lang === 'zh' ? len(s) >= 9 : len(s) >= 15));
+  const uniform = wideFlags.some(Boolean) && !wideFlags.every(Boolean);
+  if (narrowFlags.some(Boolean) && !narrowFlags.every(Boolean)) {
+    throw new Error(`cn-service: the rows disagree below 992 too (${names.join(' / ')}); cn-uniform-title only covers 992 and up`);
+  }
+
   const filled = units.map((unit, i) => {
     const cap = capability(C, story.picks[i]);
     const title = capTitle(cap.name, cap.zhName ?? '');
@@ -137,7 +155,14 @@ export function render(frag, ctx) {
     const chars = lang === 'zh' ? [...title].length : title.length;
     const overWide = lang === 'zh' ? chars >= 6 : chars >= 11;
     const overNarrow = lang === 'zh' ? chars >= 9 : chars >= 15;
-    if (overWide) u = u.replace(/class="cn-service-title-wrap/g, `class="cn-service-title-wrap ${overNarrow ? 'cn-long-title' : 'cn-long-title-wide'}`);
+    /* Shrinking only the names that do not fit is right when it lands on every
+       row and wrong when it lands on some: four rows at two sizes read as a
+       mistake, and the owner reported it as one — "这里有一行字调整成统一大小".
+       `uniform` (decided once for the block, above) is that case, and it takes
+       every row to one size instead. The English page is unaffected: all four
+       of its names are long, so its rows already agree. */
+    if (uniform) u = u.replace(/class="cn-service-title-wrap/g, 'class="cn-service-title-wrap cn-uniform-title');
+    else if (overWide) u = u.replace(/class="cn-service-title-wrap/g, `class="cn-service-title-wrap ${overNarrow ? 'cn-long-title' : 'cn-long-title-wide'}`);
 
     /* The kicker's `▶︎` is part of the donor's copy, not of its markup; keep the
        marker and its spacing exactly as drawn and change only the words after

@@ -188,3 +188,46 @@
   .cn-service .cn-long-title-wide .cn-service-title { font-size: 3.5rem; height: 7rem; }
   .cn-service .cn-long-title-wide .cn-service-icon { font-size: .857em; }
 }
+
+/* `.cn-uniform-title` — all four rows at one size.
+   ------------------------------------------------------------------------
+   The two rules above shrink only the name that cannot fit. That is right when
+   every row needs it (the English page: all four names are long) and wrong when
+   only one does: the Chinese page drew 客户研究 / 贸易情报 / 决策链识别 at the
+   donor's size and 进口商补货雷达 at half of it, which reads as a mistake rather
+   than as a treatment. cn-service.mjs now decides once for the block and sends
+   every row here instead when they disagree.
+
+   The size is measured, not chosen. "◉ 进口商补货雷达" is a constant 7.94em wide
+   whatever the font-size, and the title column runs 512px at 992 through 768px
+   at 1440 to 905px at 1920, so the largest size that still holds the longest
+   name on one line is column / 7.94: 64.4px at 992, 66.7px at 1024, 85.1px at
+   1280, 96.8px at 1440, 108.4px at 1600, 110.1px at 1920. `min(6.6rem, 6.2vw)`
+   stays under every one of those with 3-5px to spare — and note what that says
+   about the donor's own 8vw / 7rem: it overflows this column at EVERY width from
+   992 up, which is why the shrink existed at all. The long row goes from half
+   size to this (56px -> 89px at 1440, a 59% gain) and the other three come down
+   about a fifth to meet it.
+
+   `height` is the donor's window, unchanged and pinned exactly as .cn-long-title
+   pins it, because three copies of the title stack inside one overflow:hidden
+   wrap and the hover roll moves by -200% of a copy's own height: a copy shorter
+   than its window would show two copies at once. `white-space: nowrap` is the
+   donor's own value kept — at this size the name fits on one line, so unlike the
+   halving rules there is no second line to release it for.
+
+   992 and up only: below it the donor gives the title the whole grid and all
+   four names already fit at its own size, so the Chinese page keeps cinery's
+   full-size title on tablet and phone. */
+@media screen and (min-width: 992px) {
+  .cn-service .cn-uniform-title .cn-service-title {
+    font-size: min(6.6rem, 6.2vw);
+    height: 8vw;
+    white-space: nowrap;
+    overflow: hidden;
+    flex: none;
+  }
+}
+@media screen and (min-width: 1440px) {
+  .cn-service .cn-uniform-title .cn-service-title { height: 7rem; }
+}

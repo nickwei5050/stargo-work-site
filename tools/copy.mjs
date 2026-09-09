@@ -303,10 +303,14 @@ export const HOME_MONO = [
   /* work cards → the problem */
   ['(Portfolio 26©)', B('(缺的从来不是一个软件)', '(The problem was never a missing tool)')],
   ['<h2 class="h2">Work<span class="small-ftd">(4)</span></h2>', B('<h2 class="h2">工具很多，互不相通<span class="small-ftd">(4)</span></h2>', '<h2 class="h2">Many tools. None of them talk.<span class="small-ftd">(4)</span></h2>')],
-  ['Forma Digital', B('询盘在邮箱', 'Email owns the inquiry')],
-  ['One Step', B('聊天在 WhatsApp', 'WhatsApp owns the chat')],
-  ['Nero Vision', B('客户在 Excel', 'Excel owns the customer')],
-  ['Bold Moves', B('订单在 ERP', 'ERP owns the order')],
+  /* These four are the "before" picture: the same job done the traditional way,
+     one tool at a time, nothing joined up. They read as bare statements of fact
+     until the band's own heading is scrolled past, so each names the old way
+     outright — the owner's note: "逻辑是传统怎么做，散落在各个不同工具". */
+  ['Forma Digital', B('传统：询盘在邮箱', 'Traditionally: email owns the inquiry')],
+  ['One Step', B('传统：聊天在 WhatsApp', 'Traditionally: WhatsApp owns the chat')],
+  ['Nero Vision', B('传统：客户在 Excel', 'Traditionally: Excel owns the customer')],
+  ['Bold Moves', B('传统：订单在 ERP', 'Traditionally: ERP owns the order')],
   ['View all work', B('看闭环怎么连', 'See how the loop connects')],
 
   /* blog cards: the template's four-card grid, filled from BLOG (build-site.mjs) */
@@ -700,6 +704,15 @@ export const CAPABILITIES = {
   h1: B('能力', 'Capabilities'),
   caption: B('(一套 AI 操作系统，覆盖全球贸易每个环节)', '(One AI operating system. Every stage of global trade.)'),
   intro: B('企业知识到获客，客户到订单，内容到履约，AI 员工到治理。过去要靠一堆独立软件才做得完的事，STARGO WORK 串在同一个系统里。', 'From enterprise knowledge to acquisition, customer to order, content to fulfilment, agents to governance — STARGO WORK connects work that used to need a pile of separate software.'),
+  /* The four cards below carry no heading of their own in the donor, so the
+     band read as four unexplained photographs. These three lines say what the
+     cards are and what clicking one does. The title spells its two numbers as
+     Chinese numerals, which reads better than an injected digit — so the build
+     asserts they still match `macro.length` and CAPABILITY_GROUPS.length and
+     fails rather than shipping a stale count. */
+  macroCaption: B('(四个板块)', '(Four areas)'),
+  macroTitle: B('四个板块，十四个能力组', 'Four areas, fourteen capability groups'),
+  macroLede: B('点开任意一个板块，直接跳到它包含的能力组。', 'Open an area to jump straight to the capability groups inside it.'),
   macro: [
     { name: B('指挥与增长', 'Command & Growth'), groups: ['01', '02', '03'] },
     { name: B('客户与知识', 'Customer & Knowledge'), groups: ['04', '05', '06'] },
@@ -1011,7 +1024,7 @@ export const CAPABILITY_SHOWCASE = {
      languages rather than a synthesised slant. */
   heroLead: B('把外贸做成', 'Everything a trade team'),
   heroAccent: B('/one system', '/does'),
-  heroTail: B('的一套系统', 'in one place'),
+  heroTail: B('一套系统', 'in one place'),
   heroBody: B('客户研究、沟通、报价、订单、内容，走同一条工作流。288 位专业 AI 员工推进，决策权仍在你的团队。', 'Customer research, conversations, quotations, orders and content on one workflow — carried by 288 specialized AI employees, with the decisions still yours.'),
   heroButton: B('看能力图谱', 'See the capability map'),
   eyebrow: B('能力图谱', 'CAPABILITY MAP'),

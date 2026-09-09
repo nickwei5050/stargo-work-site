@@ -97,7 +97,8 @@
 }
 
 /* ------------------------------------------------------------------------
-   D. The donor's motion. Neither piece of it can travel through the extractor.
+   D. The donor's motion. None of its three pieces can travel through the
+      extractor.
 
    1. The tag roll — qubix IX3 timeline t-9db874f5, fired on wf:load:
         target  .ui-link-main-box (every match)
@@ -169,20 +170,96 @@
 }
 
 /*    02564f77 (the orbit of photographs), bfb744ca (the tag column) and
-      95c2694c (the left cell): opacity 0 → 1, blur 20px → 0, 500ms, delay 1000. */
-.qx-orbit [data-w-id="02564f77-4e9e-f819-d97d-b018f7301623"],
+      95c2694c (the left cell): opacity 0 → 1, blur 20px → 0, 500ms, delay 1000.
+      02564f77 is missing from the selector list below on purpose. It is
+      `.qx-images-rotated-box`, which also carries the endless spin of D.3, and
+      `animation` is a shorthand: whichever rule wins declares the whole list, so
+      a second rule of equal specificity would silently drop the other's names
+      and leave the ring either invisible or motionless. Its share of a-54 is
+      therefore written into that one rule, with these same values. */
 .qx-orbit [data-w-id="bfb744ca-f033-a95a-a5a1-a692c71ac55c"],
 .qx-orbit [data-w-id="95c2694c-a097-148d-d560-40e2eb648777"] {
   animation: qxo-unblur .5s cubic-bezier(.25, .1, .25, 1) 1s both;
 }
 
+/* ------------------------------------------------------------------------
+   3. The endless orbit — qubix IX2 action list a-10 "Images Rotated". It goes
+      missing for exactly the reason a-54 does: its event e-75 is PAGE_START and
+      its target is `{ id: "69a9212ffc8e44e1794fb793", appliesTo: "PAGE" }` — the
+      donor's page, not any node of this block — so the extractor, which keeps an
+      event only when it names one of the block's data-w-ids or classes, leaves
+      e-75 behind and a-10 with it. tools/fragments/qx-cap-ix.json carries qx-a-6,
+      a-7, a-11, a-17, a-19…a-26, a-55, a-56 and qx-slideInBottom, and no
+      rotation of any kind, so the ring of photographs that the donor turns for
+      ever stood still.
+
+      a-10 group for group (app.fc5cbf32.8afd82c904693d49.js, the "a-10" entry;
+      useFirstGroupAsInitialState: true):
+        0  TRANSFORM_MOVE    .images-rotated-box   x -50%, y -50%     500ms
+        1  TRANSFORM_ROTATE  .images-rotated-box   z 0                  0ms
+           TRANSFORM_ROTATE  .rotated-images       z 360                0ms
+        2  TRANSFORM_ROTATE  .images-rotated-box   z 360            30000ms
+           TRANSFORM_ROTATE  .rotated-images       z 0              30000ms
+      The ring turns one whole revolution in 30s while every photograph turns
+      360 → 0 over the same 30s — exactly backwards — and that counter-rotation
+      is what holds the pictures upright as they travel round. e-75's own config
+      is `{ loop: true }`, hence `infinite`. The dotted ring PNG behind them
+      (`.qx-hero-round-shap`, 74462d43) is not in a-10 and does not turn; only
+      these two selectors do.
+
+      Linear, not eased. Every item's `easing` is "", and IX2 resolves an empty
+      name to no easing at all — applyEasing is
+        (e, t, n) => 0===t ? 0 : 1===t ? 1 : n ? … : u(t>0 && e && a[e] ? a[e](t) : t)
+      (js/app.schunk.25099a4fefa544e6.js, module 3767), which hands back the raw
+      progress when `e` is empty. It is also the only easing under which a 30s
+      loop has no seam.
+
+      Group 0 is the initial state, not a movement: it is the same
+      translate(-50%, -50%) that qubix's own `.images-rotated-box` rule and the
+      fragment's inline transform already apply to centre the ring over the hero's
+      centre box. A CSS animation on `transform` replaces the whole property, so
+      both frames restate it; drop it and the ring lands half its own width down
+      and to the right. The photographs need no such care — qubix parks all eight
+      with top/left/bottom/right percentages (donor stylesheet lines 3240–3274)
+      and gives them no transform of their own.
+
+      Nothing here fights the entrance in D.2: 02564f77 is this same ring node,
+      but its share of a-54 is the opacity/blur pair only, no transform, so the
+      two animations never reach for one property. They are declared together
+      only because `animation` is a shorthand. Both start at page load, as the
+      donor's two PAGE_START events do — the ring is already 12deg round by the
+      time its blur clears at 1s. */
+@keyframes qxo-orbit {
+  from { transform: translate3d(-50%, -50%, 0) rotateZ(0deg); }
+  to   { transform: translate3d(-50%, -50%, 0) rotateZ(360deg); }
+}
+@keyframes qxo-orbit-upright {
+  from { transform: rotateZ(360deg); }
+  to   { transform: rotateZ(0deg); }
+}
+.qx-orbit .qx-images-rotated-box {
+  animation: qxo-unblur .5s cubic-bezier(.25, .1, .25, 1) 1s both,
+             qxo-orbit 30s linear infinite;
+}
+.qx-orbit .qx-rotated-images { animation: qxo-orbit-upright 30s linear infinite; }
+
 /* A reader who asked for less motion gets the resting state at once. The tag
-   roll is left running: it is the content of that column, not an entrance. */
+   roll is left running: it is the content of that column, not an entrance. The
+   orbit is stopped — it is the one thing here that never settles, and a ring of
+   eight photographs turning for ever in the corner of the eye is what this
+   media query exists for. It is handed over standing still, in the arrangement
+   of its own frame 0, which is also the arrangement the fragment's inline
+   transform describes. */
 @media (prefers-reduced-motion: reduce) {
   .qx-orbit [data-w-id="cd6adfb6-9554-54e8-7105-cccaca2208a9"],
   .qx-orbit [data-w-id="fa9673e5-f62e-26f8-028d-f6fb36bd66af"],
   .qx-orbit [data-w-id="74462d43-d6aa-97c4-747c-afcd9ae617f8"],
-  .qx-orbit [data-w-id="02564f77-4e9e-f819-d97d-b018f7301623"],
   .qx-orbit [data-w-id="bfb744ca-f033-a95a-a5a1-a692c71ac55c"],
   .qx-orbit [data-w-id="95c2694c-a097-148d-d560-40e2eb648777"] { animation-duration: 0s; animation-delay: 0s; }
+  /* The ring's list is restated without the spin rather than set to `none`: the
+     entrance is the only thing that can lift the inline `opacity:0;
+     filter:blur(20px)` off it, since an inline style outranks any rule but an
+     animation. At 0s it simply lands on its finished frame. */
+  .qx-orbit .qx-images-rotated-box { animation: qxo-unblur 0s linear both; }
+  .qx-orbit .qx-rotated-images { animation: none; }
 }

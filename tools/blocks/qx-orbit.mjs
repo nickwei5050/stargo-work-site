@@ -49,6 +49,14 @@
  *     keyframes with the donor's own values, delays and durations, on the same
  *     data-w-id nodes. Should e-264/a-54 ever be carried by the tooling, delete
  *     that part of the css.
+ *   - The orbit itself (a-10 "Images Rotated") is IX2 and is dropped the same
+ *     way: e-75 is PAGE_START and its target `appliesTo: "PAGE"`, naming the
+ *     donor's page and none of this block's nodes. Without it the ring of
+ *     photographs — the whole point of the composition — stood still, which is
+ *     the defect the owner reported. qx-orbit.css replays it too: the ring turns
+ *     360deg in 30s, linear, for ever, and each photograph turns 360 → 0 over
+ *     the same 30s so the pictures stay upright as they travel. Same note: if
+ *     e-75/a-10 are ever carried by the tooling, delete that part of the css.
  */
 import { setText } from '../block-lib.mjs';
 

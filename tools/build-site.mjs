@@ -792,6 +792,21 @@ PAGES['capabilities.html'] = (lang) => {
       h = s(h, `>${name}<`, `>${t(K.macro[i].name)}<`, { count: 1 });
       h = s(h, `href="${href}"`, `href="#g${K.macro[i].groups[0]}"`, { count: 1 });
     });
+  /* The donor drops straight from the page intro into four photographs with a
+     caption each, so the band did not say what it was — the owner asked for a
+     heading that frames them as the four areas the groups below sit in. The
+     title names both counts as Chinese numerals, so assert them here: a
+     fifteenth group or a fifth area must fail the build, not ship a wrong
+     number. Written with the page's own classes (.top-text, .h2, .spacer-*). */
+  if (K.macro.length !== 4 || C.CAPABILITY_GROUPS.length !== 14) {
+    throw new Error(`capabilities: macroTitle says four areas and fourteen groups; data has ${K.macro.length} and ${C.CAPABILITY_GROUPS.length}`);
+  }
+  {
+    const WORK_MAIN = '<div class="work-main">';
+    if (!h.includes(WORK_MAIN)) throw new Error('capabilities: .work-main not found for the macro heading');
+    h = h.replace(WORK_MAIN, `<div class="macro-intro"><p class="top-text">${escapeHtml(t(K.macroCaption))}</p><h2 class="h2">${escapeHtml(t(K.macroTitle))}</h2><p class="top-text big">${escapeHtml(t(K.macroLede))}</p></div><div class="spacer-m"></div>${WORK_MAIN}`);
+  }
+
   const years = h.match(/<h3 class="work-title">\d\d<\/h3><h3 class="work-title">©<\/h3>/g);
   if (!years || years.length !== 4) throw new Error('capabilities: expected 4 year pairs');
   years.forEach((y, i) => { h = h.replace(y, `<h3 class="work-title">${K.macro[i].groups.length}</h3><h3 class="work-title">${t(K.unit)}</h3>`); });
