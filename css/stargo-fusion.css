@@ -1171,6 +1171,12 @@ html[lang^="zh"] .lx-scope .lx-heading-style-h4,
 html[lang^="zh"] .lx-scope .lx-big-text,
 html[lang^="zh"] .lx-scope .lx-cta-text,
 html[lang^="zh"] h2.h2,
+/* The three cross-fading comparison headlines (#compare on the homepage, the
+   ladder on capabilities). Added after the sweep above: at 1920 「AI 原生外贸。」
+   dropped 「贸。」 onto a line of its own. They are `h2.pricing-txt`, not
+   `h2.h2`, so the rule above did not reach them. Balance is a no-op on the
+   one-line ladder headlines, which must stay one line. */
+html[lang^="zh"] h2.pricing-txt,
 html[lang^="zh"] h1.inner-title,
 html[lang^="zh"] h2.inner-title,
 html[lang^="zh"] .title-text-animattion h1,
@@ -1215,6 +1221,31 @@ html[lang^="zh"] .lx-scope .lx-heading-style-h4:has(br) {
    would only push the overflow into `.cn-title-wrapper`'s `overflow: hidden`
    and clip 「项」. It needs either a font-size step for that window or a
    different word — an owner decision, not a CSS one. */
+
+/* The closing wordmark, STARGO over WORK, between 992 and 1439px.
+   ------------------------------------------------------------------------
+   Mono sets these two at 11rem and GSAP splits them into one inline-block per
+   character, so the browser may break BETWEEN letters — which it did, as
+   STAR|GO and WOR|K. Measured: the word needs 708px on one line and the
+   element's computed width is 707.6px at 1440 (it just fits, which is why the
+   template looks right there), 693px at 1280 and 551.6px at 1024. So the type
+   has to come down with the column, and only in that band: at 1440 and above
+   the donor's own size already fits, and below 992 the donor has already
+   stepped it to 5.76rem / 4.6875rem, which fits too.
+
+   13.1vw is the largest that holds the longest of the two words on one line
+   across the whole band — 167.7px at 1280 against the 172.3px available, 134.1
+   against 137.1 at 1024, 129.9 against 132.8 at 992 — and min() keeps the
+   donor's 11rem wherever 11rem is the smaller of the two. `nowrap` is the
+   belt: if a sub-pixel rounding ever left the word a hair too wide, a 1px
+   overflow of a decorative wordmark is better than splitting a letter off. */
+@media screen and (min-width: 992px) and (max-width: 1439px) {
+  .bottom-grid._2.for-hr h1.h1,
+  .bottom-grid._2.for-hr h2.h1 {
+    font-size: min(11rem, 13.1vw);
+    white-space: nowrap;
+  }
+}
 
 /* ---------------------------------------------------------------------------
    The capability page's donor blocks style themselves.

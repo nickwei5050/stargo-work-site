@@ -1028,7 +1028,11 @@ export const CAPABILITY_SHOWCASE = {
   heroBody: B('客户研究、沟通、报价、订单、内容，走同一条工作流。288 位专业 AI 员工推进，决策权仍在你的团队。', 'Customer research, conversations, quotations, orders and content on one workflow — carried by 288 specialized AI employees, with the decisions still yours.'),
   heroButton: B('看能力图谱', 'See the capability map'),
   eyebrow: B('能力图谱', 'CAPABILITY MAP'),
-  headlineTop: B('每一项', 'Every'),
+  /* Two lines of one 10rem heading. 每项 rather than 每一项: at the donor's size
+     three characters need 484.8px and the column is 440–470px wide between 992
+     and ~1089px, so the third was pushed onto a line of its own. 每项工作 is also
+     the more ordinary Chinese for it. Keep this line to two characters. */
+  headlineTop: B('每项', 'Every'),
   headlineBottom: B('工作', 'Job'),
   headline: B('找到买家。拿下订单。工作不停。', 'Find buyers. Win orders. Keep the work moving.'),
   storiesLabel: B('你的业务能完成什么', 'What your business gets done'),
