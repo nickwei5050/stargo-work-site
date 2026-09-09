@@ -1,0 +1,503 @@
+/* ro-gallery — only what the cut cannot carry.
+
+   Two things: where the block sits on this site's homepage (an extraction can
+   never know that), and rototo's motion, which reaches us through none of the
+   tooling and is therefore re-declared here with the donor's own numbers.
+   Nothing else. No size, colour, spacing or layout rototo set is changed. */
+
+
+/* ---------------------------------------------------------- the type size --
+
+   rototo sizes the gallery's stage in `em`:
+
+     .home-main-section-wrap { padding-top: 15em }   (10em ≤479)
+
+   and that em is rototo's own `body` font-size, which a cut section never
+   brings along. Verbatim from rototo's `body` rule
+   (tools/templates/rototo/css/rototo.app.shared.47861eb30.min.css):
+
+     body { font-size: var(--layout--size-font-base); … }
+
+   The variable itself does travel — donor-lib copies `:root` onto the scope
+   root and re-copies each breakpoint's `body` redeclaration — so restating this
+   one line is all that is needed. Measured against the donor, `.ro-gallery`
+   now computes 13.867 / 12.8 / 16.517 / 15.178 / 18.667px at
+   390 / 768 / 991 / 1366 / 1920, exactly rototo's own, where it had been
+   inheriting this page's 14px at every width. Only `font-size` is restated:
+   the block holds no text, so rototo's family, colour, leading and weight have
+   nothing to draw. */
+.ro-gallery {
+  font-size: var(--layout--size-font-base);
+}
+
+
+/* ------------------------------------------------------- where it is drawn --
+
+   index.html's `.hero` holds two children, both `position: absolute`:
+   `.container-bottom.add-px` (the hero copy and the four dots, pinned by
+   `inset: 120px 0% auto`) and `.container-bottom.bottom.add-max-cnt`
+   (「© 2026 STARGO WORK」 and the STARGO / WORK wordmark, pinned by
+   `inset: auto 0% 30px`). tools/build-site.mjs puts this block between them,
+   and the owner asked for the band between them — 「图片三的文字上下排版都不变，
+   仅仅在红白的地方加入旋转的图片展示」.
+
+   `position: absolute` is what keeps that promise: neither sibling takes its
+   position from the static flow, and an out-of-flow third child adds nothing to
+   it either, so no rect on the page can move. `.hero` is already
+   `position: relative; overflow: hidden`, so it is both the containing block
+   and the clip.
+
+   `z-index: 0` is the second half of it. Both `.container-bottom` rows carry
+   `z-index: 2`, and the band between them is not always open — measured on the
+   built page it is 363.6px tall at 768×1024 and 327.5px at 1920×1080, but only
+   105.6px at 991×768 and 15.5px at 1366×768 (the Chinese page; the English
+   copy is one line longer and closes it entirely). Underneath the type is the
+   one place the gallery can never cover a word at any viewport shape. A
+   positioned element with an integer z-index is its own stacking context, so
+   the donor's `.ro-home-main-section-wrap { z-index: 9 }` stays inside the
+   block instead of climbing over the wordmark.
+
+   `pointer-events: none` follows `.home-main-section-wrap`'s own declaration
+   out to the root, so the hero's button and links keep every pixel they had.
+
+   THE BAND'S LOWER EDGE. `bottom` is the only measured number in this file. The
+   band ends at the top of `.container-bottom.bottom.add-max-cnt`, which is that
+   element's own `bottom` offset plus its own height — and since `.hero` is
+   `height: 100vh` at the top of the page, that distance from the hero's bottom
+   edge is the same whatever the viewport's height is. Measured on the built
+   page at seventeen widths from 320 to 2560 and identical on both languages
+   (the wordmark it is made of is Latin in both):
+
+       ≥1366  334.31px      1100  307.19        900   276.52
+        1280  327.25         992  295.17        768   263.05
+                             991  285.80
+
+   It is not constant inside a range, so each range takes its own largest value:
+   overshooting shortens the block's box and lifts the wheel, which errs toward
+   leaving 「© 2026 STARGO WORK」 clear, and the largest error (39px of box at
+   992, 23px at 768) moves the wheel by half that. The top stays at the hero's
+   own top: the band narrows to 15.5px at 1366×768, and a box pinned to both
+   edges would be a slit with rototo's `overflow: clip` drawn across it.
+   Everything above the band is this page's own type at `z-index: 2`, which the
+   block passes under.
+
+   BELOW 768 THERE IS NO BAND, and the block is not drawn. `@media screen and
+   (max-width: 767px) { .container-bottom { bottom: 10px } }` in
+   css/monof-template.app.shared.ed8969994.css stretches `.container-bottom
+   .add-px` to the hero's foot, the four dots go (`display: none`), and the
+   opening copy runs from the nav to the wordmark with nothing between them —
+   measured, `.add-px` ends at 890 of an 890px hero at every width from 320 to
+   767, against 397 of 1024 at 768. Dropped in there the wheel lands at 229–364
+   at 390×844, straight across the paragraph that opens the site. The owner
+   asked for this gallery in that band —「仅仅在红白的地方加入旋转的图片展示」—
+   and on a phone the page has no such place, so the block waits for a width
+   where it does. The breakpoint is not chosen: it is the site's own, the one
+   that closes the band. */
+/* THE BAND'S UPPER EDGE. `top: 0` was wrong: it is the hero's top, so the wheel
+   was drawn from behind the navigation down — measured, ten tiles overlapping
+   the nav, across the wordmark and the menu. The band starts at the foot of
+   `.container-bottom.add-px` (the hero copy and the four dots). That element is
+   `inset: 120px 0% auto`, so its foot moves with how its copy wraps — with the
+   width, not the height. Measured on the built page, identical in both
+   languages: 418px at 992 and up, 377px at 991, 397px at 768.
+
+   THE BAND ITSELF is what is left of a `height: 100vh` hero after that 418px and
+   the wordmark block pinned to its foot, so it is a function of the viewport's
+   HEIGHT, and on a short window there is barely any of it:
+
+       1366x768   16px        1366x1080   328px       991x900   238px
+       1366x900  148px        1366x1250   498px       768x1024  364px
+
+   The owner drew the red box on a tall window, where the band is real. Rather
+   than draw a 16px sliver of a 3D wheel on a laptop, the block waits for a
+   window tall enough to hold it: 950px of viewport is where the band clears
+   ~200px, which is the least that reads as the gallery rather than as a seam.
+   One line to lower if the owner would rather see a slice of it on short
+   screens. */
+/* THE TABLE. Both edges move with the width, and the top moves with the
+   LANGUAGE as well: the English hero copy is a line longer than the Chinese at
+   most widths, and a single hard-coded `top: 418px` (which is what the Chinese
+   page measures at 1366) put the block 42px above the English copy's own foot,
+   where the wheel painted across it. Measured on the built page at seventeen
+   widths, both languages, with the page settled:
+
+       width   copy foot zh / en      wordmark block, above the hero's foot
+        768        397.4 / 439.0                263.05
+        800        397.4 / 439.0                266.31
+        900        397.4 / 418.2                276.52
+        991        376.6 / 418.2                285.80
+        992        439.0 / 522.2                295.17
+       1024        439.0 / 501.4                298.73
+       1100        439.0 / 480.6                307.19
+       1200        418.2 / 480.6                318.33
+       1280        418.2 / 459.8                327.25
+       1366+       418.2 / 459.8                334.31
+
+   Each range below takes the largest figure in it, for both edges: overshooting
+   the top starts the band below the copy and overshooting the foot ends it
+   above the wordmark, so every error shortens the band rather than letting the
+   wheel touch a word. The band it leaves is never less than the wheel needs at
+   the viewport heights this block is shown at. */
+.ro-gallery {
+  position: absolute;
+  top: 398px;
+  left: 0;
+  right: 0;
+  bottom: 266.31px;
+  z-index: 0;
+  pointer-events: none;
+  /* `overflow: hidden` does NOT hold this wheel in: its tiles live in a 3D
+     rendering context (the donor gives the groups `transform-style: preserve-3d`
+     so the wheel has depth), and an ancestor's overflow does not clip a
+     descendant that is part of the same 3D context. Measured with overflow
+     alone: four to five tiles still drawn across the navigation. `clip-path`
+     clips regardless of the 3D context, so the band is a real edge. */
+  overflow: hidden;
+  clip-path: inset(0);
+}
+/* The English copy's own foot, at the same ranges. This selector is one
+   attribute more specific than the rules above and below it, so it wins at
+   every width whatever the source order — which is why English needs a value
+   in each range the Chinese top changes in, and has one. */
+html[lang="en"] .ro-gallery { top: 439px; }
+
+@media screen and (min-width: 900px) {
+  .ro-gallery { bottom: 285.80px; }
+  html[lang="en"] .ro-gallery { top: 419px; }
+}
+@media screen and (min-width: 992px) {
+  .ro-gallery { top: 439px; bottom: 295.17px; }
+  html[lang="en"] .ro-gallery { top: 523px; }
+}
+@media screen and (min-width: 1024px) {
+  .ro-gallery { bottom: 298.73px; }
+  html[lang="en"] .ro-gallery { top: 502px; }
+}
+@media screen and (min-width: 1100px) {
+  .ro-gallery { bottom: 307.19px; }
+  html[lang="en"] .ro-gallery { top: 481px; }
+}
+@media screen and (min-width: 1200px) {
+  .ro-gallery { top: 419px; bottom: 318.33px; }
+}
+@media screen and (min-width: 1280px) {
+  .ro-gallery { bottom: 327.25px; }
+  html[lang="en"] .ro-gallery { top: 460px; }
+}
+@media screen and (min-width: 1366px) {
+  .ro-gallery { bottom: 334.31px; }
+}
+
+@media screen and (max-width: 767px) { .ro-gallery { display: none; } }
+
+/* HOW SHORT A BAND IS STILL WORTH DRAWING. The band is `100vh` less the two
+   constants above, so at a given width it is purely a function of the
+   viewport's height, and the wheel's row is 168–230px tall depending on the
+   width. Below 914px of viewport the English band at the wide ranges falls
+   under ~120px — less than about half the row — and what is left reads as a
+   seam rather than as a gallery, so the block waits for a window that has room
+   for it. Above it the row is whole or nearly so: at 1920×955, the ordinary
+   maximised window on a 1080p monitor, the Chinese band is 202px against a
+   202px row. Where the band is shorter than the row the wheel is trimmed
+   equally at both edges, because it is centred — a symmetric letterbox, not the
+   one-sided flat slice the block shipped before this was measured. */
+@media screen and (max-height: 913px) { .ro-gallery { display: none; } }
+
+
+/* ------------------------------------------------ the wheel inside the band --
+
+   Placing the block is not the same as placing the wheel, and the second one
+   does not follow from the first. rototo's stage is
+
+     .ro-home-main-section-wrap { position:absolute; inset:0%; perspective:2000px;
+                                  padding-top:15em; display:flex;
+                                  justify-content:center; align-items:center }
+
+   so it fills whatever it is put in — here, the band — and the wheel is seen
+   through a perspective whose origin is the centre of that box. On rototo's own
+   page the box is a 100vh hero and never changes shape. Here the band is
+   `100vh − 418px − 334.31px`, so its height, and with it the whole projection,
+   moves with the viewport's. Left alone the wheel drifts down as the window
+   shortens: measured on the built page, the row of tiles paints 731..915 of a
+   418..916 band at 1366×1250, but 681..745 of a 418..746 band at 1920×1080 —
+   sliced flat in half by the band's lower edge — and at 1920×955, the ordinary
+   maximised window on a 1080p monitor, the band is empty white. That last one
+   is the very emptiness this block was asked for:「中间有点太白了，很空荡荡的」.
+
+   WHAT THE WHEEL ACTUALLY DOES. Measured by painted pixels (see the note on the
+   verifier below), with the stage given an explicit height and the clip removed:
+
+     stage  300px -> row 218..397     stage  700px -> row 418..597
+     stage  400px -> row 268..447     stage  900px -> row 518..697
+     stage  500px -> row 318..497     stage 1250px -> row 693..872
+
+   The row is a CONSTANT 179px tall at this width however tall the stage is, and
+   its centre is always the stage's centre plus 158px — the half of
+   `padding-top: 15em` that `align-items: center` does not take back, plus the
+   perspective's own contribution. So the wheel does not need resizing. It needs
+   lifting by that one offset, and then it is centred in the band at every
+   viewport shape, which is the only placement that keeps the whole row inside
+   the shortest band that still shows it.
+
+   THE OFFSET ACROSS WIDTHS. It is not a plain rem quantity — the wheel scales
+   with rototo's `--layout--size-font-base` but the perspective is a flat 2000px,
+   and the perspective's x-origin is half the viewport, so the projection keeps
+   moving after the em stops. Measured at nine widths, at two stage heights each
+   (600 and 900 — identical at both, which is what makes one constant possible):
+
+       width   em     row height   offset      offset in em
+        768   12.80      168        128           10.00
+        900   15.00      170        151           10.07
+        991   16.52      171        167           10.08
+       1200   13.33      175        136           10.16
+       1366   15.18      180        157           10.34
+       1600   16.67      188        176           10.56
+       1920   18.67      202        203           10.87
+       2200   18.67      213        209           11.17
+       2560   18.67      230        217           11.62
+
+   In em it barely moves, so it is written in em — one value per range, each the
+   measured figure for the widths in it. Written against the donor's own
+   variable rather than the `em` unit because the stage is free to set its own
+   font-size and this offset is a fraction of rototo's layout size, not of
+   whatever type happens to be in scope.
+
+   The error this leaves is at most ~2px anywhere below 1920 and ~12px at 2560,
+   against a band that has 166px of slack there. It matters at all only at
+   1920×955, where a 202px row goes into a 202.7px band: that one is a knife
+   edge whatever is done, and centring is the placement that survives it.
+
+   `bottom` is moved by the same amount as `top` so the stage keeps the band's
+   height and is only translated — the wheel's size and speed are untouched, and
+   the owner's 「图片和动效全部不变」 holds.
+
+   THE STAGE'S OWN CLIP HAS TO GO WITH IT. Two different elements could clip
+   this wheel and they do not behave the same way, which is worth writing down
+   because guessing it wrong cost two rounds here:
+
+     .ro-gallery      overflow: hidden   does NOT clip the wheel. It is an
+                      ancestor of the element that establishes the 3D rendering
+                      context, and overflow does not clip a descendant that is
+                      part of one — measured, four to five tiles still drawn
+                      across the navigation. `clip-path` on the same element
+                      DOES clip, because it is applied when the box is painted
+                      rather than by the overflow machinery. That is why the
+                      clip-path above exists.
+     the stage        overflow: clip     DOES clip the wheel. This is the
+                      element that carries `perspective`, so the 3D context is
+                      its content, not its sibling — measured, with the stage
+                      shifted up at 1366×1080 the row was cut at y=588 against a
+                      stage bottom of 589.
+
+   On rototo's own page that second clip is the hero's edge and is invisible.
+   Here, shifting the stage up moves it up too, across a wheel that is
+   deliberately no longer centred in it: measured, the 202px row at 1920×955
+   painted 40px of itself. `overflow: visible` hands the job to `.ro-gallery`'s
+   clip-path, which is the band exactly and is stricter than anything the stage
+   could impose, so nothing is left unclipped. */
+.ro-gallery .ro-home-main-section-wrap {
+  top: calc(var(--layout--size-font-base) * -10.05);
+  bottom: calc(var(--layout--size-font-base) * 10.05);
+  overflow: visible;
+}
+@media screen and (min-width: 992px) {
+  .ro-gallery .ro-home-main-section-wrap {
+    top: calc(var(--layout--size-font-base) * -10.3);
+    bottom: calc(var(--layout--size-font-base) * 10.3);
+  }
+}
+@media screen and (min-width: 1440px) {
+  .ro-gallery .ro-home-main-section-wrap {
+    top: calc(var(--layout--size-font-base) * -10.6);
+    bottom: calc(var(--layout--size-font-base) * 10.6);
+  }
+}
+@media screen and (min-width: 1920px) {
+  .ro-gallery .ro-home-main-section-wrap {
+    top: calc(var(--layout--size-font-base) * -11);
+    bottom: calc(var(--layout--size-font-base) * 11);
+  }
+}
+
+
+/* ------------------------------------------- the motion the cut leaves behind
+
+   rototo drives this gallery three ways and not one of them can travel:
+
+   1. THE TURN — an inline script in tools/templates/rototo/index.html:
+
+          gsap.to(".home-hero-wrapper",
+                  { rotateY: "360deg", duration: 50, ease: "linear", repeat: -1 });
+
+      A hand-written GSAP tween on the donor's page, not Webflow data at all.
+      No tool in this repo reads a donor's inline scripts.
+
+   2. THE APPROACH — the next inline script:
+
+          const isMobile = window.matchMedia("(max-width: 490px)").matches;
+          gsap.fromTo(".home-hero-wrapper", { z: "-1200rem" },
+            { z: isMobile ? "60rem" : "100rem", duration: 3.5, ease: "cubic.inOut",
+              scrollTrigger: { trigger: ".home-section", start: "top 80%",
+                               toggleActions: "play none none none" } });
+
+   3. THE UNWIND AND THE TILT — Webflow ix3 timeline `t-dd507239`, fired by
+      interaction `i-9cb16577` (wf:scroll on `.hero-section.home-hero`,
+      start "top bottom", scrub null, enter "play" — it plays once):
+
+          ta-a08ed7c5  .home-header-group.first   rotation  −15deg → −375deg  4s    pos 0    ease 12
+          ta-33d0f24c  .home-header-group.second  rotation  −30deg → −390deg  4s    pos 0    ease 12
+          ta-254e77f4  .home-header-group.third   rotation    0deg → −360deg  4s    pos 0    ease 12
+          ta-58dc173f  .home-hero-wrapper         rotationX  50deg →   90deg  4.5s  pos 0    ease 12
+          ta-eee06759  .home-main-section-wrap    opacity      0%  →   100%   1.5s  pos 0.5  ease 0
+
+      ix3 is GSAP data; tools/donor-lib.mjs returns `{events, actionLists}` —
+      IX2 — and nothing else, and tools/fuse-ix.mjs merges only the payloads
+      that carry `interactions`/`timelines`, which rototo's does not reach us as.
+
+   THE EASES. Ease 12 and ease 0 are indices into the ix3 runtime's own table
+   in tools/templates/rototo/js/app.schunk.48d5e1fb57e2bf0a.js:
+
+     ["none","power1.in","power1.out","power1.inOut","power2.in","power2.out",
+      "power2.inOut","power3.in","power3.out","power3.inOut","power4.in",
+      "power4.out","power4.inOut", …]
+
+   so 0 = "none" (linear) and 12 = "power4.inOut". Sampled through the donor
+   page's own gsap, power4.inOut is quintic in-out (0.00016 at t=0.1,
+   0.16384 at 0.4) and "cubic.inOut" is the same function object as
+   "power2.inOut", i.e. cubic in-out (0.004 at 0.1). The `cubic-bezier()`
+   nearest each is written first (max deviation 0.0084 and 0.0305 of the
+   travel) and immediately overridden with `linear()`, which samples the two
+   polynomials at 5% and reproduces them to ±0.0002 wherever it is understood;
+   a browser without `linear()` drops that one declaration and keeps the bezier.
+
+   WHEN THEY START. rototo's two ScrollTriggers fire the moment their section is
+   in view, and on the donor's own page that section is the hero, so all three
+   run at load; the turn has no trigger at all and runs at load by definition.
+   This block sits inside this site's hero — `.hero { height: 100vh }` at the
+   top of index.html — so it is on screen at load at every width the site
+   supports, and CSS animations, which also start at load, reproduce the
+   donor's timing rather than approximate it. That is why this block ships no
+   .js: an IntersectionObserver would only delay what already fires.
+
+   THE COMPOSITE. GSAP writes all three tweens into one inline transform, and
+   measured live in the donor at 1366×768 that string is
+
+     translate3d(0px, 0px, 100rem) rotateY(θ) rotateX(90deg)
+
+   (θ = 0.8064° at 231ms and 144.792° at 20 225ms — 7.2 deg/s, i.e. 360° in 50s,
+   linear). CSS applies `translate`, then `rotate`, then `transform`, which is
+   the same order; splitting the three across those three properties is what
+   lets the perpetual turn run against a one-shot approach and a one-shot tilt
+   without any of them overwriting another. The declarations below are the
+   resting frame — where the donor stands once the entrance is over — so
+   `prefers-reduced-motion` and a browser that ran no animation at all both
+   land on a gallery that is drawn, not one that is missing.
+
+   Should tools/fuse-ix.mjs ever carry a donor's ix3 timelines, delete part 3
+   below; parts 1 and 2 are inline page script and will always live here. */
+
+@keyframes ro-gallery-turn {
+  from { rotate: y 0deg; }
+  to   { rotate: y 360deg; }
+}
+
+@keyframes ro-gallery-approach {
+  from { translate: 0 0 -1200rem; }
+  to   { translate: 0 0 100rem; }
+}
+
+@keyframes ro-gallery-tilt {
+  from { transform: rotateX(50deg); }
+  to   { transform: rotateX(90deg); }
+}
+
+.ro-gallery .ro-home-hero-wrapper {
+  translate: 0 0 100rem;
+  rotate: y 0deg;
+  transform: rotateX(90deg);
+  animation-name: ro-gallery-turn, ro-gallery-approach, ro-gallery-tilt;
+  animation-duration: 50s, 3.5s, 4.5s;
+  animation-iteration-count: infinite, 1, 1;
+  animation-fill-mode: none, backwards, backwards;
+  animation-timing-function: linear, cubic-bezier(.66, 0, .34, 1), cubic-bezier(.84, 0, .16, 1);
+  /* gsap's own power2.inOut and power4.inOut, sampled every 5%. */
+  animation-timing-function:
+    linear,
+    linear(0, 0.0005, 0.004, 0.0135, 0.032, 0.0625, 0.108, 0.1715, 0.256, 0.3645, 0.5, 0.6355, 0.744, 0.8285, 0.892, 0.9375, 0.968, 0.9865, 0.996, 0.9995, 1),
+    linear(0, 0.00003, 0.0002, 0.0012, 0.0051, 0.0156, 0.0389, 0.084, 0.1638, 0.2952, 0.5, 0.7048, 0.8362, 0.916, 0.9611, 0.9844, 0.9949, 0.9988, 0.9998, 0.99997, 1);
+}
+
+/* The approach's own mobile value: `isMobile ? "60rem" : "100rem"`, on the
+   donor's `matchMedia("(max-width: 490px)")` line. Dormant while the block is
+   not drawn under 768 — kept so the donor's number is not lost if this page
+   ever grows a band on phones, and because rototo's own line is a media query
+   in everything but syntax. */
+@keyframes ro-gallery-approach-mobile {
+  from { translate: 0 0 -1200rem; }
+  to   { translate: 0 0 60rem; }
+}
+@media (max-width: 490px) {
+  .ro-gallery .ro-home-hero-wrapper {
+    translate: 0 0 60rem;
+    animation-name: ro-gallery-turn, ro-gallery-approach-mobile, ro-gallery-tilt;
+  }
+}
+
+/* The three wheels unwind a full turn and come back to the rotation rototo's
+   own stylesheet authored, which is why nothing here needs `forwards`:
+   −375deg is −15deg, −390deg is −30deg, −360deg is 0deg. `translateZ` is kept
+   where the donor kept it (`.home-header-group` translateZ(1px), which
+   `.first` and `.second` override away and `.third` restates). */
+@keyframes ro-gallery-unwind-first {
+  from { transform: rotate(-15deg); }
+  to   { transform: rotate(-375deg); }
+}
+@keyframes ro-gallery-unwind-second {
+  from { transform: rotate(-30deg); }
+  to   { transform: rotate(-390deg); }
+}
+@keyframes ro-gallery-unwind-third {
+  from { transform: translateZ(1px) rotate(0deg); }
+  to   { transform: translateZ(1px) rotate(-360deg); }
+}
+.ro-gallery .ro-home-header-group.ro-first,
+.ro-gallery .ro-home-header-group.ro-second,
+.ro-gallery .ro-home-header-group.ro-third {
+  animation-duration: 4s;
+  animation-timing-function: cubic-bezier(.84, 0, .16, 1);
+  animation-timing-function:
+    linear(0, 0.00003, 0.0002, 0.0012, 0.0051, 0.0156, 0.0389, 0.084, 0.1638, 0.2952, 0.5, 0.7048, 0.8362, 0.916, 0.9611, 0.9844, 0.9949, 0.9988, 0.9998, 0.99997, 1);
+}
+.ro-gallery .ro-home-header-group.ro-first  { animation-name: ro-gallery-unwind-first; }
+.ro-gallery .ro-home-header-group.ro-second { animation-name: ro-gallery-unwind-second; }
+.ro-gallery .ro-home-header-group.ro-third  { animation-name: ro-gallery-unwind-third; }
+
+/* ta-eee06759: opacity 0% → 100%, 1.5s at position 0.5 of the same timeline,
+   ease 0 = "none". `backwards` holds the stage down through the half-second
+   offset and hands it back to the page's own state — opacity 1 — when the
+   animation ends, so nothing is ever hidden by a rule with nothing to undo it. */
+@keyframes ro-gallery-arrive {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.ro-gallery .ro-home-main-section-wrap {
+  animation: ro-gallery-arrive 1.5s linear .5s backwards;
+}
+
+
+/* A reader who has asked their system for less motion gets the gallery as it is
+   drawn — all 24 of rototo's photographs, on the frame the donor's entrance
+   settles onto — and nothing turning. Holding it still rather than removing it
+   is the line js/stargo-pricing.js, js/stargo-media.js and
+   tools/blocks/cn-produce.css already take. Every value the animations would
+   have reached is declared above as the element's own, so `animation: none`
+   lands exactly there. */
+@media (prefers-reduced-motion: reduce) {
+  .ro-gallery .ro-home-hero-wrapper,
+  .ro-gallery .ro-home-header-group.ro-first,
+  .ro-gallery .ro-home-header-group.ro-second,
+  .ro-gallery .ro-home-header-group.ro-third,
+  .ro-gallery .ro-home-main-section-wrap {
+    animation: none;
+  }
+}

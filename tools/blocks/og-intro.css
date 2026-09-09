@@ -1,0 +1,206 @@
+/* og-intro — what the cut cannot carry, and the two layers it has to be staged in.
+
+   Nothing here re-times, re-eases or re-shapes a donor animation. Every number
+   below is either offgrid's or rototo's own, copied from the rule it came from
+   and named, or it is staging: where the overlay sits, what it sits on top of,
+   and when it is allowed to appear at all.
+
+   ------------------------------------------------------ 1. offgrid's <body>
+
+   A cut section never brings <body> rules with it, and offgrid put a good deal
+   on its own. Verbatim from
+   tools/templates/offgrid/css/offgridtemplate.app.shared.75636b1ed.css:
+
+     body { background-color: var(--_color-palette---background-color--primary);
+            font-family: var(--_fonts---satoshi);
+            color: var(--_color-palette---font-color--primary);
+            font-size: .9vw;
+            line-height: 1.5;
+            font-weight: var(--_text-weights---regular); }
+
+   (the background is what `donor.ground` already paints on `.og-intro`.) The
+   `font-size` matters more than it looks: offgrid sizes in `vw` on <body> and
+   then in `em` everywhere else — `.max-width_hero` is `max-width: 51em`,
+   `.padding-global` is `3em`, `.home-hero` gaps at `2.5em` — so without it the
+   whole hero would be laid out against this site's own 14px root instead of
+   offgrid's 0.9vw. offgrid re-declares that one number at each of its three
+   breakpoints; tools/donor-lib.mjs carries the custom properties out of those
+   `body` blocks onto the scope root but not the `font-size`, so the three
+   values are restated here as well. */
+.og-intro {
+  font-family: var(--_fonts---satoshi);
+  color: var(--_color-palette---font-color--primary);
+  font-size: .9vw;
+  line-height: 1.5;
+  font-weight: var(--_text-weights---regular);
+}
+@media screen and (max-width: 991px) { .og-intro { font-size: 1.8svw; } }
+@media screen and (max-width: 767px) { .og-intro { font-size: 2svw; } }
+@media screen and (max-width: 479px) { .og-intro { font-size: 2svw; } }
+
+/* ------------------------------------- 2. offgrid's own <style> in its <head>
+
+   tools/donor-lib.mjs reads a donor's css/ directory, so the `<style>` block
+   offgrid writes into its own `<head>` is invisible to it. One rule in there is
+   load-bearing for the mosaic: without `transform-style: preserve-3d` the
+   tiles' `rotateY(45deg)` flattens to a horizontal squash instead of turning.
+   Verbatim from offgrid/index.html:
+
+     @media (min-width: 992px) {
+       [data-works-grid] .grid__img { will-change: transform, opacity;
+                                      transform-style: preserve-3d; }
+     }
+
+   The rest of that block is not restated, and here is why for each part. Its
+   `@media (max-width: 991px)` half is written for offgrid's own *scrolling*
+   page — `body { -webkit-overflow-scrolling: touch }`, a `translateZ(0)` on
+   `<body>`, and a `transition: opacity .3s, transform .3s` on the tiles for the
+   per-image scroll reveal offgrid runs below 992px. This overlay does not
+   scroll and does not run that reveal (see the header of og-intro.mjs), and
+   that transition would smear the tween that does run. Its `.pin-spacer` and
+   `.hero-section` `pointer-events: auto !important` rules exist for the
+   ScrollTrigger pin, which is likewise not here; the overlay deliberately takes
+   no pointer events inside itself at all. */
+@media (min-width: 992px) {
+  .og-intro [data-works-grid] .og-grid__img {
+    will-change: transform, opacity;
+    transform-style: preserve-3d;
+  }
+}
+
+/* ------------------------------------- 3. one word became two, and it wrapped
+
+   `.text-spam` is the box whose width the bracket animation grows, and it is
+   `display: block; overflow: hidden` so the word inside is revealed a letter at
+   a time. offgrid's word is `OFF`: three letters with nowhere to break, so at
+   6px wide it is simply clipped. `STARGO OS` has a space in it, and measured at
+   1440 the span spent the first second of its growth two lines tall — `STARGO`
+   over `OS`, both of them out the bottom of the h1 — because a narrow block
+   wraps at the first break opportunity it has.
+
+   This is the one thing in the file the README's "type drawn for one English
+   word that now has to hold a longer name" clause covers: `nowrap` changes
+   nothing about how offgrid's own headline draws (a single word never wrapped)
+   and nothing about the animation — the same width, over the same 1200ms, on
+   the same curve. It only stops our two words from breaking apart inside a box
+   that is meant to be clipping them. */
+.og-intro .og-text-spam { white-space: nowrap; }
+
+/* ---------------------------------------------------------- 3. the overlay
+
+   The intro is drawn over the finished homepage and then removed. It has to be
+   opaque from the very first paint — otherwise the page it is introducing
+   flashes past underneath — so it is painted by this stylesheet, in the
+   document's <head>, and not by script.
+
+   Two gates decide whether it is ever shown, and both of them are settled
+   before the first frame:
+
+     - `html.w-mod-js`. The class Webflow's own head snippet writes on every
+       page of this site, synchronously, before anything renders. With no
+       JavaScript there is nothing to play the intro and nothing to take it
+       away, so the overlay must not appear at all. rototo guards its own
+       loader with the same class (`html.w-mod-js:not(.w-mod-ix3) :is(…,
+       .page-loader-column, …) { visibility: hidden !important }` in its head).
+     - `prefers-reduced-motion`. A reader who has asked their system for less
+       motion goes straight to the homepage: the overlay is never displayed, and
+       tools/blocks/og-intro.js takes the node out of the document as well. The
+       same line js/stargo-pricing.js, js/stargo-media.js and
+       tools/blocks/cn-produce.js already take. */
+.og-intro { display: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+  html.w-mod-js .og-intro { display: block; }
+}
+
+.og-intro {
+  position: fixed;
+  inset: 0;
+  /* rototo's own number for a full-screen loader (`.page-loader`), and above
+     every z-index this site's pages use: the tallest in Mono's stylesheet is
+     9999 (2147483647 belongs to the Webflow badge, which is display:none). */
+  z-index: 99999;
+  overflow: hidden;
+  /* The overlay itself takes the pointer, so nothing underneath can be clicked
+     blind while it plays; nothing inside it does (see .og-page-wrapper below),
+     so the donor's tile-hover interaction never fires and the reader never
+     hovers a photograph they cannot click. */
+}
+
+/* A ceiling, in CSS so that it holds however the JavaScript goes: fifteen
+   seconds after the page starts painting, the overlay stops covering it and
+   stops taking the pointer, whatever else has happened. That is more than twice
+   the 6.9s the sequence takes, and tools/blocks/og-intro.js will not start a
+   sequence that could not finish under it.
+
+   `opacity`, not `visibility`. Measured with the script blocked: a keyframe of
+   `to { visibility: hidden }` did release the pointer at fifteen seconds but
+   the overlay was still on screen — `visibility` only takes its end value at a
+   progress of exactly 1, and Chrome kept reporting `visible` on the filled
+   animation. `opacity: 0` leaves nothing to argue about. */
+@keyframes og-intro-ceiling { to { opacity: 0; visibility: hidden; pointer-events: none; } }
+.og-intro { animation: og-intro-ceiling .001s linear 15s forwards; }
+
+/* The two donor sections are stacked, not scrolled.
+
+   In offgrid they are consecutive full-height blocks of one long page: you read
+   the headline, you scroll, the mosaic pins. An intro has no scroll, so they
+   occupy the same box and the sequence moves between them — which is the one
+   compositional decision in this block. Both keep their own geometry: the hero
+   is still `min-height: 100svh` centred both ways, the grid is still nine
+   columns at `min-height: 99vh` (two columns below 992px, as offgrid draws it).
+
+   `.og-works-section` is given a z-index above `.og-hero-section`'s 10, which is
+   the only donor value in this file that is not reproduced as written. In
+   offgrid the two never overlap, so 10 and 2 only order them against that
+   page's own chrome; here they share a box and the mosaic is what the sequence
+   brings forward — it covers the headline as it settles, so no fade or exit has
+   to be invented for the headline to leave. */
+.og-intro .og-page-wrapper { position: absolute; inset: 0; pointer-events: none; }
+.og-intro .og-hero-section { position: absolute; inset: 0; }
+.og-intro .og-works-section { position: absolute; inset: 0; z-index: 20; }
+
+/* --------------------------------------------------- 4. rototo's page loader
+
+   Forty-eight full-height columns that lift off the top of the screen one after
+   another, which is the third thing the owner asked for. rototo is a second
+   donor and a block module cuts from one, so the markup is rebuilt in
+   og-intro.mjs and its two rules are copied here. Verbatim from
+   tools/templates/rototo/css/rototo.app.shared.47861eb30.min.css, with rototo's
+   own tokens resolved from its `:root` (`--sizes--zero: 0em`,
+   `--_theme---black: black`) and its forty-eight literal `1fr` columns written
+   as `repeat(48, 1fr)`, which computes to the same track list:
+
+     .page-loader { z-index: 99999; grid-column-gap: var(--sizes--zero);
+                    grid-row-gap: var(--sizes--zero); pointer-events: none;
+                    grid-template-rows: auto;
+                    grid-template-columns: 1fr … (48 of them);
+                    grid-auto-columns: 1fr; width: 100%; height: 100vh;
+                    display: grid; position: fixed; inset: 0% }
+     .page-loader-column { background-color: var(--_theme---black);
+                           width: 100%; height: 100% }
+
+   The columns rest at `translateY(-100%)` — clear of the top of the screen,
+   which is where rototo's own loader ends up and where the owner's screenshot
+   catches them on their way. Resting there is also what keeps them from
+   covering the headline before their turn. */
+.og-intro .og-intro-wipe {
+  z-index: 99999;
+  grid-column-gap: 0em;
+  grid-row-gap: 0em;
+  pointer-events: none;
+  grid-template-rows: auto;
+  grid-template-columns: repeat(48, 1fr);
+  grid-auto-columns: 1fr;
+  width: 100%;
+  height: 100vh;
+  display: grid;
+  position: fixed;
+  inset: 0%;
+}
+.og-intro .og-intro-column {
+  background-color: black;
+  width: 100%;
+  height: 100%;
+  transform: translateY(-100%);
+}

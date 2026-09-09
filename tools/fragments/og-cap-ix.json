@@ -1,0 +1,254 @@
+{
+ "events": {
+  "og-e-16": {
+   "id": "og-e-16",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "MOUSE_OVER",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "og-a-9",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "og-e-17"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "ee77ea60-5899-e126-bc62-0c5777c4ee8a",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "ee77ea60-5899-e126-bc62-0c5777c4ee8a",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1747909094202
+  },
+  "og-e-17": {
+   "id": "og-e-17",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "MOUSE_OUT",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "og-a-10",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "og-e-16"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "ee77ea60-5899-e126-bc62-0c5777c4ee8a",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "ee77ea60-5899-e126-bc62-0c5777c4ee8a",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1747909094202
+  }
+ },
+ "actionLists": {
+  "og-a-9": {
+   "id": "og-a-9",
+   "title": "Works CMS - Hover In",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "og-a-9-n",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".og-cms-button",
+         "selectorGuids": [
+          "e673eba7-af92-9cf0-a736-8b39f7269c7b"
+         ]
+        },
+        "value": 0,
+        "unit": ""
+       }
+      },
+      {
+       "id": "og-a-9-n-3",
+       "actionTypeId": "STYLE_FILTER",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".og-image",
+         "selectorGuids": [
+          "d0b237aa-6077-33e8-e4cb-c1a2615ae3d4"
+         ]
+        },
+        "filters": [
+         {
+          "type": "blur",
+          "filterId": "3cc0",
+          "value": 0,
+          "unit": "px"
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "og-a-9-n-2",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "inOutQuart",
+        "duration": 300,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".og-cms-button",
+         "selectorGuids": [
+          "e673eba7-af92-9cf0-a736-8b39f7269c7b"
+         ]
+        },
+        "value": 1,
+        "unit": ""
+       }
+      },
+      {
+       "id": "og-a-9-n-4",
+       "actionTypeId": "STYLE_FILTER",
+       "config": {
+        "delay": 0,
+        "easing": "inOutQuart",
+        "duration": 300,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".og-image",
+         "selectorGuids": [
+          "d0b237aa-6077-33e8-e4cb-c1a2615ae3d4"
+         ]
+        },
+        "filters": [
+         {
+          "type": "blur",
+          "filterId": "3cc0",
+          "value": 5,
+          "unit": "px"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": true,
+   "createdOn": 1747909099155
+  },
+  "og-a-10": {
+   "id": "og-a-10",
+   "title": "Works CMS - Hover Out",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "og-a-10-n",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "outExpo",
+        "duration": 800,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".og-cms-button",
+         "selectorGuids": [
+          "e673eba7-af92-9cf0-a736-8b39f7269c7b"
+         ]
+        },
+        "value": 0,
+        "unit": ""
+       }
+      },
+      {
+       "id": "og-a-10-n-2",
+       "actionTypeId": "STYLE_FILTER",
+       "config": {
+        "delay": 0,
+        "easing": "outExpo",
+        "duration": 800,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".og-image",
+         "selectorGuids": [
+          "d0b237aa-6077-33e8-e4cb-c1a2615ae3d4"
+         ]
+        },
+        "filters": [
+         {
+          "type": "blur",
+          "filterId": "3cc0",
+          "value": 0,
+          "unit": "px"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": false,
+   "createdOn": 1747909099155
+  }
+ }
+}

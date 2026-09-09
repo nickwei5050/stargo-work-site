@@ -31,6 +31,17 @@ const FRAG = `${SITE}/tools/fragments`;
 const tpl = (f) => readFileSync(`${TPL}/${f}`, 'utf8');
 const frag = (f) => readFileSync(`${FRAG}/${f}`, 'utf8');
 
+/* The homepage's opening animation ships its behaviour as a file of its own.
+   tools/capability-donors.mjs concatenates a block's `<id>.js` into
+   js/capability-blocks.js, which only the capability page loads; this one plays
+   on the homepage, so it is written out here as its own script and attached by
+   tools/chrome.mjs wherever the overlay's marker appears. (It still rides along
+   in capability-blocks.js, where it finds no `[data-og-intro]` and returns.) */
+writeFileSync(`${SITE}/js/stargo-intro.js`,
+  `/* The homepage's opening animation. Written by tools/build-site.mjs from
+   tools/blocks/og-intro.js. Do not edit by hand. */
+${readFileSync(`${SITE}/tools/blocks/og-intro.js`, 'utf8')}`, 'utf8');
+
 /**
  * Lifelogx closes every page with a full-bleed wordmark above its footer: a filled
  * headline, a gradient wash over it and a stroked copy that slides across on scroll
@@ -414,10 +425,83 @@ PAGES['index.html'] = (lang) => {
   const insertBefore = (html, anchor, fragment, label) => { const i = html.indexOf(anchor); if (i === -1) throw new Error(`insertion anchor not found for ${label}`); return html.slice(0, i) + fragment + '\n' + html.slice(i); };
   h = insertBefore(h, '<section class="section with-minus"', hero, 'four-layer stack');
   h = insertBefore(h, '<section class="video-section"', products + integration, 'switcher + channels band');
+  /* 旋转图片展示 — rototo's rotating gallery, in the empty band of the hero's own
+     footer: after the four dots and above 「© 2026 STARGO WORK」, which is the box
+     the owner drew in red. It goes in as a third child of `.hero`; that element's
+     other two children are position:absolute with explicit offsets and so is the
+     block, so nothing on the page moves — measured with and without it at
+     390/768/991/1366/1920 in both languages, every rect identical. The cut, and
+     why each of rototo's three animations had to be replayed as CSS rather than
+     carried, is documented in tools/blocks/ro-gallery.mjs. */
+  {
+    const dots = `${'<div class="circle-divider"></div>'.repeat(4)}</div></div>`;
+    const copyright = '<div class="container-bottom bottom add-max-cnt">';
+    const at = h.indexOf(dots + copyright);
+    if (at === -1) throw new Error('index: the hero band between the four dots and the copyright row is not where it was');
+    h = h.slice(0, at + dots.length) + renderBlock('ro-gallery', lang) + h.slice(at + dots.length);
+  }
   const monoLink = /<link href="css\/monof-template\.app\.shared\.[a-f0-9]+\.css" rel="stylesheet" type="text\/css"\/>/;
-  h = h.replace(monoLink, (m) => `${m}\n<link href="css/scalora-modules.sc.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>`);
+  /* offgrid's sheet carries the opening animation's block (see homeIntro below)
+     and has to be in the <head>: the overlay must be opaque on the first paint,
+     or the page it introduces flashes past underneath it. It goes before
+     scalora's and before stargo-fusion.css, the same order the capability page
+     puts the donor sheets in. */
+  h = h.replace(monoLink, (m) => `${m}\n<link href="css/${DONORS.offgrid.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/${DONORS.rototo.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/scalora-modules.sc.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>`);
+  h = homeIntro(h, lang);
   return h;
 };
+
+/**
+ * 开场动画 — the opening the owner asked for, over the homepage.
+ *
+ * OFFGRID's bracket headline reading `[STARGO OS]`, then OFFGRID's thirty-six
+ * tile mosaic revealing, then rototo's column wipe clearing to the page. It is
+ * one block, tools/blocks/og-intro.mjs, and everything about how it was cut and
+ * why each animation had to be replayed rather than carried is in that file's
+ * header.
+ *
+ * It is an overlay, not a section: the first child of <body>, `position: fixed`,
+ * so not one box of the homepage moves because of it, and it removes itself
+ * from the document when the sequence ends. It runs on index.html and
+ * en/index.html only — this function is called from the homepage builder and
+ * from nowhere else, so the other thirty-six pages never carry the markup, the
+ * script or offgrid's stylesheet.
+ *
+ * `aria-hidden` because it is decoration announcing nothing, and it holds
+ * nothing focusable: og-intro.mjs takes the donor's anchors out for exactly
+ * that reason. tools/chrome.mjs attaches js/stargo-intro.js when it sees
+ * `data-og-intro`, and og-intro.css decides whether the overlay is ever shown
+ * (never without JavaScript, never under prefers-reduced-motion).
+ */
+/**
+ * A donor block, one module each in tools/blocks.
+ *
+ * Each module knows how to cut its block out of its donor template (used by
+ * tools/capability-donors.mjs) and how to fill it with this site's words. Here
+ * we only compose them: read the fragment the extraction wrote, hand it the
+ * copy, and put it inside the root class its stylesheet is scoped under.
+ *
+ * It sat inside the capability page's own builder until the homepage's opening
+ * animation became a block too; it never used anything of that closure, so it
+ * moved out here rather than being written twice.
+ */
+function renderBlock(id, lang, extra) {
+  const mod = CAP_BLOCKS.get(id);
+  if (!mod) throw new Error(`no block module ${id}`);
+  const frag = readFileSync(`${SITE}/tools/fragments/${id}.html`, 'utf8');
+  const t = (v) => (typeof v === 'string' ? v : v[lang]);
+  const html = mod.render(frag, { C, lang, t, escapeHtml, capTitle: capTitle(lang), art, ...extra });
+  return `<div class="${mod.donor.scope.replace(/^\./, '')}">${html}</div>`;
+}
+
+function homeIntro(html, lang) {
+  const intro = renderBlock('og-intro', lang);
+  const OPEN = '<div class="og-intro">';
+  if (!intro.startsWith(OPEN)) throw new Error('index: the intro block did not come back wrapped in its scope');
+  const overlay = `<div class="og-intro" data-og-intro="" aria-hidden="true">${intro.slice(OPEN.length)}`;
+  if (!html.includes('<body>')) throw new Error('index: no <body> to put the opening animation in front of');
+  return html.replace('<body>', `<body>${overlay}`);
+}
 
 /* ---- intelligence.html / workforce.html — lifelogx homepage ----------- */
 function lxPage(spec, lang, name) {
@@ -854,24 +938,6 @@ PAGES['capabilities.html'] = (lang) => {
  */
 function loopSection(C, lang) {
   return `<div id="loop"></div>` + renderBlock('rk-award', lang) + renderBlock('qx-orbit', lang) + renderBlock('rk-insight', lang);
-}
-
-/**
- * The capability page's donor blocks, one module each in tools/blocks.
- *
- * Each module knows how to cut its block out of its donor template (used by
- * tools/capability-donors.mjs) and how to fill it with this site's words. Here
- * we only compose them: read the fragment the extraction wrote, hand it the
- * copy, and put it inside the root class its stylesheet is scoped under.
- */
-
-function renderBlock(id, lang, extra) {
-  const mod = CAP_BLOCKS.get(id);
-  if (!mod) throw new Error(`capabilities: no block module ${id}`);
-  const frag = readFileSync(`${SITE}/tools/fragments/${id}.html`, 'utf8');
-  const t = (v) => (typeof v === 'string' ? v : v[lang]);
-  const html = mod.render(frag, { C, lang, t, escapeHtml, capTitle: capTitle(lang), art, ...extra });
-  return `<div class="${mod.donor.scope.replace(/^\./, '')}">${html}</div>`;
 }
 
 let showcaseHero = '';

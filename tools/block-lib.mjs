@@ -22,6 +22,11 @@ export const DONORS = {
   qubix: { ns: 'qx-', sheet: 'qubix.qx.css', dir: `${TPL}/qubix` },
   cinery: { ns: 'cn-', sheet: 'cinery.cn2.css', dir: `${TPL}/cinery` },
   lumenis: { ns: 'lm2-', sheet: 'lumenis.lm2.css', dir: `${TPL}/lumenis` },
+  /* Added 2026-09-09 for the owner's opening animation and the homepage's
+     rotating gallery. `og-` and `ro-` avoid the four namespaces above and each
+     other; see each donor's SOURCE.md for what is taken and why. */
+  offgrid: { ns: 'og-', sheet: 'offgrid.og.css', dir: `${TPL}/offgrid` },
+  rototo: { ns: 'ro-', sheet: 'rototo.ro.css', dir: `${TPL}/rototo` },
 };
 
 /**
