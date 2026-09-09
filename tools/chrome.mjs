@@ -257,8 +257,18 @@ function head(html, lang, current) {
     .replace(/<meta content="[^"]*" property="og:image"\/>/, '')
     .replace(/<meta content="[^"]*" property="twitter:image"\/>/, '')
     .replace(/<meta property="og:type" content="website"\/>/, '')                // regenerated above (article for posts)
-    .replace(/<link href="[^"]*" rel="shortcut icon" type="image\/x-icon"\/>/, '<link href="assets/brand/stargo-wordmark-600.png" rel="shortcut icon" type="image/png"/>')
-    .replace(/<link href="[^"]*" rel="apple-touch-icon"\/>/, '<link href="assets/brand/stargo-wordmark-600.png" rel="apple-touch-icon"/>');
+    /* The tab icon. It pointed at the wordmark, which is a 139:22 lozenge: in a
+       16px tab that is an unreadable smear, which is what the owner saw. The
+       brand's square mark is used instead, cut to the sizes browsers actually
+       ask for — 16 and 32 for the tab, 48 for Windows' shortcut, 180 for iOS's
+       home screen. `shortcut icon` stays for browsers that only read that.
+       relocateAssets() prefixes ../ for pages below the root. */
+    .replace(/<link href="[^"]*" rel="shortcut icon" type="image\/x-icon"\/>/,
+      '<link href="assets/brand/stargo-icon-32.png" rel="shortcut icon" type="image/png"/>'
+      + '<link href="assets/brand/stargo-icon-16.png" rel="icon" type="image/png" sizes="16x16"/>'
+      + '<link href="assets/brand/stargo-icon-32.png" rel="icon" type="image/png" sizes="32x32"/>'
+      + '<link href="assets/brand/stargo-icon-48.png" rel="icon" type="image/png" sizes="48x48"/>')
+    .replace(/<link href="[^"]*" rel="apple-touch-icon"\/>/, '<link href="assets/brand/stargo-icon-180.png" rel="apple-touch-icon" sizes="180x180"/>');
   const headText = out.slice(0, out.indexOf('<body')).replace(/<link[^>]*>/g, '');
   if (/Mōno|monostudio|Scalora|Lifelogx/i.test(headText)) throw new Error(`chrome: template metadata survives in <head> of ${current}`);
   return out;
