@@ -314,6 +314,17 @@ function scripts(html) {
     out = out.replace('<script src="js/app.fused.js"', '<script src="js/stargo-mobile-copy.js"></script><script src="js/app.fused.js"');
     if (!out.includes('js/stargo-mobile-copy.js')) throw new Error('chrome: bundle script tag not found');
   }
+  /* The homepage's opening animation (tools/blocks/og-intro.*), on the one page
+     that carries its overlay. It replays three donor animations with GSAP, so
+     it has to run after js/gsap.min.js: `defer` puts it after every classic
+     script in the document whatever order they were written in. The overlay
+     itself is painted by css/offgrid.og.css from the <head>, so the page is
+     covered from the first paint and this script only ever animates and then
+     removes it — nothing flashes while the bundle is still arriving. */
+  if (out.includes('data-og-intro') && !out.includes('js/stargo-intro.js')) {
+    out = out.replace('</body>', '<script src="js/stargo-intro.js" defer></script></body>');
+    if (!out.includes('js/stargo-intro.js')) throw new Error('chrome: no </body> to attach the opening animation to');
+  }
   if (!out.includes('js/stargo-forms.js')) out = out.replace('</body>', '<script src="js/stargo-forms.js"></script></body>');
   if (!out.includes('js/stargo-tabs.js')) out = out.replace('</body>', '<script src="js/stargo-tabs.js"></script></body>');
   if (out.includes('data-stargo-video') && !out.includes('js/stargo-media.js')) out = out.replace('</body>', '<script src="js/stargo-media.js"></script></body>');

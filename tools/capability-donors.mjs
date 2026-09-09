@@ -26,6 +26,49 @@ import { SITE } from './paths.mjs';
    more. See tools/blocks/README.md. */
 const BLOCKS = [];
 
+/**
+ * Refuse a block stylesheet whose comments do not close where they appear to.
+ *
+ * These files carry long prose explaining every measured number, so an edit
+ * that adds a paragraph can easily leave the previous paragraph's closing delimiter in the
+ * middle of it. What follows is then not a comment and not CSS: the parser
+ * discards the stray text AND the rule after it, silently. That is not a
+ * hypothetical — it happened to ro-gallery's stage rule, which vanished from
+ * the sheet while its own @media variants stayed, so the block half-worked and
+ * the cause was invisible in the file, in the build output and in the served
+ * css. The browser is the only thing that noticed, and only if asked.
+ *
+ * Quoted strings are stepped over, because a declaration may quote a
+ * comment delimiter as a string value.
+ */
+function assertCommentsClose(css, where) {
+  let i = 0, line = 1, openedAt = 0;
+  let inComment = false, quote = '';
+  while (i < css.length) {
+    const c = css[i], next = css[i + 1];
+    if (c === '\n') line++;
+    if (inComment) {
+      if (c === '*' && next === '/') { inComment = false; i += 2; continue; }
+    } else if (quote) {
+      if (c === '\\') { i += 2; continue; }
+      if (c === quote) quote = '';
+    } else if (c === '"' || c === "'") {
+      quote = c;
+    } else if (c === '/' && next === '*') {
+      inComment = true; openedAt = line; i += 2; continue;
+    } else if (c === '*' && next === '/') {
+      throw new Error(
+        `${where}:${line}: a comment is closed here that was never opened. ` +
+        'The text before it is outside any comment, so the css parser drops it ' +
+        'and the rule that follows it. Check whether an earlier paragraph ' +
+        'already ended with */.'
+      );
+    }
+    i++;
+  }
+  if (inComment) throw new Error(`${where}:${openedAt}: this comment is never closed.`);
+}
+
 /* ------------------------------------------------------------------ run -- */
 
 mkdirSync(`${SITE}/tools/fragments`, { recursive: true });
@@ -87,7 +130,9 @@ ${readFileSync(ownJs, 'utf8')}
 
   const own = `${SITE}/tools/blocks/${b.id}.css`;
   if (existsSync(own)) {
-    sheets.get(b.donor).push(`/* ---- ${b.id}: hand-written, from tools/blocks/${b.id}.css ---- */\n${readFileSync(own, 'utf8')}\n`);
+    const css = readFileSync(own, 'utf8');
+    assertCommentsClose(css, `tools/blocks/${b.id}.css`);
+    sheets.get(b.donor).push(`/* ---- ${b.id}: hand-written, from tools/blocks/${b.id}.css ---- */\n${css}\n`);
   }
 
   if (!payloads.has(b.donor)) payloads.set(b.donor, { events: {}, actionLists: {} });
