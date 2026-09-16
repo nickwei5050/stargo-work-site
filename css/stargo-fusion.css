@@ -2095,8 +2095,9 @@ html[lang^="zh"] .hero .max-w-left.add-tp p.top-text.big.nm {
 
 /* workforce.html — the V6 content (tools/copy.mjs LX_FEATURE_WORKFORCE and
    WORKFORCE_ROLE_GROUPS; built by tools/build-site.mjs PAGES['workforce.html']).
-   Every selector below is scoped to a class the workforce builder adds, so no
-   other Lifelogx page is touched. */
+   Every selector below is scoped to a class the workforce builder adds, or to
+   .lx-feature-title-holder, which only the feature template (workforce.html,
+   both languages) carries — so no other Lifelogx page is touched. */
 
 /* 1. The pink panel's heading, 「有岗位，有团队，有工作台」, and the role-group
       heading beside the list. Neither is split into characters (no IX on
@@ -2209,7 +2210,12 @@ html[lang^="zh"] .lx-scope .lx-v6-team-display {
       grows with its content there, and a longer message (the English ones
       wrap to two lines) has to push the card, not spill out of it. At 768
       and up the card is a fixed 400px square; the three messages take about
-      the height the picture did (measured, see the V6-D report). */
+      the height the picture did. Measured with transforms off, inside the
+      second card: the picture was 384x222 at 768-1024; the messages are
+      384x214 in English and 384x149 in Chinese, all three inside the card
+      at 320, 390, 768, 1024 and 1440, and the card never scrolls. Below 480
+      the card grows with them: 416px tall at 320 and 350 at 390 in English,
+      281 and 246 in Chinese, where the picture card was 224 and 255. */
 .lx-scope .lx-v6-scene-label {
   margin-bottom: .5rem;
   opacity: .72;
