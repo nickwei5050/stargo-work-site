@@ -2119,8 +2119,29 @@ html[lang^="zh"] .lx-scope .lx-v6-roster-flow {
   word-break: keep-all;
 }
 /* The English role-group heading is two sentences, each an inline block
-   (the builder's spans), so the first line break falls between them. */
-.lx-scope .lx-v6-roster-chunk { display: inline-block; }
+   (the builder's spans), so the first line break falls between them; inside
+   the second the template's own balance (.lx-header-container-left) evens the
+   lines: "One task-focused" / "AI workforce." at 320, 390, 768 and 1440.
+   As one string it read "Ten role groups. One task-" / "focused AI
+   workforce." at 768. */
+.lx-scope .lx-v6-roster-chunk { display: inline-block; text-wrap: balance; }
+/* Between the template's 991px fold and its 1280px container the heading
+   column (1fr of 1fr 1.5fr) is narrower than "One task-focused" at 48px —
+   384px against about 390px at 1024 — and the sentence broke 「One task-」 /
+   「focused」 / 「AI workforce.」. 1fr 1.25fr gives it 427px there; the list
+   keeps 533px, and every row still shows its group and count on one line. */
+@media screen and (min-width: 992px) and (max-width: 1279px) {
+  .lx-scope .lx-v6-roster .lx-careers_sticky-grid { grid-template-columns: 1fr 1.25fr; }
+}
+
+/* English display lines the zh sweep does not reach (it is scoped to
+   html[lang^="zh"]; the Chinese page already balances both). Unbalanced, the
+   hero's "Build the team your task needs." left "needs." alone at 768, and
+   the team heading left "result." alone at 768 and 1024. */
+.lx-scope .lx-feature-title-holder .lx-heading-style-h1,
+.lx-scope .lx-v6-team-title {
+  text-wrap: balance;
+}
 
 /* The display line behind the team cards, 「一个目标，一个团队。」. It IS
    split per character (IX), so keep-all cannot reach it; it is written as two

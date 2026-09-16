@@ -1264,13 +1264,17 @@ export const LX_FEATURE_WORKFORCE = {
      role" wrapped to two lines on every card (measured at 390 and 768). That
      extra line made the parked name panel 14px taller, and at 768 its first
      line then showed 8.6px above the bottom edge of each card (the template's
-     "Team" never wrapped). The card's name already says what the role is. */
+     "Team" never wrapped). The card's name already says what the role is.
+     The same row sets how wide the name column is, and the round arrow beside
+     it gives up the difference: "Example Operations" is 106px, which squeezed
+     the arrow to 22px wide at 768 (the template's widest row left 28px), so
+     the operations cards say "Ops" in English. */
   roles: [
     { name: B('市场研究 AI 员工', 'Market Research AI'), dept: B('岗位示例', 'Example'), owns: B('市场', 'Marketing') },
     { name: B('销售跟进 AI 员工', 'Sales Follow-up AI'), dept: B('岗位示例', 'Example'), owns: B('销售', 'Sales') },
     { name: B('产品规格 AI 员工', 'Product Spec AI'), dept: B('岗位示例', 'Example'), owns: B('产品', 'Product') },
     { name: B('财务对账 AI 员工', 'Reconciliation AI'), dept: B('岗位示例', 'Example'), owns: B('财务', 'Finance') },
-    { name: B('统筹协调 AI 员工', 'Coordination AI'), dept: B('岗位示例', 'Example'), owns: B('运营', 'Operations') },
+    { name: B('统筹协调 AI 员工', 'Coordination AI'), dept: B('岗位示例', 'Example'), owns: B('运营', 'Ops') },
   ],
   /* The pink panel: what a role is, how work is handed to a team, and the
      desktop it happens in. The heading's three phrases are four characters
@@ -1286,7 +1290,7 @@ export const LX_FEATURE_WORKFORCE = {
     /* M14's summary, its availability line and its roadmap boundary: the
        browser comes first, and native clients, mobile and mini-programs are
        phased — so nothing on this page reads as a shipped phone app. */
-    { title: B('网页桌面与 AI 办公', 'Browser desktop and AI office'), text: B('在一个网页桌面里打开业务应用、处理文件、调用数字员工，并连接企业授权的账号。网页端是当前重点；语音、自动化与外部动作按开通范围开放，Windows / Mac 客户端、移动端与小程序分阶段完善。', 'Open business apps, work with files, call on AI employees and connect authorized business accounts in one browser desktop. The browser comes first: voice, automation and external actions depend on the scope enabled, and Windows / Mac clients, mobile and mini-programs are phased in.') },
+    { title: B('网页桌面与 AI 办公', 'Browser desktop and AI office'), text: B('在一个网页桌面里打开业务应用、处理文件、调用数字员工，并连接企业授权的账号。网页端是当前重点；语音、自动化与外部动作按开通范围开放，桌面客户端、移动端与小程序分阶段完善。', 'Open business apps, work with files, call on AI employees and connect authorized business accounts in one browser desktop. The browser comes first: voice, automation and external actions depend on the scope enabled, and desktop clients, mobile and mini-programs are phased in.') },
   ],
   // M14's one desktop, item by item, under the third ability.
   bullets: [
@@ -1330,7 +1334,7 @@ export const LX_FEATURE_WORKFORCE = {
     B('这项承诺需要有权人确认。', 'This commitment needs an authorized reviewer.'),
   ],
   // The small role card inside the desktop collage: one more example role.
-  extraRole: { name: B('报告 AI 员工', 'Reporting AI'), owns: B('运营', 'Operations') },
+  extraRole: { name: B('报告 AI 员工', 'Reporting AI'), owns: B('运营', 'Ops') },
   /* The paragraph under the cards: M11's summary, V6 §6.3's example, M11's
      limits and the phase line. It is the only place the scenario is told as
      sentences. The column is ordinary text flow, so the paragraph grows with
