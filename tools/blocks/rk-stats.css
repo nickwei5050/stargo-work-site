@@ -32,3 +32,13 @@
    anchors this way (`scroll-margin-top` on the lifelogx sections). Stated in
    vh because the dead band is a share of the viewport, not a fixed height. */
 .rk-stats { scroll-margin-top: 12vh; }
+
+/* The pointer at the end of the quotation paragraph (rk-stats.mjs) is this
+   site's own inline link, the only one in the band: it takes the paragraph's
+   face and colour, and an underline says it is a link. */
+.rk-stats .rk-stats-link { color: inherit; text-decoration: underline; text-underline-offset: .2em; cursor: pointer; }
+
+/* The heading is three clauses on three lines (rk-stats.mjs joins them with
+   `<br/>`); on the Chinese page `keep-all` stops a clause that meets a narrower
+   column from breaking inside a word, so it wraps whole instead. */
+html[lang^="zh"] .rk-stats .rk-rt-text-style-h2 { word-break: keep-all; }

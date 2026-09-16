@@ -263,3 +263,21 @@
   .qx-orbit .qx-images-rotated-box { animation: qxo-unblur 0s linear both; }
   .qx-orbit .qx-rotated-images { animation: none; }
 }
+
+/* ------------------------------------------------------------------------
+   F. The note in the left cell (HOME_LOOP_TABLE.note, see qx-orbit.mjs).
+      qubix's caption there was three words; ours is one sentence, the line
+      that ties the nine steps to the homepage's five stages. From 992 up the
+      cell is a `1fr` track (`1fr 4fr 1fr`, then `1fr 5fr 1fr` from 1280)
+      whose floor is its content's min-content, and for the English sentence
+      that is its longest word: measured 80px at 1024, seven lines of one or two
+      words. The floor below is the width the same cell already has at 1440
+      (169px), so the sentence reads as a short caption at every desktop width.
+      Nothing else in the cell changes; below 992 the donor makes the cell a
+      full-width row and no floor is needed. */
+@media screen and (min-width: 992px) {
+  .qx-orbit .qx-orbit-note { min-width: 10.5rem; }
+}
+/* The note is a sentence of body copy: `pretty` keeps its last line from being
+   a single character (「…两套系 / 统。」 at 390 and 1440 before). */
+.qx-orbit .qx-orbit-note { text-wrap: pretty; }

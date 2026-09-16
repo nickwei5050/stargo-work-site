@@ -1,5 +1,5 @@
 /**
- * 一个外贸闭环 — the nine stages of HOME_LOOP_TABLE, as renok's insight list.
+ * 一条业务主线 — the nine steps of HOME_LOOP_TABLE, as renok's insight list.
  *
  * Donor: renok's `.rt-insight` (index.html). Full-bleed rows between hairlines:
  * a number, a two-line description, a large title and an arrow, with a
@@ -92,7 +92,8 @@ function hooks(unit, which) {
 const FIRST = 'rk-rt-top-border';
 const NEXT = 'rk-rt-top-margin';
 
-/** "UNDERSTAND" → "Understand": renok sets its titles in Title case. */
+/** "UNDERSTAND" → "Understand", "FOLLOW-UP" → "Follow-up": renok sets its
+    titles in Title case. */
 const titleCase = (w) => w.charAt(0) + w.slice(1).toLowerCase();
 
 export function render(frag, ctx) {
@@ -132,11 +133,14 @@ export function render(frag, ctx) {
   const restHooks = hooks(units[RESTING_ROW], RESTING_ROW + 1);
 
   /* --------------------------------------------------------------- rows --- */
+  const groups = new Set(C.CAPABILITY_GROUPS.map((g) => g.n));
   const rows = L.rows.map((r, i) => {
-    const [key, , point] = r;
+    const [key, , point, group] = r;
     const [num, name] = key.split(' · ');
-    if (!/^\d\d$/.test(num) || !/^[A-Z]+$/.test(name ?? '')) throw new Error(`rk-insight: stage "${key}" is not "NN · NAME"`);
+    /* One hyphen is allowed: V5 names the eighth step "Follow up". */
+    if (!/^\d\d$/.test(num) || !/^[A-Z]+(-[A-Z]+)?$/.test(name ?? '')) throw new Error(`rk-insight: stage "${key}" is not "NN · NAME"`);
     if (!point) throw new Error(`rk-insight: stage ${key} has no point`);
+    if (!groups.has(group)) throw new Error(`rk-insight: stage ${key} names catalogue group "${group}", which CAPABILITY_GROUPS does not have`);
 
     let row = units[i % DONOR_ROWS];
 
@@ -175,10 +179,15 @@ export function render(frag, ctx) {
     if (lang === 'zh' && !zhName) throw new Error(`rk-insight: stage ${name} has no Chinese name in HOME_LOOP_TABLE.stageNames`);
     row = setText(row, 'rk-rt-text-style-h1', escapeHtml(lang === 'zh' ? zhName : titleCase(name)));
 
-    /* The row is a link to renok's service page; ours name stages whose
-       capabilities are in the catalogue, so they go there. */
+    /* The row is a link to renok's service page; ours name steps whose
+       capabilities are in the catalogue, so each goes to the one group that
+       step belongs to (the row's fourth field) — discover and qualify to 02,
+       engage to 03, understand and respond to 04, quote to 07, execute to 08,
+       follow-up to 05, learn to 14 — rather than to the top of the catalogue.
+       Every group row is a closed accordion whose heading names the group, so
+       the jump lands on a visible, labelled row the reader opens. */
     if (!row.includes('href="service.html"')) throw new Error(`rk-insight: row ${i + 1} no longer links to the donor's service page`);
-    row = row.replace('href="service.html"', 'href="#atlas"');
+    row = row.replace('href="service.html"', `href="#g${group}"`);
 
     /* Both images are decoration beside a title that already names the stage:
        renok's own alts are its file names. */

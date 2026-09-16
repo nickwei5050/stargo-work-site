@@ -66,8 +66,14 @@ export function render(frag, ctx) {
      (U+2060) between the characters of a Chinese phrase — the CJK equivalent,
      since Chinese breaks between any two characters — holds the lead and the
      tail together. A phrase with spaces (the English lead and tail) is left to
-     wrap at its spaces as the donor's does. */
-  const whole = (s) => (/\s/.test(s) ? s : [...s].join('⁠'));
+     wrap at its spaces as the donor's does.
+     A Chinese phrase longer than a line — 到把企业工作连接起来 is ten
+     characters, and the h1 holds eight at 1440 and six on a phone — would
+     overflow if held whole, so the copy marks its one permitted break with a
+     zero-width space (U+200B): each part is joined, and the ZWSP between them
+     stays a bare break opportunity (a joiner beside it would cancel it). */
+  const ZWSP = '\u200b';
+  const whole = (s) => (/\s/.test(s) ? s : s.split(ZWSP).map((part) => [...part].join('\u2060')).join(ZWSP));
   const accent = escapeHtml(t(S.heroAccent)).replace(/ /g, '&nbsp;');
   html = html.replace(H1, (m, o, lead, so, _accent, sc, tail, c) =>
     `${o}${escapeHtml(whole(t(S.heroLead)))} ${so}${accent}${sc} ${escapeHtml(whole(t(S.heroTail)))}${c}`);
@@ -76,7 +82,9 @@ export function render(frag, ctx) {
   if ((html.match(/<p[\s>]/g) ?? []).length !== 1) throw new Error('rk-hero: expected exactly one paragraph');
   html = html.replace(/(<p[^>]*>)([\s\S]*?)(<\/p>)/, (m, o, inner, c) => `${o}${escapeHtml(t(S.heroBody))}${c}`);
 
-  /* ---- button: two copies of the label roll over each other ---- */
+  /* ---- button: two copies of the label roll over each other ----
+     「查看功能全景」 is the "all capabilities" door, so it goes to #atlas, the
+     complete catalogue, not to one topic. */
   html = setTextAll(html, 'rk-rt-button-text', escapeHtml(t(S.heroButton)));
   if (!html.includes('href="contact-one.html"')) throw new Error('rk-hero: the button no longer links to contact-one.html');
   html = html.split('href="contact-one.html"').join('href="#atlas"');

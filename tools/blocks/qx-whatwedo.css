@@ -121,3 +121,12 @@
     left: 52%;
   }
 }
+
+/* 9. The condition that closes a panel (qx-whatwedo.mjs) — a connection is not
+      live until authorized, an improvement is approved before use. Same body
+      type as the lines above it, set off by a hairline on the donor's own
+      node gap so it reads as the panel's footnote, not as one more line. */
+.qx-whatwedo .qx-whatwedo-caveat {
+  border-top: 1px solid rgba(255, 255, 255, .16);
+  padding-top: var(--qx-gap);
+}

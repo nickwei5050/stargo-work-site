@@ -130,9 +130,9 @@
 /* cinery's four titles are single words — PRODUCTION, EDITING, DIRECTION,
    FILMING — drawn at 8vw (7rem at 1440 and up), `nowrap`, inside a
    `.service-title-wrap` of exactly that height. Our names are longer, and
-   nothing shorter exists: this block prints the capability's Chinese name on
-   the Chinese page (客户研究, 贸易情报) and its product name on the English page,
-   and both come from the catalogue. Measured at 1440 the donor's own
+   nothing shorter says the topic: the Chinese page prints 企业研究 / 关键决策角色
+   and the English page "Company Research" / "Key Decision Roles"
+   (CAP_V6A.growth in tools/copy.mjs). Measured at 1440 the donor's own
    `◉ PRODUCTION` is 759px in a 768px column; `◉ 进口商补货雷达` is 911px and
    `◉ BUYING COMMITTEE INTELLIGENCE` is about 1900px, so those rows would be cut
    off mid-word by the wrap's `overflow: hidden`.
@@ -230,4 +230,36 @@
 }
 @media screen and (min-width: 1440px) {
   .cn-service .cn-uniform-title .cn-service-title { height: 7rem; }
+}
+
+/* ------------------------------------------------------- 5. the lead -- */
+
+/* The Growth OS lead (cn-service.mjs, "The lead"): two paragraphs this site
+   adds above the donor's button, in the `.content-item` cell. cinery has no
+   paragraph in its opening, so the type is the block's own description type —
+   `.service-description`'s colour and size, the body's 1.4 leading — and the
+   measure is the description column's own 400px (`.service-description-wrap`
+   max-width). The note under the lead (outputs and availability) is the
+   kicker's secondary colour, one step quieter, at the same size. A paragraph
+   of five or six lines reads left-aligned even where its box sits on the
+   right: right-aligned, every line started at a different place.
+
+   The cell is `place-self: end` from 992 up (bottom-right, beside the
+   heading) and start-aligned below it, so it becomes a column whose items
+   follow that side: box and button on the right on the wide grid, on the
+   left below 992, as the rows' descriptions move on small screens.
+   The button keeps its own size — the column does not stretch it. */
+.cn-service .cn-content-item { display: flex; flex-direction: column; align-items: flex-end; gap: 1rem; }
+.cn-service .cn-service-lede {
+  max-width: 25rem;
+  margin: 0;
+  color: var(--neutral-color--primary-neutral);
+  font-size: var(--_sizes---fixed--small-02);
+  line-height: 1.4;
+  text-align: left;
+  text-wrap: pretty;
+}
+.cn-service .cn-service-lede-note { color: var(--neutral-color--secondary-neutral); margin-bottom: 1rem; }
+@media screen and (max-width: 991px) {
+  .cn-service .cn-content-item { align-items: flex-start; }
 }

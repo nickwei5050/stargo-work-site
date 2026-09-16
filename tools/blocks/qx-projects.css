@@ -74,3 +74,27 @@
       any scale. css/stargo-fusion.css does exactly this inside .sc-scope and
       .lx-scope, and qx-news inside .qx-news. */
 .qx-projects a { cursor: pointer; }
+
+/* 4. The card's explanation (qx-projects.mjs). qubix's category line was three
+      words beside the title, in a `space-between` row; ours is a sentence, and
+      on the large card a short paragraph — which squeezed the title beside it
+      to two or three characters a line (measured at 390: 「团队分 / 工、交 /
+      流、并 / 行与接 / 力」). The row may now wrap: the title keeps its own
+      width, and the explanation takes what is left, or a line of its own under
+      the title when less than 16rem is left. Being two or three lines rather
+      than the donor's one, it reads left-aligned wherever it lands and starts
+      level with the title (the donor bottom-aligned one line with another).
+      The type, colour and spacing are qubix's. */
+.qx-projects .qx-project-card-content-wrap { flex-wrap: wrap; align-items: flex-start; column-gap: 2rem; row-gap: .5rem; }
+.qx-projects .qx-project-card-title { flex: 0 1 auto; }
+.qx-projects .qx-project-card-ctg { flex: 1 1 16rem; max-width: 46rem; text-align: left; text-wrap: pretty; }
+
+/* 5. The Chinese card titles carry a zero-width space where a phrase ends
+      (288 个 / 跨部门 / 专业岗位); `keep-all` makes those and the punctuation the
+      only break points, so a narrow card never splits 跨部门. */
+html[lang^="zh"] .qx-projects .qx-project-card-title { word-break: keep-all; }
+
+/* 6. The section heading, balanced on the English page too. The Chinese page
+      already is (css/stargo-fusion.css); the English "Run the work with an AI
+      team" left "team" alone on a second line from 390 to 768. */
+.qx-projects .qx-h2.qx-project-title-mw { text-wrap: balance; }

@@ -1139,9 +1139,19 @@ PAGES['capabilities.html'] = (lang) => {
     h = h.replace(WORK_MAIN, `<div class="macro-intro"><p class="top-text">${escapeHtml(t(K.macroCaption))}</p><h2 class="h2">${escapeHtml(t(K.macroTitle))}</h2><p class="top-text big">${escapeHtml(t(K.macroLede))}</p></div><div class="spacer-m"></div>${WORK_MAIN}`);
   }
 
-  const years = h.match(/<h3 class="work-title">\d\d<\/h3><h3 class="work-title">©<\/h3>/g);
-  if (!years || years.length !== 4) throw new Error('capabilities: expected 4 year pairs');
-  years.forEach((y, i) => { h = h.replace(y, `<h3 class="work-title">${K.macro[i].groups.length}</h3><h3 class="work-title">${t(K.unit)}</h3>`); });
+  /* Each pair sits alone in the card panel's `.copy-flex` row. Each area's
+     one-line description (V5 P02) follows that row inside the card's glass
+     panel: without it the four cards named an area and a number and nothing
+     about the work. `.macro-desc` exists on this page only and is styled in
+     css/stargo-fusion.css (V6-A block); the homepage's cards share the panel
+     rules and are untouched. */
+  const years = h.match(/<div class="copy-flex"><h3 class="work-title">\d\d<\/h3><h3 class="work-title">©<\/h3><\/div>/g);
+  if (!years || years.length !== 4) throw new Error('capabilities: expected 4 year pairs, each alone in its .copy-flex row');
+  years.forEach((y, i) => {
+    if (!K.macro[i].desc) throw new Error(`capabilities: area ${i + 1} has no description`);
+    h = h.replace(y, `<div class="copy-flex"><h3 class="work-title">${K.macro[i].groups.length}</h3><h3 class="work-title">${t(K.unit)}</h3></div>` +
+      `<p class="macro-desc">${escapeHtml(t(K.macro[i].desc))}</p>`);
+  });
 
   h = s(h, 'id="Pricing"', 'id="start"');
   h = s(h, '(Pricing)', t(K.ladderCaption));
