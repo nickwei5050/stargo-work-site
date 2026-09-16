@@ -45,6 +45,9 @@
       the only break points, so 「Sales Desk：把客户聊明白，把订单跟到底」 wraps
       as Sales Desk： / 把客户聊明白， / 把订单跟到底 instead of inside 客户 or
       订单 — measured before this rule at 1440: 「Sales Desk：把客 / 户聊明白，
-      把订单 / 跟到底」. `balance` evens the lines where two would do. The type
-      itself — size, weight, leading — is the donor's. */
-html[lang^="zh"] .qx-news .qx-h2 { word-break: keep-all; text-wrap: balance; }
+      把订单 / 跟到底」. The type itself — size, weight, leading — is the
+      donor's. */
+html[lang^="zh"] .qx-news .qx-h2 { word-break: keep-all; }
+/* Balanced in both languages: the English "Sales Desk: from customer to
+   order" left "order" alone on its third line from 1024 up. */
+.qx-news .qx-h2 { text-wrap: balance; }

@@ -1589,11 +1589,11 @@ export const CAP_V6A = {
      the steps 01 / 02 / 03 of V5 M04's sequence — draft, review and approval,
      the kept version — not counts, so nothing on the band reads as a result.
      Each label is one line of the donor's 24px slot, which is 163px wide at
-     768: six Chinese characters or about seventeen Latin ones. The picture is
+     768: six Chinese characters or about fifteen Latin ones. The picture is
      this site's own editorial art for quoting (precision parts aligned and
      checked), in place of renok's branding portrait. */
   quote: {
-    steps: [B('按规则起草', 'Drafted by rules'), B('核对并批准', 'Checked, approved'), B('保留正式版本', 'Approved version')],
+    steps: [B('按规则起草', 'Drafted by rules'), B('有权人批准', 'Human approval'), B('保留正式版本', 'Version kept')],
     image: 'os-quote-studio',
     button: { label: B('报价能力详情', 'Quotation details'), href: '#g07' },
     /* The paragraph's closing pointer to where product facts live. */

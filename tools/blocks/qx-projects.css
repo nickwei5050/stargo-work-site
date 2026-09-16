@@ -93,3 +93,8 @@
       (288 个 / 跨部门 / 专业岗位); `keep-all` makes those and the punctuation the
       only break points, so a narrow card never splits 跨部门. */
 html[lang^="zh"] .qx-projects .qx-project-card-title { word-break: keep-all; }
+
+/* 6. The section heading, balanced on the English page too. The Chinese page
+      already is (css/stargo-fusion.css); the English "Run the work with an AI
+      team" left "team" alone on a second line from 390 to 768. */
+.qx-projects .qx-h2.qx-project-title-mw { text-wrap: balance; }
