@@ -2120,10 +2120,13 @@ html[lang^="zh"] .hero .max-w-left.add-tp p.top-text.big.nm {
       set by anyone: the right column's three pictures are 30 + 42 + 27rem
       (1624px with gaps) and the text column was shorter, so the row simply
       ended 179px (1440), 181px (1024) or 305px (768) under the last stat.
-      The column now carries the six delivery steps (V6 §8.4) where Mono had
-      four lines, and stat sentences that say what each figure counts, so it
-      is 1617px of 1624 at 1440 — measured gap 7px at 1440 and 1920, 12px at
-      1024, 44px at 768, i.e. the stats sit on the quote card.
+      The column now carries the owner-cockpit text, the six delivery steps
+      (V6 §8.4) where Mono had four short lines, and stat sentences that say
+      what each figure counts, so it is the taller column: without this rule
+      the last stat sits directly on the quote card. Measured row height with
+      it (the pictures stay 1624): 1757 (zh) / 2189 (en) at 1440, 1753 / 2251
+      at 1024, 1898 / 2680 at 768 — the English text is the longer, so at 768
+      the pictures end about 1050px above the last stat.
       Below 768 the template already separates the two with
       `.testi-grid._01 { margin-top: 100px }`; the same 100px goes under the
       text column here. While the pictures are the taller column it changes
@@ -2144,29 +2147,27 @@ html[lang^="zh"] .testi-grid._01 .top-text.for-sst { text-wrap: pretty; }
       the room is shared between them instead of going mostly to the middle
       (#loop and #atlas keep the shared .8 / 1.7 / 1 split above). Same
       specificity as that rule, later in the file. */
-#table .award-wrapper, #table .grdi-3-columns.mk3 {
-  grid-template-columns: minmax(0, .8fr) minmax(0, 1.35fr) minmax(0, 1.35fr);
-  column-gap: 12px;
-}
 /*    The template's rows have no gap between columns, which was fine for one
       word a cell; with sentences a long first-column word met the next
       column's text with nothing between (measured at 768: 「conversations」
       ended 8px inside the middle column, at 480 4px short of it). 12px keeps
       them apart; header and rows get the same gap, so the labels stay over
       their columns. Below 479px the header is a flex legend (its own
-      column-gap: 16px above) and the rows are stacks, so this changes nothing
-      there. */
+      column-gap: 16px above) and the rows are stacks, so the gap changes
+      nothing there. */
+#table .award-wrapper, #table .grdi-3-columns.mk3 {
+  grid-template-columns: minmax(0, .8fr) minmax(0, 1.35fr) minmax(0, 1.35fr);
+  column-gap: 12px;
+}
 /*    Below 479px each row is a centred stack (see "2. enterprise's table"
       above) and these cells now run to two lines on a phone — measured at
       390: 「邮箱、即时沟通、B2B 平台询盘与 CRM 客」/「户记录」 — so a left-aligned
       second line hung off a centred first one. Centred like the stack and
-      the legend above it. */
+      the legend above it, and balanced: without it 「户记录」, 「城业务」 and
+      「行范围」 were left short under a full first line at 390. */
 @media screen and (max-width: 479px) {
   #table .award-text { text-align: center; justify-content: center; text-wrap: balance; }
 }
-/*    `balance` too: a centred cell of two or three lines reads best with even
-      lines, and without it 「户记录」, 「城业务」 and 「行范围」 were left short
-      under a full first line at 390. */
 
 /* 4. The four hero panels' pictures follow their new subjects (V6 §8.1, §10).
       `.image-about._01…_04` exist only on the enterprise page; their pictures
@@ -2189,8 +2190,9 @@ html[lang^="zh"] .testi-grid._01 .top-text.for-sst { text-wrap: pretty; }
 
 /* 5. The six delivery steps (V6 §8.4) as a numbered list. Each step is a
       name and what it involves, and at every width from 320 to 1920 it takes
-      two or three lines in this paragraph (measured: at most 10 characters a
-      line at 768, 14 to 15 at 390, 1024, 1440 and 1920). Written as plain
+      two or more lines in this paragraph (measured, Chinese: at most 10
+      characters a line at 768, 14 to 15 at 390, 1024, 1440 and 1920; English
+      steps run to three lines at 1440 and five at 768). Written as plain
       lines, a step's second line began under its number, so the numbers no
       longer marked where a step starts. tools/build-site.mjs writes each step
       as .ent-step (number | words); the number gets a fixed track, the words
