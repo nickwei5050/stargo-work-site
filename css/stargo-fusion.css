@@ -2687,6 +2687,80 @@ html[lang^="en"] body:has(.about-grid) h1.inner-title { text-wrap: balance; }
    and the next one so parallel edits merge cleanly. */
 /* V6-G-START */
 
+/* Contact card: V5 P07's note that a demo request is not a booked meeting
+   (tools/blocks/cn-contact.mjs). It is small print and sits directly above the
+   consent line tools/chrome.mjs appends, so it takes that line's size and
+   leading (`.stargo-form-consent`, above) and only its top margin: the consent
+   line's own 16px top margin is the gap between the two. */
+.cn-contact .stargo-form-before {
+  margin: 16px 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* Contact card: the colour of the three paragraphs this site puts inside
+   cinery's dark card — the status line js/stargo-forms.js writes errors and
+   the e-mail fallback into, the demo-request note above, and the consent line
+   tools/chrome.mjs appends to every form. All three computed rgb(0,0,0) here
+   (this page's own paragraph colour, meant for Mono's white forms), which on
+   the card's #232324 measures 1.34:1: the privacy sentence and any error were
+   there but could not be read. Measured before V6 as well; the note added for
+   V6 would have inherited the same. The status line takes cinery's white, as
+   the field labels do; the two lines of small print take cinery's secondary
+   neutral (#bbb), its colour for secondary text. Scoped to `.cn-contact`, so
+   every other form keeps its own. */
+.cn-contact p.stargo-form-note {
+  color: var(--primary-color--white, #fff);
+}
+.cn-contact p.stargo-form-before,
+.cn-contact p.stargo-form-consent {
+  color: var(--neutral-color--secondary-neutral, #bbb);
+}
+
+/* Contact card: the message box's placeholder (V5 P07's example). cinery's
+   sheet paints placeholders #222 (`.cn-contact .cn-form-input::placeholder`),
+   its dark-on-light value; this field is rgb(57,57,58), where #222 measures
+   1.38:1 and cannot be read — the same mismatch tools/blocks/cn-contact.css
+   repairs for the select. cinery's own secondary neutral (#bbb) is its colour
+   for secondary text and measures 6.0:1 here. One more class than the donor
+   rule, so it wins wherever the two sheets load. */
+.cn-contact .cn-form-input.cn-is-text-area::placeholder {
+  color: var(--neutral-color--secondary-neutral, #bbb);
+  opacity: 1;
+}
+
+/* Blog index hero: V5 P09's sentence under the headline
+   (tools/build-site.mjs, PAGES['blog.html']). It wears the Lifelogx about
+   hero's own description pair, whose gap there comes from that hero's flex
+   column; `.lx-blog-title-big` has none, so the space between heading and
+   sentence is set here: 1.5rem, which keeps the sentence visibly part of the
+   heading's group while the template's own 4rem (2.5rem ≤767) margin under
+   `.lx-blog-title-big` still separates the group from the cards. The
+   template's `.lx-text-size-regular` supplies size, colour and face
+   untouched. */
+.lx-scope .lx-blog-title-big .stargo-blog-intro {
+  margin-top: 1.5rem;
+}
+
+/* Blog index hero, English: "Understand AI through real business work." does
+   not fit the 40rem measure on two lines at 3.2–4rem, and unbalanced it left
+   "work." alone on a third line at 768–1920. Balance evens the three lines;
+   the Chinese page already balances every `.lx-heading-style-h1` (the sweep
+   above), so this only brings the English heading of this one page in line.
+   No size changes. */
+.lx-scope .lx-blog-hero-title {
+  text-wrap: balance;
+}
+
+/* Contact page heading, English: "Which workflow should work better first?"
+   left "first?" alone on a third line at 320, 390 and 1024. Same fix, scoped
+   to this one heading by the class tools/build-site.mjs gives it
+   (`h1.inner-title` is shared with other pages). The Chinese heading is
+   already balanced by the sweep above. No size changes. */
+h1.inner-title.stargo-contact-title {
+  text-wrap: balance;
+}
+
 /* V6-G-END */
 
 

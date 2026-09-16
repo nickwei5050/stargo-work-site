@@ -167,9 +167,20 @@
  *
  *     tile ×4, the       the client's name → the AI-employee role the tile
  *     allcaps slot       shows, `ABOUT.circles[i].label`, in copy.mjs's order:
- *                        市场信号 AI 员工 / 报价 AI 员工 / 跟进 AI 员工 / 调度中枢,
- *                        and Market Signal Agent / Quote Agent / Follow-up Agent
- *                        / Orchestrator. The slot is no longer a client-name
+ *                        市场信号 AI 员工 / 报价 AI 员工 / 跟进 AI 员工 / 统筹 AI
+ *                        员工, and Market Signal Agent / Quote Agent / Follow-up
+ *                        Agent / Coordinator Agent (the fourth was 调度中枢 /
+ *                        Orchestrator until V6, 2026-09-16, which retired that
+ *                        engineering word). Re-measured on the built page at
+ *                        320/390/768/992/1024/1440/1920: the pill sizes to its
+ *                        words, and COORDINATOR AGENT breaks exactly where its
+ *                        row-mate FOLLOW-UP AGENT does — two lines at 320, 390,
+ *                        992 and 1024, one at 768, 1440 and 1920 — so tiles 3
+ *                        and 4 stay alike; MARKET SIGNAL AGENT already takes
+ *                        two or three lines at those widths. 统筹 AI 员工 matches
+ *                        报价/跟进 AI 员工 (two lines at 320, one above). The
+ *                        298px budget below is the pre-V6 arithmetic, kept as
+ *                        the record. The slot is no longer a client-name
  *                        slot: it names what the tile is about, which is what
  *                        qx-projects does with the same kind of slot ("The
  *                        category slot is not a category").
@@ -321,7 +332,7 @@
  *             6773dce23469ef07fffcf87e_6776fa0ce62367e64242f0fd_case-video-2-…
  *     tile 3  跟进 AI 员工     / Follow-up Agent
  *             6773dce23469ef07fffcf87e_6776f8447c59f1e277e1ee94_case-video-03-…
- *     tile 4  调度中枢         / Orchestrator
+ *     tile 4  统筹 AI 员工     / Coordinator Agent (调度中枢 / Orchestrator before V6)
  *             6773dce23469ef07fffcf87e_6776f90cc1fa6522b3738b2d_case-video-01-…
  *
  *   — each of the four as `…-poster-00001.jpg`, `…-transcode.mp4` and

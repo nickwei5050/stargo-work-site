@@ -39,14 +39,16 @@
  *                              parenthesised eyebrow form ((定价), (联系)). A
  *                              score is a claim about customers; the label is
  *                              what CONTACT.quoteLabel does to the same slot on
- *                              the contact page, where `★★★★★` became
- *                              `(我们的承诺)`.
+ *                              the contact page, where `★★★★★` became a
+ *                              label too — `(先从一条业务开始)` since V6
+ *                              (2026-09-16), `(我们的承诺)` before it.
  *     .rating-wrap's "-"     → kept. cinery's separator glyph, the way
  *                              cn-service keeps its `◉` and its `▶︎`.
  *     p.text-size-large      → the scenario's quote
  *     .text-size-medium      → the speaker: `外贸业务员 · 示例场景`
- *     .text-size-regular     → the concept the scenario shows: 企业本体,
- *                              前置部署, 主动执行, 进化引擎 · 可治理的进化
+ *     .text-size-regular     → the concept the scenario shows — since V6
+ *                              (2026-09-16) 理解企业 · 业务背景, 按业务落地,
+ *                              主动提醒, 从结果改进
  *     .slide-text ×4         → 上一条 / 下一条 (English keeps Previous / Next,
  *                              which are the plain words for the control and
  *                              carry nothing of cinery's)
@@ -189,7 +191,7 @@ export const donor = {
  *
  *     [<Mono's quote>,   the scenario's quote          ]
  *     ['John Doe',       '外贸业务员 · 示例场景'          ]   ← the label line
- *     [<Mono's role>,    '企业本体'                      ]
+ *     [<Mono's role>,    '理解企业 · 业务背景'            ]
  *
  * so the label line is the anchor and its two neighbours are the rest of the
  * card. Found by the English label, which is the same string in every one of

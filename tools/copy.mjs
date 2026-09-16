@@ -16,9 +16,16 @@ export const LANGS = ['zh', 'en'];
 
 /* Order matters: a visitor should meet the product before the price. Pricing
    sits after every page that explains what the product does, immediately before
-   About in the menu. */
+   About in the menu.
+   The English home link said "Trade OS" while the product was pitched as an
+   operating system for global trade. V6 positions it as an enterprise AI
+   operating system for manufacturing and trade, where "Trade OS" names only a
+   part of it, so the link now says what it is — the home page — as the
+   Chinese 「首页」 always did. Nothing keys on the old word: tools/chrome.mjs
+   remapLinks() already resolves "Home" to index.html, and the breadcrumb in
+   the article pages' structured data reads this label. */
 export const NAV = [
-  { href: 'index.html', label: B('首页', 'Trade OS') },
+  { href: 'index.html', label: B('首页', 'Home') },
   { href: 'intelligence.html', label: B('智能层', 'Intelligence') },
   { href: 'capabilities.html', label: B('能力', 'Capabilities') },
   { href: 'workforce.html', label: B('数字员工', 'AI Workforce') },
@@ -76,8 +83,15 @@ export const CHROME = [
   ['Be the first to know what’s new.', B('产品进展第一时间通知你。', 'Stay close to practical AI work.')],
   ['No noise. Just curated updates.', B('不发广告，只发产品更新。', 'Receive STARGO WORK product notes and practical workflow guides.')],
   ['Thank you for subscribing!', B('订阅成功。', 'You are subscribed.')],
-  ['Oops! Something went wrong while submitting the form.', B('提交失败，请稍后重试。', 'Something went wrong. Please try again.')],
-  ['Thank you! Your submission has been received!', B('已收到，我们会尽快联系你。', 'Received. We will be in touch shortly.')],
+  /* Webflow's two form-state notices (V5 P07). The success row is used only by
+     demo-request forms — the contact page card and the 「预约企业演示」 band on
+     the home, capability and enterprise pages; the newsletter has its own row
+     above — so it names the demo request and promises nothing but a reply to the
+     details given. The failure row is shared with the newsletter, and its
+     wording fits both. js/stargo-forms.js writes its own sentence over the
+     success notice at run time; these are what stands in the markup. */
+  ['Oops! Something went wrong while submitting the form.', B('本次提交未成功，请稍后重试，或使用页面已有的商务联系方式联系。', 'Your request could not be submitted. Please try again later or use the business contact options on this page.')],
+  ['Thank you! Your submission has been received!', B('已收到你的演示需求，我们会根据提交的联系方式与你沟通。', 'Your demo request has been received. We will follow up using the contact details provided.')],
   /* The footer copyright, and the dangling hyphen after it.
      Mono ships this line as `<p class="top-text big gray sm">© 2026 Mōno™
      Studio - </p>` — a trailing " - " with nothing after it, in the donor
@@ -404,7 +418,7 @@ export const HOME_MONO = [
   ['across the', B('覆盖', 'across')],
   ['>World<', B('>十类企业职能<', '>ten enterprise functions<')],
   ['>+9<', B('>288<', '>288<')],
-  ['(Home)', B('(首页)', '(Trade OS)')],
+  ['(Home)', B('(首页)', '(Home)')],   // same word as NAV[0] (V6: no "Trade OS" label)
   ['Page Layouts', B('页面', 'Pages')],
   ['2011-26©', B('2026©', '2026©')],
 ];
@@ -1011,15 +1025,33 @@ export const PRICING = {
   ctaButton: { label: B('认识你的 AI 团队', 'Meet your AI workforce'), href: 'workforce.html' },
   faqCaption: B('(常见问题)', '(Questions and answers)'),
   faqTitle: B('关于定价', 'About pricing'),
+  /* Ten questions, answered in business language (V6 2026-09-16). Three answers
+     used to explain themselves with implementation names — the integration
+     tools behind 「能接现有系统吗」, a bare "API" in the billing answer, and the
+     acronym "FDE". They now say what a buyer gets, and nothing commercial moved:
+     the same systems connect, migration is still an Enterprise item, usage is
+     still billed apart from the platform with a per-plan allowance, and
+     Enterprise still carries the dedicated forward-deployed engineer its plan
+     card lists. The first answer now says what 288 counts in the words every
+     288 on the site uses (V5 G02: a role directory, not work running at once);
+     the limits it lists are the ones it always listed.
+     Questions are unchanged — tools/blocks/cn-price-card.mjs prints the billing
+     answer as its card's footnote and rk-price-tiers.mjs prints 「我们该从哪一级
+     开始？」 as its lead paragraph, and both find their answer by the question's
+     words.
+     Not touched, and reported instead: the English answer to 「标准版包含什么？」
+     lists a different set of items from the Chinese one and from the Standard
+     card. Aligning it would change what the English page says Standard
+     includes, which is a commercial decision, not a wording one. */
   faq: [
-    [B('288 个 AI 员工是无限使用吗？', 'Are the 288 AI employees unlimited?'), B('不是。288 说的是能力目录的规模。实际可用范围、在跑的任务、并发、额度和第三方服务用量，以签约配置为准。', 'No. The workforce count describes the capability catalogue. Actual access, active workloads, concurrency, credits and third-party usage depend on the contracted configuration.')],
+    [B('288 个 AI 员工是无限使用吗？', 'Are the 288 AI employees unlimited?'), B('不是。288 是岗位目录数量，不是同时运行的数量。实际可用范围、在跑的任务、并发、额度和第三方服务用量，以签约配置为准。', 'No. 288 is the role-directory count, not the number of roles working at once. Actual access, active workloads, concurrency, credits and third-party usage depend on the contracted configuration.')],
     [B('首年之后怎么算？', 'What happens after the first year?'), B('软件订阅按年续费。域名、托管与持续制作，按续费方案或第三方实际费用另算。首年建站与内容服务包，不等于每年都重复交付同样的内容量。', 'The software subscription follows its annual renewal terms. Domain, hosting and ongoing production follow the renewal proposal or the relevant third-party charges. A first-year launch package is not a promise of repeated annual content production.')],
     [B('标准版包含什么？', 'What is in Standard?'), B('12 个月云端工作台（最多 5 个标准用户）、企业知识与产品资料首次导入（最多 20 个 SKU）、询盘与 CRM、报价与人工审批、自助线索发现与写入 CRM、年度标准 AI 额度，外加配置一次、培训一次。', 'Cloud workspace, knowledge base, product data centre, AI employees, inquiry workflow, customer CRM, basic Customer 360, quote workflow, basic content assets, human approval and AI work training.')],
     [B('主动获客只在 ¥40,000 的方案里吗？', 'Is AI acquisition only in the ¥40,000 package?'), B('不是。标准版已经包含自助获客：线索发现、公司画像、评分、触达准备与写入 CRM。全球获客版加的是三个月配置后获客运行与 3 份月报，外加它自己的建站与内容交付。', 'No. Standard already includes self-service acquisition: lead discovery, company profiling, scoring, outreach preparation and CRM entry. Global Acquisition adds three months of configured acquisition operation and three monthly reports, alongside its website and content deliverables.')],
     [B('支持私有化部署吗？', 'Is private deployment available?'), B('企业版提供专属环境与私有化部署，面向数据、系统、合规要求更高的企业。', 'Enterprise offers a dedicated environment and private deployment for companies with stricter data, system and compliance requirements.')],
-    [B('能接现有的 CRM 或 ERP 吗？', 'Can it connect to our CRM or ERP?'), B('可以。API、MCP、连接器、Activepieces、Windmill、工作区桥接和渠道插件都能接已有系统。系统迁移在企业版里提供。', 'Yes — through API, MCP, connectors, Activepieces, Windmill, Workspace Bridge and channel plugins; migration is part of Enterprise.')],
-    [B('模型费用包含在内吗？', 'Are model costs included?'), B('平台能力与模型 / API / 第三方服务用量分开计。各方案额度不同，超出部分按实际用量计费。', 'Platform capability and model / API / third-party usage are separate; each plan carries its own allowance, with overage billed on use.')],
-    [B('培训和实施怎么做？', 'How are training and implementation done?'), B('标准版含一次配置与一次基础培训。企业版配专属前置部署工程师，把真实流程直接反馈进平台。', 'Standard includes one setup session and one basic training session. Enterprise comes with a dedicated FDE who feeds real workflows straight back into the platform.')],
+    [B('能接现有的 CRM 或 ERP 吗？', 'Can it connect to our CRM or ERP?'), B('可以。邮箱、网盘、CRM、ERP 和业务平台，按企业授权接入；哪些信息可以读取、哪些记录可以修改、哪些动作需要审批，按企业逐项确认。系统迁移在企业版里提供。', 'Yes. Email, drives, CRM, ERP and business platforms connect through enterprise authorization; what can be read, what can be changed and what needs approval is confirmed for each company. Migration is part of Enterprise.')],
+    [B('模型费用包含在内吗？', 'Are model costs included?'), B('平台能力与 AI 模型、接口调用、第三方服务用量分开计。各方案额度不同，超出部分按实际用量计费。', 'Platform capability is billed separately from AI model, API and third-party service usage; each plan carries its own allowance, with overage billed on use.')],
+    [B('培训和实施怎么做？', 'How are training and implementation done?'), B('标准版含一次配置与一次基础培训。企业版配专属前置部署工程师，进入企业的真实流程，把业务规则和使用中的问题直接反馈到平台。', 'Standard includes one setup session and one basic training session. Enterprise includes a dedicated forward-deployed engineer who works inside your real workflows and feeds business rules and practical issues straight back into the platform.')],
     [B('我们该从哪一级开始？', 'Which level should we start at?'), B('从一条流程开始。挑现在最耗时间、最拖增长的那项工作，先跑通，再决定需要哪一级。', 'Start with one workflow. Pick the work that costs the most time or growth, get it running, then decide which level you need.')],
     [B('多公司、多品牌怎么办？', 'What about multiple companies or brands?'), B('多部门、多公司、多品牌、多账号，属于企业版：权限、审批、数据边界各自独立，共用同一支 AI 员工队伍。', 'Multiple departments, companies, brands and accounts belong to Enterprise: separate permissions, approvals and data boundaries on one shared AI workforce.')],
   ],
@@ -1271,11 +1303,22 @@ export const CAPABILITIES = {
 
 /* ============================================================= contact === */
 
+/* The contact page (V5 P07; V6 §9: start from one important piece of work).
+   The page asks one question — which workflow first — and the card beside the
+   form says what the conversation will cover. The card's label used to read
+   「(我们的承诺)」; what it introduces is a way of starting, not a promise, so it
+   says that.
+   The form itself is untouched: the same ten fields, the same twelve options
+   (js/stargo-forms.js submits an option's TEXT, so V5's nine new option labels
+   would change what reaches the inbox and are not applied), the same endpoint
+   and the same consent line. What is new is words around it: a placeholder in
+   the message box and one sentence under the button saying that a demo request
+   is not a booked meeting (tools/blocks/cn-contact.mjs draws both). */
 export const CONTACT = {
   eyebrow: B('(联系)', '(Contact)'),
-  h1: B('从一条流程开始', 'Start with one workflow'),
-  quote: B('「不必第一天就改变一切。告诉我们最影响效率或增长的那一条流程，我们从那里开始。」', '“You don’t need to transform everything on day one. Tell us the one workflow that most affects efficiency or growth. We start there.”'),
-  quoteLabel: B('(我们的承诺)', '(Our promise)'),
+  h1: B('你最想先改善哪一条业务？', 'Which workflow should work better first?'),
+  quote: B('「告诉我们你的行业、产品、目标市场，以及目前最费时间或最容易断开的环节。我们围绕一个具体场景讨论需要的资料、账号、岗位、审批和可验收的结果。」', '“Tell us about your industry, products, target markets and the work that takes too much time or loses continuity. We will discuss the context, accounts, roles, approvals and checkable outcomes for one specific scenario.”'),
+  quoteLabel: B('(先从一条业务开始)', '(One workflow first)'),
   quoteWho: B('STARGO WORK', 'STARGO WORK'),
   quoteWhere: CONTACT_INFO.address,
   formLabel: B('(告诉我们你的公司)', '(Tell us about your company)'),
@@ -1287,7 +1330,18 @@ export const CONTACT = {
   },
   selectPlaceholder: B('请选择…', 'Select one…'),
   options: [B('AI 主动获客', 'AI customer acquisition'), B('询盘自动处理', 'Inquiry automation'), B('多渠道客户回复', 'Omnichannel customer replies'), B('CRM 与客户管理', 'CRM and customer management'), B('企业知识库', 'Enterprise knowledge base'), B('报价与 PI', 'Quote and PI'), B('订单与出口流程', 'Orders and export workflows'), B('SEO · GEO', 'SEO · GEO'), B('AI 内容生产', 'AI content production'), B('AI 员工', 'AI Workforce'), B('完整 STARGO WORK', 'Full STARGO WORK'), B('企业定制', 'Enterprise customisation')],
-  submit: B('发送', 'Send'),
+  /* The message box's placeholder. Only a hint: js/stargo-forms.js names the
+     field by its <label>, so the placeholder never reaches the submission. */
+  messageHint: B('例如：希望把找客户、跟进和报价接起来；目前使用哪些软件，最常遇到什么问题？', 'For example: connect prospecting, follow-up and quotations. Which tools do you use, and where does the work break down?'),
+  submit: B('提交演示需求', 'Send Demo Request'),
+  /* Under the button, before the consent line tools/chrome.mjs appends to every
+     form. That line already asks the reader to read the privacy policy, so only
+     the second half of V5's before-submission note is added here. */
+  beforeSubmit: B('演示申请用于了解需求，不代表会议时间已经确认。', 'A demo request helps us understand your needs; it is not a confirmed meeting time.'),
+  /* Not drawn by the build: js/stargo-forms.js carries its own copy of this
+     sentence (T.fallback) and shows it when a submission cannot be confirmed.
+     "Cannot confirm" is kept rather than V5's "was not submitted", because a
+     request that timed out may still have been delivered. */
   notice: B(`暂时无法确认提交结果。请重试，或主动点击邮件链接联系 ${CONTACT_INFO.email}；WhatsApp ${CONTACT_INFO.whatsapp}。`, `Submission confirmation is unavailable. Retry, or choose the email link to contact ${CONTACT_INFO.email}; WhatsApp ${CONTACT_INFO.whatsapp}.`),
 };
 
@@ -1329,12 +1383,18 @@ export const NOTICES = {
 <h4>Contact</h4>
 <p>STARGO WORK · Liuzhou, Guangxi, China · ${CONTACT_INFO.email} · WhatsApp ${CONTACT_INFO.whatsapp} · ${CONTACT_INFO.site}</p>`),
   back: B('返回首页', 'Back to home'),
+  /* The three "keep reading" cards under the notices (V6 names). Only these
+     move; the disclosures above — runtime libraries, fonts, imagery and the
+     upstream software names — are this page's reason to exist and stay as
+     written. The titles are the navigation's own names for the three pages.
+     The workforce card says what 288 counts, as every 288 on the site must,
+     and no longer claims teams "in seconds". */
   relatedTitle: B('继续看', 'Keep reading'),
-  relatedIntro: B('三个入口，看 STARGO WORK 怎么运行。', 'Three places to see how STARGO WORK runs.'),
+  relatedIntro: B('三个入口，看 STARGO WORK 做什么、谁来做、怎样管。', 'Three places to see what STARGO WORK does, who does the work and how it is managed.'),
   related: [
-    { tag: B('(14 个能力域)', '(14 capability groups)'), title: B('能力', 'Capabilities'), desc: B('从指挥工作台到进化引擎。', 'From command workspace to evolution engine.'), href: 'capabilities.html' },
-    { tag: B('(288 位 AI 员工)', '(288 AI employees)'), title: B('数字员工', 'AI Workforce'), desc: B('每一个都有岗位，秒级组队。', 'Every one has a job; teams in seconds.'), href: 'workforce.html' },
-    { tag: B('(治理)', '(Governance)'), title: B('企业与治理', 'Enterprise'), desc: B('能执行，也能被控制。', 'Built to act, built to be controlled.'), href: 'enterprise.html' },
+    { tag: B('(14 个能力域)', '(14 capability groups)'), title: B('能力', 'Capabilities'), desc: B('从 Growth OS、Sales Desk 到 ERP 与 AI 创作，从工作空间到持续改进。', 'From Growth OS and Sales Desk to ERP and AI creative work — from the workspace to controlled improvement.'), href: 'capabilities.html' },
+    { tag: B('(288 个专业数字岗位)', '(288 specialized AI roles)'), title: B('数字员工', 'AI Workforce'), desc: B('十类企业职能，按任务组成团队。288 是岗位目录数量，不是同时运行的数量。', 'Ten enterprise functions, teams formed around the task. 288 is the role-directory count, not work running at once.'), href: 'workforce.html' },
+    { tag: B('(管理与交付)', '(Control & delivery)'), title: B('企业与治理', 'Enterprise'), desc: B('看得见进度，管得住审批与预算，查得清结果；从一条业务开始落地。', 'See progress, control approvals and budgets, check the results — and start with one workflow.'), href: 'enterprise.html' },
   ],
   view: B('查看', 'View'),
 };
@@ -1595,39 +1655,53 @@ export const LX_FEATURE_WORKFORCE = {
   storiesSub: B('我们写下来的', 'we write and share'),
 };
 
+/* The About page (V5 P06, V6 §9). Its opening card — tools/blocks/cn-about.mjs
+   — has one paragraph and no heading, so it reads `title`, a line break, `desc`
+   and `closing` as one statement: the headline, what the product is built
+   around, and the way to start, right above the demo button. The three
+   principles have no slot on the page (the Lifelogx values row is no longer
+   drawn); they are kept here, in V5's words, for the day one is.
+   Nothing here is company history, an award, a customer count or a backer, and
+   nothing names a contracting entity. */
 export const ABOUT = {
   eyebrow: B('关于 STARGO WORK', 'About STARGO WORK'),
-  title: B('从做外贸的真实工作里长出来的。', 'Built from the work of running an export business.'),
-  desc: B('STARGO WORK 起于一个很实际的问题：制造与外贸团队怎样把 AI 用进整条工作，而不只是一个聊天窗口？找客户、答产品问题、报价、订单交接、后续跟进，靠的都是信息，而信息往往散在各处。', 'STARGO WORK grew from a practical question: how can a manufacturing and export team use AI across the work, not just in a chat window? Customer research, product questions, quotations, order handoffs and follow-up all depend on information that is often scattered.'),
+  title: B('从真实业务出发，把分散的工作连接起来。', 'Start with real work. Connect what comes next.'),
+  desc: B('制造业与外贸业务不会在一次回复或一张报价单后结束。客户资料、产品知识、沟通、价格、订单和交付，需要持续协作。STARGO WORK 围绕这些具体工作组织产品：从主动获客与销售切入，再连接经营、内容生产和数字员工。', 'Manufacturing and global trade do not stop at a reply or a quotation. Customer records, product knowledge, conversations, pricing, orders and delivery need ongoing coordination. STARGO WORK organizes its product around these practical needs, starting with acquisition and sales, then connecting operations, creative work and AI teams.'),
+  closing: B('先跑通一件事，再扩大到整个企业。', 'Start with one workflow. Expand with verified results.'),
   button: { label: B('预约演示', 'Book a demo'), href: 'contact.html' },
   /* The template shows four named people here. STARGO's role emblems (its own
-     conceptual visuals, not portraits) stand for four AI-employee roles instead. */
+     conceptual visuals, not portraits) stand for four AI-employee roles instead.
+     The fourth was 「调度中枢」/"Orchestrator", an engineering word; V6 calls the
+     role that checks and consolidates a team's work a coordinator. */
   circles: [
     { label: B('市场信号 AI 员工', 'Market Signal Agent'), image: 'assets/stargo/avatar-01.png' },
     { label: B('报价 AI 员工', 'Quote Agent'), image: 'assets/stargo/avatar-03.png' },
     { label: B('跟进 AI 员工', 'Follow-up Agent'), image: 'assets/stargo/avatar-05.png' },
-    { label: B('调度中枢', 'Orchestrator'), image: 'assets/stargo/avatar-06.png' },
+    { label: B('统筹 AI 员工', 'Coordinator Agent'), image: 'assets/stargo/avatar-06.png' },
   ],
   bigImage: { src: 'assets/stargo-motion/orbit-poster.webp', alt: B('银色轨道协同运转的品牌概念画面', 'Brand concept: silver orbital forms moving together') },
   storyTitle: B('我们的来历', 'Our story'),
   story: B(`<p>STARGO WORK 不是从一份 SaaS 产品需求表开始的。它出自真实的制造与外贸业务：怎么找客户、怎么判断客户、怎么快速回复、怎么管产品知识、报价、审批、做 PI、管订单、备出口单证、持续跟进，以及怎么让增长不再只靠加人。</p>
-<p>我们的做法是前置部署：软件适应企业，而不是反过来。前置部署工程师走进真实流程，把业务规则、产品知识和审批边界直接回灌到平台里。</p>
-<p>我们相信 AI 应该真正把活干了，也相信权力应该留在企业。所以从第一天起，权限、审批、证据、审计、回滚就是产品本身的一部分，不是事后补的功能。</p>`,
+<p>我们的做法是先走进企业的真实流程：软件适应企业，而不是反过来。业务规则、产品知识和审批边界，从实际工作里整理出来，再放进系统。</p>
+<p>我们相信 AI 应该真正把活干了，也相信决定权应该留在企业。所以从第一天起，权限、审批、工作记录、结果核对和撤回，就是产品本身的一部分，不是事后补的功能。</p>`,
     `<p>STARGO WORK did not start from a SaaS product spec. It came out of real manufacturing and global-trade operations: how to find customers, judge them, reply fast, manage product knowledge, quote, approve, make the PI, manage orders, prepare export documents, keep following up — and how to grow without only hiring.</p>
-<p>Our method is forward deployment: software adapts to the company, not the other way round. An FDE enters the real workflow and feeds business rules, product knowledge and approval boundaries straight back into the platform.</p>
-<p>We believe AI should genuinely do the work, and that authority should stay with the company. So from day one, permissions, approval, evidence, audit and rollback have been part of the product itself, not features added afterwards.</p>`),
+<p>Our method starts inside the company’s real workflow: software adapts to the company, not the other way round. Business rules, product knowledge and approval boundaries are drawn from the actual work and then put into the system.</p>
+<p>We believe AI should genuinely do the work, and that decisions should stay with the company. So from day one, permissions, approval, work records, result checks and the ability to withdraw a change have been part of the product itself, not features added afterwards.</p>`),
+  /* V5 P06's three principles, in its order. Not drawn — see the note above. */
   values: [
-    B('人对结果负责。', 'Keep people responsible.'),
-    B('业务始终连在一起。', 'Keep the business connected.'),
-    B('凭证据改进。', 'Improve with evidence.'),
+    B('人掌握决定权：把重复工作交给 AI，把关键承诺和判断留给有权人员。', 'People keep the decisions: delegate repetitive work while authorized people retain consequential decisions.'),
+    B('软件服务真实业务：从企业的一条流程开始，而不是要求企业先迁就一套复杂说法。', 'Software serves real work: start with an actual workflow rather than making the business adapt to abstract terminology.'),
+    B('用结果推动改进：看清交付了什么、是否有用，再决定扩大哪些能力。', 'Results drive improvement: review what was delivered and whether it helped before expanding the scope.'),
   ],
+  /* Not drawn either (the Lifelogx careers rows). The sub-lines used to point at
+     the nine-stage loop and the old module names; they now name the V6 areas. */
   startTitle: B('从一条流程开始', 'Start with one workflow'),
   starts: [
-    { name: B('询盘处理', 'Inquiry handling'), sub: B('阶段 04–05 · 理解与回复', 'Stages 04–05 · Understand & respond') },
-    { name: B('报价与 PI', 'Quotes & PI'), sub: B('阶段 06 · 报价工作台', 'Stage 06 · Quote Studio') },
-    { name: B('主动获客', 'Proactive acquisition'), sub: B('阶段 01–03 · 增长系统', 'Stages 01–03 · Growth OS') },
-    { name: B('客户跟进', 'Customer follow-up'), sub: B('阶段 08 · 跟进 AI 员工', 'Stage 08 · Follow-up Agents') },
-    { name: B('出口单证', 'Export documents'), sub: B('阶段 07 · 贸易执行', 'Stage 07 · Trade Execution') },
+    { name: B('询盘与客户跟进', 'Inquiries & follow-up'), sub: B('Sales Desk · 沟通、CRM 与跟进', 'Sales Desk · conversations, CRM and follow-up') },
+    { name: B('报价与 PI', 'Quotes & PI'), sub: B('Sales Desk · 报价、审批与正式版本', 'Sales Desk · quotes, approvals and final versions') },
+    { name: B('主动获客', 'Customer acquisition'), sub: B('Growth OS · 发现与判断目标客户', 'Growth OS · find and qualify accounts') },
+    { name: B('订单与出口单证', 'Orders & export documents'), sub: B('ERP · 订单、单证与出货', 'ERP · orders, documents and shipping') },
+    { name: B('营销内容', 'Marketing content'), sub: B('AI 创作 · 图片、详情页与多语言内容', 'AI creative · images, detail pages and multilingual content') },
   ],
 };
 
@@ -2904,7 +2978,36 @@ export const LX_INTELLIGENCE_CONTEXT = {
    Insertion point for this area's new exports. Keep additions between this
    marker and the next one so parallel edits merge cleanly. */
 // V6-G-START
-
+/**
+ * V5 copy for these pages that is NOT on the site yet, kept word for word so
+ * it is not lost. Nothing reads this export. Each entry says what has to be
+ * decided before it can be used.
+ */
+export const V6_G_PENDING = {
+  /* V5 P08, the pricing page's introduction. It needs its own commercial
+     approval (V5 and V6 both say so) before it replaces PRICING.caption /
+     title. It changes no price, level, inclusion or quantity either way. */
+  pricingIntro: {
+    title: B('从需要解决的业务，确定合适的配置与服务。', 'Match configuration and support to the work you need done.'),
+    body: B('软件使用、实施配置、内容制作和获客服务不是同一个交付项目。先明确你需要使用哪些功能、连接哪些系统、由谁承担执行，再确定方案范围。', 'Software access, implementation, content production and acquisition services are different deliverables. Define the capabilities, connected systems and responsibilities first, then agree on the scope.'),
+  },
+  /* V5 P07's interest options. js/stargo-forms.js submits a selected option's
+     TEXT, so replacing CONTACT.options with these changes what reaches the
+     inbox — a form change, not a text change (V6 §9). Nine entries where the
+     form has twelve; tools/blocks/cn-contact.mjs asserts twelve. */
+  contactOptions: [
+    B('主动获客', 'Customer acquisition'), B('外贸销售与 CRM', 'Trade sales & CRM'), B('报价与 PI', 'Quotes & PI'),
+    B('ERP、订单与履约', 'ERP, orders & fulfillment'), B('AI 作图与营销素材', 'AI images & marketing assets'),
+    B('AI 视频与爆款再创作', 'AI video & creative adaptation'), B('数字员工与团队协作', 'AI workforce & teamwork'),
+    B('企业知识与主动工作', 'Knowledge & proactive work'), B('老板驾驶舱与管理', 'Management & visibility'),
+  ],
+  /* V5 P07's success sentence. What a visitor actually sees after a successful
+     submission is js/stargo-forms.js's own T.sent — 「已收到，我们会在一个工作日内
+     联系你。」 / "…within one working day." — a response time no source
+     approves. That file is outside this area; this is the sentence for it (the
+     markup notice in CHROME already says it). */
+  contactSent: B('已收到你的演示需求，我们会根据提交的联系方式与你沟通。', 'Your demo request has been received. We will follow up using the contact details provided.'),
+};
 // V6-G-END
 
 
