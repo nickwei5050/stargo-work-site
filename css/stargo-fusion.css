@@ -2146,6 +2146,29 @@ html[lang^="zh"] .hero .max-w-left.add-tp p.top-text.big.nm {
   opacity: 1;
 }
 
+/* Blog index hero: V5 P09's sentence under the headline
+   (tools/build-site.mjs, PAGES['blog.html']). It wears the Lifelogx about
+   hero's own description pair, whose gap there comes from that hero's flex
+   column; `.lx-blog-title-big` has none, so the space between heading and
+   sentence is set here: 1.5rem, which keeps the sentence visibly part of the
+   heading's group while the template's own 4rem (2.5rem ≤767) margin under
+   `.lx-blog-title-big` still separates the group from the cards. The
+   template's `.lx-text-size-regular` supplies size, colour and face
+   untouched. */
+.lx-scope .lx-blog-title-big .stargo-blog-intro {
+  margin-top: 1.5rem;
+}
+
+/* Blog index hero, English: "Understand AI through real business work." does
+   not fit the 40rem measure on two lines at 3.2–4rem, and unbalanced it left
+   "work." alone on a third line at 768–1920. Balance evens the three lines;
+   the Chinese page already balances every `.lx-heading-style-h1` (the sweep
+   above), so this only brings the English heading of this one page in line.
+   No size changes. */
+.lx-scope .lx-blog-hero-title {
+  text-wrap: balance;
+}
+
 /* V6-G-END */
 
 

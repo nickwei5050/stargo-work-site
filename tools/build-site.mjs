@@ -897,7 +897,32 @@ PAGES['blog.html'] = (lang) => {
   const t = (p) => (typeof p === 'string' ? p : p[lang]);
   const { fn: s } = makeSub('blog');
   let b = frag('lx-blog.html');
-  b = s(b, '>Discover Our Featured Stories<', `>${t(BLOG_UI.heading)}<`);
+  /* The hero (V5 P09): the headline, then the one sentence that says what these
+     articles are for.
+
+     The headline breaks after its comma on the Chinese page, and only there.
+     Chinese headings are balanced (css/stargo-fusion.css, `text-wrap: balance`
+     on `.lx-scope .lx-heading-style-h1`), and balance treats every character
+     as a break point: it evened this one into 「把 AI 放进真实业」/「务，看懂每一步。」
+     at every width from 390 to 1920, splitting 业务 across the lines. The break
+     keeps the two clauses whole. Where the first clause is wider than the
+     measure (≤479, at 2.7rem) balance still evens that clause alone — 「把 AI
+     放进」/「真实业务，」 over 「看懂每一步。」 — so no width splits a word. The
+     English heading has spaces to break at and gets no <br>; its balance rule
+     is the V6-G block in css/stargo-fusion.css.
+
+     The paragraph is the template's own description pair — the
+     `.lx-feature-description-holder` > `.lx-text-size-regular` that the
+     Lifelogx about hero puts under its <h1> (tools/fragments/lx-about.html) —
+     placed inside `.lx-blog-title-big`, which is already a centred column. Its
+     spacing is the V6-G rule in css/stargo-fusion.css. One element, no new
+     class of type, and the card grid below is untouched. */
+  const heading = escapeHtml(t(BLOG_UI.heading));
+  const headingHtml = lang === 'zh' ? heading.replace('，', '，<br/>') : heading;
+  if (lang === 'zh' && (headingHtml.match(/<br\/>/g) ?? []).length !== 1) {
+    throw new Error('blog: the Chinese heading must carry exactly one full-width comma to break after');
+  }
+  b = s(b, '>Discover Our Featured Stories</h1></div>', `>${headingHtml}</h1><div class="lx-feature-description-holder stargo-blog-intro"><div class="lx-text-size-regular">${escapeHtml(t(BLOG_UI.intro))}</div></div></div>`, { count: 1 });
   b = blogCards(b, 'lx-blog-list', 'lx-blog-item', POSTS, lang, LX_CARD);
   b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
   if (/Lifelogx|Companion|Moments in Motion|Conversational AI/.test(b)) throw new Error('blog: template copy survives');

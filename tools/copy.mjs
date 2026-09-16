@@ -911,10 +911,19 @@ export const PRICING = {
      the same systems connect, migration is still an Enterprise item, usage is
      still billed apart from the platform with a per-plan allowance, and
      Enterprise still carries the dedicated forward-deployed engineer its plan
-     card lists. Questions are unchanged — tools/blocks/cn-price-card.mjs and
-     rk-price-tiers.mjs find their answers by the question's words. */
+     card lists. The first answer now says what 288 counts in the words every
+     288 on the site uses (V5 G02: a role directory, not work running at once);
+     the limits it lists are the ones it always listed.
+     Questions are unchanged — tools/blocks/cn-price-card.mjs prints the billing
+     answer as its card's footnote and rk-price-tiers.mjs prints 「我们该从哪一级
+     开始？」 as its lead paragraph, and both find their answer by the question's
+     words.
+     Not touched, and reported instead: the English answer to 「标准版包含什么？」
+     lists a different set of items from the Chinese one and from the Standard
+     card. Aligning it would change what the English page says Standard
+     includes, which is a commercial decision, not a wording one. */
   faq: [
-    [B('288 个 AI 员工是无限使用吗？', 'Are the 288 AI employees unlimited?'), B('不是。288 说的是能力目录的规模。实际可用范围、在跑的任务、并发、额度和第三方服务用量，以签约配置为准。', 'No. The workforce count describes the capability catalogue. Actual access, active workloads, concurrency, credits and third-party usage depend on the contracted configuration.')],
+    [B('288 个 AI 员工是无限使用吗？', 'Are the 288 AI employees unlimited?'), B('不是。288 是岗位目录数量，不是同时运行的数量。实际可用范围、在跑的任务、并发、额度和第三方服务用量，以签约配置为准。', 'No. 288 is the role-directory count, not the number of roles working at once. Actual access, active workloads, concurrency, credits and third-party usage depend on the contracted configuration.')],
     [B('首年之后怎么算？', 'What happens after the first year?'), B('软件订阅按年续费。域名、托管与持续制作，按续费方案或第三方实际费用另算。首年建站与内容服务包，不等于每年都重复交付同样的内容量。', 'The software subscription follows its annual renewal terms. Domain, hosting and ongoing production follow the renewal proposal or the relevant third-party charges. A first-year launch package is not a promise of repeated annual content production.')],
     [B('标准版包含什么？', 'What is in Standard?'), B('12 个月云端工作台（最多 5 个标准用户）、企业知识与产品资料首次导入（最多 20 个 SKU）、询盘与 CRM、报价与人工审批、自助线索发现与写入 CRM、年度标准 AI 额度，外加配置一次、培训一次。', 'Cloud workspace, knowledge base, product data centre, AI employees, inquiry workflow, customer CRM, basic Customer 360, quote workflow, basic content assets, human approval and AI work training.')],
     [B('主动获客只在 ¥40,000 的方案里吗？', 'Is AI acquisition only in the ¥40,000 package?'), B('不是。标准版已经包含自助获客：线索发现、公司画像、评分、触达准备与写入 CRM。全球获客版加的是三个月配置后获客运行与 3 份月报，外加它自己的建站与内容交付。', 'No. Standard already includes self-service acquisition: lead discovery, company profiling, scoring, outreach preparation and CRM entry. Global Acquisition adds three months of configured acquisition operation and three monthly reports, alongside its website and content deliverables.')],
