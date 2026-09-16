@@ -1307,9 +1307,12 @@ export const LX_FEATURE_WORKFORCE = {
      collage overlaps its lower right corner, so the English is written in
      short words: "A business desktop in your browser" lost "browser" and
      "Browser-first today" lost "first" under the badge at 390 (the template's
-     own "A workspace that does the work" lost "does the" the same way). */
+     own "A workspace that does the work" lost "does the" the same way). The
+     grey line under it sits lowest, where the badge reaches furthest in, so
+     it is the shortest form of M14's availability line (the desktop item
+     beside the note carries the full one): four characters, two words. */
   phoneTitle: B('浏览器里的企业桌面', 'A business desktop on the web'),
-  phoneSub: B('网页端是当前重点', 'Web-first for now'),
+  phoneSub: B('网页优先', 'Web first'),
   cardA: { title: B('有岗位的 AI', 'AI with a job'), text: B('每个岗位可以配置职责、技能、企业知识、可用工具、权限、任务和运行记录：分工明确，执行时带着企业背景，也有清楚的范围。', 'Each role can be configured with responsibilities, skills, enterprise knowledge, permitted tools, access, tasks and run history: a defined job, carried out with company context and within a clear scope.') },
   // M10-04, M11-05 and M11-04: what is recorded, why it survives a pause, and what sharing does not open.
   cardB: { title: B('交接有记录', 'Handoffs on record'), text: B('记录负责人、截止时间、任务状态、结果与下一步，暂停或人工接管后仍能接着推进，各成员的工作汇总成可交接的成果。共享任务依据，不等于共享全部数据，也不会转移其他员工的权限。', "Owners, deadlines, task status, results and next steps are recorded, so work can continue after a pause or a human takeover, and each member's work is consolidated into a handoff-ready result. Sharing task context does not open all company data or pass on another role's permissions.") },
