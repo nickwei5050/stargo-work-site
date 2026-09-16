@@ -138,12 +138,21 @@
   gap: .5rem;
   letter-spacing: normal;
 }
+/* This site's own `li` rule is the one its `p` rule is (see section 2):
+   measured, each step came out at 0.7 opacity, -0.5px tracking and weight 500,
+   which ran the words of "Authorized reference" together. The steps take the
+   list's (cinery's) type instead. */
 .cn-faq .cn-answer-step {
   display: flex;
   align-items: center;
   gap: .5rem;
   margin: 0;
   padding: 0;
+  opacity: 1;
+  letter-spacing: normal;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
 }
 /* Each step is drawn like the row's own `+` button — its translucent white
    fill and top-left hairline (`.cn-plus-block`) — with the pill's 8px
