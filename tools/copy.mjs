@@ -1018,7 +1018,10 @@ export const ENTERPRISE = {
      to carry is the About page's (ABOUT.story), unchanged there. */
   noteLabel: B('(开放范围与边界)', '(Scope and boundaries)'),
   note: B('管理与控制已有基础；看板指标、跨系统动作和高级分析，依赖真实数据接入与验收。其他功能按企业配置与确认范围分阶段开放，能打开某个应用，不等于整条流程已经验收。部署方式、服务范围和数据要求由双方另行确认，不作默认承诺。付款、正式申报、合同与合规审阅，始终由企业有权人员或相应机构决定。', 'Management and control foundations exist; dashboard figures, cross-system actions and advanced analytics depend on verified data connections. Other capabilities open in phases, by configuration and agreed scope, and opening an application does not mean the whole workflow has been accepted. Deployment, service scope and data requirements are agreed separately, not assumed by default. Payments, official filings, contract and compliance reviews stay with authorized people or the relevant institutions.'),
-  noteButton: { label: B('聊聊你的业务流程', 'Discuss your workflow'), href: 'contact.html' },
+  /* V5 F10: start with one workflow. At 768 this button's column leaves
+     124px for its label (measured): six Chinese characters, or 「Plan a
+     workflow」 (120px); 「聊聊你的业务流程」 and 「Discuss your workflow」 wrapped. */
+  noteButton: { label: B('规划一条流程', 'Plan a workflow'), href: 'contact.html' },
   /* V6 §8.3 and M14-05: the old integration-method table as a table of the
      business a company already runs. The rows name kinds of work, never a
      platform shown as switched on; the last column is what has to be agreed
