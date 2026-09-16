@@ -1026,7 +1026,9 @@ export const ENTERPRISE = {
      business a company already runs. The rows name kinds of work, never a
      platform shown as switched on; the last column is what has to be agreed
      before anything connects, and the caption says nothing is on by default.
-     The last row keeps what the automation rows meant, in business terms. The
+     The last row keeps what the automation rows meant, in business terms.
+     First-column labels hold no word longer than 「knowledge」: at 768 that
+     column is about 75px, and 「conversations」 ran 8px into the next one. The
      count in the title is the row count (awardsTable). The caption is kept
      short enough for one line in the table's sticky column at 768 (about ten
      characters wide there). */
@@ -1040,7 +1042,7 @@ export const ENTERPRISE = {
        化」 left 「化」 on a line of its own there. */
     button: { label: B('查看连接详情', 'See connection details'), href: 'capabilities.html#g11' },
     rows: [
-      [B('客户与沟通', 'Customers & conversations'), B('邮箱、即时沟通、B2B 平台询盘与 CRM 客户记录', 'Email, messaging, marketplace inquiries and CRM records'), B('可以读取哪些对话，谁能代表企业回复', 'Which conversations may be read, and who may reply for the company')],
+      [B('客户与沟通', 'Customers & messages'), B('邮箱、即时沟通、B2B 平台询盘与 CRM 客户记录', 'Email, messaging, marketplace inquiries and CRM records'), B('可以读取哪些对话，谁能代表企业回复', 'Which conversations may be read, and who may reply for the company')],
       [B('产品与知识', 'Products & knowledge'), B('产品资料、规格图片、价格依据与企业文档', 'Product data, specifications, images, price sources and company documents'), B('哪些资料已经审核，可用于回答与报价', 'Which sources are approved for answers and quotations')],
       [B('ERP 与商城', 'ERP & commerce'), B('产品物料、采购库存、生产质检、订单与商城业务', 'Products, materials, purchasing, stock, production, quality, orders and online store'), B('可读取的记录、可修改的字段、需要审批的变更', 'Readable records, permitted changes and changes that need approval')],
       [B('办公与文件', 'Office & files'), B('网盘、表格、文档与共享文件夹', 'Drives, spreadsheets, documents and shared folders'), B('可以访问哪些文件夹，成果存放在哪里', 'Which folders may be opened, and where outputs are saved')],

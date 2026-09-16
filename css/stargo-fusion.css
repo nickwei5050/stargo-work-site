@@ -2146,7 +2146,16 @@ html[lang^="zh"] .testi-grid._01 .top-text.for-sst { text-wrap: pretty; }
       specificity as that rule, later in the file. */
 #table .award-wrapper, #table .grdi-3-columns.mk3 {
   grid-template-columns: minmax(0, .8fr) minmax(0, 1.35fr) minmax(0, 1.35fr);
+  column-gap: 12px;
 }
+/*    The template's rows have no gap between columns, which was fine for one
+      word a cell; with sentences a long first-column word met the next
+      column's text with nothing between (measured at 768: 「conversations」
+      ended 8px inside the middle column, at 480 4px short of it). 12px keeps
+      them apart; header and rows get the same gap, so the labels stay over
+      their columns. Below 479px the header is a flex legend (its own
+      column-gap: 16px above) and the rows are stacks, so this changes nothing
+      there. */
 /*    Below 479px each row is a centred stack (see "2. enterprise's table"
       above) and these cells now run to two lines on a phone — measured at
       390: 「邮箱、即时沟通、B2B 平台询盘与 CRM 客」/「户记录」 — so a left-aligned
