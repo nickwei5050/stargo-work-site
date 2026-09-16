@@ -39,6 +39,16 @@ const STORY = 1;
  */
 const PICKS = ['Unified Inbox', 'Buyer Requirement Extraction', 'Account 360'];
 
+/**
+ * Each row's picture, in row order (V6 §5.3: a topic-matched picture in each
+ * existing image position). qubix's are product-packaging and landscape stock —
+ * one of them shows another company's brand name — so the rows take this site's
+ * own editorial art: one intake → a shared track joining separate workspaces;
+ * requirements → accounts, products, quotes and orders linked together; the
+ * customer view → conversation, interest and history forming one context.
+ */
+const ROW_ART = ['os-desktop', 'brand-ontology', 'os-inquiries'];
+
 export const donor = {
   id: 'qx-news',
   donor: 'qubix',
@@ -55,7 +65,7 @@ export const donor = {
 };
 
 export function render(frag, ctx) {
-  const { C, lang, t, escapeHtml } = ctx;
+  const { C, lang, t, escapeHtml, art } = ctx;
   const S = C.CAPABILITY_SHOWCASE;
   const story = S.stories[STORY];
   if (!story) throw new Error(`qx-news: CAPABILITY_SHOWCASE.stories has no entry ${STORY}`);
@@ -157,9 +167,14 @@ export function render(frag, ctx) {
     if (hrefs.length !== 2) throw new Error(`qx-news: row ${i + 1} no longer carries two donor links`);
     row = row.replace(/href="blog[^"]*"/g, `href="#g${cap.group.n}"`);
 
-    /* The photograph is the donor's own and stays; only its empty alt is
-       given the words the row already says. */
+    /* The photograph: the row's editorial art in the donor's own <img> (its
+       inline transform, class and lazy loading unchanged), with the words the
+       row already says as its alt; tools/editorial-images.mjs then writes the
+       variants and the picture's description. */
     if (!row.includes('alt=""')) throw new Error(`qx-news: row ${i + 1} lost its image alt attribute`);
+    const PHOTO = /<img src="assets\/qubix\/[^"]+"/;
+    if (!PHOTO.test(row)) throw new Error(`qx-news: row ${i + 1} lost its qubix photograph`);
+    row = row.replace(PHOTO, `<img src="${art(ROW_ART[i])}"`);
     return row.replace('alt=""', `alt="${escapeHtml(t(words.text))}"`);
   });
 

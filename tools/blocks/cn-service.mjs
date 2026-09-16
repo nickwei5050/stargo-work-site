@@ -22,11 +22,11 @@
  * keeps its own data-w-id, its `_0N` class and its inline transforms — the
  * roll, the crossfade and the scroll reveal are all bound to exactly those.
  *
- * The photographs are cinery's own — the clapperboard and the lenses in the
- * review screenshot. Nothing is mapped, so `mirror` (the default,
- * assets/cinery) keeps every thumbnail and every crossfade background and
- * try-block fetches them into place. The brief is a perfect port with only the
- * words changed, so each title slot gets a short topic name (CAP_V6A.growth,
+ * The photographs were cinery's own — the clapperboard and the lenses in the
+ * review screenshot. Since the V6 content (2026-09-16) each row's thumbnail and
+ * crossfade background show this site's editorial art instead (ROW_ART below);
+ * the <img> elements, their classes and their motion are the donor's. Each
+ * title slot gets a short topic name (CAP_V6A.growth,
  * one language per page) and the type stays at the donor's 8vw nowrap wherever
  * that name fits it.
  *
@@ -54,6 +54,26 @@ export const donor = {
   ground: '#000',
 };
 
+/**
+ * The four rows' pictures (V6 §5.2: a topic-matched picture in each existing
+ * image position). cinery's own are film-set stock — a clapperboard, lenses —
+ * and say nothing about finding customers, so each row's hover thumbnail and
+ * its crossfade background take this site's own editorial art, in row order:
+ * company research → trade signals carried to a customer's destination; trade
+ * intelligence → an opportunity path through a port district; reorder
+ * judgement → context assembling layer by layer; key decision roles →
+ * specialised roles working in parallel. tools/editorial-images.mjs writes the
+ * variants, sizes and descriptions for them.
+ */
+const ROW_ART = ['brand-family-01', 'os-sales-desk', 'os-loading', 'brand-family-03'];
+
+/** Swap one cinery photograph for editorial art, keeping every other attribute
+ *  (class, data-w-id, inline transforms) exactly as the donor wrote it. */
+function toArt(tag, src) {
+  if (!/src="assets\/cinery\//.test(tag)) throw new Error(`cn-service: expected a cinery photograph, found ${tag.slice(0, 80)}`);
+  return tag.replace(/src="[^"]*"/, `src="${src}"`).replace(/\s(?:srcset|sizes)="[^"]*"/g, '');
+}
+
 /** Every image in the cut carries this one alt string. */
 const DONOR_ALT = 'alt="Image - Cinery Template"';
 /** The donor's button goes to a page this site does not have. */
@@ -67,7 +87,7 @@ const DONOR_HREF = 'href="services.html"';
 const ZH_PRODUCT_NAMES = /Growth OS|Sales Desk/g;
 
 export function render(frag, ctx) {
-  const { C, lang, t, escapeHtml } = ctx;
+  const { C, lang, t, escapeHtml, art } = ctx;
   const S = C.CAPABILITY_SHOWCASE;
   const story = S.stories[0];
   if (!story) throw new Error('cn-service: CAPABILITY_SHOWCASE.stories has no entry 0');
@@ -241,15 +261,24 @@ export function render(frag, ctx) {
     u = setText(u, 'cn-service-description', escapeHtml(t(row.text)));
 
     if (!u.includes(DONOR_ALT)) throw new Error(`cn-service: row ${i + 1} has no ${DONOR_ALT} to replace`);
+    /* The row's thumbnail — its one <img> — becomes the row's editorial art. */
+    const thumbs = u.match(/<img\b[^>]*>/g) ?? [];
+    if (thumbs.length !== 1) throw new Error(`cn-service: row ${i + 1} should hold one thumbnail, found ${thumbs.length}`);
+    u = u.replace(thumbs[0], toArt(thumbs[0], art(ROW_ART[i])));
     return u.split(DONOR_ALT).join(`alt="${escapeHtml(plain[i])}"`);
   });
 
   /* -------------------------------------------- the crossfade backgrounds -- */
 
-  /* Four `.service-bg-image._0N`, one per row and in row order. */
+  /* Four `.service-bg-image._0N`, one per row and in row order; each shows the
+     same editorial art as its row's thumbnail. */
   let n = 0;
-  const back = tail.replace(/alt="Image - Cinery Template"/g, () => `alt="${escapeHtml(plain[n++] ?? '')}"`);
+  const back = tail.replace(/<img\b[^>]*alt="Image - Cinery Template"[^>]*>/g, (tag) => {
+    const i = n++;
+    return toArt(tag, art(ROW_ART[i] ?? ROW_ART[0])).replace(DONOR_ALT, `alt="${escapeHtml(plain[i] ?? '')}"`);
+  });
   if (n !== 4) throw new Error(`cn-service: expected four background images behind the rows, found ${n}`);
+  if (/assets\/cinery\//.test(back)) throw new Error('cn-service: a cinery photograph survived behind the rows');
 
   const html = open + filled.join('') + back;
   if (html.includes('Cinery')) throw new Error('cn-service: donor copy survives in the rendered block');
