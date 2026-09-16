@@ -240,12 +240,14 @@
    `.service-description`'s colour and size, the body's 1.4 leading — and the
    measure is the description column's own 400px (`.service-description-wrap`
    max-width). The note under the lead (outputs and availability) is the
-   kicker's secondary colour, one step quieter, at the same size.
+   kicker's secondary colour, one step quieter, at the same size. A paragraph
+   of five or six lines reads left-aligned even where its box sits on the
+   right: right-aligned, every line started at a different place.
 
    The cell is `place-self: end` from 992 up (bottom-right, beside the
    heading) and start-aligned below it, so it becomes a column whose items
-   follow that side: right-aligned text and button on the wide grid, left
-   below 992, exactly as the rows' descriptions turn left on small screens.
+   follow that side: box and button on the right on the wide grid, on the
+   left below 992, as the rows' descriptions move on small screens.
    The button keeps its own size — the column does not stretch it. */
 .cn-service .cn-content-item { display: flex; flex-direction: column; align-items: flex-end; gap: 1rem; }
 .cn-service .cn-service-lede {
@@ -254,10 +256,10 @@
   color: var(--neutral-color--primary-neutral);
   font-size: var(--_sizes---fixed--small-02);
   line-height: 1.4;
-  text-align: right;
+  text-align: left;
+  text-wrap: pretty;
 }
 .cn-service .cn-service-lede-note { color: var(--neutral-color--secondary-neutral); margin-bottom: 1rem; }
 @media screen and (max-width: 991px) {
   .cn-service .cn-content-item { align-items: flex-start; }
-  .cn-service .cn-service-lede { text-align: left; }
 }

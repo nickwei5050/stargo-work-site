@@ -278,3 +278,6 @@
 @media screen and (min-width: 992px) {
   .qx-orbit .qx-orbit-note { min-width: 10.5rem; }
 }
+/* The note is a sentence of body copy: `pretty` keeps its last line from being
+   a single character (「…两套系 / 统。」 at 390 and 1440 before). */
+.qx-orbit .qx-orbit-note { text-wrap: pretty; }

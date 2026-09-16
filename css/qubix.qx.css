@@ -1385,6 +1385,9 @@ html[lang^="zh"] .qx-news .qx-h2 { word-break: keep-all; text-wrap: balance; }
 @media screen and (min-width: 992px) {
   .qx-orbit .qx-orbit-note { min-width: 10.5rem; }
 }
+/* The note is a sentence of body copy: `pretty` keeps its last line from being
+   a single character (「…两套系 / 统。」 at 390 and 1440 before). */
+.qx-orbit .qx-orbit-note { text-wrap: pretty; }
 
 @font-face {
   font-family: webflow-icons;
@@ -1916,16 +1919,13 @@ html[lang^="zh"] .qx-news .qx-h2 { word-break: keep-all; text-wrap: balance; }
       to two or three characters a line (measured at 390: 「团队分 / 工、交 /
       流、并 / 行与接 / 力」). The row may now wrap: the title keeps its own
       width, and the explanation takes what is left, or a line of its own under
-      the title when less than 16rem is left. It reads left-aligned under the
-      title and right-aligned beside it, as the donor's line was. The type,
-      colour and spacing are qubix's. */
-.qx-projects .qx-project-card-content-wrap { flex-wrap: wrap; column-gap: 2rem; row-gap: .5rem; }
+      the title when less than 16rem is left. Being two or three lines rather
+      than the donor's one, it reads left-aligned wherever it lands and starts
+      level with the title (the donor bottom-aligned one line with another).
+      The type, colour and spacing are qubix's. */
+.qx-projects .qx-project-card-content-wrap { flex-wrap: wrap; align-items: flex-start; column-gap: 2rem; row-gap: .5rem; }
 .qx-projects .qx-project-card-title { flex: 0 1 auto; }
-.qx-projects .qx-project-card-ctg { flex: 1 1 16rem; max-width: 46rem; text-align: right; }
-.qx-projects .qx-project-img-wrap-two + .qx-project-card-content-wrap .qx-project-card-ctg { text-align: left; }
-@media screen and (max-width: 767px) {
-  .qx-projects .qx-project-card-ctg { text-align: left; }
-}
+.qx-projects .qx-project-card-ctg { flex: 1 1 16rem; max-width: 46rem; text-align: left; text-wrap: pretty; }
 
 /* 5. The Chinese card titles carry a zero-width space where a phrase ends
       (288 个 / 跨部门 / 专业岗位); `keep-all` makes those and the punctuation the

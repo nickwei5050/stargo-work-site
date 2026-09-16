@@ -444,8 +444,10 @@ export const HOME_LOOP_TABLE = {
   caption: B('(九步细看)', '(The detailed business sequence)'),
   /* rk-award draws this as three display lines — 一条业务 / 主线 on the Chinese
      page — and asserts the Chinese title, so a change here means re-splitting
-     it there. */
-  title: B('一条业务主线', 'One business journey'),
+     it there. The English title's last word is the italic line; renok's 3-D
+     cursor sits just past where a four-letter word ends ("/loop" before), and
+     "/journey" ran under it at 1440, so the word is "flow". */
+  title: B('一条业务主线', 'One business flow'),
   headers: [B('(步骤)', '(Step)'), B('(发生什么)', '(What happens)'), B('(要点)', '(The point)')],
   button: B('看每一步对应的能力组', 'See the capability group behind each step'),
   /* The stage word each row leads with, in Chinese, for the blocks whose largest
@@ -1382,7 +1384,7 @@ export const CAPABILITY_SHOWCASE = {
   connectionLabel: B('接到哪里', 'Connects to'),
   /* Closes the quotation paragraph (tools/blocks/rk-stats.mjs): what this
      describes is scope, and what a company can use is confirmed per item. */
-  scopeNote: B('以上是报价工作的能力范围；你公司实际开通哪些，方案沟通时逐项确认，写在这里不等于已经部署。', 'This describes the scope of quotation work; what your company can use is confirmed item by item during scoping — a described capability is not by itself a deployed one.'),
+  scopeNote: B('你公司实际开通哪些，方案沟通时逐项确认。', 'What your company can use is confirmed item by item during scoping.'),
 
   stories: [
     {
@@ -1404,7 +1406,9 @@ export const CAPABILITY_SHOWCASE = {
       /* Sales Desk (V5 M03, V6 §5.3). The heading is V6's; tools/blocks/qx-news.mjs
          prints `promise` then `availability` in the left column, and its three
          rows keep the intake / requirements / customer-context split. */
-      label: B('Sales Desk：把客户聊明白，把订单跟到底', 'Sales Desk: understand the customer, follow the order through'),
+      /* English takes V6's compact form: the sticky column holds about fifteen
+         Latin characters a line at 58px, and the long form stood five lines. */
+      label: B('Sales Desk：把客户聊明白，把订单跟到底', 'Sales Desk: from customer to order'),
       groups: ['04', '05'],
       promise: B('Sales Desk 承接 Growth OS 确认的客户与各渠道询盘：统一入口把它们收进来，需求从来信和附件里读出来，客户全景记下背景与历史。三者一起服务于回复、产品匹配、跟进、报价与 PI，直到订单交接。', 'Sales Desk takes the prospects Growth OS has approved and the inquiries from every connected channel. One intake receives them, requirements are read from messages and attachments, and the customer view keeps context and history. Together they serve replies, product matching, follow-up, quotations and PI, through to the order handoff.'),
       picks: ['Unified Inbox', 'Inquiry Intent Detection', 'Buyer Requirement Extraction', 'Customer Risk Signals', 'Knowledge-Grounded Reply', 'Account 360', 'Automatic Follow-up'],
