@@ -1486,7 +1486,7 @@ export const CAPABILITY_SHOWCASE = {
       groups: ['06', '12'],
       promise: B('知识库是企业资料室；业务关系把客户、产品、报价、订单与负责人对应起来。回答依据企业确认的资料，资料冲突或过期时提示核实。', 'The knowledge base is the company’s reference room; business relationships connect customers, products, quotes, orders and owners. Answers rest on approved company sources, and conflicting or outdated material is flagged.'),
       panel: [
-        [B('企业知识中心', 'Knowledge center'), B('产品、价格政策、认证、FAQ、模板与制度集中管理', 'Products, pricing policy, certificates, FAQs and templates in one place')],
+        [B('企业知识中心', 'Knowledge center'), B('产品、价格政策、认证、常见问题、模板与制度集中管理', 'Products, pricing policy, certificates, FAQs and templates in one place')],
         [B('有据可查的回答', 'Answers with sources'), B('注明依据的资料；没有资料，不作答', 'Each answer names its source; no source, no answer')],
         [B('业务关系图', 'Business relationship map'), B('客户、商机、报价、订单与负责人彼此关联', 'Customers, opportunities, quotes, orders and owners linked')],
         [B('同一个客户对得上', 'One customer, every record'), B('不同系统里的同一客户或订单能对应', 'The same customer or order matched across systems')],
