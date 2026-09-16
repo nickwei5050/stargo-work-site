@@ -670,7 +670,7 @@ function lxContextSection(ctx, t) {
     for (const k of ['group', 'title', 'text']) if (!t(it[k])) throw new Error(`intelligence: context item without ${k}`);
     // A no-break space before each arrow, so a line never starts with "→".
     if (it.flow && !t(it.flow).includes(' → ')) throw new Error('intelligence: context flow without " → " steps');
-    const flow = it.flow ? `<p class="lx-text-size-regular lx-context-flow">${t(it.flow).replaceAll(' → ', ' → ')}</p>` : '';
+    const flow = it.flow ? `<p class="lx-text-size-regular lx-context-flow">${t(it.flow).replaceAll(' → ', '\u00a0→ ')}</p>` : '';
     return `<div class="lx-context-item"><div class="lx-home-features-small-texts"><div class="lx-subtext">${t(it.group)}</div></div>`
       + `<h3 class="lx-heading-style-h4">${t(it.title)}</h3>`
       + `<p class="lx-text-size-regular lx-text-weight-light">${t(it.text)}</p>${flow}</div>`;
