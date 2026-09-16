@@ -161,8 +161,11 @@ function answer(x, T, t, escapeHtml) {
   if (x.flow) {
     const steps = t(x.flow.steps);
     /* An ordered list, so a screen reader hears the steps as a sequence; the
-       arrows between the chips are drawn for the eye only. */
-    html += `<ol class="cn-answer-flow" aria-label="${escapeHtml(t(x.flow.label))}">`
+       arrows between the chips are drawn for the eye only. It carries the
+       answer paragraphs' class as well: cinery's hover ("Accordion - Hover
+       In") slides every `.cn-accordion-answer-text` of the row 1.5rem right,
+       and a list without the class stayed behind the paragraphs it heads. */
+    html += `<ol class="cn-accordion-answer-text cn-answer-flow" aria-label="${escapeHtml(t(x.flow.label))}">`
       + steps.map((s, k) => `<li class="cn-answer-step"><span class="cn-answer-step-text">${escapeHtml(s)}</span>`
         + (k < steps.length - 1 ? '<span class="cn-answer-arrow" aria-hidden="true">→</span>' : '') + '</li>').join('')
       + '</ol>';

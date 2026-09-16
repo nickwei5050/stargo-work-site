@@ -3500,8 +3500,8 @@
    its 1.5 line height; only the first keeps the 2rem, and the rest sit 1rem
    under the one before — a paragraph gap, not a new question. (Three classes
    against the donor's two, so the donor's own 2rem restatement at 767px does
-   not undo it.) */
-.cn-faq .cn-answer-flow + .cn-accordion-answer-text,
+   not undo it.) The step row carries the class too (see below), so the
+   paragraph under it is spaced the same way. */
 .cn-faq .cn-accordion-answer-text + .cn-accordion-answer-text { padding-top: 1rem; }
 
 /* The questions are longer now (V6 names each topic and marks two as 建设中 /
@@ -3524,13 +3524,16 @@
 }
 
 /* The step row (video and adaptation), read before the paragraphs (V6 §10).
-   An ordered list with the host page's list styling taken off. It takes the
-   answer text's own 2rem top and 10px left inset (0 under 480px, as the
-   answer text does) and wraps onto as many lines as the column needs. */
+   An ordered list with the host page's list styling taken off. It is also a
+   `.cn-accordion-answer-text` (cn-faq.mjs says why), so its top and left
+   inset are the answer text's own — 2rem and 10px, 0 left under 480px — and
+   only the list's other two sides and its margins are cleared here. It wraps
+   onto as many lines as the column needs. */
 .cn-faq .cn-answer-flow {
   list-style: none;
   margin: 0;
-  padding: 2rem 0 0 10px;
+  padding-right: 0;
+  padding-bottom: 0;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -3571,9 +3574,6 @@
   color: var(--neutral-color--secondary-neutral);
   font-size: var(--_sizes---fixed--xsmall-05);
   line-height: 1;
-}
-@media screen and (max-width: 479px) {
-  .cn-faq .cn-answer-flow { padding-left: 0; }
 }
 
 /* The question line is now a link to catalogue row 09. cinery draws every
