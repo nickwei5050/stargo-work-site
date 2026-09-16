@@ -1,15 +1,19 @@
 /* cn-faq — only what the cut could not carry out of cinery.
 
-   Two kinds of thing live here, and nothing else:
+   Three kinds of thing live here, and nothing else:
 
      1. the grid placement cinery wrote against Webflow's generated node ids,
         which are not classes and so are invisible to a class-driven extractor;
-     2. cinery's <body> declarations, which never travel with a cut section.
+     2. cinery's <body> declarations, which never travel with a cut section;
+     3. the longer answers of the V6 content (2026-09-16): markup the donor
+        never had — several paragraphs, a step row, a conditions line, a link
+        and a link target — drawn only from the donor's own tokens.
 
-   Every value below is copied verbatim from
+   Every value in 1 and 2 is copied verbatim from
    tools/templates/cinery/css/cinery.app.shared.3e3418b8f.css and scoped under
-   the block root exactly as the extractor scopes its own output. Nothing here
-   sets a size, colour, spacing or layout the donor did not already set. */
+   the block root exactly as the extractor scopes its own output. Section 3
+   is new and says why for each rule; it sets no font size smaller than the
+   donor's own small type and no height, so nothing is clipped. */
 
 /* ------------------------------------------- 1. the #w-node grid rules -- */
 
@@ -88,3 +92,116 @@
    answers came out at 0.7 opacity and -0.5px against the donor's 1 and normal.
    Put back what the donor computes. */
 .cn-faq p { opacity: 1; letter-spacing: normal; }
+
+/* ----------------------------------------------- 3. the V6 answers -- */
+
+/* Consecutive paragraphs. The donor's answer is one paragraph, and its class
+   puts 2rem above it to clear the question. Every paragraph of a longer
+   answer carries the same class, so it keeps the answer's grey, its 16px and
+   its 1.5 line height; only the first keeps the 2rem, and the rest sit 1rem
+   under the one before — a paragraph gap, not a new question. (Three classes
+   against the donor's two, so the donor's own 2rem restatement at 767px does
+   not undo it.) The step row carries the class too (see below), so the
+   paragraph under it is spaced the same way. */
+.cn-faq .cn-accordion-answer-text + .cn-accordion-answer-text { padding-top: 1rem; }
+
+/* The questions are longer now (V6 names each topic and marks two as 建设中 /
+   In Development), and several take two or three lines on a phone or in the
+   two-column grid at 992–1024. The Chinese page already balances them
+   (css/stargo-fusion.css, the CJK heading sweep); the English page is given
+   the same here, because measured without it the new titles left one word on
+   a line of its own — "Editing" at 1440, "Development" and "Content" at 390
+   and 1024. The runs the block marks `cn-keep` (a status, and a few named
+   phrases, see CREATIVE_TOPICS) are never split. Type size is untouched. */
+.cn-faq .cn-accordion-heading { text-wrap: balance; }
+.cn-faq .cn-keep { white-space: nowrap; }
+
+/* The conditions line opens with its label in the white of the question
+   above it, so each topic's availability can be found by eye without reading
+   the whole answer. */
+.cn-faq .cn-answer-label {
+  color: var(--primary-color--white);
+  font-weight: var(--_typography---font-weight--medium);
+}
+
+/* The step row (video and adaptation), read before the paragraphs (V6 §10).
+   An ordered list with the host page's list styling taken off. It is also a
+   `.cn-accordion-answer-text` (cn-faq.mjs says why), so its top and left
+   inset are the answer text's own — 2rem and 10px, 0 left under 480px — and
+   only the list's other two sides and its margins are cleared here. It wraps
+   onto as many lines as the column needs. */
+.cn-faq .cn-answer-flow {
+  list-style: none;
+  margin: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem;
+  letter-spacing: normal;
+}
+/* This site's own `li` rule is the one its `p` rule is (see section 2):
+   measured, each step came out at 0.7 opacity, -0.5px tracking and weight 500,
+   which ran the words of "Authorized reference" together. The steps take the
+   list's (cinery's) type instead. */
+.cn-faq .cn-answer-step {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin: 0;
+  padding: 0;
+  opacity: 1;
+  letter-spacing: normal;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}
+/* Each step is drawn like the row's own `+` button — its translucent white
+   fill and top-left hairline (`.cn-plus-block`) — with the pill's 8px
+   corners, in white at the donor's xsmall-05 (14px). */
+.cn-faq .cn-answer-step-text {
+  border-style: solid none none solid;
+  border-width: 1px;
+  border-color: var(--border-color--primary-border);
+  background-color: var(--border-color--primary-border);
+  border-radius: 8px;
+  padding: .375rem .75rem;
+  color: var(--primary-color--white);
+  font-size: var(--_sizes---fixed--xsmall-05);
+  line-height: 1.3;
+}
+.cn-faq .cn-answer-arrow {
+  color: var(--neutral-color--secondary-neutral);
+  font-size: var(--_sizes---fixed--xsmall-05);
+  line-height: 1;
+}
+
+/* The question line is now a link to catalogue row 09. cinery draws every
+   `a` white, medium and undecorated, which would leave it looking like the
+   plain label it replaced; the underline is what says it goes somewhere. */
+.cn-faq .cn-question-link {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .2em;
+}
+.cn-faq .cn-question-link:hover { text-decoration-color: var(--neutral-color--secondary-neutral); }
+
+/* Link targets. A topic reached by its id (capabilities.html#creative-video)
+   is scrolled to by tools/blocks/cn-faq.js, which reads this margin; it keeps
+   the question off the top edge — the same share of the viewport rk-stats.css
+   leaves above #story-3. */
+.cn-faq .cn-accordion-content-item[id] { scroll-margin-top: 12vh; }
+
+/* The picture card, once the grid stacks (991px and below). Beside the
+   questions the card is as tall as its grid row, whatever the picture; stacked,
+   its `height: 100%` has nothing to resolve against and the card takes the
+   picture's own proportions. cinery's portrait was 1280 × 1349, so the donor
+   drew a card a little taller than wide on tablet and phone; the editorial
+   picture that replaced it is landscape (1586 × 992) and, measured, shrank the
+   card to 342 × 214 at 390px. The donor's proportions are restated here, and
+   `object-fit: cover` (donor) crops the picture to them as it does beside the
+   questions. */
+@media screen and (max-width: 991px) {
+  .cn-faq .cn-faq-image { aspect-ratio: 1280 / 1349; }
+}
