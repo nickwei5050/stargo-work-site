@@ -149,7 +149,9 @@ function question(x, i, t, escapeHtml) {
     if (at < 0) throw new Error(`cn-faq: topic ${x.id} keeps "${run}", which is not in its title "${name}"`);
     html = html.slice(0, at) + KEEP(escapeHtml(run)) + html.slice(at + escapeHtml(run).length);
   }
-  return `${i + 1}. ${html}${status ? ` · ${KEEP(escapeHtml(status))}` : ''}`;
+  /* U+00A0 before the dot, an ordinary space after it: a wrapped title may
+     break only after 「·」. */
+  return `${i + 1}. ${html}${status ? `\u00a0· ${KEEP(escapeHtml(status))}` : ''}`;
 }
 
 /** One answer: the step row (if any), the paragraphs, then the conditions. */

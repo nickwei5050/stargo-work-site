@@ -1583,6 +1583,7 @@ export const CREATIVE_TOPICS = {
     {
       id: 'creative-assets',
       title: B('素材、版本与短视频剪辑', 'Assets, Versions & Short-form Editing'),
+      keep: B([], ['Short-form']),
       covers: ['Short-form Clip Editing', 'AI Creative Studio'],
       body: [
         B('把制作需求、步骤、参考素材，以及图片、视频和音频放进同一个创意工作空间；每个项目保留版本与素材库，成熟的制作流程可以直接复用。',
