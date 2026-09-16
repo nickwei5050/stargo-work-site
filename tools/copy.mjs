@@ -1608,11 +1608,14 @@ export const CAP_V6A = {
      §5.5's six operating themes, in its order, one card each; desktop rows and
      the phone slider are filled from this one list. Theme 4 keeps every trade
      document the old cards named, and themes 3 and 4 say where the decision
-     stays. `link` is each card's role line, pointing at the catalogue group. */
+     stays. The section has no paragraph of its own, so its conditions ride on
+     the cards they belong to: ERP foundations and per-enterprise validation
+     (1), the connected logistics systems (5), staged delivery (6). `link` is
+     each card's role line, pointing at the catalogue group. */
   operations: {
     themes: [
       { title: B(`产品、物料${ZW}与采购`, 'Products, materials & purchasing'),
-        text: B('产品档案、规格、物料清单与供应商资料保持一致；订单需求衔接采购计划、采购单与到货跟进。', 'Product records, specifications, bills of materials and suppliers stay consistent; order demand links to purchasing plans, purchase orders and deliveries.') },
+        text: B('产品档案、规格、物料清单与供应商资料保持一致，订单需求衔接采购与到货跟进。已有 ERP 与商城基础，跨系统协同按企业配置验收。', 'Product records, specifications, bills of materials and suppliers stay consistent, and order demand links to purchasing and deliveries. ERP and commerce foundations exist; cross-system work is validated per enterprise.') },
       { title: B(`库存、生产${ZW}与质检`, 'Stock, production & quality'),
         text: B('看清可交付数量与缺货，跟踪生产任务、物料需求、质检、包装与交期。', 'See available stock and shortages; track production tasks, material needs, quality checks, packing and lead times.') },
       { title: B(`订单与${ZW}付款节点`, 'Orders & payment milestones'),
@@ -1620,9 +1623,9 @@ export const CAP_V6A = {
       { title: B(`外贸单证${ZW}与出口资料`, 'Trade documents & export records'),
         text: B('准备并核对商业发票、装箱单、原产地证 / Form E 资料、提单、认证与出口退税资料；正式签发、申报与获批由主管机构完成。', 'Prepare and check commercial invoices, packing lists, certificate of origin / Form E materials, bills of lading, certifications and export tax-rebate records; official issuance, filing and approval stay with the authorities.') },
       { title: B('物流与交付', 'Logistics & delivery'),
-        text: B('运费询价、订舱、物流轨迹、预计到达与异常处理，运输单据跟着交付进度走。', 'Freight quotes, bookings, tracking, arrival estimates and exceptions, with shipping documents following delivery progress.') },
+        text: B('运费询价、订舱、物流轨迹、预计到达与异常处理，运输单据跟着交付走；范围取决于企业接入的货代与物流系统。', 'Freight quotes, bookings, tracking, arrival estimates and exceptions, with shipping documents following delivery; the scope depends on the forwarding and logistics systems connected.') },
       { title: B(`售后、渠道${ZW}与复购`, 'Service, channels & reorders'),
-        text: B('保修、退换货、备件与经销商支持，商城业务与补货建议，把成交后的生意接下去。', 'Warranty, returns, spare parts and dealer support, commerce and reorder suggestions — the business after the sale.') },
+        text: B('保修、退换货、备件与经销商支持，商城业务与补货建议，把成交后的生意接下去；按系统接入情况分阶段交付。', 'Warranty, returns, spare parts, dealer support, commerce and reorder suggestions — the business after the sale, delivered in stages as systems connect.') },
     ],
     link: { label: B('ERP 与履约详情', 'ERP & fulfilment details'), href: '#g08' },
     /* The six portraits were the donor's testimonial sitters: beside an

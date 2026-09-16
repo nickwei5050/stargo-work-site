@@ -98,9 +98,13 @@ export function render(frag, ctx) {
   const label = (lang === 'zh' ? t(story.label).replace(/([：，])/g, `$1${ZWSP}`) : t(story.label)).replace('Sales Desk', 'Sales\u00a0Desk');
   let left = setText(head, 'qx-h2', escapeHtml(label));
   /* The lead: what Sales Desk takes in, how the three rows below serve the
-     reply, the product fit, the follow-up, the quote and the PI, and — as its
-     own sentence — what is still connected and validated one by one. */
-  left = setText(left, 'qx-body', escapeHtml(`${t(story.promise)}${lang === 'zh' ? '' : ' '}${t(story.availability)}`));
+     reply, the product fit, the follow-up, the quote and the PI, what it
+     produces, and — as its own sentence — what is still connected and
+     validated one by one. */
+  if (!story.output) throw new Error('qx-news: story 1 has no output line');
+  const gap = lang === 'zh' ? '' : ' ';
+  const outputs = lang === 'zh' ? `工作成果：${t(story.output)}` : `Outputs: ${t(story.output).replace(/^./, (c) => c.toLowerCase())}`;
+  left = setText(left, 'qx-body', escapeHtml([t(story.promise), outputs, t(story.availability)].join(gap)));
 
   /* The button says what it goes to. `#atlas` is the complete catalogue
      section, and `catalogueLabel` is the heading that section prints for
