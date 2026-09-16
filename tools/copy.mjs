@@ -570,9 +570,10 @@ export const LX_INTELLIGENCE = {
   /* The two hero buttons keep their anchors (#lx-ontology is clicked by
      tools/verify-interactions.mjs): the first opens the business-context cards,
      the second the closing card on improvement. The English names stay one
-     line at 768, where "Business context" wrapped beside its icon. */
-  store1: { name: B('业务理解', 'Context'), sub: B('读懂业务关系', 'How the business connects'), href: '#lx-ontology' },
-  store2: { name: B('持续改进', 'Improvement'), sub: B('用结果改进', 'Judged by results'), href: '#lx-evolution' },
+     line at 768, where "Business context" wrapped beside its icon, and keep
+     their arrow inside a 320 viewport, which "Improvement" pushed to the edge. */
+  store1: { name: B('业务理解', 'Context'), sub: B('读懂业务关系', 'How work connects'), href: '#lx-ontology' },
+  store2: { name: B('持续改进', 'Improving'), sub: B('用结果改进', 'Judged by results'), href: '#lx-evolution' },
   heroDesc: B('AI 理解公司，并主动推进工作', 'Know the company. Keep work moving.'),
   tags: LX_TAGS,
   features: [
