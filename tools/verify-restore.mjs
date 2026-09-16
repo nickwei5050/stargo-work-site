@@ -77,8 +77,14 @@ const TEXT_AUDIT = `(() => {
     if (!rects.length) continue;
     const box = rects.reduce((b, r) => ({ left: Math.min(b.left, r.left), top: Math.min(b.top, r.top), right: Math.max(b.right, r.right), bottom: Math.max(b.bottom, r.bottom) }), { left: 1e9, top: 1e9, right: -1e9, bottom: -1e9 });
     if (box.bottom < 0 || box.top > vh) continue;              // not on screen right now
+    // Text inside a collapsed clipping container (a closed accordion row) is not
+    // painted at all, wherever its glyph boxes fall. The capability catalogue's
+    // closed rows now hold several screens of detail, so those boxes reach the
+    // footer when the page is scrolled to its end; they are not "covered" text.
+    const clips = clipsOf(el);
+    if (clips.some((c) => { const cr = c.getBoundingClientRect(); return cr.width < 4 || cr.height < 4; })) continue;
     // 1. clipped by an overflow-hidden ancestor (tolerance 2px)
-    for (const c of clipsOf(el)) {
+    for (const c of clips) {
       const cr = c.getBoundingClientRect();
       if (cr.width < 4 || cr.height < 4) continue;                                 // collapsed containers are animation states, not clipping
       const cut = box.top < cr.top - 4 || box.bottom > cr.bottom + 4 || box.left < cr.left - 4 || box.right > cr.right + 4;
