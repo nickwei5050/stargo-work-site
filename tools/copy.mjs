@@ -603,44 +603,56 @@ export const LX_INTELLIGENCE = {
   ctaDesc: B('每次执行都留下记录：做了什么、结果如何、人在哪里改过。系统据此提出候选的提示词、技能或流程改动，先在小范围与现行版本比对，通过评估和审批才发布，否则回滚。模型权重不会自行重训。', 'Every run leaves a record: what was done, how it turned out, where a person corrected it. From that the system proposes a candidate prompt, skill or workflow change, compares it against the current one on a small slice, and releases it only after evaluation and approval — otherwise it rolls back. Model weights are not retrained on their own.'),
 };
 
+/* The workforce copy from when workforce.html was built on the Lifelogx
+   homepage template. No page renders this object whole any more (workforce
+   moved to LX_FEATURE_WORKFORCE on the feature template), but three things
+   still read parts of it, so it is kept current rather than left to rot:
+     - about.html's button label is `store1.name`, and its split heading
+       「AI」/「团队」, "AI"/"Team" must stay inside `heroDesc`
+       (tools/blocks/cn-about-projects.mjs asserts both languages);
+     - the capabilities orbit draws `ctaLogo` as two words
+       (tools/blocks/qx-orbit.mjs).
+   The rest follows V6 §6 like the live page: 288 is a role directory, teams
+   are formed by task (no speed claim), the browser desktop comes first, and
+   nothing here says always-on work or mobile approval is available. */
 export const LX_WORKFORCE = {
   heroWord: B('数字员工', 'AI Workforce'),
-  store1: { name: B('288 位 AI 员工', '288 AI Employees'), sub: B('每一个都有岗位', 'Every one of them has a job'), href: '#lx-teams' },
+  store1: { name: B('认识数字员工', 'Meet the AI Workforce'), sub: B('288 个专业数字岗位', '288 specialized AI roles'), href: '#lx-teams' },
   store2: { name: B('定价', 'Pricing'), sub: B('从企业需要的层级开始', 'Start at the level you need'), href: 'pricing.html' },
-  heroDesc: B('AI 团队已经上线。', 'Your AI team is already online.'),
+  heroDesc: B('按任务选择岗位，组成 AI 团队，关键决定由人确认。', 'Select roles by task, form an AI team and keep key decisions with people.'),
   tags: LX_TAGS,
   features: [
-    { title: B('有岗位', 'Has a job'), text: B('岗位、目标、知识、工具、权限、执行记录，不从空白提示开始。', 'Role, goal, tools, permissions, record. Never a blank prompt.') },
-    { title: B('秒级组队', 'Instant teams'), text: B('一个目标，秒级组队，AI 员工并行开工。', 'One goal forms an agent team that runs in parallel.') },
-    { title: B('随处工作', 'Works anywhere'), text: B('云端运行，办公室、工厂、展会、机场都能用。', 'Cloud-based: office, factory, trade show or airport.') },
+    { title: B('有岗位', 'Has a job'), text: B('职责、技能、企业知识、可用工具、权限和运行记录，都可以按岗位配置。', 'Responsibilities, skills, enterprise knowledge, permitted tools, access and run history are configured per role.') },
+    { title: B('按任务组队', 'Teams by task'), text: B('按岗位、技能、权限与任务复杂度选择员工，明确每个成员的职责。', 'Choose employees by role, skills, access and task complexity, with a clear job for each member.') },
+    { title: B('网页桌面', 'Browser desktop'), text: B('网页端是当前重点；语音、自动化与其他终端按开通范围开放。', 'Browser-first; voice, automation and other clients depend on the scope enabled.') },
   ],
   cards: [
-    { title: B('市场研究 AI 员工', 'Market Research Agent'), text: B('目标市场、需求变化、竞争格局。', 'Target markets, demand shifts, competitive landscape.') },
-    { title: B('进口商情报 AI 员工', 'Importer Intelligence Agent'), text: B('谁在进口、多久一次、什么时候补货。', 'Who imports, how often, when they reorder.') },
-    { title: B('经销商发现 AI 员工', 'Dealer Discovery Agent'), text: B('经销商网络、Google Maps、区域机会。', 'Dealer networks, Google Maps, regional opportunities.') },
-    { title: B('决策链 AI 员工', 'Buying Committee Agent'), text: B('谁研究、谁推荐、谁拍板。', 'Who researches, who recommends, who decides.') },
-    { title: B('产品匹配 AI 员工', 'Product Matching Agent'), text: B('从需求匹配到产品配置和参数。', 'From requirement to product configuration and specs.') },
-    { title: B('报价 AI 员工', 'Quote Agent'), text: B('报价草稿、价格规则、利润护栏。', 'Quote drafts, pricing rules, margin guardrails.') },
-    { title: B('跟进 AI 员工', 'Follow-up Agent'), text: B('一个客户都不会忘。', 'Never forgets a customer.') },
+    { title: B('市场研究 AI 员工', 'Market Research AI'), text: B('目标市场、需求变化、竞争格局。', 'Target markets, demand shifts, competitive landscape.') },
+    { title: B('销售跟进 AI 员工', 'Sales Follow-up AI'), text: B('客户记录、回复与下一步跟进。', 'Customer records, replies and next steps.') },
+    { title: B('产品规格 AI 员工', 'Product Spec AI'), text: B('核对需求、配置与参数。', 'Requirements, configurations and specifications checked.') },
+    { title: B('报价 AI 员工', 'Quotation AI'), text: B('报价草稿、价格规则与审批依据。', 'Quote drafts, pricing rules and the basis for approval.') },
+    { title: B('财务对账 AI 员工', 'Reconciliation AI'), text: B('付款节点、对账与应收提醒。', 'Payment milestones, reconciliation and receivable reminders.') },
+    { title: B('内容 AI 员工', 'Content AI'), text: B('按产品与品牌资料准备营销素材。', 'Marketing assets prepared from product and brand information.') },
+    { title: B('统筹协调 AI 员工', 'Coordination AI'), text: B('汇总成果与未决问题，交负责人确认。', 'Results and open questions consolidated for the responsible person.') },
   ],
-  gradient: [B('云端工作空间', 'Cloud workspace'), B('桌面完整工作台', 'Desktop workspace'), B('移动端查看与审批', 'Mobile review and approval'), B('永远在线的 AI 员工', 'Always-on agents')],
-  bigText: B('把工作交给 AI，权力留在企业', 'Delegate the work. Keep the authority.'),
+  gradient: [B('网页桌面', 'Browser desktop'), B('多应用与文件', 'Apps and files'), B('表格与报告', 'Sheets and reports'), B('授权网页任务', 'Authorized web tasks')],
+  bigText: B('把工作交给 AI，把决定权留在企业。', 'Delegate the work. Keep the authority.'),
   bubbles: [
     B('价格', 'Price'), B('利润', 'Margin'), B('正式报价', 'Formal quote'), B('PI', 'PI'), B('重要客户回复', 'Key customer reply'),
-    B('审批闸门', 'Approval Gate'),
+    B('关键审批', 'Key approval'),
     B('关键业务动作', 'Critical business action'), B('对外付款', 'Outbound payment'), B('合同条款', 'Contract terms'),
-    B('人掌权', 'Humans keep authority'), B('AI 干活', 'AI does the work'), B('人在环中', 'Human-in-the-Loop'),
+    B('人掌权', 'People decide'), B('AI 干活', 'AI does the work'), B('人工确认', 'Human review'),
   ],
-  words: [B('不再', 'No'), B('空白提示', 'blank prompts'), B('丢上下文', 'lost context'), B('夜里停工', 'idle nights')],
-  feat2Title: B('合上笔记本，公司不会停。', 'Your company doesn’t stop when you close your laptop.'),
-  feat2Sub: B('定时运行，事件触发。', 'Scheduled routines. Event-driven agents.'),
-  feat2Card: { title: B('调度中枢', 'Orchestrator'), text: B('并行干活，汇总结果，只把需要人拍板的交回来。你离开电脑，AI 员工照样执行已授权的任务；客户、订单或市场一有变化，自动启动。', 'Parallel work, consolidated results, only the human decisions handed back. Agents keep running authorised tasks after you leave the desk and start automatically when a customer, order or market state changes.') },
+  words: [B('不再', 'No'), B('从零交代', 'starting from zero'), B('丢上下文', 'lost context'), B('反复转述', 'repeated relaying')],
+  feat2Title: B('交办之后，进度看得见。', 'After you delegate, progress stays visible.'),
+  feat2Sub: B('定时与事件任务，按授权开放。', 'Scheduled and event-based tasks, as authorized.'),
+  feat2Card: { title: B('统筹角色', 'Coordinating role'), text: B('研究、销售、产品与内容员工并行处理子任务，统筹角色复核并汇总成果，只把需要人决定的事项交回。更深入的团队交流协作仍在完善。', 'Research, sales, product and content roles work on subtasks in parallel; a coordinating role checks and consolidates the results and hands back only what a person must decide. Deeper team communication is still evolving.') },
   feat2Button: { label: B('查看定价', 'See pricing'), href: 'pricing.html' },
-  feat2Lines: [B('定时例行任务', 'Scheduled Routines'), B('事件驱动 AI 员工', 'Event-Driven Agents'), B('永远在线', 'Always-On')],
+  feat2Lines: [B('定时任务', 'Scheduled tasks'), B('事件触发', 'Event triggers'), B('按授权范围运行', 'Within authorized scope')],
   ctaTitle: B('别买 AI 工具。', 'Don’t hire AI tools.'),
   ctaSub: B('建立 AI 产能。', 'Build AI capacity.'),
   ctaLogo: B('STARGO WORK', 'STARGO WORK'),
-  ctaDesc: B('288 位 AI 员工。一家云端公司。', '288 AI Employees. One Cloud Company.'),
+  ctaDesc: B('288 个专业数字岗位，按任务选择与派工。', '288 specialized AI roles, selected and assigned by task.'),
 };
 
 /* ============================================================= pricing === */
@@ -1246,54 +1258,159 @@ export const LEGAL = {
     not people, not a team; the careers list becomes five workflow
     entry points that all lead to the contact page. */
 /**
- * Workforce page, built on the Lifelogx feature template.
+ * Workforce page, built on the Lifelogx feature template (V6 §6; V5 M10, M11,
+ * M14, P04, F02, F08).
  *
- * The Intelligence page explains how delegation works. This one answers a
- * different question: who is actually on the team. Roles, the department each
- * belongs to, what the department owns, and what a company gets done with them.
- * No head-count claims, no productivity figures — the template's "Views / 99.6M"
- * slot carries a department and the object that department owns.
+ * The Intelligence page explains how the company's context and proactive work
+ * behave. This one answers a different question, in the order a visitor asks
+ * it: which roles there are (288, across ten role groups — the block after the
+ * pink panel, `WORKFORCE_ROLE_GROUPS` below), what a role is and how work is
+ * handed to a team, where that work happens (the browser desktop), and how a
+ * team of roles gets one task done — goal and roles, exchanged information and
+ * parallel work, checked results and a person's decision.
+ *
+ * What it must not say, and why the slots read the way they do:
+ *   - 288 is the size of the role directory. Wherever the page states it, the
+ *     same sentence or the block beside it says it is not concurrent execution
+ *     and not 288 people replaced (V5 G02, M10).
+ *   - The five hero cards are examples, not the directory: the template's grey
+ *     "Views" label says so (「岗位示例」), and the "99.6M" figure slot carries
+ *     the role group. No names beyond these, no head counts, no output figures.
+ *   - The team scenario is labelled an illustration on every card and in the
+ *     paragraph under it, and it keeps the phase line: basic role selection
+ *     and delegation are recorded, deeper team communication is still evolving.
+ *   - The browser desktop comes first; voice, automation, external actions and
+ *     other clients follow the enabled scope (M14). Nothing on this page says
+ *     mobile approval or always-on work is available.
+ *   - `answerTabs[0]` is also about.html's heading line (tools/blocks/
+ *     cn-about-reviews.mjs, 「四个」/「岗位」) and stays 「岗位」/"Roles".
  */
 export const LX_FEATURE_WORKFORCE = {
-  heroPink: B('288 位 AI 员工。', 'Give the work to a team.'),
-  heroWhite: B('一张组织架构图。', 'Not another chat window.'),
-  heroDesc: B('每一位都有岗位、目标、工具、权限和执行记录。不是 288 个聊天机器人。', 'STARGO WORK brings 288 specialized AI employees into one cloud workspace. Assign a goal, bring the right roles together and follow their progress.'),
+  /* The two hero lines are split per character on the Chinese page and
+     balanced, so each is written as two halves of about equal width that meet
+     at a natural break: 「288 个专业」/「数字岗位。」 and 「按工作需要，」/
+     「组成 AI 团队。」 wherever a line has to wrap (phones, and 768 for the
+     second). V6 §6.1 writes the second line 「组成你的 AI 团队」; with 「你的」
+     the halves are 6em and 8.7em, and balance then breaks inside 组成 —
+     measured 「按工作需要，组」/「成你的 AI 团队。」 at 390 and 768, and a
+     three-line 「按工作需」/「要，组成你」/「的 AI 团队。」 at 320. Without it the
+     comma is the break at 320, 390 and 768, and one line from 1024 up.
+
+     The description's last sentence is the short form of M10's availability
+     line (the long form is the note under the role-group total). It is cut to
+     fit the fourth line at 390 exactly: the longer 「288 是岗位目录数量，启用范围
+     受配置、预算和权限约束。」 left 「束。」 alone on a fifth. */
+  heroPink: B('288 个专业数字岗位。', '288 specialized AI roles.'),
+  heroWhite: B('按工作需要，组成 AI 团队。', 'Build the team your task needs.'),
+  heroDesc: B('不是只有外贸销售，也不是 288 个相同的聊天窗口。企业支持、市场、销售、客服、合规、供应链、财务、运营、产品工程与专业服务，都有对应的专业角色。288 指岗位目录数量，按配置、预算和权限启用。', 'This is more than a trade-sales team or 288 identical chat windows. Specialized roles span enterprise support, marketing, sales, service, compliance, supply chains, finance, operations, product and engineering, and professional services. 288 is the role-directory count; activation depends on configuration, budget and access.'),
   heroButton: B('预约演示', 'Book a demo'),
+  /* Five examples from different role groups — research, sales, product,
+     finance and coordination — so the marquee no longer reads as a trade-only
+     team. Names stay at the length of 「市场信号 AI 员工」: below 480px the
+     card's name panel has room for two lines, not three (stargo-fusion.css,
+     "the scattered photo cards under the CTA"). `dept` is the grey label and
+     is the same on every card; the build asserts that.
+
+     The English label is the one word "Example", not "Example role": the label
+     and the group sit side by side in a row as wide as the name, and "Example
+     role" wrapped to two lines on every card (measured at 390 and 768). That
+     extra line made the parked name panel 14px taller, and at 768 its first
+     line then showed 8.6px above the bottom edge of each card (the template's
+     "Team" never wrapped). The card's name already says what the role is.
+     The same row sets how wide the name column is, and the round arrow beside
+     it gives up the difference: "Example Operations" is 106px, which squeezed
+     the arrow to 22px wide at 768 (the template's widest row left 28px), so
+     the operations cards say "Ops" in English. */
   roles: [
-    { name: B('市场信号 AI 员工', 'Market Signal Agent'), dept: B('部门', 'Team'), owns: B('增长', 'Growth') },
-    { name: B('报价 AI 员工', 'Quote Agent'), dept: B('部门', 'Team'), owns: B('销售', 'Sales') },
-    { name: B('跟进 AI 员工', 'Follow-up Agent'), dept: B('部门', 'Team'), owns: B('客户', 'Accounts') },
-    { name: B('单证 AI 员工', 'Document Agent'), dept: B('部门', 'Team'), owns: B('单证', 'Documents') },
-    { name: B('调度中枢', 'Orchestrator'), dept: B('部门', 'Team'), owns: B('调度', 'Operations') },
+    { name: B('市场研究 AI 员工', 'Market Research AI'), dept: B('岗位示例', 'Example'), owns: B('市场', 'Marketing') },
+    { name: B('销售跟进 AI 员工', 'Sales Follow-up AI'), dept: B('岗位示例', 'Example'), owns: B('销售', 'Sales') },
+    { name: B('产品规格 AI 员工', 'Product Spec AI'), dept: B('岗位示例', 'Example'), owns: B('产品', 'Product') },
+    { name: B('财务对账 AI 员工', 'Reconciliation AI'), dept: B('岗位示例', 'Example'), owns: B('财务', 'Finance') },
+    { name: B('统筹协调 AI 员工', 'Coordination AI'), dept: B('岗位示例', 'Example'), owns: B('运营', 'Ops') },
   ],
-  doTitle: B('一个团队，能替你完成这些', 'Every AI employee needs more than a name.'),
+  /* The pink panel: what a role is, how work is handed to a team, and the
+     desktop it happens in. The heading's three phrases are four characters
+     each because the heading box is 192px wide at 768 (4.8 characters of
+     40px type); the build's zh-only `keep-all` then lets it break only at
+     the commas. The same 192px holds one English word a line, so the longest
+     word must fit it: "workspace" did not (it ran 8px out of the box at 768);
+     "desktop" does, and is what the panel's third item is about. */
+  doTitle: B('有岗位，有团队，有工作台', 'Roles, teams and a desktop'),
   abilities: [
-    { title: B('主动获客', 'Prospecting'), text: B('市场信号、进口记录、经销商网络、采购决策链，串成可跟进的机会。', 'Market signals, import records, dealer networks and buying committees become opportunities you can work.') },
-    { title: B('询盘到报价', 'Inquiry to quote'), text: B('识别客户、匹配产品、套用价格规则、出报价，越过利润护栏的进审批。', 'Identify the customer, match the product, apply the pricing rules, draft the quote; anything past the margin guardrail goes to approval.') },
-    { title: B('订单与单证', 'Orders and documents'), text: B('PI、付款节点、生产进度、出口文件与认证资料，都在一个订单上。', 'PI, payment milestones, production progress, export documents and certificates, all on one order object.') },
+    { title: B('按任务组队', 'Teams formed by task'), text: B('按岗位、技能、企业知识、权限与任务复杂度选择合适员工，明确每个成员负责研究、销售、产品、内容还是数据工作。', 'Choose employees by role, skills, enterprise knowledge, access and task complexity, and give each member a clear job in research, sales, product, content or data.') },
+    { title: B('交办与确认', 'Delegate and approve'), text: B('提出业务目标，选择员工或团队，查看任务和成果，并批准关键动作；需要判断或遇到异常时，由人接管。', 'Set a business goal, choose employees or a team, inspect tasks and results, and approve key actions. People take over when judgment or an exception calls for it.') },
+    /* M14's summary, its availability line and its roadmap boundary: the
+       browser comes first, and native clients, mobile and mini-programs are
+       phased — so nothing on this page reads as a shipped phone app. */
+    { title: B('网页桌面与 AI 办公', 'Browser desktop and AI office'), text: B('在一个网页桌面里打开业务应用、处理文件、调用数字员工，并连接企业授权的账号。网页端是当前重点；语音、自动化与外部动作按开通范围开放，桌面客户端、移动端与小程序分阶段完善。', 'Open business apps, work with files, call on AI employees and connect authorized business accounts in one browser desktop. The browser comes first: voice, automation and external actions depend on the scope enabled, and desktop clients, mobile and mini-programs are phased in.') },
   ],
+  // M14's one desktop, item by item, under the third ability.
   bullets: [
-    B('看得见优先级', 'Priorities at a glance'),
-    B('跟得住客户与订单', 'Customers and orders tracked'),
-    B('关键动作留有证据', 'Critical actions leave evidence'),
-    B('越权的事进审批', 'Anything past authority needs approval'),
+    B('业务应用、文件与素材', 'Business apps, files and assets'),
+    B('表格、文档与报告', 'Spreadsheets, documents and reports'),
+    B('语音交办，转成任务', 'Voice requests turned into tasks'),
+    B('授权网页任务与账号连接', 'Authorized web tasks and connected accounts'),
   ],
-  phoneTitle: B('真正能干活的工作台', 'A workspace that does the work'),
-  phoneSub: B('日常运营在同一处', 'Day-to-day operations in one place'),
-  cardA: { title: B('有岗位的 AI', 'AI with a job'), text: B('岗位、目标、知识、工具、权限、执行记录都配好了，不从空白提示开始。', 'It never starts from a blank prompt: role, goal, knowledge, tools, permissions and record are all configured.') },
-  cardB: { title: B('记得住上下文', 'Context that holds'), text: B('研究岗记下公司证据，产品岗核对能不能做，销售岗写出第一封信，协调岗合成一份简报。每一步都写在同一个客户对象上，下一个岗位接手，不用你再转述。', 'The research role records the company evidence, the product role checks what is actually offerable, the sales role drafts the first message and a coordinator merges it into one brief. Each step is written onto the same customer object, so the next role picks it up without you relaying it.') },
-  stackedCard: B('企业要的能力，已经在里面。', 'The capabilities a company needs, already inside.'),
+  /* The black sticky note beside the desktop item. Nine characters, like the
+     string stargo-fusion.css measured for this card (「真正能干活的工作台」),
+     so its `text-wrap: pretty` rule still lands on a 3 / 3 / 3 or 3 / 4 / 2
+     break on phones.
+     On a phone the note is about 70px wide and the round avatar badge of the
+     collage overlaps its lower right corner, so the English is written in
+     short words: "A business desktop in your browser" lost "browser" and
+     "Browser-first today" lost "first" under the badge at 390 (the template's
+     own "A workspace that does the work" lost "does the" the same way). The
+     grey line under it sits lowest, where the badge reaches furthest in, so
+     it is the shortest form of M14's availability line (the desktop item
+     beside the note carries the full one): four characters, two words. */
+  phoneTitle: B('浏览器里的企业桌面', 'A business desktop on the web'),
+  phoneSub: B('网页优先', 'Web first'),
+  cardA: { title: B('有岗位的 AI', 'AI with a job'), text: B('每个岗位可以配置职责、技能、企业知识、可用工具、权限、任务和运行记录：分工明确，执行时带着企业背景，也有清楚的范围。', 'Each role can be configured with responsibilities, skills, enterprise knowledge, permitted tools, access, tasks and run history: a defined job, carried out with company context and within a clear scope.') },
+  // M10-04, M11-05 and M11-04: what is recorded, why it survives a pause, and what sharing does not open.
+  cardB: { title: B('交接有记录', 'Handoffs on record'), text: B('记录负责人、截止时间、任务状态、结果与下一步，暂停或人工接管后仍能接着推进，各成员的工作汇总成可交接的成果。共享任务依据，不等于共享全部数据，也不会转移其他员工的权限。', "Owners, deadlines, task status, results and next steps are recorded, so work can continue after a pause or a human takeover, and each member's work is consolidated into a handoff-ready result. Sharing task context does not open all company data or pass on another role's permissions.") },
+  /* The three stacked cards are the team scenario in M11's order, two steps a
+     card: goal and roles → information and parallel work → checked results and
+     a person's decision. Each heading is two equal halves joined by a comma, so
+     the balanced break lands on the comma at every width. `sceneLabel` sits
+     above each heading with the card's step number. */
+  sceneLabel: B('协作场景示意', 'Illustrative scenario'),
+  stackedCard: B('交办目标，分派岗位', 'Set the goal, assign the roles'),
   answersCards: [
-    B('在手机上批掉一条报价', 'Approve a quote from your phone'),
-    B('一个目标 → 分派角色 → 交接上下文 → 一份可复核的简报', 'One goal → roles assigned → context handed over → a reviewable brief'),
+    B('交流信息，并行处理', 'Share information, work in parallel'),
+    B('复核成果，交人确认', 'Check the results, then a person decides'),
   ],
-  extraRole: { name: B('审计台账', 'Audit Ledger'), owns: B('留痕', 'Evidence') },
-  answersBody: B('岗位、目标、工具、权限、审批、执行记录，都包含在你选的层级里。', 'Roles, goals, tools, permissions, approvals and records — all included in the level you choose.'),
+  /* What the roles say to each other in the second card (P04). They replace
+     the template's picture of two chat bubbles, whose English words were
+     painted into the image: the bubbles are now page text over the template's
+     own text-free blob, so each language page shows its own words. */
+  chat: [
+    B('请核对产品规格。', 'Check the product specifications.'),
+    B('已补充可引用的卖点资料。', 'Supporting product-benefit information has been added.'),
+    B('这项承诺需要有权人确认。', 'This commitment needs an authorized reviewer.'),
+  ],
+  // The small role card inside the desktop collage: one more example role.
+  extraRole: { name: B('报告 AI 员工', 'Reporting AI'), owns: B('运营', 'Ops') },
+  /* The paragraph under the cards: M11's summary, V6 §6.3's example, M11's
+     limits and the phase line. It is the only place the scenario is told as
+     sentences. The column is ordinary text flow, so the paragraph grows with
+     its copy (nothing clips it). */
+  answersBody: B('一个复杂任务可以交给多个数字员工分工完成：重点不在聊天人数，而在信息能否传递、责任是否明确、结果能否交接。协作场景示意：开拓一个新的目标市场。研究员工找到目标企业后，可以把待确认的规格交给产品员工；销售员工据此调整开发策略，创意员工准备匹配的营销素材。统筹角色把结果与未决问题汇总，交给负责人确认。协作次数、预算和可执行动作都有限制，人工审批、暂停与接管始终保留。基础员工选择与派工已有记录，更深入的团队交流协作仍在完善。', 'Complex work can be assigned to a bounded team of AI employees. What matters is information exchange, clear ownership and reliable handoff, not the number of chat windows. Illustrative scenario: entering a new target market. Research can hand specification questions to a product specialist. Sales uses the findings to refine outreach, while creative specialists prepare relevant assets. A coordinator consolidates outputs and unresolved questions for the responsible person to review. Collaboration rounds, budgets and permitted actions are limited, and human approval, pause and takeover remain available. Basic role discovery and delegation are recorded; deeper team communication and coordination are still evolving.'),
+  /* The statement under that paragraph (M11's headline). The Chinese is cut to
+     「而是一起做完」 so each half is seven characters: at 768 the column holds
+     8.6 characters of 40px type, and 「而是一起把事做完。」 is nine. The
+     heading is balanced per character, so the half before the comma must not
+     be the shorter one: measured with P04's full wording, every width from 320
+     to 1920 broke 「不是各聊各的，而」/「是一起把事做完。」. */
+  teamTitle: B('不是各聊各的，而是一起做完。', 'A shared goal, connected work and a coherent result.'),
   // The template's square tile has a follower count painted into the artwork.
   tile: { src: 'assets/stargo-motion/orbit-poster.webp', alt: B('银色轨道协同运转的品牌概念画面', 'Brand concept: silver orbital forms moving together') },
-  answersTitle: B('常见问题都在这里', 'All your answers here'),
-  answerTabs: [B('岗位', 'Roles'), B('权限', 'Authority'), B('部署', 'Deployment')],
-  answersCard: B('把工作交给 AI，权力留在企业', 'Delegate the work. Keep the authority.'),
+  /* The display line behind the stacked cards; split per character on the
+     Chinese page. Two five-character halves: one line of this size holds 5.8
+     to 6.4 characters from 320 to 1440. */
+  answersTitle: B('一个目标，一个团队。', 'One goal, one team.'),
+  // Three static labels over the team paragraph. [0] is also about.html's heading.
+  answerTabs: [B('岗位', 'Roles'), B('协作', 'Teamwork'), B('确认', 'Review')],
+  answersCard: B('把工作交给 AI，把决定权留在企业。', 'Delegate the work. Keep the authority.'),
   answersButton: B('聊聊你的方案', 'Discuss your plan'),
   storiesTitle: B('文章', 'Stories'),
   storiesSub: B('我们写下来的', 'we write and share'),
@@ -2470,6 +2587,52 @@ export const CATALOGUE_DETAIL = {
    Insertion point for this area's new exports. Keep additions between this
    marker and the next one so parallel edits merge cleanly. */
 // V6-D-START
+
+/**
+ * workforce.html — the ten role groups (V6 §6.2, V5 M10 and P04).
+ *
+ * One compact block after the pink panel and before the team scenario. The
+ * counts are V4's (pages 21–22) as carried by V5 M10 and V6 §6.2; they are the
+ * size of each group in the role directory, not staff, not concurrent work,
+ * and the note under the total says so. tools/build-site.mjs asserts that
+ * there are ten groups and that they add up to `total.count`, which must be
+ * 288 — change a number here and the build tells you whether the table still
+ * sums.
+ *
+ * `titleChunks`: the Chinese heading is drawn with `word-break: keep-all`
+ * (css/stargo-fusion.css, V6-D) and a <wbr> between these chunks, so it can
+ * only break between phrases — 「十类岗位，」/「一个可按任务」/「组织的数字团队。」
+ * — never inside one. The longest chunk is eight characters, which fits the
+ * narrowest column this heading gets (288px of 32px type at 320). Joined, the
+ * chunks are P04's heading word for word; the build checks that too. English
+ * is P04's two sentences, each drawn as its own inline block, so a line break
+ * falls between them before it falls inside one: as one string the heading
+ * read "Ten role groups. One task-" / "focused AI workforce." at 768.
+ *
+ * `flow` is M10's five steps. The build glues each arrow to the step before
+ * it, so a line may end on an arrow but never start with one.
+ */
+export const WORKFORCE_ROLE_GROUPS = {
+  titleChunks: B(['十类岗位，', '一个可按任务', '组织的数字团队。'], ['Ten role groups.', 'One task-focused AI workforce.']),
+  intro: B('每个岗位都应有职责、技能、企业知识、可用权限和工作记录。选择谁，不只看名称，还要看本次任务需要什么、允许做什么。', 'A role needs responsibilities, skills, enterprise knowledge, permitted actions and work history. Choose specialists by what the task requires and what they are authorized to do—not by title alone.'),
+  flow: B('交办业务目标 → 选择员工或团队 → 分配任务 → 查看工作成果 → 批准关键动作', 'Set the business goal → Select employees or a team → Assign work → Inspect outputs → Approve key actions'),
+  unit: B('个岗位', 'roles'),
+  groups: [
+    { name: B('企业通用支持', 'Enterprise essentials'), count: 15 },
+    { name: B('客户开发与市场', 'Customer development & marketing'), count: 50 },
+    { name: B('销售', 'Sales'), count: 16 },
+    { name: B('客户服务', 'Customer service'), count: 5 },
+    { name: B('风控与合规', 'Compliance'), count: 20 },
+    { name: B('供应链', 'Supply chain'), count: 4 },
+    { name: B('财务', 'Finance'), count: 14 },
+    { name: B('运营', 'Operations'), count: 19 },
+    { name: B('产品与工程', 'Product & engineering'), count: 129 },
+    { name: B('专业服务', 'Professional services'), count: 16 },
+  ],
+  total: { name: B('合计', 'Total'), count: 288 },
+  // M10's value line and availability line, P04's scope line.
+  note: B('288 是岗位目录数量：可按任务选择、配置与派工的专业数字岗位，不是同时执行的数量，也不代表替代 288 名真人员工。实际启用、同时执行与操作范围，受企业配置、预算和权限约束。', '288 is the size of the role directory: specialized roles you select, configure and assign by task. It is not concurrent execution or a claim to replace 288 people. Activation, concurrent work and permitted actions depend on configuration, budget and access.'),
+};
 
 // V6-D-END
 

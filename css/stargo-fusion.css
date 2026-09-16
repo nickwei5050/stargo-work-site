@@ -2251,6 +2251,184 @@ html[lang^="zh"] .hero .max-w-left.add-tp p.top-text.big.nm {
    and the next one so parallel edits merge cleanly. */
 /* V6-D-START */
 
+/* workforce.html — the V6 content (tools/copy.mjs LX_FEATURE_WORKFORCE and
+   WORKFORCE_ROLE_GROUPS; built by tools/build-site.mjs PAGES['workforce.html']).
+   Every selector below is scoped to a class the workforce builder adds, or to
+   .lx-feature-title-holder, which only the feature template (workforce.html,
+   both languages) carries — so no other Lifelogx page is touched. */
+
+/* 1. The pink panel's heading, 「有岗位，有团队，有工作台」, and the role-group
+      heading beside the list. Neither is split into characters (no IX on
+      them), so `keep-all` works here: it leaves the commas — and the <wbr>s
+      the builder puts between the role-group heading's phrases — as the only
+      break points, and `text-wrap: balance` (the zh sweep above) chooses
+      among those. Without it balance halves the string wherever the middle
+      falls: 「有岗位，有团」/「队，有工作台」. Every phrase is shorter than the
+      narrowest line it gets — four characters in the panel heading's 192px
+      box at 768 (4.8 characters of 40px type), eight in the role-group
+      heading's 288px at 320 (nine characters of 32px type). Chinese only;
+      English breaks at its spaces.
+      The five-step line under the role-group intro gets the same treatment:
+      its steps are joined by "&nbsp;→ ", so with keep-all it breaks only after
+      an arrow. Without it, 320, 390 and 1024 read 「…→ 分」/「配任务 →…」. The
+      longest step with its arrow is nine characters of 14px type (126px). */
+html[lang^="zh"] .lx-scope .lx-v6-panel-title,
+html[lang^="zh"] .lx-scope .lx-v6-roster-title,
+html[lang^="zh"] .lx-scope .lx-v6-roster-flow {
+  word-break: keep-all;
+}
+/* The English role-group heading is two sentences, each an inline block
+   (the builder's spans), so the first line break falls between them; inside
+   the second the template's own balance (.lx-header-container-left) evens the
+   lines: "One task-focused" / "AI workforce." at 320, 390, 768 and 1440.
+   As one string it read "Ten role groups. One task-" / "focused AI
+   workforce." at 768. */
+.lx-scope .lx-v6-roster-chunk { display: inline-block; text-wrap: balance; }
+/* Between the template's 991px fold and its 1280px container the heading
+   column (1fr of 1fr 1.5fr) is narrower than "One task-focused" at 48px —
+   384px against about 390px at 1024 — and the sentence broke 「One task-」 /
+   「focused」 / 「AI workforce.」. 1fr 1.25fr gives it 427px there; the list
+   keeps 533px, and every row still shows its group and count on one line. */
+@media screen and (min-width: 992px) and (max-width: 1279px) {
+  .lx-scope .lx-v6-roster .lx-careers_sticky-grid { grid-template-columns: 1fr 1.25fr; }
+}
+
+/* English display lines the zh sweep does not reach (it is scoped to
+   html[lang^="zh"]; the Chinese page already balances both). Unbalanced, the
+   hero's "Build the team your task needs." left "needs." alone at 768, and
+   the team heading left "result." alone at 768 and 1024. */
+.lx-scope .lx-feature-title-holder .lx-heading-style-h1,
+.lx-scope .lx-v6-team-title {
+  text-wrap: balance;
+}
+
+/* The display line behind the team cards, 「一个目标，一个团队。」. It IS
+   split per character (IX), so keep-all cannot reach it; it is written as two
+   five-character halves instead, and balance puts the break between them.
+   Unbalanced, the box's six characters a line (800px of 124.8px type at 1440,
+   358px of 58.5px at 390) gave 「一个目标，一」/「个团队。」. The template does
+   not balance `.lx-big-text-on-gradient` because its own words never needed
+   it; the class is the workforce builder's. */
+html[lang^="zh"] .lx-scope .lx-v6-team-display {
+  text-wrap: balance;
+}
+
+/* 2. The ten role groups: the template's careers list (lifelogx.lx.css,
+      .lx-careers_*) with rows that are not links. What is added is only what
+      the list did not need as a job board: a count column on the right, a
+      marked total row, and room for the intro and the note. The count keeps
+      the row's own 1.5rem; the unit under it uses the list's grey sub-line.
+      At 991px and below the template folds the grid to one column; the
+      heading is no longer sticky there because it would sit on top of the
+      rows it introduces. */
+.lx-scope .lx-v6-roster .lx-careers_01-item {
+  gap: 1rem;
+  cursor: default;
+}
+.lx-scope .lx-v6-roster .lx-careers-item-name { min-width: 0; }
+.lx-scope .lx-v6-roster .lx-careers-item-name > div:first-child { overflow-wrap: anywhere; }
+.lx-scope .lx-v6-roster-count {
+  flex: none;
+  align-items: flex-end;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.lx-scope .lx-v6-roster-count .lx-careers-text { white-space: nowrap; }
+.lx-scope .lx-v6-roster-total {
+  background-color: transparent;
+  box-shadow: inset 0 0 0 1px var(--_semantics---primary);
+  color: var(--_semantics---primary);
+}
+.lx-scope .lx-v6-roster-total .lx-careers-text { color: inherit; }
+.lx-scope .lx-v6-roster-title { margin-top: 0; margin-bottom: 0; }
+.lx-scope .lx-v6-roster-intro { margin: 1.5rem 0 0; font-size: 1.125rem; }
+.lx-scope .lx-v6-roster-flow { margin: 1rem 0 0; font-size: .875rem; }
+.lx-scope .lx-v6-roster-note { margin: 1.5rem 0 0; }
+.lx-scope .lx-v6-roster .lx-header-container-left { margin-bottom: 0; }
+@media screen and (max-width: 991px) {
+  .lx-scope .lx-v6-roster .lx-sticky-content { position: static; }
+  .lx-scope .lx-v6-roster .lx-careers_sticky-grid { row-gap: 2rem; }
+}
+@media screen and (max-width: 479px) {
+  .lx-scope .lx-v6-roster .lx-careers_01-item { padding: .875rem 1rem; }
+  .lx-scope .lx-v6-roster-intro { font-size: 1rem; }
+}
+
+/* 3. The team scenario's cards: the label above each heading, and the second
+      card's messages. The label is the template's own .lx-subtext (the
+      feature grid's small caps), given the card's text colour at a lower
+      opacity so it reads as a caption, not as a second heading.
+
+      The messages replace a picture of two chat bubbles (Group 34.png, 740 x
+      430) whose words were painted in. The arrangement copies that picture:
+      the blob is 37% of the width and sits on the left, the bubbles start 1/3
+      of the way across and overlap the blob, white, black type, large radius.
+      It is laid out in normal flow, not stacked absolutely, because below
+      480px the template gives these cards `aspect-ratio: auto` — the card
+      grows with its content there, and a longer message (the English ones
+      wrap to two lines) has to push the card, not spill out of it. At 768
+      and up the card is a fixed 400px square; the three messages take about
+      the height the picture did. Measured with transforms off, inside the
+      second card: the picture was 384x222 at 768-1024; the messages are
+      384x214 in English and 384x149 in Chinese, all three inside the card
+      at 320, 390, 768, 1024 and 1440, and the card never scrolls. Below 480
+      the card grows with them: 416px tall at 320 and 350 at 390 in English,
+      281 and 246 in Chinese, where the picture card was 224 and 255. */
+.lx-scope .lx-v6-scene-label {
+  margin-bottom: .5rem;
+  opacity: .72;
+}
+.lx-scope .lx-v6-chat {
+  display: flex;
+  align-items: center;
+  padding: .25rem 0 1rem 1.25rem;
+}
+.lx-scope .lx-v6-chat-blob {
+  flex: none;
+  width: 37%;
+  height: auto;
+}
+.lx-scope .lx-v6-chat-lines {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .5rem;
+  min-width: 0;
+  margin-left: -13%;
+}
+.lx-scope .lx-v6-chat-line {
+  margin: 0;
+  padding: .5rem .875rem;
+  border-radius: 1.1rem;
+  background-color: #fff;
+  color: #000;
+  font-size: 1rem;
+  line-height: 1.35;
+  text-align: left;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .18);
+}
+.lx-scope .lx-v6-chat-line:first-child { border-bottom-left-radius: .3rem; }
+@media screen and (max-width: 479px) {
+  .lx-scope .lx-v6-chat { padding-left: 1rem; }
+  .lx-scope .lx-v6-chat-lines { gap: .375rem; }
+  .lx-scope .lx-v6-chat-line { padding: .375rem .625rem; font-size: .8125rem; border-radius: .9rem; }
+}
+
+/* 4. The small role card inside the desktop collage (.lx-organized-mind-card,
+      marked .lx-v6-collage-card by the builder). Same mechanism as the hero
+      cards' fix further up this file ("the scattered photo cards under the
+      CTA"): the card clips, and its name panel is parked just below the bottom
+      edge by a fixed 80px transform. Below 480px the card is 119px tall and
+      the panel's content overflows it, so a two-line name — 「报告 AI 员工」
+      wraps at the card's 77px — lifts the panel's first line 6.3px into view:
+      the top half of 「报告 AI 员」 showed along the card's bottom at 390
+      (measured; the template's one-line 「审计台账」 leaked 1.9px, below the
+      glyphs' ink). The same 16px margin puts it back under the edge. There is
+      no hover on a phone, so the revealed position is never shown there. */
+@media screen and (max-width: 479px) {
+  .lx-scope .lx-v6-collage-card .lx-name-views-content { margin-top: 16px; }
+}
+
 /* V6-D-END */
 
 
