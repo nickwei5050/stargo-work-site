@@ -252,8 +252,10 @@ export function render(frag, ctx) {
      to 373px in English and cut 71px off the button's label between 992 and
      1440, so the line stays a short label — now a link to the section's own
      catalogue row, `#g09`, which the build gives every group row
-     (tools/build-site.mjs, capabilityShowcase). Measured after, at 992: see
-     the V6 B record. */
+     (tools/build-site.mjs, capabilityShowcase). Measured after, at 992 in a
+     432px row: the line 154px ("◉ Catalogue group 09") beside the 259px
+     button, 118px (「◉ 对应能力组 09」) beside 160px; neither label is cut, and
+     the same holds at 320–1920. */
   const QLINE = /(<div class="cn-text-size-regular">)([^<]*)(<\/div>)/;
   const q = QLINE.exec(tail);
   if (!q) throw new Error('cn-faq: the question block has no .text-size-regular line');
