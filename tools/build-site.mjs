@@ -668,7 +668,9 @@ function lxContextSection(ctx, t) {
   if (ctx?.items?.length !== 6) throw new Error(`intelligence: expected 6 context items, found ${ctx?.items?.length}`);
   const items = ctx.items.map((it) => {
     for (const k of ['group', 'title', 'text']) if (!t(it[k])) throw new Error(`intelligence: context item without ${k}`);
-    const flow = it.flow ? `<p class="lx-text-size-regular lx-context-flow">${t(it.flow)}</p>` : '';
+    // A no-break space before each arrow, so a line never starts with "→".
+    if (it.flow && !t(it.flow).includes(' → ')) throw new Error('intelligence: context flow without " → " steps');
+    const flow = it.flow ? `<p class="lx-text-size-regular lx-context-flow">${t(it.flow).replaceAll(' → ', ' → ')}</p>` : '';
     return `<div class="lx-context-item"><div class="lx-home-features-small-texts"><div class="lx-subtext">${t(it.group)}</div></div>`
       + `<h3 class="lx-heading-style-h4">${t(it.title)}</h3>`
       + `<p class="lx-text-size-regular lx-text-weight-light">${t(it.text)}</p>${flow}</div>`;
@@ -752,6 +754,12 @@ function lxPage(spec, lang, name) {
   b = b.replace('class="lx-sitcky-section"', `id="${name === 'intelligence' ? 'lx-ontology' : 'lx-teams'}" class="lx-sitcky-section"`);
   if (!b.includes('id="lx-more"') || !b.includes('id="lx-evolution"')) throw new Error(`${name}: anchor ids`);
   if (/Lifelogx|Tomato|lifelog/i.test(b)) throw new Error(`${name}: template brand survives`);
+  // V6 §7: the page explains the layer in business terms. The architecture
+  // labels it used to lead with must not come back through any slot.
+  {
+    const jargon = b.match(/企业本体|前置部署|调度中枢|自我进化|提示词|模型权重|Ontology|Embedded FDE|Orchestrator|Evolution|model weights|\bprompts?\b/);
+    if (jargon) throw new Error(`${name}: architecture wording "${jargon[0]}" is back on the page`);
+  }
   return inMonoShell(b + bigMark(), ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
 }
 PAGES['intelligence.html'] = (lang) => lxPage(C.LX_INTELLIGENCE, lang, 'intelligence');

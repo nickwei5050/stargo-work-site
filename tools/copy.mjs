@@ -635,13 +635,15 @@ export const LX_INTELLIGENCE = {
      characters wide, and a forced break is the only break a phrase gets. */
   feat2Lines: [B('工作暂停，', 'Resume the task'), B('背景不必', 'without rebuilding'), B('从头解释。', 'the context.')],
   /* P03's improvement heading on the closing card; M13-05/06 underneath, with
-     V6's 复盘成败 / 比较新旧方法 and M13's availability (controlled
-     improvement has foundations, advanced improvement is still evolving) —
-     this card is the page's one body-text place for improvement. */
+     V6's 复盘成败 / 比较新旧方法 and P03's 「高级改进持续完善」 — this card
+     is the page's one body-text place for improvement (the foundation half of
+     that availability line is in LX_INTELLIGENCE_CONTEXT.note). About as long
+     as the text it replaces: the card grows with its copy, and on a phone the
+     copy column is eleven characters wide. */
   ctaTitle: B('把有用的方法<wbr>留下，', 'Keep useful methods.'),
   ctaSub: B('把无效的改动<wbr>撤回。', 'Withdraw ineffective changes.'),
   ctaLogo: B('STARGO WORK', 'STARGO WORK'),
-  ctaDesc: B('每次执行都留下记录：做了什么，结果是否达到目标，人在哪里修正过。从成败中复盘出更好的工作方法与流程，先测试、与现行做法比较，经批准后再逐步采用；效果不足可以撤回，失败的证据留给修复或人工处理。受控改进已有基础，高级改进仍在完善。', 'Every run leaves a record: what was done, whether the result met the goal and where a person corrected it. Successes and failures are reviewed for better working methods and processes, which are tested, compared with the current way and adopted gradually after approval. Changes that do not help can be withdrawn; failures keep their evidence for repair or human handling. Controlled improvement has foundations; advanced improvement is still evolving.'),
+  ctaDesc: B('每次执行都留下记录：做了什么，是否达到目标，人在哪里修正过。从成败中复盘出更好的做法，先测试、与现行做法比较，批准后再逐步采用；效果不足可以撤回，失败的证据留给修复或人工处理。高级改进仍在完善。', 'Every run leaves a record: what was done, whether it met the goal and where a person corrected it. Better methods drawn from successes and failures are tested, compared with the current way and adopted gradually after approval. Changes that do not help are withdrawn; failures keep their evidence for repair or human handling. Advanced improvement is still evolving.'),
 };
 
 export const LX_WORKFORCE = {
@@ -1535,7 +1537,7 @@ export const CAPABILITY_SHOWCASE = {
 // V6-E-START
 /* intelligence.html: one section of plain explanations (V6 §7, V5 P03, M12,
    M13, M11-05, F09), placed by lxContextSection() in tools/build-site.mjs
-   between the "No prompting / waiting / forgetting" band and the 288-roles
+   between the 「不再 等提醒 / 等回复 / 丢上下文」 band and the 288-roles
    section.
 
    WHY A SECTION: V6 asks that enterprise knowledge, the business relationship
@@ -1548,10 +1550,15 @@ export const CAPABILITY_SHOWCASE = {
    already has room — the closing card (LX_INTELLIGENCE.ctaDesc) — so it is not
    repeated here; the other six are.
 
-   The heading is P03's headline. The note is P03's availability line with
-   M12's staged templates and F09's boundary, so the page never reads as if
-   proactive work, memory or improvement were finished, or as if "proactive"
-   meant a mind of its own. */
+   The heading is P03's headline. The knowledge base (「企业知识库」, the
+   company's reference room) and the relationship map are two items, as V6
+   asks; the map carries M12-05's rules and approvals, 「同一个客户」 M12-04 and
+   M12-06's review area, the memory item V6's 已做事项 / 后续任务. The note is
+   P03's availability line with M12's staged templates, M13's controlled
+   improvement and F09's boundary, so the page never reads as if proactive
+   work, memory or improvement were finished, or as if "proactive" meant a
+   mind of its own. The flow line is M13's loop; the build keeps each arrow on
+   the line of the step before it. */
 export const LX_INTELLIGENCE_CONTEXT = {
   title: B('不只是读文件，', 'More than reading files.'),
   titleSub: B('更要读懂你的公司。', 'Know the company behind the work.'),

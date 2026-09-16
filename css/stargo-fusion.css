@@ -2150,6 +2150,19 @@ html[lang^="zh"] .hero .max-w-left.add-tp p.top-text.big.nm {
 .lx-scope .lx-context-item p,
 .lx-scope .lx-context-note p { margin: 0; }
 .lx-scope .lx-context-flow { color: var(--_semantics---primary); }
+/* Line breaking, both languages. The English titles broke 「One customer,
+   every」/「system」 and 「Tasks that carry」/「on」; balance evens them (the
+   Chinese h4s already get it from the lx sweep). `pretty` keeps a lone
+   character or word off the last line of the paragraphs, e.g. 「…请人判」/
+   「断。」 at 390. In Chinese the flow line breaks only at its spaces, so a
+   step such as 沉淀经验 is never split; the build puts a no-break space before
+   each arrow. */
+.lx-scope .lx-context-title > span,
+.lx-scope .lx-context-item h3 { text-wrap: balance; }
+.lx-scope .lx-context-lede,
+.lx-scope .lx-context-item p,
+.lx-scope .lx-context-note p { text-wrap: pretty; }
+html[lang^="zh"] .lx-scope .lx-context-flow { word-break: keep-all; overflow-wrap: anywhere; }
 .lx-scope .lx-context-note {
   display: flex;
   flex-flow: column;
@@ -2191,6 +2204,23 @@ html[lang^="zh"] .lx-scope .lx-gradient-section-text .lx-heading-style-h1,
 html[lang^="zh"] .lx-scope .lx-cta-wrapper .lx-cta-text {
   word-break: keep-all;
   overflow-wrap: anywhere;
+}
+/* Two older rules further up now serve the new copy unchanged:
+   `.lx-cta_wrapper .lx-big-text` keep-all breaks 「机会、期限，不靠人记。」
+   only at its punctuation (「机会、」/「期限，」/「不靠人记。」 at 320, two lines
+   from 390, one at 1440), and `.lx-hero-desc` keep-all + balance gives
+   「AI 理解公司，」/「并主动推进工作」 at every width.
+
+   intelligence.html, English — the same two headline slots, balanced. The
+   English page had no balance on them, and the new copy left a word alone:
+   「Leads and deadlines, not left to」/「memory.」 at 1920, 「Assign useful AI」/
+   「work」 and 「Improve from real」/「outcomes」 at 320-390. Neither element is
+   split into per-word spans, and the gradient headings only fade, so balance
+   changes where the lines break and nothing else. `.lx-gradient-section-text`
+   exists only on this page; `.lx-cta_wrapper .lx-big-text` likewise. */
+html[lang="en"] .lx-scope .lx-cta_wrapper .lx-big-text,
+html[lang="en"] .lx-scope .lx-gradient-section-text .lx-heading-style-h1 {
+  text-wrap: balance;
 }
 
 /* V6-E-END */
