@@ -526,54 +526,110 @@ export const HOME_SC_INTEGRATION = [
 /** Shared slot originals of the lifelogx homepage, with two different fills. */
 const LX_TAGS = { CARDS: B('客户', 'Customer'), transfers: B('报价', 'Quote'), financing: B('订单', 'Order') };
 
+/* intelligence.html (V6 §7, V5 P03 with M11, M12, M13 and M16).
+   The page keeps its address and the nav label 智能层, and says what the layer
+   does for a business rather than how it is built: it understands the company
+   (knowledge, relationships, one customer across systems) and keeps work
+   moving (opportunities and deadlines, tasks that survive a pause, memory,
+   improvement judged by results). The architecture words the page used to lead
+   with — 企业本体 / 前置部署 / 调度中枢 / 进化, prompts, skills and model
+   weights — are gone from every slot; the business meaning they carried is in
+   the copy below and in LX_INTELLIGENCE_CONTEXT (the V6-E block at the end of
+   this file), which the page adds as one section of plain explanations.
+
+   Slot budgets, measured on the built page (Chromium, 2026-09-16):
+   - heroWord is the giant brand word: three or four characters.
+   - heroDesc sits in a box 8 em wide at 1024 and up (307px at 38.4px) and
+     must stay two lines; the Chinese page breaks it only at spaces and
+     punctuation (stargo-fusion.css), so each half has to fit 8 em on its own.
+     It carries V6's visible headline, 「让 AI 理解你的公司，并主动推进工作」,
+     cut to fit: with 让 and 你的 still in, the first half measured wider than
+     8 em ("AI" and its two spaces take about two) and the Chinese hero broke
+     into three lines from 1024 up.
+   - store1.sub / store2.sub: at 320 the two captions have about seven
+     characters of room before they wrap; six or fewer keeps them one line.
+   - features: three fixed-height cards (24rem / 21.5rem / 21.5rem). At 320px
+     the copy column is 7 characters wide and at 1024 8 characters, so a
+     Chinese text of up to 28 characters stays within four lines; the English
+     texts stay within the five lines the old English already used at 320.
+     The titles sit beside an icon: five characters at most.
+   - words: one line each and four characters at most (verify-restore).
+   - bigText is 7 em wide on a desktop and 5 em at 320, and the Chinese page
+     breaks it only at punctuation: every run between punctuation marks must be
+     five characters or fewer.
+   - ctaTitle / ctaSub are 9 em wide from 1024 up and about 6.5 em on a phone;
+     the <wbr> is where the Chinese line breaks when it has to (the page sets
+     keep-all on these two lines, V6-E in stargo-fusion.css). */
 export const LX_INTELLIGENCE = {
   heroWord: B('智能层', 'Intelligence'),
-  store1: { name: B('企业本体', 'Ontology'), sub: B('给 AI 一份企业模型', 'Give AI a model of your business'), href: '#lx-ontology' },
-  store2: { name: B('进化', 'Evolution'), sub: B('可治理的自我进化', 'Governed self-evolution'), href: '#lx-evolution' },
-  heroDesc: B('不是聊天机器人，是运营层。', 'Not a chatbot. An operating layer.'),
+  /* The two hero buttons keep their anchors (#lx-ontology is clicked by
+     tools/verify-interactions.mjs): the first opens the business-context cards,
+     the second the closing card on improvement. */
+  store1: { name: B('业务理解', 'Business context'), sub: B('读懂业务关系', 'How the business connects'), href: '#lx-ontology' },
+  store2: { name: B('持续改进', 'Improvement'), sub: B('用结果改进', 'Judged by results'), href: '#lx-evolution' },
+  heroDesc: B('AI 理解公司，并主动推进工作', 'Know the company. Keep work moving.'),
   tags: LX_TAGS,
   features: [
-    /* The three animated cards are fixed-height boxes (24rem / 21.5rem / 21.5rem) that
-       hold about four, three and three lines at the template's 2rem type. */
-    { title: B('企业本体', 'Ontology'), text: B('客户、询盘、报价、订单，都成为 AI 能读懂、能操作的对象。', 'Customers, quotes and orders become objects AI can act on.') },
-    { title: B('前置部署', 'Embedded FDE'), text: B('软件适应企业，而不是反过来。', 'Software adapts to your business, not the reverse.') },
-    { title: B('主动执行', 'Proactive'), text: B('不等提问。按事件和目标运行，在权限内行事。', 'Runs on events and goals; acts within its authority.') },
+    /* P03's three entries. The second carries V6's four implementation steps
+       for this page (observe the real workflow, prepare context, arrange
+       roles and approvals, validate with real cases); the gradient headings
+       below repeat them as P03's 落地四步. */
+    { title: B('业务关系', 'Relationships'), text: B('客户、产品、报价、订单和负责人，不再是互不相干的记录。', 'Customers, products, quotes, orders and owners, connected.') },
+    { title: B('按流程落地', 'Real workflows'), text: B('先了解业务，再安排资料、岗位与审批，用真实样本验收。', 'Fit the real workflow; validate with real cases.') },
+    { title: B('主动工作', 'Proactive work'), text: B('关注机会、期限和异常，先提出有依据的建议，再按授权推进。', 'Watches opportunities and deadlines; acts within authority.') },
   ],
+  /* P03's six business cards. They are rendered in two columns and mirrored
+     for phones by lxOntologyList() in tools/build-site.mjs; only the first six
+     entries are used. */
   cards: [
-    { title: B('客户', 'Customer'), text: B('是谁、来自哪个市场、买过什么、正在谈什么、谁负责、下一步是什么。', 'Who they are, which market, what they bought, what is being discussed, who owns it, what comes next.') },
-    { title: B('询盘', 'Inquiry'), text: B('来源、意图、需求、风险信号、关联的客户与产品，以及下一步该转成什么对象。', 'Source, intent, requirement, risk signals, the customer and product it links to, and the next object it should become.') },
-    { title: B('报价', 'Quote'), text: B('出自哪次询盘、哪个配置、哪条价格规则，有没有越过利润护栏，谁批的。', 'Which inquiry it came from, which configuration, which pricing rule, whether it crossed a margin guardrail, who approved it.') },
-    { title: B('订单', 'Order'), text: B('出自哪次报价、走到哪个阶段、款到没到、单证备齐了哪些、哪些操作要过审批。', 'Which quote it came from, what stage it is at, whether it is paid, which documents exist, which operations need approval.') },
-    { title: B('出货', 'Shipment'), text: B('生产、QC、包装、提单、原产地证、Form E、认证资料——一个对象，一条链。', 'Production, QC, packing, bill of lading, certificate of origin, Form E, certifications — one object, one chain.') },
-    { title: B('任务', 'Task'), text: B('目标、待办、状态、负责人、证据、审批、失败与恢复。执行中断，系统也知道做到了哪一步。', 'Goal, to-dos, state, owner, evidence, approval, failure and recovery — even when interrupted, the system knows where it is.') },
-    { title: B('AI 员工', 'Agent'), text: B('岗位、目标、技能、工具、记忆、企业知识、权限、任务与执行证据。', 'Role, goal, skills, tools, memory, enterprise knowledge, permissions, tasks and execution evidence.') },
+    { title: B('客户', 'Customer'), text: B('是谁，来自哪里，之前谈过什么。', 'Identity, source and previous conversations.') },
+    { title: B('询盘', 'Inquiry'), text: B('想采购什么，还缺哪些信息。', 'Requirements and information still missing.') },
+    { title: B('报价', 'Quote'), text: B('采用什么价格，哪一版已经批准。', 'The price used and the version approved.') },
+    { title: B('订单', 'Order'), text: B('约定了什么，当前走到哪一步。', 'The agreed commitment and current progress.') },
+    { title: B('出货', 'Shipment'), text: B('什么时间交付，还缺哪些资料。', 'Delivery timing and missing records.') },
+    { title: B('任务', 'Task'), text: B('谁负责，何时完成，结果如何核对。', 'Owner, deadline and how the result will be checked.') },
   ],
-  gradient: [B('观察真实流程', 'Observe the real workflow'), B('给运营建模', 'Model the operation'), B('把 AI 放进流程', 'Deploy AI into the workflow'), B('用结果改进平台', 'Improve the platform')],
-  bigText: B('主动，不是被动', 'Proactive by design'),
+  gradient: [B('观察真实流程', 'Observe the workflow'), B('整理业务关系', 'Map the business context'), B('安排 AI 参与的步骤', 'Assign useful AI work'), B('用实际结果改进', 'Improve from real outcomes')],
+  /* P03's proactive-work heading, 「机会、截止时间和待办事项，不必都靠人记着。」,
+     cut to the slot (see bigText above); the bubbles underneath name the
+     opportunities, deadlines and pending work it refers to. */
+  bigText: B('主动跟进，不靠人记', 'Followed up, not left to memory.'),
+  /* Two marquee rows. Row one shows entries 0-5 and, in its loop copy, 6 in
+     place of 2: business situations the layer watches for. Row two shows 7-11
+     and then 5: M13's loop — notice a change, understand the context, propose,
+     get approval, act, check the result, retain the lesson — and the point
+     where it stops to ask. No job titles. */
   bubbles: [
-    B('重点客户三天没回音。', 'A key account has gone quiet for three days.'),
-    B('老客户可能进入补货周期。', 'An old customer may be entering a reorder cycle.'),
-    B('新进口商开始出现采购信号。', 'A new importer starts showing buying signals.'),
-    B('报价发出去了，没有下文。', 'A quote went out and nothing came back.'),
-    B('订单即将走到下一个节点。', 'An order is about to hit its next milestone.'),
-    B('跟进 AI 员工', 'Follow-up Agent'),
-    B('某个产品在某个市场的搜索需求突然上升。', 'A product suddenly gets more search demand in one market.'),
-    B('客户问了知识库答不上来的问题。', 'A customer asks something the knowledge base can’t answer.'),
-    B('市场信号 AI 员工', 'Market Signal Agent'),
-    B('发现变化 → 判断重要性 → 生成任务', 'Spot the change → judge it → create the task'),
-    B('调动合适的 AI 员工 → 执行 → 该审批的提审批', 'Mobilise the right agents → execute → ask for approval'),
-    B('调度中枢', 'Orchestrator'),
+    B('重点客户三天没有回复。', 'A key account hasn’t replied in three days.'),
+    B('老客户可能到了补货周期。', 'A regular customer may be due to reorder.'),
+    B('新进口商出现采购信号。', 'A new importer shows buying signals.'),
+    B('报价发出后，还没有下文。', 'A quote went out; no answer yet.'),
+    B('交期临近，出货资料还没备齐。', 'Delivery is close; shipping records are incomplete.'),
+    B('一份报价在等负责人批准。', 'A quote is waiting for its approver.'),
+    B('某个产品在一个市场的搜索需求上升。', 'Search demand for a product rises in one market.'),
+    B('发现变化 → 理解上下文', 'Notice a change → understand the context'),
+    B('提出建议 → 获得确认', 'Propose an action → get approval'),
+    B('推进任务 → 核对结果', 'Act → check the result'),
+    B('沉淀经验，留给下一次', 'Retain the lesson for next time'),
+    B('证据不足时，先停下来请人判断。', 'Not enough evidence? It stops and asks.'),
   ],
-  words: [B('不再', 'No'), B('等提示', 'prompting'), B('等回复', 'waiting'), B('丢上下文', 'forgetting')],
-  feat2Title: B('288 个 AI 员工。', '288 AI Employees.'),
-  feat2Sub: B('同一份企业现实。', 'One shared business reality.'),
-  feat2Card: { title: B('AI 员工团队', 'Agent Teams'), text: B('一项复杂任务，可同时调用市场研究、客户调查、产品、销售、报价、合规、内容和订单 AI 员工，彼此交换上下文、任务和结果。这是数字团队，不是聊天框。', 'One complex task can call research, account, product, sales, quote, compliance, content and order agents at once; they exchange context, tasks and results. A digital team, not a chatbox.') },
-  feat2Button: { label: B('认识 AI 员工', 'Meet the workforce'), href: 'workforce.html' },
-  feat2Lines: [B('长任务执行', 'Long-horizon execution'), B('数小时、数天、数周', 'Hours, days, weeks'), B('中断后仍知道下一步', 'Knows the next step after a break')],
-  ctaTitle: B('公司本身就是模型。', 'The company becomes the model.'),
-  ctaSub: B('可治理的自我进化', 'Governed self-evolution'),
+  /* 等提醒 rather than 等提示: M13's 「不再每件事，都等你开口提醒。」, and no
+     echo of 提示词. Same width, so the band's sizes still hold. */
+  words: [B('不再', 'No'), B('等提醒', 'prompting'), B('等回复', 'waiting'), B('丢上下文', 'forgetting')],
+  /* M11 in plain words: the 288 roles work as a team on one task. The two
+     headings break at their commas on a phone (keep-all, V6-E). */
+  feat2Title: B('288 个岗位，', '288 specialized roles.'),
+  feat2Sub: B('分工协作，把事做完。', 'Divide the work. Finish it together.'),
+  feat2Card: { title: B('按任务组队', 'Teams for the task'), text: B('一项复杂任务，可由研究、销售、产品和创意等岗位分工完成：彼此交流问题与结果，并行处理，按责任交接，再由统筹角色汇总，交负责人确认。基础选人与派工已有记录，更深入的团队交流仍在完善。', 'A complex task can be divided among research, sales, product and creative roles. They exchange questions and results, work in parallel and hand off by responsibility; a coordinating role consolidates the work for the responsible person to confirm. Basic role selection and delegation are recorded; deeper team communication is still evolving.') },
+  feat2Button: { label: B('认识数字员工', 'Meet the AI Workforce'), href: 'workforce.html' },
+  /* P03's ongoing-work heading, one phrase per line: at 768 the box is five
+     characters wide, and a forced break is the only break a phrase gets. */
+  feat2Lines: [B('工作暂停，', 'Resume the task'), B('背景不必', 'without rebuilding'), B('从头解释。', 'the context.')],
+  /* P03's improvement heading on the closing card; M13-05/06 underneath. */
+  ctaTitle: B('把有用的方法<wbr>留下，', 'Keep useful methods.'),
+  ctaSub: B('把无效的改动<wbr>撤回。', 'Withdraw ineffective changes.'),
   ctaLogo: B('STARGO WORK', 'STARGO WORK'),
-  ctaDesc: B('每次执行都留下记录：做了什么、结果如何、人在哪里改过。系统据此提出候选的提示词、技能或流程改动，先在小范围与现行版本比对，通过评估和审批才发布，否则回滚。模型权重不会自行重训。', 'Every run leaves a record: what was done, how it turned out, where a person corrected it. From that the system proposes a candidate prompt, skill or workflow change, compares it against the current one on a small slice, and releases it only after evaluation and approval — otherwise it rolls back. Model weights are not retrained on their own.'),
+  ctaDesc: B('每次执行都留下记录：做了什么，结果是否达到目标，人在哪里修正过。据此整理出更好的工作方法，先测试、与现行做法比较，经批准后再逐步采用；效果不足可以撤回，失败的证据留给修复或人工处理。', 'Every run leaves a record: what was done, whether the result met the goal and where a person corrected it. Better working methods are drawn from that record, tested, compared with the current way and adopted gradually after approval. Changes that do not help can be withdrawn; failures keep their evidence for repair or human handling.'),
 };
 
 export const LX_WORKFORCE = {
@@ -1465,7 +1521,64 @@ export const CAPABILITY_SHOWCASE = {
    Insertion point for this area's new exports. Keep additions between this
    marker and the next one so parallel edits merge cleanly. */
 // V6-E-START
+/* intelligence.html: one section of plain explanations (V6 §7, V5 P03, M12,
+   M13, M11-05, F09), placed by lxContextSection() in tools/build-site.mjs
+   between the "No prompting / waiting / forgetting" band and the 288-roles
+   section.
 
+   WHY A SECTION: V6 asks that enterprise knowledge, the business relationship
+   map, one customer across systems, proactive work, long-running tasks,
+   long-term memory and improvement each have a readable place on the page, and
+   that the knowledge base and the relationship map be explained separately.
+   The template's own slots are headlines, fixed-height cards and marquee
+   bubbles; none of them holds a sentence such as "answers cite their sources
+   and conflicting material is flagged". Improvement is the one topic that
+   already has room — the closing card (LX_INTELLIGENCE.ctaDesc) — so it is not
+   repeated here; the other six are.
+
+   The heading is P03's headline. The note is P03's availability line with
+   M12's staged templates and F09's boundary, so the page never reads as if
+   proactive work, memory or improvement were finished, or as if "proactive"
+   meant a mind of its own. */
+export const LX_INTELLIGENCE_CONTEXT = {
+  title: B('不只是读文件，', 'More than reading files.'),
+  titleSub: B('更要读懂你的公司。', 'Understanding the company behind the work.'),
+  lede: B(
+    '产品是什么、客户谈到哪一步、价格该用哪一版、任务该由谁负责——把这些业务背景联系起来，AI 才能提出更有依据的下一步。企业知识、业务关系、长期任务与工作经验，共同服务实际经营。',
+    'Which product is involved? Where does the customer stand? Which price is approved? Who owns the next step? Connecting that business context gives AI a better basis for action. Knowledge, relationships, ongoing tasks and retained experience support real work together.'),
+  /* Eyebrows: the two halves of the hero line. Three items each. */
+  items: [
+    { group: B('理解公司', 'Knowing the company'),
+      title: B('企业资料室', 'A reference room'),
+      text: B('产品目录、技术参数、价格政策、认证、常见问答、合同模板、制度流程和历史项目，集中成可检索的资料库。回答注明依据，记录来源、版本、权限与更新时间；资料冲突或过期时，提示人去核实。',
+        'Catalogs, specifications, pricing policies, certifications, common questions, contract templates, procedures and project history in one searchable library. Answers cite their sources, with version, access and update date recorded; conflicting or outdated material is flagged for a person to check.') },
+    { group: B('理解公司', 'Knowing the company'),
+      title: B('业务关系图', 'A relationship map'),
+      text: B('资料库回答“公司知道什么”；业务关系图说明客户、联系人、产品、询盘、商机、报价、订单、文件、任务和负责人怎样关联：现在到了哪一步，下一步由谁推进，按规则是否需要审批。',
+        'The library holds what the company knows. The relationship map shows how customers, contacts, products, inquiries, opportunities, quotes, orders, documents, tasks and owners connect: where things stand, who moves next and whether the rules call for approval.') },
+    { group: B('理解公司', 'Knowing the company'),
+      title: B('记录对得上', 'Records that match'),
+      text: B('邮箱、CRM、ERP 等不同系统里的记录，能判断是不是同一个客户、产品或订单，并保留对应依据，减少重复建档、串客户和互相矛盾的信息。新导入的资料先进入待审核区，不直接当成已确认的事实。',
+        'Records in email, CRM, ERP and other systems are checked for whether they describe the same customer, product or order, and the matching evidence is kept: fewer duplicates, mixed-up customers and conflicting facts. Newly imported files wait for review instead of becoming approved facts.') },
+    { group: B('主动推进', 'Moving work forward'),
+      title: B('盯住机会与期限', 'Opportunities and deadlines'),
+      text: B('在已接入的客户、订单、任务和市场信号里，关注新机会、未回复的客户、临近的交期、异常和待批准事项；把“开发一个市场”“推进一个客户”这样的目标拆成步骤，提出有依据的下一步，按授权推进。证据不足、权限缺失或信息冲突时，先停下来请人判断。',
+        'Across connected customers, orders, tasks and market signals, it watches for new opportunities, unanswered leads, approaching deadlines, exceptions and pending approvals. Goals such as entering a market or advancing an account become steps with evidence-backed next actions, carried out within authorization. When evidence, permission or consistency is missing, it stops and asks a person.'),
+      flow: B('发现变化 → 理解上下文 → 提出建议 → 获得确认 → 推进任务 → 核对结果 → 沉淀经验',
+        'Notice a change → Understand the context → Propose an action → Get approval → Act → Check the result → Retain the lesson') },
+    { group: B('主动推进', 'Moving work forward'),
+      title: B('任务不断线', 'Tasks that carry on'),
+      text: B('每项任务保留目标、计划、负责人、认领状态、截止时间、证据、失败原因和下一步，按事件或时间检查进展。暂停、人工接管或恢复之后，接手的人不必从头了解背景。能否持续运行，取决于企业已配置的任务与运行条件。',
+        'Each task keeps its goal, plan, owner, claim status, deadline, evidence, failure reasons and next step, with progress checked on events or on a schedule. After a pause, a human takeover or a recovery, whoever picks it up does not start from scratch. Whether it keeps running depends on the tasks and operating conditions the company has configured.') },
+    { group: B('主动推进', 'Moving work forward'),
+      title: B('长期记忆', 'Long-term memory'),
+      text: B('分层留下客户偏好、沟通摘要、项目决定、已做事项、任务结果和做事方法。每条记忆标明来源，可以修正，按权限查看，避免把一次猜测长期当成事实。',
+        'Customer preferences, conversation summaries, project decisions, completed work, task outcomes and working procedures are kept in layers. Each memory shows its source, can be corrected and is visible by permission, rather than keeping an unverified guess as fact.') },
+  ],
+  noteLabel: B('开放说明', 'Availability'),
+  note: B('企业知识、业务关联和目标推进已有基础；高级关联与企业资料模板按接入情况逐步完善，企业级主动工作、统一长期记忆与高级改进仍在持续完善。主动工作不是人的主观意识，也不意味着 AI 可以无限制地自行决定，关键判断仍由人负责。',
+    'Knowledge, business context and goal progression have established foundations. Richer relationships and enterprise templates arrive in stages as sources are connected; enterprise-wide proactive work, unified long-term memory and advanced improvement continue to evolve. Proactive work does not imply human consciousness or unrestricted autonomy, and people remain responsible for consequential judgment.'),
+};
 // V6-E-END
 
 
