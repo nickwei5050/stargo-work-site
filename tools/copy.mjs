@@ -38,12 +38,15 @@ export const MORE = [
   { href: 'blog.html', label: B('博客', 'Blog') },
 ];
 /* The pill's middle slot. Four stages, short enough to sit in a row, each
-   pointing at its block on the capability page. */
+   pointing at its block on the capability page. The labels name what those
+   blocks now are (V6 §5): Growth OS prospecting, Sales Desk, quotations, and
+   ERP with fulfilment — so 沟通 became 销售 and 订单 became 经营. The loop's
+   title card (tools/blocks/rk-award.mjs) draws [0] and [3] as its two chips. */
 export const CAP_JUMPS = [
-  { anchor: 'story-1', label: B('获客', 'Buyers') },
-  { anchor: 'story-2', label: B('沟通', 'Replies') },
+  { anchor: 'story-1', label: B('获客', 'Prospects') },
+  { anchor: 'story-2', label: B('销售', 'Sales') },
   { anchor: 'story-3', label: B('报价', 'Quotes') },
-  { anchor: 'story-4', label: B('订单', 'Orders') },
+  { anchor: 'story-4', label: B('经营', 'Operations') },
 ];
 
 export const LANG_SWITCH = B('EN', '中文');
@@ -428,29 +431,51 @@ export const HOME_BRAND_WALL = {
   captionSample: B('', ''),
   year: B('2026©', '2026©'),
 };
+/* The nine steps (V5 P02 「九步细看」, V6 §5). They are the detailed reading of
+   the same business journey the homepage shows as five stages — acquisition,
+   sales, delivery, collection and service, repeat business — not a second
+   system, and the capability page says so beside them (`note`, drawn in the
+   orbit block's left column; `lede` is the full sentence). Every row is
+   [code, what happens, the point, group]: the code is the stage word the
+   blocks key on, the point is what renok's two-line insight slot prints, and
+   the group is the catalogue group (#gNN) the row links to. Business language
+   only — no engine or module names. */
 export const HOME_LOOP_TABLE = {
-  caption: B('(九个阶段)', '(Nine stages)'),
-  title: B('一个外贸闭环', 'One closed loop'),
-  headers: [B('(阶段)', '(Stage)'), B('(发生什么)', '(What happens)'), B('(要点)', '(The point)')],
-  button: B('看每一步背后的能力', 'See the capabilities behind each step'),
+  caption: B('(九步细看)', '(The detailed business sequence)'),
+  /* rk-award draws this as three display lines — 一条业务 / 主线 on the Chinese
+     page — and asserts the Chinese title, so a change here means re-splitting
+     it there. */
+  title: B('一条业务主线', 'One business journey'),
+  headers: [B('(步骤)', '(Step)'), B('(发生什么)', '(What happens)'), B('(要点)', '(The point)')],
+  button: B('看每一步对应的能力组', 'See the capability group behind each step'),
   /* The stage word each row leads with, in Chinese, for the blocks whose largest
      type is that word: the Chinese page shows Chinese only. */
-  stageNames: { DISCOVER: '发现', QUALIFY: '筛选', ENGAGE: '触达', UNDERSTAND: '理解', RESPOND: '回复', QUOTE: '报价', EXECUTE: '执行', FOLLOW: '跟进', LEARN: '学习' },
-  /* The capability page opens this section with a statement rather than a table
-     caption; the nine rows follow underneath. */
+  stageNames: { DISCOVER: '发现', QUALIFY: '筛选', ENGAGE: '触达', UNDERSTAND: '理解', RESPOND: '回复', QUOTE: '报价', EXECUTE: '执行', 'FOLLOW-UP': '跟进', LEARN: '学习' },
   lede: B(
-    '从发现机会到成交复盘，外贸的九个阶段原本散落在不同的人、系统和表格里。STARGO WORK 把它们串成一条工作流，上一步的结果，就是下一步的输入。',
-    'Nine stages, from spotting an opportunity to reviewing what closed — normally scattered across different people, systems and spreadsheets. STARGO WORK puts them on one workflow, so each step\'s result becomes the next step\'s input.'),
+    '九步用于解释具体销售动作；首页五个阶段用于浏览经营全景。两者是同一条业务链的不同阅读深度，不是两套系统。',
+    'The nine steps explain detailed sales actions. The five homepage stages give the operating overview. They are different levels of the same business journey, not separate systems.'),
+  note: B(
+    '与首页五个阶段是同一条业务主线，这里分九步细看，不是两套系统。',
+    'The homepage’s five stages, read here in nine detailed steps — one business journey, not two systems.'),
   rows: [
-    ['01 · DISCOVER', B('发现市场机会。AI 持续扫描公开市场、搜索、社交平台、贸易数据、经销商网络和企业信号，捕捉潜在机会。', 'Find market opportunities. AI keeps looking through public markets, search, social platforms, trade data, dealer networks and company signals.'), B('不等询盘上门，主动找正在发生的需求。', 'Not waiting for inquiries — looking for demand as it happens.')],
-    ['02 · QUALIFY', B('判断谁值得跟进。增长系统综合企业背景、采购信号、目标市场、产品匹配度、决策链和历史行为，逐一评分。', 'Decide who is worth following. Growth OS scores company background, buying signals, target market, product fit, decision chain and past behaviour.'), B('业务员的时间，只留给真正可能成交的客户。', 'Sales time goes to the people who can actually close.')],
-    ['03 · ENGAGE', B('主动触达。按客户公司、市场、职位、采购场景和产品需求生成个性化内容；邮件、WhatsApp、Alibaba 与官网的沟通，汇入同一个业务上下文。', 'Reach out. Personalised content by company, market, role, buying scenario and product need; Email, WhatsApp, Alibaba and the website share one context.'), B('多渠道，一个上下文。', 'Many channels, one context.')],
-    ['04 · UNDERSTAND', B('每次对话都沉淀为客户情报。系统识别客户是谁、来自哪个市场、想买什么，以及采购意图、预计需求、关键问题、历史沟通、风险信号和下一步动作。', 'Every conversation becomes customer intelligence: who, which market, what they want, intent, expected demand, key questions, history, risk signals and next step.'), B('每次沟通，客户全景同步更新。', 'Every exchange updates Customer 360.')],
-    ['05 · RESPOND', B('先理解产品，再回复。AI 依据企业知识库、产品数据库、历史报价、业务规则和客户上下文作答。', 'Reply only after AI understands your product — from the knowledge base, product database, past quotes, business rules and customer context.'), B('简单问题自动答复，复杂问题人工审批，不知道的不编。', 'Simple questions handled, complex ones approved by a human, unknowns never invented.')],
-    ['06 · QUOTE', B('从询盘到报价，不再从 Excel 起步。报价工作台按客户、产品、配置、数量、价格规则、历史成交、利润护栏和贸易条件生成草稿。', 'From inquiry to quote without opening Excel. Quote Studio drafts from customer, product, configuration, quantity, pricing rules, past deals, margin guardrails and trade terms.'), B('价格敏感项先审批，通过后出正式报价与 PI。', 'Price-sensitive items go to approval, then formal quote and PI.')],
-    ['07 · EXECUTE', B('从报价到真实订单。PI、订单、付款节点、生产进度、QC、包装、出货、商业发票、装箱单、原产地证、Form E、提单、认证资料，直到出口与退税。', 'From quote to a real order: PI, order, payment milestones, production, QC, packing, shipment, commercial invoice, packing list, certificate of origin, Form E, bill of lading, certifications, export and tax-rebate flow.'), B('销售与履约，第一次走在同一条业务链上。', 'Sales and fulfilment on one chain for the first time.')],
-    ['08 · FOLLOW', B('AI 不会忘记任何客户。没回复的、报价后没下文的、半年前谈过没成交的、展会带回的一沓名片，沉睡客户再激活、展会线索持续转化和跟进 AI 员工都盯着，等一个重新开启的时机。', 'AI doesn’t forget a customer. No reply, no decision after the quote, a conversation from six months ago, a stack of trade-show cards — Dormant Lead Reactivation, Trade Show Afterburner and Follow-up Agents keep looking for the moment to reopen.'), B('每条线索，都有下一次。', 'Every lead gets a next time.')],
-    ['09 · LEARN', B('每一次结果，都让下一次做得更好。哪些客户成交、哪个市场转化高、哪种开发方式有效、哪些报价被接受，全部回流进化引擎。', 'Every outcome makes the next run better. Which customers closed, which market converts, which outreach works, which quotes were accepted — outcomes return to the Evolution Engine.'), B('系统不只存数据，还在学这家企业是怎么做成生意的。', 'The system doesn’t just store data; it learns how the company wins business.')],
+    ['01 · DISCOVER', B('发现目标客户。围绕产品、目标市场和客户类型，从搜索、企业官网、地图、社交平台、展会及依法授权的贸易数据中寻找经销商、进口商与目标企业。', 'Discover target accounts. Around your products, markets and buyer types, find dealers, importers and target companies through search, websites, maps, social channels, trade shows and lawfully authorized trade data.'),
+      B('围绕产品与目标市场，主动找到值得开发的企业。', 'Find companies worth developing around your products and markets.'), '02'],
+    ['02 · QUALIFY', B('判断谁值得开发。综合产品匹配、市场适配、采购信号、联系人覆盖、风险和商业价值，形成客户画像、商机简报与开发优先级；证据不足时标注待核实。', 'Decide who is worth developing. Combine product fit, market fit, buying signals, contact coverage, risk and commercial value into account profiles, opportunity briefs and priorities; weak evidence is flagged for checking.'),
+      B('结合采购信号与背调判断机会；证据不足先核实，不猜。', 'Qualify with buying signals and research; weak evidence is checked, not guessed.'), '02'],
+    ['03 · ENGAGE', B('开始联系。准备多语言开发邮件、沟通话术与跟进计划，经确认后按授权渠道触达；确认的客户连同背调与下一步任务转入 Sales Desk。', 'Start the conversation. Prepare multilingual emails, messaging and follow-up plans, reach out through authorized channels once approved, and hand approved prospects to Sales Desk with their research and next actions.'),
+      B('开发计划确认后，再按授权渠道联系客户。', 'Once the plan is approved, reach out through authorized channels.'), '03'],
+    ['04 · UNDERSTAND', B('理解客户要什么。邮件、网站、WhatsApp 与阿里国际站等渠道的询盘进入同一入口，识别产品、规格、数量、交期和缺失信息，并更新客户全景。', 'Understand what the customer needs. Inquiries from email, the website, WhatsApp, Alibaba.com and other channels arrive in one intake; products, specifications, quantities, deadlines and missing details are identified and the customer record is updated.'),
+      B('询盘与主动开发的客户进入 Sales Desk，需求汇在一处。', 'Prospects and inquiries meet in Sales Desk, with requirements in one place.'), '04'],
+    ['05 · RESPOND', B('有依据地回复。查询产品参数、价格政策、MOQ、包装、认证与交期，辅助产品匹配和多语言回复；缺少真实资料时明确提示，重要回复由人审核或接管。', 'Reply with evidence. Check specifications, pricing policy, MOQ, packaging, certifications and lead times to support product matching and multilingual replies; missing facts are flagged, and important replies are reviewed or taken over by a person.'),
+      B('依据企业确认的资料起草回复；缺资料就标出，由人复核。', 'Draft replies from verified company facts; gaps are flagged and a person reviews.'), '04'],
+    ['06 · QUOTE', B('按规则报价。按产品配置、数量、包装、币种和贸易条款准备报价草稿，关联价格表、历史报价、折扣权限与利润边界；批准后形成 PI，批准不等于已经发送。', 'Quote within the rules. Draft from product configuration, quantity, packaging, currency and trade terms, using approved pricebooks, quote history, discount permissions and margin limits; the PI follows approval, and approval is not sending.'),
+      B('按价格规则与利润边界起草报价，批准后再转 PI。', 'Quote within pricing rules and margin limits; the PI follows approval.'), '07'],
+    ['07 · EXECUTE', B('让后台接住订单。衔接产品物料、采购、库存、生产质检、包装发货，以及商业发票、装箱单、原产地证资料、提单与认证资料；正式签发与申报由相应机构办理。', 'Carry the order into operations. Connect materials, purchasing, stock, production and quality, packing and shipment, plus commercial invoices, packing lists, origin materials, bills of lading and certifications; official issuance and filing stay with the relevant authorities.'),
+      B('订单交给 ERP 与履约：物料、生产、质检、单证与发货。', 'Hand the order to ERP and fulfilment: materials, production, QC, documents, shipment.'), '08'],
+    ['08 · FOLLOW-UP', B('持续跟进。跟踪订金、尾款与对账提醒，协同物流、售后、保修与备件，整理经销商历史订单与补货机会，唤醒沉睡客户；资金支付由有权人员决定。', 'Keep following up. Track deposits, balances and reconciliation reminders, coordinate logistics, service, warranty and spare parts, and surface dealer reorder and reactivation opportunities; payments remain with authorized people.'),
+      B('付款节点、售后与补货机会，每个下一步都有负责人。', 'Payments, service and reorders, each next step with an owner.'), '05'],
+    ['09 · LEARN', B('从结果中改进。记录成交与未成交的原因、有效的开发方式和被接受的报价，形成候选改进，经测试与批准后再采用，效果不足可以撤回。', 'Improve from outcomes. Record why deals were won or lost, which outreach worked and which quotes were accepted, then test and approve candidate improvements before adoption — and withdraw them if they fall short.'),
+      B('复盘成交与未成交的原因，改进先验证再采用。', 'Review wins and losses; improvements are tested before adoption.'), '14'],
   ],
 };
 
@@ -981,49 +1006,72 @@ export const CAPABILITY_GROUPS = [
 ];
 
 export const CAPABILITIES = {
+  /* h1 / caption / intro are substituted into Mono's inner hero, which the page
+     builder then replaces with renok's hero (CAPABILITY_SHOWCASE.hero*); they
+     stay in step with it (V5 P02) so nothing stale lingers in the source. */
   h1: B('能力', 'Capabilities'),
-  caption: B('(一套 AI 操作系统，覆盖全球贸易每个环节)', '(One AI operating system. Every stage of global trade.)'),
-  intro: B('企业知识到获客，客户到订单，内容到履约，AI 员工到治理。过去要靠一堆独立软件才做得完的事，STARGO WORK 串在同一个系统里。', 'From enterprise knowledge to acquisition, customer to order, content to fulfilment, agents to governance — STARGO WORK connects work that used to need a pile of separate software.'),
+  caption: B('(从找客户，到把企业工作连接起来)', '(From finding customers to connected enterprise work)'),
+  intro: B('先看 Growth OS 主动获客与 Sales Desk 外贸闭环，再看 ERP、商城、财务履约、图片视频、数字员工与企业智能。每个模块都说明做什么、输出什么，以及需要哪些配置与确认。', 'Start with Growth OS and Sales Desk, then explore ERP, commerce, finance and fulfillment, creative work, AI teams and enterprise intelligence. Each module explains the work, the outputs and the configuration or approvals required.'),
   /* The four cards below carry no heading of their own in the donor, so the
      band read as four unexplained photographs. These three lines say what the
      cards are and what clicking one does. The title spells its two numbers as
      Chinese numerals, which reads better than an injected digit — so the build
      asserts they still match `macro.length` and CAPABILITY_GROUPS.length and
-     fails rather than shipping a stale count. */
-  macroCaption: B('(四个板块)', '(Four areas)'),
-  macroTitle: B('四个板块，十四个能力组', 'Four areas, fourteen capability groups'),
+     fails rather than shipping a stale count.
+     V5 P02 writes the map heading 「四个业务板块，十四类能力。」. On a 320px
+     phone this h2 holds under six characters a line and every character is a
+     break point, so 「四个业务板块，」 (seven) cannot stay whole and the line
+     broke inside 板块. 业务 therefore lives in the caption above it, and the
+     heading keeps two five-character halves that break on the comma. */
+  macroCaption: B('(四个业务板块)', '(Four business areas)'),
+  macroTitle: B('四个板块，十四类能力', 'Four areas. Fourteen capability groups'),
   macroLede: B('点开任意一个板块，直接跳到它包含的能力组。', 'Open an area to jump straight to the capability groups inside it.'),
+  /* The four entries and their one-line descriptions (V5 P02). `groups[0]` is
+     where the card links; tools/verify-release.mjs checks each card's picture
+     by that link, so the grouping stays as it was. `desc` is printed inside the
+     card's glass panel under the group count (tools/build-site.mjs). */
   macro: [
-    { name: B('指挥与增长', 'Command & Growth'), groups: ['01', '02', '03'] },
-    { name: B('客户与知识', 'Customer & Knowledge'), groups: ['04', '05', '06'] },
-    { name: B('商务与履约', 'Commercial & Trade'), groups: ['07', '08', '09'] },
-    { name: B('员工与治理', 'Workforce & Governance'), groups: ['10', '11', '12', '13', '14'] },
+    { name: B('指挥与增长', 'Workspace & growth'), groups: ['01', '02', '03'],
+      desc: B('从统一工作空间出发，发现客户、识别机会，组织开发任务。', 'Discover accounts, qualify opportunities and organize prospecting from one workspace.') },
+    { name: B('客户与知识', 'Customers & knowledge'), groups: ['04', '05', '06'],
+      desc: B('把询盘、客户记录和企业资料连接起来，让回复带着完整背景。', 'Connect inquiries, customer records and company knowledge for context-aware replies.') },
+    { name: B('商务、履约与创作', 'Commercial, delivery & creative'), groups: ['07', '08', '09'],
+      desc: B('从报价与 PI，延伸到 ERP、交付、回款、AI 图片与营销视频项目。', 'Extend quotes and PI into operations, delivery, collection, AI images and marketing-video projects.') },
+    { name: B('员工与管理', 'Workforce & management'), groups: ['10', '11', '12', '13', '14'],
+      desc: B('选择数字员工、组织协作，管理业务背景、权限、任务与持续改进。', 'Select AI specialists, coordinate work and manage context, permissions, tasks and improvement.') },
   ],
   unit: B('组', 'groups'),
-  cardButton: B('看全部能力', 'See every capability'),
-  table: { caption: B('(按能力域)', '(By capability group)'), title: B('能力图谱', 'Capability map'), headers: [B('(能力域)', '(Group)'), B('(能力)', '(Capability)'), B('(说明)', '(What it is)')], button: { label: B('认识 AI 员工', 'Meet the AI workforce'), href: 'workforce.html' } },
+  cardButton: B('查看功能全景', 'Explore Capabilities'),
+  table: { caption: B('(按能力组)', '(By capability group)'), title: B('能力图谱', 'Capability map'), headers: [B('(能力组)', '(Group)'), B('(能力)', '(Capability)'), B('(说明)', '(What it is)')], button: { label: B('认识数字员工', 'Meet the AI workforce'), href: 'workforce.html' } },
+  /* The closing Mono section: start with one workflow (V5 F10), then widen. */
   ladderCaption: B('(从一条流程开始)', '(Start with one workflow)'),
   // Scalora stacks these three on one absolutely-positioned line and swaps them.
   // The slot is one line tall (120px), so each language has to fit on one line:
   // at 1440 that is 800px at 96px type, roughly sixteen characters.
-  ladder: [B('选一条流程。', 'One workflow.'), B('先跑起来。', 'Let it run.'), B('再扩到全公司。', 'Then scale.')],
-  ladderDesc: B('不必一次改造整个企业。挑一条最要紧的业务流程，让 STARGO WORK 从那里开始。', 'You don’t need to change the whole company at once. Pick the one workflow that matters most and let STARGO WORK start there.'),
-  card1: { name: B('第一条流程', 'The first workflow'), desc: B('对效率或增长影响最大的那一条：询盘、报价、主动获客或客户回复。', 'The one that most affects efficiency or growth: inquiries, quoting, prospecting or customer replies.'), big: '1', unit: B('(条流程)', '(workflow)'),
-    items: [B('梳理现有流程与系统', 'Map the current process and systems'), B('映射进企业本体', 'Model it in the ontology'), B('AI 员工接手真实流程', 'AI employees enter the real workflow'), B('记录响应、效率与订单', 'Measure response, efficiency and orders'), B('沉淀为技能与工作流', 'Turn it into skills and workflows')],
-    tlLabel: B('从哪开始：', 'Start with:'), tl: B('一条流程', 'one workflow'), button: { label: B('预约演示', 'Book a Demo'), href: 'contact.html' } },
-  card2: { name: B('AI 原生公司', 'An AI-native company'), desc: B('客户、产品、询盘、报价、订单、文件、任务，连同 288 个 AI 员工，都在同一套企业 AI 系统里。', 'Customers, products, inquiries, quotes, orders, documents, tasks and 288 AI employees in one enterprise AI system.'), big: '288', unit: B('(个 AI 员工)', '(AI employees)'),
-    items: [B('14 个能力域', '14 capability groups'), B('全渠道获客网络', 'Omnichannel growth network'), B('报价 → PI → 订单 → 出口，一条链', 'Quote → PI → order → export on one chain'), B('可治理的自我进化', 'Governed self-evolution'), B('审批权在人手里', 'Humans keep approval authority')],
+  ladder: [B('选一条流程。', 'One workflow.'), B('验证成果。', 'Prove results.'), B('再扩大范围。', 'Then expand.')],
+  ladderDesc: B('不必第一天就改造全部部门。先选一条最重要的业务流程，准备资料与规则、连接授权账号、安排数字员工与审批，用真实样本验证成果，跑通后再扩大范围。', 'You don’t need to change every department on day one. Choose one priority workflow, prepare its context and rules, connect authorized accounts, assign AI roles and approvals, validate real cases — then expand.'),
+  card1: { name: B('第一条流程', 'The first workflow'), desc: B('对效率或增长影响最大的那一条：主动获客、询盘跟进、报价、订单交付或营销内容。', 'The one that most affects efficiency or growth: prospecting, inquiry follow-up, quotation, order delivery or marketing content.'), big: '1', unit: B('(条流程)', '(workflow)'),
+    items: [B('选定一条业务流程', 'Choose one business workflow'), B('准备产品、客户、知识与规则', 'Prepare product, customer, knowledge and rules'), B('连接授权账号', 'Connect authorized accounts'), B('安排数字员工与审批', 'Assign AI roles and approvals'), B('用真实样本验证成果', 'Validate with real cases')],
+    tlLabel: B('从哪开始：', 'Start with:'), tl: B('一条流程', 'one workflow'), button: { label: B('预约企业演示', 'Request a Demo'), href: 'contact.html' } },
+  /* The second card is where the first workflow leads, not a claim about the
+     company today. 288 is the size of the role directory — the unit and the
+     fourth bullet say so — never a number of employees running at once. */
+  card2: { name: B('逐步扩展到全公司', 'Across the company, in phases'), desc: B('第一条流程验证有效后，按配置与交付范围逐步开放更多业务板块与数字岗位。', 'Once the first workflow proves useful, more business areas and AI roles open in phases, by configuration and agreed scope.'), big: '288', unit: B('(个专业数字岗位)', '(specialized AI roles)'),
+    items: [B('Growth OS 与 Sales Desk 两大引擎', 'Growth OS and Sales Desk, the two engines'), B('ERP、履约与 AI 创作', 'ERP, fulfilment and AI creative work'), B('企业知识与业务关系共享', 'Shared company knowledge and context'), B('288 是岗位目录，不是同时运行数', '288 is a role directory, not concurrent runs'), B('关键决定由有权人批准', 'Authorized people approve key decisions')],
     tlLabel: B('下一步：', 'Next:'), tl: B('看定价', 'see pricing'), button: { label: B('看定价', 'See pricing'), href: 'pricing.html' } },
   faqCaption: B('(常见问题)', '(FAQ)'),
+  /* Four slots, four V5 questions that belong on the capability page: how it
+     differs from a chat window (F12), the systems a company already has (F11),
+     what is available now (F13) and where to start (F10). */
   faq: [
-    [B('这些能力怎么组合？', 'How do the capabilities combine?'), B('按业务流程组合，不按软件模块。一条询盘依次走过对话、知识、CRM、报价、审批、履约，每个环节由对应的 AI 员工接手，结果落回同一个客户对象。', 'By business process, not by software module. One inquiry moves through conversation, knowledge, CRM, quoting, approval and fulfilment; each step is handled by the matching AI employee and the result lands on the same customer object.')],
-    [B('能力之间共享什么？', 'What do they share?'), B('同一个企业本体、同一份客户全景、同一套企业知识、同一本审计台账。一个能力的输出，就是另一个能力的输入。', 'One ontology, one Customer 360, one body of enterprise knowledge, one audit ledger. Any capability’s output is another capability’s input.')],
-    [B('新渠道怎么接？', 'How is a new channel added?'), B('通过渠道插件 SDK。新渠道接进来，用的还是同一套客户、CRM、知识、AI 员工和进化基础设施。', 'Through the Channel Plugin SDK. A new channel plugs into the same customer, CRM, knowledge, agent and evolution infrastructure.')],
-    [B('从哪里开始？', 'Where do we start?'), B('从一条流程开始。挑最耗时间、最拖增长的那一条，先跑通。', 'With one workflow. Pick the one that costs the most time or growth and get it running first.')],
+    [B('它和单独使用一个 AI 聊天窗口有什么区别？', 'How is this different from using a standalone AI chat?'), B('重点不在对话形式，而在任务是否连接了企业资料、客户历史、业务应用、责任、审批和结果。STARGO WORK 围绕完整业务流程组织这些信息与工作，而不把一次文字回答当作业务已经完成。', 'The focus is not the chat format. It is whether the work connects enterprise information, customer history, business applications, ownership, approvals and results. STARGO WORK organizes those elements around a business workflow rather than equating a text answer with completed work.')],
+    [B('现有 CRM、ERP、邮箱和网盘都要换掉吗？', 'Must we replace our current CRM, ERP, email and drives?'), B('不必先假定全部替换。STARGO WORK 的方向是把现有业务账号和资料连接到同一工作空间。具体保留、接入或调整哪些系统，需要结合企业当前软件和权限逐项确认。', 'A complete replacement should not be assumed. STARGO WORK aims to connect existing accounts and information in one workspace. Which systems are retained, integrated or adjusted depends on the enterprise’s software and access permissions.')],
+    [B('所有渠道和全部功能现在都能直接用吗？', 'Is every channel and feature immediately available?'), B('不能仅凭功能介绍这样判断。部分已有应用基础，部分需要企业账号和真实数据接入，一键视频、深度协作和高级主动工作等仍在完善。演示与交付应逐项确认，不把能打开页面当作完整流程已经验收。', 'A capability description is not proof of availability. Some applications have foundations, some require enterprise accounts and live data, and video, deeper teamwork and advanced proactive work continue to evolve. Confirm each delivery scope and validate the workflow, not just page access.')],
+    [B('企业应该从哪里开始？', 'Where should an enterprise start?'), B('先选一条最重要的业务流程，准备产品、客户、知识和规则，连接授权账号，安排数字员工与审批，再用真实样本验证成果。跑通后再扩大范围，而不是第一天就改造全部部门。', 'Choose one priority workflow. Prepare product, customer, knowledge and policy context, connect authorized accounts, assign roles and approvals, then validate real cases. Expand after that first workflow is proven useful.')],
   ],
   moreLabel: B('(想看它跑起来？)', '(Want to see it running?)'),
-  more: B('每项能力背后都有界面和 AI 员工，跑在真实的外贸流程里。预约演示，我们按你的流程逐个打开看。', 'Every capability has a screen and an agent behind it in a real trade workflow. Book a demo and we walk through them in your process.'),
-  moreButton: B('预约演示', 'Book a Demo'),
+  more: B('演示按你的业务流程进行：已有基础的部分直接打开看；需要企业账号、真实数据或仍在建设的部分，逐项说明开放条件。', 'The demo follows your workflow: what already has foundations, we open and show; what needs enterprise accounts, live data or is still in development, we explain condition by condition.'),
+  moreButton: B('预约企业演示', 'Request a Demo'),
 };
 
 /* ============================================================= contact === */
@@ -1299,14 +1347,23 @@ export const ABOUT = {
 export const CAPABILITY_SHOWCASE = {
   // The donor sets these two lines at 192px and never wraps them, so each has to
   // fit the 1180px column: "Connected" measures 1216px and does not.
-  /* The page opens on renok's hero. Its accent word is set in an italic serif,
-     which has no CJK glyphs, so the accent stays a Latin fragment in both
-     languages rather than a synthesised slant. */
-  heroLead: B('把外贸做成', 'Everything a trade team'),
-  heroAccent: B('/one system', '/does'),
-  heroTail: B('一套系统', 'in one place'),
-  heroBody: B('客户研究、沟通、报价、订单、内容，走同一条工作流。288 位专业 AI 员工推进，决策权仍在你的团队。', 'Customer research, conversations, quotations, orders and content on one workflow — carried by 288 specialized AI employees, with the decisions still yours.'),
-  heroButton: B('看能力图谱', 'See the capability map'),
+  /* The page opens on renok's hero (V5 P02: 「从找客户，到把企业工作连接起
+     来。」). Its accent word is set in an italic serif, which has no CJK
+     glyphs, so the accent stays a Latin fragment in both languages rather than
+     a synthesised slant. On the Chinese page that fragment is the product name
+     the sentence starts from — Growth OS finds the customers — so no English
+     word stands in the Chinese headline. The display headline drops the full
+     stop, as every display heading on the site does.
+     tools/blocks/rk-hero.mjs holds each Chinese phrase together with word
+     joiners; a zero-width space (U+200B) marks the one place a long phrase may
+     still break, so 到把企业工作 / 连接起来 wraps between its two halves and
+     never inside a word. The English tail's no-break space keeps "work" from
+     falling onto a line alone. */
+  heroLead: B('从找客户', 'From finding customers to'),
+  heroAccent: B('/Growth OS', '/connected'),
+  heroTail: B('到把企业工作​连接起来', 'enterprise work'),
+  heroBody: B('先看 Growth OS 主动获客与 Sales Desk 外贸闭环，再看 ERP、商城、财务履约、图片视频、数字员工与企业智能。每个模块都说明做什么、输出什么，以及需要哪些配置与确认。', 'Start with Growth OS and Sales Desk, then explore ERP, commerce, finance and fulfillment, creative work, AI teams and enterprise intelligence. Each module explains the work, the outputs and the configuration or approvals required.'),
+  heroButton: B('查看功能全景', 'Explore Capabilities'),
   eyebrow: B('能力图谱', 'CAPABILITY MAP'),
   /* Two lines of one 10rem heading. 每项 rather than 每一项: at the donor's size
      three characters need 484.8px and the column is 440–470px wide between 992
@@ -1314,54 +1371,74 @@ export const CAPABILITY_SHOWCASE = {
      the more ordinary Chinese for it. Keep this line to two characters. */
   headlineTop: B('每项', 'Every'),
   headlineBottom: B('工作', 'Job'),
-  headline: B('找到买家。拿下订单。工作不停。', 'Find buyers. Win orders. Keep the work moving.'),
+  headline: B('先找客户，再把生意做完整。', 'Find the customer. Carry the business forward.'),
   storiesLabel: B('你的业务能完成什么', 'What your business gets done'),
-  storiesNote: B('六件事，环环相扣。点开看背后怎么做。', 'Six connected outcomes. Open one to see the work behind it.'),
-  foundationsNote: B('上面每件事都靠这四样。', 'Four things every outcome above depends on.'),
-  body: B('看 STARGO 怎么把客户研究、沟通、报价、贸易执行和内容创作串成一条工作流：业务上下文共享，288 位专业 AI 员工推进。', 'Explore how STARGO brings customer research, conversations, quotations, trade operations and creative work together — with shared business context and 288 specialized AI employees.'),
+  storiesNote: B('六段业务，环环相扣。点开看背后怎么做。', 'Six connected areas of work. Open one to see the work behind it.'),
+  foundationsNote: B('上面每段业务都靠这四个基础。', 'Four foundations every area above depends on.'),
+  body: B('面向制造业与外贸企业的网页桌面级 AI 企业操作系统：Growth OS 主动获客，Sales Desk 外贸闭环，连接 ERP、AI 创作、企业知识与 288 个专业数字岗位。', 'A browser-based desktop AI operating system for manufacturing and global trade enterprises: Growth OS and Sales Desk, connected with ERP, creative work, enterprise knowledge and 288 specialized AI roles.'),
   cardButton: B('聊聊你的流程', 'Discuss your workflow'),
   inCatalogue: B('对应能力组', 'In the catalogue'),
   outputLabel: B('产出', 'Useful output'),
   connectionLabel: B('接到哪里', 'Connects to'),
-  scopeNote: B('这里列的是能力登记范围。你公司实际能用哪些，方案沟通时确认。登记在册，不等于已经部署。', 'Scope shown here is the capability register. Availability for your company is confirmed during scoping — a documented capability is not by itself a deployed one.'),
+  /* Closes the quotation paragraph (tools/blocks/rk-stats.mjs): what this
+     describes is scope, and what a company can use is confirmed per item. */
+  scopeNote: B('以上是报价工作的能力范围；你公司实际开通哪些，方案沟通时逐项确认，写在这里不等于已经部署。', 'This describes the scope of quotation work; what your company can use is confirmed item by item during scoping — a described capability is not by itself a deployed one.'),
 
   stories: [
     {
       image: 'os-cockpit',
-      label: B('找出值得跟进的买家', 'Find the buyers worth pursuing'),
+      /* Growth OS, proactive acquisition (V5 M02, V6 §5.2). tools/blocks/
+         cn-service.mjs prints `promise` + `connection` as the section's lead
+         and `output` + `availability` under it; the four rows are the first
+         four picks, worded by CAP_V6A.growth below. */
+      label: B('Growth OS · 主动获客', 'Growth OS · Proactive prospecting'),
       groups: ['02', '03'],
-      promise: B('从你的产品和目标市场出发。公司研究、可查的贸易记录、采购信号汇到一起，得到的是一个可以判断的客户，不是一份联系人名单。', 'Start with your products and target markets. Company research, available trade records and buying signals come together into an account you can judge, not a contact list.'),
+      promise: B('Growth OS 不只整理已有询盘，而是围绕产品、目标市场和客户画像，寻找值得开发的企业，判断机会；证据不足时标注待核实，不强猜。', 'Growth OS goes beyond incoming inquiries: it looks for companies worth developing around your products, target markets and buyer profiles, and qualifies the opportunity — weak evidence is marked for checking, never guessed.'),
       picks: ['Account Research', 'Trade Intelligence', 'Importer Reorder Radar', 'Buying Committee Intelligence', 'Opportunity Decision Engine', 'Dealer Opportunity Brief', 'CRM Automatic Lead Creation'],
-      output: B('一份有据可查的客户简报、一封触达草稿、一条有人负责的跟进任务。', 'An evidence-backed account brief, an outreach draft and a follow-up task with an owner.'),
-      connection: B('同一份客户上下文，直接带进下一次沟通和报价。', 'The same account context carries into the next conversation and quotation.'),
+      output: B('工作成果：客户清单、联系人信息、商机简报、开发计划。', 'Outputs: prospect lists, contact details, opportunity briefs and outreach plans.'),
+      connection: B('确认后的客户连同来源、背调、产品兴趣和下一步任务转入 Sales Desk，不必等询盘，也不重复建档。', 'Approved prospects move into Sales Desk with their sources, research, product interests and next actions — no waiting for an inquiry, no duplicate records.'),
+      availability: B('核心流程建设中，真实数据与客户触达按授权接入。', 'Core workflows are developing; live sources and outreach require authorization.'),
     },
     {
       image: 'os-sales-desk',
-      label: B('从对话里读懂客户', 'Turn conversations into customer understanding'),
+      /* Sales Desk (V5 M03, V6 §5.3). The heading is V6's; tools/blocks/qx-news.mjs
+         prints `promise` then `availability` in the left column, and its three
+         rows keep the intake / requirements / customer-context split. */
+      label: B('Sales Desk：把客户聊明白，把订单跟到底', 'Sales Desk: understand the customer, follow the order through'),
       groups: ['04', '05'],
-      promise: B('询盘从已接入的渠道进来，落在同一条客户时间线上。需求从来信里读出来，答案取自企业审核过的知识，敏感的部分留给人定。', 'Inquiries arrive from connected channels and land on one customer timeline. Requirements are read out of the message, answered from approved company knowledge, and anything sensitive waits for a person.'),
+      promise: B('Sales Desk 承接 Growth OS 确认的客户与各渠道询盘：统一入口把它们收进来，需求从来信和附件里读出来，客户全景记下背景与历史。三者一起服务于回复、产品匹配、跟进、报价与 PI，直到订单交接。', 'Sales Desk takes the prospects Growth OS has approved and the inquiries from every connected channel. One intake receives them, requirements are read from messages and attachments, and the customer view keeps context and history. Together they serve replies, product matching, follow-up, quotations and PI, through to the order handoff.'),
       picks: ['Unified Inbox', 'Inquiry Intent Detection', 'Buyer Requirement Extraction', 'Customer Risk Signals', 'Knowledge-Grounded Reply', 'Account 360', 'Automatic Follow-up'],
-      output: B('一条客户记录、一份结构化需求、一封待复核的回复。', 'A customer record, structured requirements and a reply ready for review.'),
-      connection: B('谈定的需求就是报价的起点。', 'The agreed requirement becomes the starting point of the quotation.'),
+      output: B('客户档案、结构化需求、产品方案、待审核回复与连续的销售跟进记录。', 'Customer records, structured requirements, product fit, review-ready replies and continuous sales history.'),
+      connection: B('确认的需求与产品方案，就是下一段报价的起点。', 'The agreed requirement and product fit become the starting point of the quotation below.'),
+      availability: B('已有业务工作台；渠道收发、价格和业务交接逐项接通与验证。', 'The workspace exists; messaging, price sources and business handoffs are integrated and validated one by one.'),
     },
     {
       image: 'os-quote-studio',
-      label: B('在商务可控的前提下出报价', 'Prepare quotations with commercial control'),
+      /* Quotations, PI and commercial records (V5 M04, V6 §5.4). The heading's
+         three clauses are drawn as three lines by tools/blocks/rk-stats.mjs,
+         which splits it at 「，」 / ". "; the paragraph is `promise`, then
+         `connection`, then `availability`, then the scope note. */
+      label: B('报价有依据，利润有边界，文件有版本', 'Ground the price. Review the margin. Keep the version.'),
       groups: ['07', '06'],
-      promise: B('报价从询盘、审核过的产品资料和你设定的价格规则起步，不是从一张空表开始。AI 备好，有权限的人拍板。', 'A quotation starts from the inquiry, the approved product information and your configured pricing rules — not a blank spreadsheet. AI prepares; authorized people commit.'),
+      promise: B('按产品配置、数量、包装、币种和贸易条款准备报价草稿；价格来自企业确认的价格表与历史报价，折扣和利润越过边界须由有权人批准，AI 不自行编价。每一版都留存、可比较，批准的版本再转为 PI 与合同，并衔接商业发票、装箱单等单证的准备与人工复核。', 'Quote drafts are built from product configuration, quantity, packaging, currency and trade terms. Prices come from the company’s approved pricebooks and quote history; discounts or margins beyond the limits need an authorized approver, and AI never invents a price. Every version is kept and comparable, and the approved one becomes the PI and the contract, with commercial invoices, packing lists and other documents prepared for human review.'),
       picks: ['Quote Studio', 'Product Configuration & Quantity', 'Pricing Rules', 'Margin Guardrails', 'Historical Price Context', 'Approval Workflow', 'PI Studio / PI Center'],
-      output: B('一份批准过的报价、完整的版本记录、随之生成的形式发票。', 'An approved quotation, its version history and the pro forma invoice behind it.'),
-      connection: B('批准过的商务细节直接带进订单，不用二次录入。', 'Approved commercial detail passes into the order without re-entry.'),
+      output: B('报价草稿、批准版本、PI、商务条款与可追溯的商业资料。', 'Quote drafts, approved versions, proforma invoices, commercial terms and traceable documents.'),
+      connection: B('批准报价不等于已经发送，发送也不等于客户已经收到，三者分别确认。', 'An approved quote is not a sent one, and a sent quote is not a received one; each is confirmed on its own.'),
+      availability: B('报价与 PI 持续完善；真实价格、合同、签章与单证按企业系统接通。', 'Quotes and PI are evolving; live prices, contracts, signatures and documents depend on connected enterprise systems.'),
     },
     {
       image: 'os-trade-execution',
-      label: B('订单一路盯到交付和复购', 'Coordinate orders through fulfilment and follow-up'),
+      /* ERP and fulfilment (V5 M05 + M06, V6 §5.5). The marquee is `label`; the
+         six cards are CAP_V6A.operations (six operating themes, not register
+         items). The boundary is said on the two cards it belongs to. */
+      label: B('ERP 与履约：前端拿订单，后台接得住', 'ERP & fulfilment: from winning orders to delivering them'),
       groups: ['08'],
-      promise: B('付款节点、生产进度、包装、出运，都在同一个订单对象里。商务单据用批准过的订单数据生成。', 'The order carries payment milestones, production status, packing and shipment in one place, and the commercial paperwork is prepared from approved order data.'),
+      promise: B('把销售前端与企业经营后台放到同一个桌面：不仅知道客户要什么，也知道产品、物料、库存、生产、订单与收款在哪里。', 'Bring sales and operating systems into one desktop, connecting demand with products, materials, inventory, production, orders and commercial records.'),
       picks: ['Order Management', 'Payment Milestones', 'Production Status & QC', 'Commercial Invoice · Packing List', 'Certificate of Origin · Form E', 'Bill of Lading Workflow', 'Export Documentation & Workflow'],
-      output: B('看得见的订单状态、一份单据清单、下一步由谁负责。', 'A visible order status, a document checklist and the next accountable owner.'),
-      connection: B('交付结果沉淀在客户档案上，售后和下一次采购都用得上。', 'Delivery outcomes stay on the account for after-sales and the next purchase.'),
-      caveat: B('单据准备与流程支持不替代正式签发、清关决定或专业合规审查。', 'Document preparation and workflow support do not replace official issuance, customs decisions or professional compliance review.'),
+      output: B('订单里程碑、付款提醒、资料清单、异常事项、售后记录与复购跟进。', 'Order milestones, payment reminders, document checklists, exceptions, service records and reorder follow-up.'),
+      connection: B('获客 → 销售 → ERP / 履约 → 财务协同 → 售后复购 → 新一轮增长。', 'Acquisition → sales → ERP / fulfilment → finance coordination → support and repeat sales → renewed growth.'),
+      availability: B('已有 ERP 与商城应用基础；跨系统协同按企业配置验收，履约、物流、财务与服务按接入情况分阶段交付。', 'ERP and commerce foundations exist; cross-system work is validated per enterprise, and fulfilment, logistics, finance and service are delivered in stages as systems connect.'),
+      caveat: B('正式申报、签发与资金支付仍由相应有权人员和机构处理；单据准备与流程协同不替代专业合规审查。', 'Official filings, issuance and payments stay with the authorized people and institutions; document preparation and workflow support do not replace professional compliance review.'),
     },
     {
       image: 'brand-family-01',
@@ -1374,46 +1451,80 @@ export const CAPABILITY_SHOWCASE = {
     },
     {
       image: 'os-agent-center',
+      /* AI roles working as a team (V5 M10 + M11, V6 §5.7). The three cards
+         are CAP_V6A.team; `output` fills the two-line slot beside the heading. */
       label: B('让 AI 团队把活干完', 'Run the work with an AI team'),
       groups: ['01', '10'],
-      promise: B('交出去的是目标，不是提示词。相关岗位接手，彼此传递上下文，交回一份可复核的结果。决定权仍在你手里。', 'Assign a goal, not a prompt. The relevant specialists take it up, exchange context between themselves and return something reviewable, with the decisions still yours.'),
+      promise: B('一个复杂任务可以交给多个数字员工分工完成。重点不在聊天人数，而在信息能否传递、责任是否明确、结果能否交接。', 'Assign complex work to a bounded team of digital employees. What matters is information exchange, clear ownership and reliable handoff — not the number of chat windows.'),
       picks: ['288 Specialized AI Employees', 'Workforce Panel', 'Agent Teams · Multi-Agent Collaboration', 'Task Delegation · Handoff · Parallel Execution', 'Role · Skills · Tools · Memory', 'Approval Center', 'Mobile Companion'],
-      output: B('一次组队分工、看得见的进度、一份待复核的简报。', 'A team assignment, visible progress and one brief for review.'),
-      connection: B('288 是岗位目录，不是 288 个并发运行，也不是无限用量。', '288 is the role catalogue — not 288 simultaneous runs or unlimited usage.'),
+      output: B('按责任汇总的结果、成员之间的交接记录，以及清楚的下一步。', 'Consolidated results, clear handoffs and assigned next steps.'),
+      connection: B('288 是岗位目录数量，不是同时运行的员工数，也不等于替代 288 名真人。', '288 is the role-directory count — not concurrent workers, and not a claim to replace 288 people.'),
     },
   ],
 
-  foundationsLabel: B('每件事都跑在这个底座上', 'What every story runs on'),
+  /* The four foundations (V5 M12, M14, M15, M13 in business language). Each
+     node shows `label` and `promise`; clicking it opens `panel` — short
+     [title, what it means] lines written for a manager, not a list of register
+     entries — and a node with a `caveat` closes its panel with it. The promise
+     already carries each caveat's substance, so a condition is never only
+     behind a click. The label is cut in half around the orb
+     (tools/blocks/qx-whatwedo.mjs): twelve Chinese characters, six a side. */
+  foundationsLabel: B('所有业务工作共用四个基础', 'Four foundations beneath the work'),
   foundations: [
     {
       image: 'brand-ontology',
-      label: B('业务上下文', 'Business context'),
+      label: B('企业知识与业务关系', 'Knowledge and business relationships'),
       groups: ['06', '12'],
-      promise: B('客户、报价、订单是带关系、带规则的对象。答案取自企业资料，不是临场编的。', 'Customers, quotes and orders are objects with relationships and rules, and answers are retrieved from company sources rather than improvised.'),
-      picks: ['Business Relationship Map', 'Customer · Product · Inquiry · Opportunity Objects', 'Enterprise Brain', 'Source Retrieval', 'Source-Grounded Answers'],
+      promise: B('知识库是企业资料室；业务关系把客户、产品、报价、订单与负责人对应起来。回答依据企业确认的资料，资料冲突或过期时提示核实。', 'The knowledge base is the company’s reference room; business relationships connect customers, products, quotes, orders and owners. Answers rest on approved company sources, and conflicting or outdated material is flagged.'),
+      panel: [
+        [B('企业知识中心', 'Knowledge center'), B('产品目录、参数、价格政策、认证、FAQ、合同模板与制度集中管理', 'Catalogs, specifications, pricing policies, certifications, FAQs, templates and policies in one place')],
+        [B('有据可查的回答', 'Answers with sources'), B('回答注明依据的资料，缺少资料时不作答', 'Each answer names the material behind it; no material, no answer')],
+        [B('业务关系图', 'Business relationship map'), B('客户、联系人、商机、报价、订单、文件与负责人彼此关联', 'Customers, contacts, opportunities, quotes, orders, files and owners linked together')],
+        [B('同一个客户对得上', 'One customer, every record'), B('不同系统里的同一客户、产品或订单能对应，减少重复建档', 'The same customer, product or order is matched across systems, with fewer duplicates')],
+        [B('规则进入执行', 'Rules inside the work'), B('报价权限、订单条件和审批人，在动手之前就清楚', 'Pricing authority, order conditions and approvers are known before anything is done')],
+      ],
+      caveat: B('企业知识与业务关联已有基础；更深的关联和企业资料模板按接入情况逐步完善。', 'Knowledge and business-context foundations exist; richer relationships and company templates are delivered in stages.'),
     },
     {
       image: 'os-desktop',
-      label: B('工具与连接', 'Tools and connections'),
+      label: B('按授权连接业务系统', 'Connections, by authorization'),
       groups: ['11'],
-      promise: B('AI 员工通过正式接口接入现有系统，没有接口的工具也能直接操作。', 'Agents reach existing systems through documented interfaces, and work the tools that have no interface at all.'),
-      picks: ['Approved Actions & Tool Connections', 'External Connectors', 'Workflow Automation', 'Browser Automation', 'Credential Management'],
-      caveat: B('连接器登记在册，不等于你公司已经接通。配置、授权完成才算。', 'A connector in the register is not a live integration for your company until it is configured and authorized.'),
+      promise: B('邮箱、网盘、CRM、ERP 与业务平台按企业授权接入，明确哪些能看、哪些能改、哪些要审批。列出的连接完成配置与授权前，不算已经接通。', 'Email, drives, CRM, ERP and business platforms connect through enterprise authorization, defining what can be read, changed or needs approval. A listed connection is not live until it is configured and authorized.'),
+      panel: [
+        [B('连接企业账号与应用', 'Business accounts and apps'), B('邮箱、网盘、CRM、ERP 与业务平台，按授权开放相应功能', 'Email, drives, CRM, ERP and business platforms, opened as far as authorized')],
+        [B('跨应用工作流', 'Cross-app workflows'), B('按时间或业务变化触发，把重复步骤连起来', 'Repeated steps linked together, run on a schedule or when the business changes')],
+        [B('授权网页任务', 'Authorized web tasks'), B('在授权环境中查资料、填表、上传下载，不绕过登录与安全验证', 'Research, forms, uploads and downloads in an authorized environment, never bypassing sign-in or security checks')],
+        [B('账号统一保管', 'Sign-ins kept safe'), B('登录凭据集中保管，不在对话和文件里流转', 'Credentials are held centrally, never passed around in chats or files')],
+        [B('同步与出错处理', 'Sync and error handling'), B('数据同步、失败重试与异常都有记录', 'Synchronization, retries and exceptions are all recorded')],
+      ],
+      caveat: B('目录里列出的连接，不等于你公司已经接通；配置与授权完成后才算。', 'A connection listed in the catalogue is not a live integration for your company until it is configured and authorized.'),
     },
     {
       image: 'os-login',
-      label: B('权限与证据', 'Authority and evidence'),
+      label: B('权限、审批与记录', 'Permissions, approvals and records'),
       groups: ['13'],
-      promise: B('哪些能自己跑、哪些要复核、哪些要审批，企业说了算。每个重要动作都留下记录，人随时能回看。', 'The company sets what may run alone, what needs review and what needs approval; every important action leaves a record a person can read back.'),
-      picks: ['Human-in-the-Loop', 'Approval Service', 'Permission Control · Identity', 'Audit Ledger · Agent Evidence · Action History', 'Failure Handling · Rollback'],
+      promise: B('哪些工作可以自动推进、哪些要复核、哪些必须审批，由企业决定。重要动作都留下记录：谁做的、依据什么、结果如何。', 'The company decides what may proceed on its own, what needs review and what needs approval. Important actions leave a record: who acted, on what basis and with what result.'),
+      panel: [
+        [B('人工审批', 'Human approval'), B('报价、对外触达、重要承诺与付款等关键决定由有权人批准', 'Quotes, outreach, important commitments and payments are decided by authorized people')],
+        [B('权限与身份', 'Access and identity'), B('谁能看什么、能做什么，按岗位与账号设定', 'Who may see and do what, set by role and account')],
+        [B('工作记录', 'Work records'), B('做了什么、由哪个数字员工完成、凭谁的授权', 'What was done, by which AI role, on whose authority')],
+        [B('暂停与接管', 'Pause and takeover'), B('出现异常时停下来，由人接手或退回', 'When something goes wrong, work stops for a person to take over or roll it back')],
+        [B('企业数据隔离', 'Separated company data'), B('不同公司与品牌的数据各自分开', 'Each company and brand keeps its own data boundary')],
+      ],
     },
     {
       image: 'brand-loop',
-      label: B('可核查的改进', 'Improvement you can check'),
+      label: B('经过验证的改进', 'Improvement you can check'),
       groups: ['14'],
-      promise: B('记录下来的结果，沉淀成知识、提示词、技能和流程的候选改动。先评估，批准后才发布，不成立就回滚。', 'Recorded outcomes become candidate changes to knowledge, prompts, skills and workflows — evaluated and approved before release, rolled back when they do not hold.'),
-      picks: ['Work Observation', 'Attempts · Outcomes · Scores', 'Outcome Review', 'Pre-release Testing', 'Side-by-side Trials · Staged Release · Rollback'],
-      caveat: B('改的是知识、提示词、技能和流程，不会自行重训基础模型权重。', 'This improves knowledge, prompts, skills and workflows. It does not retrain foundation-model weights on its own.'),
+      promise: B('从成功和失败中整理可改进的工作方法、岗位技能与流程，先测试、比较、批准，再逐步采用；效果不足时可以撤回。', 'Better working methods, role skills and processes are drawn from successes and failures, then tested, compared and approved before gradual adoption — and withdrawn if they fall short.'),
+      panel: [
+        [B('观察实际工作', 'Watch the real work'), B('记录真实执行中发生了什么', 'Record what actually happened in the work')],
+        [B('结果复盘', 'Outcome review'), B('成交与未成交、成功与失败，整理成候选改进', 'Wins and losses, successes and failures, turned into candidate improvements')],
+        [B('采用前测试', 'Tested before adoption'), B('改进先经过测试与比较，再交人批准', 'Each improvement is tested and compared, then approved by a person')],
+        [B('小范围试用', 'Trial on a slice'), B('先在一部分工作中试用，保留或撤回', 'Tried on part of the work first, then kept or withdrawn')],
+        [B('核对业务结果', 'Check the business result'), B('不只记录“执行过”，还核对是否达到目标', 'Not only that it ran, but whether it met the goal')],
+      ],
+      caveat: B('改进的是知识、岗位技能与流程，经测试和批准后采用，可以撤回。', 'Improvements apply to knowledge, role skills and processes; they are tested and approved before adoption and can be withdrawn.'),
     },
   ],
 
@@ -1425,7 +1536,112 @@ export const CAPABILITY_SHOWCASE = {
    Insertion point for this area's new exports. Keep additions between this
    marker and the next one so parallel edits merge cleanly. */
 // V6-A-START
+/* The words V6 §5 gives the capability showcases that are not a register
+   entry's own name and gloss. A showcase row is a short reading of its topic in
+   that section's story — 企业研究 in the Growth OS section says what the
+   research is for there — while the catalogue below keeps the register's
+   wording, so these are written here rather than by renaming register items
+   (their names are the keys the picks look up).
 
+   A zero-width space (U+200B) inside a Chinese title marks where it may break:
+   the blocks set those titles `word-break: keep-all`, so the narrow name slots
+   wrap between phrases (产品、物料 / 与采购) instead of inside a word. */
+const ZW = '​';
+export const CAP_V6A = {
+  /* #story-1 — Growth OS (tools/blocks/cn-service.mjs). The pill names the
+     engine; the two heading lines are the donor's two-character / short-word
+     display slot (see headlineTop above for why two characters). The rows are
+     keyed by the story's first four picks and keep V6's four topics. */
+  growth: {
+    eyebrow: B('Growth OS', 'Growth OS'),
+    headTop: B('主动', 'Find'),
+    headBottom: B('获客', 'Leads'),
+    button: { label: B('获客能力详情', 'Prospecting details'), href: '#g02' },
+    rows: {
+      'Account Research': { title: B('企业研究', 'Company Research'),
+        text: B('查清企业规模、市场、主营产品与渠道，信息注明来源与更新时间。', 'Company size, markets, products and channels, with the source and date of every fact.') },
+      'Trade Intelligence': { title: B('贸易情报', 'Trade Intelligence'),
+        text: B('从依法授权的贸易数据与公开信息里，读出采购记录与供应商变化。', 'Purchase records and supplier changes, read from lawfully authorized trade data and public sources.') },
+      'Importer Reorder Radar': { title: B('补货判断', 'Reorder Signals'),
+        text: B('根据采购周期判断补货窗口；证据不足时标注待核实，不编造需求。', 'Reorder windows judged from purchase cycles; weak evidence is marked for checking, never invented.') },
+      'Buying Committee Intelligence': { title: B('关键决策角色', 'Key Decision Roles'),
+        text: B('找出采购决策人与影响者，保留身份匹配依据，确认后交给 Sales Desk。', 'Buyers and influencers identified with identity evidence, then handed to Sales Desk once approved.') },
+    },
+  },
+  /* #story-2 — Sales Desk (tools/blocks/qx-news.mjs): intake, requirements,
+     customer context — V6 §5.3's three names — keyed by the register pick each
+     row links to (its group decides #g04 / #g05). */
+  sales: {
+    rows: {
+      'Unified Inbox': { title: B('统一询盘入口', 'Unified Inquiry Intake'),
+        text: B('各渠道询盘汇入同一入口，分清新询盘、历史消息与垃圾信息。', 'Inquiries from each connected channel arrive in one intake, sorted from history and spam.') },
+      'Buyer Requirement Extraction': { title: B('买方需求提取', 'Buyer Requirement Extraction'),
+        text: B('从来信与附件读出产品、规格、数量与交期，并提示缺失信息。', 'Products, specifications, quantities and deadlines read from messages and attachments, with gaps flagged.') },
+      'Account 360': { title: B('客户全景', 'Customer Context'),
+        text: B('联系人、商机阶段、沟通记录、报价与订单，接手时一屏看全。', 'Contacts, stage, conversations, quotes and orders — the whole context for whoever takes over.') },
+    },
+  },
+  /* #story-3 — quotations (tools/blocks/rk-stats.mjs). The three reels show
+     the steps 01 / 02 / 03 of V5 M04's sequence — draft, review and approval,
+     the kept version — not counts, so nothing on the band reads as a result.
+     Each label is one line of the donor's 24px slot, which is 163px wide at
+     768: six Chinese characters or about seventeen Latin ones. The picture is
+     this site's own editorial art for quoting (precision parts aligned and
+     checked), in place of renok's branding portrait. */
+  quote: {
+    steps: [B('按规则起草', 'Drafted by rules'), B('核对并批准', 'Checked, approved'), B('保留正式版本', 'Approved version')],
+    image: 'os-quote-studio',
+    button: { label: B('报价能力详情', 'Quotation details'), href: '#g07' },
+    /* The paragraph's closing pointer to where product facts live. */
+    facts: { lead: B('价格与产品事实的依据，见', 'For the product facts behind a price, see'), label: B('产品与企业知识', 'Products & enterprise knowledge'), href: '#g06' },
+  },
+  /* #story-4 — ERP and fulfilment (tools/blocks/rk-testimonials.mjs): V6
+     §5.5's six operating themes, in its order, one card each; desktop rows and
+     the phone slider are filled from this one list. Theme 4 keeps every trade
+     document the old cards named, and themes 3 and 4 say where the decision
+     stays. `link` is each card's role line, pointing at the catalogue group. */
+  operations: {
+    themes: [
+      { title: B(`产品、物料${ZW}与采购`, 'Products, materials & purchasing'),
+        text: B('产品档案、规格、物料清单与供应商资料保持一致；订单需求衔接采购计划、采购单与到货跟进。', 'Product records, specifications, bills of materials and suppliers stay consistent; order demand links to purchasing plans, purchase orders and deliveries.') },
+      { title: B(`库存、生产${ZW}与质检`, 'Stock, production & quality'),
+        text: B('看清可交付数量与缺货，跟踪生产任务、物料需求、质检、包装与交期。', 'See available stock and shortages; track production tasks, material needs, quality checks, packing and lead times.') },
+      { title: B(`订单与${ZW}付款节点`, 'Orders & payment milestones'),
+        text: B('订单、订金、尾款、发票与对账提醒对应起来；资金支付由有权人员批准，AI 不擅自付款。', 'Orders, deposits, balances, invoices and reconciliation reminders line up; payments are authorized by people, never by AI alone.') },
+      { title: B(`外贸单证${ZW}与出口资料`, 'Trade documents & export records'),
+        text: B('准备并核对商业发票、装箱单、原产地证 / Form E 资料、提单、认证与出口退税资料；正式签发、申报与获批由主管机构完成。', 'Prepare and check commercial invoices, packing lists, certificate of origin / Form E materials, bills of lading, certifications and export tax-rebate records; official issuance, filing and approval stay with the authorities.') },
+      { title: B('物流与交付', 'Logistics & delivery'),
+        text: B('运费询价、订舱、物流轨迹、预计到达与异常处理，运输单据跟着交付进度走。', 'Freight quotes, bookings, tracking, arrival estimates and exceptions, with shipping documents following delivery progress.') },
+      { title: B(`售后、渠道${ZW}与复购`, 'Service, channels & reorders'),
+        text: B('保修、退换货、备件与经销商支持，商城业务与补货建议，把成交后的生意接下去。', 'Warranty, returns, spare parts and dealer support, commerce and reorder suggestions — the business after the sale.') },
+    ],
+    link: { label: B('ERP 与履约详情', 'ERP & fulfilment details'), href: '#g08' },
+    /* The six portraits were the donor's testimonial sitters: beside an
+       operating theme a face reads as a customer quote this company does not
+       have. This site's own abstract avatars stand in (decorative). */
+    icons: ['avatar-07', 'avatar-08', 'avatar-09', 'avatar-10', 'avatar-11', 'avatar-12'],
+  },
+  /* #story-6 — AI roles as a team (tools/blocks/qx-projects.mjs): V6 §5.7's
+     three cards. The large card is the teamwork example and says it is an
+     illustration and that deeper teamwork opens in phases. Links go to the
+     workforce page, where M10/M11 are told in full, and to the catalogue
+     group for the role and task entries. Pictures are this site's editorial
+     art for specialised roles and parallel work. */
+  team: {
+    arrowHref: 'workforce.html',
+    cards: [
+      { title: B(`288 个${ZW}跨部门${ZW}专业岗位`, '288 cross-functional specialist roles'),
+        text: B('岗位目录，按任务选用；不是同时运行的 288 个员工，也不替代真人。', 'A role directory chosen per task — not 288 employees running at once, and not a replacement for people.'),
+        href: 'workforce.html', pill: B('认识数字员工', 'Meet the AI Workforce'), image: 'phone-agents' },
+      { title: B(`员工任务、${ZW}进度与成果`, 'Tasks, progress and results'),
+        text: B('谁在做什么、哪里在等待、交付了什么，关键动作由人批准。', 'Who is doing what, what is waiting and what was delivered, with key actions approved by people.'),
+        href: '#g10', pill: B('员工能力组', 'AI workforce group'), image: 'mobile-agents' },
+      { title: B(`团队分工、${ZW}交流、${ZW}并行与接力`, 'Roles, exchange, parallel work and handoffs'),
+        text: B('协作示意：市场研究员工找到目标企业，产品员工核对规格，销售员工规划开发，创意员工准备素材，统筹角色复核汇总后交负责人确认。基础派工已有记录，深度团队互通按阶段开放；图为示意，不是实时运行画面。', 'Illustrative: research finds target accounts, a product specialist checks specifications, sales plans outreach, creative prepares assets, and a coordinator reviews and consolidates the package for the responsible person to confirm. Basic delegation is recorded; deeper teamwork opens in phases. The picture is an illustration, not a live view.'),
+        href: 'workforce.html', pill: B('看团队协作', 'See teamwork'), image: 'brand-family-03' },
+    ],
+  },
+};
 // V6-A-END
 
 
