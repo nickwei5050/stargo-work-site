@@ -171,10 +171,16 @@
  *                        员工, and Market Signal Agent / Quote Agent / Follow-up
  *                        Agent / Coordinator Agent (the fourth was 调度中枢 /
  *                        Orchestrator until V6, 2026-09-16, which retired that
- *                        engineering word; COORDINATOR AGENT is two characters
- *                        shorter than MARKET SIGNAL AGENT, the longest line the
- *                        measurement below was taken on, and was re-measured on
- *                        the built page). The slot is no longer a client-name
+ *                        engineering word). Re-measured on the built page at
+ *                        320/390/768/992/1024/1440/1920: the pill sizes to its
+ *                        words, and COORDINATOR AGENT breaks exactly where its
+ *                        row-mate FOLLOW-UP AGENT does — two lines at 320, 390,
+ *                        992 and 1024, one at 768, 1440 and 1920 — so tiles 3
+ *                        and 4 stay alike; MARKET SIGNAL AGENT already takes
+ *                        two or three lines at those widths. 统筹 AI 员工 matches
+ *                        报价/跟进 AI 员工 (two lines at 320, one above). The
+ *                        298px budget below is the pre-V6 arithmetic, kept as
+ *                        the record. The slot is no longer a client-name
  *                        slot: it names what the tile is about, which is what
  *                        qx-projects does with the same kind of slot ("The
  *                        category slot is not a category").

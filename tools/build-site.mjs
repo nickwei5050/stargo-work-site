@@ -1376,7 +1376,11 @@ PAGES['contact.html'] = (lang) => {
   const { fn: s } = makeSub('contact');
   let h = tpl('contact_contact-1.html');
   h = s(h, '(Contact)', t(K.eyebrow));
-  h = s(h, 'Let’s Connect', t(K.h1));
+  /* V5 P07's question. The class is a hook for the V6-G balance rule in
+     css/stargo-fusion.css: unbalanced, the English question left "first?" on a
+     line of its own at 320, 390 and 1024. `h1.inner-title` is shared by other
+     pages, so the rule is scoped to this one heading rather than to the class. */
+  h = s(h, '<h1 class="inner-title">Let’s Connect</h1>', `<h1 class="inner-title stargo-contact-title">${t(K.h1)}</h1>`, { count: 1 });
   // The quote card keeps the template design (portrait film, gradient, mark); the mark is STARGO's and the rating slot names the card.
   h = h.replace(/<img[^>]*class="logo-testi-1"[^>]*\/>/, `<img src="${WORDMARK}" loading="lazy" alt="STARGO WORK" class="logo-testi-1 stargo-card-mark"/>`);
   h = s(h, '>★★★★★<', `>${t(K.quoteLabel)}<`);

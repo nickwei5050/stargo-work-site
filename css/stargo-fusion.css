@@ -2134,6 +2134,25 @@ html[lang^="zh"] .hero .max-w-left.add-tp p.top-text.big.nm {
   line-height: 1.6;
 }
 
+/* Contact card: the colour of the three paragraphs this site puts inside
+   cinery's dark card — the status line js/stargo-forms.js writes errors and
+   the e-mail fallback into, the demo-request note above, and the consent line
+   tools/chrome.mjs appends to every form. All three computed rgb(0,0,0) here
+   (this page's own paragraph colour, meant for Mono's white forms), which on
+   the card's #232324 measures 1.34:1: the privacy sentence and any error were
+   there but could not be read. Measured before V6 as well; the note added for
+   V6 would have inherited the same. The status line takes cinery's white, as
+   the field labels do; the two lines of small print take cinery's secondary
+   neutral (#bbb), its colour for secondary text. Scoped to `.cn-contact`, so
+   every other form keeps its own. */
+.cn-contact p.stargo-form-note {
+  color: var(--primary-color--white, #fff);
+}
+.cn-contact p.stargo-form-before,
+.cn-contact p.stargo-form-consent {
+  color: var(--neutral-color--secondary-neutral, #bbb);
+}
+
 /* Contact card: the message box's placeholder (V5 P07's example). cinery's
    sheet paints placeholders #222 (`.cn-contact .cn-form-input::placeholder`),
    its dark-on-light value; this field is rgb(57,57,58), where #222 measures
@@ -2166,6 +2185,15 @@ html[lang^="zh"] .hero .max-w-left.add-tp p.top-text.big.nm {
    above), so this only brings the English heading of this one page in line.
    No size changes. */
 .lx-scope .lx-blog-hero-title {
+  text-wrap: balance;
+}
+
+/* Contact page heading, English: "Which workflow should work better first?"
+   left "first?" alone on a third line at 320, 390 and 1024. Same fix, scoped
+   to this one heading by the class tools/build-site.mjs gives it
+   (`h1.inner-title` is shared with other pages). The Chinese heading is
+   already balanced by the sweep above. No size changes. */
+h1.inner-title.stargo-contact-title {
   text-wrap: balance;
 }
 
