@@ -2093,6 +2093,134 @@ html[lang^="zh"] .hero .max-w-left.add-tp p.top-text.big.nm {
    and the next one so parallel edits merge cleanly. */
 /* V6-D-START */
 
+/* workforce.html — the V6 content (tools/copy.mjs LX_FEATURE_WORKFORCE and
+   WORKFORCE_ROLE_GROUPS; built by tools/build-site.mjs PAGES['workforce.html']).
+   Every selector below is scoped to a class the workforce builder adds, so no
+   other Lifelogx page is touched. */
+
+/* 1. The pink panel's heading, 「有岗位，有团队，有工作台」, and the role-group
+      heading beside the list. Neither is split into characters (no IX on
+      them), so `keep-all` works here: it leaves the commas — and the <wbr>s
+      the builder puts between the role-group heading's phrases — as the only
+      break points, and `text-wrap: balance` (the zh sweep above) chooses
+      among those. Without it balance halves the string wherever the middle
+      falls: 「有岗位，有团」/「队，有工作台」. Every phrase is shorter than the
+      narrowest line it gets — four characters in the panel heading's 192px
+      box at 768 (4.8 characters of 40px type), eight in the role-group
+      heading's 288px at 320 (nine characters of 32px type). Chinese only;
+      English breaks at its spaces. */
+html[lang^="zh"] .lx-scope .lx-v6-panel-title,
+html[lang^="zh"] .lx-scope .lx-v6-roster-title {
+  word-break: keep-all;
+}
+
+/* The display line behind the team cards, 「一个目标，一个团队。」. It IS
+   split per character (IX), so keep-all cannot reach it; it is written as two
+   five-character halves instead, and balance puts the break between them.
+   Unbalanced, the box's six characters a line (800px of 124.8px type at 1440,
+   358px of 58.5px at 390) gave 「一个目标，一」/「个团队。」. The template does
+   not balance `.lx-big-text-on-gradient` because its own words never needed
+   it; the class is the workforce builder's. */
+html[lang^="zh"] .lx-scope .lx-v6-team-display {
+  text-wrap: balance;
+}
+
+/* 2. The ten role groups: the template's careers list (lifelogx.lx.css,
+      .lx-careers_*) with rows that are not links. What is added is only what
+      the list did not need as a job board: a count column on the right, a
+      marked total row, and room for the intro and the note. The count keeps
+      the row's own 1.5rem; the unit under it uses the list's grey sub-line.
+      At 991px and below the template folds the grid to one column; the
+      heading is no longer sticky there because it would sit on top of the
+      rows it introduces. */
+.lx-scope .lx-v6-roster .lx-careers_01-item {
+  gap: 1rem;
+  cursor: default;
+}
+.lx-scope .lx-v6-roster .lx-careers-item-name { min-width: 0; }
+.lx-scope .lx-v6-roster .lx-careers-item-name > div:first-child { overflow-wrap: anywhere; }
+.lx-scope .lx-v6-roster-count {
+  flex: none;
+  align-items: flex-end;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.lx-scope .lx-v6-roster-count .lx-careers-text { white-space: nowrap; }
+.lx-scope .lx-v6-roster-total {
+  background-color: transparent;
+  box-shadow: inset 0 0 0 1px var(--_semantics---primary);
+  color: var(--_semantics---primary);
+}
+.lx-scope .lx-v6-roster-total .lx-careers-text { color: inherit; }
+.lx-scope .lx-v6-roster-title { margin-top: 0; margin-bottom: 0; }
+.lx-scope .lx-v6-roster-intro { margin: 1.5rem 0 0; font-size: 1.125rem; }
+.lx-scope .lx-v6-roster-flow { margin: 1rem 0 0; font-size: .875rem; }
+.lx-scope .lx-v6-roster-note { margin: 1.5rem 0 0; }
+.lx-scope .lx-v6-roster .lx-header-container-left { margin-bottom: 0; }
+@media screen and (max-width: 991px) {
+  .lx-scope .lx-v6-roster .lx-sticky-content { position: static; }
+  .lx-scope .lx-v6-roster .lx-careers_sticky-grid { row-gap: 2rem; }
+}
+@media screen and (max-width: 479px) {
+  .lx-scope .lx-v6-roster .lx-careers_01-item { padding: .875rem 1rem; }
+  .lx-scope .lx-v6-roster-intro { font-size: 1rem; }
+}
+
+/* 3. The team scenario's cards: the label above each heading, and the second
+      card's messages. The label is the template's own .lx-subtext (the
+      feature grid's small caps), given the card's text colour at a lower
+      opacity so it reads as a caption, not as a second heading.
+
+      The messages replace a picture of two chat bubbles (Group 34.png, 740 x
+      430) whose words were painted in. The arrangement copies that picture:
+      the blob is 37% of the width and sits on the left, the bubbles start 1/3
+      of the way across and overlap the blob, white, black type, large radius.
+      It is laid out in normal flow, not stacked absolutely, because below
+      480px the template gives these cards `aspect-ratio: auto` — the card
+      grows with its content there, and a longer message (the English ones
+      wrap to two lines) has to push the card, not spill out of it. At 768
+      and up the card is a fixed 400px square; the three messages take about
+      the height the picture did (measured, see the V6-D report). */
+.lx-scope .lx-v6-scene-label {
+  margin-bottom: .5rem;
+  opacity: .72;
+}
+.lx-scope .lx-v6-chat {
+  display: flex;
+  align-items: center;
+  padding: .25rem 0 1rem 1.25rem;
+}
+.lx-scope .lx-v6-chat-blob {
+  flex: none;
+  width: 37%;
+  height: auto;
+}
+.lx-scope .lx-v6-chat-lines {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .5rem;
+  min-width: 0;
+  margin-left: -13%;
+}
+.lx-scope .lx-v6-chat-line {
+  margin: 0;
+  padding: .5rem .875rem;
+  border-radius: 1.1rem;
+  background-color: #fff;
+  color: #000;
+  font-size: 1rem;
+  line-height: 1.35;
+  text-align: left;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .18);
+}
+.lx-scope .lx-v6-chat-line:first-child { border-bottom-left-radius: .3rem; }
+@media screen and (max-width: 479px) {
+  .lx-scope .lx-v6-chat { padding-left: 1rem; }
+  .lx-scope .lx-v6-chat-lines { gap: .375rem; }
+  .lx-scope .lx-v6-chat-line { padding: .375rem .625rem; font-size: .8125rem; border-radius: .9rem; }
+}
+
 /* V6-D-END */
 
 

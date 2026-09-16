@@ -711,38 +711,59 @@ PAGES['workforce.html'] = (lang) => {
   let b = frag('lx-feature.html');
 
   /* hero */
-  b = s(b, '>Think it once<', `>${t(W.heroPink)}<`);
-  b = s(b, '>Remember it forever<', `>${t(W.heroWhite)}<`);
-  b = s(b, 'Each feature focuses on reducing friction between thought and action.', t(W.heroDesc));
+  b = s(b, '>Think it once<', `>${t(W.heroPink)}<`, { count: 1 });
+  b = s(b, '>Remember it forever<', `>${t(W.heroWhite)}<`, { count: 1 });
+  b = s(b, 'Each feature focuses on reducing friction between thought and action.', t(W.heroDesc), { count: 1 });
   b = s(b, '>Download<', `>${t(W.heroButton)}<`);
 
-  /* the five role cards, repeated once for the marquee loop */
+  /* The five role cards, repeated once for the marquee loop. They are examples
+     (V6 §6.1): the grey label that was the template's "Views" says so on every
+     card, so all five roles must carry the same label, and the figure slot
+     carries the role group. The collage card in the desktop item below is a
+     sixth example with its own group, and it shares the fifth card's template
+     figure (125.5M), so it is written first, inside its own element, before
+     the marquee's figures are replaced two by two. */
+  if (W.roles.length !== 5) throw new Error(`workforce: the marquee has five role cards, copy has ${W.roles.length}`);
+  for (const r of W.roles) {
+    if (t(r.dept) !== t(W.roles[0].dept)) throw new Error(`workforce: role "${t(r.name)}" is labelled "${t(r.dept)}", the others "${t(W.roles[0].dept)}"`);
+  }
+  if (lang === 'zh' && t(W.roles[0].dept) !== '岗位示例') throw new Error('workforce: the role cards must be labelled 岗位示例 (V6 §6.1)');
+  {
+    const card = findByClass(b, 'a', 'lx-organized-mind-card');
+    if (!card) throw new Error('workforce: the collage role card (.lx-organized-mind-card) is gone');
+    const inner = s(card.text, '<div class="lx-text-size-tiny">125.5M</div>', `<div class="lx-text-size-tiny">${t(W.extraRole.owns)}</div>`, { count: 1 });
+    b = b.slice(0, card.start) + inner + b.slice(card.end);
+  }
   const NAMES = ['Philip', 'Arlene', 'Marjorie', 'Collen', 'Greg'];
   const FIGURES = ['99.6M', '88.3', '16.2M', '73.7M', '125.5M'];
   NAMES.forEach((person, i) => {
     b = s(b, `<div class="lx-name-text">${person}</div>`, `<div class="lx-name-text">${t(W.roles[i].name)}</div>`, { count: 2 });
   });
   FIGURES.forEach((fig, i) => {
-    b = b.split(`<div class="lx-text-size-tiny">${fig}</div>`).join(`<div class="lx-text-size-tiny">${t(W.roles[i].owns)}</div>`);
+    b = s(b, `<div class="lx-text-size-tiny">${fig}</div>`, `<div class="lx-text-size-tiny">${t(W.roles[i].owns)}</div>`, { count: 2 });
   });
-  b = b.split('<div class="lx-text-size-tiny lx-text-color-grey">Views</div>')
-    .join(`<div class="lx-text-size-tiny lx-text-color-grey">${t(W.roles[0].dept)}</div>`);
+  b = s(b, '<div class="lx-text-size-tiny lx-text-color-grey">Views</div>',
+    `<div class="lx-text-size-tiny lx-text-color-grey">${t(W.roles[0].dept)}</div>`, { count: 11 });
   // the template's cards link to the studio's own social accounts
   b = b.replace(/href="https:\/\/(?:www\.)?(?:linkedin|instagram|facebook|x|twitter|tiktok|youtube)\.com[^"]*"/g, 'href="contact.html"');
   // the fifth card and the panel button are placeholders in the template
   b = b.split('href="#"').join('href="contact.html"');
 
-  /* what the team gets done */
-  b = s(b, '>Here is what you can get done with Us<', `>${t(W.doTitle)}<`);
+  /* The pink panel: what a role is, how work is handed to a team, and the
+     browser desktop it happens in (M10, M14). The panel heading gets a class
+     so the Chinese page can keep it from breaking inside a phrase
+     (css/stargo-fusion.css, V6-D). */
+  b = s(b, 'class="lx-heading-style-h3 lx-bold-black-text">Here is what you can get done with Us<',
+    `class="lx-heading-style-h3 lx-bold-black-text lx-v6-panel-title">${t(W.doTitle)}<`, { count: 1 });
   [['Interaction', 'Instantly find what you need dates, notes, or activities without digging around.'],
    ['Conversation', 'Chat freely with your AI, your friends, or even your thoughts.'],
    ['Organized Mind', 'Stay on top of everything with a clear overview of your world.']]
     .forEach(([title, text], i) => {
       b = s(b, `>${title}<`, `>${t(W.abilities[i].title)}<`, { count: 1 });
-      b = s(b, text, t(W.abilities[i].text));
+      b = s(b, text, t(W.abilities[i].text), { count: 1 });
     });
   ['See priorities at a glance', 'Track projects and people', 'Stay focused on what matters', 'Keep distractions out']
-    .forEach((line, i) => { b = s(b, line, t(W.bullets[i])); });
+    .forEach((line, i) => { b = s(b, line, t(W.bullets[i]), { count: 1 }); });
 
   /* the two feature cards over the pink panel */
   b = s(b, '>Your Best Friend AI<', `>${t(W.cardA.title)}<`);
@@ -750,20 +771,89 @@ PAGES['workforce.html'] = (lang) => {
   b = s(b, '>Memory That Sticks<', `>${t(W.cardB.title)}<`);
   b = s(b, 'From quick notes to deep thoughts, nothing slips through the cracks.', t(W.cardB.text));
 
-  /* the three rotating answer cards and the confirmation card they sit behind */
-  b = s(b, 'Ready‑made features your usersalready expect.', t(W.stackedCard));
-  b = s(b, '>Chatting on the fly with your AI companion<', `>${t(W.answersCards[0])}<`);
-  b = s(b, '>Quickly capture and share ideas<', `>${t(W.answersCards[1])}<`);
-  b = b.split('>An online account that means business<').join(`>${t(W.phoneTitle)}<`);
-  b = b.split('>An online account thatmeans business<').join(`>${t(W.phoneTitle)}<`);
-  b = s(b, '>Easy day-to-day banking<', `>${t(W.phoneSub)}<`);
-  b = s(b, 'Easy day-to-day banking: local IBAN, freeMastercards, instant &amp; international transfers,financing solutions. All included in your plan.', t(W.answersBody));
-  b = s(b, '<div class="lx-name-text">Dancing for you</div>', `<div class="lx-name-text">${t(W.extraRole.name)}</div>`);
+  /* The three stacked cards: the team scenario in M11's order, each card
+     labelled an illustration with its step number (V6 §6.3). */
+  if (W.answersCards.length !== 2) throw new Error('workforce: two rotating cards follow the stacked one');
+  [['Ready‑made features your usersalready expect.', W.stackedCard],
+   ['Chatting on the fly with your AI companion', W.answersCards[0]],
+   ['Quickly capture and share ideas', W.answersCards[1]]]
+    .forEach(([orig, copy], i) => {
+      b = s(b, `<h4 class="lx-heading-style-h4">${orig}</h4>`,
+        `<div class="lx-subtext lx-v6-scene-label">${escapeHtml(t(W.sceneLabel))} · 0${i + 1}</div>`
+        + `<h4 class="lx-heading-style-h4">${escapeHtml(t(copy))}</h4>`, { count: 1 });
+    });
+  /* The second card's picture was two chat bubbles with English words painted
+     into the image ("That's correct", "Ok"), on both language pages. The
+     bubbles are now page text — what the roles say to each other (P04) —
+     beside the template's own text-free blob, which the icon loops on the
+     other two cards already use. Same holder, same place in the card; the
+     arrangement is css/stargo-fusion.css, V6-D. */
+  {
+    const bubbles = b.match(/<img\b[^>]*6942c7318ab7f0a234efab41_Group%2034\.png[^>]*>/g) ?? [];
+    if (bubbles.length !== 1) throw new Error(`workforce: expected the one chat-bubble picture in the second card, found ${bubbles.length}`);
+    if (W.chat.length !== 3) throw new Error('workforce: the second card carries P04\'s three messages');
+    const BLOB = 'assets/6929b6c693cb856e01ef7c05/6942c685459bddbfc09cab06_Vector%20(7).png';
+    if (!b.includes(`src="${BLOB}"`)) throw new Error('workforce: the blob artwork the chat reuses is no longer in the icon loops');
+    b = s(b, bubbles[0], `<div class="lx-v6-chat"><img src="${BLOB}" loading="lazy" alt="" class="lx-v6-chat-blob"/>`
+      + `<div class="lx-v6-chat-lines">${W.chat.map((m) => `<p class="lx-v6-chat-line">${escapeHtml(t(m))}</p>`).join('')}</div></div>`, { count: 1 });
+  }
+  /* The confirmation card and the team paragraph's heading were one template
+     string in two spellings; they now say different things: the note beside
+     the desktop item names the desktop, the heading closes the scenario. */
+  b = s(b, '>An online account that means business<', `>${t(W.phoneTitle)}<`, { count: 1 });
+  b = s(b, '<h3 class="lx-heading-style-h3">An online account thatmeans business</h3>',
+    `<h3 class="lx-heading-style-h3 lx-v6-team-title">${t(W.teamTitle)}</h3>`, { count: 1 });
+  b = s(b, '>Easy day-to-day banking<', `>${t(W.phoneSub)}<`, { count: 1 });
+  b = s(b, 'Easy day-to-day banking: local IBAN, freeMastercards, instant &amp; international transfers,financing solutions. All included in your plan.', t(W.answersBody), { count: 1 });
+  b = s(b, '<div class="lx-name-text">Dancing for you</div>', `<div class="lx-name-text">${t(W.extraRole.name)}</div>`, { count: 1 });
 
-  /* the answers block */
-  b = s(b, '>All your answers here<', `>${t(W.answersTitle)}<`);
+  /* The display line behind the cards. The template left it unbalanced (its
+     own four words never needed it); the class lets the Chinese page balance
+     its two five-character halves (css/stargo-fusion.css, V6-D). */
+  b = s(b, '<div class="lx-big-text-on-gradient">All your answers here</div>',
+    `<div class="lx-big-text-on-gradient lx-v6-team-display">${t(W.answersTitle)}</div>`, { count: 1 });
   ['CARDS', 'transfers', 'financing'].forEach((tab, i) => { b = s(b, `>${tab}<`, `>${t(W.answerTabs[i])}<`, { count: 1 }); });
   b = s(b, '>Get the app<', `>${t(W.answersButton)}<`);
+
+  /* The ten role groups (V6 §6.2), the one block this page adds. It goes after
+     the pink panel — after 「有岗位的 AI」, before the team scenario — and it
+     is the template's own careers list from its About page (lx-about.html:
+     .lx-careers_sticky-grid, a sticky heading beside .lx-careers_01-list), in
+     the page's standard .lx-section shell. Rows are <div>s, not the template's
+     <a>s: a role group is not a link. Every row shows the group and its count,
+     which is what a phone keeps when the grid folds to one column. No IX
+     attribute: the block is static, so nothing about the page's animation
+     timeline changes. */
+  {
+    const R = C.WORKFORCE_ROLE_GROUPS;
+    if (R.groups.length !== 10) throw new Error(`workforce: V6 §6.2 lists ten role groups, copy has ${R.groups.length}`);
+    const sum = R.groups.reduce((n, g) => n + g.count, 0);
+    if (!R.groups.every((g) => Number.isInteger(g.count) && g.count > 0)) throw new Error('workforce: every role group needs a positive whole count');
+    if (sum !== R.total.count) throw new Error(`workforce: the role groups add up to ${sum}, the total row says ${R.total.count}`);
+    if (R.total.count !== 288) throw new Error(`workforce: the role directory is 288 roles (V5 M10, V6 §6.2); the table totals ${R.total.count}`);
+    if (R.titleChunks.zh.join('') !== '十类岗位，一个可按任务组织的数字团队。') throw new Error('workforce: the role-group heading is no longer P04\'s');
+    if (!t(R.note).includes('288')) throw new Error('workforce: the note under the total must say what 288 counts');
+    const title = lang === 'zh' ? R.titleChunks.zh.map(escapeHtml).join('<wbr>') : escapeHtml(R.titleChunks.en.join(' '));
+    const row = (name, count, extra = '') => `<div class="lx-careers_01-item lx-v6-roster-row${extra}" role="listitem">`
+      + `<div class="lx-careers-item-name"><div>${escapeHtml(t(name))}</div></div>`
+      + `<div class="lx-careers-item-name lx-v6-roster-count"><div>${count}</div><div class="lx-careers-text">${escapeHtml(t(R.unit))}</div></div></div>`;
+    const block = '<div id="lx-role-groups" class="lx-careers_wrapper lx-v6-roster"><div class="lx-section"><div class="lx-padding-global">'
+      + '<div class="lx-container-medium"><div class="lx-padding-section-medium"><div class="lx-careers_sticky-grid">'
+      + '<div class="lx-grid-content"><div class="lx-sticky-content"><div class="lx-header-container-left"><div class="lx-text-align-left">'
+      + `<h2 class="lx-heading-style-h2 lx-v6-roster-title">${title}</h2>`
+      + `<p class="lx-careers-text lx-v6-roster-intro">${escapeHtml(t(R.intro))}</p>`
+      + `<p class="lx-careers-text lx-v6-roster-flow">${escapeHtml(t(R.flow))}</p>`
+      + '</div></div></div></div>'
+      + '<div class="lx-grid-content"><div class="lx-careers_01-list" role="list">'
+      + R.groups.map((g) => row(g.name, g.count)).join('')
+      + row(R.total.name, R.total.count, ' lx-v6-roster-total')
+      + `</div><p class="lx-careers-text lx-v6-roster-note">${escapeHtml(t(R.note))}</p></div>`
+      + '</div></div></div></div></div></div>';
+    const AT = '<div data-w-id="dc3f430b-880a-bd0a-232f-0f7008c64b95" class="lx-gradient-anim-holder-feature">';
+    b = s(b, AT, block + AT, { count: 1 });
+    const pos = { block: b.indexOf('id="lx-role-groups"'), panel: b.indexOf('lx-capabilites-section-bg'), cards: b.indexOf('lx-answers-card-section') };
+    if (!(pos.panel < pos.block && pos.block < pos.cards)) throw new Error(`workforce: the role groups must sit between the pink panel and the team cards (${JSON.stringify(pos)})`);
+  }
 
   /* the article strip: our own posts */
   b = s(b, '>Stories<', `>${t(W.storiesTitle)}<`);
