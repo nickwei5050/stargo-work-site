@@ -1420,3 +1420,73 @@ export const CAPABILITY_SHOWCASE = {
   catalogueLabel: B('完整目录', 'The complete catalogue'),
   catalogueNote: B('登记在册的全部能力，按组排列。上面的成果引用的就是这些条目。', 'Every capability in the register, by group. The outcomes above draw from these same entries.'),
 };
+
+/* ===== V6 A: capability showcases (#story-1…#story-4, #story-6, foundations) =====
+   Insertion point for this area's new exports. Keep additions between this
+   marker and the next one so parallel edits merge cleanly. */
+// V6-A-START
+
+// V6-A-END
+
+
+
+
+/* ===== V6 B: creative topics (#story-5) =====
+   Insertion point for this area's new exports. Keep additions between this
+   marker and the next one so parallel edits merge cleanly. */
+// V6-B-START
+
+// V6-B-END
+
+
+
+
+/* ===== V6 C: capability catalogue detail (#g01–#g14, #atlas) =====
+   Insertion point for this area's new exports. Keep additions between this
+   marker and the next one so parallel edits merge cleanly. */
+// V6-C-START
+
+// V6-C-END
+
+
+
+
+/* ===== V6 D: workforce page =====
+   Insertion point for this area's new exports. Keep additions between this
+   marker and the next one so parallel edits merge cleanly. */
+// V6-D-START
+
+// V6-D-END
+
+
+
+
+/* ===== V6 E: intelligence page =====
+   Insertion point for this area's new exports. Keep additions between this
+   marker and the next one so parallel edits merge cleanly. */
+// V6-E-START
+
+// V6-E-END
+
+
+
+
+/* ===== V6 F: enterprise page =====
+   Insertion point for this area's new exports. Keep additions between this
+   marker and the next one so parallel edits merge cleanly. */
+// V6-F-START
+
+// V6-F-END
+
+
+
+
+/* ===== V6 G: about, contact, blog and pricing notes =====
+   Insertion point for this area's new exports. Keep additions between this
+   marker and the next one so parallel edits merge cleanly. */
+// V6-G-START
+
+// V6-G-END
+
+
+
