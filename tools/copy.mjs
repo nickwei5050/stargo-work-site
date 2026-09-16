@@ -641,7 +641,7 @@ export const LX_INTELLIGENCE = {
      there. */
   feat2Title: B('288 个岗位，', '288 AI roles.'),
   feat2Sub: B('分工协作，把事做完。', 'Divide the work. Finish it together.'),
-  feat2Card: { title: B('按任务组队', 'Teams for the task'), text: B('一项复杂任务，可由研究、销售、产品和创意等岗位分工完成：彼此交流问题与结果，并行处理，按责任交接，再由统筹角色汇总，交负责人确认。基础选人与派工已有记录，更深入的团队交流仍在完善。', 'A complex task can be divided among research, sales, product and creative roles. They exchange questions and results, work in parallel and hand off by responsibility; a coordinating role consolidates the work for the responsible person to confirm. Basic role selection and delegation are recorded; deeper team communication is still evolving.') },
+  feat2Card: { title: B('按任务组队', 'Task teams'), text: B('一项复杂任务，可由研究、销售、产品和创意等岗位分工完成：彼此交流问题与结果，并行处理，按责任交接，再由统筹角色汇总，交负责人确认。基础选人与派工已有记录，更深入的团队交流仍在完善。', 'A complex task can be divided among research, sales, product and creative roles. They exchange questions and results, work in parallel and hand off by responsibility; a coordinating role consolidates the work for the responsible person to confirm. Basic role selection and delegation are recorded; deeper team communication is still evolving.') },
   feat2Button: { label: B('认识数字员工', 'Meet the AI Workforce'), href: 'workforce.html' },
   /* P03's ongoing-work heading, one phrase per line: at 768 the box is five
      characters wide, and a forced break is the only break a phrase gets. */

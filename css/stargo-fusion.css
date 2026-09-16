@@ -2216,12 +2216,16 @@ html[lang^="zh"] .lx-scope .lx-cta-wrapper .lx-cta-text {
    intelligence.html, English — the same two headline slots, balanced. The
    English page had no balance on them, and the new copy left a word alone:
    「Leads and deadlines, not left to」/「memory.」 at 1920, 「Assign useful AI」/
-   「work」 and 「Improve from real」/「outcomes」 at 320-390. Neither element is
-   split into per-word spans, and the gradient headings only fade, so balance
-   changes where the lines break and nothing else. `.lx-gradient-section-text`
-   exists only on this page; `.lx-cta_wrapper .lx-big-text` likewise. */
+   「work」 and 「Improve from real」/「outcomes」 at 320-390; the same goes for
+   the 288-roles pair (「Divide the work. Finish it」/「together.」 at 1024) and
+   the closing card (「Withdraw ineffective」/「changes.」 from 1024). None of
+   these elements is split into per-word spans, and they only fade or move as
+   a whole, so balance changes where the lines break and nothing else. All
+   four selectors match on this page only. */
 html[lang="en"] .lx-scope .lx-cta_wrapper .lx-big-text,
-html[lang="en"] .lx-scope .lx-gradient-section-text .lx-heading-style-h1 {
+html[lang="en"] .lx-scope .lx-gradient-section-text .lx-heading-style-h1,
+html[lang="en"] .lx-scope .lx-team-section .lx-flex-text-center .lx-heading-style-h1,
+html[lang="en"] .lx-scope .lx-cta-wrapper .lx-cta-text {
   text-wrap: balance;
 }
 
