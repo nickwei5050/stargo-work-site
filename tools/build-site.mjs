@@ -154,13 +154,17 @@ function fromStudio(spec, lang) {
   if (!spec.approach?.length) throw new Error(`${spec.name}: approach has no lines`);
   /* A stat that lists its items must count them (V6 §8: the number in front
      of 「项管理控制：…」 is the number of controls the sentence names), and
-     each item must actually be in the sentence on both pages. */
+     each item must actually be in the sentence on both pages. The sentence
+     joins the items with 「、」 and with commas, so an item that holds one of
+     those reads as two and the figure would look wrong to anyone counting. */
   spec.stats.forEach((st, i) => {
     if (!st.items) return;
     if (st.value !== String(st.items.length)) throw new Error(`${spec.name}: stat ${i} says ${st.value} but lists ${st.items.length}`);
     for (const lng of ['zh', 'en']) {
       const missing = st.items.filter((x) => !st.text[lng].includes(x[lng]));
       if (missing.length) throw new Error(`${spec.name}: stat ${i} (${lng}) does not name ${missing.map((x) => x[lng]).join(', ')}`);
+      const split = st.items.filter((x) => /[、，,；;]/.test(x[lng]));
+      if (split.length) throw new Error(`${spec.name}: stat ${i} (${lng}) item reads as two: ${split.map((x) => x[lng]).join(' | ')}`);
     }
   });
   let h = tpl('studio.html');
@@ -1130,18 +1134,23 @@ PAGES['pricing.html'] = (lang) => {
 /* ---- enterprise.html — Mono studio ------------------------------------ */
 /* Pictures by what sits beside them (V6 §8.2, §10). All are the site's own
    concept illustrations; editorialImages() gives each its alt and marks it as
-   one. The three left-column pictures sit beside, in order, the owner cockpit
-   (work lanes converging on one command centre), the six delivery steps (a
-   track climbing level by level — the second slot is the tallest, about
-   square at 1440, so a portrait picture loses less to the cover crop than a
-   landscape one) and the numbers (a controlled passage
-   through permission boundaries). The five cards: capabilities and apps,
-   permissions, approvals, work and result records (business records linked
-   together) and account connection and protection (layered boundaries). The
+   one. The three pictures in the column beside the text sit, in order, next
+   to the owner cockpit (work lanes converging on one command centre), the six
+   delivery steps (a track climbing level by level — the second slot is the
+   tallest, about square at 1440, so a portrait picture loses less to the
+   cover crop than a landscape one) and the numbers, which lead with the 288
+   roles (specialized roles working in parallel). The five cards, in order:
+   capabilities and apps (instruments laid out on one board), account and
+   role permissions (specialized roles on a shared foundation), approvals (a
+   controlled, reversible approval path), work and result records (business
+   records linked together) and account connection and protection (layered
+   boundaries). No picture is used twice on the page, the four hero panels
+   included (their pictures are CSS, in the V6-F block of stargo-fusion.css,
+   and os-login — a gated passage — is the first panel's, beside 「决定」). The
    legacy UI mock-ups with invented figures are not used here. */
 PAGES['enterprise.html'] = (lang) => fromStudio({
   name: 'enterprise', ...C.ENTERPRISE, cards: C.ENTERPRISE.cards,
-  images: { work: [OS.cockpit, BRAND.tall, OS.login], quote: BRAND.square, cards: [OS.agents, OS.login, MOBILE.phoneApprovals, BRAND.ontology, BRAND.family(4)] },
+  images: { work: [OS.cockpit, BRAND.tall, BRAND.family(3)], quote: BRAND.square, cards: [OS.agents, MOBILE.phoneAgents, MOBILE.phoneApprovals, BRAND.ontology, BRAND.family(4)] },
 }, lang);
 
 /* ---- capabilities.html — Mono work-1 + table -------------------------- */

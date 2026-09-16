@@ -917,15 +917,24 @@ export const PRICING = {
    The two stat lists below are written once and counted, so the figure in
    front of each sentence is always the number of things the sentence names
    (tools/build-site.mjs fromStudio() checks it again). They sit above
-   ENTERPRISE because the object reads them while it is being built. */
+   ENTERPRISE because the object reads them while it is being built.
+
+   The thirteen controls are the same thirteen the stat used to list under
+   their engineering names, one for one and in the same order: capability
+   centre, identity and permission, approval service, audit ledger, credential
+   management, agent guardrails, tenant isolation, failure handling, staged
+   release, rollback, evaluation, observability, human in the loop. The list
+   is printed joined with 「、」 and with commas, so no item may contain either
+   (fromStudio() checks) — otherwise a reader would count more items than the
+   figure says. */
 const ENT_CONTROLS = [
   B('应用开通管理', 'application access'),
   B('账号与岗位权限', 'account and role permissions'),
   B('关键动作审批', 'approval of key actions'),
   B('操作与审批记录', 'activity and approval records'),
-  B('账号密码统一保管', 'secure storage of logins'),
+  B('登录凭据集中保管', 'secure keeping of sign-in credentials'),
   B('数字员工的工作边界', 'work limits for AI roles'),
-  B('各公司、各品牌数据分开', 'separate data for each company and brand'),
+  B('不同企业的数据相互隔离', 'data kept apart between companies'),
   B('出错即停并报告', 'stop and report on failure'),
   B('新做法先小范围试用', 'small trials before wider use'),
   B('效果不足可撤回', 'reversal when results fall short'),
@@ -959,7 +968,7 @@ export const ENTERPRISE = {
   story: [
     { label: B('(决定)', '(Decisions)'), text: B('关键决定由企业掌握。哪些报价、客户触达和内容发布需要审批、由谁批准，企业自己定；付款、正式申报和专业审阅，始终由有权人员确认。', 'Key decisions stay with the company. It decides which quotations, customer outreach and published content need approval, and who approves them. Payments, official filings and professional reviews always stay with authorized people.') },
     { label: B('(核对)', '(Results)'), text: B('结果可以核对。谁做了什么、谁批准、结果是否达到要求、失败卡在哪一步，都有记录。已提交不等于已完成，核对过才算数。', 'Results can be checked. Who did what, who approved it, whether the result met the requirement and where a failure stopped are all on record. Submitted is not finished until the result is checked.') },
-    { label: B('(连接)', '(Connect)'), text: B('连接企业已有的业务。邮箱、客户记录、产品知识、ERP 和网盘，经企业授权后进入同一个工作流程，不必先换掉现有软件。', 'Connect the business you already run. With company authorization, email, customer records, product knowledge, ERP and shared drives feed one workflow — without replacing the software you use today.') },
+    { label: B('(连接)', '(Connect)'), text: B('连接企业已有的业务。邮箱、客户记录、产品知识、ERP 和网盘，经企业授权逐项接入同一个工作流程。不必先假定要换掉现有软件，保留、接入还是调整，按企业情况确认。', 'Connect the business you already run. With company authorization, email, customer records, product knowledge, ERP and shared drives join one workflow, one connection at a time. Replacing current software is not assumed; what to keep, connect or adjust is agreed with each company.') },
     { label: B('(经营)', '(Oversight)'), text: B('看经营，不只看 AI 对话。商机、订单、任务、异常、费用和待审批事项，按负责人和期限呈现给管理者，先处理真正需要决定的事。', 'Watch the business, not just AI conversations. Opportunities, orders, tasks, exceptions, costs and pending approvals reach managers by owner and deadline, so the decisions that matter come first.') },
   ],
   /* V6 §8.2 and M15: the owner cockpit, beside the page's first large picture
@@ -1008,7 +1017,7 @@ export const ENTERPRISE = {
      (V5 P05 availability, M16-01, F13, F14). The origin story this slot used
      to carry is the About page's (ABOUT.story), unchanged there. */
   noteLabel: B('(开放范围与边界)', '(Scope and boundaries)'),
-  note: B('管理与控制已有基础；看板指标、跨系统动作和高级分析，要等真实数据接入并验收后才算数。能打开某个应用，不等于整条流程已经验收。部署方式、服务范围和数据要求由双方另行确认。付款、正式申报、合同与合规审阅，始终由企业有权人员或相应机构决定。', 'Management and control foundations exist. Dashboard figures, cross-system actions and advanced analytics count only once real data is connected and validated, and opening an application does not mean the whole workflow is accepted. Deployment, service scope and data requirements are agreed separately. Payments, official filings, contract and compliance reviews stay with authorized people or the relevant institutions.'),
+  note: B('管理与控制已有基础；看板指标、跨系统动作和高级分析，依赖真实数据接入与验收。其他功能按企业配置与确认范围分阶段开放，能打开某个应用，不等于整条流程已经验收。部署方式、服务范围和数据要求由双方另行确认，不作默认承诺。付款、正式申报、合同与合规审阅，始终由企业有权人员或相应机构决定。', 'Management and control foundations exist; dashboard figures, cross-system actions and advanced analytics depend on verified data connections. Other capabilities open in phases, by configuration and agreed scope, and opening an application does not mean the whole workflow has been accepted. Deployment, service scope and data requirements are agreed separately, not assumed by default. Payments, official filings, contract and compliance reviews stay with authorized people or the relevant institutions.'),
   noteButton: { label: B('聊聊你的业务流程', 'Discuss your workflow'), href: 'contact.html' },
   /* V6 §8.3 and M14-05: the old integration-method table as a table of the
      business a company already runs. The rows name kinds of work, never a
@@ -1018,7 +1027,7 @@ export const ENTERPRISE = {
      count in the title is the row count (awardsTable). */
   table: {
     caption: B('(默认不开启 · 按企业授权逐项接入)', '(Nothing is on by default · connected per authorization)'), title: B('业务连接', 'Connections'),
-    headers: [B('(业务)', '(Area)'), B('(可以连接什么)', '(What can connect)'), B('(接入前要确认)', '(Agree first)')],
+    headers: [B('(业务)', '(Area)'), B('(可以连接什么)', '(What can connect)'), B('(接入前要确认)', '(Confirm first)')],
     /* Not the whole map: the catalogue group that holds account connection,
        automation and approved actions (V6 §5.8 puts M14 in #g11). */
     button: { label: B('查看连接与自动化', 'Connections & automation'), href: 'capabilities.html#g11' },

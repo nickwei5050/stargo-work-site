@@ -2156,6 +2156,21 @@ html[lang^="zh"] .testi-grid._01 .top-text.for-sst { text-wrap: pretty; }
   #table .award-text { text-align: center; justify-content: center; }
 }
 
+/* 4. The four hero panels' pictures follow their new subjects (V6 §8.1, §10).
+      `.image-about._01…_04` exist only on the enterprise page; their pictures
+      are set in "4. Template stock photography" above and are overridden here
+      with the same specificity, later in the file. Before, panel 1 carried
+      os-cockpit — the picture the owner-cockpit band now shows two screens
+      further down — and panel 2 carried os-agent-center (tools on parallel
+      lanes) beside 「结果可以核对」. Now: 决定 → a gated passage (os-login),
+      核对 → a measured, reversible check path (brand-loop), 连接 → one track
+      joining separate workspaces (os-desktop); 经营 keeps the dispatch floor.
+      All are landscape 1586×992 like the pictures they replace, so the
+      cover crop is unchanged. */
+.image-about._01 { background-image: url("../assets/stargo-editorial/os-login.webp"); }
+.image-about._02 { background-image: url("../assets/stargo-editorial/brand-loop.webp"); }
+.image-about._03 { background-image: url("../assets/stargo-editorial/os-desktop.webp"); }
+
 /* V6-F-END */
 
 
