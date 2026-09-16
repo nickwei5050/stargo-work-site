@@ -454,8 +454,9 @@
    the next click on the same row closes it). So this waits for that closed
    state, scrolls the row into place and clicks it — once, and only while it
    is closed, so a row the reader already opened stays open. It runs on load,
-   on every hash change, and when a link to the hash the address already shows
-   is clicked again (that fires no hashchange).
+   on every hash change, and when a link on this page to one of the rows is
+   clicked (see the click handler at the end: Webflow turns those into
+   pushState, which fires no hashchange).
 
    No other hash opens anything. Without IX2 nothing was collapsed to begin
    with: the answer is already on the page and the row is only scrolled to.
@@ -520,13 +521,28 @@
   if (document.readyState === 'complete') onLoad();
   else window.addEventListener('load', onLoad);
   window.addEventListener('hashchange', function () { arrive(window.location.hash); });
+
+  /* A link on this page to one of the rows. Webflow's own scroll module takes
+     every same-page hash link (a delegated jQuery click handler on document):
+     it cancels the jump, writes the hash with history.pushState — which fires
+     no hashchange — and eases the window to the row's top edge over about two
+     seconds, ignoring scroll-margin. Left to it, the row was reached closed and
+     under the top edge (measured: 75px above it at 1440). So these links are
+     taken first, in the capture phase, and do what the address path does: the
+     hash is written the way Webflow writes it (so Back still works), and the
+     row is aligned and opened. A modified click (new tab, new window) is left
+     to the browser. */
   document.addEventListener('click', function (e) {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     var a = e.target && e.target.closest ? e.target.closest('a[href*="#' + PREFIX + '"]') : null;
-    if (!a || a.hash !== window.location.hash) return;
-    var here = window.location.pathname.replace(/\.html$/, '');
-    if (a.pathname.replace(/\.html$/, '') !== here) return;
-    window.setTimeout(function () { arrive(a.hash); }, 0);
-  });
+    if (!a || a.host !== window.location.host) return;
+    if (a.pathname.replace(/\.html$/, '') !== window.location.pathname.replace(/\.html$/, '')) return;
+    if (!rowFor(a.hash)) return;
+    e.preventDefault();
+    e.stopPropagation();
+    if (window.location.hash !== a.hash && window.history && window.history.pushState) window.history.pushState({ hash: a.hash }, '', a.hash);
+    arrive(a.hash);
+  }, true);
 })();
 
 

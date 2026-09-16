@@ -183,3 +183,16 @@
    the question off the top edge — the same share of the viewport rk-stats.css
    leaves above #story-3. */
 .cn-faq .cn-accordion-content-item[id] { scroll-margin-top: 12vh; }
+
+/* The picture card, once the grid stacks (991px and below). Beside the
+   questions the card is as tall as its grid row, whatever the picture; stacked,
+   its `height: 100%` has nothing to resolve against and the card takes the
+   picture's own proportions. cinery's portrait was 1280 × 1349, so the donor
+   drew a card a little taller than wide on tablet and phone; the editorial
+   picture that replaced it is landscape (1586 × 992) and, measured, shrank the
+   card to 342 × 214 at 390px. The donor's proportions are restated here, and
+   `object-fit: cover` (donor) crops the picture to them as it does beside the
+   questions. */
+@media screen and (max-width: 991px) {
+  .cn-faq .cn-faq-image { aspect-ratio: 1280 / 1349; }
+}
