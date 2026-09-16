@@ -83,9 +83,11 @@
   var stage = root.querySelector('.og-page-wrapper');
   var h1 = root.querySelector('.og-is-hero');
   var span = root.querySelector('.og-text-spam');
-  var tiles = root.querySelectorAll('[data-works-grid] .og-grid__img');
   var columns = root.querySelectorAll('.og-intro-column');
-  if (!h1 || !span || !tiles.length || !columns.length) { finish(); return; }
+  /* The mosaic is no longer part of this opening, so it is no longer part of
+     the guard: requiring tiles that the markup does not contain would send
+     every visitor straight to finish() and there would be no opening at all. */
+  if (!h1 || !span || !columns.length) { finish(); return; }
 
   /* Webflow builds an easing from four numbers with the same bezier solver
      every browser uses for `cubic-bezier()`; a-24-n-2 carries
@@ -148,13 +150,17 @@
     onComplete: function () { span.style.width = 'auto'; },
   }, 1);
 
-  /* -- phase 2: offgrid's works mosaic --------------------------------- */
-  tl.fromTo(tiles,
-    { autoAlpha: 0, scale: 0.8, rotateY: 45 },
-    {
-      autoAlpha: 1, scale: 1, rotateY: 0, duration: 1,
-      stagger: { amount: 0.8, from: 'center', grid: [4, 9] },
-    }, '>');
+  /* -- phase 2 is gone -------------------------------------------------- */
+  /* offgrid's thirty-six-tile works mosaic used to reveal here, between the
+     name and the wipe. The owner cut it (2026-09-10): 「这么多照片墙不要了」 —
+     the name, then rototo's effect, then the homepage. The tiles are no longer
+     in the markup either (tools/blocks/og-intro.mjs), so there is nothing left
+     to tween and 4.25 MB is no longer fetched on a first visit.
+
+     The wipe keeps its `'>'` position, which now reads off the end of the
+     bracket instead of the end of the mosaic's stagger: the opening is the same
+     motion it always was, ~2.2s shorter. Nothing about the wipe's own values
+     changes. */
 
   /* -- phase 3: rototo t-195e7dff -------------------------------------- */
   /* `y: 0` in both from-vars is not a donor value and does not move anything:

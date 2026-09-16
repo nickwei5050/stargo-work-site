@@ -1,5 +1,447 @@
 /* Capability-page block scripts. Written by tools/capability-donors.mjs from tools/blocks/<id>.js. Do not edit by hand. */
 (function(){
+/* ---- cn-about-reviews: tools/blocks/cn-about-reviews.js ---- */
+/* cn-about-reviews — the two behaviours the cut cannot carry.
+
+   ONE: THE SLIDER, which Webflow would have supplied and this site does not.
+   `.w-slider` is a Webflow COMPONENT, not an IX2 interaction. IX2 travels:
+   tools/donor-lib.mjs lifts the donor's `{events, actionLists}` and
+   tools/fuse-ix.mjs merges them into js/app.fused.js — which is how this
+   block's one interaction, the pill's blurred square, arrives on its own. A
+   component does not: it is a module of Webflow's runtime, registered with
+   `define("<name>", …)`, and this site ships only
+
+     js/app.fused.js                      dropdown, lightbox
+     js/app.schunk.25099a4fefa544e6.js    brand, edit, focus, forms, links,
+                                          lottie, navbar, scroll, touch
+     js/app.schunk.e0c428ff9737f919.js    (no component definitions)
+
+   — no `slider`, and the string `w-slider` appears in none of the three.
+   cinery's own exported bundle does not carry it either. Left alone the band
+   would draw its first card and clip the other three behind
+   `.w-slider-mask { overflow: hidden }`, and both arrows would be dead
+   controls: two 4rem bars that say 上一条 / 下一条 and do nothing.
+
+   WHY IT IS NOT CSS KEYFRAMES. The house rule is to replay donor motion the
+   tooling drops as keyframes with the donor's own numbers, and that is what
+   tools/blocks/cn-about-reviews.css does for this block's four ix3 timelines.
+   It cannot be done for the slider. The four cards are inline-blocks tiled
+   across one `white-space: nowrap` mask, so a shared transform can only
+   translate the row; wrapping from the fourth card to the first in the same
+   direction — the donor's `data-infinite="true"` — needs a fifth box to slide
+   in from, and adding one would be adding an element. And
+   `data-hide-arrows="false"` is a control: a keyframe cannot be clicked.
+
+   WHY THIS IS A SECOND COPY OF tools/blocks/cn-reviews.js. That file drives
+   `.cn-reviews .cn-testimonial-slider`; this band's root is
+   `.cn-about-reviews`, so it would never be touched. One file per block is the
+   rule (tools/blocks/README.md: "two blocks are never edited in the same
+   file"), and the duplication is its price. Both scripts are concatenated into
+   js/capability-blocks.js and each selects only under its own root, so if the
+   two bands ever appear on one page neither drives the other's slider. If the
+   logic below is ever corrected, correct it in both.
+
+   EVERY NUMBER BELOW IS READ OFF THE DONOR'S OWN ELEMENT. The slider element
+   carries them exactly as cinery exported them, and
+   tools/blocks/cn-about-reviews.mjs asserts each one is still there:
+
+     data-animation="slide"      the transition is a slide, not a crossfade
+     data-duration="500"         how long one transition takes, ms
+     data-easing="ease"          the CSS timing function, by that name
+     data-delay="4000"           how long a card is held once it has arrived, ms
+     data-autoplay="true"        it advances on its own
+     data-autoplay-limit="0"     for as many rounds as it likes
+     data-infinite="true"        the fourth card hands back to the first
+     data-disable-swipe="false"  a touch drag moves it
+
+   The fallbacks in the code are those same values, so a re-cut that dropped an
+   attribute would still turn at cinery's speed rather than at some other one.
+   The cycle is `delay` after a card lands plus `duration` to move it on —
+   4.5s a card — which is how Webflow's own slider arms its timer.
+
+   WHAT IT DOES TO THE DOM. Nothing that is in the fragment. It sets `transform`
+   and `transition` on the four cards and, once a transition has finished, moves
+   one card from the front of the mask to the back (or back to front) — which is
+   how a four-card row wraps forward without a clone. No class, no `data-w-id`,
+   no `#w-node-…` id and no attribute in the markup is touched, so the pill's
+   IX2 loop and the grid placement in tools/blocks/cn-about-reviews.css both
+   stay bound to what they were bound to. The reorder waits for `transitionend`,
+   with a timer 200ms past the donor's own duration behind it, so a timer that
+   fires a frame early can never cut a card off mid-slide.
+
+   The `role` / `tabindex` / `aria-label` on the two arrows are added for the
+   same reason Webflow's slider adds them at runtime: cinery exported the arrows
+   as bare `<div>`s because its runtime was going to make them buttons. The
+   label is the arrow's own word, so nothing is written here that
+   tools/blocks/cn-about-reviews.mjs did not already take out of tools/copy.mjs.
+
+   STOPPING. An auto-advancing band with no way to stop it is a barrier, so the
+   first deliberate act by a reader — a click, a key, a swipe, or simply putting
+   keyboard focus on one of the arrows — stops the autoplay for good and leaves
+   the band under the reader's hand. Webflow's slider stops autoplay on
+   interaction too; the focus case is this file's own. A reader who has asked
+   their system for less motion never gets the autoplay at all, and their arrow
+   presses cut straight to the next card instead of sliding.
+
+   All four cards stay in the document and in the accessibility tree at every
+   moment; only three of them are outside the mask's clip. A reader on a screen
+   reader gets all four scenarios whether or not the band ever turns.
+
+   TWO: THE HEADING'S ARRIVAL, which is ix3 and therefore also cannot travel.
+
+     interaction i-9f439e20   trigger  wf:scroll on class `heading-wrap`,
+                              scrollTriggerConfig { start: "top 85%",
+                              enter: "play", leave/enterBack/leaveBack: "none" }
+     timeline    t-864fc814   ta-7549a871  .top-title     y 110% -> 0%, position 0
+                              ta-f06a78d6  .bottom-title  y 110% -> 0%, position 0.3
+                              both tt:2 (fromTo), ease 6, duration unset
+
+   Read out of tools/templates/cinery/js/app.9d009f54.b1680441e3b493e5.js. The
+   two classes below are the whole of the replay; tools/blocks/cn-about-reviews.css
+   draws them, with the donor's easing (ease 6 = gsap `power2.inOut`) and the ix3
+   runtime's own default duration (0.5s). The trigger is an IntersectionObserver
+   whose bottom margin (-15% of the viewport) is the same line as ScrollTrigger's
+   "top 85%", firing once. `cn-about-reviews-armed` is added only after the
+   observer is already watching, so the heading is never put down where nothing
+   is left to pick it up. Same replay, same numbers, as
+   tools/blocks/cn-produce.js, which owns cinery's other `.top-title` /
+   `.bottom-title` pair. */
+(function () {
+  var ROOT = '.cn-about-reviews';
+
+  function reduced() {
+    try {
+      return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    } catch (e) {
+      return false;   /* no matchMedia: keep the donor's motion */
+    }
+  }
+
+  /* ---------------------------------------------------------- the slider -- */
+
+  var EASINGS = { ease: 1, 'ease-in': 1, 'ease-out': 1, 'ease-in-out': 1, linear: 1 };
+
+  function num(el, name, fallback) {
+    var v = parseInt(el.getAttribute(name), 10);
+    return isFinite(v) && v >= 0 ? v : fallback;
+  }
+
+  /* Run `fn` when a transition of `ms` on `el` is over. `transitionend` is the
+     truth (only `transform` is transitioned here, so it fires once per card);
+     the timer is the safety net for a transition that never starts — a hidden
+     tab, a browser that dropped the frame — and it is deliberately late. */
+  function after(el, ms, fn) {
+    var done = false;
+    function once() {
+      if (done) return;
+      done = true;
+      el.removeEventListener('transitionend', once);
+      fn();
+    }
+    if (ms > 0) {
+      el.addEventListener('transitionend', once);
+      window.setTimeout(once, ms + 200);
+    } else {
+      window.setTimeout(once, 0);
+    }
+  }
+
+  function setupSlider(slider) {
+    var mask = slider.querySelector('.cn-mask');
+    if (!mask) return;
+    var count = mask.querySelectorAll('.cn-testimonial-slide').length;
+    /* One card cannot slide anywhere, and a mask holding anything other than
+       the cards is not the shape this drives. Leave it exactly as drawn. */
+    if (count < 2 || count !== mask.children.length) return;
+
+    var still = reduced();
+    var duration = still ? 0 : num(slider, 'data-duration', 500);
+    var delay = num(slider, 'data-delay', 4000);
+    var easing = slider.getAttribute('data-easing');
+    if (!EASINGS[easing]) easing = 'ease';
+    var autoplay = slider.getAttribute('data-autoplay') !== 'false' && !still;
+    var swipe = slider.getAttribute('data-disable-swipe') !== 'true';
+
+    var busy = false;
+    var timer = null;
+
+    function place(pct, ms) {
+      var kids = mask.children;
+      for (var i = 0; i < kids.length; i++) {
+        kids[i].style.transition = ms > 0 ? ('transform ' + ms + 'ms ' + easing) : 'none';
+        kids[i].style.transform = 'translateX(' + pct + '%)';
+      }
+    }
+
+    function arm() {
+      window.clearTimeout(timer);
+      if (!autoplay) return;
+      timer = window.setTimeout(function () { go(1); }, delay);
+    }
+
+    function stop() {
+      autoplay = false;
+      window.clearTimeout(timer);
+    }
+
+    /* Each card is exactly one mask wide, so -100% of a card's own width moves
+       the whole row by exactly one card. Forward: slide the row left, then send
+       the card that left to the back and put the row back at zero. Backward:
+       bring the last card round to the front first, start the row one card to
+       the left, and slide it home. Either way the row rests at zero and the
+       card on show is the first child. */
+    function go(dir) {
+      if (busy) return;
+      busy = true;
+      var moving;
+      if (dir > 0) {
+        place(0, 0);
+        void mask.offsetWidth;                      /* commit the reset before animating */
+        moving = mask.firstElementChild;
+        place(-100, duration);
+        after(moving, duration, function () {
+          mask.appendChild(mask.firstElementChild);
+          place(0, 0);
+          busy = false;
+          arm();
+        });
+      } else {
+        mask.insertBefore(mask.lastElementChild, mask.firstElementChild);
+        moving = mask.firstElementChild;
+        place(-100, 0);
+        void mask.offsetWidth;
+        place(0, duration);
+        after(moving, duration, function () {
+          place(0, 0);
+          busy = false;
+          arm();
+        });
+      }
+    }
+
+    function word(el) {
+      var t = el && el.querySelector('.cn-slide-text');
+      return t ? (t.textContent || '').trim() : '';
+    }
+
+    function control(el, dir) {
+      if (!el) return;
+      var label = word(el);
+      if (!el.getAttribute('role')) el.setAttribute('role', 'button');
+      if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');
+      if (label && !el.getAttribute('aria-label')) el.setAttribute('aria-label', label);
+      el.addEventListener('click', function () { stop(); go(dir); });
+      el.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
+        e.preventDefault();
+        stop();
+        go(dir);
+      });
+      el.addEventListener('focus', stop);
+    }
+
+    control(slider.querySelector('.cn-left-arrow'), -1);
+    control(slider.querySelector('.cn-right-arrow'), 1);
+
+    if (swipe) {
+      var x0 = null;
+      var y0 = 0;
+      mask.addEventListener('touchstart', function (e) {
+        if (!e.touches || e.touches.length !== 1) { x0 = null; return; }
+        x0 = e.touches[0].clientX;
+        y0 = e.touches[0].clientY;
+      }, { passive: true });
+      mask.addEventListener('touchend', function (e) {
+        if (x0 === null || !e.changedTouches || !e.changedTouches.length) return;
+        var dx = e.changedTouches[0].clientX - x0;
+        var dy = e.changedTouches[0].clientY - y0;
+        x0 = null;
+        /* 40px, and more sideways than up: the page scrolls vertically through
+           this band, and a drag that is mostly vertical belongs to the page.
+           Nothing is prevented here, so that scroll still happens. */
+        if (Math.abs(dx) < 40 || Math.abs(dx) <= Math.abs(dy)) return;
+        stop();
+        go(dx < 0 ? 1 : -1);
+      }, { passive: true });
+    }
+
+    place(0, 0);
+    arm();
+  }
+
+  /* --------------------------------------------------------- the heading -- */
+
+  function setupHeading(root) {
+    var wrap = root.querySelector('.cn-heading-wrap');
+    var top = root.querySelector('.cn-top-title');
+    var bottom = root.querySelector('.cn-bottom-title');
+    if (!wrap || !top || !bottom) return;
+    if (typeof IntersectionObserver !== 'function') return;
+    if (reduced()) return;
+
+    var armed = false;
+    function play() {
+      if (!armed) return;
+      armed = false;
+      root.classList.remove('cn-about-reviews-armed');
+      root.classList.add('cn-about-reviews-reveal');
+    }
+
+    var io = new IntersectionObserver(function (entries) {
+      for (var i = 0; i < entries.length; i++) {
+        if (!entries[i].isIntersecting) continue;
+        io.disconnect();
+        play();
+        return;
+      }
+    }, { rootMargin: '0px 0px -15% 0px', threshold: 0 });
+
+    io.observe(wrap);
+    armed = true;
+    root.classList.add('cn-about-reviews-armed');
+
+    /* Belt and braces: if the heading is on screen and the observer has still
+       not spoken, put the lines up anyway rather than leave them below the
+       mask. */
+    window.setTimeout(function () {
+      if (armed && wrap.getBoundingClientRect().top < window.innerHeight) { io.disconnect(); play(); }
+    }, 6000);
+  }
+
+  /* ------------------------------------------------------------- wiring -- */
+
+  function init() {
+    var roots = document.querySelectorAll(ROOT);
+    for (var i = 0; i < roots.length; i++) {
+      setupHeading(roots[i]);
+      var sliders = roots[i].querySelectorAll('.cn-testimonial-slider');
+      for (var j = 0; j < sliders.length; j++) setupSlider(sliders[j]);
+    }
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+
+
+/* ---- cn-about: tools/blocks/cn-about.js ---- */
+/* cn-about — the introduction paragraph's arrival, which the cut cannot carry.
+
+   cinery reveals the one sentence in this card with an ix3 (GSAP) timeline, not
+   with the IX2 payload tools/donor-lib.mjs extracts. Read out of
+   tools/templates/cinery/js/app.9d009f54.b1680441e3b493e5.js:
+
+     interaction i-7405f602   scope { type: "site" }
+                              trigger wf:scroll on class `text-size-large`,
+                              scrollTriggerConfig { clamp: true,
+                                start: "top 85%", end: "bottom top",
+                                scrub: null, enter: "play",
+                                leave / enterBack / leaveBack: "none" }
+     timeline    t-a0ad7ea5   ta-34911dc2  targets ["wf:trigger-only"] — the
+                              paragraph itself; timing { position: 0,
+                              stagger: { each: .1 }, ease: 5 }; tt: 2 (fromTo);
+                              properties { "wf:transform": { y: ["110%","0%"] } };
+                              splitText { type: "lines", mask: "lines" }
+
+   The runtime resolves the two numbers the action leaves out. Ease 5 is index 5
+   of its own table in js/app.schunk.25099a4fefa544e6.js — ["none","power1.in",
+   "power1.out","power1.inOut","power2.in","power2.out","power2.inOut",…] — i.e.
+   gsap `power2.out`; and an action with no duration takes that runtime's
+   `DEFAULTS.DURATION = .5`. Both are the same two lookups tools/blocks/
+   cn-produce.js documents for cinery's heading reveal.
+
+   WHY IT CANNOT TRAVEL, AND WHY IT IS HERE AND NOT IN THE CSS
+   donor-lib returns `{events, actionLists}` (IX2) only — it never reads a
+   donor's ix3 arrays — and although this site ships the ix3 runtime on every
+   page, it registers no interactions with it (`register([{id:"i-…"` appears
+   nowhere in js/), so no donor timeline fires. That much is true of the button
+   label's roll as well, and that one is replayed in tools/blocks/cn-about.css,
+   because a whole element can be moved by a stylesheet. This one cannot: it
+   animates LINES, and a stylesheet cannot find a line box. So it is replayed
+   with the donor's own tools — the gsap, SplitText and ScrollTrigger this site
+   already loads on every page (js/gsap.min.js, js/SplitText.min.js, and
+   js/stargo-splittext-cjk.js, which wraps SplitText so Chinese, which has no
+   spaces, still breaks into words and therefore into lines) — and with the
+   donor's own numbers: 110% -> 0%, 0.5s, power2.out, 0.1s between lines,
+   starting when the paragraph's top crosses 85% of the viewport.
+
+   NOTHING IS EVER HIDDEN THAT THIS SCRIPT CANNOT SHOW AGAIN. The paragraph is
+   split only at the instant it plays, and the split is reverted the moment the
+   tween finishes, so:
+
+     · a page that never loads this file simply shows the paragraph, drawn
+       exactly as cinery draws it at rest. That is today's case for the page
+       this block is for: tools/build-site.mjs appends
+       `<script src="js/capability-blocks.js" defer>` on capabilities.html and
+       on pricing.html only, and about.html gets no such tag — so until the
+       central wiring adds one there, the block is complete and still, and this
+       file is inert rather than harmful. It needs nothing else: about.html
+       already loads js/gsap.min.js, js/SplitText.min.js,
+       js/stargo-splittext-cjk.js and js/ScrollTrigger.min.js;
+     · a browser without gsap, SplitText or ScrollTrigger does the same;
+     · a reader who has asked for less motion does the same;
+     · once the entrance is over the DOM is the donor's markup again, so a
+       resize re-wraps the sentence normally instead of re-flowing it inside
+       line boxes measured at the old width.
+
+   That is the same guarantee tools/blocks/cn-produce.js writes down for
+   cinery's heading, arrived at the other way round: it arms a hidden state only
+   after its observer is watching, this one never arms one at all. */
+(function () {
+  var root = document.querySelector('.cn-about');
+  if (!root) return;
+  var p = root.querySelector('.cn-text-size-large');
+  if (!p) return;
+
+  var gsap = window.gsap;
+  var Split = window.SplitText;
+  var ST = window.ScrollTrigger;
+  if (!gsap || !Split || !ST) return;
+  try {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  } catch (e) { /* no matchMedia: keep the donor's motion */ }
+
+  var played = false;
+  function play() {
+    if (played) return;
+    played = true;
+    var split = null;
+    try {
+      /* `mask: "lines"` is the donor's own option: SplitText wraps each line in
+         an overflow-hidden box, which is what makes a 110% offset read as the
+         line rising out of the page rather than sliding over its neighbour. */
+      split = Split.create(p, { type: 'lines', mask: 'lines' });
+      if (!split.lines || !split.lines.length) throw new Error('no lines');
+      /* fromTo, as the action's `tt: 2` says. immediateRender puts the lines
+         down in the same task as the split, before the browser paints, so the
+         sentence never flashes at its resting position first. */
+      gsap.fromTo(split.lines, { yPercent: 110 }, {
+        yPercent: 0,
+        duration: 0.5,
+        ease: 'power2.out',
+        stagger: 0.1,
+        onComplete: function () { try { split.revert(); } catch (e) { /* already gone */ } },
+      });
+    } catch (e) {
+      /* Anything unexpected and the paragraph goes back to being a paragraph. */
+      if (split && split.revert) { try { split.revert(); } catch (e2) { /* nothing to undo */ } }
+    }
+  }
+
+  try { gsap.registerPlugin(ST); } catch (e) { /* the plugin registers itself */ }
+  ST.create({ trigger: p, start: 'top 85%', once: true, onEnter: play });
+
+  /* The donor's trigger is a scroll trigger on a page where this section is
+     below the fold. Here the block may already be on screen when the script
+     runs, and ScrollTrigger's behaviour for a trigger created inside its own
+     range is not something to depend on — so the same line is checked once,
+     directly: "top 85%" is the paragraph's top crossing 85% of the viewport.
+     play() is idempotent, so whichever of the two speaks first wins and the
+     other is a no-op. */
+  if (!played && p.getBoundingClientRect().top < window.innerHeight * 0.85) play();
+})();
+
+
 /* ---- cn-produce: tools/blocks/cn-produce.js ---- */
 /* cn-produce — the heading's arrival, which the cut cannot carry.
 
@@ -67,6 +509,259 @@
   window.setTimeout(function () {
     if (armed && wrap.getBoundingClientRect().top < window.innerHeight) { io.disconnect(); play(); }
   }, 6000);
+})();
+
+
+/* ---- cn-reviews: tools/blocks/cn-reviews.js ---- */
+/* cn-reviews — the slider behaviour cinery's markup asks for and this site does
+   not ship.
+
+   WHY THIS FILE EXISTS
+   `.w-slider` is a Webflow COMPONENT, not an IX2 interaction. IX2 travels:
+   tools/donor-lib.mjs lifts the donor's `{events, actionLists}` and
+   tools/fuse-ix.mjs merges them into js/app.fused.js, which is how the two
+   arrows keep their hover rolls (a-45 … a-48, fired by e-248 … e-251 on
+   MOUSE_OVER / MOUSE_OUT). A component does not: it is a module of Webflow's
+   runtime, registered with `define("<name>", …)`, and this site ships only
+
+     js/app.fused.js                      dropdown, lightbox
+     js/app.schunk.25099a4fefa544e6.js    brand, edit, focus, forms, links,
+                                          lottie, navbar, scroll, touch
+     js/app.schunk.e0c428ff9737f919.js    (no component definitions)
+
+   — no `slider`, and the string `w-slider` appears in none of the three.
+   cinery's own exported bundle does not carry it either. Left alone the band
+   would draw its first card and clip the other three behind
+   `.w-slider-mask { overflow: hidden }`, and both arrows would be dead
+   controls: two 4rem bars that say Previous and Next and do nothing.
+
+   WHY IT IS NOT CSS KEYFRAMES
+   The house rule is to replay donor motion the tooling drops as keyframes with
+   the donor's own numbers, and that is what tools/blocks/ro-gallery.css and
+   tools/blocks/cn-produce.css do. It cannot be done here. The four cards are
+   inline-blocks tiled across one `white-space: nowrap` mask, so a shared
+   transform can only translate the row; wrapping from the fourth card to the
+   first in the same direction — the donor's `data-infinite="true"` — needs a
+   fifth box to slide in from, and adding one would be adding an element. And
+   `data-hide-arrows="false"` is a control: a keyframe cannot be clicked.
+
+   EVERY NUMBER BELOW IS READ OFF THE DONOR'S OWN ELEMENT
+   The slider element carries them, exactly as cinery exported it, and
+   tools/blocks/cn-reviews.mjs asserts each one is still there:
+
+     data-animation="slide"      the transition is a slide, not a crossfade
+     data-duration="500"         how long one transition takes, ms
+     data-easing="ease"          the CSS timing function, by that name
+     data-delay="4000"           how long a card is held once it has arrived, ms
+     data-autoplay="true"        it advances on its own
+     data-autoplay-limit="0"     for as many rounds as it likes
+     data-infinite="true"        the fourth card hands back to the first
+     data-disable-swipe="false"  a touch drag moves it
+
+   The fallbacks in the code are those same values, so a re-cut that dropped an
+   attribute would still turn at cinery's speed rather than at some other one.
+   The cycle is `delay` after a card lands plus `duration` to move it on —
+   4.5s a card — which is how Webflow's own slider arms its timer: it waits
+   `delay`, transitions for `duration`, and re-arms when the transition
+   completes.
+
+   WHAT IT DOES TO THE DOM
+   Nothing that is in the fragment. It sets `transform` and `transition` on the
+   four cards and, once a transition has finished, moves one card from the front
+   of the mask to the back (or back to front) — which is how a four-card row
+   wraps forward without a clone. Webflow's own slider does the same kind of
+   thing at runtime. No class, no `data-w-id`, no `#w-node-…` id and no
+   attribute in the markup is touched, so the IX2 hover rolls and the grid
+   placement in tools/blocks/cn-reviews.css both stay bound to what they were
+   bound to. The reorder waits for `transitionend`, with a timer 200ms past the
+   donor's own duration behind it, so a timer that fires a frame early can never
+   cut a card off mid-slide.
+
+   The `role` / `tabindex` / `aria-label` on the two arrows are added here for
+   the same reason Webflow's slider adds them at runtime: cinery exported the
+   arrows as bare `<div>`s because its runtime was going to make them buttons.
+   The label is the arrow's own word, so nothing is written here that
+   tools/blocks/cn-reviews.mjs did not already take out of tools/copy.mjs.
+
+   STOPPING. An auto-advancing quote band with no way to stop it is a barrier,
+   so the first deliberate act by a reader — a click, a key, a swipe, or simply
+   putting keyboard focus on one of the arrows — stops the autoplay for good and
+   leaves the band under the reader's hand. Webflow's slider stops autoplay on
+   interaction too; the focus case is this file's own, and it is what makes the
+   stop reachable without a mouse. A reader who has asked their system for less
+   motion never gets the autoplay at all, and their arrow presses cut straight
+   to the next card instead of sliding — the line js/stargo-pricing.js,
+   js/stargo-media.js and tools/blocks/cn-produce.js already take.
+
+   All four cards stay in the document and in the accessibility tree at every
+   moment; only three of them are outside the mask's clip. A reader on a screen
+   reader gets all four scenarios whether or not the band ever turns. */
+(function () {
+  var EASINGS = { ease: 1, 'ease-in': 1, 'ease-out': 1, 'ease-in-out': 1, linear: 1 };
+
+  function num(el, name, fallback) {
+    var v = parseInt(el.getAttribute(name), 10);
+    return isFinite(v) && v >= 0 ? v : fallback;
+  }
+
+  function reduced() {
+    try {
+      return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    } catch (e) {
+      return false;   /* no matchMedia: keep the donor's motion */
+    }
+  }
+
+  /* Run `fn` when a transition of `ms` on `el` is over. `transitionend` is the
+     truth (only `transform` is transitioned here, so it fires once per card);
+     the timer is the safety net for a transition that never starts — a hidden
+     tab, a browser that dropped the frame — and it is deliberately late. */
+  function after(el, ms, fn) {
+    var done = false;
+    function once() {
+      if (done) return;
+      done = true;
+      el.removeEventListener('transitionend', once);
+      fn();
+    }
+    if (ms > 0) {
+      el.addEventListener('transitionend', once);
+      window.setTimeout(once, ms + 200);
+    } else {
+      window.setTimeout(once, 0);
+    }
+  }
+
+  function setup(slider) {
+    var mask = slider.querySelector('.cn-mask');
+    if (!mask) return;
+    var count = mask.querySelectorAll('.cn-testimonial-slide').length;
+    /* One card cannot slide anywhere, and a mask holding anything other than
+       the cards is not the shape this drives. Leave it exactly as drawn. */
+    if (count < 2 || count !== mask.children.length) return;
+
+    var still = reduced();
+    var duration = still ? 0 : num(slider, 'data-duration', 500);
+    var delay = num(slider, 'data-delay', 4000);
+    var easing = slider.getAttribute('data-easing');
+    if (!EASINGS[easing]) easing = 'ease';
+    var autoplay = slider.getAttribute('data-autoplay') !== 'false' && !still;
+    var swipe = slider.getAttribute('data-disable-swipe') !== 'true';
+
+    var busy = false;
+    var timer = null;
+
+    function place(pct, ms) {
+      var kids = mask.children;
+      for (var i = 0; i < kids.length; i++) {
+        kids[i].style.transition = ms > 0 ? ('transform ' + ms + 'ms ' + easing) : 'none';
+        kids[i].style.transform = 'translateX(' + pct + '%)';
+      }
+    }
+
+    function arm() {
+      window.clearTimeout(timer);
+      if (!autoplay) return;
+      timer = window.setTimeout(function () { go(1); }, delay);
+    }
+
+    function stop() {
+      autoplay = false;
+      window.clearTimeout(timer);
+    }
+
+    /* Each card is exactly one mask wide, so -100% of a card's own width moves
+       the whole row by exactly one card. Forward: slide the row left, then send
+       the card that left to the back and put the row back at zero. Backward:
+       bring the last card round to the front first, start the row one card to
+       the left, and slide it home. Either way the row rests at zero and the
+       card on show is the first child. */
+    function go(dir) {
+      if (busy) return;
+      busy = true;
+      var moving;
+      if (dir > 0) {
+        place(0, 0);
+        void mask.offsetWidth;                      /* commit the reset before animating */
+        moving = mask.firstElementChild;
+        place(-100, duration);
+        after(moving, duration, function () {
+          mask.appendChild(mask.firstElementChild);
+          place(0, 0);
+          busy = false;
+          arm();
+        });
+      } else {
+        mask.insertBefore(mask.lastElementChild, mask.firstElementChild);
+        moving = mask.firstElementChild;
+        place(-100, 0);
+        void mask.offsetWidth;
+        place(0, duration);
+        after(moving, duration, function () {
+          place(0, 0);
+          busy = false;
+          arm();
+        });
+      }
+    }
+
+    function word(el) {
+      var t = el && el.querySelector('.cn-slide-text');
+      return t ? (t.textContent || '').trim() : '';
+    }
+
+    function control(el, dir) {
+      if (!el) return;
+      var label = word(el);
+      if (!el.getAttribute('role')) el.setAttribute('role', 'button');
+      if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');
+      if (label && !el.getAttribute('aria-label')) el.setAttribute('aria-label', label);
+      el.addEventListener('click', function () { stop(); go(dir); });
+      el.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
+        e.preventDefault();
+        stop();
+        go(dir);
+      });
+      el.addEventListener('focus', stop);
+    }
+
+    control(slider.querySelector('.cn-left-arrow'), -1);
+    control(slider.querySelector('.cn-right-arrow'), 1);
+
+    if (swipe) {
+      var x0 = null;
+      var y0 = 0;
+      mask.addEventListener('touchstart', function (e) {
+        if (!e.touches || e.touches.length !== 1) { x0 = null; return; }
+        x0 = e.touches[0].clientX;
+        y0 = e.touches[0].clientY;
+      }, { passive: true });
+      mask.addEventListener('touchend', function (e) {
+        if (x0 === null || !e.changedTouches || !e.changedTouches.length) return;
+        var dx = e.changedTouches[0].clientX - x0;
+        var dy = e.changedTouches[0].clientY - y0;
+        x0 = null;
+        /* 40px, and more sideways than up: the page scrolls vertically through
+           this band, and a drag that is mostly vertical belongs to the page.
+           Nothing is prevented here, so that scroll still happens. */
+        if (Math.abs(dx) < 40 || Math.abs(dx) <= Math.abs(dy)) return;
+        stop();
+        go(dx < 0 ? 1 : -1);
+      }, { passive: true });
+    }
+
+    place(0, 0);
+    arm();
+  }
+
+  function init() {
+    var sliders = document.querySelectorAll('.cn-reviews .cn-testimonial-slider');
+    for (var i = 0; i < sliders.length; i++) setup(sliders[i]);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
 })();
 
 
@@ -154,9 +849,11 @@
   var stage = root.querySelector('.og-page-wrapper');
   var h1 = root.querySelector('.og-is-hero');
   var span = root.querySelector('.og-text-spam');
-  var tiles = root.querySelectorAll('[data-works-grid] .og-grid__img');
   var columns = root.querySelectorAll('.og-intro-column');
-  if (!h1 || !span || !tiles.length || !columns.length) { finish(); return; }
+  /* The mosaic is no longer part of this opening, so it is no longer part of
+     the guard: requiring tiles that the markup does not contain would send
+     every visitor straight to finish() and there would be no opening at all. */
+  if (!h1 || !span || !columns.length) { finish(); return; }
 
   /* Webflow builds an easing from four numbers with the same bezier solver
      every browser uses for `cubic-bezier()`; a-24-n-2 carries
@@ -219,13 +916,17 @@
     onComplete: function () { span.style.width = 'auto'; },
   }, 1);
 
-  /* -- phase 2: offgrid's works mosaic --------------------------------- */
-  tl.fromTo(tiles,
-    { autoAlpha: 0, scale: 0.8, rotateY: 45 },
-    {
-      autoAlpha: 1, scale: 1, rotateY: 0, duration: 1,
-      stagger: { amount: 0.8, from: 'center', grid: [4, 9] },
-    }, '>');
+  /* -- phase 2 is gone -------------------------------------------------- */
+  /* offgrid's thirty-six-tile works mosaic used to reveal here, between the
+     name and the wipe. The owner cut it (2026-09-10): 「这么多照片墙不要了」 —
+     the name, then rototo's effect, then the homepage. The tiles are no longer
+     in the markup either (tools/blocks/og-intro.mjs), so there is nothing left
+     to tween and 4.25 MB is no longer fetched on a first visit.
+
+     The wipe keeps its `'>'` position, which now reads off the end of the
+     bracket instead of the end of the mosaic's stagger: the opening is the same
+     motion it always was, ~2.2s shorter. Nothing about the wipe's own values
+     changes. */
 
   /* -- phase 3: rototo t-195e7dff -------------------------------------- */
   /* `y: 0` in both from-vars is not a donor value and does not move anything:

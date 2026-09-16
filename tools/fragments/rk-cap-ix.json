@@ -969,6 +969,1255 @@
    },
    "createdOn": 1770634380445
   },
+  "rk-e-1515": {
+   "id": "rk-e-1515",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "rk-a-92",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "rk-e-2193"
+    }
+   },
+   "mediaQueries": [
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "cacecf34-e427-8fd7-d839-092b3e532c2c",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "cacecf34-e427-8fd7-d839-092b3e532c2c",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767344322222
+  },
+  "rk-e-1516": {
+   "id": "rk-e-1516",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "rk-a-89",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "rk-e-1537"
+    }
+   },
+   "mediaQueries": [
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "cacecf34-e427-8fd7-d839-092b3e532bec",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "cacecf34-e427-8fd7-d839-092b3e532bec",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767344276127
+  },
+  "rk-e-1517": {
+   "id": "rk-e-1517",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "rk-a-25",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "rk-e-2202"
+    }
+   },
+   "mediaQueries": [
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "cacecf34-e427-8fd7-d839-092b3e532bb0",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "cacecf34-e427-8fd7-d839-092b3e532bb0",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767344244262
+  },
+  "rk-e-1520": {
+   "id": "rk-e-1520",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "rk-a-91",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "rk-e-2114"
+    }
+   },
+   "mediaQueries": [
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "cacecf34-e427-8fd7-d839-092b3e532c3c",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "cacecf34-e427-8fd7-d839-092b3e532c3c",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767344349784
+  },
+  "rk-e-1521": {
+   "id": "rk-e-1521",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "rk-a-25",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "rk-e-2173"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "cacecf34-e427-8fd7-d839-092b3e532ba1",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "cacecf34-e427-8fd7-d839-092b3e532ba1",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1765825255789
+  },
+  "rk-e-1522": {
+   "id": "rk-e-1522",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "rk-a-93",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "rk-e-2162"
+    }
+   },
+   "mediaQueries": [
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "cacecf34-e427-8fd7-d839-092b3e532bdc",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "cacecf34-e427-8fd7-d839-092b3e532bdc",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767344267919
+  },
+  "rk-e-1524": {
+   "id": "rk-e-1524",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "rk-a-89",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "rk-e-2156"
+    }
+   },
+   "mediaQueries": [
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "cacecf34-e427-8fd7-d839-092b3e532bfc",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "cacecf34-e427-8fd7-d839-092b3e532bfc",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767344285751
+  },
+  "rk-e-1526": {
+   "id": "rk-e-1526",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "rk-a-24",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "rk-e-2113"
+    }
+   },
+   "mediaQueries": [
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "cacecf34-e427-8fd7-d839-092b3e532ba2",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "cacecf34-e427-8fd7-d839-092b3e532ba2",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767344220335
+  },
+  "rk-e-1530": {
+   "id": "rk-e-1530",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "rk-a-94",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "rk-e-2203"
+    }
+   },
+   "mediaQueries": [
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "cacecf34-e427-8fd7-d839-092b3e532c0c",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "cacecf34-e427-8fd7-d839-092b3e532c0c",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767344299719
+  },
+  "rk-e-1531": {
+   "id": "rk-e-1531",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "rk-a-28",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "rk-e-2163"
+    }
+   },
+   "mediaQueries": [
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "cacecf34-e427-8fd7-d839-092b3e532bcc",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "cacecf34-e427-8fd7-d839-092b3e532bcc",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767344259303
+  },
+  "rk-e-1533": {
+   "id": "rk-e-1533",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "rk-a-90",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "rk-e-1538"
+    }
+   },
+   "mediaQueries": [
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "cacecf34-e427-8fd7-d839-092b3e532c1c",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "cacecf34-e427-8fd7-d839-092b3e532c1c",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1767344308295
+  },
+  "rk-e-1698": {
+   "id": "rk-e-1698",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "rk-a-25",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "rk-e-1699"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "a02bae27-4af9-3edd-fc70-6d1e3065dd7b",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "a02bae27-4af9-3edd-fc70-6d1e3065dd7b",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1770899458151
+  },
+  "rk-e-1700": {
+   "id": "rk-e-1700",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_CLICK",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "rk-a-35",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "rk-e-1701"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "a02bae27-4af9-3edd-fc70-6d1e3065dd80",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "a02bae27-4af9-3edd-fc70-6d1e3065dd80",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1770899458151
+  },
+  "rk-e-1701": {
+   "id": "rk-e-1701",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "MOUSE_SECOND_CLICK",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "rk-a-36",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "rk-e-1700"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "a02bae27-4af9-3edd-fc70-6d1e3065dd80",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "a02bae27-4af9-3edd-fc70-6d1e3065dd80",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1770899458151
+  },
+  "rk-e-1702": {
+   "id": "rk-e-1702",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "rk-a-24",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "rk-e-1703"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "26e84ccb-312f-2381-be94-20beaa5940b5",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "26e84ccb-312f-2381-be94-20beaa5940b5",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1770899458151
+  },
+  "rk-e-1704": {
+   "id": "rk-e-1704",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "rk-a-25",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "rk-e-1705"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "26e84ccb-312f-2381-be94-20beaa5940ba",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "26e84ccb-312f-2381-be94-20beaa5940ba",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1770899458151
+  },
+  "rk-e-1706": {
+   "id": "rk-e-1706",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "rk-a-28",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "rk-e-1707"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "26e84ccb-312f-2381-be94-20beaa5940c4",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "26e84ccb-312f-2381-be94-20beaa5940c4",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1770899458151
+  },
+  "rk-e-1710": {
+   "id": "rk-e-1710",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "rk-a-25",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "rk-e-1711"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "26e84ccb-312f-2381-be94-20beaa5940f9",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "26e84ccb-312f-2381-be94-20beaa5940f9",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1770899458151
+  },
+  "rk-e-1712": {
+   "id": "rk-e-1712",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "rk-a-28",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "rk-e-1713"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "26e84ccb-312f-2381-be94-20beaa594106",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "26e84ccb-312f-2381-be94-20beaa594106",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1770899458151
+  },
+  "rk-e-1716": {
+   "id": "rk-e-1716",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "rk-a-24",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "rk-e-1717"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "26e84ccb-312f-2381-be94-20beaa594136",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "26e84ccb-312f-2381-be94-20beaa594136",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1770899458151
+  },
+  "rk-e-1718": {
+   "id": "rk-e-1718",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "rk-a-25",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "rk-e-1719"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "26e84ccb-312f-2381-be94-20beaa59413b",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "26e84ccb-312f-2381-be94-20beaa59413b",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1770899458151
+  },
+  "rk-e-1720": {
+   "id": "rk-e-1720",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "rk-a-28",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "rk-e-1721"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "26e84ccb-312f-2381-be94-20beaa594145",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "26e84ccb-312f-2381-be94-20beaa594145",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1770899458151
+  },
+  "rk-e-1726": {
+   "id": "rk-e-1726",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "rk-a-25",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "rk-e-1727"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "26e84ccb-312f-2381-be94-20beaa59417c",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "26e84ccb-312f-2381-be94-20beaa59417c",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1770899458151
+  },
+  "rk-e-1732": {
+   "id": "rk-e-1732",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "rk-a-25",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "rk-e-1733"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "26e84ccb-312f-2381-be94-20beaa5941bb",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "26e84ccb-312f-2381-be94-20beaa5941bb",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1770899458151
+  },
+  "rk-e-1740": {
+   "id": "rk-e-1740",
+   "name": "",
+   "animationType": "preset",
+   "eventTypeId": "SCROLL_INTO_VIEW",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "rk-a-25",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "rk-e-1741"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "26e84ccb-312f-2381-be94-20beaa5941fd",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "26e84ccb-312f-2381-be94-20beaa5941fd",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": 0,
+    "scrollOffsetUnit": "%",
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1770899458151
+  },
+  "rk-e-2088": {
+   "id": "rk-e-2088",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "MOUSE_OVER",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "rk-a-143",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "rk-e-2089"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "1b670e64-7cd8-f7c1-c048-00c68ca78f10",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "1b670e64-7cd8-f7c1-c048-00c68ca78f10",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1771354714522
+  },
+  "rk-e-2089": {
+   "id": "rk-e-2089",
+   "name": "",
+   "animationType": "custom",
+   "eventTypeId": "MOUSE_OUT",
+   "action": {
+    "id": "",
+    "actionTypeId": "GENERAL_START_ACTION",
+    "config": {
+     "delay": 0,
+     "easing": "",
+     "duration": 0,
+     "actionListId": "rk-a-144",
+     "affectedElements": {},
+     "playInReverse": false,
+     "autoStopEventId": "rk-e-2088"
+    }
+   },
+   "mediaQueries": [
+    "main",
+    "medium",
+    "small",
+    "tiny"
+   ],
+   "target": {
+    "id": "1b670e64-7cd8-f7c1-c048-00c68ca78f10",
+    "appliesTo": "ELEMENT",
+    "styleBlockIds": []
+   },
+   "targets": [
+    {
+     "id": "1b670e64-7cd8-f7c1-c048-00c68ca78f10",
+     "appliesTo": "ELEMENT",
+     "styleBlockIds": []
+    }
+   ],
+   "config": {
+    "loop": false,
+    "playInReverse": false,
+    "scrollOffsetValue": null,
+    "scrollOffsetUnit": null,
+    "delay": null,
+    "direction": null,
+    "effectIn": null
+   },
+   "createdOn": 1771354714535
+  },
   "rk-e-184": {
    "id": "rk-e-184",
    "name": "",
@@ -3832,6 +5081,1990 @@
    ],
    "useFirstGroupAsInitialState": false,
    "createdOn": 1770628468202
+  },
+  "rk-a-28": {
+   "id": "rk-a-28",
+   "title": "Slide from bottom(3) 5",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "rk-a-28-n",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "yValue": 3.14,
+        "xUnit": "PX",
+        "yUnit": "rem",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "rk-a-28-n-2",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "value": 0,
+        "unit": ""
+       }
+      },
+      {
+       "id": "rk-a-28-n-3",
+       "actionTypeId": "STYLE_FILTER",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "filters": [
+         {
+          "type": "blur",
+          "filterId": "4eba",
+          "value": 0.375,
+          "unit": "rem"
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "rk-a-28-n-4",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 300,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "yValue": 0,
+        "xUnit": "PX",
+        "yUnit": "rem",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "rk-a-28-n-5",
+       "actionTypeId": "STYLE_FILTER",
+       "config": {
+        "delay": 300,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "filters": [
+         {
+          "type": "blur",
+          "filterId": "4eba",
+          "value": 0,
+          "unit": "rem"
+         }
+        ]
+       }
+      },
+      {
+       "id": "rk-a-28-n-6",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 300,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "value": 1,
+        "unit": ""
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": true,
+   "createdOn": 1764232898659
+  },
+  "rk-a-25": {
+   "id": "rk-a-25",
+   "title": "Slide from bottom(2) 6",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "rk-a-25-n",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "yValue": 3.14,
+        "xUnit": "PX",
+        "yUnit": "rem",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "rk-a-25-n-2",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "value": 0,
+        "unit": ""
+       }
+      },
+      {
+       "id": "rk-a-25-n-3",
+       "actionTypeId": "STYLE_FILTER",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "filters": [
+         {
+          "type": "blur",
+          "filterId": "4eba",
+          "value": 0.375,
+          "unit": "rem"
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "rk-a-25-n-4",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 200,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "yValue": 0,
+        "xUnit": "PX",
+        "yUnit": "rem",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "rk-a-25-n-5",
+       "actionTypeId": "STYLE_FILTER",
+       "config": {
+        "delay": 200,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "filters": [
+         {
+          "type": "blur",
+          "filterId": "4eba",
+          "value": 0,
+          "unit": "rem"
+         }
+        ]
+       }
+      },
+      {
+       "id": "rk-a-25-n-6",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 200,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "value": 1,
+        "unit": ""
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": true,
+   "createdOn": 1764232898659
+  },
+  "rk-a-24": {
+   "id": "rk-a-24",
+   "title": "Slide from bottom(1) 6",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "rk-a-24-n",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "yValue": 3.14,
+        "xUnit": "PX",
+        "yUnit": "rem",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "rk-a-24-n-2",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "value": 0,
+        "unit": ""
+       }
+      },
+      {
+       "id": "rk-a-24-n-3",
+       "actionTypeId": "STYLE_FILTER",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "filters": [
+         {
+          "type": "blur",
+          "filterId": "4eba",
+          "value": 0.375,
+          "unit": "rem"
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "rk-a-24-n-4",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 100,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "yValue": 0,
+        "xUnit": "PX",
+        "yUnit": "rem",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "rk-a-24-n-5",
+       "actionTypeId": "STYLE_FILTER",
+       "config": {
+        "delay": 100,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "filters": [
+         {
+          "type": "blur",
+          "filterId": "4eba",
+          "value": 0,
+          "unit": "rem"
+         }
+        ]
+       }
+      },
+      {
+       "id": "rk-a-24-n-6",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 100,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "value": 1,
+        "unit": ""
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": true,
+   "createdOn": 1764232898659
+  },
+  "rk-a-92": {
+   "id": "rk-a-92",
+   "title": "Slide from bottom(9)",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "rk-a-92-n",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "yValue": 3.14,
+        "xUnit": "PX",
+        "yUnit": "rem",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "rk-a-92-n-2",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "value": 0,
+        "unit": ""
+       }
+      },
+      {
+       "id": "rk-a-92-n-3",
+       "actionTypeId": "STYLE_FILTER",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "filters": [
+         {
+          "type": "blur",
+          "filterId": "4eba",
+          "value": 0.375,
+          "unit": "rem"
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "rk-a-92-n-4",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 900,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "yValue": 0,
+        "xUnit": "PX",
+        "yUnit": "rem",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "rk-a-92-n-5",
+       "actionTypeId": "STYLE_FILTER",
+       "config": {
+        "delay": 900,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "filters": [
+         {
+          "type": "blur",
+          "filterId": "4eba",
+          "value": 0,
+          "unit": "rem"
+         }
+        ]
+       }
+      },
+      {
+       "id": "rk-a-92-n-6",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 900,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "value": 1,
+        "unit": ""
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": true,
+   "createdOn": 1764232898659
+  },
+  "rk-a-89": {
+   "id": "rk-a-89",
+   "title": "Slide from bottom(5) 2",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "rk-a-89-n",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "yValue": 3.14,
+        "xUnit": "PX",
+        "yUnit": "rem",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "rk-a-89-n-2",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "value": 0,
+        "unit": ""
+       }
+      },
+      {
+       "id": "rk-a-89-n-3",
+       "actionTypeId": "STYLE_FILTER",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "filters": [
+         {
+          "type": "blur",
+          "filterId": "4eba",
+          "value": 0.375,
+          "unit": "rem"
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "rk-a-89-n-4",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 500,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "yValue": 0,
+        "xUnit": "PX",
+        "yUnit": "rem",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "rk-a-89-n-5",
+       "actionTypeId": "STYLE_FILTER",
+       "config": {
+        "delay": 500,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "filters": [
+         {
+          "type": "blur",
+          "filterId": "4eba",
+          "value": 0,
+          "unit": "rem"
+         }
+        ]
+       }
+      },
+      {
+       "id": "rk-a-89-n-6",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 500,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "value": 1,
+        "unit": ""
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": true,
+   "createdOn": 1764232898659
+  },
+  "rk-a-91": {
+   "id": "rk-a-91",
+   "title": "Slide from bottom(10)",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "rk-a-91-n",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "yValue": 3.14,
+        "xUnit": "PX",
+        "yUnit": "rem",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "rk-a-91-n-2",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "value": 0,
+        "unit": ""
+       }
+      },
+      {
+       "id": "rk-a-91-n-3",
+       "actionTypeId": "STYLE_FILTER",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "filters": [
+         {
+          "type": "blur",
+          "filterId": "4eba",
+          "value": 0.375,
+          "unit": "rem"
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "rk-a-91-n-4",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 1000,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "yValue": 0,
+        "xUnit": "PX",
+        "yUnit": "rem",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "rk-a-91-n-5",
+       "actionTypeId": "STYLE_FILTER",
+       "config": {
+        "delay": 1000,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "filters": [
+         {
+          "type": "blur",
+          "filterId": "4eba",
+          "value": 0,
+          "unit": "rem"
+         }
+        ]
+       }
+      },
+      {
+       "id": "rk-a-91-n-6",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 1000,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "value": 1,
+        "unit": ""
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": true,
+   "createdOn": 1764232898659
+  },
+  "rk-a-93": {
+   "id": "rk-a-93",
+   "title": "Slide from bottom(4) 2",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "rk-a-93-n",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "yValue": 3.14,
+        "xUnit": "PX",
+        "yUnit": "rem",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "rk-a-93-n-2",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "value": 0,
+        "unit": ""
+       }
+      },
+      {
+       "id": "rk-a-93-n-3",
+       "actionTypeId": "STYLE_FILTER",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "filters": [
+         {
+          "type": "blur",
+          "filterId": "4eba",
+          "value": 0.375,
+          "unit": "rem"
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "rk-a-93-n-4",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 400,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "yValue": 0,
+        "xUnit": "PX",
+        "yUnit": "rem",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "rk-a-93-n-5",
+       "actionTypeId": "STYLE_FILTER",
+       "config": {
+        "delay": 400,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "filters": [
+         {
+          "type": "blur",
+          "filterId": "4eba",
+          "value": 0,
+          "unit": "rem"
+         }
+        ]
+       }
+      },
+      {
+       "id": "rk-a-93-n-6",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 400,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "value": 1,
+        "unit": ""
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": true,
+   "createdOn": 1764232898659
+  },
+  "rk-a-94": {
+   "id": "rk-a-94",
+   "title": "Slide from bottom(6)",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "rk-a-94-n",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "yValue": 3.14,
+        "xUnit": "PX",
+        "yUnit": "rem",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "rk-a-94-n-2",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "value": 0,
+        "unit": ""
+       }
+      },
+      {
+       "id": "rk-a-94-n-3",
+       "actionTypeId": "STYLE_FILTER",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "filters": [
+         {
+          "type": "blur",
+          "filterId": "4eba",
+          "value": 0.375,
+          "unit": "rem"
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "rk-a-94-n-4",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 600,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "yValue": 0,
+        "xUnit": "PX",
+        "yUnit": "rem",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "rk-a-94-n-5",
+       "actionTypeId": "STYLE_FILTER",
+       "config": {
+        "delay": 600,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "filters": [
+         {
+          "type": "blur",
+          "filterId": "4eba",
+          "value": 0,
+          "unit": "rem"
+         }
+        ]
+       }
+      },
+      {
+       "id": "rk-a-94-n-6",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 600,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "value": 1,
+        "unit": ""
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": true,
+   "createdOn": 1764232898659
+  },
+  "rk-a-90": {
+   "id": "rk-a-90",
+   "title": "Slide from bottom(8)",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "rk-a-90-n",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "yValue": 3.14,
+        "xUnit": "PX",
+        "yUnit": "rem",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "rk-a-90-n-2",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "value": 0,
+        "unit": ""
+       }
+      },
+      {
+       "id": "rk-a-90-n-3",
+       "actionTypeId": "STYLE_FILTER",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "filters": [
+         {
+          "type": "blur",
+          "filterId": "4eba",
+          "value": 0.375,
+          "unit": "rem"
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "rk-a-90-n-4",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 800,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "yValue": 0,
+        "xUnit": "PX",
+        "yUnit": "rem",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "rk-a-90-n-5",
+       "actionTypeId": "STYLE_FILTER",
+       "config": {
+        "delay": 800,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "filters": [
+         {
+          "type": "blur",
+          "filterId": "4eba",
+          "value": 0,
+          "unit": "rem"
+         }
+        ]
+       }
+      },
+      {
+       "id": "rk-a-90-n-6",
+       "actionTypeId": "STYLE_OPACITY",
+       "config": {
+        "delay": 800,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": true,
+         "id": "eacb5c61-c5d7-10f4-bd3d-e4509fedd05a"
+        },
+        "value": 1,
+        "unit": ""
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": true,
+   "createdOn": 1764232898659
+  },
+  "rk-a-35": {
+   "id": "rk-a-35",
+   "title": "Toggle ball tap in",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "rk-a-35-n",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".rk-rt-toggle-ball.rk-rt-one",
+         "selectorGuids": [
+          "5fbc6f01-7c28-e1ce-93b0-7999a905b8ed",
+          "c13e9a93-8a62-03b9-8286-7bde12e1174b"
+         ]
+        },
+        "xValue": 1,
+        "yValue": 1,
+        "locked": true
+       }
+      },
+      {
+       "id": "rk-a-35-n-15",
+       "actionTypeId": "STYLE_SIZE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "selector": ".rk-rt-yearly-wrap-line.rk-rt-yearly-lin",
+         "selectorGuids": [
+          "fafac355-c383-e25c-77d9-931bc1f7b091",
+          "1a176c88-ec17-a33a-1f63-6addfb863e46"
+         ]
+        },
+        "widthValue": 0,
+        "heightValue": 0.0625,
+        "widthUnit": "%",
+        "heightUnit": "rem",
+        "locked": false
+       }
+      },
+      {
+       "id": "rk-a-35-n-13",
+       "actionTypeId": "STYLE_SIZE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "selector": ".rk-rt-yearly-wrap-line.rk-rt-monthly-line",
+         "selectorGuids": [
+          "fafac355-c383-e25c-77d9-931bc1f7b091",
+          "80897262-915f-7d0c-ae7f-7912dd17f51f"
+         ]
+        },
+        "widthValue": 100,
+        "heightValue": 0.0625,
+        "widthUnit": "%",
+        "heightUnit": "rem",
+        "locked": false
+       }
+      },
+      {
+       "id": "rk-a-35-n-11",
+       "actionTypeId": "GENERAL_DISPLAY",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 0,
+        "target": {
+         "selector": ".rk-rt-yearly-wrapper",
+         "selectorGuids": [
+          "7de74465-2300-3fa1-c772-0c3c0cdd53ab"
+         ]
+        },
+        "value": "none"
+       }
+      },
+      {
+       "id": "rk-a-35-n-9",
+       "actionTypeId": "GENERAL_DISPLAY",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 0,
+        "target": {
+         "selector": ".rk-rt-monthly-wrapper",
+         "selectorGuids": [
+          "816d3d8d-1902-bbe6-4207-77bb6d92b239"
+         ]
+        },
+        "value": "block"
+       }
+      },
+      {
+       "id": "rk-a-35-n-6",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "selector": ".rk-rt-yearly",
+         "selectorGuids": [
+          "5fbc6f01-7c28-e1ce-93b0-7999a905b8f5"
+         ]
+        },
+        "globalSwatchId": "",
+        "rValue": 255,
+        "bValue": 255,
+        "gValue": 255,
+        "aValue": 0.5
+       }
+      },
+      {
+       "id": "rk-a-35-n-5",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "selector": ".rk-rt-monthly",
+         "selectorGuids": [
+          "1785bcbc-54e9-6e6f-eee3-f21e853758bc"
+         ]
+        },
+        "rValue": 255,
+        "bValue": 255,
+        "gValue": 255,
+        "aValue": 1
+       }
+      },
+      {
+       "id": "rk-a-35-n-2",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".rk-rt-toggle-ball.rk-rt-two",
+         "selectorGuids": [
+          "5fbc6f01-7c28-e1ce-93b0-7999a905b8ed",
+          "fcc2d4dc-3439-9c66-f40b-4c977189118b"
+         ]
+        },
+        "xValue": 0.2,
+        "yValue": 0.2,
+        "locked": true
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "rk-a-35-n-3",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".rk-rt-toggle-ball.rk-rt-two",
+         "selectorGuids": [
+          "5fbc6f01-7c28-e1ce-93b0-7999a905b8ed",
+          "fcc2d4dc-3439-9c66-f40b-4c977189118b"
+         ]
+        },
+        "xValue": 1,
+        "yValue": 1,
+        "locked": true
+       }
+      },
+      {
+       "id": "rk-a-35-n-16",
+       "actionTypeId": "STYLE_SIZE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "selector": ".rk-rt-yearly-wrap-line.rk-rt-yearly-lin",
+         "selectorGuids": [
+          "fafac355-c383-e25c-77d9-931bc1f7b091",
+          "1a176c88-ec17-a33a-1f63-6addfb863e46"
+         ]
+        },
+        "widthValue": 100,
+        "heightValue": 0.0625,
+        "widthUnit": "%",
+        "heightUnit": "rem",
+        "locked": false
+       }
+      },
+      {
+       "id": "rk-a-35-n-14",
+       "actionTypeId": "STYLE_SIZE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "selector": ".rk-rt-yearly-wrap-line.rk-rt-monthly-line",
+         "selectorGuids": [
+          "fafac355-c383-e25c-77d9-931bc1f7b091",
+          "80897262-915f-7d0c-ae7f-7912dd17f51f"
+         ]
+        },
+        "widthValue": 0,
+        "heightValue": 0.0625,
+        "widthUnit": "%",
+        "heightUnit": "rem",
+        "locked": false
+       }
+      },
+      {
+       "id": "rk-a-35-n-12",
+       "actionTypeId": "GENERAL_DISPLAY",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 0,
+        "target": {
+         "selector": ".rk-rt-yearly-wrapper",
+         "selectorGuids": [
+          "7de74465-2300-3fa1-c772-0c3c0cdd53ab"
+         ]
+        },
+        "value": "block"
+       }
+      },
+      {
+       "id": "rk-a-35-n-10",
+       "actionTypeId": "GENERAL_DISPLAY",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 0,
+        "target": {
+         "selector": ".rk-rt-monthly-wrapper",
+         "selectorGuids": [
+          "816d3d8d-1902-bbe6-4207-77bb6d92b239"
+         ]
+        },
+        "value": "none"
+       }
+      },
+      {
+       "id": "rk-a-35-n-8",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "selector": ".rk-rt-monthly",
+         "selectorGuids": [
+          "1785bcbc-54e9-6e6f-eee3-f21e853758bc"
+         ]
+        },
+        "globalSwatchId": "",
+        "rValue": 255,
+        "bValue": 255,
+        "gValue": 255,
+        "aValue": 0.5
+       }
+      },
+      {
+       "id": "rk-a-35-n-7",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "selector": ".rk-rt-yearly",
+         "selectorGuids": [
+          "5fbc6f01-7c28-e1ce-93b0-7999a905b8f5"
+         ]
+        },
+        "rValue": 255,
+        "bValue": 255,
+        "gValue": 255,
+        "aValue": 1
+       }
+      },
+      {
+       "id": "rk-a-35-n-4",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".rk-rt-toggle-ball.rk-rt-one",
+         "selectorGuids": [
+          "5fbc6f01-7c28-e1ce-93b0-7999a905b8ed",
+          "c13e9a93-8a62-03b9-8286-7bde12e1174b"
+         ]
+        },
+        "xValue": 0.2,
+        "yValue": 0.2,
+        "locked": true
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": true,
+   "createdOn": 1770630211000
+  },
+  "rk-a-36": {
+   "id": "rk-a-36",
+   "title": "Toggle ball tap out",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "rk-a-36-n-5",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".rk-rt-toggle-ball.rk-rt-two",
+         "selectorGuids": [
+          "5fbc6f01-7c28-e1ce-93b0-7999a905b8ed",
+          "fcc2d4dc-3439-9c66-f40b-4c977189118b"
+         ]
+        },
+        "xValue": 0.2,
+        "yValue": 0.2,
+        "locked": true
+       }
+      },
+      {
+       "id": "rk-a-36-n-12",
+       "actionTypeId": "STYLE_SIZE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "selector": ".rk-rt-yearly-wrap-line.rk-rt-yearly-lin",
+         "selectorGuids": [
+          "fafac355-c383-e25c-77d9-931bc1f7b091",
+          "1a176c88-ec17-a33a-1f63-6addfb863e46"
+         ]
+        },
+        "widthValue": 0,
+        "heightValue": 0.0625,
+        "widthUnit": "%",
+        "heightUnit": "rem",
+        "locked": false
+       }
+      },
+      {
+       "id": "rk-a-36-n-11",
+       "actionTypeId": "STYLE_SIZE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "selector": ".rk-rt-yearly-wrap-line.rk-rt-monthly-line",
+         "selectorGuids": [
+          "fafac355-c383-e25c-77d9-931bc1f7b091",
+          "80897262-915f-7d0c-ae7f-7912dd17f51f"
+         ]
+        },
+        "widthValue": 100,
+        "heightValue": 0.0625,
+        "widthUnit": "%",
+        "heightUnit": "rem",
+        "locked": false
+       }
+      },
+      {
+       "id": "rk-a-36-n-10",
+       "actionTypeId": "GENERAL_DISPLAY",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 0,
+        "target": {
+         "selector": ".rk-rt-yearly-wrapper",
+         "selectorGuids": [
+          "7de74465-2300-3fa1-c772-0c3c0cdd53ab"
+         ]
+        },
+        "value": "none"
+       }
+      },
+      {
+       "id": "rk-a-36-n-9",
+       "actionTypeId": "GENERAL_DISPLAY",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 0,
+        "target": {
+         "selector": ".rk-rt-monthly-wrapper",
+         "selectorGuids": [
+          "816d3d8d-1902-bbe6-4207-77bb6d92b239"
+         ]
+        },
+        "value": "block"
+       }
+      },
+      {
+       "id": "rk-a-36-n-6",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "selector": ".rk-rt-monthly",
+         "selectorGuids": [
+          "1785bcbc-54e9-6e6f-eee3-f21e853758bc"
+         ]
+        },
+        "rValue": 255,
+        "bValue": 255,
+        "gValue": 255,
+        "aValue": 1
+       }
+      },
+      {
+       "id": "rk-a-36-n-7",
+       "actionTypeId": "STYLE_TEXT_COLOR",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "selector": ".rk-rt-yearly",
+         "selectorGuids": [
+          "5fbc6f01-7c28-e1ce-93b0-7999a905b8f5"
+         ]
+        },
+        "globalSwatchId": "",
+        "rValue": 255,
+        "bValue": 255,
+        "gValue": 255,
+        "aValue": 0.5
+       }
+      },
+      {
+       "id": "rk-a-36-n-8",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".rk-rt-toggle-ball.rk-rt-one",
+         "selectorGuids": [
+          "5fbc6f01-7c28-e1ce-93b0-7999a905b8ed",
+          "c13e9a93-8a62-03b9-8286-7bde12e1174b"
+         ]
+        },
+        "xValue": 1,
+        "yValue": 1,
+        "locked": true
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": false,
+   "createdOn": 1770630211000
+  },
+  "rk-a-143": {
+   "id": "rk-a-143",
+   "title": "Contact button hover in",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "rk-a-143-n",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".rk-rt-button-icon-block",
+         "selectorGuids": [
+          "4b6c20a7-b12b-4178-bc33-e48f9899f973"
+         ]
+        },
+        "xValue": 0,
+        "yValue": 0,
+        "locked": true
+       }
+      },
+      {
+       "id": "rk-a-143-n-2",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".rk-rt-button-text.rk-rt-text-two",
+         "selectorGuids": [
+          "bd336f81-9fac-5a35-66d2-6e5b3c97b17e",
+          "0268ab44-550a-d08e-dd79-2251d1e4eedc"
+         ]
+        },
+        "yValue": 120,
+        "xUnit": "PX",
+        "yUnit": "%",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "rk-a-143-n-3",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".rk-rt-button-text.rk-rt-text-one",
+         "selectorGuids": [
+          "bd336f81-9fac-5a35-66d2-6e5b3c97b17e",
+          "23b4a3fd-cf75-f6e3-5194-ca6b4132a55f"
+         ]
+        },
+        "yValue": 0,
+        "xUnit": "PX",
+        "yUnit": "%",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "rk-a-143-n-4",
+       "actionTypeId": "STYLE_BORDER",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".rk-rt-button-wrap.rk-rt-overflow-hidden.rk-rt-radius-xl",
+         "selectorGuids": [
+          "4b6c20a7-b12b-4178-bc33-e48f9899f977",
+          "4b6c20a7-b12b-4178-bc33-e48f9899f97a",
+          "4b6c20a7-b12b-4178-bc33-e48f9899f97e"
+         ]
+        },
+        "globalSwatchId": "",
+        "rValue": 255,
+        "bValue": 255,
+        "gValue": 255,
+        "aValue": 0
+       }
+      },
+      {
+       "id": "rk-a-143-n-5",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".rk-rt-button-background-circle",
+         "selectorGuids": [
+          "4b6c20a7-b12b-4178-bc33-e48f9899f976"
+         ]
+        },
+        "xValue": 1,
+        "yValue": 1,
+        "locked": true
+       }
+      },
+      {
+       "id": "rk-a-143-n-6",
+       "actionTypeId": "STYLE_SIZE",
+       "config": {
+        "delay": 0,
+        "easing": "",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".rk-rt-button-background-circle",
+         "selectorGuids": [
+          "4b6c20a7-b12b-4178-bc33-e48f9899f976"
+         ]
+        },
+        "widthValue": 0.5,
+        "heightValue": 0.5,
+        "widthUnit": "rem",
+        "heightUnit": "rem",
+        "locked": false
+       }
+      }
+     ]
+    },
+    {
+     "actionItems": [
+      {
+       "id": "rk-a-143-n-7",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 800,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".rk-rt-button-background-circle",
+         "selectorGuids": [
+          "4b6c20a7-b12b-4178-bc33-e48f9899f976"
+         ]
+        },
+        "xValue": 10,
+        "yValue": 10,
+        "locked": true
+       }
+      },
+      {
+       "id": "rk-a-143-n-8",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".rk-rt-button-text.rk-rt-text-two",
+         "selectorGuids": [
+          "bd336f81-9fac-5a35-66d2-6e5b3c97b17e",
+          "0268ab44-550a-d08e-dd79-2251d1e4eedc"
+         ]
+        },
+        "yValue": 0,
+        "xUnit": "PX",
+        "yUnit": "%",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "rk-a-143-n-9",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".rk-rt-button-text.rk-rt-text-one",
+         "selectorGuids": [
+          "bd336f81-9fac-5a35-66d2-6e5b3c97b17e",
+          "23b4a3fd-cf75-f6e3-5194-ca6b4132a55f"
+         ]
+        },
+        "yValue": -120,
+        "xUnit": "PX",
+        "yUnit": "%",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "rk-a-143-n-10",
+       "actionTypeId": "STYLE_BORDER",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".rk-rt-button-wrap.rk-rt-overflow-hidden.rk-rt-radius-xl",
+         "selectorGuids": [
+          "4b6c20a7-b12b-4178-bc33-e48f9899f977",
+          "4b6c20a7-b12b-4178-bc33-e48f9899f97a",
+          "4b6c20a7-b12b-4178-bc33-e48f9899f97e"
+         ]
+        },
+        "rValue": 255,
+        "bValue": 255,
+        "gValue": 255,
+        "aValue": 1
+       }
+      },
+      {
+       "id": "rk-a-143-n-11",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 600,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".rk-rt-button-icon-block",
+         "selectorGuids": [
+          "4b6c20a7-b12b-4178-bc33-e48f9899f973"
+         ]
+        },
+        "xValue": 1.03,
+        "yValue": 1.03,
+        "locked": true
+       }
+      },
+      {
+       "id": "rk-a-143-n-12",
+       "actionTypeId": "STYLE_SIZE",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 800,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".rk-rt-button-background-circle",
+         "selectorGuids": [
+          "4b6c20a7-b12b-4178-bc33-e48f9899f976"
+         ]
+        },
+        "widthValue": 20,
+        "heightValue": 20,
+        "widthUnit": "rem",
+        "heightUnit": "rem",
+        "locked": false
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": true,
+   "createdOn": 1756657983365
+  },
+  "rk-a-144": {
+   "id": "rk-a-144",
+   "title": "Contact button hover out",
+   "actionItemGroups": [
+    {
+     "actionItems": [
+      {
+       "id": "rk-a-144-n",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "outQuart",
+        "duration": 600,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".rk-rt-button-icon-block",
+         "selectorGuids": [
+          "4b6c20a7-b12b-4178-bc33-e48f9899f973"
+         ]
+        },
+        "xValue": 0,
+        "yValue": 0,
+        "locked": true
+       }
+      },
+      {
+       "id": "rk-a-144-n-2",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".rk-rt-button-text.rk-rt-text-two",
+         "selectorGuids": [
+          "bd336f81-9fac-5a35-66d2-6e5b3c97b17e",
+          "0268ab44-550a-d08e-dd79-2251d1e4eedc"
+         ]
+        },
+        "yValue": 100,
+        "xUnit": "PX",
+        "yUnit": "%",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "rk-a-144-n-3",
+       "actionTypeId": "TRANSFORM_MOVE",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".rk-rt-button-text.rk-rt-text-one",
+         "selectorGuids": [
+          "bd336f81-9fac-5a35-66d2-6e5b3c97b17e",
+          "23b4a3fd-cf75-f6e3-5194-ca6b4132a55f"
+         ]
+        },
+        "yValue": 0,
+        "xUnit": "PX",
+        "yUnit": "%",
+        "zUnit": "PX"
+       }
+      },
+      {
+       "id": "rk-a-144-n-4",
+       "actionTypeId": "STYLE_BORDER",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 500,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".rk-rt-button-wrap.rk-rt-overflow-hidden.rk-rt-radius-xl",
+         "selectorGuids": [
+          "4b6c20a7-b12b-4178-bc33-e48f9899f977",
+          "4b6c20a7-b12b-4178-bc33-e48f9899f97a",
+          "4b6c20a7-b12b-4178-bc33-e48f9899f97e"
+         ]
+        },
+        "globalSwatchId": "",
+        "rValue": 255,
+        "bValue": 255,
+        "gValue": 255,
+        "aValue": 0
+       }
+      },
+      {
+       "id": "rk-a-144-n-5",
+       "actionTypeId": "STYLE_SIZE",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 600,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".rk-rt-button-background-circle",
+         "selectorGuids": [
+          "4b6c20a7-b12b-4178-bc33-e48f9899f976"
+         ]
+        },
+        "widthValue": 0.5,
+        "heightValue": 0.5,
+        "widthUnit": "rem",
+        "heightUnit": "rem",
+        "locked": false
+       }
+      },
+      {
+       "id": "rk-a-144-n-6",
+       "actionTypeId": "TRANSFORM_SCALE",
+       "config": {
+        "delay": 0,
+        "easing": "ease",
+        "duration": 600,
+        "target": {
+         "useEventTarget": "CHILDREN",
+         "selector": ".rk-rt-button-background-circle",
+         "selectorGuids": [
+          "4b6c20a7-b12b-4178-bc33-e48f9899f976"
+         ]
+        },
+        "xValue": 1,
+        "yValue": 1,
+        "locked": true
+       }
+      }
+     ]
+    }
+   ],
+   "useFirstGroupAsInitialState": false,
+   "createdOn": 1756657983365
   },
   "rk-a-37": {
    "id": "rk-a-37",

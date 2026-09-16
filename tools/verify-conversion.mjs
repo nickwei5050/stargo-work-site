@@ -15,7 +15,7 @@ try {
       await route.fulfill({ status: 503, contentType: 'application/json', body: '{"ok":false,"error":"not_configured"}' });
     });
     await p.goto(`${BASE}/${lang}contact.html`, { waitUntil: 'load' });
-    const form = p.locator('#email-form');
+    const form = p.locator('form[data-stargo-form="contact"]');
     await form.evaluate(f => f.requestSubmit());
     assert.equal(requests, 0, 'invalid form sends nothing');
     assert(await form.locator('.stargo-form-note').isVisible());
@@ -31,18 +31,28 @@ try {
     const legal = await p.locator('a').evaluateAll(as => as.filter(a => /Privacy|隐私|Terms|条款/.test(a.innerText)).map(a => a.getAttribute('href')));
     assert(legal.length > 0 && legal.every(h => /(?:privacy|terms)\.html/.test(h)));
     await p.goto(`${BASE}/${lang}pricing.html`, { waitUntil: 'load' });
-    const tabs = p.locator('.w-tab-link');
-    for (const index of [1, 0]) {
-      await tabs.nth(index).click();
-      await p.waitForTimeout(600);
-      assert.equal(await tabs.nth(index).getAttribute('aria-selected'), 'true');
-      assert.equal(await p.locator('.w-tab-pane.w--tab-active').count(), 1);
-    }
-    await p.locator('.pricng-tab-info').nth(1).click();
-    assert(await p.locator('.w-tab-pane.w--tab-active .pricing-card-price-block.year').first().isVisible());
-    await p.locator('.pricng-tab-info').nth(0).click();
-    assert(await p.locator('.w-tab-pane.w--tab-active .pricing-card-price-block.monthly').first().isVisible());
-    console.log(`PASS ${lang || 'zh/'} ${width}: validation, duplicate guard, mocked 503 truthful fallback, legal, pricing tabs + renewal`);
+    /* The pricing page was rebuilt on renok's tier grid (2026-09-15), so the
+       first-year/renewal switch is no longer Webflow tabs. renok draws one
+       control — `.rk-rt-toggle`, the switch itself; the words either side of it
+       are labels and carry no interaction, which is the donor's own design —
+       and it swaps `display` on the two panes. Test the control that exists:
+       renewal prices are a real deliverable and must stay reachable. */
+    const toggle = p.locator('.rk-rt-toggle');
+    const monthly = p.locator('.rk-rt-monthly-wrapper');
+    const yearly = p.locator('.rk-rt-yearly-wrapper');
+    assert.equal(await toggle.count(), 1, 'one pricing toggle');
+    assert(await monthly.isVisible() && !(await yearly.isVisible()), 'first-year prices show at rest');
+    await toggle.click();
+    await p.waitForTimeout(600);
+    assert(await yearly.isVisible() && !(await monthly.isVisible()), 'the toggle reaches the renewal prices');
+    await toggle.click();
+    await p.waitForTimeout(600);
+    assert(await monthly.isVisible() && !(await yearly.isVisible()), 'the toggle comes back');
+    /* Five levels in each pane, and the renewal pane must not silently be a
+       copy of the first-year one. */
+    assert.equal(await p.locator('.rk-rt-monthly-wrapper .rk-rt-pricing-card').count(), 5, 'five first-year levels');
+    assert.equal(await p.locator('.rk-rt-yearly-wrapper .rk-rt-pricing-card').count(), 5, 'five renewal levels');
+    console.log(`PASS ${lang || 'zh/'} ${width}: validation, duplicate guard, mocked 503 truthful fallback, legal, pricing toggle + renewal`);
     count++;
     await p.close();
   }

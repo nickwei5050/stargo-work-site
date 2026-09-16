@@ -503,6 +503,126 @@ function homeIntro(html, lang) {
   return html.replace('<body>', `<body>${overlay}`);
 }
 
+/* ---- the enterprise ontology list inside the lifelogx sticky section -------
+   THE DEFECT: the page shipped six objects (客户 / 询盘 / 报价 / 订单 / 出货 /
+   任务) but no viewport ever showed more than three of them. Measured on the
+   served page before this change, walking DOWN only (these templates reverse
+   their reveal on upward scroll, so a frame taken after scrolling back up is a
+   half-closed animation, not the layout):
+
+       width   客户    询盘    报价    订单    出货    任务
+       390     358x42 358x42 358x42  0x0    0x0    0x0
+       430     398x42 398x42 398x42  0x0    0x0    0x0     <- 412/430 were the
+       768      0x0    0x0    0x0   224x42 224x42 224x42      widths no earlier
+       1024     0x0    0x0    0x0   309x42 309x42 309x42      pass measured at
+       1440     0x0    0x0    0x0   416x42 416x42 416x42
+
+   The 0x0 boxes are not a reveal mid-frame: those headings sit under an
+   ancestor at display:none. Half the catalogue was unreachable at every single
+   width, while every card's eyebrow already promised 「客户 ▪ 报价 ▪ 订单」.
+
+   WHY IT HAPPENED: the donor ships the SAME three texts twice, in two sibling
+   wrappers that css/lifelogx.lx.css switches at 767px —
+
+     .lx-home-features-texts.lx-hide-desktop   display:none,  flex below 768
+     .lx-hero-home-text-holder.lx-hide-mobile-landscape   flex,  none below 768
+
+   — so Lifelogx can show its three features inline between the picture cards on
+   a phone and in the scroll-synced right-hand column on a desktop. It is a
+   REPOSITIONING device for one list, not a way to carry two. This build read
+   the six slots as six distinct objects (spec.cards.slice(0, 6) fed straight
+   into both wrappers), which silently cut the list in half at the breakpoint.
+
+   THE FIX, and why it is shaped this way: each wrapper now carries the whole
+   list, which is exactly what the donor does — the two wrappers are mutually
+   exclusive, so nothing is ever on screen twice.
+
+     - 客户 / 询盘 / 报价 lose the `lx-hide-desktop` breakpoint switch and stand
+       in the left column at every width. Nothing binds to that class but the
+       display rule above; the interactions bind to .lx-expandable-item.lx-_N
+       and .lx-home-features-texts.lx-_N, which are untouched here.
+     - 订单 / 出货 / 任务 stay in the donor's right-hand sticky column, still
+       driven by lx-a-39 / lx-a-65 (STYLE_OPACITY + TRANSFORM_MOVE at y=±100%
+       of each block's own height), so the desktop cross-fade is byte-for-byte
+       the donor's.
+     - and three clones of the donor's own mobile unit — the same markup, the
+       same `lx-hide-desktop` class the donor uses for precisely this purpose —
+       mirror that trio inline below 768, where the right-hand column is gone.
+
+   Rejected: simply deleting both `lx-hide-*` switches. It measures green (all
+   six get a box at all five widths) but it puts the donor's overlapping
+   opacity carousel on a phone, where .lx-sitcky-section is height:auto instead
+   of 300vh. Measured at 430x900: 订单 and 出货 never reach opacity 0.95 while
+   fully inside the viewport — the scroll range is too short for a three-step
+   cross-fade — and below 479px .lx-hero-home-text-holder picks up the donor's
+   `text-align:center`, so that trio would be centred while the trio above it
+   stays ranged left. Cloning the unit the donor already wrote for phones keeps
+   the phone layout the donor's plain inline list.
+
+   AFTER, same downward walk, every heading's widest box and the number of
+   copies of it that are not under a display:none ancestor:
+
+       width   客户    询盘    报价    订单    出货    任务     copies visible
+       320    288x42 288x42 288x42 288x42 288x42 288x42   1 each
+       360    328x42 328x42 328x42 328x42 328x42 328x42   1 each
+       375    343x42 343x42 343x42 343x42 343x42 343x42   1 each
+       390    358x42 358x42 358x42 358x42 358x42 358x42   1 each
+       393    361x42 361x42 361x42 361x42 361x42 361x42   1 each
+       412    380x42 380x42 380x42 380x42 380x42 380x42   1 each
+       430    398x42 398x42 398x42 398x42 398x42 398x42   1 each
+       768    224x42 224x42 224x42 224x42 224x42 224x42   1 each
+       834    246x42 246x42 246x42 246x42 246x42 246x42   1 each
+       1024   309x42 309x42 309x42 309x42 309x42 309x42   1 each
+       1440   416x42 416x42 416x42 416x42 416x42 416x42   1 each
+
+   Also walked at the three breakpoint edges the donor switches on — 479/480,
+   767/768 and 991/992 — and on en/intelligence.html, with the same result. The
+   three phone clones carry the only second DOM copy of 订单 / 出货 / 任务 and
+   it is display:none from 768 up, so nothing is ever on screen twice.
+
+   The desktop cross-fade is untouched: sampling the walk every 40px, the
+   sticky trio peaks at opacity 0.94 / 0.92 / 1.00 at 1024 with this change and
+   at 0.98 / 0.91 / 1.00 with the new left-column texts forced back to
+   display:none. Same numbers, so the sub-1.0 readings are the sampling step
+   landing beside a continuous cross-fade, not anything this change caused. */
+function lxOntologyList(b, spec, t, name) {
+  const PLAIN = '<div class="lx-home-features-texts">';
+  const MOBILE = '<div class="lx-home-features-texts lx-hide-desktop">';
+  const found = b.split(MOBILE).length - 1;
+  if (found !== 3) throw new Error(`${name}: expected 3 ${MOBILE} units in the donor, found ${found}`);
+  if (b.includes(PLAIN)) throw new Error(`${name}: the donor already has an unswitched features-texts unit`);
+
+  // Off with the breakpoint switch: these three now stand at every width.
+  b = b.split(MOBILE).join(PLAIN);
+
+  // Clone the last one three times, switch back on, for the phone mirror of the
+  // right-hand column. Same unit, same markup — cloning a unit is how this repo
+  // repeats a donor row, and nothing in it carries a data-w-id to collide.
+  const unit = extractElement(b, b.lastIndexOf(PLAIN), 'div');
+  const clone = MOBILE + unit.text.slice(PLAIN.length);
+  for (const marker of ['<h3 class="lx-heading-style-h3 lx-home-feature">', '<div class="lx-text-size-regular lx-text-weight-light">']) {
+    if (clone.split(marker).length - 1 !== 1) throw new Error(`${name}: the cloned ontology unit does not hold exactly one ${marker}`);
+  }
+  b = b.slice(0, unit.end) + clone.repeat(3) + b.slice(unit.end);
+
+  /* Slot order down the document: three unswitched units in the left column,
+     three phone-only clones after them, the donor's three sticky units in the
+     right column, then the story card, which shares these two classes. */
+  const objects = spec.cards.slice(0, 6);
+  const inLeftColumn = objects.slice(0, 3);          // 客户 / 询盘 / 报价
+  const inStickyColumn = objects.slice(3, 6);        // 订单 / 出货 / 任务
+  const slots = [...inLeftColumn, ...inStickyColumn, ...inStickyColumn];
+  b = setEachInner(b, '<h3 class="lx-heading-style-h3 lx-home-feature">', [...slots.map((c) => t(c.title)), t(spec.feat2Card.title)]);
+  b = setEachInner(b, '<div class="lx-text-size-regular lx-text-weight-light">', [...slots.map((c) => t(c.text)), t(spec.feat2Card.text)]);
+
+  // Every object once in each wrapper, and the wrappers never overlap.
+  for (const c of objects) {
+    const n = b.split(`<h3 class="lx-heading-style-h3 lx-home-feature">${t(c.title)}</h3>`).length - 1;
+    if (n !== (inLeftColumn.includes(c) ? 1 : 2)) throw new Error(`${name}: ${t(c.title)} appears ${n} times`);
+  }
+  return b;
+}
+
 /* ---- intelligence.html / workforce.html — lifelogx homepage ----------- */
 function lxPage(spec, lang, name) {
   const t = (p) => (typeof p === 'string' ? p : p[lang]);
@@ -523,9 +643,7 @@ function lxPage(spec, lang, name) {
   b = s(b, 'Ready made features your users already expect.', t(spec.features[2].text));
   b = s(b, '<h3 class="lx-expandable-text">Organised</h3>', `<h3 class="lx-expandable-text">${t(spec.features[2].title)}</h3>`);
   for (const [k, v] of Object.entries(spec.tags)) b = s(b, `>${k}<`, `>${t(v)}<`);
-  // six carousel cards plus the story card share these two classes
-  b = setEachInner(b, '<h3 class="lx-heading-style-h3 lx-home-feature">', [...spec.cards.slice(0, 6).map((c) => t(c.title)), t(spec.feat2Card.title)]);
-  b = setEachInner(b, '<div class="lx-text-size-regular lx-text-weight-light">', [...spec.cards.slice(0, 6).map((c) => t(c.text)), t(spec.feat2Card.text)]);
+  b = lxOntologyList(b, spec, t, name);
   spec.gradient.forEach((g, i) => {
     const re = new RegExp(`(class="lx-heading-style-h1 lx-_${i + 1}">)[^<]*(</h3>)`);
     if (!re.test(b)) throw new Error(`${name}: gradient heading ${i + 1}`);
@@ -676,7 +794,86 @@ PAGES['about.html'] = (lang) => {
   b = s(b, '<a href="#" class="lx-careers_01-item w-inline-block">', '<a href="contact.html" class="lx-careers_01-item w-inline-block">', { count: 5 });
   b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
   if (/Lifelogx|Lina Elsen|Amira|Mila Eron|Oren|Full Time|Part Time|Contract<|>Download</.test(b)) throw new Error('about: template copy survives');
-  return inMonoShell(b + bigMark(), ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
+
+  /* The page the owner asked for (2026-09-10): 「about页面也拿cinery模版替换成我们
+     现有的about模版，仅改变文字」, with its composition chosen on 2026-09-15:
+     「介绍带 + 项目网格 + 评价」.
+
+     cinery ships no About page — only index.html and pricing.html — so the
+     three blocks below are cut from its HOME page, which is where its
+     introduction band, its work grid and its testimonial band live.
+
+     The Lifelogx page above is still built, and deliberately: every assertion
+     it makes about that template keeps running, so a donor re-cut fails here
+     rather than silently in some later release. What it can no longer do is
+     carry copy cinery has no slot for — `ABOUT.storyTitle`/`story`,
+     `ABOUT.values` and `ABOUT.startTitle`/`starts` are drawn by none of the
+     three blocks. That is a real content loss, the owner has been told which
+     entries it costs, and they stay in copy.mjs so the swap destroys nothing
+     and putting them back is one block away. */
+  void b;
+  const aboutBody = [
+    renderBlock('cn-about', lang),
+    renderBlock('cn-about-projects', lang),
+    renderBlock('cn-about-reviews', lang),
+  ].join('\n');
+
+  const aboutSheets = [...new Set(Object.values(DONORS).map((d) => d.sheet))]
+    .filter((f) => existsSync(`${SITE}/css/${f}`));
+  let out = inMonoShell(aboutBody + bigMark(), [...aboutSheets, 'donor-fonts.css', 'lifelogx.lx.css', 'stargo-fusion.css'])
+    .replace('<body ', '<body class="stargo-dark-page" ')
+    .replace('</body>', '<script src="js/stargo-video-defer.js" defer></script><script src="js/capability-blocks.js" defer></script>');
+
+  /* The projects band is four of cinery's own case-study clips — the owner
+     asked for them back on 2026-09-15 (「恢复原模版」) after a still-image
+     version. They are `<video autoplay loop muted playsinline>` with no
+     `preload`, so a browser takes the first playable source and starts it while
+     the page is still parsing: measured, 4 posters + 4 mp4 = 4,193,766 bytes
+     fetched before the reader has scrolled anywhere near the band, on a page
+     that previously fetched almost nothing.
+
+     This is the same mechanism the capability page already uses for cinery's
+     27-card break band, applied here for the same reason. It changes no
+     element, class, interaction id, poster or frame — the clips are the
+     template's clips, drawn exactly as the template draws them; the url simply
+     waits in `data-src` until js/stargo-video-defer.js restores it as the band
+     comes near. One line to delete if the owner would rather they load at
+     once. */
+  {
+    const sources = (out.match(/<source /g) ?? []).length;
+    out = out.replace(/<video\b[^>]*>[\s\S]*?<\/video>/g, (v) => (v.includes('<source ') ? v
+      .replace('<video', '<video data-defer')
+      .replace(/\spreload="[^"]*"/, ' preload="none"')
+      .replace(/(<source[^>]*?)\ssrc=/g, '$1 data-src=') : v));
+    if (sources && !(out.match(/<source[^>]* data-src=/g) ?? []).length) {
+      throw new Error('about: the projects clips were not deferred');
+    }
+
+    /* Deferring `<source src>` alone did NOT work here, and the measurement
+       said so: with only that in place the live page still fetched 5.66 MB of
+       video before the reader had scrolled, and the DOM showed four sources
+       deferred and four live. The four live ones were put back by Webflow's
+       own `w-background-video` runtime, which reads the wrapper's
+       `data-video-urls` on init and sets a source itself — so the component
+       re-added exactly what the build had just taken away.
+
+       Renaming the attribute is what actually stops it: the runtime looks for
+       `data-video-urls`, finds nothing, and leaves the element alone, so the
+       `<video>` plays from its own two `<source>` children — which are the ones
+       js/stargo-video-defer.js restores when the band comes near. The clips,
+       their posters, the box, its classes and the hover are all untouched; the
+       only thing that changes is who decides when the file is fetched.
+
+       The poster attribute is deliberately left alone: the four posters are
+       138,816 bytes in total and they are what the reader sees until the clip
+       arrives. */
+    const wrappers = (out.match(/\sdata-video-urls=/g) ?? []).length;
+    out = out.replace(/\sdata-video-urls=/g, ' data-defer-video-urls=');
+    if (wrappers && (out.match(/\sdata-video-urls=/g) ?? []).length) {
+      throw new Error('about: a data-video-urls survived, Webflow will fetch the clip eagerly');
+    }
+  }
+  return out;
 };
 
 /* ---- blog.html — lifelogx blog index ------------------------------------ */
@@ -844,14 +1041,50 @@ PAGES['pricing.html'] = (lang) => {
     faq = faq.replace(/(<div class="paragraph-p2">)[^<]*(<\/div>)/g, (_, a, b) => `${a}${t(P.faq[an++][1])}${b}`);
     if (an !== 10) throw new Error(`pricing: ${an} faq answers`);
   }
-  let body = [hero, plans, cta, faq].join('\n');
-  body = localise(scClasses(body));
-  body = body.replace(/alt="(Pricing Card Icon|Check Icon|Close Icon|Arrow Dowen)"/g, 'alt=""');
-  if (/Scalora|\$\d/.test(body)) throw new Error('pricing: template copy or dollar price survives');
-  body = `<div class="sc-scope sc-page">\n${body}\n</div>`;
-  return inMonoShell(body, ['scalora-modules.sc.css', 'stargo-fusion.css'])
+  /* The page the owner asked for (2026-09-10): 「定价页面要重新做，现在这个模版和
+     我们的主题不太搭，拿cinery模版和RENOK的模版来变成我们的」— cinery's styling
+     as the page's voice, renok's tier grid as its structure, and cinery's
+     review composition to close it.
+
+     Scalora's own hero and plan cards are what that replaces, so they are no
+     longer in the body. The code above still builds them, and deliberately:
+     every assertion it makes about Scalora's markup keeps running, so the day
+     that template changes shape the build says so here rather than in some
+     later release where the cards are wanted again. `cta` and `faq` stay on the
+     page — they are this site's own words (ten real questions and answers),
+     not the template's, and the owner asked for a new pricing page, not a
+     shorter one.
+
+     Order is the owner's own reading order, image by image: the cinery header
+     (图一), renok's toggle and five tier cards (图三), renok's comparison table
+     (图四), cinery's all-features card (图二), then the reviews (图五). */
+  const scPart = (() => {
+    let sc = [cta, faq].join('\n');
+    sc = localise(scClasses(sc));
+    sc = sc.replace(/alt="(Pricing Card Icon|Check Icon|Close Icon|Arrow Dowen)"/g, 'alt=""');
+    if (/Scalora|\$\d/.test(sc)) throw new Error('pricing: template copy or dollar price survives');
+    return `<div class="sc-scope sc-page">\n${sc}\n</div>`;
+  })();
+
+  const body = [
+    renderBlock('cn-price-hero', lang),
+    renderBlock('rk-price-tiers', lang),
+    renderBlock('rk-price-compare', lang),
+    renderBlock('cn-price-card', lang),
+    renderBlock('cn-reviews', lang),
+    scPart,
+  ].join('\n');
+
+  /* Every donor sheet, the way the capability page does it, so adding a block
+     to this page never means remembering to link its styles — that is exactly
+     how the first cinery blocks shipped unstyled. js/capability-blocks.js is
+     the concatenation of every tools/blocks/<id>.js; cn-reviews ships one, so
+     this page needs it. */
+  const donorSheets = [...new Set(Object.values(DONORS).map((d) => d.sheet))]
+    .filter((f) => existsSync(`${SITE}/css/${f}`));
+  return inMonoShell(body, [...donorSheets, 'donor-fonts.css', 'scalora-modules.sc.css', 'stargo-fusion.css'])
     .replace('<body ', '<body class="stargo-dark-page stargo-pricing-lx" ')
-    .replace('</body>', '<script src="js/stargo-pricing.js"></script></body>');
+    .replace('</body>', '<script src="js/stargo-pricing.js"></script><script src="js/capability-blocks.js" defer></script></body>');
 };
 
 /* ---- enterprise.html — Mono studio ------------------------------------ */
@@ -1133,6 +1366,61 @@ PAGES['contact.html'] = (lang) => {
   if (!/<video id="[^"]+-video"/.test(h)) throw new Error('contact: quote card video');
   h = h.replace(/(<form id="email-form"[^>]*>)/, '$1<div class="stargo-hp" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"/></div>');
   if (!h.includes('stargo-hp')) throw new Error('contact: form not found');
+
+  /* The form column the owner asked for (2026-09-10): 「联系页面也拿cinery模版来
+     改但我要保留原网站如图6的这个」, settled on 2026-09-15 as B2 — keep this
+     page's own two columns and its quote card, and swap ONLY the right-hand
+     form for cinery's card.
+
+     So everything above still runs: Mono's form is built, its fields filled,
+     its honeypot added and every assertion it makes kept — and then the whole
+     `.w-form` element it lives in is replaced by tools/blocks/cn-contact.mjs,
+     which renders exactly that shape (one `.w-form` root, the form, then
+     `.w-form-done` and `.w-form-fail` as siblings after it). The block carries
+     this site's own ten fields and every hook js/stargo-forms.js and
+     functions/api/contact.js read; what it takes from cinery is the card.
+
+     Scoped through `.form-amin` because `w-form` is Webflow's own class and
+     the page carries more than one. */
+  {
+    const col = findByClass(h, 'div', 'form-amin');
+    const card = findByClass(col.text, 'div', 'w-form');
+    if (!card.text.includes('stargo-hp')) throw new Error('contact: the .w-form inside .form-amin is not the one holding the form');
+    const rebuilt = col.text.slice(0, card.start) + renderBlock('cn-contact', lang) + col.text.slice(card.end);
+    h = h.slice(0, col.start) + rebuilt + h.slice(col.end);
+  }
+  /* The block's styles. This page does not go through inMonoShell — it is the
+     Mono contact template returned whole — so the donor sheets the other pages
+     get there have to be linked here, after Mono's own. Without this the
+     cinery card renders with Mono's default form styling and nothing says so:
+     measured before this line existed, the card's background computed
+     `rgba(0,0,0,0)` and the fields were Mono's white inputs. That is the same
+     silent failure the first cinery blocks shipped with, and it is silent
+     precisely because an unstyled form still submits. */
+  {
+    const monoLink = /<link href="css\/monof-template\.app\.shared\.[a-f0-9]+\.css" rel="stylesheet" type="text\/css"\/>/;
+    if (!monoLink.test(h)) throw new Error('contact: Mono stylesheet link not found, cannot attach the donor sheets');
+    const sheets = [...new Set(Object.values(DONORS).map((d) => d.sheet))]
+      .filter((f) => existsSync(`${SITE}/css/${f}`))
+      .concat('donor-fonts.css')
+      .map((f) => `<link href="css/${f}" rel="stylesheet" type="text/css"/>`)
+      .join('\n');
+    h = h.replace(monoLink, (m) => `${m}\n${sheets}`);
+    if (!h.includes(`css/${DONORS.cinery.sheet}`)) throw new Error('contact: the cinery sheet did not attach; the form card would be unstyled');
+  }
+
+  /* The quote card is the other column and is untouched — 「图6」 is why B2 was
+     chosen over replacing the page. Assert it survived the splice. */
+  if (!/<video id="[^"]+-video"/.test(h)) throw new Error('contact: the quote card lost its portrait film in the swap');
+  /* Not the number of forms on the page — the Mono shell carries a second one
+     in its footer — but the number that reach this site's endpoint. Exactly
+     one form may post to /api/contact, and it must be the one that came out of
+     the block with its honeypot. */
+  if ((h.match(/action="\/api\/contact"/g) ?? []).length !== 1) {
+    throw new Error(`contact: expected exactly one form posting to /api/contact, found ${(h.match(/action="\/api\/contact"/g) ?? []).length}`);
+  }
+  if ((h.match(/name="website"/g) ?? []).length !== 1) throw new Error('contact: expected exactly one honeypot after the swap');
+
   return h.replace(/<body\b/, '<body class="stargo-contact-page"');
 };
 

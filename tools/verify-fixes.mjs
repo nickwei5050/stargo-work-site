@@ -76,11 +76,11 @@ try {
     for (const width of [320, 390, 768, 1440]) {
       await open(lang + 'contact', width);
       await check(`${lang}contact ${width} fields`, async () => {
-        const widths = await p.locator('#email-form input:not([type=submit]):not([name=website]), #email-form select, #email-form textarea').evaluateAll(es => es.map(e => ({ name: e.name, width: e.getBoundingClientRect().width })));
+        const widths = await p.locator('form[data-stargo-form="contact"] input:not([type=submit]):not([name=website]), form[data-stargo-form="contact"] select, form[data-stargo-form="contact"] textarea').evaluateAll(es => es.map(e => ({ name: e.name, width: e.getBoundingClientRect().width })));
         assert(widths.every(r => r.width >= (width < 768 ? width - 65 : 200)), JSON.stringify(widths));
-        assert.equal(await p.locator('#email-form a[href="privacy.html"]').count(), 1);
+        assert.equal(await p.locator('form[data-stargo-form="contact"] a[href="privacy.html"]').count(), 1);
       });
-      await p.locator('#email-form').scrollIntoViewIfNeeded(); await p.waitForTimeout(300);
+      await p.locator('form[data-stargo-form="contact"]').scrollIntoViewIfNeeded(); await p.waitForTimeout(300);
       await p.screenshot({ path: `${OUT}/${lang ? 'en' : 'zh'}-contact-${width}.png` });
     }
     await check(`${lang}form full client → handler → stubbed relay`, async () => {
@@ -95,7 +95,7 @@ try {
         await route.fulfill({ status: response.status, contentType: 'application/json', body: await response.text() });
       });
       try {
-        const form = p.locator('#email-form');
+        const form = p.locator('form[data-stargo-form="contact"]');
         await form.evaluate(f => f.requestSubmit()); assert.equal(requests.length, 0);
         await form.locator('[name=name]').fill('QA not delivered'); await form.locator('[type=email]').fill('qa@example.invalid');
         await form.evaluate(f => { f.requestSubmit(); f.requestSubmit(); }); await p.waitForTimeout(500);

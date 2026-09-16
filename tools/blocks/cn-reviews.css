@@ -1,0 +1,138 @@
+/* cn-reviews — only what the cut cannot carry out of cinery.
+
+   Three kinds of thing live here, and nothing else:
+
+     1. the grid placement cinery wrote against Webflow's generated `#w-node-…`
+        ids, which are not classes and so are invisible to a class-driven
+        extractor;
+     2. cinery's <body> declarations, which never travel with a cut element,
+        and the two properties this site's own `p` rule leaks into the quote;
+     3. where the band sits on OUR page — the one thing an extraction can never
+        know — written with cinery's own spacing values.
+
+   Every value in 1 and 2 is copied verbatim from
+   tools/templates/cinery/css/cinery.app.shared.3e3418b8f.css and scoped under
+   the block root exactly as the extractor scopes its own output. Nothing here
+   sets a size, colour, typeface or layout the donor did not already set.
+
+   There is no motion in this file. cinery's slider is a Webflow COMPONENT, not
+   an IX2 interaction, and it cannot be replayed as keyframes: four slides in
+   one `white-space: nowrap` mask have no fifth box for the fourth to hand the
+   first, so `data-infinite="true"` has nowhere to land, and `Previous` /
+   `Next` are controls, which no keyframe can be. tools/blocks/cn-reviews.js
+   replays the component instead, from the slider's own data attributes. The
+   two arrows' hover rolls are IX2 (a-45 … a-48, fired by e-248 … e-251) and do
+   travel, so nothing about them is written here. */
+
+
+/* ------------------------------------------- 1. the #w-node grid rules -- */
+
+/* Webflow puts an element's grid position on a generated `#w-node-…` id, not on
+   a class, so the extractor never sees these. Twelve of them are in this cut,
+   and every one matters.
+
+   FOUR, at every width: the lower half of each card. `.testimonial-content-grid`
+   is `grid-template-rows: auto auto; height: 100%`, so its second row is as tall
+   as whatever is left of the card under the quote. Without `align-self: end` the
+   logo, the speaker and the concept line sit at the TOP of that leftover space
+   instead of on the card's floor, and they float differently in every card
+   because the quotes are different lengths. This is the rule that lines the four
+   cards' feet up with each other.
+
+   EIGHT, below 768: the card stacks. `.testimonial-grid` is a `.w-layout-grid`,
+   i.e. `grid-template-columns: 1fr 1fr`, and cinery keeps both columns at every
+   width — it hands the portrait and the content block a full-width row each of a
+   two-column grid instead. Without these the portrait keeps half a phone's width
+   (`.testimonial-image-wrap` is `height: 30rem` under 768 and `20rem` under 480,
+   which is the height cinery drew for a full-width picture), and the quote is set
+   at `--_sizes---fixed--small-04` (1.5rem) in the other half.
+
+   Donor rules, in donor order, at the donor's own breakpoint. */
+.cn-reviews #w-node-_2980f196-9156-606d-9b25-297d85c44cbf-85c44ca6,
+.cn-reviews #w-node-_2980f196-9156-606d-9b25-297d85c44cdd-85c44ca6,
+.cn-reviews #w-node-_2980f196-9156-606d-9b25-297d85c44cfb-85c44ca6,
+.cn-reviews #w-node-_2980f196-9156-606d-9b25-297d85c44d19-85c44ca6 { align-self: end; }
+
+@media screen and (max-width: 767px) {
+  .cn-reviews #w-node-_2980f196-9156-606d-9b25-297d85c44cac-85c44ca6 { grid-area: 1 / 1 / 2 / 3; }
+  .cn-reviews #w-node-_2980f196-9156-606d-9b25-297d85c44cae-85c44ca6 { grid-area: 2 / 1 / 3 / 3; }
+  .cn-reviews #w-node-_2980f196-9156-606d-9b25-297d85c44cca-85c44ca6 { grid-area: 1 / 1 / 2 / 3; }
+  .cn-reviews #w-node-_2980f196-9156-606d-9b25-297d85c44ccc-85c44ca6 { grid-area: 2 / 1 / 3 / 3; }
+  .cn-reviews #w-node-_2980f196-9156-606d-9b25-297d85c44ce8-85c44ca6 { grid-area: 1 / 1 / 2 / 3; }
+  .cn-reviews #w-node-_2980f196-9156-606d-9b25-297d85c44cea-85c44ca6 { grid-area: 2 / 1 / 3 / 3; }
+  .cn-reviews #w-node-_2980f196-9156-606d-9b25-297d85c44d06-85c44ca6 { grid-area: 1 / 1 / 2 / 3; }
+  .cn-reviews #w-node-_2980f196-9156-606d-9b25-297d85c44d08-85c44ca6 { grid-area: 2 / 1 / 3 / 3; }
+}
+
+
+/* --------------------------------------------- 2. what <body> supplied -- */
+
+/* cinery's own `body` rule, restated on the block root. A cut element never
+   brings <body> along, and this band is set almost entirely in inherited type:
+   only `.text-size-regular` names a colour of its own, and not one of the five
+   text slots in a card names a family. Dropped onto this site's pricing page the
+   quote, the speaker line, the label and both arrow words would be drawn in
+   Mono's typeface at Mono's leading. Donor rule, verbatim:
+
+     body { background-color: var(--background-color--primary-background);
+            font-family: var(--_typography---font-family--primary);
+            color: var(--primary-color--white);
+            font-size: var(--_sizes---fixed--small);
+            line-height: 1.4;
+            font-weight: var(--_typography---font-weight--regular); }
+
+   `background-color` is left out because `donor.ground` already paints the block
+   root with the same `#000` that variable resolves to. The rest is as cinery
+   wrote it, variables and all: the extractor copies cinery's `:root` onto the
+   scope root, so the names still resolve here. */
+.cn-reviews {
+  font-family: var(--_typography---font-family--primary);
+  color: var(--primary-color--white);
+  font-size: var(--_sizes---fixed--small);
+  line-height: 1.4;
+  font-weight: var(--_typography---font-weight--regular);
+}
+
+/* cinery's `p` rule is `{ font-size; margin-bottom; line-height }` and nothing
+   else, so a cinery paragraph is opaque and tracks normally. This site's own
+   `p` rule (css/monof-template.app.shared.ed8969994.css) adds `opacity: .7` and
+   `letter-spacing: -.5px`, and neither property is in the extracted
+   `.cn-reviews p`, so both leak through onto the one paragraph in this block —
+   the pull quote, which is the largest type in the band and the thing a reader
+   looks at first. Put back what the donor computes. Same repair, for the same
+   reason, as tools/blocks/cn-service.css. */
+.cn-reviews p { opacity: 1; letter-spacing: normal; }
+
+
+/* -------------------------------------------- 3. where the band is drawn -- */
+
+/* On cinery's own page this band is the last thing inside a shared
+   `.padding-bottom.padding-xhuge` column that opens far above it with three
+   pricing tables, so it is given a foot and no head: what sits over it there is
+   a `.spacer-small` (1rem) under the last plan card.
+
+   `donor.wrap` puts that column's own chain back — `.padding-global` (2.5rem
+   gutters, 1.25rem under 768), `.container-large` (100% wide, max 100rem,
+   centred) and `.padding-bottom.padding-xhuge` (8rem of foot, 6rem under 992,
+   5rem under 768) — because the arrows need it: `.left-arrow` and `.right-arrow`
+   are `inset: auto … -5rem …` and hang a full rem below a slider that only
+   carries `margin-bottom: 4rem`, so without a foot they would be drawn across
+   whatever follows the block.
+
+   THE HEAD IS THE ONE NUMBER THIS FILE CHOOSES, and it is still cinery's. On
+   our pricing page the band is a section of its own rather than the end of
+   somebody else's column, so it needs a top as well as a foot. These are the
+   values of cinery's own `.padding-top.padding-xhuge`, the rule it uses
+   wherever a section opens:
+
+     .padding-top, .padding-top.padding-xhuge { padding-bottom: 0; … }
+     .padding-xhuge                           { padding: 8rem }
+     @media (max-width: 767px) .padding-top.padding-xhuge { padding-top: 6rem }
+     @media (max-width: 479px) .padding-top.padding-xhuge { padding-top: 5rem }
+
+   cinery writes no 991 step for the top and does write one for the foot, so
+   between 768 and 991 the band opens on 8rem and closes on 6rem. That asymmetry
+   is cinery's own pairing, kept rather than evened out. */
+.cn-reviews { padding-top: 8rem; }
+@media screen and (max-width: 767px) { .cn-reviews { padding-top: 6rem; } }
+@media screen and (max-width: 479px) { .cn-reviews { padding-top: 5rem; } }

@@ -470,6 +470,18 @@ button.toggle-header { width: 100%; border: 0; border-radius: 0; background: tra
 .footer .stargo-wa { margin-right: .3em; }
 @media (max-width: 1279px) {
   .footer .navigation-text-main { font-size: 15px; }
+}
+/* The band where the prefix genuinely does not fit is 768-1279px, not
+   "everything below 1280". Measured on the built page with the prefix forced
+   visible: the label "WhatsApp +86 187 7512 7878" needs 198px at the footer's
+   15px, and the contact grid's first span gives 194px at 768, 211px at 834 and
+   181px at 1024 — minus the 16px icon slide, 178/195/165px of visible box. So
+   the last digits of the number were cut, which is why this rule exists.
+   Below 768 the footer's bottom is a single column (see the mobile footer block
+   at the end of this file) and the same link is 307px wide at 320 and 413px at
+   430, so the prefix fits with 109-215px to spare and comes back — a phone must
+   not be told to ring a bare number with no channel on it. */
+@media (min-width: 768px) and (max-width: 1279px) {
   .footer .stargo-wa { display: none; }
 }
 @media (max-width: 479px) {
@@ -1259,3 +1271,760 @@ html[lang^="zh"] .lx-scope .lx-heading-style-h4:has(br) {
    that owns it. See tools/blocks/README.md.
    --------------------------------------------------------------------------- */
 
+
+
+/* The homepage hero on a short phone: the call to action lands on the wordmark.
+   ---------------------------------------------------------------------------
+   `.hero-agency` is `height: 100vh; position: sticky` inside a 300vh
+   `.hero-track`, and the hero's two rows are both out of flow: the copy
+   (`.container-bottom.add-px`) is pinned by `top`, the closing wordmark
+   (`.container-bottom.bottom`) by `bottom`. Neither knows how tall the other
+   is, so on a short window they simply meet. Measured on the built page at
+   375x667 (an iPhone SE, and the shortest phone in common use):
+
+       预约演示      383..434     STARGO  415..478     19px of overlap
+       Book a Demo   406..457     STARGO  415..478     42px of overlap
+
+   and the button is drawn straight through the letterforms — both are solid
+   black, so the label and the word destroy each other. It clears on its own at
+   about 686px of viewport height in Chinese and 709px in English; every phone
+   at 800px and up (360x800, 390x844, 393x852, 430x932) was already correct and
+   must not change.
+
+   The hero's height is not available to fix: it is the sticky 100vh panel the
+   whole 300vh scroll choreography is timed against. What is available is the
+   wordmark's size. The block is bottom-anchored, so shrinking the type moves
+   its top DOWN, away from the button, and moves nothing else: grid height is
+   `2 x 0.85em + 10px` (measured 137.5px at the donor's 4.6875rem/75px), and the
+   button needs the top at 465px in the worse of the two languages, which is
+   87px of grid, which is 45px of type.
+
+   6.5vh gives 43.4px at 667 and 46.8px at 720 — inside the budget at both, and
+   `min()` keeps the donor's own 4.6875rem wherever that is already the smaller.
+   The query is gated on height as well as width because this is a height
+   problem: a 390x844 phone keeps the wordmark exactly as the template drew it.
+   The copyright line above is untouched — it is real text at 14px and shrinking
+   it would trade a collision for an unreadable line. */
+@media screen and (max-width: 767px) and (max-height: 720px) {
+  .hero .container-bottom.bottom .bottom-grid._2 h1.h1,
+  .hero .container-bottom.bottom .bottom-grid._2 h2.h1 {
+    font-size: min(4.6875rem, 6.5vh);
+  }
+}
+
+
+/* Touch targets: the standalone links a finger has to hit.
+   ---------------------------------------------------------------------------
+   Measured on the built page with touch emulation: the navigation's
+   `.button-link` is 74x25 on a phone and 63x18 on an iPad in landscape, and the
+   footer's `.legal-link` is 62x20. Both are standalone controls, and both are
+   under the 24x24 CSS pixels WCAG 2.5.8 asks for on the short axis — 18px in
+   the worst case, which is a link you aim at rather than tap.
+
+   The fix is padding, not size: the text does not move and nothing is
+   restyled, the box around it simply grows to a finger. `(pointer: coarse)`
+   scopes it to touch input, so a mouse-driven desktop keeps the navigation row
+   exactly as the template drew it — the defect is a touch defect and the cure
+   belongs where the defect is.
+
+   The privacy link inside the contact form's consent sentence is deliberately
+   NOT here. It is an inline link in a run of prose, which 2.5.8 exempts, and
+   padding it would open gaps in the middle of the sentence. */
+@media (pointer: coarse) {
+  /* Every `.button-link`, not only the two in the bar: the same class builds
+     the slide-out menu's list, and those were still 111x17 when the rule named
+     `.navbar` and `.navigation-text-main` alone — the menu is the one a phone
+     actually navigates with. */
+  a.button-link {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+  .legal-link {
+    display: inline-block;
+    padding-top: 7px;
+    padding-bottom: 7px;
+  }
+}
+
+
+/* The homepage's 「认识 AI 员工」 pill, drawn across the copy beside it.
+   ---------------------------------------------------------------------------
+   In the "288 位专业 AI 员工" card the pill sits at the left of the card's
+   bottom row and `.team-circle.btm` — the label and the two heading lines —
+   sits to its right, anchored by `right: 20px` at a fixed width. The width
+   does not come down with the card, so as the column narrows the block's LEFT
+   edge walks left until it is on top of the pill. Measured on the built page,
+   with the section settled (not mid-entrance):
+
+       768   pill 40..174   text 116..354   59 x 43 overlapped
+       800   pill 40..174   text 132..370   43 x 43
+       834   pill 42..176   text 149..387   27 x 43
+       900+  pill 40..174   text 182..420   clear
+       <768  the card is wider relative to the pill and it is clear again
+
+   At 768 that hides the first two characters of both heading lines, so the
+   sentence starts mid-word. Capping the block's width keeps the donor's
+   right-hand anchor and its side-by-side composition, and simply stops it
+   before the pill: 200px is the pill's own width plus the card's padding and a
+   gap, so the text starts at 195 against the pill's 174 at the tightest width
+   in the band. `left: auto` is restated because the used value the browser
+   derives from `right` + `width` is what was walking left. */
+@media screen and (min-width: 768px) and (max-width: 899px) {
+  .card-half .team-circle.btm {
+    left: auto;
+    max-width: calc(100% - 200px);
+  }
+}
+
+
+/* The pricing-ladder orb, dipping into the line below it at 768.
+   ---------------------------------------------------------------------------
+   The orb is set inline in `.h2.for-stats` and sunk `-0.14em` so it sits on the
+   type's baseline. At 768 the Chinese title wraps to two lines and the sink
+   puts the orb's box 0.92px past the top of the second line's glyph box — 46
+   square px of overlap against the 40 this repo's own verifier allows
+   (tools/verify-restore.mjs, "ladder orb overlaps the title glyphs"). Measured
+   identically before and after today's work, so it is not new; it has simply
+   never been chased.
+
+   Lifting the sink to -0.06em at 768..991 clears it, and lifting is the safe
+   direction: it moves the orb AWAY from the line below and further into its own
+   line box, where there is room. Above 991 the title does not wrap and the
+   donor's own -0.14em is kept. */
+@media screen and (max-width: 991px) {
+  .h2.for-stats .video-logo.for-sct.stargo-inline-orb {
+    vertical-align: -0.06em;
+  }
+}
+
+
+/* The open menu's own links, on the pricing page.
+   ---------------------------------------------------------------------------
+   `.absolute-main` is an empty decorative div inside `.menu-wrapper`
+   (`<div class="absolute-main"></div>`, no content and no children). It
+   computes `z-index: 9999; pointer-events: auto`, while the menu it sits in is
+   `z-index: 222` — so on the pricing page it lies across the menu's own links
+   and swallows every click. Measured on production with the menu open at 1440:
+   the 「定价」 item is drawn at 1142,485 92x50 and `elementFromPoint` at its
+   centre returns `DIV.absolute-main`, not the link; a real click times out.
+
+   Not a regression from the cinery/renok rebuild — the previous deployment
+   behaves identically on /pricing, and the homepage menu works on both. It has
+   simply never been caught, because the site's mobile audit measured tap-target
+   SIZES and never actually tapped a menu item.
+
+   An empty decorative layer has nothing to receive a click for, so it stops
+   taking them. Nothing about its size, paint, stacking or animation changes —
+   only whether it is in the hit-test path.
+
+   Scoping it under `.menu-wrapper` was the first attempt and it matched
+   nothing: on the pages built through inMonoShell the element is a direct
+   child of `<body>` (measured parent chain on /pricing:
+   `body.stargo-dark-page.stargo-pricing-lx`), full-viewport at 0,0 1440x900,
+   while on the contact page it sits inside `.main-content` at -216,45 and
+   never covers the menu. Same class, two different positions in the tree — so
+   the rule is written against the class itself. */
+.absolute-main {
+  pointer-events: none;
+}
+
+
+/* The hero wordmark on a large phone — 「STARG / O / WORK」.
+   ---------------------------------------------------------------------------
+   Reported from a real handset (2026-09-16) and reproduced at 412px and 430px:
+   the homepage hero card shrinks as the page scrolls, and inside the narrowed
+   card 「STARGO」 no longer fits on one line, so the browser breaks the word and
+   drops the O onto a line of its own. Measured at 430x800 after scrolling 600px:
+   the word's box is 258px wide at the donor's 75px, and the text needs more
+   than that — height 108px, i.e. two line boxes, against 54px at 393 and below.
+
+   Neither existing wordmark rule reaches it. One is gated `min-width: 992px`
+   (desktop), the other `max-width: 767px AND max-height: 720px` — a 430x800
+   phone satisfies the width but not the height, so it fell through to the
+   template's own size.
+
+   WHY THIS WAS NOT CAUGHT: every mobile pass on this site used 375, 390, 393,
+   768 and 1024. 412 and 430 — where most large Android handsets and the Pro
+   Max iPhones live — were never in the set, so the hole in the width list was
+   exactly where the defect was. The widths below are now the ones the audit
+   walks.
+
+   `nowrap` is what actually forbids the break; the clamp is what keeps the
+   unbroken word inside the shrunken card. 15.5vw measured against the card's
+   own inner width: 66.6px at 430 (card 257), 63.9 at 412, 60.5 at 390, 49.6 at
+   320 — each comfortably inside. `min()` keeps the donor's 4.6875rem wherever
+   that is already smaller, so nothing grows. */
+@media screen and (max-width: 767px) {
+  .hero .container-bottom.bottom .bottom-grid._2 h1.h1,
+  .hero .container-bottom.bottom .bottom-grid._2 h2.h1 {
+    font-size: min(4.6875rem, 15.5vw);
+    white-space: nowrap;
+  }
+}
+
+
+/* The footer on a phone: the same information the desktop footer carries.
+   ---------------------------------------------------------------------------
+   Measured on the built pages at 320 / 360 / 375 / 390 / 393 / 412 / 430 (and
+   768 / 834 / 1024, which are NOT affected — everything below is gated at
+   767px and 479px). Reported on index, intelligence, workforce, enterprise,
+   pricing, about, contact and blog; the footer is one block built by
+   tools/chrome.mjs, so it is one defect on eight pages.
+
+   Three pieces of information were dropped on a phone:
+     - the 「WhatsApp」 label before +86 187 7512 7878, leaving a bare number
+       with no channel on it  (fixed in the `.stargo-wa` rule above);
+     - the 「(一般咨询)」 column heading over www.stargomoto.com, so the URL was
+       orphaned under 「(商务合作)」 and read as a third business contact;
+     - the whole 「(社交)」 heading and its three round social buttons.
+
+   ONE CAUSE UNDERNEATH ALL OF IT. `.footer-bottom-grid` is a grid with
+   `place-items: start stretch` — in a grid that is "top-align the two columns,
+   let each fill its track". Below 768px the template flips it to
+   `display: flex; flex-flow: column`, and in a column flexbox the two axes
+   swap: `align-items: start` is now the HORIZONTAL one, so both
+   `.footer-btm-part-1` blocks shrink-to-fit instead of filling the row. Webflow
+   patched the divider between them (`.line-vertical { width: 100% }` at 767)
+   and never the parts themselves. Measured before: the lower part is
+   158.3px wide at EVERY phone width — 320, 360, 375, 390, 393, 412 and 430 all
+   give exactly 158.3px, because it is the block's max-content width and no
+   longer has anything to do with the screen. On a 430px phone that is 37% of
+   the viewport with 255px of dead black beside it, and every grid inside it is
+   sized from that 158.3px rather than from the screen: the pages grid ran two
+   74.2px columns, which its longest label (「企业与治理」, 71.5px) cleared by
+   2.7px, and the address row computed four 32.1px tracks.
+
+   Fix 1 — give the parts the row they are in, in the template's own idiom: the
+   same `width: 100%` Webflow wrote for the divider at the same breakpoint.
+   Measured after: the lower part is 307px at 320, 346 at 360, 360 at 375, 374
+   at 390/393, 396 at 412 and 413 at 430 — the row it sits in, at every width —
+   and the pages grid's columns go from 74.2px to 148.5-201.5px, so no label
+   overflows its column any more. */
+@media screen and (max-width: 767px) {
+  .footer .footer-bottom-grid > .footer-btm-part-1 { width: 100%; }
+}
+
+/* Fix 2 — restore the two hidden headings and the social buttons, and pair each
+   heading with the thing it names.
+   ---------------------------------------------------------------------------
+   Below 479px the Mono template hides `.top-text.opc.hdi` (the SECOND heading
+   of each pair — 「(一般咨询)」 and 「(社交)」) and `.social-content` (the three
+   round buttons) outright, and it has a reason: the heading pair is a
+   two-column grid while the contact pair below it collapses to a single stacked
+   column, so an un-hidden second heading would sit to the right of the first
+   with nothing under it — the column-labels-above-nothing defect. It also still
+   carries the desktop placement `grid-area: 1 / 3 / 2 / 5`, i.e. columns 3-4 of
+   a grid that now has two, which is what made the address row compute four
+   32.1px tracks instead of three.
+
+   So the answer is not "show them where the desktop puts them". The phone
+   footer is a stack, and in a stack a heading belongs immediately above its own
+   group. `display: contents` dissolves the heading grid, the 20px spacer and
+   the contact grid, which promotes their four cells into one flex column on the
+   block wrapper; `order` then interleaves them heading / group / heading /
+   group. The grid placements the cells carry become inert the moment their
+   grid is gone, so nothing has to be unset. No markup changes: the
+   `data-w-id`s, the Webflow node ids and the link structure are all untouched,
+   and the reveal animation on the footer is not addressed here at all.
+
+   Scope: `.footer-btm-part-1 > .margin-50 > div` is exactly the two paired
+   blocks (contact and address). The 「(页面)」 block above them is built
+   differently — a bare <p> heading followed by `.margin-20`, not a heading grid
+   — and it is not inside a `.margin-50`, so it keeps the template's layout.
+
+   Spacing is the template's own two numbers: 20px (`--page-margin--divider-small`,
+   the `.margin-20` the template already puts between a heading row and its
+   content row) between a heading and its group, and 20+10 = 30px
+   (`.footer-small-grid`'s own `grid-row-gap`) before the second heading, so the
+   pair still reads as one block against the 50px `.margin-50` that separates it
+   from the next.
+
+   Measured after, at 430, the block reads top to bottom as 「(商务合作)」 /
+   sales@stargomoto.com / WhatsApp +86 187 7512 7878 / 「(一般咨询)」 /
+   www.stargomoto.com / 「(地址)」 / 柳州 · 广西 · 中国 / 「(社交)」 / the three
+   round buttons. Heading top to the first line of the group it names: 41px
+   every time (49px for the buttons, which are a 32px row rather than a line of
+   type). Group to the NEXT heading: 55px and 46px inside a pair, against 74px
+   where the `.margin-50` separates the contact pair from the address pair — so
+   a pair still reads as one block. Every row is 413px wide (307px at 320), the
+   document's scrollWidth equals the viewport at all of 320 / 360 / 375 / 390 /
+   393 / 412 / 430, and the order is the same at every one of them. */
+@media screen and (max-width: 479px) {
+  .footer .footer-btm-part-1 > .margin-50 > div {
+    display: flex;
+    flex-flow: column;
+    row-gap: 20px;
+  }
+
+  .footer .footer-btm-part-1 > .margin-50 > div > .footer-small-grid,
+  .footer .footer-btm-part-1 > .margin-50 > div > .margin-20,
+  .footer .footer-btm-part-1 > .margin-50 > div > .margin-20 > .footer-small-grid.sec {
+    display: contents;
+  }
+
+  .footer .footer-btm-part-1 > .margin-50 .top-text.opc { order: 1; }
+  .footer .footer-btm-part-1 > .margin-50 .footer-small-grid.sec > .flex-item:first-child { order: 2; }
+  /* `display: block` is what un-hides it; the template's own rule is
+     `.top-text.opc.hdi { display: none }` inside its 479px block. */
+  .footer .footer-btm-part-1 > .margin-50 .top-text.opc.hdi {
+    order: 3;
+    display: block;
+    margin-top: 10px;
+  }
+  .footer .footer-btm-part-1 > .margin-50 .footer-small-grid.sec > .flex-item:last-child { order: 4; }
+
+  /* The template's blanket `.hide-mobile, .social-content { display: none }`.
+     The footer's copy of it is the only way to reach the site's e-mail,
+     WhatsApp and corporate site as buttons, so it comes back as the flex row
+     `.social-content` is everywhere else. */
+  .footer .footer-btm-part-1 .social-content.for-footer { display: flex; }
+}
+
+
+/* Headings that break mid-word, or strand one character, on a phone.
+   ---------------------------------------------------------------------------
+   A second pass over the sweep further up this file ("文字单独一个字在一行").
+   That sweep measured 21 widths from 360 up and reached for `text-wrap:
+   balance` / `pretty`; these five cases are the ones it could not have caught,
+   because 412 and 430 were not in its width list and because a balancer cannot
+   help when the break it has to avoid is BETWEEN TWO HAN CHARACTERS OF ONE
+   WORD rather than at the end of a line.
+
+   Measured at 320 / 360 / 375 / 390 / 393 / 412 / 430 in Chromium, by walking
+   each heading's text nodes with a Range and grouping the per-character rects
+   into real line boxes. Scoped `html[lang^="zh"]` like the sweep above: every
+   case here is a CJK line-breaking defect, and the English pages are left
+   exactly as the donors draw them (verified: the same probe on the en/ pages reports
+   identical line boxes before and after). Nothing here animates. */
+
+/* 1. intelligence.html, the closing statement 「主动，不是被动」 at 64px.
+      Seven characters need 448px and the element is 320-430px wide, so it MUST
+      take two lines; `text-wrap: balance` (already on it, from the sweep above)
+      duly balanced them 4 / 3 — and put the break inside 不是:
+      「主动，不」/「是被动」 at all seven widths.
+
+      No balancer can fix that, because in CJK every inter-character position is
+      a legal break and balance is choosing between legal breaks. `word-break:
+      keep-all` is the property that removes the illegal ones: it suppresses the
+      soft-wrap opportunities between Han characters, leaving the comma as the
+      only break in the string. Measured after: 「主动，」/「不是被动」 at 320,
+      360, 375, 390, 393, 412 and 430. The longer of the two runs is four
+      characters — 256px — against 320px at the narrowest width, so keep-all can
+      never push it out of the box. The file already uses this exact idiom on
+      `.lx-hero-text`.
+
+      Scoped to the CTA band's statement: `.lx-big-text` appears once on the
+      site (workforce's gradient word is `.lx-big-text-on-gradient`, a different
+      class), and keep-all must never reach a heading with no punctuation in it,
+      which would then have no break opportunity at all. */
+html[lang^="zh"] .lx-scope .lx-cta_wrapper .lx-big-text { word-break: keep-all; }
+
+/* 2. intelligence.html, the hero sub-headline 「不是聊天机器人，是运营层。」 at
+      32px in a 288-398px box. Thirteen characters need 416px, so again two
+      lines, and the browser broke inside 运营层, leaving 「层。」 alone at 390,
+      393, 412 and 430 (and splitting 运营 at 360/375). Same cure, same reason,
+      plus balance so the two runs sit either side of the comma rather than the
+      first line running long. Measured after, all seven widths:
+      「不是聊天机器人，」 / 「是运营层。」 — 256px and 160px, both inside the
+      288px box at 320. */
+html[lang^="zh"] .lx-scope .lx-hero-desc { word-break: keep-all; text-wrap: balance; }
+
+/* 3. about.html, the first AI-employee card title 「市场信号 AI 员工」 at 20px
+      in a 88-143px grid cell. At 412 and 430 it read 「市场信号 AI 员」/「工」 —
+      the orphan 工 the owner objects to. The string has two real spaces in it
+      (around the product noun "AI"), so keep-all leaves three break points and
+      the browser picks the ones that fit: measured after, 「市场信号」/「AI 员工」
+      at 320 and 「市场信号 AI」/「员工」 at 360, 375, 390, 393, 412 and 430.
+
+      `text-wrap: balance` was tried first and is WRONG here: it equalises the
+      two lines to 「市场信」/「号 AI 员工」, which splits 市场信号 — a worse
+      defect than the one being fixed. Recorded so the next pass does not
+      repeat it. */
+html[lang^="zh"] .cn-case-study-item .cn-text-size-medium { word-break: keep-all; }
+
+/* 4. workforce.html, the sticky-note card inside the 「订单与单证」 band:
+      「真正能干活的工作台」, nine characters at 17.6px in a card the donor sizes
+      at 32% of its collage. Measured box: 46px at 320, 58 at 360, 62 at 375, 66
+      at 390, 67 at 393, 73 at 412, 78 at 430 — so three or four glyphs a line.
+      At 390, 393, 412 and 430 it came out 4 / 4 / 1 with 「台」 alone.
+
+      `pretty` is the right tool rather than `balance`: it reworks only the tail,
+      and measured after it gives 「真正能」/「干活的工」/「作台」 at 390-430 (no
+      short line), leaves 360 and 375 at the 3 / 3 / 3 they already had, and
+      leaves 768 / 834 / 1024 at the 5 / 4 the donor draws — line boxes
+      identical before and after at those three widths.
+
+      NOT fixed at 320, deliberately: the card is 46px there, which is two
+      glyphs, so nine characters need five lines and one of them has to hold a
+      single character. No line-breaking value changes that. `balance` was tried
+      and is worse — it moves the lone character to the FIRST line
+      (「真」/「正能」/…), which reads as a mistake rather than as a tail. */
+html[lang^="zh"] .lx-scope .lx-confirmation-card .lx-text-size-medium { text-wrap: pretty; }
+
+/* 5. capabilities.html, 「每件事都跑在」 ⚫ 「这个底座上」 — one sentence the
+      donor splits into two elements either side of the decorative sphere.
+      ---------------------------------------------------------------------
+      On a phone the donor keeps that as a flex ROW and gives the sphere
+      `width: 25vw` of it (`.qx-wrapper-image-change-service` below 479px), so
+      the eleven characters of the sentence have `100vw - 32px - 25vw` between
+      them: 208px at 320 and 290px at 430. At the donor's own 32px they need
+      338px, so BOTH halves wrapped and the sentence was drawn as four lines
+      around the sphere — 「每件事都 / 跑在」 ⚫ 「这个底座 / 上」 at 320-393, and
+      「每件事都跑 / 在」 ⚫ 「这个底座 / 上」 at 412 and 430. Read in any order
+      that is not one line each, it is not a sentence.
+
+      A line-breaking value cannot help: the text does not fit, and every split
+      of a six- and a five-character phrase leaves a fragment. The sphere cannot
+      give the room back either — at 320 the eleven characters need 338px
+      against 288px of container with the sphere removed entirely. So the type
+      has to come down with the screen, and only where it must: above 479px the
+      donor's own steps already fit (measured one line each at 768, 834 and
+      1024 at the donor's 42px, unchanged by this rule).
+
+      The size is measured, not chosen. A character of this face at this
+      tracking paints 0.961 em, so eleven of them fit when
+      font <= (0.75 * vw - 32px) / 10.57, which is 6.98vw - 3.03px. 6.8vw - 3.1px
+      sits just under that line at every width and leaves the sentence 4-5px
+      clear of the container on each side: measured after, one line each at
+      18.66px / 320, 21.38 / 360, 22.40 / 375, 23.42 / 390, 23.62 / 393,
+      24.92 / 412, 26.14 / 430, with the row painting 20..300 inside 16..304 at
+      320 and 21..409 inside 16..414 at 430. `min()` keeps the donor's 32px
+      wherever 32px is already the smaller, so nothing grows, and `nowrap` is
+      the belt: the whole point is that these two phrases are single lines. */
+@media screen and (max-width: 479px) {
+  html[lang^="zh"] .qx-whatwedo .qx-wrapper-content-service .qx-h2,
+  html[lang^="zh"] .qx-whatwedo .qx-wrapper-content-service .qx-text-heading-servie {
+    font-size: min(32px, calc(6.8vw - 3.1px));
+    white-space: nowrap;
+  }
+}
+
+
+/* Text cut off by the screen edge, or by the box it sits in.
+   ---------------------------------------------------------------------------
+   Three separate places, one habit behind them: a donor sized something for
+   its own word or its own card, our word or our card is a different size, and
+   the difference lands outside a box that clips.
+
+   All three were measured by walking DOWN the page in ~160px steps until the
+   element settled, then reading per-character rects — these sections carry
+   scroll reveals whose toggleActions reverse, and a frame taken on the way back
+   up is a half-played animation, not a layout. */
+
+/* 1. blog (and about, intelligence, workforce and the six article pages — the
+      shared lifelogx closing snippet): the display wordmark 「STARGO」, sliced
+      at BOTH edges. The S was cut through its bowl, the final O cut in half.
+      -----------------------------------------------------------------------
+      Lifelogx sets `.lx-text-extra-big` (and the outlined copy behind it,
+      `.lx-text-extra-big-stroke`) at 24vw, and steps it UP to 26vw below 768px.
+      That step is sized for the donor's own word: eight narrow lowercase
+      letters. Ours is six capitals, which is wider per character, and 26vw
+      makes it 1.07x the viewport. `.lx-text-extrabig-loop-wrap` is
+      `overflow: hidden`, so the surplus is not a bleed, it is a cut.
+
+      Measured settled (the word carries a scale 0.9 -> 1 reveal; these are the
+      numbers after it lands), word box against viewport:
+
+          320  -11..331   360  -13..373   375  -13..388   390  -14..404
+          393  -14..407   412  -14..426   430  -15..445   479  -17..496
+          480  -17..497   600  -21..621   767  -27..794
+          768    5..763   834    5..829  1024    7..1018   <- 24vw, fits
+
+      So the defect is the whole 26vw band, 320 through 767, and the fix is to
+      drop that band back to the donor's own 24vw — the value it uses at every
+      other width. That is not a size invented here: at 768 the donor's 24vw
+      already draws this word 5px from each edge, and 24vw keeps exactly that
+      proportion all the way down. Measured after: 2..318 at 320, 2..373 at 375,
+      3..427 at 430, 3..476 at 479, 3..477 at 480, 4..596 at 600, 5..762 at 767,
+      and 768 and up untouched at 5..763. The step across the 768 breakpoint is
+      now 184.08px -> 184.32px, i.e. invisible. */
+@media screen and (max-width: 767px) {
+  .lx-scope .lx-text-extra-big,
+  .lx-scope .lx-text-extra-big-stroke { font-size: 24vw; }
+}
+
+@media screen and (max-width: 479px) {
+  /* 2. intelligence, the gradient headline in the 「不再 / 等提示 / 等回复 /
+        丢上下文」 band. The four words cross-fade in one place, so they share a
+        size; the longest, 「丢上下文」, is four characters, and below 480px the
+        donor sets 24vw. A character of this face at this size paints almost
+        exactly 1em, so four of them are 96vw — and the band starts at the
+        section's own 16px gutter, so the word ends at 96vw + 16px.
+
+        Measured before (word box against the viewport, and against its own
+        16px-gutter track):
+
+            320  16..323  track 16..304   right edge 3px PAST the viewport
+            360  16..362  track 16..344   2px past
+            375  16..376  track 16..359   1px past
+            390  16..390  track 16..374   flush with the viewport edge
+            393  16..393  track 16..377   flush
+            412  16..412  track 16..396   flush
+            430  16..429  track 16..414   1px inside
+
+        i.e. from 390 up the final 文 sits hard against the edge with
+        `main-content`'s `overflow: clip` on it, and below 390 it is past it.
+        The English copy already has its own sizes in this band further up this
+        file; this is the Chinese half of the same problem, so it is written the
+        same way and scoped the same way.
+
+        Four characters fit the gutter when the size is at most
+        (vw - 32px) / 4 = 25vw - 8px; 25vw - 10px leaves 4px of air on each side
+        at every width. Measured after: 20..300 in 16..304 at 320, 20..340 in
+        16..344 at 360, 20..355 in 16..359 at 375, 20..370 in 16..374 at 390,
+        20..373 in 16..377 at 393, 20..392 in 16..396 at 412, 20..410 in
+        16..414 at 430. `min()` keeps the donor's own 24vw wherever 24vw is
+        already the smaller of the two, so nothing grows. */
+  html[lang^="zh"] .lx-scope .lx-no-writing .lx-big-gradient-text {
+    font-size: min(24vw, calc(25vw - 10px));
+  }
+
+  /* 3. workforce, the scattered photo cards under the CTA: a line of white text
+        sliced horizontally through the middle, showing only the top half of the
+        glyphs (「市场信号 AI」 on the laptop tile).
+        --------------------------------------------------------------------
+        Each `.lx-feature-hero-card` is `overflow: hidden` and parks its name
+        panel just BELOW its own bottom edge; hovering slides the panel up into
+        the card. The park is therefore only correct while the panel's top is at
+        or past the card's bottom, and that holds at every width the donor
+        designed for — measured leak (glyph pixels inside the clip) is 0px on
+        all ten cards at 768, 834, 1024 and 1440.
+
+        Below 480px the card is 123px tall instead of 205/266, while the panel's
+        offset inside it is fixed in pixels, so the panel's top ends up ABOVE the
+        card's bottom and its first line is cut in half by the clip. Measured
+        leak at 320, 360, 375, 390, 393, 412 and 430, identical at all seven:
+        11px on the two cards whose name wraps to two lines
+        (「市场信号 AI 员工」) and 2px on the other eight.
+
+        16px of margin — not a transform, which the reveal owns — puts every
+        panel back below the edge. Measured after: leak 0px on all ten cards at
+        all seven widths, with the card boxes unchanged at 123px, so nothing in
+        the collage moves. There is no hover on a phone, so the panel's revealed
+        position is unreachable there and this only ever moves the parked one. */
+  .lx-scope .lx-feature-hero-card .lx-name-views-content { margin-top: 16px; }
+}
+
+
+/* Blocks pinned to a fixed pixel width on a phone, leaving dead screen beside
+   them.
+   ---------------------------------------------------------------------------
+   Three instances of the same Webflow habit: a max-width typed for the
+   smallest phone the designer had (320px, 370px, 250px) that no breakpoint ever
+   releases. On a 320px handset they are invisible; on the 412px and 430px
+   handsets most Android phones and the Pro Max iPhones actually are, they cost
+   a quarter to two fifths of the screen. Measured at 320 / 360 / 375 / 390 /
+   393 / 412 / 430, and at 768 / 834 / 991 / 1024 to confirm nothing above the
+   gate moves. */
+
+/* 1. index, the hero copy. `.container-bottom.add-px` is capped at 320px below
+      479px and `.bottom-grid.max-w-rsp` inside it at 300px, so the headline
+      list, the paragraph and the CTA all sit in a 320px column whatever the
+      phone is. Measured before, the block's box against the viewport:
+      0..304 at 320 (the cap is not even reached), then 0..320 at 360, 375, 390,
+      393, 412 AND 430 — 110px of empty white beside it at 430, 26% of the
+      screen.
+
+      Both caps come off below 480px and the block falls back to
+      `.container-bottom`'s own `width: 95%`, which is the rule the template
+      already applies from 991px down. Measured after: 0..304 at 320 (identical
+      — 95% of 320 is 304, so the narrowest phone is untouched to the pixel),
+      0..342 at 360, 0..356 at 375, 0..371 at 390/393, 0..391 at 412, 0..409 at
+      430, and the paragraph's measure goes from a fixed 294px to 328/345/362/
+      379/389px. The block's height is unchanged at 806px, so the hero's sticky
+      100vh panel and the 300vh scroll choreography timed against it do not
+      move, and the closing wordmark below it is a different element and is not
+      touched here. */
+@media screen and (max-width: 479px) {
+  .hero .container-bottom.add-px { max-width: none; }
+  .hero .container-bottom.add-px .bottom-grid.max-w-rsp { max-width: none; }
+}
+
+/* 2 and 3. enterprise's 「(来自真实的全球贸易)」 intro and contact's
+   「(我们的承诺)」 card are both `.max-w-left`, and the template DOES release
+   that class on mobile — `@media (max-width: 991px) { .max-w-left { max-width:
+   100% } }`. But it releases only the bare class: the two variants
+   `.max-w-left.add-mr` (250px) and `.max-w-left.add-cnt` (370px) are two-class
+   selectors, so they outrank the release and keep their desktop caps all the
+   way down. That is the whole defect.
+
+   Measured before:
+     enterprise `.add-mr`  247px wide at 320, 360, 375, 390, 393, 412 AND 430 —
+       the same 247px on every phone, inside a row that is 307..413px, so at 430
+       it fills 60% of the line and 40% of the screen is empty beside it;
+     contact `.add-cnt`    370px, and the card inside it (`.testimonials-card
+       ._03.rl`, which the template narrows to 90% below 768px) 276 / 311 / 324 /
+       333 / 333 / 333 / 333px, left-anchored, against a 307..413px row — a
+       79px band of empty black down its right side at 430.
+
+   Releasing the two variants at the same 991px breakpoint the template uses for
+   their base class. Measured after:
+     `.add-mr`  304 / 340 / 355 / 374 / 374 / 391 / 407px — the row it sits in,
+       at every phone width; 172px at 768, 188 at 834, 226 at 991 and 234 at
+       1024, i.e. IDENTICAL to before at all four, because from 768 up the block
+       is a grid track narrower than its old cap and the cap never bound;
+     `.add-cnt` and the card 307 / 346 / 360 / 374 / 377 / 396 / 413px, the same
+       width as the contact form stacked below them, which is what made the old
+       band read as a mistake; 286 / 313 / 376 / 317px at 768 / 834 / 991 / 1024,
+       again identical to before. */
+@media screen and (max-width: 991px) {
+  .max-w-left.add-mr,
+  .max-w-left.add-cnt { max-width: 100%; }
+}
+
+/* The card's own 90% belongs to the same defect: with the wrapper released it
+   would still stop 41px short of the row on a 430px phone, and only on the
+   right, because the block is left-anchored. 100% is what the template gives
+   this card at every other width. */
+@media screen and (max-width: 767px) {
+  .testimonials-card._03.rl { max-width: 100%; }
+}
+
+
+/* Smaller mobile defects, one block each.
+   ========================================================================= */
+
+/* 1. index and enterprise: the pull-quote `.top-text.for-sst`, set at body size
+      with no leading.
+      --------------------------------------------------------------------
+      The template steps this class 27.2px (desktop h3) -> 16px (work-title,
+      <=991) -> 19.2px (h5, <=767) -> 16px (h6, <=479) and never gives it a
+      line-height, so it inherits the page's DISPLAY leading of 1.1 at every
+      size. At 27px that is 2.7px of air and merely tight; at 16px it is 1.6px,
+      and CJK glyphs fill their em box, so the lines touch. Measured pitch on
+      the homepage's dark 「企业版」 card: 17px at 360, 375, 393, 412 and 430 and
+      18px at 320 and 390 — for 16px type. The card beside it on the same page
+      uses `.top-text.for-tst`, which DOES declare
+      `line-height: var(--line-height--paragraph-line-height)`, and runs 21px.
+      That is the number this quote should have had.
+
+      Two changes, both the template's own tokens:
+        - the paragraph line-height from 991px down, i.e. everywhere the type is
+          at or under 19.2px. Measured after: pitch 25px at 320-430 and 21px at
+          768 and 991; 1024 and up are outside the query and unchanged at
+          27.2px / 29.92px, pitch 30px.
+        - the h5 step kept below 479px instead of dropping to h6. The <=479 step
+          DOWN to 16px is what leaves enterprise's 「(原则)」 quote —
+          「把工作交给 AI。权力留在企业。」 — at body size in a 370px-tall card,
+          reading as a caption rather than as the pull-quote it is at every other
+          width. 19.2px is not a new size: it is what the template itself gives
+          this class in the band immediately above (480-767), so the phone now
+          continues that band instead of stepping backwards.
+
+      Checked for overflow, because the card is a fixed 370px box below 479px:
+      after the change the quote's bottom still sits 155px (index, 320 — the
+      worst case, four lines) to 192px above the card's bottom edge at every one
+      of 320 / 360 / 375 / 390 / 393 / 412 / 430. */
+@media screen and (max-width: 991px) {
+  .top-text.for-sst { line-height: var(--line-height--paragraph-line-height); }
+}
+@media screen and (max-width: 479px) {
+  .top-text.for-sst { font-size: var(--font--h5); }
+}
+
+/* 2. enterprise's 「接入方式」 table: a three-across header over stacked rows.
+      --------------------------------------------------------------------
+      Below 479px the template collapses each data row to a single centred
+      column (`.award-wrapper { flex-flow: column; display: flex }`) but leaves
+      the header a three-column grid, so the column labels name columns that no
+      longer exist. Measured at 320: the labels sit at x31..73, x125..182 and
+      x224..289 (the third wrapping to two lines in its 64px track, header 42px
+      tall) while the first data row is a centred stack — API at x147..173,
+      「直接调用与被调用」 at x92..228, 「已有系统」 at x126..194. Not one label is
+      over the cell it names.
+
+      Restoring the three columns for the data was tried first and is wrong: at
+      320 the first track is 51px, and 「Activepieces」 and 「Windmill」 are wider
+      than that with no break opportunity in them, so they overprint the middle
+      column. The rows have to stay stacked.
+
+      So the header stops being a header and becomes what it can honestly be on
+      a phone: one centred legend line, in the same order as the three lines of
+      every row below it, on the same centre line as them. Measured after, 320:
+      x58..100, x116..173, x189..262 on one 21px line (the third label no longer
+      wraps); 375: x85..127, x143..201, x217..290. `flex-wrap` is there so the
+      legend can take a second line rather than overflow if the labels ever grow.
+      Above 479px nothing changes — the rows are a real three-column grid there
+      and the header still matches them. `#loop` and `#atlas` are the same
+      donor table on the same page and the same site, and they collapse the same
+      way, so they are named here too. */
+@media screen and (max-width: 479px) {
+  #table .grdi-3-columns.mk3,
+  #loop .grdi-3-columns.mk3,
+  #atlas .grdi-3-columns.mk3 {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    column-gap: 16px;
+    row-gap: 4px;
+  }
+}
+
+/* 3. capabilities, the 「四个板块，十四个能力组」 intro. `.macro-intro` is this
+      site's own wrapper (written by tools/build-site.mjs, and the only class
+      here with no donor behind it), so nothing ever gave its three parts a
+      rhythm: Mono's `h2` carries `margin-top: 15px` and `margin-bottom: 0`, and
+      the sub-line carries no margin at all. Measured gap between the headline's
+      bottom and the sub-line's top: 0px at 320, 360, 375, 390, 393, 412, 430,
+      768, 1024 AND 1440 — they are touching at every width, with the headline at
+      30.4px and the sub-line at 17.6px on a phone, which is where it reads worst.
+
+      15px, so the sub-line sits below the headline exactly as far as the
+      headline sits below the eyebrow — the block's own measured rhythm rather
+      than a new number. Measured after: 15 / 15 at every one of those ten
+      widths. */
+.macro-intro p.top-text.big { margin-top: 15px; }
+
+/* 4. capabilities, the capability-map rows: the question sitting ~10px below
+      its own 「+」 toggle.
+      --------------------------------------------------------------------
+      `.cn-accordion-top-wrap` is `display: flex; align-items: center`, so it
+      centres the title item and the plus block on each other. In the FAQ block
+      that works. In the capability map it does not, and the reason is scope:
+      the donor's own reset is written `.cn-faq .cn-accordion-heading`, and the
+      capability map roots the same markup under `.cn-capmap`, where the reset
+      cannot reach it and Webflow's `h2 { margin-top: 20px }` applies instead.
+
+      Measured at 430: `.cn-faq` title item 26px tall with a 26px heading in it,
+      `.cn-capmap` title item 46px tall with the same 26px heading pinned to its
+      BOTTOM by that 20px margin — so the heading's centre falls 10px below the
+      32px toggle's. Same at 1024 (36px heading in a 56px item). Measured after:
+      `.cn-capmap` reports title 26 / heading 26 / row 32 / toggle 32 at 320,
+      360, 375, 390, 393, 412 and 430, and 36 / 36 / 40 / 40 at 768 and 1024 —
+      identical to the FAQ block at every width. Only the margin changes;
+      the row's expand animation, its rounded ground and the plus's own
+      rotation are untouched. */
+.cn-capmap .cn-accordion-heading { margin-top: 0; }
+
+
+/* The contact page's two columns, and the thousand pixels between them.
+   ---------------------------------------------------------------------------
+   `.contact-1-grid` is three columns: the quote card (「我们的承诺」 + its
+   portrait film) takes one, the form takes two. Measured on the built page,
+   the form card is 1335px tall against the quote card's 204px — 1131px of
+   difference at 1440 and 1280, 1113 at 1024, 1114 at 992 — and the grid is
+   `align-items: start`, so the card sits at the top and the rest of its column
+   is empty. That is what reads as a hole down the left of the page.
+
+   Three ways to close it, and why this one:
+     - stretch the card to the form's height: the portrait is a fixed-ratio
+       film, so it would have to crop or letterbox. It is the page's one piece
+       of human imagery; distorting it to fill space is the worst trade.
+     - centre the card in its column: the hole moves, it does not close, and
+       the promise is then below the fold when the form is at the top.
+     - let it follow. The card says 「不必第一天就改变一切。告诉我们最影响效率或
+       增长的那一条流程，我们从那里开始。」 — which is the one thing worth having
+       on screen WHILE someone fills in eight fields. Sticky keeps it there and
+       leaves the card's own design untouched.
+
+   `top` is 108px: the navigation bar measures 68px and 40px is the page's own
+   gutter above the grid, so the card settles exactly where it started rather
+   than jumping under the bar. Only from 992px up, where the grid is actually
+   side by side — below that the template stacks the two into one column and
+   there is no hole to close. */
+@media screen and (min-width: 992px) {
+  .stargo-contact-page .contact-1-grid .max-w-left.add-cnt {
+    position: sticky;
+    top: 108px;
+  }
+}

@@ -153,6 +153,36 @@ export function render(frag, ctx) {
   const named = html.match(/alt="[^"]+"/g);
   if (named) throw new Error(`ro-gallery: an alt attribute still names something: ${named[0]}`);
 
+  /* THE SIZE THE BROWSER IS TOLD TO FETCH.
+     Every one of these images ships six variants (500/800/1080/1600/2000/2544w)
+     and a `sizes` that rototo wrote for its own page, where the photograph is
+     full-bleed: `(max-width: <n>px) 100vw, <n>px`. Here it is not. The tile is
+     `.ro-home-header-img-wrap { width: 14rem }` — 261px at 1920, 224px at 1439
+     — so `100vw` tells the browser it needs about seven times the pixels it
+     will draw, and it duly fetches the 2000w file (85.2 KB) for a 261px box
+     when the 500w one (16.4 KB) is the right plate. Measured over the 24
+     photographs that is 1.59 MB where ~0.39 MB will do at 1x, ~0.74 MB at 2x.
+
+     Nothing about the pictures or the motion changes: same files, same
+     srcset, same wheel — only which of the six plates the browser is told to
+     pick. The owner authorised this one attribute.
+
+     The numbers are 14rem evaluated at the top of each range rototo's own
+     `--layout--size-font-base` is constant over (it is
+     `clamp(768px,100vw,1920px) / (1440/unit)`, and `unit` steps 24/16/15/14 at
+     991/1280/1440/1920). The top of each range is used, never the middle, so
+     the value never under-states the box and the browser is never talked into
+     a plate coarser than the tile. Below 768 the block is `display: none` and
+     the images are never laid out, so the first entry is academic.
+
+       ≤991    14rem at 991  = 231px        ≤1439  14rem at 1439 = 224px
+       ≤1919   14rem at 1919 = 280px        ≥1920  14rem at 1920 = 261px */
+  const SIZES = '(max-width: 991px) 231px, (max-width: 1439px) 224px, (max-width: 1919px) 280px, 261px';
+  const before = (html.match(/ sizes="[^"]*"/g) ?? []).length;
+  if (before !== 24) throw new Error(`ro-gallery: expected 24 sizes attributes to retarget, found ${before}`);
+  html = html.replace(/ sizes="[^"]*"/g, ` sizes="${SIZES}"`);
+  if ((html.match(/100vw/g) ?? []).length) throw new Error('ro-gallery: a donor `100vw` sizes hint survived');
+
   /* ctx is unused: this block changes no words because it has none. Touch it
      so the contract in tools/blocks/README.md stays visible at the call site. */
   if (!ctx || (ctx.lang !== 'zh' && ctx.lang !== 'en')) throw new Error(`ro-gallery: unknown lang ${ctx?.lang}`);

@@ -17,6 +17,7 @@ import assert from 'node:assert/strict';
 import { mkdirSync, writeFileSync, readFileSync, existsSync } from 'node:fs';
 import { SITE_PAGES } from './chrome.mjs';
 import { POSTS, postPath } from './blog.mjs';
+import { ABOUT } from './copy.mjs';
 
 import { SITE, req } from './paths.mjs';
 const pw = req('@playwright/test');
@@ -262,11 +263,17 @@ for (const width of WIDTHS.filter((w) => [390, 768, 1280, 1440].includes(w))) fo
     for (const r of orb.rects) { const overlap = Math.max(0, Math.min(r[2], orb.orb[2]) - Math.max(r[0], orb.orb[0])) * Math.max(0, Math.min(r[3], orb.orb[3]) - Math.max(r[1], orb.orb[1])); assert(overlap < 40, `ladder orb overlaps the title glyphs: ${JSON.stringify({ r, orb: orb.orb })}`); }
     assert(orb.lines <= (width < 768 ? 4 : 3), `ladder title wraps into ${orb.lines} lines`);
     await page.screenshot({ path: `${OUT}/${id}-ladder.png` });
-    // partner wall: eight sample cards, flip animation intact, labelled as a sample
+    // partner wall: eight sample cards, flip animation intact, and NO caption
     assert.equal(await page.locator('.partner-grid .partner-card').count(), 8, 'eight partner cards');
     assert.equal(await page.locator('.partner-grid .card-side.is-back img').count(), 8, 'flip backs');
-    const caption = await page.locator('.bottom-grid._1.grd .top-text').first().innerText();
-    assert(/示例|sample/i.test(caption), `partner caption marks the sample: ${caption}`);
+    /* The owner removed the wall's sample labels on 2026-09-10. The assertion
+       is inverted rather than deleted: with the template's own marks still in
+       the grid, the wall must make no claim about them at all, so the caption
+       has to stay empty — and it must never silently fall back to the
+       template's "(Partners)" or to 「我们服务过的品牌」, which would be a
+       statement about customers this site does not have. */
+    const caption = (await page.locator('.bottom-grid._1.grd .top-text').first().innerText()).trim();
+    assert.equal(caption, '', `partner wall must carry no caption while its logos are the template's: "${caption}"`);
     await scrollTo(page, (await secTop(page, '.partner-grid')).top - 200); await page.waitForTimeout(1600);
     await page.screenshot({ path: `${OUT}/${id}-partners.png` });
     // scenario cards (sticky testimonials): portrait film present, four cards, illustrative labels, mark, through the scroll
@@ -324,14 +331,50 @@ for (const lang of ['', 'en/']) {
     // About
     let h = await head(`${BASE}/${lang}about.html`);
     assert.match(h.canonical, /\/(en\/)?about$/); assert.equal(h.hreflang.length, 3); assert(h.ld[0]['@graph'].some((n) => n['@type'] === 'AboutPage'));
-    assert.equal(await page.locator('.lx-about-image-holder img').count(), 4, 'four role circles');
-    const names = await page.locator('.lx-about-name').allInnerTexts();
-    assert.deepEqual(names, ['Market Signal Agent', 'Quote Agent', 'Follow-up Agent', 'Orchestrator']);
-    assert.equal(await page.locator('.lx-careers_01-item[href$="contact.html"]').count(), 5, 'five workflow entry points to contact');
-    assert.match(await page.locator('.lx-button.lx-is-secondary').innerText(), /预约演示|Book a demo/);
+    /* The About page was rebuilt on cinery (2026-09-15): the owner asked for
+       「about页面也拿cinery模版替换」 and chose 「介绍带 + 项目网格 + 评价」. The
+       Lifelogx circles, careers rows and rich-text story are no longer on it,
+       so the assertions that named them are replaced rather than deleted —
+       what they were really protecting is that this page still introduces the
+       company, still names the four AI-employee roles, and still reaches the
+       contact page. Each of those is asserted below against what now draws it.
+
+       This is the second time a hard-coded list here went stale behind a
+       rebuild (the first was the four role names, held in English against a
+       Chinese page). Both now read from ABOUT, so a rename cannot break the
+       gate for a page that is correct. */
+    assert.equal(await page.locator('.cn-about, .cn-about-projects, .cn-about-reviews').count(), 3, 'the three cinery bands');
+    /* textContent, not innerText: innerText returns only what is RENDERED, and
+       these labels are hidden until their scroll reveal fires, so innerText
+       reads '' on a page that is perfectly correct. */
+    const roles = (await page.locator('.cn-about-projects').evaluate((e) => e.textContent)).replace(/\s+/g, ' ');
+    for (const c of ABOUT.circles) {
+      const label = c.label[lang === 'en/' ? 'en' : 'zh'];
+      assert(roles.includes(label), `About names the role ${label}`);
+    }
+    /* The tiles play cinery's own four clips. They were briefly replaced by four
+       still images on 2026-09-15 and the owner reverted that the same day —
+       「11.3 MB 无引用的 cinery 案例片，帮我恢复原模版」 — so these three assertions
+       are the inverted form of the ones that swap put here, kept rather than
+       deleted so the band stays guarded either way. Each tile is one `<video>`
+       with an mp4 and a webm; the band's only `<img>`s are the two copies of the
+       STARGO wordmark each tile stacks for its hover roll (8 in all). What must
+       NOT come back with the clips is a client name, a year or a logoipsum
+       mark — the role names asserted above are what the tile line says. */
+    assert.equal(await page.locator('.cn-about-projects video').count(), 4, 'four donor clips');
+    assert.equal(await page.locator('.cn-about-projects source').count(), 8, 'an mp4 and a webm per clip');
+    assert.equal(await page.locator('.cn-about-projects img.stargo-still').count(), 0,
+      'the still-image version of this band was reverted; the tiles play the template clips');
+    /* And every one of them is served from this origin. `data-src` as well as
+       `src`, so wiring js/stargo-video-defer.js into the About page later does
+       not turn this into a false failure. */
+    const clipSrcs = await page.locator('.cn-about-projects source')
+      .evaluateAll((ss) => ss.map((s) => s.getAttribute('src') || s.getAttribute('data-src')));
+    for (const src of clipSrcs) assert.match(src ?? '', /(?:^|\/)assets\/cinery\//, `clip served locally: ${src}`);
+    assert(await page.locator('.cn-about a[href$="contact.html"]').count() >= 1, 'About reaches the contact page');
+    const intro = await page.locator('.cn-about').innerText();
+    assert(intro.replace(/\s+/g, '').length > 40, 'the introduction band carries its paragraph');
     for (const f of [0.35, 0.6, 0.85]) { const H = await page.evaluate(() => document.documentElement.scrollHeight); await scrollTo(page, H * f); await page.waitForTimeout(700); }
-    const story = await page.locator('.lx-about-rich-text p').first().evaluate((p) => ({ op: getComputedStyle(p).opacity, text: p.textContent.length }));
-    assert(story.text > 40, 'story text present');
     await page.screenshot({ path: `${OUT}/${L}-about-story.png` });
     await scrollTo(page, 0); await page.waitForTimeout(500);
     await page.screenshot({ path: `${OUT}/${L}-about-hero.png` });

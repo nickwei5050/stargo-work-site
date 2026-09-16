@@ -1,0 +1,242 @@
+/* cn-price-card — only what the cut could not carry out of cinery.
+
+   Five things live here, and nothing else:
+
+     1. where the card sits on THIS site's pricing page, which an extraction can
+        never know;
+     2. cinery's <body> declarations, which never travel with a cut section;
+     3. this site's own `p` rule, leaking into the one <p> the card contains;
+     4. the grid placement cinery wrote against Webflow's generated `#w-node-…`
+        ids, which are not classes and so are invisible to a class-driven
+        extractor;
+     5. the one piece of motion cinery drives from ix3, which
+        tools/donor-lib.mjs does not carry.
+
+   Every value in 2, 4 and 5 is copied from cinery's own export
+   (tools/templates/cinery/css/cinery.app.shared.3e3418b8f.css and
+   tools/templates/cinery/js/app.9d009f54.b1680441e3b493e5.js) and scoped under
+   the block root exactly as the extractor scopes its own output. Nothing here
+   sets a size, colour, spacing or layout the donor did not already set — 1 is
+   the block's own outer margin, which the donor's section supplied and which
+   this page has its own value for, and 3 sets nothing at all: it puts back what
+   cinery computes. */
+
+
+/* ------------------------------------------ 1. where the card is drawn --
+
+   HORIZONTAL — nothing here. `.package-component-grid` is `width: 100%` with
+   `grid-template-columns: .5fr 1fr`, so it needs a measured box around it or it
+   is drawn edge to edge at a width cinery never draws. That box is
+   `donor.wrap` in tools/blocks/cn-price-card.mjs, not a rule here: the cut puts
+   cinery's own `.padding-global > .container-large` back around the grid, so
+   the card gets `max-width: 100rem` (1600px) and `padding: 0 2.5rem` (1.25rem
+   ≤767) — cinery's numbers, extracted with everything else. That 1600px is to
+   the pixel this site's own `.sc-container` max-width
+   (css/scalora-modules.sc.css:343), so the card's outer edge lands on the same
+   line as every section above and below it.
+
+   VERTICAL — this, and only this. A cut section brings no outer spacing: on
+   cinery's page the grid sits inside `.padding-bottom.padding-xhuge` with a
+   `.spacer-xlarge` above it, i.e. 4rem of air above (3rem ≤479) and 8rem below
+   (6rem ≤991, 5rem ≤767). Those are cinery's numbers for cinery's section
+   rhythm, and this page has its own: every section on pricing.html is
+   `<section><div class="sc-container"><div class="section-padding-large">`, and
+   `.section-padding-large` pads top and bottom by
+   `--_spacing---section-padding--section-padding-large`, declared on `:root` in
+   css/scalora-modules.sc.css as
+
+       72px        (line 69, and again at line 4542 for ≤991)
+       40px        (line 5318, inside `@media screen and (max-width: 767px)`)
+
+   The card is dropped between those sections, so it takes their figure rather
+   than cinery's: a block that sat on 4rem/8rem would open a seam wider than any
+   other join on the page. Written as literals rather than as `var(…)` so the
+   block keeps its rhythm even if it is ever placed outside `.sc-scope`.
+
+   No ground is painted. `.package-content-block` brings its own
+   (`--primary-color--dark`, #232324) and this page paints
+   `--beckground-color--bg-color-02` (#161616) on `.sc-scope.sc-page`
+   (css/stargo-fusion.css:144), so the two columns read as raised panels exactly
+   as they do on cinery's black. That is also why `donor.ground` is not set:
+   putting cinery's own body black behind the card would lay one dark slab
+   across a page that is already dark, in a different dark. */
+.cn-price-card {
+  padding-top: 72px;
+  padding-bottom: 72px;
+}
+@media screen and (max-width: 767px) {
+  .cn-price-card { padding-top: 40px; padding-bottom: 40px; }
+}
+
+
+/* --------------------------------------------- 2. what <body> supplied --
+
+   Only `.text-size-regular`, `.text-size-small`, `.text-size-medium`,
+   `.price-text`, `.prcing-title`, `.button-text` and `.text-weight-semibold`
+   name type of their own in this card, and not one of them names a FAMILY: the
+   typeface came from cinery's `body`, which a cut section never brings along.
+   Without this rule every word in the card — the heading, five ticked
+   features, the renewal line, the workforce figure, the price, four benefit
+   lines, the footnote and the button label — is set in this page's Inter rather
+   than cinery's Overused Grotesk, and the leading under them is this site's
+   1.1 where cinery sets 1.4.
+
+   cinery's rule, verbatim:
+
+     body { background-color: var(--background-color--primary-background);
+            font-family: var(--_typography---font-family--primary);
+            color: var(--primary-color--white);
+            font-size: var(--_sizes---fixed--small);
+            line-height: 1.4;
+            font-weight: var(--_typography---font-weight--regular); }
+
+   `background-color` is left out, for the reason given in 1: the card paints
+   its own panels and the page behind them is already the right dark. Every
+   variable named here does travel — tools/donor-lib.mjs copies cinery's `:root`
+   onto the scope root and re-copies each breakpoint's `body` redeclaration — so
+   restating the five declarations is the whole repair.
+
+   The escaped h2 line-height token cinery leaves behind
+   (`--_typography---h2--h2-line-height\<deleted|variable-…\>`, which
+   tools/blocks/cn-service.css has to restore) is NOT needed here: the card's
+   only <h2> is `.prcing-title`, which sets `line-height: .9` itself and wins
+   over the element rule. */
+.cn-price-card {
+  font-family: var(--_typography---font-family--primary);
+  color: var(--primary-color--white);
+  font-size: var(--_sizes---fixed--small);
+  line-height: 1.4;
+  font-weight: var(--_typography---font-weight--regular);
+}
+
+
+/* ------------------------------------------------ 3. this site's own `p` --
+
+   The card contains exactly two <p> elements: the button's two `.button-text`
+   copies. cinery's `p` rule is `{ font-size; margin-bottom; line-height }` and
+   nothing else, so a cinery paragraph is opaque and tracks normally. This
+   site's `p` (css/monof-template.app.shared.ed8969994.css:2164) adds
+   `opacity: .7` and `letter-spacing: -.5px`, and neither property is in the
+   extracted `.cn-price-card p`, so both leak straight onto the button label —
+   a CTA drawn at 70% over its own glow. `.button-text` does declare
+   `font-weight: var(--_typography---font-weight--medium)`, so the third
+   property that rule adds is already covered. Put back what cinery computes;
+   this is the same repair tools/blocks/cn-service.css makes. */
+.cn-price-card p { opacity: 1; letter-spacing: normal; }
+
+
+/* ------------------------------------------- 4. the #w-node grid rules --
+
+   Webflow puts an element's grid position on a generated `#w-node-…` id, not on
+   a class, so a class-driven extractor never sees these four rules. They are
+   what holds the right-hand column together: `.package-inner-grid` is
+   `grid-template-rows: auto auto auto; height: 100%`, and a grid item with no
+   `align-self` stretches. Without them the portrait row, the price, the four
+   benefit lines and the footnote would each be stretched over a third of the
+   card's full height instead of sitting at the top, the middle and the foot of
+   their rows, and the full-width button would float in the middle of its cell
+   rather than resting on the card's bottom edge.
+
+   Donor rules, in donor order, verbatim from
+   tools/templates/cinery/css/cinery.app.shared.3e3418b8f.css. cinery declares
+   no breakpoint variant of any of them, so neither does this file. */
+.cn-price-card #w-node-_28ea525f-125d-38fb-5355-ec1f6c3bb978-6c3bb977 { grid-area: span 1 / span 1 / span 1 / span 1; }
+.cn-price-card #w-node-_28ea525f-125d-38fb-5355-ec1f6c3bb9a4-6c3bb977 { grid-area: 1 / 1 / 2 / 2; align-self: start; }
+.cn-price-card #w-node-_28ea525f-125d-38fb-5355-ec1f6c3bb9c5-6c3bb977 { align-self: center; }
+.cn-price-card #w-node-_28ea525f-125d-38fb-5355-ec1f6c3bb9d8-6c3bb977,
+.cn-price-card #w-node-_28ea525f-125d-38fb-5355-ec1f6c3bb9da-6c3bb977 { align-self: end; }
+
+
+/* --------------------------------- 5. the motion the cut leaves behind --
+
+   The card has one interaction and it does not travel. cinery is an ix3 (GSAP)
+   export — its <html> takes `w-mod-ix w-mod-ix3` — and unlike ix2 an ix3
+   interaction addresses its trigger by CLASS, not by `data-w-id`, which is why
+   there is no id on this button to notice it by. From cinery's own bundle,
+   tools/templates/cinery/js/app.9d009f54.b1680441e3b493e5.js:
+
+     i-84a682e6  scope: site
+                 triggers: ["wf:hover", {controlType:"standard",
+                            pluginConfig:{type:"mouseenter", hover:"each"}},
+                            ["wf:class", ["main-button"], …]]
+                 timelineIds: ["t-bf9e6807"]
+
+     t-bf9e6807  ta-4d1b04ff  targets  ["wf:selector", ".button-text",
+                                        {relationship:"within",
+                                         filterBy:["wf:trigger-only",""],
+                                         firstMatchOnly:false}]
+                              timing   {duration: .4, position: 0,
+                                        stagger:{amount:.4}, ease: 12}
+                              props    {"wf:transform": {yPercent:[null,"-100%"]}}
+                              splitText{type: "chars"}
+
+   tools/donor-lib.mjs hands back `ix: { events, actionLists }` (line 312) — IX2
+   — and nothing else, and tools/fuse-ix.mjs reads a donor payload's ix3 only out
+   of its `interactions`/`timelines` keys (lines 151–152), which a donor payload
+   never reaches us carrying: tools/fragments/cn-ix.json holds `events` (4) and
+   `actionLists` (4) and no other key.
+
+   Checked in the built bundle rather than inferred: `cn-main-button` and
+   `cn-button-text` — the namespaced classes this card's button actually carries
+   — occur 0 times each in js/app.fused.js. The bundle does contain the strings
+   `main-button` and `button-text`, and neither can reach this block: the only
+   `main-button` in it is qubix's own namespaced `.qx-main-button`, and every
+   `.button-text` / `.lx-button-text-2nd` selector in it belongs to this site's
+   base template or to lumenis, none of which is a class on this card's anchor.
+   So without this section the two `.button-text`
+   copies cinery stacks inside a `height: 1.125rem; overflow: hidden` window
+   just sit there: the second one is drawn permanently out of sight and the
+   hover does nothing.
+
+   THE EASE. `ease: 12` is an index into the ix3 runtime's own table, in the
+   chunk this site already ships — js/app.schunk.25099a4fefa544e6.js, where
+   `let p=[` begins at byte 252 164 and the array literal at 252 170:
+
+     ["none","power1.in","power1.out","power1.inOut","power2.in","power2.out",
+      "power2.inOut","power3.in","power3.out","power3.inOut","power4.in",
+      "power4.out","power4.inOut", …]
+
+   so 12 = "power4.inOut", GSAP's quintic in-out (16t⁵ up to the midpoint).
+   `cubic-bezier(.84, 0, .16, 1)` is the nearest bezier to it and is written
+   first for a browser that has nothing better; the `linear()` after it samples
+   the polynomial itself every 5% and is the same list
+   tools/blocks/ro-gallery.css measured for the same ease, so the two blocks
+   cannot drift apart.
+
+   WHY A TRANSITION AND NOT @keyframes. The donor's trigger is `wf:hover` with
+   `hover: "each"`, i.e. it runs forward on mouseenter and back on mouseleave,
+   and it must be interruptible half way. A transition is the CSS instrument
+   that does exactly that; a pair of keyframe animations would need a second
+   name for the return and would restart it from the end rather than from
+   wherever the pointer left it. The travel is the donor's own — `yPercent:
+   -100%` of the copy's own height, which at `font-size: 1rem; line-height: 1.2`
+   is 19.2px against an 18px window, so copy one leaves the window exactly as
+   copy two fills it — and the duration is the donor's own .4s.
+
+   WHAT IS LOST. `splitText: {type: "chars"}` with `stagger: {amount: .4}` means
+   cinery rolls the label one character at a time, the starts spread over .4s,
+   so the whole roll takes .8s end to end. There are no character elements
+   without GSAP's SplitText at runtime, so the line rolls as one with the
+   donor's own duration and ease and no stagger. That is the single respect in
+   which this replay is not the donor's motion, and it is recorded here rather
+   than papered over.
+
+   Should tools/donor-lib.mjs ever carry cinery's ix3, delete this section: the
+   timeline would then drive the same elements and the two would fight. */
+.cn-price-card .cn-button-text {
+  transition: transform .4s cubic-bezier(.84, 0, .16, 1);
+  /* gsap's own power4.inOut, sampled every 5%. */
+  transition-timing-function:
+    linear(0, 0.00003, 0.0002, 0.0012, 0.0051, 0.0156, 0.0389, 0.084, 0.1638, 0.2952, 0.5, 0.7048, 0.8362, 0.916, 0.9611, 0.9844, 0.9949, 0.9988, 0.9998, 0.99997, 1);
+}
+.cn-price-card .cn-main-button:hover .cn-button-text { transform: translateY(-100%); }
+
+/* A reader who has asked their system for less motion gets the button as it is
+   drawn — cinery's label, on cinery's glow — and nothing rolling. Holding it
+   still rather than removing it is the line tools/blocks/ro-gallery.css and
+   tools/blocks/cn-produce.css already take. The resting state is the element's
+   own, so dropping the transform lands exactly there. */
+@media (prefers-reduced-motion: reduce) {
+  .cn-price-card .cn-button-text { transition: none; }
+  .cn-price-card .cn-main-button:hover .cn-button-text { transform: none; }
+}

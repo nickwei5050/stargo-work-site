@@ -99,3 +99,25 @@
   .qx-whatwedo .qx-wrapper-main-services-three .qx-whatwedo-panel,
   .qx-whatwedo .qx-whatwedo-four .qx-whatwedo-panel { position: static; width: auto; margin-top: var(--qx-gap); }
 }
+
+/* 8. Between 768 and 991 the two bottom nodes overlap by 13px.
+      The donor puts `-three` at `left: 46%` and rule 2 above puts the clone at
+      `left: 0%`; both nodes are 336px wide. That is fine on the donor's own
+      desktop, where 46% is far past the first node's right edge, but the nodes
+      stop shrinking while the column does: measured on the built page, the
+      clone runs 33..369 and `-three` starts at 356 (768px viewport) and
+      144..480 against 467 (991px) — 13px of overlap at both, which lands on the
+      last character of the left paragraph and the first of the right, and reads
+      as two sentences printed on top of each other.
+
+      46% -> 52% is the whole fix: it puts `-three` at 365.6 of a 703px column
+      against the clone's 337, a 28px gutter, and keeps it inside the column
+      (365.6 + 336 = 701.6). Below 768 rule 3 already lifts the clone onto its
+      own line and above 991 the column is wide enough for the donor's own 46%
+      (measured at 1024: 40..376 against 474, clear), so neither side of this
+      band is touched. */
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .qx-whatwedo .qx-wrapper-main-services.qx-wrapper-main-services-three:not(.qx-whatwedo-four) {
+    left: 52%;
+  }
+}

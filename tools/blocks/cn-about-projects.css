@@ -1,0 +1,306 @@
+/* cn-about-projects — only what the cut could not carry out of cinery.
+
+   Four kinds of thing live here, and nothing else:
+
+     1. the grid placement cinery wrote against Webflow's generated `#w-node-…`
+        ids, which are not classes and so are invisible to a class-driven
+        extractor;
+     2. cinery's <body> declarations, which never travel with a cut section,
+        plus the one heading token whose variable name Webflow left escaped;
+     3. two properties this site's own `p` rule adds and cinery's does not, and
+        which therefore leak onto both copies of the button label;
+     4. one ix3 (GSAP) timeline — the button label's roll — which
+        tools/donor-lib.mjs cannot carry, replayed with the donor's own numbers.
+
+   Everything in 1–3 is copied verbatim from
+   tools/templates/cinery/css/cinery.app.shared.3e3418b8f.css and scoped under
+   the block root exactly as the extractor scopes its own output. Nothing here
+   sets a size, colour, spacing or layout the donor did not already set.
+
+   WHAT IS NOT HERE, and why, so the next reader does not go looking:
+
+     · no placement rule. ro-gallery.css has one because that block is dropped
+       into a `position: relative` hero band; this one is a full-width
+       `<section>` in normal flow, and the About page's own container
+       (`.lx-scope { display: block; width: 100% }`, css/stargo-fusion.css:137)
+       gives it the whole page width, which is what cinery gives it too. Same
+       note as tools/blocks/cn-about.css, the band above this one.
+     · no background. `donor.ground` in tools/blocks/cn-about-projects.mjs
+       already writes cinery's `body` black onto the block root — the section
+       itself carries no rule at all in cinery's sheet — so nothing is painted
+       twice.
+     · no `isolation: isolate`. cn-service.css needs it because moving cinery's
+       body black onto a block root that is not a stacking context let that
+       block's `z-index: -1` photograph layer escape to the document root and be
+       painted over. Nothing in this cut is behind the ground: the four glass
+       panels are plain `position: absolute` with no z-index, and every other
+       layer here is positive (`.case-study-container` 2, `.case-logo-wrap` 5,
+       `.case-logo` and `.case-arrow-wrap` 10, `.heading-wrap` 5,
+       `.case-study-block._01` 4, `._02` 3).
+     · no rule for the four tiles' stills. Since 2026-09-15 each tile draws an
+       `<img class="stargo-still">` where cinery played a case-study film (see
+       WHAT THE PICTURES ARE in tools/blocks/cn-about-projects.mjs), and the one
+       rule that needs — `.w-background-video > img.stargo-still { position:
+       absolute; inset: 0; width: 100%; height: 100%; object-fit: cover }` — is
+       already in css/stargo-fusion.css:190, written for the homepage's OS
+       theatre and loaded by about.html. The box around it is cinery's own and
+       unchanged: `.cn-case-video.w-background-video` keeps its heights, its
+       `position: relative; overflow: hidden` and the layers over it. Restating
+       any of that here would be a second copy of a shared rule, not placement.
+     · no size or wrapping rule for the tile line. The three text slots sit in a
+       `1fr 1fr` pill whose tracks carry automatic minimums, so the line takes
+       the width it needs and the 4rem arrow keeps its own; the module holds the
+       words inside that measure instead (see THE TWO SLOTS THAT ARE LEFT EMPTY
+       in tools/blocks/cn-about-projects.mjs).
+     · no replay of the heading's rise. See section 4. */
+
+/* ------------------------------------------- 1. the #w-node grid rules -- */
+
+/* Webflow puts an element's grid position on a generated `#w-node-…` id, not on
+   a class, so the extractor never sees these. There are ten in this cut, and
+   without them two things go wrong.
+
+   The top row: `.top-content-grid` is Webflow's default `1fr 1fr`, and the
+   button's cell is the donor's only `place-self` — without it the button sits
+   at the TOP LEFT of the right-hand cell instead of bottom right, i.e. level
+   with the eyebrow pill rather than with the baseline of the second heading
+   line. Below 992 the two ids swap the grid into one column and put the button
+   on its own row underneath, left aligned; without them the heading and the
+   button stay side by side in two half-width columns on a phone, where the
+   heading alone needs the full width.
+
+   The four tiles: each pill is a `1fr 1fr` grid holding the name line and the
+   arrow. `place-self: center start` / `center end` is what puts the name at the
+   left end of the pill and the arrow at the right end, both on its centre line;
+   without them both stretch to fill their track and the arrow lands in the
+   middle of the pill's right half instead of at its edge.
+
+   Donor rules, in donor order, at the donor's own breakpoints. */
+.cn-about-projects #w-node-_43f5e317-c160-f6d4-e9e7-62114ae2cf9a-805165a1 { place-self: end; }
+
+.cn-about-projects #w-node-fb6f08c0-bccf-aeab-a33d-45198963fe7b-8963fe69 { place-self: center start; }
+.cn-about-projects #w-node-fb6f08c0-bccf-aeab-a33d-45198963fe80-8963fe69 { place-self: center end; }
+.cn-about-projects #w-node-fb6f08c0-bccf-aeab-a33d-45198963fe97-8963fe69 { place-self: center start; }
+.cn-about-projects #w-node-fb6f08c0-bccf-aeab-a33d-45198963fe9c-8963fe69 { place-self: center end; }
+.cn-about-projects #w-node-fb6f08c0-bccf-aeab-a33d-45198963feb5-8963fe69 { place-self: center start; }
+.cn-about-projects #w-node-fb6f08c0-bccf-aeab-a33d-45198963feba-8963fe69 { place-self: center end; }
+.cn-about-projects #w-node-fb6f08c0-bccf-aeab-a33d-45198963fed1-8963fe69 { place-self: center start; }
+.cn-about-projects #w-node-fb6f08c0-bccf-aeab-a33d-45198963fed6-8963fe69 { place-self: center end; }
+
+/* cinery restates these two at all three of its breakpoints, identically each
+   time; they are repeated here the same way rather than collapsed into one
+   `max-width: 991px` block, so the file reads against the donor's sheet
+   line for line. */
+@media screen and (max-width: 991px) {
+  .cn-about-projects #w-node-a34212dd-4694-ed9f-e5b4-34cde67cdd13-805165a1 { grid-area: 1 / 1 / 2 / 3; }
+  .cn-about-projects #w-node-_43f5e317-c160-f6d4-e9e7-62114ae2cf9a-805165a1 { grid-area: 2 / 1 / 3 / 3; justify-self: start; }
+}
+
+@media screen and (max-width: 767px) {
+  .cn-about-projects #w-node-a34212dd-4694-ed9f-e5b4-34cde67cdd13-805165a1 { grid-area: 1 / 1 / 2 / 3; }
+  .cn-about-projects #w-node-_43f5e317-c160-f6d4-e9e7-62114ae2cf9a-805165a1 { grid-area: 2 / 1 / 3 / 3; justify-self: start; }
+}
+
+@media screen and (max-width: 479px) {
+  .cn-about-projects #w-node-a34212dd-4694-ed9f-e5b4-34cde67cdd13-805165a1 { grid-area: 1 / 1 / 2 / 3; }
+  .cn-about-projects #w-node-_43f5e317-c160-f6d4-e9e7-62114ae2cf9a-805165a1 { grid-area: 2 / 1 / 3 / 3; justify-self: start; }
+}
+
+/* --------------------------------------------- 2. what <body> supplied -- */
+
+/* The h2 line-height token whose name Webflow left escaped
+   (`--_typography---h2--h2-line-height\<deleted\|variable-…\>`). The extractor's
+   `:root` scan reads `--[\w-]+` names only — the backslash stops the match
+   before the colon — so the one token both of this block's heading rules ask
+   for never arrives:
+
+     .heading-style-h2 { line-height: var(--_typography---h2--h2-line-height\<…\>); }
+     h2               { line-height: var(--_typography---h2--h2-line-height\<…\>); }
+
+   With it undefined the declaration is invalid at computed-value time and the
+   h2 falls back to the inherited leading. That matters twice over here: the
+   gradient is painted with `background-clip: text` over the element box, so a
+   taller box stretches it; and each line sits inside a `.title-wrapper` whose
+   `overflow: hidden` is exactly as tall as the line it holds, which is what the
+   donor's line reveal is masked by. cinery declares it `100%` on `:root` and
+   restates it as `100%` at each of its three breakpoints, so one unconditional
+   declaration is what the donor computes at every width. The other five heading
+   tokens cinery escapes the same way are not restored: this block has no h1,
+   h3, h4, h5 or h6. Same repair, same reason, as cn-service.css and
+   cn-produce.css. */
+.cn-about-projects {
+  --_typography---h2--h2-line-height\<deleted\|variable-dce8260e-414c-a934-1b6e-a3323274e042\>: 100%;
+}
+
+/* cinery's own `body` rule, restated on the block root. A cut section never
+   brings <body> along, so without this the block inherits the About page's own
+   body instead. Donor rule, verbatim:
+
+     body { background-color: var(--background-color--primary-background);
+            font-family: var(--_typography---font-family--primary);
+            color: var(--primary-color--white);
+            font-size: var(--_sizes---fixed--small);
+            line-height: 1.4;
+            font-weight: var(--_typography---font-weight--regular); }
+
+   `background-color` is the one declaration left out: `donor.ground` already
+   paints the block root with the same `#000` that variable resolves to.
+
+   What the block would inherit instead, from Mono
+   (css/monof-template.app.shared.ed8969994.css), which is the shell the About
+   page is built in:
+
+     body { font-family: var(--font--primary-font);            Inter, sans-serif
+            color:       var(--color--second-color);           #000
+            font-size:   var(--button--font-size);             14px
+            line-height: var(--line-height--page-line-height); 1.1
+            font-weight: var(--font-weight--500);              500
+            cursor: none }
+
+   (`cursor: none` is the sixth and is deliberately not restated:
+   css/stargo-fusion.css:138 already hands the pointer back to every `a`,
+   `button` and `[role="button"]` inside `.lx-scope`, and the five links in this
+   block are all `a`.)
+
+   `color` is not cosmetic here. Two of the block's slots name no colour of
+   their own — `.cn-button-text` and `.cn-subtitle`'s inherited box — and the
+   button they sit in is `--primary-color--dark` (#232324). Mono's #000 on
+   #232324 is 1.34:1 by WCAG relative luminance ((L+.05)/(l+.05), with #232324
+   at 0.01685): the label would be, in practice, invisible. cinery's
+   `--primary-color--white` gives 15.71:1 on the same button. (The four tile
+   lines are safe either way — `.case-study-item` sets `color: #fff` itself —
+   which is exactly why the failure would have shipped unnoticed.)
+
+   `font-family` is the other one that matters: nothing inside this cut names a
+   font except `.cn-heading-style-h2`, so the eyebrow, both button labels and all
+   four tile lines would be set in Inter rather than the Overused Grotesk the
+   extractor already mirrored into assets/cinery/ and declared with cinery's own
+   `@font-face` rules — and Inter draws cinery's uppercase about 15% wider,
+   which is the measurement the module's width budgets are written against.
+
+   `font-size`, `line-height` and `font-weight` come with them because they are
+   one rule in the donor and because anything sized in `em` inside the block
+   resolves against them. */
+.cn-about-projects {
+  font-family: var(--_typography---font-family--primary);
+  color: var(--primary-color--white);
+  font-size: var(--_sizes---fixed--small);
+  line-height: 1.4;
+  font-weight: var(--_typography---font-weight--regular);
+}
+
+/* --------------------------------------------- 3. what our `p` rule adds -- */
+
+/* cinery's two `p` rules are `{ margin-top; margin-bottom }` and
+   `{ font-size; margin-bottom; line-height }` — nothing else, so a cinery
+   paragraph is opaque and tracks normally. Mono's is
+
+     p { opacity: .7;
+         font-size: var(--font--work-title);
+         line-height: var(--line-height--paragraph-line-height);
+         font-weight: var(--font-weight--500);
+         letter-spacing: -.5px;
+         margin-bottom: 10px; }
+
+   and of those six, four have a counterpart in the extracted rules and two do
+   not. So `opacity: .7` and `letter-spacing: -.5px` leak straight through onto
+   the only two `<p>` this block has — the two stacked copies of the button
+   label — dimming type cinery draws at full strength and pulling the tracking
+   in by half a pixel per character inside a window that is exactly one line
+   high. Put back what the donor computes. Same repair cn-service.css and
+   cn-about.css make, for the same reason. */
+.cn-about-projects p { opacity: 1; letter-spacing: normal; }
+
+/* ------------------------------ 4. the motion the cut leaves behind ------- */
+
+/* cinery drives this section four ways. Three of them arrive on their own and
+   are listed in tools/blocks/cn-about-projects.mjs: the eyebrow pill's blur
+   loop (IX2 e-225/e-226 → a-33), the second block's scroll parallax
+   (e-227 → a-34) and each tile's hover (e-228/e-229 → a-35/a-36, four times),
+   together with the plain css `.case-arrow-wrap:hover { transform: scale(1.1) }`
+   and `.main-button:hover { transform: scale(.95) }`, which the extractor takes
+   with everything else.
+
+   The fourth does not, and this is it: the button LABEL's roll.
+
+     interaction i-84a682e6   trigger wf:hover on class `main-button`
+                              (controlType "standard", pluginConfig
+                              { type: "mouseenter", hover: "each" })
+     timeline    t-bf9e6807   ta-4d1b04ff  targets `.button-text` within the
+                              trigger; timing { duration: .4, position: 0,
+                              stagger: { amount: .4 }, ease: 12 };
+                              properties { "wf:transform":
+                                { yPercent: [null, "-100%"] } };
+                              splitText { type: "chars" }
+
+   Read out of tools/templates/cinery/js/app.9d009f54.b1680441e3b493e5.js. Ease
+   12 is index 12 of the ix3 runtime's own table in
+   js/app.schunk.25099a4fefa544e6.js — ["none","power1.in","power1.out",
+   "power1.inOut","power2.in","power2.out","power2.inOut","power3.in",…] — i.e.
+   gsap `power4.inOut`, which is quintic in-out.
+
+   Why it cannot travel: ix3 is GSAP data and donor-lib returns
+   `{events, actionLists}` (IX2) only. This site ships the ix3 runtime but
+   registers no interactions with it — no file under js/ calls
+   `ix3.getInstance().register([…])` — so no donor timeline fires. The real fix
+   is in tools/donor-lib.mjs and tools/fuse-ix.mjs, shared files this block may
+   not edit; tools/blocks/cn-about.css and tools/blocks/cn-produce.css carry the
+   same note for the same reason.
+
+   WHAT THE DONOR'S GEOMETRY IS. `.button-text-wrap` is `flex-flow: column;
+   justify-content: flex-start; height: 1.125rem; overflow: hidden` — an 18px
+   window — and it holds TWO `.button-text` copies at `font-size: 1rem;
+   line-height: 1.2`, i.e. 19.2px each. (They do not shrink to fit: an
+   overflow-hidden flex item keeps its automatic minimum size, which here is its
+   own line box.) At rest the first copy fills the window and the second sits
+   below it, clipped. `yPercent: -100%` lifts both by 19.2px: the first leaves
+   through the top, the second takes its place. cn-about-projects.mjs writes the
+   same words into both copies precisely because of this — write one and the
+   hover shows the donor's "Explore More".
+
+   WHAT IS REDUCED. The donor splits the label into characters and staggers them
+   across 0.4s, so its roll runs 0.8s end to end. Splitting characters means
+   rewriting the label into spans at runtime, which is DOM structure, and the
+   brief is 「仅仅针对文字进行改动」 — so the label rolls as one piece here and the
+   roll takes the action's own 0.4s. Nothing else changes: same trigger, same
+   direction, same distance, same easing, same window.
+
+   WHY A TRANSITION AND NOT @keyframes. Webflow's hover timeline with
+   `hover: "each"` plays forward on mouseenter and back on mouseleave. A
+   one-shot keyframe animation cannot come back; a transition does exactly this,
+   in both directions, for free.
+
+   THE EASING. `cubic-bezier(.84, 0, .16, 1)` is the bezier nearest quintic
+   in-out — max deviation 0.0305 of the travel, which over a 19.2px roll is
+   0.59px, i.e. under a device pixel at 1x. tools/blocks/ro-gallery.css fitted
+   and measured the same curve for the same ease index. */
+.cn-about-projects .cn-main-button .cn-button-text {
+  transition: transform .4s cubic-bezier(.84, 0, .16, 1);
+}
+.cn-about-projects .cn-main-button:hover .cn-button-text {
+  transform: translateY(-100%);
+}
+
+/* The heading's own arrival — ix3 timeline `t-864fc814`, fired by `i-9f439e20`
+   on `.heading-wrap` at "top 85%", playing once, which brings `.top-title` and
+   `.bottom-title` up from y 110% behind their masks 0.3s apart — is NOT
+   replayed here. It needs something to notice that the band has scrolled into
+   view, i.e. an observer, i.e. a script, and this block ships none;
+   tools/blocks/cn-produce.js is what that costs, and cn-service, which draws
+   the same two masked lines out of the same donor, does not replay it either.
+   Nothing in this file hides the heading, so both lines simply stand where
+   cinery draws them, at rest — the same guarantee cn-about.css writes down for
+   the paragraph reveal it cannot replay in css.
+
+   If the heading's rise is ever wanted here, it is cn-produce.css's three rules
+   plus cn-produce.js's observer with `cn-produce` renamed, and about.html then
+   has to link js/capability-blocks.js as well as css/cinery.cn2.css. */
+
+/* A reader who has asked their system for less motion gets the block as it is
+   drawn — the four clips, the marks, the pill, every word in place, nothing
+   sliding. The label still swaps for its identical twin, instantly, so no word
+   is lost. Same line js/stargo-pricing.js, js/stargo-media.js,
+   tools/blocks/cn-produce.css and tools/blocks/cn-about.css already take. */
+@media (prefers-reduced-motion: reduce) {
+  .cn-about-projects .cn-main-button .cn-button-text { transition: none; }
+}

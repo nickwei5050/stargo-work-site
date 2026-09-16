@@ -70,8 +70,28 @@ export const CHROME = [
   ['Thank you for subscribing!', B('订阅成功。', 'You are subscribed.')],
   ['Oops! Something went wrong while submitting the form.', B('提交失败，请稍后重试。', 'Something went wrong. Please try again.')],
   ['Thank you! Your submission has been received!', B('已收到，我们会尽快联系你。', 'Received. We will be in touch shortly.')],
-  ['© 2026 Mōno™ Studio -', B('© 2026 STARGO WORK -', '© 2026 STARGO WORK -')],
+  /* The footer copyright, and the dangling hyphen after it.
+     Mono ships this line as `<p class="top-text big gray sm">© 2026 Mōno™
+     Studio - </p>` — a trailing " - " with nothing after it, in the donor
+     itself (tools/templates/studio.html). It is the designer's separator
+     waiting for a second clause that the template never adds. Nothing of ours
+     is missing: there is no second clause in copy.mjs, none in chrome.mjs and
+     none in the donor, so the line was never going to read as anything but
+     「© 2026 STARGO WORK -」. Reported from a phone, where it is the last thing
+     on the page and the hyphen sits alone at the end of the line.
+     Both spellings of the donor string are mapped, the hyphenated one first,
+     and both now resolve to the same finished sentence.
+
+     The third entry is not a donor string and is not a mistake. The homepage
+     never reaches the first two: tools/build-site.mjs already rewrites
+     「© 2026 Mōno™ Studio」 to 「© 2026 STARGO WORK」 while it assembles the page,
+     and applyChrome runs after that, so by the time this table is applied the
+     homepage's line reads 「© 2026 STARGO WORK - 」 and neither donor key
+     matches it any more. That entry catches it, and every other page passes
+     through it unchanged. */
+  ['© 2026 Mōno™ Studio -', B('© 2026 STARGO WORK', '© 2026 STARGO WORK')],
   ['© 2026 Mōno™ Studio', B('© 2026 STARGO WORK', '© 2026 STARGO WORK')],
+  ['© 2026 STARGO WORK -', B('© 2026 STARGO WORK', '© 2026 STARGO WORK')],
   ['(Pages)', B('(页面)', '(Pages)')],
   ['(New Projects / Business)', B('(商务合作)', '(Business)')],
   ['(General Inquiries)', B('(一般咨询)', '(General)')],
@@ -191,41 +211,41 @@ export const HOME_MONO = [
   /* the image + quote card that closes the pricing ladder → Enterprise */
   ['&quot;Mōno™ helped us simplify complexity. They streamlined our product narrative, improved performance, and delivered a digital experience that truly reflects our brand. The results were immediate — higher engagement.&quot;',
     B('「多部门、多公司、多品牌、多账号；复杂审批与系统对接；专属前置部署团队；私有化部署。」', '“Multiple departments, companies, brands and accounts. Complex approvals and system integration. A dedicated FDE. Private deployment.”')],
-  ['Elena Rossi', B('Enterprise · 定制', 'Enterprise · Custom')],
+  ['Elena Rossi', B('企业版 · 定制', 'Enterprise · Custom')],
   ['Marketing Director at Auralis®', B('联系企业版团队', 'Talk to STARGO Enterprise')],
 
   /* flip cards → the pricing ladder */
   ['Mōno™ stands behind the data.', B('从企业需要的 AI 层级开始。', 'One system. The right level of support.')],
   ['Our success is reflected in the numbers we achieve for our clients. Every project is designed with measurable growth at its core.',
     B('一份年度软件订阅，加上可选的建站、内容与获客服务包。服务包价格是首年总价，已经包含软件订阅；服务交付量按档替换，不叠加。', 'An annual software subscription, with optional website, content and acquisition services. Service prices are first-year totals that already include the subscription; service quantities replace the lower tier rather than stacking.')],
-  ['(Value created)', B('(Standard)', '(Standard)')],
+  ['(Value created)', B('(标准版)', '(Standard)')],
   ['$174M', B('¥10,000', '¥10,000')],
   ['Empowering growth through strategic solutions.', B('12 个月云端工作台、核心外贸流程与自助线索发现。', 'A 12-month workspace, core trade workflows and self-service lead discovery.')],
   ['CRI: 5.1% → 6.7%', B('首年 ¥10,000 · 按年续费', '¥10,000 first year · renews yearly')],
   ['“We didn’t expect smoother onboarding and a noticeable lift in qualified leads.”', B('「先把企业的知识、客户和报价放进同一个系统。」', '“Put the company’s knowledge, customers and quotes into one system first.”')],
-  ['Daniel Kim', B('Standard · 年度软件订阅', 'Standard · the annual subscription')],
-  ['(Return client rate)', B('(Launch)', '(Launch)')],
+  ['Daniel Kim', B('标准版 · 年度软件订阅', 'Standard · the annual subscription')],
+  ['(Return client rate)', B('(上线版)', '(Launch)')],
   ['92%', B('¥20,000', '¥20,000')],
   ['Building lasting partnerships built on trust.', B('官网 3 个核心页面与 20 个 SKU 页、中英文内容、20 个 SKU 图片与 10 条短视频。', 'A 3-page website with 20 SKU pages, Chinese and English content, 20 SKU image sets and 10 short videos.')],
   ['CRI: 2.9% → 4.4%', B('首年总价 ¥20,000（含 ¥10,000 软件订阅）· 续费另议', '¥20,000 first-year total, subscription included · renewal per proposal')],
   ['“Everything feels faster, clearer, and more premium. We shipped the redesign and conversions followed immediately.”', B('「让 AI 开始对外工作。」', '“Let AI start working outward.”')],
-  ['Olivia Carter', B('Launch · 建站与内容服务', 'Launch · website and content service')],
-  ['(Projects delivered)', B('(Growth)', '(Growth)')],
+  ['Olivia Carter', B('上线版 · 建站与内容服务', 'Launch · website and content service')],
+  ['(Projects delivered)', B('(增长版)', '(Growth)')],
   ['+320', B('¥30,000', '¥30,000')],
   ['Driving successful outcomes across industries.', B('官网 4 个核心页面与 40 个 SKU 页、5 个语种、SEO 与 GEO 实施服务。', 'A 4-page website with 40 SKU pages, five languages, and SEO / GEO implementation.')],
   ['CRI: 1.7% → 2.6%', B('首年总价 ¥30,000（含 ¥10,000 软件订阅）· 续费另议', '¥30,000 first-year total, subscription included · renewal per proposal')],
   ['“The new site finally matches our product. Cleaner UX, better messaging, and results we can actually measure.”', B('「不只把活干完，还开始带动增长。」', '“Not only doing the work — starting to drive growth.”')],
-  ['Marcus Reed', B('Growth · 更大范围的建站与内容', 'Growth · a wider website and content build')],
-  ['(Client retention)', B('(Global Acquisition)', '(Global Acquisition)')],
+  ['Marcus Reed', B('增长版 · 更大范围的建站与内容', 'Growth · a wider website and content build')],
+  ['(Client retention)', B('(全球获客版)', '(Global Acquisition)')],
   ['88%', B('¥40,000', '¥40,000')],
   ['Optimized journeys that turn traffic into growth.', B('官网 5 个核心页面与 80 个 SKU 页、18 种语言，另加三个月配置后获客运行与 3 份月报。', 'A 5-page website with 80 SKU pages, 18 languages, plus three months of configured acquisition operation and 3 monthly reports.')],
   ['CRI: 3.8% → 5.6%', B('首年总价 ¥40,000（含 ¥10,000 软件订阅）· 续费另议', '¥40,000 first-year total, subscription included · renewal per proposal')],
-  ['“The redesign removed friction everywhere. It’s simple, sharp, and performs better across every device.”', B('「Standard 档自己获客；选这一档，我们替你跑三个月。」', '“Self-service acquisition is in Standard; this plan runs it for you for three months.”')],
-  ['Sofia Martinez', B('Global Acquisition · 配置后获客运行', 'Global Acquisition · configured acquisition operation')],
+  ['“The redesign removed friction everywhere. It’s simple, sharp, and performs better across every device.”', B('「标准版自己获客；选这一档，我们替你跑三个月。」', '“Self-service acquisition is in Standard; this plan runs it for you for three months.”')],
+  ['Sofia Martinez', B('全球获客版 · 配置后获客运行', 'Global Acquisition · configured acquisition operation')],
   ['>★★★★★<', B('>云端 · 知识 · CRM · 审批<', '>Cloud · knowledge · CRM · approval<'), { nth: 0 }],
-  ['>★★★★★<', B('>含年度 Standard 软件订阅，另加：<', '>The annual Standard subscription, plus:<'), { nth: 0 }],
-  ['>★★★★★<', B('>含年度 Standard 软件订阅，另加：<', '>The annual Standard subscription, plus:<'), { nth: 0 }],
-  ['>★★★★★<', B('>含年度 Standard 软件订阅，另加：<', '>The annual Standard subscription, plus:<'), { nth: 0 }],
+  ['>★★★★★<', B('>含标准版年度软件订阅，另加：<', '>The annual Standard subscription, plus:<'), { nth: 0 }],
+  ['>★★★★★<', B('>含标准版年度软件订阅，另加：<', '>The annual Standard subscription, plus:<'), { nth: 0 }],
+  ['>★★★★★<', B('>含标准版年度软件订阅，另加：<', '>The annual Standard subscription, plus:<'), { nth: 0 }],
 
   /* FAQ */
   ['What services does your agency offer?', B('STARGO WORK 到底是什么？', 'What is STARGO WORK?')],
@@ -329,7 +349,7 @@ export const HOME_MONO = [
   ['(Pricing)', B('(两种外贸)', '(Two ways to run trade)')],
   ['(FAQ)', B('(常见问题)', '(FAQ)')],
   ['(Testimonials)', B('(智能层 · 四个示例场景)', '(Intelligence · four illustrative scenarios)')],
-  ['(Success stories)', B('(Enterprise)', '(Enterprise)')],
+  ['(Success stories)', B('(企业版)', '(Enterprise)')],
   ['(Stats)', B('(定价 · AI 层级)', '(Pricing · the AI ladder)')],
   ['(Blog)', B('(博客)', '(Blog)')],
   ['(Project)', B('(每次增长)', '(each growth step)')],
@@ -351,7 +371,7 @@ export const HOME_MONO = [
   ['>+9<', B('>288<', '>288<')],
   ['(Home)', B('(首页)', '(Trade OS)')],
   ['Page Layouts', B('页面', 'Pages')],
-  ['2011-26©', B('示意 Logo · 非真实客户', 'Sample logos · not actual clients')],
+  ['2011-26©', B('2026©', '2026©')],
 ];
 /** The same sentence ships twice (stages 001 and 003); replaced by position. */
 export const HOME_DUP_DESC = {
@@ -360,10 +380,20 @@ export const HOME_DUP_DESC = {
   second: LOOP_DESC[2],
 };
 /** The template's flip-card logo wall. Real logos in assets/brands/ replace the
-    sample marks; until then the wall keeps its eight sample logos and says so. */
+    sample marks.
+
+    The owner asked for the wall's two sample labels to go (2026-09-10):
+    「不要写下面logo示例(合作伙伴墙 · 示例) 示意 Logo · 非真实客户这些全部删掉」.
+    So `captionSample` is empty — the wall carries no caption at all until real
+    logos are dropped in, at which point `caption` takes over. Empty rather than
+    a neutral word on purpose: with the template's own eight marks still in the
+    grid, any caption at all would be a claim about them, and the claim would
+    not be true. The disclosure on the notices page (tools/copy.mjs, the
+    imagery paragraph) still names the sample logo wall and is left alone —
+    that page is where it belongs. */
 export const HOME_BRAND_WALL = {
   caption: B('(我们服务过的品牌)', '(Brands we have served)'),
-  captionSample: B('(合作伙伴墙 · 示例)', '(Partner wall · sample)'),
+  captionSample: B('', ''),
   year: B('2026©', '2026©'),
 };
 export const HOME_LOOP_TABLE = {
@@ -549,25 +579,25 @@ export const PRICING = {
   renewalPrice: B('联系我们', 'Ask us'),
   panes: [
     [
-      { name: B('Standard', 'Standard'), price: '¥10,000', unit: 'year', renewal: '¥10,000',
+      { name: B('标准版', 'Standard'), price: '¥10,000', unit: 'year', renewal: '¥10,000',
         desc: B('适合想自己把 AI 用进外贸流程的团队。', 'For teams that want to run their own AI-assisted export workflow.'),
-        cta: B('了解 Standard', 'Discuss Standard'),
+        cta: B('了解标准版', 'Discuss Standard'),
         items: [B('12 个月云端工作台，最多 5 个标准用户账号', 'A 12-month workspace with up to 5 standard user accounts'), B('首次导入企业知识、FAQ 与最多 20 个 SKU 的文字资料', 'Initial text import for company knowledge, FAQ and up to 20 SKUs'), B('产品、客户、询盘、匹配、报价与 CRM 流程', 'Product, customer, inquiry, matching, quotation and CRM workflows'), B('自助线索发现、公司画像、评分与写入 CRM', 'Self-service lead discovery, profiling, scoring and CRM entry'), B('年度标准 AI 额度，配置一次、培训一次', 'Standard annual AI credits, one setup session and one training session')] },
-      { name: B('Launch', 'Launch'), price: '¥20,000', unit: 'first', renewal: 'ask',
+      { name: B('上线版', 'Launch'), price: '¥20,000', unit: 'first', renewal: 'ask',
         desc: B('适合需要官网和第一套外贸销售素材的制造企业。', 'For manufacturers that need a website and a first set of export sales assets.'),
-        cta: B('了解 Launch', 'Discuss Launch'),
-        items: [B('含年度 Standard 软件订阅，另加：', 'The annual Standard subscription, plus:'), B('官网 3 个核心页面与 20 个 SKU 模板页', 'A website with 3 core pages and 20 SKU template pages'), B('中英文官网内容', 'Chinese and English website content'), B('20 个 SKU 的图片内容与 10 条实拍短视频', 'An image-content set for 20 SKUs and 10 short videos'), B('基础站内 SEO、一年域名与托管、最多 3 轮修改', 'Basic on-site SEO, 1 year of domain and hosting, up to 3 revision rounds')] },
-      { name: B('Growth', 'Growth'), price: '¥30,000', unit: 'first', renewal: 'ask', featured: true,
+        cta: B('了解上线版', 'Discuss Launch'),
+        items: [B('含标准版年度软件订阅，另加：', 'The annual Standard subscription, plus:'), B('官网 3 个核心页面与 20 个 SKU 模板页', 'A website with 3 core pages and 20 SKU template pages'), B('中英文官网内容', 'Chinese and English website content'), B('20 个 SKU 的图片内容与 10 条实拍短视频', 'An image-content set for 20 SKUs and 10 short videos'), B('基础站内 SEO、一年域名与托管、最多 3 轮修改', 'Basic on-site SEO, 1 year of domain and hosting, up to 3 revision rounds')] },
+      { name: B('增长版', 'Growth'), price: '¥30,000', unit: 'first', renewal: 'ask', featured: true,
         desc: B('适合要扩产品展示、加语种、提升搜索可见度的团队。', 'For teams expanding product presentation, languages and search visibility.'),
-        cta: B('了解 Growth', 'Discuss Growth'),
-        items: [B('含年度 Standard 软件订阅，另加：', 'The annual Standard subscription, plus:'), B('官网 4 个核心页面与 40 个 SKU 模板页', 'A website with 4 core pages and 40 SKU template pages'), B('中英文，另加 3 个语种', 'Chinese and English plus 3 further languages'), B('40 个 SKU 的图片内容、20 条实拍短视频与 10 条 AI 视频', 'An image-content set for 40 SKUs, 20 short videos and 10 AI videos'), B('约定范围内的 SEO 与 GEO 内容和结构优化', 'SEO and GEO content and structure within the agreed scope')] },
+        cta: B('了解增长版', 'Discuss Growth'),
+        items: [B('含标准版年度软件订阅，另加：', 'The annual Standard subscription, plus:'), B('官网 4 个核心页面与 40 个 SKU 模板页', 'A website with 4 core pages and 40 SKU template pages'), B('中英文，另加 3 个语种', 'Chinese and English plus 3 further languages'), B('40 个 SKU 的图片内容、20 条实拍短视频与 10 条 AI 视频', 'An image-content set for 40 SKUs, 20 short videos and 10 AI videos'), B('约定范围内的 SEO 与 GEO 内容和结构优化', 'SEO and GEO content and structure within the agreed scope')] },
     ],
     [
-      { name: B('Global Acquisition', 'Global Acquisition'), price: '¥40,000', unit: 'first', renewal: 'ask', featured: true,
+      { name: B('全球获客版', 'Global Acquisition'), price: '¥40,000', unit: 'first', renewal: 'ask', featured: true,
         desc: B('适合再加三个月配置后 AI 获客运行的团队。', 'For teams adding three months of configured AI acquisition operation.'),
-        cta: B('了解 Global Acquisition', 'Discuss Global Acquisition'),
-        items: [B('含年度 Standard 软件订阅，另加：', 'The annual Standard subscription, plus:'), B('官网 5 个核心页面与 80 个 SKU 模板页', 'A website with 5 core pages and 80 SKU template pages'), B('官网与 SKU 文字系统翻译成 18 种语言', 'Website and SKU text in 18 system-translated languages'), B('80 个 SKU 的图片内容、50 条实拍短视频与 20 条 AI 视频', 'An image-content set for 80 SKUs, 50 short videos and 20 AI videos'), B('三个月配置后 AI 获客运行与 3 份月报', 'Three months of configured AI acquisition operation and 3 monthly reports')] },
-      { name: B('Enterprise', 'Enterprise'), price: B('定制', 'Custom'), unit: 'none', renewal: 'custom',
+        cta: B('了解全球获客版', 'Discuss Global Acquisition'),
+        items: [B('含标准版年度软件订阅，另加：', 'The annual Standard subscription, plus:'), B('官网 5 个核心页面与 80 个 SKU 模板页', 'A website with 5 core pages and 80 SKU template pages'), B('官网与 SKU 文字系统翻译成 18 种语言', 'Website and SKU text in 18 system-translated languages'), B('80 个 SKU 的图片内容、50 条实拍短视频与 20 条 AI 视频', 'An image-content set for 80 SKUs, 50 short videos and 20 AI videos'), B('三个月配置后 AI 获客运行与 3 份月报', 'Three months of configured AI acquisition operation and 3 monthly reports')] },
+      { name: B('企业版', 'Enterprise'), price: B('定制', 'Custom'), unit: 'none', renewal: 'custom',
         desc: B('多部门、多公司、多品牌、多账号，以及更复杂的审批与系统接入。', 'Multiple departments, companies, brands and accounts, with complex approvals and system integration.'),
         cta: B('联系企业版团队', 'Talk to STARGO Enterprise'),
         items: [B('大量 AI 员工与复杂审批', 'Large AI workforce and complex approval'), B('现有 CRM · ERP 接入与系统迁移', 'Existing CRM · ERP integration and migration'), B('自定义工作流 · 专属 AI 员工 · 专属前置部署工程师', 'Custom workflows · dedicated agents · dedicated FDE'), B('私有化部署', 'Private deployment'), B('SLA', 'SLA')] },
@@ -577,13 +607,60 @@ export const PRICING = {
         items: [B('挑最耗时间、最拖增长的那项工作', 'Pick the work that costs the most time or growth'), B('我们从那里开始', 'We start there'), B('看 AI 在真实流程里怎么干活', 'See AI working in your real process'), B('再决定需要哪一级', 'Then decide which level you need'), B('不必一次改动整个企业', 'No need to change the whole company at once')] },
     ],
   ],
+  /* ------------------------------------------- 层级之间的包含关系 ---
+     OWNER'S DECISION, 2026-09-15: 「包含 —— 高档位全部继承」.
+
+     THE DEFECT THIS ANSWERS. The levels above are prose. A higher level says
+     what it ADDS — 「含标准版年度软件订阅，另加：」 and then its own deliverables —
+     and never restates what it already carries, because a price list that
+     repeated every lower line would be unreadable. A comparison chart that
+     derives a tick by matching a row's sentence against a level's own `items`
+     therefore printed a dash wherever a level was merely SILENT, and silence
+     read as absence: 上线版's 「基础站内 SEO、一年域名与托管、最多 3 轮修改」 ticked
+     one column and dashed four, so the ¥30,000 and ¥40,000 levels stood as
+     having no domain, no hosting and no SEO that the ¥20,000 level has — while
+     增长版 ticked the SEO row immediately under it. One tier, two opposite
+     verdicts, on the same page.
+
+     WHY IT IS WRITTEN HERE, AS DATA. The fix is NOT a looser match in the
+     renderer: "nearly the same sentence" is a guess, and a guess cannot be read
+     back by the next person. What a level contains is a fact about the product,
+     the owner decides it, and it belongs in this file beside the levels it is
+     about. So it is one step per pair, and the renderer only follows the steps.
+
+       { level, from }   `level` carries everything `from` carries, and
+                         everything `from` in turn carries: the steps compose,
+                         so 全球获客版 → 增长版 → 上线版 → 标准版 is the whole
+                         ladder in three lines. Both names must be levels of
+                         `panes`, in both languages, and `from` must stand
+                         BELOW `level` there — inheritance goes up the price
+                         list, never down.
+
+     WHAT IT DOES NOT SAY. 企业版 is not in this list. PRICING states no
+     inclusion for it — its `items` name a workforce, an integration, a
+     deployment and an SLA, and nothing of the four levels below — so it
+     inherits nothing and still ticks only the five lines it states itself. An
+     inclusion for 企业版 would be a new claim about the product, which is the
+     owner's to make in this file, not the chart's to guess.
+
+     THE CROSS-CHECK. The first step restates, as data, what three levels
+     already state in words: 上线版, 增长版 and 全球获客版 each open their `items`
+     with 「含标准版年度软件订阅，另加：」. tools/blocks/rk-price-compare.mjs asserts
+     the two agree — exactly the levels this ladder carries up to 标准版 are the
+     levels whose own first sentence says so — so the declaration cannot drift
+     from the prose in either direction. */
+  inherits: [
+    { level: B('上线版', 'Launch'), from: B('标准版', 'Standard') },
+    { level: B('增长版', 'Growth'), from: B('上线版', 'Launch') },
+    { level: B('全球获客版', 'Global Acquisition'), from: B('增长版', 'Growth') },
+  ],
   featuredBadge: B('推荐方案', 'Our recommendation'),
   compareTitle: B('所选方案对比', 'Compare selected plans'),
   compareFeatures: B('能力', 'Capability'),
   comparePlans: [
-    { name: B('Standard', 'Standard'), desc: B('自己的 AI 外贸流程', 'Your own AI-assisted export workflow') },
-    { name: B('Growth', 'Growth'), desc: B('Standard + 官网、内容与搜索', 'Standard plus website, content and search') },
-    { name: B('Global Acquisition', 'Global Acquisition'), desc: B('Growth + 三个月配置后运行', 'Growth plus three months of configured operation') },
+    { name: B('标准版', 'Standard'), desc: B('自己的 AI 外贸流程', 'Your own AI-assisted export workflow') },
+    { name: B('增长版', 'Growth'), desc: B('标准版 + 官网、内容与搜索', 'Standard plus website, content and search') },
+    { name: B('全球获客版', 'Global Acquisition'), desc: B('增长版 + 三个月配置后运行', 'Growth plus three months of configured operation') },
   ],
   compareGroups: [
     { title: B('软件订阅', 'Software subscription'), rows: [
@@ -605,6 +682,159 @@ export const PRICING = {
       [B('18 种语言的官网与 SKU 系统翻译', '18-language website/SKU system translation'), [0, 0, 1]],
     ] },
   ],
+  /* --------------------------------------------- the comparison matrix ---
+     DERIVED, not authored. Every cell below is read out of the five levels'
+     own `items` above. Nothing here is a new claim about the product, and
+     nothing here may be changed on its own: change a level's `items` and the
+     cell that quotes it has to move with it, or the build stops.
+
+     WHY IT EXISTS (owner's decision, 2026-09-15). The levels' items are prose
+     carrying different NUMBERS — 「官网 3 个核心页面」 against 「官网 4 个核心页面」
+     — so a chart that can only tick or dash a row turns "a bigger number" into
+     "does not have it": 增长版 reads as lacking what 上线版 has, and 企业版,
+     whose items name none of the website deliverables, stands as a column of
+     dashes. So a row that differs by quantity carries the quantity, and only a
+     row that is genuinely yes-or-no stays a tick.
+
+     valueRows  one row per quantity. `cells` holds one entry per level, in
+                PRICING.panes order:
+                  { v, from }  the words the cell shows, and the exact fragment
+                               of that level's own items sentence they are read
+                               out of. `from` must occur verbatim inside one of
+                               that level's items, and every word and number of
+                               `v` must occur inside `from`, in order.
+                  'custom'     that level is scoped individually, by the
+                               declared `customScope` rule below — never by a
+                               judgement made in the renderer.
+                  null         the capability is not part of that level at all,
+                               drawn as the template's own dash. `key` is the
+                               word that level's items would have to carry if it
+                               did have the capability, and a dash may only be
+                               written where `key` is absent from them AND from
+                               every level this one inherits.
+     tickRows   one row per genuinely yes-or-no line, each one the exact
+                sentence a level's items state it in. WHICH levels tick is not
+                written here and is never hand-written into this file: it is
+                DERIVED, and from exactly two things — the level's own `items`,
+                and PRICING.inherits above. A level ticks a line when it states
+                that line itself, or when it declares that it contains a level
+                which does. Nothing else can put a tick in a cell.
+     customScope  THE ONE DECLARED EXCEPTION on a value row (owner's decision,
+                2026-09-15: 「写「定制」—— 它本来就是全定制」). A level whose `unit`
+                is this rule's `unit` and whose `price` is this rule's `price`
+                is not sold by quantity at all: there is no 3 or 4 or 5 to
+                state, because its scope is written per company. Such a level
+                therefore reads its own price — 定制 / Custom — in every value
+                cell, and that is not a number invented out of silence, it is
+                the level's own word for what it sells. It is allowed ONLY
+                where all four of these hold, and rk-price-compare.mjs checks
+                each of them against the level itself:
+                  · the level's `unit` is exactly this rule's `unit`;
+                  · the level's `price` is exactly this rule's `price`, in both
+                    languages, and that price is what the cell prints;
+                  · the level's own `items` are SILENT about that row's `key` —
+                    the same silence a dash requires. A level that states a
+                    quantity has stated it, and 定制 may not be written over it;
+                  · it holds on EVERY value row of that level, never on some.
+                It does not reach tick rows. A tick is a yes; 定制 is not one,
+                so 企业版 still ticks only the five lines its own items state.
+
+     THE RULE THAT GOVERNS ALL OF IT: where a level's items are SILENT about a
+     capability, no value and no tick is invented for it — with the two
+     exceptions DECLARED above, each of them data in this file that the renderer
+     follows rather than a judgement it makes:
+       · PRICING.inherits — a level that declares it contains a lower level
+         ticks that level's lines. The tick is not invented out of silence; it
+         is the declared inheritance being read.
+       · compareMatrix.customScope — a level priced 定制 reads 定制 rather than a
+         quantity, because that is what its own price says its scope is.
+     Outside those two, silence stays a dash. 企业版 declares no inheritance, so
+     it dashes the five subscription rows it says nothing about; and no tick
+     anywhere is written for a line a level neither states nor inherits.
+
+     tools/blocks/rk-price-compare.mjs draws this chart and asserts every line
+     above against PRICING itself — a value that cannot be traced back to a
+     level's own sentence, or a tick that traces to neither the level's own
+     items nor a declared step of PRICING.inherits, throws the build instead of
+     reaching the page. */
+  compareMatrix: {
+    /* The five priced levels of `panes`, in `panes` order. Asserted against it. */
+    tiers: [B('标准版', 'Standard'), B('上线版', 'Launch'), B('增长版', 'Growth'), B('全球获客版', 'Global Acquisition'), B('企业版', 'Enterprise')],
+    /* The declared exception, as data: which levels are scoped individually.
+       Not a name — a test, so it cannot be a back door for one column. A level
+       matching BOTH fields prints its own `price` on every value row; a level
+       matching neither may not print it on any. 企业版 is the only level of
+       `panes` that matches, and the only way to add another is to price it
+       this way here. Written out in full in the comment above. */
+    customScope: { unit: 'none', price: B('定制', 'Custom') },
+    valueRows: [
+      { label: B('官网核心页面', 'Website core pages'), key: B('核心页面', 'core pages'), cells: [
+        null,
+        { v: B('3', '3'), from: B('3 个核心页面', '3 core pages') },
+        { v: B('4', '4'), from: B('4 个核心页面', '4 core pages') },
+        { v: B('5', '5'), from: B('5 个核心页面', '5 core pages') },
+        'custom'] },
+      { label: B('SKU 模板页', 'SKU template pages'), key: B('SKU 模板页', 'SKU template pages'), cells: [
+        null,
+        { v: B('20', '20'), from: B('20 个 SKU 模板页', '20 SKU template pages') },
+        { v: B('40', '40'), from: B('40 个 SKU 模板页', '40 SKU template pages') },
+        { v: B('80', '80'), from: B('80 个 SKU 模板页', '80 SKU template pages') },
+        'custom'] },
+      { label: B('官网语种', 'Website languages'), key: B('官网', 'website'), cells: [
+        null,
+        { v: B('中英文', 'Chinese and English'), from: B('中英文官网内容', 'Chinese and English website content') },
+        { v: B('中英文 + 3 个语种', 'Chinese and English + 3 languages'), from: B('中英文，另加 3 个语种', 'Chinese and English plus 3 further languages') },
+        { v: B('18 种语言', '18 languages'), from: B('18 种语言', '18 system-translated languages') },
+        'custom'] },
+      { label: B('SKU 图片内容', 'SKU image sets'), key: B('图片内容', 'image-content'), cells: [
+        null,
+        { v: B('20 个', '20'), from: B('20 个 SKU 的图片内容', '20 SKUs') },
+        { v: B('40 个', '40'), from: B('40 个 SKU 的图片内容', '40 SKUs') },
+        { v: B('80 个', '80'), from: B('80 个 SKU 的图片内容', '80 SKUs') },
+        'custom'] },
+      { label: B('实拍短视频', 'Filmed short videos'), key: B('实拍短视频', 'short videos'), cells: [
+        null,
+        { v: B('10 条', '10'), from: B('10 条实拍短视频', '10 short videos') },
+        { v: B('20 条', '20'), from: B('20 条实拍短视频', '20 short videos') },
+        { v: B('50 条', '50'), from: B('50 条实拍短视频', '50 short videos') },
+        'custom'] },
+      { label: B('AI 视频', 'AI videos'), key: B('AI 视频', 'AI videos'), cells: [
+        null,
+        null,
+        { v: B('10 条', '10'), from: B('10 条 AI 视频', '10 AI videos') },
+        { v: B('20 条', '20'), from: B('20 条 AI 视频', '20 AI videos') },
+        'custom'] },
+    ],
+    tickRows: [
+      /* Whose line each row is. Which OTHER columns tick it is not written
+         here — it is PRICING.inherits, read forward by the chart.
+
+         标准版's own five lines. 上线版 inherits 标准版, 增长版 inherits 上线版 and
+         全球获客版 inherits 增长版, so all four tick these; 企业版 declares no
+         inheritance and does not. */
+      B('12 个月云端工作台，最多 5 个标准用户账号', 'A 12-month workspace with up to 5 standard user accounts'),
+      B('首次导入企业知识、FAQ 与最多 20 个 SKU 的文字资料', 'Initial text import for company knowledge, FAQ and up to 20 SKUs'),
+      B('产品、客户、询盘、匹配、报价与 CRM 流程', 'Product, customer, inquiry, matching, quotation and CRM workflows'),
+      B('自助线索发现、公司画像、评分与写入 CRM', 'Self-service lead discovery, profiling, scoring and CRM entry'),
+      B('年度标准 AI 额度，配置一次、培训一次', 'Standard annual AI credits, one setup session and one training session'),
+      /* 上线版's own line — and so 增长版's and 全球获客版's, up the ladder. This
+         is the row the 2026-09-15 decision was made about: it used to tick one
+         column and dash four. */
+      B('基础站内 SEO、一年域名与托管、最多 3 轮修改', 'Basic on-site SEO, 1 year of domain and hosting, up to 3 revision rounds'),
+      /* 增长版's own line, and it continues up to 全球获客版. */
+      B('约定范围内的 SEO 与 GEO 内容和结构优化', 'SEO and GEO content and structure within the agreed scope'),
+      /* 全球获客版's own line. Nothing inherits it: it is the top of the ladder. */
+      B('三个月配置后 AI 获客运行与 3 份月报', 'Three months of configured AI acquisition operation and 3 monthly reports'),
+      /* 企业版's own five lines, and its only ticks — it inherits nothing, and
+         `customScope` buys it no tick anywhere: it reads 定制 on the six value
+         rows above and dashes the four levels' lines it does not state. */
+      B('大量 AI 员工与复杂审批', 'Large AI workforce and complex approval'),
+      B('现有 CRM · ERP 接入与系统迁移', 'Existing CRM · ERP integration and migration'),
+      B('自定义工作流 · 专属 AI 员工 · 专属前置部署工程师', 'Custom workflows · dedicated agents · dedicated FDE'),
+      B('私有化部署', 'Private deployment'),
+      B('SLA', 'SLA'),
+    ],
+  },
   ctaTitle: B('别买 AI 工具。<span class="sub-title-text">建 AI 产能。</span>', 'Don’t hire AI tools. <span class="sub-title-text">Build AI capacity.</span>'),
   ctaDesc: B('288 个 AI 员工，是 STARGO WORK 的 AI 员工能力体系。模型调用、并发、自动任务和第三方服务用量，按方案配置。', '288 AI employees are the STARGO WORK workforce capability system. Model calls, concurrency, automated tasks and third-party usage are configured per plan.'),
   ctaButton: { label: B('认识你的 AI 团队', 'Meet your AI workforce'), href: 'workforce.html' },
@@ -613,14 +843,14 @@ export const PRICING = {
   faq: [
     [B('288 个 AI 员工是无限使用吗？', 'Are the 288 AI employees unlimited?'), B('不是。288 说的是能力目录的规模。实际可用范围、在跑的任务、并发、额度和第三方服务用量，以签约配置为准。', 'No. The workforce count describes the capability catalogue. Actual access, active workloads, concurrency, credits and third-party usage depend on the contracted configuration.')],
     [B('首年之后怎么算？', 'What happens after the first year?'), B('软件订阅按年续费。域名、托管与持续制作，按续费方案或第三方实际费用另算。首年建站与内容服务包，不等于每年都重复交付同样的内容量。', 'The software subscription follows its annual renewal terms. Domain, hosting and ongoing production follow the renewal proposal or the relevant third-party charges. A first-year launch package is not a promise of repeated annual content production.')],
-    [B('Standard 包含什么？', 'What is in Standard?'), B('12 个月云端工作台（最多 5 个标准用户）、企业知识与产品资料首次导入（最多 20 个 SKU）、询盘与 CRM、报价与人工审批、自助线索发现与写入 CRM、年度标准 AI 额度，外加配置一次、培训一次。', 'Cloud workspace, knowledge base, product data centre, AI employees, inquiry workflow, customer CRM, basic Customer 360, quote workflow, basic content assets, human approval and AI work training.')],
-    [B('主动获客只在 ¥40,000 的方案里吗？', 'Is AI acquisition only in the ¥40,000 package?'), B('不是。Standard 已经包含自助获客：线索发现、公司画像、评分、触达准备与写入 CRM。Global Acquisition 加的是三个月配置后获客运行与 3 份月报，外加它自己的建站与内容交付。', 'No. Standard already includes self-service acquisition: lead discovery, company profiling, scoring, outreach preparation and CRM entry. Global Acquisition adds three months of configured acquisition operation and three monthly reports, alongside its website and content deliverables.')],
-    [B('支持私有化部署吗？', 'Is private deployment available?'), B('Enterprise 提供专属环境与私有化部署，面向数据、系统、合规要求更高的企业。', 'Enterprise offers a dedicated environment and private deployment for companies with stricter data, system and compliance requirements.')],
-    [B('能接现有的 CRM 或 ERP 吗？', 'Can it connect to our CRM or ERP?'), B('可以。API、MCP、连接器、Activepieces、Windmill、工作区桥接和渠道插件都能接已有系统。系统迁移在 Enterprise 里提供。', 'Yes — through API, MCP, connectors, Activepieces, Windmill, Workspace Bridge and channel plugins; migration is part of Enterprise.')],
+    [B('标准版包含什么？', 'What is in Standard?'), B('12 个月云端工作台（最多 5 个标准用户）、企业知识与产品资料首次导入（最多 20 个 SKU）、询盘与 CRM、报价与人工审批、自助线索发现与写入 CRM、年度标准 AI 额度，外加配置一次、培训一次。', 'Cloud workspace, knowledge base, product data centre, AI employees, inquiry workflow, customer CRM, basic Customer 360, quote workflow, basic content assets, human approval and AI work training.')],
+    [B('主动获客只在 ¥40,000 的方案里吗？', 'Is AI acquisition only in the ¥40,000 package?'), B('不是。标准版已经包含自助获客：线索发现、公司画像、评分、触达准备与写入 CRM。全球获客版加的是三个月配置后获客运行与 3 份月报，外加它自己的建站与内容交付。', 'No. Standard already includes self-service acquisition: lead discovery, company profiling, scoring, outreach preparation and CRM entry. Global Acquisition adds three months of configured acquisition operation and three monthly reports, alongside its website and content deliverables.')],
+    [B('支持私有化部署吗？', 'Is private deployment available?'), B('企业版提供专属环境与私有化部署，面向数据、系统、合规要求更高的企业。', 'Enterprise offers a dedicated environment and private deployment for companies with stricter data, system and compliance requirements.')],
+    [B('能接现有的 CRM 或 ERP 吗？', 'Can it connect to our CRM or ERP?'), B('可以。API、MCP、连接器、Activepieces、Windmill、工作区桥接和渠道插件都能接已有系统。系统迁移在企业版里提供。', 'Yes — through API, MCP, connectors, Activepieces, Windmill, Workspace Bridge and channel plugins; migration is part of Enterprise.')],
     [B('模型费用包含在内吗？', 'Are model costs included?'), B('平台能力与模型 / API / 第三方服务用量分开计。各方案额度不同，超出部分按实际用量计费。', 'Platform capability and model / API / third-party usage are separate; each plan carries its own allowance, with overage billed on use.')],
-    [B('培训和实施怎么做？', 'How are training and implementation done?'), B('Standard 含一次配置与一次基础培训。Enterprise 配专属前置部署工程师，把真实流程直接反馈进平台。', 'Standard includes one setup session and one basic training session. Enterprise comes with a dedicated FDE who feeds real workflows straight back into the platform.')],
+    [B('培训和实施怎么做？', 'How are training and implementation done?'), B('标准版含一次配置与一次基础培训。企业版配专属前置部署工程师，把真实流程直接反馈进平台。', 'Standard includes one setup session and one basic training session. Enterprise comes with a dedicated FDE who feeds real workflows straight back into the platform.')],
     [B('我们该从哪一级开始？', 'Which level should we start at?'), B('从一条流程开始。挑现在最耗时间、最拖增长的那项工作，先跑通，再决定需要哪一级。', 'Start with one workflow. Pick the work that costs the most time or growth, get it running, then decide which level you need.')],
-    [B('多公司、多品牌怎么办？', 'What about multiple companies or brands?'), B('多部门、多公司、多品牌、多账号，属于 Enterprise：权限、审批、数据边界各自独立，共用同一支 AI 员工队伍。', 'Multiple departments, companies, brands and accounts belong to Enterprise: separate permissions, approvals and data boundaries on one shared AI workforce.')],
+    [B('多公司、多品牌怎么办？', 'What about multiple companies or brands?'), B('多部门、多公司、多品牌、多账号，属于企业版：权限、审批、数据边界各自独立，共用同一支 AI 员工队伍。', 'Multiple departments, companies, brands and accounts belong to Enterprise: separate permissions, approvals and data boundaries on one shared AI workforce.')],
   ],
 };
 

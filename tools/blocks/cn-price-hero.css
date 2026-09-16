@@ -1,0 +1,149 @@
+/* cn-price-hero — only what the cut cannot carry out of cinery.
+
+   Three kinds of thing live here, and nothing else:
+
+     1. cinery's <body> declarations, which never travel with a cut section —
+        including the one heading token whose name Webflow left escaped;
+     2. the four properties the host page's own bare-element rules set on this
+        block's single `<p>`, put back to what cinery computes for it;
+     3. nothing at all for placement, and nothing at all for motion — both are
+        explained below rather than left as an absence a later reader has to
+        re-derive.
+
+   Every value in 1 and 2 is copied verbatim from
+   tools/templates/cinery/css/cinery.app.shared.3e3418b8f.css and scoped under
+   the block root exactly as the extractor scopes its own output. Nothing here
+   sets a size, colour, spacing or layout the donor did not already set. */
+
+
+/* --------------------------------------------- 1. what <body> supplied -- */
+
+/* cinery's own `body` rule, restated on the block root. A cut section never
+   brings <body> along, so the block would inherit whatever the page it lands on
+   sets — on pricing.html that is Mono's `body` and, inside the Scalora wrapper,
+   `.sc-scope { font-family: Interdisplay, …; color: …; font-size: …;
+   line-height: …; letter-spacing: …; font-weight: … }`. Only
+   `.cn-heading-style-h2` and `.cn-subtitle` name type of their own, so the pill
+   box, the spacers and every `em`-sized edge in the block take these.
+
+   Donor rule, verbatim:
+
+     body { background-color: var(--background-color--primary-background);
+            font-family: var(--_typography---font-family--primary);
+            color: var(--primary-color--white);
+            font-size: var(--_sizes---fixed--small);
+            line-height: 1.4;
+            font-weight: var(--_typography---font-weight--regular); }
+
+   `background-color` is deliberately not restated, and no `donor.ground` is
+   declared either: see the note in tools/blocks/cn-price-hero.mjs. In short,
+   pricing.html is already dark at every layer this block can sit in
+   (`body.stargo-dark-page` #1b1a19, `.sc-scope` #161616), so cinery's black is
+   not needed to make white type legible — and painting it would draw a
+   full-width seam against #161616 that the donor never had. */
+.cn-price-hero {
+  font-family: var(--_typography---font-family--primary);
+  color: var(--primary-color--white);
+  font-size: var(--_sizes---fixed--small);
+  line-height: 1.4;
+  font-weight: var(--_typography---font-weight--regular);
+}
+
+/* The heading's leading, which is a token the extractor cannot read.
+
+   Webflow left this variable's name escaped —
+   `--_typography---h2--h2-line-height\<deleted\|variable-dce8260e-…\>` — and
+   tools/donor-lib.mjs's `:root` scan matches `--[\w-]+` names only, so the one
+   token both of this block's heading rules ask for never arrives:
+
+     .heading-style-h2 { line-height: var(--_typography---h2--h2-line-height\<…\>); }
+     h2               { line-height: var(--_typography---h2--h2-line-height\<…\>); }
+
+   With it undefined the declaration is invalid at computed-value time and the
+   two `<h2>`s fall back to the leading they inherit. That matters twice over
+   here: the gradient this block's wordmark is painted with
+   (`linear-gradient(180deg, white 40%, #000 100%)`, `background-clip: text`) is
+   laid over the element box, so a taller box stretches the fade; and
+   `.cn-title-wrapper` is `overflow: hidden`, so the box is a mask. Measured in
+   the browser with cinery's own Overused Grotesk SemiBold, the line box at
+   `line-height: 100%` is exactly 192px at 192px type for the Latin line
+   ("SYSTEM") and for the CJK line (系统) alike — i.e. at the donor's value the
+   mask clips nothing, and above it the fade would be drawn over air.
+
+   cinery declares the token `100%` on `:root` and restates it as `100%` at each
+   of its three breakpoints, so one unconditional declaration is exactly what the
+   donor computes at every width. The five other heading tokens cinery escapes
+   the same way are not restored: this block has no h1, h3, h4, h5 or h6. */
+.cn-price-hero {
+  --_typography---h2--h2-line-height\<deleted\|variable-dce8260e-414c-a934-1b6e-a3323274e042\>: 100%;
+}
+
+
+/* ------------------------------------------------- 2. the one paragraph -- */
+
+/* cinery's `p` rule is `{ font-size; margin-bottom; line-height }` and nothing
+   else, so a cinery paragraph is opaque, tracks normally, and takes its weight
+   from `body` (regular, 400). The pages this block lands on say otherwise, from
+   two bare-element rules the extraction cannot know about:
+
+     p { opacity: .7;                                  css/monof-template.app…css
+         font-size: var(--font--work-title);           (1rem, 1.1rem ≥…)
+         line-height: var(--line-height--paragraph-line-height);   (1.3)
+         font-weight: var(--font-weight--500);         (500)
+         letter-spacing: -.5px;
+         margin-bottom: 10px; }
+     .sc-scope p { margin-bottom: 0; }                 css/scalora-modules.sc.css
+
+   `font-size` and `line-height` are already covered — `.cn-price-hero
+   .cn-text-size-medium` is (0,2,0) and beats both — but `opacity`,
+   `letter-spacing` and `font-weight` are set nowhere in the extracted sheet, so
+   Mono's values leak straight through onto the block's only `<p>`: the
+   paragraph under the wordmark rendered at 70% and half a pixel tight, in medium
+   rather than regular. This puts back what cinery computes, and nothing else.
+   (tools/blocks/cn-service.css restores the first two on its own descriptions;
+   `font-weight` is the third and it belongs with them.)
+
+   `margin-bottom` is the reason the selector carries the class as well as the
+   element. `.cn-price-hero p` and `.sc-scope p` are both (0,1,1), so which of
+   cinery's 10px and Scalora's 0 wins would be decided by the order the two
+   sheets happen to be linked in — and that order is settled outside this block,
+   in whatever wires it onto the page. `p.cn-text-size-medium` is (0,2,1) and
+   wins either way, on the donor's own value. There is exactly one `<p>` in the
+   cut, so the class costs nothing in reach. */
+.cn-price-hero p.cn-text-size-medium {
+  opacity: 1;
+  letter-spacing: normal;
+  font-weight: var(--_typography---font-weight--regular);
+  margin-bottom: 10px;
+}
+
+
+/* ------------------------------------ 3. what is deliberately not here -- */
+
+/* NO PLACEMENT RULES. Unlike tools/blocks/ro-gallery.css, which had to pin its
+   block into a band between two absolutely-positioned siblings, this one is an
+   ordinary block in ordinary flow and cinery already spaces it:
+   `.cn-padding-top-header { padding-top: 10rem }` (8rem ≤991) opens it, and it
+   closes flush, with no bottom padding — exactly as cinery's own header does,
+   where the next section (`.section-service-content`, a `.padding-bottom
+   .padding-xhuge` opening on a `.spacer-xlarge`) supplies the gap. The pricing
+   page keeps that arrangement: Scalora's `.pricing-hero` opens on `padding-top:
+   var(--_spacing---padding--padding-xl)` (16px) around a
+   `.pricing-hero-contant-wrapper` at `padding-top:
+   var(--_spacing---padding--padding-24xl)` (160px), so 176px of the next
+   section's own air follows this block's flush edge. Adding spacing here would
+   be inventing it.
+
+   NO KEYFRAMES. The full argument is in tools/blocks/cn-price-hero.mjs under
+   MOTION; the short of it is that cinery drives two things near this header and
+   only one of them touches it. The pill's blurred square is IX2 — event `e-341`
+   bound to the pill's `data-w-id`, running action list `a-33` — which
+   tools/donor-lib.mjs carries and tools/fuse-ix.mjs merges, so it loops here on
+   its own. The masked line reveal is ix3 (`i-9f439e20` → `t-864fc814`), which
+   does not travel — but its two actions target `.top-title` and `.bottom-title`
+   *within* the trigger, and cinery's pricing header has neither: the `<h2>` is
+   its `.title-wrapper`'s only child. The donor's own wordmark therefore does not
+   move, and neither does this one. cn-price-hero.mjs throws if a re-cut ever
+   brings those two DIVs in, because at that point the reveal would be real
+   motion that has been lost and would have to be replayed the way
+   tools/blocks/cn-produce.css replays it. */
