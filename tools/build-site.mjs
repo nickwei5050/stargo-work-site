@@ -737,12 +737,16 @@ function lxPage(spec, lang, name) {
   // The plain-explanations section (see lxContextSection) opens the 288-roles
   // section's slot in the document: after the "no writing" band, before the
   // team card. The marker is that section's own opening, which is unique.
+  // The 288-roles section also gets a class of its own, `lx-team-section`:
+  // workforce.html has a `.lx-flex-text-center` heading pair too (its article
+  // strip), and the V6-E line-breaking rule for 「288 个岗位，」 must not reach it.
   {
     const TEAM = '<div class="lx-section"><div class="lx-padding-global"><div class="lx-container-medium"><div class="lx-padding-section-medium"><div class="w-layout-hflex lx-flex-text-center">';
     const at = b.indexOf(TEAM);
     if (at < 0 || b.split(TEAM).length !== 2) throw new Error(`${name}: expected one 288-roles section opening`);
     if (!(b.indexOf('lx-section lx-no-writing') < at && at < b.indexOf('class="lx-cta-wrapper"'))) throw new Error(`${name}: the 288-roles section is no longer between the "no writing" band and the closing card`);
-    b = b.slice(0, at) + lxContextSection(C.LX_INTELLIGENCE_CONTEXT, t) + b.slice(at);
+    const tagged = TEAM.replace('<div class="lx-section">', '<div class="lx-section lx-team-section">');
+    b = b.slice(0, at) + lxContextSection(C.LX_INTELLIGENCE_CONTEXT, t) + tagged + b.slice(at + TEAM.length);
   }
   // Imagery stays the template's own (owner decision, 2026-09-06): the phone screens, the
   // translucent overlays of the gradient and "no writing" sections, the closing card's image and

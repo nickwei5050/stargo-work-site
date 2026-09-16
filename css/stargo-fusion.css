@@ -2191,7 +2191,9 @@ html[lang^="zh"] .lx-scope .lx-context-flow { word-break: keep-all; overflow-wra
    should never fire.
    - The 288-roles headings, 「288 个岗位，」 and 「分工协作，把事做完。」
      (2.7rem on a phone, 6.7 em of room at 320): without keep-all the second
-     one balanced to 「分工协作，把」/「事做完。」.
+     one balanced to 「分工协作，把」/「事做完。」. Scoped by `.lx-team-section`,
+     which the build puts on this section only: workforce.html's article strip
+     is a `.lx-flex-text-center` heading pair as well.
    - The four gradient headings. 「安排 AI 参与的步骤」 is 8.5 em against
      8.2 em at 320 and must take two lines there; keep-all puts the break at a
      space, 「安排 AI」/「参与的步骤」, instead of inside 参与.
@@ -2199,7 +2201,7 @@ html[lang^="zh"] .lx-scope .lx-context-flow { word-break: keep-all; overflow-wra
      「把无效的改动撤回。」: nine characters fit the 9 em box from 1024 up and
      wrap below it. The copy carries a <wbr> after 方法 / 改动, so the break
      reads 「把有用的方法」/「留下，」 rather than 「把有用的方」/「法留下，」. */
-html[lang^="zh"] .lx-scope .lx-flex-text-center .lx-heading-style-h1,
+html[lang^="zh"] .lx-scope .lx-team-section .lx-flex-text-center .lx-heading-style-h1,
 html[lang^="zh"] .lx-scope .lx-gradient-section-text .lx-heading-style-h1,
 html[lang^="zh"] .lx-scope .lx-cta-wrapper .lx-cta-text {
   word-break: keep-all;
