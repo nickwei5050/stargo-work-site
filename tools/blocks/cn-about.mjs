@@ -75,15 +75,22 @@
  *   Every string comes from tools/copy.mjs. The slots are one paragraph, one
  *   button label in two copies, five accessible names and one alt attribute,
  *   and there is no sixth; the donor has no eyebrow and no heading here, so
- *   `ABOUT.eyebrow`, `ABOUT.title` and `ABOUT.storyTitle` have nowhere to go
- *   and are not printed — a heading is not added, because adding one is
- *   structure, and the brief is 「仅仅针对文字进行改动」.
+ *   `ABOUT.eyebrow` and `ABOUT.storyTitle` have nowhere to go and are not
+ *   printed — a heading is not added, because adding one is structure, and the
+ *   brief is 「仅仅针对文字进行改动」. `ABOUT.title` IS printed, since V6
+ *   (2026-09-16): as the paragraph's first line — see render().
  *
  *     the paragraph   `We craft high-end video experiences …narratives ™.`
- *                     -> ABOUT.desc. It is the register's own About paragraph
- *                        and it is the same kind of sentence in the same slot:
- *                        the studio saying, once, what it is. Length is close
- *                        enough that the card keeps its proportions. The card
+ *                     -> ABOUT.title, a line break, ABOUT.desc and
+ *                        ABOUT.closing (V5 P06: headline, body, closing). It is
+ *                        the register's own About copy and the same kind of
+ *                        statement in the same slot: the studio saying, once,
+ *                        what it is. Longer than the donor's, so the card grows
+ *                        (its height is its content's; see below):
+ *                        measured on the built page, not estimated — see the
+ *                        V6 G notes in docs. The arithmetic that follows is the
+ *                        pre-V6 sentence's and is kept as the record of how the
+ *                        card was first sized. The card
  *                        offers 784px of measure (55rem max-width less 2×3rem
  *                        of padding) at the donor's 2rem. The max-width is what
  *                        binds at every width the card is wide: at 1440 the
@@ -238,8 +245,8 @@ export function render(frag, ctx) {
   if (!DONORS[donor.donor]) throw new Error(`cn-about: donor ${donor.donor} is not registered`);
 
   const A = C.ABOUT;
-  if (!A?.desc || !A?.button?.label || !A?.button?.href) {
-    throw new Error('cn-about: copy.mjs ABOUT needs desc and button {label, href}');
+  if (!A?.title || !A?.desc || !A?.closing || !A?.button?.label || !A?.button?.href) {
+    throw new Error('cn-about: copy.mjs ABOUT needs title, desc, closing and button {label, href}');
   }
 
   /* --------------------------------------------------------- the shape --- */
@@ -284,9 +291,25 @@ export function render(frag, ctx) {
   /* The card's one paragraph. `.text-size-large` is 2rem / 1.4 / 500 in a card
      that is `max-width: 55rem` with `padding: 3rem` and NO height, so the slot
      takes whatever the sentence needs and every donor value stays where it is.
-     The copy is the register's own About paragraph — nothing here is written
-     for this block. */
-  html = setText(html, 'cn-text-size-large', escapeHtml(t(A.desc)));
+     The copy is the register's own About copy — nothing here is written for
+     this block.
+
+     V6 (2026-09-16) gives the page a headline, a body and a closing line (V5
+     P06), and this card is the only place on the page that can carry words of
+     that length. So the three are read here in that order: the headline, a
+     `<br/>`, then the body and the closing line as one run — the closing line
+     is the last thing read before the demo button. The line break is the only
+     markup added, and it is what lets the headline stand on a line of its own
+     instead of being run into the body; no heading element is added
+     (「仅仅针对文字进行改动」). cn-about.js splits this paragraph into lines for
+     its entrance and reverts the split afterwards; SplitText treats a `<br>`
+     as a line end, so the headline keeps its own line through the entrance. */
+  const run = lang === 'zh' ? '' : ' ';
+  const statement = `${escapeHtml(t(A.title))}<br/>${escapeHtml(t(A.desc))}${run}${escapeHtml(t(A.closing))}`;
+  html = setText(html, 'cn-text-size-large', statement);
+  if ((html.match(/<br\/>/g) ?? []).length !== 1) {
+    throw new Error('cn-about: expected exactly one <br/> in the block — the one after the headline');
+  }
 
   /* ---------------------------------------------------------- the icon --- */
 

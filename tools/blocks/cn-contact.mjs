@@ -137,7 +137,7 @@
  *   and does not duplicate: chrome.mjs only rewrites `method="get"`, which is
  *   gone by the time it looks.
  *
- * WHAT WAS ADDED TO THE DONOR (two things, both inside the form)
+ * WHAT WAS ADDED TO THE DONOR (three things, all inside the form)
  *
  *   1. The honeypot, as the form's first child. js/stargo-forms.js reads
  *      `input[name="website"]` and, when it has a value, shows a bot the
@@ -161,6 +161,20 @@
  *      stated plainly: css/stargo-fusion.css gives `.stargo-form-note`
  *      `margin-top: 12px`, so the card is 12px taller at rest than cinery's is.
  *      That is the only measurement in this block that is not the donor's.
+ *
+ *   3. (V6, 2026-09-16) `<p class="stargo-form-before">`, right after the
+ *      status line: V5 P07's sentence that a demo request is not a confirmed
+ *      meeting time. Static text, not a live region, and not a field — nothing
+ *      in js/stargo-forms.js or functions/api/contact.js reads a <p>. Its small
+ *      print size and spacing are the V6 G rule in css/stargo-fusion.css, set
+ *      to match the consent line tools/chrome.mjs appends right after it. The
+ *      privacy half of P07's note is that consent line already.
+ *
+ *   And one attribute is filled rather than added: the message box's
+ *   `placeholder` (the donor ships it empty) carries V5 P07's example of what
+ *   to write. cinery paints placeholders #222, which on this card's field is
+ *   1.38:1 — the same mismatch the select's colour is repaired for in
+ *   cn-contact.css — so the V6 G rule gives it cinery's own secondary neutral.
  *
  * WHAT WAS TAKEN OFF THE DONOR'S FORM (two attributes, and only these)
  *   `data-wf-page-id` and `data-wf-element-id`. They identify a page and an
@@ -282,7 +296,11 @@
  *
  *     the ten labels         C.CONTACT.fields.*
  *     the select             C.CONTACT.selectPlaceholder + C.CONTACT.options
- *     the submit             C.CONTACT.submit ("发送" / "Send")
+ *     the submit             C.CONTACT.submit (「提交演示需求」 / "Send Demo
+ *                            Request" since V6; nothing keys on the value —
+ *                            js/stargo-forms.js finds it by [type=submit])
+ *     the message hint       C.CONTACT.messageHint, in the textarea's placeholder
+ *     the note under it      C.CONTACT.beforeSubmit
  *     .form-message-success  "Thank you! Your submission has been received!"
  *     .form-message-error    "Oops! Something went wrong while submitting the
  *                             form."
@@ -393,6 +411,13 @@ const HONEYPOT = '<div class="stargo-hp" aria-hidden="true"><input aria-label="W
 const NOTE = '<p class="stargo-form-note" role="status" aria-live="polite"></p>';
 
 /**
+ * V5 P07's note that a demo request is not a booked meeting (V6, 2026-09-16).
+ * Static small print, styled beside the consent line by the V6 G rule in
+ * css/stargo-fusion.css. Not a live region: it never changes.
+ */
+const BEFORE_OPEN = '<p class="stargo-form-before">';
+
+/**
  * The ten fields, in the order the card draws them.
  *
  *   name      the `name` attribute — what functions/api/contact.js reads, and
@@ -501,8 +526,8 @@ export function render(frag, ctx) {
   if (!DONORS[donor.donor]) throw new Error(`cn-contact: donor ${donor.donor} is not registered`);
 
   const K = C.CONTACT;
-  if (!K?.fields || !K?.options || !K?.selectPlaceholder || !K?.submit) {
-    throw new Error('cn-contact: copy.mjs CONTACT needs fields, options, selectPlaceholder and submit');
+  if (!K?.fields || !K?.options || !K?.selectPlaceholder || !K?.submit || !K?.messageHint || !K?.beforeSubmit) {
+    throw new Error('cn-contact: copy.mjs CONTACT needs fields, options, selectPlaceholder, submit, messageHint and beforeSubmit');
   }
   for (const f of FIELDS) {
     if (!K.fields[f.copy]) throw new Error(`cn-contact: copy.mjs CONTACT.fields has no "${f.copy}" for the ${f.name} field`);
@@ -661,6 +686,13 @@ export function render(frag, ctx) {
       /* 5000 is functions/api/contact.js's own ceiling and this site's own
          number for this field; the donor's 256 would truncate a paragraph. */
       control = put(control, 'maxlength', '5000', where);
+      /* V5 P07's example of what to write. The donor ships `placeholder=""`,
+         so this fills an attribute that is already there. It is a hint only:
+         js/stargo-forms.js names a field by its <label> and reads `.value`,
+         so the placeholder never reaches the submission. cinery colours
+         placeholders #222, which is unreadable on this field — see the V6 G
+         rule in css/stargo-fusion.css. */
+      control = put(control, 'placeholder', escapeHtml(t(K.messageHint)), where);
       control = `${control.replace(/^<input\b/, '<textarea').replace(/\s*\/>$/, '>')}</textarea>`;
     } else {
       throw new Error(`cn-contact: ${where} asks for unit shape "${f.unit}", which this block does not draw`);
@@ -691,7 +723,11 @@ export function render(frag, ctx) {
   /* ------------------------------------------- the submit, and the note -- */
 
   html = html.replace(`value="${DONOR_SUBMIT}"`, `value="${escapeHtml(t(K.submit))}"`);
-  html = html.replace('</form>', `${NOTE}</form>`);
+  /* The status line first, so js/stargo-forms.js's messages land right under
+     the button; then V5 P07's before-submission sentence. tools/chrome.mjs
+     appends the consent line after both, so the two sentences of small print
+     read together. */
+  html = html.replace('</form>', `${NOTE}${BEFORE_OPEN}${escapeHtml(t(K.beforeSubmit))}</p></form>`);
 
   /* --------------------------------------------------- the two notices -- */
 
@@ -792,6 +828,15 @@ export function render(frag, ctx) {
   onceAttr('name', 'website', 'js/stargo-forms.js and functions/api/contact.js both read the honeypot');
   once('class="stargo-hp"', 'the honeypot must stay off-screen, not merely be present');
   once(NOTE, 'js/stargo-forms.js writes every non-success message into .stargo-form-note');
+  once(BEFORE_OPEN, 'the demo-request note (V5 P07) sits under the button, once');
+  if (html.indexOf(BEFORE_OPEN) < html.indexOf(NOTE) || html.indexOf(BEFORE_OPEN) > html.indexOf('</form>')) {
+    throw new Error('cn-contact: the demo-request note must follow the status line and stay inside the form');
+  }
+  /* The one placeholder this block fills, on the one field it belongs to. */
+  const hinted = [...html.matchAll(/<(input|textarea)\b[^>]*\splaceholder="([^"]+)"/g)];
+  if (hinted.length !== 1 || hinted[0][1] !== 'textarea') {
+    throw new Error(`cn-contact: expected exactly one filled placeholder, on the message box — found ${hinted.map((m) => m[1]).join(', ') || 'none'}`);
+  }
 
   /* the card around it */
   for (const notice of ['class="cn-form-message-success w-form-done"', 'class="cn-form-message-error w-form-fail"']) {

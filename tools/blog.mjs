@@ -11,11 +11,19 @@
  */
 import { B } from './copy.mjs';
 
+/* The blog's own words (V5 P09). The index page's hero is one <h1> and nothing
+   else — no introduction paragraph and no "view all" button — so the heading
+   takes V5's headline, and V5's introduction sentence waits in `intro` until the
+   page has a place for it (nothing reads it yet). `all` is the link back to the
+   index in every article's date line, which is the one "view all articles"
+   control the blog has. Articles, their URLs, titles, dates and bodies are
+   untouched. */
 export const BLOG_UI = {
-  heading: B('AI 如何改变全球贸易', 'How AI changes global trade'),
+  heading: B('把 AI 放进真实业务，看懂每一步。', 'Understand AI through real business work.'),
+  intro: B('从客户开发、销售报价，到企业知识、数字员工和管理控制，逐步理解一条业务流程如何被连接、执行与核对。', 'Explore how customer acquisition, sales, quotations, enterprise knowledge, AI roles and management controls connect work and make its outcomes checkable.'),
   related: B('相关文章', 'Related articles'),
   more: B('更多文章', 'More from the blog'),
-  all: B('全部文章', 'All articles'),
+  all: B('查看全部文章', 'View All Articles'),
   byline: B('STARGO WORK 团队', 'The STARGO WORK team'),
   section: B('博客', 'Blog'),
 };

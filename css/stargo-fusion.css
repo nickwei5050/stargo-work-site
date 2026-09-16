@@ -2123,6 +2123,29 @@ html[lang^="zh"] .hero .max-w-left.add-tp p.top-text.big.nm {
    and the next one so parallel edits merge cleanly. */
 /* V6-G-START */
 
+/* Contact card: V5 P07's note that a demo request is not a booked meeting
+   (tools/blocks/cn-contact.mjs). It is small print and sits directly above the
+   consent line tools/chrome.mjs appends, so it takes that line's size and
+   leading (`.stargo-form-consent`, above) and only its top margin: the consent
+   line's own 16px top margin is the gap between the two. */
+.cn-contact .stargo-form-before {
+  margin: 16px 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* Contact card: the message box's placeholder (V5 P07's example). cinery's
+   sheet paints placeholders #222 (`.cn-contact .cn-form-input::placeholder`),
+   its dark-on-light value; this field is rgb(57,57,58), where #222 measures
+   1.38:1 and cannot be read — the same mismatch tools/blocks/cn-contact.css
+   repairs for the select. cinery's own secondary neutral (#bbb) is its colour
+   for secondary text and measures 6.0:1 here. One more class than the donor
+   rule, so it wins wherever the two sheets load. */
+.cn-contact .cn-form-input.cn-is-text-area::placeholder {
+  color: var(--neutral-color--secondary-neutral, #bbb);
+  opacity: 1;
+}
+
 /* V6-G-END */
 
 
