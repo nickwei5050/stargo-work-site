@@ -556,9 +556,12 @@ const LX_TAGS = { CARDS: B('客户', 'Customer'), transfers: B('报价', 'Quote'
      and 「按真实流程落地」 measured 「企业业务关」/「系」 and 「按真实流程」/「落地」
      there, so the titles are their five-character forms.
    - words: one line each and four characters at most (verify-restore).
-   - bigText is 5 em wide at 320, 6 at 390, 8 at 768 and 1024, and the
-     Chinese page breaks it only at punctuation (keep-all on .lx-big-text):
-     every run between punctuation marks must be five characters or fewer.
+   - bigText fills the viewport width with no side padding: 5 em at 320,
+     6.1 at 390, 8 at 768 and 1024, 11.5 at 1440. The Chinese page breaks it
+     only at punctuation (keep-all on .lx-big-text), so a run must stay at four
+     glyphs, punctuation included, to keep a margin at 320, and two runs that
+     together make six glyphs join into one edge-to-edge line at 390
+     (「机会、期限，不靠人记。」 touched the left edge at both widths).
    - ctaTitle / ctaSub are 9 em wide from 1024 up and about 6.5 em on a phone;
      the <wbr> is where the Chinese line breaks when it has to (the page sets
      keep-all on these two lines, V6-E in stargo-fusion.css). */
@@ -566,8 +569,9 @@ export const LX_INTELLIGENCE = {
   heroWord: B('智能层', 'Intelligence'),
   /* The two hero buttons keep their anchors (#lx-ontology is clicked by
      tools/verify-interactions.mjs): the first opens the business-context cards,
-     the second the closing card on improvement. */
-  store1: { name: B('业务理解', 'Business context'), sub: B('读懂业务关系', 'How the business connects'), href: '#lx-ontology' },
+     the second the closing card on improvement. The English names stay one
+     line at 768, where "Business context" wrapped beside its icon. */
+  store1: { name: B('业务理解', 'Context'), sub: B('读懂业务关系', 'How the business connects'), href: '#lx-ontology' },
   store2: { name: B('持续改进', 'Improvement'), sub: B('用结果改进', 'Judged by results'), href: '#lx-evolution' },
   heroDesc: B('AI 理解公司，并主动推进工作', 'Know the company. Keep work moving.'),
   tags: LX_TAGS,
@@ -593,12 +597,13 @@ export const LX_INTELLIGENCE = {
   ],
   gradient: [B('观察真实流程', 'Observe the workflow'), B('整理业务关系', 'Map the business context'), B('安排 AI 参与的步骤', 'Assign useful AI work'), B('用实际结果改进', 'Improve from real outcomes')],
   /* P03's proactive-work heading, 「机会、截止时间和待办事项，不必都靠人记着。」,
-     cut to the slot (see bigText above): runs of three, three and five
-     characters, so it reads 「机会、」/「期限，」/「不靠人记。」 at 320, two lines
-     from 390 and one at 1440. The bubbles around it name the opportunities,
+     cut to the slot (see bigText above): runs of four, three and four glyphs,
+     so it reads 「新机会、」/「期限，」/「不靠人记」 at 320 and 390, two lines at
+     768 and 1024 and one from 1440. No closing 。, like the heading it
+     replaces (「主动，不是被动」). The bubbles around it name the opportunities,
      deadlines and pending approvals it refers to. "Opportunities" is wider
      than a phone at this size (409px at 64px), hence "Leads". */
-  bigText: B('机会、期限，不靠人记。', 'Leads and deadlines, not left to memory.'),
+  bigText: B('新机会、期限，不靠人记', 'Leads and deadlines, not left to memory.'),
   /* Two marquee rows. Row one shows entries 0-5 and, in its loop copy, 6 in
      place of 2: business situations the layer watches for. Row two shows 7-11
      and then 5: M13's loop — notice a change, understand the context, propose,

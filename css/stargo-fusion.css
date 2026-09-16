@@ -2206,9 +2206,9 @@ html[lang^="zh"] .lx-scope .lx-cta-wrapper .lx-cta-text {
   overflow-wrap: anywhere;
 }
 /* Two older rules further up now serve the new copy unchanged:
-   `.lx-cta_wrapper .lx-big-text` keep-all breaks 「机会、期限，不靠人记。」
-   only at its punctuation (「机会、」/「期限，」/「不靠人记。」 at 320, two lines
-   from 390, one at 1440), and `.lx-hero-desc` keep-all + balance gives
+   `.lx-cta_wrapper .lx-big-text` keep-all breaks 「新机会、期限，不靠人记」
+   only at its punctuation (three lines at 320 and 390, two at 768 and 1024,
+   one from 1440), and `.lx-hero-desc` keep-all + balance gives
    「AI 理解公司，」/「并主动推进工作」 at every width.
 
    intelligence.html, English — the same two headline slots, balanced. The
