@@ -1222,8 +1222,12 @@ function capabilityShowcase(C, lang) {
      screenshots are in F:/stargo 网站/.docx/word/media. A block knows how to
      fill itself (tools/blocks/<id>.mjs); here we only put them in order and hang
      the anchors the nav and the floating pill jump to. */
+  /* `#atlas` used to hang on the first chapter, so every "complete catalogue"
+     link on the page landed on the prospecting opener instead of the
+     catalogue. It now sits on the catalogue section itself (below); this
+     chapter is reached as #story-1, the zero-size anchor in front of it. */
   const CHAPTERS = [
-    { id: 'cn-service', anchor: 'atlas' },        // 找到买家 heading + 01 (image9, image11)
+    { id: 'cn-service' },                         // 找到买家 heading + 01 (image9, image11)
     { id: 'qx-news', anchor: 'story-2' },         // 02 把对话变成理解 (image13)
     { id: 'rk-stats', anchor: 'story-3' },        // 03 报价 (image15)
     /* image17 (the break: a small circle in a white band) and image18 (the cards
@@ -1252,10 +1256,88 @@ function capabilityShowcase(C, lang) {
     .replace('<div data-w-id="cn-capmap-row"', `<div id="${id}" data-w-id="e9dfc491-ce9f-1abc-547e-929be71d3026"`)
     .replace(/<h2 class="cn-accordion-heading">[\s\S]*?<\/h2>/, `<h2 class="cn-accordion-heading">${escapeHtml(title)}</h2>`)
     .replace(/<div class="cn-accordion-content-block">[\s\S]*?<\/div><\/div><\/div>$/, `<div class="cn-accordion-content-block">${body}</div></div></div>`);
+  /* Each group opens onto what it does before what it lists (V6 §5.8):
+     its public one-line summary, then the V5 detail — per topic a lede, the
+     detail items, the value / boundary line, the business outputs and that
+     topic's availability note — and only then the register entries as the
+     index. Everything stays inside the donor's answer block, which IX2 opens
+     to its natural height, so a longer answer is never clipped; with no
+     script at all the answers simply stand open.
+
+     The donor answer is a <p>, and a list or a table cannot sit inside one,
+     so the detail is its own block of <p>, <ul>, <table> and <h3> elements.
+     The classes the donor styles (`cn-accordion-answer-text`) are kept on the
+     text so it reads in the block's own type; cn-lede / cn-out / cn-note were
+     reserved for this in css/stargo-fusion.css, and the V6-C rules there
+     space the rest. */
+  const L = C.CATALOGUE_LABELS;
+  const DETAIL = C.CATALOGUE_DETAIL;
+  {
+    const groups = C.CAPABILITY_GROUPS.map((g) => g.n);
+    const missing = groups.filter((n) => !DETAIL[n]);
+    const extra = Object.keys(DETAIL).filter((n) => !groups.includes(n));
+    if (missing.length || extra.length) {
+      throw new Error(`capabilities: catalogue detail must match the groups (missing ${missing.join(',') || '-'}, unknown ${extra.join(',') || '-'})`);
+    }
+    /* Every V5 detail item the catalogue carries, exactly once: a topic
+       moved between groups must not vanish from both or print twice. */
+    const seen = Object.values(DETAIL).flatMap((d) => d.parts.flatMap((p) => p.points.map((x) => x.id)));
+    const count = (id) => seen.filter((x) => x === id).length;
+    const wrong = C.CATALOGUE_V5_ITEMS.filter((id) => count(id) !== 1);
+    if (wrong.length) throw new Error(`capabilities: V5 items not placed exactly once in the catalogue: ${wrong.map((id) => `${id}×${count(id)}`).join(', ')}`);
+    /* M02–M16 each have a home in at least one group (M01 is the homepage's). */
+    const topics = new Set(Object.values(DETAIL).flatMap((d) => d.sources));
+    const unplaced = Array.from({ length: 15 }, (_, i) => `M${String(i + 2).padStart(2, '0')}`).filter((m) => !topics.has(m));
+    if (unplaced.length) throw new Error(`capabilities: V5 topics with no catalogue group: ${unplaced.join(', ')}`);
+    for (const [n, d] of Object.entries(DETAIL)) {
+      if (!d.summary || !d.parts.length) throw new Error(`capabilities: g${n} detail needs a summary and at least one part`);
+      d.parts.forEach((p, i) => {
+        if (!p.points.length) throw new Error(`capabilities: g${n} part ${i + 1} has no detail items`);
+        if (d.parts.length > 1 && !p.heading) throw new Error(`capabilities: g${n} has several parts, so part ${i + 1} needs a sub-heading`);
+      });
+    }
+  }
+  /* The ten role groups add up to the 288 the sub-heading states — V6 §6.2,
+     and the figure is a directory size, which the part's own availability
+     note says. A changed count fails here instead of shipping a wrong sum. */
+  for (const p of Object.values(DETAIL).flatMap((d) => d.parts)) {
+    if (!p.roles) continue;
+    const sum = p.roles.rows.reduce((n, [, k]) => n + k, 0);
+    if (p.roles.rows.length !== 10 || sum !== p.roles.total) {
+      throw new Error(`capabilities: role table has ${p.roles.rows.length} groups summing to ${sum}, expected 10 summing to ${p.roles.total}`);
+    }
+    for (const l of ['zh', 'en']) {
+      if (!p.heading[l].includes(String(p.roles.total))) throw new Error(`capabilities: the role table's heading (${l}) must state ${p.roles.total}`);
+    }
+  }
+  const txt = (v) => escapeHtml(t(v));
+  const roleTable = (r) =>
+    `<table class="cn-cat-table"><caption class="cn-accordion-answer-text">${txt(r.caption)}</caption>` +
+    `<thead><tr><th scope="col">${txt(r.head[0])}</th><th scope="col">${txt(r.head[1])}</th></tr></thead><tbody>` +
+    r.rows.map(([name, k]) => `<tr><th scope="row">${txt(name)}</th><td>${k}</td></tr>`).join('') +
+    `</tbody><tfoot><tr><th scope="row">${txt(r.sum)}</th><td>${r.total}</td></tr></tfoot></table>`;
+  const part = (p) => [
+    p.heading ? `<h3 class="cn-cat-sub">${txt(p.heading)}</h3>` : '',
+    p.lede ? `<p class="cn-accordion-answer-text cn-cat-lede">${txt(p.lede)}</p>` : '',
+    p.roles ? roleTable(p.roles) : '',
+    `<ul class="cn-cat-points">${p.points.map((x) =>
+      `<li class="cn-accordion-answer-text"><strong>${txt(x.title)}</strong> ${txt(x.text)}</li>`).join('')}</ul>`,
+    p.value ? `<p class="cn-accordion-answer-text cn-cat-value">${txt(p.value)}</p>` : '',
+    p.outputs ? `<p class="cn-accordion-answer-text cn-out"><strong>${txt(L.outputs)}</strong> ${txt(p.outputs)}</p>` : '',
+    p.availability ? `<p class="cn-accordion-answer-text cn-note"><strong>${txt(L.availability)}</strong> ${txt(p.availability)}</p>` : '',
+  ].join('');
+  const detail = (n) => `<div class="cn-cat-detail">` +
+    `<p class="cn-accordion-answer-text cn-lede">${txt(DETAIL[n].summary)}</p>` +
+    DETAIL[n].parts.map(part).join('') + `</div>`;
+
   const catalogue = C.CAPABILITY_GROUPS.map((g) => catRow(`g${g.n}`, `${g.n} ${t(g.name)}`,
+    detail(g.n) +
+    `<h3 class="cn-cat-sub cn-cat-index">${txt(L.register)}</h3>` +
     g.items.map(([name, gloss, zhName]) =>
       `<p class="cn-accordion-answer-text"><strong>${capTitle(lang)(name, zhName)}</strong> ${escapeHtml(t(gloss))}</p>`).join('')));
 
+  /* The band states the register's size and what that size means: groups and
+     entries in the register, not a count of live features (V6 §5.8). */
   const total = C.CAPABILITY_GROUPS.reduce((n, g) => n + g.items.length, 0);
   const band = (label, note) =>
     `<div class="cn-band"><div class="cn-band-label">${escapeHtml(label)}</div>` +
@@ -1263,13 +1345,22 @@ function capabilityShowcase(C, lang) {
 
   showcaseHero = renderBlock('rk-hero', lang);
 
-  /* The first chapter carries both #atlas (hero button, stage rows) and #story-1
-     (the floating pill); a zero-size anchor takes the second name. */
+  /* #story-1 (the floating pill) is a zero-size anchor in front of the first
+     chapter. #atlas — the hero button, the stage rows and every "complete
+     catalogue" link — is the catalogue section.
+
+     js/stargo-catalogue.js opens a group when the address names it
+     (capabilities.html#g08, from another page or a link on this one) through
+     the row's own IX2 click, and keeps a click inside an open answer from
+     closing it. It is attached here, beside the markup it drives, rather
+     than in the page's script list; `defer` runs it after the parse like the
+     page's other deferred scripts, and chrome.mjs versions and relocates its
+     src like any other. */
   return `<span id="story-1"></span>` + chapters +
-    `<section class="cn-capmap"><div class="cn-capmap-inner">` +
-    band(t(S.catalogueLabel), `${t(S.catalogueNote)} ${C.CAPABILITY_GROUPS.length} ${lang === 'zh' ? '个能力组 · ' : 'groups · '}${total}${lang === 'zh' ? ' 项能力。' : ' capabilities.'}`) +
+    `<section id="atlas" class="cn-capmap"><div class="cn-capmap-inner">` +
+    band(t(S.catalogueLabel), `${t(S.catalogueNote)} ${t(L.count(C.CAPABILITY_GROUPS.length, total))}`) +
     `<div class="cn-faq-container">${catalogue.join('')}</div>` +
-    `</div></section>`;
+    `</div></section><script src="js/stargo-catalogue.js" defer></script>`;
 }
 
   const rows = C.CAPABILITY_GROUPS.flatMap((g) => g.items.map(([item, gloss], i) => [

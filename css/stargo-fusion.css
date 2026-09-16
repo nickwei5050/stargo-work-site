@@ -2082,7 +2082,107 @@ html[lang^="zh"] .hero .max-w-left.add-tp p.top-text.big.nm {
    Insertion point for this area's rules. Keep additions between this marker
    and the next one so parallel edits merge cleanly. */
 /* V6-C-START */
+/* The catalogue's groups open onto their detail first (V6 §5.8): the group's
+   one-line summary, then per topic an optional sub-heading, a lede, the
+   detail items, a value line, the business outputs and the availability note,
+   and last the register entries under their own small heading. Markup:
+   tools/build-site.mjs capabilityShowcase().
 
+   Everything sits in cinery's answer block (36rem wide), which IX2 opens to
+   its natural height, so nothing here sets a height. The donor gives every
+   `.cn-accordion-answer-text` a 2rem top padding — right for one answer,
+   far too loose for a list — so inside the detail that padding is taken off
+   and the rhythm is set with margins instead. The register entries below keep
+   the donor's spacing exactly as before. Type sizes are the block's own 16px
+   (15px for the table and the availability note, as `.cn-note` already had);
+   nothing is shrunk to make the longer answers fit. */
+
+/* Landing on #atlas or #gNN. The page has no fixed bar at the top (the nav
+   scrolls away with the hero, the pill sits at the bottom), so this is only
+   breathing room: the heading lands 24px below the edge instead of on it.
+   js/stargo-catalogue.js reads the same value when it re-aligns a row. */
+.cn-capmap[id],
+.cn-capmap .cn-accordion-content-item[id] { scroll-margin-top: 24px; }
+
+/* Each kind of line below sets its own top margin; at equal specificity these
+   come after the generic `answer + answer { margin-top: 12px }` above, so
+   they win without a reset. */
+.cn-capmap .cn-cat-detail .cn-accordion-answer-text { padding-top: 0; padding-left: 0; }
+/* The donor insets answer text 10px (none below 480px). The detail's
+   headings, lists and table take that inset as a block, so every line of it
+   starts on the same edge as the register entries below. */
+.cn-capmap .cn-cat-detail,
+.cn-capmap .cn-cat-sub.cn-cat-index { padding-left: 10px; }
+@media (max-width: 479px) {
+  .cn-capmap .cn-cat-detail,
+  .cn-capmap .cn-cat-sub.cn-cat-index { padding-left: 0; }
+}
+
+/* the group's summary: the first line of the answer, where the donor's own
+   paragraph used to start */
+.cn-capmap .cn-cat-detail > .cn-accordion-answer-text.cn-lede {
+  padding-top: 2rem; margin-bottom: 0; color: #e4e4e4; font-size: 18px; line-height: 1.5;
+}
+
+/* sub-headings: one per topic in g01, g08, g09, g10 and g13, and the
+   register's own heading */
+.cn-capmap .cn-cat-sub {
+  margin: 28px 0 0; padding-top: 18px; border-top: 1px solid rgba(255, 255, 255, .12);
+  font-size: 18px; line-height: 1.4; font-weight: 500; letter-spacing: normal; color: #fff;
+}
+.cn-capmap .cn-cat-sub.cn-cat-index { margin-top: 36px; }
+.cn-capmap .cn-cat-index + .cn-accordion-answer-text { padding-top: 14px; }
+
+.cn-capmap .cn-cat-detail .cn-cat-lede { margin-top: 14px; color: #cfcfcf; }
+.cn-capmap .cn-cat-detail .cn-cat-sub + .cn-cat-lede { margin-top: 10px; }
+
+/* the detail items: title on its own line, text under it, a hairline down
+   the left so a run of six reads as one list */
+.cn-capmap .cn-cat-points {
+  display: flex; flex-flow: column; gap: 14px;
+  margin: 16px 0 0; padding: 0; list-style: none;
+}
+.cn-capmap .cn-cat-points > li.cn-accordion-answer-text {
+  margin: 0; padding: 0 0 0 14px; border-left: 1px solid rgba(255, 255, 255, .18);
+}
+.cn-capmap .cn-cat-points > li > strong { display: block; margin-bottom: 2px; }
+
+.cn-capmap .cn-cat-detail .cn-cat-value { margin-top: 16px; color: #cfcfcf; }
+.cn-capmap .cn-cat-detail .cn-out { margin-top: 14px; }
+/* The availability note is part of the answer, not small print: the donor's
+   #6f6f6f on the row's dark ground was too faint to read at 15px. */
+.cn-capmap .cn-cat-detail .cn-note { margin-top: 8px; color: #c4c4c4; font-size: 15px; }
+.cn-capmap .cn-cat-detail .cn-out strong,
+.cn-capmap .cn-cat-detail .cn-note strong { margin-right: .25em; }
+
+/* g10's ten role groups: two columns that fit a phone as they are */
+.cn-capmap .cn-cat-table {
+  width: 100%; margin: 16px 0 0; border-collapse: collapse;
+  font-size: 15px; line-height: 1.4; color: var(--neutral-color--secondary-neutral);
+}
+.cn-capmap .cn-cat-table caption {
+  caption-side: top; padding: 0 0 8px; text-align: left; color: #cfcfcf;
+}
+.cn-capmap .cn-cat-table th,
+.cn-capmap .cn-cat-table td {
+  padding: 7px 0; border-bottom: 1px solid rgba(255, 255, 255, .1);
+  text-align: left; font-weight: 400;
+}
+.cn-capmap .cn-cat-table thead th { color: #8d8d8d; font-size: 13px; }
+.cn-capmap .cn-cat-table td,
+.cn-capmap .cn-cat-table thead th:last-child {
+  padding-left: 16px; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.cn-capmap .cn-cat-table td { color: #fff; }
+.cn-capmap .cn-cat-table tfoot th,
+.cn-capmap .cn-cat-table tfoot td {
+  border-top: 1px solid rgba(255, 255, 255, .3); border-bottom: 0; color: #fff; font-weight: 500;
+}
+
+@media (max-width: 767px) {
+  .cn-capmap .cn-cat-detail > .cn-accordion-answer-text.cn-lede { font-size: 17px; }
+  .cn-capmap .cn-cat-sub { font-size: 17px; }
+}
 /* V6-C-END */
 
 
