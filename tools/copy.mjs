@@ -553,8 +553,11 @@ const LX_TAGS = { CARDS: B('客户', 'Customer'), transfers: B('报价', 'Quote'
      copy and title; at 1024 (a 267px column of 2rem type) the 21.5rem cards
      manage four lines and no more: "Learn the workflow, set up roles and
      approvals, test on real cases." took five and its first line sat above
-     the open card, so the English second text is the shorter form. At 320
-     and 768 the Chinese column is seven characters wide. The titles sit beside an
+     the open card, so the English second text is the shorter form. At 320 the
+     third card fits a one-line title and four lines of copy: with "Proactive
+     work" on two lines it never fitted, whatever the copy, so its English
+     title is the template's one word. At 320 and 768 the Chinese column is
+     seven characters wide. The titles sit beside an
      icon and have five characters of room at 320 and 768: P03's 「企业业务关系」
      and 「按真实流程落地」 measured 「企业业务关」/「系」 and 「按真实流程」/「落地」
      there, so the titles are their five-character forms.
@@ -586,7 +589,7 @@ export const LX_INTELLIGENCE = {
        below repeat them as P03's 落地四步. */
     { title: B('业务关系', 'Relationships'), text: B('客户、产品、报价、订单和负责人，不再是互不相干的记录。', 'Customers, products, quotes, orders and owners, connected.') },
     { title: B('按流程落地', 'Real workflows'), text: B('先了解业务，再安排资料、岗位与审批，用真实样本验收。', 'Workflow first, then data, roles, approvals and real-case tests.') },
-    { title: B('主动工作', 'Proactive work'), text: B('关注机会、期限和异常，先提出有依据的建议，再按授权推进。', 'Watches opportunities and deadlines; acts within authority.') },
+    { title: B('主动工作', 'Proactive'), text: B('关注机会、期限和异常，先提出有依据的建议，再按授权推进。', 'Flags leads, deadlines and risks; acts only as authorized.') },
   ],
   /* P03's six business cards. They are rendered in two columns and mirrored
      for phones by lxOntologyList() in tools/build-site.mjs; only the first six
