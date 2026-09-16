@@ -1492,7 +1492,7 @@ export const CREATIVE_TOPICS = {
         B('提供文字说明、产品参考图或已有素材，在同一个工作流里生成和编辑图片：白底主图、场景图、海报、卖点图和广告创意。',
           'Provide a written brief, product reference images or existing assets, and generate and edit images in one workflow: product heroes on white, scenes, posters, benefit graphics and advertising concepts.'),
         B('制作时套用企业统一的品牌资产、标志、配色、语气和已确认的产品事实；外观、参数或文字不准确的地方，先检查再局部修正，降低素材“好看但不真实”的风险。你查看的是可以比较、可以继续修改的图片版本。',
-          'A shared brand kit — logo, colours and tone — and verified product facts guide the work. Inaccurate appearance, specifications or text are checked and corrected locally, reducing attractive but misleading content. You review image versions you can compare and keep refining.'),
+          'A shared brand kit — logo, colors and tone — and verified product facts guide the work. Inaccurate appearance, specifications or text are checked and corrected locally, reducing attractive but misleading content. You review image versions you can compare and keep refining.'),
       ],
       note: CREATIVE_NOTE,
     },
@@ -1508,8 +1508,8 @@ export const CREATIVE_TOPICS = {
       body: [
         B('输入产品资料、参考图片、目标市场、语言、时长和画幅，把制作需求组织成一个视频项目。流程涵盖脚本、分镜、画面、配音、字幕、审核和导出，保留素材、任务状态与版本，减少工具切换与反复交接。',
           'Start with product facts, reference images, audience, language, duration and aspect ratio. Organize the brief into a video project covering scripts, storyboards, visuals, voiceover, captions, review and export, while retaining assets, task status and versions.'),
-        B('生成前先给出可审阅的制作方案：开场吸引点、卖点表达、镜头顺序、节奏与结尾行动引导。后期可加入多语言旁白、音乐、品牌标志、片尾和参数字幕，均按可用工具和已授权素材制作；生成预算、审批与任务状态随项目记录。',
-          'Before anything is generated, a production plan is ready to review: the hook, benefits, shot order, pacing and call to action. Post-production can add multilingual narration, music, branding, end cards and specification overlays, using available tools and authorized assets. Generation budgets, approvals and task status are recorded with the project.'),
+        B('生成之前，先形成一份可审阅的制作方案：开场吸引点、卖点表达、镜头顺序、节奏与结尾行动引导。画面以已确认的产品事实和品牌规范为准，并保留质量检查；多语言旁白、音乐、品牌标志、片尾和参数标注在后期加入，均按可用工具和已授权素材制作。生成预算、审批与任务状态随项目记录。',
+          'Before generation, the workflow prepares a production plan for review: the hook, benefits, shot order, pacing and call to action. Visuals are grounded in verified product and brand information, with quality checks. Multilingual narration, music, branding, end cards and specification overlays are added in post-production, using available tools and authorized assets. Generation budgets, approvals and task status are recorded with the project.'),
         B('产品介绍、广告、品牌宣传与社媒短片，都围绕同一套产品和品牌资料展开。目标是支持横版、竖版、方版，以及失败镜头的局部重做。',
           'Product explainers, advertisements, brand films and social clips use the same verified product and brand context. The workflow aims to support portrait, landscape and square formats, with local revisions rather than regenerating everything.'),
       ],
@@ -1521,12 +1521,14 @@ export const CREATIVE_TOPICS = {
       title: B('爆款结构再创作 · 建设中', 'Viral Creative Adaptation · In Development'),
       keep: B(['再创作'], []),
       covers: ['Viral Structure Adaptation'],
-      /* V6 gives the Chinese steps; the English follows them step for step
-         (M09's own English row also names the call to action and the three
-         kinds of change, which the Chinese row leaves to the paragraphs). */
+      /* The Chinese steps are the short row the brief gives; the English uses
+         M09's own words for the same five steps. M09's full row also names the
+         call to action and the new hook, scene or market of each direction —
+         the Chinese row leaves those to the paragraphs, so the English does
+         too, and both languages carry the same steps. */
       flow: {
         label: B('再创作流程', 'Adaptation flow'),
-        steps: B(['有权使用的参考视频', '拆解开场、节奏与镜头', '结合自身产品和品牌', '三个原创方向', '制作与审核'], ['Authorized reference video', 'Analyze the hook, pacing and shots', 'Apply your own product and brand', 'Three original directions', 'Production and review']),
+        steps: B(['有权使用的参考视频', '拆解开场、节奏与镜头', '结合自身产品和品牌', '三个原创方向', '制作与审核'], ['Authorized reference', 'Analyze hook, pacing and shots', 'Apply your product and brand', 'Three original directions', 'Production and review']),
       },
       body: [
         B('输入有权使用的参考视频与自己的产品素材，先分析开场吸引点、镜头功能、节奏、产品出场和行动引导，再结合自身产品、品牌与市场组织原创脚本和分镜。',
