@@ -86,11 +86,20 @@
  *                        the register's own About copy and the same kind of
  *                        statement in the same slot: the studio saying, once,
  *                        what it is. Longer than the donor's, so the card grows
- *                        (its height is its content's; see below):
- *                        measured on the built page, not estimated — see the
- *                        V6 G notes in docs. The arithmetic that follows is the
- *                        pre-V6 sentence's and is kept as the record of how the
- *                        card was first sized. The card
+ *                        (its height is its content's; see below). Measured on
+ *                        the built page (V6, 2026-09-16), lines of the one
+ *                        paragraph, zh / en:
+ *
+ *                          320   17 / 26      1024   6 / 9
+ *                          390   12 / 17      1440   6 / 9
+ *                           768   7 /  9      1920   6 / 9
+ *
+ *                        — against 4 lines for the pre-V6 Chinese sentence at
+ *                        1440. Nothing overflows or is clipped at any of them,
+ *                        the headline takes its own line(s) at every width, and
+ *                        no type size changed. The arithmetic that follows is
+ *                        the pre-V6 sentence's and is kept as the record of how
+ *                        the card was first sized. The card
  *                        offers 784px of measure (55rem max-width less 2×3rem
  *                        of padding) at the donor's 2rem. The max-width is what
  *                        binds at every width the card is wide: at 1440 the
