@@ -144,6 +144,25 @@ const TEAM_TPL = [['Adrian Keller', '(Founder)'], ['Luca Moretti', '(Lead Produc
 function fromStudio(spec, lang) {
   const t = (p) => (typeof p === 'string' ? p : p[lang]);
   const { fn: s } = makeSub(spec.name);
+  /* The studio layout has fixed places: four sticky hero panels, three stat
+     rows and five team cards. Checked by count up front, so a list that grows
+     or shrinks in copy.mjs fails here by name instead of as an undefined
+     deep inside a replacement. */
+  [['story', 4], ['stats', 3], ['cards', 5]].forEach(([k, n]) => {
+    if (spec[k]?.length !== n) throw new Error(`${spec.name}: ${k} needs ${n} entries, has ${spec[k]?.length}`);
+  });
+  if (!spec.approach?.length) throw new Error(`${spec.name}: approach has no lines`);
+  /* A stat that lists its items must count them (V6 §8: the number in front
+     of 「项管理控制：…」 is the number of controls the sentence names), and
+     each item must actually be in the sentence on both pages. */
+  spec.stats.forEach((st, i) => {
+    if (!st.items) return;
+    if (st.value !== String(st.items.length)) throw new Error(`${spec.name}: stat ${i} says ${st.value} but lists ${st.items.length}`);
+    for (const lng of ['zh', 'en']) {
+      const missing = st.items.filter((x) => !st.text[lng].includes(x[lng]));
+      if (missing.length) throw new Error(`${spec.name}: stat ${i} (${lng}) does not name ${missing.map((x) => x[lng]).join(', ')}`);
+    }
+  });
   let h = tpl('studio.html');
   h = s(h, '(Our Studio ©26)', t(spec.eyebrow));
   h = s(h, '>About Mōno™<', `>${t(spec.h1)}<`);
@@ -155,7 +174,13 @@ function fromStudio(spec, lang) {
   h = setInner(h, '<h2 class="h2 _01 sm _600">', t(spec.intro));
   h = removeByClass(h, 'div', 'as-seen');
   h = s(h, '(Approach)', t(spec.approachLabel));
-  ['Think clearly.', 'Design precisely.', 'Build intelligently.', 'Refine continuously.'].forEach((x, i) => { h = s(h, x, t(spec.approach[i]), { count: 1 }); });
+  /* Mono's approach block is one paragraph of four <br/>-separated lines. The
+     enterprise page's delivery order has six steps, so the four template lines
+     are replaced as one run with however many lines copy.mjs gives, in the
+     template's own `line <br/>` shape (the last line closes with a bare
+     <br/>, as Mono writes it). Nothing animates per line. */
+  h = s(h, 'Think clearly. <br/>Design precisely. <br/>Build intelligently. <br/>Refine continuously.<br/>',
+    `${spec.approach.map(t).join(' <br/>')}<br/>`, { count: 1 });
   h = setLink(h, 'Begin collaboration', { href: spec.approachButton.href, text: t(spec.approachButton.label) });
   h = s(h, '(Stats)', t(spec.statsLabel));
   [['30', spec.stats[0]], ['80', spec.stats[1]], ['+7', spec.stats[2]]].forEach(([old, st]) => {
@@ -1103,9 +1128,20 @@ PAGES['pricing.html'] = (lang) => {
 };
 
 /* ---- enterprise.html — Mono studio ------------------------------------ */
+/* Pictures by what sits beside them (V6 §8.2, §10). All are the site's own
+   concept illustrations; editorialImages() gives each its alt and marks it as
+   one. The three left-column pictures sit beside, in order, the owner cockpit
+   (work lanes converging on one command centre), the six delivery steps (a
+   track climbing level by level — the second slot is the tallest, about
+   square at 1440, so a portrait picture loses less to the cover crop than a
+   landscape one) and the numbers (a controlled passage
+   through permission boundaries). The five cards: capabilities and apps,
+   permissions, approvals, work and result records (business records linked
+   together) and account connection and protection (layered boundaries). The
+   legacy UI mock-ups with invented figures are not used here. */
 PAGES['enterprise.html'] = (lang) => fromStudio({
   name: 'enterprise', ...C.ENTERPRISE, cards: C.ENTERPRISE.cards,
-  images: { work: [OS.agents, OS.login, OS.trade], quote: BRAND.square, cards: [OS.agents, OS.login, MOBILE.phoneApprovals, OS.trade, BRAND.ontology] },
+  images: { work: [OS.cockpit, BRAND.tall, OS.login], quote: BRAND.square, cards: [OS.agents, OS.login, MOBILE.phoneApprovals, BRAND.ontology, BRAND.family(4)] },
 }, lang);
 
 /* ---- capabilities.html — Mono work-1 + table -------------------------- */

@@ -2113,6 +2113,49 @@ html[lang^="zh"] .hero .max-w-left.add-tp p.top-text.big.nm {
    and the next one so parallel edits merge cleanly. */
 /* V6-F-START */
 
+/* 1. The left column of the owner-cockpit band now reaches the quote row.
+      ------------------------------------------------------------------
+      `.about-grid` (enterprise only) is two columns from 768px up, and the
+      space between its last stat and the image + quote row below was never
+      set by anyone: the right column's three pictures are 30 + 42 + 27rem
+      (1624px with gaps) and the text column was shorter, so the row simply
+      ended 179px (1440), 181px (1024) or 305px (768) under the last stat.
+      The column now carries the six delivery steps (V6 §8.4) where Mono had
+      four lines, and stat sentences that say what each figure counts, so it
+      is 1617px of 1624 at 1440 — measured gap 7px at 1440 and 1920, 12px at
+      1024, 44px at 768, i.e. the stats sit on the quote card.
+      Below 768 the template already separates the two with
+      `.testi-grid._01 { margin-top: 100px }`; the same 100px goes under the
+      text column here. While the pictures are the taller column it changes
+      nothing; when the text is taller the row grows by what it needs and the
+      pictures keep their own heights. */
+@media screen and (min-width: 768px) {
+  .about-grid > .about-max-w { padding-bottom: 100px; }
+}
+
+/* 2. The pull-quote is M15's value line, three to four lines long, and the
+      enterprise card is the only `.testi-grid._01` on the site. `pretty`
+      reworks only the tail so a closing 「“已经完成”。」 is not left as a
+      short last line. */
+html[lang^="zh"] .testi-grid._01 .top-text.for-sst { text-wrap: pretty; }
+
+/* 3. The connections table (#table): its middle and last columns are now
+      both sentences — what can connect, and what has to be agreed first — so
+      the room is shared between them instead of going mostly to the middle
+      (#loop and #atlas keep the shared .8 / 1.7 / 1 split above). Same
+      specificity as that rule, later in the file. */
+#table .award-wrapper, #table .grdi-3-columns.mk3 {
+  grid-template-columns: minmax(0, .8fr) minmax(0, 1.35fr) minmax(0, 1.35fr);
+}
+/*    Below 479px each row is a centred stack (see "2. enterprise's table"
+      above) and these cells now run to two lines on a phone — measured at
+      390: 「邮箱、即时沟通、B2B 平台询盘与 CRM 客」/「户记录」 — so a left-aligned
+      second line hung off a centred first one. Centred like the stack and
+      the legend above it. */
+@media screen and (max-width: 479px) {
+  #table .award-text { text-align: center; justify-content: center; }
+}
+
 /* V6-F-END */
 
 

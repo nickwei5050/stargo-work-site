@@ -906,51 +906,129 @@ export const PRICING = {
 
 /* ========================================================== enterprise === */
 
+/* The enterprise page as the owner's management and delivery page (V5 P05,
+   M15, M16; placed by V6 §8, 2026-09-16). It used to introduce the platform's
+   technical components — integration protocols, automation engines, the
+   model runtime — and the owner asked for none of that in marketing copy.
+   What those components are FOR stays: account authorization, connected
+   information, approvals, records, limits and human takeover, each said in
+   terms of customers, orders, owners and deadlines.
+
+   The two stat lists below are written once and counted, so the figure in
+   front of each sentence is always the number of things the sentence names
+   (tools/build-site.mjs fromStudio() checks it again). They sit above
+   ENTERPRISE because the object reads them while it is being built. */
+const ENT_CONTROLS = [
+  B('应用开通管理', 'application access'),
+  B('账号与岗位权限', 'account and role permissions'),
+  B('关键动作审批', 'approval of key actions'),
+  B('操作与审批记录', 'activity and approval records'),
+  B('账号密码统一保管', 'secure storage of logins'),
+  B('数字员工的工作边界', 'work limits for AI roles'),
+  B('各公司、各品牌数据分开', 'separate data for each company and brand'),
+  B('出错即停并报告', 'stop and report on failure'),
+  B('新做法先小范围试用', 'small trials before wider use'),
+  B('效果不足可撤回', 'reversal when results fall short'),
+  B('结果核对', 'result checks'),
+  B('进度可见', 'visible progress'),
+  B('人工接管', 'human takeover'),
+];
+/* V6 §8.4: web and cloud, a dedicated environment or private deployment,
+   confirmed per enterprise. Nothing here is a default service commitment. */
+const ENT_DEPLOYMENT = [
+  B('网页云端', 'browser-based cloud'),
+  B('专属企业环境', 'a dedicated enterprise environment'),
+  B('私有化部署', 'private deployment'),
+];
+const enList = (xs, last = 'and') => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} ${last} ${xs[xs.length - 1]}`);
+
 export const ENTERPRISE = {
-  eyebrow: B('(企业与治理)', '(Enterprise)'),
-  h1: B('能干活，也管得住。', 'Built to act. Built to be controlled.'),
+  eyebrow: B('(企业管理与交付)', '(Enterprise control & delivery)'),
+  /* V5 P05's headline, 「把工作交给 AI，把决定权留在企业。」, with its second
+     「把」 dropped. The h1 is split one character per inline-block and set with
+     `text-wrap: balance`, so every character is a break point and the browser
+     evens the two lines by width: with the second 「把」 the halves measure
+     7.3em | 9em and the best balance moved 「把」 up to the first line
+     (「…AI，把」/「决定权…」). Without it they are 7.3em | 8em and the comma is
+     the balanced break at every width from 320 to 1920. Same meaning; the
+     full sentence is also the footer line on every page. */
+  h1: B('把工作交给 AI，决定权留在企业。', 'Delegate the work. Keep the authority.'),
+  /* V6 §8.1: the four panels keep their places; each now answers the owner's
+     question for that place. The labels are set at up to 144px inside a
+     400px panel, so they stay two characters (or one English word). */
   story: [
-    { label: B('(权力)', '(Authority)'), text: B('AI 能看什么、调什么、执行什么，哪些动作必须审批，谁来批，由企业自己定。AI 干活，人掌权。', 'The company decides what AI can see, call and execute, which actions need approval and who approves. AI does the work; people keep the authority.') },
-    { label: B('(证据)', '(Evidence)'), text: B('AI 员工每次重要执行，都留下任务、输入、上下文、工具、动作、输出、证据、审批和结果。管理者看到的不只是答案，还有为什么这么做、调了什么、结果如何。', 'Every important agent run leaves task, input, context, tools, actions, output, evidence, approval and outcome — so a manager sees not just the answer but why, what was called and what happened.') },
-    { label: B('(接入)', '(Connect)'), text: B('已有的企业系统和业务工具，通过 API、MCP、连接器、Activepieces、Windmill、工作区桥接和渠道插件接进来。不必扔掉现有软件从头再来。', 'Existing systems and tools connect through API, MCP, connectors, Activepieces, Windmill, Workspace Bridge and channel plugins. Nobody throws their software away to start over.') },
-    { label: B('(模型)', '(Models)'), text: B('AI 员工运行时，按任务接入所需的模型与工具。模型是引擎；企业长期拥有的，是自己的数据、企业本体、知识、工作流、技能、AI 员工队伍和业务记忆。', 'The agent runtime connects the model and tools each task needs. The model is the engine; what the company owns for the long run is its data, ontology, knowledge, workflows, skills, agent workforce and business memory.') },
+    { label: B('(决定)', '(Decisions)'), text: B('关键决定由企业掌握。哪些报价、客户触达和内容发布需要审批、由谁批准，企业自己定；付款、正式申报和专业审阅，始终由有权人员确认。', 'Key decisions stay with the company. It decides which quotations, customer outreach and published content need approval, and who approves them. Payments, official filings and professional reviews always stay with authorized people.') },
+    { label: B('(核对)', '(Results)'), text: B('结果可以核对。谁做了什么、谁批准、结果是否达到要求、失败卡在哪一步，都有记录。已提交不等于已完成，核对过才算数。', 'Results can be checked. Who did what, who approved it, whether the result met the requirement and where a failure stopped are all on record. Submitted is not finished until the result is checked.') },
+    { label: B('(连接)', '(Connect)'), text: B('连接企业已有的业务。邮箱、客户记录、产品知识、ERP 和网盘，经企业授权后进入同一个工作流程，不必先换掉现有软件。', 'Connect the business you already run. With company authorization, email, customer records, product knowledge, ERP and shared drives feed one workflow — without replacing the software you use today.') },
+    { label: B('(经营)', '(Oversight)'), text: B('看经营，不只看 AI 对话。商机、订单、任务、异常、费用和待审批事项，按负责人和期限呈现给管理者，先处理真正需要决定的事。', 'Watch the business, not just AI conversations. Opportunities, orders, tasks, exceptions, costs and pending approvals reach managers by owner and deadline, so the decisions that matter come first.') },
   ],
-  introLabel: B('(为什么从一开始就这样设计)', '(Why it is built this way)'),
-  intro: B('落地从范围开始：先定一条业务流程、要接的系统、谁批什么，以及验收时要看到的产出。试点交付的都是可复核的东西——流程模型、权限与审批规则、连接边界、执行记录，以及这条流程跑完的真实结果。达到约定的验收标准，再定下一条。', 'Delivery starts with scope: one business workflow, the systems it must reach, who approves what, and what you expect to see at acceptance. A pilot hands back things you can check — the modelled workflow, the permission and approval rules, the integration boundary, the execution record and the real result of running that workflow end to end. Meet the agreed acceptance criteria, then scope the next one.'),
-  approachLabel: B('(部署方式)', '(Deployment)'),
-  approach: [B('云端：最快开始，数据边界按租户隔离。', 'Cloud: fastest start, tenant-isolated data boundary.'), B('专属企业环境：独立环境，满足更严的数据要求。', 'Dedicated environment: separate infrastructure for stricter data requirements.'), B('私有化部署：跑在企业自己的边界内。', 'Private deployment: runs inside your own boundary.'), B('企业 SLA：服务等级按项目约定。', 'Enterprise SLA: service levels agreed per project.')],
-  approachButton: { label: B('联系 STARGO 前置部署团队', 'Talk to a STARGO FDE'), href: 'contact.html' },
-  statsLabel: B('(数字)', '(Numbers)'),
+  /* V6 §8.2 and M15: the owner cockpit, beside the page's first large picture
+     (tools/build-site.mjs puts os-cockpit there — work lanes converging on one
+     command centre, an AI concept illustration, not a screen). No figures are
+     shown because there is no connected data to show; the text says so. */
+  introLabel: B('(老板驾驶舱)', '(The owner’s cockpit)'),
+  intro: B('管理者要看的不是 AI 忙了多久，而是谁在做什么、钱花在哪里、客户和订单推进到哪一步。驾驶舱把商机推进、交付状态、用量与预算边界、待审批事项、任务负责人、阻塞和实际结果放在一起。数据只来自已接入的系统，缺的就标明缺失。看得见，管得住，查得清。', 'Managers need more than busy AI: who is doing what, what it costs, and where each customer and order stands. The cockpit brings opportunity progress, delivery status, usage and budget limits, pending approvals, task owners, blockers and actual results together. Figures come only from connected systems; anything missing is shown as missing. Visible, controllable, traceable.'),
+  /* V6 §8.4, M16 and V5 F10: the delivery order, one line per step, in the
+     slot that used to list deployment options (those are the third stat now). */
+  approachLabel: B('(落地顺序)', '(How delivery works)'),
+  approach: [
+    B('01 选择一条业务：定目标与验收标准。', '01 Choose one workflow: set the goal and acceptance criteria.'),
+    B('02 准备企业资料：产品、客户、知识与规则。', '02 Prepare company context: products, customers, knowledge and rules.'),
+    B('03 连接授权账号：可读、可改、需审批，逐项说清。', '03 Connect authorized accounts: what may be read, changed or needs approval.'),
+    B('04 配置员工与审批：谁来做，谁来批。', '04 Configure roles and approvals: who does the work, who signs off.'),
+    B('05 验证实际成果：用真实样本核对结果。', '05 Validate actual results against real cases.'),
+    B('06 再扩大范围：跑通一条，再定下一条。', '06 Expand the scope: prove one workflow, then choose the next.'),
+  ],
+  approachButton: { label: B('预约企业演示', 'Request a Demo'), href: 'contact.html' },
+  statsLabel: B('(数字口径)', '(What the numbers count)'),
   stats: [
-    { value: '288', text: B('个 AI 员工，在企业设定的权限范围内工作。', 'AI employees, working inside the permissions the company sets.') },
-    { value: '13', text: B('项企业治理能力：能力中心、身份与权限、审批服务、审计台账、凭据管理、AI 员工护栏、租户隔离、故障处理、灰度发布、回滚、评估、可观测性、人在环中。', 'enterprise governance capabilities: Capability Center, Identity & Permission, Approval Service, Audit Ledger, Credential Management, Agent Guardrails, Tenant Isolation, Failure Handling, Canary, Rollback, Evaluation, Observability, Human-in-the-Loop.') },
-    { value: '3', text: B('种部署方式：云端、专属企业环境、私有化部署。', 'deployment options: cloud, dedicated enterprise environment, private deployment.') },
+    /* stats[0] is also read by tools/blocks/cn-price-card.mjs: the value must
+       stay a bare figure, and the text is split at its FIRST comma — the noun
+       goes beside the figure, the rest becomes a line of its own there. */
+    { value: '288', text: B('个专业数字岗位，按企业设定的权限与预算启用（岗位目录数量，不是同时运行的数量）。', 'specialized AI roles, enabled within the permissions and budgets the company sets (a role directory, not concurrent runs).') },
+    { value: String(ENT_CONTROLS.length), items: ENT_CONTROLS, text: B(`项管理控制：${ENT_CONTROLS.map((x) => x.zh).join('、')}。`, `management controls: ${enList(ENT_CONTROLS.map((x) => x.en))}.`) },
+    { value: String(ENT_DEPLOYMENT.length), items: ENT_DEPLOYMENT, text: B(`种部署方式：${ENT_DEPLOYMENT.map((x) => x.zh).join('、')}，按企业需求逐项确认；服务等级属于企业版事项，按项目另行约定。`, `deployment options: ${enList(ENT_DEPLOYMENT.map((x) => x.en), 'or')}, confirmed with each enterprise. Service levels are an Enterprise-plan item agreed per project.`) },
   ],
+  /* The pull-quote is M15's value line. P05's headline is the h1 now, so the
+     card no longer repeats it. */
   quoteLabel: B('(原则)', '(The principle)'),
-  quote: { text: B('「把工作交给 AI。权力留在企业。」', '“Delegate the work. Keep the authority.”'), who: B('STARGO WORK', 'STARGO WORK'), where: B('人在环中', 'Human-in-the-Loop') },
-  cardsTitle: B('五个治理组件', 'Five governance components'),
+  quote: { text: B('「对企业真正重要的是：可管理、可停止、可追踪、可验证，而不是 AI 在对话中声称“已经完成”。」', '“What matters is work you can manage, stop, trace and verify — not an AI message claiming it is done.”'), who: B('STARGO WORK', 'STARGO WORK'), where: B('决定权始终在人', 'People stay in command') },
+  /* V5 P05's five management components. V6 §8.3 names usage and budgets and
+     pausing with human takeover for these places too; they are carried in the
+     first and fourth role lines rather than by dropping account connection. */
+  cardsTitle: B('五个管理组件', 'Five management components'),
   cards: [
-    { name: B('能力中心', 'Capability Center'), role: B('(AI 能调什么)', '(What AI may call)') },
-    { name: B('身份与权限', 'Identity & Permission'), role: B('(谁，以什么身份)', '(Who, as whom)') },
-    { name: B('审批服务', 'Approval Service'), role: B('(哪些必须审批)', '(What must be approved)') },
-    { name: B('审计台账', 'Audit Ledger'), role: B('(每个动作留证据)', '(Every action leaves evidence)') },
-    { name: B('凭据管理', 'Credential Management'), role: B('(凭据不进提示词)', '(Credentials never enter a prompt)') },
+    { name: B('能力与应用管理', 'Capability & app management'), role: B('(企业开通了什么、哪些工作可做、哪些仍需配置，用量与预算上限多少)', '(Enabled applications, available work, missing setup, usage and budget limits)') },
+    { name: B('账号与岗位权限', 'Account & role permissions'), role: B('(明确谁可以查看资料，谁可以修改记录)', '(Who may read information, and who may change records)') },
+    { name: B('关键动作审批', 'Approval of key actions'), role: B('(报价、对外触达和重要承诺，由有权人确认)', '(Quotations, outreach and important commitments go to authorized reviewers)') },
+    { name: B('工作与结果记录', 'Work & result records'), role: B('(做过什么、谁批准、实际结果是否符合要求；出错即停，可转人工)', '(Actions, approvals and whether actual outcomes meet the requirement; failures stop and pass to a person)') },
+    { name: B('账号连接与保护', 'Account connection & protection'), role: B('(通过企业授权连接业务账号，不向不必要的岗位开放访问)', '(Business accounts connected through authorization, with no access for roles that do not need it)') },
   ],
-  noteLabel: B('(来自真实的全球贸易)', '(Born inside real global trade)'),
-  note: B('STARGO WORK 不是从一张 SaaS 产品需求表起步的。它来自真实的制造业与全球贸易业务：怎么找客户、判断客户、快速回复、管理产品知识、报价、审批、做 PI、管理订单、备出口单证、持续跟进，以及怎么让增长不再只靠加人。', 'STARGO WORK did not start from a SaaS product spec. It came out of real manufacturing and global-trade operations: how to find customers, judge them, reply fast, manage product knowledge, quote, approve, make the PI, manage orders, prepare export documents, keep following up — and how to grow without only hiring.'),
-  noteButton: { label: B('预约演示', 'Book a Demo'), href: 'contact.html' },
+  /* Beside the components: what is available and where the line stays
+     (V5 P05 availability, M16-01, F13, F14). The origin story this slot used
+     to carry is the About page's (ABOUT.story), unchanged there. */
+  noteLabel: B('(开放范围与边界)', '(Scope and boundaries)'),
+  note: B('管理与控制已有基础；看板指标、跨系统动作和高级分析，要等真实数据接入并验收后才算数。能打开某个应用，不等于整条流程已经验收。部署方式、服务范围和数据要求由双方另行确认。付款、正式申报、合同与合规审阅，始终由企业有权人员或相应机构决定。', 'Management and control foundations exist. Dashboard figures, cross-system actions and advanced analytics count only once real data is connected and validated, and opening an application does not mean the whole workflow is accepted. Deployment, service scope and data requirements are agreed separately. Payments, official filings, contract and compliance reviews stay with authorized people or the relevant institutions.'),
+  noteButton: { label: B('聊聊你的业务流程', 'Discuss your workflow'), href: 'contact.html' },
+  /* V6 §8.3 and M14-05: the old integration-method table as a table of the
+     business a company already runs. The rows name kinds of work, never a
+     platform shown as switched on; the last column is what has to be agreed
+     before anything connects, and the caption says nothing is on by default.
+     The last row keeps what the automation rows meant, in business terms. The
+     count in the title is the row count (awardsTable). */
   table: {
-    caption: B('(接入已有系统)', '(Connect what you already use)'), title: B('接入方式', 'Integration'),
-    headers: [B('(方式)', '(Method)'), B('(做什么)', '(What it does)'), B('(连接什么)', '(What it connects)')],
-    button: { label: B('看能力全景', 'See all capabilities'), href: 'capabilities.html' },
+    caption: B('(默认不开启 · 按企业授权逐项接入)', '(Nothing is on by default · connected per authorization)'), title: B('业务连接', 'Connections'),
+    headers: [B('(业务)', '(Area)'), B('(可以连接什么)', '(What can connect)'), B('(接入前要确认)', '(Agree first)')],
+    /* Not the whole map: the catalogue group that holds account connection,
+       automation and approved actions (V6 §5.8 puts M14 in #g11). */
+    button: { label: B('查看连接与自动化', 'Connections & automation'), href: 'capabilities.html#g11' },
     rows: [
-      ['API', B('直接调用与被调用', 'Call and be called directly'), B('已有系统', 'Existing systems')],
-      ['MCP', B('AI 员工调用工具的标准接口', 'The standard interface agents use tools through'), B('工具与数据源', 'Tools and data sources')],
-      [B('连接器', 'Connectors'), B('预置连接器', 'Pre-built connectors'), B('CRM · 邮箱 · 网盘 · 知识', 'CRM · mail · drives · knowledge')],
-      ['Activepieces', B('工作流自动化', 'Workflow automation'), B('跨系统流程', 'Cross-system processes')],
-      ['Scripts & Data Jobs', B('脚本与 ETL 执行', 'Scripts and ETL'), B('数据与脚本', 'Data and scripts')],
-      [B('工作区桥接', 'Workspace Bridge'), B('工作台与产出交付', 'Workspace and deliverables'), B('桌面与文件', 'Desktop and files')],
-      [B('渠道插件', 'Channel Plugins'), B('获客渠道插件', 'Acquisition channel plugins'), B('Reddit · Google · LinkedIn · Alibaba · WhatsApp · 邮件', 'Reddit · Google · LinkedIn · Alibaba · WhatsApp · Email')],
+      [B('客户与沟通', 'Customers & conversations'), B('邮箱、即时沟通、B2B 平台询盘与 CRM 客户记录', 'Email, messaging, marketplace inquiries and CRM records'), B('可以读取哪些对话，谁能代表企业回复', 'Which conversations may be read, and who may reply for the company')],
+      [B('产品与知识', 'Products & knowledge'), B('产品资料、规格图片、价格依据与企业文档', 'Product data, specifications, images, price sources and company documents'), B('哪些资料已经审核，可用于回答与报价', 'Which sources are approved for answers and quotations')],
+      [B('ERP 与商城', 'ERP & commerce'), B('产品物料、采购库存、生产质检、订单与商城业务', 'Products, materials, purchasing, stock, production, quality, orders and online store'), B('可读取的记录、可修改的字段、需要审批的变更', 'Readable records, permitted changes and changes that need approval')],
+      [B('办公与文件', 'Office & files'), B('网盘、表格、文档与共享文件夹', 'Drives, spreadsheets, documents and shared folders'), B('可以访问哪些文件夹，成果存放在哪里', 'Which folders may be opened, and where outputs are saved')],
+      [B('财务、物流及其他业务服务', 'Finance, logistics & other services'), B('收付款、物流、签章与第三方数据', 'Payments, logistics, signatures and third-party data'), B('按企业授权与系统情况开放；付款与正式申报由有权人员把关', 'Opened per authorization and system; payments and official filings stay with authorized people')],
+      [B('跨系统自动化', 'Cross-system automation'), B('定时任务、事件触发与数据同步', 'Scheduled work, event triggers and data synchronization'), B('先人工跑通、确认规则，再逐步扩大自动执行范围', 'Run it by hand and agree the rules before automating more of it')],
     ],
   },
 };
