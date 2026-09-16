@@ -2063,6 +2063,35 @@ html[lang^="zh"] .hero .max-w-left.add-tp p.top-text.big.nm {
    and the next one so parallel edits merge cleanly. */
 /* V6-A-START */
 
+/* capabilities.html — the four business areas (V5 P02).
+   Each card's glass panel now ends with the area's one-line description
+   (`p.macro-desc`, written by tools/build-site.mjs on this page only). It is
+   set like the group count above it — same white, same fluid size, regular
+   weight — at reading leading, and held to a measure so a long English line
+   wraps inside the panel rather than stretching it past the photograph's four
+   fifths. `pretty` keeps a lone word off the last line. The host's `p` rule
+   (`opacity: .7`, `-.5px` tracking) is put back to the panel's own values. */
+.wrok-wrapper .work-card .work-title-main .macro-desc {
+  margin: 0;
+  max-width: 30em;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: clamp(1rem, 1.05vw, 1.25rem);
+  font-weight: var(--font-weight--400, 400);
+  line-height: 1.45;
+  letter-spacing: normal;
+  opacity: 1;
+  text-wrap: pretty;
+}
+@media screen and (max-width: 991px) {
+  .wrok-wrapper .work-card .work-title-main .macro-desc { font-size: clamp(0.95rem, 1.9vw, 1.15rem); }
+}
+
+/* The map heading above those cards, 「四个板块，十四类能力」 / "Four areas.
+   Fourteen capability groups". Chinese headings are already balanced site-wide
+   (`h2.h2`); the English one left "groups" alone on its second line at 1440,
+   so this one heading is balanced in both languages. */
+.macro-intro .h2 { text-wrap: balance; }
+
 /* V6-A-END */
 
 

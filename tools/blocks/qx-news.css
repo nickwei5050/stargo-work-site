@@ -39,3 +39,12 @@
 .qx-news p { opacity: 1; }
 .qx-news { cursor: auto; }
 .qx-news a { cursor: pointer; }
+
+/* 3. The Sales Desk heading (V6 §5.3) on the Chinese page. qx-news.mjs puts a
+      zero-width space after its colon and its comma; `keep-all` makes those
+      the only break points, so 「Sales Desk：把客户聊明白，把订单跟到底」 wraps
+      as Sales Desk： / 把客户聊明白， / 把订单跟到底 instead of inside 客户 or
+      订单 — measured before this rule at 1440: 「Sales Desk：把客 / 户聊明白，
+      把订单 / 跟到底」. `balance` evens the lines where two would do. The type
+      itself — size, weight, leading — is the donor's. */
+html[lang^="zh"] .qx-news .qx-h2 { word-break: keep-all; text-wrap: balance; }

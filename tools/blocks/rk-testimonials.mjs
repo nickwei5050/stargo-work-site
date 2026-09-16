@@ -1,5 +1,6 @@
 /**
- * 把订单一路协调到交付与复购 — story 04 of the capability showcase.
+ * ERP 与履约：前端拿订单，后台接得住 — story 04 of the capability showcase
+ * (V5 M05 + M06, V6 §5.5).
  *
  * Donor: renok's home testimonials (index.html). A 300vh section whose first
  * child is a sticky, viewport-high backdrop — a black ground under a silk
@@ -14,24 +15,25 @@
  * Each card is: a paragraph, a hairline, then an avatar photograph, a name
  * with a check badge, a role line, and a client logo on the right.
  *
- *   paragraph  → the capability's gloss, from the register
- *   name       → capTitle(name, zhName): Chinese name on the Chinese page,
- *                product name on the English page
- *   role line  → the capability's group name, straight out of the register:
- *                the shortest label copy.mjs has for the slot. A card whose
- *                gloss is one line is narrower than the donor's (the card is a
- *                flex item under a max-width, and the donor's paragraphs fill
- *                it), so in those cards the role still wraps to two lines
- *   marquee    → the story's label
- *   avatar     → stays: the donor's own portrait (mirrored into assets/renok)
+ *   paragraph  → the theme's short description (CAP_V6A.operations)
+ *   name       → the theme's name, one language per page
+ *   role line  → a link to the catalogue group with the full detail (#g08),
+ *                in the donor's grey
+ *   marquee    → the story's label, 「ERP 与履约：前端拿订单，后台接得住」
+ *   avatar     → REPLACED. A portrait of a person beside an operating theme
+ *                reads as a customer testimonial; this site's own abstract
+ *                avatar takes the same <img>, decorative.
  *   logo       → REPLACED. "Cairo" is a client logo, and a client logo asserts
  *                a customer this company does not have. It is mapped to the
  *                site's own wordmark rather than dropped, so the card keeps the
  *                donor's three-part bottom row.
  *
- * The story names seven capabilities and renok draws six cards. The cards are
- * filled in DOM order with the first six picks, so the desktop rows and the
- * phone slider carry the same six in the same order; the seventh is reported.
+ * V6 §5.5 names six operating themes — products, materials and purchasing;
+ * stock, production and quality; orders and payment milestones; trade
+ * documents and export records; logistics and delivery; service, channels and
+ * reorders — and renok draws six cards, so each card is one theme, filled in
+ * DOM order, and the desktop rows and the phone slider carry the same six in
+ * the same order.
  *
  * Every card in the donor DOM is filled — the slider copies too. A slot left
  * with donor copy because it is invisible at this width is still donor copy.
@@ -86,12 +88,29 @@ function divEnd(html, start, what) {
 }
 
 export function render(frag, ctx) {
-  const { C, t, escapeHtml, capTitle } = ctx;
+  const { C, t, escapeHtml } = ctx;
   const S = C.CAPABILITY_SHOWCASE;
   const story = S.stories[STORY];
   if (!story) throw new Error(`rk-testimonials: CAPABILITY_SHOWCASE.stories has no entry ${STORY}`);
-  if (story.picks.length < CARDS) throw new Error(`rk-testimonials: story ${STORY} names ${story.picks.length} capabilities, renok draws ${CARDS}`);
-  const caps = story.picks.slice(0, CARDS).map((name) => capability(C, name));
+  /* V6 §5.5: six operating themes (CAP_V6A.operations), in V6's order. They
+     are not register entries, so they carry their own words; the story's picks
+     still resolve against the register, and the group they sit in is where
+     every card's link goes. */
+  const O = C.CAP_V6A?.operations;
+  if (!O?.themes || O.themes.length !== CARDS) throw new Error(`rk-testimonials: CAP_V6A.operations needs ${CARDS} themes, one per card, has ${O?.themes?.length}`);
+  if (!O.link?.href || !O.icons || O.icons.length !== CARDS) throw new Error('rk-testimonials: CAP_V6A.operations needs a link and one icon per theme');
+  const groups = new Set(story.picks.map((name) => capability(C, name).group.n));
+  if (groups.size !== 1 || O.link.href !== `#g${[...groups][0]}`) {
+    throw new Error(`rk-testimonials: the cards should link to the group story ${STORY}'s picks sit in (${[...groups].join(', ')}), not ${O.link.href}`);
+  }
+  /* The one theme that must keep the trade documents the old cards named, and
+     say where issuance stays — a reword that drops either fails here. */
+  const docs = t(O.themes[3].text);
+  for (const word of ctx.lang === 'zh'
+    ? ['商业发票', '装箱单', '原产地证', 'Form E', '提单', '认证', '退税', '主管机构']
+    : ['commercial invoices', 'packing lists', 'certificate of origin', 'Form E', 'bills of lading', 'certifications', 'tax-rebate', 'authorities']) {
+    if (!docs.includes(word)) throw new Error(`rk-testimonials: the trade-document theme no longer says "${word}"`);
+  }
 
   let html = frag;
 
@@ -110,9 +129,11 @@ export function render(frag, ctx) {
     throw new Error(`rk-testimonials: renok draws ${CARDS} cards twice (rows + slider), found ${cards.length}`);
   }
 
+  /* Card i shows theme i % 6: the desktop rows and the phone slider carry the
+     same six in the same order, from the same records. */
   for (let i = cards.length - 1; i >= 0; i--) {
     const [a, b] = cards[i];
-    html = html.slice(0, a) + fillCard(html.slice(a, b), caps[i % CARDS], i) + html.slice(b);
+    html = html.slice(0, a) + fillCard(html.slice(a, b), i % CARDS, i) + html.slice(b);
   }
 
   /* ---- attributes that still say the donor's words ---- */
@@ -131,26 +152,32 @@ export function render(frag, ctx) {
 
   return html;
 
-  /** One card: paragraph, name, role line, and the avatar's alt. */
-  function fillCard(card, cap, i) {
+  /** One card: paragraph, name, role line, and the icon beside them. */
+  function fillCard(card, k, i) {
+    const theme = O.themes[k];
     /* The paragraph is the only <p> in the card, inside an unclassed div. */
     const ps = card.match(/<p>[\s\S]*?<\/p>/g) ?? [];
     if (ps.length !== 1) throw new Error(`rk-testimonials: card ${i + 1} holds ${ps.length} paragraphs, expected one`);
-    let out = card.replace(ps[0], `<p>${escapeHtml(t(cap.gloss))}</p>`);
+    let out = card.replace(ps[0], `<p>${escapeHtml(t(theme.text))}</p>`);
 
-    /* The name, beside the check badge. */
-    out = setText(out, 'rk-rt-responsive-text-change', escapeHtml(capTitle(cap.name, cap.zhName ?? '')));
+    /* The name, beside the check badge. Its Chinese form carries zero-width
+       spaces where a phrase ends; rk-testimonials.css keeps the name from
+       breaking anywhere else in its ~130px slot. */
+    out = setText(out, 'rk-rt-responsive-text-change', escapeHtml(t(theme.title)));
 
-    /* The role line: the register's own group name — the string the
-       catalogue prints as that group's heading, and the shortest label the
-       register has for the slot. */
-    out = setText(out, 'rk-rt-text-color-light-gray', escapeHtml(t(cap.group.name)));
+    /* The role line: a link to the catalogue group that holds the full ERP,
+       fulfilment, finance and service detail (#g08). The line keeps its donor
+       class, so it keeps renok's grey. */
+    out = setText(out, 'rk-rt-text-color-light-gray', `<a class="rk-testimonials-link" href="${O.link.href}">${escapeHtml(t(O.link.label))}</a>`);
 
-    /* The portrait is decorative beside a name that already says what the
-       card is about; the donor's alt was the sitter's file name. */
-    const AVATAR = /(<img src="assets\/renok\/[^"]+" loading="lazy" alt=")[^"]*(" class="rk-rt-radius-10"\/>)/;
+    /* The icon. The donor's portrait of a person would read as a customer
+       testimonial beside an operating theme; this site's own abstract avatar
+       takes its place, decorative (empty alt), in the same <img>, so the
+       portrait's box and radius are unchanged. */
+    const AVATAR = /(<img src=")assets\/renok\/[^"]+(" loading="lazy" alt=")[^"]*(" class="rk-rt-radius-10"\/>)/;
     if (!AVATAR.test(out)) throw new Error(`rk-testimonials: card ${i + 1} has no mirrored portrait`);
-    out = out.replace(AVATAR, (s, x, y) => `${x}${y}`);
+    /* ctx.art() names the webp artwork; the avatars are this site's png set. */
+    out = out.replace(AVATAR, (s, a, b, c) => `${a}assets/stargo-editorial/${O.icons[k]}.png${b}${c}`);
     return out;
   }
 }

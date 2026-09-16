@@ -1,5 +1,5 @@
 /**
- * 每件事共同依赖的底座 — the four foundations of the capability showcase.
+ * 所有业务工作共用四个基础 — the four foundations of the capability showcase.
  *
  * Donor: qubix's "What We Do" (index.html, `.home-service-two`). A 600vh
  * scroll-pinned stage: a dark orb (`Ellipse 2.png`) behind a ticked ring
@@ -17,16 +17,17 @@
  *     extra class (`qx-whatwedo-four`) that tools/blocks/qx-whatwedo.css uses
  *     only to move it to the bottom-left corner — the donor has no fourth
  *     position to borrow;
- *   - a panel listing the foundation's picks is appended INSIDE each node's
- *     own description wrapper, hidden until tools/blocks/qx-whatwedo.js
- *     toggles it. No donor element moves or loses an attribute.
+ *   - a panel listing what the foundation covers (and its condition, where it
+ *     has one) is appended INSIDE each node's own description wrapper, hidden
+ *     until tools/blocks/qx-whatwedo.js toggles it. No donor element moves or
+ *     loses an attribute.
  *
  * Both donor images stay (mirrored into assets/qubix by try-block). The
  * hidden number slot (`.wrapper-text-number-service` is display:none in the
  * donor) carries "01"–"04" so the numbering the owner speaks of is in the
  * markup even though the donor never shows it.
  */
-import { setText, capability } from '../block-lib.mjs';
+import { setText } from '../block-lib.mjs';
 
 export const donor = {
   id: 'qx-whatwedo',
@@ -44,10 +45,17 @@ export const donor = {
 const NODE_COUNT = 3;
 
 export function render(frag, ctx) {
-  const { C, lang, t, escapeHtml, capTitle } = ctx;
+  const { C, lang, t, escapeHtml } = ctx;
   const S = C.CAPABILITY_SHOWCASE;
   const F = S.foundations;
   if (!F || F.length !== 4) throw new Error(`qx-whatwedo: expected 4 foundations, have ${F?.length}`);
+  /* The two conditions V6 keeps visible: a listed connection is not a live one,
+     and an improvement is tested and approved before it is used and can be
+     withdrawn. Each is in its foundation's always-visible promise, not only
+     behind the click. */
+  const said = (i, zh, en) => (lang === 'zh' ? zh : en).test(t(F[i].promise));
+  if (!said(1, /不算已经接通/, /not live until/)) throw new Error('qx-whatwedo: foundation 02 no longer says a listed connection is not live until configured');
+  if (!said(3, /批准[\s\S]*撤回/, /approved[\s\S]*withdrawn/)) throw new Error('qx-whatwedo: foundation 04 no longer says improvements are approved first and can be withdrawn');
 
   /* ------------------------------------------------------------ split ---- */
   const OPEN = '<div class="qx-wrapper-main-services qx-wrapper-main-services-';
@@ -76,8 +84,8 @@ export function render(frag, ctx) {
   const label = t(S.foundationsLabel);
   const words = label.split(' ');
   const halves = lang === 'zh'
-    ? [label.slice(0, Math.round(label.length / 2)), label.slice(Math.round(label.length / 2))] // 每件事共同 | 依赖的底座
-    : [words.slice(0, 2).join(' '), ' ' + words.slice(2).join(' ')];        // What every | story runs on
+    ? [label.slice(0, Math.round(label.length / 2)), label.slice(Math.round(label.length / 2))] // 所有业务工作 | 共用四个基础
+    : [words.slice(0, 2).join(' '), ' ' + words.slice(2).join(' ')];        // Four foundations | beneath the work
   if (!halves[0] || !halves[1].trim()) throw new Error(`qx-whatwedo: cannot split foundationsLabel "${label}"`);
   head = setText(head, 'qx-h2', escapeHtml(halves[0]));
   head = setText(head, 'qx-text-heading-servie', escapeHtml(halves[1]));
@@ -102,15 +110,22 @@ export function render(frag, ctx) {
     node = setText(node, 'qx-h5', escapeHtml(t(f.label)));
     node = setText(node, 'qx-body', escapeHtml(t(f.promise)));
 
-    /* The panel: this foundation's picks, name then gloss, each in the donor's
-       own body type. It sits inside the description wrapper, after the promise,
-       so the node's donor structure above it is untouched. */
-    const items = f.picks.map((pick) => {
-      const cap = capability(C, pick);
-      const title = capTitle(escapeHtml(cap.name), escapeHtml(cap.zhName ?? ''));
-      return `<div class="qx-body qx-whatwedo-pick"><span class="qx-text-tittle-service">${title}</span> · ${escapeHtml(t(cap.gloss))}</div>`;
-    }).join('');
-    const panel = `<div class="qx-whatwedo-panel" id="qx-whatwedo-panel-${num}" hidden>${items}</div>`;
+    /* The panel: this foundation's lines, title then meaning, each in the
+       donor's own body type, and the foundation's condition last when it has
+       one. The lines are written for a manager (CAPABILITY_SHOWCASE.
+       foundations[i].panel) rather than printed from register entries, whose
+       names are product and engineering labels. The catalogue groups the
+       foundation stands on (`groups`) must still exist. It sits inside the
+       description wrapper, after the promise, so the node's donor structure
+       above it is untouched. */
+    for (const g of f.groups ?? []) {
+      if (!C.CAPABILITY_GROUPS.some((x) => x.n === g)) throw new Error(`qx-whatwedo: foundation ${num} names group ${g}, which the catalogue does not have`);
+    }
+    if (!Array.isArray(f.panel) || f.panel.length < 3) throw new Error(`qx-whatwedo: foundation ${num} needs its panel lines`);
+    const items = f.panel.map(([title, meaning]) =>
+      `<div class="qx-body qx-whatwedo-pick"><span class="qx-text-tittle-service">${escapeHtml(t(title))}</span> · ${escapeHtml(t(meaning))}</div>`).join('');
+    const caveat = f.caveat ? `<div class="qx-body qx-whatwedo-pick qx-whatwedo-caveat">${escapeHtml(t(f.caveat))}</div>` : '';
+    const panel = `<div class="qx-whatwedo-panel" id="qx-whatwedo-panel-${num}" hidden>${items}${caveat}</div>`;
 
     const DESC_CLOSE = '</div></div></div>';
     if (!node.endsWith(DESC_CLOSE)) throw new Error(`qx-whatwedo: node ${num} does not close with body, description wrapper and node`);

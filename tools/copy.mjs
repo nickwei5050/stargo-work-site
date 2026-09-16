@@ -1361,7 +1361,7 @@ export const CAPABILITY_SHOWCASE = {
      falling onto a line alone. */
   heroLead: B('从找客户', 'From finding customers to'),
   heroAccent: B('/Growth OS', '/connected'),
-  heroTail: B('到把企业工作​连接起来', 'enterprise work'),
+  heroTail: B('到把企业工作\u200b连接起来', 'enterprise\u00a0work'),
   heroBody: B('先看 Growth OS 主动获客与 Sales Desk 外贸闭环，再看 ERP、商城、财务履约、图片视频、数字员工与企业智能。每个模块都说明做什么、输出什么，以及需要哪些配置与确认。', 'Start with Growth OS and Sales Desk, then explore ERP, commerce, finance and fulfillment, creative work, AI teams and enterprise intelligence. Each module explains the work, the outputs and the configuration or approvals required.'),
   heroButton: B('查看功能全景', 'Explore Capabilities'),
   eyebrow: B('能力图谱', 'CAPABILITY MAP'),
@@ -1546,7 +1546,7 @@ export const CAPABILITY_SHOWCASE = {
    A zero-width space (U+200B) inside a Chinese title marks where it may break:
    the blocks set those titles `word-break: keep-all`, so the narrow name slots
    wrap between phrases (产品、物料 / 与采购) instead of inside a word. */
-const ZW = '​';
+const ZW = '\u200b';
 export const CAP_V6A = {
   /* #story-1 — Growth OS (tools/blocks/cn-service.mjs). The pill names the
      engine; the two heading lines are the donor's two-character / short-word

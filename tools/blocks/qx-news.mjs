@@ -1,5 +1,6 @@
 /**
- * 把对话变成对客户的理解 — story 02 of the capability showcase.
+ * Sales Desk：把客户聊明白，把订单跟到底 — story 02 of the capability showcase
+ * (V6 §5.3).
  *
  * Donor: qubix's "Latest news" list (index.html). A sticky left column — h2,
  * lead paragraph, one pill button — beside three rows that are each
@@ -54,10 +55,17 @@ export const donor = {
 };
 
 export function render(frag, ctx) {
-  const { C, lang, t, escapeHtml, capTitle } = ctx;
+  const { C, lang, t, escapeHtml } = ctx;
   const S = C.CAPABILITY_SHOWCASE;
   const story = S.stories[STORY];
   if (!story) throw new Error(`qx-news: CAPABILITY_SHOWCASE.stories has no entry ${STORY}`);
+  if (!story.availability) throw new Error('qx-news: story 1 has no availability line — Sales Desk must say what still needs connecting');
+  /* V6 §5.3: the rows' names and lines are this section's (CAP_V6A.sales),
+     one per pick, and a pick with no words fails here. */
+  const R = C.CAP_V6A?.sales?.rows;
+  if (!R || Object.keys(R).length !== PICKS.length || PICKS.some((p) => !R[p]?.title || !R[p]?.text)) {
+    throw new Error(`qx-news: CAP_V6A.sales.rows must word exactly ${PICKS.join(' / ')}`);
+  }
 
   /* ------------------------------------------------------------ split ---- */
   const OPEN = '<div role="listitem" class="qx-collection-item w-dyn-item">';
@@ -78,14 +86,28 @@ export function render(frag, ctx) {
   const tail = frag.slice(end);
 
   /* ------------------------------------------------------- left column --- */
-  /* One heading, one lead. `.h2` capitalises, which is the donor's own look. */
-  let left = setText(head, 'qx-h2', escapeHtml(t(story.label)));
-  left = setText(left, 'qx-body', escapeHtml(t(story.promise)));
+  /* One heading, one lead. `.h2` capitalises, which is the donor's own look.
+     The heading is V6's 「Sales Desk：把客户聊明白，把订单跟到底」. On the
+     Chinese page every character is a break point and the sticky column holds
+     seven or eight a line, so it broke inside 客户 and 订单; a zero-width
+     space after each punctuation mark gives qx-news.css (`word-break:
+     keep-all`) the only places it may wrap — after the colon and after the
+     comma — so it reads Sales Desk： / 把客户聊明白， / 把订单跟到底. */
+  const ZWSP = '\u200b';
+  /* The product name is one unit on both pages: a no-break space holds it. */
+  const label = (lang === 'zh' ? t(story.label).replace(/([：，])/g, `$1${ZWSP}`) : t(story.label)).replace('Sales Desk', 'Sales\u00a0Desk');
+  let left = setText(head, 'qx-h2', escapeHtml(label));
+  /* The lead: what Sales Desk takes in, how the three rows below serve the
+     reply, the product fit, the follow-up, the quote and the PI, and — as its
+     own sentence — what is still connected and validated one by one. */
+  left = setText(left, 'qx-body', escapeHtml(`${t(story.promise)}${lang === 'zh' ? '' : ' '}${t(story.availability)}`));
 
   /* The button says what it goes to. `#atlas` is the complete catalogue
      section, and `catalogueLabel` is the heading that section prints for
      itself, so the pill borrows a line the page already says rather than a new
-     one. `.main-button` is `white-space: nowrap`, so it has to stay short. */
+     one. `.main-button` is `white-space: nowrap`, so it has to stay short.
+     This is the "all capabilities" door; the rows below each go to their own
+     group. */
   const BUTTON = /(<div class="qx-button-content-wrap"><div>)([\s\S]*?)(<\/div>)/;
   if (!BUTTON.test(left)) throw new Error('qx-news: the button label div is gone from the left column');
   left = left.replace(BUTTON, (m, open, inner, close) => `${open}${escapeHtml(t(S.catalogueLabel))}${close}`);
@@ -108,32 +130,33 @@ export function render(frag, ctx) {
        catalogue prints as that group's heading. Nothing here is a date. */
     let row = setText(unit, 'qx-body', escapeHtml(`${cap.group.n} · ${t(cap.group.name)}`));
 
-    /* The title: one language per page. `capTitle` is already bound to the
-       page's language, so the Chinese page gets the Chinese name and the
-       English page the product name — no bilingual subtitle. */
-    const title = capTitle(escapeHtml(cap.name), escapeHtml(cap.zhName ?? ''));
-    row = setText(row, 'qx-text-block-3', title);
+    /* The title: one language per page — V6's name for the row
+       (统一询盘入口 / 买方需求提取 / 客户全景). */
+    const words = C.CAP_V6A.sales.rows[pick];
+    row = setText(row, 'qx-text-block-3', escapeHtml(t(words.title)));
 
     /* Hidden, but still the donor talking. */
     row = setText(row, 'qx-display-none', '');
 
-    /* The gloss goes in the one unclassed div in the row — the only element
-       here with no class attribute at all, which is what makes it findable.
-       The tag is kept as it is: no class, no style. */
+    /* The row's line goes in the one unclassed div in the row — the only
+       element here with no class attribute at all, which is what makes it
+       findable. The tag is kept as it is: no class, no style. */
     const GLOSS = /<div>([\s\S]*?)<\/div>/;
     if (!GLOSS.test(row)) throw new Error(`qx-news: row ${i + 1} has no unclassed div for the gloss`);
-    row = row.replace(GLOSS, () => `<div>${escapeHtml(t(cap.gloss))}</div>`);
+    row = row.replace(GLOSS, () => `<div>${escapeHtml(t(words.text))}</div>`);
 
-    /* Both row links point at the donor's blog posts. The rows name entries in
-       the catalogue, so they go where the catalogue is. */
+    /* Both row links point at the donor's blog posts. Each row goes to the
+       catalogue group its entry sits in — intake and requirements to #g04,
+       the customer view to #g05 — whose heading is the same label the row's
+       date slot prints. */
     const hrefs = row.match(/href="blog[^"]*"/g) ?? [];
     if (hrefs.length !== 2) throw new Error(`qx-news: row ${i + 1} no longer carries two donor links`);
-    row = row.replace(/href="blog[^"]*"/g, 'href="#atlas"');
+    row = row.replace(/href="blog[^"]*"/g, `href="#g${cap.group.n}"`);
 
     /* The photograph is the donor's own and stays; only its empty alt is
-       given the words the title already says. */
+       given the words the row already says. */
     if (!row.includes('alt=""')) throw new Error(`qx-news: row ${i + 1} lost its image alt attribute`);
-    return row.replace('alt=""', `alt="${escapeHtml(t(cap.gloss))}"`);
+    return row.replace('alt=""', `alt="${escapeHtml(t(words.text))}"`);
   });
 
   return left + rows.join('') + tail;
