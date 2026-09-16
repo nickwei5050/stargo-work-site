@@ -2108,11 +2108,19 @@ html[lang^="zh"] .hero .max-w-left.add-tp p.top-text.big.nm {
       narrowest line it gets — four characters in the panel heading's 192px
       box at 768 (4.8 characters of 40px type), eight in the role-group
       heading's 288px at 320 (nine characters of 32px type). Chinese only;
-      English breaks at its spaces. */
+      English breaks at its spaces.
+      The five-step line under the role-group intro gets the same treatment:
+      its steps are joined by "&nbsp;→ ", so with keep-all it breaks only after
+      an arrow. Without it, 320, 390 and 1024 read 「…→ 分」/「配任务 →…」. The
+      longest step with its arrow is nine characters of 14px type (126px). */
 html[lang^="zh"] .lx-scope .lx-v6-panel-title,
-html[lang^="zh"] .lx-scope .lx-v6-roster-title {
+html[lang^="zh"] .lx-scope .lx-v6-roster-title,
+html[lang^="zh"] .lx-scope .lx-v6-roster-flow {
   word-break: keep-all;
 }
+/* The English role-group heading is two sentences, each an inline block
+   (the builder's spans), so the first line break falls between them. */
+.lx-scope .lx-v6-roster-chunk { display: inline-block; }
 
 /* The display line behind the team cards, 「一个目标，一个团队。」. It IS
    split per character (IX), so keep-all cannot reach it; it is written as two
@@ -2219,6 +2227,21 @@ html[lang^="zh"] .lx-scope .lx-v6-team-display {
   .lx-scope .lx-v6-chat { padding-left: 1rem; }
   .lx-scope .lx-v6-chat-lines { gap: .375rem; }
   .lx-scope .lx-v6-chat-line { padding: .375rem .625rem; font-size: .8125rem; border-radius: .9rem; }
+}
+
+/* 4. The small role card inside the desktop collage (.lx-organized-mind-card,
+      marked .lx-v6-collage-card by the builder). Same mechanism as the hero
+      cards' fix further up this file ("the scattered photo cards under the
+      CTA"): the card clips, and its name panel is parked just below the bottom
+      edge by a fixed 80px transform. Below 480px the card is 119px tall and
+      the panel's content overflows it, so a two-line name — 「报告 AI 员工」
+      wraps at the card's 77px — lifts the panel's first line 6.3px into view:
+      the top half of 「报告 AI 员」 showed along the card's bottom at 390
+      (measured; the template's one-line 「审计台账」 leaked 1.9px, below the
+      glyphs' ink). The same 16px margin puts it back under the edge. There is
+      no hover on a phone, so the revealed position is never shown there. */
+@media screen and (max-width: 479px) {
+  .lx-scope .lx-v6-collage-card .lx-name-views-content { margin-top: 16px; }
 }
 
 /* V6-D-END */

@@ -722,7 +722,9 @@ PAGES['workforce.html'] = (lang) => {
      carries the role group. The collage card in the desktop item below is a
      sixth example with its own group, and it shares the fifth card's template
      figure (125.5M), so it is written first, inside its own element, before
-     the marquee's figures are replaced two by two. */
+     the marquee's figures are replaced two by two. It also gets a class of its
+     own: its name, 「报告 AI 员工」, wraps to two lines on a phone, and
+     css/stargo-fusion.css (V6-D) parks that taller panel lower there. */
   if (W.roles.length !== 5) throw new Error(`workforce: the marquee has five role cards, copy has ${W.roles.length}`);
   for (const r of W.roles) {
     if (t(r.dept) !== t(W.roles[0].dept)) throw new Error(`workforce: role "${t(r.name)}" is labelled "${t(r.dept)}", the others "${t(W.roles[0].dept)}"`);
@@ -731,7 +733,8 @@ PAGES['workforce.html'] = (lang) => {
   {
     const card = findByClass(b, 'a', 'lx-organized-mind-card');
     if (!card) throw new Error('workforce: the collage role card (.lx-organized-mind-card) is gone');
-    const inner = s(card.text, '<div class="lx-text-size-tiny">125.5M</div>', `<div class="lx-text-size-tiny">${t(W.extraRole.owns)}</div>`, { count: 1 });
+    let inner = s(card.text, '<div class="lx-text-size-tiny">125.5M</div>', `<div class="lx-text-size-tiny">${t(W.extraRole.owns)}</div>`, { count: 1 });
+    inner = s(inner, 'class="lx-organized-mind-card w-inline-block"', 'class="lx-organized-mind-card lx-v6-collage-card w-inline-block"', { count: 1 });
     b = b.slice(0, card.start) + inner + b.slice(card.end);
   }
   const NAMES = ['Philip', 'Arlene', 'Marjorie', 'Collen', 'Greg'];
@@ -833,7 +836,15 @@ PAGES['workforce.html'] = (lang) => {
     if (R.total.count !== 288) throw new Error(`workforce: the role directory is 288 roles (V5 M10, V6 §6.2); the table totals ${R.total.count}`);
     if (R.titleChunks.zh.join('') !== '十类岗位，一个可按任务组织的数字团队。') throw new Error('workforce: the role-group heading is no longer P04\'s');
     if (!t(R.note).includes('288')) throw new Error('workforce: the note under the total must say what 288 counts');
-    const title = lang === 'zh' ? R.titleChunks.zh.map(escapeHtml).join('<wbr>') : escapeHtml(R.titleChunks.en.join(' '));
+    if (R.titleChunks.en.length !== 2) throw new Error('workforce: the English role-group heading is P04\'s two sentences, one chunk each');
+    const title = lang === 'zh'
+      ? R.titleChunks.zh.map(escapeHtml).join('<wbr>')
+      : R.titleChunks.en.map((c) => `<span class="lx-v6-roster-chunk">${escapeHtml(c)}</span>`).join(' ');
+    /* M10's five steps. The space before each arrow becomes a no-break space,
+       so a line can end on "→" but never begin with one. */
+    const steps = t(R.flow).split(' → ');
+    if (steps.length !== 5) throw new Error(`workforce: the role-group flow is M10's five steps joined by " → ", found ${steps.length}`);
+    const flow = steps.map(escapeHtml).join('&nbsp;→ ');
     const row = (name, count, extra = '') => `<div class="lx-careers_01-item lx-v6-roster-row${extra}" role="listitem">`
       + `<div class="lx-careers-item-name"><div>${escapeHtml(t(name))}</div></div>`
       + `<div class="lx-careers-item-name lx-v6-roster-count"><div>${count}</div><div class="lx-careers-text">${escapeHtml(t(R.unit))}</div></div></div>`;
@@ -842,7 +853,7 @@ PAGES['workforce.html'] = (lang) => {
       + '<div class="lx-grid-content"><div class="lx-sticky-content"><div class="lx-header-container-left"><div class="lx-text-align-left">'
       + `<h2 class="lx-heading-style-h2 lx-v6-roster-title">${title}</h2>`
       + `<p class="lx-careers-text lx-v6-roster-intro">${escapeHtml(t(R.intro))}</p>`
-      + `<p class="lx-careers-text lx-v6-roster-flow">${escapeHtml(t(R.flow))}</p>`
+      + `<p class="lx-careers-text lx-v6-roster-flow">${flow}</p>`
       + '</div></div></div></div>'
       + '<div class="lx-grid-content"><div class="lx-careers_01-list" role="list">'
       + R.groups.map((g) => row(g.name, g.count)).join('')
