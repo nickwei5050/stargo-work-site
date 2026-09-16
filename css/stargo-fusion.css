@@ -2439,6 +2439,132 @@ html[lang^="zh"] .lx-scope .lx-v6-team-display {
    and the next one so parallel edits merge cleanly. */
 /* V6-E-START */
 
+/* intelligence.html — the plain-explanations section (#lx-context), V6 §7.
+   ---------------------------------------------------------------------------
+   One added section (tools/build-site.mjs lxContextSection) between the
+   "no writing" band and the 288-roles section: P03's headline, a lede, six
+   short explanations and the availability note. Everything that is not
+   already a Lifelogx class is here, and every value is one the template uses
+   elsewhere: the grid is .lx-story-grid's (1rem gap, 4rem top margin, one
+   column below 768), the card outline is .lx-story-grid-item.lx-_3's (1px
+   #262627, 23px radius), the pink is --_semantics---primary as on
+   .lx-heading-style-h1.lx-pink. Three columns from 992px, where the Chinese
+   item titles (at most seven characters of 2rem type) still fit the 234px
+   inside a card; two between 768 and 991; one below. No animation: nothing
+   here is bound by the Lifelogx interactions, so it is readable without
+   JavaScript and never waits for a scroll trigger. */
+#lx-context { scroll-margin-top: 100px; }
+.lx-scope .lx-context-head {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  text-align: center;
+}
+.lx-scope .lx-context-title { margin: 0; }
+.lx-scope .lx-context-title > span { display: block; }
+.lx-scope .lx-context-title > .lx-context-pink { color: var(--_semantics---primary); }
+.lx-scope .lx-context-lede {
+  max-width: 46rem;
+  margin: 1.5rem 0 0;
+  color: var(--_primitives---primary--text-grey, #989898);
+}
+.lx-scope .lx-context-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 4rem;
+}
+.lx-scope .lx-context-item {
+  display: flex;
+  flex-flow: column;
+  gap: 1rem;
+  padding: 2rem;
+  border: 1px solid #262627;
+  border-radius: 23px;
+}
+.lx-scope .lx-context-item h3,
+.lx-scope .lx-context-item p,
+.lx-scope .lx-context-note p { margin: 0; }
+.lx-scope .lx-context-flow { color: var(--_semantics---primary); }
+/* Line breaking, both languages. The English titles broke 「One customer,
+   every」/「system」 and 「Tasks that carry」/「on」; balance evens them (the
+   Chinese h4s already get it from the lx sweep). `pretty` keeps a lone
+   character or word off the last line of the paragraphs, e.g. 「…请人判」/
+   「断。」 at 390. In Chinese the flow line breaks only at its spaces, so a
+   step such as 沉淀经验 is never split; the build puts a no-break space before
+   each arrow. */
+.lx-scope .lx-context-title > span,
+.lx-scope .lx-context-item h3 { text-wrap: balance; }
+.lx-scope .lx-context-lede,
+.lx-scope .lx-context-item p,
+.lx-scope .lx-context-note p { text-wrap: pretty; }
+html[lang^="zh"] .lx-scope .lx-context-flow { word-break: keep-all; overflow-wrap: anywhere; }
+.lx-scope .lx-context-note {
+  display: flex;
+  flex-flow: column;
+  gap: .75rem;
+  max-width: 46rem;
+  margin: 3rem auto 0;
+}
+@media (max-width: 991px) {
+  .lx-scope .lx-context-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 767px) {
+  .lx-scope .lx-context-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 479px) {
+  .lx-scope .lx-context-item { padding: 1.5rem; }
+  .lx-scope .lx-context-grid { margin-top: 3rem; }
+}
+
+/* intelligence.html, Chinese — where the new headings may break.
+   ---------------------------------------------------------------------------
+   The same idiom as the homepage block above (V6 homepage headings):
+   `word-break: keep-all` leaves only spaces, punctuation and <wbr> as break
+   points, and `text-wrap: balance` (the lx sweep further up) then chooses the
+   most even of those. `overflow-wrap: anywhere` is the fallback for a run that
+   cannot fit a line on its own; each run was written to fit at 320px, so it
+   should never fire.
+   - The 288-roles headings, 「288 个岗位，」 and 「分工协作，把事做完。」
+     (2.7rem on a phone, 6.7 em of room at 320): without keep-all the second
+     one balanced to 「分工协作，把」/「事做完。」. Scoped by `.lx-team-section`,
+     which the build puts on this section only: workforce.html's article strip
+     is a `.lx-flex-text-center` heading pair as well.
+   - The four gradient headings. 「安排 AI 参与的步骤」 is 8.5 em against
+     8.2 em at 320 and must take two lines there; keep-all puts the break at a
+     space, 「安排 AI」/「参与的步骤」, instead of inside 参与.
+   - The closing card's two lines, 「把有用的方法留下，」 and
+     「把无效的改动撤回。」: nine characters fit the 9 em box from 1024 up and
+     wrap below it. The copy carries a <wbr> after 方法 / 改动, so the break
+     reads 「把有用的方法」/「留下，」 rather than 「把有用的方」/「法留下，」. */
+html[lang^="zh"] .lx-scope .lx-team-section .lx-flex-text-center .lx-heading-style-h1,
+html[lang^="zh"] .lx-scope .lx-gradient-section-text .lx-heading-style-h1,
+html[lang^="zh"] .lx-scope .lx-cta-wrapper .lx-cta-text {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+/* Two older rules further up now serve the new copy unchanged:
+   `.lx-cta_wrapper .lx-big-text` keep-all breaks 「新机会、期限，不靠人记」
+   only at its punctuation (three lines at 320 and 390, two at 768 and 1024,
+   one from 1440), and `.lx-hero-desc` keep-all + balance gives
+   「AI 理解公司，」/「并主动推进工作」 at every width.
+
+   intelligence.html, English — the same two headline slots, balanced. The
+   English page had no balance on them, and the new copy left a word alone:
+   「Leads and deadlines, not left to」/「memory.」 at 1920, 「Assign useful AI」/
+   「work」 and 「Improve from real」/「outcomes」 at 320-390; the same goes for
+   the 288-roles pair (「Divide the work. Finish it」/「together.」 at 1024) and
+   the closing card (「Withdraw ineffective」/「changes.」 from 1024). None of
+   these elements is split into per-word spans, and they only fade or move as
+   a whole, so balance changes where the lines break and nothing else. All
+   four selectors match on this page only. */
+html[lang="en"] .lx-scope .lx-cta_wrapper .lx-big-text,
+html[lang="en"] .lx-scope .lx-gradient-section-text .lx-heading-style-h1,
+html[lang="en"] .lx-scope .lx-team-section .lx-flex-text-center .lx-heading-style-h1,
+html[lang="en"] .lx-scope .lx-cta-wrapper .lx-cta-text {
+  text-wrap: balance;
+}
+
 /* V6-E-END */
 
 

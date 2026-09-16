@@ -638,7 +638,55 @@ function lxOntologyList(b, spec, t, name) {
   return b;
 }
 
-/* ---- intelligence.html / workforce.html — lifelogx homepage ----------- */
+/* ---- the plain-explanations section on intelligence.html (V6 §7) ----------
+   V6 asks for readable places for enterprise knowledge, the relationship map,
+   one customer across systems, proactive work, long-running tasks and memory,
+   with the knowledge base and the relationship map explained apart. The
+   Lifelogx homepage has no slot that holds a paragraph — its text lives in
+   headlines, fixed-height cards and marquee bubbles — so this adds ONE section
+   (an approved V6 type-B addition) with the copy in
+   C.LX_INTELLIGENCE_CONTEXT.
+
+   Built from the page's own vocabulary: .lx-section / .lx-padding-global /
+   .lx-container-medium / .lx-padding-section-medium for the frame, the h2 and
+   h4 heading styles, the eyebrow (.lx-home-features-small-texts .lx-subtext)
+   and the regular text style. Its grid and card outline are in the V6-E block
+   of css/stargo-fusion.css and copy .lx-story-grid (gap, top margin) and
+   .lx-story-grid-item.lx-_3 (1px #262627, 23px radius).
+
+   Deliberately static. Nothing in it carries a class that the Lifelogx
+   interactions bind to (tools/fragments/lx-ix.json binds .lx-fade-in-*,
+   .lx-content, .lx-sitcky-section and others by class), so the IX engine never
+   starts it at opacity 0, and it reads the same without JavaScript. It also
+   avoids `.lx-home-feature` and `.lx-home-features-texts`: lxOntologyList()
+   counts the first, and the sticky cross-fade styles the second.
+
+   It goes in front of the 288-roles section: after 「不再 等提醒 / 等回复 /
+   丢上下文」, before the team card and the closing card on improvement, which
+   is the one topic of the seven this section leaves to its existing slot. */
+function lxContextSection(ctx, t) {
+  if (ctx?.items?.length !== 6) throw new Error(`intelligence: expected 6 context items, found ${ctx?.items?.length}`);
+  const items = ctx.items.map((it) => {
+    for (const k of ['group', 'title', 'text']) if (!t(it[k])) throw new Error(`intelligence: context item without ${k}`);
+    // A no-break space before each arrow, so a line never starts with "→".
+    if (it.flow && !t(it.flow).includes(' → ')) throw new Error('intelligence: context flow without " → " steps');
+    const flow = it.flow ? `<p class="lx-text-size-regular lx-context-flow">${t(it.flow).replaceAll(' → ', '\u00a0→ ')}</p>` : '';
+    return `<div class="lx-context-item"><div class="lx-home-features-small-texts"><div class="lx-subtext">${t(it.group)}</div></div>`
+      + `<h3 class="lx-heading-style-h4">${t(it.title)}</h3>`
+      + `<p class="lx-text-size-regular lx-text-weight-light">${t(it.text)}</p>${flow}</div>`;
+  }).join('');
+  return `<div id="lx-context" class="lx-section lx-context"><div class="lx-padding-global"><div class="lx-container-medium"><div class="lx-padding-section-medium">`
+    + `<div class="lx-context-head"><h2 class="lx-heading-style-h2 lx-context-title"><span class="lx-context-pink">${t(ctx.title)}</span><span>${t(ctx.titleSub)}</span></h2>`
+    + `<p class="lx-text-size-medium lx-context-lede">${t(ctx.lede)}</p></div>`
+    + `<div class="lx-context-grid">${items}</div>`
+    + `<div class="lx-context-note"><div class="lx-home-features-small-texts"><div class="lx-subtext">${t(ctx.noteLabel)}</div></div>`
+    + `<p class="lx-text-size-regular lx-text-color-grey">${t(ctx.note)}</p></div>`
+    + `</div></div></div></div>`;
+}
+
+/* ---- intelligence.html — lifelogx homepage -----------------------------
+   The only caller is PAGES['intelligence.html'] below; workforce.html moved to
+   the Lifelogx feature template and no longer comes through here. */
 function lxPage(spec, lang, name) {
   const t = (p) => (typeof p === 'string' ? p : p[lang]);
   const { fn: s } = makeSub(name);
@@ -686,6 +734,20 @@ function lxPage(spec, lang, name) {
   b = s(b, 'class="lx-cta-logo-text">Lifelogx</div>', `class="lx-cta-logo-text">${t(spec.ctaLogo)}</div>`);
   b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
   b = s(b, 'The smartest friend you’ll ever have.', t(spec.ctaDesc));
+  // The plain-explanations section (see lxContextSection) opens the 288-roles
+  // section's slot in the document: after the "no writing" band, before the
+  // team card. The marker is that section's own opening, which is unique.
+  // The 288-roles section also gets a class of its own, `lx-team-section`:
+  // workforce.html has a `.lx-flex-text-center` heading pair too (its article
+  // strip), and the V6-E line-breaking rule for 「288 个岗位，」 must not reach it.
+  {
+    const TEAM = '<div class="lx-section"><div class="lx-padding-global"><div class="lx-container-medium"><div class="lx-padding-section-medium"><div class="w-layout-hflex lx-flex-text-center">';
+    const at = b.indexOf(TEAM);
+    if (at < 0 || b.split(TEAM).length !== 2) throw new Error(`${name}: expected one 288-roles section opening`);
+    if (!(b.indexOf('lx-section lx-no-writing') < at && at < b.indexOf('class="lx-cta-wrapper"'))) throw new Error(`${name}: the 288-roles section is no longer between the "no writing" band and the closing card`);
+    const tagged = TEAM.replace('<div class="lx-section">', '<div class="lx-section lx-team-section">');
+    b = b.slice(0, at) + lxContextSection(C.LX_INTELLIGENCE_CONTEXT, t) + tagged + b.slice(at + TEAM.length);
+  }
   // Imagery stays the template's own (owner decision, 2026-09-06): the phone screens, the
   // translucent overlays of the gradient and "no writing" sections, the closing card's image and
   // the avatars in the scenario bubbles are all part of the composition the pink palette was
@@ -696,6 +758,12 @@ function lxPage(spec, lang, name) {
   b = b.replace('class="lx-sitcky-section"', `id="${name === 'intelligence' ? 'lx-ontology' : 'lx-teams'}" class="lx-sitcky-section"`);
   if (!b.includes('id="lx-more"') || !b.includes('id="lx-evolution"')) throw new Error(`${name}: anchor ids`);
   if (/Lifelogx|Tomato|lifelog/i.test(b)) throw new Error(`${name}: template brand survives`);
+  // V6 §7: the page explains the layer in business terms. The architecture
+  // labels it used to lead with must not come back through any slot.
+  {
+    const jargon = b.match(/企业本体|前置部署|调度中枢|自我进化|提示词|模型权重|Ontology|Embedded FDE|Orchestrator|Evolution|model weights|\bprompts?\b/);
+    if (jargon) throw new Error(`${name}: architecture wording "${jargon[0]}" is back on the page`);
+  }
   return inMonoShell(b + bigMark(), ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
 }
 PAGES['intelligence.html'] = (lang) => lxPage(C.LX_INTELLIGENCE, lang, 'intelligence');
