@@ -358,7 +358,7 @@ export const HOME_MONO = [
      nine characters: the column holds three a line between 768 and 1024px,
      and the full sentence stood six lines tall there. */
   ['(Portfolio 26©)', B('(缺的从来不是一个软件)', '(The problem was never a missing tool)')],
-  ['<h2 class="h2">Work<span class="small-ftd">(4)</span></h2>', B('<h2 class="h2">工具很多，靠人连接<span class="small-ftd">(4)</span></h2>', '<h2 class="h2">Many tools. Too many manual handoffs.<span class="small-ftd">(4)</span></h2>')],
+  ['<h2 class="h2">Work<span class="small-ftd">(4)</span></h2>', B('<h2 class="h2">工具很多，靠人连接<span class="small-ftd">(4)</span></h2>', '<h2 class="h2">Many tools, manual handoffs.<span class="small-ftd">(4)</span></h2>')],
   ['Forma Digital', B('询盘来了，还要重新整理', 'Email inquiries still need organizing')],
   ['One Step', B('窗口很多，客户信息分散', 'Chats span windows; context is scattered')],
   ['Nero Vision', B('客户在表格，跟进靠人记', 'Customers in sheets, follow-up by memory')],
