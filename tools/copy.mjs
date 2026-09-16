@@ -1472,8 +1472,13 @@ export const CAPABILITY_SHOWCASE = {
      entries — and a node with a `caveat` closes its panel with it. The promise
      already carries each caveat's substance, so a condition is never only
      behind a click. The label is cut in half around the orb
-     (tools/blocks/qx-whatwedo.mjs): twelve Chinese characters, six a side. */
-  foundationsLabel: B('所有业务工作共用四个基础', 'Four foundations beneath the work'),
+     (tools/blocks/qx-whatwedo.mjs). On a phone the scroll action pushes the
+     two halves outward, and the old label's six-and-five characters were the
+     most that stayed on screen at 320 and 390 — twelve (所有业务工作 /
+     共用四个基础) lost a character at each edge, and "foundations" lost its first
+     letters — so the Chinese is nine characters (每项业务的 / 四个基础) and the
+     English keeps to short words, as "What every / story runs on" did. */
+  foundationsLabel: B('每项业务的四个基础', 'What every area rests on'),
   foundations: [
     {
       image: 'brand-ontology',

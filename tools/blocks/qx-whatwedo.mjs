@@ -1,5 +1,5 @@
 /**
- * 所有业务工作共用四个基础 — the four foundations of the capability showcase.
+ * 每项业务的四个基础 — the four foundations of the capability showcase.
  *
  * Donor: qubix's "What We Do" (index.html, `.home-service-two`). A 600vh
  * scroll-pinned stage: a dark orb (`Ellipse 2.png`) behind a ticked ring
@@ -84,8 +84,8 @@ export function render(frag, ctx) {
   const label = t(S.foundationsLabel);
   const words = label.split(' ');
   const halves = lang === 'zh'
-    ? [label.slice(0, Math.round(label.length / 2)), label.slice(Math.round(label.length / 2))] // 所有业务工作 | 共用四个基础
-    : [words.slice(0, 2).join(' '), ' ' + words.slice(2).join(' ')];        // Four foundations | beneath the work
+    ? [label.slice(0, Math.round(label.length / 2)), label.slice(Math.round(label.length / 2))] // 每项业务的 | 四个基础
+    : [words.slice(0, 2).join(' '), ' ' + words.slice(2).join(' ')];        // What every | area rests on
   if (!halves[0] || !halves[1].trim()) throw new Error(`qx-whatwedo: cannot split foundationsLabel "${label}"`);
   head = setText(head, 'qx-h2', escapeHtml(halves[0]));
   head = setText(head, 'qx-text-heading-servie', escapeHtml(halves[1]));
