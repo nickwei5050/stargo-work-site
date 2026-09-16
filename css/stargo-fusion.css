@@ -2162,14 +2162,36 @@ html[lang^="zh"] .testi-grid._01 .top-text.for-sst { text-wrap: pretty; }
       with the same specificity, later in the file. Before, panel 1 carried
       os-cockpit — the picture the owner-cockpit band now shows two screens
       further down — and panel 2 carried os-agent-center (tools on parallel
-      lanes) beside 「结果可以核对」. Now: 决定 → a gated passage (os-login),
-      核对 → a measured, reversible check path (brand-loop), 连接 → one track
-      joining separate workspaces (os-desktop); 经营 keeps the dispatch floor.
-      All are landscape 1586×992 like the pictures they replace, so the
-      cover crop is unchanged. */
-.image-about._01 { background-image: url("../assets/stargo-editorial/os-login.webp"); }
-.image-about._02 { background-image: url("../assets/stargo-editorial/brand-loop.webp"); }
-.image-about._03 { background-image: url("../assets/stargo-editorial/os-desktop.webp"); }
+      lanes) beside 「结果可以核对」. Now: 决定 → layered permission
+      boundaries (brand-family-04), 核对 → records set out one after another
+      (os-loading), 连接 → separate lanes joining one block (brand-family-03);
+      经营 keeps the dispatch floor. The panels print white text straight on
+      the picture, so only dark pictures qualify: os-login, brand-loop and
+      os-desktop fit the subjects as well but are pale, and the first try with
+      them left the panel text unreadable at 1440 (they are used as framed
+      pictures further down instead). All are landscape 1586×992 like the
+      pictures they replace, so the cover crop is unchanged. */
+.image-about._01 { background-image: url("../assets/stargo-editorial/brand-family-04.webp"); }
+.image-about._02 { background-image: url("../assets/stargo-editorial/os-loading.webp"); }
+.image-about._03 { background-image: url("../assets/stargo-editorial/brand-family-03.webp"); }
+
+/* 5. The six delivery steps (V6 §8.4) as a numbered list. Each step is a
+      name and what it involves, and at every width from 320 to 1920 it takes
+      two or three lines in this paragraph (measured: at most 10 characters a
+      line at 768, 14 to 15 at 390, 1024, 1440 and 1920). Written as plain
+      lines, a step's second line began under its number, so the numbers no
+      longer marked where a step starts. tools/build-site.mjs writes each step
+      as .ent-step (number | words); the number gets a fixed track, the words
+      wrap in theirs, and a small gap separates the steps. Type size, weight
+      and line height are the paragraph's own. `pretty` keeps a step from
+      ending on a single character (「清。」 at 320, 「则。」 at 768). */
+.approach-grid .ent-step {
+  display: grid;
+  grid-template-columns: 1.55em minmax(0, 1fr);
+  column-gap: .3em;
+}
+.approach-grid .ent-step + .ent-step { margin-top: .3em; }
+.approach-grid .ent-step-t { text-wrap: pretty; }
 
 /* V6-F-END */
 

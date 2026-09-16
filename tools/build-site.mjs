@@ -178,13 +178,23 @@ function fromStudio(spec, lang) {
   h = setInner(h, '<h2 class="h2 _01 sm _600">', t(spec.intro));
   h = removeByClass(h, 'div', 'as-seen');
   h = s(h, '(Approach)', t(spec.approachLabel));
-  /* Mono's approach block is one paragraph of four <br/>-separated lines. The
-     enterprise page's delivery order has six steps, so the four template lines
-     are replaced as one run with however many lines copy.mjs gives, in the
-     template's own `line <br/>` shape (the last line closes with a bare
-     <br/>, as Mono writes it). Nothing animates per line. */
-  h = s(h, 'Think clearly. <br/>Design precisely. <br/>Build intelligently. <br/>Refine continuously.<br/>',
-    `${spec.approach.map(t).join(' <br/>')}<br/>`, { count: 1 });
+  /* Mono's approach block is one paragraph of four short <br/>-separated
+     lines. The enterprise page (the only caller) puts its numbered delivery
+     order there: six steps, each a name and what it involves, which run to
+     two lines in the paragraph's 121 + 363px grid at 1440 (fewer than 15
+     characters a line). As bare lines the second line of a step started under
+     its number and the next step's number was lost in the text, so each step
+     is its own <span class="ent-step">: the number in one track, the words in
+     the next (stargo-fusion.css, V6-F block). Spans, not blocks, because a
+     <p> may only hold phrasing content. The paragraph is still split into
+     words and letters by the Webflow/GSAP reveal; that split keeps nested
+     elements, so the reveal is unchanged — checked in the browser. */
+  const steps = spec.approach.map((x) => {
+    const m = /^(\d{2}) (\S[\s\S]*)$/.exec(t(x));
+    if (!m) throw new Error(`${spec.name}: approach line "${t(x)}" does not start with a two-digit step number`);
+    return `<span class="ent-step"><span class="ent-step-n">${m[1]}</span><span class="ent-step-t">${m[2]}</span></span>`;
+  });
+  h = s(h, 'Think clearly. <br/>Design precisely. <br/>Build intelligently. <br/>Refine continuously.<br/>', steps.join(''), { count: 1 });
   h = setLink(h, 'Begin collaboration', { href: spec.approachButton.href, text: t(spec.approachButton.label) });
   h = s(h, '(Stats)', t(spec.statsLabel));
   [['30', spec.stats[0]], ['80', spec.stats[1]], ['+7', spec.stats[2]]].forEach(([old, st]) => {
@@ -1138,19 +1148,19 @@ PAGES['pricing.html'] = (lang) => {
    to the owner cockpit (work lanes converging on one command centre), the six
    delivery steps (a track climbing level by level — the second slot is the
    tallest, about square at 1440, so a portrait picture loses less to the
-   cover crop than a landscape one) and the numbers, which lead with the 288
-   roles (specialized roles working in parallel). The five cards, in order:
-   capabilities and apps (instruments laid out on one board), account and
-   role permissions (specialized roles on a shared foundation), approvals (a
-   controlled, reversible approval path), work and result records (business
-   records linked together) and account connection and protection (layered
-   boundaries). No picture is used twice on the page, the four hero panels
-   included (their pictures are CSS, in the V6-F block of stargo-fusion.css,
-   and os-login — a gated passage — is the first panel's, beside 「决定」). The
-   legacy UI mock-ups with invented figures are not used here. */
+   cover crop than a landscape one) and the numbers — roles, controls and the
+   deployment options (one track joining separate workspaces). The five
+   cards, in order: capabilities and apps (instruments laid out on one board),
+   account and role permissions (specialized roles on a shared foundation),
+   approvals (a controlled, reversible approval path), work and result
+   records (business records linked together) and account connection and
+   protection (a gated passage through explicit boundaries). No picture is
+   used twice on the page, the four hero panels included (their pictures are
+   CSS, in the V6-F block of stargo-fusion.css). The legacy UI mock-ups with
+   invented figures are not used here. */
 PAGES['enterprise.html'] = (lang) => fromStudio({
   name: 'enterprise', ...C.ENTERPRISE, cards: C.ENTERPRISE.cards,
-  images: { work: [OS.cockpit, BRAND.tall, BRAND.family(3)], quote: BRAND.square, cards: [OS.agents, MOBILE.phoneAgents, MOBILE.phoneApprovals, BRAND.ontology, BRAND.family(4)] },
+  images: { work: [OS.cockpit, BRAND.tall, OS.desktop], quote: BRAND.square, cards: [OS.agents, MOBILE.phoneAgents, MOBILE.phoneApprovals, BRAND.ontology, OS.login] },
 }, lang);
 
 /* ---- capabilities.html — Mono work-1 + table -------------------------- */
