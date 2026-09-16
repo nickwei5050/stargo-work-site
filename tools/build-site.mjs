@@ -1266,10 +1266,14 @@ function capabilityShowcase(C, lang) {
 
      The donor answer is a <p>, and a list or a table cannot sit inside one,
      so the detail is its own block of <p>, <ul>, <table> and <h3> elements.
-     The classes the donor styles (`cn-accordion-answer-text`) are kept on the
-     text so it reads in the block's own type; cn-lede / cn-out / cn-note were
-     reserved for this in css/stargo-fusion.css, and the V6-C rules there
-     space the rest. */
+     Each of them, sub-headings and table included, carries the class the
+     donor styles and animates (`cn-accordion-answer-text`): the row's hover
+     interaction slides every element with that class sideways, and a block
+     without it would be left behind. A list carries it on its items and a
+     table on itself, never on a child as well, or that child would slide
+     twice. cn-lede / cn-out / cn-note were reserved for this in
+     css/stargo-fusion.css, and the V6-C rules there space the rest. */
+  const TEXT = 'cn-accordion-answer-text';
   const L = C.CATALOGUE_LABELS;
   const DETAIL = C.CATALOGUE_DETAIL;
   {
@@ -1312,36 +1316,50 @@ function capabilityShowcase(C, lang) {
   }
   const txt = (v) => escapeHtml(t(v));
   const roleTable = (r) =>
-    `<table class="cn-cat-table"><caption class="cn-accordion-answer-text">${txt(r.caption)}</caption>` +
+    `<table class="${TEXT} cn-cat-table"><caption>${txt(r.caption)}</caption>` +
     `<thead><tr><th scope="col">${txt(r.head[0])}</th><th scope="col">${txt(r.head[1])}</th></tr></thead><tbody>` +
     r.rows.map(([name, k]) => `<tr><th scope="row">${txt(name)}</th><td>${k}</td></tr>`).join('') +
     `</tbody><tfoot><tr><th scope="row">${txt(r.sum)}</th><td>${r.total}</td></tr></tfoot></table>`;
   const part = (p) => [
-    p.heading ? `<h3 class="cn-cat-sub">${txt(p.heading)}</h3>` : '',
-    p.lede ? `<p class="cn-accordion-answer-text cn-cat-lede">${txt(p.lede)}</p>` : '',
+    p.heading ? `<h3 class="${TEXT} cn-cat-sub">${txt(p.heading)}</h3>` : '',
+    p.lede ? `<p class="${TEXT} cn-cat-lede">${txt(p.lede)}</p>` : '',
     p.roles ? roleTable(p.roles) : '',
     `<ul class="cn-cat-points">${p.points.map((x) =>
-      `<li class="cn-accordion-answer-text"><strong>${txt(x.title)}</strong> ${txt(x.text)}</li>`).join('')}</ul>`,
-    p.value ? `<p class="cn-accordion-answer-text cn-cat-value">${txt(p.value)}</p>` : '',
-    p.outputs ? `<p class="cn-accordion-answer-text cn-out"><strong>${txt(L.outputs)}</strong> ${txt(p.outputs)}</p>` : '',
-    p.availability ? `<p class="cn-accordion-answer-text cn-note"><strong>${txt(L.availability)}</strong> ${txt(p.availability)}</p>` : '',
+      `<li class="${TEXT}"><strong>${txt(x.title)}</strong> ${txt(x.text)}</li>`).join('')}</ul>`,
+    p.value ? `<p class="${TEXT} cn-cat-value">${txt(p.value)}</p>` : '',
+    p.outputs ? `<p class="${TEXT} cn-out"><strong>${txt(L.outputs)}</strong> ${txt(p.outputs)}</p>` : '',
+    p.availability ? `<p class="${TEXT} cn-note"><strong>${txt(L.availability)}</strong> ${txt(p.availability)}</p>` : '',
   ].join('');
   const detail = (n) => `<div class="cn-cat-detail">` +
-    `<p class="cn-accordion-answer-text cn-lede">${txt(DETAIL[n].summary)}</p>` +
+    `<p class="${TEXT} cn-lede">${txt(DETAIL[n].summary)}</p>` +
     DETAIL[n].parts.map(part).join('') + `</div>`;
 
   const catalogue = C.CAPABILITY_GROUPS.map((g) => catRow(`g${g.n}`, `${g.n} ${t(g.name)}`,
     detail(g.n) +
-    `<h3 class="cn-cat-sub cn-cat-index">${txt(L.register)}</h3>` +
+    `<h3 class="${TEXT} cn-cat-sub cn-cat-index">${txt(L.register)}</h3>` +
     g.items.map(([name, gloss, zhName]) =>
-      `<p class="cn-accordion-answer-text"><strong>${capTitle(lang)(name, zhName)}</strong> ${escapeHtml(t(gloss))}</p>`).join('')));
+      `<p class="${TEXT}"><strong>${capTitle(lang)(name, zhName)}</strong> ${escapeHtml(t(gloss))}</p>`).join('')));
+  /* Nothing that carries the class may sit inside another element that
+     carries it (it would slide twice), and every text block of the answer
+     must carry it (or it would not slide at all). */
+  for (const row of catalogue) {
+    const block = row.slice(row.indexOf('<div class="cn-accordion-content-block">'));
+    if (/<(?:ul|caption|div)\b[^>]*class="[^"]*cn-accordion-answer-text/.test(block)) {
+      throw new Error('capabilities: a catalogue container carries cn-accordion-answer-text as well as its children');
+    }
+    const loose = block.match(/<(?:p|h3|table|li)\b(?![^>]*cn-accordion-answer-text)[^>]*>/g);
+    if (loose) throw new Error(`capabilities: catalogue blocks without cn-accordion-answer-text: ${loose.slice(0, 3).join(' ')}`);
+  }
 
   /* The band states the register's size and what that size means: groups and
      entries in the register, not a count of live features (V6 §5.8). */
   const total = C.CAPABILITY_GROUPS.reduce((n, g) => n + g.items.length, 0);
+  const count = L.count(C.CAPABILITY_GROUPS.length, total);
+  if (!t(count.size).includes(String(total))) throw new Error('capabilities: the band count must state the register total');
   const band = (label, note) =>
     `<div class="cn-band"><div class="cn-band-label">${escapeHtml(label)}</div>` +
-    `<div class="cn-band-note">${escapeHtml(note)}</div></div>`;
+    `<div class="cn-band-note">${escapeHtml(note)} <span class="cn-band-count">` +
+    `<span>${txt(count.size)}</span>${lang === 'zh' ? '' : ' '}<span>${txt(count.meaning)}</span></span></div></div>`;
 
   showcaseHero = renderBlock('rk-hero', lang);
 
@@ -1358,7 +1376,7 @@ function capabilityShowcase(C, lang) {
      src like any other. */
   return `<span id="story-1"></span>` + chapters +
     `<section id="atlas" class="cn-capmap"><div class="cn-capmap-inner">` +
-    band(t(S.catalogueLabel), `${t(S.catalogueNote)} ${t(L.count(C.CAPABILITY_GROUPS.length, total))}`) +
+    band(t(S.catalogueLabel), t(S.catalogueNote)) +
     `<div class="cn-faq-container">${catalogue.join('')}</div>` +
     `</div></section><script src="js/stargo-catalogue.js" defer></script>`;
 }

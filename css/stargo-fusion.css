@@ -2095,7 +2095,17 @@ html[lang^="zh"] .hero .max-w-left.add-tp p.top-text.big.nm {
    and the rhythm is set with margins instead. The register entries below keep
    the donor's spacing exactly as before. Type sizes are the block's own 16px
    (15px for the table and the availability note, as `.cn-note` already had);
-   nothing is shrunk to make the longer answers fit. */
+   nothing is shrunk to make the longer answers fit.
+
+   Every block of the answer carries `.cn-accordion-answer-text`, the
+   sub-headings and the role table included. Cinery's "Accordion - Hover In"
+   slides each element with that class 1.5rem to the right while the row is
+   hovered (a tap does the same on a phone); a heading or table without it
+   stayed where it was, and the column came apart under the pointer. The
+   class brings the donor's type and padding with it, so the rules for those
+   blocks below are written one class stronger than the donor's
+   `.cn-capmap .cn-accordion-answer-text` and than the `answer + answer`
+   margin above. */
 
 /* Landing on #atlas or #gNN. The page has no fixed bar at the top (the nav
    scrolls away with the hero, the pill sits at the bottom), so this is only
@@ -2104,18 +2114,22 @@ html[lang^="zh"] .hero .max-w-left.add-tp p.top-text.big.nm {
 .cn-capmap[id],
 .cn-capmap .cn-accordion-content-item[id] { scroll-margin-top: 24px; }
 
+/* The band's count: the figure and its meaning each move to the next line
+   whole when they fit there, so a narrow band breaks between them and not
+   inside a word (a piece wider than the band still wraps inside itself). */
+.cn-capmap .cn-band-count > span { display: inline-block; }
+
 /* Each kind of line below sets its own top margin; at equal specificity these
    come after the generic `answer + answer { margin-top: 12px }` above, so
    they win without a reset. */
 .cn-capmap .cn-cat-detail .cn-accordion-answer-text { padding-top: 0; padding-left: 0; }
-/* The donor insets answer text 10px (none below 480px). The detail's
-   headings, lists and table take that inset as a block, so every line of it
-   starts on the same edge as the register entries below. */
-.cn-capmap .cn-cat-detail,
-.cn-capmap .cn-cat-sub.cn-cat-index { padding-left: 10px; }
+/* The donor insets answer text 10px (none below 480px). The detail takes
+   that inset as a block, so every line of it starts on the same edge as the
+   register entries below (and as the register's heading, which keeps the
+   donor's own inset). */
+.cn-capmap .cn-cat-detail { padding-left: 10px; }
 @media (max-width: 479px) {
-  .cn-capmap .cn-cat-detail,
-  .cn-capmap .cn-cat-sub.cn-cat-index { padding-left: 0; }
+  .cn-capmap .cn-cat-detail { padding-left: 0; }
 }
 
 /* the group's summary: the first line of the answer, where the donor's own
@@ -2126,11 +2140,22 @@ html[lang^="zh"] .hero .max-w-left.add-tp p.top-text.big.nm {
 
 /* sub-headings: one per topic in g01, g08, g09, g10 and g13, and the
    register's own heading */
-.cn-capmap .cn-cat-sub {
+.cn-capmap .cn-accordion-answer-text.cn-cat-sub {
   margin: 28px 0 0; padding-top: 18px; border-top: 1px solid rgba(255, 255, 255, .12);
   font-size: 18px; line-height: 1.4; font-weight: 500; letter-spacing: normal; color: #fff;
+  text-wrap: balance;
 }
-.cn-capmap .cn-cat-sub.cn-cat-index { margin-top: 36px; }
+/* the register's heading draws its rule from the same edge as the detail's
+   (the donor's 10px inset as a margin, not a padding inside the rule) */
+.cn-capmap .cn-accordion-answer-text.cn-cat-index { margin-top: 36px; margin-left: 10px; padding-left: 0; }
+@media (max-width: 479px) {
+  .cn-capmap .cn-accordion-answer-text.cn-cat-index { margin-left: 0; }
+}
+/* The register under it is now an index, one short line per entry. The
+   donor's 2rem above every answer paragraph (plus the 12px between them)
+   left 44px between one-line entries; 4px + 12px keeps them apart at the
+   rhythm of the detail's own list. */
+.cn-capmap .cn-cat-index ~ .cn-accordion-answer-text { padding-top: 4px; }
 .cn-capmap .cn-cat-index + .cn-accordion-answer-text { padding-top: 14px; }
 
 .cn-capmap .cn-cat-detail .cn-cat-lede { margin-top: 14px; color: #cfcfcf; }
@@ -2152,23 +2177,27 @@ html[lang^="zh"] .hero .max-w-left.add-tp p.top-text.big.nm {
 /* The availability note is part of the answer, not small print: the donor's
    #6f6f6f on the row's dark ground was too faint to read at 15px. */
 .cn-capmap .cn-cat-detail .cn-note { margin-top: 8px; color: #c4c4c4; font-size: 15px; }
+/* a part with no outputs line: the note follows the list at the list's own gap */
+.cn-capmap .cn-cat-detail .cn-cat-points + .cn-note { margin-top: 16px; }
 .cn-capmap .cn-cat-detail .cn-out strong,
 .cn-capmap .cn-cat-detail .cn-note strong { margin-right: .25em; }
 
 /* g10's ten role groups: two columns that fit a phone as they are */
-.cn-capmap .cn-cat-table {
+.cn-capmap .cn-accordion-answer-text.cn-cat-table {
   width: 100%; margin: 16px 0 0; border-collapse: collapse;
   font-size: 15px; line-height: 1.4; color: var(--neutral-color--secondary-neutral);
 }
+/* the caption moves with its table, so it does not carry the class itself */
 .cn-capmap .cn-cat-table caption {
-  caption-side: top; padding: 0 0 8px; text-align: left; color: #cfcfcf;
+  caption-side: top; padding: 0 0 8px; text-align: left;
+  color: #cfcfcf; font-size: 16px; line-height: 1.5;
 }
 .cn-capmap .cn-cat-table th,
 .cn-capmap .cn-cat-table td {
   padding: 7px 0; border-bottom: 1px solid rgba(255, 255, 255, .1);
   text-align: left; font-weight: 400;
 }
-.cn-capmap .cn-cat-table thead th { color: #8d8d8d; font-size: 13px; }
+.cn-capmap .cn-cat-table thead th { color: #8d8d8d; }
 .cn-capmap .cn-cat-table td,
 .cn-capmap .cn-cat-table thead th:last-child {
   padding-left: 16px; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap;
@@ -2181,7 +2210,7 @@ html[lang^="zh"] .hero .max-w-left.add-tp p.top-text.big.nm {
 
 @media (max-width: 767px) {
   .cn-capmap .cn-cat-detail > .cn-accordion-answer-text.cn-lede { font-size: 17px; }
-  .cn-capmap .cn-cat-sub { font-size: 17px; }
+  .cn-capmap .cn-accordion-answer-text.cn-cat-sub { font-size: 17px; }
 }
 /* V6-C-END */
 

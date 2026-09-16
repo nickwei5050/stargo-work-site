@@ -9,13 +9,21 @@
  * open/closed bookkeeping stays right and the row still closes on the next
  * click of its heading.
  *
- *   - Arriving on capabilities.html#g08 (from another page, or a link or
- *     macro card on this one): the browser jumps to the row while IX2 is
- *     still collapsing the accordions above it, so the landing point drifts.
- *     Once IX2 has applied its closed state, the row is brought back to the
- *     top of the screen (its CSS scroll-margin keeps the heading clear of the
- *     edge), then clicked open if it is closed. #atlas is re-aligned the same
- *     way without opening anything.
+ *   - Arriving on capabilities.html#g08 from another page (or a hash set by
+ *     script): the browser jumps to the row while IX2 is still collapsing the
+ *     accordions above it, so the landing point drifts. Once IX2 has applied
+ *     its closed state, the row is brought back to the top of the screen (its
+ *     CSS scroll-margin keeps the heading clear of the edge), then clicked
+ *     open if it is closed. #atlas is re-aligned the same way without opening
+ *     anything.
+ *   - A link on this page (a macro card, a "details" link): Webflow's scroll
+ *     module takes the click — it cancels it, pushes the hash without a
+ *     hashchange event and glides to where the row was when the link was
+ *     clicked. That glide is the template's motion and stays. The row is
+ *     opened at once (it grows downwards, so its heading does not move), and
+ *     when the page has stopped moving the row is re-aligned in case the
+ *     sections above it changed height on the way (lazy images, pinned
+ *     blocks). If the reader scrolls or clicks meanwhile, it is left alone.
  *   - A click inside an open answer does not reach the row. Each answer is now
  *     several paragraphs long, and IX2 treats any click in the row as the
  *     toggle, so selecting a sentence used to collapse the group and move the
@@ -84,37 +92,63 @@
     })();
   }
 
+  function marginOf(el) { return parseFloat(getComputedStyle(el).scrollMarginTop) || 0; }
   function scrollToEl(el) {
-    var margin = parseFloat(getComputedStyle(el).scrollMarginTop) || 0;
-    var y = Math.max(0, el.getBoundingClientRect().top + window.pageYOffset - margin);
+    var y = Math.max(0, el.getBoundingClientRect().top + window.pageYOffset - marginOf(el));
     // `lenis` is the page's smooth-scroll instance (a top-level const in the
     // template's inline script); jump it too, or it glides back.
     if (typeof lenis !== 'undefined' && lenis && lenis.scrollTo) lenis.scrollTo(y, { immediate: true, force: true });
     else window.scrollTo(0, y);
   }
+  function misplaced(el) { return Math.abs(el.getBoundingClientRect().top - marginOf(el)) > 2; }
 
+  // Wheel, touch, keys or a press after the arrival mean the reader has taken
+  // over; nothing is moved after that.
   var moved = false;
   function markMoved() { moved = true; }
   ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(function (t) {
     window.addEventListener(t, markMoved, { passive: true });
   });
 
-  function arrive() {
-    var hash = window.location.hash;
-    var isRow = ROW.test(hash);
-    if (!isRow && hash !== '#atlas') return;
+  function targetOf(hash) {
+    if (!ROW.test(hash) && hash !== '#atlas') return null;
     var el = document.getElementById(hash.slice(1));
-    if (!el || !root.contains(el)) return; // contains() is true for root itself
+    return el && root.contains(el) ? el : null; // contains() is true for root itself
+  }
+  function openRow(el, ix) {
+    if (!ix || !ROW.test('#' + el.id) || isOpen(el)) return;
+    var plus = el.querySelector('.cn-plus-block');
+    (plus || el).click();
+  }
+
+  // the page jumped (load, hashchange): put the row in place, open it, and
+  // put it back once more after late layout (fonts, images above)
+  function arrive() {
+    var el = targetOf(window.location.hash);
+    if (!el) return;
     whenIxReady(function (ix) {
       moved = false;
       scrollToEl(el);
-      if (isRow && ix && !isOpen(el)) {
-        var plus = el.querySelector('.cn-plus-block');
-        (plus || el).click();
-      }
-      // Late layout (fonts, images above) can still shift the row once;
-      // put it back unless the reader has started moving.
+      openRow(el, ix);
       setTimeout(function () { if (!moved) scrollToEl(el); }, 1000);
+    });
+  }
+
+  // the page is gliding there (Webflow's scroll): open the row now, and align
+  // it once the page has held still for a moment
+  function follow(el) {
+    whenIxReady(function (ix) {
+      moved = false;
+      openRow(el, ix);
+      var last = null, still = 0, start = Date.now();
+      (function settle() {
+        if (moved) return;
+        var y = window.pageYOffset;
+        still = y === last ? still + 1 : 0;
+        last = y;
+        if (still < 6 && Date.now() - start < 8000) { setTimeout(settle, 50); return; }
+        if (misplaced(el)) scrollToEl(el);
+      })();
     });
   }
 
@@ -122,11 +156,20 @@
   if (document.readyState === 'complete') onLoad();
   else window.addEventListener('load', onLoad);
   window.addEventListener('hashchange', arrive);
-  // A link to the group already in the address fires no hashchange.
+
+  // A link to a group on this page. Webflow's handler may run before or after
+  // this one, so what happened is read once both have: a cancelled click is
+  // Webflow gliding; otherwise the browser jumped, and a changed hash has
+  // already fired hashchange (a hash that was already current fires nothing).
   document.addEventListener('click', function (e) {
     var a = e.target.closest && e.target.closest('a[href*="#"]');
-    if (!a || a.hash !== window.location.hash || a.pathname !== window.location.pathname) return;
-    if (!ROW.test(a.hash) && a.hash !== '#atlas') return;
-    setTimeout(arrive, 0);
+    if (!a || a.host !== window.location.host || a.pathname !== window.location.pathname) return;
+    var el = targetOf(a.hash);
+    if (!el) return;
+    var before = window.location.hash;
+    setTimeout(function () {
+      if (e.defaultPrevented) follow(el);
+      else if (before === a.hash) arrive();
+    }, 0);
   });
 })();
