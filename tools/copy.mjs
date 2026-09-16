@@ -979,7 +979,7 @@ export const ENTERPRISE = {
   intro: B('管理者要看的不是 AI 忙了多久，而是谁在做什么、钱花在哪里、客户和订单推进到哪一步。驾驶舱把商机推进、交付状态、用量与预算边界、待审批事项、任务负责人、阻塞和实际结果放在一起。数据只来自已接入的系统，缺的就标明缺失。看得见，管得住，查得清。', 'Managers need more than busy AI: who is doing what, what it costs, and where each customer and order stands. The cockpit brings opportunity progress, delivery status, usage and budget limits, pending approvals, task owners, blockers and actual results together. Figures come only from connected systems; anything missing is shown as missing. Visible, controllable, traceable.'),
   /* V6 §8.4, M16 and V5 F10: the delivery order, one line per step, in the
      slot that used to list deployment options (those are the third stat now). */
-  approachLabel: B('(落地顺序)', '(How delivery works)'),
+  approachLabel: B('(落地顺序)', '(Delivery steps)'),
   approach: [
     B('01 选择一条业务：定目标与验收标准。', '01 Choose one workflow: set the goal and acceptance criteria.'),
     B('02 准备企业资料：产品、客户、知识与规则。', '02 Prepare company context: products, customers, knowledge and rules.'),
@@ -1024,13 +1024,18 @@ export const ENTERPRISE = {
      platform shown as switched on; the last column is what has to be agreed
      before anything connects, and the caption says nothing is on by default.
      The last row keeps what the automation rows meant, in business terms. The
-     count in the title is the row count (awardsTable). */
+     count in the title is the row count (awardsTable). The caption is kept
+     short enough for one line in the table's sticky column at 768 (about ten
+     characters wide there). */
   table: {
-    caption: B('(默认不开启 · 按企业授权逐项接入)', '(Nothing is on by default · connected per authorization)'), title: B('业务连接', 'Connections'),
+    caption: B('(默认关闭 · 按授权接入)', '(Off by default · connected per authorization)'), title: B('业务连接', 'Connections'),
     headers: [B('(业务)', '(Area)'), B('(可以连接什么)', '(What can connect)'), B('(接入前要确认)', '(Confirm first)')],
     /* Not the whole map: the catalogue group that holds account connection,
-       automation and approved actions (V6 §5.8 puts M14 in #g11). */
-    button: { label: B('查看连接与自动化', 'Connections & automation'), href: 'capabilities.html#g11' },
+       automation and approved actions (V6 §5.8 puts M14 in #g11, 「自动化与日常
+       办公」). The label stays within six characters: the button sits in the
+       table's sticky left column, which holds seven at 768, and 「查看连接与自动
+       化」 left 「化」 on a line of its own there. */
+    button: { label: B('查看连接详情', 'See connection details'), href: 'capabilities.html#g11' },
     rows: [
       [B('客户与沟通', 'Customers & conversations'), B('邮箱、即时沟通、B2B 平台询盘与 CRM 客户记录', 'Email, messaging, marketplace inquiries and CRM records'), B('可以读取哪些对话，谁能代表企业回复', 'Which conversations may be read, and who may reply for the company')],
       [B('产品与知识', 'Products & knowledge'), B('产品资料、规格图片、价格依据与企业文档', 'Product data, specifications, images, price sources and company documents'), B('哪些资料已经审核，可用于回答与报价', 'Which sources are approved for answers and quotations')],

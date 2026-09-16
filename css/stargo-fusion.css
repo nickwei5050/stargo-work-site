@@ -2153,8 +2153,11 @@ html[lang^="zh"] .testi-grid._01 .top-text.for-sst { text-wrap: pretty; }
       second line hung off a centred first one. Centred like the stack and
       the legend above it. */
 @media screen and (max-width: 479px) {
-  #table .award-text { text-align: center; justify-content: center; }
+  #table .award-text { text-align: center; justify-content: center; text-wrap: balance; }
 }
+/*    `balance` too: a centred cell of two or three lines reads best with even
+      lines, and without it 「户记录」, 「城业务」 and 「行范围」 were left short
+      under a full first line at 390. */
 
 /* 4. The four hero panels' pictures follow their new subjects (V6 §8.1, §10).
       `.image-about._01…_04` exist only on the enterprise page; their pictures
@@ -2192,6 +2195,14 @@ html[lang^="zh"] .testi-grid._01 .top-text.for-sst { text-wrap: pretty; }
 }
 .approach-grid .ent-step + .ent-step { margin-top: .3em; }
 .approach-grid .ent-step-t { text-wrap: pretty; }
+
+/* 6. The English headline, 「Delegate the work. Keep the authority.」, is two
+      sentences, and unbalanced it broke inside the second one — 「…Keep the」 /
+      「authority.」 at 1440 and 1920, 「…Keep」 / 「the authority.」 at 768 (the
+      Chinese pages already balance `h1.inner-title`, sweep above). Balanced,
+      it breaks between the sentences. `:has(.about-grid)` keeps this to the
+      enterprise page: the other English pages' titles are other areas'. */
+html[lang^="en"] body:has(.about-grid) h1.inner-title { text-wrap: balance; }
 
 /* V6-F-END */
 
