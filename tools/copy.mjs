@@ -1435,7 +1435,163 @@ export const CAPABILITY_SHOWCASE = {
    Insertion point for this area's new exports. Keep additions between this
    marker and the next one so parallel edits merge cleanly. */
 // V6-B-START
-
+/**
+ * The creative section of the capability page (`#story-5`, tools/blocks/cn-faq.mjs):
+ * V6 §5.6's seven topics, in V6's order, with the answers V5 M07–M09 supply.
+ *
+ * Why a list of its own rather than `CAPABILITY_SHOWCASE.stories[4].picks`: the
+ * seven rows used to print seven catalogue entries' one-line glosses, and V6
+ * found exactly that too thin — image and video were one row, and nothing said
+ * what goes in, what comes out or what is still being built. The topics are
+ * named for the result a buyer cares about, so they are no longer catalogue
+ * names. `covers` keeps the tie to the register: it lists the catalogue entries
+ * each topic now explains, and the block refuses to build if any entry the
+ * story used to show is covered by no topic ("没有删掉旧内容", V6 §5.6).
+ *
+ * Every answer reads in the same order — what you provide, what work is
+ * organized, what you review or receive — and ends on its conditions (`note`,
+ * printed after `noteLabel`). Topics 2 and 3 carry V6's own three paragraphs
+ * word for word (body[0], body[2] and note for video; body[0], body[2] and
+ * note for adaptation); the paragraphs between them are the V5 M08/M09 detail
+ * V6's text does not carry — the reviewable plan, authorized assets, budgets
+ * and approvals; provenance and usage rights, the no-borrowed-claims rule and
+ * what is handed back — so no condition is lost by using the shorter text.
+ * The other five are built from M07 and keep M07's availability sentence
+ * verbatim; 5 and 6 add M07-06's separate authorization for publishing, and 7
+ * adds M09-05's "per enabled capability" for repurposing and reframing.
+ *
+ * `flow` is the short step row V6 §10 asks to read before the paragraphs,
+ * kept as text: the two languages must list the same number of steps.
+ *
+ * `keep` names the runs of a title that must not be split across two lines
+ * (the block sets them `nowrap`): measured at 320px, 「爆款结构再创作」 broke as
+ * 「爆款结构再」/「创作」, 「一键生成视频」 as 「一键生成」/「视频」 and "Short-form"
+ * after its hyphen. The status after 「 · 」 is always kept whole, so
+ * 「建设中」 / "In Development" never splits either. Each run is at most 150px
+ * at the heading's 20px, inside the 189px the heading has at 320px.
+ */
+const CREATIVE_NOTE = B('创意工作室已有基础；营销套件、局部检查与一键编排持续整合。', 'The creative workspace is present; packaged marketing, local checks and one-click workflows are being integrated.');
+const CREATIVE_PUBLISH = B('发布到外部渠道需要单独授权。', 'Publishing to external channels requires separate authorization.');
+const creativeNotes = (...parts) => B(parts.map((p) => p.zh).join(''), parts.map((p) => p.en).join(' '));
+export const CREATIVE_TOPICS = {
+  /* The pill over the two-word heading. It names the whole section, which the
+     old story label (「为产品和市场做内容」) did not: images and video were the
+     part a reader could not find. One line, `overflow: hidden` — keep short. */
+  label: B('AI 作图、视频与营销内容', 'AI images, video & marketing'),
+  /* The line beside the button: a link to this section's catalogue group, with
+     the group number appended by the block. About 150px is free there in
+     English at 992px (see cn-faq.mjs), so the words stay this short. */
+  catalogueLink: B('对应能力组', 'Catalogue group'),
+  noteLabel: B('开放说明：', 'Availability: '),
+  items: [
+    {
+      id: 'creative-images',
+      title: B('AI 作图与图片编辑', 'AI Images & Editing'),
+      covers: ['AI Creative Studio', 'AI Image & Video Workflow'],
+      body: [
+        B('提供文字说明、产品参考图或已有素材，在同一个工作流里生成和编辑图片：白底主图、场景图、海报、卖点图和广告创意。',
+          'Provide a written brief, product reference images or existing assets, and generate and edit images in one workflow: product heroes on white, scenes, posters, benefit graphics and advertising concepts.'),
+        B('制作时套用企业统一的品牌资产、标志、配色、语气和已确认的产品事实；外观、参数或文字不准确的地方，先检查再局部修正，降低素材“好看但不真实”的风险。你查看的是可以比较、可以继续修改的图片版本。',
+          'A shared brand kit — logo, colours and tone — and verified product facts guide the work. Inaccurate appearance, specifications or text are checked and corrected locally, reducing attractive but misleading content. You review image versions you can compare and keep refining.'),
+      ],
+      note: CREATIVE_NOTE,
+    },
+    {
+      id: 'creative-video',
+      title: B('AI 一键生成视频 · 建设中', 'One-click Video · In Development'),
+      keep: B(['AI 一键生成视频'], []),
+      covers: ['AI Image & Video Workflow'],
+      flow: {
+        label: B('一键视频流程', 'One-click video flow'),
+        steps: B(['制作需求', '脚本', '分镜', '画面', '配音', '字幕', '审核与导出'], ['Brief', 'Script', 'Storyboard', 'Visuals', 'Voiceover', 'Captions', 'Review and export']),
+      },
+      body: [
+        B('输入产品资料、参考图片、目标市场、语言、时长和画幅，把制作需求组织成一个视频项目。流程涵盖脚本、分镜、画面、配音、字幕、审核和导出，保留素材、任务状态与版本，减少工具切换与反复交接。',
+          'Start with product facts, reference images, audience, language, duration and aspect ratio. Organize the brief into a video project covering scripts, storyboards, visuals, voiceover, captions, review and export, while retaining assets, task status and versions.'),
+        B('生成前先给出可审阅的制作方案：开场吸引点、卖点表达、镜头顺序、节奏与结尾行动引导。后期可加入多语言旁白、音乐、品牌标志、片尾和参数字幕，均按可用工具和已授权素材制作；生成预算、审批与任务状态随项目记录。',
+          'Before anything is generated, a production plan is ready to review: the hook, benefits, shot order, pacing and call to action. Post-production can add multilingual narration, music, branding, end cards and specification overlays, using available tools and authorized assets. Generation budgets, approvals and task status are recorded with the project.'),
+        B('产品介绍、广告、品牌宣传与社媒短片，都围绕同一套产品和品牌资料展开。目标是支持横版、竖版、方版，以及失败镜头的局部重做。',
+          'Product explainers, advertisements, brand films and social clips use the same verified product and brand context. The workflow aims to support portrait, landscape and square formats, with local revisions rather than regenerating everything.'),
+      ],
+      note: B('当前一键成片流程仍在建设；真实生成、播放、编辑和最终导出需要完整验收。最终成果必须是可播放、可导出的文件，而不是仅有“任务完成”的提示。',
+        'The one-click production workflow is still developing. Actual generation, playback, editing and export require end-to-end validation. Delivery means a playable, exportable file, not merely a completion message.'),
+    },
+    {
+      id: 'creative-viral',
+      title: B('爆款结构再创作 · 建设中', 'Viral Creative Adaptation · In Development'),
+      keep: B(['再创作'], []),
+      covers: ['Viral Structure Adaptation'],
+      /* V6 gives the Chinese steps; the English follows them step for step
+         (M09's own English row also names the call to action and the three
+         kinds of change, which the Chinese row leaves to the paragraphs). */
+      flow: {
+        label: B('再创作流程', 'Adaptation flow'),
+        steps: B(['有权使用的参考视频', '拆解开场、节奏与镜头', '结合自身产品和品牌', '三个原创方向', '制作与审核'], ['Authorized reference video', 'Analyze the hook, pacing and shots', 'Apply your own product and brand', 'Three original directions', 'Production and review']),
+      },
+      body: [
+        B('输入有权使用的参考视频与自己的产品素材，先分析开场吸引点、镜头功能、节奏、产品出场和行动引导，再结合自身产品、品牌与市场组织原创脚本和分镜。',
+          'Use an authorized reference video and your own product assets to examine the opening hook, shot purpose, pacing, product reveal and call to action. Rebuild the concept as original scripts and storyboards grounded in your product, brand and market.'),
+        B('开始前记录参考素材的来源、使用权与制作目标；卖点只取自企业已确认的产品事实，不把参考片里的说法当作自己的事实。',
+          'Before work starts, the reference’s source, usage rights and production goal are recorded. Claims come only from your verified product facts, never from the reference video.'),
+        B('以不同开场、场景或表达方向规划三个原创版本，说明各版变化点，衔接视频制作、审核与多尺寸输出，并保留反馈以供后续比较。',
+          'Plan three original adaptations with declared changes to the hook, scene or messaging. Connect the selected work to production, review and output formats, keeping feedback for future comparisons.'),
+        B('你收到的是结构说明、原创脚本与分镜、各版变化点和后续制作任务；接入渠道数据后，可再比较各版表现。',
+          'You receive a structural analysis, original scripts and storyboards, the declared differences between versions and the follow-on production tasks; where channel data is connected, the versions can then be compared on performance.'),
+      ],
+      noteLabel: B('边界与开放说明：', 'Boundaries and availability: '),
+      note: B('这里的“复刻”指借鉴结构，不直接复制原片、人脸、声音、音乐、标志或水印，也不承诺必成爆款。结构分析与成片衔接仍在建设。',
+        'Adapt the structure rather than copying footage, faces, voices, music, logos or watermarks. Viral performance is not guaranteed, and the analysis-to-production workflow is still developing.'),
+    },
+    {
+      id: 'creative-kits',
+      title: B('商品营销套件、详情页与图册', 'Product Marketing Kits & Catalogs'),
+      covers: ['AI Creative Studio'],
+      body: [
+        B('选定产品、目标市场、销售平台和语言，一次规划主图、卖点图、细节图、参数图、品牌展示图与配套文案，减少逐张反复下指令。',
+          'Choose the product, target market, sales platform and language, then plan hero images, benefit graphics, detail shots, specification graphics, brand visuals and supporting copy in one coordinated workflow, with fewer repeated instructions.'),
+        B('同一套产品资料继续延伸为商品详情页、宣传图册、产品介绍和销售支持资料；品牌标志、关键参数、价格和文字放在可核对的排版里，便于逐项确认。成果可以继续用于销售、官网、商城和社交平台。',
+          'The same product facts extend into detail pages, catalogs, product introductions and sales collateral. Logos, specifications, prices and text stay in checkable, controlled layouts, ready to confirm item by item and to reuse across sales, websites, commerce and social channels.'),
+      ],
+      note: CREATIVE_NOTE,
+    },
+    {
+      id: 'creative-multilingual',
+      title: B('多语言文案与社媒内容', 'Multilingual & Social Content'),
+      covers: ['Product · Sales · Social Content', 'Multi-language Content'],
+      body: [
+        B('从已确认的产品资料、目标市场和语言出发，撰写社媒、产品和销售文案并做多语言本地化，让同一个产品故事贯通产品页面、销售方案与社媒。',
+          'Start from confirmed product information, target markets and languages. Write social, product and sales copy and localize it, so one product story runs through product pages, sales decks and social feeds.'),
+        B('营销活动的文案与发布素材围绕同一个故事准备，按市场和渠道整理成可以审阅的文字与配图组合。',
+          'Campaign copy and publishing materials are prepared around the same story and organized by market and channel into text and visuals you can review.'),
+      ],
+      note: creativeNotes(CREATIVE_NOTE, CREATIVE_PUBLISH),
+    },
+    {
+      id: 'creative-search',
+      title: B('官网、搜索与 AI 搜索内容', 'Website & Search Content'),
+      covers: ['SEO · GEO · GEO Trust Content'],
+      body: [
+        B('提供产品资料、目标市场和你正在经营的销售网站，为官网产品页与市场页撰写文案，并按目标语言本地化。',
+          'Provide product information, target markets and the websites you sell through. Copy for product and market pages is prepared and localized into your target languages.'),
+        B('内容按搜索引擎和 AI 搜索的阅读方式规划：结构清楚、事实可核对、说法有出处，目标是让买家更容易找到你，也让 AI 搜索准确引用；搜索排名和引用结果不作保证。你收到的是内容规划和页面文案，确认后再上线。',
+          'Content is planned for how search engines and AI search read it: clear structure, checkable facts and cited sources. The aim is to help buyers find you and AI search quote you accurately; rankings and citations are not guaranteed. You receive a content plan and page copy to approve before anything goes live.'),
+      ],
+      note: creativeNotes(CREATIVE_NOTE, CREATIVE_PUBLISH),
+    },
+    {
+      id: 'creative-assets',
+      title: B('素材、版本与短视频剪辑', 'Assets, Versions & Short-form Editing'),
+      covers: ['Short-form Clip Editing', 'AI Creative Studio'],
+      body: [
+        B('把制作需求、步骤、参考素材，以及图片、视频和音频放进同一个创意工作空间；每个项目保留版本与素材库，成熟的制作流程可以直接复用。',
+          'Keep briefs, production steps, references, images, video and audio in one creative workspace. Each project retains its versions and asset library, and proven production workflows can be reused.'),
+        B('已有的产品视频可以剪成社媒短片，长视频拆条、竖屏改版和字幕适配也在这里衔接。每次改动都有版本记录，目标是只重做需要修改的镜头或局部，不必每次从头再来。你得到的是带版本记录的素材库，以及按已开放能力剪出的短片。',
+          'Existing product footage can be cut into short social clips, with long-video repurposing, vertical reframing and caption adaptation connected here. Every change is versioned; the goal is to redo only the shot or section that needs it rather than starting over. You get a versioned asset library and clips cut with the capabilities enabled for you.'),
+      ],
+      note: creativeNotes(CREATIVE_NOTE, B('长视频拆条、竖屏改版与字幕适配按已开放能力执行。', 'Repurposing, reframing and caption adaptation depend on enabled capabilities.')),
+    },
+  ],
+};
 // V6-B-END
 
 
