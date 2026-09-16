@@ -320,7 +320,14 @@ PAGES['index.html'] = (lang) => {
   {
     const cards = ['699b6466d5f19893993a4d79_work-1.webp', '699b6466d5f19893993a4d34_work-5.webp', '699b6466d5f19893993a4d1a_work-4.webp', '699b6466d5f19893993a4d8f_work-8.webp'];
     cards.forEach((k, i) => { h = swapImg(h, k, SILO[i]); });
-    const scenes = [['Scene%20%239.webp', OS.desk], ['Scene%20%235.webp', OS.inquiries], ['Scene%20%2310%20(Light)', OS.cockpit], ['Scene%20%238.webp', OS.quote], ['Scene%2018.webp', OS.agents]];
+    /* The five stages, in order (V6 §4.6): prospecting — an opportunity path
+       through a port district; trade sales — conversation becoming shared
+       customer context; fulfilment — inspection to dispatch; collection and
+       service — trade signals carried to a customer's destination; retain and
+       improve — an observed, reversible feedback path. The last three changed
+       with the stages: a quotation or command-centre picture no longer matches
+       what those stages now say. */
+    const scenes = [['Scene%20%239.webp', OS.desk], ['Scene%20%235.webp', OS.inquiries], ['Scene%20%2310%20(Light)', OS.trade], ['Scene%20%238.webp', BRAND.family(1)], ['Scene%2018.webp', BRAND.loop]];
     scenes.forEach(([k, src]) => { h = swapImg(h, k, src); });
     // Retain the original grid/zoom animation. The centre is a real video,
     // sourced from the owner's fourth template; surrounding imagery is separate.
@@ -404,21 +411,29 @@ PAGES['index.html'] = (lang) => {
     if (products === before) throw new Error('index: core-systems heading not found for the mobile variant');
   }
   {
-    // four Scalora dashboard drawings → the four STARGO OS systems, desktop and mobile variants alike
-    // Keyed on both languages' product names: the Chinese page names them in
-    // Chinese (增长系统 / 客户全景 / 报价工作台 / 贸易执行), so matching only the
-    // English prefix would throw on the very page this map exists to fill.
+    // four Scalora dashboard drawings → the four product slots, desktop and mobile variants alike.
+    // Keyed on the start of each slot's name (V6 §4.7), in both languages: the
+    // two engines keep their product names, the two business areas are named
+    // ERP and AI 创作 / AI Creative. Each slot's picture matches what the slot
+    // now says: an opportunity path (prospecting), shared customer context
+    // (sales), components, packaging and fulfilment handoff (operations), and
+    // a camera-like aperture (images and video).
     const bySystem = {
-      'Growth OS': OS.desk, '增长系统': OS.desk,
-      'Customer 360': OS.inquiries, '客户全景': OS.inquiries,
-      'Quote Studio': OS.quote, '报价工作台': OS.quote,
-      'Trade Execution': OS.trade, '贸易执行': OS.trade,
+      'Growth OS': OS.desk,
+      'Sales Desk': OS.inquiries,
+      'ERP': BRAND.family(2),
+      'AI 创作': OS.boot, 'AI Creative': OS.boot,
     };
+    const used = new Set();
+    let slots = 0;
     products = products.replace(/<div class="products-cards-dashboard-block[^"]*">[\s\S]*?<h3 class="heading-style-h4">([^<]*)<\/h3>/g, (block, title) => {
       const key = Object.keys(bySystem).find((k) => title.startsWith(k));
-      if (!key) throw new Error(`index: unknown system ${title}`);
-      return block.replace(/<img[^>]*class="prodect-dashboard-image"\/>/, `<img src="${bySystem[key]}" loading="lazy" alt="${escapeHtml(title)}" class="prodect-dashboard-image"/>`);
+      if (!key) throw new Error(`index: unknown product slot ${title}`);
+      used.add(bySystem[key]); slots++;
+      // `title` is already HTML text (it may carry &amp;), so it is not escaped a second time.
+      return block.replace(/<img[^>]*class="prodect-dashboard-image"\/>/, `<img src="${bySystem[key]}" loading="lazy" alt="${title.replace(/"/g, '&quot;')}" class="prodect-dashboard-image"/>`);
     });
+    if (slots !== 8 || used.size !== 4) throw new Error(`index: expected 8 product panels (4 desktop + 4 phone) showing 4 pictures, found ${slots} showing ${used.size}`);
     if (/prodect-dashboard-0\d\.svg/.test(products)) throw new Error('index: Scalora dashboard drawing survives');
   }
   const integration = addRootClass(sub('sc-integration', frag('integration.html'), C.HOME_SC_INTEGRATION), 'sc-scope');

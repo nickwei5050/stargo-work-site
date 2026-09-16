@@ -2028,3 +2028,32 @@ html[lang^="zh"] .lx-scope .lx-confirmation-card .lx-text-size-medium { text-wra
     top: 108px;
   }
 }
+
+/* V6 homepage headings (2026-09-16): break at the punctuation, not inside a word.
+   ---------------------------------------------------------------------------
+   The new headings are sentences with a comma in the middle —
+   「288 个数字岗位，不只服务外贸。」 and the four problem-card titles such as
+   「询盘来了，还要重新整理」. `text-wrap: balance`
+   (above) evens the two lines by length, and in CJK any character is a break
+   opportunity, so at 390px it cut 「岗位」 in half, and at 320px 「还要」.
+   The Scalora headings are not listed: GSAP splits them into one inline-block
+   per character, and a break between inline-blocks is always allowed, so
+   keep-all cannot reach them. Their copy is written in two equal halves
+   instead, which is where balance puts the break.
+   `word-break: keep-all` leaves only the space and the comma as break
+   points, so balance lands on the comma. `overflow-wrap: anywhere` is the
+   fallback for a half that does not fit the line at all (320px): it may then
+   break inside it rather than run out of the box. Chinese pages only; the
+   English headings wrap on spaces already. */
+html[lang^="zh"] .section.with-minus h2.h2,
+html[lang^="zh"] .work-card .work-title.b {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+/* The hero's readable introduction is now the product definition, five
+   lines at 1440 that left 「握。」 alone on the last one. `pretty` reworks
+   only the tail. */
+html[lang^="zh"] .hero .max-w-left.add-tp p.top-text.big.nm {
+  text-wrap: pretty;
+}

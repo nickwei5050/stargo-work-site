@@ -152,12 +152,12 @@ export const donor = {
  * are donor markup either side of the span, and nothing here touches them).
  *
  * It is written here rather than read out of `HOME_THEATRE`, which is where it
- * used to come from. That constant is the homepage's own theatre section
- * (「STARGO OS ©」) and it still says OS, correctly — the opening and that
- * section simply do not name the same thing any more, so deriving one from the
- * other would either be wrong here or would silently rename the homepage. The
- * check below is what keeps this honest: the name must be one the site
- * actually uses.
+ * used to come from. That constant is the line at the centre of the homepage's
+ * workspace film, and since the V6 copy (2026-09-16) it is a sentence
+ * (「同一个工作空间，连接日常经营。」), not a product name — the opening and that
+ * section do not name the same thing, so deriving one from the other would be
+ * wrong here. The check below is what keeps this honest: the name must be one
+ * the site actually uses.
  */
 function productName(C) {
   const name = 'STARGO WORK';

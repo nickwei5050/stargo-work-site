@@ -54,7 +54,7 @@ const DONOR_HREF = 'href="contact.html"';
  * Creative" — its first and last words, read straight out of the register so a
  * renamed group fails here instead of drifting.
  */
-const HEADING_WORDS = { zh: ['内容', '创意'], en: ['Content', 'Creative'] };
+const HEADING_WORDS = { zh: ['图片', '视频'], en: ['Images', 'Video'] };
 
 function headingWords(C, lang) {
   const g = C.CAPABILITY_GROUPS.find((x) => x.n === HEADING_GROUP);
