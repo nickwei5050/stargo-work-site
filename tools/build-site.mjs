@@ -924,6 +924,9 @@ PAGES['workforce.html'] = (lang) => {
     `<div class="lx-big-text-on-gradient lx-v6-team-display">${t(W.answersTitle)}</div>`, { count: 1 });
   ['CARDS', 'transfers', 'financing'].forEach((tab, i) => { b = s(b, `>${tab}<`, `>${t(W.answerTabs[i])}<`, { count: 1 }); });
   b = s(b, '>Get the app<', `>${t(W.answersButton)}<`);
+  /* The team scenario is where capabilities #story-6 sends 「看团队协作」
+     (V6 §12: a details link lands on its topic). */
+  b = s(b, 'class="lx-section lx-answers-card-section-holder"', 'id="lx-team" class="lx-section lx-answers-card-section-holder"', { count: 1 });
 
   /* The ten role groups (V6 §6.2), the one block this page adds. It goes after
      the pink panel — after 「有岗位的 AI」, before the team scenario — and it

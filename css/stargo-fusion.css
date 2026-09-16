@@ -2765,3 +2765,46 @@ h1.inner-title.stargo-contact-title {
 
 
 
+
+/* ===== V6 review fixes (lead, 2026-09-17) =====
+   Found by the post-merge browser review of the whole V6 candidate. */
+
+/* 1. The homepage workspace film's centre line is now a sentence
+      (「同一个工作空间，连接日常经营。」) where it used to be a short product
+      name. Mono positions `.cta-sm-title` absolutely with no offsets, so the
+      longer line started at the left edge of the screen. It now spans the
+      section with the page's 16px gutter and is centred and balanced; the
+      Chinese copy is written in two near-equal halves so balance breaks at the
+      comma (GSAP splits it per character, so keep-all cannot help). */
+.video-section .cta-sm-title._06 {
+  left: 16px;
+  right: 16px;
+  text-align: center;
+  text-wrap: balance;
+}
+
+/* 2. Enterprise owner-cockpit band: the text column (cockpit, six delivery
+      steps, three stats with what they count) is now taller than Mono's three
+      fixed-height pictures, which left a long empty run under the last one —
+      about 1,500px in English at 768. From 768 up the three frames grow to the
+      column's height instead (the pictures are object-fit: cover, so they are
+      cropped, not distorted, and the blur-in reveal is unchanged). While the
+      pictures are the taller column this changes nothing. */
+@media screen and (min-width: 768px) {
+  .about-grid > .about-images .work-content-wrapper { flex: 1 1 auto; }
+}
+
+/* 3. Chinese orphans. Most new V6 paragraphs ended with one character and its
+      full stop on a line of their own at some width (「…复/核。」, 「…完/善。」).
+      `text-wrap: pretty` reworks only the last lines of a paragraph. Chinese
+      pages only, and never on the pricing page, whose layout this change must
+      leave exactly as it was. */
+html[lang^="zh"] body:not(:has(.rk-price-tiers)) :is(p, li, .qx-body, .lx-text-size-regular, .lx-text-size-medium, .rk-rt-insights-text, .cn-accordion-answer-text, .cn-text-size-large) {
+  text-wrap: pretty;
+}
+
+/* 4. The footer statement (every page): the Chinese line breaks after 「企业的」
+      with a forced break in the copy (the heading is split per character, so
+      no line-breaking property keeps 「网页」 together). English lines are
+      balanced so a single word does not end the statement. */
+html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }

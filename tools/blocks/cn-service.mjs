@@ -61,11 +61,11 @@ export const donor = {
  * its crossfade background take this site's own editorial art, in row order:
  * company research → trade signals carried to a customer's destination; trade
  * intelligence → an opportunity path through a port district; reorder
- * judgement → context assembling layer by layer; key decision roles →
- * specialised roles working in parallel. tools/editorial-images.mjs writes the
+ * judgement → context assembling layer by layer; key decision roles → a key
+ * decision held at an approval point. tools/editorial-images.mjs writes the
  * variants, sizes and descriptions for them.
  */
-const ROW_ART = ['brand-family-01', 'os-sales-desk', 'os-loading', 'brand-family-03'];
+const ROW_ART = ['brand-family-01', 'os-sales-desk', 'os-loading', 'mobile-approvals'];
 
 /** Swap one cinery photograph for editorial art, keeping every other attribute
  *  (class, data-w-id, inline transforms) exactly as the donor wrote it. */

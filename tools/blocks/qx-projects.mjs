@@ -66,7 +66,11 @@ export function render(frag, ctx) {
   if (!T?.cards || T.cards.length !== CARDS || !T.arrowHref) throw new Error(`qx-projects: CAP_V6A.team needs ${CARDS} cards and an arrow link`);
   const groupHref = `#g${capability(C, picks[0]).group.n}`;
   for (const href of [T.arrowHref, ...T.cards.map((c) => c.href)]) {
-    if (href !== 'workforce.html' && href !== groupHref) throw new Error(`qx-projects: ${href} is neither the workforce page nor ${groupHref}`);
+    /* The workforce page itself, or one of its two sections these cards are
+       about: the ten role groups (#lx-role-groups) and the team scenario
+       (#lx-team). tools/chrome.mjs checks that the page exists; the ids are
+       written by the workforce builder in tools/build-site.mjs. */
+    if (!/^workforce\.html(#lx-(role-groups|team))?$/.test(href) && href !== groupHref) throw new Error(`qx-projects: ${href} is neither the workforce page (or one of its two sections) nor ${groupHref}`);
   }
   /* The directory card has to say what 288 is not, and the teamwork card that
      it is an illustration and that deeper teamwork is phased. */
