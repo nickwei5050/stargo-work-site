@@ -1330,7 +1330,7 @@ function postPage(post, lang) {
   }
   // Date and byline under the title; the template's CMS page shows neither.
   // The separators stay with the part before them (&nbsp;), so no line starts with 「·」.
-  b = b.replace('<div class="lx-blog-details-image-holder">', `<p class="lx-post-meta"><time datetime="${post.date}">${formatDate(post.date, lang)}</time>&nbsp;· ${t(BLOG_UI.byline)}&nbsp;· <a href="blog.html">${t(BLOG_UI.all)}</a></p><div class="lx-blog-details-image-holder">`);
+  b = b.replace('<div class="lx-blog-details-image-holder">', `<p class="lx-post-meta"><time datetime="${post.date}">${formatDate(post.date, lang)}</time>&nbsp;· <span class="lx-post-by">${t(BLOG_UI.byline)}</span>&nbsp;· <a href="blog.html">${t(BLOG_UI.all)}</a></p><div class="lx-blog-details-image-holder">`);
   if (!b.includes('lx-post-meta')) throw new Error('post: meta line');
   b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
   if (/Lifelogx|Companion|Moments in Motion|Conversational AI|Small Support/.test(b)) throw new Error(`post ${post.slug}: template copy survives`);

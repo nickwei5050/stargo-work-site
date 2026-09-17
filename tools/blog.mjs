@@ -39,6 +39,7 @@
  * pairs. Slugs, dates and covers are URLs and never change.
  */
 import { B, WORKFORCE_ROLE_GROUPS } from './copy.mjs';
+import { zhWbr } from './lib-html.mjs';
 
 /* The blog's own words (V5 P09, V6 §9). The index page's hero was one <h1> and
    nothing else, so `heading` takes V5's headline and `intro` — V5's sentence
@@ -87,6 +88,20 @@ const keepNames = (html) => html.replace(KEEP, (m) => `<span class="sgp-nw">${m}
 const inline = (s) => keepNames(esc(s).replace(/\|/g, '<wbr>'));
 /** An article body's own h3s, written in the body HTML: the same treatment. */
 const phraseHeadings = (html) => html.replace(/(<h3\b[^>]*>)([^]*?)(<\/h3>)/g, (m, open, text, close) => open + keepNames(text.replace(/\|/g, '<wbr>')) + close);
+/* Chart card text (V7-BLOG r2): step titles and descriptions, the scenario
+   examples, the availability items, the hand-off line and the lane titles are
+   drawn keep-all on the Chinese pages too, so they break at spaces and
+   「，、：；？！。」 only — 「交/期」 and 「并/行处理」 split before — and at a 「|」
+   where a phrase is wider than the narrowest card it sits in (checked at the
+   foot of this file). */
+const card = (v, lang) => inline(tx(v, lang));
+/* The Chinese call to action is running text with a link: its words are cut
+   by tools/lib-html.mjs zhWbr, so keep-all breaks it between words only
+   (「把工/作」, 「连/接」 at 320–390); the link stays whole (CSS). */
+const ctaWords = (html) => html.replace(/(<p class="sgp-cta">)([^]*?)(<\/p>)/, (m, open, inner, close) => {
+  if (inner.includes('&')) throw new Error('blog: a Chinese call to action carries an entity; zhWbr expects plain text');
+  return open + inner.replace(/(<a\b[^>]*>[^<]*<\/a>)|([^<]+)/g, (x, link, text) => link ?? zhWbr(text)) + close;
+});
 
 /** One chart: a figure whose caption is its title; `inner` is the chart body. */
 function figure(kind, n, lang, title, inner, note) {
@@ -114,8 +129,14 @@ const LOOP = {
   ],
   back: B('客户与业务结果持续沉淀，进入下一轮增长。', 'Customer context and outcomes feed the next growth cycle.'),
 };
+/* A label of items joined by 「 · 」 wraps, if ever, after a dot and between
+   whole items: 「采购 · 生产 · / 库存」 wrapped inside the list (V7-BLOG r2). */
+const dotted = (v, lang) => {
+  const parts = tx(v, lang).split(' · ');
+  return parts.length < 2 ? esc(parts[0]) : parts.map((p) => `<span class="sgp-nw">${esc(p)}</span>`).join(`${String.fromCharCode(160)}· `);
+};
 export function chartLoop(lang, n) {
-  const items = LOOP.stages.map(([name, tag, sub], i) => `<li class="sgc-step"><span class="sgc-idx">${two(i + 1)}</span><strong class="sgc-step-title">${esc(tx(name, lang))}</strong><span class="sgc-tag">${esc(tx(tag, lang))}</span><span class="sgc-step-text">${esc(tx(sub, lang))}</span></li>`).join('');
+  const items = LOOP.stages.map(([name, tag, sub], i) => `<li class="sgc-step"><span class="sgc-idx">${two(i + 1)}</span><strong class="sgc-step-title">${card(name, lang)}</strong><span class="sgc-tag">${esc(tx(tag, lang))}</span><span class="sgc-step-text">${dotted(sub, lang)}</span></li>`).join('');
   return figure('loop', n, lang, LOOP.title,
     `<ol class="sgc-flow sgc-flow-5">${items}</ol><p class="sgc-back"><span class="sgc-back-icon" aria-hidden="true">↻</span>${esc(tx(LOOP.back, lang))}</p>`);
 }
@@ -130,8 +151,8 @@ const PIPE = {
   steps: [
     [B('找到对的企业', 'Discover the right accounts'), B('经销商、进口商、批发商、目标企业', 'Dealers, importers, wholesalers and target accounts')],
     [B('把客户查清楚', 'Research people and companies'), B('企业背调、关键联系人、邮箱与渠道账号', 'Company research, decision makers and contact details')],
-    [B('判断什么时候值得跟进', 'Spot evidence-backed opportunities'), B('采购信号、补货周期、供应商变化、商业价值', 'Buying signals, reorder patterns, supplier changes and value')],
-    [B('形成可执行的开发计划', 'Prepare the outreach plan'), B('多语言话术、跟进计划、展会线索与沉睡客户唤醒', 'Multilingual playbooks, follow-ups, trade-show leads and reactivation')],
+    [B('判断什么时候|值得跟进', 'Spot opportunities backed by evidence'), B('采购信号、补货周期、供应商变化、商业价值', 'Buying signals, reorder patterns, supplier changes and value')],
+    [B('形成可执行的|开发计划', 'Prepare the outreach plan'), B('多语言话术、跟进计划、展会线索与沉睡客户唤醒', 'Multilingual playbooks, follow-ups, trade-show leads and reactivation')],
   ],
   handoff: B('确认客户 → 转入 Sales Desk', 'Approved prospect → Sales Desk'),
   handoffText: B('带上来源、背调、产品兴趣与下一步任务，不必重新录入。', 'Source, research, product interests and next actions travel with it — no re-entry.'),
@@ -145,7 +166,7 @@ const PIPE = {
   work: [
     [B('理解需求', 'Understand'), B('提取规格、数量、市场、交期，整理附件与图纸', 'Extract requirements; organize attachments and drawings')],
     [B('辅助回复', 'Respond'), B('查企业资料、匹配产品、翻译、起草，人工确认', 'Match products, translate and draft from company facts, then review')],
-    [B('持续推进', 'Follow through'), B('跟进、提醒、阶段管理，保留人工接管与客户历史', 'Tasks, reminders and stages, with human takeover and history')],
+    [B('持续推进', 'Follow through'), B('跟进、提醒、阶段管理，保留人工接管|与客户历史', 'Tasks, reminders and stages, with human takeover and history')],
   ],
   chainLabel: B('之后的业务链', 'What follows'),
   chain: B(['报价', 'PI', '订单', '售后', '复购'], ['Quote', 'PI', 'Order', 'Support', 'Reorder']),
@@ -153,16 +174,16 @@ const PIPE = {
 };
 export function chartPipeline(lang, n) {
   const P = PIPE;
-  const steps = (list, cls) => `<ol class="${cls}">${list.map(([h, s], i) => `<li class="sgc-step"><span class="sgc-idx">${two(i + 1)}</span><strong class="sgc-step-title">${esc(tx(h, lang))}</strong><span class="sgc-step-text">${esc(tx(s, lang))}</span></li>`).join('')}</ol>`;
+  const steps = (list, cls) => `<ol class="${cls}">${list.map(([h, s], i) => `<li class="sgc-step"><span class="sgc-idx">${two(i + 1)}</span><strong class="sgc-step-title">${card(h, lang)}</strong><span class="sgc-step-text">${card(s, lang)}</span></li>`).join('')}</ol>`;
   const inner = '<div class="sgc-lanes">'
-    + `<div class="sgc-lane sgc-lane-growth"><p class="sgc-lane-title">${esc(tx(P.growth, lang))}</p>`
+    + `<div class="sgc-lane sgc-lane-growth"><p class="sgc-lane-title">${card(P.growth, lang)}</p>`
     + label(P.sourcesLabel, lang) + chips(P.sources, lang)
     + `<p class="sgc-profile">${esc(tx(P.profile, lang))}</p>`
     + steps(P.steps, 'sgc-flow sgc-flow-4')
     + '</div>'
-    + `<div class="sgc-handoff"><p class="sgc-handoff-title"><strong>${esc(tx(P.handoff, lang))}</strong></p><p class="sgc-handoff-text">${esc(tx(P.handoffText, lang))}</p>`
+    + `<div class="sgc-handoff"><p class="sgc-handoff-title"><strong>${esc(tx(P.handoff, lang))}</strong></p><p class="sgc-handoff-text">${card(P.handoffText, lang)}</p>`
     + label(P.outLabel, lang) + chips(P.outputs, lang, 'sgc-chips sgc-chips-solid') + '</div>'
-    + `<div class="sgc-lane sgc-lane-sales"><p class="sgc-lane-title">${esc(tx(P.sales, lang))}</p>`
+    + `<div class="sgc-lane sgc-lane-sales"><p class="sgc-lane-title">${card(P.sales, lang)}</p>`
     + label(P.intakeLabel, lang) + chips(P.intake, lang)
     + label(P.crmLabel, lang) + chips(P.crm, lang, 'sgc-chips sgc-chips-grid')
     + steps(P.work, 'sgc-flow sgc-flow-3')
@@ -269,8 +290,8 @@ const PROACTIVE = {
   title: B('主动工作：发现变化，到沉淀经验', 'Proactive work: from noticing a change to keeping the lesson'),
   steps: [
     [B('发现变化', 'Notice'), B('客户、订单、期限与异常', 'Customers, orders, deadlines, exceptions')],
-    [B('提出建议', 'Propose'), B('结合当前事实给出下一步', 'A next step grounded in current facts')],
-    [B('获得确认', 'Approve'), B('有权人批准关键动作', 'An authorized person signs off')],
+    [B('提出建议', 'Propose'), B('结合当前事实|给出下一步', 'A next step grounded in current facts')],
+    [B('获得确认', 'Approve'), B('有权人批准|关键动作', 'An authorized person signs off')],
     [B('推进任务', 'Act'), B('在授权范围内执行', 'Work within the authorized scope')],
     [B('核对结果', 'Verify'), B('检查是否达到目标', 'Check the outcome against the goal')],
     [B('沉淀经验', 'Learn'), B('留下有用的做法', 'Keep what worked')],
@@ -278,16 +299,16 @@ const PROACTIVE = {
   back: B('回到第一步，持续关注下一次变化。', 'Back to the first step, watching for the next change.'),
   exLabel: B('场景示意', 'Examples'),
   examples: [
-    [B('机会来了', 'An opportunity appears'), B('某客户可能进入补货窗口，建议复核采购信号。', 'A customer may be nearing a reorder window; review the evidence.')],
-    [B('事情快到期了', 'A deadline is approaching'), B('订单交期临近，提醒核对生产与运输安排。', 'A delivery date is close; check production and shipping.')],
+    [B('机会来了', 'An opportunity appears'), B('某客户可能|进入补货窗口，建议复核采购信号。', 'A customer may be nearing a reorder window; review the evidence.')],
+    [B('事情快到期了', 'A deadline is approaching'), B('订单交期临近，提醒核对|生产与运输安排。', 'A delivery date is close; check production and shipping.')],
     [B('有内容需要你决定', 'A decision needs you'), B('报价或对外内容待确认，整理依据交给有权人。', 'A quote or outbound content awaits sign-off; the context goes to the right person.')],
   ],
   note: B('主动工作仍受权限与审批约束，不是人的意识，也不是无限制的自主决定；企业级主动工作、统一长期记忆和高级改进持续完善。', 'Permissions and approvals still apply: proactive work is not consciousness or unrestricted autonomy. Enterprise-wide proactive work, unified long-term memory and advanced improvement are still evolving.'),
 };
 export function chartProactive(lang, n) {
   const P = PROACTIVE;
-  const steps = P.steps.map(([h, s], i) => `<li class="sgc-step"><span class="sgc-idx">${two(i + 1)}</span><strong class="sgc-step-title">${esc(tx(h, lang))}</strong><span class="sgc-step-text">${esc(tx(s, lang))}</span></li>`).join('');
-  const ex = P.examples.map(([h, s]) => `<li class="sgc-example"><strong>${esc(tx(h, lang))}</strong><span>${esc(tx(s, lang))}</span></li>`).join('');
+  const steps = P.steps.map(([h, s], i) => `<li class="sgc-step"><span class="sgc-idx">${two(i + 1)}</span><strong class="sgc-step-title">${card(h, lang)}</strong><span class="sgc-step-text">${card(s, lang)}</span></li>`).join('');
+  const ex = P.examples.map(([h, s]) => `<li class="sgc-example"><strong>${esc(tx(h, lang))}</strong><span>${card(s, lang)}</span></li>`).join('');
   return figure('proactive', n, lang, P.title,
     `<ol class="sgc-flow sgc-flow-6">${steps}</ol><p class="sgc-back"><span class="sgc-back-icon" aria-hidden="true">↻</span>${esc(tx(P.back, lang))}</p>`
     + label(P.exLabel, lang) + `<ul class="sgc-examples">${ex}</ul>`,
@@ -307,7 +328,7 @@ const START = {
   motto: B('把工作交给 AI，把决定权留在企业。', 'Delegate the work. Keep the authority.'),
 };
 export function chartStart(lang, n) {
-  const steps = START.steps.map(([h, s], i) => `<li class="sgc-step"><span class="sgc-idx">${two(i + 1)}</span><strong class="sgc-step-title">${esc(tx(h, lang))}</strong><span class="sgc-step-text">${esc(tx(s, lang))}</span></li>`).join('');
+  const steps = START.steps.map(([h, s], i) => `<li class="sgc-step"><span class="sgc-idx">${two(i + 1)}</span><strong class="sgc-step-title">${card(h, lang)}</strong><span class="sgc-step-text">${card(s, lang)}</span></li>`).join('');
   return figure('start', n, lang, START.title, `<ol class="sgc-flow sgc-flow-5 sgc-numbered">${steps}</ol><p class="sgc-motto">${esc(tx(START.motto, lang))}</p>`);
 }
 
@@ -322,7 +343,7 @@ const OWNER = {
   note: B('看板指标只来自已接入的数据，缺失时明确显示。', 'Dashboard metrics come only from connected data; missing figures are shown as missing.'),
 };
 export function chartOwner(lang, n) {
-  const items = OWNER.items.map(([h, s], i) => `<li class="sgc-trio-item"><span class="sgc-idx">${two(i + 1)}</span><strong class="sgc-trio-title">${esc(tx(h, lang))}</strong><span class="sgc-step-text">${esc(tx(s, lang))}</span></li>`).join('');
+  const items = OWNER.items.map(([h, s], i) => `<li class="sgc-trio-item"><span class="sgc-idx">${two(i + 1)}</span><strong class="sgc-trio-title">${esc(tx(h, lang))}</strong><span class="sgc-step-text">${card(s, lang)}</span></li>`).join('');
   return figure('owner', n, lang, OWNER.title, `<ul class="sgc-trio">${items}</ul>`, OWNER.note);
 }
 
@@ -333,12 +354,12 @@ const STATUS = {
     ['now', B('现已可用', 'Available now'), B(['AI 团队协作：组队、互发消息、并行处理、汇总交付', 'AI 一键生成视频：从制作需求到可导出的成片', '爆款结构再创作：参考结构到三个原创方向'], ['AI teamwork: form a team, message, work in parallel, deliver one result', 'One-click AI video: from a brief to an exportable film', 'Viral creative adaptation: from a reference structure to three original directions'])],
     ['base', B('已有基础，按企业配置启用', 'Foundations in place, enabled by configuration'), B(['网页桌面、客户管理与企业知识', 'Sales Desk 业务工作台', '创意工作室、ERP 与商城应用'], ['Browser desktop, customer management and enterprise knowledge', 'The Sales Desk workspace', 'Creative workspace, ERP and commerce applications'])],
     ['link', B('逐项连接与验收', 'Connected and validated one by one'), B(['Growth OS 真实数据与客户触达，按授权接入', '各渠道真实收发与业务交接', '真实价格、合同、签章、单证、物流与财务'], ['Growth OS live data and outreach, by authorization', 'Live channel messaging and business handoffs', 'Live prices, contracts, signatures, documents, logistics and finance'])],
-    ['next', B('持续完善', 'Still evolving'), B(['Growth OS 核心流程', '营销套件、局部检查与一键编排', '企业级主动工作、统一长期记忆与高级改进', '原生客户端、移动端与小程序'], ['Growth OS core workflows', 'Packaged marketing kits, local checks and one-click kit production', 'Enterprise-wide proactive work, unified long-term memory and advanced improvement', 'Native clients, mobile and mini-programs'])],
+    ['next', B('持续完善', 'Still evolving'), B(['Growth OS 核心流程', '商品营销套件的|一键编排与局部检查', '企业级主动工作、统一长期记忆与高级改进', '原生客户端、移动端与小程序'], ['Growth OS core workflows', 'One-click marketing-kit production and local checks', 'Enterprise-wide proactive work, unified long-term memory and advanced improvement', 'Native clients, mobile and mini-programs'])],
   ],
   note: B('现已可用的能力，也在企业开通的服务、额度和权限内运行。实际交付以企业配置与确认范围为准；发布到外部渠道、正式申报与资金支付由有权人员确认。', 'Available capabilities also run within the services, credits and access a company enables. Delivery follows the enterprise configuration and agreed scope; publishing to external channels, official filings and payments are confirmed by authorized people.'),
 };
 export function chartStatus(lang, n) {
-  const cols = STATUS.cols.map(([key, h, items]) => `<li class="sgc-status sgc-status-${key}"><strong class="sgc-status-title">${esc(tx(h, lang))}</strong><ul>${tx(items, lang).map((x) => `<li>${esc(x)}</li>`).join('')}</ul></li>`).join('');
+  const cols = STATUS.cols.map(([key, h, items]) => `<li class="sgc-status sgc-status-${key}"><strong class="sgc-status-title">${esc(tx(h, lang))}</strong><ul>${tx(items, lang).map((x) => `<li>${inline(x)}</li>`).join('')}</ul></li>`).join('');
   return figure('status', n, lang, STATUS.title, `<ul class="sgc-statuses">${cols}</ul>`, STATUS.note);
 }
 
@@ -357,8 +378,8 @@ export function chartContext(lang, n) {
   const C = CONTEXT;
   const core = `<ol class="sgc-chain sgc-chain-core">${tx(C.core, lang).map((x) => `<li>${esc(x)}</li>`).join('')}</ol>`;
   const inner = '<div class="sgc-duo">'
-    + `<div class="sgc-duo-card"><p class="sgc-lane-title">${esc(tx(C.roomTitle, lang))}</p>${chips(C.room, lang, 'sgc-chips sgc-chips-grid')}${chips(C.roomChecks, lang, 'sgc-checks')}</div>`
-    + `<div class="sgc-duo-card"><p class="sgc-lane-title">${esc(tx(C.mapTitle, lang))}</p>${core}${chips(C.links, lang, 'sgc-chips sgc-chips-grid')}${chips(C.questions, lang, 'sgc-questions')}</div>`
+    + `<div class="sgc-duo-card"><p class="sgc-lane-title">${card(C.roomTitle, lang)}</p>${chips(C.room, lang, 'sgc-chips sgc-chips-grid')}${chips(C.roomChecks, lang, 'sgc-checks')}</div>`
+    + `<div class="sgc-duo-card"><p class="sgc-lane-title">${card(C.mapTitle, lang)}</p>${core}${chips(C.links, lang, 'sgc-chips sgc-chips-grid')}${chips(C.questions, lang, 'sgc-questions')}</div>`
     + '</div>';
   return figure('context', n, lang, C.title, inner);
 }
@@ -387,7 +408,8 @@ export const faqEntities = (post, lang) => (post.faq ?? []).map((f) => ({ '@type
 
 /** The article body as printed: lead paragraph, takeaways, the rest, FAQ. */
 export function renderBody(post, lang) {
-  const body = phraseHeadings(post.body[lang].trim());
+  const text = phraseHeadings(post.body[lang].trim());
+  const body = lang === 'zh' ? ctaWords(text) : text;
   const cut = body.indexOf('</p>');
   if (!body.startsWith('<p>') || cut < 0) throw new Error(`blog ${post.slug}: the body must open with its answer paragraph`);
   return body.slice(0, cut + 4) + renderTakeaways(post, lang) + body.slice(cut + 4) + renderFaq(post, lang);
@@ -440,7 +462,7 @@ const GUIDE_SECTIONS = [
     id: 'guide-quotes',
     h: B('报价、PI 与商业文件|怎样管起来？', 'How are quotes, PIs and trade documents controlled?'),
     text: B('<p>报价按配置、数量、币种和贸易条款起草，关联价格表、历史报价、折扣权限和利润边界，AI 不自行编价；价格与重要承诺由有权人批准，确认后转为 PI 并保留批准版本。合同条款核对，以及商业发票、装箱单、原产地证与 Form E 资料、提单等单证的准备与归档，也在这条链上协同。</p>',
-      '<p>Quotes are drafted from configuration, quantity, currency and trade terms, using price lists, quote history, discount permissions and margin guardrails; AI never invents prices. Authorized people approve prices and commitments, and an agreed quote becomes a PI with its approved version kept. Clause checks and the preparation and filing of invoices, packing lists, origin and Form E materials and bills of lading run on the same chain.</p>'),
+      '<p>Quotes are drafted from configuration, quantity, currency and trade terms, using price lists, quote history, discount permissions and margin guardrails; AI never invents prices. Authorized people approve prices and commitments, and an agreed quote becomes a PI with its approved version kept. Contract clause checks run on the same chain, together with the preparation and filing of commercial invoices, packing lists, certificates of origin and Form E materials, and bills of lading.</p>'),
     value: B('价格有依据，利润有边界，文件有版本；批准与发送分别受控。', 'grounded prices, protected margins, versioned documents — and approval kept separate from sending.'),
     cond: B('真实价格、合同、签章与单证按企业系统接通；正式签发由相应机构完成。见<a href="capabilities.html#g07">报价、PI 与商业文件</a>。', 'live prices, contracts, signatures and documents depend on connected systems; official issuance stays with the authorized bodies. See <a href="capabilities.html#g07">Quotations and PI</a>.'),
   },
@@ -466,7 +488,7 @@ const GUIDE_SECTIONS = [
     text: B('<p>从自己的产品照片与参数、品牌标志与配色、目标市场与渠道出发，生成和编辑主图、场景图、卖点海报、详情页、图册和社媒素材；营销套件一次规划整组图片与文案，不准确的外观或参数可以局部修正，官网与搜索内容支持多语言和 SEO / GEO 规划。</p>',
       '<p>Starting from your own product photos and facts, logo, colors, market and channel, you generate and edit hero images, scenes, benefit posters, detail pages, catalogs and social assets. A marketing kit plans a full set of images and copy at once, inaccurate visuals or specifications can be corrected locally, and website and search content comes with multilingual and SEO and GEO planning.</p>'),
     value: B('同一套产品事实，持续产出销售、官网、商城和社媒素材。', 'one set of product facts feeds sales, website, commerce and social assets.'),
-    cond: B('创意工作室已有基础；营销套件与一键编排持续整合；对外发布需单独授权。见<a href="capabilities.html#creative-images">AI 作图与图片编辑</a>。', 'the creative workspace is present; marketing kits and one-click kit production are being integrated; external publishing needs separate authorization. See <a href="capabilities.html#creative-images">AI images</a>.'),
+    cond: B('创意工作室已有基础；商品营销套件的一键编排与局部检查持续整合；对外发布需单独授权。见<a href="capabilities.html#creative-images">AI 作图与图片编辑</a>。', 'the creative workspace is present; one-click marketing-kit production and local checks are being integrated; external publishing needs separate authorization. See <a href="capabilities.html#creative-images">AI images</a>.'),
   },
   {
     id: 'guide-video',
@@ -594,7 +616,7 @@ export const POSTS = [
     section: B('产品解读', 'Product guides'),
     keywords: B(['STARGO WORK', 'AI 企业操作系统', 'Growth OS', 'Sales Desk', '数字员工', '外贸 AI'], ['STARGO WORK', 'AI operating system', 'Growth OS', 'Sales Desk', 'AI employees', 'AI for manufacturers']),
     mentions: ['Growth OS', 'Sales Desk'],
-    title: B('STARGO WORK 图文详解：从获客到经营', 'STARGO WORK, explained: one system from acquisition to operations'),
+    title: B('STARGO WORK 图文详解：从获客到经营', 'STARGO WORK, explained: one\u00a0system from acquisition to operations'),   // "one system" never splits (the heading broke "one / system" at 1280–1920)
     titleChunks: ['STARGO ', 'WORK ', '图文详解：', '从获客', '到经营'],
     description: B('一篇读懂 STARGO WORK：两大核心引擎、业务循环、288 个数字岗位、AI 团队协作与一键视频，以及每项能力的价值和开放条件。', 'A complete guide to STARGO WORK: two core engines, the business loop, 288 AI roles, AI teamwork and one-click video, with each one’s value and availability.'),
     takeaways: [
@@ -784,7 +806,7 @@ ${chartStart('en', 1)}
 <p>In STARGO WORK, approving a quote and sending it are separate controls. Approval means an authorized person has confirmed the price and terms. Sending is a second, outbound action that needs its own authorization. Whether the customer received it, and what happened next, is checked after that.</p>
 <p>Approved is not sent, and sent is not received or done. The three states are recorded separately, so managers see real progress.</p>
 <h3>How do contracts, documents and orders follow?</h3>
-<p>Contract templates, clause checks and versions are coordinated on the same chain; e-signatures and legal review connect through the company’s own processes. Commercial invoices, packing lists, certificate of origin and Form E materials and bills of lading can be prepared, checked and filed, while official issuance stays with the authorized bodies. Confirmed orders are then handed to fulfillment, support and repeat-sales follow-up.</p>
+<p>Contract templates, clause checks and versions are coordinated on the same chain; e-signatures and legal review connect through the company’s own processes. Commercial invoices, packing lists, certificates of origin and Form E materials, and bills of lading can be prepared, checked and filed, while official issuance stays with the authorized bodies. Confirmed orders are then handed to fulfillment, support and repeat-sales follow-up.</p>
 <h3>What is available today?</h3>
 <p>The Sales Desk workspace exists; live channel messaging and business handoffs are connected and validated one by one. Quotes and PI continue to improve, and live prices, contracts, signatures and documents depend on the enterprise systems that are connected. See <a href="capabilities.html#g04">Inquiries and customer conversations</a>, <a href="capabilities.html#g05">CRM and customer context</a> and <a href="capabilities.html#g07">Quotations, PI and commercial records</a> in the capability catalogue.</p>
 <p class="sgp-cta">Want to see a real inquiry become a PI? <a href="contact.html">Request a demo</a>.</p>`),
@@ -945,7 +967,7 @@ ${chartLoop('zh', 1)}
 <li><strong>Growth OS：</strong>核心流程建设中，真实数据与客户触达按授权接入。</li>
 <li><strong>Sales Desk：</strong>工作台已经具备，各渠道真实收发与业务交接逐项连接、验证；真实价格、合同、签章与单证按企业系统接通。</li>
 <li><strong>ERP 与履约：</strong>已有 ERP 与商城应用基础，跨系统协同和 AI 操作按企业配置验收；物流、财务与服务按已接入的系统分阶段交付。</li>
-<li><strong>创作、知识与管理：</strong>创意工作室已有基础，营销套件与一键编排持续整合；企业知识与业务关系图已有基础，更丰富的关联逐步完善；看板指标只来自已接入的数据。</li>
+<li><strong>创作、知识与管理：</strong>创意工作室已有基础，商品营销套件的一键编排与局部检查持续整合；企业知识与业务关系图已有基础，更丰富的关联逐步完善；看板指标只来自已接入的数据。</li>
 <li><strong>使用终端：</strong>网页桌面是当前重点；语音、自动化和对外动作按开放范围推进，原生客户端、移动端和小程序分阶段完善。</li>
 </ul>
 <p>更深一层的原理见<a href="intelligence.html">企业智能</a>，全部能力见<a href="capabilities.html">功能全景</a>，岗位目录见<a href="workforce.html">数字员工</a>。</p>
@@ -982,7 +1004,7 @@ ${chartLoop('en', 1)}
 <li><strong>Growth OS:</strong> core workflows are being built out; live data and outreach are connected by authorization.</li>
 <li><strong>Sales Desk:</strong> the workspace exists; live channel messaging and business handoffs are connected and validated one by one, and live prices, contracts, signatures and documents depend on connected enterprise systems.</li>
 <li><strong>ERP and fulfillment:</strong> ERP and commerce foundations exist; cross-system work and AI actions are configured and accepted per company, and logistics, finance and service arrive in stages through connected systems.</li>
-<li><strong>Creative work, knowledge and control:</strong> the creative workspace is present, with marketing kits and one-click kit production being integrated; knowledge and relationship-map foundations exist, with richer relationships arriving in stages; dashboard metrics come only from connected data.</li>
+<li><strong>Creative work, knowledge and control:</strong> the creative workspace is present, with one-click marketing-kit production and local checks being integrated; knowledge and relationship-map foundations exist, with richer relationships arriving in stages; dashboard metrics come only from connected data.</li>
 <li><strong>Devices:</strong> the browser desktop comes first; voice, automation and external actions follow by enabled scope, and native clients, mobile and mini-programs are phased.</li>
 </ul>
 <p>Read the principles on <a href="intelligence.html">Enterprise Intelligence</a>, every business area on <a href="capabilities.html">Capabilities</a> and the role directory on <a href="workforce.html">AI Workforce</a>.</p>
@@ -1222,7 +1244,35 @@ const phrasesOf = (html) => html
   .replace(/<wbr>/g, '\n').replace(/<[^>]+>/g, '').replace(/&[a-z]+;/g, 'x')
   .replace(/([，、：；？！。])/g, '$1\n').split(/[\n ]+/).filter(Boolean);
 
+/* Chart card text (card() above) on the Chinese pages: the widest phrase of
+   each line, against the narrowest card it is drawn in at any page width
+   (measured at 320–1920 px, V7-BLOG r2). Mark a break with 「|」 where a
+   phrase is wider. */
+const CARD_PHRASES = [
+  [LOOP.stages.map((x) => x[0]), 5.5, 'loop step title'],
+  [LOOP.stages.flatMap((x) => x[2].zh.split(' · ')).map((zh) => ({ zh })), 7, 'loop label item'],
+  [PIPE.steps.map((x) => x[0]), 9.5, 'Growth OS step title'],
+  [PIPE.steps.map((x) => x[1]), 11.5, 'Growth OS step line'],
+  [PIPE.work.map((x) => x[0]), 6.5, 'Sales Desk step title'],
+  [PIPE.work.map((x) => x[1]), 8, 'Sales Desk step line'],
+  [PROACTIVE.steps.map((x) => x[0]), 7, 'proactive step title'],
+  [PROACTIVE.steps.map((x) => x[1]), 8.5, 'proactive step line'],
+  [PROACTIVE.examples.map((x) => x[1]), 11, 'proactive example'],
+  [START.steps.map((x) => x[0]), 8, 'start step title'],
+  [START.steps.map((x) => x[1]), 13.5, 'start step line'],
+  [OWNER.items.map((x) => x[1]), 9.5, 'owner card line'],
+  [STATUS.cols.flatMap((c) => c[2].zh).map((zh) => ({ zh })), 15, 'availability item'],
+  [[PIPE.handoffText], 16, 'hand-off line'],
+  [[PIPE.growth, PIPE.sales, CONTEXT.roomTitle, CONTEXT.mapTitle], 13, 'lane title'],
+];
+
 const problems = [];
+for (const [texts, max, what] of CARD_PHRASES) {
+  for (const { zh } of texts) {
+    const wide = phrasesOf(inline(zh)).find((p) => widthOf(p) > max);
+    if (wide) problems.push(`chart: Chinese ${what} phrase «${wide}» is wider than ${max} characters; mark a break with 「|」 (${bare(zh)})`);
+  }
+}
 for (const post of POSTS) {
   const fail = (msg) => problems.push(`${post.slug}: ${msg}`);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(post.date) || (post.modified && post.modified < post.date)) fail('dates');
