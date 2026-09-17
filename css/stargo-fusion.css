@@ -3327,6 +3327,29 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
    copy carries (tools/blog.mjs BLOG_UI.intro), so 「数字员工」 stays whole. */
 html[lang^="zh"] .lx-scope .stargo-blog-intro .lx-text-size-regular { word-break: keep-all; overflow-wrap: anywhere; }
 
+/* Chinese article titles in lists — the blog index and workforce cards
+   (.lx-blog-title), the related list beside an article, and the homepage
+   cards (.blog-txt). Unbroken Chinese wraps between any two characters, which
+   split 「图文详/解」, 「组/队」 and 「操作/系统」 and left 「营」, 「管」 or 「PI」
+   alone on a last line. The titles are written in phrases separated by
+   spaces, 「：」 and 「、」, so keep-all breaks only there and balance evens
+   the lines; overflow-wrap keeps a phrase wider than its card from
+   overflowing. Supersedes the `text-wrap: pretty` set on .lx-blog-title in
+   the V6 sweep above, which fixed two of the old titles only. */
+html[lang^="zh"] .lx-scope :is(.lx-blog-title, .lx-related-item > .lx-text-size-regular),
+html[lang^="zh"] .blog-grid .blog-txt {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+/* The Chinese article heading is printed in phrases (tools/blog.mjs
+   titleHtml). The title animation splits it into one box per character and
+   then into lines by where those boxes land, so `white-space` alone does not
+   hold a phrase together; an inline-block phrase is laid out as one unit, and
+   the lines are cut between phrases only. */
+.lx-scope .lx-blog-title-holder .sgp-nobr { display: inline-block; white-space: nowrap; }
+
 /* Chinese blog headings: full-width punctuation.
    The heading face, 42dot Sans, is a Korean font. It carries its own ，。：？
    glyphs, drawn in the middle of the em box as Korean typography does, so

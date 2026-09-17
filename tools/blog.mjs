@@ -550,6 +550,20 @@ function guideBody(lang) {
   return `${lead}${toc}\n${sections}\n${end}`;
 }
 
+/**
+ * The Chinese article heading in phrases. The page's title animation splits
+ * the <h1> into one box per character (js/stargo-splittext-cjk.js) and then
+ * into lines, so the heading may break between any two characters — it broke
+ * 「获/客」, 「沟/通」 and 「关/系图」. postPage() wraps each chunk in a
+ * no-wrap span, so lines break only between chunks. Chunks are short (at most
+ * about seven characters: the heading is ~36px in a 288px column at 320) and
+ * must join back into the exact title; the check at the foot of this file
+ * says so. English headings break at spaces and need none.
+ */
+export const titleHtml = (post, lang, esc = (s) => s) => (lang === 'zh' && post.titleChunks
+  ? post.titleChunks.map((c) => `<span class="sgp-nobr">${esc(c.trimEnd())}</span>${c.endsWith(' ') ? ' ' : ''}`).join('')
+  : esc(post.title[lang]));
+
 /** Newest first. `cover` names a file pair written by tools/blog-covers.mjs into assets/blog/. */
 export const POSTS = [
   {
@@ -561,6 +575,7 @@ export const POSTS = [
     keywords: B(['STARGO WORK', 'AI 企业操作系统', 'Growth OS', 'Sales Desk', '数字员工', '外贸 AI'], ['STARGO WORK', 'AI operating system', 'Growth OS', 'Sales Desk', 'AI employees', 'AI for manufacturers']),
     mentions: ['Growth OS', 'Sales Desk'],
     title: B('STARGO WORK 图文详解：从获客到经营', 'STARGO WORK, explained: one system from acquisition to operations'),
+    titleChunks: ['STARGO ', 'WORK ', '图文详解：', '从获客', '到经营'],
     description: B('一篇读懂 STARGO WORK：两大核心引擎、业务循环、288 个数字岗位、AI 团队协作与一键视频，以及每项能力的价值和开放条件。', 'A complete guide to STARGO WORK: two core engines, the business loop, 288 AI roles, AI teamwork and one-click video, with each capability’s value and terms.'),
     takeaways: [
       B('一个网页桌面，两大核心引擎：Growth OS 主动获客，Sales Desk 外贸销售。', 'One browser desktop, two core engines: Growth OS for acquisition and Sales Desk for trade sales.'),
@@ -605,6 +620,7 @@ export const POSTS = [
     section: B('落地方法', 'Getting started'),
     keywords: B(['AI 落地', '企业引入 AI', '业务流程', '数字员工', '审批'], ['AI adoption', 'first AI workflow', 'implementation steps', 'AI employees', 'human approval']),
     title: B('从一条流程开始：AI 落地的五个步骤', 'Start with one workflow: five steps to put AI to work'),
+    titleChunks: ['从一条流程', '开始：', 'AI ', '落地的', '五个步骤'],
     description: B('企业引入 AI 不必一次改造所有部门。先选一条最影响经营的流程，按五个步骤跑通并用真实样本验证，再扩大范围。', 'You don’t need to change every department at once. Pick the workflow that matters most, run it through five steps with real cases, then expand the scope.'),
     takeaways: [
       B('先选一条最影响经营的流程，不必一次改造所有部门。', 'Start with the workflow that matters most, not every department at once.'),
@@ -690,6 +706,7 @@ ${chartStart('en', 1)}
     keywords: B(['Sales Desk', '询盘处理', '外贸报价', 'PI', '报价审批'], ['Sales Desk', 'inquiry handling', 'export quotation', 'proforma invoice', 'quote approval']),
     mentions: ['Sales Desk', 'Growth OS'],
     title: B('Sales Desk：从询盘到批准的报价与 PI', 'Sales Desk: from inquiry to an approved quote and PI'),
+    titleChunks: ['Sales ', 'Desk：', '从询盘', '到批准的', '报价与 PI'],
     description: B('Sales Desk 把需求理解、客户记录、产品匹配、报价草稿、审批和 PI 放进同一条销售链。批准不等于发送，关键价格由有权人决定。', 'How Sales Desk takes an inquiry through customer context, product fit, a policy-based quote, approval and PI — and why approving a quote is not sending it.'),
     takeaways: [
       B('询盘、客户记录、产品匹配、报价和 PI 在同一条销售链上推进。', 'Inquiries, customer records, product fit, quotes and PIs move along one sales chain.'),
@@ -774,6 +791,7 @@ ${chartStart('en', 1)}
     section: B('管理与控制', 'Management and control'),
     keywords: B(['AI 审批', '人工确认', '老板驾驶舱', '预算控制', '人工接管'], ['AI approvals', 'human review', 'owner cockpit', 'budget limits', 'human takeover']),
     title: B('谁来做决定：审批、记录、预算与接管', 'Who decides? Approvals, records, budgets and human takeover'),
+    titleChunks: ['谁来做决定：', '审批、', '记录、', '预算与接管'],
     description: B('AI 可以准备报价、消息和文件，但关键动作由有权人员决定。本文说明哪些动作要审批、审批时看什么，以及预算、暂停接管和老板驾驶舱。', 'AI prepares quotes, messages and documents; authorized people make the key calls. What needs approval, what approvers see and how owners stay in control.'),
     takeaways: [
       B('AI 准备资料和草稿，报价、触达、承诺和付款由有权人员审批。', 'AI prepares; authorized people approve quotes, outreach, commitments and payments.'),
@@ -867,6 +885,7 @@ ${chartOwner('en', 1)}
     keywords: B(['AI 企业操作系统', '网页桌面', '制造业 AI', '外贸 AI', 'Growth OS'], ['AI operating system', 'browser-based desktop', 'AI for manufacturers', 'AI for exporters', 'Growth OS']),
     mentions: ['Growth OS', 'Sales Desk'],
     title: B('什么是网页桌面级 AI 企业操作系统', 'What is a browser-based AI operating system for manufacturers?'),
+    titleChunks: ['什么是', '网页桌面级 ', 'AI ', '企业', '操作系统'],
     description: B('STARGO WORK 面向制造业与外贸企业。本文说明网页桌面级 AI 企业操作系统和聊天工具的区别、两大核心引擎，以及从获客到复购的业务循环。', 'STARGO WORK is a browser-based desktop AI operating system for manufacturers and exporters: how it differs from chat, its two engines and the business loop.'),
     takeaways: [
       B('在浏览器里打开的企业工作桌面，连接应用、文件、客户、知识与数字员工。', 'A company workspace in the browser that connects apps, files, customers, knowledge and AI employees.'),
@@ -955,6 +974,7 @@ ${chartLoop('en', 1)}
     section: B('数字员工', 'AI workforce'),
     keywords: B(['数字员工', 'AI 员工', 'AI 团队协作', '288 个岗位', '岗位目录'], ['AI employees', 'AI workforce', 'AI teamwork', '288 AI roles', 'role directory']),
     title: B('288 个数字员工：怎样组队、沟通、交付', '288 AI roles: how AI employees team up, talk and deliver'),
+    titleChunks: ['288 个', '数字员工：', '怎样组队、', '沟通、', '交付'],
     description: B('288 是覆盖十类企业职能的专业岗位目录。多位 AI 员工现已可以组成团队、互发消息、并行工作，由统筹角色汇总成一个结果交人确认。', '288 is a directory of specialized roles across ten functions. AI employees can now form teams, message each other, work in parallel and deliver one result.'),
     takeaways: [
       B('288 是覆盖十类企业职能的专业岗位目录，不代表替代 288 名真人。', '288 is a directory of specialized roles across ten functions, not 288 people replaced.'),
@@ -1045,6 +1065,7 @@ ${chartTeam('en', 2)}
     section: B('企业知识', 'Enterprise knowledge'),
     keywords: B(['企业知识库', '业务关系图', '企业上下文', '客户数据', 'AI 理解企业'], ['enterprise knowledge base', 'business relationship map', 'business context', 'customer records', 'company knowledge for AI']),
     title: B('企业知识与业务关系图：让 AI 读懂公司', 'Enterprise knowledge and the business relationship map, explained'),
+    titleChunks: ['企业知识', '与', '业务关系图：', '让 AI ', '读懂公司'],
     description: B('知识库回答公司知道什么，业务关系图说明客户、产品、报价、订单和负责人之间怎样关联。两者一起，让 AI 带着企业背景做事。', 'The knowledge base holds what your company knows; the relationship map links customers, products, quotes, orders and owners, so AI works in real context.'),
     takeaways: [
       B('知识库回答“公司知道什么”，业务关系图说明“事情怎样关联、谁负责”。', 'The knowledge base holds what the company knows; the map shows how things connect and who owns them.'),
@@ -1161,6 +1182,7 @@ for (const post of POSTS) {
   if (count(D.zh) < 50 || count(D.zh) > 80) fail(`Chinese description is ${count(D.zh)} characters (50–80)`);
   if (count(D.en) < 120 || count(D.en) > 160) fail(`English description is ${count(D.en)} characters (120–160)`);
   if (/["<>&]/.test(T.zh + T.en + D.zh + D.en)) fail('titles and descriptions are printed into attributes: no " < > &');
+  if (post.titleChunks && (post.titleChunks.join('') !== T.zh || post.titleChunks.some((c) => [...c.replace(/[A-Za-z0-9 ]+/g, 'x')].length > 7))) fail('titleChunks must join into the Chinese title, each chunk at most about seven characters');
   if (!post.takeaways || post.takeaways.length < 3 || post.takeaways.length > 5) fail('3–5 takeaways');
   if (!post.faq || post.faq.length < 3 || post.faq.length > 8) fail('3–8 FAQ pairs');
   if (!post.section?.zh || !post.keywords?.zh?.length || !post.keywords?.en?.length) fail('section and keywords in both languages');

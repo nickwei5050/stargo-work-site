@@ -19,7 +19,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 
 import { makeSub, findByClass, removeByClass, elementContaining, extractElement, setInner, setEachInner, setLink, escapeHtml } from './lib-html.mjs';
 import { applyChrome, remapLinks, relocateAssets, relocateLinks, assertInternalLinks, stillImage, WORDMARK } from './chrome.mjs';
 import * as C from './copy.mjs';
-import { POSTS, BLOG_UI, postPath, featured, others, coverSrc, coverSrcset, formatDate, renderBody } from './blog.mjs';
+import { POSTS, BLOG_UI, postPath, featured, others, coverSrc, coverSrcset, formatDate, renderBody, titleHtml } from './blog.mjs';
 import { loadBlocks, art, capTitle, DONORS } from './block-lib.mjs';
 
 import { SITE } from './paths.mjs';
@@ -1156,7 +1156,8 @@ function postPage(post, lang) {
     const items = others(post, 5).map((p) => `<a role="listitem" href="${postPath(p)}" class="lx-related-item w-dyn-item"><div class="lx-text-size-regular">${escapeHtml(t(p.title))}</div><div class="lx-text-size-small lx-text-size-grey">${escapeHtml(t(p.description))}</div></a>`).join('');
     b = b.slice(0, list.start) + list.text.replace(/>[\s\S]*<\/div>$/, `>${items}</div>`) + b.slice(list.end);
   }
-  b = s(b, '>How AI Companions Can Transform Your Life<', `>${escapeHtml(t(post.title))}<`, { count: 1 });
+  // The heading, in phrases on the Chinese page (tools/blog.mjs titleHtml says why).
+  b = s(b, '>How AI Companions Can Transform Your Life<', `>${titleHtml(post, lang, escapeHtml)}<`, { count: 1 });
   b = s(b, '>Related Items<', `>${t(BLOG_UI.related)}<`, { count: 1 });
   b = s(b, '>More from blog<', `>${t(BLOG_UI.more)}<`, { count: 1 });
   b = swapImg(b, '6945522d9e13fa6b32ace3c9_Futuristic', coverSrc(post));

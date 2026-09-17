@@ -36,6 +36,10 @@
     // With a custom delimiter SplitText pops a trailing empty chunk and then
     // reads the first one; an empty text node would leave it nothing to read.
     if (zh && v.prepareText == null) v.prepareText = function (text) { return text === '' ? ' ' : text; };
+    // A phrase marked .sgp-nobr (the Chinese article headings, tools/blog.mjs
+    // titleHtml) is kept whole: with the per-character delimiter above, lines
+    // could otherwise be cut inside a word such as 「获客」.
+    if (v.ignore == null) v.ignore = '.sgp-nobr';
     return new Orig(targets, v);
   }
   Patched.prototype = Orig.prototype;
