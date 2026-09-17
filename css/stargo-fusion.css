@@ -3538,8 +3538,16 @@ html[lang^="zh"] #start .bottom-grid._1.grd > .top-text.big { white-space: nowra
       dark sections. As its own formatting context the wrapper keeps that
       margin inside, and the band is black like the wrapper; the marquee and
       the section below stay where they were. .cn-produce is on this page
-      only, right after #story-5. */
+      only, right after #story-5.
+      Under 480px the section below brings a top margin of its own (the
+      donor's 60px on .qx-home-project-section), which used to collapse into
+      the marquee's 64px and now stood alone: a 60px white band under the black
+      one. The marquee's margin already parts the two dark sections, so that
+      margin is dropped here, and #story-6 starts where it did before. */
 #story-5 + .cn-produce { display: flow-root; }
+@media screen and (max-width: 479px) {
+  #story-5 + .cn-produce + #story-6 > .qx-home-project-section { margin-top: 0; }
+}
 
 /* 8. The Chinese title 「一条业务 / 主线 / /09」 in #loop. The donor stacks its
       Latin lines at line-height 1 and pulls each lower line up (-1.7rem from
