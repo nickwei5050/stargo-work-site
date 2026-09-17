@@ -341,7 +341,9 @@ export function render(frag, ctx) {
   const words = (s) => zhKeepWords(s, 'stargo-keep')
     .replace('<span class="stargo-keep">STARGO</span> <span class="stargo-keep">WORK</span>', '<span class="stargo-keep">STARGO WORK</span>')
     // the word list cuts 「报价单后」 as 报价|单后
-    .replace('<span class="stargo-keep">报价</span><span class="stargo-keep">单后</span>', '<span class="stargo-keep">报价单后</span>');
+    .replace('<span class="stargo-keep">报价</span><span class="stargo-keep">单后</span>', '<span class="stargo-keep">报价单后</span>')
+    // and the product term 「数字员工」 as 数字|员工 (「数字」/「员工。」 at 320)
+    .replace('<span class="stargo-keep">数字</span><span class="stargo-keep">员工。</span>', '<span class="stargo-keep">数字员工。</span>');
   const body = lang === 'zh' ? words(t(A.desc)) : escapeHtml(t(A.desc));
   const statement = `${keep(t(A.title))}<br/>${body}${run}${keep(t(A.closing))}`;
   html = setText(html, 'cn-text-size-large', statement);
