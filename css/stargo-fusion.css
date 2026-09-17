@@ -2819,6 +2819,544 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
 
 
 /* V7-BLOG-START (blog articles, FAQ blocks) */
+/* The blog (V7, 2026-09-17). Article bodies are printed by tools/blog.mjs
+   renderBody() into `.lx-text-rich-text.stargo-post`: the answer paragraph,
+   the 「要点速览」 takeaways (.sgp-takeaways), h3 sections, the charts
+   (figure.sgc, built from data by the chart* helpers), the value/condition
+   lines of the long guide (.sgp-value / .sgp-cond), the call to action
+   (.sgp-cta) and the FAQ (.sgp-faq). Everything here is scoped to that block,
+   except the blog index hero and the Chinese heading punctuation at the end.
+   Palette and type are lifelogx's own: the pink primary, its deep tertiary,
+   the dark border and greys, "42 Dotsans" for headings and Inter for text. */
+.lx-scope .stargo-post {
+  --sg-accent: var(--_semantics---primary, #e393bd);
+  --sg-hot: var(--_primitives---primary--secondary, #f938a1);
+  --sg-deep: var(--_primitives---primary--tertiary, #500b38);
+  --sg-line: var(--_primitives---primary--border-dark, #292829);
+  --sg-card: #121113;
+  --sg-card-2: #1a191c;
+  --sg-panel: #0b0a0c;
+  --sg-muted: var(--_primitives---primary--text-grey, #989898);
+  --sg-soft: #c9c7cb;
+  --sg-ink: #16060f;
+  --sg-head: var(--_ui-styles---fonts--heading, "42 Dotsans", Arial, sans-serif);
+}
+.lx-scope .stargo-post h3 { text-wrap: balance; }
+.lx-scope .stargo-post h3[id] { scroll-margin-top: 6rem; }
+@media (max-width: 479px) {
+  .lx-scope .stargo-post h3 { font-size: 1.7rem; line-height: 1.25; }
+}
+
+/* Key takeaways, right under the answer paragraph. */
+.lx-scope .stargo-post .sgp-takeaways {
+  margin: 1.75rem 0 2.25rem;
+  padding: 1.25rem 1.4rem 1.1rem;
+  border: 1px solid rgba(227, 147, 189, .38);
+  border-radius: 1rem;
+  background: linear-gradient(135deg, rgba(80, 11, 56, .62), rgba(18, 17, 19, .96) 70%);
+}
+.lx-scope .stargo-post .sgp-takeaways-title {
+  margin: 0 0 .8rem;
+  font-family: var(--sg-head);
+  font-size: .95rem;
+  line-height: 1.3;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--sg-accent);
+}
+.lx-scope .stargo-post .sgp-takeaways ul { list-style: none; margin: 0; padding: 0; overflow: visible; }
+.lx-scope .stargo-post .sgp-takeaways li {
+  position: relative;
+  margin: 0 0 .55rem;
+  padding-left: 1.55rem;
+  line-height: 1.6;
+}
+.lx-scope .stargo-post .sgp-takeaways li:last-child { margin-bottom: 0; }
+.lx-scope .stargo-post .sgp-takeaways li::before {
+  content: "";
+  position: absolute;
+  left: .1rem;
+  top: .52em;
+  width: .6rem;
+  height: .6rem;
+  border-radius: 50%;
+  background: var(--sg-accent);
+  box-shadow: 0 0 0 4px rgba(227, 147, 189, .16);
+}
+
+/* The long guide's contents list. */
+.lx-scope .stargo-post .sgp-toc {
+  margin: 0 0 2.5rem;
+  padding: 1.2rem 1.4rem;
+  border: 1px solid var(--sg-line);
+  border-radius: 1rem;
+  background: var(--sg-panel);
+}
+.lx-scope .stargo-post .sgp-toc-title { margin: 0 0 .75rem; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--sg-muted); }
+.lx-scope .stargo-post .sgp-toc ol { list-style: none; margin: 0; padding: 0; overflow: visible; counter-reset: sgtoc; columns: 2 17rem; column-gap: 2rem; }
+.lx-scope .stargo-post .sgp-toc li {
+  counter-increment: sgtoc;
+  position: relative;
+  break-inside: avoid;
+  margin: 0 0 .5rem;
+  padding-left: 2rem;
+  font-size: .92rem;
+  line-height: 1.45;
+}
+.lx-scope .stargo-post .sgp-toc li::before {
+  content: counter(sgtoc, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  color: var(--sg-accent);
+  font-variant-numeric: tabular-nums;
+}
+.lx-scope .stargo-post .sgp-toc a { color: inherit; text-decoration: none; }
+.lx-scope .stargo-post .sgp-toc a:hover,
+.lx-scope .stargo-post .sgp-toc a:focus-visible { color: var(--sg-accent); text-decoration: underline; }
+
+/* Value and availability lines under each guide section. */
+.lx-scope .stargo-post :is(.sgp-value, .sgp-cond) {
+  margin: 0 0 .65rem;
+  padding: .1rem 0 .1rem .9rem;
+  border-left: 2px solid var(--sg-line);
+  font-size: .95rem;
+  line-height: 1.65;
+}
+.lx-scope .stargo-post .sgp-value { border-left-color: var(--sg-accent); }
+.lx-scope .stargo-post .sgp-cond { color: var(--sg-soft); }
+.lx-scope .stargo-post .sgp-value strong { color: var(--sg-accent); font-weight: 600; }
+.lx-scope .stargo-post .sgp-cond strong { color: #fffffe; font-weight: 600; }
+
+/* The closing call to action. */
+.lx-scope .stargo-post .sgp-cta {
+  margin: 2.5rem 0 0;
+  padding: 1.1rem 1.35rem;
+  border: 1px solid rgba(227, 147, 189, .3);
+  border-radius: 1rem;
+  background: var(--sg-card);
+  font-weight: 500;
+  line-height: 1.6;
+}
+.lx-scope .stargo-post .sgp-cta a { font-weight: 600; white-space: nowrap; }
+
+/* FAQ at the end of every article (the same words as its FAQPage data). */
+.lx-scope .stargo-post .sgp-faq { margin-top: 3.5rem; padding-top: .5rem; border-top: 1px solid var(--sg-line); }
+.lx-scope .stargo-post .sgp-faq h3 { margin-top: 2rem; }
+.lx-scope .stargo-post .sgp-faq-item { padding: 1.1rem 0 1.15rem; border-bottom: 1px solid var(--sg-line); }
+.lx-scope .stargo-post .sgp-faq-item h4 {
+  margin: 0 0 .5rem;
+  font-family: var(--_ui-styles---fonts--text, Inter, sans-serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: normal;
+}
+.lx-scope .stargo-post .sgp-faq-item p { margin: 0; color: var(--sg-soft); }
+
+/* ---- charts --------------------------------------------------------------
+   figure.sgc is a size container: every chart lays itself out for the width
+   it actually has (the article column is 1fr beside the related list above
+   991px and full width below), stacked by default and in rows from 480–600px
+   of chart width. Webflow's rich-text sheet shrinks figures to 60% and hides
+   the text of any div inside a figure (`.w-richtext figure div`); both are
+   undone here. Text is real text; the bars and frames are decoration. */
+.lx-scope .stargo-post figure.sgc {
+  container-type: inline-size;
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  margin: 2rem 0 2.25rem;
+  padding: 1.25rem;
+  border: 1px solid var(--sg-line);
+  border-radius: 1.25rem;
+  background: radial-gradient(120% 80% at 0% 0%, rgba(80, 11, 56, .42), transparent 62%), var(--sg-panel);
+  color: #fffffe;
+  font-family: var(--_ui-styles---fonts--text, Inter, sans-serif);
+  font-size: 1rem;
+}
+.lx-scope .stargo-post figure.sgc div { color: inherit; font-size: inherit; }
+.lx-scope .stargo-post .sgc :is(ul, ol) { list-style: none; margin: 0; padding: 0; overflow: visible; }
+.lx-scope .stargo-post .sgc :is(li, p) { margin: 0; opacity: 1; letter-spacing: normal; line-height: 1.45; }
+.lx-scope .stargo-post .sgc strong { font-weight: 600; }
+.lx-scope .stargo-post .sgc-cap { display: flex; flex-wrap: wrap; align-items: baseline; gap: .4rem .7rem; margin: 0 0 1.15rem; text-align: left; }
+.lx-scope .stargo-post .sgc-no {
+  flex: none;
+  padding: .15rem .6rem;
+  border: 1px solid rgba(227, 147, 189, .45);
+  border-radius: 999px;
+  color: var(--sg-accent);
+  font-size: .72rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.lx-scope .stargo-post .sgc-title { flex: 1 1 14rem; min-width: 0; font-family: var(--sg-head); font-size: 1.2rem; line-height: 1.35; }
+.lx-scope .stargo-post .sgc .sgc-label { margin: 1rem 0 .5rem; color: var(--sg-muted); font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; }
+.lx-scope .stargo-post .sgc .sgc-note { margin-top: 1.1rem; color: var(--sg-muted); font-size: .82rem; line-height: 1.6; }
+.lx-scope .stargo-post .sgc-idx { color: var(--sg-accent); font-size: .72rem; font-variant-numeric: tabular-nums; letter-spacing: .06em; }
+
+/* Steps: a card per step, joined by an arrow badge in the gap. */
+.lx-scope .stargo-post .sgc-flow { --sgc-gap: 1rem; display: grid; gap: var(--sgc-gap); }
+.lx-scope .stargo-post .sgc-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.7rem minmax(0, 1fr);
+  column-gap: .6rem;
+  row-gap: .15rem;
+  align-content: start;
+  padding: .8rem .9rem;
+  border: 1px solid var(--sg-line);
+  border-radius: .85rem;
+  background: var(--sg-card);
+}
+.lx-scope .stargo-post .sgc-step > .sgc-idx { grid-row: 1 / span 3; padding-top: .22rem; }
+.lx-scope .stargo-post .sgc-step-title { font-size: 1rem; line-height: 1.35; }
+.lx-scope .stargo-post .sgc-tag { color: var(--sg-accent); font-size: .8rem; }
+.lx-scope .stargo-post .sgc-step-text { color: var(--sg-soft); font-size: .85rem; line-height: 1.5; }
+.lx-scope .stargo-post :is(.sgc-flow > li, .sgc-lanes > *, .sgc-team > *) { position: relative; }
+.lx-scope .stargo-post :is(.sgc-flow > li + li, .sgc-lanes > * + *, .sgc-team > * + *)::before {
+  content: "↓";
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: calc(var(--sgc-gap, 1rem) / -2 - 1px);
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  border: 1px solid rgba(227, 147, 189, .5);
+  border-radius: 50%;
+  background: var(--sg-panel);
+  color: var(--sg-accent);
+  font-size: .72rem;
+  line-height: 1;
+}
+.lx-scope .stargo-post .sgc-back { display: flex; align-items: center; gap: .5rem; margin-top: 1rem; color: var(--sg-soft); font-size: .88rem; }
+.lx-scope .stargo-post .sgc-back-icon { flex: none; color: var(--sg-accent); font-size: 1.15rem; line-height: 1; }
+.lx-scope .stargo-post .sgc .sgc-motto { margin-top: 1.4rem; text-align: center; color: var(--sg-accent); font-family: var(--sg-head); font-size: 1.1rem; line-height: 1.4; }
+
+/* Rows once the chart is wide enough: the arrow moves into the column gap. */
+@container (min-width: 480px) {
+  .lx-scope .stargo-post :is(.sgc-flow-3, .sgc-flow-6) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .lx-scope .stargo-post :is(.sgc-flow-4) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lx-scope .stargo-post :is(.sgc-flow-3, .sgc-flow-4, .sgc-flow-6) .sgc-step { grid-template-columns: 1fr; }
+  .lx-scope .stargo-post :is(.sgc-flow-3, .sgc-flow-4, .sgc-flow-6) .sgc-step > .sgc-idx { grid-row: auto; padding: 0 0 .2rem; }
+  .lx-scope .stargo-post :is(.sgc-flow-3, .sgc-flow-4, .sgc-flow-6) > li + li::before { content: "→"; left: calc(var(--sgc-gap) / -2 - 1px); top: 50%; }
+  .lx-scope .stargo-post .sgc-flow-4 > li:nth-child(2n + 1)::before,
+  .lx-scope .stargo-post .sgc-flow-6 > li:nth-child(3n + 1)::before { content: none; }
+}
+@container (min-width: 600px) {
+  .lx-scope .stargo-post .sgc-flow-5 { --sgc-gap: .9rem; grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .lx-scope .stargo-post .sgc-flow-5 .sgc-step { grid-template-columns: 1fr; padding: .85rem .75rem; }
+  .lx-scope .stargo-post .sgc-flow-5 .sgc-step > .sgc-idx { grid-row: auto; padding: 0 0 .25rem; }
+  .lx-scope .stargo-post .sgc-flow-5 > li + li::before { content: "→"; left: calc(var(--sgc-gap) / -2 - 1px); top: 50%; }
+  .lx-scope .stargo-post .sgc-numbered .sgc-step > .sgc-idx { font-family: var(--sg-head); font-size: 1.6rem; line-height: 1; letter-spacing: 0; }
+}
+
+/* Chips. */
+.lx-scope .stargo-post .sgc-chips { display: flex; flex-wrap: wrap; gap: .4rem; }
+.lx-scope .stargo-post .sgc-chips li {
+  padding: .3rem .7rem;
+  border: 1px solid var(--sg-line);
+  border-radius: 999px;
+  background: var(--sg-card-2);
+  font-size: .82rem;
+  line-height: 1.35;
+}
+.lx-scope .stargo-post .sgc-chips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); }
+.lx-scope .stargo-post .sgc-chips-grid li { border-radius: .6rem; }
+.lx-scope .stargo-post .sgc-chips-solid li { border-color: transparent; background: var(--sg-accent); color: var(--sg-ink); font-weight: 600; }
+.lx-scope .stargo-post .sgc-traits { margin-top: 1rem; }
+.lx-scope .stargo-post .sgc-traits li { color: var(--sg-soft); }
+
+/* (2) Growth OS → Sales Desk. */
+.lx-scope .stargo-post .sgc-lanes { --sgc-gap: 1.1rem; display: grid; gap: var(--sgc-gap); }
+.lx-scope .stargo-post :is(.sgc-lane, .sgc-duo-card, .sgc-team > div) {
+  padding: 1rem;
+  border: 1px solid var(--sg-line);
+  border-radius: 1rem;
+  background: rgba(18, 17, 19, .92);
+}
+.lx-scope .stargo-post .sgc .sgc-lane-title { margin: 0 0 .1rem; font-family: var(--sg-head); font-size: 1.05rem; line-height: 1.35; }
+.lx-scope .stargo-post .sgc-lane > .sgc-label:first-of-type { margin-top: .6rem; }
+.lx-scope .stargo-post .sgc .sgc-profile { margin: .75rem 0 1rem; color: var(--sg-accent); font-size: .85rem; }
+.lx-scope .stargo-post .sgc-lane .sgc-flow { margin-top: 1rem; }
+.lx-scope .stargo-post .sgc-handoff {
+  padding: 1rem;
+  border: 1px solid rgba(227, 147, 189, .5);
+  border-radius: 1rem;
+  background: linear-gradient(135deg, var(--sg-deep), #22091a);
+}
+.lx-scope .stargo-post .sgc-handoff-title strong { font-size: 1.05rem; }
+.lx-scope .stargo-post .sgc .sgc-handoff-text { margin-top: .25rem; color: #f2d7e6; font-size: .86rem; line-height: 1.5; }
+.lx-scope .stargo-post .sgc-handoff .sgc-label { color: #f2d7e6; }
+.lx-scope .stargo-post .sgc-chain { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem 0; }
+.lx-scope .stargo-post .sgc-chain li {
+  position: relative;
+  padding: .32rem .7rem;
+  border-radius: .5rem;
+  background: var(--sg-card-2);
+  font-size: .86rem;
+  font-weight: 600;
+}
+.lx-scope .stargo-post .sgc-chain li + li { margin-left: 1.35rem; }
+.lx-scope .stargo-post .sgc-chain li + li::before {
+  content: "→";
+  position: absolute;
+  left: -1.05rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--sg-accent);
+  font-weight: 400;
+}
+
+/* (3) The role directory as bars. */
+.lx-scope .stargo-post .sgc-bars { display: grid; gap: .7rem; }
+.lx-scope .stargo-post .sgc-bar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "name value" "track track";
+  align-items: baseline;
+  column-gap: .75rem;
+  row-gap: .3rem;
+}
+.lx-scope .stargo-post .sgc-bar-name { grid-area: name; font-size: .9rem; line-height: 1.35; }
+.lx-scope .stargo-post .sgc-bar-value { grid-area: value; color: var(--sg-muted); font-size: .8rem; white-space: nowrap; }
+.lx-scope .stargo-post .sgc-bar-value strong { color: #fffffe; font-size: 1rem; font-variant-numeric: tabular-nums; }
+.lx-scope .stargo-post .sgc-bar-track { grid-area: track; display: block; height: .55rem; overflow: hidden; border-radius: 999px; background: #1f1e21; }
+.lx-scope .stargo-post .sgc-bar-fill { display: block; width: var(--sgc-share, 0%); height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--sg-deep), var(--sg-hot) 55%, var(--sg-accent)); }
+.lx-scope .stargo-post .sgc-total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: .8rem;
+  border-top: 1px solid var(--sg-line);
+  font-weight: 600;
+}
+.lx-scope .stargo-post .sgc-total-value { color: var(--sg-muted); font-size: .85rem; }
+.lx-scope .stargo-post .sgc-total-value strong { color: var(--sg-accent); font-family: var(--sg-head); font-size: 1.8rem; line-height: 1; font-weight: 500; }
+@container (min-width: 520px) {
+  .lx-scope .stargo-post .sgc-bar { grid-template-columns: minmax(8rem, 14rem) minmax(0, 1fr) 4.75rem; grid-template-areas: "name track value"; align-items: center; }
+  .lx-scope .stargo-post .sgc-bar-track { height: .8rem; }
+  .lx-scope .stargo-post .sgc-bar-value { text-align: right; }
+}
+
+/* (4) AI teamwork. */
+.lx-scope .stargo-post .sgc-team { --sgc-gap: 1.1rem; display: grid; gap: var(--sgc-gap); }
+.lx-scope .stargo-post .sgc .sgc-quote { font-family: var(--sg-head); font-size: 1.25rem; line-height: 1.35; }
+.lx-scope .stargo-post .sgc-team-brief .sgc-label { margin-top: 0; }
+.lx-scope .stargo-post .sgc .sgc-aside { margin-top: .5rem; color: var(--sg-muted); font-size: .75rem; }
+.lx-scope .stargo-post .sgc .sgc-hub {
+  display: grid;
+  justify-items: center;
+  gap: .15rem;
+  max-width: 17rem;
+  margin: 0 auto 1rem;
+  padding: .9rem 1.2rem;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 25%, var(--sg-hot), var(--sg-deep) 72%);
+  box-shadow: 0 0 0 6px rgba(227, 147, 189, .12);
+  text-align: center;
+}
+.lx-scope .stargo-post .sgc-hub strong { font-family: var(--sg-head); font-size: 1.15rem; font-weight: 500; }
+.lx-scope .stargo-post .sgc-hub span { color: #f7e1ec; font-size: .78rem; line-height: 1.35; }
+.lx-scope .stargo-post .sgc-roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: .5rem; }
+.lx-scope .stargo-post .sgc-role { display: grid; align-content: start; gap: .15rem; padding: .7rem .8rem; border: 1px solid var(--sg-line); border-radius: .75rem; background: var(--sg-card-2); }
+.lx-scope .stargo-post .sgc-role-name { font-size: .92rem; line-height: 1.3; }
+.lx-scope .stargo-post .sgc-role-task { color: var(--sg-soft); font-size: .8rem; line-height: 1.4; }
+.lx-scope .stargo-post .sgc-role-lead { border-color: rgba(227, 147, 189, .55); background: #251220; }
+.lx-scope .stargo-post .sgc-msgs { display: grid; gap: .45rem; }
+.lx-scope .stargo-post .sgc-msg {
+  display: grid;
+  gap: .1rem;
+  padding: .5rem .75rem;
+  border: 1px solid rgba(227, 147, 189, .28);
+  border-radius: .8rem .8rem .8rem .2rem;
+  background: rgba(80, 11, 56, .35);
+}
+.lx-scope .stargo-post .sgc-msg-who { color: var(--sg-accent); font-size: .72rem; line-height: 1.35; }
+.lx-scope .stargo-post .sgc-msg-text { font-size: .88rem; }
+.lx-scope .stargo-post .sgc-team-out .sgc-label { margin-top: 0; }
+.lx-scope .stargo-post .sgc-outlist li { padding: .45rem 0; border-bottom: 1px solid var(--sg-line); font-size: .92rem; font-weight: 500; }
+.lx-scope .stargo-post .sgc .sgc-review {
+  display: flex;
+  justify-content: center;
+  gap: .45rem;
+  margin-top: .9rem;
+  padding: .65rem .8rem;
+  border-radius: .75rem;
+  background: var(--sg-accent);
+  color: var(--sg-ink);
+  font-weight: 700;
+}
+@container (min-width: 640px) {
+  .lx-scope .stargo-post .sgc-team { grid-template-columns: minmax(0, .85fr) minmax(0, 2.1fr) minmax(0, 1fr); align-items: start; }
+  .lx-scope .stargo-post .sgc-team > div + div::before { content: "→"; left: calc(var(--sgc-gap) / -2 - 1px); top: 3rem; }
+  .lx-scope .stargo-post .sgc-roles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lx-scope .stargo-post .sgc-role-lead { grid-column: 1 / -1; }
+}
+
+/* (5) One-click video. */
+.lx-scope .stargo-post .sgc .sgc-brief {
+  display: grid;
+  gap: .3rem;
+  margin-bottom: 1.1rem;
+  padding: .85rem 1rem;
+  border: 1px solid var(--sg-line);
+  border-radius: 1rem;
+  background: var(--sg-card);
+}
+.lx-scope .stargo-post .sgc-brief .sgc-label { margin: 0; }
+.lx-scope .stargo-post .sgc-brief .sgc-quote { font-size: 1.1rem; }
+.lx-scope .stargo-post .sgc-pills { display: flex; flex-wrap: wrap; align-items: center; gap: .55rem 0; }
+.lx-scope .stargo-post .sgc-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: .4rem;
+  padding: .38rem .75rem;
+  border: 1px solid var(--sg-line);
+  border-radius: 999px;
+  background: var(--sg-card-2);
+  font-size: .88rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.lx-scope .stargo-post .sgc-pill + .sgc-pill { margin-left: 1.3rem; }
+.lx-scope .stargo-post .sgc-pill + .sgc-pill::before { content: "→"; position: absolute; left: -1.02rem; top: 50%; transform: translateY(-50%); color: var(--sg-accent); font-weight: 400; }
+.lx-scope .stargo-post .sgc-pill:last-child { border-color: transparent; background: var(--sg-accent); color: var(--sg-ink); }
+.lx-scope .stargo-post .sgc-pill:last-child .sgc-idx { color: var(--sg-deep); }
+.lx-scope .stargo-post .sgc-video-grid { display: grid; gap: 1rem; margin-top: .4rem; }
+.lx-scope .stargo-post .sgc-beats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
+.lx-scope .stargo-post .sgc-frame-beat {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: .5rem;
+  min-height: 5.25rem;
+  padding: .6rem .7rem;
+  border: 1px solid var(--sg-line);
+  border-radius: .7rem;
+  background: linear-gradient(165deg, #2b0f21, var(--sg-card) 70%);
+  font-size: .86rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.lx-scope .stargo-post .sgc-formats { display: flex; align-items: flex-end; justify-content: space-around; gap: .75rem; padding: .25rem 0; }
+.lx-scope .stargo-post .sgc-format { display: grid; justify-items: center; gap: .3rem; text-align: center; font-size: .82rem; }
+.lx-scope .stargo-post .sgc-shape { display: block; border: 2px solid var(--sg-accent); border-radius: .35rem; background: rgba(227, 147, 189, .12); }
+.lx-scope .stargo-post .sgc-shape-portrait { width: 2.3rem; height: 4.1rem; }
+.lx-scope .stargo-post .sgc-shape-landscape { width: 5.4rem; height: 3.05rem; }
+.lx-scope .stargo-post .sgc-shape-square { width: 3.3rem; height: 3.3rem; }
+.lx-scope .stargo-post .sgc-format-ratio { color: var(--sg-muted); font-size: .75rem; font-variant-numeric: tabular-nums; }
+@container (min-width: 560px) {
+  .lx-scope .stargo-post .sgc-video-grid { grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); align-items: start; }
+  .lx-scope .stargo-post .sgc-beats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .lx-scope .stargo-post .sgc-frame-beat { min-height: 6.5rem; }
+}
+
+/* (6) Proactive loop: examples under the steps. */
+.lx-scope .stargo-post .sgc-examples { display: grid; gap: .5rem; }
+.lx-scope .stargo-post .sgc-example { display: grid; gap: .2rem; padding: .7rem .85rem; border-left: 2px solid var(--sg-accent); border-radius: 0 .7rem .7rem 0; background: var(--sg-card); }
+.lx-scope .stargo-post .sgc-example strong { font-size: .92rem; }
+.lx-scope .stargo-post .sgc-example span { color: var(--sg-soft); font-size: .84rem; line-height: 1.5; }
+@container (min-width: 560px) {
+  .lx-scope .stargo-post .sgc-examples { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* (8) Owner control trio. */
+.lx-scope .stargo-post .sgc-trio { display: grid; gap: .6rem; }
+.lx-scope .stargo-post .sgc-trio-item { display: grid; align-content: start; gap: .3rem; padding: 1rem; border: 1px solid var(--sg-line); border-radius: .9rem; background: var(--sg-card); }
+.lx-scope .stargo-post .sgc-trio-title { font-family: var(--sg-head); font-size: 1.45rem; font-weight: 500; line-height: 1.2; }
+@container (min-width: 520px) {
+  .lx-scope .stargo-post .sgc-trio { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* (9) Availability. */
+.lx-scope .stargo-post .sgc-statuses { display: grid; gap: .6rem; }
+.lx-scope .stargo-post .sgc-status { display: grid; align-content: start; gap: .55rem; padding: .9rem 1rem; border: 1px solid var(--sg-line); border-radius: .9rem; background: var(--sg-card); }
+.lx-scope .stargo-post .sgc-status-title { display: flex; align-items: center; gap: .5rem; font-size: .98rem; line-height: 1.35; }
+.lx-scope .stargo-post .sgc-status-title::before { content: ""; flex: none; width: .65rem; height: .65rem; border: 2px solid var(--sg-muted); border-radius: 50%; }
+.lx-scope .stargo-post .sgc-status-now { border-color: rgba(227, 147, 189, .6); background: linear-gradient(135deg, rgba(80, 11, 56, .7), var(--sg-card) 75%); }
+.lx-scope .stargo-post .sgc-status-now .sgc-status-title::before { border-color: var(--sg-accent); background: var(--sg-accent); }
+.lx-scope .stargo-post .sgc-status-base .sgc-status-title::before { border-color: var(--sg-accent); background: linear-gradient(90deg, var(--sg-accent) 50%, transparent 50%); }
+.lx-scope .stargo-post .sgc-status-next { border-style: dashed; }
+.lx-scope .stargo-post .sgc-status ul { display: grid; gap: .35rem; }
+.lx-scope .stargo-post .sgc-status li li,
+.lx-scope .stargo-post .sgc-status ul > li { position: relative; padding-left: .95rem; color: var(--sg-soft); font-size: .85rem; line-height: 1.5; }
+.lx-scope .stargo-post .sgc-status ul > li::before { content: ""; position: absolute; left: 0; top: .62em; width: .35rem; height: .35rem; border-radius: 50%; background: var(--sg-muted); }
+@container (min-width: 560px) {
+  .lx-scope .stargo-post .sgc-statuses { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* (10) Knowledge and the relationship map. */
+.lx-scope .stargo-post .sgc-duo { display: grid; gap: .75rem; }
+.lx-scope .stargo-post .sgc-duo-card { display: grid; align-content: start; gap: .8rem; }
+.lx-scope .stargo-post .sgc-checks { display: grid; gap: .3rem; }
+.lx-scope .stargo-post .sgc-checks li { position: relative; padding-left: 1.3rem; color: var(--sg-soft); font-size: .86rem; }
+.lx-scope .stargo-post .sgc-checks li::before { content: "✓"; position: absolute; left: 0; color: var(--sg-accent); }
+.lx-scope .stargo-post .sgc-questions { display: grid; gap: .35rem; }
+.lx-scope .stargo-post .sgc-questions li { padding: .45rem .7rem; border-radius: .6rem .6rem .6rem .15rem; background: rgba(80, 11, 56, .4); font-size: .86rem; }
+.lx-scope .stargo-post .sgc-chain-core li { background: var(--sg-deep); }
+@container (min-width: 560px) {
+  .lx-scope .stargo-post .sgc-duo { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 479px) {
+  .lx-scope .stargo-post figure.sgc { margin-left: 0; margin-right: 0; padding: 1rem .85rem; border-radius: 1rem; }
+  .lx-scope .stargo-post :is(.sgp-takeaways, .sgp-toc) { padding: 1rem; }
+  .lx-scope .stargo-post .sgp-toc ol { columns: 1; }
+  .lx-scope .stargo-post .sgc-title { font-size: 1.08rem; }
+  .lx-scope .stargo-post .sgp-cta a { white-space: normal; }
+}
+
+/* Blog index hero (V5 P09).
+   English: at 320 the heading ran to four lines with 「work.」 alone. Up to
+   about 345px wide the 2.7rem heading cannot fit "Understand AI" or
+   "business work." on a line, so it now scales with the viewport there
+   (12.5vw = 40px at 320) and balances into three lines; from 346px it is the
+   template's 2.7rem again. */
+@media (max-width: 479px) {
+  html[lang="en"] .lx-scope .lx-blog-hero-title { font-size: min(2.7rem, 12.5vw); }
+}
+/* Chinese intro: only ever break at its punctuation and at the <wbr>s the
+   copy carries (tools/blog.mjs BLOG_UI.intro), so 「数字员工」 stays whole. */
+html[lang^="zh"] .lx-scope .stargo-blog-intro .lx-text-size-regular { word-break: keep-all; overflow-wrap: anywhere; }
+
+/* Chinese blog headings: full-width punctuation.
+   The heading face, 42dot Sans, is a Korean font. It carries its own ，。：？
+   glyphs, drawn in the middle of the em box as Korean typography does, so
+   「真实业务，」 read as if a space stood before the comma, and every 「：」 and
+   「？」 in an article heading did the same. It has no `halt` feature, so
+   `font-feature-settings: "halt"` and `text-spacing-trim` (which relies on it)
+   cannot help. A unicode-range face sends the CJK punctuation blocks alone to
+   a Simplified Chinese system font — comma and stop sit at the bottom left, as
+   Chinese readers expect — and leaves every other character to 42dot Sans.
+   Where no listed font is installed the face is skipped and nothing changes. */
+@font-face {
+  font-family: "Stargo CJK Punct";
+  src: local("PingFang SC"), local("PingFangSC-Regular"), local("Microsoft YaHei"), local("MicrosoftYaHei"),
+    local("Noto Sans CJK SC"), local("NotoSansCJKsc-Regular"), local("Noto Sans SC"), local("Source Han Sans SC"), local("SourceHanSansSC-Regular");
+  unicode-range: U+3000-303F, U+FF01-FF60;
+  font-display: swap;
+}
+html[lang^="zh"] .lx-scope :is(.lx-blog-hero-title, .lx-blog-title, .lx-blog-title-holder),
+html[lang^="zh"] .lx-scope .stargo-post :is(h3, .sgc-title, .sgc-quote, .sgc-lane-title, .sgc-hub strong, .sgc-trio-title, .sgc-motto, .sgp-takeaways-title) {
+  font-family: "Stargo CJK Punct", var(--_ui-styles---fonts--heading, "42 Dotsans"), Arial, sans-serif;
+}
+/* With the comma and the stop now at the left of their em box, their empty
+   right half still counted when the centred hero lines were measured, pulling
+   「真实业务，」 and 「看懂每一步。」 half a character to the left. SplitText
+   (js/stargo-splittext-cjk.js) keeps punctuation in the word before it, and
+   the build puts the one <br> right after the comma, so the comma is the last
+   letter of the word before <br> and the stop the last letter of the heading. */
+html[lang^="zh"] .lx-scope .lx-blog-hero-title :is(.gsap_split_word:has(+ br), .gsap_split_word:last-child) > .gsap_split_letter:last-child {
+  margin-right: -.5em;
+}
 /* V7-BLOG-END */
 
 

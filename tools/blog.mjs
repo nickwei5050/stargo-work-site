@@ -72,7 +72,7 @@ const figNo = (n, lang) => (lang === 'zh' ? `图 ${n}` : `Figure ${n}`);
 
 /** One chart: a figure whose caption is its title; `inner` is the chart body. */
 function figure(kind, n, lang, title, inner, note) {
-  return `<figure class="sgc sgc-${kind}">`
+  return `<figure class="sgc sgc--${kind}">`
     + `<figcaption class="sgc-cap"><span class="sgc-no">${figNo(n, lang)}</span><span class="sgc-title">${esc(tx(title, lang))}</span></figcaption>`
     + inner
     + (note ? `<p class="sgc-note">${esc(tx(note, lang))}</p>` : '')
