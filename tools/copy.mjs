@@ -1708,10 +1708,10 @@ export const ABOUT = {
      The fourth was 「调度中枢」/"Orchestrator", an engineering word; V6 calls the
      role that checks and consolidates a team's work a coordinator. */
   circles: [
-    { label: B('市场信号 AI 员工', 'Market Signal Agent'), image: 'assets/stargo/avatar-01.png' },
-    { label: B('报价 AI 员工', 'Quote Agent'), image: 'assets/stargo/avatar-03.png' },
-    { label: B('跟进 AI 员工', 'Follow-up Agent'), image: 'assets/stargo/avatar-05.png' },
-    { label: B('统筹 AI 员工', 'Coordinator Agent'), image: 'assets/stargo/avatar-06.png' },
+    { label: B('市场信号 AI 员工', 'Market Signal AI'), image: 'assets/stargo/avatar-01.png' },
+    { label: B('报价 AI 员工', 'Quotation AI'), image: 'assets/stargo/avatar-03.png' },
+    { label: B('跟进 AI 员工', 'Follow-up AI'), image: 'assets/stargo/avatar-05.png' },
+    { label: B('统筹 AI 员工', 'Coordination AI'), image: 'assets/stargo/avatar-06.png' },
   ],
   bigImage: { src: 'assets/stargo-motion/orbit-poster.webp', alt: B('银色轨道协同运转的品牌概念画面', 'Brand concept: silver orbital forms moving together') },
   storyTitle: B('我们的来历', 'Our story'),

@@ -4058,6 +4058,38 @@ html[lang^="zh"] .lx-scope .lx-cta-wrapper .lx-cta-logo-holder .lx-text-size-reg
   word-break: keep-all;
   overflow-wrap: anywhere;
 }
+
+/* about.html, the four AI-employee tiles: the title pill under each clip.
+   The donor grid is `1fr 1fr`, so the title had half the pill (88px at 320,
+   164-191px at 992-1100) and the arrow the other half, and two empty donor
+   slots beside the title took 16px more: "MARKET / SIGNAL / AGENT",
+   "FOLLOW- / UP AGENT", 「报价 AI」/「员工」 (320), 「市场信号 AI」/「员工」
+   (360-430). The title now has the pill's width less the arrow, the empty
+   slots are not drawn, and the last two words of a title stay together
+   (tools/blocks/cn-about-projects.mjs; `.stargo-keep` is the Chinese rule
+   elsewhere in this file). The arrow keeps its place at the right end. */
+.cn-about-projects .cn-case-study-content-grid { grid-template-columns: minmax(0, 1fr) auto; }
+.cn-about-projects .cn-case-study-item > .cn-text-size-medium:empty { display: none; }
+.cn-about-projects .cn-case-study-item .stargo-nobr { white-space: nowrap; }
+
+/* about.html and pricing.html, the review slider: the site's focus ring
+   ([tabindex]:focus-visible) lost to the donor's `outline: 0` on the arrows
+   (`.cn-about-reviews .w-slider-arrow-left:focus`, 0,3,0), so a keyboard user
+   tabbing to Previous / Next saw nothing change. The ring is drawn inside the
+   rounded arrow. */
+.cn-about-reviews .w-slider .w-slider-arrow-left:focus-visible,
+.cn-about-reviews .w-slider .w-slider-arrow-right:focus-visible,
+.cn-reviews .w-slider .w-slider-arrow-left:focus-visible,
+.cn-reviews .w-slider .w-slider-arrow-right:focus-visible {
+  outline: 2px solid #e8823a;
+  outline-offset: -3px;
+  border-radius: 16px;
+}
+
+/* about.html, English, the review attribution: "Trade manager · illustrative
+   / scenario" left one word alone at 320-768. Balanced, the line breaks after
+   the dot or not at all. */
+html[lang="en"] .cn-about-reviews .cn-testimonial-info .cn-text-size-medium { text-wrap: balance; }
 @media screen and (min-width: 1440px) {
   .lx-scope .lx-cta-wrapper .lx-cta-logo-holder { max-width: 88%; }
 }
