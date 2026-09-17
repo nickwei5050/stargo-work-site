@@ -2847,6 +2847,11 @@ html[lang^="zh"] .utility-page-content h1.h2 { text-wrap: balance; }
 /*      The quote is plain text (not split per letter); in Chinese it ended
         「…可验收的结/果。」」 at 768 and 1024. `pretty` reworks the last lines. */
 html[lang^="zh"] .stargo-contact-page .testimonials-card .card-testi > .top-text.for-tst { text-wrap: pretty; }
+/*      English: the quote, and the two long form labels ("What would you like AI
+        to improve / first?", "What workflow do you want AI to / improve?"),
+        ended on one word. */
+html[lang^="en"] .stargo-contact-page .testimonials-card .card-testi > .top-text.for-tst { text-wrap: pretty; }
+html[lang^="en"] .stargo-contact-page .cn-contact .cn-form-label { text-wrap: balance; }
 
 /* H2. Homepage #loop, the small labels on the three 3D cards (ERP 与履约 /
        AI 创作 / 数字员工; "ERP & delivery" / "AI creative" / "AI teams").
@@ -2920,6 +2925,9 @@ html[lang^="zh"] .stargo-contact-page .testimonials-card .card-testi > .top-text
 html[lang^="en"] .sc-scope.sc-hero .hero-title-inner-block { flex-wrap: wrap; }
 html[lang^="en"] .sc-scope.sc-hero .hero-title-changing-words-wrapper { align-items: center; }
 html[lang^="en"] .sc-scope.sc-hero .hero-title-changeing-word { white-space: nowrap; }
+/*     At 320 the heading lines themselves broke "Carry it through" / "to";
+       balanced: "Carry it" / "through to". */
+html[lang^="en"] .sc-scope.sc-hero .hero-title-block h2 { text-wrap: balance; }
 
 /* H4. Homepage, 288 section, dark card: the label (「(按任务组队)」 /
        "(Teams by task)") and the avatar row. Below 992px Mono pins the two,
@@ -2982,6 +2990,7 @@ html[lang^="zh"] .testimonials-section .testimonials-width > div:has(> p.top-tex
   body:has(#loop) section:has(.service-title) .bottom-grid.grd > p.top-text:first-child,
   html[lang^="zh"] #compare .bottom-grid.mw.grd > p.top-text {
     margin-right: calc(-100% - 10px + 28px);
+    min-width: 0;
     text-wrap: balance;
   }
   body:has(#loop) section:has(.service-title) .bottom-grid.grd > .circle-divider { justify-self: end; }
@@ -3020,6 +3029,38 @@ html[lang^="zh"] section.drk h2.h2.for-stats {
         balanced block now; the statement above it keeps its forced break. */
 html[lang^="en"] .footer-part-1 h2.h2 > span { display: block; text-wrap: balance; }
 
+/* H19. Homepage sweep: short texts that ended on one word or one character.
+   - English: section captions, the scenario speakers, the chat bubbles, the
+     product tab names, the FAQ questions, the article titles and the pricing
+     heading are balanced ("(The problem was never a missing / tool)",
+     "(288 AI roles · not concurrent / runs)", "Needs an authorized /
+     reviewer", "AI Creative · Images & / video", "…“288 digital employees” /
+     mean?", "From inquiry to quote, without starting in / Excel", "One
+     system. The / right level of / support."), and so are the short quotes and
+     plan lines of the flip cards and scenarios ("…approvals and /
+     acceptance.”", "…self-service lead / discovery."), where `pretty` left
+     the last word alone. Longer running text (the product descriptions, the
+     comparison lines) takes `pretty`.
+   - Chinese: the pricing flip cards' quotes and labels and the Enterprise
+     quote (「…带动增/长。」」, 「…对外工/作。」」, 「…审/批」, 「…私有化部/署。」」)
+     take `pretty`; the article titles break only at their punctuation and
+     spaces, balanced (「…的正确顺/序」 → 「从一条流程开始：」/「企业引入 AI
+     的正确顺序」). */
+html[lang^="en"] body:has(#loop) :is(.bottom-grid > p.top-text:first-child, section.gr p.top-text, .testimonials-section p.top-text, .team-circle p.top-text, .caption-text, .p-chat, .products-card-name-block .heading-style-h5, .products-cards-dashboard-block .heading-style-h4, .faq-wrapper .toggle-header, .blog-txt, section.drk h2.h2.for-stats, .top-text.for-tst, .top-text.for-sst, p.p-max, p.top-text._05) {
+  text-wrap: balance;
+}
+html[lang^="en"] body:has(#loop) :is(.paragraph-p1, p.p-no-bottom, #compare p.top-text, #compare h2.h2._01.sm._600) {
+  text-wrap: pretty;
+}
+html[lang^="zh"] body:has(#loop) :is(.top-text.for-tst.sts, .top-text.for-sst, .sc-scope.integration .integration-info-block div, .paragraph-p1) {
+  text-wrap: pretty;
+}
+html[lang^="zh"] body:has(#loop) .blog-txt {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
 /* H16. Notices page, the "Keep reading" band.
    - The three card sentences are plain text. In Chinese they broke inside
      words (「创/作」, 「岗/位」, 「目/录」, 「结/果」); `keep-all` breaks them
@@ -3055,8 +3096,10 @@ html[lang^="en"] .max-lft-dvc p.top-text.big {
      moves under the price when the two do not fit. The tick icons of long
      feature lines were squeezed smaller than the others (renok's and
      cinery's lists alike); they keep their size.
-   - Short Chinese card texts and the review quotes left one character on
-     their last line (「资/料」, 「培训一/次」, 「核/对。」」); `pretty`. The FAQ
+   - Short card texts and the review quotes left one character or word on
+     their last line (「资/料」, 「培训一/次」, 「核/对。」」, "SKUs",
+     "session", "need."); `pretty` (the English review quotes are balanced:
+     their last line was "up.”" or a lone "follow-up.”"). The FAQ
      questions left a word or a character alone ("year?", 「始？」); balanced. */
 @media (max-width: 479px) {
   .rk-price-tiers .rk-rt-pricing-v1-top { grid-template-columns: minmax(0, 1fr); }
@@ -3073,12 +3116,14 @@ html[lang^="zh"] .rk-price-tiers h1.rk-rt-gap-off { word-break: keep-all; }
 .rk-price-tiers .rk-rt-price-yearly-box > div { white-space: nowrap; }
 .rk-price-tiers .rk-rt-pricing-list-items > div:first-child,
 .cn-price-card .cn-check-icon { flex: none; }
-html[lang^="zh"] .rk-price-tiers .rk-rt-text-color-premium-grey,
-html[lang^="zh"] .rk-price-compare .rk-rt-text-color-premium-grey,
-html[lang^="zh"] .cn-price-card .cn-text-size-regular,
-.cn-reviews p.cn-text-size-large {
+.rk-price-tiers .rk-rt-text-color-premium-grey,
+.rk-price-tiers .rk-rt-pricing-top-right > .rk-rt-text-color-light-gray,
+.rk-price-compare .rk-rt-text-color-premium-grey,
+.cn-price-card .cn-text-size-regular,
+html[lang^="zh"] .cn-reviews p.cn-text-size-large {
   text-wrap: pretty;
 }
+html[lang^="en"] .cn-reviews p.cn-text-size-large { text-wrap: balance; }
 .sc-page .faq .heading-style-h6 { text-wrap: balance; }
 
 /* H12/H13. Contact page on phones.
