@@ -19,7 +19,7 @@ import { editorialImages } from './editorial-images.mjs';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { CAP_JUMPS, NAV, SECONDARY, MORE, LANG_SWITCH, CHROME, META, CONTACT_INFO, SITE_URL } from './copy.mjs';
-import { POSTS, BLOG_UI, postPath, coverSrc } from './blog.mjs';
+import { POSTS, BLOG_UI, postPath, coverSrc, faqEntities, wordCount } from './blog.mjs';
 
 /** Every page the build produces, as root-relative names. */
 export const SITE_PAGES = [...NAV, ...SECONDARY, ...MORE].map((n) => n.href).concat(POSTS.map(postPath));
@@ -213,15 +213,29 @@ function head(html, lang, current) {
   if (current === 'blog.html') {
     graph.push({
       '@type': 'Blog', '@id': `${blogUrl}#blog`, url: blogUrl, name: `STARGO WORK ${BLOG_UI.section[lang]}`, description, inLanguage, publisher: { '@id': ORG_ID },
-      blogPost: POSTS.map((p) => ({ '@type': 'BlogPosting', '@id': `${cleanUrl(lang, postPath(p))}#article`, headline: p.title[lang], url: cleanUrl(lang, postPath(p)), datePublished: p.date, image: `${SITE_URL}/${coverSrc(p)}` })),
+      blogPost: POSTS.map((p) => ({ '@type': 'BlogPosting', '@id': `${cleanUrl(lang, postPath(p))}#article`, headline: p.title[lang], url: cleanUrl(lang, postPath(p)), datePublished: p.date, dateModified: p.modified ?? p.date, image: `${SITE_URL}/${coverSrc(p)}` })),
     });
   }
   if (post) {
+    /* BlogPosting. `wordCount` is tools/blog.mjs wordCount() over the printed
+       article (body, takeaways, FAQ): words on English pages, characters on
+       Chinese pages (each Han character one, each Latin or numeric run one).
+       `about` is the product the blog explains; `mentions` names the product
+       engines an article is about (schema.org Thing), where it lists any. */
     graph.push({
       '@type': 'BlogPosting', '@id': `${self}#article`, headline: post.title[lang], description, image: ogImage, url: self, mainEntityOfPage: { '@id': self },
-      datePublished: post.date, dateModified: post.modified ?? post.date, inLanguage, keywords: post.keywords.join(', '),
+      datePublished: post.date, dateModified: post.modified ?? post.date, inLanguage, keywords: post.keywords[lang].join(', '),
+      ...(post.section ? { articleSection: post.section[lang] } : {}),
+      wordCount: wordCount(post, lang),
+      about: { '@type': 'SoftwareApplication', name: 'STARGO WORK', applicationCategory: 'BusinessApplication', operatingSystem: 'Web', url: `${SITE_URL}/` },
+      ...(post.mentions?.length ? { mentions: post.mentions.map((name) => ({ '@type': 'Thing', name })) } : {}),
       author: { '@type': 'Organization', '@id': ORG_ID, name: 'STARGO WORK' }, publisher: { '@id': ORG_ID }, isPartOf: { '@id': `${blogUrl}#blog` },
     });
+    /* The article's visible 「常见问题」 section (tools/blog.mjs renderFaq) as
+       structured data: the same questions and answers, word for word. */
+    if (post.faq?.length) {
+      graph.push({ '@type': 'FAQPage', '@id': `${self}#faq`, url: self, inLanguage, isPartOf: { '@id': self }, mainEntity: faqEntities(post, lang) });
+    }
     graph.push({
       '@type': 'BreadcrumbList', '@id': `${self}#breadcrumb`, itemListElement: [
         { '@type': 'ListItem', position: 1, name: NAV[0].label[lang], item: cleanUrl(lang, 'index.html') },
@@ -242,11 +256,11 @@ function head(html, lang, current) {
     `<meta property="og:locale" content="${lang === 'zh' ? 'zh_CN' : 'en_US'}"/>`,
     `<meta property="og:image" content="${ogImage}"/>`,
     post ? '<meta property="og:image:width" content="1200"/><meta property="og:image:height" content="800"/>' : '<meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/>',
-    ...(post ? [`<meta property="article:published_time" content="${post.date}"/>`, `<meta property="article:modified_time" content="${post.modified ?? post.date}"/>`, `<meta property="article:section" content="${BLOG_UI.section[lang]}"/>`, ...post.keywords.map((k) => `<meta property="article:tag" content="${k}"/>`)] : []),
+    ...(post ? [`<meta property="article:published_time" content="${post.date}"/>`, `<meta property="article:modified_time" content="${post.modified ?? post.date}"/>`, `<meta property="article:section" content="${(post.section ?? BLOG_UI.section)[lang]}"/>`, ...post.keywords[lang].map((k) => `<meta property="article:tag" content="${k}"/>`)] : []),
     '<meta name="twitter:card" content="summary_large_image"/>',
     `<meta name="twitter:image" content="${ogImage}"/>`,
     '<meta name="theme-color" content="#0d0906"/>',
-    `<script type="application/ld+json">${JSON.stringify(ld)}</script>`,
+    `<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>`,   // no "</script>" can end the block early
   ].join('');
   let out = html
     .replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/g, '')   // the template's own structured data

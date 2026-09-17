@@ -19,7 +19,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 
 import { makeSub, findByClass, removeByClass, elementContaining, extractElement, setInner, setEachInner, setLink, escapeHtml } from './lib-html.mjs';
 import { applyChrome, remapLinks, relocateAssets, relocateLinks, assertInternalLinks, stillImage, WORDMARK } from './chrome.mjs';
 import * as C from './copy.mjs';
-import { POSTS, BLOG_UI, postPath, featured, others, coverSrc, coverSrcset, formatDate } from './blog.mjs';
+import { POSTS, BLOG_UI, postPath, featured, others, coverSrc, coverSrcset, formatDate, renderBody } from './blog.mjs';
 import { loadBlocks, art, capTitle, DONORS } from './block-lib.mjs';
 
 import { SITE } from './paths.mjs';
@@ -1133,7 +1133,10 @@ PAGES['blog.html'] = (lang) => {
   if (lang === 'zh' && (headingHtml.match(/<br\/>/g) ?? []).length !== 1) {
     throw new Error('blog: the Chinese heading must carry exactly one full-width comma to break after');
   }
-  b = s(b, '>Discover Our Featured Stories</h1></div>', `>${headingHtml}</h1><div class="lx-feature-description-holder stargo-blog-intro"><div class="lx-text-size-regular">${escapeHtml(t(BLOG_UI.intro))}</div></div></div>`, { count: 1 });
+  /* The intro may carry <wbr> (tools/blog.mjs BLOG_UI): the Chinese one is
+     drawn keep-all, and those are its break points inside long phrases. */
+  const intro = escapeHtml(t(BLOG_UI.intro)).replace(/&lt;wbr&gt;/g, '<wbr>');
+  b = s(b, '>Discover Our Featured Stories</h1></div>', `>${headingHtml}</h1><div class="lx-feature-description-holder stargo-blog-intro"><div class="lx-text-size-regular">${intro}</div></div></div>`, { count: 1 });
   b = blogCards(b, 'lx-blog-list', 'lx-blog-item', POSTS, lang, LX_CARD);
   b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
   if (/Lifelogx|Companion|Moments in Motion|Conversational AI/.test(b)) throw new Error('blog: template copy survives');
@@ -1161,9 +1164,15 @@ function postPage(post, lang) {
   if (!b.includes(coverSrcset(post))) throw new Error('post: hero image');
   {
     // The rich-text block carries the interaction's initial state inline (opacity 0, data-w-id): keep its tag, replace its content.
+    // renderBody() prints the answer paragraph, the 「要点速览」 takeaways, the
+    // sections and charts, and the 「常见问题」 FAQ (the FAQPage structured data
+    // in tools/chrome.mjs reads the same pairs). `stargo-post` scopes the V7-BLOG
+    // rules in css/stargo-fusion.css to article bodies.
     const rich = findByClass(b, 'div', 'lx-text-rich-text');
     if (!rich) throw new Error('post: rich text block');
-    b = b.slice(0, rich.start) + rich.text.slice(0, rich.text.indexOf('>') + 1) + t(post.body).trim() + '</div>' + b.slice(rich.end);
+    const open = rich.text.slice(0, rich.text.indexOf('>') + 1).replace('class="lx-text-rich-text ', 'class="lx-text-rich-text stargo-post ');
+    if (!open.includes('stargo-post')) throw new Error('post: rich text class');
+    b = b.slice(0, rich.start) + open + renderBody(post, lang) + '</div>' + b.slice(rich.end);
   }
   // Date and byline under the title; the template's CMS page shows neither.
   b = b.replace('<div class="lx-blog-details-image-holder">', `<p class="lx-post-meta"><time datetime="${post.date}">${formatDate(post.date, lang)}</time> · ${t(BLOG_UI.byline)} · <a href="blog.html">${t(BLOG_UI.all)}</a></p><div class="lx-blog-details-image-holder">`);
