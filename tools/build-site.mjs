@@ -970,10 +970,10 @@ PAGES['workforce.html'] = (lang) => {
     inner = s(inner, 'class="lx-organized-mind-card w-inline-block"', 'class="lx-organized-mind-card lx-v6-collage-card w-inline-block"', { count: 1 });
     b = b.slice(0, card.start) + inner + b.slice(card.end);
   }
-  /* V7-LX: a Chinese role name keeps 「AI 员工」 together (a no-break space),
-     so a name that wraps in its card reads 「市场研究」/「AI 员工」, not
+  /* V7-LX: a Chinese role name keeps 「AI 员工」 together (a `.stargo-keep`
+     span, white-space: nowrap), so a name that wraps in its card reads 「市场研究」/「AI 员工」, not
      「市场研究 AI 员」/「工」 (768 and the collage card at 390). */
-  const roleName = (name) => (lang === 'zh' ? t(name).replace(/ AI (?=员工)/, ' AI\u00a0') : t(name));
+  const roleName = (name) => (lang === 'zh' ? t(name).replace(/ AI 员工$/, ' <span class="stargo-keep">AI 员工</span>') : t(name));
   const NAMES = ['Philip', 'Arlene', 'Marjorie', 'Collen', 'Greg'];
   const FIGURES = ['99.6M', '88.3', '16.2M', '73.7M', '125.5M'];
   NAMES.forEach((person, i) => {

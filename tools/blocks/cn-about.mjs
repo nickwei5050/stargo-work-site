@@ -314,7 +314,17 @@ export function render(frag, ctx) {
      its entrance and reverts the split afterwards; SplitText treats a `<br>`
      as a line end, so the headline keeps its own line through the entrance. */
   const run = lang === 'zh' ? '' : ' ';
-  const statement = `${escapeHtml(t(A.title))}<br/>${escapeHtml(t(A.desc))}${run}${escapeHtml(t(A.closing))}`;
+  /* V7-LX: on the Chinese page each clause of the headline and of the closing
+     line is kept whole (`.stargo-keep`, white-space: nowrap in
+     css/stargo-fusion.css), so the headline breaks at its comma —
+     「从真实业务出发，」/「把分散的工作连接起来。」 — instead of leaving
+     「起来。」 alone at 390. A span survives the entrance's line split, so the
+     break is the same during and after it. Only clauses of eleven characters
+     or fewer are bound: the card's narrowest line (320) holds twelve. */
+  const keep = (s) => (lang === 'zh'
+    ? s.split(/(?<=，)/).map((c) => (c.length <= 11 ? `<span class="stargo-keep">${escapeHtml(c)}</span>` : escapeHtml(c))).join('')
+    : escapeHtml(s));
+  const statement = `${keep(t(A.title))}<br/>${escapeHtml(t(A.desc))}${run}${keep(t(A.closing))}`;
   html = setText(html, 'cn-text-size-large', statement);
   if ((html.match(/<br\/>/g) ?? []).length !== 1) {
     throw new Error('cn-about: expected exactly one <br/> in the block — the one after the headline');

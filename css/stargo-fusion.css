@@ -3250,6 +3250,22 @@ html[lang^="zh"] .lx-page:has(.lx-hero-features) .lx-blog-title {
   overflow-wrap: anywhere;
 }
 
+/* enterprise.html, English — the five management component titles are
+   balanced: "Capability & app / management", "Account & role / permissions",
+   "Approval of key / actions", "Work & result / records" left their last word
+   alone from 320 to 1024; they read "Approval of / key actions" and so on.
+   `.team-grid` is on this page only. */
+html[lang^="en"] .team-grid .team-content .h2 { text-wrap: balance; }
+
+/* intelligence.html, English, phones: the collapsed card titles sit beside a
+   2.4rem icon, and "Real workflows" wrapped at 320, which the 5rem pill a card
+   collapses to cannot hold. Below 480 the gap beside the icon is .75rem and
+   the titles are 1.75rem, the size of the card text above them. */
+@media screen and (max-width: 479px) {
+  html[lang="en"] .lx-scope .lx-expandable-icon-text { grid-column-gap: .75rem; column-gap: .75rem; }
+  html[lang="en"] .lx-scope .lx-expandable-icon-text .lx-expandable-text { font-size: 1.75rem; }
+}
+
 /* enterprise.html — the story panels print white text straight on their
    pictures, and two of them are bright where the text runs on a phone: the
    metal lanes of (Connect) and the loading bay of (Oversight) ("authorization",
