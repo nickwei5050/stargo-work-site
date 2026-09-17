@@ -3024,6 +3024,33 @@ html[lang^="zh"] .lx-scope .lx-v6-roster-intro {
 @media screen and (min-width: 768px) and (max-width: 991px) {
   .lx-scope .lx-capabilities-grid { grid-template-columns: 1fr; }
 }
+
+/* workforce.html — the team scenario (#lx-team). The display line 「一个目标，
+   一个团队。」 / "One goal, one team." sits behind the three stacked cards,
+   which IX2 (lx-a-73) slides up one by one over the section's scroll. While
+   the cards cover it, only its edges showed between their rotated corners,
+   and read as stray marks: a lone white square left of card 03 at 390 (the
+   end of 「一」), 「—」, 「，」 and 「。」 around the cards at 768 and 1440.
+   The line now stays invisible while it is covered and fades in while the
+   last card uncovers it. Measured on the section's own scroll range (0 when
+   its top meets the top of the screen, 100% when its bottom meets the
+   bottom): the third card starts to move at about 62-65% and has left the
+   line at 81-83%, at 390, 768 and 1440; the line starts to show under it at
+   about 70%, so the fade runs from 68% to 84%.
+   The cards' motion is IX2's and is untouched; where a browser has no
+   scroll-driven animations, the line behaves as before. */
+@keyframes lx-v7-team-reveal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@supports (animation-timeline: view()) {
+  .lx-scope #lx-team.lx-answers-card-section-holder { view-timeline: --lx-v7-team block; }
+  .lx-scope #lx-team .lx-v6-team-display {
+    animation: lx-v7-team-reveal linear both;
+    animation-timeline: --lx-v7-team;
+    animation-range: contain 68% contain 84%;
+  }
+}
 @media screen and (max-width: 767px) {
   .lx-scope .lx-organized-mind-text { padding-right: 1.5rem; }
   .lx-scope .lx-organized-mind .lx-confirmation-card { z-index: 2; }
