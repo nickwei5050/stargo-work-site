@@ -3061,6 +3061,16 @@ html[lang^="zh"] body:has(#loop) .blog-txt {
   text-wrap: balance;
 }
 
+/* H8. Homepage demo band, Chinese heading 「预约企业演示。」: with its Chinese
+       full stop (tools/chrome.mjs) it is seven full-width characters, 280px
+       at 40px, and below 340px the card holds 257 — it broke 「预约企/业演示。」.
+       It keeps one line: the size steps down with the card there (35.7px at
+       320) and the phrase is never broken inside. */
+html[lang^="zh"] body:has(#loop) section.ctc h2.h2.for-ctn {
+  font-size: min(40px, calc((100vw - 70px) / 7));
+  word-break: keep-all;
+}
+
 /* H16. Notices page, the "Keep reading" band.
    - The three card sentences are plain text. In Chinese they broke inside
      words (「创/作」, 「岗/位」, 「目/录」, 「结/果」); `keep-all` breaks them
