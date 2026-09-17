@@ -737,6 +737,13 @@ function lxPage(spec, lang, name) {
   b = s(b, 'Get it on Market Play', t(spec.store2.sub));
   b = setLink(b, t(spec.store1.name), { href: spec.store1.href });
   b = setLink(b, t(spec.store2.name), { href: spec.store2.href });
+  /* V7: the two hero buttons glide with js/stargo-anchor-glide.js, which
+     re-measures the target on every frame. Webflow's own glide aimed at where
+     the closing card was at click time, and below 768px the expandable cards
+     collapse on the way, so #lx-evolution was reached ~888px too far down. */
+  for (const { href } of [spec.store1, spec.store2]) {
+    b = s(b, `<a href="${href}" class="lx-big-button`, `<a href="${href}" data-stargo-anchor="" class="lx-big-button`, { count: 1 });
+  }
   b = s(b, 'The friend who never forgets.', t(spec.heroDesc));
   b = s(b, 'Natural, human-like chats that keep users engaged and understood.', t(spec.features[0].text));
   b = s(b, '<h3 class="lx-expandable-text">Interaction</h3>', `<h3 class="lx-expandable-text">${t(spec.features[0].title)}</h3>`);
@@ -803,7 +810,7 @@ function lxPage(spec, lang, name) {
     const jargon = b.match(/企业本体|前置部署|调度中枢|自我进化|提示词|模型权重|Ontology|Embedded FDE|Orchestrator|Evolution|model weights|\bprompts?\b/);
     if (jargon) throw new Error(`${name}: architecture wording "${jargon[0]}" is back on the page`);
   }
-  return inMonoShell(b + bigMark(), ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
+  return inMonoShell(b + bigMark() + '<script src="js/stargo-anchor-glide.js" defer></script>', ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
 }
 PAGES['intelligence.html'] = (lang) => lxPage(C.LX_INTELLIGENCE, lang, 'intelligence');
 /* ---- workforce.html — lifelogx feature page ----------------------------
