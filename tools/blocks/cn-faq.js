@@ -119,7 +119,12 @@
   var latest = 0;
   function arrive(hash) {
     var row = rowFor(hash);
-    if (!row) return;
+    /* A hash that is not ours ends any wait or hold of ours (`latest` is the
+       counter both take their turn from): the page now belongs to whoever owns
+       that hash — js/stargo-catalogue.js for #gNN and the page's sections —
+       and two scripts putting the page back in two places would fight for
+       seconds. */
+    if (!row) { latest++; return; }
     var wrap = row.querySelector('.cn-accordion-content-wrap');
     var run = ++latest; // a newer arrival replaces one still waiting
     var waited = 0;

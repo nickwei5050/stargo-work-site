@@ -73,12 +73,17 @@
    tools/blocks/cn-about-reviews.mjs did not already take out of tools/copy.mjs.
 
    STOPPING. An auto-advancing band with no way to stop it is a barrier, so the
-   first deliberate act by a reader — a click, a key, a swipe, or simply putting
-   keyboard focus on one of the arrows — stops the autoplay for good and leaves
-   the band under the reader's hand. Webflow's slider stops autoplay on
-   interaction too; the focus case is this file's own. A reader who has asked
-   their system for less motion never gets the autoplay at all, and their arrow
-   presses cut straight to the next card instead of sliding.
+   first deliberate act by a reader — a click, a key, a swipe, pointing at the
+   band, or simply putting keyboard focus inside it — stops the autoplay for
+   good and leaves the band under the reader's hand. And the band stops on its
+   own: it turns once round, showing every card, and then rests on the card it
+   started on. An advance moves a card inside the mask, so it moves in the
+   reading order too, and moving content that starts by itself has to be
+   stoppable (WCAG 2.2.2 Pause, Stop, Hide); after the round the arrows and a
+   swipe are the way on. Webflow's slider stops autoplay on interaction too;
+   the hover, focus and one-round cases are this file's own. A reader who has
+   asked their system for less motion never gets the autoplay at all, and their
+   arrow presses cut straight to the next card instead of sliding.
 
    All four cards stay in the document and in the accessibility tree at every
    moment; only three of them are outside the mask's clip. A reader on a screen
@@ -161,6 +166,7 @@
 
     var busy = false;
     var timer = null;
+    var turns = 0;          /* cards the band has moved on by itself */
 
     function place(pct, ms) {
       var kids = mask.children;
@@ -170,10 +176,18 @@
       }
     }
 
+    /* The band turns itself once round and then rests on the card it started
+       on. An advance moves a card inside the mask, which moves it in the
+       reading order too, so a band that never stops is a page that rewrites
+       itself under a screen reader with no way to hold it still (WCAG 2.2.2).
+       One round shows every card once; after that the arrows and a swipe are
+       the way on, and pointing at the band or putting focus in it stops the
+       turning at once. */
     function arm() {
       window.clearTimeout(timer);
       if (!autoplay) return;
-      timer = window.setTimeout(function () { go(1); }, delay);
+      if (turns >= count) { stop(); return; }
+      timer = window.setTimeout(function () { turns++; go(1); }, delay);
     }
 
     function stop() {
@@ -239,6 +253,11 @@
 
     control(slider.querySelector('.cn-left-arrow'), -1);
     control(slider.querySelector('.cn-right-arrow'), 1);
+
+    /* A reader pointing at the band, or with focus anywhere inside it, is
+       reading it: the turning stops, the same way an arrow stops it. */
+    slider.addEventListener('mouseenter', stop);
+    slider.addEventListener('focusin', stop);
 
     if (swipe) {
       var x0 = null;

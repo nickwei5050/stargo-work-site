@@ -227,7 +227,11 @@
   // and keep it there through late layout (fonts, pictures, pinned blocks)
   function arrive() {
     var el = targetOf(window.location.hash);
-    if (!el) return;
+    /* A hash that is not ours ends any glide or hold of ours (`run` is the
+       counter both take their turn from): the page now belongs to whoever owns
+       that hash — tools/blocks/cn-faq.js for #creative-* — and two scripts
+       putting the page back in two places would fight for seconds. */
+    if (!el) { run++; return; }
     whenIxReady(function (ix) {
       moved = false;
       scrollToEl(el);
