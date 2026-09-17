@@ -2848,6 +2848,115 @@ html[lang^="zh"] .utility-page-content h1.h2 { text-wrap: balance; }
         「…可验收的结/果。」」 at 768 and 1024. `pretty` reworks the last lines. */
 html[lang^="zh"] .stargo-contact-page .testimonials-card .card-testi > .top-text.for-tst { text-wrap: pretty; }
 
+/* H2. Homepage #loop, the small labels on the three 3D cards (ERP 与履约 /
+       AI 创作 / 数字员工; "ERP & delivery" / "AI creative" / "AI teams").
+       From 768px Scalora sets them at its 24px h5 inside boxes 134 and 114px
+       wide, so the English labels broke ("ERP &"/"delivery", "AI"/"creative")
+       and a six-character Chinese label broke before its last character. At
+       Scalora's own phone size (20px, 26px leading) a label of up to six
+       Chinese characters or about fourteen Latin ones holds one line; a longer
+       one wraps onto two balanced lines. */
+@media (min-width: 768px) {
+  .sc-scope.sc-hero .hero-card-041-title {
+    font-size: 20px;
+    line-height: 26px;
+    text-wrap: balance;
+  }
+}
+
+/*     …and the card stack those labels sit on. Two things hid the lowest
+       labels at every width, in both languages:
+       1. The section after this band (`.section.with-minus`) is pulled up
+          100px over it (white, z-index 10), so the band's last 100px are never
+          seen — and the stack was drawn into them (at 390 the two lower labels
+          sat 29 and 57px under that edge, at 1440 × 900 the lowest 36–97px).
+          The band now carries those 100px beyond what it shows: 100px more
+          bottom padding below 992, and from 992 a height of one screen plus
+          100px, so the part that is seen is still exactly one screen.
+       2. From 992 the stack is zoomed to the room left under the text (fix 3
+          near the top of this file). That ladder was measured against a
+          shorter text block than today's: re-measured at 1440 × 640–1200, the
+          painted stack ends 501px + 533px × zoom below the band's top in
+          Chinese. In English the heading is a line taller and the paragraph
+          two lines taller (131px in all). The steps below are the same zoom
+          values, each taken at the height where the stack now fits on the
+          screen; English has its own. Under 899px, where English would need a
+          stack under half size, it keeps half size and the band grows to hold
+          it (then 124px of padding: the 100px above plus the 3D overhang).
+       The motion is untouched. */
+@media (max-width: 991px) {
+  .sc-scope.sc-hero .hero-contant-wrapper { padding-bottom: calc(var(--_spacing---padding--padding-21xl) + 100px); }
+}
+@media (min-width: 992px) {
+  .sc-scope.sc-hero { height: calc(100vh + 100px); min-height: 740px; }
+}
+@media (min-width: 992px) and (max-height: 1033px) { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .78; } }
+@media (min-width: 992px) and (max-height: 916px)  { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .66; } }
+@media (min-width: 992px) and (max-height: 852px)  { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .58; } }
+@media (min-width: 992px) and (max-height: 809px)  { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .5; } }
+@media (min-width: 992px) and (max-height: 767px)  { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .42; } }
+@media (min-width: 992px) and (max-height: 724px)  { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .34; } }
+@media (min-width: 992px) and (max-height: 681px)  { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .28; } }
+@media (min-width: 992px) and (max-height: 649px)  { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .22; } }
+@media (min-width: 992px) and (max-height: 1164px) { html[lang^="en"] .sc-scope.sc-hero .hero-cards-wrapper { zoom: .78; } }
+@media (min-width: 992px) and (max-height: 1047px) { html[lang^="en"] .sc-scope.sc-hero .hero-cards-wrapper { zoom: .66; } }
+@media (min-width: 992px) and (max-height: 983px)  { html[lang^="en"] .sc-scope.sc-hero .hero-cards-wrapper { zoom: .58; } }
+@media (min-width: 992px) and (max-height: 940px)  { html[lang^="en"] .sc-scope.sc-hero .hero-cards-wrapper { zoom: .5; } }
+@media (min-width: 992px) and (max-height: 898px) {
+  html[lang^="en"] .sc-scope.sc-hero { height: auto; }
+  html[lang^="en"] .sc-scope.sc-hero .hero-contant-wrapper { padding-bottom: 124px; }
+}
+
+/* H3. Homepage #loop, English heading: the rotating last word sits in an
+       80px window that shows one line of it. From 768 Scalora puts the window
+       beside "Carry it through to", which left it 264px — too narrow for
+       "repeat orders.", which broke in two and never showed whole — and broke
+       "Carry it / through to" beside it. As Scalora itself does below 768, the
+       window now takes the line under "Carry it through to", as wide as its
+       longest word, each word centred in it; a word never wraps. The heading
+       is three lines either way, so nothing below it moves. The Chinese
+       heading (「再推进到」 plus a two-character word) fits on one line and is
+       unchanged. */
+html[lang^="en"] .sc-scope.sc-hero .hero-title-inner-block { flex-wrap: wrap; }
+html[lang^="en"] .sc-scope.sc-hero .hero-title-changing-words-wrapper { align-items: center; }
+html[lang^="en"] .sc-scope.sc-hero .hero-title-changeing-word { white-space: nowrap; }
+
+/* H4. Homepage, 288 section, dark card: the label (「(按任务组队)」 /
+       "(Teams by task)") and the avatar row. Below 992px Mono pins the two,
+       stacked, 20px from the card's bottom-right corner, and the label landed
+       on the last text line (「十类企业职能」 / "ten enterprise functions") at
+       320–991. Below 992 they now share one row, label right-aligned before
+       the avatars (40px tall instead of 76):
+         - 768–991, where the card's height is fixed by the grid, the row stays
+           pinned to the corner and clears the text by 26px or more (a label
+           up to twice today's length wraps onto two lines);
+         - up to 767, where the card is as tall as its content, the row joins
+           the flow under the text (16px below it, 20px above the card's
+           edge), so no label length can reach the text; a label too long for
+           the row goes on its own line above the avatars.
+       From 992 the pair sits top-right beside the big 288; its width is capped
+       so a longer label wraps rather than running over the number. Layout
+       only: the label is copy and may change length. */
+@media (min-width: 992px) {
+  .card-half._01 .team-circle { max-width: calc(100% - 251px); }
+}
+@media (max-width: 991px) {
+  .card-half._01 .team-circle {
+    left: 15px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    column-gap: 12px;
+    row-gap: 8px;
+  }
+  .card-half._01 .team-circle > .top-text { min-width: 0; text-align: right; text-wrap: balance; }
+  .card-half._01 .team-circle > .team-flex { flex: none; }
+}
+@media (max-width: 767px) {
+  .card-half._01 { padding-bottom: 20px; }
+  .card-half._01 .team-circle { position: relative; inset: auto; margin-top: 16px; flex-wrap: wrap; }
+}
+
 /* H12/H13. Contact page on phones.
    - The form card sat 16px inside the column (`.form-amin`'s padding-inline,
      written for the white Mono form this card replaced), so the stacked form
