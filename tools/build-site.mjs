@@ -97,6 +97,21 @@ function swapImg(html, key, src, { nth = null, alt = '' } = {}) {
   if (!hit) throw new Error(`swapImg: no <img> with ${key}${nth != null ? ` #${nth}` : ''}`);
   return out;
 }
+/* V7-LX: the last clause of a Chinese paragraph as one unit.
+   Several paragraphs end with an availability clause (「高级改进仍在完善。」,
+   「更深入的团队交流仍在完善。」). Chinese may break between any two
+   characters, and `text-wrap: pretty` did not stop 「…仍在」/「完善。」 at 390 or
+   「…高级」/「改进仍在完善。」 at 1024. The clause after the last Chinese
+   punctuation mark is wrapped in `.lx-v7-tail`, which css/stargo-fusion.css
+   (V7-LX) sets as an inline-block on the Chinese pages: it moves to the next
+   line whole when it does not fit, and wraps inside itself only if it is
+   longer than a whole line. Whatever the clause says, it is never split at
+   its end. English is returned unchanged. */
+function zhTail(text, lang) {
+  if (lang !== 'zh') return text;
+  const m = text.match(/^([\s\S]*[，。；：])([^，。；：<>]+。)$/);
+  return m ? `${m[1]}<span class="lx-v7-tail">${m[2]}</span>` : text;
+}
 const CHECK = 'assets/69a01660589c516ba5f0f917/69a9086623545093091785d8_check-icon.svg';
 const CROSS = 'assets/69a01660589c516ba5f0f917/69a91f28a82e2c7b982d5703_cancel-circle-icon.svg';
 
@@ -639,7 +654,7 @@ function homeIntro(html, lang) {
    at 0.98 / 0.91 / 1.00 with the new left-column texts forced back to
    display:none. Same numbers, so the sub-1.0 readings are the sampling step
    landing beside a continuous cross-fade, not anything this change caused. */
-function lxOntologyList(b, spec, t, name) {
+function lxOntologyList(b, spec, t, name, lang) {
   const PLAIN = '<div class="lx-home-features-texts">';
   const MOBILE = '<div class="lx-home-features-texts lx-hide-desktop">';
   const found = b.split(MOBILE).length - 1;
@@ -667,7 +682,7 @@ function lxOntologyList(b, spec, t, name) {
   const inStickyColumn = objects.slice(3, 6);        // 订单 / 出货 / 任务
   const slots = [...inLeftColumn, ...inStickyColumn, ...inStickyColumn];
   b = setEachInner(b, '<h3 class="lx-heading-style-h3 lx-home-feature">', [...slots.map((c) => t(c.title)), t(spec.feat2Card.title)]);
-  b = setEachInner(b, '<div class="lx-text-size-regular lx-text-weight-light">', [...slots.map((c) => t(c.text)), t(spec.feat2Card.text)]);
+  b = setEachInner(b, '<div class="lx-text-size-regular lx-text-weight-light">', [...slots.map((c) => t(c.text)), zhTail(t(spec.feat2Card.text), lang)]);
 
   // Every object once in each wrapper, and the wrappers never overlap.
   for (const c of objects) {
@@ -752,7 +767,7 @@ function lxPage(spec, lang, name) {
   b = s(b, 'Ready made features your users already expect.', t(spec.features[2].text));
   b = s(b, '<h3 class="lx-expandable-text">Organised</h3>', `<h3 class="lx-expandable-text">${t(spec.features[2].title)}</h3>`);
   for (const [k, v] of Object.entries(spec.tags)) b = s(b, `>${k}<`, `>${t(v)}<`);
-  b = lxOntologyList(b, spec, t, name);
+  b = lxOntologyList(b, spec, t, name, lang);
   spec.gradient.forEach((g, i) => {
     const re = new RegExp(`(class="lx-heading-style-h1 lx-_${i + 1}">)[^<]*(</h3>)`);
     if (!re.test(b)) throw new Error(`${name}: gradient heading ${i + 1}`);
@@ -766,6 +781,36 @@ function lxPage(spec, lang, name) {
     const target = t(spec.bubbles[order[i]]);
     if (b.includes(html)) b = s(b, html, target); else b = s(b, orig, target);
   });
+  /* V7-LX: the left-moving marquee rows loop without overlap. IX2 (lx-a-35)
+     moves each of a row's two copies by -100% of ITS OWN width over 60s, so
+     the two copies must be equally wide. The template's second copy swapped
+     one bubble for another (here 6 for 2), and with this copy the copies were
+     3684 and 3895px wide at zh 1440: the second one slid 211px into the first
+     over each loop and covered 「一份报价在等负责人批准。」. Both copies are now
+     the same six bubbles, 0-4 and 6. Bubble 5, the quote waiting for approval,
+     is not lost: the right-moving row ends every copy with it. There are two
+     such rows (the section repeats its pair of rows), handled alike. */
+  {
+    const OPEN = '<div class="lx-cta-list-left">';
+    const found = b.split(OPEN).length - 1;
+    if (found !== 4) throw new Error(`${name}: expected two left-moving marquee rows of two copies, found ${found} copies`);
+    const bubble = (i) => t(spec.bubbles[i]);
+    const texts = (html) => [...html.matchAll(/<p class="lx-testimonial-text">([^<]*)<\/p>/g)].map((m) => m[1]);
+    const expectA = [0, 1, 2, 3, 4, 5].map(bubble).join('|');
+    const expectB = [0, 1, 6, 3, 4, 5].map(bubble).join('|');
+    let from = 0;
+    for (let row = 0; row < 2; row++) {
+      const a = extractElement(b, b.indexOf(OPEN, from), 'div');
+      if (b.indexOf(OPEN, a.end) !== a.end) throw new Error(`${name}: marquee row ${row + 1}: the two copies are not adjacent`);
+      const second = extractElement(b, a.end, 'div');
+      if (texts(a.text).join('|') !== expectA || texts(second.text).join('|') !== expectB) {
+        throw new Error(`${name}: marquee row ${row + 1} no longer holds bubbles 0-5 / 0,1,6,3,4,5`);
+      }
+      const unit = s(a.text, `<p class="lx-testimonial-text">${bubble(5)}</p>`, `<p class="lx-testimonial-text">${bubble(6)}</p>`, { count: 1 });
+      b = b.slice(0, a.start) + unit + unit + b.slice(second.end);
+      from = a.start + unit.length * 2;
+    }
+  }
   ['_1', '_2', '_3', '_4'].forEach((k, i) => {
     const re = new RegExp(`(class="lx-big-gradient-text lx-${k}">)[^<]*(</h3>)`, 'g');
     if (!re.test(b)) throw new Error(`${name}: gradient word ${k}`);
@@ -779,7 +824,7 @@ function lxPage(spec, lang, name) {
   b = s(b, 'class="lx-cta-text lx-_2nd">As simple as talking</h4>', `class="lx-cta-text lx-_2nd">${t(spec.ctaSub)}</h4>`);
   b = s(b, 'class="lx-cta-logo-text">Lifelogx</div>', `class="lx-cta-logo-text">${t(spec.ctaLogo)}</div>`);
   b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
-  b = s(b, 'The smartest friend you’ll ever have.', t(spec.ctaDesc));
+  b = s(b, 'The smartest friend you’ll ever have.', zhTail(t(spec.ctaDesc), lang));
   // The plain-explanations section (see lxContextSection) opens the 288-roles
   // section's slot in the document: after the "no writing" band, before the
   // team card. The marker is that section's own opening, which is unique.

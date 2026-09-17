@@ -660,8 +660,9 @@ export const LX_INTELLIGENCE = {
      deadlines and pending approvals it refers to. "Opportunities" is wider
      than a phone at this size (409px at 64px), hence "Leads". */
   bigText: B('新机会、期限，不靠人记', 'Leads and deadlines, not left to memory.'),
-  /* Two marquee rows. Row one shows entries 0-5 and, in its loop copy, 6 in
-     place of 2: business situations the layer watches for. Row two shows 7-11
+  /* Two marquee rows. Row one shows entries 0-4 and 6 in both of its loop
+     copies (tools/build-site.mjs, V7-LX): business situations the layer
+     watches for. Row two shows 7-11
      and then 5: M13's loop — notice a change, understand the context, propose,
      get approval, act, check the result, retain the lesson — and the point
      where it stops to ask. No job titles. */

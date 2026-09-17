@@ -2874,6 +2874,21 @@ html[lang^="zh"] .lx-scope .lx-expandable-content > .lx-expandable-text {
   .lx-scope .lx-expandable-content > .lx-expandable-text { font-size: 1.75rem; }
 }
 
+/* The closing clause of a Chinese paragraph (tools/build-site.mjs zhTail):
+   one unit, so an availability clause such as 「高级改进仍在完善。」 is never
+   split (「高级」/「改进…」 at 1024) and never leaves 「完善。」 alone
+   (390). Inline-block: it drops to the next line whole, and only a clause
+   longer than the line wraps inside itself. */
+html[lang^="zh"] .lx-scope .lx-v7-tail { display: inline-block; }
+
+/* intelligence.html — the bubble marquee. Each row's two copies move by
+   -100% of their own width (IX2, 60s a loop), so they must be equally wide;
+   the build now gives both copies the same bubbles. The template's row is a
+   fixed 625rem (10,000px), which the English copies (about 5,090px each)
+   outgrew: flexbox squeezed them to 5,000px. The row now takes its content's
+   width, 625rem at least, so no copy is squeezed. */
+.lx-scope .lx-cta-author-list { width: max-content; }
+
 /* V7-LX-END */
 
 
