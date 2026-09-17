@@ -873,6 +873,48 @@ export const PRICING = {
     { level: B('增长版', 'Growth'), from: B('上线版', 'Launch') },
     { level: B('全球获客版', 'Global Acquisition'), from: B('增长版', 'Growth') },
   ],
+  /* ----------------------------------------------- 续费视图里写什么 ---
+     DECIDED 2026-09-17 (the owner delegated the call: "make the best choice").
+
+     THE DEFECT. The period switch on the pricing page (tools/blocks/rk-price-
+     tiers.*) has a 续费 / Renewal grid, and on it 上线版, 增长版 and 全球获客版
+     listed their first-year deliverables — pages, SKU image sets, short and AI
+     videos, translations, three months of acquisition operation — under the
+     renewal price, as if they were delivered again every year. This file's own
+     answer to 「首年之后怎么算？」 (PRICING.faq) says they are not.
+
+     THE RULE. On the renewal grid, a level sold as a first-year package
+     (`unit: 'first'`) lists that answer instead of its first-year items, under
+     that question, and nothing more. Its renewal price stays 联系我们. 标准版 (a
+     plain annual subscription), 企业版 (定制) and the whole first-year grid keep
+     their own items. The comparison chart below the band is not switched by the
+     toggle; it states first-year inclusions and prices (「/ 首年」) and stays so.
+
+     `lines`   in order. Each is written out of `from`: fragments that must occur
+               verbatim (a raised first letter allowed) in the answer to
+               「首年之后怎么算？」 or in the level's own items, and the line is
+               those fragments in that order with nothing between them but
+               spaces and punctuation. Two neighbouring fragments may not be cut
+               from one source sentence around words the line leaves out, so a
+               line cannot quote 「不等于」 without its 「不」. No word reaches a
+               renewal card that its sources do not carry. rk-price-tiers.mjs
+               asserts all of it.
+     `when`    a line carrying it is listed only on a level whose own items
+               contain that fragment: continued acquisition operation is quoted
+               at renewal only where the first year included it. */
+  renewalTerms: {
+    lines: [
+      { text: B('标准版软件订阅按年续费', 'The Standard software subscription follows its annual renewal terms'),
+        from: B(['标准版', '软件订阅按年续费'], ['The', 'Standard', 'software subscription follows its annual renewal terms']) },
+      { text: B('域名、托管与持续制作，按续费方案或第三方实际费用另算', 'Domain, hosting and ongoing production follow the renewal proposal or the relevant third-party charges'),
+        from: B(['域名、托管与持续制作，按续费方案或第三方实际费用另算'], ['Domain, hosting and ongoing production follow the renewal proposal or the relevant third-party charges']) },
+      { text: B('配置后 AI 获客运行，按续费方案或第三方实际费用另算', 'Configured AI acquisition operation follows the renewal proposal or the relevant third-party charges'),
+        from: B(['配置后 AI 获客运行', '按续费方案或第三方实际费用另算'], ['Configured AI acquisition operation', 'follows', 'the renewal proposal or the relevant third-party charges']),
+        when: B('配置后 AI 获客运行', 'configured AI acquisition operation') },
+      { text: B('首年建站与内容服务包，不等于每年都重复交付同样的内容量', 'A first-year launch package is not a promise of repeated annual content production'),
+        from: B(['首年建站与内容服务包，不等于每年都重复交付同样的内容量'], ['A first-year launch package is not a promise of repeated annual content production']) },
+    ],
+  },
   featuredBadge: B('推荐方案', 'Our recommendation'),
   compareTitle: B('所选方案对比', 'Compare selected plans'),
   compareFeatures: B('能力', 'Capability'),
