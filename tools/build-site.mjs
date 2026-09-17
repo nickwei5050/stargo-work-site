@@ -768,6 +768,26 @@ function lxPage(spec, lang, name) {
   b = s(b, '<h3 class="lx-expandable-text">Organised</h3>', `<h3 class="lx-expandable-text">${t(spec.features[2].title)}</h3>`);
   for (const [k, v] of Object.entries(spec.tags)) b = s(b, `>${k}<`, `>${t(v)}<`);
   b = lxOntologyList(b, spec, t, name, lang);
+  /* V7-LX: each card's small caps label names that card (C.LX_INTELLIGENCE
+     cardTags / teamTags). The template's label — the three LX_TAGS words with
+     a dot between — sits above the six object cards (left column, phone
+     clones of 订单 / 出货 / 任务, sticky column) and above the team card, in
+     that document order; the team card's label also carries IX attributes,
+     so it is matched by its class and its template words only. */
+  {
+    if (spec.cardTags?.length !== 6 || !spec.teamTags) throw new Error(`${name}: a small caps label for each of the six cards and the team card`);
+    const [w1, w2, w3] = ['CARDS', 'transfers', 'financing'].map((k) => t(spec.tags[k]));
+    const re = new RegExp(`(class="lx-home-features-small-texts">)<div class="lx-subtext">${w1}</div>(<img[^>]*>)<div class="lx-subtext">${w2}</div><img[^>]*><div class="lx-subtext">${w3}</div>`, 'g');
+    const order = [0, 1, 2, 3, 4, 5, 3, 4, 5].map((i) => t(spec.cardTags[i])).concat([t(spec.teamTags)]);
+    let k = 0;
+    b = b.replace(re, (m, open, dot) => {
+      const items = order[k++];
+      if (!items) return m;
+      return open + items.map((w) => `<div class="lx-subtext">${escapeHtml(w)}</div>`).join(dot);
+    });
+    if (k !== order.length) throw new Error(`${name}: expected ${order.length} template card labels, found ${k}`);
+    if (b.includes(`<div class="lx-subtext">${w1}</div>`)) throw new Error(`${name}: a template card label survives`);
+  }
   spec.gradient.forEach((g, i) => {
     const re = new RegExp(`(class="lx-heading-style-h1 lx-_${i + 1}">)[^<]*(</h3>)`);
     if (!re.test(b)) throw new Error(`${name}: gradient heading ${i + 1}`);

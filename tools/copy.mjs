@@ -651,6 +651,19 @@ export const LX_INTELLIGENCE = {
     { title: B('出货', 'Shipment'), text: B('什么时间交付，还缺哪些资料。', 'Delivery timing and missing records.') },
     { title: B('任务', 'Task'), text: B('谁负责，何时完成，结果如何核对。', 'Owner, deadline and how the result will be checked.') },
   ],
+  /* V7-LX: the small caps label above each of those six cards, in their
+     order, and above the team card (feat2Card). The template printed one
+     label, 「客户 · 报价 · 订单」, on all of them; each now names what its own
+     card is about, in the card's own words. Two or three short items. */
+  cardTags: [
+    B(['身份', '来源', '沟通'], ['Identity', 'Source', 'History']),
+    B(['需求', '待补信息'], ['Needs', 'Missing info']),
+    B(['价格', '版本', '批准'], ['Price', 'Version', 'Approval']),
+    B(['约定', '进度'], ['Commitment', 'Progress']),
+    B(['交期', '资料'], ['Timing', 'Records']),
+    B(['负责人', '期限', '核对'], ['Owner', 'Deadline', 'Check']),
+  ],
+  teamTags: B(['分工', '交接', '确认'], ['Roles', 'Handoffs', 'Sign-off']),
   gradient: [B('观察真实流程', 'Observe the workflow'), B('整理业务关系', 'Map the business context'), B('安排 AI 参与的步骤', 'Assign useful AI work'), B('用实际结果改进', 'Improve from real outcomes')],
   /* P03's proactive-work heading, 「机会、截止时间和待办事项，不必都靠人记着。」,
      cut to the slot (see bigText above): runs of four, three and four glyphs,
