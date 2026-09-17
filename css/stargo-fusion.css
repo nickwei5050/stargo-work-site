@@ -4060,6 +4060,9 @@ html[lang^="en"] .team-grid .team-content .h2 { text-wrap: balance; }
   .lx-scope .lx-cta-wrapper .lx-cta-logo-holder { max-width: 85%; }
   .lx-scope .lx-cta-wrapper .lx-cta-logo-text { white-space: nowrap; }
 }
+@media screen and (min-width: 1440px) {
+  .lx-scope .lx-cta-wrapper .lx-cta-logo-holder { max-width: 88%; }
+}
 @media screen and (min-width: 768px) and (max-width: 879px) {
   .lx-scope .lx-cta-wrapper .lx-cta-logo-text { font-size: 2.25rem; }
 }
@@ -4099,9 +4102,26 @@ html[lang^="zh"] .lx-scope .lx-cta-wrapper .lx-cta-logo-holder .lx-text-size-reg
    / scenario" left one word alone at 320-768. Balanced, the line breaks after
    the dot or not at all. */
 html[lang="en"] .cn-about-reviews .cn-testimonial-info .cn-text-size-medium { text-wrap: balance; }
-@media screen and (min-width: 1440px) {
-  .lx-scope .lx-cta-wrapper .lx-cta-logo-holder { max-width: 88%; }
-}
+
+/* enterprise.html, the fourth story panel, (经营) / (Oversight): the
+   template fades its heading and text out (IX3 t-255c7997, at 1.0 of a 1.3
+   timeline) just as the sliding track lands it, so the text dissolved about
+   one wheel step after it came to rest and the section then stayed pinned
+   for 500-700px showing only the zooming, dimming port photograph (390, 768,
+   1440, both languages). Panels 1-3 stay until the track carries them away;
+   the fourth now stays too, to the end of the pinned run and while the
+   section scrolls off. Only that exit fade is cancelled: it is the inline
+   opacity on the heading and paragraph themselves, while the entrance
+   animates their split lines, so the entrance, the slide and the
+   photograph's zoom and dim are unchanged (the text shadow above keeps the
+   text readable on the photograph).
+   The panel headings are set at a line-height of .85 and their reveal wraps
+   each line in a mask that clips, which cut the descender of "(Oversight)"
+   ("Oversiqht", 390 and 1440) now that the heading stays on screen; the
+   masks keep clipping, a quarter of an em outside their box. */
+.sutdio-animation .studio-sticky .h2.for-abt.d04,
+.sutdio-animation .studio-sticky .top-text.for-abt.t04 { opacity: 1 !important; }
+.sutdio-animation .studio-sticky .h2.for-abt .gsap_split_line-mask { overflow-clip-margin: .25em; }
 
 /* V7-LX-END */
 
