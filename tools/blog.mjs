@@ -70,10 +70,28 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
 const tx = (v, lang) => (v && typeof v === 'object' && 'zh' in v ? v[lang] : v);
 const figNo = (n, lang) => (lang === 'zh' ? `图 ${n}` : `Figure ${n}`);
 
+/* Headings break between phrases (V7 editor). On the Chinese pages the
+   article's h3s, the FAQ questions, the chart titles, quotes, motto and
+   profile line are drawn `word-break: keep-all` with `text-wrap: balance`
+   (V7-BLOG in css/stargo-fusion.css): they break only at spaces and at
+   「，、：；？！。」, never inside a word such as 「连接」 or 「浏览器」, and never
+   leave one character alone on a line. Where a phrase could be wider than the
+   narrowest line (h3: 10 characters at 320px; FAQ question: 15; chart title:
+   14; quote: 11), the copy marks an extra break with 「|」. inline() prints the
+   mark as <wbr> and keeps the product names whole; bare() drops it wherever
+   the text is plain (the FAQ structured data). The check at the foot of this
+   file measures every phrase. */
+const KEEP = /STARGO WORK|Growth OS|Sales Desk|one-click/g;
+const bare = (s) => String(s).replace(/\|/g, '');
+const keepNames = (html) => html.replace(KEEP, (m) => `<span class="sgp-nw">${m}</span>`);
+const inline = (s) => keepNames(esc(s).replace(/\|/g, '<wbr>'));
+/** An article body's own h3s, written in the body HTML: the same treatment. */
+const phraseHeadings = (html) => html.replace(/(<h3\b[^>]*>)([^]*?)(<\/h3>)/g, (m, open, text, close) => open + keepNames(text.replace(/\|/g, '<wbr>')) + close);
+
 /** One chart: a figure whose caption is its title; `inner` is the chart body. */
 function figure(kind, n, lang, title, inner, note) {
   return `<figure class="sgc sgc--${kind}">`
-    + `<figcaption class="sgc-cap"><span class="sgc-no">${figNo(n, lang)}</span><span class="sgc-title">${esc(tx(title, lang))}</span></figcaption>`
+    + `<figcaption class="sgc-cap"><span class="sgc-no">${figNo(n, lang)}</span><span class="sgc-title">${inline(tx(title, lang))}</span></figcaption>`
     + inner
     + (note ? `<p class="sgc-note">${esc(tx(note, lang))}</p>` : '')
     + '</figure>';
@@ -178,7 +196,7 @@ export function chartRoles(lang, n, { note = true } = {}) {
 const TEAM = {
   title: B('多 AI 员工协作：不是各聊各的，而是一起把事做完', 'AI teamwork: not separate chats, but one job finished together'),
   briefLabel: B('老板交办', 'The business brief'),
-  brief: B('“开拓一个新的目标市场。”', '“Develop a new target market.”'),
+  brief: B('“开拓一个|新的目标市场”', '“Develop a new target market.”'),
   scenario: B('场景示意', 'Illustrative scenario'),
   hub: B('同一个任务', 'Shared mission'),
   hubText: B('共同的目标、客户与产品信息', 'One goal, shared customer and product facts'),
@@ -190,10 +208,12 @@ const TEAM = {
     [B('复核与统筹', 'Review and coordination'), B('汇总并交人确认', 'Check and consolidate')],
   ],
   msgLabel: B('员工之间的消息', 'Messages between them'),
+  /* Chat bubbles: the bubble is the quotation, so no quote marks (V4 p. 23
+     prints 「请核对规格」 and 「已补充卖点」 bare). */
   msgs: [
-    [B('市场研究 → 销售策划', 'Market research → Sales planning'), B('“目标客户清单已交接。”', '“Target account list handed over.”')],
-    [B('销售策划 → 产品专家', 'Sales planning → Product specialist'), B('“请核对规格。”', '“Please check the specifications.”')],
-    [B('产品专家 → 创意员工', 'Product specialist → Creative specialist'), B('“已补充卖点。”', '“Benefits added.”')],
+    [B('市场研究 → 销售策划', 'Market research → Sales planning'), B('目标客户清单已交接', 'Target account list handed over')],
+    [B('销售策划 → 产品专家', 'Sales planning → Product specialist'), B('请核对规格', 'Please check the specifications')],
+    [B('产品专家 → 创意员工', 'Product specialist → Creative specialist'), B('已补充卖点', 'Benefits added')],
   ],
   outLabel: B('统一交付', 'Combined output'),
   outputs: B(['客户清单', '开发策略', '产品方案', '营销素材', '下一步任务'], ['Prospect list', 'Outreach plan', 'Product fit', 'Creative assets', 'Next actions']),
@@ -206,7 +226,7 @@ export function chartTeam(lang, n) {
   const roles = T.roles.map(([r, t], i) => `<li class="sgc-role${i === T.roles.length - 1 ? ' sgc-role-lead' : ''}"><strong class="sgc-role-name">${esc(tx(r, lang))}</strong><span class="sgc-role-task">${esc(tx(t, lang))}</span></li>`).join('');
   const msgs = T.msgs.map(([who, what]) => `<li class="sgc-msg"><span class="sgc-msg-who">${esc(tx(who, lang))}</span><span class="sgc-msg-text">${esc(tx(what, lang))}</span></li>`).join('');
   const inner = '<div class="sgc-team">'
-    + `<div class="sgc-team-brief">${label(T.briefLabel, lang)}<p class="sgc-quote">${esc(tx(T.brief, lang))}</p><p class="sgc-aside">${esc(tx(T.scenario, lang))}</p></div>`
+    + `<div class="sgc-team-brief">${label(T.briefLabel, lang)}<p class="sgc-quote">${inline(tx(T.brief, lang))}</p><p class="sgc-aside">${esc(tx(T.scenario, lang))}</p></div>`
     + `<div class="sgc-team-core"><p class="sgc-hub"><strong>${esc(tx(T.hub, lang))}</strong><span>${esc(tx(T.hubText, lang))}</span></p>`
     + `<ol class="sgc-roles">${roles}</ol>`
     + label(T.msgLabel, lang) + `<ul class="sgc-msgs">${msgs}</ul></div>`
@@ -220,7 +240,7 @@ export function chartTeam(lang, n) {
 const VIDEO = {
   title: B('AI 一键生成视频：一句需求，走到一条成片', 'One-click AI video: from one brief to a finished film'),
   briefLabel: B('制作需求示例', 'Illustrative brief'),
-  brief: B('“为这款产品制作一条竖版英文宣传短片。”', '“Create a vertical English promo for this product.”'),
+  brief: B('“为这款产品制作|一条竖版英文宣传短片”', '“Create a vertical English promo for this product.”'),
   steps: B(['制作需求', '脚本', '分镜', '画面', '配音', '字幕', '导出'], ['Brief', 'Script', 'Storyboard', 'Visuals', 'Voiceover', 'Captions', 'Export']),
   boardLabel: B('分镜示意', 'Storyboard beats'),
   board: B(['吸引注意', '展示产品', '说明价值', '引导咨询'], ['The hook', 'The product', 'The benefits', 'The next step']),
@@ -234,7 +254,7 @@ export function chartVideo(lang, n) {
   const steps = tx(V.steps, lang).map((s, i) => `<li class="sgc-pill"><span class="sgc-idx">${two(i + 1)}</span>${esc(s)}</li>`).join('');
   const board = tx(V.board, lang).map((s, i) => `<li class="sgc-frame-beat"><span class="sgc-idx">${two(i + 1)}</span>${esc(s)}</li>`).join('');
   const formats = V.formats.map(([name, ratio, shape]) => `<li class="sgc-format"><span class="sgc-shape sgc-shape-${shape}" aria-hidden="true"></span><span class="sgc-format-name">${esc(tx(name, lang))}</span><span class="sgc-format-ratio">${ratio}</span></li>`).join('');
-  const inner = `<p class="sgc-brief"><span class="sgc-label">${esc(tx(V.briefLabel, lang))}</span><span class="sgc-quote">${esc(tx(V.brief, lang))}</span></p>`
+  const inner = `<p class="sgc-brief"><span class="sgc-label">${esc(tx(V.briefLabel, lang))}</span><span class="sgc-quote">${inline(tx(V.brief, lang))}</span></p>`
     + `<ol class="sgc-pills">${steps}</ol>`
     + '<div class="sgc-video-grid">'
     + `<div class="sgc-video-board">${label(V.boardLabel, lang)}<ol class="sgc-beats">${board}</ol></div>`
@@ -315,7 +335,7 @@ const STATUS = {
     ['link', B('逐项连接与验收', 'Connected and validated one by one'), B(['Growth OS 真实数据与客户触达，按授权接入', '各渠道真实收发与业务交接', '真实价格、合同、签章、单证、物流与财务'], ['Growth OS live data and outreach, by authorization', 'Live channel messaging and business handoffs', 'Live prices, contracts, signatures, documents, logistics and finance'])],
     ['next', B('持续完善', 'Still evolving'), B(['Growth OS 核心流程', '营销套件、局部检查与一键编排', '企业级主动工作、统一长期记忆与高级改进', '原生客户端、移动端与小程序'], ['Growth OS core workflows', 'Packaged marketing kits, local checks and one-click kit production', 'Enterprise-wide proactive work, unified long-term memory and advanced improvement', 'Native clients, mobile and mini-programs'])],
   ],
-  note: B('实际交付以企业配置与确认范围为准；发布到外部渠道、正式申报与资金支付由有权人员确认。', 'Delivery follows the enterprise configuration and agreed scope; publishing to external channels, official filings and payments are confirmed by authorized people.'),
+  note: B('现已可用的能力，也在企业开通的服务、额度和权限内运行。实际交付以企业配置与确认范围为准；发布到外部渠道、正式申报与资金支付由有权人员确认。', 'Available capabilities also run within the services, credits and access a company enables. Delivery follows the enterprise configuration and agreed scope; publishing to external channels, official filings and payments are confirmed by authorized people.'),
 };
 export function chartStatus(lang, n) {
   const cols = STATUS.cols.map(([key, h, items]) => `<li class="sgc-status sgc-status-${key}"><strong class="sgc-status-title">${esc(tx(h, lang))}</strong><ul>${tx(items, lang).map((x) => `<li>${esc(x)}</li>`).join('')}</ul></li>`).join('');
@@ -358,16 +378,16 @@ export function renderTakeaways(post, lang) {
 export function renderFaq(post, lang) {
   if (!post.faq?.length) return '';
   return `<section class="sgp-faq" aria-labelledby="sgp-faq-title"><h3 id="sgp-faq-title">${esc(BLOG_UI.faq[lang])}</h3>`
-    + post.faq.map((f) => `<div class="sgp-faq-item"><h4>${esc(f.q[lang])}</h4><p>${esc(f.a[lang])}</p></div>`).join('')
+    + post.faq.map((f) => `<div class="sgp-faq-item"><h4>${inline(f.q[lang])}</h4><p>${esc(f.a[lang])}</p></div>`).join('')
     + '</section>';
 }
 
-/** schema.org Question entities for the FAQPage node; plain text, identical to renderFaq(). */
-export const faqEntities = (post, lang) => (post.faq ?? []).map((f) => ({ '@type': 'Question', name: f.q[lang], acceptedAnswer: { '@type': 'Answer', text: f.a[lang] } }));
+/** schema.org Question entities for the FAQPage node; plain text, identical to renderFaq()'s text. */
+export const faqEntities = (post, lang) => (post.faq ?? []).map((f) => ({ '@type': 'Question', name: bare(f.q[lang]), acceptedAnswer: { '@type': 'Answer', text: f.a[lang] } }));
 
 /** The article body as printed: lead paragraph, takeaways, the rest, FAQ. */
 export function renderBody(post, lang) {
-  const body = post.body[lang].trim();
+  const body = phraseHeadings(post.body[lang].trim());
   const cut = body.indexOf('</p>');
   if (!body.startsWith('<p>') || cut < 0) throw new Error(`blog ${post.slug}: the body must open with its answer paragraph`);
   return body.slice(0, cut + 4) + renderTakeaways(post, lang) + body.slice(cut + 4) + renderFaq(post, lang);
@@ -392,7 +412,7 @@ export function wordCount(post, lang) {
 const GUIDE_SECTIONS = [
   {
     id: 'guide-loop',
-    h: B('一套系统，怎样连接从获客到经营？', 'How does one system connect acquisition to operations?'),
+    h: B('一套系统，怎样连接|从获客到经营？', 'How does one system connect acquisition to operations?'),
     text: B('<p>Growth OS 与 Sales Desk 是业务主线：先主动找到客户、判断机会，再把沟通、报价、PI 和订单交接放进同一条销售链。ERP、内容生产、数字员工、企业知识和管理工具围绕主线协同，结果持续沉淀，进入下一轮增长。</p>',
       '<p>Growth OS and Sales Desk lead the journey: find customers and qualify opportunities, then carry conversations, quotes, PIs and order handoffs along one sales chain. Operations, creative work, AI employees, enterprise knowledge and management tools support that line, and every outcome feeds the next growth cycle.</p>'),
     fig: chartLoop,
@@ -401,7 +421,7 @@ const GUIDE_SECTIONS = [
   },
   {
     id: 'guide-growth',
-    h: B('Growth OS：怎样主动把商机找出来？', 'Growth OS: how are opportunities found proactively?'),
+    h: B('Growth OS：怎样主动|把商机找出来？', 'Growth OS: how are opportunities found proactively?'),
     text: B('<p>Growth OS 不只整理已有询盘。它围绕产品、目标市场和客户画像，从公开搜索、企业官网、地图、社交平台、展会和授权贸易数据中寻找经销商、进口商与目标企业；结合采购信号、补货周期和联系人背调排出开发优先级，再准备多语言开发邮件与跟进计划。证据不足时标注待核实，不编造需求。</p>',
       '<p>Growth OS goes beyond incoming inquiries. Around your products, markets and customer profile, it finds dealers, importers and target accounts through public search, company websites, maps, social channels, trade shows and authorized trade data; ranks them by buying signals, reorder patterns and contact research; and prepares multilingual outreach and follow-up plans. Thin evidence is flagged, never filled in.</p>'),
     value: B('把“到处找客户”变成有目标、有证据、有优先级的开发。', 'scattered prospecting becomes targeted, evidence-backed and prioritized.'),
@@ -409,8 +429,8 @@ const GUIDE_SECTIONS = [
   },
   {
     id: 'guide-sales',
-    h: B('Sales Desk：客户怎样一步步走向订单？', 'Sales Desk: how does a customer become an order?'),
-    text: B('<p>Sales Desk 承接 Growth OS 确认的客户和各渠道询盘：邮件、网站、WhatsApp 与阿里国际站的消息集中处理，需求从来信和附件中读出，客户资料、沟通记录、报价和订单汇成客户全景。回复以产品参数、价格政策、MOQ 和贸易条款为依据；跟进、提醒和人工接管都保留，避免重复触达。</p>',
+    h: B('Sales Desk：客户怎样|一步步走向订单？', 'Sales Desk: how does a customer become an order?'),
+    text: B('<p>Sales Desk 承接 Growth OS 确认的客户和各渠道询盘：邮件、网站、WhatsApp 与阿里国际站的消息集中处理，从来信和附件中读出需求，客户资料、沟通记录、报价和订单汇成客户全景。回复以产品参数、价格政策、MOQ 和贸易条款为依据；跟进、提醒和人工接管都保留，避免重复触达。</p>',
       '<p>Sales Desk takes over approved prospects and inquiries from every channel. Email, website, WhatsApp and Alibaba.com messages arrive in one place, requirements are read from messages and attachments, and records, conversations, quotes and orders form a complete customer view. Replies rest on specifications, pricing policy, MOQ and trade terms; follow-ups, reminders and human takeover prevent duplicate outreach.</p>'),
     fig: chartPipeline,
     value: B('换人接手也有完整背景，沟通一路连到报价、订单与复购。', 'anyone can pick up an account with full context, from conversation to quote, order and reorder.'),
@@ -418,11 +438,11 @@ const GUIDE_SECTIONS = [
   },
   {
     id: 'guide-quotes',
-    h: B('报价、PI 与商业文件怎样管起来？', 'How are quotes, PIs and trade documents controlled?'),
+    h: B('报价、PI 与商业文件|怎样管起来？', 'How are quotes, PIs and trade documents controlled?'),
     text: B('<p>报价按配置、数量、币种和贸易条款起草，关联价格表、历史报价、折扣权限和利润边界，AI 不自行编价；价格与重要承诺由有权人批准，确认后转为 PI 并保留批准版本。合同条款核对，以及商业发票、装箱单、原产地证与 Form E 资料、提单等单证的准备与归档，也在这条链上协同。</p>',
       '<p>Quotes are drafted from configuration, quantity, currency and trade terms, using price lists, quote history, discount permissions and margin guardrails; AI never invents prices. Authorized people approve prices and commitments, and an agreed quote becomes a PI with its approved version kept. Clause checks and the preparation and filing of invoices, packing lists, origin and Form E materials and bills of lading run on the same chain.</p>'),
     value: B('价格有依据，利润有边界，文件有版本；批准与发送分别受控。', 'grounded prices, protected margins, versioned documents — and approval kept separate from sending.'),
-    cond: B('真实价格、合同、签章与单证按企业系统接通；正式签发由相应机构完成。见<a href="capabilities.html#g07">报价、PI 与商业文件</a>。', 'live prices, contracts, signatures and documents depend on connected systems; official issuance stays with the authorities. See <a href="capabilities.html#g07">Quotations and PI</a>.'),
+    cond: B('真实价格、合同、签章与单证按企业系统接通；正式签发由相应机构完成。见<a href="capabilities.html#g07">报价、PI 与商业文件</a>。', 'live prices, contracts, signatures and documents depend on connected systems; official issuance stays with the authorized bodies. See <a href="capabilities.html#g07">Quotations and PI</a>.'),
   },
   {
     id: 'guide-erp',
@@ -442,7 +462,7 @@ const GUIDE_SECTIONS = [
   },
   {
     id: 'guide-images',
-    h: B('AI 作图与品牌内容能做什么？', 'What can AI images and brand content do?'),
+    h: B('AI 作图与品牌内容|能做什么？', 'What can AI images and brand content do?'),
     text: B('<p>从自己的产品照片与参数、品牌标志与配色、目标市场与渠道出发，生成和编辑主图、场景图、卖点海报、详情页、图册和社媒素材；营销套件一次规划整组图片与文案，不准确的外观或参数可以局部修正，官网与搜索内容支持多语言和 SEO / GEO 规划。</p>',
       '<p>Starting from your own product photos and facts, logo, colors, market and channel, you generate and edit hero images, scenes, benefit posters, detail pages, catalogs and social assets. A marketing kit plans a full set of images and copy at once, inaccurate visuals or specifications can be corrected locally, and website and search content comes with multilingual and SEO and GEO planning.</p>'),
     value: B('同一套产品事实，持续产出销售、官网、商城和社媒素材。', 'one set of product facts feeds sales, website, commerce and social assets.'),
@@ -450,7 +470,7 @@ const GUIDE_SECTIONS = [
   },
   {
     id: 'guide-video',
-    h: B('AI 一键生成视频是怎样的流程？', 'How does one-click AI video work?'),
+    h: B('AI 一键生成视频|是怎样的流程？', 'How does one-click AI video work?'),
     text: B('<p>一句制作需求会变成一个视频项目：先根据产品资料、受众、语言、时长和画幅形成可审阅的制作方案，再生成画面，加入配音、字幕、音乐和品牌片尾，导出竖版、横版或方版成片。失败镜头单独重做，版本与成本随项目记录。</p>',
       '<p>One brief becomes a video project. From product facts, audience, language, duration and format, a production plan is prepared for review; then the visuals are generated, voiceover, captions, music and a branded end card are added, and a portrait, landscape or square film is exported. A failed shot is redone on its own, and versions and costs are recorded.</p>'),
     fig: chartVideo,
@@ -467,7 +487,7 @@ const GUIDE_SECTIONS = [
   },
   {
     id: 'guide-workforce',
-    h: B('288 个数字员工覆盖哪些岗位？', 'Which jobs do the 288 AI employees cover?'),
+    h: B('288 个数字员工|覆盖哪些岗位？', 'Which jobs do the 288 AI employees cover?'),
     text: B('<p>288 个专业岗位分布在十类企业职能中，不只服务外贸。每个岗位可以配置职责、技能、企业知识、可用工具、权限和运行记录；老板提出目标，选择员工或团队，查看成果并批准关键动作。</p>',
       '<p>The 288 specialized roles span ten enterprise functions, not export sales alone. Each can be configured with responsibilities, skills, enterprise knowledge, tools, access and a run history. An owner sets a goal, picks employees or a team, reviews the results and approves key actions.</p>'),
     fig: (lang, n) => chartRoles(lang, n, { note: false }),
@@ -476,12 +496,12 @@ const GUIDE_SECTIONS = [
   },
   {
     id: 'guide-teamwork',
-    h: B('多个 AI 员工怎样一起把事做完？', 'How do several AI employees finish one job together?'),
+    h: B('多个 AI 员工怎样|一起把事做完？', 'How do several AI employees finish one job together?'),
     text: B('<p>复杂任务可以交给一支 AI 团队：按岗位、技能和权限组队，成员之间发送定向消息、提问、补充信息和交接结果，研究、销售、产品与内容子任务并行处理，再由统筹角色检查并合成一个交付包，交人确认。暂停或接管之后，工作仍能继续。</p>',
       '<p>A complex task can go to an AI team. Members are chosen by role, skills and access; they send each other directed messages, ask questions, add context and hand over results; research, sales, product and content subtasks run in parallel; and a coordinating role checks and combines the work into one package for a person to confirm. Work continues after a pause or takeover.</p>'),
     fig: chartTeam,
     value: B('信息能传递，责任有归属，结果能交接。', 'information flows, ownership is clear and the result can be handed over.'),
-    cond: B('现已可用。协作轮次、预算和动作有上限，随时可叫停；人工审批与接管始终保留；共享任务信息不授予他人权限；对外动作须经授权审批。见<a href="workforce.html#lx-team">协作场景</a>。', 'available now. Rounds, budgets and actions are capped and work can be stopped; human approval and takeover remain; shared context grants no one else’s permissions; external actions need authorized approval. See the <a href="workforce.html#lx-team">team scenario</a>.'),
+    cond: B('现已可用。协作轮次、预算和动作有上限，随时可叫停；人工审批与接管始终保留；共享任务信息不授予他人权限；对外动作须经授权审批。见<a href="workforce.html#lx-team">协作场景</a>。', 'available now. Rounds, budgets and actions are capped and work can be stopped; human approval and takeover remain; shared task context does not grant other employees’ permissions; external actions need an authorized approval. See the <a href="workforce.html#lx-team">team scenario</a>.'),
   },
   {
     id: 'guide-context',
@@ -502,7 +522,7 @@ const GUIDE_SECTIONS = [
   },
   {
     id: 'guide-desktop',
-    h: B('为什么说一个浏览器就是工作空间？', 'Why is a browser enough for the whole workspace?'),
+    h: B('为什么说|一个浏览器|就是工作空间？', 'Why is a browser enough for the whole workspace?'),
     text: B('<p>它像一台企业专属电脑：多个应用窗口、文件和数字员工在同一个桌面里；AI 帮忙整理表格、文档、翻译和报告；语音可以转成纪要和待办；在授权环境中处理网页、表单和上传下载，不绕过登录与安全验证；邮箱、网盘、CRM 和 ERP 按企业授权连接。</p>',
       '<p>It works like a company-specific computer: application windows, files and AI employees share one desktop. AI helps with spreadsheets, documents, translation and reports; speech becomes notes and tasks; routine web work, forms, uploads and downloads run in an authorized environment without bypassing sign-in or security checks; and email, drives, CRM and ERP connect through company authorization.</p>'),
     value: B('少在工具之间来回切换，入口、文件和数字员工集中在一处。', 'less switching between tools, with entry points, files and AI employees in one place.'),
@@ -531,7 +551,7 @@ const GUIDE_SECTIONS = [
 
 function guideBody(lang) {
   let n = 0;
-  const toc = `<nav class="sgp-toc" aria-labelledby="sgp-toc-title"><p class="sgp-toc-title" id="sgp-toc-title">${esc(BLOG_UI.toc[lang])}</p><ol>${GUIDE_SECTIONS.map((s) => `<li><a href="#${s.id}">${esc(s.h[lang])}</a></li>`).join('')}</ol></nav>`;
+  const toc = `<nav class="sgp-toc" aria-labelledby="sgp-toc-title"><p class="sgp-toc-title" id="sgp-toc-title">${esc(BLOG_UI.toc[lang])}</p><ol>${GUIDE_SECTIONS.map((s) => `<li><a href="#${s.id}">${inline(s.h[lang])}</a></li>`).join('')}</ol></nav>`;
   const sections = GUIDE_SECTIONS.map((s) => {
     const fig = s.fig ? s.fig(lang, n + 1) : '';
     if (s.fig) n += s.figs ?? 1;
@@ -541,9 +561,9 @@ function guideBody(lang) {
   }).join('\n');
   const lead = lang === 'zh'
     ? '<p>STARGO WORK 是一套面向制造业与外贸企业的网页桌面级 AI 企业操作系统：以 Growth OS 主动获客和 Sales Desk 外贸销售为主线，把企业经营、内容生产、企业知识和 288 个专业数字岗位连接在同一个工作空间里，关键决定由人掌握。</p>'
-      + '<p>本文按业务顺序讲清图文详解的十六个主题：每一项做什么、对老板有什么价值、需要满足哪些条件。</p>'
+      + '<p>本文按业务顺序讲清十六个主题：每一项做什么，对老板有什么价值，需要满足哪些条件。</p>'
     : '<p>STARGO WORK is a browser-based desktop AI operating system for manufacturing and global trade enterprises. Growth OS for proactive acquisition and Sales Desk for trade sales lead the business, while operations, creative work, enterprise knowledge and 288 specialized AI roles support them in one workspace — and people keep the decisions.</p>'
-      + '<p>This guide follows the sixteen topics of the STARGO WORK visual guide in business order: what each one does, what it is worth to an owner and what it depends on.</p>';
+      + '<p>This guide covers sixteen topics in business order: what each one does, what it is worth to an owner and what it depends on.</p>';
   const end = lang === 'zh'
     ? '<p class="sgp-cta">想从哪条业务开始？<a href="contact.html">预约企业演示</a>——把工作交给 AI，把决定权留在企业。</p>'
     : '<p class="sgp-cta">Which workflow would you start with? <a href="contact.html">Request a demo</a> — delegate the work, keep the authority.</p>';
@@ -576,11 +596,11 @@ export const POSTS = [
     mentions: ['Growth OS', 'Sales Desk'],
     title: B('STARGO WORK 图文详解：从获客到经营', 'STARGO WORK, explained: one system from acquisition to operations'),
     titleChunks: ['STARGO ', 'WORK ', '图文详解：', '从获客', '到经营'],
-    description: B('一篇读懂 STARGO WORK：两大核心引擎、业务循环、288 个数字岗位、AI 团队协作与一键视频，以及每项能力的价值和开放条件。', 'A complete guide to STARGO WORK: two core engines, the business loop, 288 AI roles, AI teamwork and one-click video, with each capability’s value and terms.'),
+    description: B('一篇读懂 STARGO WORK：两大核心引擎、业务循环、288 个数字岗位、AI 团队协作与一键视频，以及每项能力的价值和开放条件。', 'A complete guide to STARGO WORK: two core engines, the business loop, 288 AI roles, AI teamwork and one-click video, with each one’s value and availability.'),
     takeaways: [
       B('一个网页桌面，两大核心引擎：Growth OS 主动获客，Sales Desk 外贸销售。', 'One browser desktop, two core engines: Growth OS for acquisition and Sales Desk for trade sales.'),
       B('业务循环：主动获客 → 外贸成交 → 企业履约 → 经营协同 → 复购增长。', 'The loop: acquisition → trade sales → fulfillment → business coordination → repeat growth.'),
-      B('288 个专业数字岗位覆盖十类职能；AI 团队协作、一键视频与爆款再创作现已可用。', '288 specialized roles across ten functions; AI teamwork, one-click video and viral adaptation are available now.'),
+      B('288 个专业数字岗位覆盖十类职能；AI 团队协作、一键视频与爆款再创作现已可用，在开通的服务、额度和权限内运行。', '288 specialized roles across ten functions; AI teamwork, one-click video and viral adaptation are available now, within the services, credits and access a company enables.'),
       B('报价、触达、付款等关键动作由有权人员批准；已批准不等于已发送。', 'Authorized people approve quotes, outreach and payments; approved is not the same as sent.'),
       B('从一条业务流程开始，用真实样本验证，再按企业配置扩大范围。', 'Start with one workflow, validate it with real cases, then expand by configuration.'),
     ],
@@ -595,16 +615,16 @@ export const POSTS = [
       Q('它只适用于外贸部门吗？', 'Is it only for the export department?',
         '不是。核心从主动获客与外贸销售切入，同时覆盖 ERP、商城、采购库存、生产质检、财务履约、内容创作、知识、办公及管理协同。具体工作能否直接执行，取决于企业配置和已连接系统。',
         'No. Acquisition and trade sales are the starting point, while the scope also covers operations, commerce, purchasing, stock, production, quality, finance coordination, creative work, knowledge, office tasks and management. Executable work depends on configuration and connected systems.'),
-      Q('AI 一键视频与爆款再创作是同一个功能吗？', 'Are one-click video and viral adaptation the same feature?',
+      Q('AI 一键视频与爆款再创作|是同一个功能吗？', 'Are one-click video and viral adaptation the same feature?',
         '不是。一键视频从产品资料与制作需求出发，组织脚本、分镜、画面、配音、字幕和导出，交付可播放、可导出的视频文件；爆款再创作先分析有权使用的参考视频结构，再结合自身产品形成三个原创方向。两者现已可用，成片都经人工审核后再发布。',
         'No. One-click video starts from product facts and a brief and organizes the script, storyboard, visuals, voiceover, captions and export into a playable, exportable file. Viral adaptation first studies the structure of an authorized reference video and develops three original directions for your product. Both are available now, and finished videos are reviewed by people before publishing.'),
-      Q('“复刻爆款”是不是复制别人的视频？', 'Does viral adaptation copy someone else’s video?',
+      Q('“复刻爆款”|是不是复制别人的视频？', 'Does viral adaptation copy someone else’s video?',
         '不是。这里指借鉴开场、节奏、镜头安排和转化逻辑，再用自己的产品与品牌制作原创内容。不直接复制原片、人脸、声音、音乐、标志或水印，也不保证生成内容一定成为爆款。',
         'No. It studies hooks, pacing, shot structure and calls to action, then develops original content for your product and brand. It does not copy footage, faces, voices, music, logos or watermarks, and it does not guarantee viral performance.'),
       Q('主动工作是不是让 AI 自己决定一切？', 'Does proactive work mean AI decides everything?',
         '不是。主动工作指关注客户、订单、期限和异常，提出下一步建议，并在授权范围内推进任务。企业级主动工作、统一长期记忆和高级改进持续完善；关键判断仍由人负责。',
         'No. It means tracking customers, orders, deadlines and exceptions, recommending next steps and progressing authorized work. Enterprise-wide proactive work, unified long-term memory and advanced improvement are still evolving, and people remain responsible for consequential judgment.'),
-      Q('所有渠道和全部功能现在都能直接用吗？', 'Is every channel and feature available right away?',
+      Q('所有渠道和全部功能|现在都能直接用吗？', 'Is every channel and feature available right away?',
         '不能仅凭功能介绍这样判断。AI 团队协作、一键视频和爆款再创作现已可用，并在企业开通的服务、额度和权限内运行；部分应用已有基础，按企业配置启用；真实渠道、客户交接、价格、物流和财务需要逐项连接与验收；企业级主动工作和统一长期记忆仍在完善。',
         'A capability description is not proof of availability. AI teamwork, one-click video and viral adaptation are available now, within the services, credits and access a company enables. Some applications have foundations and are enabled by configuration; live channels, handoffs, prices, logistics and finance are connected and validated one by one; enterprise-wide proactive work and unified long-term memory are still evolving.'),
       Q('能自动签发证书、报关退税或代替专业判断吗？', 'Does it issue certificates or replace professional review?',
@@ -630,10 +650,10 @@ export const POSTS = [
     ],
     body: B(`
 <p>企业引入 AI，最稳妥的顺序是：先选一条最影响经营的业务流程，按五个步骤跑通并用真实样本验证，再逐步扩大到其他部门。</p>
-<h3>为什么不一次改造所有部门？</h3>
+<h3>为什么不|一次改造所有部门？</h3>
 <p>同时把获客、客服、报价、订单和内容交给新系统，每个团队都在适应新工具，却没有一条流程真正跑到底。管理者也很难判断：哪里真的省了时间，哪里只是换了个地方做同样的事。</p>
 <p>从一条流程开始，范围小，责任清楚，结果容易核对。跑通之后，整理好的资料、审批规则和工作方法，可以直接用到下一条流程。</p>
-<h3>第一条流程应该选哪一条？</h3>
+<h3>第一条流程|应该选哪一条？</h3>
 <p>通常选最耗时间、最影响增长，或者交接最乱的那一条。制造业与外贸企业常见的起点有：</p>
 <ul>
 <li><strong>主动获客：</strong>只靠平台询盘，没有自己的目标客户清单和开发优先级。</li>
@@ -649,7 +669,7 @@ ${chartStart('zh', 1)}
 <p><strong>第三步，连接已有账号。</strong>按企业授权接入邮箱、网盘、CRM、ERP 等现有系统。不必先假定全部替换，保留、接入还是调整，逐项确认。</p>
 <p><strong>第四步，安排员工与审批。</strong>明确由哪些数字员工执行、谁来确认、遇到异常由谁接管，并设好预算和可执行动作的边界。</p>
 <p><strong>第五步，验证真实成果。</strong>用真实样本核对结果：不是页面能打开，也不是 AI 说一句“已完成”，而是业务结果确实达到目标。确认有效，再扩大范围。</p>
-<h3>人在这条流程里负责什么？</h3>
+<h3>人在这条流程里|负责什么？</h3>
 <p>从第一条流程开始就要设好审批。AI 负责准备资料、形成草稿和提出建议；报价、对外触达、重要承诺和付款等关键动作，由企业有权人员决定。批准、发送和结果核对分开处理，每一步都留有记录。这就是 STARGO WORK 的原则：把工作交给 AI，把决定权留在企业。</p>
 <h3>跑通之后，怎样扩大范围？</h3>
 <p>第一条流程验证有效后，再按企业配置与交付范围，逐步开放更多业务板块和数字岗位。各项能力的开放条件不同：Growth OS 的真实数据与客户触达按授权接入；Sales Desk 的渠道收发和业务交接逐项连接、验证；ERP、履约与财务协同按企业已接入的系统分阶段交付。</p>
@@ -716,7 +736,7 @@ ${chartStart('en', 1)}
     ],
     body: B(`
 <p>Sales Desk 把一封询盘推进成经过批准的报价与 PI：先读懂需求、对上客户和产品，再按企业确认的价格规则起草报价，交有权人批准；批准之后要不要发出、何时发出，是另一个单独受控的动作。</p>
-<h3>为什么报价总是从电子表格开始？</h3>
+<h3>为什么报价|总是从电子表格开始？</h3>
 <p>一封询盘进来，业务员要先判断客户是谁、来自哪个市场、想买什么；再翻产品文件找参数，打开上一次的报价表对照价格，找老板确认折扣和利润，最后手工做成报价单。</p>
 <p>每一步都在不同的窗口里，判断和确认的过程很少留下记录；客户改了数量，旧版本还可能被误发出去。</p>
 <h3>询盘进来后，Sales Desk 先做什么？</h3>
@@ -733,12 +753,12 @@ ${chartStart('en', 1)}
 <li><strong>由有权人批准：</strong>价格、折扣、利润和重要承诺交给有权人员确认，审批时能看到这份报价的依据和来龙去脉。</li>
 <li><strong>保留正式版本：</strong>批准后的报价转为 PI，保留条款、金额、付款节点和批准版本；客户修改数量或配置时，变更有记录，降低错发旧版本的风险。</li>
 </ol>
-<h3>批准了，为什么还不算“发出去”？</h3>
+<h3>批准了，为什么|还不算“发出去”？</h3>
 <p>在 STARGO WORK 里，报价批准与实际发送分别受控。批准，说明价格和条款已由有权人确认；发送，是另一个需要授权的对外动作；客户是否收到、后续是否成交，还要继续核对。</p>
 <p>已批准不等于已发送，已发送也不等于已收到或已办完。三种状态分开记录，管理者看到的就是真实进度。</p>
 <h3>合同、单证和订单怎样接上？</h3>
 <p>合同模板、条款核对与版本管理在同一条链上协同，电子签和法律审阅按企业流程衔接。商业发票、装箱单、原产地证与 Form E 资料、提单等外贸单证可以准备、核对和归档，正式签发由相应机构完成。确认的订单再交接给履约、售后和复购跟进。</p>
-<h3>开放条件</h3>
+<h3>现在能用到什么程度？</h3>
 <p>Sales Desk 业务工作台已经具备；各渠道的真实收发与业务交接需逐项连接、验证。报价与 PI 持续完善，真实价格、合同、签章与单证按企业系统接通。详见能力目录中的<a href="capabilities.html#g04">询盘与多渠道沟通</a>、<a href="capabilities.html#g05">CRM 与客户全景</a>和<a href="capabilities.html#g07">报价、PI 与商业文件</a>。</p>
 <p class="sgp-cta">想看一封真实询盘怎样走到 PI？<a href="contact.html">预约企业演示</a>。</p>`,
     `
@@ -819,7 +839,7 @@ ${chartStart('en', 1)}
 <p>STARGO WORK 分开记录这些状态，也区分进行中、已提交、结果待核对和已验证完成，避免 AI 在对话里说一句“已经完成”就被当成事实。</p>
 <h3>预算、暂停和接管怎样设置？</h3>
 <ul>
-<li><strong>权限：</strong>按企业和岗位隔离数据与工具权限，不同企业的数据相互隔离，登录凭据集中保管。</li>
+<li><strong>权限：</strong>数据与工具权限按岗位划分，不同企业的数据相互隔离，登录凭据集中保管。</li>
 <li><strong>预算：</strong>为用量和费用设置边界，AI 团队的协作轮次与可执行动作也有上限。</li>
 <li><strong>出错即停：</strong>执行失败时报告并停止，或交由人工处理，失败不藏起来。</li>
 <li><strong>暂停与接管：</strong>任何时候都可以暂停任务、由人接管，处理完再继续。</li>
@@ -827,7 +847,7 @@ ${chartStart('en', 1)}
 <h3>老板驾驶舱里看什么？</h3>
 <p>老板驾驶舱汇总客户、商机、报价、订单、跟进、待审批事项和异常；任务总控显示目标、任务、执行步骤、负责人、失败原因与结果；控制中心统一管理数据同步、应用和系统运行状态。所有指标只来自已接入的数据，缺失时明确显示，不用估算填满。</p>
 ${chartOwner('zh', 1)}
-<h3>开放条件</h3>
+<h3>现在能用到什么程度？</h3>
 <p>管理与控制已有基础；看板数据、自动动作和高级分析按真实接入验收。实施步骤与管理边界见<a href="enterprise.html">企业管理与交付</a>，相关能力见<a href="capabilities.html#g13">权限、审批与经营控制</a>和<a href="capabilities.html#g01">工作空间与经营总览</a>。</p>
 <p class="sgp-cta">想先确定哪些动作必须由你批准？<a href="contact.html">预约企业演示</a>。</p>`,
     `
@@ -850,7 +870,7 @@ ${chartOwner('zh', 1)}
 <p>STARGO WORK records these states separately and distinguishes work in progress, submitted work, results awaiting a check and verified completion — so an AI message saying “done” is never taken as proof.</p>
 <h3>How are budgets, stops and takeover set?</h3>
 <ul>
-<li><strong>Access:</strong> data and tool permissions are separated by company and role, data is kept apart between companies, and sign-in credentials are kept securely in one place.</li>
+<li><strong>Access:</strong> data and tool permissions follow each role, data is kept apart between companies, and sign-in credentials are kept securely in one place.</li>
 <li><strong>Budgets:</strong> usage and cost have limits, and an AI team’s collaboration rounds and permitted actions are capped.</li>
 <li><strong>Stop on failure:</strong> failed work is reported and stopped, or handed to a person. Failures are not hidden.</li>
 <li><strong>Pause and takeover:</strong> any task can be paused and taken over by a person, then resumed.</li>
@@ -862,7 +882,7 @@ ${chartOwner('en', 1)}
 <p>Management and control foundations exist; dashboard data, automated actions and advanced analytics are accepted against verified data connections. See <a href="enterprise.html">Enterprise control and delivery</a> for implementation steps and limits, and <a href="capabilities.html#g13">Permissions, approvals and control</a> and <a href="capabilities.html#g01">Workspace and business overview</a> in the catalogue.</p>
 <p class="sgp-cta">Want to decide which actions must come to you? <a href="contact.html">Request a demo</a>.</p>`),
     faq: [
-      Q('报价、发消息和付款等关键动作谁决定？', 'Who controls consequential actions?',
+      Q('报价、发消息和付款等|关键动作谁决定？', 'Who controls consequential actions?',
         '由企业有权人员决定。AI 可以准备资料、形成草稿和提出建议；报价、对外触达、重要承诺、正式申报和资金支付等事项按企业规则审批。批准、发送和实际结果核对分别处理。',
         'Authorized people do. AI can organize information, prepare drafts and recommend next steps. Quotations, outreach, important commitments, official submissions and payments remain subject to enterprise approval rules. Approval, delivery and outcome checks are distinct steps.'),
       Q('老板驾驶舱里的数字从哪里来？', 'Where do the cockpit’s numbers come from?',
@@ -895,7 +915,7 @@ ${chartOwner('en', 1)}
     ],
     body: B(`
 <p>网页桌面级 AI 企业操作系统，是在浏览器里打开的一张企业工作桌面：业务应用、文件、客户、知识和数字员工都在里面，围绕同一条业务流程协同工作。STARGO WORK 面向制造业与外贸企业，以 Growth OS 主动获客和 Sales Desk 外贸销售为两大核心引擎。</p>
-<h3>为什么说它不是又多了一个工具？</h3>
+<h3>为什么说它|不是又多了一个工具？</h3>
 <p>制造业和外贸企业并不缺软件：邮箱收询盘，聊天工具谈客户，电子表格记报价，ERP 管订单。缺的是把这些工作连起来的一层——知道客户、询盘、报价、订单和任务之间是什么关系，并在这些关系上推进工作。</p>
 <p>目标不是再加一个工具，而是减少业务断点：少一些信息搬运和反复交接，多一些有依据的推进、清楚的责任和可核对的结果。</p>
 <h3>它和单独用一个 AI 聊天窗口有什么不同？</h3>
@@ -904,10 +924,10 @@ ${chartOwner('en', 1)}
 <li><strong>连着业务和责任：</strong>工作落在客户记录、报价、订单和任务上，谁负责、下一步是什么都清楚。</li>
 <li><strong>结果要核对：</strong>关键动作由有权人批准，一次文字回答不会被当作业务已经完成。</li>
 </ul>
-<h3>两大核心引擎分别做什么？</h3>
+<h3>两大核心引擎|分别做什么？</h3>
 <p><strong>Growth OS</strong> 解决“去哪里找客户、谁值得开发、下一步怎样联系”：围绕产品、目标市场和客户类型寻找经销商、进口商、批发商和目标企业，整理背调、联系人、采购信号与开发优先级。确认后的客户连同背景和任务转入 Sales Desk。</p>
 <p><strong>Sales Desk</strong> 解决“怎样理解客户、持续跟进、报价并交接订单”：统一询盘与消息入口，把客户资料、历史沟通、产品匹配、回复草稿、跟进、报价和 PI 放进同一条销售链。</p>
-<h3>其他能力怎样配合这两条主线？</h3>
+<h3>其他能力怎样配合|这两条主线？</h3>
 <ul>
 <li><strong>ERP 与履约：</strong>连接产品物料、采购、库存、生产质检、订单发票与商城业务，再衔接物流、财务、单证和售后。</li>
 <li><strong>AI 创作：</strong>产品图片、详情页、图册、多语言内容，以及一键生成视频和爆款结构再创作。</li>
@@ -915,11 +935,19 @@ ${chartOwner('en', 1)}
 <li><strong>企业知识与业务关系图：</strong>让 AI 知道公司知道什么，也知道事情之间怎样关联、由谁负责。</li>
 <li><strong>老板驾驶舱与管理控制：</strong>看重点、看异常、做审批，费用和结果都可核对。</li>
 </ul>
-<h3>一条完整的业务循环是什么样？</h3>
+<h3>一条完整的业务循环|是什么样？</h3>
 ${chartLoop('zh', 1)}
 <p>主动获客找到客户、判断机会；外贸成交完成沟通、报价和 PI；企业履约衔接采购、生产和库存；经营协同跟进回款、售后和渠道；复购增长关注补货、唤醒和复盘。客户与业务结果持续沉淀，进入下一轮增长。</p>
 <h3>现在能用到什么程度？</h3>
-<p>网页桌面是当前重点；语音、自动化、对外动作以及原生客户端、移动端和小程序按开放范围分阶段推进。各项能力按企业配置与交付范围开放：Growth OS 核心流程持续建设，真实数据与客户触达按授权接入；Sales Desk 工作台已经具备，渠道与业务交接逐项连接、验证；AI 团队协作、一键视频与爆款再创作现已可用。</p>
+<p>各项能力按企业配置与交付范围开放，条件各不相同：</p>
+<ul>
+<li><strong>现已可用：</strong>AI 团队协作、一键生成视频和爆款结构再创作，在企业开通的服务、额度和权限内运行；协作轮次与预算有上限，成片经人工审核后发布，对外动作须经授权审批。</li>
+<li><strong>Growth OS：</strong>核心流程建设中，真实数据与客户触达按授权接入。</li>
+<li><strong>Sales Desk：</strong>工作台已经具备，各渠道真实收发与业务交接逐项连接、验证；真实价格、合同、签章与单证按企业系统接通。</li>
+<li><strong>ERP 与履约：</strong>已有 ERP 与商城应用基础，跨系统协同和 AI 操作按企业配置验收；物流、财务与服务按已接入的系统分阶段交付。</li>
+<li><strong>创作、知识与管理：</strong>创意工作室已有基础，营销套件与一键编排持续整合；企业知识与业务关系图已有基础，更丰富的关联逐步完善；看板指标只来自已接入的数据。</li>
+<li><strong>使用终端：</strong>网页桌面是当前重点；语音、自动化和对外动作按开放范围推进，原生客户端、移动端和小程序分阶段完善。</li>
+</ul>
 <p>更深一层的原理见<a href="intelligence.html">企业智能</a>，全部能力见<a href="capabilities.html">功能全景</a>，岗位目录见<a href="workforce.html">数字员工</a>。</p>
 <p class="sgp-cta">想看它在你的业务里怎样运转？<a href="contact.html">预约企业演示</a>。</p>`,
     `
@@ -948,7 +976,15 @@ ${chartLoop('zh', 1)}
 ${chartLoop('en', 1)}
 <p>Proactive acquisition finds and qualifies customers. Trade sales handles conversations, quotes and PIs. Fulfillment connects purchasing, production and stock. Business coordination follows payments, support and channels. Repeat growth watches reorders, reactivation and reviews. Customer context and outcomes then feed the next cycle.</p>
 <h3>How much of it can you use today?</h3>
-<p>The browser desktop is the current focus; voice, automation, external actions, native clients, mobile and mini-programs follow in phases according to enabled scope. Capabilities open according to configuration and the agreed delivery scope: Growth OS core workflows are being built out, with live data and outreach connected by authorization; the Sales Desk workspace exists, with channels and handoffs validated one by one; AI teamwork, one-click video and viral creative adaptation are available now.</p>
+<p>Capabilities open according to configuration and the agreed delivery scope, and the conditions differ:</p>
+<ul>
+<li><strong>Available now:</strong> AI teamwork, one-click video and viral creative adaptation, within the services, credits and access a company enables. Collaboration rounds and budgets are capped, finished videos are reviewed by people before publishing, and external actions need an authorized approval.</li>
+<li><strong>Growth OS:</strong> core workflows are being built out; live data and outreach are connected by authorization.</li>
+<li><strong>Sales Desk:</strong> the workspace exists; live channel messaging and business handoffs are connected and validated one by one, and live prices, contracts, signatures and documents depend on connected enterprise systems.</li>
+<li><strong>ERP and fulfillment:</strong> ERP and commerce foundations exist; cross-system work and AI actions are configured and accepted per company, and logistics, finance and service arrive in stages through connected systems.</li>
+<li><strong>Creative work, knowledge and control:</strong> the creative workspace is present, with marketing kits and one-click kit production being integrated; knowledge and relationship-map foundations exist, with richer relationships arriving in stages; dashboard metrics come only from connected data.</li>
+<li><strong>Devices:</strong> the browser desktop comes first; voice, automation and external actions follow by enabled scope, and native clients, mobile and mini-programs are phased.</li>
+</ul>
 <p>Read the principles on <a href="intelligence.html">Enterprise Intelligence</a>, every business area on <a href="capabilities.html">Capabilities</a> and the role directory on <a href="workforce.html">AI Workforce</a>.</p>
 <p class="sgp-cta">Want to see it run on your own business? <a href="contact.html">Request a demo</a>.</p>`),
     faq: [
@@ -984,15 +1020,15 @@ ${chartLoop('en', 1)}
     ],
     body: B(`
 <p>288 是 STARGO WORK 的专业数字岗位目录，覆盖十类企业职能；遇到复杂任务，多位 AI 员工可以组成团队，互相发消息、并行处理，再由统筹角色汇总成一个结果，交给人确认。这项团队协作能力现已可用。</p>
-<h3>288 个岗位分布在哪些职能？</h3>
+<h3>288 个岗位|分布在哪些职能？</h3>
 <p>数字员工不只服务外贸销售，十类岗位的分布如下：</p>
 ${chartRoles('zh', 1, { note: false })}
 <p>288 指岗位目录的数量，不代表替代 288 名真人员工。实际启用哪些员工、一次协作的规模有多大、允许执行哪些动作，都按企业的配置、预算和权限确定。</p>
-<h3>一个 AI 员工和一个聊天窗口有什么不同？</h3>
+<h3>一个 AI 员工和一个聊天窗口|有什么不同？</h3>
 <p>聊天窗口从一段空白对话开始，回答完就结束。一个 AI 员工可以配置职责、技能、企业知识、可用工具、权限、任务和运行记录：它知道自己负责什么，能用企业的哪些资料，哪些动作必须先请示人。</p>
 <h3>一支 AI 团队怎样组成？</h3>
 <p>负责人提出业务目标后，按岗位、技能、企业知识、工具权限和任务复杂度查找合适的员工，组成一支小团队，并写清每位成员的职责：谁做研究，谁定销售策略，谁核对产品，谁准备素材，谁负责复核与统筹。</p>
-<h3>团队成员之间怎样沟通？</h3>
+<h3>团队成员之间|怎样沟通？</h3>
 ${chartTeam('zh', 2)}
 <ul>
 <li><strong>定向消息：</strong>一位员工可以直接给另一位发消息、提问题，例如请产品专家核对规格。</li>
@@ -1075,7 +1111,7 @@ ${chartTeam('en', 2)}
     ],
     body: B(`
 <p>企业知识回答“公司知道什么”，业务关系图说明“这些事之间怎样关联、现在由谁负责”；两者合在一起，AI 才能带着企业背景做事，而不是每次从头解释。</p>
-<h3>为什么只读文件还不够？</h3>
+<h3>为什么|只读文件还不够？</h3>
 <p>CRM 里有客户，ERP 里有订单，邮箱里有询盘，网盘里有产品文件。它们各自正确，却互相不知道对方。</p>
 <p>AI 如果只读到几份孤立的文件，就不知道这份报价属于哪个客户、这个订单来自哪次报价、这件事该由谁来推进，回答常常“差一点”。</p>
 <h3>企业知识库里放什么？</h3>
@@ -1094,9 +1130,9 @@ ${chartContext('zh', 1)}
 <li><strong>价格该用哪一版？</strong>关联报价权限、价格版本、订单条件和审批，知道哪一版是批准过的。</li>
 <li><strong>这件事谁来负责？</strong>关联负责人、审批、结果和历史决定，AI 不只知道“应该做什么”，还知道“是否允许做、由谁负责”。</li>
 </ul>
-<h3>新企业的资料怎样接入？</h3>
+<h3>新企业的资料|怎样接入？</h3>
 <p>产品、客户、规则等结构化模板帮助新企业接入。导入的资料先进入待审核区域，确认后再逐步连接正式业务来源，不会把上传的文件直接当成企业认可的事实。</p>
-<h3>开放条件</h3>
+<h3>现在能用到什么程度？</h3>
 <p>企业知识与业务关联已有基础；更丰富的业务关联和企业资料模板按接入情况逐步完善。详见企业智能页的<a href="intelligence.html#lx-context">业务理解</a>部分，以及能力目录中的<a href="capabilities.html#g06">产品与企业知识</a>和<a href="capabilities.html#g12">企业业务关系与上下文</a>。</p>
 <p class="sgp-cta">想看你的产品和客户资料怎样被连接起来？<a href="contact.html">预约企业演示</a>。</p>`,
     `
@@ -1126,16 +1162,16 @@ ${chartContext('en', 1)}
 <p>Foundations for enterprise knowledge and business context exist; richer relationships and enterprise templates arrive in stages as sources are connected. Read the <a href="intelligence.html#lx-context">business context</a> section of Enterprise Intelligence, and see <a href="capabilities.html#g06">Products and enterprise knowledge</a> and <a href="capabilities.html#g12">Business relationships and context</a> in the catalogue.</p>
 <p class="sgp-cta">Want to see how your product and customer information would connect? <a href="contact.html">Request a demo</a>.</p>`),
     faq: [
-      Q('知识库和业务关系图有什么区别？', 'How do the knowledge base and the relationship map differ?',
+      Q('知识库和业务关系图|有什么区别？', 'How do the knowledge base and the relationship map differ?',
         '知识库是企业资料室，回答公司知道什么；业务关系图把客户、产品、报价、订单和负责人联系起来，说明事情之间怎样关联、下一步由谁推进。',
         'The knowledge base is the company’s reference room and answers what the company knows. The relationship map links customers, products, quotes, orders and owners, showing how things connect and who moves the next step.'),
       Q('资料里没有答案时，AI 会怎么做？', 'What does AI do when the answer is not in the files?',
         '明确说明缺少哪些资料，而不是编造；资料过期或互相矛盾时，提示人工核实。',
         'It says which information is missing instead of inventing it, and flags outdated or conflicting material for a person to check.'),
-      Q('上传的文件会直接成为企业认可的事实吗？', 'Do uploaded files become approved facts right away?',
+      Q('上传的文件|会直接成为|企业认可的事实吗？', 'Do uploaded files become approved facts right away?',
         '不会。导入的资料先进入待审核区域，确认后再逐步连接正式业务来源。',
         'No. Imported material is staged for review first and connected to authoritative sources step by step.'),
-      Q('需要先把所有资料整理完才能开始吗？', 'Must all information be organized before we start?',
+      Q('需要先把所有资料整理完|才能开始吗？', 'Must all information be organized before we start?',
         '不需要。可以先准备第一条业务流程所需的产品、客户、知识与规则，跑通后再逐步补充。',
         'No. Start with the products, customers, knowledge and rules the first workflow needs, and add more once it works.'),
     ],
@@ -1171,6 +1207,20 @@ const BANNED_ZH = [/Boss Cockpit/i, /Mission Control/i, /Control Center/i, /\bFD
 const ZH_LATIN = new Set(['STARGO', 'WORK', 'Growth', 'OS', 'Sales', 'Desk', 'AI', 'ERP', 'CRM', 'PI', 'SKU', 'MOQ', 'HS', 'SEO', 'GEO', 'WhatsApp', 'Form', 'E']);
 const visible = (html) => html.replace(/<[^>]+>/g, ' ');
 const count = (s) => [...s].length;
+/* Chinese heading phrases (inline() above): the widest run between two break
+   opportunities, in character widths — a Han character or a full-width mark
+   is 1, anything else about 0.6 — must fit the narrowest line of its kind. */
+const PHRASES = [
+  [/<h3\b[^>]*>([^]*?)<\/h3>/g, 10, 'heading'],
+  [/<h4>([^]*?)<\/h4>/g, 15, 'FAQ question'],
+  [/<span class="sgc-title">([^]*?)<\/span><\/figcaption>/g, 14, 'chart title'],
+  [/class="sgc-quote">([^<]*?)<\/(?:p|span)>/g, 11, 'chart quote'],
+];
+const widthOf = (s) => [...s].reduce((n, c) => n + (/[　-〿㐀-鿿＀-￯“”]/.test(c) ? 1 : 0.6), 0);
+const phrasesOf = (html) => html
+  .replace(/<span class="sgp-nw">([^<]*)<\/span>/g, (m, t) => t.replace(/ /g, ' '))
+  .replace(/<wbr>/g, '\n').replace(/<[^>]+>/g, '').replace(/&[a-z]+;/g, 'x')
+  .replace(/([，、：；？！。])/g, '$1\n').split(/[\n ]+/).filter(Boolean);
 
 const problems = [];
 for (const post of POSTS) {
@@ -1192,6 +1242,7 @@ for (const post of POSTS) {
     const links = [...body.matchAll(/href="([^"#]+\.html)[^"]*"/g)].map((m) => m[1]).filter((h) => h !== 'contact.html');
     if (links.length < 2) fail(`${lang} body needs at least two internal links besides contact.html`);
     const text = [T[lang], D[lang], post.section[lang], ...post.keywords[lang], ...post.takeaways.map((x) => x[lang]), visible(renderBody(post, lang))].join('\n');
+    if (text.includes('|')) fail(`${lang}: a 「|」 break mark is printed as text (it belongs in headings, FAQ questions and chart titles or quotes only)`);
     for (const re of [...BANNED, ...(lang === 'zh' ? BANNED_ZH : [])]) {
       const m = text.match(re);
       if (m) fail(`${lang} text uses a banned term «${m[0]}» near «${text.slice(Math.max(0, m.index - 30), m.index + 30).replace(/\s+/g, ' ')}»`);
@@ -1199,6 +1250,13 @@ for (const post of POSTS) {
     if (lang === 'zh') {
       const stray = [...new Set((text.match(/[A-Za-z]+/g) ?? []).filter((w) => !ZH_LATIN.has(w)))];
       if (stray.length) fail(`Chinese text carries English words: ${stray.join(', ')}`);
+      const html = renderBody(post, lang);
+      for (const [re, max, what] of PHRASES) {
+        for (const m of html.matchAll(re)) {
+          const wide = phrasesOf(m[1]).find((p) => widthOf(p) > max);
+          if (wide) fail(`Chinese ${what} phrase «${wide}» is wider than ${max} characters; mark a break with 「|」 (${visible(m[1])})`);
+        }
+      }
     } else if (/[　-鿿＀-￯]/.test(text)) {
       fail('English text carries Chinese characters');
     }
