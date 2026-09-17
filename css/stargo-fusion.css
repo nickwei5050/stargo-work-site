@@ -3136,6 +3136,19 @@ html[lang="en"] .lx-scope .lx-v6-panel-title { text-wrap: balance; }
   }
 }
 
+/* enterprise.html — the four story panels (.studio-sticky, this page only).
+   Mono ends each panel's text 60px above the bottom of the screen, and from
+   992 the fixed pill navigation (.menu-bottom) reappears whenever the reader
+   scrolls up: 50px tall, 15px off the bottom, 590-830px wide across the
+   middle. At 1024, 1440 and 1920 it covered the last line of the panel text
+   — "…reviews always stay with authorized people" (Decisions), "the result is
+   checked" (Results), 「按企业情况确认。」 (Connect), "the decisions that
+   matter come first" (Oversight). From 992 the panels end their text 100px
+   above the bottom, which clears the pill with 35px to spare. */
+@media screen and (min-width: 992px) {
+  .studio-sticky { padding-bottom: 100px; }
+}
+
 /* Short Chinese phrases the build binds together (tools/build-site.mjs
    zhKeep) in text the reveal splits per character: the enterprise cockpit
    paragraph (「管得/住，」, 「查/得清。」), the delivery steps (「定目/标」)
