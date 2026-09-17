@@ -1475,7 +1475,11 @@ PAGES['pricing.html'] = (lang) => {
    invented figures are not used here. */
 PAGES['enterprise.html'] = (lang) => fromStudio({
   name: 'enterprise', ...C.ENTERPRISE, cards: C.ENTERPRISE.cards,
-  images: { work: [OS.cockpit, BRAND.tall, OS.desktop], quote: BRAND.square, cards: [OS.agents, MOBILE.phoneAgents, MOBILE.phoneApprovals, BRAND.ontology, OS.login] },
+  /* V7-LX: card 2 (账号与岗位权限 / Account & role permissions) takes a landscape
+     picture again, layered permission boundaries (brand-family-04), so the first
+     row reads landscape, landscape, tall as in the template; it had the
+     portrait phone-agents, which made the row short, tall, tall. */
+  images: { work: [OS.cockpit, BRAND.tall, OS.desktop], quote: BRAND.square, cards: [OS.agents, BRAND.family(4), MOBILE.phoneApprovals, BRAND.ontology, OS.login] },
 }, lang);
 
 /* ---- capabilities.html — Mono work-1 + table -------------------------- */
