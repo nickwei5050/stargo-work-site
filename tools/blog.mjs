@@ -126,7 +126,7 @@ const PIPE = {
   growth: B('Growth OS · 主动获客', 'Growth OS · proactive acquisition'),
   sourcesLabel: B('数据来源（按授权接入）', 'Sources (authorized access only)'),
   sources: B(['公开搜索', '企业官网', '地图商家', '社交平台', '展会线索', '授权贸易数据'], ['Public search', 'Company websites', 'Map listings', 'Social channels', 'Trade shows', 'Authorized trade data']),
-  profile: B('目标客户画像：产品 × 市场 × 客户类型', 'Ideal customer profile: product × market × buyer type'),
+  profile: B('目标客户画像：产品\u00a0×\u00a0市场\u00a0×\u00a0客户类型', 'Ideal customer profile: product\u00a0×\u00a0market\u00a0×\u00a0buyer type'),   // the three terms stay on one line
   steps: [
     [B('找到对的企业', 'Discover the right accounts'), B('经销商、进口商、批发商、目标企业', 'Dealers, importers, wholesalers and target accounts')],
     [B('把客户查清楚', 'Research people and companies'), B('企业背调、关键联系人、邮箱与渠道账号', 'Company research, decision makers and contact details')],
@@ -1218,7 +1218,7 @@ const PHRASES = [
 ];
 const widthOf = (s) => [...s].reduce((n, c) => n + (/[　-〿㐀-鿿＀-￯“”]/.test(c) ? 1 : 0.6), 0);
 const phrasesOf = (html) => html
-  .replace(/<span class="sgp-nw">([^<]*)<\/span>/g, (m, t) => t.replace(/ /g, ' '))
+  .replace(/<span class="sgp-nw">([^<]*)<\/span>/g, (m, t) => t.replace(/ /g, '\u00a0'))
   .replace(/<wbr>/g, '\n').replace(/<[^>]+>/g, '').replace(/&[a-z]+;/g, 'x')
   .replace(/([，、：；？！。])/g, '$1\n').split(/[\n ]+/).filter(Boolean);
 
