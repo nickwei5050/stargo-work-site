@@ -3556,6 +3556,26 @@ html[lang^="en"] .lx-scope .stargo-post :is(.sgc-step-text, .sgc-example span, .
    25px lower than its neighbours. The content starts at the top; the spare
    height stays at the foot of the shorter cards. */
 .blog-grid .blog-wrapper { justify-content: flex-start; }
+
+/* AI teamwork chart (tools/blog.mjs chartTeam; the visual guide and the 288
+   article), English, below 640px of chart width. The role cards were laid
+   out at 9rem, which Chinese fits and English does not: two cards of 155px
+   at 414 and three of 155–159px at 600 and 1024 read "Creative / specialist",
+   "Product / specialist", "Review and / coordination", "Plan the /
+   engagement" and "Check and / consolidate". The longest two-line task,
+   "Check and consolidate", needs 138px plus the card's 27.6px of padding and
+   border, so a card is never narrower than 11rem: two columns where two of
+   those fit (480, 600, 1024), one where they do not (320–414). The lead card
+   spans the row, as it does from 640px, so a row never ends on an empty
+   cell, and a name or task that ever runs out of room breaks evenly. The
+   messages under the cards name the same roles: at 320 their lines read
+   "Product specialist → Creative / specialist" and "Target account list
+   handed / over"; they break evenly too. */
+@container (max-width: 639.98px) {
+  html[lang^="en"] .lx-scope .stargo-post .sgc-roles { grid-template-columns: repeat(auto-fit, minmax(max(min(100%, 11rem), calc(50% - .25rem)), 1fr)); }
+  html[lang^="en"] .lx-scope .stargo-post .sgc-role-lead { grid-column: 1 / -1; }
+}
+html[lang^="en"] .lx-scope .stargo-post :is(.sgc-role-name, .sgc-role-task, .sgc-msg-who, .sgc-msg-text) { text-wrap: balance; }
 /* V7-BLOG-END */
 
 
@@ -4883,5 +4903,34 @@ html[lang^="en"] .button-text.w-variant-83ed8c83-4d97-b61d-2146-78e915c17bb4 { t
         which the split leaves whole (js/stargo-splittext-cjk.js), set on one
         line here. */
 .max-lft-dvc p.top-text.big .sgp-nobr { white-space: nowrap; }
+
+/* H27. The 404 page's header menu button (tools/chrome.mjs overlayMenu keeps
+        it; the side-menu icon with nothing behind it is gone). Below 992px it
+        is drawn as on every other page ("Audit fixes" near the top of this
+        file, written for `.navigation-top`): a 44px light tile with the
+        template's white icon turned dark, so it shows on the white page. */
+@media (max-width: 991px) {
+  .absolute-element > .navbar .menu-button,
+  .absolute-element > .navbar .menu-button.w--open { background: #f4f4f4; min-width: 44px; min-height: 44px; }
+  .absolute-element > .navbar .menu-button .lottie-white { filter: invert(1); }
+}
+
+/* H28. Pricing comparison table, 768–991: the price row on the header's
+        tracks. `1fr` floors at a cell's min-content, and a price cell's is its
+        h2 plus 20px of padding: ¥40,000 at 30px is 111px of text in a 99px
+        column at 768, so the price row alone widened its plan tracks and
+        lined up with nothing (its plan tracks started up to 47px off in
+        English and 24px in Chinese at 768, closing by 860;
+        rk-price-compare.css section 3). Every row
+        now draws the same six tracks, which cannot be pushed by content, and
+        the price keeps renok's size wherever it fits and steps down with the
+        column where it does not (¥40,000 is 3.705em wide; 3.8em leaves a
+        margin), measured against the cell itself. Nothing is clipped and no
+        text changes. */
+@media (min-width: 768px) and (max-width: 991px) {
+  .rk-price-compare .rk-rt-pricing-chart-rows { grid-template-columns: minmax(0, 1.2fr) repeat(5, minmax(0, 1fr)); }
+  .rk-price-compare .rk-rt-chart-columns.rk-rt-chart-col-1 { container-type: inline-size; }
+  .rk-price-compare .rk-rt-pricing-chart-price h2 { font-size: min(var(--_font-details---font-size--heading-two), 100cqi / 3.8); }
+}
 
 /* V7-HOME-END */

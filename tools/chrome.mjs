@@ -123,7 +123,19 @@ function topNav(html, L, current) {
 function overlayMenu(html, L, current) {
   const flex = findByClass(html, 'div', 'nav-top-flex');
   if (!flex) {
-    if (!html.includes('menu-wrapper')) return html.replace(/<div class="menu-button w-nav-button">[\s\S]*?<\/div><\/div>/, '');
+    /* A header with no side menu behind it: the 404 page, whose Mono template
+       ships the header alone. Its two-line icon has nothing to open (a plain
+       <div> that ignored clicks and could not be focused), so it goes. The
+       header's own menu button stays: it is Webflow's collapsed navigation, the
+       same button every other page uses below 992px, and without it a phone
+       or tablet had no way off the 404 page but the logo. */
+    if (!html.includes('menu-wrapper')) {
+      const icon = /<div data-w-id="[^"]*" class="circle-wrap">(?:<div class="line-divider-menu [^"]*"><\/div>)+<\/div>/g;
+      const n = (html.match(icon) ?? []).length;
+      if (n !== 1) throw new Error(`chrome: expected one side menu icon on a page without a side menu, found ${n}`);
+      if (!html.includes('<div class="menu-button w-nav-button">')) throw new Error('chrome: header menu button not found');
+      return html.replace(icon, '');
+    }
     throw new Error('chrome: overlay menu not found');
   }
   const item = findByClass(flex.text, 'div', 'menu-item');
@@ -408,7 +420,8 @@ function socialIcons(html) {
  * sits behind the page while closed, and its links (at opacity 0) used to be
  * the first sixteen Tab stops of every desktop page. js/stargo-side-menu.js
  * lifts `inert` while the menu is open and handles Enter, Space and Escape.
- * The 404 page has the icon but no menu, and is left as it is.
+ * The 404 page has no side menu; overlayMenu() takes its icon away and leaves it
+ * the header's menu button below 992px.
  */
 const SIDE_MENU_LABELS = { open: { zh: '菜单', en: 'Menu' }, close: { zh: '关闭菜单', en: 'Close menu' } };
 function sideMenu(html, lang) {
