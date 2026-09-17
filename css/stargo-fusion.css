@@ -2926,23 +2926,27 @@ html[lang="en"] .lx-scope .lx-v7-sentence {
    page only).
    - The lede had no side gutter below 768px: the template zeroes the padding
      of this hero's `.lx-padding-global`, so the text ran 0-3px from the
-     screen edges. It gets the site's 16px.
+     screen edges. It gets the site's 16px (the title keeps the full width,
+     so "288 specialized" still fits one line at 320).
    - Chinese lede: it breaks at punctuation and spaces only, so a word is never
      split (「按配」/「置、」 from 768 to 1920; 「聊」/「天」, 「合」/「规」,
      「专业服」/「务」, 「企业支」/「持」, 「目录数」/「量」 on phones). The
-     longest run is about ten characters, well inside the narrowest line.
-   - The text sits over the floating photo cards (the template's own short
-     copy fitted between them; ours is longer). From 1280 the two title lines
-     are 3.125rem instead of 4rem and the text block sits 1.75rem lower, which
-     at 1440x900 puts the title between the three upper cards (the English
-     white line ran 90px across the right-hand laptop) and keeps the lede and
-     the button above the two lower ones. Below that width the cards come in
-     closer than any sensible title size, so the text is made legible instead:
-     a soft black veil behind the text block (behind the text, in front of the
-     cards, so a card passing under the lede is dimmed rather than competing
-     with it). On phones the veil is a full-width band, because the cards sit
-     at the screen edges exactly where the lede's lines run. Nothing moves:
-     the cards keep their places and their scroll motion. */
+     longest run is about ten characters, well inside the narrowest line; the
+     build binds a figure to the word after it (「288 个」).
+   - The text ran over the floating photo cards (the template's own short copy
+     fitted between them; ours is longer): at 1440 the English white line ran
+     about 90px across the right-hand laptop. The title is 3.125rem from 1280
+     and 2.5rem from 768 to 1279 instead of 4rem, the lede is 36rem wide from
+     992 to 1279, and from 768 the text block and its button sit a little
+     lower (1.75rem from 992, .75rem below). Measured at rest with the viewport
+     heights of 1024 (768-991) and 900: the title, lede and button clear all
+     five cards at 768, 820, 900, 992, 1024, 1100, 1280, 1440 and 1920, in
+     both languages. On phones the cards sit at the screen edges exactly where
+     the lede's lines run, so the text is made legible instead: a black band
+     behind the text block (behind the text, in front of the cards) dims a
+     card where it passes under the text. The same veil, as a soft ellipse,
+     is behind the text on wider screens, for the moments the cards' scroll
+     motion carries them under it. The cards keep their places and motion. */
 .lx-scope .lx-hero-features .lx-feature-hero-text-holder::before {
   content: "";
   position: absolute;
@@ -2955,18 +2959,18 @@ html[lang^="zh"] .lx-scope .lx-hero-features .lx-feature-description-holder .lx-
   word-break: keep-all;
   overflow-wrap: anywhere;
 }
+@media screen and (min-width: 1280px) {
+  .lx-scope .lx-hero-features .lx-feature-title-holder .lx-heading-style-h1 { font-size: 3.125rem; }
+}
 @media screen and (min-width: 992px) {
   .lx-scope .lx-hero-features .lx-feature-hero-text-holder,
   .lx-scope .lx-hero-features .lx-about-button-holder { top: 1.75rem; }
 }
-@media screen and (min-width: 1280px) {
-  .lx-scope .lx-hero-features .lx-feature-title-holder .lx-heading-style-h1 { font-size: 3.125rem; }
+@media screen and (min-width: 992px) and (max-width: 1279px) {
+  .lx-scope .lx-hero-features .lx-feature-description-holder { max-width: 36rem; }
 }
 @media screen and (min-width: 768px) and (max-width: 1279px) {
   .lx-scope .lx-hero-features .lx-feature-title-holder .lx-heading-style-h1 { font-size: 2.5rem; }
-}
-@media screen and (min-width: 992px) and (max-width: 1279px) {
-  .lx-scope .lx-hero-features .lx-feature-description-holder { max-width: 36rem; }
 }
 @media screen and (min-width: 768px) and (max-width: 991px) {
   .lx-scope .lx-hero-features .lx-feature-hero-text-holder,
@@ -2981,6 +2985,55 @@ html[lang^="zh"] .lx-scope .lx-hero-features .lx-feature-description-holder .lx-
     inset: -1.5rem 0;
     background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .8) 1.5rem, rgba(0, 0, 0, .8) calc(100% - 1.5rem), rgba(0, 0, 0, 0));
   }
+}
+
+/* workforce.html, Chinese — the role-group intro beside the list
+   (「每个岗位都应有职责、技能、企业知识、可用权限和工作记录。…」) breaks at
+   its punctuation only: it split 「可用」/「权限」 at 360, 「任」/「务」 at 390,
+   「工作」/「记录」 at 430 and 「需」/「要」 at 1024. Its longest run is twelve
+   characters; the column holds at least eighteen, and the intro keeps its
+   three to four lines. */
+html[lang^="zh"] .lx-scope .lx-v6-roster-intro {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+/* workforce.html — the pink panel (.lx-capabilities-grid and the cards in it,
+   this page only).
+   - 768-991: the template kept its desktop split there, the heading in a
+     192px column and the cards in 416px beside it, so every card was cramped:
+     the desktop card (.lx-organized-mind) gave its text a ~160px column (a
+     16-line English paragraph under a 4-line heading, list items of 3-4
+     lines, 「…转成任」/「务」), and the small cards had 138px (「交接有」/
+     「记录」). From 768 to 991 the panel stacks as the template stacks it
+     below 768 — heading on top, then the card grid at the full panel width —
+     so the small cards are 308px and more, and the desktop card keeps its own
+     desktop layout (text beside the collage) at 640px and more.
+   - Below 768 the desktop card is one column and the template pads its text
+     on the left only; the right side gets the same padding so lines stop
+     short of the card's edge (they ran to it).
+   - Phones: the black note 「浏览器里的企业桌面」 / "A business desktop on the
+     web" was 32% of the collage strip, 77px at 320, so it broke into five
+     two-character lines (「浏览/器里/的企/业桌/面」), and the people circle,
+     which comes later in the markup, covered half of it. The note is now a
+     fixed 7rem with 1rem type — five Chinese characters a line, so it reads
+     「浏览器里的」/「企业桌面」 at every phone width, and "A business /
+     desktop on / the web" — and it is drawn above the circle; the circle
+     moves to the bottom of the strip (3rem taller) and the role card to its
+     upper right, so neither the note nor the circle hides the other. */
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .lx-scope .lx-capabilities-grid { grid-template-columns: 1fr; }
+}
+@media screen and (max-width: 767px) {
+  .lx-scope .lx-organized-mind-text { padding-right: 1.5rem; }
+  .lx-scope .lx-organized-mind .lx-confirmation-card { z-index: 2; }
+}
+@media screen and (max-width: 479px) {
+  .lx-scope .lx-organized-mind-images { height: 17rem; }
+  .lx-scope .lx-organized-mind-images > .lx-people-image-holder { margin-top: auto; }
+  .lx-scope .lx-organized-mind .lx-confirmation-card { width: 7rem; }
+  .lx-scope .lx-organized-mind .lx-confirmation-card h6 { font-size: 1rem; }
+  .lx-scope .lx-organized-mind .lx-organized-mind-card { top: 22%; bottom: auto; }
 }
 
 /* V7-LX-END */

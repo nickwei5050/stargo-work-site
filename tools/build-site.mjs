@@ -986,7 +986,7 @@ PAGES['workforce.html'] = (lang) => {
 
   /* the two feature cards over the pink panel */
   b = s(b, '>Your Best Friend AI<', `>${t(W.cardA.title)}<`);
-  b = s(b, 'More than an assistant—it’s the friend who listens, remembers, and keeps life simple.', t(W.cardA.text));
+  b = s(b, 'More than an assistant—it’s the friend who listens, remembers, and keeps life simple.', zhTail(t(W.cardA.text), lang));
   b = s(b, '>Memory That Sticks<', `>${t(W.cardB.title)}<`);
   b = s(b, 'From quick notes to deep thoughts, nothing slips through the cracks.', t(W.cardB.text));
 
