@@ -3109,6 +3109,33 @@ html[lang="en"] .lx-scope .lx-v6-panel-title { text-wrap: balance; }
   .about-grid > .about-images .work-content-wrapper._03 { height: 13rem; }
 }
 
+/* enterprise.html — the connections table (#table). Its header labels kept
+   the template's placement (the last one pushed to the right edge of its
+   column, the middle one centred from 992 and right-aligned from 480 to 991),
+   while the cells under them are left-aligned sentences, so 「(接入前要确认)」
+   / "(Confirm first)" sat over the far end of text that starts at the left.
+   From 480 (where the header is a real three-column row) each label starts
+   where its column's text starts, and every cell fills its column (the
+   third cells hugged the right edge, so in Chinese, where they are shorter
+   than the column at 1440 and 1920, each row's text started somewhere
+   else). Below 480 the header is a centred legend
+   over centred stacks (rule 2 further up) and is left as it is. */
+@media screen and (min-width: 480px) {
+  #table .grdi-3-columns.mk3 > .top-text { justify-self: start; text-align: left; }
+  #table .award-wrapper > .award-text { justify-self: stretch; }
+}
+/* The Chinese cells break at their punctuation and spaces only where a
+   phrase fits a line — in the stacked rows on phones and in the wide columns
+   from 992: they split 「有/权人员」 at 1440, and 「平/台」, 「生/产」,
+   「付/款」 on phones. Between 480 and 991 the columns hold about eleven
+   characters, less than the longest phrase, and keep their normal breaking. */
+@media screen and (max-width: 479px), screen and (min-width: 992px) {
+  html[lang^="zh"] #table .award-text {
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+  }
+}
+
 @keyframes lx-v7-team-reveal {
   from { opacity: 0; }
   to { opacity: 1; }
