@@ -154,10 +154,15 @@ for (const width of WIDTHS.filter((w) => [390, 768, 1024, 1280, 1440, 1920].incl
         // The accordion cards open and close as the section scrolls, moving their copy through an
         // overflow-hidden box. What must hold: every card reaches a state in which its copy and title
         // are both fully inside the open card, and the copy never runs into the title.
-        const boxes = await page.evaluate(() => [...document.querySelectorAll('.lx-expandable-item')].map((card, i) => { const c = card.getBoundingClientRect(); const t = card.querySelector('.lx-expandable-text'); const tr = t.getBoundingClientRect(); const title = card.querySelector('.lx-expandable-icon-text'); const ti = title.getBoundingClientRect(); return { i, card: [c.top, c.bottom], text: [tr.top, tr.bottom], title: [ti.top, ti.bottom], height: c.height, textHeight: tr.height }; }));
+        // Since V7-LX r2 (css/stargo-fusion.css, V7-LX) the card content is a wrapping column laid
+        // out from the bottom: once the copy no longer fits above the icon row it moves WHOLE into
+        // a second column beside the card, where the card's overflow clips it, instead of being
+        // sliced line by line. Such copy is not on screen, so "inside" also requires the copy to
+        // sit within the card horizontally.
+        const boxes = await page.evaluate(() => [...document.querySelectorAll('.lx-expandable-item')].map((card, i) => { const c = card.getBoundingClientRect(); const t = card.querySelector('.lx-expandable-text'); const tr = t.getBoundingClientRect(); const title = card.querySelector('.lx-expandable-icon-text'); const ti = title.getBoundingClientRect(); return { i, card: [c.top, c.bottom], cardX: [c.left, c.right], text: [tr.top, tr.bottom], textX: [tr.left, tr.right], title: [ti.top, ti.bottom], height: c.height, textHeight: tr.height }; }));
         cardCount = boxes.length;
         for (const b of boxes) {
-          const inside = b.text[0] >= b.card[0] - 1 && b.text[1] <= b.card[1] + 1 && b.title[0] >= b.card[0] - 1 && b.title[1] <= b.card[1] + 1;
+          const inside = b.text[0] >= b.card[0] - 1 && b.text[1] <= b.card[1] + 1 && b.textX[0] >= b.cardX[0] - 1 && b.textX[1] <= b.cardX[1] + 1 && b.title[0] >= b.card[0] - 1 && b.title[1] <= b.card[1] + 1;
           if (inside && b.height > 200) { readableCards.add(b.i); assert(b.text[1] <= b.title[0] + 1, `card ${b.i} copy runs into its title @${f}: ${JSON.stringify(b)}`); assert(b.textHeight <= b.height * 0.6, `card ${b.i} copy takes ${Math.round(b.textHeight)}px of a ${Math.round(b.height)}px card @${f}`); }
         }
         if (f === 0.42 || f === 0.82) await page.screenshot({ path: `${OUT}/${id}-sticky-${f}.png` });
