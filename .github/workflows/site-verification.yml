@@ -2,7 +2,7 @@ name: Site verification
 
 # The release gate for the STARGO WORK site.
 #
-# Plain terms: this job rebuilds all 38 pages from source, checks the rebuilt
+# Plain terms: this job rebuilds all 40 pages from source, checks the rebuilt
 # pages are byte-identical to the pages committed in the branch, serves the
 # repository root, and then loads every page in a real Chromium to check for
 # JavaScript errors, failed requests, off-origin requests, dead links,
@@ -129,7 +129,7 @@ jobs:
           fi
           echo "Clean. Everything the next diff shows will have been written by the build."
 
-      - name: Rebuild all 38 pages from source
+      - name: Rebuild all 40 pages from source
         timeout-minutes: 15
         run: npm run build
 
@@ -250,7 +250,7 @@ jobs:
         timeout-minutes: 30
         run: npm run verify
 
-      - name: Assert the verifiers actually verified all 38 pages
+      - name: Assert the verifiers actually verified all 40 pages
         # The verifiers exit non-zero when they find a problem, but a run that
         # checked nothing at all would still exit zero. This step refuses that:
         # every committed page must appear in the report, with a real result.

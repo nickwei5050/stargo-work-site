@@ -407,7 +407,8 @@ for (const lang of ['', 'en/']) {
       assert(bp && bp.headline === post.title[L] && bp.datePublished === post.date && bp.author.name === 'STARGO WORK' && bp.image.includes('assets/blog/'), 'BlogPosting');
       assert.equal(g.find((n) => n['@type'] === 'BreadcrumbList').itemListElement.length, 3, 'breadcrumbs');
       assert(h.h2h3.filter((x) => x.startsWith('H3')).length >= 3, 'article sections use h3');
-      assert.equal(await page.locator('a.lx-related-item').count(), POSTS.length - 1, 'related links');
+      // postPage() lists up to five other articles (others(post, 5) in tools/build-site.mjs).
+      assert.equal(await page.locator('a.lx-related-item').count(), Math.min(5, POSTS.length - 1), 'related links');
       assert.equal(await page.locator('.lx-blog-item a').count(), 3, 'more from the blog');
       const rel = await page.locator('a.lx-related-item, .lx-blog-item a').evaluateAll((as) => as.map((a) => a.getAttribute('href')));
       assert(rel.every((r) => /^\.\.\/blog\//.test(r)) && !rel.includes(`../blog/${post.slug}.html`), `related links leave the article: ${rel.join(' ')}`);
