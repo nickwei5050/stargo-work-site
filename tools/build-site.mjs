@@ -925,7 +925,11 @@ PAGES['workforce.html'] = (lang) => {
   /* hero */
   b = s(b, '>Think it once<', `>${t(W.heroPink)}<`, { count: 1 });
   b = s(b, '>Remember it forever<', `>${t(W.heroWhite)}<`, { count: 1 });
-  b = s(b, 'Each feature focuses on reducing friction between thought and action.', t(W.heroDesc), { count: 1 });
+  /* V7-LX: a figure keeps the Chinese word after it on its line (「288 个」,
+     「288 指」); the lede breaks only at punctuation and spaces there
+     (css/stargo-fusion.css V7-LX), so the space after a figure became a line
+     end: 「…也不是 288」/「个相同的…」. The space before the figure still breaks. */
+  b = s(b, 'Each feature focuses on reducing friction between thought and action.', lang === 'zh' ? t(W.heroDesc).replace(/(\d) (?=[\u3400-\u9fff])/g, '$1\u00a0') : t(W.heroDesc), { count: 1 });
   b = s(b, '>Download<', `>${t(W.heroButton)}<`);
 
   /* The five role cards, repeated once for the marquee loop. They are examples
