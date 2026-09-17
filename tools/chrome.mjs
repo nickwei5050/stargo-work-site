@@ -405,6 +405,41 @@ function formMarkup(html, lang) {
 }
 
 /**
+ * Names the page's Webflow runtime writes in English when the markup has none:
+ * the menu button ("menu") and each form, with its two notices ("<data-name>",
+ * "… success", "… failure" — "Email Form", "Subscribe", "Contact Form"). The
+ * runtime keeps a name that is already there (it tests the success notice's
+ * name before naming the form), so the Chinese pages carry their own. The
+ * English pages keep the runtime's names.
+ */
+const FORM_NAMES = {
+  newsletter: { form: '订阅表单', done: '订阅成功提示', fail: '订阅失败提示' },
+  contact: { form: '预约演示表单', done: '提交成功提示', fail: '提交失败提示' },
+};
+function zhRuntimeNames(html) {
+  let out = html.replace(/<div class="menu-button w-nav-button">/g, '<div class="menu-button w-nav-button" aria-label="菜单">');
+  const FORM = /<form\b[^>]*\sdata-stargo-form="(newsletter|contact)"[^>]*>/g;
+  const parts = [];
+  let last = 0;
+  for (const m of out.matchAll(FORM)) {
+    const names = FORM_NAMES[m[1]];
+    const close = out.indexOf('</form>', m.index);
+    const next = out.slice(close).search(/<form\b/);
+    const end = next === -1 ? out.length : close + next;
+    let tail = out.slice(close, end);
+    const done = /(<div class="[^"]*\bw-form-done\b[^"]*")/;
+    const fail = /(<div class="[^"]*\bw-form-fail\b[^"]*")/;
+    if (!done.test(tail) || !fail.test(tail)) throw new Error('chrome: a form has no Webflow success/failure notice after it');
+    tail = tail.replace(done, `$1 aria-label="${names.done}"`).replace(fail, `$1 aria-label="${names.fail}"`);
+    parts.push(out.slice(last, m.index), m[0].replace(/^<form\b/, `<form aria-label="${names.form}"`), out.slice(m.index + m[0].length, close), tail);
+    last = end;
+  }
+  parts.push(out.slice(last));
+  out = parts.join('');
+  return out;
+}
+
+/**
  * A Chinese sentence ends in 「。」. Two template lines keep an ASCII full stop
  * after text this site puts in front of it: the demo band's heading (Mono's
  * "Let's talk." with 「预约企业演示」 in place of the words) and its legal line
@@ -499,7 +534,7 @@ export function applyChrome(html, { lang, current }) {
   out = scripts(out);
   out = linkHygiene(out, lang);
   out = formMarkup(out, lang);
-  if (lang === 'zh') out = zhFullStops(out);
+  if (lang === 'zh') out = zhRuntimeNames(zhFullStops(out));
   out = uniqueLayoutIds(out);
   out = editorialImages(out, lang);
   // Unhashed local runtimes used to stay stale for a day after deployments.

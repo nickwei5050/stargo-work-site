@@ -2957,6 +2957,69 @@ html[lang^="en"] .sc-scope.sc-hero .hero-title-changeing-word { white-space: now
   .card-half._01 .team-circle { position: relative; inset: auto; margin-top: 16px; flex-wrap: wrap; }
 }
 
+/* H5. Homepage captions.
+   - The row captions are plain text in the first of four grid columns. In
+     Chinese, `keep-all` lets a caption break only at its spaces, so
+     「(288 个数字岗位 · 非同时运行)」 breaks after 「·」 at 768 (it broke
+     「非同时/运行」) and 「(四个示例场景 · 非客户评价)」 after 「·」 at
+     1024–1440 (「非/客户评价」, 「非客户/评价」). `min-width: 0` keeps the
+     grid's equal columns from growing to the unbroken phrase.
+   - Below 480 the first column is 69–86px. The five-stages caption spills into
+     the second column (its dot moves to that column's end) so it reads on one
+     line in Chinese (「(五个业务/阶段)」 before) and on two in English
+     ("(Five/business/stages)" before); the FAQ caption does the same
+     (「(常见问/题)」 at 320) with the row's three dots each centred in their
+     columns, still evenly spaced. */
+html[lang^="zh"] body:has(#loop) section.with-minus .bottom-grid > p.top-text:first-child,
+html[lang^="zh"] .testimonials-section .testimonials-width > div > p.top-text {
+  word-break: keep-all;
+}
+html[lang^="zh"] body:has(#loop) section.with-minus .bottom-grid > p.top-text:first-child,
+html[lang^="zh"] .testimonials-section .testimonials-width > div:has(> p.top-text) {
+  min-width: 0;
+}
+@media (max-width: 479px) {
+  body:has(#loop) section:has(.service-title) .bottom-grid.grd > p.top-text:first-child,
+  html[lang^="zh"] #compare .bottom-grid.mw.grd > p.top-text {
+    margin-right: calc(-100% - 10px + 28px);
+    text-wrap: balance;
+  }
+  body:has(#loop) section:has(.service-title) .bottom-grid.grd > .circle-divider { justify-self: end; }
+  html[lang^="zh"] #compare .bottom-grid.mw.grd > .circle-divider { justify-self: center; }
+}
+
+/* H6. Homepage, English display headings: one word ("context.", "work")
+       ended the channel band and the phone products heading, and the 288
+       heading broke "Across / the enterprise." Balanced lines, and the channel
+       heading's box is 40px wider from 768, so "Different channels," /
+       "one business context." fits its two lines (the second is 463px in a
+       458px box). Layout only; the words may change. */
+html[lang^="en"] .sc-scope.integration .integration-title-block h2,
+html[lang^="en"] .sc-scope.products .products-title-block h2,
+html[lang^="en"] body:has(#loop) section.with-minus h2.h2:not(.card-half h2) {
+  text-wrap: balance;
+}
+@media (min-width: 768px) {
+  html[lang^="en"] .sc-scope.integration .integration-title-block { margin-inline: -20px; }
+}
+
+/* H7. Homepage, Chinese.
+   - The sticky problem heading sits in a column three characters wide from
+     768 to 1439px and broke 「工具很/多，靠/人连接」. The copy marks the word
+     boundaries (<wbr>) and `keep-all` breaks only there (and after 「，」):
+     「工具/很多，/靠人/连接」 — one word a line, as the English heading has.
+   - The pricing heading broke 「从企业需要/的 AI 层级开始。」 at every width;
+     with `keep-all` it breaks at its spaces: 「从企业需要的/AI 层级开始。」. */
+html[lang^="zh"] section.gr h2.h2,
+html[lang^="zh"] section.drk h2.h2.for-stats {
+  word-break: keep-all;
+}
+
+/* H17. Footer statement, English: the second sentence ("Delegate the work.
+        Keep the authority.") left "authority." alone at 320. It is its own
+        balanced block now; the statement above it keeps its forced break. */
+html[lang^="en"] .footer-part-1 h2.h2 > span { display: block; text-wrap: balance; }
+
 /* H12/H13. Contact page on phones.
    - The form card sat 16px inside the column (`.form-amin`'s padding-inline,
      written for the white Mono form this card replaced), so the stacked form

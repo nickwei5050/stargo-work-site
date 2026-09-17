@@ -138,7 +138,7 @@ export const CHROME = [
   ['>Privacy Policy<', B('>隐私政策<', '>Privacy Policy<')],
   ['>View Work<', B('>查看<', '>View<')],
   ['>Read more<', B('>阅读<', '>Read more<')],
-  ['Talk to Denis', B('预约企业 AI 演示', 'Book a demo')],
+  ['Talk to Denis', B('预约企业演示', 'Book a demo')],   // the menu card holds one line at 992-1439: the site's own CTA wording
   ['>Schedule a call<', B('>预约演示<', '>Book a demo<')],
   ['>Get in touch<', B('>联系我们<', '>Get in touch<')],
   ['>Terms of use<', B('>使用条款<', '>Terms of use<')],
@@ -383,7 +383,7 @@ export const HOME_MONO = [
      nine characters: the column holds three a line between 768 and 1024px,
      and the full sentence stood six lines tall there. */
   ['(Portfolio 26©)', B('(缺的从来不是一个软件)', '(The problem was never a missing tool)')],
-  ['<h2 class="h2">Work<span class="small-ftd">(4)</span></h2>', B('<h2 class="h2">工具很多，靠人连接<span class="small-ftd">(4)</span></h2>', '<h2 class="h2">Many tools, manual handoffs.<span class="small-ftd">(4)</span></h2>')],
+  ['<h2 class="h2">Work<span class="small-ftd">(4)</span></h2>', B('<h2 class="h2">工具<wbr/>很多，靠人<wbr/>连接<span class="small-ftd">(4)</span></h2>', '<h2 class="h2">Many tools, manual handoffs.<span class="small-ftd">(4)</span></h2>')],
   ['Forma Digital', B('询盘来了，还要重新整理', 'Email inquiries still need organizing')],
   ['One Step', B('窗口很多，客户信息分散', 'Chats span windows; context is scattered')],
   ['Nero Vision', B('客户在表格，跟进靠人记', 'Customers in sheets, follow-up by memory')],
