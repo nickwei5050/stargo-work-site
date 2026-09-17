@@ -4123,6 +4123,45 @@ html[lang="en"] .cn-about-reviews .cn-testimonial-info .cn-text-size-medium { te
 .sutdio-animation .studio-sticky .top-text.for-abt.t04 { opacity: 1 !important; }
 .sutdio-animation .studio-sticky .h2.for-abt .gsap_split_line-mask { overflow-clip-margin: .25em; }
 
+/* intelligence.html, English — lone last words in the display lines.
+   - The gradient steps, the big line and the closing card's two lines keep
+     their last two words together (tools/build-site.mjs enGlue), so balance
+     breaks one word earlier: "Observe / the workflow", "not left / to
+     memory.", "Keep / useful methods.", "Withdraw / ineffective changes.".
+   - The joined pairs have to fit their column. The closing card's widest one,
+     "ineffective changes.", is 9.14em; its column is the screen less 80px
+     below 480, less 96px to 767, and 66% of the card from 768 (401px at 768,
+     570 at 1024). The lines keep the template's sizes (2.3 / 3 / 3.8rem)
+     wherever the pair fits and scale down with the column where it does not:
+     25.5px at 320, 33px at 390, 41px at 480, 43px at 768, 52px at 900.
+   - "to memory." is 5.27em, and the big line is the full screen width below
+     768: 4rem from 375px (55px at 320) and 5.6rem from 507px (85px at 480),
+     so the line keeps a 16px margin.
+   - The six card titles in the plain-explanations grid: "Enterprise /
+     knowledge", "A relationship / map" and "Long-term / memory" at 768-1279.
+     Their widest title, "Enterprise knowledge", is 9.85em in a title box of
+     half the screen less 106px (768-991, two columns) and a third of it less
+     98px (992-1279, three columns); the titles are 2rem wherever it fits and
+     follow that box where it does not (27.4px at 768, 24px at 1024), so the
+     two-word titles stay on one line and the longer ones stay balanced. */
+@media screen and (max-width: 479px) {
+  html[lang="en"] .lx-scope .lx-cta-wrapper .lx-cta-text { font-size: min(2.3rem, calc(10.63vw - 8.5px)); }
+  html[lang="en"] .lx-scope .lx-cta_wrapper .lx-big-text { font-size: min(4rem, calc(18.87vw - 6.04px)); }
+}
+@media screen and (min-width: 480px) and (max-width: 767px) {
+  html[lang="en"] .lx-scope .lx-cta-wrapper .lx-cta-text { font-size: min(3rem, calc(10.63vw - 10.2px)); }
+  html[lang="en"] .lx-scope .lx-cta_wrapper .lx-big-text { font-size: min(5.6rem, calc(18.87vw - 6.04px)); }
+}
+@media screen and (min-width: 768px) {
+  html[lang="en"] .lx-scope .lx-cta-wrapper .lx-cta-text { font-size: min(3.8rem, calc(7.01vw - 11.26px)); }
+}
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  html[lang="en"] .lx-scope .lx-context-item h3 { font-size: min(2rem, calc(4.95vw - 10.6px)); }
+}
+@media screen and (min-width: 992px) and (max-width: 1279px) {
+  html[lang="en"] .lx-scope .lx-context-item h3 { font-size: min(2rem, calc(3.3vw - 9.8px)); }
+}
+
 /* V7-LX-END */
 
 

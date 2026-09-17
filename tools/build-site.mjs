@@ -140,6 +140,19 @@ function enSentences(text, lang) {
   const parts = text.split(/(?<=[.!?])\s+/);
   return parts.length < 2 ? text : parts.map((p) => `<span class="lx-v7-sentence">${p}</span>`).join(' ');
 }
+/* V7-LX r2: an English display line whose last word must not stand alone:
+   the space before that word is a no-break space, so the balanced heading
+   breaks one word earlier — "Observe / the workflow" (320-390), "not left /
+   to memory." (320), "Keep / useful methods." and "Withdraw / ineffective
+   changes." (320-1279) instead of a lone "workflow", "memory.", "methods."
+   or "changes.". css/stargo-fusion.css (V7-LX) sizes the closing card's two
+   lines and the big line so the joined pair fits its column. Chinese is
+   returned as it is. */
+function enGlue(text, lang) {
+  if (lang !== 'en') return text;
+  const at = text.lastIndexOf(' ');
+  return at < 0 ? text : `${text.slice(0, at)}\u00a0${text.slice(at + 1)}`;
+}
 const CHECK = 'assets/69a01660589c516ba5f0f917/69a9086623545093091785d8_check-icon.svg';
 const CROSS = 'assets/69a01660589c516ba5f0f917/69a91f28a82e2c7b982d5703_cancel-circle-icon.svg';
 
@@ -833,9 +846,9 @@ function lxPage(spec, lang, name) {
   spec.gradient.forEach((g, i) => {
     const re = new RegExp(`(class="lx-heading-style-h1 lx-_${i + 1}">)[^<]*(</h3>)`);
     if (!re.test(b)) throw new Error(`${name}: gradient heading ${i + 1}`);
-    b = b.replace(re, `$1${t(g)}$2`);
+    b = b.replace(re, `$1${enGlue(t(g), lang)}$2`);
   });
-  b = s(b, '>Is this you<', `>${t(spec.bigText)}<`);
+  b = s(b, '>Is this you<', `>${enGlue(t(spec.bigText), lang)}<`);
   const bubbleOriginals = ["I'll remember that for later", "It's too boring to document.", "I can't be bothered.", "I'll remember that", "No way I'm writing all that", 'Documenting can be a drag sometimes', 'IT Support', 'Logistics Analyst', "It's just not on my priority list", 'I prefer to keep it in my head..', "Maybe I'll get to it eventually.", "I'd rather focus on the fun parts."];
   const order = [7, 0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11]; // longest-first originals mapped back to the spec order
   bubbleOriginals.forEach((orig, i) => {
@@ -882,8 +895,8 @@ function lxPage(spec, lang, name) {
   b = s(b, '<h3 class="lx-heading-style-h1">As simple as talking</h3>', `<h3 class="lx-heading-style-h1">${enSentences(t(spec.feat2Sub), lang)}</h3>`);
   b = setLink(b, 'Get started', { href: spec.feat2Button.href, text: t(spec.feat2Button.label) });
   b = s(b, 'Your story, <br/>Your memories, <br/>Your moments', spec.feat2Lines.map(t).join(' <br/>'));
-  b = s(b, '>Your AI companion<', `>${t(spec.ctaTitle)}<`);
-  b = s(b, 'class="lx-cta-text lx-_2nd">As simple as talking</h4>', `class="lx-cta-text lx-_2nd">${t(spec.ctaSub)}</h4>`);
+  b = s(b, '>Your AI companion<', `>${enGlue(t(spec.ctaTitle), lang)}<`);
+  b = s(b, 'class="lx-cta-text lx-_2nd">As simple as talking</h4>', `class="lx-cta-text lx-_2nd">${enGlue(t(spec.ctaSub), lang)}</h4>`);
   b = s(b, 'class="lx-cta-logo-text">Lifelogx</div>', `class="lx-cta-logo-text">${t(spec.ctaLogo)}</div>`);
   b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
   // V7-LX: on the Chinese page the paragraph also breaks between words only
