@@ -3020,6 +3020,67 @@ html[lang^="zh"] section.drk h2.h2.for-stats {
         balanced block now; the statement above it keeps its forced break. */
 html[lang^="en"] .footer-part-1 h2.h2 > span { display: block; text-wrap: balance; }
 
+/* H16. Notices page, the "Keep reading" band.
+   - The three card sentences are plain text. In Chinese they broke inside
+     words (「创/作」, 「岗/位」, 「目/录」, 「结/果」); `keep-all` breaks them
+     only at punctuation and spaces (`anywhere` is the fallback for a phrase
+     longer than the card, and keeps the cards' sizes as they are).
+   - In English the side sentence and the card sentences left one word on
+     their last line ("managed.", "workflow.", "improvement."); they are
+     three or four lines long, and balanced lines end none of them on one
+     word. (The Chinese side sentence is split per letter; a break in its
+     copy keeps 「做什么」 and 「谁来做」 whole.)
+   The notice text above the band is not touched. */
+html[lang^="zh"] .blog-text-wrp .margin-10 p {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+html[lang^="en"] .blog-text-wrp .margin-10 p,
+html[lang^="en"] .max-lft-dvc p.top-text.big {
+  text-wrap: balance;
+}
+
+/* H18/H19. Pricing page, layout only (no price, plan or word changes).
+   - The tiers band's head: renok sets the heading beside a 35% column holding
+     the paragraph and the first-year / renewal switch. With this page's
+     longer heading that column was 163px at 768 and 170px at 390, so the
+     heading ran five lines in English and the switch labels broke
+     ("First-/year/total", 「首年价/格」, 「续/费」). Below 992 the two now
+     stack, as renok already does under 360; the switch labels never wrap.
+     The heading is balanced, and in Chinese breaks only at its comma
+     (「从需要解决的业务，」/「确定合适的配置与服务。」; it left 「务。」 alone at
+     768 and 1024).
+   - In the tier cards the price unit broke into three lines beside the price
+     at 1024 ("/ first / year / total", 「/ 首 / 年」); it keeps one line and
+     moves under the price when the two do not fit. The tick icons of long
+     feature lines were squeezed smaller than the others (renok's and
+     cinery's lists alike); they keep their size.
+   - Short Chinese card texts and the review quotes left one character on
+     their last line (「资/料」, 「培训一/次」, 「核/对。」」); `pretty`. The FAQ
+     questions left a word or a character alone ("year?", 「始？」); balanced. */
+@media (max-width: 479px) {
+  .rk-price-tiers .rk-rt-pricing-v1-top { grid-template-columns: minmax(0, 1fr); }
+}
+@media (min-width: 480px) and (max-width: 991px) {
+  .rk-price-tiers .rk-rt-pricing-v1-top { flex-direction: column; align-items: flex-start; }
+  .rk-price-tiers .rk-rt-pricing-top-right { flex: none; max-width: 34.6875rem; }
+}
+.rk-price-tiers h1.rk-rt-gap-off { text-wrap: balance; }
+html[lang^="zh"] .rk-price-tiers h1.rk-rt-gap-off { word-break: keep-all; }
+.rk-price-tiers .rk-rt-monthly,
+.rk-price-tiers .rk-rt-yearly { white-space: nowrap; }
+.rk-price-tiers .rk-rt-card-price { flex-wrap: wrap; }
+.rk-price-tiers .rk-rt-price-yearly-box > div { white-space: nowrap; }
+.rk-price-tiers .rk-rt-pricing-list-items > div:first-child,
+.cn-price-card .cn-check-icon { flex: none; }
+html[lang^="zh"] .rk-price-tiers .rk-rt-text-color-premium-grey,
+html[lang^="zh"] .rk-price-compare .rk-rt-text-color-premium-grey,
+html[lang^="zh"] .cn-price-card .cn-text-size-regular,
+.cn-reviews p.cn-text-size-large {
+  text-wrap: pretty;
+}
+.sc-page .faq .heading-style-h6 { text-wrap: balance; }
+
 /* H12/H13. Contact page on phones.
    - The form card sat 16px inside the column (`.form-amin`'s padding-inline,
      written for the white Mono form this card replaced), so the stacked form

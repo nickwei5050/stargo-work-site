@@ -1406,7 +1406,7 @@ export const NOTICES = {
      The workforce card says what 288 counts, as every 288 on the site must,
      and no longer claims teams "in seconds". */
   relatedTitle: B('继续看', 'Keep reading'),
-  relatedIntro: B('三个入口，看 STARGO WORK 做什么、谁来做、怎样管。', 'Three places to see what STARGO WORK does, who does the work and how it is managed.'),
+  relatedIntro: B('三个入口，看 STARGO WORK<br/>做什么、谁来做、怎样管。', 'Three places to see what STARGO WORK does, who does the work and how it is managed.'),   // zh: split per letter, so the break keeps 做什么 and 谁来做 whole
   related: [
     { tag: B('(14 个能力域)', '(14 capability groups)'), title: B('能力', 'Capabilities'), desc: B('从 Growth OS、Sales Desk 到 ERP 与 AI 创作，从工作空间到持续改进。', 'From Growth OS and Sales Desk to ERP and AI creative work — from the workspace to controlled improvement.'), href: 'capabilities.html' },
     { tag: B('(288 个专业数字岗位)', '(288 specialized AI roles)'), title: B('数字员工', 'AI Workforce'), desc: B('十类企业职能，按任务组成团队。288 是岗位目录数量，不是同时运行的数量。', 'Ten enterprise functions, teams formed around the task. 288 is the role-directory count, not work running at once.'), href: 'workforce.html' },
