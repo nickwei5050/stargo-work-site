@@ -3426,6 +3426,136 @@ html[lang^="zh"] .lx-scope .stargo-post :is(h3, .sgp-faq-item h4, .sgc-title, .s
 html[lang^="en"] .lx-scope :is(.lx-blog-title-holder, .lx-blog-title, .lx-related-item > .lx-text-size-regular) {
   text-wrap: balance;
 }
+
+/* ---- V7-BLOG r2 (review of 2026-09-17) -------------------------------- */
+/* The guide's contents list repeats the section headings, so it breaks like
+   them. Chinese: only at spaces, 「，、：；？！。」 and the 「|」 marks of the
+   headings (tools/blog.mjs inline()); it split 「视/频」, 「一/切」 and
+   「接得/住」 at 320–768. Both languages: balanced, which left no single
+   "proactively?" or "do?" on a second line. */
+.lx-scope .stargo-post .sgp-toc li { text-wrap: balance; }
+html[lang^="zh"] .lx-scope .stargo-post .sgp-toc li { word-break: keep-all; overflow-wrap: anywhere; }
+
+/* Chinese chart text — step titles and descriptions, the scenario examples,
+   the availability items, the hand-off line, the lane titles — and the
+   closing call to action broke inside words (「交/期」, 「翻/译」, 「并/行处理」,
+   「物/流」, 「关键动/作」, 「把工/作」). They break only at spaces, at
+   「，、：；？！。」 and at the <wbr>s tools/blog.mjs writes: a 「|」 mark in a
+   phrase longer than the narrowest card (checked there), and the word
+   boundaries of the call to action. Descriptions keep `pretty`, titles are
+   balanced (below). */
+html[lang^="zh"] .lx-scope .stargo-post :is(.sgc-step-title, .sgc-step-text, .sgc-example span, .sgc-status li, .sgc-handoff-text, .sgc-lane-title, .sgp-cta) {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+/* Both languages: the descriptions and the call to action end on more than
+   one word ("signs / off", "the authorized / scope", "Request a / demo."). */
+.lx-scope .stargo-post :is(.sgc-step-text, .sgc-example span, .sgc-status li, .sgc-handoff-text, .sgp-cta) { text-wrap: pretty; }
+/* English card lines are short (two or three lines): balanced, as `pretty`
+   still left "Extract requirements; / organize attachments and / drawings". */
+html[lang^="en"] .lx-scope .stargo-post :is(.sgc-step-text, .sgc-example span, .sgc-status li, .sgc-handoff-text) { text-wrap: balance; }
+/* The link is short in both languages («预约企业演示», "Request a demo") and
+   never splits, at any width ("Request a / demo." and 「预约企业演/示」 at 320). */
+@media (max-width: 479px) {
+  .lx-scope .stargo-post .sgp-cta a { white-space: nowrap; }
+}
+
+/* Card titles in the charts are balanced in both languages, like the chart
+   titles: "Connected and validated one by / one", "Assign roles and /
+   approvals", "Customer development & / marketing" left one word alone. */
+.lx-scope .stargo-post :is(.sgc-step-title, .sgc-status-title, .sgc-lane-title, .sgc-bar-name, .sgc-frame-beat) { text-wrap: balance; }
+
+/* Arrow chains. They wrapped with the last box alone on a row, the arrow
+   starting that row: 「报价 → PI → 订单 → 售后 / → 复购」 (390), "Customer →
+   Opportunity → Quote / → Order" (1440), the video steps 3 | 3 | 1 (390) and
+   5 | 2 (768, 1440). The rows are now set by the width the chart has (the
+   figure is the size container), per language, since the boxes are wider in
+   English; the limits below leave 15–35px to spare over the measured widths.
+   A row never starts with an arrow.
+
+   The video steps are a grid of 2, 3, 4 or 7 columns. Each step's arrow sits
+   centred in the gap before it; the list clips at its own edges, so the arrow
+   of a step that starts a row (it would sit left of the first column) is not
+   drawn. The last step fills what is left of its row (2 | 2 | 2 | 1 → the last
+   step across both columns; 4 | 3 → the last across two). */
+.lx-scope .stargo-post .sgc .sgc-pills {
+  display: grid;
+  grid-template-columns: repeat(var(--sgc-pc, 2), auto);
+  gap: .55rem var(--sgc-pg, 1.1rem);
+  overflow: clip;
+}
+.lx-scope .stargo-post .sgc .sgc-pill { justify-content: center; padding: .38rem .65rem; }
+.lx-scope .stargo-post .sgc-pill + .sgc-pill { margin-left: 0; }
+.lx-scope .stargo-post .sgc-pill + .sgc-pill::before { left: calc(var(--sgc-pg, 1.1rem) / -2 - 1px); transform: translate(-50%, -50%); }
+.lx-scope .stargo-post .sgc-pill:last-child { grid-column: span var(--sgc-last, 2); }
+/* Needed: Chinese 275 / 373 / 647px for 3 / 4 / 7 columns, English 240 /
+   357 / 487px for 2 / 3 / 4 (seven English steps need 794px, more than an
+   article column has). */
+@container (min-width: 290px) { html[lang^="zh"] .lx-scope .stargo-post .sgc-pills { --sgc-pc: 3; --sgc-last: 3; } }
+@container (min-width: 375px) { html[lang^="en"] .lx-scope .stargo-post .sgc-pills { --sgc-pc: 3; --sgc-last: 3; } }
+@container (min-width: 390px) { html[lang^="zh"] .lx-scope .stargo-post .sgc-pills { --sgc-pc: 4; --sgc-pg: 1.3rem; --sgc-last: 2; } }
+@container (min-width: 505px) { html[lang^="en"] .lx-scope .stargo-post .sgc-pills { --sgc-pc: 4; --sgc-pg: 1.3rem; --sgc-last: 2; } }
+@container (min-width: 680px) { html[lang^="zh"] .lx-scope .stargo-post .sgc-pills { --sgc-pc: 7; --sgc-last: 1; } }
+
+/* The two chains keep their natural box widths (in a grid, English "Quote →
+   PI → Order" did not fit at 320). Where the whole chain does not fit on one
+   line, its last two boxes move to a second row — 3 | 2 for the five-step
+   business chain, 2 | 2 for the relationship-map core — and the first of them
+   loses its arrow and indent. Needed on one line (chart width): business
+   chain 355px Chinese, 430px English (it sits in a lane); core 299px /
+   412px, and 609px / 836px once the two cards stand side by side. */
+.lx-scope .stargo-post .sgc-chain::after { content: var(--sgc-break, none); flex: 0 0 100%; order: 1; }
+.lx-scope .stargo-post .sgc-chain li:nth-last-child(-n + 2) { order: var(--sgc-row2, 0); margin-top: var(--sgc-row2-gap, 0); }
+.lx-scope .stargo-post .sgc-chain li + li:nth-last-child(2) { margin-left: var(--sgc-row2-indent, 1.35rem); }
+.lx-scope .stargo-post .sgc-chain li + li:nth-last-child(2)::before { content: var(--sgc-row2-arrow, "→"); }
+@container (width < 372px) {
+  html[lang^="zh"] .lx-scope .stargo-post .sgc-lane .sgc-chain { row-gap: 0; --sgc-break: ""; --sgc-row2: 2; --sgc-row2-gap: .45rem; --sgc-row2-indent: 0; --sgc-row2-arrow: none; }
+}
+@container (width < 446px) {
+  html[lang^="en"] .lx-scope .stargo-post .sgc-lane .sgc-chain { row-gap: 0; --sgc-break: ""; --sgc-row2: 2; --sgc-row2-gap: .45rem; --sgc-row2-indent: 0; --sgc-row2-arrow: none; }
+}
+@container (width < 312px) or ((width >= 560px) and (width < 625px)) {
+  html[lang^="zh"] .lx-scope .stargo-post .sgc-chain-core { row-gap: 0; --sgc-break: ""; --sgc-row2: 2; --sgc-row2-gap: .45rem; --sgc-row2-indent: 0; --sgc-row2-arrow: none; }
+}
+@container (width < 428px) or (width >= 560px) {
+  html[lang^="en"] .lx-scope .stargo-post .sgc-chain-core { row-gap: 0; --sgc-break: ""; --sgc-row2: 2; --sgc-row2-gap: .45rem; --sgc-row2-indent: 0; --sgc-row2-arrow: none; }
+}
+
+@container (min-width: 600px) {
+  /* The five-column business loop. Chinese: 「采购 · 生产 · 库存」 needed
+     105px on a line of 95px at 768 and 104px at 1440, and wrapped after the
+     second dot. The card is a little tighter and the line a little smaller,
+     so each label fits; if one ever wraps, it wraps after a dot, between
+     whole items (tools/blog.mjs chartLoop), and balanced. */
+  html[lang^="zh"] .lx-scope .stargo-post .sgc-flow-5:not(.sgc-numbered) .sgc-step { padding: .85rem .55rem; }
+  html[lang^="zh"] .lx-scope .stargo-post .sgc-flow-5:not(.sgc-numbered) .sgc-step-text { font-size: .8rem; text-wrap: balance; }
+  /* English: five columns of about 100px stacked every two-word title
+     ("Proactive / acquisition", "Repeat / growth") and most tags and labels.
+     The loop runs three and two, the second row centred, like the other
+     wrapped step rows (no arrow at a row start). */
+  html[lang^="en"] .lx-scope .stargo-post .sgc-flow-5:not(.sgc-numbered) { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  html[lang^="en"] .lx-scope .stargo-post .sgc-flow-5:not(.sgc-numbered) > li { grid-column: span 2; }
+  html[lang^="en"] .lx-scope .stargo-post .sgc-flow-5:not(.sgc-numbered) > li:nth-child(4) { grid-column: 2 / span 2; }
+  html[lang^="en"] .lx-scope .stargo-post .sgc-flow-5:not(.sgc-numbered) > li:nth-child(4)::before { content: none; }
+}
+@container (min-width: 560px) {
+  /* English storyboard beats: four beats of about 70px beside the formats
+     read "The / product", "The / benefits", "The next / step". Two by two
+     they hold each beat on one line. */
+  html[lang^="en"] .lx-scope .stargo-post .sgc-beats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  html[lang^="en"] .lx-scope .stargo-post .sgc-frame-beat { min-height: 5.25rem; }
+}
+
+/* The date line under an article title: the date and the author stay whole,
+   so it breaks only between its three parts (「STARGO WORK / 团队」 on every
+   phone, "The / STARGO WORK team" at 320). */
+.lx-scope .lx-post-meta :is(time, .lx-post-by) { white-space: nowrap; }
+
+/* Homepage "Latest articles": the cards in a row are one height and their
+   content sat at the bottom, so a card with a shorter title had its image
+   25px lower than its neighbours. The content starts at the top; the spare
+   height stays at the foot of the shorter cards. */
+.blog-grid .blog-wrapper { justify-content: flex-start; }
 /* V7-BLOG-END */
 
 
