@@ -3149,6 +3149,38 @@ html[lang="en"] .lx-scope .lx-v6-panel-title { text-wrap: balance; }
   .studio-sticky { padding-bottom: 100px; }
 }
 
+/* about.html — the introduction card in the hero (.cn-about, this page
+   only). Since V6 it carries the headline, the description and the closing
+   line in one paragraph, and below 480px that paragraph was 22px type in a
+   card that is 95% of the band with 24px of padding: 26 lines in English at
+   320 (the card 1,045px tall, the demo button 1,080px down the page) and 17
+   in Chinese. Below 480 the card now takes the band's full width, its
+   padding and gaps are 20 / 16px, and the paragraph is 18px at 1.45 — the
+   copy is unchanged. */
+@media screen and (max-width: 479px) {
+  .cn-about .cn-intro-container { width: 100%; }
+  .cn-about .cn-intro-content-block {
+    padding: 1.25rem 1.25rem 1.5rem;
+    grid-row-gap: 1rem;
+    row-gap: 1rem;
+  }
+  .cn-about .cn-text-size-large { font-size: 1.125rem; line-height: 1.45; }
+}
+
+/* about.html and pricing.html, Chinese — the scenario quotes in the review
+   band (.cn-about-reviews on About, .cn-reviews on Pricing; each block is on
+   that one page). The blocks mark the quotes' word boundaries with <wbr>
+   (zhQuote in tools/blocks/cn-about-reviews.mjs and cn-reviews.mjs); here the
+   line breaks only there and at punctuation, and `pretty` keeps a short last
+   line off the end. Before: 「…采用改」/「进。」」 at 390 (Pricing),
+   「…明确资」/「料、…」 at 1440 (both). On Pricing this changes where these
+   four quotes break and nothing else. */
+html[lang^="zh"] :is(.cn-about-reviews, .cn-reviews) p.cn-text-size-large {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
+}
+
 /* Short Chinese phrases the build binds together (tools/build-site.mjs
    zhKeep) in text the reveal splits per character: the enterprise cockpit
    paragraph (「管得/住，」, 「查/得清。」), the delivery steps (「定目/标」)
