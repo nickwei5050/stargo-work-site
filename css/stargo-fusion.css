@@ -3607,9 +3607,8 @@ html[lang^="zh"] .rk-award .rk-rt-awards-third-text { margin-top: 0; }
    60px of scrolling later (four lines at 360, 「…推」/「进。」).
    The gap is now flexible: the content fills the card, text at the top and
    icon row at the bottom as before, and the space between them (at least
-   1.5rem) is what the collapse takes first. The text stays whole until the
-   card is shorter than text + icon row. Card 2 is a bottom-aligned row in the
-   template; it becomes the same bottom-aligned column so the same rule
+   1.5rem) is what the collapse takes first. Card 2 is a bottom-aligned row in
+   the template; it becomes the same bottom-aligned column so the same rule
    applies. The IX2 timeline, heights and opacity are untouched.
    Below 480px the three texts are 1.75rem (the template's 2rem gave seven
    characters a line at 320). The Chinese texts break only at punctuation and
@@ -3618,7 +3617,15 @@ html[lang^="zh"] .rk-award .rk-rt-awards-third-text { margin-top: 0; }
    320-480, 768-1024): 「关注机会、期限和异常，」/「有依据地提建议，」/
    「按授权推进。」 at 390. In the 182px tablet columns (768) the Chinese
    texts are 1.4rem so an eight-character phrase fits a line; four lines, as
-   before. The titles beside the icons keep their size. */
+   before. The titles beside the icons keep their size.
+   V7-LX r2: this holds at every width (the collapse runs from 768 up as well:
+   「客户、产品、报价、订单」 was sliced through by the card's top edge at 1440,
+   "Workflow first, then" in English), and the text no longer slides under
+   that edge at all once the card is shorter than text + gap + icon row. The
+   content is a wrapping column laid out from the bottom (icon row first):
+   when the paragraph no longer fits above the icon row it moves whole into a
+   second column, outside the clipped card, instead of being cut line by line;
+   it comes back whole when the card grows again. */
 html[lang^="zh"] .lx-scope .lx-expandable-content > .lx-expandable-text {
   word-break: keep-all;
   overflow-wrap: anywhere;
@@ -3626,22 +3633,24 @@ html[lang^="zh"] .lx-scope .lx-expandable-content > .lx-expandable-text {
 @media screen and (min-width: 768px) and (max-width: 991px) {
   html[lang^="zh"] .lx-scope .lx-expandable-content > .lx-expandable-text { font-size: 1.4rem; }
 }
-@media screen and (max-width: 767px) {
-  .lx-scope .lx-expandable-item.lx-_2 {
-    flex-flow: column;
-    justify-content: flex-end;
-    align-items: center;
-  }
-  .lx-scope .lx-expandable-item > .lx-expandable-content {
-    flex: 1 0 auto;
-    justify-content: space-between;
-    grid-row-gap: 1.5rem;
-    row-gap: 1.5rem;
-  }
-}
 @media screen and (max-width: 479px) {
   .lx-scope .lx-expandable-content > .lx-expandable-text { font-size: 1.75rem; }
 }
+.lx-scope #lx-ontology .lx-expandable-item.lx-_2 {
+  flex-flow: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+.lx-scope #lx-ontology .lx-expandable-item > .lx-expandable-content {
+  flex: 1 1 0;
+  min-height: 0;
+  flex-flow: column-reverse wrap;
+  justify-content: space-between;
+  align-content: flex-start;
+  grid-row-gap: 1.5rem;
+  row-gap: 1.5rem;
+}
+.lx-scope #lx-ontology .lx-expandable-content > .lx-expandable-icon-text { order: -1; }
 
 /* The closing clause of a Chinese paragraph (tools/build-site.mjs zhTail):
    one unit, so an availability clause such as 「高级改进仍在完善。」 is never
@@ -4044,6 +4053,238 @@ html[lang^="en"] .team-grid .team-content .h2 { text-wrap: balance; }
 .studio-sticky .about-flx .h2.for-abt,
 .studio-sticky .about-flx .top-text.for-abt {
   text-shadow: 0 1px 2px rgba(0, 0, 0, .55), 0 0 18px rgba(0, 0, 0, .55);
+}
+
+/* intelligence.html (both languages), the "no writing" band — the text-free
+   screen laid over the hand-held phone (tools/build-site.mjs, V7-LX). The
+   layer has the photograph's box (it is its sibling, absolutely placed), so
+   the IX2 move/scale that both share lands them on the same pixels.
+   `.stargo-nw-frame` is the photograph's picture inside that box: the
+   template shows it object-fit: cover, anchored top left, from 768px (a box
+   720px tall, so the picture is height-driven and cropped at the right on
+   tablets), and at its natural ratio, full width, below 768px. The screen
+   sits on the phone's own screen in the 1262x1474 picture (x 153-699,
+   y 22-1204, 2px into the black bezel so no template pixel shows at the
+   edge); its outline is the screen's rounded rectangle with the three
+   fingertips that overlap the left edge cut out, so the fingers stay in
+   front. The black pill is the camera cut-out the screen covers. */
+.lx-scope .lx-no-writing-image-holder:has(> .stargo-nw-screen) { position: relative; }
+.lx-scope .lx-no-writing-image.stargo-nw-screen {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  container-type: size;
+}
+.lx-scope .stargo-nw-frame {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: max(100cqw, 100cqh * 1262 / 1474);
+  height: max(100cqh, 100cqw * 1474 / 1262);
+}
+@media screen and (max-width: 767px) {
+  .lx-scope .stargo-nw-frame { width: 100%; height: auto; aspect-ratio: 1262 / 1474; }
+}
+.lx-scope .stargo-nw-frame .stargo-nw-art {
+  position: absolute;
+  left: 12.124%;
+  top: 1.493%;
+  width: 43.265%;
+  height: 80.19%;
+  max-width: none;
+  object-fit: cover;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 546 1182' preserveAspectRatio='none'%3E%3Cpath d='M85 0H461A85 85 0 0 1 546 85V1097A85 85 0 0 1 461 1182H85A85 85 0 0 1 0 1097L0 1090L1.5 1087L4.5 1084L9.5 1081L13.5 1078L16.5 1075L19.5 1072L21.5 1069L22.5 1066L23.5 1063L24.5 1060L24.5 1057L24.5 1054L24.5 1051L24.5 1048L23.5 1045L22.5 1042L21.5 1039L21.5 1036L19.5 1033L17.5 1030L15.5 1027L12.5 1024L9.5 1021L6.5 1018L3.5 1015L1.5 1012L2.5 1009L2.5 1006L2.5 1003L0 1000L0 946L1.5 943L2.5 940L6.5 937L10.5 934L12.5 931L15.5 928L16.5 925L18.5 922L19.5 919L20.5 916L20.5 913L20.5 910L20.5 907L20.5 904L20.5 901L20.5 898L20.5 895L20.5 892L20.5 889L19.5 886L18.5 883L17.5 880L16.5 877L14.5 874L12.5 871L10.5 868L6.5 865L3.5 862L0 859L0 811L1.5 808L2.5 805L3.5 802L4.5 799L4.5 796L5.5 793L6.5 790L6.5 787L6.5 784L7.5 781L7.5 778L7.5 775L7.5 772L7.5 769L7.5 766L7.5 763L6.5 760L5.5 757L5.5 754L4.5 751L3.5 748L2.5 745L1.5 742L0 739V85A85 85 0 0 1 85 0Z'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 546 1182' preserveAspectRatio='none'%3E%3Cpath d='M85 0H461A85 85 0 0 1 546 85V1097A85 85 0 0 1 461 1182H85A85 85 0 0 1 0 1097L0 1090L1.5 1087L4.5 1084L9.5 1081L13.5 1078L16.5 1075L19.5 1072L21.5 1069L22.5 1066L23.5 1063L24.5 1060L24.5 1057L24.5 1054L24.5 1051L24.5 1048L23.5 1045L22.5 1042L21.5 1039L21.5 1036L19.5 1033L17.5 1030L15.5 1027L12.5 1024L9.5 1021L6.5 1018L3.5 1015L1.5 1012L2.5 1009L2.5 1006L2.5 1003L0 1000L0 946L1.5 943L2.5 940L6.5 937L10.5 934L12.5 931L15.5 928L16.5 925L18.5 922L19.5 919L20.5 916L20.5 913L20.5 910L20.5 907L20.5 904L20.5 901L20.5 898L20.5 895L20.5 892L20.5 889L19.5 886L18.5 883L17.5 880L16.5 877L14.5 874L12.5 871L10.5 868L6.5 865L3.5 862L0 859L0 811L1.5 808L2.5 805L3.5 802L4.5 799L4.5 796L5.5 793L6.5 790L6.5 787L6.5 784L7.5 781L7.5 778L7.5 775L7.5 772L7.5 769L7.5 766L7.5 763L6.5 760L5.5 757L5.5 754L4.5 751L3.5 748L2.5 745L1.5 742L0 739V85A85 85 0 0 1 85 0Z'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
+}
+.lx-scope .stargo-nw-frame::after {
+  content: "";
+  position: absolute;
+  left: 26.783%;
+  top: 2.782%;
+  width: 13.629%;
+  height: 3.528%;
+  border-radius: 999px;
+  background: #000;
+}
+
+/* intelligence.html (both languages), the pink closing card (#lx-evolution):
+   the STARGO WORK paragraph ran under the portrait. From 768px the text
+   column is 66% of the card and the portrait an absolute box over its right
+   42% (40% from 1440), later in the document, so the ends of the paragraph's
+   lines were painted over wherever the photograph is opaque: 'what was
+   don[e]', 'dra[wn]' (en 768), 'met th[e]', 'Change[s]' (en 991),
+   'where a [person]' (en 1200-1366), 「里修正」「批复或人」 (zh 991). The logo
+   and paragraph row now ends 19-32px before the portrait box at every width
+   (85% of the column; 88% from 1440, where the portrait is 40%). Measured
+   text right / portrait left: 421/440 at 768, 546/570 at 991, 565/589 at
+   1024, 708/737 at 1280, 816/848 at 1440, both languages. The heading keeps
+   its width, so its line breaks do not change; the paragraph takes a line
+   or two more where it has to. Phones stack the card and are unchanged.
+   The narrower row no longer holds the 43.2px 「STARGO WORK」 label (300px)
+   below ~860px (265px at 768), where it split into 「STARGO」/「WORK」; the
+   label stays on one line and is 2.25rem (250px) from 768 to 879. */
+@media screen and (min-width: 768px) and (max-width: 1439px) {
+  .lx-scope .lx-cta-wrapper .lx-cta-logo-holder { max-width: 85%; }
+  .lx-scope .lx-cta-wrapper .lx-cta-logo-text { white-space: nowrap; }
+}
+@media screen and (min-width: 1440px) {
+  .lx-scope .lx-cta-wrapper .lx-cta-logo-holder { max-width: 88%; }
+}
+@media screen and (min-width: 768px) and (max-width: 879px) {
+  .lx-scope .lx-cta-wrapper .lx-cta-logo-text { font-size: 2.25rem; }
+}
+html[lang^="zh"] .lx-scope .lx-cta-wrapper .lx-cta-logo-holder .lx-text-size-regular {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+/* about.html, the four AI-employee tiles: the title pill under each clip.
+   The donor grid is `1fr 1fr`, so the title had half the pill (88px at 320,
+   164-191px at 992-1100) and the arrow the other half, and two empty donor
+   slots beside the title took 16px more: "MARKET / SIGNAL / AGENT",
+   "FOLLOW- / UP AGENT", 「报价 AI」/「员工」 (320), 「市场信号 AI」/「员工」
+   (360-430). The title now has the pill's width less the arrow, the empty
+   slots are not drawn, and the last two words of a title stay together
+   (tools/blocks/cn-about-projects.mjs; `.stargo-keep` is the Chinese rule
+   elsewhere in this file). The arrow keeps its place at the right end. */
+.cn-about-projects .cn-case-study-content-grid { grid-template-columns: minmax(0, 1fr) auto; }
+.cn-about-projects .cn-case-study-item > .cn-text-size-medium:empty { display: none; }
+.cn-about-projects .cn-case-study-item .stargo-nobr { white-space: nowrap; }
+
+/* about.html and pricing.html, the review slider: the site's focus ring
+   ([tabindex]:focus-visible) lost to the donor's `outline: 0` on the arrows
+   (`.cn-about-reviews .w-slider-arrow-left:focus`, 0,3,0), so a keyboard user
+   tabbing to Previous / Next saw nothing change. The ring is drawn inside the
+   rounded arrow. */
+.cn-about-reviews .w-slider .w-slider-arrow-left:focus-visible,
+.cn-about-reviews .w-slider .w-slider-arrow-right:focus-visible,
+.cn-reviews .w-slider .w-slider-arrow-left:focus-visible,
+.cn-reviews .w-slider .w-slider-arrow-right:focus-visible {
+  outline: 2px solid #e8823a;
+  outline-offset: -3px;
+  border-radius: 16px;
+}
+
+/* about.html, English, the review attribution: "Trade manager · illustrative
+   / scenario" left one word alone at 320-768. Balanced, the line breaks after
+   the dot or not at all. */
+html[lang="en"] .cn-about-reviews .cn-testimonial-info .cn-text-size-medium { text-wrap: balance; }
+
+/* enterprise.html, the fourth story panel, (经营) / (Oversight): the
+   template fades its heading and text out (IX3 t-255c7997, at 1.0 of a 1.3
+   timeline) just as the sliding track lands it, so the text dissolved about
+   one wheel step after it came to rest and the section then stayed pinned
+   for 500-700px showing only the zooming, dimming port photograph (390, 768,
+   1440, both languages). Panels 1-3 stay until the track carries them away;
+   the fourth now stays too, to the end of the pinned run and while the
+   section scrolls off. Only that exit fade is cancelled: it is the inline
+   opacity on the heading and paragraph themselves, while the entrance
+   animates their split lines, so the entrance, the slide and the
+   photograph's zoom and dim are unchanged (the text shadow above keeps the
+   text readable on the photograph).
+   The panel headings are set at a line-height of .85 and their reveal wraps
+   each line in a mask that clips, which cut the descender of "(Oversight)"
+   ("Oversiqht", 390 and 1440) now that the heading stays on screen; the
+   masks keep clipping, a quarter of an em outside their box. */
+.sutdio-animation .studio-sticky .h2.for-abt.d04,
+.sutdio-animation .studio-sticky .top-text.for-abt.t04 { opacity: 1 !important; }
+.sutdio-animation .studio-sticky .h2.for-abt .gsap_split_line-mask { overflow-clip-margin: .25em; }
+
+/* intelligence.html, English — lone last words in the display lines.
+   - The gradient steps, the big line and the closing card's two lines keep
+     their last two words together (tools/build-site.mjs enGlue), so balance
+     breaks one word earlier: "Observe / the workflow", "not left / to
+     memory.", "Keep / useful methods.", "Withdraw / ineffective changes.".
+   - The joined pairs have to fit their column. The closing card's widest one,
+     "ineffective changes.", is 9.14em; its column is the screen less 80px
+     below 480, less 96px to 767, and 66% of the card from 768 (401px at 768,
+     570 at 1024). The lines keep the template's sizes (2.3 / 3 / 3.8rem)
+     wherever the pair fits and scale down with the column where it does not:
+     25.5px at 320, 33px at 390, 41px at 480, 43px at 768, 52px at 900.
+   - "to memory." is 5.27em, and the big line is the full screen width below
+     768: 4rem from 375px (55px at 320) and 5.6rem from 507px (85px at 480),
+     so the line keeps a 16px margin.
+   - The six card titles in the plain-explanations grid: "Enterprise /
+     knowledge", "A relationship / map" and "Long-term / memory" at 768-1279.
+     Their widest title, "Enterprise knowledge", is 9.85em in a title box of
+     half the screen less 106px (768-991, two columns) and a third of it less
+     98px (992-1279, three columns); the titles are 2rem wherever it fits and
+     follow that box where it does not (27.4px at 768, 24px at 1024), so the
+     two-word titles stay on one line and the longer ones stay balanced. */
+@media screen and (max-width: 479px) {
+  html[lang="en"] .lx-scope .lx-cta-wrapper .lx-cta-text { font-size: min(2.3rem, calc(10.63vw - 8.5px)); }
+  html[lang="en"] .lx-scope .lx-cta_wrapper .lx-big-text { font-size: min(4rem, calc(18.87vw - 6.04px)); }
+}
+@media screen and (min-width: 480px) and (max-width: 767px) {
+  html[lang="en"] .lx-scope .lx-cta-wrapper .lx-cta-text { font-size: min(3rem, calc(10.63vw - 10.2px)); }
+  html[lang="en"] .lx-scope .lx-cta_wrapper .lx-big-text { font-size: min(5.6rem, calc(18.87vw - 6.04px)); }
+}
+@media screen and (min-width: 768px) {
+  html[lang="en"] .lx-scope .lx-cta-wrapper .lx-cta-text { font-size: min(3.8rem, calc(7.01vw - 11.26px)); }
+}
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  html[lang="en"] .lx-scope .lx-context-item h3 { font-size: min(2rem, calc(4.95vw - 10.6px)); }
+}
+@media screen and (min-width: 992px) and (max-width: 1279px) {
+  html[lang="en"] .lx-scope .lx-context-item h3 { font-size: min(2rem, calc(3.3vw - 9.8px)); }
+}
+
+/* intelligence.html, English, tablets — the 288-roles section's side card.
+   From 768 the card grid has three columns and the card's title has a third
+   of the screen less 74px (182px at 768, 267 at 1023), but its lines, as the
+   copy breaks them, are up to 8.2em ("without rebuilding", 262px at 2rem): it
+   read "Resume the / task / without / rebuilding / the context." at 768-900
+   and "without / rebuilding" to 1023. The title is 2rem wherever its lines
+   fit and follows the column below that (21.7px at 768, 27px at 900), so it
+   keeps its three lines. The button under the text, "Meet the AI Workforce"
+   (172px), had 158px inside its side padding at 768 and wrapped to "Meet the
+   AI" / "Workforce" to about 890px; its side padding is 1rem there. */
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  html[lang="en"] .lx-scope .lx-team-section .lx-story-text-holder .lx-heading-style-h4 { font-size: min(2rem, calc(3.97vw - 8.8px)); }
+}
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  html[lang="en"] .lx-scope .lx-team-section .lx-button.lx-is-secondary { padding-left: 1rem; padding-right: 1rem; }
+}
+
+/* workforce.html — the closing block of the team scenario (text, button and
+   the pink card with the orbit poster; `.lx-feature-grid` is on this page
+   only). From 768 the template sets it as two equal columns and stretches the
+   card to the height of the text column, while the poster is a landscape
+   picture at the card's width: at 768 the card was 344x643 with a 149px
+   picture at its top (422px tall in Chinese), and in its 344px column the
+   English heading read "A shared goal, / connected / work and a / coherent
+   result.". From 768 to 991 the block stacks as the template stacks it below
+   768: the heading has the full width ("A shared goal, connected / work and
+   a coherent result."), and the card, under the button, fits the poster.
+   From 992 to 1279 the columns stay, and the card fits the poster and sits
+   level with the middle of the text column (it was 512px tall around a
+   212px picture at 992); from 1280 the two already match. */
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .lx-scope .lx-feature-grid:has(.lx-v6-team-title) { grid-template-columns: 1fr; }
+}
+@media screen and (min-width: 992px) and (max-width: 1279px) {
+  .lx-scope .lx-feature-grid:has(.lx-v6-team-title) > .lx-feature-grid-item:has(> .lx-feature-grid-bg) { justify-content: center; }
+  .lx-scope .lx-feature-grid:has(.lx-v6-team-title) .lx-feature-grid-bg { height: auto; }
+}
+
+/* enterprise.html, English — the five management component titles (see the
+   balance rule above). Two of them still had no two-line split that fits:
+   "Account connection" is 174px at 19.2px, wider than the 143-174px columns
+   at 320-368, 480-576 and 768-776, so the title took three lines ("Account /
+   connection / & protection"); the copy now says "Linked accounts &
+   protection" (142px). "app management" is 152px, wider than the column at
+   320-330 and 480-515 ("Capability & app / management"): there the five
+   titles follow the column (18.6px at 320, 17.8px at 480) and are 1.2rem
+   everywhere else, so they read "Capability & / app management". */
+@media screen and (max-width: 479px) {
+  html[lang^="en"] .team-grid .team-content .h2._01.sm._600.lw { font-size: min(1.2rem, calc(6.08vw - 0.9px)); }
+}
+@media screen and (min-width: 480px) and (max-width: 767px) {
+  html[lang^="en"] .team-grid .team-content .h2._01.sm._600.lw { font-size: min(1.2rem, calc(4.05vw - 1.6px)); }
 }
 
 /* V7-LX-END */

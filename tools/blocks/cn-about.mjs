@@ -176,6 +176,12 @@
  *   `target="_blank"` is left exactly where the donor put it, as the workforce
  *   page leaves it: it is an attribute, not a word.
  *
+ *   V7-LX r2 supersedes the rest of this at render time: contact.html is only
+ *   the extraction-time placeholder. render() keeps the first three links with
+ *   the company's three real channels (website, WhatsApp, email — the footer's
+ *   list, from CONTACT_INFO) and neutral glyphs, and drops the last two, so no
+ *   network logo is drawn and no icon promises an account.
+ *
  * THE MOTION
  *   Three things move in this section. Two of them travel with the cut and one
  *   does not, and the one that does not is why this block ships a .css and a
@@ -199,6 +205,7 @@
  *                block exactly as cinery draws it at rest.
  */
 import { setText, setTextAll, DONORS } from '../block-lib.mjs';
+import { zhKeep as zhKeepWords } from '../lib-html.mjs';
 
 /** cinery's five placeholder social urls, in the order the row draws them. */
 const SOCIAL_URLS = [
@@ -324,7 +331,21 @@ export function render(frag, ctx) {
   const keep = (s) => (lang === 'zh'
     ? s.split(/(?<=，)/).map((c) => (c.length <= 11 ? `<span class="stargo-keep">${escapeHtml(c)}</span>` : escapeHtml(c))).join('')
     : escapeHtml(s));
-  const statement = `${keep(t(A.title))}<br/>${escapeHtml(t(A.desc))}${run}${keep(t(A.closing))}`;
+  /* V7-LX r2: the body between them breaks between words only on the Chinese
+     page: each word of two or more characters is its own `.stargo-keep` span
+     (tools/lib-html.mjs zhKeep; punctuation rides on the word before it), and
+     「STARGO WORK」 is one span. It read 「结」/「束。」 from 1024 up, 「需」/「要」
+     at 390, 「经」/「营」 at 430 and 768, 「STARGO」/「WORK」 at 320. Every word
+     is far shorter than the 320 line (twelve characters), so nothing can
+     overflow, and the spans survive the entrance's line split. */
+  const words = (s) => zhKeepWords(s, 'stargo-keep')
+    .replace('<span class="stargo-keep">STARGO</span> <span class="stargo-keep">WORK</span>', '<span class="stargo-keep">STARGO WORK</span>')
+    // the word list cuts 「报价单后」 as 报价|单后
+    .replace('<span class="stargo-keep">报价</span><span class="stargo-keep">单后</span>', '<span class="stargo-keep">报价单后</span>')
+    // and the product term 「数字员工」 as 数字|员工 (「数字」/「员工。」 at 320)
+    .replace('<span class="stargo-keep">数字</span><span class="stargo-keep">员工。</span>', '<span class="stargo-keep">数字员工。</span>');
+  const body = lang === 'zh' ? words(t(A.desc)) : escapeHtml(t(A.desc));
+  const statement = `${keep(t(A.title))}<br/>${body}${run}${keep(t(A.closing))}`;
   html = setText(html, 'cn-text-size-large', statement);
   if ((html.match(/<br\/>/g) ?? []).length !== 1) {
     throw new Error('cn-about: expected exactly one <br/> in the block — the one after the headline');
@@ -339,17 +360,50 @@ export function render(frag, ctx) {
 
   /* --------------------------------------------------- the social links --- */
 
-  /* Five links, and after `donor.images` all five go to contact.html. Their
-     accessible names should say so, and the name this site gives that page is
-     the one its own navigation uses — resolved by href so a renamed page cannot
-     leave five links called something the menu no longer says. */
-  const contact = C.NAV.find((n) => n.href === SOCIAL_HREF);
-  if (!contact) throw new Error(`cn-about: NAV has no ${SOCIAL_HREF} entry to name the five social links`);
-  const contactName = escapeHtml(t(contact.label));
-  for (const aria of DONOR_ARIA) {
-    const from = `aria-label="${aria}"`;
-    if (!html.includes(from)) throw new Error(`cn-about: the social row has no ${from}`);
-    html = html.split(from).join(`aria-label="${contactName}"`);
+  /* V7-LX r2: STARGO has no social accounts, and five network logos that all
+     opened the contact form promised profiles that do not exist. The row now
+     shows the company's three real channels, the ones the site footer lists
+     (C.CONTACT_INFO), each with a plain glyph of what it is and a name that
+     says where it goes, in the footer's own words: the website (a globe),
+     WhatsApp (a speech bubble) and email (an envelope). The first three
+     donor links are kept — their `data-w-id`s carry the glyph roll (IX2
+     MOUSE_OVER/OUT) — and the last two are removed, so the row stays a
+     centred row of equal circles. Both stacked copies of each glyph are
+     replaced, as the roll swaps one for the other. */
+  const CI = C.CONTACT_INFO;
+  if (!CI?.siteHref || !CI?.whatsappHref || !CI?.email) throw new Error('cn-about: copy.mjs CONTACT_INFO needs siteHref, whatsappHref and email');
+  const svg = (inner) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${inner}</svg>`;
+  const CHANNELS = [
+    { href: CI.siteHref, external: true, label: { zh: 'STARGO 企业官网', en: 'STARGO corporate website' },
+      glyph: svg('<circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9s1.3-6.4 3.8-9z"></path>') },
+    { href: CI.whatsappHref, external: true, label: { zh: '通过 WhatsApp 联系 STARGO WORK', en: 'WhatsApp STARGO WORK' },
+      glyph: svg('<path d="M20.5 11.6a8.4 8.4 0 0 1-12.2 7.5L3.5 20.5l1.4-4.6A8.4 8.4 0 1 1 20.5 11.6z"></path>') },
+    { href: `mailto:${CI.email}`, external: false, label: { zh: '发邮件给 STARGO WORK', en: 'Email STARGO WORK' },
+      glyph: svg('<rect x="3" y="5" width="18" height="14" rx="2.5"></rect><path d="m4 7 8 6 8-6"></path>') },
+  ];
+  {
+    const OPEN = '<div class="cn-social-media-wrapper">';
+    const at = html.indexOf(OPEN);
+    if (at < 0 || html.indexOf(OPEN, at + 1) >= 0) throw new Error('cn-about: expected one social row');
+    const end = html.indexOf('</a></div>', at);
+    if (end < 0) throw new Error('cn-about: the social row does not end with its fifth link');
+    const rows = html.slice(at + OPEN.length, end + 4).match(/<a\b[^>]*class="cn-social-link w-inline-block">[\s\S]*?<\/a>/g) ?? [];
+    if (rows.length !== 5 || rows.join('') !== html.slice(at + OPEN.length, end + 4)) throw new Error(`cn-about: the social row is not five adjacent links (${rows.length})`);
+    DONOR_ARIA.forEach((aria, i) => { if (!rows[i].includes(`aria-label="${aria}"`)) throw new Error(`cn-about: social link ${i + 1} is not "${aria}"`); });
+    const out = CHANNELS.map((ch, i) => {
+      const name = escapeHtml(ch.label[lang]);
+      let a = rows[i]
+        .replace(/aria-label="[^"]*"/, `aria-label="${name}" title="${name}"`)
+        .replace(`href="${SOCIAL_HREF}"`, `href="${escapeHtml(ch.href)}"${ch.external ? ' target="_blank" rel="noopener noreferrer"' : ''}`)
+        .replace(/\s*target="_blank"(?![^>]*rel=)/, '');
+      const glyphs = (a.match(/<svg\b[\s\S]*?<\/svg>/g) ?? []).length;
+      if (glyphs !== 2) throw new Error(`cn-about: social link ${i + 1} should stack two glyphs, found ${glyphs}`);
+      a = a.replace(/<svg\b[\s\S]*?<\/svg>/g, ch.glyph);
+      if (!a.includes(`href="${escapeHtml(ch.href)}"`)) throw new Error(`cn-about: social link ${i + 1} did not take its channel`);
+      return a;
+    }).join('');
+    html = html.slice(0, at + OPEN.length) + out + html.slice(end + 4);
+    if ((html.match(/class="cn-social-link w-inline-block"/g) ?? []).length !== 3) throw new Error('cn-about: the social row should hold the three channels');
   }
 
   /* -------------------------------------------------------- the button --- */

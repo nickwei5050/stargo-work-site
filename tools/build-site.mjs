@@ -140,6 +140,19 @@ function enSentences(text, lang) {
   const parts = text.split(/(?<=[.!?])\s+/);
   return parts.length < 2 ? text : parts.map((p) => `<span class="lx-v7-sentence">${p}</span>`).join(' ');
 }
+/* V7-LX r2: an English display line whose last word must not stand alone:
+   the space before that word is a no-break space, so the balanced heading
+   breaks one word earlier — "Observe / the workflow" (320-390), "not left /
+   to memory." (320), "Keep / useful methods." and "Withdraw / ineffective
+   changes." (320-1279) instead of a lone "workflow", "memory.", "methods."
+   or "changes.". css/stargo-fusion.css (V7-LX) sizes the closing card's two
+   lines and the big line so the joined pair fits its column. Chinese is
+   returned as it is. */
+function enGlue(text, lang) {
+  if (lang !== 'en') return text;
+  const at = text.lastIndexOf(' ');
+  return at < 0 ? text : `${text.slice(0, at)}\u00a0${text.slice(at + 1)}`;
+}
 const CHECK = 'assets/69a01660589c516ba5f0f917/69a9086623545093091785d8_check-icon.svg';
 const CROSS = 'assets/69a01660589c516ba5f0f917/69a91f28a82e2c7b982d5703_cancel-circle-icon.svg';
 
@@ -833,9 +846,9 @@ function lxPage(spec, lang, name) {
   spec.gradient.forEach((g, i) => {
     const re = new RegExp(`(class="lx-heading-style-h1 lx-_${i + 1}">)[^<]*(</h3>)`);
     if (!re.test(b)) throw new Error(`${name}: gradient heading ${i + 1}`);
-    b = b.replace(re, `$1${t(g)}$2`);
+    b = b.replace(re, `$1${enGlue(t(g), lang)}$2`);
   });
-  b = s(b, '>Is this you<', `>${t(spec.bigText)}<`);
+  b = s(b, '>Is this you<', `>${enGlue(t(spec.bigText), lang)}<`);
   const bubbleOriginals = ["I'll remember that for later", "It's too boring to document.", "I can't be bothered.", "I'll remember that", "No way I'm writing all that", 'Documenting can be a drag sometimes', 'IT Support', 'Logistics Analyst', "It's just not on my priority list", 'I prefer to keep it in my head..', "Maybe I'll get to it eventually.", "I'd rather focus on the fun parts."];
   const order = [7, 0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11]; // longest-first originals mapped back to the spec order
   bubbleOriginals.forEach((orig, i) => {
@@ -882,11 +895,18 @@ function lxPage(spec, lang, name) {
   b = s(b, '<h3 class="lx-heading-style-h1">As simple as talking</h3>', `<h3 class="lx-heading-style-h1">${enSentences(t(spec.feat2Sub), lang)}</h3>`);
   b = setLink(b, 'Get started', { href: spec.feat2Button.href, text: t(spec.feat2Button.label) });
   b = s(b, 'Your story, <br/>Your memories, <br/>Your moments', spec.feat2Lines.map(t).join(' <br/>'));
-  b = s(b, '>Your AI companion<', `>${t(spec.ctaTitle)}<`);
-  b = s(b, 'class="lx-cta-text lx-_2nd">As simple as talking</h4>', `class="lx-cta-text lx-_2nd">${t(spec.ctaSub)}</h4>`);
+  b = s(b, '>Your AI companion<', `>${enGlue(t(spec.ctaTitle), lang)}<`);
+  b = s(b, 'class="lx-cta-text lx-_2nd">As simple as talking</h4>', `class="lx-cta-text lx-_2nd">${enGlue(t(spec.ctaSub), lang)}</h4>`);
   b = s(b, 'class="lx-cta-logo-text">Lifelogx</div>', `class="lx-cta-logo-text">${t(spec.ctaLogo)}</div>`);
   b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
-  b = s(b, 'The smartest friend you’ll ever have.', zhTail(t(spec.ctaDesc), lang));
+  // V7-LX: on the Chinese page the paragraph also breaks between words only
+  // (<wbr> + keep-all, css/stargo-fusion.css V7-LX): its column is narrower
+  // since it stopped running under the portrait, and it read 「是」/「否」.
+  // The word list cuts 「从成败中复盘出」 as 从|成败|中复|盘出; it is kept as
+  // 「从成败中」「复盘出」 (「复」/「盘」 at 820 otherwise).
+  b = s(b, 'The smartest friend you’ll ever have.', lang === 'zh'
+    ? zhTail(t(spec.ctaDesc), lang).replace(/^[^<]+/, (head) => zhWbr(head)).replace('从<wbr>成败<wbr>中复<wbr>盘出', '从成败中<wbr>复盘出')
+    : t(spec.ctaDesc));
   // The plain-explanations section (see lxContextSection) opens the 288-roles
   // section's slot in the document: after the "no writing" band, before the
   // team card. The marker is that section's own opening, which is unique.
@@ -901,22 +921,21 @@ function lxPage(spec, lang, name) {
     const tagged = TEAM.replace('<div class="lx-section">', '<div class="lx-section lx-team-section">');
     b = b.slice(0, at) + lxContextSection(C.LX_INTELLIGENCE_CONTEXT, t) + tagged + b.slice(at + TEAM.length);
   }
-  // Imagery stays the template's own (owner decision, 2026-09-06): the phone screens, the
+  // Imagery stays the template's own (owner decision, 2026-09-06): the phone frames, the
   // translucent overlays of the gradient and "no writing" sections, the closing card's image and
   // the avatars in the scenario bubbles are all part of the composition the pink palette was
-  // designed around. Only their template alt text goes.
+  // designed around. Only their template alt text goes. The painted phone screens are the
+  // exception (V7-LX, below): they carried readable template interfaces and brand names.
   if ((b.match(/lx-author-image-medium/g) ?? []).length !== 48) throw new Error(`${name}: avatar bubbles changed`);
-  /* V7-LX, the one exception on the Chinese page: the four phone-screen
-     pictures inside the three phone mockups (hero, team card, phone features)
-     have the template's English interface painted in — "Danny Hopkins",
-     "Messages", "Your wall collection", "New faces on here". STARGO's four
-     phone-format concept pictures (887x1774, text-free) take those slots
-     there: the screens are object-fit: cover in the same frame, so the crop
-     and the cycling animation are unchanged, and they stay decorative
-     (alt=""). The English page keeps the template's screens. The hand-held
-     phone of the "no writing" band (no-writing-sc) is a cut-out composite
-     with its own English text and has no text-free counterpart; it stays. */
-  if (lang === 'zh') {
+  /* V7-LX, the one exception, on both pages: the four phone-screen pictures
+     inside the three phone mockups (hero, team card, phone features) have the
+     template's interface painted in — a chat that names a design tool, a
+     message list with addresses and Polish lines, a card wall with a video
+     app's name, a dating screen ("New faces on here"). STARGO's four
+     phone-format concept pictures (887x1774, text-free) take those slots: the
+     screens are object-fit: cover in the same frame, so the crop and the
+     cycling animation are unchanged, and they stay decorative (alt=""). */
+  {
     const SCREENS = [
       ['iPhone%2013%20Pro%20Max%20-%203', MOBILE.inquiry],   // a chat → conversation becomes customer knowledge
       ['iPhone%2013%20Pro%20Max%20-%204', MOBILE.approvals], // a message list → a decision held at an approval gate
@@ -927,6 +946,22 @@ function lxPage(spec, lang, name) {
       if ((b.match(new RegExp(`<img\\b[^>]*${key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'g')) ?? []).length !== 3) throw new Error(`${name}: expected the phone screen ${key} in three mockups`);
       b = swapImg(b, key, src);
     }
+  }
+  /* V7-LX: the hand-held phone of the "no writing" band (no-writing-sc) is a
+     cut-out composite whose screen carries the template's English interface
+     and a video app's name, on both pages. The composite stays (hand, frame,
+     cut-out edge); a text-free screen (MOBILE.core, shared context: the band
+     says 「不再丢上下文」) is laid over its screen. The layer is a sibling of
+     the photograph with the photograph's own class, so the band's IX2
+     (lx-a-68, `.lx-no-writing-image`, children of the trigger) moves and
+     scales both together, and it copies the photograph's initial transform.
+     css/stargo-fusion.css (V7-LX) places the screen on the photograph's
+     object-fit box, rounds it and keeps the fingertips in front. */
+  {
+    const re = /(<img src="assets\/6929b6c693cb856e01ef7c05\/694d149575edcf4ee403b317_no-writing-sc\.avif"[^>]*?style="([^"]*)"[^>]*class="lx-no-writing-image"\/>)/g;
+    const hits = b.match(re) ?? [];
+    if (hits.length !== 1) throw new Error(`${name}: expected one hand-held phone photograph (no-writing-sc), found ${hits.length}`);
+    b = b.replace(re, (m, tag, style) => `${tag}<div class="lx-no-writing-image stargo-nw-screen" style="${style}" aria-hidden="true"><div class="stargo-nw-frame"><img src="${MOBILE.core}" loading="lazy" alt="" class="stargo-nw-art"/></div></div>`);
   }
   b = b.replace(/<div([^>]*)class="([^"]*\blx-gradient-section\b[^"]*)"/, '<div id="lx-more"$1class="$2"');
   b = b.replace(/<div class="lx-cta-wrapper">/, '<div id="lx-evolution" class="lx-cta-wrapper">');

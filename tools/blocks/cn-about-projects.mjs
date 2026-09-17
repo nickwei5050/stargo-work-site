@@ -184,6 +184,14 @@
  *                        slot: it names what the tile is about, which is what
  *                        qx-projects does with the same kind of slot ("The
  *                        category slot is not a category").
+ *                        V7-LX r2 (2026-09-17): the English names are the
+ *                        workforce page's role words — Market Signal AI /
+ *                        Quotation AI / Follow-up AI / Coordination AI — since
+ *                        the site's term is "AI employee", not "agent"; the
+ *                        pill gives the title its whole width but the arrow
+ *                        and each title keeps its last two words (「AI 员工」)
+ *                        together, so the two- and three-line breaks above
+ *                        ("MARKET / SIGNAL / AGENT", 「报价 AI」/「员工」) are gone.
  *
  *     tile ×4, href      `project_visage.html` and its three siblings — pages
  *                        this site does not have → `workforce.html`, the page
@@ -935,7 +943,19 @@ export function render(frag, ctx) {
        1.25rem, the longest of the four — MARKET SIGNAL AGENT — is 248px in the
        298px this line has at 992, the narrowest width the two-column tile grid
        is used at. */
-    let u = setText(unit, 'cn-text-style-allcaps', escapeHtml(t(role.label)));
+    /* V7-LX r2: the title keeps its ending together. Chinese: 「AI 员工」 is one
+       `.stargo-keep` span, as on workforce.html (it read 「报价 AI」/「员工」 at
+       320). English (the workforce page's role words, "Quotation AI", not
+       "Agent"): the last two words are one `.stargo-nobr` span, so "AI" is
+       never alone on a line and "Follow-up" never breaks at its hyphen. Both
+       spans keep the ordinary space, so the text is unchanged. The pill gives
+       the title all of its width but the arrow (css/stargo-fusion.css V7-LX). */
+    const raw = t(role.label);
+    const label = lang === 'zh'
+      ? escapeHtml(raw).replace(/ AI 员工$/, ' <span class="stargo-keep">AI 员工</span>')
+      : escapeHtml(raw).replace(/(^|\s)(\S+ \S+)$/, '$1<span class="stargo-nobr">$2</span>');
+    if (!label.includes('<span')) throw new Error(`cn-about-projects: tile ${i + 1}: the label "${raw}" has no ending to keep together`);
+    let u = setText(unit, 'cn-text-style-allcaps', label);
 
     /* The year, and then the separator that pointed at it. Both elements, both
        classes and both `#w-node-…` placements stay exactly where the donor put
