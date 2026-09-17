@@ -112,6 +112,17 @@ function zhTail(text, lang) {
   const m = text.match(/^([\s\S]*[，。；：])([^，。；：<>]+。)$/);
   return m ? `${m[1]}<span class="lx-v7-tail">${m[2]}</span>` : text;
 }
+/* V7-LX: an English display line of two or more short sentences, one
+   `.lx-v7-sentence` span each (inline-block, balanced; css/stargo-fusion.css
+   V7-LX), so a line break falls between sentences before it falls inside
+   one: "Know the / company. Keep / work moving." became "Know the company." /
+   "Keep work moving.". Chinese and one-sentence lines are returned as they
+   are. */
+function enSentences(text, lang) {
+  if (lang !== 'en') return text;
+  const parts = text.split(/(?<=[.!?])\s+/);
+  return parts.length < 2 ? text : parts.map((p) => `<span class="lx-v7-sentence">${p}</span>`).join(' ');
+}
 const CHECK = 'assets/69a01660589c516ba5f0f917/69a9086623545093091785d8_check-icon.svg';
 const CROSS = 'assets/69a01660589c516ba5f0f917/69a91f28a82e2c7b982d5703_cancel-circle-icon.svg';
 
@@ -759,7 +770,7 @@ function lxPage(spec, lang, name) {
   for (const { href } of [spec.store1, spec.store2]) {
     b = s(b, `<a href="${href}" class="lx-big-button`, `<a href="${href}" data-stargo-anchor="" class="lx-big-button`, { count: 1 });
   }
-  b = s(b, 'The friend who never forgets.', t(spec.heroDesc));
+  b = s(b, 'The friend who never forgets.', enSentences(t(spec.heroDesc), lang));
   b = s(b, 'Natural, human-like chats that keep users engaged and understood.', t(spec.features[0].text));
   b = s(b, '<h3 class="lx-expandable-text">Interaction</h3>', `<h3 class="lx-expandable-text">${t(spec.features[0].title)}</h3>`);
   b = s(b, 'Smooth, intuitive actions that make every tap feel effortless.', t(spec.features[1].text));
@@ -837,7 +848,7 @@ function lxPage(spec, lang, name) {
     b = b.replace(re, `$1${t(spec.words[i])}$2`);
   });
   b = s(b, '<h3 class="lx-heading-style-h1 lx-pink">Add your Notes in minutes</h3>', `<h3 class="lx-heading-style-h1 lx-pink">${t(spec.feat2Title)}</h3>`);
-  b = s(b, '<h3 class="lx-heading-style-h1">As simple as talking</h3>', `<h3 class="lx-heading-style-h1">${t(spec.feat2Sub)}</h3>`);
+  b = s(b, '<h3 class="lx-heading-style-h1">As simple as talking</h3>', `<h3 class="lx-heading-style-h1">${enSentences(t(spec.feat2Sub), lang)}</h3>`);
   b = setLink(b, 'Get started', { href: spec.feat2Button.href, text: t(spec.feat2Button.label) });
   b = s(b, 'Your story, <br/>Your memories, <br/>Your moments', spec.feat2Lines.map(t).join(' <br/>'));
   b = s(b, '>Your AI companion<', `>${t(spec.ctaTitle)}<`);

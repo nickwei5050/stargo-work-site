@@ -2889,6 +2889,39 @@ html[lang^="zh"] .lx-scope .lx-v7-tail { display: inline-block; }
    width, 625rem at least, so no copy is squeezed. */
 .lx-scope .lx-cta-author-list { width: max-content; }
 
+/* intelligence.html, English display lines of two sentences (the hero line
+   and 「Divide the work. Finish it together.」): each sentence is a span
+   (tools/build-site.mjs enSentences), an inline-block that wraps and
+   balances inside itself, so lines break between the sentences first.
+   Before: "Divide the / work. Finish / it together." at 320 and "Know the /
+   company. Keep / work moving." at 1440 and 1920.
+   - The hero line sits in the grid's narrow right column (277px at 1440,
+     263 at 1280), and each sentence is about 330px at 38.4px. From 1280 the
+     line's box starts 6rem left of that column (a percentage width and a
+     negative margin, so the grid's own column sizes do not change), which is
+     clear of the phone, so it reads "Know the company." / "Keep work
+     moving."; the box's right edge stays where it was.
+     Between 992 and 1279 the phone is too close, and the line keeps its
+     column: "Know the / company." / "Keep work / moving.".
+   - The team heading pair is 2.7rem on a phone; "Finish it together." is
+     339px there, wider than a 320-360px screen's 288-328px. Below 375px the
+     pair is 2.25rem, and it reads "288 AI roles." / "Divide the work." /
+     "Finish it together.". */
+html[lang="en"] .lx-scope .lx-v7-sentence {
+  display: inline-block;
+  text-wrap: balance;
+}
+@media screen and (min-width: 1280px) {
+  html[lang="en"] .lx-scope .lx-hero-home-text-holder > .lx-hero-desc {
+    width: calc(100% + 6rem);
+    max-width: none;
+    margin-left: -6rem;
+  }
+}
+@media screen and (max-width: 374px) {
+  html[lang="en"] .lx-scope .lx-team-section .lx-flex-text-center .lx-heading-style-h1 { font-size: 2.25rem; }
+}
+
 /* V7-LX-END */
 
 
