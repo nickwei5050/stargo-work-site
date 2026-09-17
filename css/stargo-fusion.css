@@ -3039,6 +3039,46 @@ html[lang^="zh"] .lx-scope .lx-v6-roster-intro {
    about 70%, so the fade runs from 68% to 84%.
    The cards' motion is IX2's and is untouched; where a browser has no
    scroll-driven animations, the line behaves as before. */
+/* workforce.html, English — the three scenario cards and two short lines.
+   - Each card heading is two clauses (tools/build-site.mjs writes one
+     `.lx-v7-clause` span per clause), and each clause keeps to its own line:
+     "Check the results," / "then a person decides" rather than "…then a
+     person" / "decides" (768-1920). The heading box is the card's 75% less
+     its padding, 280px from 768 up, and the longer clause is 325px at 2rem,
+     so the English text box is 90% of the card (340px); between 480 and
+     599 the card is narrower and the headings are 1.75rem. Below 480 the
+     headings are 1.25rem (1.125rem below 360) in a box that runs to the
+     card's right padding (185px at 320), where every clause fits one line.
+   - The label over each heading keeps "scenario · 01" together (no-break
+     spaces in the build); at 320 it read "Illustrative scenario" / "· 01".
+   - The pink panel heading, "Roles, teams and a desktop", is balanced: it
+     left "desktop" alone at 360, 390, 1440 and 1920.
+   - The role card in the desktop collage (hover shows its name) is 9rem
+     from 992 up, where "Reporting AI" wrapped; it is 10rem there, the size
+     the template gives it from 768 to 991, where the name fits one line. */
+html[lang="en"] .lx-scope .lx-v7-clause {
+  display: inline-block;
+  text-wrap: balance;
+}
+html[lang="en"] .lx-scope .lx-answers-card-text { width: 90%; }
+html[lang="en"] .lx-scope .lx-v6-panel-title { text-wrap: balance; }
+@media screen and (max-width: 479px) {
+  html[lang="en"] .lx-scope .lx-answers-card-text {
+    width: auto;
+    padding-right: 1.25rem;
+  }
+  html[lang="en"] .lx-scope .lx-answers-card-text .lx-heading-style-h4 { font-size: 1.25rem; }
+}
+@media screen and (max-width: 359px) {
+  html[lang="en"] .lx-scope .lx-answers-card-text .lx-heading-style-h4 { font-size: 1.125rem; }
+}
+@media screen and (min-width: 480px) and (max-width: 599px) {
+  html[lang="en"] .lx-scope .lx-answers-card-text .lx-heading-style-h4 { font-size: 1.75rem; }
+}
+@media screen and (min-width: 992px) {
+  .lx-scope .lx-v6-collage-card { width: 10rem; }
+}
+
 @keyframes lx-v7-team-reveal {
   from { opacity: 0; }
   to { opacity: 1; }

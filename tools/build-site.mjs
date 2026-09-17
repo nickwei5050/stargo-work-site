@@ -991,15 +991,24 @@ PAGES['workforce.html'] = (lang) => {
   b = s(b, 'From quick notes to deep thoughts, nothing slips through the cracks.', t(W.cardB.text));
 
   /* The three stacked cards: the team scenario in M11's order, each card
-     labelled an illustration with its step number (V6 §6.3). */
+     labelled an illustration with its step number (V6 §6.3).
+     V7-LX: the label's last word, the dot and the number never part (no-break
+     spaces): "Illustrative scenario" / "· 01" at 320. English headings are
+     written as clauses, one `.lx-v7-clause` span each (inline-block,
+     css/stargo-fusion.css V7-LX), so a heading breaks at its comma first:
+     "Check the results," / "then a person decides" instead of a lone
+     "decides" (768-1920). */
+  const clauses = (text) => (lang === 'en' && text.includes(', ')
+    ? text.split(/(?<=,) /).map((c) => `<span class="lx-v7-clause">${escapeHtml(c)}</span>`).join(' ')
+    : escapeHtml(text));
   if (W.answersCards.length !== 2) throw new Error('workforce: two rotating cards follow the stacked one');
   [['Ready‑made features your usersalready expect.', W.stackedCard],
    ['Chatting on the fly with your AI companion', W.answersCards[0]],
    ['Quickly capture and share ideas', W.answersCards[1]]]
     .forEach(([orig, copy], i) => {
       b = s(b, `<h4 class="lx-heading-style-h4">${orig}</h4>`,
-        `<div class="lx-subtext lx-v6-scene-label">${escapeHtml(t(W.sceneLabel))} · 0${i + 1}</div>`
-        + `<h4 class="lx-heading-style-h4">${escapeHtml(t(copy))}</h4>`, { count: 1 });
+        `<div class="lx-subtext lx-v6-scene-label">${escapeHtml(t(W.sceneLabel)).replace(/ (?=[^ ]*$)/, '\u00a0')}\u00a0·\u00a00${i + 1}</div>`
+        + `<h4 class="lx-heading-style-h4">${clauses(t(copy))}</h4>`, { count: 1 });
     });
   /* The second card's picture was two chat bubbles with English words painted
      into the image ("That's correct", "Ok"), on both language pages. The
