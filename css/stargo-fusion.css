@@ -2837,4 +2837,29 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
        its computed style is what it was. */
 html[lang^="zh"] .utility-page-content h1.h2 { text-wrap: balance; }
 
+/* H11. Contact page, the photo card's head row: the STARGO mark and the card's
+        label. The label wrapped inside its half of the row at 768
+        (「(从一条业务开/始)」) and touched the mark (「STARGO(Start with one)」
+        at 768 in English). The label now keeps its one line and a 16px gap;
+        where the two do not fit side by side it moves under the mark. */
+.stargo-contact-page .testimonials-card .flex-btw.make-flx { flex-wrap: wrap; column-gap: 16px; row-gap: 8px; }
+.stargo-contact-page .testimonials-card .flex-btw.make-flx > .top-text.for-tst { white-space: nowrap; }
+/*      The quote is plain text (not split per letter); in Chinese it ended
+        「…可验收的结/果。」」 at 768 and 1024. `pretty` reworks the last lines. */
+html[lang^="zh"] .stargo-contact-page .testimonials-card .card-testi > .top-text.for-tst { text-wrap: pretty; }
+
+/* H12/H13. Contact page on phones.
+   - The form card sat 16px inside the column (`.form-amin`'s padding-inline,
+     written for the white Mono form this card replaced), so the stacked form
+     was 32px narrower than the photo card above it and its fields lost the
+     same width (225px at 320). The card now spans the column like the photo
+     card; its own 24px padding keeps the fields off its edge.
+   - The message box is 2 rows plus cinery's 32px/64px padding (138px). The
+     English example text runs to five lines at 320 and reached the bottom
+     border. 200px gives the five lines the box's own bottom padding back. */
+@media (max-width: 767px) {
+  .stargo-contact-page .form-amin { padding-inline: 0; }
+  .stargo-contact-page .cn-contact .cn-form-input.cn-is-text-area { min-height: 200px; }
+}
+
 /* V7-HOME-END */

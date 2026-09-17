@@ -92,3 +92,17 @@
   font-weight: var(--_font-details---font-weight--semibold);
   letter-spacing: var(--_font-details---font-letter-spacing--heading-two);
 }
+
+/* ------------------------------- 4. the two period labels are now tabs -- */
+
+/* tools/blocks/rk-price-tiers.js makes 首年价格 / 续费 (First-year total /
+   Renewal) the switch's keyboard and touch controls. As text they are 22.7px
+   tall; a transparent layer 6px above and below makes each a 34px target on a
+   phone without moving a pixel of renok's row: the labels are already
+   `position: relative`, and a pseudo-element takes no room. */
+.rk-price-tiers .rk-rt-monthly-wrap::before,
+.rk-price-tiers .rk-rt-yearly-wrap::before {
+  content: "";
+  position: absolute;
+  inset: -6px -4px;
+}
