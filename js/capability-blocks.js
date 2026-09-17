@@ -477,7 +477,15 @@
    question as its name, aria-controls on the answer, aria-expanded kept in
    step with the answer's real height (so it follows IX2's own tween), and
    Enter or Space doing what a click does. The opening and closing are still
-   IX2's. */
+   IX2's.
+
+   A click inside an open answer does not reach the row, as in the catalogue
+   (js/stargo-catalogue.js). IX2 treats any click in the row as the toggle, so
+   a tap on a paragraph, or a drag to select a sentence, collapsed an answer
+   several hundred pixels tall under the reader. The heading and the plus sit
+   outside the answer and still toggle; links inside an answer are taken by
+   the capture-phase handler below first, and the address path opens a row
+   with row.click(), which starts on the row itself. */
 (function () {
   var root = document.getElementById('story-5');
   if (!root || !root.querySelector('.cn-accordion-content-item[id^="creative-"]')) return;
@@ -493,6 +501,7 @@
       var heading = row.querySelector('.cn-accordion-heading');
       var wrap = row.querySelector('.cn-accordion-content-wrap');
       if (!plus || !heading || !wrap) return;
+      wrap.addEventListener('click', function (e) { e.stopPropagation(); });
       heading.id = row.id + '-title';
       wrap.id = row.id + '-answer';
       plus.setAttribute('role', 'button');
