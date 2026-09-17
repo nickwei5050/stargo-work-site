@@ -217,12 +217,14 @@ export function render(frag, ctx) {
      site's pricing page: the first shows what a tier costs in year one, the
      second what it renews at — a figure, 联系我们 when the renewal is quoted,
      or the tier's own 定制 when the whole plan is custom. Reproduced here so
-     the band and the page below it cannot state different money. */
+     the band and the page below it cannot state different money. A quoted
+     renewal is a phrase, not a yearly figure, so it carries no 「/ 年」 unit
+     (V7-HOME: it read 「联系我们 / 年」, "Ask us / year"). */
   const unitOf = (u) => (u === 'year' ? t(P.unitYear) : u === 'first' ? t(P.unitFirst) : '');
   const firstPrice = (p) => t(p.price);
   const firstUnit = (p) => unitOf(p.unit);
   const renewPrice = (p) => (p.renewal === 'ask' ? t(P.renewalPrice) : p.renewal === 'custom' ? t(p.price) : p.renewal);
-  const renewUnit = (p) => (p.renewal === 'ask' ? t(P.unitYear) : unitOf(p.unit === 'first' ? 'year' : p.unit));
+  const renewUnit = (p) => (p.renewal === 'ask' ? '' : unitOf(p.unit === 'first' ? 'year' : p.unit));
   for (const p of tiers) {
     for (const [what, v] of [['price', firstPrice(p)], ['renewal', renewPrice(p)]]) {
       if (typeof v !== 'string' || !v) throw new Error(`rk-price-tiers: tier ${t(p.name)} has no ${what}`);

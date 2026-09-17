@@ -341,6 +341,7 @@ function scripts(html) {
   }
   if (!out.includes('js/stargo-forms.js')) out = out.replace('</body>', '<script src="js/stargo-forms.js"></script></body>');
   if (!out.includes('js/stargo-tabs.js')) out = out.replace('</body>', '<script src="js/stargo-tabs.js"></script></body>');
+  if (out.includes('id="stargo-side-menu"') && !out.includes('js/stargo-side-menu.js')) out = out.replace('</body>', '<script src="js/stargo-side-menu.js"></script></body>');
   if (out.includes('data-stargo-video') && !out.includes('js/stargo-media.js')) out = out.replace('</body>', '<script src="js/stargo-media.js"></script></body>');
   out = out.replace(
     'const nav = document.querySelector(".menu-bottom");',
@@ -367,6 +368,62 @@ const SOCIAL_LABELS = {
   whatsapp: { zh: '通过 WhatsApp 联系 STARGO WORK', en: 'WhatsApp STARGO WORK' },
   site: { zh: 'STARGO 企业官网', en: 'STARGO corporate website' },
 };
+const socialKind = (href) => (href.startsWith('mailto:') ? 'mail' : href.includes('wa.me/') ? 'whatsapp' : 'site');
+
+/* The icon on each of those buttons says where it goes. The template drew an
+   Instagram camera, an X logo and a third-party star on them; STARGO has no
+   accounts there, and the buttons lead to the corporate website, WhatsApp and
+   e-mail. Each now carries a plain line glyph for its destination — a globe, a
+   speech bubble, an envelope — drawn in the template's icon style: white, 16px,
+   centred in the same 40px round tile (the X tile's square `sq` variant goes,
+   so the three match), and still the `.social-icon` the template's hover lift
+   moves. The glyph is decoration; the button's name is its aria-label.
+   The about page's intro card shows the same three channels (V7-LX,
+   tools/blocks/cn-about.mjs CHANNELS): the paths below are that card's paths,
+   point for point, so the site draws one icon set. */
+const SOCIAL_GLYPH = (paths) => `<svg class="social-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${paths}</svg>`;
+const SOCIAL_ICONS = {
+  site: SOCIAL_GLYPH('<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9s1.3-6.4 3.8-9z"/>'),
+  whatsapp: SOCIAL_GLYPH('<path d="M20.5 11.6a8.4 8.4 0 0 1-12.2 7.5L3.5 20.5l1.4-4.6A8.4 8.4 0 1 1 20.5 11.6z"/>'),
+  mail: SOCIAL_GLYPH('<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/>'),
+};
+const TEMPLATE_SOCIAL_ART = /instagram%20|twitter%20|_contra\.png/;
+
+function socialIcons(html) {
+  const out = html.replace(/<a\b[^>]*\bclass="social-wrapper\b[^"]*"[^>]*>[\s\S]*?<\/a>/g, (a) => {
+    const href = (a.match(/href="([^"]*)"/) || [])[1] || '';
+    const img = /<img\b[^>]*\bclass="social-icon\b[^"]*"[^>]*\/>/;
+    if (!img.test(a)) throw new Error('chrome: a social button has no icon to replace');
+    return a.replace(/class="social-wrapper sq /, 'class="social-wrapper ').replace(img, SOCIAL_ICONS[socialKind(href)]);
+  });
+  if (TEMPLATE_SOCIAL_ART.test(out)) throw new Error('chrome: a template social-network icon survives');
+  return out;
+}
+
+/**
+ * The desktop side menu (from 992px): the header's two-line icon opens it, the
+ * round close button closes it — Webflow click interactions on plain <div>s.
+ * The icon becomes a named button that says what it controls, the close button
+ * a named button, and the menu and the close button start `inert`: the menu
+ * sits behind the page while closed, and its links (at opacity 0) used to be
+ * the first sixteen Tab stops of every desktop page. js/stargo-side-menu.js
+ * lifts `inert` while the menu is open and handles Enter, Space and Escape.
+ * The 404 page has the icon but no menu, and is left as it is.
+ */
+const SIDE_MENU_LABELS = { open: { zh: '菜单', en: 'Menu' }, close: { zh: '关闭菜单', en: 'Close menu' } };
+function sideMenu(html, lang) {
+  if (!html.includes('<div class="menu-wrapper">')) return html;
+  const one = (out, from, to, what) => {
+    const n = out.split(from).length - 1;
+    if (n !== 1) throw new Error(`chrome: expected one ${what}, found ${n}`);
+    return out.replace(from, to);
+  };
+  let out = html;
+  out = one(out, '<div class="menu-wrapper">', '<div class="menu-wrapper" id="stargo-side-menu" inert="">', 'side menu');
+  out = one(out, 'class="circle-wrap">', `class="circle-wrap" role="button" tabindex="0" aria-label="${SIDE_MENU_LABELS.open[lang]}" aria-expanded="false" aria-controls="stargo-side-menu">`, 'side menu icon');
+  out = one(out, 'class="fixed-close-button">', `class="fixed-close-button" role="button" tabindex="0" aria-label="${SIDE_MENU_LABELS.close[lang]}" inert="">`, 'side menu close button');
+  return out;
+}
 /* The honeypot input's accessible name (tools/blocks/cn-contact.mjs and
    formMarkup below both write it in English). The wrapper is aria-hidden and
    off-screen, but the name is still page text. */
@@ -382,7 +439,7 @@ function linkHygiene(html, lang) {
     const href = (tag.match(/href="([^"]*)"/) || [])[1] || '';
     const external = /^(https?:)?\/\//.test(href) || /^(mailto|tel):/.test(href);
     if (/\bsocial-wrapper\b/.test(tag)) {
-      const label = SOCIAL_LABELS[href.startsWith('mailto:') ? 'mail' : href.includes('wa.me/') ? 'whatsapp' : 'site'][lang];
+      const label = SOCIAL_LABELS[socialKind(href)][lang];
       tag = tag.replace('<a ', `<a aria-label="${label}" title="${label}" `);
     }
     if (!external) return tag.replace(/\s*target="_blank"/g, '');
@@ -545,8 +602,10 @@ export function applyChrome(html, { lang, current }) {
   for (const [a, b] of CHROME) out = opt(out, a, b[lang]);
   out = wordmark(out);
   out = chromeImagery(out);
+  out = sideMenu(out, lang);
   out = scripts(out);
   out = linkHygiene(out, lang);
+  out = socialIcons(out);
   out = formMarkup(out, lang);
   if (lang === 'zh') out = zhRuntimeNames(zhFullStops(out));
   out = uniqueLayoutIds(out);

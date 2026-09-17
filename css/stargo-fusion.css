@@ -4744,4 +4744,144 @@ html[lang^="en"] .cn-reviews p.cn-text-size-large { text-wrap: balance; }
   .stargo-contact-page .cn-contact .cn-form-input.cn-is-text-area { min-height: 200px; }
 }
 
+/* ---- V7-HOME round 2 ---------------------------------------------------- */
+
+/* H20. Chinese phrases kept whole in two headings the reveal splits into one
+        box per character (so `word-break` cannot reach them):
+   - the homepage's (从哪里开始？) heading, whose words the builder wraps in
+     `.zh-keep` (it broke 「订/单交付」 at 768–1440 and 「交/付」 at 390);
+   - the footer's newsletter heading on every Chinese page, three phrases
+     (tools/copy.mjs CHROME): it broke 「产品进展第一 / 时间通知你。」 at
+     768–940. It stays on one line where it fits and otherwise breaks between
+     phrases. */
+html[lang^="zh"] :is(#compare, .footer) .zh-keep { white-space: nowrap; }
+
+/* H21. The desktop side menu's two buttons (tools/chrome.mjs sideMenu,
+        js/stargo-side-menu.js) show the site's focus ring from the keyboard.
+        The menu icon is a 45×12 pair of lines, so the ring stands off it. */
+.last-part .circle-wrap[role="button"] { cursor: pointer; }
+.last-part .circle-wrap[role="button"]:focus-visible { outline-offset: 10px; border-radius: 4px; }
+.fixed-close-button[role="button"]:focus-visible { outline-offset: 4px; border-radius: 50%; }
+
+/*      The 404 page's header is Mono's `.absolute-element`, not the
+        `.navigation-top` every other page has, so the header fixes near the top
+        of this file ("Navigation labels", "Top navigation: nine items") never
+        reached it: the English labels were squeezed into the template's
+        four equal columns and clipped at their left edge ("ntelligence",
+        "apabilities") at 1280–1920. The same rules, for that wrapper. */
+@media (min-width: 992px) {
+  .absolute-element > .navbar .nav-menu.first .button-link { flex-shrink: 0; }
+  .absolute-element > .navbar { grid-template-columns: 1fr auto 1fr; }
+  .absolute-element > .navbar > .make-grid { grid-column: 2 / 3; width: max-content; }
+  .absolute-element > .navbar > .last-part { grid-column: 3 / 4; }
+  .absolute-element > .navbar > .make-grid > .nav-menu.first { width: max-content; justify-content: center; }
+}
+@media (min-width: 992px) and (max-width: 1439px) {
+  html[lang="en"] .absolute-element > .navbar .nav-menu.first { grid-column-gap: 10px; }
+  html[lang="en"] .absolute-element > .navbar .navigation-text-main { font-size: 15px; }
+}
+@media (min-width: 992px) and (max-width: 1279px) {
+  html[lang="en"] .absolute-element > .navbar .nav-menu.first { grid-column-gap: 8px; }
+  html[lang="en"] .absolute-element > .navbar .navigation-text-main { font-size: 14px; }
+}
+
+/*      …and its footer tagline. Below 992px Mono lets the 404 block shrink to
+        its content, so on a tall phone (390×844, 430×932) the footer began
+        above the middle of the screen and the tagline's reveal, which starts
+        when its top passes the middle, never started: its letters stayed at
+        opacity 0. The block keeps at least one screen, as it does from 992
+        (the template's own 100vh), so the footer arrives by scrolling. */
+@media (max-width: 991px) {
+  .utility-page-wrap { min-height: 100vh; min-height: 100svh; }
+}
+
+/* H22. Pricing page, Chinese.
+   - FAQ questions: the builder marks their word boundaries (<wbr>) and they
+     break only there — 「模型费用包/含在内吗？」 and 「多品/牌怎么办？」 split
+     words at 320.
+   - The struck-through 「按工具计价」 in the 288 AI 员工 card was squeezed to
+     「按工/具计/价」 beside ¥10,000 at 320: it keeps one line and moves above
+     the price where the two do not fit side by side, and 「/ 年」 keeps one line.
+   - The footer's consent note is `pretty` like on every other Chinese page
+     (rule "3. Chinese orphans" leaves this page out for its plan cards); it
+     ended 「…处理你的申/请。」 at 1024–1920. */
+html[lang^="zh"] .sc-page .faq .heading-style-h6 { word-break: keep-all; }
+.cn-price-card .cn-price-block { flex-wrap: wrap; }
+.cn-price-card .cn-price-block > .cn-price-text,
+.cn-price-card .cn-price-wrap > .cn-text-size-small { white-space: nowrap; }
+html[lang^="zh"] .stargo-form-consent { text-wrap: pretty; }
+
+/*      English FAQ questions ended on one word below 340px ("…/ unlimited?",
+        "…/ available?", "…/ done?"): the question column was 170px. The list's
+        own inset goes there, so the cards line up with the heading above
+        them and the column is 194px, as wide as at 340. */
+@media (max-width: 339px) {
+  .sc-page .faq .faq-list-wrapper { padding-inline: 0; }
+}
+
+/* H23. Pricing comparison table, Chinese: labels and values break only at the
+        word marks the block writes (tools/blocks/rk-price-compare.mjs) and at
+        their spaces — 「中英文 + 3 个语/种」, 「云端工作/台」, 「个标/准」,
+        「企业知/识」 split words at every width. `anywhere` is only the belt for
+        a word longer than its track. The plan names in the header row are
+        centred in their tag, so "Global / Acquisition" on two lines (480–990)
+        sits under its tag as the one-line names do. */
+html[lang^="zh"] .rk-price-compare .rk-rt-chart-left-col .rk-rt-text-color-premium-grey,
+html[lang^="zh"] .rk-price-compare .rk-rt-chart-columns > .w-layout-hflex {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+.rk-price-compare .rk-rt-chart-top-tag .rk-rt-text-style-h6 { text-align: center; }
+
+/* H24. Homepage #loop, Chinese: the rotating word (「报价。」「履约。」「复购。」)
+        showed a space between its two characters (12px at 1440): the reveal
+        splits it twice and leaves a space between the pieces. As a flex row
+        the word lays its pieces side by side and draws no space between them;
+        its size and the rotation are unchanged. */
+html[lang^="zh"] .sc-scope.sc-hero .hero-title-changeing-word { display: flex; }
+
+/* H25. Homepage, English.
+   - "Discuss your workflow" in the five-stages row wrapped ("Discuss your /
+     workflow", one word a line at 480–580) in its one-column cell. From 480
+     to 991 the button takes the row's last two columns, set to their right
+     edge (clear of the dot in the third); below 480 it takes its own line
+     under the caption. The Chinese button keeps its row below 480, where it
+     fits.
+   - The demo band's "Request a Demo." broke "Request a / Demo." below 375 and
+     the journey title "Understand / needs." at 320: both step down with the
+     screen there, as the Chinese demo heading does (H8), and keep one line.
+   - The side menu's legal links and the "Request a Demo" link under
+     (Where to start?) are written in sentence case; Mono capitalised every
+     word ("Request A Demo", "Terms Of Use"). They read as written. */
+/*   (r2) Both stay in the row's first line: the button's cell is the last two
+     columns of row 1 and the second dot keeps its own cell, the third column
+     of row 1, under the button's empty left part (a spanning button alone had
+     pushed the dot to a second line at 480–767 and the button itself below
+     the row at 768–991). The dots sit where the template puts them. */
+@media (min-width: 480px) and (max-width: 991px) {
+  body:has(#loop) .bottom-grid._1.grd > #w-node-_834d27be-a307-1552-5d45-d5d881496a66-993a4bf1 {
+    grid-area: 1 / 3 / 2 / 5;
+    justify-self: end;
+  }
+  body:has(#loop) .bottom-grid._1.grd > .circle-divider.hide-crc { grid-area: 1 / 3 / 2 / 4; }
+}
+@media (max-width: 479px) {
+  html[lang^="en"] body:has(#loop) .bottom-grid._1.grd > #w-node-_834d27be-a307-1552-5d45-d5d881496a66-993a4bf1 {
+    grid-column: 1 / 5;
+    grid-row: 2 / 3;
+    justify-self: start;
+  }
+}
+html[lang^="en"] body:has(#loop) section.ctc h2.h2.for-ctn { font-size: min(40px, calc((100vw - 70px) / 7.7)); }
+html[lang^="en"] body:has(#loop) .animation-section .cta-sm-title { font-size: min(var(--button--cta-title), calc((100vw - 16px) / 9)); }
+html[lang^="en"] .button-text.w-variant-83ed8c83-4d97-b61d-2146-78e915c17bb4 { text-transform: none; }
+
+/* H26. Notices, English: the (Keep reading) subtitle broke the brand name
+        ("…what STARGO / WORK does", 390–1920 except 1024). Its line reveal
+        re-splits the text on every space, a no-break space included, so the
+        name is a `.sgp-nobr` span (tools/copy.mjs NOTICES.relatedIntro),
+        which the split leaves whole (js/stargo-splittext-cjk.js), set on one
+        line here. */
+.max-lft-dvc p.top-text.big .sgp-nobr { white-space: nowrap; }
+
 /* V7-HOME-END */
