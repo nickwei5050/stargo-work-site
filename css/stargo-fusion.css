@@ -4200,6 +4200,22 @@ html[lang="en"] .cn-about-reviews .cn-testimonial-info .cn-text-size-medium { te
   .lx-scope .lx-feature-grid:has(.lx-v6-team-title) .lx-feature-grid-bg { height: auto; }
 }
 
+/* enterprise.html, English — the five management component titles (see the
+   balance rule above). Two of them still had no two-line split that fits:
+   "Account connection" is 174px at 19.2px, wider than the 143-174px columns
+   at 320-368, 480-576 and 768-776, so the title took three lines ("Account /
+   connection / & protection"); the copy now says "Linked accounts &
+   protection" (142px). "app management" is 152px, wider than the column at
+   320-330 and 480-515 ("Capability & app / management"): there the five
+   titles follow the column (18.6px at 320, 17.8px at 480) and are 1.2rem
+   everywhere else, so they read "Capability & / app management". */
+@media screen and (max-width: 479px) {
+  html[lang^="en"] .team-grid .team-content .h2._01.sm._600.lw { font-size: min(1.2rem, calc(6.08vw - 0.9px)); }
+}
+@media screen and (min-width: 480px) and (max-width: 767px) {
+  html[lang^="en"] .team-grid .team-content .h2._01.sm._600.lw { font-size: min(1.2rem, calc(4.05vw - 1.6px)); }
+}
+
 /* V7-LX-END */
 
 

@@ -1190,7 +1190,7 @@ export const ENTERPRISE = {
     { name: B('账号与岗位权限', 'Account & role permissions'), role: B('(明确谁可以查看资料，谁可以修改记录)', '(Who may read information, and who may change records)') },
     { name: B('关键动作审批', 'Approval of key actions'), role: B('(报价、对外触达和重要承诺，由有权人确认)', '(Quotations, outreach and important commitments go to authorized reviewers)') },
     { name: B('工作与结果记录', 'Work & result records'), role: B('(做过什么、谁批准、实际结果是否符合要求；出错即停，可转人工)', '(Actions, approvals and whether actual outcomes meet the requirement; failures stop and pass to a person)') },
-    { name: B('账号连接与保护', 'Account connection & protection'), role: B('(通过企业授权连接业务账号，不向不必要的岗位开放访问)', '(Business accounts connected through authorization, with no access for roles that do not need it)') },
+    { name: B('账号连接与保护', 'Linked accounts & protection'), role: B('(通过企业授权连接业务账号，不向不必要的岗位开放访问)', '(Business accounts connected through authorization, with no access for roles that do not need it)') },
   ],
   /* Beside the components: what is available and where the line stays
      (V5 P05 availability, M16-01, F13, F14). The origin story this slot used
