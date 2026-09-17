@@ -55,7 +55,7 @@ export const BLOG_UI = {
   related: B('相关文章', 'Related articles'),
   more: B('更多文章', 'More from the blog'),
   all: B('查看全部文章', 'View All Articles'),
-  byline: B('STARGO WORK 团队', 'The STARGO WORK team'),
+  byline: B('STARGO WORK 团队', 'The STARGO WORK team'),   // the brand never splits across lines
   section: B('博客', 'Blog'),
   takeaways: B('要点速览', 'Key takeaways'),
   faq: B('常见问题', 'Frequently asked questions'),
