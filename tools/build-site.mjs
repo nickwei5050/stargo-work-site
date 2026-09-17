@@ -875,6 +875,28 @@ function lxPage(spec, lang, name) {
   // the avatars in the scenario bubbles are all part of the composition the pink palette was
   // designed around. Only their template alt text goes.
   if ((b.match(/lx-author-image-medium/g) ?? []).length !== 48) throw new Error(`${name}: avatar bubbles changed`);
+  /* V7-LX, the one exception on the Chinese page: the four phone-screen
+     pictures inside the three phone mockups (hero, team card, phone features)
+     have the template's English interface painted in — "Danny Hopkins",
+     "Messages", "Your wall collection", "New faces on here". STARGO's four
+     phone-format concept pictures (887x1774, text-free) take those slots
+     there: the screens are object-fit: cover in the same frame, so the crop
+     and the cycling animation are unchanged, and they stay decorative
+     (alt=""). The English page keeps the template's screens. The hand-held
+     phone of the "no writing" band (no-writing-sc) is a cut-out composite
+     with its own English text and has no text-free counterpart; it stays. */
+  if (lang === 'zh') {
+    const SCREENS = [
+      ['iPhone%2013%20Pro%20Max%20-%203', MOBILE.inquiry],   // a chat → conversation becomes customer knowledge
+      ['iPhone%2013%20Pro%20Max%20-%204', MOBILE.approvals], // a message list → a decision held at an approval gate
+      ['iPhone%2016%20Pro%20-%201', MOBILE.agents],          // a card wall → parallel tasks at a shared junction
+      ['iPhone%2016%20Pro%20-%202', MOBILE.core],            // the first screen → shared enterprise context
+    ];
+    for (const [key, src] of SCREENS) {
+      if ((b.match(new RegExp(`<img\\b[^>]*${key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'g')) ?? []).length !== 3) throw new Error(`${name}: expected the phone screen ${key} in three mockups`);
+      b = swapImg(b, key, src);
+    }
+  }
   b = b.replace(/<div([^>]*)class="([^"]*\blx-gradient-section\b[^"]*)"/, '<div id="lx-more"$1class="$2"');
   b = b.replace(/<div class="lx-cta-wrapper">/, '<div id="lx-evolution" class="lx-cta-wrapper">');
   b = b.replace('class="lx-sitcky-section"', `id="${name === 'intelligence' ? 'lx-ontology' : 'lx-teams'}" class="lx-sitcky-section"`);
