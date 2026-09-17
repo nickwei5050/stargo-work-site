@@ -3068,7 +3068,7 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
 .lx-scope .stargo-post .sgc-chips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); }
 .lx-scope .stargo-post .sgc-chips-grid li { border-radius: .6rem; }
 .lx-scope .stargo-post .sgc-chips-solid li { border-color: transparent; background: var(--sg-accent); color: var(--sg-ink); font-weight: 600; }
-.lx-scope .stargo-post .sgc-traits { margin-top: 1rem; }
+.lx-scope .stargo-post .sgc .sgc-traits { margin-top: 1.1rem; }
 .lx-scope .stargo-post .sgc-traits li { color: var(--sg-soft); }
 
 /* (2) Growth OS → Sales Desk. */
