@@ -3434,6 +3434,456 @@ html[lang^="en"] .lx-scope :is(.lx-blog-title-holder, .lx-blog-title, .lx-relate
 
 
 /* V7-LX-START (workforce, intelligence, enterprise, about fixes) */
+
+/* intelligence.html — the three expandable cards under the hero, on phones.
+   Below 768px each card is in the page flow; IX2 fades it in and then
+   collapses it from 24 / 25 / 21.5rem to 5rem while it is scrolled past. The
+   card is a bottom-aligned flex column that clips, and its text sat a fixed
+   7rem above the icon row, so the collapse cut into the text from the first
+   pixel it shrank: the third card (主动工作) only turns opaque when its top is
+   about 100px from the top of the screen, and at 390 its text was clipped
+   60px of scrolling later (four lines at 360, 「…推」/「进。」).
+   The gap is now flexible: the content fills the card, text at the top and
+   icon row at the bottom as before, and the space between them (at least
+   1.5rem) is what the collapse takes first. The text stays whole until the
+   card is shorter than text + icon row. Card 2 is a bottom-aligned row in the
+   template; it becomes the same bottom-aligned column so the same rule
+   applies. The IX2 timeline, heights and opacity are untouched.
+   Below 480px the three texts are 1.75rem (the template's 2rem gave seven
+   characters a line at 320). The Chinese texts break only at punctuation and
+   at the <wbr>s in the copy, at every width, so no word is split any more
+   (before: 「报/价」「负责/人」「验/收」「授/权」 and a lone 「进。」 at
+   320-480, 768-1024): 「关注机会、期限和异常，」/「有依据地提建议，」/
+   「按授权推进。」 at 390. In the 182px tablet columns (768) the Chinese
+   texts are 1.4rem so an eight-character phrase fits a line; four lines, as
+   before. The titles beside the icons keep their size. */
+html[lang^="zh"] .lx-scope .lx-expandable-content > .lx-expandable-text {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  html[lang^="zh"] .lx-scope .lx-expandable-content > .lx-expandable-text { font-size: 1.4rem; }
+}
+@media screen and (max-width: 767px) {
+  .lx-scope .lx-expandable-item.lx-_2 {
+    flex-flow: column;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  .lx-scope .lx-expandable-item > .lx-expandable-content {
+    flex: 1 0 auto;
+    justify-content: space-between;
+    grid-row-gap: 1.5rem;
+    row-gap: 1.5rem;
+  }
+}
+@media screen and (max-width: 479px) {
+  .lx-scope .lx-expandable-content > .lx-expandable-text { font-size: 1.75rem; }
+}
+
+/* The closing clause of a Chinese paragraph (tools/build-site.mjs zhTail):
+   one unit, so an availability clause such as 「高级改进仍在完善。」 is never
+   split (「高级」/「改进…」 at 1024) and never leaves 「完善。」 alone
+   (390). Inline-block: it drops to the next line whole, and only a clause
+   longer than the line wraps inside itself. */
+html[lang^="zh"] .lx-scope .lx-v7-tail { display: inline-block; }
+
+/* intelligence.html — the bubble marquee. Each row's two copies move by
+   -100% of their own width (IX2, 60s a loop), so they must be equally wide;
+   the build now gives both copies the same bubbles. The template's row is a
+   fixed 625rem (10,000px), which the English copies (about 5,090px each)
+   outgrew: flexbox squeezed them to 5,000px. The row now takes its content's
+   width, 625rem at least, so no copy is squeezed. */
+.lx-scope .lx-cta-author-list { width: max-content; }
+
+/* intelligence.html, English display lines of two sentences (the hero line
+   and 「Divide the work. Finish it together.」): each sentence is a span
+   (tools/build-site.mjs enSentences), an inline-block that wraps and
+   balances inside itself, so lines break between the sentences first.
+   Before: "Divide the / work. Finish / it together." at 320 and "Know the /
+   company. Keep / work moving." at 1440 and 1920.
+   - The hero line sits in the grid's narrow right column (277px at 1440,
+     263 at 1280), and each sentence is about 330px at 38.4px. From 1280 the
+     line's box starts 6rem left of that column (a percentage width and a
+     negative margin, so the grid's own column sizes do not change), which is
+     clear of the phone, so it reads "Know the company." / "Keep work
+     moving."; the box's right edge stays where it was.
+     Between 992 and 1279 the phone is too close, and the line keeps its
+     column: "Know the / company." / "Keep work / moving.".
+   - The team heading pair is 2.7rem on a phone; "Finish it together." is
+     339px there, wider than a 320-360px screen's 288-328px. Below 375px the
+     pair is 2.25rem, and it reads "288 AI roles." / "Divide the work." /
+     "Finish it together.". */
+html[lang="en"] .lx-scope .lx-v7-sentence {
+  display: inline-block;
+  text-wrap: balance;
+}
+@media screen and (min-width: 1280px) {
+  html[lang="en"] .lx-scope .lx-hero-home-text-holder > .lx-hero-desc {
+    width: calc(100% + 6rem);
+    max-width: none;
+    margin-left: -6rem;
+  }
+}
+@media screen and (max-width: 374px) {
+  html[lang="en"] .lx-scope .lx-team-section .lx-flex-text-center .lx-heading-style-h1 { font-size: 2.25rem; }
+}
+
+/* workforce.html — the hero (both languages; `.lx-hero-features` is on this
+   page only).
+   - The lede had no side gutter below 768px: the template zeroes the padding
+     of this hero's `.lx-padding-global`, so the text ran 0-3px from the
+     screen edges. It gets the site's 16px (the title keeps the full width,
+     so "288 specialized" still fits one line at 320).
+   - Chinese lede: it breaks at punctuation and spaces only, so a word is never
+     split (「按配」/「置、」 from 768 to 1920; 「聊」/「天」, 「合」/「规」,
+     「专业服」/「务」, 「企业支」/「持」, 「目录数」/「量」 on phones). The
+     longest run is about ten characters, well inside the narrowest line; the
+     build binds a figure to the word after it (「288 个」).
+   - The text ran over the floating photo cards (the template's own short copy
+     fitted between them; ours is longer): at 1440 the English white line ran
+     about 90px across the right-hand laptop. The title is 3.125rem from 1280
+     and 2.5rem from 768 to 1279 instead of 4rem, the lede is 36rem wide from
+     992 to 1279, and from 768 the text block and its button sit a little
+     lower (1.75rem from 992, .75rem below). Measured at rest with the viewport
+     heights of 1024 (768-991) and 900: the title, lede and button clear all
+     five cards at 768, 820, 900, 992, 1024, 1100, 1280, 1440 and 1920, in
+     both languages. On phones the cards sit at the screen edges exactly where
+     the lede's lines run, so the text is made legible instead: a black band
+     behind the text block (behind the text, in front of the cards) dims a
+     card where it passes under the text. The same veil, as a soft ellipse,
+     is behind the text on wider screens, for the moments the cards' scroll
+     motion carries them under it. The cards keep their places and motion. */
+.lx-scope .lx-hero-features .lx-feature-hero-text-holder::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -2.5rem -3rem;
+  background: radial-gradient(closest-side, rgba(0, 0, 0, .85) 62%, rgba(0, 0, 0, 0));
+  pointer-events: none;
+}
+html[lang^="zh"] .lx-scope .lx-hero-features .lx-feature-description-holder .lx-text-size-regular {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+@media screen and (min-width: 1280px) {
+  .lx-scope .lx-hero-features .lx-feature-title-holder .lx-heading-style-h1 { font-size: 3.125rem; }
+}
+@media screen and (min-width: 992px) {
+  .lx-scope .lx-hero-features .lx-feature-hero-text-holder,
+  .lx-scope .lx-hero-features .lx-about-button-holder { top: 1.75rem; }
+}
+@media screen and (min-width: 992px) and (max-width: 1279px) {
+  .lx-scope .lx-hero-features .lx-feature-description-holder { max-width: 36rem; }
+}
+@media screen and (min-width: 768px) and (max-width: 1279px) {
+  .lx-scope .lx-hero-features .lx-feature-title-holder .lx-heading-style-h1 { font-size: 2.5rem; }
+}
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .lx-scope .lx-hero-features .lx-feature-hero-text-holder,
+  .lx-scope .lx-hero-features .lx-about-button-holder { top: .75rem; }
+}
+@media screen and (max-width: 767px) {
+  .lx-scope .lx-hero-features .lx-feature-description-holder {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .lx-scope .lx-hero-features .lx-feature-hero-text-holder::before {
+    inset: -1.5rem 0;
+    background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .8) 1.5rem, rgba(0, 0, 0, .8) calc(100% - 1.5rem), rgba(0, 0, 0, 0));
+  }
+}
+
+/* workforce.html, Chinese — the role-group intro beside the list
+   (「每个岗位都应有职责、技能、企业知识、可用权限和工作记录。…」) breaks at
+   its punctuation only: it split 「可用」/「权限」 at 360, 「任」/「务」 at 390,
+   「工作」/「记录」 at 430 and 「需」/「要」 at 1024. Its longest run is twelve
+   characters; the column holds at least eighteen, and the intro keeps its
+   three to four lines. */
+html[lang^="zh"] .lx-scope .lx-v6-roster-intro {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+/* workforce.html — the pink panel (.lx-capabilities-grid and the cards in it,
+   this page only).
+   - 768-991: the template kept its desktop split there, the heading in a
+     192px column and the cards in 416px beside it, so every card was cramped:
+     the desktop card (.lx-organized-mind) gave its text a ~160px column (a
+     16-line English paragraph under a 4-line heading, list items of 3-4
+     lines, 「…转成任」/「务」), and the small cards had 138px (「交接有」/
+     「记录」). From 768 to 991 the panel stacks as the template stacks it
+     below 768 — heading on top, then the card grid at the full panel width —
+     so the small cards are 308px and more, and the desktop card keeps its own
+     desktop layout (text beside the collage) at 640px and more.
+   - Below 768 the desktop card is one column and the template pads its text
+     on the left only; the right side gets the same padding so lines stop
+     short of the card's edge (they ran to it).
+   - Phones: the black note 「浏览器里的企业桌面」 / "A business desktop on the
+     web" was 32% of the collage strip, 77px at 320, so it broke into five
+     two-character lines (「浏览/器里/的企/业桌/面」), and the people circle,
+     which comes later in the markup, covered half of it. The note is now a
+     fixed 7rem with 1rem type — five Chinese characters a line, so it reads
+     「浏览器里的」/「企业桌面」 at every phone width, and "A business /
+     desktop on / the web" — and it is drawn above the circle; the circle
+     moves to the bottom of the strip (3rem taller) and the role card to its
+     upper right, so neither the note nor the circle hides the other. */
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .lx-scope .lx-capabilities-grid { grid-template-columns: 1fr; }
+}
+
+/* workforce.html — the team scenario (#lx-team). The display line 「一个目标，
+   一个团队。」 / "One goal, one team." sits behind the three stacked cards,
+   which IX2 (lx-a-73) slides up one by one over the section's scroll. While
+   the cards cover it, only its edges showed between their rotated corners,
+   and read as stray marks: a lone white square left of card 03 at 390 (the
+   end of 「一」), 「—」, 「，」 and 「。」 around the cards at 768 and 1440.
+   The line now stays invisible while it is covered and fades in while the
+   last card uncovers it. Measured on the section's own scroll range (0 when
+   its top meets the top of the screen, 100% when its bottom meets the
+   bottom): the third card starts to move at about 62-65% and has left the
+   line at 81-83%, at 390, 768 and 1440; the line starts to show under it at
+   about 70%, so the fade runs from 68% to 84%.
+   The cards' motion is IX2's and is untouched; where a browser has no
+   scroll-driven animations, the line behaves as before. */
+/* workforce.html, English — the three scenario cards and two short lines.
+   - Each card heading is two clauses (tools/build-site.mjs writes one
+     `.lx-v7-clause` span per clause), and each clause keeps to its own line:
+     "Check the results," / "then a person decides" rather than "…then a
+     person" / "decides" (768-1920). The heading box is the card's 75% less
+     its padding, 280px from 768 up, and the longer clause is 325px at 2rem,
+     so the English text box is 90% of the card (340px); between 480 and
+     599 the card is narrower and the headings are 1.75rem. Below 480 the
+     headings are 1.25rem (1.125rem below 360) in a box that runs to the
+     card's right padding (185px at 320), where every clause fits one line.
+   - The label over each heading keeps "scenario · 01" together (no-break
+     spaces in the build); at 320 it read "Illustrative scenario" / "· 01".
+   - The pink panel heading, "Roles, teams and a desktop", is balanced: it
+     left "desktop" alone at 360, 390, 1440 and 1920.
+   - The role card in the desktop collage (hover shows its name) is 9rem
+     from 992 up, where "Reporting AI" wrapped; it is 10rem there, the size
+     the template gives it from 768 to 991, where the name fits one line. */
+html[lang="en"] .lx-scope .lx-v7-clause {
+  display: inline-block;
+  text-wrap: balance;
+}
+html[lang="en"] .lx-scope .lx-answers-card-text { width: 90%; }
+html[lang="en"] .lx-scope .lx-v6-panel-title { text-wrap: balance; }
+@media screen and (max-width: 479px) {
+  html[lang="en"] .lx-scope .lx-answers-card-text {
+    width: auto;
+    padding-right: 1.25rem;
+  }
+  html[lang="en"] .lx-scope .lx-answers-card-text .lx-heading-style-h4 { font-size: 1.25rem; }
+}
+@media screen and (max-width: 359px) {
+  html[lang="en"] .lx-scope .lx-answers-card-text .lx-heading-style-h4 { font-size: 1.125rem; }
+}
+@media screen and (min-width: 480px) and (max-width: 599px) {
+  html[lang="en"] .lx-scope .lx-answers-card-text .lx-heading-style-h4 { font-size: 1.75rem; }
+}
+@media screen and (min-width: 992px) {
+  .lx-scope .lx-v6-collage-card { width: 10rem; }
+}
+
+/* enterprise.html — the owner-cockpit band (.about-grid, this page only).
+   From 992 the lead's rule further up ("V6 review fixes", 2) lets the three
+   picture frames grow with the text column, and the band has no blank run
+   (measured 1024 and 1440, both languages: frames end where the text ends).
+   Between 768 and 991 the same rule stretched three landscape pictures into
+   359px-wide frames up to 1024px tall beside a text column in which a step
+   of the delivery list held two words a line ("Prepare / company /
+   context:"). There the band now stacks as the template stacks it below
+   768: the three pictures in a row on top at the template's small heights
+   (scaled to the wider row), the text under them across the band. */
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .about-grid {
+    display: flex;
+    flex-flow: column-reverse;
+    grid-row-gap: 40px;
+    row-gap: 40px;
+  }
+  .about-grid > .about-images {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: 16px;
+    column-gap: 16px;
+  }
+  .about-grid > .about-max-w { max-width: none; }
+  .about-grid > .about-images .work-content-wrapper { flex: none; }
+  .about-grid > .about-images .work-content-wrapper._01 { height: 12rem; }
+  .about-grid > .about-images .work-content-wrapper._02 { height: 20rem; }
+  .about-grid > .about-images .work-content-wrapper._03 { height: 13rem; }
+}
+
+/* enterprise.html — the connections table (#table). Its header labels kept
+   the template's placement (the last one pushed to the right edge of its
+   column, the middle one centred from 992 and right-aligned from 480 to 991),
+   while the cells under them are left-aligned sentences, so 「(接入前要确认)」
+   / "(Confirm first)" sat over the far end of text that starts at the left.
+   From 480 (where the header is a real three-column row) each label starts
+   where its column's text starts, and every cell fills its column (the
+   third cells hugged the right edge, so in Chinese, where they are shorter
+   than the column at 1440 and 1920, each row's text started somewhere
+   else). Below 480 the header is a centred legend
+   over centred stacks (rule 2 further up) and is left as it is. */
+@media screen and (min-width: 480px) {
+  #table .grdi-3-columns.mk3 > .top-text { justify-self: start; text-align: left; }
+  #table .award-wrapper > .award-text { justify-self: stretch; }
+}
+/* The Chinese cells break at their punctuation and spaces only where a
+   phrase fits a line — in the stacked rows on phones and in the wide columns
+   from 992: they split 「有/权人员」 at 1440, and 「平/台」, 「生/产」,
+   「付/款」 on phones. Between 480 and 991 the columns hold about eleven
+   characters, less than the longest phrase, and keep their normal breaking. */
+@media screen and (max-width: 479px), screen and (min-width: 992px) {
+  html[lang^="zh"] #table .award-text {
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* enterprise.html — the four story panels (.studio-sticky, this page only).
+   Mono ends each panel's text 60px above the bottom of the screen, and from
+   992 the fixed pill navigation (.menu-bottom) reappears whenever the reader
+   scrolls up: 50px tall, 15px off the bottom, 590-830px wide across the
+   middle. At 1024, 1440 and 1920 it covered the last line of the panel text
+   — "…reviews always stay with authorized people" (Decisions), "the result is
+   checked" (Results), 「按企业情况确认。」 (Connect), "the decisions that
+   matter come first" (Oversight). From 992 the panels end their text 100px
+   above the bottom, which clears the pill with 35px to spare. */
+@media screen and (min-width: 992px) {
+  .studio-sticky { padding-bottom: 100px; }
+}
+
+/* about.html — the introduction card in the hero (.cn-about, this page
+   only). Since V6 it carries the headline, the description and the closing
+   line in one paragraph, and below 480px that paragraph was 22px type in a
+   card that is 95% of the band with 24px of padding: 26 lines in English at
+   320 (the card 1,045px tall, the demo button 1,080px down the page) and 17
+   in Chinese. Below 480 the card now takes the band's full width, its
+   padding and gaps are 20 / 16px, and the paragraph is 18px at 1.45 — the
+   copy is unchanged. */
+@media screen and (max-width: 479px) {
+  .cn-about .cn-intro-container { width: 100%; }
+  .cn-about .cn-intro-content-block {
+    padding: 1.25rem 1.25rem 1.5rem;
+    grid-row-gap: 1rem;
+    row-gap: 1rem;
+  }
+  .cn-about .cn-text-size-large { font-size: 1.125rem; line-height: 1.45; }
+}
+
+/* about.html and pricing.html, Chinese — the scenario quotes in the review
+   band (.cn-about-reviews on About, .cn-reviews on Pricing; each block is on
+   that one page). The blocks mark the quotes' word boundaries with <wbr>
+   (zhQuote in tools/blocks/cn-about-reviews.mjs and cn-reviews.mjs); here the
+   line breaks only there and at punctuation, and `pretty` keeps a short last
+   line off the end. Before: 「…采用改」/「进。」」 at 390 (Pricing),
+   「…明确资」/「料、…」 at 1440 (both). On Pricing this changes where these
+   four quotes break and nothing else. */
+html[lang^="zh"] :is(.cn-about-reviews, .cn-reviews) p.cn-text-size-large {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
+}
+
+/* Short Chinese phrases the build binds together (tools/build-site.mjs
+   zhKeep) in text the reveal splits per character: the enterprise cockpit
+   paragraph (「管得/住，」, 「查/得清。」), the delivery steps (「定目/标」)
+   and the pull-quote (「可管/理」, 「可验/证」, 「“已经/完成”」). */
+html[lang^="zh"] .stargo-keep { white-space: nowrap; }
+
+@keyframes lx-v7-team-reveal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@supports (animation-timeline: view()) {
+  .lx-scope #lx-team.lx-answers-card-section-holder { view-timeline: --lx-v7-team block; }
+  .lx-scope #lx-team .lx-v6-team-display {
+    animation: lx-v7-team-reveal linear both;
+    animation-timeline: --lx-v7-team;
+    animation-range: contain 68% contain 84%;
+  }
+}
+@media screen and (max-width: 767px) {
+  .lx-scope .lx-organized-mind-text { padding-right: 1.5rem; }
+  .lx-scope .lx-organized-mind .lx-confirmation-card { z-index: 2; }
+}
+@media screen and (max-width: 479px) {
+  .lx-scope .lx-organized-mind-images { height: 17rem; }
+  .lx-scope .lx-organized-mind-images > .lx-people-image-holder { margin-top: auto; }
+  .lx-scope .lx-organized-mind .lx-confirmation-card { width: 7rem; }
+  .lx-scope .lx-organized-mind .lx-confirmation-card h6 { font-size: 1rem; }
+  .lx-scope .lx-organized-mind .lx-organized-mind-card { top: 22%; bottom: auto; }
+}
+
+/* The scan of the four pages (zh and en; 320, 390, 768, 1024, 1440) for
+   lone words and split words in headings, labels and cards; each fix is
+   scoped to its page.
+   - intelligence.html, Chinese, the six object cards in the sticky column:
+     one sentence each, and at 768 three of them ended on two characters
+     (「…之前谈过」/「什么。」, 「…已经」/「批准。」, 「…结果如何」/「核对。」).
+     They break at their commas now (「是谁，来自哪里，」/「之前谈过什么。」).
+   - intelligence.html, English, the collapsed card titles at 768-991: "Real
+     workflows" wrapped beside its icon, and a two-line title does not fit the
+     5rem pill the card collapses to (its first line was cut). The titles are
+     1.25rem there, with a 1.75rem icon and a .75rem gap, and stay on one line.
+   - workforce.html, English, the small card titles and the desktop card
+     title are balanced: "Teams formed by / task", "Delegate and / approve",
+     "Handoffs on / record", "Browser / desktop and AI / office" became
+     "Teams formed / by task", "Delegate / and approve", "Handoffs / on record",
+     "Browser desktop / and AI office".
+   - workforce.html, the three article titles in its article strip: balanced
+     in English ("…keep the / authority", "…into a / company"), and in Chinese
+     broken at punctuation and spaces only (「…AI，权/力留在企业」,
+     「…AI 的正/确顺序」). The blog index keeps its own rules. */
+html[lang^="zh"] .lx-scope .lx-sitcky-section .lx-home-features-texts .lx-text-size-regular {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  html[lang="en"] .lx-scope .lx-expandable-icon-text { grid-column-gap: .75rem; column-gap: .75rem; }
+  html[lang="en"] .lx-scope .lx-expandable-icon-text .lx-expendable-icon { width: 1.75rem; }
+  html[lang="en"] .lx-scope .lx-expandable-icon-text .lx-expandable-text { font-size: 1.25rem; }
+}
+html[lang="en"] .lx-scope .lx-little-grid-text-holder .lx-heading-style-h4,
+html[lang="en"] .lx-scope .lx-organized-mind-text .lx-heading-style-h4,
+html[lang="en"] .lx-page:has(.lx-hero-features) .lx-blog-title {
+  text-wrap: balance;
+}
+html[lang^="zh"] .lx-page:has(.lx-hero-features) .lx-blog-title {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+/* enterprise.html, English — the five management component titles are
+   balanced: "Capability & app / management", "Account & role / permissions",
+   "Approval of key / actions", "Work & result / records" left their last word
+   alone from 320 to 1024; they read "Approval of / key actions" and so on.
+   `.team-grid` is on this page only. */
+html[lang^="en"] .team-grid .team-content .h2 { text-wrap: balance; }
+
+/* intelligence.html, English, phones: the collapsed card titles sit beside a
+   2.4rem icon, and "Real workflows" wrapped at 320, which the 5rem pill a card
+   collapses to cannot hold. Below 480 the gap beside the icon is .75rem and
+   the titles are 1.75rem, the size of the card text above them. */
+@media screen and (max-width: 479px) {
+  html[lang="en"] .lx-scope .lx-expandable-icon-text { grid-column-gap: .75rem; column-gap: .75rem; }
+  html[lang="en"] .lx-scope .lx-expandable-icon-text .lx-expandable-text { font-size: 1.75rem; }
+}
+
+/* enterprise.html — the story panels print white text straight on their
+   pictures, and two of them are bright where the text runs on a phone: the
+   metal lanes of (Connect) and the loading bay of (Oversight) ("authorization",
+   "records", "Watch the business…" lost contrast at 390). A soft dark shadow
+   under the panel text keeps it readable on any part of the picture; the
+   pictures and the overlay are unchanged. */
+.studio-sticky .about-flx .h2.for-abt,
+.studio-sticky .about-flx .top-text.for-abt {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .55), 0 0 18px rgba(0, 0, 0, .55);
+}
+
 /* V7-LX-END */
 
 

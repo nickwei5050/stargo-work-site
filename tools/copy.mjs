@@ -637,8 +637,8 @@ export const LX_INTELLIGENCE = {
        for this page (observe the real workflow, prepare context, arrange
        roles and approvals, validate with real cases); the gradient headings
        below repeat them as P03's 落地四步. */
-    { title: B('业务关系', 'Connections'), text: B('客户、产品、报价、订单和负责人，不再是互不相干的记录。', 'Customers, products, quotes, orders and owners, connected.') },
-    { title: B('按流程落地', 'Real workflows'), text: B('先了解业务，再安排资料、岗位与审批，用真实样本验收。', 'Workflow first, then data, roles, approvals and real-case tests.') },
+    { title: B('业务关系', 'Connections'), text: B('客户、产品、报价、订单<wbr>和负责人，不再是<wbr>互不相干的记录。', 'Customers, products, quotes, orders and owners, connected.') },
+    { title: B('按流程落地', 'Real workflows'), text: B('先了解业务，再安排<wbr>资料、岗位与审批，用真实样本验收。', 'Workflow first, then data, roles, approvals and real-case tests.') },
     { title: B('主动工作', 'Proactive'), text: B('关注机会、期限和异常，有依据地提建议，按授权推进。', 'Flags leads, deadlines and risks; acts only as authorized.') },
   ],
   /* P03's six business cards. They are rendered in two columns and mirrored
@@ -652,6 +652,19 @@ export const LX_INTELLIGENCE = {
     { title: B('出货', 'Shipment'), text: B('什么时间交付，还缺哪些资料。', 'Delivery timing and missing records.') },
     { title: B('任务', 'Task'), text: B('谁负责，何时完成，结果如何核对。', 'Owner, deadline and how the result will be checked.') },
   ],
+  /* V7-LX: the small caps label above each of those six cards, in their
+     order, and above the team card (feat2Card). The template printed one
+     label, 「客户 · 报价 · 订单」, on all of them; each now names what its own
+     card is about, in the card's own words. Two or three short items. */
+  cardTags: [
+    B(['身份', '来源', '沟通'], ['Identity', 'Source', 'History']),
+    B(['需求', '待补信息'], ['Needs', 'Missing info']),
+    B(['价格', '版本', '批准'], ['Price', 'Version', 'Approval']),
+    B(['约定', '进度'], ['Commitment', 'Progress']),
+    B(['交期', '资料'], ['Timing', 'Records']),
+    B(['负责人', '期限', '核对'], ['Owner', 'Deadline', 'Check']),
+  ],
+  teamTags: B(['分工', '交接', '确认'], ['Roles', 'Handoffs', 'Sign-off']),
   gradient: [B('观察真实流程', 'Observe the workflow'), B('整理业务关系', 'Map the business context'), B('安排 AI 参与的步骤', 'Assign useful AI work'), B('用实际结果改进', 'Improve from real outcomes')],
   /* P03's proactive-work heading, 「机会、截止时间和待办事项，不必都靠人记着。」,
      cut to the slot (see bigText above): runs of four, three and four glyphs,
@@ -661,8 +674,9 @@ export const LX_INTELLIGENCE = {
      deadlines and pending approvals it refers to. "Opportunities" is wider
      than a phone at this size (409px at 64px), hence "Leads". */
   bigText: B('新机会、期限，不靠人记', 'Leads and deadlines, not left to memory.'),
-  /* Two marquee rows. Row one shows entries 0-5 and, in its loop copy, 6 in
-     place of 2: business situations the layer watches for. Row two shows 7-11
+  /* Two marquee rows. Row one shows entries 0-4 and 6 in both of its loop
+     copies (tools/build-site.mjs, V7-LX): business situations the layer
+     watches for. Row two shows 7-11
      and then 5: M13's loop — notice a change, understand the context, propose,
      get approval, act, check the result, retain the lesson — and the point
      where it stops to ask. No job titles. */

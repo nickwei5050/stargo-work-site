@@ -292,6 +292,25 @@
  */
 import { setText, setTextAll, splitRepeat, DONORS } from '../block-lib.mjs';
 
+/* V7-LX: the Chinese quote's word boundaries. The scenario quotes are shared
+   copy (HOME_MONO) and are not reworded here; the band only marks where a
+   word ends, with a <wbr> between two words that are both Chinese (ICU's
+   word segmentation, at build time), and css/stargo-fusion.css (V7-LX) lets
+   the line break only there and at punctuation. Before, the quotes split
+   「资/料」 at 1440 and left 「进。」」 alone at 390. English is unchanged. */
+const ZH_WORDS = new Intl.Segmenter('zh', { granularity: 'word' });
+const HAN = /[\u3400-\u9fff]/;
+function zhQuote(text, escapeHtml) {
+  const parts = [...ZH_WORDS.segment(text)].map((s) => s.segment);
+  if (parts.join('') !== text) throw new Error('cn-about-reviews: word segmentation changed the quote');
+  /* Only two words of two or more characters may part. A one-character word
+     stays with its neighbours — ICU reads 负责人 as 负责 + 人 and 放在一起 as
+     放 + 在一起, and 「负责」/「人、」 or 「放」/「在一起」 is not a break. */
+  const joins = (i) => HAN.test(parts[i - 1].slice(-1)) && HAN.test(parts[i][0])
+    && parts[i - 1].length > 1 && parts[i].length > 1;
+  return parts.map((p, i) => (i && joins(i) ? '<wbr>' : '') + escapeHtml(p)).join('');
+}
+
 /** This site's own mark, in the slot cinery filled with a client's. */
 const WORDMARK = 'assets/brand/stargo-wordmark.png';
 
@@ -731,7 +750,7 @@ export function render(frag, ctx) {
     if (!/>-<\/div>/.test(top)) {
       throw new Error(`cn-about-reviews: slide ${i + 1} lost the "-" cinery sets between the rating and its stars`);
     }
-    top = setText(top, 'cn-text-size-large', escapeHtml(t(card.quote)));
+    top = setText(top, 'cn-text-size-large', lang === 'zh' ? zhQuote(t(card.quote), escapeHtml) : escapeHtml(t(card.quote)));
 
     /* Below it: the mark, the speaker, and what the scenario shows. */
     const names = (bot.match(/class="[^"]*cn-text-size-medium[^"]*"/g) ?? []).length;
