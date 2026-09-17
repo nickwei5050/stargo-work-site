@@ -97,10 +97,12 @@ const phraseHeadings = (html) => html.replace(/(<h3\b[^>]*>)([^]*?)(<\/h3>)/g, (
 const card = (v, lang) => inline(tx(v, lang));
 /* The Chinese call to action is running text with a link: its words are cut
    by tools/lib-html.mjs zhWbr, so keep-all breaks it between words only
-   (「把工/作」, 「连/接」 at 320–390); the link stays whole (CSS). */
+   (「把工/作」, 「连/接」 at 320–390); a one-character word (把, 和, 在) stays
+   with the word after it, and the link stays whole (CSS). */
 const ctaWords = (html) => html.replace(/(<p class="sgp-cta">)([^]*?)(<\/p>)/, (m, open, inner, close) => {
   if (inner.includes('&')) throw new Error('blog: a Chinese call to action carries an entity; zhWbr expects plain text');
-  return open + inner.replace(/(<a\b[^>]*>[^<]*<\/a>)|([^<]+)/g, (x, link, text) => link ?? zhWbr(text)) + close;
+  const words = (text) => zhWbr(text).replace(/(^|<wbr>)(\p{Script=Han})<wbr>/gu, '$1$2');
+  return open + inner.replace(/(<a\b[^>]*>[^<]*<\/a>)|([^<]+)/g, (x, link, text) => link ?? words(text)) + close;
 });
 
 /** One chart: a figure whose caption is its title; `inner` is the chart body. */
