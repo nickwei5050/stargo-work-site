@@ -20,7 +20,7 @@ const descriptions = {
   'brand-ontology': ['客户、沟通、产品、报价、订单与任务的关系', 'Relationships among accounts, conversation, products, quotes, orders and tasks'],
   'brand-loop': ['观察、评估与可回退的反馈路径', 'An observation, evaluation and reversible feedback path'],
   'brand-family-01': ['从贸易市场信号到客户目的地', 'From trade signals to a customer destination'],
-  'brand-family-02': ['零件匹配、包装与履约交接', 'Component matching, packaging and fulfilment handoff'],
+  'brand-family-02': ['零件匹配、包装与履约交接', 'Component matching, packaging and fulfillment handoff'],
   'brand-family-03': ['专业分工与并行执行', 'Specialized roles and parallel execution'],
   'brand-family-04': ['共享上下文、权限边界与可控进化', 'Shared context, permission boundaries and governed evolution'],
   'mobile-approvals': ['关键决策在审批点等待', 'A key decision held at an approval gate'],

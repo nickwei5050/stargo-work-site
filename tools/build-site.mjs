@@ -361,7 +361,7 @@ PAGES['index.html'] = (lang) => {
     cards.forEach((k, i) => { h = swapImg(h, k, SILO[i]); });
     /* The five stages, in order (V6 §4.6): prospecting — an opportunity path
        through a port district; trade sales — conversation becoming shared
-       customer context; fulfilment — inspection to dispatch; collection and
+       customer context; fulfillment — inspection to dispatch; collection and
        service — trade signals carried to a customer's destination; retain and
        improve — an observed, reversible feedback path. The last three changed
        with the stages: a quotation or command-centre picture no longer matches
@@ -455,7 +455,7 @@ PAGES['index.html'] = (lang) => {
     // two engines keep their product names, the two business areas are named
     // ERP and AI 创作 / AI Creative. Each slot's picture matches what the slot
     // now says: an opportunity path (prospecting), shared customer context
-    // (sales), components, packaging and fulfilment handoff (operations), and
+    // (sales), components, packaging and fulfillment handoff (operations), and
     // a camera-like aperture (images and video).
     const bySystem = {
       'Growth OS': OS.desk,
@@ -1707,7 +1707,7 @@ function capabilityShowcase(C, lang) {
     h = h.replace(bundleTag, '$1<script src="js/stargo-video-defer.js" defer></script><script src="js/capability-blocks.js" defer></script>');
   }
   // Assign by buyer meaning, not image sequence: growth, customer context,
-  // commercial fulfilment, workforce/governance. Parallel-team art belongs
+  // commercial fulfillment, workforce/governance. Parallel-team art belongs
   // at the homepage Workforce door, not beneath the Commercial label.
   const familyArt = [BRAND.family(1), OS.inquiries, BRAND.family(2), BRAND.family(4)];
   ['699b6466d5f19893993a4d79_work-1.webp', '699b6466d5f19893993a4d1a_work-4.webp', '699b6466d5f19893993a4d34_work-5.webp', '699b6466d5f19893993a4d8f_work-8.webp']
@@ -1740,7 +1740,7 @@ PAGES['contact.html'] = (lang) => {
   h = s(h, '>Category<', `>${t(K.fields.category)}<`);
   h = s(h, '>Message<', `>${t(K.fields.message)}<`);
   h = s(h, '>Select one...<', `>${t(K.selectPlaceholder)}<`);
-  // twelve workflow entry points instead of the template's three options
+  // V5 P07's nine interest labels instead of the template's three options
   h = h.replace(/<option value="First">First choice<\/option><option value="Second">Second choice<\/option><option value="Third">Third choice<\/option>/,
     K.options.map((o, i) => `<option value="${i + 1}">${t(o)}</option>`).join(''));
   if (h.includes('First choice')) throw new Error('contact: select options');

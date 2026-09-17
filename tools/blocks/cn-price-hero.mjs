@@ -81,22 +81,22 @@
  *                     tools/blocks/cn-produce.mjs names its pill. 定价 /
  *                     "Pricing" — the donor's `text-transform: uppercase` makes
  *                     it PRICING on the English page, as it made ALL IN ONE.
- *     the two lines   the opening of this page's own promise, PRICING.title
- *                     (「同一套系统，选合适的支持层级。」 / "One system. The right
- *                     level of support."), one word per line box. They are
+ *     the two lines   two words of this page's own promise, PRICING.title (V5
+ *                     P08: 「从需要解决的业务，确定合适的配置与服务。」 / "Match
+ *                     configuration and support to the work you need done."),
+ *                     one word per line box: 合适 / 配置, Work / Done. They are
  *                     written out below because the title is a sentence with
  *                     markup in it and these are two words; the assertion binds
- *                     them back to it, so a rewritten promise fails the build
+ *                     each back to it, so a rewritten promise fails the build
  *                     instead of quietly leaving a wordmark that no longer says
  *                     what the page says.
- *     the paragraph   META['pricing.html'].description — the site's own
- *                     one-sentence account of this page. It states nothing that
- *                     is not already in PRICING (an annual subscription, and
- *                     optional website / content / acquisition packages), and it
- *                     is the same length as the donor's: measured in the donor's
- *                     own 32rem box at 20px/1.5, cinery's sentence sets three
- *                     lines, the English 117 characters set three, the Chinese
- *                     39 set two.
+ *     the paragraph   PRICING.introBody — V5 P08's supporting sentence, applied
+ *                     with the title on the owner's instruction of 2026-09-17.
+ *                     (It used to print META['pricing.html'].description, which
+ *                     remains the page's search description.) It names no
+ *                     price, level or quantity. It sets more lines than
+ *                     cinery's sentence in the donor's 32rem box; the box has
+ *                     no fixed height, so the header grows and nothing clips.
  *
  *   No price, plan name, metric, date or customer appears in this block. The
  *   ladder is 200 lines further down the page and is built by tools/build-site.mjs
@@ -170,16 +170,19 @@ const DONOR_WORDS = ['>All In One<', '>Visual</h2>', '>Package</h2>', 'A complet
 /**
  * The wordmark, one word per line box.
  *
- * Both are the opening of PRICING.title — 「同一套系统，…」 / "One system. …" —
- * and `inTitle` is what render() checks the title still contains. Written out
- * rather than sliced off the title because the title is a full sentence that
- * carries a `<span class="sub-title-text">` for Scalora's own h1 treatment, and
- * because a wordmark is chosen, not derived: cinery sets these two boxes at
- * 192px and never wraps them, so the slot takes a word and not a clause.
+ * Both words are taken from PRICING.title (V5 P08) — 「…确定合适的配置与服务。」 /
+ * "…the work you need done." — and render() checks the title, tags removed,
+ * still contains each of them. Written out rather than sliced off the title
+ * because the title is a full sentence that carries a
+ * `<span class="sub-title-text">` for Scalora's own h1 treatment, and because a
+ * wordmark is chosen, not derived: cinery sets these two boxes at 192px and
+ * never wraps them, so the slot takes a word and not a clause. 合适 / 配置 are
+ * two characters each, like the 系统 measured below; Work and Done are
+ * narrower than PACKAGE at every size.
  */
 const WORDMARK = {
-  zh: { top: '一套', bottom: '系统', inTitle: '一套系统' },
-  en: { top: 'One', bottom: 'System', inTitle: 'One system' },
+  zh: { top: '合适', bottom: '配置' },
+  en: { top: 'Work', bottom: 'Done' },
 };
 
 export function render(frag, ctx) {
@@ -237,11 +240,14 @@ export function render(frag, ctx) {
   if (!P?.title) throw new Error('cn-price-hero: PRICING.title is what this wordmark opens; it is missing');
   const mark = WORDMARK[lang];
   /* The wordmark cannot drift from the sentence it is the opening of. */
-  if (!t(P.title).includes(mark.inTitle)) {
-    throw new Error(
-      `cn-price-hero: the ${lang} wordmark says "${mark.top}${mark.bottom}" but PRICING.title no longer contains `
-      + `"${mark.inTitle}" — it now reads "${t(P.title).replace(/<[^>]+>/g, '')}". Rewrite the two line boxes to `
-      + 'match the page\'s own promise, keeping each one to a word the donor\'s 192px box can hold.');
+  const plainTitle = t(P.title).replace(/<[^>]+>/g, '');
+  for (const word of [mark.top, mark.bottom]) {
+    if (!plainTitle.toLowerCase().includes(word.toLowerCase())) {
+      throw new Error(
+        `cn-price-hero: the ${lang} wordmark says "${mark.top} ${mark.bottom}" but PRICING.title no longer contains `
+        + `"${word}" — it now reads "${plainTitle}". Rewrite the two line boxes to `
+        + 'match the page\'s own promise, keeping each one to a word the donor\'s 192px box can hold.');
+    }
   }
 
   /* One `<h2>` per line box, filled where it stands — the split is at the second
@@ -263,12 +269,10 @@ export function render(frag, ctx) {
 
   /* --------------------------------------------------------- the paragraph -- */
 
-  /* The site's own sentence about this page. Using META rather than writing a
-     new one keeps the header from making a claim the page does not already
-     make, and keeps it in step with the description a search engine is given. */
-  const meta = C.META?.[donor.page];
-  if (!meta?.description) throw new Error(`cn-price-hero: META['${donor.page}'].description is what the paragraph says; it is missing`);
-  html = setText(html, 'cn-text-size-medium', escapeHtml(t(meta.description)));
+  /* V5 P08's supporting sentence, the introduction the owner approved for this
+     page (2026-09-17). */
+  if (!P.introBody) throw new Error('cn-price-hero: PRICING.introBody is what the paragraph says; it is missing');
+  html = setText(html, 'cn-text-size-medium', escapeHtml(t(P.introBody)));
 
   /* ------------------------------------------------------------- the guard -- */
 

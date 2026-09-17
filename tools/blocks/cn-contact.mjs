@@ -218,7 +218,7 @@
  *   7   team       CONTACT.fields.team       input type=text
  *   8   systems    CONTACT.fields.systems    input type=text
  *   9   field      CONTACT.fields.category   select, CONTACT.selectPlaceholder
- *                                            + the twelve CONTACT.options
+ *                                            + the nine CONTACT.options
  *   10  field-2    CONTACT.fields.message    textarea
  *
  * Every `name`, every `id` and every label is the one this site's own contact
@@ -234,10 +234,10 @@
  *   the select   cinery has no `<select>` anywhere in its export — so the
  *                `<input>` of units[0] is re-tagged `<select>`, its
  *                `maxlength`, `placeholder` and `type` (none of which a select
- *                may carry) are dropped, and the thirteen `<option>`s are
+ *                may carry) are dropped, and the ten `<option>`s are
  *                written from C.CONTACT.selectPlaceholder and C.CONTACT.options
  *                exactly as tools/build-site.mjs writes them (`value=""` then
- *                `value="1"`…`"12"`). The options are the only elements in this
+ *                `value="1"`…`"9"`). The options are the only elements in this
  *                block that are not a donor element, and there is no donor
  *                element they could have been cloned from.
  *                Its class becomes `cn-form-input is-select-input w-select`:
@@ -460,7 +460,7 @@ const DROPPED = [
  * cn-service ends on cannot be used verbatim here; the check below names what
  * survived instead of only saying that something did.
  */
-const PRODUCT_WORDS = new Set(['STARGO', 'WORK', 'WHATSAPP', 'AI', 'CRM', 'PI', 'SEO', 'GEO', 'SKU', 'OS', 'QC']);
+const PRODUCT_WORDS = new Set(['STARGO', 'WORK', 'WHATSAPP', 'AI', 'CRM', 'ERP', 'PI', 'SEO', 'GEO', 'SKU', 'OS', 'QC']);
 
 /* ------------------------------------------------------ tiny tag surgery -- */
 
@@ -633,9 +633,9 @@ export function render(frag, ctx) {
      way tools/build-site.mjs writes the same list — an empty value on the
      placeholder (js/stargo-forms.js's collect() reads a select by
      `options[selectedIndex].text` and skips index 0, so the placeholder must be
-     first and must be selected), then 1…12. */
-  if (K.options.length !== 12) {
-    throw new Error(`cn-contact: expected copy.mjs CONTACT.options to hold the twelve workflow entry points, found ${K.options.length}`);
+     first and must be selected), then 1…9 — V5 P07's nine interest labels. */
+  if (K.options.length !== 9) {
+    throw new Error(`cn-contact: expected copy.mjs CONTACT.options to hold V5 P07's nine interest labels, found ${K.options.length}`);
   }
   const options = `<option value="">${escapeHtml(t(K.selectPlaceholder))}</option>`
     + K.options.map((o, i) => `<option value="${i + 1}">${escapeHtml(t(o))}</option>`).join('');
@@ -815,7 +815,7 @@ export function render(frag, ctx) {
     if (a !== 1 || b !== 1) throw new Error(`cn-contact: expected one ${open}…${close}, found ${a} open / ${b} close`);
   }
   const opts = (html.match(/<option\b/g) ?? []).length;
-  if (opts !== K.options.length + 1) throw new Error(`cn-contact: expected ${K.options.length + 1} <option> (the placeholder and the twelve entry points), found ${opts}`);
+  if (opts !== K.options.length + 1) throw new Error(`cn-contact: expected ${K.options.length + 1} <option> (the placeholder and the nine interest labels), found ${opts}`);
   if (!/<select[^>]*><option value="">/.test(html)) {
     throw new Error('cn-contact: the placeholder is not the select\'s first option — js/stargo-forms.js skips index 0 and would send the placeholder as an answer');
   }

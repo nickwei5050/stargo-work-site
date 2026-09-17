@@ -40,7 +40,7 @@
  * WHAT THE WORDS BECOME. Every slot is filled from tools/copy.mjs, and every
  * figure in the card is a figure copy.mjs already publishes on this same page:
  * the price and its unit are 标准版's own (`¥10,000`, `/ 年`), the renewal line
- * is 标准版's own renewal, the workforce figure is ENTERPRISE.stats[0], and the
+ * is 标准版's own renewal, the workforce figure is PRICING.cardStat, and the
  * footnote is the pricing FAQ's own answer about model cost. No price, metric,
  * date, customer or testimonial is invented anywhere in this block. Two slots
  * have no copy.mjs source and are written plain, in the site's register, saying
@@ -182,7 +182,6 @@ export function render(frag, ctx) {
   if (!DONORS[donor.donor]) throw new Error(`cn-price-card: donor ${donor.donor} is not registered`);
 
   const P = C.PRICING;
-  const E = C.ENTERPRISE;
 
   /* -------------------------------------------------- what the card is about --
 
@@ -305,9 +304,10 @@ export function render(frag, ctx) {
      companies"). Both are metrics about customers, and this block invents
      neither. What the site does publish, and can stand behind, is the size of
      its AI workforce and the sentence it always attaches to that number:
-     ENTERPRISE.stats[0] is `{ value: '288', text: '个 AI 员工，在企业设定的权限
+     PRICING.cardStat is `{ value: '288', text: '个 AI 员工，在企业设定的权限
      范围内工作。' / 'AI employees, working inside the permissions the company
-     sets.' }`. The stat's own comma is where the site itself divides the figure
+     sets.' }` (it used to be read from ENTERPRISE.stats[0]; the enterprise page
+     now words its own line differently, and the owner keeps this one). The stat's own comma is where the site itself divides the figure
      from its qualifier, so the figure and its noun go on the star line and the
      qualifier goes on the secondary line under it — which is the shape cinery
      draws. Measured: 「288 个 AI 员工」 ~112px on a star row with ~600px free,
@@ -321,11 +321,11 @@ export function render(frag, ctx) {
     const r = region(html, '<div class="cn-client-rating-wrap">', 'the portrait and rating row');
     let row = html.slice(r.at, r.end);
 
-    const stat = E.stats?.[0];
-    if (!stat || !/^\d+$/.test(String(stat.value ?? ''))) throw new Error(`cn-price-card: ENTERPRISE.stats[0] is ${JSON.stringify(stat?.value)}, not a figure`);
+    const stat = P.cardStat;
+    if (!stat || !/^\d+$/.test(String(stat.value ?? ''))) throw new Error(`cn-price-card: PRICING.cardStat is ${JSON.stringify(stat?.value)}, not a figure`);
     const said = t(stat.text);
     const split = /^([^，,]+)[，,]\s*([\s\S]+)$/.exec(said);
-    if (!split) throw new Error(`cn-price-card: ENTERPRISE.stats[0].text no longer divides at a comma — "${said}"`);
+    if (!split) throw new Error(`cn-price-card: PRICING.cardStat.text no longer divides at a comma — "${said}"`);
     const [, noun, qualifier] = split;
 
     /* The qualifier is written by copy.mjs as the tail of a sentence, so on the

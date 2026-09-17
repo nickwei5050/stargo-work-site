@@ -166,7 +166,7 @@ export function render(frag, ctx) {
     out = setText(out, 'rk-rt-responsive-text-change', escapeHtml(t(theme.title)));
 
     /* The role line: a link to the catalogue group that holds the full ERP,
-       fulfilment, finance and service detail (#g08). The line keeps its donor
+       fulfillment, finance and service detail (#g08). The line keeps its donor
        class, so it keeps renok's grey. */
     out = setText(out, 'rk-rt-text-color-light-gray', `<a class="rk-testimonials-link" href="${O.link.href}">${escapeHtml(t(O.link.label))}</a>`);
 
