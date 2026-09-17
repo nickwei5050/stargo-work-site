@@ -26,7 +26,21 @@ for (const f of files) {
     assert(/\balt="/.test(tag[0]) && /\bwidth="/.test(tag[0]) && /\bheight="/.test(tag[0]), `${f}: image metadata`);
   }
   assert(/og:image[^>]*(stargo-editorial\/og-cover\.png|assets\/blog\/[\w-]+\.webp)/.test(html), `${f}: share cover`);   // articles share their cover
-  assert(/js\/stargo-tabs.js\?v=[0-9a-f]{12}/.test(html), `${f}: runtime cache version`);
+  /* Runtime cache version: every local script and stylesheet the page loads
+     carries its content hash (tools/chrome.mjs), so a deployment never serves a
+     stale runtime. This used to be asserted through js/stargo-tabs.js alone, as
+     if every page loaded it; since its rebuild about.html has no tab component
+     and did not load it, and the check failed for the wrong reason. */
+  for (const m of html.matchAll(/\s(?:src|href)="(?:\.\.\/)*((?:css|js)\/[^"]+)"/g)) {
+    assert(/\?v=[0-9a-f]{12}$/.test(m[1]), `${f}: runtime cache version on ${m[1]}`);
+  }
+  /* js/stargo-tabs.js drives the tab components: Webflow tabs (.w-tabs), the
+     pricing period toggle (.pricing-tabs-info-block), the homepage's core-systems
+     switcher (.product-sticky-block) and the FAQ accordions' ARIA
+     (.toggle-wrapper). A page that carries one of them must load it. */
+  if (/class="[^"]*\b(?:w-tabs|pricing-tabs-info-block|product-sticky-block|toggle-wrapper)\b/.test(html)) {
+    assert(/js\/stargo-tabs\.js\?v=[0-9a-f]{12}/.test(html), `${f}: has tab components but does not load js/stargo-tabs.js`);
+  }
 }
 console.log(`PASS static: 43 unique generated originals; placed images carry alt/width/height; ${files.length} pages without legacy references`);
 const BASE = process.env.BASE_URL || 'http://127.0.0.1:4200';
@@ -81,8 +95,10 @@ async function worker() {
       // Contact/pricing deliberately hide decorative media on small screens.
       // Keep that composition and verify those images are not downloaded.
       // Pages that use the templates' own imagery (lifelogx pages, blog) request none of the generated set.
+      // About joined them when it was rebuilt from cinery's blocks (its pictures are cinery's clips and
+      // photographs, like the pricing page's); only the shared menu carries generated art there.
       if (hasImageArea) assert(assets.length > 0, 'visible new images requested');
-      else assert((width < 992 && ['contact', 'pricing'].includes(name)) || /intelligence|workforce|blog|pricing/.test(name), 'only approved template-imagery pages omit generated art');
+      else assert((width < 992 && ['contact', 'pricing'].includes(name)) || /intelligence|workforce|blog|pricing|about/.test(name), 'only approved template-imagery pages omit generated art');
       const card = await page.evaluate(() => [...document.querySelectorAll('img[src*="stargo-editorial"]')].find(i => {
         const r = i.getBoundingClientRect();
         return r.width > 180 && r.height > 150 && !i.closest('.menu-wrapper,nav,.navbar,.menu-bottom');

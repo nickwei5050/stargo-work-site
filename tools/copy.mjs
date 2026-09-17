@@ -138,7 +138,7 @@ export const CHROME = [
   ['>Privacy Policy<', B('>隐私政策<', '>Privacy Policy<')],
   ['>View Work<', B('>查看<', '>View<')],
   ['>Read more<', B('>阅读<', '>Read more<')],
-  ['Talk to Denis', B('预约企业 AI 演示', 'Book a demo')],
+  ['Talk to Denis', B('预约企业演示', 'Book a demo')],   // the menu card holds one line at 992-1439: the site's own CTA wording
   ['>Schedule a call<', B('>预约演示<', '>Book a demo<')],
   ['>Get in touch<', B('>联系我们<', '>Get in touch<')],
   ['>Terms of use<', B('>使用条款<', '>Terms of use<')],
@@ -384,7 +384,7 @@ export const HOME_MONO = [
      nine characters: the column holds three a line between 768 and 1024px,
      and the full sentence stood six lines tall there. */
   ['(Portfolio 26©)', B('(缺的从来不是一个软件)', '(The problem was never a missing tool)')],
-  ['<h2 class="h2">Work<span class="small-ftd">(4)</span></h2>', B('<h2 class="h2">工具很多，靠人连接<span class="small-ftd">(4)</span></h2>', '<h2 class="h2">Many tools, manual handoffs.<span class="small-ftd">(4)</span></h2>')],
+  ['<h2 class="h2">Work<span class="small-ftd">(4)</span></h2>', B('<h2 class="h2">工具<wbr/>很多，靠人<wbr/>连接<span class="small-ftd">(4)</span></h2>', '<h2 class="h2">Many tools, manual handoffs.<span class="small-ftd">(4)</span></h2>')],
   ['Forma Digital', B('询盘来了，还要重新整理', 'Email inquiries still need organizing')],
   ['One Step', B('窗口很多，客户信息分散', 'Chats span windows; context is scattered')],
   ['Nero Vision', B('客户在表格，跟进靠人记', 'Customers in sheets, follow-up by memory')],
@@ -1421,7 +1421,7 @@ export const NOTICES = {
      The workforce card says what 288 counts, as every 288 on the site must,
      and no longer claims teams "in seconds". */
   relatedTitle: B('继续看', 'Keep reading'),
-  relatedIntro: B('三个入口，看 STARGO WORK 做什么、谁来做、怎样管。', 'Three places to see what STARGO WORK does, who does the work and how it is managed.'),
+  relatedIntro: B('三个入口，看 STARGO WORK<br/>做什么、谁来做、怎样管。', 'Three places to see what STARGO WORK does, who does the work and how it is managed.'),   // zh: split per letter, so the break keeps 做什么 and 谁来做 whole
   related: [
     { tag: B('(14 个能力域)', '(14 capability groups)'), title: B('能力', 'Capabilities'), desc: B('从 Growth OS、Sales Desk 到 ERP 与 AI 创作，从工作空间到持续改进。', 'From Growth OS and Sales Desk to ERP and AI creative work — from the workspace to controlled improvement.'), href: 'capabilities.html' },
     { tag: B('(288 个专业数字岗位)', '(288 specialized AI roles)'), title: B('数字员工', 'AI Workforce'), desc: B('十类企业职能，按任务组成团队，互相沟通、分工协作，一起把事做完。', 'Ten enterprise functions; teams form around the task, talk to each other and finish the work together.'), href: 'workforce.html' },

@@ -3979,4 +3979,327 @@ html[lang^="en"] .team-grid .team-content .h2 { text-wrap: balance; }
 
 
 /* V7-HOME-START (home, contact, notices, blog index fixes) */
+
+/* H1. The 404 page's title is now its h1 (it was Mono's h2.h2). The Chinese
+       heading sweep above balances `h2.h2`; the same for this one heading so
+       its computed style is what it was. */
+html[lang^="zh"] .utility-page-content h1.h2 { text-wrap: balance; }
+
+/* H11. Contact page, the photo card's head row: the STARGO mark and the card's
+        label. The label wrapped inside its half of the row at 768
+        (「(从一条业务开/始)」) and touched the mark (「STARGO(Start with one)」
+        at 768 in English). The label now keeps its one line and a 16px gap;
+        where the two do not fit side by side it moves under the mark. */
+.stargo-contact-page .testimonials-card .flex-btw.make-flx { flex-wrap: wrap; column-gap: 16px; row-gap: 8px; }
+.stargo-contact-page .testimonials-card .flex-btw.make-flx > .top-text.for-tst { white-space: nowrap; }
+/*      The quote is plain text (not split per letter); in Chinese it ended
+        「…可验收的结/果。」」 at 768 and 1024. `pretty` reworks the last lines. */
+html[lang^="zh"] .stargo-contact-page .testimonials-card .card-testi > .top-text.for-tst { text-wrap: pretty; }
+/*      English: the quote, and the two long form labels ("What would you like AI
+        to improve / first?", "What workflow do you want AI to / improve?"),
+        ended on one word. */
+html[lang^="en"] .stargo-contact-page .testimonials-card .card-testi > .top-text.for-tst { text-wrap: pretty; }
+html[lang^="en"] .stargo-contact-page .cn-contact .cn-form-label { text-wrap: balance; }
+
+/* H2. Homepage #loop, the small labels on the three 3D cards (ERP 与履约 /
+       AI 创作 / 数字员工; "ERP & delivery" / "AI creative" / "AI teams").
+       From 768px Scalora sets them at its 24px h5 inside boxes 134 and 114px
+       wide, so the English labels broke ("ERP &"/"delivery", "AI"/"creative")
+       and a six-character Chinese label broke before its last character. At
+       Scalora's own phone size (20px, 26px leading) a label of up to six
+       Chinese characters or about fourteen Latin ones holds one line; a longer
+       one wraps onto two balanced lines. */
+@media (min-width: 768px) {
+  .sc-scope.sc-hero .hero-card-041-title {
+    font-size: 20px;
+    line-height: 26px;
+    text-wrap: balance;
+  }
+}
+
+/*     …and the card stack those labels sit on. Two things hid the lowest
+       labels at every width, in both languages:
+       1. The section after this band (`.section.with-minus`) is pulled up
+          100px over it (white, z-index 10), so the band's last 100px are never
+          seen — and the stack was drawn into them (at 390 the two lower labels
+          sat 29 and 57px under that edge, at 1440 × 900 the lowest 36–97px).
+          The band now carries those 100px beyond what it shows: 100px more
+          bottom padding below 992, and from 992 a height of one screen plus
+          100px, so the part that is seen is still exactly one screen.
+       2. From 992 the stack is zoomed to the room left under the text (fix 3
+          near the top of this file). That ladder was measured against a
+          shorter text block than today's: re-measured at 1440 × 640–1200, the
+          painted stack ends 501px + 533px × zoom below the band's top in
+          Chinese. In English the heading is a line taller and the paragraph
+          two lines taller (131px in all). The steps below are the same zoom
+          values, each taken at the height where the stack now fits on the
+          screen; English has its own. Under 899px, where English would need a
+          stack under half size, it keeps half size and the band grows to hold
+          it (then 124px of padding: the 100px above plus the 3D overhang).
+       The motion is untouched. */
+@media (max-width: 991px) {
+  .sc-scope.sc-hero .hero-contant-wrapper { padding-bottom: calc(var(--_spacing---padding--padding-21xl) + 100px); }
+}
+@media (min-width: 992px) {
+  .sc-scope.sc-hero { height: calc(100vh + 100px); min-height: 740px; }
+}
+@media (min-width: 992px) and (max-height: 1033px) { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .78; } }
+@media (min-width: 992px) and (max-height: 916px)  { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .66; } }
+@media (min-width: 992px) and (max-height: 852px)  { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .58; } }
+@media (min-width: 992px) and (max-height: 809px)  { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .5; } }
+@media (min-width: 992px) and (max-height: 767px)  { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .42; } }
+@media (min-width: 992px) and (max-height: 724px)  { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .34; } }
+@media (min-width: 992px) and (max-height: 681px)  { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .28; } }
+@media (min-width: 992px) and (max-height: 649px)  { .sc-scope.sc-hero .hero-cards-wrapper { zoom: .22; } }
+@media (min-width: 992px) and (max-height: 1164px) { html[lang^="en"] .sc-scope.sc-hero .hero-cards-wrapper { zoom: .78; } }
+@media (min-width: 992px) and (max-height: 1047px) { html[lang^="en"] .sc-scope.sc-hero .hero-cards-wrapper { zoom: .66; } }
+@media (min-width: 992px) and (max-height: 983px)  { html[lang^="en"] .sc-scope.sc-hero .hero-cards-wrapper { zoom: .58; } }
+@media (min-width: 992px) and (max-height: 940px)  { html[lang^="en"] .sc-scope.sc-hero .hero-cards-wrapper { zoom: .5; } }
+@media (min-width: 992px) and (max-height: 898px) {
+  html[lang^="en"] .sc-scope.sc-hero { height: auto; }
+  html[lang^="en"] .sc-scope.sc-hero .hero-contant-wrapper { padding-bottom: 124px; }
+}
+
+/* H3. Homepage #loop, English heading: the rotating last word sits in an
+       80px window that shows one line of it. From 768 Scalora puts the window
+       beside "Carry it through to", which left it 264px — too narrow for
+       "repeat orders.", which broke in two and never showed whole — and broke
+       "Carry it / through to" beside it. As Scalora itself does below 768, the
+       window now takes the line under "Carry it through to", as wide as its
+       longest word, each word centred in it; a word never wraps. The heading
+       is three lines either way, so nothing below it moves. The Chinese
+       heading (「再推进到」 plus a two-character word) fits on one line and is
+       unchanged. */
+html[lang^="en"] .sc-scope.sc-hero .hero-title-inner-block { flex-wrap: wrap; }
+html[lang^="en"] .sc-scope.sc-hero .hero-title-changing-words-wrapper { align-items: center; }
+html[lang^="en"] .sc-scope.sc-hero .hero-title-changeing-word { white-space: nowrap; }
+/*     At 320 the heading lines themselves broke "Carry it through" / "to";
+       balanced: "Carry it" / "through to". */
+html[lang^="en"] .sc-scope.sc-hero .hero-title-block h2 { text-wrap: balance; }
+
+/* H4. Homepage, 288 section, dark card: the label (「(按任务组队)」 /
+       "(Teams by task)") and the avatar row. Below 992px Mono pins the two,
+       stacked, 20px from the card's bottom-right corner, and the label landed
+       on the last text line (「十类企业职能」 / "ten enterprise functions") at
+       320–991. Below 992 they now share one row, label right-aligned before
+       the avatars (40px tall instead of 76):
+         - 768–991, where the card's height is fixed by the grid, the row stays
+           pinned to the corner and clears the text by 26px or more (a label
+           up to twice today's length wraps onto two lines);
+         - up to 767, where the card is as tall as its content, the row joins
+           the flow under the text (16px below it, 20px above the card's
+           edge), so no label length can reach the text; a label too long for
+           the row goes on its own line above the avatars.
+       From 992 the pair sits top-right beside the big 288; its width is capped
+       so a longer label wraps rather than running over the number. Layout
+       only: the label is copy and may change length. */
+@media (min-width: 992px) {
+  .card-half._01 .team-circle { max-width: calc(100% - 251px); }
+}
+@media (max-width: 991px) {
+  .card-half._01 .team-circle {
+    left: 15px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    column-gap: 12px;
+    row-gap: 8px;
+  }
+  .card-half._01 .team-circle > .top-text { min-width: 0; text-align: right; text-wrap: balance; }
+  .card-half._01 .team-circle > .team-flex { flex: none; }
+}
+@media (max-width: 767px) {
+  .card-half._01 { padding-bottom: 20px; }
+  .card-half._01 .team-circle { position: relative; inset: auto; margin-top: 16px; flex-wrap: wrap; }
+}
+
+/* H5. Homepage captions.
+   - The row captions are plain text in the first of four grid columns. In
+     Chinese, `keep-all` lets a caption break only at its spaces, so
+     「(288 个数字岗位 · 非同时运行)」 breaks after 「·」 at 768 (it broke
+     「非同时/运行」) and 「(四个示例场景 · 非客户评价)」 after 「·」 at
+     1024–1440 (「非/客户评价」, 「非客户/评价」). `min-width: 0` keeps the
+     grid's equal columns from growing to the unbroken phrase.
+   - Below 480 the first column is 69–86px. The five-stages caption spills into
+     the second column (its dot moves to that column's end) so it reads on one
+     line in Chinese (「(五个业务/阶段)」 before) and on two in English
+     ("(Five/business/stages)" before); the FAQ caption does the same
+     (「(常见问/题)」 at 320) with the row's three dots each centred in their
+     columns, still evenly spaced. */
+html[lang^="zh"] body:has(#loop) section.with-minus .bottom-grid > p.top-text:first-child,
+html[lang^="zh"] .testimonials-section .testimonials-width > div > p.top-text {
+  word-break: keep-all;
+}
+html[lang^="zh"] body:has(#loop) section.with-minus .bottom-grid > p.top-text:first-child,
+html[lang^="zh"] .testimonials-section .testimonials-width > div:has(> p.top-text) {
+  min-width: 0;
+}
+@media (max-width: 479px) {
+  body:has(#loop) section:has(.service-title) .bottom-grid.grd > p.top-text:first-child,
+  html[lang^="zh"] #compare .bottom-grid.mw.grd > p.top-text {
+    margin-right: calc(-100% - 10px + 28px);
+    min-width: 0;
+    text-wrap: balance;
+  }
+  body:has(#loop) section:has(.service-title) .bottom-grid.grd > .circle-divider { justify-self: end; }
+  html[lang^="zh"] #compare .bottom-grid.mw.grd > .circle-divider { justify-self: center; }
+}
+
+/* H6. Homepage, English display headings: one word ("context.", "work")
+       ended the channel band and the phone products heading, and the 288
+       heading broke "Across / the enterprise." Balanced lines, and the channel
+       heading's box is 40px wider from 768, so "Different channels," /
+       "one business context." fits its two lines (the second is 463px in a
+       458px box). Layout only; the words may change. */
+html[lang^="en"] .sc-scope.integration .integration-title-block h2,
+html[lang^="en"] .sc-scope.products .products-title-block h2,
+html[lang^="en"] body:has(#loop) section.with-minus h2.h2:not(.card-half h2) {
+  text-wrap: balance;
+}
+@media (min-width: 768px) {
+  html[lang^="en"] .sc-scope.integration .integration-title-block { margin-inline: -20px; }
+}
+
+/* H7. Homepage, Chinese.
+   - The sticky problem heading sits in a column three characters wide from
+     768 to 1439px and broke 「工具很/多，靠/人连接」. The copy marks the word
+     boundaries (<wbr>) and `keep-all` breaks only there (and after 「，」):
+     「工具/很多，/靠人/连接」 — one word a line, as the English heading has.
+   - The pricing heading broke 「从企业需要/的 AI 层级开始。」 at every width;
+     with `keep-all` it breaks at its spaces: 「从企业需要的/AI 层级开始。」. */
+html[lang^="zh"] section.gr h2.h2,
+html[lang^="zh"] section.drk h2.h2.for-stats {
+  word-break: keep-all;
+}
+
+/* H17. Footer statement, English: the second sentence ("Delegate the work.
+        Keep the authority.") left "authority." alone at 320. It is its own
+        balanced block now; the statement above it keeps its forced break. */
+html[lang^="en"] .footer-part-1 h2.h2 > span { display: block; text-wrap: balance; }
+
+/* H19. Homepage sweep: short texts that ended on one word or one character.
+   - English: section captions, the scenario speakers, the chat bubbles, the
+     product tab names, the FAQ questions, the article titles and the pricing
+     heading are balanced ("(The problem was never a missing / tool)",
+     "(288 AI roles · not concurrent / runs)", "Needs an authorized /
+     reviewer", "AI Creative · Images & / video", "…“288 digital employees” /
+     mean?", "From inquiry to quote, without starting in / Excel", "One
+     system. The / right level of / support."), and so are the short quotes and
+     plan lines of the flip cards and scenarios ("…approvals and /
+     acceptance.”", "…self-service lead / discovery."), where `pretty` left
+     the last word alone. Longer running text (the product descriptions, the
+     comparison lines) takes `pretty`.
+   - Chinese: the pricing flip cards' quotes and labels and the Enterprise
+     quote (「…带动增/长。」」, 「…对外工/作。」」, 「…审/批」, 「…私有化部/署。」」)
+     take `pretty`; the article titles break only at their punctuation and
+     spaces, balanced (「…的正确顺/序」 → 「从一条流程开始：」/「企业引入 AI
+     的正确顺序」). */
+html[lang^="en"] body:has(#loop) :is(.bottom-grid > p.top-text:first-child, section.gr p.top-text, .testimonials-section p.top-text, .team-circle p.top-text, .caption-text, .p-chat, .products-card-name-block .heading-style-h5, .products-cards-dashboard-block .heading-style-h4, .faq-wrapper .toggle-header, .blog-txt, section.drk h2.h2.for-stats, .top-text.for-tst, .top-text.for-sst, p.p-max, p.top-text._05) {
+  text-wrap: balance;
+}
+html[lang^="en"] body:has(#loop) :is(.paragraph-p1, p.p-no-bottom, #compare p.top-text, #compare h2.h2._01.sm._600) {
+  text-wrap: pretty;
+}
+html[lang^="zh"] body:has(#loop) :is(.top-text.for-tst.sts, .top-text.for-sst, .sc-scope.integration .integration-info-block div, .paragraph-p1) {
+  text-wrap: pretty;
+}
+html[lang^="zh"] body:has(#loop) .blog-txt {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+/* H8. Homepage demo band, Chinese heading 「预约企业演示。」: with its Chinese
+       full stop (tools/chrome.mjs) it is seven full-width characters, 280px
+       at 40px, and below 340px the card holds 257 — it broke 「预约企/业演示。」.
+       It keeps one line: the size steps down with the card there (35.7px at
+       320) and the phrase is never broken inside. */
+html[lang^="zh"] body:has(#loop) section.ctc h2.h2.for-ctn {
+  font-size: min(40px, calc((100vw - 70px) / 7));
+  word-break: keep-all;
+}
+/*     The band's legal line (home, capabilities, enterprise) ends with the two
+       link texts and 「。」; the line broke inside 「隐私政策」 at 340–390. The
+       link texts keep one line each. */
+html[lang^="zh"] section.ctc .legal-link { white-space: nowrap; }
+
+/* H16. Notices page, the "Keep reading" band.
+   - The three card sentences are plain text. In Chinese they broke inside
+     words (「创/作」, 「岗/位」, 「目/录」, 「结/果」); `keep-all` breaks them
+     only at punctuation and spaces (`anywhere` is the fallback for a phrase
+     longer than the card, and keeps the cards' sizes as they are).
+   - In English the side sentence and the card sentences left one word on
+     their last line ("managed.", "workflow.", "improvement."); they are
+     three or four lines long, and balanced lines end none of them on one
+     word. (The Chinese side sentence is split per letter; a break in its
+     copy keeps 「做什么」 and 「谁来做」 whole.)
+   The notice text above the band is not touched. */
+html[lang^="zh"] .blog-text-wrp .margin-10 p {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+html[lang^="en"] .blog-text-wrp .margin-10 p,
+html[lang^="en"] .max-lft-dvc p.top-text.big {
+  text-wrap: balance;
+}
+
+/* H18/H19. Pricing page, layout only (no price, plan or word changes).
+   - The tiers band's head: renok sets the heading beside a 35% column holding
+     the paragraph and the first-year / renewal switch. With this page's
+     longer heading that column was 163px at 768 and 170px at 390, so the
+     heading ran five lines in English and the switch labels broke
+     ("First-/year/total", 「首年价/格」, 「续/费」). Below 992 the two now
+     stack, as renok already does under 360; the switch labels never wrap.
+     The heading is balanced, and in Chinese breaks only at its comma
+     (「从需要解决的业务，」/「确定合适的配置与服务。」; it left 「务。」 alone at
+     768 and 1024).
+   - In the tier cards the price unit broke into three lines beside the price
+     at 1024 ("/ first / year / total", 「/ 首 / 年」); it keeps one line and
+     moves under the price when the two do not fit. The tick icons of long
+     feature lines were squeezed smaller than the others (renok's and
+     cinery's lists alike); they keep their size.
+   - Short card texts and the review quotes left one character or word on
+     their last line (「资/料」, 「培训一/次」, 「核/对。」」, "SKUs",
+     "session", "need."); `pretty` (the English review quotes are balanced:
+     their last line was "up.”" or a lone "follow-up.”"). The FAQ
+     questions left a word or a character alone ("year?", 「始？」); balanced. */
+@media (max-width: 479px) {
+  .rk-price-tiers .rk-rt-pricing-v1-top { grid-template-columns: minmax(0, 1fr); }
+}
+@media (min-width: 480px) and (max-width: 991px) {
+  .rk-price-tiers .rk-rt-pricing-v1-top { flex-direction: column; align-items: flex-start; }
+  .rk-price-tiers .rk-rt-pricing-top-right { flex: none; max-width: 34.6875rem; }
+}
+.rk-price-tiers h1.rk-rt-gap-off { text-wrap: balance; }
+html[lang^="zh"] .rk-price-tiers h1.rk-rt-gap-off { word-break: keep-all; }
+.rk-price-tiers .rk-rt-monthly,
+.rk-price-tiers .rk-rt-yearly { white-space: nowrap; }
+.rk-price-tiers .rk-rt-card-price { flex-wrap: wrap; }
+.rk-price-tiers .rk-rt-price-yearly-box > div { white-space: nowrap; }
+.rk-price-tiers .rk-rt-pricing-list-items > div:first-child,
+.cn-price-card .cn-check-icon { flex: none; }
+.rk-price-tiers .rk-rt-text-color-premium-grey,
+.rk-price-tiers .rk-rt-pricing-top-right > .rk-rt-text-color-light-gray,
+.rk-price-compare .rk-rt-text-color-premium-grey,
+.cn-price-card .cn-text-size-regular,
+html[lang^="zh"] .cn-reviews p.cn-text-size-large {
+  text-wrap: pretty;
+}
+html[lang^="en"] .cn-reviews p.cn-text-size-large { text-wrap: balance; }
+.sc-page .faq .heading-style-h6 { text-wrap: balance; }
+
+/* H12/H13. Contact page on phones.
+   - The form card sat 16px inside the column (`.form-amin`'s padding-inline,
+     written for the white Mono form this card replaced), so the stacked form
+     was 32px narrower than the photo card above it and its fields lost the
+     same width (225px at 320). The card now spans the column like the photo
+     card; its own 24px padding keeps the fields off its edge.
+   - The message box is 2 rows plus cinery's 32px/64px padding (138px). The
+     English example text runs to five lines at 320 and reached the bottom
+     border. 200px gives the five lines the box's own bottom padding back. */
+@media (max-width: 767px) {
+  .stargo-contact-page .form-amin { padding-inline: 0; }
+  .stargo-contact-page .cn-contact .cn-form-input.cn-is-text-area { min-height: 200px; }
+}
+
 /* V7-HOME-END */

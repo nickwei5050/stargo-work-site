@@ -247,6 +247,18 @@ export function render(frag, ctx) {
      page's two-tone heading; renok's h2 is one text node and gains no element
      here, so the span is dropped and the words kept. */
   head = setText(head, 'rk-rt-gap-off', escapeHtml(t(P.title).replace(/<[^>]*>/g, '')));
+  /* That heading is PRICING.title, the page's own promise, and the pricing page
+     has no other h1 (cinery's 合适 / 配置 wordmark above it is two h2 line
+     boxes). So it is the page's one h1. renok styles it through
+     `.rk-price-tiers h2` element rules; tools/blocks/rk-price-tiers.css
+     re-states those for this h1 so it draws exactly as before. */
+  head = swap(head, '<h2 class="rk-rt-gap-off">', '<h1 class="rk-rt-gap-off">', 'the section heading');
+  {
+    const at = head.indexOf('<h1 class="rk-rt-gap-off">') + '<h1 class="rk-rt-gap-off">'.length;
+    const close = head.indexOf('</h2>', at);
+    if (close < 0 || head.slice(at, close).includes('<')) throw new Error('rk-price-tiers: the section heading does not close right after its text');
+    head = head.slice(0, close) + '</h1>' + head.slice(close + '</h2>'.length);
+  }
 
   /* The paragraph beside the heading is PRICING's own answer to 「我们该从哪一级
      开始？」 — the question a row of five levels puts to the reader. Found by the
