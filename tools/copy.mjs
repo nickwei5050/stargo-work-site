@@ -885,32 +885,40 @@ export const PRICING = {
 
      THE RULE. On the renewal grid, a level sold as a first-year package
      (`unit: 'first'`) lists that answer instead of its first-year items, under
-     that question, and nothing more. Its renewal price stays 联系我们. 标准版 (a
-     plain annual subscription), 企业版 (定制) and the whole first-year grid keep
-     their own items. The comparison chart below the band is not switched by the
-     toggle; it states first-year inclusions and prices (「/ 首年」) and stays so.
+     that question, and nothing more: the same three lines on 上线版, 增长版 and
+     全球获客版 —
+       1. 标准版软件订阅按年续费 / the Standard software subscription follows
+          its annual renewal terms;
+       2. 域名、托管与持续制作，按续费方案或第三方实际费用另算 / domain, hosting
+          and ongoing production follow the renewal proposal or the relevant
+          third-party charges;
+       3. 首年建站与内容服务包，不等于每年都重复交付同样的内容量 / a first-year
+          launch package is not a promise of repeated annual content production.
+     (Decided 2026-09-18: nothing beyond the answer's three statements; a
+     fourth line about configured AI acquisition operation was removed.) These
+     lines are terms, not inclusions, so they carry a neutral marker instead of
+     renok's tick. A package's renewal price stays 联系我们. 标准版 (a plain
+     annual subscription), 企业版 (定制) and the whole first-year grid keep
+     their own items and ticks. The comparison chart below the band is not
+     switched by the toggle; it states first-year inclusions and prices
+     (「/ 首年」) and stays so.
 
-     `lines`   in order. Each is written out of `from`: fragments that must occur
-               verbatim (a raised first letter allowed) in the answer to
-               「首年之后怎么算？」 or in the level's own items, and the line is
-               those fragments in that order with nothing between them but
-               spaces and punctuation. Two neighbouring fragments may not be cut
-               from one source sentence around words the line leaves out, so a
-               line cannot quote 「不等于」 without its 「不」. No word reaches a
-               renewal card that its sources do not carry. rk-price-tiers.mjs
-               asserts all of it.
-     `when`    a line carrying it is listed only on a level whose own items
-               contain that fragment: continued acquisition operation is quoted
-               at renewal only where the first year included it. */
+     `lines`   in order, each listed on every first-year package. Each is
+               written out of `from`: fragments that must occur verbatim (a
+               raised first letter allowed) in the answer to 「首年之后怎么算？」
+               or in the level's own items, and the line is those fragments in
+               that order with nothing between them but spaces and punctuation.
+               Two neighbouring fragments may not be cut from one source
+               sentence around words the line leaves out, so a line cannot quote
+               「不等于」 without its 「不」. No word reaches a renewal card that its
+               sources do not carry. A line holds `text` and `from` and nothing
+               else. rk-price-tiers.mjs asserts all of it. */
   renewalTerms: {
     lines: [
       { text: B('标准版软件订阅按年续费', 'The Standard software subscription follows its annual renewal terms'),
         from: B(['标准版', '软件订阅按年续费'], ['The', 'Standard', 'software subscription follows its annual renewal terms']) },
       { text: B('域名、托管与持续制作，按续费方案或第三方实际费用另算', 'Domain, hosting and ongoing production follow the renewal proposal or the relevant third-party charges'),
         from: B(['域名、托管与持续制作，按续费方案或第三方实际费用另算'], ['Domain, hosting and ongoing production follow the renewal proposal or the relevant third-party charges']) },
-      { text: B('配置后 AI 获客运行，按续费方案或第三方实际费用另算', 'Configured AI acquisition operation follows the renewal proposal or the relevant third-party charges'),
-        from: B(['配置后 AI 获客运行', '按续费方案或第三方实际费用另算'], ['Configured AI acquisition operation', 'follows', 'the renewal proposal or the relevant third-party charges']),
-        when: B('配置后 AI 获客运行', 'configured AI acquisition operation') },
       { text: B('首年建站与内容服务包，不等于每年都重复交付同样的内容量', 'A first-year launch package is not a promise of repeated annual content production'),
         from: B(['首年建站与内容服务包，不等于每年都重复交付同样的内容量'], ['A first-year launch package is not a promise of repeated annual content production']) },
     ],

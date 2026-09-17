@@ -66,8 +66,10 @@
  *   and every tier in PRICING has five, so five of the six donor rows are
  *   emitted and the sixth is dropped. Same mechanism, same splitRepeat().
  *   On the renewal grid a first-year package (上线版, 增长版, 全球获客版) lists
- *   PRICING.renewalTerms instead — three or four rows under 「首年之后怎么算？」,
- *   emitted from the same donor rows (decided 2026-09-17; see `renewList`).
+ *   PRICING.renewalTerms instead — the same three rows under 「首年之后怎么算？」,
+ *   emitted from the same donor rows (decided 2026-09-17, trimmed to the FAQ
+ *   answer's three statements 2026-09-18; see `renewList`). Those rows are
+ *   terms, not inclusions, so their tick becomes a neutral dot (TERM_ROW).
  *
  * WHERE THE GRID ITSELF HAD TO BE TOLD OUR COUNT
  *   `.rt-pricing-cards-grid { grid-template-columns: 1fr 1fr 1fr }` is the one
@@ -144,6 +146,18 @@ const ITEM = '<div class="w-layout-vflex rk-rt-pricing-card-items">';
 const CARD_BORDERED = '<div class="w-layout-vflex rk-rt-pricing-card rk-rt-border-right">';
 const CARD_PLAIN = '<div class="w-layout-vflex rk-rt-pricing-card">';
 const CARD_OPEN = /^<div class="w-layout-vflex rk-rt-pricing-card( rk-rt-border-right)?">/;
+/* One feature row: renok's tick (a white badge with a check cut out, marked
+   up 22 × 21 and drawn 20 × 20, decorative, alt="") beside the line. A
+   renewal term is not something the plan includes, so on those rows the row
+   gains `stargo-renewal-term` and the tick's <img> gives way to an empty,
+   aria-hidden <span> that tools/blocks/rk-price-tiers.css draws as a small
+   dot in the tick's own box, colour and alignment. Every other row keeps
+   renok's tick. */
+const TERM_ROW = {
+  row: ['<div class="w-layout-hflex rk-rt-pricing-list-items">', '<div class="w-layout-hflex rk-rt-pricing-list-items stargo-renewal-term">'],
+  tick: /<img width="22" height="21" alt="" src="[^"]*_pricing-arrow\.svg" loading="lazy"\/>/g,
+  dot: '<span class="stargo-renewal-dot" aria-hidden="true"></span>',
+};
 
 /** How many cards stand in the first row; tools/blocks/rk-price-tiers.css agrees. */
 const PER_ROW = 3;
@@ -242,23 +256,29 @@ export function render(frag, ctx) {
      Renewal grid (decided 2026-09-17, written out at PRICING.renewalTerms): a
      tier sold as a first-year package (`unit: 'first'`) is not re-delivered
      every year, so it lists PRICING.faq's answer to 「首年之后怎么算？」 under that
-     question instead — the Standard subscription renews annually, the rest is
-     quoted — and nothing its sources do not say. 标准版 and 企业版 list their
-     own items in both grids. */
+     question instead — its three statements (the Standard subscription renews
+     annually; domain, hosting and ongoing production follow the renewal
+     proposal or third-party charges; a first-year package is not a promise of
+     repeated annual production), the same on every package, and nothing its
+     sources do not say. 标准版 and 企业版 list their own items in both grids. */
   const afterYearOne = P.faq?.find(([q]) => /首年之后/.test(q.zh));
   if (!afterYearOne) throw new Error('rk-price-tiers: PRICING.faq no longer answers 首年之后怎么算 — that answer is what a package lists on the renewal grid');
   const terms = P.renewalTerms?.lines;
   if (!terms?.length) throw new Error('rk-price-tiers: PRICING.renewalTerms lists no lines for the renewal grid');
+  for (const line of terms) {
+    /* Every line goes on every package; a key this module does not read (a
+       condition, say) would be silently ignored, so there must be none. */
+    const extra = Object.keys(line).filter((k) => k !== 'text' && k !== 'from');
+    if (extra.length) throw new Error(`rk-price-tiers: PRICING.renewalTerms line ${JSON.stringify(t(line.text))} carries ${extra.join(', ')}; a line is \`text\` and \`from\` and is listed on every first-year package`);
+  }
   const glueOnly = (s) => !/[^\s\p{P}]/u.test(s);
   const raised = (f) => f.charAt(0).toLowerCase() + f.slice(1);
-  const usedTerms = new Set();
   const renewalList = (tier) => {
     const items = tier.items.map(t);
     /* Sentence by sentence, so the check below can see words left out. */
     const sources = [...t(afterYearOne[1]).split(/(?<=[。！？])|(?<=[.!?])\s+/), ...items].filter(Boolean);
     const homes = (f) => sources.flatMap((s) => [f, raised(f)].filter((g) => s.includes(g)).slice(0, 1).map((g) => ({ s, end: s.indexOf(g) + g.length })));
-    const lines = terms.filter((line) => {
-      if (line.when && !items.some((it) => it.includes(t(line.when)))) return false;
+    for (const line of terms) {
       /* The line is its fragments, in order, with only spaces and punctuation
          between them; every fragment is the FAQ answer's or this tier's own;
          and two neighbours are never one sentence with words cut out between. */
@@ -275,12 +295,11 @@ export function render(frag, ctx) {
         prev = f;
       }
       if (!glueOnly(rest)) throw new Error(`rk-price-tiers: renewal line ${JSON.stringify(t(line.text))} carries words after its last fragment: ${JSON.stringify(rest)}`);
-      usedTerms.add(line);
-      return true;
-    });
-    return { heading: t(afterYearOne[0]), lines };
+    }
+    return { heading: t(afterYearOne[0]), lines: terms, terms: true };
   };
   const packaged = (tier) => tier.unit === 'first';
+  if (!tiers.some(packaged)) throw new Error('rk-price-tiers: no tier is a first-year package (`unit: \'first\'`), so PRICING.renewalTerms would be listed on no renewal card');
   for (const tier of tiers.filter(packaged)) {
     /* The first line says the Standard subscription renews; that is true only
        of a package that carries it, which each one states as its first item. */
@@ -369,7 +388,7 @@ export function render(frag, ctx) {
     if (units !== 1) throw new Error(`rk-price-tiers: a card should hold one price unit, found ${units}`);
     top = setText(top, 'rk-rt-text-color-light-gray', escapeHtml(unit));
 
-    const { heading, lines: listed } = list(tier);
+    const { heading, lines: listed, terms: asTerms } = list(tier);
     top = setText(top, 'rk-rt-text-style-h6', escapeHtml(heading));
 
     /* The badge is an absolutely-positioned pill that only renok's middle card
@@ -381,7 +400,17 @@ export function render(frag, ctx) {
     }
     if (badged) top = setText(top, 'rk-rt-text-color-black', escapeHtml(badge));
 
-    const lines = listed.map((line, i) => setText(rows.units[i % rows.units.length], 'rk-rt-text-color-premium-grey', escapeHtml(t(line.text ?? line))));
+    const lines = listed.map((line, i) => {
+      let row = setText(rows.units[i % rows.units.length], 'rk-rt-text-color-premium-grey', escapeHtml(t(line.text ?? line)));
+      if (asTerms) {
+        /* A renewal term: neutral dot, not renok's tick (see TERM_ROW). */
+        row = swap(row, TERM_ROW.row[0], TERM_ROW.row[1], 'a feature row\'s list-item wrapper');
+        const ticks = row.match(TERM_ROW.tick) ?? [];
+        if (ticks.length !== 1) throw new Error(`rk-price-tiers: a feature row should hold one tick image, found ${ticks.length}`);
+        row = row.replace(TERM_ROW.tick, TERM_ROW.dot);
+      }
+      return row;
+    });
 
     /* The button keeps two copies of its label, one rolling up behind the
        other. Every plan button goes to contact.html, exactly as the plan
@@ -428,8 +457,6 @@ export function render(frag, ctx) {
   const html = head
     + fillPane(panes[0], firstPrice, firstUnit, t(P.toggleA), firstYearList)
     + fillPane(panes[1], renewPrice, renewUnit, t(P.toggleB), renewList);
-  const unusedTerms = terms.filter((line) => !usedTerms.has(line));
-  if (unusedTerms.length) throw new Error(`rk-price-tiers: PRICING.renewalTerms line(s) listed on no renewal card: ${unusedTerms.map((l) => t(l.text)).join(' | ')}`);
 
   /* ---- fail loudly rather than ship a slot that quietly missed ---- */
 

@@ -6,7 +6,9 @@
    and tools/donor-lib.mjs carries IX2, namespacing the class selectors inside
    the payload the same way it namespaces the markup. renok's index.html loads
    no GSAP and authors no ix3 timeline for this section, so there is nothing to
-   replay as keyframes). */
+   replay as keyframes). The one mark drawn here that renok does not draw is
+   section 5's dot, which stands in for renok's tick on the renewal-term rows,
+   in the tick's own box and colour. */
 
 /* ---------------------------------------------------- 1. renok's `body` -- */
 
@@ -105,4 +107,42 @@
   content: "";
   position: absolute;
   inset: -6px -4px;
+}
+
+/* ------------------------- 5. renewal terms carry a dot, not a tick -- */
+
+/* On the renewal grid the three first-year packages list the pricing FAQ's
+   renewal terms (PRICING.renewalTerms), one of which is a negative — 「不等于
+   每年都重复交付」 / "not a promise of repeated annual content production".
+   renok's tick means "included", so tools/blocks/rk-price-tiers.mjs gives
+   those rows `.stargo-renewal-term` and puts an empty, aria-hidden
+   `.stargo-renewal-dot` where the tick's <img> was. Every other row, in both
+   grids, keeps the tick.
+
+   The dot takes the tick's own box so nothing in the row moves: renok's
+   `img { display: inline-block; vertical-align: middle }` with the SVG's
+   intrinsic 20 × 20 (its `width/height: 100%` resolve to auto in the
+   shrink-wrapped cell), measured 20 × 20 at 390, 768 and 1440 in both
+   languages, in a cell 20px wide and one body line tall; the text starts
+   30px from the row's edge. The mark is the tick's white (`--white`), a 6px
+   disc centred in that box. It is drawn as a border rather than a background
+   so it stays visible under forced colours. */
+.rk-price-tiers .stargo-renewal-term .stargo-renewal-dot {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  width: 20px;
+  height: 20px;
+}
+.rk-price-tiers .stargo-renewal-term .stargo-renewal-dot::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  box-sizing: border-box;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border: 3px solid var(--white);
+  border-radius: 50%;
 }
