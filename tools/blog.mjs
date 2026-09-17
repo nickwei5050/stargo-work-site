@@ -183,7 +183,7 @@ export function chartPipeline(lang, n) {
     + `<p class="sgc-profile">${esc(tx(P.profile, lang))}</p>`
     + steps(P.steps, 'sgc-flow sgc-flow-4')
     + '</div>'
-    + `<div class="sgc-handoff"><p class="sgc-handoff-title"><strong>${esc(tx(P.handoff, lang))}</strong></p><p class="sgc-handoff-text">${card(P.handoffText, lang)}</p>`
+    + `<div class="sgc-handoff"><p class="sgc-handoff-title"><strong>${card(P.handoff, lang)}</strong></p><p class="sgc-handoff-text">${card(P.handoffText, lang)}</p>`
     + label(P.outLabel, lang) + chips(P.outputs, lang, 'sgc-chips sgc-chips-solid') + '</div>'
     + `<div class="sgc-lane sgc-lane-sales"><p class="sgc-lane-title">${card(P.sales, lang)}</p>`
     + label(P.intakeLabel, lang) + chips(P.intake, lang)
@@ -602,11 +602,14 @@ function guideBody(lang) {
  * no-wrap span, so lines break only between chunks. Chunks are short (at most
  * about seven characters: the heading is ~36px in a 288px column at 320) and
  * must join back into the exact title; the check at the foot of this file
- * says so. English headings break at spaces and need none.
+ * says so. English headings break at spaces; words a title joins with a
+ * no-break space ("one system") are one no-wrap phrase too, since the
+ * animation's line split does not honour the no-break space (it still broke
+ * "one / system" at 1280–1920, V7-BLOG r2).
  */
 export const titleHtml = (post, lang, esc = (s) => s) => (lang === 'zh' && post.titleChunks
   ? post.titleChunks.map((c) => `<span class="sgp-nobr">${esc(c.trimEnd())}</span>${c.endsWith(' ') ? ' ' : ''}`).join('')
-  : esc(post.title[lang]));
+  : esc(post.title[lang]).replace(/[^  ]+(?: [^  ]+)+/g, (m) => `<span class="sgp-nobr">${m}</span>`));
 
 /** Newest first. `cover` names a file pair written by tools/blog-covers.mjs into assets/blog/. */
 export const POSTS = [
