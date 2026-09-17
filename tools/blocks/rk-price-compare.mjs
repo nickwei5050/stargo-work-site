@@ -289,6 +289,7 @@
  *   tools/blocks/rk-price-compare.css, where it has always been recorded.
  */
 import { setText, splitRepeat } from '../block-lib.mjs';
+import { zhWbr } from '../lib-html.mjs';
 
 export const donor = {
   id: 'rk-price-compare',
@@ -933,8 +934,13 @@ export function render(frag, ctx) {
      centres the text inside it, so a value sits where a tick sat; the type is
      the body type tools/blocks/rk-price-compare.css restores, the same
      inheritance that draws the period under a price. */
+  /* V7-HOME: on the Chinese page a label or a value marks its word boundaries
+     (<wbr>, tools/lib-html.mjs zhWbr) and css/stargo-fusion.css (V7-HOME H23)
+     breaks it only there and at its spaces: the 108-133px tracks had split
+     「语/种」, 「工作/台」, 「标/准」, 「知/识」 and more. English is unchanged. */
+  const cellWords = (text) => (lang === 'zh' ? zhWbr(text) : escapeHtml(text));
   const valueCell = (text) => {
-    const out = tickCell.replace(IMG, escapeHtml(text));
+    const out = tickCell.replace(IMG, cellWords(text));
     if (out === tickCell) throw new Error(`rk-price-compare: the tick cell has no <img> to put 「${text}」 in place of`);
     return out;
   };
@@ -945,7 +951,7 @@ export function render(frag, ctx) {
     /* renok's own rows, re-used in renok's own order, so every emitted row keeps
        a real `data-w-id` and the donor's staggered reveal repeats. */
     const cut = rowCells(donorRows[i % DONOR_ROWS].text, CELL, 'tick cells', iconless);
-    let left = setText(cut.head, 'rk-rt-text-color-premium-grey', escapeHtml(t(row.label)));
+    let left = setText(cut.head, 'rk-rt-text-color-premium-grey', cellWords(t(row.label)));
     left = dropNodeId(left);
     const cells = row.cells.map((c) => (c.kind === 'tick' ? tickCell : c.kind === 'dash' ? dashCell : valueCell(t(c.text))));
     return left + cells.join('') + cut.tail;
@@ -994,12 +1000,13 @@ export function render(frag, ctx) {
   for (const [what, got, want] of check) {
     if (got !== want) throw new Error(`rk-price-compare: rendered ${got} ${what}, expected ${want}`);
   }
-  const unnamed = tiers.filter((p) => !html.includes(`>${escapeHtml(t(p.name))}<`));
+  const plain = html.replace(/<wbr>/g, '');   // the word marks are not part of what a cell says
+  const unnamed = tiers.filter((p) => !plain.includes(`>${escapeHtml(t(p.name))}<`));
   if (unnamed.length) throw new Error(`rk-price-compare: no column is headed ${unnamed.map((p) => t(p.name)).join(', ')}`);
   const undrawn = rows.flatMap((r) => r.cells.filter((c) => c.kind === 'value').map((c) => t(c.text)))
-    .filter((s) => !html.includes(`>${escapeHtml(s)}<`));
+    .filter((s) => !plain.includes(`>${escapeHtml(s)}<`));
   if (undrawn.length) throw new Error(`rk-price-compare: ${[...new Set(undrawn)].join(', ')} was traced but never reached a cell`);
-  const unlabelled = rows.map((r) => t(r.label)).filter((s) => !html.includes(`>${escapeHtml(s)}<`));
+  const unlabelled = rows.map((r) => t(r.label)).filter((s) => !plain.includes(`>${escapeHtml(s)}<`));
   if (unlabelled.length) throw new Error(`rk-price-compare: no row is labelled ${unlabelled.join(' | ')}`);
 
   const words = html.replace(/<[^>]+>/g, ' ');

@@ -82,7 +82,7 @@ export const CHROME = [
   ['Let’s create great work together!', B('把工作交给 AI，把决定权留在企业。', 'Delegate the work. Keep the authority.')],
   ['Let’s Collaborate', B('预约演示', 'Book a Demo')],
   ['(Newsletter)', B('(订阅更新)', '(Newsletter)')],
-  ['Be the first to know what’s new.', B('产品进展第一时间通知你。', 'Stay close to practical AI work.')],
+  ['Be the first to know what’s new.', B('<span class="zh-keep">产品进展</span><span class="zh-keep">第一时间</span><span class="zh-keep">通知你。</span>', 'Stay close to practical AI work.')],   // zh: per-character split; each phrase is kept whole (css/stargo-fusion.css V7-HOME H20)
   ['No noise. Just curated updates.', B('不发广告，只发产品更新。', 'Receive STARGO WORK product notes and practical workflow guides.')],
   ['Thank you for subscribing!', B('订阅成功。', 'You are subscribed.')],
   /* Webflow's two form-state notices (V5 P07). The success row is used only by
@@ -138,10 +138,10 @@ export const CHROME = [
   ['>Privacy Policy<', B('>隐私政策<', '>Privacy Policy<')],
   ['>View Work<', B('>查看<', '>View<')],
   ['>Read more<', B('>阅读<', '>Read more<')],
-  ['Talk to Denis', B('预约企业演示', 'Book a demo')],   // the menu card holds one line at 992-1439: the site's own CTA wording
-  ['>Schedule a call<', B('>预约演示<', '>Book a demo<')],
+  ['Talk to Denis', B('预约企业演示', 'Book a Demo')],   // the menu card holds one line at 992-1439: the site's own CTA wording
+  ['>Schedule a call<', B('>预约演示<', '>Book a Demo<')],
   ['>Get in touch<', B('>联系我们<', '>Get in touch<')],
-  ['>Terms of use<', B('>使用条款<', '>Terms of use<')],
+  ['>Terms of use<', B('>使用条款<', '>Terms<')],
   ['>Privacy policy<', B('>隐私政策<', '>Privacy policy<')],
   ['>Licensing<', B('>第三方声明<', '>Notices<')],
   ['>contact@monostudio.io<', B(`>${CONTACT_INFO.email}<`, `>${CONTACT_INFO.email}<`)],
@@ -410,7 +410,7 @@ export const HOME_MONO = [
   ['(Success stories)', B('(企业版)', '(Enterprise)')],
   ['(Stats)', B('(定价 · AI 层级)', '(Pricing · the AI ladder)')],
   ['(Blog)', B('(博客)', '(Blog)')],
-  ['(Project)', B('(工作方式)', '(how work moves)')],
+  ['(Project)', B('(工作方式)', '(workflow)')],
   ['What&#x27;s included:', B('工作：', 'The work:')],
   ['Timeline:', B('结果：', 'The result:')],
   ['Pick Smart.', B('少一些复制粘贴。', 'Less copying.')],
@@ -1421,7 +1421,7 @@ export const NOTICES = {
      The workforce card says what 288 counts, as every 288 on the site must,
      and no longer claims teams "in seconds". */
   relatedTitle: B('继续看', 'Keep reading'),
-  relatedIntro: B('三个入口，看 STARGO WORK<br/>做什么、谁来做、怎样管。', 'Three places to see what STARGO WORK does, who does the work and how it is managed.'),   // zh: split per letter, so the break keeps 做什么 and 谁来做 whole
+  relatedIntro: B('三个入口，看 STARGO WORK<br/>做什么、谁来做、怎样管。', 'Three places to see what STARGO&nbsp;WORK does, who does the work and how it is managed.'),   // zh: split per letter, so the break keeps 做什么 and 谁来做 whole
   related: [
     { tag: B('(14 个能力域)', '(14 capability groups)'), title: B('能力', 'Capabilities'), desc: B('从 Growth OS、Sales Desk 到 ERP 与 AI 创作，从工作空间到持续改进。', 'From Growth OS and Sales Desk to ERP and AI creative work — from the workspace to controlled improvement.'), href: 'capabilities.html' },
     { tag: B('(288 个专业数字岗位)', '(288 specialized AI roles)'), title: B('数字员工', 'AI Workforce'), desc: B('十类企业职能，按任务组成团队，互相沟通、分工协作，一起把事做完。', 'Ten enterprise functions; teams form around the task, talk to each other and finish the work together.'), href: 'workforce.html' },
@@ -1492,7 +1492,7 @@ export const LEGAL = {
 <h4>价格与方案</h4>
 <p>本站列出的方案与价格为公开参考价，以人民币计。实际服务范围、续费价格、模型与第三方服务用量，以双方签署的合同或订单为准。我们可能在不另行通知的情况下调整本站的方案与价格。</p>
 <h4>知识产权</h4>
-<p>STARGO 标识、字标、产品名称（含 STARGO WORK、STARGO OS、Growth OS、Quote Studio 等）以及本站的文字、界面图与品牌视觉，均归 STARGO 所有。未经书面许可，不得复制、改编或用于商业用途。本站使用的第三方模板、库与字体，其许可见「第三方声明」。</p>
+<p>STARGO 标识、字标、产品名称（含 STARGO WORK、STARGO OS、Growth OS 等）以及本站的文字、界面图与品牌视觉，均归 STARGO 所有。未经书面许可，不得复制、改编或用于商业用途。本站使用的第三方模板、库与字体，其许可见「第三方声明」。</p>
 <h4>第三方名称</h4>
 <p>站内提到的其他公司、产品与项目名称属于各自所有者，出现在本站是为了说明兼容性或来源，不表示相关方对 STARGO 的背书。</p>
 <h4>责任限制</h4>
@@ -1508,7 +1508,7 @@ export const LEGAL = {
 <h4>Plans and prices</h4>
 <p>Plans and prices listed here are public reference prices in Chinese yuan. The actual scope of service, renewal price and allowance for model and third-party usage are set by the contract or order signed by both parties. Plans and prices on this site may change without notice.</p>
 <h4>Intellectual property</h4>
-<p>The STARGO mark, wordmark and product names (including STARGO WORK, STARGO OS, Growth OS and Quote Studio), together with the text, interface images and brand visuals on this site, belong to STARGO. They may not be copied, adapted or used commercially without written permission. Third-party templates, libraries and fonts used by the site are licensed as described in the Notices page.</p>
+<p>The STARGO mark, wordmark and product names (including STARGO WORK, STARGO OS and Growth OS), together with the text, interface images and brand visuals on this site, belong to STARGO. They may not be copied, adapted or used commercially without written permission. Third-party templates, libraries and fonts used by the site are licensed as described in the Notices page.</p>
 <h4>Third-party names</h4>
 <p>Other company, product and project names mentioned on this site belong to their respective owners. They appear to explain compatibility or origin and imply no endorsement of STARGO.</p>
 <h4>Limitation of liability</h4>

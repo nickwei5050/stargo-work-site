@@ -358,7 +358,12 @@ PAGES['index.html'] = (lang) => {
     const inner = C.HOME_HERO_LIST.map((l) => `<p class="top-text big">${t(l)}<!--$--><br/><!--/$--></p>`).join('');
     h = h.slice(0, flex.start) + `<div class="flex-top">${inner}</div>` + h.slice(flex.end);
   }
-  for (const [old, pair, opts] of C.HOME_MONO) h = s(h, old, t(pair), opts);
+  /* V7-HOME: the (从哪里开始？) heading is split into one box per character, so
+     any two characters could part (「订/单交付」 at 768-1440, 「交/付」 at 390).
+     On the Chinese page each of its words goes in a nowrap `.zh-keep` span, as
+     the capability page's closing line does (css/stargo-fusion.css V7-HOME H20). */
+  const START_HEADING = 'Expand your scope with marketing, SEO, or content creation.';
+  for (const [old, pair, opts] of C.HOME_MONO) h = s(h, old, old === START_HEADING && lang === 'zh' ? zhKeepWords(t(pair)) : t(pair), opts);
   // Shorter hero copy on phones (swapped in before the text animation splits lines).
   h = h.replace(/<p class="top-text big nm">/, `<p class="top-text big nm" data-mobile-text="${escapeHtml(t(C.HOME_MOBILE.heroSupport))}">`);
 
@@ -469,6 +474,17 @@ PAGES['index.html'] = (lang) => {
   // The "work" cards point at the loop table below.
   for (const p of ['project_forma-digital.html', 'project_one-step.html', 'project_nero-vision.html', 'project_bold-moves.html']) h = s(h, `href="${p}"`, 'href="#loop"');
   h = setLink(h, t(C.HOME_MONO.find(([o]) => o === 'View all work')[1]), { href: '#loop' });
+  /* V7-HOME: the band just above #loop shrinks by 100px while the page scrolls
+     past it, and Webflow's glide aims at where #loop was at click time, so
+     「看业务主线」 and the four cards landed with the section's top 100px above
+     the screen at 992px and up. js/stargo-anchor-glide.js re-measures the
+     target on every frame (as the intelligence page's hero buttons do). */
+  {
+    let n = 0;
+    h = h.replace(/<a\b([^>]*?) href="#loop"/g, (m, pre) => { n++; return `<a${pre} data-stargo-anchor="" href="#loop"`; });
+    if (n !== 5) throw new Error(`index: expected 5 links to #loop, found ${n}`);
+    h = s(h, '</body>', '<script src="js/stargo-anchor-glide.js" defer></script></body>', { count: 1 });
+  }
   h = h.replace(/<h3 class="work-title">\d\d<\/h3><h3 class="work-title">©<\/h3>/g, (m, i) => m).replace(/<h3 class="work-title">(26|24|25)<\/h3><h3 class="work-title">©<\/h3>/g, (m) => m);
   {
     let n = 0;
@@ -1373,7 +1389,7 @@ PAGES['pricing.html'] = (lang) => {
     let k = 0;
     c = c.replace(/(class="pricing-card-price">)[^<]*(<)/g, (_, a, b) => `${a}${k++ === 0 ? t(spec.price) : spec.renewal === 'ask' ? t(P.renewalPrice) : spec.renewal === 'custom' ? t(spec.price) : spec.renewal === 'demo' ? t(spec.price) : spec.renewal}${b}`);
     let u = 0;
-    c = c.replace(/(class="heading-style-h6">)[^<]*(<)/g, (_, a, b) => `${a}${u++ === 0 ? unitOf(spec.unit) : (spec.renewal === 'ask' ? t(P.unitYear) : unitOf(spec.unit === 'first' ? 'year' : spec.unit))}${b}`);
+    c = c.replace(/(class="heading-style-h6">)[^<]*(<)/g, (_, a, b) => `${a}${u++ === 0 ? unitOf(spec.unit) : (spec.renewal === 'ask' ? '' : unitOf(spec.unit === 'first' ? 'year' : spec.unit))}${b}`);
     const paras = [t(spec.desc), ...spec.items.map(t)];
     let pi = 0;
     c = c.replace(/(<div class="paragraph-p1">)[^<]*(<\/div>)/g, (_, a, b) => `${a}${paras[pi++] ?? ''}${b}`);
@@ -1450,7 +1466,12 @@ PAGES['pricing.html'] = (lang) => {
   faq = faq.replace(/<h2>Frequently asked questions<\/h2>/, `<h2>${t(P.faqTitle)}</h2>`);
   {
     let q = 0;
-    faq = faq.replace(/(<div class="heading-style-h6">)[^<]*(<\/div>)/g, (_, a, b) => `${a}${t(P.faq[q++][0])}${b}`);
+    /* V7-HOME: on the Chinese page each question marks its word boundaries
+       (<wbr>) and css/stargo-fusion.css (V7-HOME H22) breaks only there: at
+       320 「模型费用包/含在内吗？」 and 「多品/牌」 split words. 「¥」 stays with
+       its figure. */
+    const question = (text) => (lang === 'zh' ? zhWbr(text).replace(/¥<wbr>/g, '¥') : text);
+    faq = faq.replace(/(<div class="heading-style-h6">)[^<]*(<\/div>)/g, (_, a, b) => `${a}${question(t(P.faq[q++][0]))}${b}`);
     if (q !== 10) throw new Error(`pricing: ${q} faq questions`);
     let an = 0;
     faq = faq.replace(/(<div class="paragraph-p2">)[^<]*(<\/div>)/g, (_, a, b) => `${a}${t(P.faq[an++][1])}${b}`);
