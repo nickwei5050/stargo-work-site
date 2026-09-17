@@ -37,7 +37,7 @@ const STORY = 1;
  * known about the customer ends up on one screen. Two sit in group 04 and one
  * in group 05 — the two groups the story itself declares.
  */
-const PICKS = ['Unified Inbox', 'Buyer Requirement Extraction', 'Account 360'];
+const PICKS = ['Unified Inbox', 'Buyer Requirement Extraction', 'Account Overview'];
 
 /**
  * Each row's picture, in row order (V6 §5.3: a topic-matched picture in each

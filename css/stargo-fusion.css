@@ -3521,6 +3521,69 @@ html[lang^="en"] body:has(#atlas) .macro-desc {
   text-wrap: balance;
 }
 
+/* V7-CAP r2 ------------------------------------------------------------- */
+
+/* 6. The Chinese caption 「(常见问题)」 in #start. It sits in the first of four
+      grid cells, 69px wide at 320 and 79px at 360, and needs 79px at its
+      17.6px, so it read 「(常见问 / 题)」 at 320 and 「(常见问题 / )」 at 360. On
+      one line the cell takes the caption's width (the three dots beside it
+      move 10px right at 320 and 1px at 360; nothing else moves) and the page
+      does not scroll sideways. The reveal splits the caption into lines when
+      the page loads, so this has to be in the stylesheet, not added later. */
+html[lang^="zh"] #start .bottom-grid._1.grd > .top-text.big { white-space: nowrap; }
+
+/* 7. The white band under the 「聊聊你的流程」 marquee. The marquee's own
+      bottom margin (8rem, 4rem on phones) passed through its black wrapper
+      (margin collapsing), so the white page showed for 64–128px between two
+      dark sections. As its own formatting context the wrapper keeps that
+      margin inside, and the band is black like the wrapper; the marquee and
+      the section below stay where they were. .cn-produce is on this page
+      only, right after #story-5. */
+#story-5 + .cn-produce { display: flow-root; }
+
+/* 8. The Chinese title 「一条业务 / 主线 / /09」 in #loop. The donor stacks its
+      Latin lines at line-height 1 and pulls each lower line up (-1.7rem from
+      1280, -.5rem to 768), which suits Latin letters, whose ink sits well
+      inside the line. Chinese characters fill almost the whole em, so the
+      strokes of 业 and 条 ran into 主 and 线 (22px of overlap at 1440, 5–7px at
+      768) and the slash touched 主线. Chinese lines are not pulled up, and get
+      a little leading: 1.06em, or 4px where 1.06em is less (the 39px phone
+      size, where the lines only just touched before). English is unchanged. */
+html[lang^="zh"] .rk-award .rk-rt-extra-big-text { line-height: max(1.06em, 1em + 4px); }
+html[lang^="zh"] .rk-award .rk-rt-awards-second-text,
+html[lang^="zh"] .rk-award .rk-rt-awards-third-text { margin-top: 0; }
+
+/* 9. English accordion names under 375px (the catalogue rows and the seven
+      creative topics). Balance cannot keep the last two words together when
+      they are wider than the box — "Customer Conversations" is 240px at 20px
+      and the box is 197px at 320, 237px at 360 — so a name ended on one word:
+      "02 … / Opportunity / Research", "04 … / Conversations",
+      "06 … / Knowledge", "07 … / Records", "3. Viral Creative / Adaptation",
+      "7. … / Editing". The size follows the box (about 12px of width per 1px
+      of type for that pair) from 16px at 320 to the donor's 20px at 372px,
+      and is never above 20px. Chinese names are not affected. */
+@media screen and (max-width: 374px) {
+  html[lang^="en"] .cn-capmap .cn-accordion-heading,
+  html[lang^="en"] #story-5 .cn-accordion-heading {
+    font-size: clamp(1rem, calc(8.2vw - 10.5px), 1.25rem);
+  }
+}
+
+/* 10. The English split heading at #foundations on phones. "What every" needs
+       150px at the donor's 32px and its half is 104px wide at 320 and 148px at
+       479, so it stood as "What / every" (and "area / rests on") at every
+       phone width. As on the Chinese page (the zh sweep above), the type comes
+       down with the screen so that each half is one line: the two halves need
+       10.4em together and have 75vw - 32px, so 7vw - 3.1px leaves a few pixels
+       spare at every width; min() keeps 32px wherever that is smaller. */
+@media screen and (max-width: 479px) {
+  html[lang^="en"] .qx-whatwedo .qx-wrapper-content-service .qx-h2,
+  html[lang^="en"] .qx-whatwedo .qx-wrapper-content-service .qx-text-heading-servie {
+    font-size: min(32px, calc(7vw - 3.1px));
+    white-space: nowrap;
+  }
+}
+
 /* V7-CAP-END */
 
 

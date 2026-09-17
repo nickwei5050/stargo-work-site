@@ -1596,8 +1596,12 @@ PAGES['capabilities.html'] = (lang) => {
   h = setLink(h, 'Book a call', { href: K.card1.button.href, text: t(K.card1.button.label) });
   h = setLink(h, 'Book a call', { href: K.card2.button.href, text: t(K.card2.button.label) });
   h = s(h, '(FAQ)', t(K.faqCaption));
+  /* The questions are plain button text, so at 360–375 the browser broke them
+     inside a word or before the last character: 「…有什么区 / 别？」,
+     「…都要换掉 / 吗？」. On the Chinese page each word is a `.zh-keep` span,
+     like the closing line below (css/stargo-fusion.css V7-CAP, #start). */
   [['What services does your agency offer?', 0], ['How do you determine the right strategy?', 1], ['How long does a typical project take?', 2], ['Do you work with businesses in any industry?', 3]]
-    .forEach(([q, i]) => { h = s(h, `>${q}<`, `>${t(K.faq[i][0])}<`, { count: 1 }); });
+    .forEach(([q, i]) => { h = s(h, `>${q}<`, `>${lang === 'zh' ? zhKeepWords(t(K.faq[i][0])) : t(K.faq[i][0])}<`, { count: 1 }); });
   h = setEachInner(h, '<p class="paragraph">', K.faq.map((f) => t(f[1])));
   h = s(h, '(Looking for more?)', t(K.moreLabel));
   /* The closing line is a large heading that GSAP splits into one box per
