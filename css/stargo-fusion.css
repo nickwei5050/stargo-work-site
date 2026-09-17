@@ -3360,6 +3360,9 @@ html[lang^="zh"] .blog-grid .blog-txt {
 /* The date line under an article title broke 「团/队」 at 320; it breaks at
    its spaces and middle dots only. */
 html[lang^="zh"] .lx-scope .lx-post-meta { word-break: keep-all; overflow-wrap: anywhere; }
+/* The link at its end stays whole: at 390 the English line split it into
+   "View" / "All Articles". */
+.lx-scope .lx-post-meta a { white-space: nowrap; }
 
 /* The Chinese article heading is printed in phrases (tools/blog.mjs
    titleHtml). The title animation splits it into one box per character and

@@ -219,7 +219,7 @@ const TEAM = {
   outputs: B(['客户清单', '开发策略', '产品方案', '营销素材', '下一步任务'], ['Prospect list', 'Outreach plan', 'Product fit', 'Creative assets', 'Next actions']),
   review: B('人工确认', 'Human review'),
   traits: B(['任务分工', '直接交流', '并行处理', '共享业务信息', '交接与接力', '可暂停 / 可接管'], ['Clear roles', 'Direct messages', 'Parallel work', 'Shared context', 'Durable handoffs', 'Pause and take over']),
-  note: B('协作轮次、预算和可执行动作都有上限，随时可以叫停；共享任务信息不等于共享权限，对外动作须经授权审批。', 'Collaboration rounds, budgets and permitted actions are capped, and work can be stopped at any time. Shared task context does not grant permissions; external actions need an authorized approval.'),
+  note: B('协作轮次、预算和可执行动作都有上限，随时可以叫停；共享任务信息不会带来其他员工的权限，对外动作须经授权审批。', 'Collaboration rounds, budgets and permitted actions are capped, and work can be stopped at any time. Shared task context does not grant other employees’ permissions; external actions need an authorized approval.'),
 };
 export function chartTeam(lang, n) {
   const T = TEAM;
