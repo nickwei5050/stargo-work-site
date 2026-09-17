@@ -2808,3 +2808,27 @@ html[lang^="zh"] body:not(:has(.rk-price-tiers)) :is(p, li, .qx-body, .lx-text-s
       no line-breaking property keeps 「网页」 together). English lines are
       balanced so a single word does not end the statement. */
 html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
+
+
+/* ===== V7 round (2026-09-17): owner decisions, blog, pre-existing fixes =====
+   One block per work area so parallel edits merge cleanly. Keep each area's
+   rules between its own markers. */
+
+/* V7-COPY-START (lead: status copy, pricing, contact) */
+/* V7-COPY-END */
+
+
+/* V7-BLOG-START (blog articles, FAQ blocks) */
+/* V7-BLOG-END */
+
+
+/* V7-CAP-START (capabilities page fixes) */
+/* V7-CAP-END */
+
+
+/* V7-LX-START (workforce, intelligence, enterprise, about fixes) */
+/* V7-LX-END */
+
+
+/* V7-HOME-START (home, contact, notices, blog index fixes) */
+/* V7-HOME-END */
