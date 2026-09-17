@@ -112,6 +112,23 @@ function zhTail(text, lang) {
   const m = text.match(/^([\s\S]*[，。；：])([^，。；：<>]+。)$/);
   return m ? `${m[1]}<span class="lx-v7-tail">${m[2]}</span>` : text;
 }
+/* V7-LX: short Chinese phrases kept on one line, for text the page's reveal
+   splits into one inline-block per character (js/stargo-splittext-cjk.js),
+   where `word-break` cannot reach and any two characters may part: the
+   enterprise cockpit paragraph read 「管得」/「住，查得清。」 at 1440, a step
+   「定目」/「标与验收标准。」 at 320. Every run of at most `max` characters
+   that ends at 、，。；： — and every “quoted term” with the punctuation after
+   it — becomes a `.stargo-keep` span (white-space: nowrap, zh only, in
+   css/stargo-fusion.css V7-LX); the split happens inside the span, so the
+   reveal is unchanged. Longer runs still break anywhere, so nothing can
+   overflow a line that holds `max` characters. English is unchanged. */
+function zhKeep(text, lang, max = 5) {
+  if (lang !== 'zh') return text;
+  const wrap = (m) => `<span class="stargo-keep">${m}</span>`;
+  return text
+    .replace(/“[^“”<>]{1,8}”[。，、；：」]*/g, wrap)
+    .replace(new RegExp(`(?<=^|[、，。；：」\\s>])[\\u3400-\\u9fff]{1,${max}}[、，。；：]+(?![^<]*</span>)`, 'g'), wrap);
+}
 /* V7-LX: an English display line of two or more short sentences, one
    `.lx-v7-sentence` span each (inline-block, balanced; css/stargo-fusion.css
    V7-LX), so a line break falls between sentences before it falls inside
@@ -201,7 +218,7 @@ function fromStudio(spec, lang) {
     h = setInner(h, `<p class="top-text for-abt t0${i + 1}">`, t(spec.story[i].text));
   });
   h = s(h, '(Introduction)', t(spec.introLabel));
-  h = setInner(h, '<h2 class="h2 _01 sm _600">', t(spec.intro));
+  h = setInner(h, '<h2 class="h2 _01 sm _600">', zhKeep(t(spec.intro), lang, 4));
   h = removeByClass(h, 'div', 'as-seen');
   h = s(h, '(Approach)', t(spec.approachLabel));
   /* Mono's approach block is one paragraph of four short <br/>-separated
@@ -218,7 +235,7 @@ function fromStudio(spec, lang) {
   const steps = spec.approach.map((x) => {
     const m = /^(\d{2}) (\S[\s\S]*)$/.exec(t(x));
     if (!m) throw new Error(`${spec.name}: approach line "${t(x)}" does not start with a two-digit step number`);
-    return `<span class="ent-step"><span class="ent-step-n">${m[1]}</span><span class="ent-step-t">${m[2]}</span></span>`;
+    return `<span class="ent-step"><span class="ent-step-n">${m[1]}</span><span class="ent-step-t">${zhKeep(m[2], lang, 8)}</span></span>`;
   });
   h = s(h, 'Think clearly. <br/>Design precisely. <br/>Build intelligently. <br/>Refine continuously.<br/>', steps.join(''), { count: 1 });
   h = setLink(h, 'Begin collaboration', { href: spec.approachButton.href, text: t(spec.approachButton.label) });
@@ -231,7 +248,7 @@ function fromStudio(spec, lang) {
     h = h.slice(0, i) + `<h2 class="h2 _01">${st.value}</h2></div><div><p class="top-text">${t(st.text)}` + h.slice(end);
   });
   h = s(h, '(Success stories)', t(spec.quoteLabel));
-  h = setInner(h, '<div class="top-text for-sst">', t(spec.quote.text));
+  h = setInner(h, '<div class="top-text for-sst">', zhKeep(t(spec.quote.text), lang, 4));
   h = s(h, '>Elena Rossi<', `>${t(spec.quote.who)}<`);
   h = s(h, '>Marketing Director at Auralis®<', `>${t(spec.quote.where)}<`);
   h = h.replace(/<img[^>]*class="logo-absolute"[^>]*\/>/, '');

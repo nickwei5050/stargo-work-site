@@ -3136,6 +3136,12 @@ html[lang="en"] .lx-scope .lx-v6-panel-title { text-wrap: balance; }
   }
 }
 
+/* Short Chinese phrases the build binds together (tools/build-site.mjs
+   zhKeep) in text the reveal splits per character: the enterprise cockpit
+   paragraph (「管得/住，」, 「查/得清。」), the delivery steps (「定目/标」)
+   and the pull-quote (「可管/理」, 「可验/证」, 「“已经/完成”」). */
+html[lang^="zh"] .stargo-keep { white-space: nowrap; }
+
 @keyframes lx-v7-team-reveal {
   from { opacity: 0; }
   to { opacity: 1; }
