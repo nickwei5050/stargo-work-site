@@ -970,10 +970,14 @@ PAGES['workforce.html'] = (lang) => {
     inner = s(inner, 'class="lx-organized-mind-card w-inline-block"', 'class="lx-organized-mind-card lx-v6-collage-card w-inline-block"', { count: 1 });
     b = b.slice(0, card.start) + inner + b.slice(card.end);
   }
+  /* V7-LX: a Chinese role name keeps 「AI 员工」 together (a no-break space),
+     so a name that wraps in its card reads 「市场研究」/「AI 员工」, not
+     「市场研究 AI 员」/「工」 (768 and the collage card at 390). */
+  const roleName = (name) => (lang === 'zh' ? t(name).replace(/ AI (?=员工)/, ' AI\u00a0') : t(name));
   const NAMES = ['Philip', 'Arlene', 'Marjorie', 'Collen', 'Greg'];
   const FIGURES = ['99.6M', '88.3', '16.2M', '73.7M', '125.5M'];
   NAMES.forEach((person, i) => {
-    b = s(b, `<div class="lx-name-text">${person}</div>`, `<div class="lx-name-text">${t(W.roles[i].name)}</div>`, { count: 2 });
+    b = s(b, `<div class="lx-name-text">${person}</div>`, `<div class="lx-name-text">${roleName(W.roles[i].name)}</div>`, { count: 2 });
   });
   FIGURES.forEach((fig, i) => {
     b = s(b, `<div class="lx-text-size-tiny">${fig}</div>`, `<div class="lx-text-size-tiny">${t(W.roles[i].owns)}</div>`, { count: 2 });
@@ -1050,7 +1054,7 @@ PAGES['workforce.html'] = (lang) => {
     `<h3 class="lx-heading-style-h3 lx-v6-team-title">${t(W.teamTitle)}</h3>`, { count: 1 });
   b = s(b, '>Easy day-to-day banking<', `>${t(W.phoneSub)}<`, { count: 1 });
   b = s(b, 'Easy day-to-day banking: local IBAN, freeMastercards, instant &amp; international transfers,financing solutions. All included in your plan.', t(W.answersBody), { count: 1 });
-  b = s(b, '<div class="lx-name-text">Dancing for you</div>', `<div class="lx-name-text">${t(W.extraRole.name)}</div>`, { count: 1 });
+  b = s(b, '<div class="lx-name-text">Dancing for you</div>', `<div class="lx-name-text">${roleName(W.extraRole.name)}</div>`, { count: 1 });
 
   /* The display line behind the cards. The template left it unbalanced (its
      own four words never needed it); the class lets the Chinese page balance

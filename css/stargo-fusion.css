@@ -3211,6 +3211,56 @@ html[lang^="zh"] .stargo-keep { white-space: nowrap; }
   .lx-scope .lx-organized-mind .lx-organized-mind-card { top: 22%; bottom: auto; }
 }
 
+/* The scan of the four pages (zh and en; 320, 390, 768, 1024, 1440) for
+   lone words and split words in headings, labels and cards; each fix is
+   scoped to its page.
+   - intelligence.html, Chinese, the six object cards in the sticky column:
+     one sentence each, and at 768 three of them ended on two characters
+     (「…之前谈过」/「什么。」, 「…已经」/「批准。」, 「…结果如何」/「核对。」).
+     They break at their commas now (「是谁，来自哪里，」/「之前谈过什么。」).
+   - intelligence.html, English, the collapsed card titles at 768-991: "Real
+     workflows" wrapped beside its icon, and a two-line title does not fit the
+     5rem pill the card collapses to (its first line was cut). The titles are
+     1.25rem there, with a 1.75rem icon and a .75rem gap, and stay on one line.
+   - workforce.html, English, the small card titles and the desktop card
+     title are balanced: "Teams formed by / task", "Delegate and / approve",
+     "Handoffs on / record", "Browser / desktop and AI / office" became
+     "Teams formed / by task", "Delegate / and approve", "Handoffs / on record",
+     "Browser desktop / and AI office".
+   - workforce.html, the three article titles in its article strip: balanced
+     in English ("…keep the / authority", "…into a / company"), and in Chinese
+     broken at punctuation and spaces only (「…AI，权/力留在企业」,
+     「…AI 的正/确顺序」). The blog index keeps its own rules. */
+html[lang^="zh"] .lx-scope .lx-sitcky-section .lx-home-features-texts .lx-text-size-regular {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  html[lang="en"] .lx-scope .lx-expandable-icon-text { grid-column-gap: .75rem; column-gap: .75rem; }
+  html[lang="en"] .lx-scope .lx-expandable-icon-text .lx-expendable-icon { width: 1.75rem; }
+  html[lang="en"] .lx-scope .lx-expandable-icon-text .lx-expandable-text { font-size: 1.25rem; }
+}
+html[lang="en"] .lx-scope .lx-little-grid-text-holder .lx-heading-style-h4,
+html[lang="en"] .lx-scope .lx-organized-mind-text .lx-heading-style-h4,
+html[lang="en"] .lx-page:has(.lx-hero-features) .lx-blog-title {
+  text-wrap: balance;
+}
+html[lang^="zh"] .lx-page:has(.lx-hero-features) .lx-blog-title {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+/* enterprise.html — the story panels print white text straight on their
+   pictures, and two of them are bright where the text runs on a phone: the
+   metal lanes of (Connect) and the loading bay of (Oversight) ("authorization",
+   "records", "Watch the business…" lost contrast at 390). A soft dark shadow
+   under the panel text keeps it readable on any part of the picture; the
+   pictures and the overlay are unchanged. */
+.studio-sticky .about-flx .h2.for-abt,
+.studio-sticky .about-flx .top-text.for-abt {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .55), 0 0 18px rgba(0, 0, 0, .55);
+}
+
 /* V7-LX-END */
 
 
