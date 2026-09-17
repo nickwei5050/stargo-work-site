@@ -300,7 +300,7 @@ export const HOME_MONO = [
     B('不必先假定全部替换。STARGO WORK 的方向是把现有业务账号和资料连接到同一工作空间。具体保留、接入或调整哪些系统，需要结合企业当前软件和权限逐项确认。', 'A complete replacement should not be assumed. STARGO WORK aims to connect existing accounts and information in one workspace. Which systems are retained, integrated or adjusted depends on the enterprise’s software and access permissions.')],
   ['How long does a typical project take?', B('288 个数字员工是什么意思？', 'What does “288 digital employees” mean?')],
   ['Project timelines vary depending on scope. A branding or website project typically takes 4–8 weeks, while marketing campaigns are ongoing with monthly optimization and reporting',
-    B('它表示 288 个可按任务选择的专业数字岗位，覆盖十类企业职能，不只外贸销售。每个岗位可配置职责、知识、技能和权限；不是同时运行 288 个员工，也不等于替代 288 名真人。实际启用、同时执行的任务及操作范围受配置、预算和权限约束。', 'It denotes 288 specialized, task-selectable roles across ten enterprise role groups — not trade sales alone. Roles can be configured with responsibilities, knowledge, skills and access. The number does not represent concurrent workers or replacement of 288 people; activation, concurrent work and permitted actions depend on configuration, budget and access.')],
+    B('它表示 288 个可按任务选择的专业数字岗位，覆盖十类企业职能，不只外贸销售。每个岗位可配置职责、知识、技能和权限；多位员工可以组成团队，互相沟通、分工完成同一项任务。288 不等于替代 288 名真人，实际启用的员工、协作规模及操作范围受配置、预算和权限约束。', 'It denotes 288 specialized, task-selectable roles across ten enterprise role groups — not trade sales alone. Each role can be configured with responsibilities, knowledge, skills and access, and several can form a team, message each other and complete one task together. The number is not a claim to replace 288 people; the employees enabled, the size of a collaboration and permitted actions depend on configuration, budget and access.')],
   ['Do you work with businesses in any industry?', B('报价、发消息和付款等关键动作谁决定？', 'Who controls consequential actions?')],
   ['Yes! We’ve worked with startups, tech companies, e-commerce brands, real estate firms, and service providers. Our process is adaptable to fit the needs of different industries and audiences',
     B('由企业有权人员决定。AI 可以准备资料、形成草稿和提出建议；报价、对外触达、重要承诺、正式申报和资金支付等事项按企业规则审批。批准、发送和实际结果核对分别处理。', 'Authorized people do. AI can organize information, prepare drafts and recommend next steps. Quotations, outreach, important commitments, official submissions and payments remain subject to enterprise approval rules. Approval, delivery and outcome checks are distinct steps.')],
@@ -311,9 +311,10 @@ export const HOME_MONO = [
     B('面向制造业与外贸企业的网页桌面级 AI 企业操作系统。Growth OS 主动找客户，Sales Desk 推进销售；连接 ERP、AI 创作与 288 个跨部门数字岗位，关键决定由企业掌握。', 'A browser-based desktop AI operating system for manufacturers and export teams. Growth OS finds prospects; Sales Desk advances sales. ERP, creative work and 288 cross-functional AI roles support the business, with your team in control.')],
 
   /* who we are → 288 cross-functional roles (V6 §4.4). The counter card says
-     what the number is — a role directory across ten functions, not 288
-     things running at once; the ten groups and their counts are on the
-     workforce page. */
+     what the number is — a role directory across ten functions whose roles
+     team up by task; the ten groups and their counts are on the workforce
+     page. (The owner retired the "not running at once" wording on
+     2026-09-17.) */
   ['We shape brands with focus, intention, and impact.', B('288 个数字岗位，不只服务外贸。', '288 specialized AI roles. Across the enterprise.')],
   /* The approval card (V5 H08): AI prepares, an authorized person decides, and
      the three states — approved, sent, received — are never run together.
@@ -400,7 +401,7 @@ export const HOME_MONO = [
   ['>Contact us<', B('>预约企业演示<', '>Request a Demo<')],
   ['Let&#x27;s talk', B('预约企业演示', 'Request a Demo')],
   ['Scroll Down', B('向下滚动', 'Scroll down')],
-  ['(Who we are)', B('(288 个数字岗位 · 非同时运行)', '(288 AI roles · not concurrent runs)')],
+  ['(Who we are)', B('(288 个数字岗位 · 组队协作)', '(288 AI roles · working as teams)')],
   ['(Team of experts)', B('(按任务组队)', '(Teams by task)')],
   ['(Services)', B('(五个业务阶段)', '(Five business stages)')],
   ['(Pricing)', B('(两种工作方式)', '(Two ways of working)')],
@@ -556,7 +557,7 @@ export const HOME_SC_PRODUCTS = [
   ['Create, manage, and collaborate on documentation, SOPs, and internal knowledge in one flexible workspace.',
     B('将客户需求衔接到产品物料、采购、库存、生产质检、订单发票和商城业务，让销售知道能不能交、何时交、哪些环节还在等待。按企业使用的经营系统配置协同范围。', 'Connect demand with products, materials, purchasing, inventory, production, quality, orders, invoices and commerce so sales can understand availability, lead times and outstanding work. Coordination depends on the operating systems configured for the enterprise.')],
   ['Build workflows that connect your teams, data, and tools — without complex integrations.',
-    B('围绕真实产品与品牌资料组织主图、场景图、详情页、图册和多语言内容；进一步衔接视频制作与爆款结构原创改编。创意工作室已有基础；一键成片与爆款再创作持续建设。', 'Build product images, scenes, detail pages, catalogs and multilingual content from verified product and brand information, with evolving video-production and creative-adaptation workflows. The creative workspace has foundations; one-click video and viral adaptation are still developing.')],
+    B('围绕真实产品与品牌资料组织主图、场景图、详情页、图册和多语言内容；从一句制作需求生成营销视频，也能借鉴有效视频的结构做原创改编。生成内容经人工审核后使用，按企业开通的服务与额度开放。', 'Build product images, scenes, detail pages, catalogs and multilingual content from verified product and brand information; turn a brief into a marketing video, or adapt a proven video structure into original work. Generated content is reviewed before use, within the services and credits the company enables.')],
   ['Dashbord Image', B('界面示意图', 'Interface illustration')],
 ];
 /* The channel band (V5 H09, V6 §4.8): three different uses — finding
@@ -690,7 +691,7 @@ export const LX_INTELLIGENCE = {
      there. */
   feat2Title: B('288 个岗位，', '288 AI roles.'),
   feat2Sub: B('分工协作，把事做完。', 'Divide the work. Finish it together.'),
-  feat2Card: { title: B('按任务组队', 'Task teams'), text: B('一项复杂任务，可由研究、销售、产品和创意等岗位分工完成：彼此交流问题与结果，并行处理，按责任交接，再由统筹角色汇总，交负责人确认。基础选人与派工已有记录，更深入的团队交流仍在完善。', 'A complex task can be divided among research, sales, product and creative roles. They exchange questions and results, work in parallel and hand off by responsibility; a coordinating role consolidates the work for the responsible person to confirm. Basic role selection and delegation are recorded; deeper team communication is still evolving.') },
+  feat2Card: { title: B('按任务组队', 'Task teams'), text: B('一项复杂任务，可由研究、销售、产品和创意等岗位分工完成：彼此发消息、提问、补充资料，并行处理，按责任交接，再由统筹角色汇总，交负责人确认。协作轮次与预算有上限，随时可以叫停。', 'A complex task can be divided among research, sales, product and creative roles. They message each other, ask questions, fill gaps, work in parallel and hand off by responsibility; a coordinating role consolidates the work for the responsible person to confirm. Collaboration rounds and budgets are capped, and the work can be stopped at any time.') },
   feat2Button: { label: B('认识数字员工', 'Meet the AI Workforce'), href: 'workforce.html' },
   /* P03's ongoing-work heading, one phrase per line: at 768 the box is five
      characters wide, and a forced break is the only break a phrase gets. */
@@ -750,7 +751,7 @@ export const LX_WORKFORCE = {
   words: [B('不再', 'No'), B('从零交代', 'starting from zero'), B('丢上下文', 'lost context'), B('反复转述', 'repeated relaying')],
   feat2Title: B('交办之后，进度看得见。', 'After you delegate, progress stays visible.'),
   feat2Sub: B('定时与事件任务，按授权开放。', 'Scheduled and event-based tasks, as authorized.'),
-  feat2Card: { title: B('统筹角色', 'Coordinating role'), text: B('研究、销售、产品与内容员工并行处理子任务，统筹角色复核并汇总成果，只把需要人决定的事项交回。更深入的团队交流协作仍在完善。', 'Research, sales, product and content roles work on subtasks in parallel; a coordinating role checks and consolidates the results and hands back only what a person must decide. Deeper team communication is still evolving.') },
+  feat2Card: { title: B('统筹角色', 'Coordinating role'), text: B('研究、销售、产品与内容员工并行处理子任务，互相传递信息、交接结果；统筹角色复核并汇总成果，只把需要人决定的事项交回。', 'Research, sales, product and content roles work on subtasks in parallel, passing information and results to each other; a coordinating role checks and consolidates the output and hands back only what a person must decide.') },
   feat2Button: { label: B('查看定价', 'See pricing'), href: 'pricing.html' },
   feat2Lines: [B('定时任务', 'Scheduled tasks'), B('事件触发', 'Event triggers'), B('按授权范围运行', 'Within authorized scope')],
   ctaTitle: B('别买 AI 工具。', 'Don’t hire AI tools.'),
@@ -1158,7 +1159,7 @@ export const ENTERPRISE = {
     /* stats[0] is also read by tools/blocks/cn-price-card.mjs: the value must
        stay a bare figure, and the text is split at its FIRST comma — the noun
        goes beside the figure, the rest becomes a line of its own there. */
-    { value: '288', text: B('个专业数字岗位，按企业设定的权限与预算启用（岗位目录数量，不是同时运行的数量）。', 'specialized AI roles, enabled within the permissions and budgets the company sets (a role directory, not concurrent runs).') },
+    { value: '288', text: B('个专业数字岗位，可按任务组队协作，在企业设定的权限与预算内工作。', 'specialized AI roles that team up by task, working within the permissions and budgets the company sets.') },
     { value: String(ENT_CONTROLS.length), items: ENT_CONTROLS, text: B(`项管理控制：${ENT_CONTROLS.map((x) => x.zh).join('、')}。`, `management controls: ${enList(ENT_CONTROLS.map((x) => x.en))}.`) },
     { value: String(ENT_DEPLOYMENT.length), items: ENT_DEPLOYMENT, text: B(`种部署方式：${ENT_DEPLOYMENT.map((x) => x.zh).join('、')}，按企业需求逐项确认；服务等级属于企业版事项，按项目另行约定。`, `deployment options: ${enList(ENT_DEPLOYMENT.map((x) => x.en), 'or')}, confirmed with each enterprise. Service levels are an Enterprise-plan item agreed per project.`) },
   ],
@@ -1235,8 +1236,8 @@ export const CAPABILITY_GROUPS = [
   G('06', 'Products & Enterprise Knowledge', '产品与企业知识', [I('Enterprise Brain', '企业大脑', '企业已审核的答案，集中在一处', 'The approved company answer, in one place'), I('Knowledge Center', '知识中心', '已审核的企业答案，在这里保持最新', 'Where approved company answers are kept current'), I('Knowledge Intake', '资料导入', '文档和文件，沉淀成可引用的知识', 'Turns documents and files into answerable knowledge'), I('Knowledge Retrieval', '知识检索', '找出能回答这个问题的那一段', 'Finds the passage that answers the question'), I('Source Retrieval', '原文检索', '取回答案所依据的原文', 'Retrieves the passage an answer is based on'), I('Drive & Document Access', '网盘与文档接入', '直接读团队现有文档，不用先迁移', 'Reads existing team documents without a migration'), I('Product Intelligence', '产品智能', '规格、选配与限制，AI 能据此推理', 'Specifications, options and constraints AI can reason over'), I('Product Center & Library', '产品中心与产品库', '整条流程共用的同一份产品记录', 'One product record the whole workflow reads'), I('Specifications & Images', '产品参数与图片', '买家会追问的那些技术细节', 'The technical detail a buyer asks for'), I('Historical Knowledge & Business Rules', '历史知识与业务规则', '公司以前定过、现在仍然算数的规矩', 'What the company has decided before, and still applies'), I('Evidence Retrieval', '证据检索', '给出答案，附上支撑文档', 'Returns the supporting document with the answer'), I('Source-Grounded Answers', '有据可查的回答', '缺少审核过的来源时明确提示，不编造答案', 'Flags the gap instead of answering without an approved source')]),
   G('07', 'Quotations, PI & Commercial Records', '报价、PI 与商业文件', [I('Quote Studio', '报价工作室', '报价从询盘开始，不从空表格开始', 'Builds the quotation from the inquiry, not a blank sheet'), I('Inquiry → Quote', '询盘到报价', '需求直接落成带价格的草稿', 'Carries the request straight into a priced draft'), I('Product Configuration & Quantity', '产品配置与数量计算', '报的到底是什么，数量多少', 'What exactly is being priced, and how many'), I('Commercial Terms', '贸易条件', '套用约定的付款、交期与质保条款', 'Applies the agreed payment, delivery and warranty terms'), I('Pricing Rules', '价格规则', '按你配置的规则定价，不靠猜', 'Prices from your configured rules, not from guesswork'), I('Margin Guardrails', '利润护栏', '报价越过利润线，没人批就过不了', 'Stops a quote crossing the margin line without approval'), I('Historical Price Context', '历史价格参考', '这个买家、这个市场，以前成交价多少', 'Shows what this buyer and market paid before'), I('Approval Workflow', '审批流程', '例外转给有权拍板的人', 'Routes the exception to the person allowed to decide'), I('Quote Versioning', '报价版本', '每一版都留存，改动也留痕', 'Keeps every version and what changed between them'), I('PI Studio / PI Center', '形式发票中心', '批准的报价转成形式发票，发送另行确认', 'Turns the approved quote into a pro forma invoice; sending is a separate step')]),
   G('08', 'ERP, Orders & Fulfillment', 'ERP、订单与履约', [I('Order Management', '订单管理', '从批准的报价一路跟到交付', 'Tracks the order from approved quote to delivery'), I('Trade Execution', '贸易执行引擎', '批准的商务条件，带进履约环节', 'Carries approved commercial detail into fulfillment'), I('Payment Milestones', '付款节点', '定金、尾款，以及还差什么没到', 'Tracks deposits, balances and what is still outstanding'), I('Production Status & QC', '生产进度与质检', '货在哪一步，检验过没过', 'Where the goods are, and whether they passed'), I('Packaging & Shipment', '包装与出货', '怎么装运，随货走哪些东西', 'How it ships, and what travels with it'), I('Commercial Invoice · Packing List', '商业发票 · 装箱单', '按批准的订单数据生成，待人复核', 'Prepared from approved order data, ready for review'), I('Certificate of Origin · Form E', '原产地证 · Form E', '整理申请材料；签发仍归主管机构', 'Organizes the application material; issuance stays with the authority'), I('Bill of Lading Workflow', '提单流程', '运输单据跟着货走', 'Keeps shipping documents moving with the shipment'), I('Certification & Battery Documentation', '认证与电池资料', '认证与电池相关材料按目的国备齐', 'Certification and battery files prepared for the destination market'), I('Export Documentation & Workflow', '出口单证与流程', '出口单据从准备到复核的整条链', 'Export documents, from preparation to review'), I('Export Tax Rebate', '六阶段出口退税流程', '按六个阶段整理退税资料、跟踪进度；申报与受理归主管部门', 'Tracks rebate preparation through six stages; filing and acceptance stay with the authorities'), I('CBU / SKD / CKD Workflow Support', '整车 / 半散件 / 全散件流程', '整车、半散件、全散件的装运资料分别整理', 'Keeps built-up, semi- and fully-knocked-down shipments documented separately')]),
-  G('09', 'AI Images, Video & Marketing', 'AI 图片、视频与营销', [I('AI Creative Studio', 'AI 创意工作室', '围绕真实产品，组织产品页所需的图片与销售素材', 'Organizes the images and sales material a product page needs, from real product facts'), I('Content Creation & Global Website Content', '内容生产与全球官网内容', '为你的目标销售站点写产品与市场文案', 'Product and market copy for the sites you sell on'), I('Search & AI-search Content', '搜索优化 · AI 搜索可信内容', '内容结构化，既能被搜到，也能被引用', 'Content structured to be found and to be quoted'), I('Multi-language Content', '多语言内容', '同一个产品故事，覆盖目标市场', 'The same product story across your target markets'), I('Product · Sales · Social Content', '产品 · 销售 · 社交内容', '同一个产品故事，贯通页面、方案与社媒', 'One product story across page, deck and feed'), I('AI Image & Video Workflow', 'AI 图片与视频流程', '按可复用的流程产出产品图片；视频流程建设中', 'Product visuals produced to a repeatable workflow; video is in development'), I('Viral Structure Adaptation', '爆款结构再创作', '借鉴有效视频的结构，为你的产品做原创改编（建设中）', 'Adapts a proven video structure into original work for your product (in development)'), I('Viral Video Structure · Scene · Speech · Product Analysis', '爆款结构 · 场景 · 语音 · 产品分析', '拆解有效视频的开场、节奏与表达（建设中）', 'Breaks down a working video’s hook, pacing and messaging (in development)'), I('Short-form Clip Editing', '剪辑与短视频', '把产品素材剪成社媒短片，按已开放的能力使用', 'Cuts product footage into short social clips, where the capability is enabled')]),
-  G('10', 'AI Workforce & Teamwork', '数字员工与团队协作', [I('288 Specialized AI Employees', '288 个专业 AI 员工', '按岗位分工的数字岗位目录，不是同时运行的数量', 'A role directory organized by job, not a count of agents running at once'), I('AI Employee Roster', 'AI 员工名册', '谁在岗，各自负责什么', 'Who is available, and what each one is for'), I('Workforce Panel', '员工面板', '派活、看进度、复核交回来的结果', 'Assign work, watch progress, review what came back'), I('AI Teams & Collaboration', '动态组队与多 AI 员工协作', '一个目标，几个专业岗位分工协作，而不是一次问答', 'Several specialists on one goal, not a single chat reply'), I('AI Employee Communication', 'AI 员工间交流', '岗位之间传递任务信息，少一些人工转述；深入协作持续完善', 'Roles pass task context to each other; deeper coordination is still evolving'), I('Role · Skills · Tools · Memory', '岗位 · 技能 · 工具 · 记忆', '每个员工做什么、懂什么、能用什么、记得什么', 'What an employee does, knows, may use and remembers'), I('Shared Enterprise Context', '共享企业上下文', '同一份业务事实，按各自权限使用', 'One set of business facts, used within each role’s permissions'), I('Task Delegation · Handoff · Parallel Execution', '任务委派 · 交接 · 并行执行', '任务拆开、在岗位间流转、并行推进', 'Work splits, moves between roles and runs at once'), I('Scheduled Work', '定时工作', '按时跑的例行研究与跟进', 'Recurring research and follow-up that runs on time'), I('Evidence & Human Approval', '执行证据与人工审批', '审批人拍板前看的那份记录', 'The record an approver reads before deciding')]),
+  G('09', 'AI Images, Video & Marketing', 'AI 图片、视频与营销', [I('AI Creative Studio', 'AI 创意工作室', '围绕真实产品，组织产品页所需的图片与销售素材', 'Organizes the images and sales material a product page needs, from real product facts'), I('Content Creation & Global Website Content', '内容生产与全球官网内容', '为你的目标销售站点写产品与市场文案', 'Product and market copy for the sites you sell on'), I('Search & AI-search Content', '搜索优化 · AI 搜索可信内容', '内容结构化，既能被搜到，也能被引用', 'Content structured to be found and to be quoted'), I('Multi-language Content', '多语言内容', '同一个产品故事，覆盖目标市场', 'The same product story across your target markets'), I('Product · Sales · Social Content', '产品 · 销售 · 社交内容', '同一个产品故事，贯通页面、方案与社媒', 'One product story across page, deck and feed'), I('AI Image & Video Workflow', 'AI 图片与视频流程', '按可复用的流程产出产品图片与营销视频', 'Product visuals and marketing videos produced to a repeatable workflow'), I('Viral Structure Adaptation', '爆款结构再创作', '借鉴有效视频的结构，为你的产品做原创改编', 'Adapts a proven video structure into original work for your product'), I('Viral Video Structure · Scene · Speech · Product Analysis', '爆款结构 · 场景 · 语音 · 产品分析', '拆解有效视频的开场、节奏与表达', 'Breaks down a working video’s hook, pacing and messaging'), I('Short-form Clip Editing', '剪辑与短视频', '把产品素材剪成社媒短片，按已开放的能力使用', 'Cuts product footage into short social clips, where the capability is enabled')]),
+  G('10', 'AI Workforce & Teamwork', '数字员工与团队协作', [I('288 Specialized AI Employees', '288 个专业 AI 员工', '按岗位分工的专业数字岗位目录，按任务选用', 'A role directory organized by job, chosen per task'), I('AI Employee Roster', 'AI 员工名册', '谁在岗，各自负责什么', 'Who is available, and what each one is for'), I('Workforce Panel', '员工面板', '派活、看进度、复核交回来的结果', 'Assign work, watch progress, review what came back'), I('AI Teams & Collaboration', '动态组队与多 AI 员工协作', '一个目标，几个专业岗位分工协作，而不是一次问答', 'Several specialists on one goal, not a single chat reply'), I('AI Employee Communication', 'AI 员工间交流', '员工之间直接发消息、提问与交接，少一些人工转述', 'Employees message each other, ask questions and hand over work, with less relaying by people'), I('Role · Skills · Tools · Memory', '岗位 · 技能 · 工具 · 记忆', '每个员工做什么、懂什么、能用什么、记得什么', 'What an employee does, knows, may use and remembers'), I('Shared Enterprise Context', '共享企业上下文', '同一份业务事实，按各自权限使用', 'One set of business facts, used within each role’s permissions'), I('Task Delegation · Handoff · Parallel Execution', '任务委派 · 交接 · 并行执行', '任务拆开、在岗位间流转、并行推进', 'Work splits, moves between roles and runs at once'), I('Scheduled Work', '定时工作', '按时跑的例行研究与跟进', 'Recurring research and follow-up that runs on time'), I('Evidence & Human Approval', '执行证据与人工审批', '审批人拍板前看的那份记录', 'The record an approver reads before deciding')]),
   G('11', 'Automation & Everyday Work', '自动化与日常办公', [I('AI Employee Setup', 'AI 员工工作环境', '为每个 AI 员工配好工具、划定边界', 'Where an AI employee gets its tools and limits'), I('Workflow Automation', '工作流自动化', '跨应用把步骤连起来，不用写代码', 'Connects steps across apps without custom code'), I('Scheduled Data Jobs', '数据整理与定期作业', '流程需要的数据整理与定期处理', 'Runs the data preparation and routine jobs a workflow needs'), I('Long-Horizon Control', '长任务控制', '长时间任务保留目标与进度，可暂停、恢复和接力', 'Keeps long-running work on its goal, with pause, resume and handoff'), I('Browser Automation', '浏览器自动化', '在授权范围内操作网页工具，不绕过登录与安全验证', 'Works web tools within authorization, without bypassing sign-in or security checks'), I('Screen Operation', '界面操作', '无法对接时，在授权环境中操作界面', 'Operates an interface in an authorized environment when integration is not available'), I('Scheduled Routines · Event-Triggered Workflows', '定时例程 · 事件触发', '按时间跑，或在业务状态变化时跑', 'Runs on a clock, or when the business state changes'), I('Approved Actions & Tool Connections', '授权动作与工具连接', 'AI 员工获准使用的业务动作与工具', 'The business actions and tools an agent is allowed to use'), I('External Connectors', '外部系统连接', '对接团队已在用的系统', 'Reaches the systems your team already runs'), I('Credential Management', '凭据管理', '账号密码统一保管，不交给 AI 员工直接查看', 'Holds the logins so AI employees never see them directly')]),
   G('12', 'Business Relationships & Context', '企业业务关系与上下文', [I('Business Relationship Map', '企业业务关系图', '客户、报价、订单与责任对应起来，AI 据此推进工作', 'Links customers, quotes, orders and owners so AI works from the same picture'), I('Cross-system Identity', '跨系统身份', '同一个客户，在各个系统里都对得上', 'The same customer across every connected system'), I('Customer, Product, Inquiry & Opportunity Records', '客户 · 产品 · 询盘 · 商机记录', '商务一侧的业务记录', 'The commercial side of the business, as records'), I('Quote, Order, Document & Task Records', '报价 · 订单 · 文件 · 任务记录', '执行这一侧，仍挂回同一个客户', 'The execution side, linked back to the customer'), I('AI Employee & Market Signal Records', 'AI 员工 · 市场信号记录', '谁做的，由什么触发', 'Who did the work, and what prompted it'), I('Relationships, Permitted Actions & Business Rules', '业务关系 · 可做的动作 · 业务规则', '记录之间如何关联，允许做哪些动作', 'How your records connect and what may be done to them'), I('Enterprise Context', '企业上下文', 'AI 员工动手前先读的企业状态', 'The company state an agent reads before acting'), I('Operational Records', '经营记录', '经营记录保存在哪里，以哪一份为准', 'Where operating records are kept, and which copy is authoritative')]),
   G('13', 'Permissions, Approvals & Control', '权限、审批与经营控制', [I('Human-in-the-Loop', '人在回路', '明确哪些决定仍须由人来做', 'Names the decisions a person must still make'), I('Approval Service', '审批服务', '待决事项集中一处，等各自的负责人', 'One place where pending decisions wait for their owner'), I('Capability Center', '能力中心', 'AI 员工能调用什么，以谁的名义', 'What agents are allowed to call, and on whose behalf'), I('Permission Control · Identity', '权限控制 · 身份', '谁能看什么、能做什么', 'Who can see what, and who can do what'), I('Identity Check', '身份校验', 'AI 员工动作之前，先验身份', 'Checks identity before any agent action begins'), I('Audit Ledger · Agent Evidence · Action History', '审计台账 · AI 员工证据 · 动作历史', '做了什么、哪个 AI 员工做的、凭谁的授权', 'What was done, by which agent, on whose authority'), I('Guardrails', '护栏', 'AI 员工自己越不过的边界', 'Boundaries an agent cannot cross on its own'), I('Company Data Separation', '企业数据隔离', '按公司和品牌分开的数据边界', 'Separate data boundaries per company and brand'), I('Failure Handling · Rollback', '失败处理 · 回滚', '出错时停下来、退回去', 'Stops on an error and puts things back'), I('Work Visibility', '执行可见', 'AI 员工正在做什么，看得见', 'See what agents are doing while they do it')]),
@@ -1293,9 +1294,9 @@ export const CAPABILITIES = {
     tlLabel: B('从哪开始：', 'Start with:'), tl: B('一条流程', 'one workflow'), button: { label: B('预约企业演示', 'Request a Demo'), href: 'contact.html' } },
   /* The second card is where the first workflow leads, not a claim about the
      company today. 288 is the size of the role directory — the unit and the
-     fourth bullet say so — never a number of employees running at once. */
+     fourth bullet say so — whose roles team up by task. */
   card2: { name: B('逐步扩展到全公司', 'Across the company, in phases'), desc: B('第一条流程验证有效后，按配置与交付范围逐步开放更多业务板块与数字岗位。', 'Once the first workflow proves useful, more business areas and AI roles open in phases, by configuration and agreed scope.'), big: '288', unit: B('(个专业数字岗位)', '(specialized AI roles)'),
-    items: [B('Growth OS 与 Sales Desk 两大引擎', 'Growth OS and Sales Desk, the two engines'), B('ERP、履约与 AI 创作', 'ERP, fulfillment and AI creative work'), B('企业知识与业务关系共享', 'Shared company knowledge and context'), B('288 是岗位目录，不是同时运行数', '288 is a role directory, not concurrent runs'), B('关键决定由有权人批准', 'Authorized people approve key decisions')],
+    items: [B('Growth OS 与 Sales Desk 两大引擎', 'Growth OS and Sales Desk, the two engines'), B('ERP、履约与 AI 创作', 'ERP, fulfillment and AI creative work'), B('企业知识与业务关系共享', 'Shared company knowledge and context'), B('288 个岗位，按任务组队协作', '288 roles that team up by task'), B('关键决定由有权人批准', 'Authorized people approve key decisions')],
     tlLabel: B('下一步：', 'Next:'), tl: B('看定价', 'see pricing'), button: { label: B('看定价', 'See pricing'), href: 'pricing.html' } },
   faqCaption: B('(常见问题)', '(FAQ)'),
   /* Four slots, four V5 questions that belong on the capability page: how it
@@ -1304,7 +1305,7 @@ export const CAPABILITIES = {
   faq: [
     [B('它和单独使用一个 AI 聊天窗口有什么区别？', 'How is this different from using a standalone AI chat?'), B('重点不在对话形式，而在任务是否连接了企业资料、客户历史、业务应用、责任、审批和结果。STARGO WORK 围绕完整业务流程组织这些信息与工作，而不把一次文字回答当作业务已经完成。', 'The focus is not the chat format. It is whether the work connects enterprise information, customer history, business applications, ownership, approvals and results. STARGO WORK organizes those elements around a business workflow rather than equating a text answer with completed work.')],
     [B('现有 CRM、ERP、邮箱和网盘都要换掉吗？', 'Must we replace our current CRM, ERP, email and drives?'), B('不必先假定全部替换。STARGO WORK 的方向是把现有业务账号和资料连接到同一工作空间。具体保留、接入或调整哪些系统，需要结合企业当前软件和权限逐项确认。', 'A complete replacement should not be assumed. STARGO WORK aims to connect existing accounts and information in one workspace. Which systems are retained, integrated or adjusted depends on the enterprise’s software and access permissions.')],
-    [B('所有渠道和全部功能现在都能直接用吗？', 'Is every channel and feature immediately available?'), B('不能仅凭功能介绍这样判断。部分已有应用基础，部分需要企业账号和真实数据接入，一键视频、深度协作和高级主动工作等仍在完善。演示与交付应逐项确认，不把能打开页面当作完整流程已经验收。', 'A capability description is not proof of availability. Some applications have foundations, some require enterprise accounts and live data, and video, deeper teamwork and advanced proactive work continue to evolve. Confirm each delivery scope and validate the workflow, not just page access.')],
+    [B('所有渠道和全部功能现在都能直接用吗？', 'Is every channel and feature immediately available?'), B('不能仅凭功能介绍这样判断。部分已有应用基础，部分需要企业账号和真实数据接入，企业级主动工作和统一长期记忆等仍在完善。演示与交付应逐项确认，不把能打开页面当作完整流程已经验收。', 'A capability description is not proof of availability. Some applications have foundations, some require enterprise accounts and live data, and enterprise-wide proactive work and unified long-term memory continue to evolve. Confirm each delivery scope and validate the workflow, not just page access.')],
     [B('企业应该从哪里开始？', 'Where should an enterprise start?'), B('先选一条最重要的业务流程，准备产品、客户、知识和规则，连接授权账号，安排数字员工与审批，再用真实样本验证成果。跑通后再扩大范围，而不是第一天就改造全部部门。', 'Choose one priority workflow. Prepare product, customer, knowledge and policy context, connect authorized accounts, assign roles and approvals, then validate real cases. Expand after that first workflow is proven useful.')],
   ],
   moreLabel: B('(想看它跑起来？)', '(Want to see it running?)'),
@@ -1409,7 +1410,7 @@ export const NOTICES = {
   relatedIntro: B('三个入口，看 STARGO WORK 做什么、谁来做、怎样管。', 'Three places to see what STARGO WORK does, who does the work and how it is managed.'),
   related: [
     { tag: B('(14 个能力域)', '(14 capability groups)'), title: B('能力', 'Capabilities'), desc: B('从 Growth OS、Sales Desk 到 ERP 与 AI 创作，从工作空间到持续改进。', 'From Growth OS and Sales Desk to ERP and AI creative work — from the workspace to controlled improvement.'), href: 'capabilities.html' },
-    { tag: B('(288 个专业数字岗位)', '(288 specialized AI roles)'), title: B('数字员工', 'AI Workforce'), desc: B('十类企业职能，按任务组成团队。288 是岗位目录数量，不是同时运行的数量。', 'Ten enterprise functions, teams formed around the task. 288 is the role-directory count, not work running at once.'), href: 'workforce.html' },
+    { tag: B('(288 个专业数字岗位)', '(288 specialized AI roles)'), title: B('数字员工', 'AI Workforce'), desc: B('十类企业职能，按任务组成团队，互相沟通、分工协作，一起把事做完。', 'Ten enterprise functions; teams form around the task, talk to each other and finish the work together.'), href: 'workforce.html' },
     { tag: B('(管理与交付)', '(Control & delivery)'), title: B('企业管理', 'Enterprise'), desc: B('看得见进度，管得住审批与预算，查得清结果；从一条业务开始落地。', 'See progress, control approvals and budgets, check the results — and start with one workflow.'), href: 'enterprise.html' },
   ],
   view: B('查看', 'View'),
@@ -1526,14 +1527,17 @@ export const LEGAL = {
  *
  * What it must not say, and why the slots read the way they do:
  *   - 288 is the size of the role directory. Wherever the page states it, the
- *     same sentence or the block beside it says it is not concurrent execution
- *     and not 288 people replaced (V5 G02, M10).
+ *     same sentence or the block beside it says that enabled roles, the size
+ *     of a collaboration and permitted actions follow configuration, budget
+ *     and access, and that it is not 288 people replaced (V5 G02, M10). The
+ *     "not running at once" wording was retired by the owner on 2026-09-17.
  *   - The five hero cards are examples, not the directory: the template's grey
  *     "Views" label says so (「岗位示例」), and the "99.6M" figure slot carries
  *     the role group. No names beyond these, no head counts, no output figures.
  *   - The team scenario is labelled an illustration on every card and in the
- *     paragraph under it, and it keeps the phase line: basic role selection
- *     and delegation are recorded, deeper team communication is still evolving.
+ *     paragraph under it. Teamwork itself is available (owner, 2026-09-17):
+ *     the page says what bounds it — capped rounds and budgets, stop at any
+ *     time, human approval, pause and takeover.
  *   - The browser desktop comes first; voice, automation, external actions and
  *     other clients follow the enabled scope (M14). Nothing on this page says
  *     mobile approval or always-on work is available.
@@ -1649,7 +1653,7 @@ export const LX_FEATURE_WORKFORCE = {
      limits and the phase line. It is the only place the scenario is told as
      sentences. The column is ordinary text flow, so the paragraph grows with
      its copy (nothing clips it). */
-  answersBody: B('一个复杂任务可以交给多个数字员工分工完成：重点不在聊天人数，而在信息能否传递、责任是否明确、结果能否交接。协作场景示意：开拓一个新的目标市场。研究员工找到目标企业后，可以把待确认的规格交给产品员工；销售员工据此调整开发策略，创意员工准备匹配的营销素材。统筹角色把结果与未决问题汇总，交给负责人确认。协作次数、预算和可执行动作都有限制，人工审批、暂停与接管始终保留。基础员工选择与派工已有记录，更深入的团队交流协作仍在完善。', 'Complex work can be assigned to a bounded team of AI employees. What matters is information exchange, clear ownership and reliable handoff, not the number of chat windows. Illustrative scenario: entering a new target market. Research can hand specification questions to a product specialist. Sales uses the findings to refine outreach, while creative specialists prepare relevant assets. A coordinator consolidates outputs and unresolved questions for the responsible person to review. Collaboration rounds, budgets and permitted actions are limited, and human approval, pause and takeover remain available. Basic role discovery and delegation are recorded; deeper team communication and coordination are still evolving.'),
+  answersBody: B('一个复杂任务可以交给多个数字员工分工完成：重点不在聊天人数，而在信息能否传递、责任是否明确、结果能否交接。协作场景示意：开拓一个新的目标市场。研究员工找到目标企业后，可以把待确认的规格交给产品员工；销售员工据此调整开发策略，创意员工准备匹配的营销素材。统筹角色把结果与未决问题汇总，交给负责人确认。协作次数、预算和可执行动作都有限制，人工审批、暂停与接管始终保留。', 'Complex work can be assigned to a bounded team of AI employees. What matters is information exchange, clear ownership and reliable handoff, not the number of chat windows. Illustrative scenario: entering a new target market. Research can hand specification questions to a product specialist. Sales uses the findings to refine outreach, while creative specialists prepare relevant assets. A coordinator consolidates outputs and unresolved questions for the responsible person to review. Collaboration rounds, budgets and permitted actions are limited, and human approval, pause and takeover remain available.'),
   /* The statement under that paragraph (M11's headline). The Chinese is cut to
      「而是一起做完」 so each half is seven characters: at 768 the column holds
      8.6 characters of 40px type, and 「而是一起把事做完。」 is nine. The
@@ -1850,7 +1854,7 @@ export const CAPABILITY_SHOWCASE = {
       promise: B('一个复杂任务可以交给多个数字员工分工完成。重点不在聊天人数，而在信息能否传递、责任是否明确、结果能否交接。', 'Assign complex work to a bounded team of digital employees. What matters is information exchange, clear ownership and reliable handoff — not the number of chat windows.'),
       picks: ['288 Specialized AI Employees', 'Workforce Panel', 'AI Teams & Collaboration', 'Task Delegation · Handoff · Parallel Execution', 'Role · Skills · Tools · Memory', 'Approval Center', 'Mobile Companion'],
       output: B('按责任汇总的结果、成员之间的交接记录，以及清楚的下一步。', 'Consolidated results, clear handoffs and assigned next steps.'),
-      connection: B('288 是岗位目录数量，不是同时运行的员工数，也不等于替代 288 名真人。', '288 is the role-directory count — not concurrent workers, and not a claim to replace 288 people.'),
+      connection: B('288 个专业岗位，按任务选用、组队协作，不等于替代 288 名真人。', '288 specialized roles, chosen per task and teaming up for the work — not a claim to replace 288 people.'),
     },
   ],
 
@@ -2023,7 +2027,8 @@ export const CAP_V6A = {
   },
   /* #story-6 — AI roles as a team (tools/blocks/qx-projects.mjs): V6 §5.7's
      three cards. The large card is the teamwork example and says it is an
-     illustration and that deeper teamwork opens in phases. Links go to the
+     illustration and that the employees message each other and work in
+     parallel (available, owner 2026-09-17). Links go to the
      workforce page, where M10/M11 are told in full, and to the catalogue
      group for the role and task entries. Pictures are this site's editorial
      art for specialised roles and parallel work. */
@@ -2031,13 +2036,13 @@ export const CAP_V6A = {
     arrowHref: 'workforce.html',
     cards: [
       { title: B(`288 个${ZW}跨部门${ZW}专业岗位`, '288 cross-functional specialist roles'),
-        text: B('岗位目录，按任务选用；不是同时运行的 288 个员工，也不替代真人。', 'A role directory chosen per task — not 288 employees running at once, and not a replacement for people.'),
+        text: B('岗位目录，按任务选用、组队协作；不替代真人。', 'A role directory, chosen per task and working as teams — not a replacement for people.'),
         href: 'workforce.html#lx-role-groups', pill: B('认识数字员工', 'Meet the AI Workforce'), image: 'phone-agents' },
       { title: B(`员工任务、${ZW}进度与成果`, 'Tasks, progress and results'),
         text: B('谁在做什么、哪里在等待、交付了什么，关键动作由人批准。', 'Who is doing what, what is waiting and what was delivered, with key actions approved by people.'),
         href: '#g10', pill: B('员工能力组', 'AI workforce group'), image: 'mobile-agents' },
       { title: B(`团队分工、${ZW}交流、${ZW}并行与接力`, 'Roles, exchange, parallel work and handoffs'),
-        text: B('协作示意：市场研究员工找到目标企业，产品员工核对规格，销售员工规划开发，创意员工准备素材，统筹角色复核汇总后交负责人确认。基础派工已有记录，深度团队互通按阶段开放；图为示意，不是实时运行画面。', 'Illustrative: research finds target accounts, a product specialist checks specifications, sales plans outreach, creative prepares assets, and a coordinator reviews and consolidates the package for the responsible person to confirm. Basic delegation is recorded; deeper teamwork opens in phases. The picture is an illustration, not a live view.'),
+        text: B('协作示意：市场研究员工找到目标企业，产品员工核对规格，销售员工规划开发，创意员工准备素材；员工之间直接交流、并行推进，统筹角色复核汇总后交负责人确认。图为示意，不是实时运行画面。', 'Illustrative: research finds target accounts, a product specialist checks specifications, sales plans outreach and creative prepares assets; the employees message each other and work in parallel, and a coordinator reviews and consolidates the package for the responsible person to confirm. The picture is an illustration, not a live view.'),
         href: 'workforce.html#lx-team', pill: B('看团队协作', 'See teamwork'), image: 'brand-family-03' },
     ],
   },
@@ -2082,9 +2087,10 @@ export const CAP_V6A = {
  * `keep` names the runs of a title that must not be split across two lines
  * (the block sets them `nowrap`): measured at 320px, 「爆款结构再创作」 broke as
  * 「爆款结构再」/「创作」, 「一键生成视频」 as 「一键生成」/「视频」 and "Short-form"
- * after its hyphen. The status after 「 · 」 is always kept whole, so
- * 「建设中」 / "In Development" never splits either. Each run is at most 150px
- * at the heading's 20px, inside the 189px the heading has at 320px.
+ * after its hyphen. A status after 「 · 」 (none today: video and viral
+ * adaptation are available since 2026-09-17) is always kept whole. Each run is
+ * at most 150px at the heading's 20px, inside the 189px the heading has at
+ * 320px.
  */
 const CREATIVE_NOTE = B('创意工作室已有基础；营销套件、局部检查与一键编排持续整合。', 'The creative workspace is present; packaged marketing, local checks and one-click workflows are being integrated.');
 const CREATIVE_PUBLISH = B('发布到外部渠道需要单独授权。', 'Publishing to external channels requires separate authorization.');
@@ -2114,7 +2120,7 @@ export const CREATIVE_TOPICS = {
     },
     {
       id: 'creative-video',
-      title: B('AI 一键生成视频 · 建设中', 'One-click Video · In Development'),
+      title: B('AI 一键生成视频', 'One-click Video'),
       keep: B(['AI 一键生成视频'], []),
       covers: ['AI Image & Video Workflow'],
       flow: {
@@ -2126,15 +2132,15 @@ export const CREATIVE_TOPICS = {
           'Start with product facts, reference images, audience, language, duration and aspect ratio. Organize the brief into a video project covering scripts, storyboards, visuals, voiceover, captions, review and export, while retaining assets, task status and versions.'),
         B('生成之前，先形成一份可审阅的制作方案：开场吸引点、卖点表达、镜头顺序、节奏与结尾行动引导。画面以已确认的产品事实和品牌规范为准，并保留质量检查；多语言旁白、音乐、品牌标志、片尾和参数标注在后期加入，均按可用工具和已授权素材制作。生成预算、审批与任务状态随项目记录。',
           'Before generation, the workflow prepares a production plan for review: the hook, benefits, shot order, pacing and call to action. Visuals are grounded in verified product and brand information, with quality checks. Multilingual narration, music, branding, end cards and specification overlays are added in post-production, using available tools and authorized assets. Generation budgets, approvals and task status are recorded with the project.'),
-        B('产品介绍、广告、品牌宣传与社媒短片，都围绕同一套产品和品牌资料展开。目标是支持横版、竖版、方版，以及失败镜头的局部重做。',
-          'Product explainers, advertisements, brand films and social clips use the same verified product and brand context. The workflow aims to support portrait, landscape and square formats, with local revisions rather than regenerating everything.'),
+        B('产品介绍、广告、品牌宣传与社媒短片，都围绕同一套产品和品牌资料展开，可输出横版、竖版、方版；失败镜头单独重做，不必推倒整条视频。',
+          'Product explainers, advertisements, brand films and social clips use the same verified product and brand context, in portrait, landscape and square formats; a failed shot is redone on its own rather than regenerating everything.'),
       ],
-      note: B('当前一键成片流程仍在建设；真实生成、播放、编辑和最终导出需要完整验收。最终成果必须是可播放、可导出的文件，而不是仅有“任务完成”的提示。',
-        'The one-click production workflow is still developing. Actual generation, playback, editing and export require end-to-end validation. Delivery means a playable, exportable file, not merely a completion message.'),
+      note: B('交付的是可播放、可导出的视频文件，而不只是“任务完成”的提示；生成前可审阅制作方案，成片经人工审核后再发布，生成按企业开通的服务与额度计量。',
+        'What you receive is a playable, exportable video file, not merely a completion message. The production plan can be reviewed before generation, finished videos are reviewed before they are published, and generation runs within the services and credits the company enables.'),
     },
     {
       id: 'creative-viral',
-      title: B('爆款结构再创作 · 建设中', 'Viral Creative Adaptation · In Development'),
+      title: B('爆款结构再创作', 'Viral Creative Adaptation'),
       keep: B(['再创作'], []),
       covers: ['Viral Structure Adaptation'],
       /* The Chinese steps are the short row the brief gives; the English uses
@@ -2157,8 +2163,8 @@ export const CREATIVE_TOPICS = {
           'You receive a structural analysis, original scripts and storyboards, the declared differences between versions and the follow-on production tasks; where channel data is connected, the versions can then be compared on performance.'),
       ],
       noteLabel: B('边界与开放说明：', 'Boundaries and availability: '),
-      note: B('这里的“复刻”指借鉴结构，不直接复制原片、人脸、声音、音乐、标志或水印，也不承诺必成爆款。结构分析与成片衔接仍在建设。',
-        'Adapt the structure rather than copying footage, faces, voices, music, logos or watermarks. Viral performance is not guaranteed, and the analysis-to-production workflow is still developing.'),
+      note: B('这里的“复刻”指借鉴结构，不直接复制原片、人脸、声音、音乐、标志或水印；参考视频须有权使用，也不承诺必成爆款。',
+        'Adapt the structure rather than copying footage, faces, voices, music, logos or watermarks. Reference videos must be ones you are entitled to use, and viral performance is not guaranteed.'),
     },
     {
       id: 'creative-kits',
@@ -2577,8 +2583,8 @@ export const CATALOGUE_DETAIL = {
         /* The status is part of the heading (V6 §5.6); on a narrow English
            line it stays in one piece and the dot stays with the words before it
            (U+00A0). */
-        heading: B('AI 一键生成视频 · 建设中', 'One-click video\u00a0· In\u00a0development'),
-        lede: B('将文案、分镜、素材、画面、配音、字幕和导出组织成一个视频项目，目标是减少营销视频制作中的工具切换与手工交接。', 'Organize scripts, storyboards, assets, visuals, voiceover, captions and export in one project, reducing fragmented tools and manual production handoffs.'),
+        heading: B('AI 一键生成视频', 'One-click video'),
+        lede: B('将文案、分镜、素材、画面、配音、字幕和导出组织成一个视频项目，减少营销视频制作中的工具切换与手工交接。', 'Organize scripts, storyboards, assets, visuals, voiceover, captions and export in one project, reducing fragmented tools and manual production handoffs.'),
         points: [
           CP('M08-01', '输入产品与视频目标', 'Start from products and a video brief',
             '根据产品资料、参考图片、目标受众、语言、时长和画幅，组织产品介绍、广告、品牌宣传与社媒短视频项目。',
@@ -2593,18 +2599,18 @@ export const CATALOGUE_DETAIL = {
             '把多语言旁白、字幕、音乐、品牌标志、片尾和参数叠加纳入后期流程，按可用工具和授权素材完成制作。',
             'Coordinate multilingual narration, captions, music, branding, end cards and specification overlays through available tools and authorized assets.'),
           CP('M08-05', '项目版本与局部重做', 'Project versions and local revisions',
-            '保存产品资料、参考素材、分镜、任务状态和成果版本；目标是支持失败镜头单独重做，避免每次推倒整条视频。',
-            'Retain product facts, references, storyboards, task status and artifact versions, with a workflow goal of redoing individual failed shots instead of regenerating everything.'),
+            '保存产品资料、参考素材、分镜、任务状态和成果版本；失败镜头可以单独重做，不必每次推倒整条视频。',
+            'Retain product facts, references, storyboards, task status and artifact versions, and redo an individual failed shot instead of regenerating everything.'),
           CP('M08-06', '预览、导出与成本控制', 'Preview, export and cost control',
             '组织横版、竖版、方版等输出，记录生成预算、审批、任务状态和最终文件；只有可播放、可导出的成果才能算交付。',
             'Organize landscape, portrait and square outputs with budgets, approvals, task tracking and final files. Delivery requires an actual playable, exportable artifact.'),
         ],
-        value: B('当前边界：已有项目、素材与任务记录等基础；真实生成、播放、编辑与导出的完整成片验收仍需补齐。', 'Current boundary: project, asset and task-record foundations are present; end-to-end generation, playback, editing and export still require production validation.'),
-        outputs: B('围绕产品视频、广告、品牌宣传与社媒短片组织制作项目；完整成片交付以实际验收为准。', 'Organize product explainers, advertisements, brand videos and social clips. Finished-video delivery requires actual validation.'),
-        availability: B('一键视频建设中；真实生成、播放、编辑与导出的完整成片仍需验收。能打开页面不等于成片可以交付。', 'In development: end-to-end generation, playback, editing and export still require production validation. A working page is not the same as a deliverable video.'),
+        value: B('从一句制作需求到一条可播放、可导出的成片：脚本、分镜、画面、配音、字幕和导出在同一个项目里完成，版本与成本都有记录。', 'From a brief to a playable, exportable video: script, storyboard, visuals, voiceover, captions and export in one project, with versions and costs on record.'),
+        outputs: B('产品视频、广告、品牌宣传与社媒短片的成片文件，以及制作方案、版本记录和生成成本。', 'Finished product explainers, advertisements, brand videos and social clips, with the production plan, version history and generation cost.'),
+        availability: B('一键视频已开放。成片经人工审核后再发布；生成按企业开通的服务与额度计量，素材须有权使用。', 'Available. Finished videos are reviewed before they are published; generation runs within the services and credits the company enables, using assets you are entitled to use.'),
       },
       {
-        heading: B('爆款结构再创作 · 建设中', 'Viral creative adaptation\u00a0· In\u00a0development'),
+        heading: B('爆款结构再创作', 'Viral creative adaptation'),
         lede: B('把「这个视频为什么吸引人」拆解为可用的营销结构，再结合自己的产品、品牌与目标市场，生成新的创意版本。', 'Extract the marketing structure behind an engaging reference video, then adapt it to the enterprise’s own products, brand and target market.'),
         points: [
           CP('M09-01', '参考视频接入', 'Reference-video intake',
@@ -2628,7 +2634,7 @@ export const CATALOGUE_DETAIL = {
         ],
         value: B('「复刻」指结构借鉴与原创改编：不直接复制原片、人脸、声音、音乐、标志或水印，也不承诺必然成为爆款。', 'Adaptation means borrowing a structure to make original work — not copying footage, faces, voices, music, logos or watermarks. Viral performance is not guaranteed.'),
         outputs: B('参考结构说明、原创脚本与分镜、版本变化点和后续制作任务；不承诺必然成为爆款。', 'Structural analysis, original scripts and storyboards, declared variant differences and production tasks — not a guarantee of viral results.'),
-        availability: B('爆款结构分析与再创作建设中；不直接复制原片，不承诺必成爆款。从结构分析到成片的完整流程仍需验收。', 'Structural adaptation is developing; it does not copy original footage or guarantee viral performance. The analysis-to-finished-video workflow still requires validation.'),
+        availability: B('爆款结构再创作已开放，从结构分析一直衔接到成片制作。参考视频须有权使用；不直接复制原片，不承诺必成爆款。', 'Available, from structural analysis through to finished production. Reference videos must be ones you are entitled to use; original footage is never copied, and viral performance is not guaranteed.'),
       },
     ],
   },
@@ -2637,7 +2643,7 @@ export const CATALOGUE_DETAIL = {
      of the role directory; the build checks the ten counts add up to it. */
   '10': {
     sources: ['M10', 'M11', 'M16'],
-    summary: B('288 个专业岗位，围绕任务选人、派工、交流与接力。', 'Select, assign and coordinate 288 specialized roles around shared tasks.'),
+    summary: B('288 个专业岗位，围绕任务选人、组队、交流与接力。', 'Select, team up and coordinate 288 specialized roles around shared tasks.'),
     parts: [
       {
         heading: B('288 个专业数字岗位', '288 specialized AI roles'),
@@ -2671,12 +2677,12 @@ export const CATALOGUE_DETAIL = {
             '提出业务目标，选择合适员工或团队，查看任务和成果，并批准关键动作。需要判断或遇到异常时保留人工接管。',
             'Set a business goal, choose employees or a team, inspect tasks and results, and approve key actions. Retain human takeover when judgment or exception handling is needed.'),
           CP('M10-04', '成果怎样接力和管理', 'How results are handed over',
-            '记录责任、截止时间、任务状态、结果与下一步；将不同成员的工作汇总为可交接的成果。更深入的团队互通按建设进度开放。',
-            'Track responsibility, deadlines, task status, outcomes and next steps. Consolidate member outputs into a handoff-ready result. Deeper team interoperability is phased.'),
+            '记录责任、截止时间、任务状态、结果与下一步；员工之间直接交接，不同成员的工作汇总为可交接的成果。',
+            'Track responsibility, deadlines, task status, outcomes and next steps. Members hand work to each other directly, and their outputs are consolidated into a handoff-ready result.'),
         ],
-        value: B('不是「同时雇用 288 个真人」，而是拥有可按任务选择、配置与派工的专业数字岗位目录。', 'This is a directory of professional AI roles for task-based selection, configuration and delegation, not a claim to replace 288 people.'),
+        value: B('不是「雇用 288 个真人」，而是拥有可按任务选择、配置、派工并组队协作的专业数字岗位目录。', 'This is a directory of professional AI roles for task-based selection, configuration, delegation and teamwork, not a claim to replace 288 people.'),
         outputs: B('可按任务选用的专业数字岗位目录，以及职责、任务、工作记录与交接成果。', 'A task-selectable role directory with responsibilities, tasks, work history and handoff-ready outputs.'),
-        availability: B('288 是岗位目录数量，不是同时执行数量，也不等于替代 288 名真人员工；实际启用、同时执行的任务及操作范围受配置、预算和权限约束。', '288 is the role-directory count, not concurrent workers or a claim to replace 288 people. Activation, concurrent work and permitted actions depend on configuration, budget and access.'),
+        availability: B('288 是岗位目录数量，不等于替代 288 名真人员工；实际启用的员工、协作规模及操作范围受配置、预算和权限约束。', '288 is the role-directory count, not a claim to replace 288 people. The employees enabled, the size of a collaboration and permitted actions depend on configuration, budget and access.'),
       },
       {
         heading: B('多个 AI 员工交流协作', 'AI employees working together'),
@@ -2703,7 +2709,7 @@ export const CATALOGUE_DETAIL = {
         ],
         value: B('场景示例：研究员工找客户，销售员工定策略，产品员工匹配规格，创意员工做素材，统筹员工汇总后交人确认。', 'Illustrative scenario: research finds accounts, sales plans outreach, product specialists check fit, creatives prepare assets, and a coordinator submits the package for review.'),
         outputs: B('按责任汇总的结果、成员之间的交接记录，以及清楚的下一步任务。', 'Consolidated results, accountable member handoffs and clearly assigned next actions.'),
-        availability: B('基础员工选择与派工已有记录；更深入的团队交流协作仍在完善，按建设进度分阶段开放。', 'Basic role discovery and delegation are recorded; deeper team communication and coordination are still evolving and open in stages.'),
+        availability: B('团队协作已开放：员工可以组队、互相发消息、并行处理并汇总交付。协作轮次、预算与可执行动作有上限，随时可以叫停；对外动作仍需有权人员批准。', 'Available: employees form teams, message each other, work in parallel and deliver one consolidated result. Collaboration rounds, budgets and permitted actions are capped, work can be stopped at any time, and external actions still need an authorized approval.'),
       },
     ],
   },
@@ -2797,11 +2803,11 @@ export const CATALOGUE_DETAIL = {
           /* V5 writes 「原资料仍记录……验收缺口」 — an editor's reference to its
              source records. On the page it says what those records say. */
           CP('M16-03', '视频与爆款再创作', 'Video and creative adaptation',
-            '已有项目与素材等基础；真实成片的生成、播放和导出仍有待验收。一键生成、审核与最终文件交付需完整验证，不能把页面可用当成成片可交付。',
-            'Project and asset foundations exist; generating, playing and exporting finished videos still awaits validation. The whole generation-to-file workflow must be validated, rather than equating a working page with a deliverable video.'),
+            '一键视频与爆款结构再创作已开放，交付的是可播放、可导出的成片文件；成片经人工审核后再发布，生成按企业开通的服务与额度计量。',
+            'One-click video and viral creative adaptation are available, and what they deliver is a playable, exportable video file. Finished videos are reviewed before publishing, and generation runs within the services and credits the company enables.'),
           CP('M16-04', '协作、业务理解与记忆', 'Teamwork, context and memory',
-            '基础选人与派工、企业知识及业务关联已有建设。深入的团队交流、企业级主动工作、统一长期记忆与新企业资料接入，需分阶段完善和验收。',
-            'Basic role discovery, delegation, enterprise knowledge and business relationships have foundations. Deeper team communication, enterprise-wide proactive work, unified memory and new-enterprise onboarding require staged delivery and validation.'),
+            '员工组队、互相交流与协作交付已开放；企业知识及业务关联已有建设。企业级主动工作、统一长期记忆与新企业资料接入，需分阶段完善和验收。',
+            'AI employees can already form teams, communicate and deliver together, and enterprise knowledge and business relationships have foundations. Enterprise-wide proactive work, unified memory and new-enterprise onboarding require staged delivery and validation.'),
           CP('M16-05', '高级分析与外部业务系统', 'Analytics and connected business systems',
             '高级增长分析需要合适的资源配置；财务、物流、签章、客户渠道与第三方数据依企业授权及系统情况开放。正式申报、付款和专业审阅由有权人员把关。',
             'Advanced growth analytics needs suitable resources. Finance, logistics, signatures, customer channels and third-party data depend on enterprise access and systems. Authorized people retain control of filings, payments and professional reviews.'),
@@ -2862,8 +2868,8 @@ export const CATALOGUE_DETAIL = {
  *
  * One compact block after the pink panel and before the team scenario. The
  * counts are V4's (pages 21–22) as carried by V5 M10 and V6 §6.2; they are the
- * size of each group in the role directory, not staff, not concurrent work,
- * and the note under the total says so. tools/build-site.mjs asserts that
+ * size of each group in the role directory, not staff, and the note under the
+ * total says so. tools/build-site.mjs asserts that
  * there are ten groups and that they add up to `total.count`, which must be
  * 288 — change a number here and the build tells you whether the table still
  * sums.
@@ -2900,7 +2906,7 @@ export const WORKFORCE_ROLE_GROUPS = {
   ],
   total: { name: B('合计', 'Total'), count: 288 },
   // M10's value line and availability line, P04's scope line.
-  note: B('288 是岗位目录数量：可按任务选择、配置与派工的专业数字岗位，不是同时执行的数量，也不代表替代 288 名真人员工。实际启用、同时执行与操作范围，受企业配置、预算和权限约束。', '288 is the size of the role directory: specialized roles you select, configure and assign by task. It is not concurrent execution or a claim to replace 288 people. Activation, concurrent work and permitted actions depend on configuration, budget and access.'),
+  note: B('288 是岗位目录数量：可按任务选择、配置、派工并组队协作的专业数字岗位，不代表替代 288 名真人员工。实际启用的员工、协作规模与操作范围，受企业配置、预算和权限约束。', '288 is the size of the role directory: specialized roles you select, configure, assign and team up by task. It is not a claim to replace 288 people. The employees enabled, the size of a collaboration and permitted actions depend on configuration, budget and access.'),
 };
 
 // V6-D-END

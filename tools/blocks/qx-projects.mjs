@@ -72,11 +72,12 @@ export function render(frag, ctx) {
        written by the workforce builder in tools/build-site.mjs. */
     if (!/^workforce\.html(#lx-(role-groups|team))?$/.test(href) && href !== groupHref) throw new Error(`qx-projects: ${href} is neither the workforce page (or one of its two sections) nor ${groupHref}`);
   }
-  /* The directory card has to say what 288 is not, and the teamwork card that
-     it is an illustration and that deeper teamwork is phased. */
+  /* The directory card has to say what 288 is (a role directory), and the
+     teamwork card that its picture is an illustration and that the employees
+     work with each other. */
   const [dir, , team] = T.cards.map((c) => t(c.text));
-  if (ctx.lang === 'zh' ? !/不是同时运行/.test(dir) : !/not 288 employees running at once/.test(dir)) throw new Error('qx-projects: the 288 card no longer says the roles are not running at once');
-  if (ctx.lang === 'zh' ? !/示意/.test(team) || !/按阶段开放/.test(team) : !/Illustrative/.test(team) || !/in phases/.test(team)) throw new Error('qx-projects: the teamwork card lost its illustration or phasing note');
+  if (ctx.lang === 'zh' ? !/岗位目录/.test(dir) : !/role directory/.test(dir)) throw new Error('qx-projects: the 288 card no longer says 288 is a role directory');
+  if (ctx.lang === 'zh' ? !/示意/.test(team) || !/直接交流/.test(team) : !/Illustrative/.test(team) || !/message each other/.test(team)) throw new Error('qx-projects: the teamwork card lost its illustration note or its account of the employees working with each other');
 
   /* ------------------------------------------------------------ split ---- */
   const OPEN = '<div role="listitem" class="qx-project-cl-item w-dyn-item">';
