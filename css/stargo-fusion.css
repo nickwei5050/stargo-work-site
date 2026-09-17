@@ -4179,6 +4179,27 @@ html[lang="en"] .cn-about-reviews .cn-testimonial-info .cn-text-size-medium { te
   html[lang="en"] .lx-scope .lx-team-section .lx-button.lx-is-secondary { padding-left: 1rem; padding-right: 1rem; }
 }
 
+/* workforce.html — the closing block of the team scenario (text, button and
+   the pink card with the orbit poster; `.lx-feature-grid` is on this page
+   only). From 768 the template sets it as two equal columns and stretches the
+   card to the height of the text column, while the poster is a landscape
+   picture at the card's width: at 768 the card was 344x643 with a 149px
+   picture at its top (422px tall in Chinese), and in its 344px column the
+   English heading read "A shared goal, / connected / work and a / coherent
+   result.". From 768 to 991 the block stacks as the template stacks it below
+   768: the heading has the full width ("A shared goal, connected / work and
+   a coherent result."), and the card, under the button, fits the poster.
+   From 992 to 1279 the columns stay, and the card fits the poster and sits
+   level with the middle of the text column (it was 512px tall around a
+   212px picture at 992); from 1280 the two already match. */
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .lx-scope .lx-feature-grid:has(.lx-v6-team-title) { grid-template-columns: 1fr; }
+}
+@media screen and (min-width: 992px) and (max-width: 1279px) {
+  .lx-scope .lx-feature-grid:has(.lx-v6-team-title) > .lx-feature-grid-item:has(> .lx-feature-grid-bg) { justify-content: center; }
+  .lx-scope .lx-feature-grid:has(.lx-v6-team-title) .lx-feature-grid-bg { height: auto; }
+}
+
 /* V7-LX-END */
 
 
