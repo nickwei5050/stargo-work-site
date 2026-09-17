@@ -113,7 +113,13 @@ export function render(frag, ctx) {
      AI workforce in brief, so it goes to the page that tells it in full. */
   const BTN_HREF = /(<a data-w-id="[^"]*" href=")[^"]*("[^>]*class="qx-position-icon-button-wrap)/;
   if (!BTN_HREF.test(top)) throw new Error('qx-projects: the arrow button anchor is gone from the top row');
-  top = top.replace(BTN_HREF, (m, a, b) => `${a}${T.arrowHref}${b}`);
+  /* The button is two arrow images and nothing else, both decorative (alt=""
+     below), so without a label a screen reader announces a nameless link.
+     Its name is the name of the page it opens, as the site navigation writes
+     it (「数字员工」 / "AI Workforce"), in the page's language. */
+  const arrowPage = C.NAV.find((n) => n.href === T.arrowHref.split('#')[0]);
+  if (!arrowPage) throw new Error(`qx-projects: the arrow button goes to ${T.arrowHref}, which is not a page in the site navigation, so it has no name to carry`);
+  top = top.replace(BTN_HREF, (m, a, b) => `${a}${T.arrowHref}" aria-label="${escapeHtml(t(arrowPage.label))}${b}`);
 
   const alts = (top.match(/alt="Image"/g) ?? []).length;
   if (alts !== 2) throw new Error(`qx-projects: expected two arrow images with alt="Image", found ${alts}`);

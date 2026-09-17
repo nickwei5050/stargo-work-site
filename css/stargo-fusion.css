@@ -3430,6 +3430,97 @@ html[lang^="en"] .lx-scope :is(.lx-blog-title-holder, .lx-blog-title, .lx-relate
 
 
 /* V7-CAP-START (capabilities page fixes) */
+
+/* 1. The catalogue band (#atlas) on the page grid.
+      The band sat on its own grid: `5vw` side padding and a 1180px column
+      (38.4px and 130px from the edge at 768 and 1440, 22px at 390), while the
+      foundations section right above it — and the other qubix sections of the
+      page — set their words on qubix's container: 16px from the edge below
+      480, a 540px column with 24px inside to 767, 767px with 32px to 991,
+      and 1360px with 40px from 992. So 「完整目录」 started 50px right of
+      「经过验证的改进」 at 1440 and 5–6px off it at 768 and 390. The band now
+      uses the same container, written as the section's padding plus a
+      maximum width for the column (the container's width less its padding).
+      Its first band also dropped a 76px (52px on phones) top margin meant for
+      a band between two groups of rows: with one band left, at the top of
+      the section, it only pushed the heading further below the section's
+      own 140px (80px) top padding. */
+#atlas.cn-capmap { padding-left: 40px; padding-right: 40px; }
+#atlas .cn-capmap-inner { max-width: 1280px; }
+#atlas .cn-capmap-inner > .cn-band:first-child { margin-top: 0; }
+@media screen and (max-width: 991px) {
+  #atlas.cn-capmap { padding-left: 32px; padding-right: 32px; }
+  #atlas .cn-capmap-inner { max-width: 703px; }
+}
+@media screen and (max-width: 767px) {
+  #atlas.cn-capmap { padding-left: 24px; padding-right: 24px; }
+  #atlas .cn-capmap-inner { max-width: 492px; }
+}
+@media screen and (max-width: 479px) {
+  #atlas.cn-capmap { padding-left: 16px; padding-right: 16px; }
+  #atlas .cn-capmap-inner { max-width: none; }
+}
+
+/* 2. Catalogue group names wrap between words only.
+      The names are one run of text (not split per character), so `keep-all`
+      removes the breaks between characters and leaves the space after the
+      number, the 「、」 and the <wbr>s the builder puts between words
+      (tools/lib-html.mjs, zhWbr). Before: 「04 询盘与多渠道沟 / 通」,
+      「08 ERP、订单与履 / 约」 at 320, 「12 企业业务关系与上下 / 文」 and
+      「13 权限、审批与经营控 / 制」 at 360. `balance` then evens a name that
+      takes two lines, as the site does for the other accordion headings
+      (the zh sweep above). The longest word is three characters, far inside
+      the narrowest row; `anywhere` is only the belt. English names break at
+      their spaces and are balanced so a name does not end on one word
+      ("08 ERP, Orders & / Fulfillment" at 320–390). */
+html[lang^="zh"] .cn-capmap .cn-accordion-heading {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+html[lang^="en"] .cn-capmap .cn-accordion-heading { text-wrap: balance; }
+
+/* 3. The closing line in #start (「演示按你的业务流程进行：…」). GSAP splits it
+      into one box per character, so the browser could break it anywhere and
+      did, at every width (「仍/在」 at 375 and 768, 「直/接」 and 「建/设」 at
+      390, 「部/分」 at 360, 「说/明」 at 320). The builder wraps each word of it
+      in `.zh-keep` (tools/lib-html.mjs, zhKeep), and a word never breaks. */
+html[lang^="zh"] #start .zh-keep { white-space: nowrap; }
+
+/* 4. English headings and card titles that ended on one word (measured at
+      320–1440 before): foundation titles ("Knowledge and business /
+      relationships", "Connections, by / authorization" at 768–1440), the
+      split foundations heading ("area rests / on" at 360–390), the teamwork
+      card titles ("288 cross-functional specialist / roles" at 320, "Roles,
+      exchange, parallel work and / handoffs" at 360–390), the #story-4 theme
+      names ("Stock, production & / quality") and the rollout heading in
+      #start ("Across the company, in / phases" at 320–768). Balance only
+      moves the break; no box changes size. The Chinese page balances its own
+      headings already, or does not need to. */
+html[lang^="en"] .qx-whatwedo .qx-h5,
+html[lang^="en"] .qx-whatwedo .qx-wrapper-content-service .qx-h2,
+html[lang^="en"] .qx-whatwedo .qx-wrapper-content-service .qx-text-heading-servie,
+html[lang^="en"] .qx-projects .qx-project-card-title,
+html[lang^="en"] .rk-testimonials .rk-rt-text-style-h4,
+html[lang^="en"] body:has(#atlas) #start h2.about-title {
+  text-wrap: balance;
+}
+
+/* 5. The same for the English card lines under them. The nine steps'
+      descriptions ("…reach out through authorized / channels." at 390,
+      "…not / guessed." at 1024 and 1440) take `pretty`, which reworks only
+      the last lines of a paragraph, as the Chinese page already does for
+      them (the zh orphan rule above). The four area cards' lines ("…from
+      one / workspace.", "…tasks and / improvement." at 320–360) are short
+      paragraphs of up to four lines, where Chromium's `pretty` kept the
+      single word; they are balanced instead. */
+html[lang^="en"] .rk-insight .rk-rt-insights-text {
+  text-wrap: pretty;
+}
+html[lang^="en"] body:has(#atlas) .macro-desc {
+  text-wrap: balance;
+}
+
 /* V7-CAP-END */
 
 
