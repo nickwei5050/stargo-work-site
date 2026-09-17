@@ -901,22 +901,21 @@ function lxPage(spec, lang, name) {
     const tagged = TEAM.replace('<div class="lx-section">', '<div class="lx-section lx-team-section">');
     b = b.slice(0, at) + lxContextSection(C.LX_INTELLIGENCE_CONTEXT, t) + tagged + b.slice(at + TEAM.length);
   }
-  // Imagery stays the template's own (owner decision, 2026-09-06): the phone screens, the
+  // Imagery stays the template's own (owner decision, 2026-09-06): the phone frames, the
   // translucent overlays of the gradient and "no writing" sections, the closing card's image and
   // the avatars in the scenario bubbles are all part of the composition the pink palette was
-  // designed around. Only their template alt text goes.
+  // designed around. Only their template alt text goes. The painted phone screens are the
+  // exception (V7-LX, below): they carried readable template interfaces and brand names.
   if ((b.match(/lx-author-image-medium/g) ?? []).length !== 48) throw new Error(`${name}: avatar bubbles changed`);
-  /* V7-LX, the one exception on the Chinese page: the four phone-screen
-     pictures inside the three phone mockups (hero, team card, phone features)
-     have the template's English interface painted in — "Danny Hopkins",
-     "Messages", "Your wall collection", "New faces on here". STARGO's four
-     phone-format concept pictures (887x1774, text-free) take those slots
-     there: the screens are object-fit: cover in the same frame, so the crop
-     and the cycling animation are unchanged, and they stay decorative
-     (alt=""). The English page keeps the template's screens. The hand-held
-     phone of the "no writing" band (no-writing-sc) is a cut-out composite
-     with its own English text and has no text-free counterpart; it stays. */
-  if (lang === 'zh') {
+  /* V7-LX, the one exception, on both pages: the four phone-screen pictures
+     inside the three phone mockups (hero, team card, phone features) have the
+     template's interface painted in — a chat that names a design tool, a
+     message list with addresses and Polish lines, a card wall with a video
+     app's name, a dating screen ("New faces on here"). STARGO's four
+     phone-format concept pictures (887x1774, text-free) take those slots: the
+     screens are object-fit: cover in the same frame, so the crop and the
+     cycling animation are unchanged, and they stay decorative (alt=""). */
+  {
     const SCREENS = [
       ['iPhone%2013%20Pro%20Max%20-%203', MOBILE.inquiry],   // a chat → conversation becomes customer knowledge
       ['iPhone%2013%20Pro%20Max%20-%204', MOBILE.approvals], // a message list → a decision held at an approval gate
@@ -927,6 +926,22 @@ function lxPage(spec, lang, name) {
       if ((b.match(new RegExp(`<img\\b[^>]*${key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'g')) ?? []).length !== 3) throw new Error(`${name}: expected the phone screen ${key} in three mockups`);
       b = swapImg(b, key, src);
     }
+  }
+  /* V7-LX: the hand-held phone of the "no writing" band (no-writing-sc) is a
+     cut-out composite whose screen carries the template's English interface
+     and a video app's name, on both pages. The composite stays (hand, frame,
+     cut-out edge); a text-free screen (MOBILE.core, shared context: the band
+     says 「不再丢上下文」) is laid over its screen. The layer is a sibling of
+     the photograph with the photograph's own class, so the band's IX2
+     (lx-a-68, `.lx-no-writing-image`, children of the trigger) moves and
+     scales both together, and it copies the photograph's initial transform.
+     css/stargo-fusion.css (V7-LX) places the screen on the photograph's
+     object-fit box, rounds it and keeps the fingertips in front. */
+  {
+    const re = /(<img src="assets\/6929b6c693cb856e01ef7c05\/694d149575edcf4ee403b317_no-writing-sc\.avif"[^>]*?style="([^"]*)"[^>]*class="lx-no-writing-image"\/>)/g;
+    const hits = b.match(re) ?? [];
+    if (hits.length !== 1) throw new Error(`${name}: expected one hand-held phone photograph (no-writing-sc), found ${hits.length}`);
+    b = b.replace(re, (m, tag, style) => `${tag}<div class="lx-no-writing-image stargo-nw-screen" style="${style}" aria-hidden="true"><div class="stargo-nw-frame"><img src="${MOBILE.core}" loading="lazy" alt="" class="stargo-nw-art"/></div></div>`);
   }
   b = b.replace(/<div([^>]*)class="([^"]*\blx-gradient-section\b[^"]*)"/, '<div id="lx-more"$1class="$2"');
   b = b.replace(/<div class="lx-cta-wrapper">/, '<div id="lx-evolution" class="lx-cta-wrapper">');

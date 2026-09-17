@@ -3975,6 +3975,62 @@ html[lang^="en"] .team-grid .team-content .h2 { text-wrap: balance; }
   text-shadow: 0 1px 2px rgba(0, 0, 0, .55), 0 0 18px rgba(0, 0, 0, .55);
 }
 
+/* intelligence.html (both languages), the "no writing" band — the text-free
+   screen laid over the hand-held phone (tools/build-site.mjs, V7-LX). The
+   layer has the photograph's box (it is its sibling, absolutely placed), so
+   the IX2 move/scale that both share lands them on the same pixels.
+   `.stargo-nw-frame` is the photograph's picture inside that box: the
+   template shows it object-fit: cover, anchored top left, from 768px (a box
+   720px tall, so the picture is height-driven and cropped at the right on
+   tablets), and at its natural ratio, full width, below 768px. The screen
+   sits on the phone's own screen in the 1262x1474 picture (x 153-699,
+   y 22-1204, 2px into the black bezel so no template pixel shows at the
+   edge); its outline is the screen's rounded rectangle with the three
+   fingertips that overlap the left edge cut out, so the fingers stay in
+   front. The black pill is the camera cut-out the screen covers. */
+.lx-scope .lx-no-writing-image-holder:has(> .stargo-nw-screen) { position: relative; }
+.lx-scope .lx-no-writing-image.stargo-nw-screen {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  container-type: size;
+}
+.lx-scope .stargo-nw-frame {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: max(100cqw, 100cqh * 1262 / 1474);
+  height: max(100cqh, 100cqw * 1474 / 1262);
+}
+@media screen and (max-width: 767px) {
+  .lx-scope .stargo-nw-frame { width: 100%; height: auto; aspect-ratio: 1262 / 1474; }
+}
+.lx-scope .stargo-nw-frame .stargo-nw-art {
+  position: absolute;
+  left: 12.124%;
+  top: 1.493%;
+  width: 43.265%;
+  height: 80.19%;
+  max-width: none;
+  object-fit: cover;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 546 1182' preserveAspectRatio='none'%3E%3Cpath d='M85 0H461A85 85 0 0 1 546 85V1097A85 85 0 0 1 461 1182H85A85 85 0 0 1 0 1097L0 1090L1.5 1087L4.5 1084L9.5 1081L13.5 1078L16.5 1075L19.5 1072L21.5 1069L22.5 1066L23.5 1063L24.5 1060L24.5 1057L24.5 1054L24.5 1051L24.5 1048L23.5 1045L22.5 1042L21.5 1039L21.5 1036L19.5 1033L17.5 1030L15.5 1027L12.5 1024L9.5 1021L6.5 1018L3.5 1015L1.5 1012L2.5 1009L2.5 1006L2.5 1003L0 1000L0 946L1.5 943L2.5 940L6.5 937L10.5 934L12.5 931L15.5 928L16.5 925L18.5 922L19.5 919L20.5 916L20.5 913L20.5 910L20.5 907L20.5 904L20.5 901L20.5 898L20.5 895L20.5 892L20.5 889L19.5 886L18.5 883L17.5 880L16.5 877L14.5 874L12.5 871L10.5 868L6.5 865L3.5 862L0 859L0 811L1.5 808L2.5 805L3.5 802L4.5 799L4.5 796L5.5 793L6.5 790L6.5 787L6.5 784L7.5 781L7.5 778L7.5 775L7.5 772L7.5 769L7.5 766L7.5 763L6.5 760L5.5 757L5.5 754L4.5 751L3.5 748L2.5 745L1.5 742L0 739V85A85 85 0 0 1 85 0Z'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 546 1182' preserveAspectRatio='none'%3E%3Cpath d='M85 0H461A85 85 0 0 1 546 85V1097A85 85 0 0 1 461 1182H85A85 85 0 0 1 0 1097L0 1090L1.5 1087L4.5 1084L9.5 1081L13.5 1078L16.5 1075L19.5 1072L21.5 1069L22.5 1066L23.5 1063L24.5 1060L24.5 1057L24.5 1054L24.5 1051L24.5 1048L23.5 1045L22.5 1042L21.5 1039L21.5 1036L19.5 1033L17.5 1030L15.5 1027L12.5 1024L9.5 1021L6.5 1018L3.5 1015L1.5 1012L2.5 1009L2.5 1006L2.5 1003L0 1000L0 946L1.5 943L2.5 940L6.5 937L10.5 934L12.5 931L15.5 928L16.5 925L18.5 922L19.5 919L20.5 916L20.5 913L20.5 910L20.5 907L20.5 904L20.5 901L20.5 898L20.5 895L20.5 892L20.5 889L19.5 886L18.5 883L17.5 880L16.5 877L14.5 874L12.5 871L10.5 868L6.5 865L3.5 862L0 859L0 811L1.5 808L2.5 805L3.5 802L4.5 799L4.5 796L5.5 793L6.5 790L6.5 787L6.5 784L7.5 781L7.5 778L7.5 775L7.5 772L7.5 769L7.5 766L7.5 763L6.5 760L5.5 757L5.5 754L4.5 751L3.5 748L2.5 745L1.5 742L0 739V85A85 85 0 0 1 85 0Z'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
+}
+.lx-scope .stargo-nw-frame::after {
+  content: "";
+  position: absolute;
+  left: 26.783%;
+  top: 2.782%;
+  width: 13.629%;
+  height: 3.528%;
+  border-radius: 999px;
+  background: #000;
+}
+
 /* V7-LX-END */
 
 
