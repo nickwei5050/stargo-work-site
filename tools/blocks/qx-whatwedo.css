@@ -84,7 +84,11 @@
       Painted in the donor's own black so the list reads over what it crosses,
       spaced on the donor's own node gap; picks are `.qx-body` and keep the
       donor's body type and colour. Below 479 the donor lets everything flow,
-      and so does the panel. */
+      and so does the panel.
+      These are the places a list starts from. On narrower or shorter screens
+      (tablets, 480–1279) some of them land on a neighbouring node or run out
+      of the pinned frame; tools/blocks/qx-whatwedo.js then moves that list,
+      with inline left/top/width, to the nearest place that is clear. */
 .qx-whatwedo .qx-whatwedo-panel { --qx-gap: var(--_common-spacing---spacing-medium);
   display: flex; flex-flow: column; gap: var(--qx-gap);
   position: absolute; width: 100%; top: 0; left: calc(100% + var(--qx-gap));

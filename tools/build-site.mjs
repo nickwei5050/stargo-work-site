@@ -16,7 +16,7 @@
  * stops matching fails the build rather than shipping an agency's copy.
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 'node:fs';
-import { makeSub, findByClass, removeByClass, elementContaining, extractElement, setInner, setEachInner, setLink, escapeHtml } from './lib-html.mjs';
+import { makeSub, findByClass, removeByClass, elementContaining, extractElement, setInner, setEachInner, setLink, escapeHtml, zhWbr, zhKeep } from './lib-html.mjs';
 import { applyChrome, remapLinks, relocateAssets, relocateLinks, assertInternalLinks, stillImage, WORDMARK } from './chrome.mjs';
 import * as C from './copy.mjs';
 import { POSTS, BLOG_UI, postPath, featured, others, coverSrc, coverSrcset, formatDate } from './blog.mjs';
@@ -1432,7 +1432,13 @@ PAGES['capabilities.html'] = (lang) => {
     .forEach(([q, i]) => { h = s(h, `>${q}<`, `>${t(K.faq[i][0])}<`, { count: 1 }); });
   h = setEachInner(h, '<p class="paragraph">', K.faq.map((f) => t(f[1])));
   h = s(h, '(Looking for more?)', t(K.moreLabel));
-  h = s(h, 'Expand your scope with marketing, SEO, or content creation.', t(K.more));
+  /* The closing line is a large heading that GSAP splits into one box per
+     character, so the browser may break it anywhere: it read 「仍/在」,
+     「直/接」, 「建/设」, 「部/分」 or 「说/明」 depending on the width. On the
+     Chinese page each word goes in a nowrap span (tools/lib-html.mjs, zhKeep;
+     css/stargo-fusion.css, V7-CAP), so any wording of this sentence breaks
+     between words only. */
+  h = s(h, 'Expand your scope with marketing, SEO, or content creation.', lang === 'zh' ? zhKeep(t(K.more)) : t(K.more));
   h = setLink(h, 'Contact us', { href: 'contact.html', text: t(K.moreButton) });
 
 
@@ -1516,7 +1522,10 @@ function capabilityShowcase(C, lang) {
        id: the cn-faq block on this page carries the same interaction under that
        id (tools/donor-lib.mjs keeps donor ids), and one event drives both. */
     .replace('<div data-w-id="cn-capmap-row"', `<div id="${id}" data-w-id="e9dfc491-ce9f-1abc-547e-929be71d3026"`)
-    .replace(/<h2 class="cn-accordion-heading">[\s\S]*?<\/h2>/, `<h2 class="cn-accordion-heading">${escapeHtml(title)}</h2>`)
+    /* A Chinese group name may wrap only between its words (<wbr> between
+       them, `keep-all` in css/stargo-fusion.css V7-CAP): at 320 and 360 the
+       names broke inside a word — 「沟/通」, 「履/约」, 「经/营」, 「上下/文」. */
+    .replace(/<h2 class="cn-accordion-heading">[\s\S]*?<\/h2>/, `<h2 class="cn-accordion-heading">${lang === 'zh' ? zhWbr(title) : escapeHtml(title)}</h2>`)
     .replace(/<div class="cn-accordion-content-block">[\s\S]*?<\/div><\/div><\/div>$/, `<div class="cn-accordion-content-block">${body}</div></div></div>`);
   /* Each group opens onto what it does before what it lists (V6 §5.8):
      its public one-line summary, then the V5 detail — per topic a lede, the

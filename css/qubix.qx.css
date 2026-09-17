@@ -1392,6 +1392,41 @@ html[lang^="zh"] .qx-news .qx-h2 { word-break: keep-all; }
    a single character (「…两套系 / 统。」 at 390 and 1440 before). */
 .qx-orbit .qx-orbit-note { text-wrap: pretty; }
 
+/* ------------------------------------------------------------------------
+   G. Phones narrower than the ring (V7). Below 480 the donor's grid is
+      `1fr 1fr` and the ring spans both tracks at a fixed 340px (drawn at
+      scale .9). A spanning item's width is a floor for the tracks it crosses,
+      so below a 340px container (every phone under 372px) both tracks grew to
+      158px against the 132–164px there is room for, and the grid ran off the
+      right edge: the tag column was cut at the screen edge at 320 and 360
+      (measured: tags 267..356 in a 320px viewport, the mouse link 314..356),
+      and the ring sat 26px right of centre.
+
+      The ring keeps its 340px and the donor's centring, but its side margins
+      are written as `50% - 170px` instead of `auto`: equal to auto wherever
+      the ring fits, negative (it overhangs the gutters evenly) where it does
+      not. A percentage margin resolves against zero while the tracks are
+      sized, so the ring stops setting their floor and the donor's `1fr 1fr`
+      shares the container again. The tag column still asks for its own
+      width (`auto` minimum), so an English tag list (161px, "04 · UNDERSTAND")
+      takes what it needs and the note beside it takes the rest (103px at
+      320, 143px at 360; equal tracks from 375 up, as before).
+
+      Under 360 the ring is also drawn a little smaller (.84 against .9), so
+      its orbiting photographs, which overhang the ring by 5–8%, stay on the
+      screen: at .9 the leftmost one ran 8px past the edge of a 320px screen.
+      The ring's own box has no animation (only its children do), so this
+      transform is free. Nothing changes from 375 up. */
+@media screen and (max-width: 479px) {
+  .qx-orbit .qx-hero-center-box {
+    margin-left: calc(50% - 170px);
+    margin-right: calc(50% - 170px);
+  }
+}
+@media screen and (max-width: 359px) {
+  .qx-orbit .qx-hero-center-box { transform: scale(.84); }
+}
+
 @font-face {
   font-family: webflow-icons;
   src: url("data:application/x-font-ttf;charset=utf-8;base64,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") format("truetype");
@@ -2474,7 +2509,11 @@ html[lang^="zh"] .qx-projects .qx-project-card-title { word-break: keep-all; }
       Painted in the donor's own black so the list reads over what it crosses,
       spaced on the donor's own node gap; picks are `.qx-body` and keep the
       donor's body type and colour. Below 479 the donor lets everything flow,
-      and so does the panel. */
+      and so does the panel.
+      These are the places a list starts from. On narrower or shorter screens
+      (tablets, 480–1279) some of them land on a neighbouring node or run out
+      of the pinned frame; tools/blocks/qx-whatwedo.js then moves that list,
+      with inline left/top/width, to the nearest place that is clear. */
 .qx-whatwedo .qx-whatwedo-panel { --qx-gap: var(--_common-spacing---spacing-medium);
   display: flex; flex-flow: column; gap: var(--qx-gap);
   position: absolute; width: 100%; top: 0; left: calc(100% + var(--qx-gap));

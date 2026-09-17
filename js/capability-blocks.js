@@ -443,7 +443,8 @@
 
 
 /* ---- cn-faq: tools/blocks/cn-faq.js ---- */
-/* cn-faq — open the creative topic an address names.
+/* cn-faq — open the creative topic an address names, and let a keyboard open
+   any topic.
 
    The seven rows of #story-5 carry ids (creative-images … creative-assets,
    tools/blocks/cn-faq.mjs) so another page can send a reader to one topic,
@@ -462,16 +463,57 @@
    with: the answer is already on the page and the row is only scrolled to.
 
    How far below the top edge the row lands is its own `scroll-margin-top`
-   (tools/blocks/cn-faq.css). The scroll is window.scrollTo, not
-   scrollIntoView, which would also scroll any clipped ancestor of the row.
-   The row is aligned again once the 800ms opening is over, because content
-   above it (lazy pictures, other blocks' reveals) can still move it. */
+   (tools/blocks/cn-faq.css). The scroll is a plain window scroll (through the
+   page's Lenis instance, so its own glide stops too), not scrollIntoView,
+   which would also scroll any clipped ancestor of the row.
+   For a few seconds after, the row is put back whenever content above it
+   (lazy pictures, other blocks' reveals, the 800ms opening itself) has moved
+   it while the page was otherwise still — unless the reader has scrolled,
+   touched, pressed a key or clicked meanwhile.
+
+   The rows are plain divs, and IX2 listens for a click, so without help they
+   opened for a mouse only. Each row's plus is given what js/stargo-catalogue.js
+   gives the catalogue's: role="button", a place in the Tab order, the row's
+   question as its name, aria-controls on the answer, aria-expanded kept in
+   step with the answer's real height (so it follows IX2's own tween), and
+   Enter or Space doing what a click does. The opening and closing are still
+   IX2's. */
 (function () {
   var root = document.getElementById('story-5');
   if (!root || !root.querySelector('.cn-accordion-content-item[id^="creative-"]')) return;
   var PREFIX = 'creative-';
-  var OPEN_MS = 800;   // cinery's "Accordion Opens" size tween
   var PATIENCE = 4000; // how long to wait for IX2 before treating it as absent
+  var HOLD = 3000;     // how long a landed row is kept in place
+
+  /* ---- the plus as a button ------------------------------------------- */
+  var items = root.querySelectorAll('.cn-accordion-content-item[id^="creative-"]');
+  for (var k = 0; k < items.length; k++) {
+    (function (row) {
+      var plus = row.querySelector('.cn-plus-block');
+      var heading = row.querySelector('.cn-accordion-heading');
+      var wrap = row.querySelector('.cn-accordion-content-wrap');
+      if (!plus || !heading || !wrap) return;
+      heading.id = row.id + '-title';
+      wrap.id = row.id + '-answer';
+      plus.setAttribute('role', 'button');
+      plus.setAttribute('tabindex', '0');
+      plus.setAttribute('aria-labelledby', heading.id);
+      plus.setAttribute('aria-controls', wrap.id);
+      function sync() {
+        var open = wrap.getBoundingClientRect().height > 1;
+        plus.setAttribute('aria-expanded', String(open));
+        wrap.setAttribute('aria-hidden', String(!open));
+      }
+      plus.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault();
+        plus.click(); // bubbles to the row, where IX2 listens
+      });
+      sync();
+      if ('ResizeObserver' in window) new ResizeObserver(sync).observe(wrap);
+      else row.addEventListener('click', function () { window.setTimeout(sync, 900); });
+    })(items[k]);
+  }
 
   function rowFor(hash) {
     var id = String(hash || '').replace(/^#/, '');
@@ -491,11 +533,24 @@
     return false;
   }
 
-  function align(row) {
+  function destOf(row) {
     var margin = parseFloat(window.getComputedStyle(row).scrollMarginTop) || 0;
+    var max = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
     var y = row.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop || 0) - margin;
-    window.scrollTo(0, Math.max(0, Math.round(y)));
+    return Math.max(0, Math.min(max, Math.round(y)));
   }
+  function align(row) {
+    var y = destOf(row);
+    // `lenis` is the page's smooth-scroll instance; an immediate jump through
+    // it also stops a glide of its own that would pull the page away again.
+    if (typeof lenis !== 'undefined' && lenis && lenis.scrollTo) lenis.scrollTo(y, { immediate: true, force: true });
+    else window.scrollTo(0, y);
+  }
+
+  var moved = false;
+  ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(function (t) {
+    window.addEventListener(t, function () { moved = true; }, { passive: true });
+  });
 
   var latest = 0;
   function arrive(hash) {
@@ -504,6 +559,7 @@
     var wrap = row.querySelector('.cn-accordion-content-wrap');
     var run = ++latest; // a newer arrival replaces one still waiting
     var waited = 0;
+    moved = false;
     (function step() {
       if (run !== latest) return;
       var h = wrap ? wrap.style.height : '';
@@ -511,9 +567,17 @@
          row is mid-tween (a pixel height that is not 0). */
       var busy = !ixStarted() || (h !== '' && h !== '0px');
       if (busy && waited < PATIENCE) { waited += 100; window.setTimeout(step, 100); return; }
+      moved = false;
       align(row);
       if (wrap && wrap.style.height === '0px') row.click();
-      window.setTimeout(function () { if (run === latest) align(row); }, OPEN_MS + 150);
+      var start = Date.now(), last = null;
+      (function hold() {
+        if (run !== latest || moved) return;
+        var y = window.pageYOffset;
+        if (y === last && Math.abs(y - destOf(row)) > 2) align(row);
+        last = window.pageYOffset;
+        if (Date.now() - start < HOLD) window.setTimeout(hold, 120);
+      })();
     })();
   }
 
@@ -521,6 +585,14 @@
   if (document.readyState === 'complete') onLoad();
   else window.addEventListener('load', onLoad);
   window.addEventListener('hashchange', function () { arrive(window.location.hash); });
+
+  /* The same page whatever form its address takes: /capabilities,
+     /en/capabilities/, capabilities.html, …/index.html. */
+  function pagePath(p) {
+    p = String(p || '');
+    try { p = decodeURIComponent(p); } catch (e) { /* keep it as written */ }
+    return p.replace(/\/index(?:\.html?)?$/i, '/').replace(/\.html?$/i, '').replace(/\/+$/, '').toLowerCase();
+  }
 
   /* A link on this page to one of the rows. Webflow's own scroll module takes
      every same-page hash link (a delegated jQuery click handler on document):
@@ -536,11 +608,13 @@
     if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     var a = e.target && e.target.closest ? e.target.closest('a[href*="#' + PREFIX + '"]') : null;
     if (!a || a.host !== window.location.host) return;
-    if (a.pathname.replace(/\.html$/, '') !== window.location.pathname.replace(/\.html$/, '')) return;
+    if (pagePath(a.pathname) !== pagePath(window.location.pathname)) return;
     if (!rowFor(a.hash)) return;
     e.preventDefault();
     e.stopPropagation();
-    if (window.location.hash !== a.hash && window.history && window.history.pushState) window.history.pushState({ hash: a.hash }, '', a.hash);
+    if (window.location.hash !== a.hash && window.history && window.history.pushState) {
+      try { window.history.pushState({ hash: a.hash }, '', a.hash); } catch (err) { /* file: in some engines */ }
+    }
     arrive(a.hash);
   }, true);
 })();
@@ -1078,16 +1152,39 @@
    Vanilla, scoped to .qx-whatwedo. The donor ships no click interaction on
    this block; this is the smallest toggle that does what the owner asked:
    "点击可以分别展开介绍01、02、03、04的功能". One node open at a time, so a
-   list never stacks onto a neighbour on the crowded stage. */
+   list never stacks onto a neighbour on the crowded stage.
+
+   Where an open list goes. qx-whatwedo.css hangs each list off its node
+   toward the middle of the stage (01 to its right, 02 below, 03 above, 04
+   above and to the right), which is right on a desktop screen. The nodes do
+   not shrink with the screen, though, and on a tablet the lists landed on a
+   neighbour: at 768 and 820 list 01 lay over node 02's title and took its
+   clicks, at 1024 × 768 list 02 ran over node 03 and off the bottom of the
+   pinned frame, and at 991 list 02 covered node 03. So when a list opens
+   (and when the window or the frame changes), its place is checked against
+   the other nodes and the pinned frame (`.qx-sticky-service-wrapp`, which
+   clips): if the stylesheet's place is clear it is kept; otherwise the list
+   goes to the nearest clear place beside, below or above its own node, in the
+   order that keeps it pointing into the stage, and may be drawn wider (up to
+   twice its node) so it is shorter. The orb and the split heading may still
+   be covered, as the stylesheet intends; another node's words never are, so
+   every node stays readable and clickable while a list is open. Below 480 the
+   lists flow under their nodes and none of this runs. */
 (function () {
   var root = document.querySelector('.qx-whatwedo');
   if (!root) return;
   var nodes = root.querySelectorAll('.qx-wrapper-main-services[aria-controls]');
+  var current = null;
+  var settled = false; // the last placement is a compromise: do not redo it on scroll
+
+  function panelOf(node) { return root.querySelector('#' + node.getAttribute('aria-controls')); }
   function setOpen(node, open) {
-    var panel = root.querySelector('#' + node.getAttribute('aria-controls'));
+    var panel = panelOf(node);
     if (!panel) return;
     panel.hidden = !open;
     node.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) { current = node; place(node, panel); }
+    else if (current === node) current = null;
   }
   function toggle(node) {
     var open = node.getAttribute('aria-expanded') !== 'true';
@@ -1102,6 +1199,180 @@
       });
     })(nodes[i]);
   }
+
+  /* ---- where an open list goes ------------------------------------------ */
+
+  /* Per node, the sides to try after the stylesheet's own place, nearest to
+     the donor's composition first. right/left: 'start' aligns the list's top
+     with the node's, 'end' its bottom. above/below: 'start' aligns the left
+     edges, 'end' the right edges, 'beside' starts the list past the node's
+     right edge. The list then slides along that side to the nearest clear
+     spot. */
+  var SIDES = [
+    [['right', 'start'], ['below', 'start'], ['left', 'start'], ['above', 'start']],  // 01, top left
+    [['below', 'start'], ['left', 'start'], ['above', 'end'], ['right', 'start']],    // 02, right
+    [['above', 'start'], ['left', 'end'], ['right', 'end'], ['below', 'start']],      // 03, bottom
+    [['above', 'beside'], ['right', 'end'], ['above', 'start'], ['below', 'start']]   // 04, bottom left
+  ];
+
+  function frameOf(stage) {
+    for (var e = stage; e && e !== document.body; e = e.parentElement) {
+      var cs = getComputedStyle(e);
+      if (cs.overflowX !== 'visible' || cs.overflowY !== 'visible') return e;
+    }
+    return null;
+  }
+  function hits(a, b) { return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top; }
+  function area(a, b) {
+    return Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left)) *
+      Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
+  }
+  function rect(x, y, w, h) { return { left: x, top: y, right: x + w, bottom: y + h }; }
+
+  /* The start coordinate nearest `pref` inside [lo, hi] that is not inside any
+     blocked interval. */
+  function slide(lo, hi, pref, blocked) {
+    if (hi < lo) return null;
+    var tries = [Math.max(lo, Math.min(hi, pref))];
+    for (var i = 0; i < blocked.length; i++) tries.push(blocked[i][0], blocked[i][1]);
+    var best = null;
+    for (var j = 0; j < tries.length; j++) {
+      var c = tries[j], ok = c >= lo - 0.01 && c <= hi + 0.01;
+      for (var k = 0; ok && k < blocked.length; k++) if (c > blocked[k][0] + 0.01 && c < blocked[k][1] - 0.01) ok = false;
+      if (ok && (best === null || Math.abs(c - pref) < Math.abs(best - pref))) best = c;
+    }
+    return best;
+  }
+
+  function geometry(node, panel) {
+    var stage = node.offsetParent;
+    if (!stage) return null;
+    var sb = stage.getBoundingClientRect();
+    var frame = frameOf(stage);
+    var fb = frame ? frame.getBoundingClientRect() : { top: -Infinity, bottom: Infinity };
+    var gap = parseFloat(getComputedStyle(panel).rowGap) || 12;
+    var others = [];
+    for (var i = 0; i < nodes.length; i++) {
+      var r = nodes[i].getBoundingClientRect();
+      /* keep a list a gap clear of every node, its own included */
+      others.push({ left: r.left - gap + 1, right: r.right + gap - 1, top: r.top - gap + 1, bottom: r.bottom + gap - 1 });
+    }
+    return {
+      box: { left: sb.left, right: sb.right, top: Math.max(sb.top, fb.top), bottom: Math.min(sb.bottom, fb.bottom) },
+      gap: gap,
+      node: node.getBoundingClientRect(),
+      others: others
+    };
+  }
+  function clear(g, r) {
+    if (r.left < g.box.left - 1 || r.right > g.box.right + 1 || r.top < g.box.top - 1 || r.bottom > g.box.bottom + 1) return false;
+    for (var i = 0; i < g.others.length; i++) if (hits(r, g.others[i])) return false;
+    return true;
+  }
+  function cost(g, r) {
+    var c = 0;
+    for (var i = 0; i < g.others.length; i++) c += area(r, g.others[i]);
+    c += Math.max(0, g.box.top - r.top) * (r.right - r.left) + Math.max(0, r.bottom - g.box.bottom) * (r.right - r.left);
+    return c;
+  }
+
+  function place(node, panel) {
+    var s = panel.style;
+    s.left = s.top = s.right = s.bottom = s.width = '';
+    settled = false;
+    if (panel.hidden || getComputedStyle(panel).position !== 'absolute') return;
+    var g = geometry(node, panel);
+    if (!g) return;
+    if (clear(g, panel.getBoundingClientRect())) return; // the stylesheet's place is fine
+
+    /* where (left: 0; top: 0) puts the list: the origin of its node's box */
+    s.left = '0px'; s.top = '0px'; s.right = 'auto'; s.bottom = 'auto';
+    var o = panel.getBoundingClientRect();
+    var n = g.node, gap = g.gap, box = g.box;
+    var index = Array.prototype.indexOf.call(nodes, node);
+    var sides = SIDES[index] || SIDES[0];
+    var widths = [n.width, Math.min(box.right - box.left, n.width * 1.5), Math.min(box.right - box.left, n.width * 2)];
+    var fallback = null;
+
+    for (var wi = 0; wi < widths.length; wi++) {
+      var w = Math.round(widths[wi]);
+      if (wi && w <= Math.round(widths[wi - 1])) continue;
+      s.width = w + 'px';
+      var h = panel.offsetHeight;
+      for (var si = 0; si < sides.length; si++) {
+        var side = sides[si][0], align = sides[si][1];
+        var x = null, y = null, blocked = [], j, r;
+        if (side === 'right' || side === 'left') {
+          x = side === 'right' ? n.right + gap : n.left - gap - w;
+          if (x < box.left - 1 || x + w > box.right + 1) continue;
+          var py = align === 'end' ? n.bottom - h : n.top;
+          for (j = 0; j < g.others.length; j++) {
+            r = g.others[j];
+            if (r.left < x + w && r.right > x) blocked.push([r.top - h, r.bottom]);
+          }
+          y = slide(box.top, box.bottom - h, py, blocked);
+          if (y === null) y = Math.max(box.top, Math.min(box.bottom - h, py));
+        } else {
+          y = side === 'below' ? n.bottom + gap : n.top - gap - h;
+          if (y < box.top - 1 || y + h > box.bottom + 1) {
+            var cy = Math.max(box.top, Math.min(box.bottom - h, y));
+            var cx = Math.max(box.left, Math.min(box.right - w, n.left));
+            var c = cost(g, rect(cx, cy, w, h)) + 1e6;
+            if (!fallback || c < fallback.c) fallback = { c: c, x: cx, y: cy, w: w };
+            continue;
+          }
+          var px = align === 'end' ? n.right - w : align === 'beside' ? n.right + gap : n.left;
+          for (j = 0; j < g.others.length; j++) {
+            r = g.others[j];
+            if (r.top < y + h && r.bottom > y) blocked.push([r.left - w, r.right]);
+          }
+          x = slide(box.left, box.right - w, px, blocked);
+          if (x === null) x = Math.max(box.left, Math.min(box.right - w, px));
+        }
+        var at = rect(x, y, w, h);
+        if (clear(g, at)) {
+          s.left = Math.round(x - o.left) + 'px';
+          s.top = Math.round(y - o.top) + 'px';
+          return;
+        }
+        var cc = cost(g, at);
+        if (!fallback || cc < fallback.c) fallback = { c: cc, x: x, y: y, w: w };
+      }
+    }
+    /* Nothing is clear (a very short frame): take the place that covers least. */
+    if (fallback) {
+      s.width = Math.round(fallback.w) + 'px';
+      s.left = Math.round(fallback.x - o.left) + 'px';
+      s.top = Math.round(fallback.y - o.top) + 'px';
+      settled = true;
+    } else {
+      s.left = s.top = s.right = s.bottom = s.width = '';
+    }
+  }
+
+  /* The frame moves with the page until it pins, and the nodes drift a little
+     as they fade in; a list that no longer fits is placed again. A resize or a
+     late font always places it again. */
+  var queued = false;
+  function recheck(force) {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(function () {
+      queued = false;
+      if (!current) return;
+      var panel = panelOf(current);
+      if (!panel || panel.hidden) return;
+      if (!force) {
+        if (settled) return;
+        var g = geometry(current, panel);
+        if (!g || clear(g, panel.getBoundingClientRect())) return;
+      }
+      place(current, panel);
+    });
+  }
+  window.addEventListener('resize', function () { recheck(true); });
+  window.addEventListener('scroll', function () { recheck(false); }, { passive: true });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { recheck(true); });
 })();
 
 
