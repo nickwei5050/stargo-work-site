@@ -3536,9 +3536,8 @@ html[lang^="en"] body:has(#atlas) .macro-desc {
    60px of scrolling later (four lines at 360, 「…推」/「进。」).
    The gap is now flexible: the content fills the card, text at the top and
    icon row at the bottom as before, and the space between them (at least
-   1.5rem) is what the collapse takes first. The text stays whole until the
-   card is shorter than text + icon row. Card 2 is a bottom-aligned row in the
-   template; it becomes the same bottom-aligned column so the same rule
+   1.5rem) is what the collapse takes first. Card 2 is a bottom-aligned row in
+   the template; it becomes the same bottom-aligned column so the same rule
    applies. The IX2 timeline, heights and opacity are untouched.
    Below 480px the three texts are 1.75rem (the template's 2rem gave seven
    characters a line at 320). The Chinese texts break only at punctuation and
@@ -3547,7 +3546,15 @@ html[lang^="en"] body:has(#atlas) .macro-desc {
    320-480, 768-1024): 「关注机会、期限和异常，」/「有依据地提建议，」/
    「按授权推进。」 at 390. In the 182px tablet columns (768) the Chinese
    texts are 1.4rem so an eight-character phrase fits a line; four lines, as
-   before. The titles beside the icons keep their size. */
+   before. The titles beside the icons keep their size.
+   V7-LX r2: this holds at every width (the collapse runs from 768 up as well:
+   「客户、产品、报价、订单」 was sliced through by the card's top edge at 1440,
+   "Workflow first, then" in English), and the text no longer slides under
+   that edge at all once the card is shorter than text + gap + icon row. The
+   content is a wrapping column laid out from the bottom (icon row first):
+   when the paragraph no longer fits above the icon row it moves whole into a
+   second column, outside the clipped card, instead of being cut line by line;
+   it comes back whole when the card grows again. */
 html[lang^="zh"] .lx-scope .lx-expandable-content > .lx-expandable-text {
   word-break: keep-all;
   overflow-wrap: anywhere;
@@ -3555,22 +3562,24 @@ html[lang^="zh"] .lx-scope .lx-expandable-content > .lx-expandable-text {
 @media screen and (min-width: 768px) and (max-width: 991px) {
   html[lang^="zh"] .lx-scope .lx-expandable-content > .lx-expandable-text { font-size: 1.4rem; }
 }
-@media screen and (max-width: 767px) {
-  .lx-scope .lx-expandable-item.lx-_2 {
-    flex-flow: column;
-    justify-content: flex-end;
-    align-items: center;
-  }
-  .lx-scope .lx-expandable-item > .lx-expandable-content {
-    flex: 1 0 auto;
-    justify-content: space-between;
-    grid-row-gap: 1.5rem;
-    row-gap: 1.5rem;
-  }
-}
 @media screen and (max-width: 479px) {
   .lx-scope .lx-expandable-content > .lx-expandable-text { font-size: 1.75rem; }
 }
+.lx-scope #lx-ontology .lx-expandable-item.lx-_2 {
+  flex-flow: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+.lx-scope #lx-ontology .lx-expandable-item > .lx-expandable-content {
+  flex: 1 1 0;
+  min-height: 0;
+  flex-flow: column-reverse wrap;
+  justify-content: space-between;
+  align-content: flex-start;
+  grid-row-gap: 1.5rem;
+  row-gap: 1.5rem;
+}
+.lx-scope #lx-ontology .lx-expandable-content > .lx-expandable-icon-text { order: -1; }
 
 /* The closing clause of a Chinese paragraph (tools/build-site.mjs zhTail):
    one unit, so an availability clause such as 「高级改进仍在完善。」 is never
