@@ -886,7 +886,14 @@ function lxPage(spec, lang, name) {
   b = s(b, 'class="lx-cta-text lx-_2nd">As simple as talking</h4>', `class="lx-cta-text lx-_2nd">${t(spec.ctaSub)}</h4>`);
   b = s(b, 'class="lx-cta-logo-text">Lifelogx</div>', `class="lx-cta-logo-text">${t(spec.ctaLogo)}</div>`);
   b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
-  b = s(b, 'The smartest friend you’ll ever have.', zhTail(t(spec.ctaDesc), lang));
+  // V7-LX: on the Chinese page the paragraph also breaks between words only
+  // (<wbr> + keep-all, css/stargo-fusion.css V7-LX): its column is narrower
+  // since it stopped running under the portrait, and it read 「是」/「否」.
+  // The word list cuts 「从成败中复盘出」 as 从|成败|中复|盘出; it is kept as
+  // 「从成败中」「复盘出」 (「复」/「盘」 at 820 otherwise).
+  b = s(b, 'The smartest friend you’ll ever have.', lang === 'zh'
+    ? zhTail(t(spec.ctaDesc), lang).replace(/^[^<]+/, (head) => zhWbr(head)).replace('从<wbr>成败<wbr>中复<wbr>盘出', '从成败中<wbr>复盘出')
+    : t(spec.ctaDesc));
   // The plain-explanations section (see lxContextSection) opens the 288-roles
   // section's slot in the document: after the "no writing" band, before the
   // team card. The marker is that section's own opening, which is unique.

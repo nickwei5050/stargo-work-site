@@ -4031,6 +4031,37 @@ html[lang^="en"] .team-grid .team-content .h2 { text-wrap: balance; }
   background: #000;
 }
 
+/* intelligence.html (both languages), the pink closing card (#lx-evolution):
+   the STARGO WORK paragraph ran under the portrait. From 768px the text
+   column is 66% of the card and the portrait an absolute box over its right
+   42% (40% from 1440), later in the document, so the ends of the paragraph's
+   lines were painted over wherever the photograph is opaque: 'what was
+   don[e]', 'dra[wn]' (en 768), 'met th[e]', 'Change[s]' (en 991),
+   'where a [person]' (en 1200-1366), 「里修正」「批复或人」 (zh 991). The logo
+   and paragraph row now ends 19-32px before the portrait box at every width
+   (85% of the column; 88% from 1440, where the portrait is 40%). Measured
+   text right / portrait left: 421/440 at 768, 546/570 at 991, 565/589 at
+   1024, 708/737 at 1280, 816/848 at 1440, both languages. The heading keeps
+   its width, so its line breaks do not change; the paragraph takes a line
+   or two more where it has to. Phones stack the card and are unchanged.
+   The narrower row no longer holds the 43.2px 「STARGO WORK」 label (300px)
+   below ~860px (265px at 768), where it split into 「STARGO」/「WORK」; the
+   label stays on one line and is 2.25rem (250px) from 768 to 879. */
+@media screen and (min-width: 768px) and (max-width: 1439px) {
+  .lx-scope .lx-cta-wrapper .lx-cta-logo-holder { max-width: 85%; }
+  .lx-scope .lx-cta-wrapper .lx-cta-logo-text { white-space: nowrap; }
+}
+@media screen and (min-width: 768px) and (max-width: 879px) {
+  .lx-scope .lx-cta-wrapper .lx-cta-logo-text { font-size: 2.25rem; }
+}
+html[lang^="zh"] .lx-scope .lx-cta-wrapper .lx-cta-logo-holder .lx-text-size-regular {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+@media screen and (min-width: 1440px) {
+  .lx-scope .lx-cta-wrapper .lx-cta-logo-holder { max-width: 88%; }
+}
+
 /* V7-LX-END */
 
 
