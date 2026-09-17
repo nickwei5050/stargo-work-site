@@ -4162,6 +4162,23 @@ html[lang="en"] .cn-about-reviews .cn-testimonial-info .cn-text-size-medium { te
   html[lang="en"] .lx-scope .lx-context-item h3 { font-size: min(2rem, calc(3.3vw - 9.8px)); }
 }
 
+/* intelligence.html, English, tablets — the 288-roles section's side card.
+   From 768 the card grid has three columns and the card's title has a third
+   of the screen less 74px (182px at 768, 267 at 1023), but its lines, as the
+   copy breaks them, are up to 8.2em ("without rebuilding", 262px at 2rem): it
+   read "Resume the / task / without / rebuilding / the context." at 768-900
+   and "without / rebuilding" to 1023. The title is 2rem wherever its lines
+   fit and follows the column below that (21.7px at 768, 27px at 900), so it
+   keeps its three lines. The button under the text, "Meet the AI Workforce"
+   (172px), had 158px inside its side padding at 768 and wrapped to "Meet the
+   AI" / "Workforce" to about 890px; its side padding is 1rem there. */
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  html[lang="en"] .lx-scope .lx-team-section .lx-story-text-holder .lx-heading-style-h4 { font-size: min(2rem, calc(3.97vw - 8.8px)); }
+}
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  html[lang="en"] .lx-scope .lx-team-section .lx-button.lx-is-secondary { padding-left: 1rem; padding-right: 1rem; }
+}
+
 /* V7-LX-END */
 
 
