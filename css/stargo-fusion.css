@@ -2899,15 +2899,19 @@ html[lang^="en"] body:has(#atlas) #start h2.about-title {
   text-wrap: balance;
 }
 
-/* 5. The same for the English card lines under them: the nine steps'
+/* 5. The same for the English card lines under them. The nine steps'
       descriptions ("…reach out through authorized / channels." at 390,
-      "…not / guessed." at 1024 and 1440) and the four area cards' lines
-      ("…prospecting from one / workspace." at 320). `pretty` reworks only
+      "…not / guessed." at 1024 and 1440) take `pretty`, which reworks only
       the last lines of a paragraph, as the Chinese page already does for
-      these (the zh orphan rule above). */
-html[lang^="en"] .rk-insight .rk-rt-insights-text,
-html[lang^="en"] body:has(#atlas) .macro-desc {
+      them (the zh orphan rule above). The four area cards' lines ("…from
+      one / workspace.", "…tasks and / improvement." at 320–360) are short
+      paragraphs of up to four lines, where Chromium's `pretty` kept the
+      single word; they are balanced instead. */
+html[lang^="en"] .rk-insight .rk-rt-insights-text {
   text-wrap: pretty;
+}
+html[lang^="en"] body:has(#atlas) .macro-desc {
+  text-wrap: balance;
 }
 
 /* V7-CAP-END */

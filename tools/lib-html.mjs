@@ -162,13 +162,16 @@ export function escapeHtml(s) {
    single characters (询|盘, 获|客, 商|机, 营|销, 账|号, 逐|项), so a single
    character that is not a function word of its own joins the single
    character after it, or else the word before it, or else the word after it.
-   And punctuation stays with the piece it closes (、，：…) or opens (「（…).
-   Spaces stay spaces: they are break points already. A piece is a word or a
-   short phrase, so it always fits a phone's line. */
+   Punctuation stays with the piece it closes (、，：…) or opens (「（…), and
+   so do the structural particles 的 地 得 之 了 着 过, which a line should not
+   start with. Spaces stay spaces: they are break points already. A piece is
+   a word or a short phrase, so it always fits a phone's line. */
 const ZH_CHAR = /^\p{Script=Han}$/u;
 const ZH_ANY = /\p{Script=Han}/u;
 /** Characters that are words on their own; a line may break before or after them. */
-const ZH_FREE = new Set([...'与和及或并而的地得之在于按把被对从向往给让将由为以就都也还又再更最很不仍已']);
+const ZH_FREE = new Set([...'与和及或并而在于按把被对从向往给让将由为以就都也还又再更最很不仍已']);
+/** Particles that belong to the word before them. */
+const ZH_TAIL = new Set([...'的地得之了着过']);
 const ZH_CLOSE = /^[、，。；：！？）》」』〉】”’…·—%]+$/;
 const ZH_OPEN = /^[（《「『〈【“‘]+$/;
 const ZH_TRIM = /^[（《「『〈【“‘]+|[、，。；：！？）》」』〉】”’…·—%]+$/g;
@@ -184,7 +187,11 @@ export function zhPieces(text) {
   let open = '';
   for (const p of raw) {
     if (ZH_OPEN.test(p)) { open += p; continue; }
-    if (ZH_CLOSE.test(p) && glued.length && !space(glued[glued.length - 1])) { glued[glued.length - 1] += p; continue; }
+    const prev = glued[glued.length - 1];
+    if (ZH_CLOSE.test(p) && glued.length && !space(prev)) { glued[glued.length - 1] += p; continue; }
+    /* 的 on its own, or joined by the dictionary to a locative (建设|中的) */
+    const tail = ZH_TAIL.has(p) || /^[中上下里内外前后间][的地得之]$/u.test(p);
+    if (tail && glued.length && !space(prev) && ZH_ANY.test(prev) && !ZH_CLOSE.test(prev.slice(-1))) { glued[glued.length - 1] += p; continue; }
     glued.push(open + p);
     open = '';
   }
