@@ -636,8 +636,8 @@ export const LX_INTELLIGENCE = {
        for this page (observe the real workflow, prepare context, arrange
        roles and approvals, validate with real cases); the gradient headings
        below repeat them as P03's 落地四步. */
-    { title: B('业务关系', 'Connections'), text: B('客户、产品、报价、订单和负责人，不再是互不相干的记录。', 'Customers, products, quotes, orders and owners, connected.') },
-    { title: B('按流程落地', 'Real workflows'), text: B('先了解业务，再安排资料、岗位与审批，用真实样本验收。', 'Workflow first, then data, roles, approvals and real-case tests.') },
+    { title: B('业务关系', 'Connections'), text: B('客户、产品、报价、订单<wbr>和负责人，不再是<wbr>互不相干的记录。', 'Customers, products, quotes, orders and owners, connected.') },
+    { title: B('按流程落地', 'Real workflows'), text: B('先了解业务，再安排<wbr>资料、岗位与审批，用真实样本验收。', 'Workflow first, then data, roles, approvals and real-case tests.') },
     { title: B('主动工作', 'Proactive'), text: B('关注机会、期限和异常，有依据地提建议，按授权推进。', 'Flags leads, deadlines and risks; acts only as authorized.') },
   ],
   /* P03's six business cards. They are rendered in two columns and mirrored

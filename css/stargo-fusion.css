@@ -2827,6 +2827,53 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
 
 
 /* V7-LX-START (workforce, intelligence, enterprise, about fixes) */
+
+/* intelligence.html — the three expandable cards under the hero, on phones.
+   Below 768px each card is in the page flow; IX2 fades it in and then
+   collapses it from 24 / 25 / 21.5rem to 5rem while it is scrolled past. The
+   card is a bottom-aligned flex column that clips, and its text sat a fixed
+   7rem above the icon row, so the collapse cut into the text from the first
+   pixel it shrank: the third card (主动工作) only turns opaque when its top is
+   about 100px from the top of the screen, and at 390 its text was clipped
+   60px of scrolling later (four lines at 360, 「…推」/「进。」).
+   The gap is now flexible: the content fills the card, text at the top and
+   icon row at the bottom as before, and the space between them (at least
+   1.5rem) is what the collapse takes first. The text stays whole until the
+   card is shorter than text + icon row. Card 2 is a bottom-aligned row in the
+   template; it becomes the same bottom-aligned column so the same rule
+   applies. The IX2 timeline, heights and opacity are untouched.
+   Below 480px the three texts are 1.75rem (the template's 2rem gave seven
+   characters a line at 320). The Chinese texts break only at punctuation and
+   at the <wbr>s in the copy, at every width, so no word is split any more
+   (before: 「报/价」「负责/人」「验/收」「授/权」 and a lone 「进。」 at
+   320-480, 768-1024): 「关注机会、期限和异常，」/「有依据地提建议，」/
+   「按授权推进。」 at 390. In the 182px tablet columns (768) the Chinese
+   texts are 1.4rem so an eight-character phrase fits a line; four lines, as
+   before. The titles beside the icons keep their size. */
+html[lang^="zh"] .lx-scope .lx-expandable-content > .lx-expandable-text {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  html[lang^="zh"] .lx-scope .lx-expandable-content > .lx-expandable-text { font-size: 1.4rem; }
+}
+@media screen and (max-width: 767px) {
+  .lx-scope .lx-expandable-item.lx-_2 {
+    flex-flow: column;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  .lx-scope .lx-expandable-item > .lx-expandable-content {
+    flex: 1 0 auto;
+    justify-content: space-between;
+    grid-row-gap: 1.5rem;
+    row-gap: 1.5rem;
+  }
+}
+@media screen and (max-width: 479px) {
+  .lx-scope .lx-expandable-content > .lx-expandable-text { font-size: 1.75rem; }
+}
+
 /* V7-LX-END */
 
 
