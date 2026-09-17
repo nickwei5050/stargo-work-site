@@ -3079,6 +3079,36 @@ html[lang="en"] .lx-scope .lx-v6-panel-title { text-wrap: balance; }
   .lx-scope .lx-v6-collage-card { width: 10rem; }
 }
 
+/* enterprise.html — the owner-cockpit band (.about-grid, this page only).
+   From 992 the lead's rule further up ("V6 review fixes", 2) lets the three
+   picture frames grow with the text column, and the band has no blank run
+   (measured 1024 and 1440, both languages: frames end where the text ends).
+   Between 768 and 991 the same rule stretched three landscape pictures into
+   359px-wide frames up to 1024px tall beside a text column in which a step
+   of the delivery list held two words a line ("Prepare / company /
+   context:"). There the band now stacks as the template stacks it below
+   768: the three pictures in a row on top at the template's small heights
+   (scaled to the wider row), the text under them across the band. */
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .about-grid {
+    display: flex;
+    flex-flow: column-reverse;
+    grid-row-gap: 40px;
+    row-gap: 40px;
+  }
+  .about-grid > .about-images {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: 16px;
+    column-gap: 16px;
+  }
+  .about-grid > .about-max-w { max-width: none; }
+  .about-grid > .about-images .work-content-wrapper { flex: none; }
+  .about-grid > .about-images .work-content-wrapper._01 { height: 12rem; }
+  .about-grid > .about-images .work-content-wrapper._02 { height: 20rem; }
+  .about-grid > .about-images .work-content-wrapper._03 { height: 13rem; }
+}
+
 @keyframes lx-v7-team-reveal {
   from { opacity: 0; }
   to { opacity: 1; }
