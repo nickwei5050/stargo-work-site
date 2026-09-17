@@ -374,15 +374,18 @@ const socialKind = (href) => (href.startsWith('mailto:') ? 'mail' : href.include
    Instagram camera, an X logo and a third-party star on them; STARGO has no
    accounts there, and the buttons lead to the corporate website, WhatsApp and
    e-mail. Each now carries a plain line glyph for its destination — a globe, a
-   chat bubble, an envelope — drawn in the template's icon style: white, 16px,
+   speech bubble, an envelope — drawn in the template's icon style: white, 16px,
    centred in the same 40px round tile (the X tile's square `sq` variant goes,
    so the three match), and still the `.social-icon` the template's hover lift
-   moves. The glyph is decoration; the button's name is its aria-label. */
+   moves. The glyph is decoration; the button's name is its aria-label.
+   The about page's intro card shows the same three channels (V7-LX,
+   tools/blocks/cn-about.mjs CHANNELS): the paths below are that card's paths,
+   point for point, so the site draws one icon set. */
 const SOCIAL_GLYPH = (paths) => `<svg class="social-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${paths}</svg>`;
 const SOCIAL_ICONS = {
-  site: SOCIAL_GLYPH('<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.4 2.5 3.6 5.5 3.6 9s-1.2 6.5-3.6 9c-2.4-2.5-3.6-5.5-3.6-9S9.6 5.5 12 3z"/>'),
-  whatsapp: SOCIAL_GLYPH('<path d="M20.5 11.5a8.5 8.5 0 0 1-12.3 7.6L3.5 20.5l1.4-4.5A8.5 8.5 0 1 1 20.5 11.5z"/><path d="M8.6 11.6h.01M12 11.6h.01M15.4 11.6h.01" stroke-width="2.4"/>'),
-  mail: SOCIAL_GLYPH('<rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="m3.8 7.2 8.2 5.8 8.2-5.8"/>'),
+  site: SOCIAL_GLYPH('<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9s1.3-6.4 3.8-9z"/>'),
+  whatsapp: SOCIAL_GLYPH('<path d="M20.5 11.6a8.4 8.4 0 0 1-12.2 7.5L3.5 20.5l1.4-4.6A8.4 8.4 0 1 1 20.5 11.6z"/>'),
+  mail: SOCIAL_GLYPH('<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/>'),
 };
 const TEMPLATE_SOCIAL_ART = /instagram%20|twitter%20|_contra\.png/;
 

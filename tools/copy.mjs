@@ -1421,7 +1421,7 @@ export const NOTICES = {
      The workforce card says what 288 counts, as every 288 on the site must,
      and no longer claims teams "in seconds". */
   relatedTitle: B('继续看', 'Keep reading'),
-  relatedIntro: B('三个入口，看 STARGO WORK<br/>做什么、谁来做、怎样管。', 'Three places to see what STARGO&nbsp;WORK does, who does the work and how it is managed.'),   // zh: split per letter, so the break keeps 做什么 and 谁来做 whole
+  relatedIntro: B('三个入口，看 STARGO WORK<br/>做什么、谁来做、怎样管。', 'Three places to see what <span class="sgp-nobr">STARGO WORK</span> does, who does the work and how it is managed.'),   // zh: split per letter, so the break keeps 做什么 and 谁来做 whole. en: the line reveal re-splits on every space (a no-break space too), so the name is an ignored `.sgp-nobr` span kept on one line (css/stargo-fusion.css V7-HOME H26)
   related: [
     { tag: B('(14 个能力域)', '(14 capability groups)'), title: B('能力', 'Capabilities'), desc: B('从 Growth OS、Sales Desk 到 ERP 与 AI 创作，从工作空间到持续改进。', 'From Growth OS and Sales Desk to ERP and AI creative work — from the workspace to controlled improvement.'), href: 'capabilities.html' },
     { tag: B('(288 个专业数字岗位)', '(288 specialized AI roles)'), title: B('数字员工', 'AI Workforce'), desc: B('十类企业职能，按任务组成团队，互相沟通、分工协作，一起把事做完。', 'Ten enterprise functions; teams form around the task, talk to each other and finish the work together.'), href: 'workforce.html' },
