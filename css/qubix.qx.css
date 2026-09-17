@@ -2560,3 +2560,18 @@ html[lang^="zh"] .qx-projects .qx-project-card-title { word-break: keep-all; }
   padding-top: var(--qx-gap);
 }
 
+/* 10. Between 480 and 767 the donor stacks the first two nodes: node 01 at
+       `top: 2vw`, node 02 at `margin-top: 25%` of the column. The English
+       node 01 is two lines taller than the Chinese one (a four-line promise
+       under a one-line title, 131px in a 492px column), so its last line ran
+       under node 02's title — measured at 600: node 01 at 98..229, node 02
+       from 209 — and while node 01 was open (it comes forward, rule 5) it hid
+       the top of that title and took its clicks. Node 02 starts 4rem lower in
+       English, which clears node 01 across the band (at 480, where the column
+       is 432px and node 01 wraps to five lines, too). */
+@media screen and (min-width: 480px) and (max-width: 767px) {
+  html[lang^="en"] .qx-whatwedo .qx-wrapper-main-services.qx-wrapper-main-services-two {
+    margin-top: calc(25% + 4rem);
+  }
+}
+
