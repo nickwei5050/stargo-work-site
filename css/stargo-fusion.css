@@ -2831,4 +2831,10 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
 
 
 /* V7-HOME-START (home, contact, notices, blog index fixes) */
+
+/* H1. The 404 page's title is now its h1 (it was Mono's h2.h2). The Chinese
+       heading sweep above balances `h2.h2`; the same for this one heading so
+       its computed style is what it was. */
+html[lang^="zh"] .utility-page-content h1.h2 { text-wrap: balance; }
+
 /* V7-HOME-END */

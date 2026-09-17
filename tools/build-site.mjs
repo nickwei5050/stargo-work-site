@@ -436,7 +436,13 @@ PAGES['index.html'] = (lang) => {
   // Scalora modules. The nine-stage table now lives on the capabilities page:
   // the homepage tells the loop once (five stages) and drills into four systems.
   const sub = (name, fragment, list) => { const { fn } = makeSub(name); let f = fragment; for (const [old, pair, opts] of list) f = fn(f, old, t(pair), opts); return f; };
-  let hero = frag('hero.html').replace(/<h1 /g, '<h2 ').replace(/<\/h1>/g, '</h2>');
+  /* Scalora's hero writes its two title lines as bare `<h1>` tags. The page's
+     one h1 is Mono's hero wordmark, so both become h2 — every tag, with or
+     without attributes, open and close alike (a `<h1 ` pattern used to miss the
+     bare tags and shipped `<h1>…</h2>`). `.sc-scope .hero-title-block h2` in
+     stargo-fusion.css restores the h1 type scale, so nothing moves. */
+  let hero = frag('hero.html').replace(/<h1(?=[\s>])/g, '<h2').replace(/<\/h1>/g, '</h2>');
+  if (/<\/?h1[\s>]/.test(hero)) throw new Error('index: a level-one heading survives in the Scalora hero');
   hero = addRootClass(sub('sc-hero', hero, C.HOME_SC_HERO), 'sc-scope').replace(/^<section class="/, '<section id="loop" class="');
   hero = hero.replace(/<div class="hero-description-block"><div>/, `<div class="hero-description-block"><div data-mobile-text="${escapeHtml(t(C.HOME_MOBILE.scHero))}">`);
   let products = addRootClass(sub('sc-products', frag('products.html'), C.HOME_SC_PRODUCTS), 'sc-scope');
@@ -552,7 +558,15 @@ function homeIntro(html, lang) {
   const intro = renderBlock('og-intro', lang);
   const OPEN = '<div class="og-intro">';
   if (!intro.startsWith(OPEN)) throw new Error('index: the intro block did not come back wrapped in its scope');
-  const overlay = `<div class="og-intro" data-og-intro="" aria-hidden="true">${intro.slice(OPEN.length)}`;
+  /* offgrid tags its bracketed headline <h1>. Here it is an aria-hidden overlay
+     that removes itself, and the homepage already has its h1 (Mono's hero), so
+     the tag becomes a div. Its look is carried by `.og-intro
+     .og-heading-style-h1…` class rules, which outrank offgrid's `.og-intro h1`
+     element rules on every property those set; js/stargo-intro.js finds it by
+     class. */
+  const body = intro.slice(OPEN.length).replace(/<h1(?=[\s>])/g, '<div').replace(/<\/h1>/g, '</div>');
+  if (/<\/?h1[\s>]/.test(body)) throw new Error('index: the opening animation still carries a level-one heading');
+  const overlay = `<div class="og-intro" data-og-intro="" aria-hidden="true">${body}`;
   if (!html.includes('<body>')) throw new Error('index: no <body> to put the opening animation in front of');
   return html.replace('<body>', `<body>${overlay}`);
 }
@@ -1048,7 +1062,7 @@ PAGES['about.html'] = (lang) => {
     .filter((f) => existsSync(`${SITE}/css/${f}`));
   let out = inMonoShell(aboutBody + bigMark(), [...aboutSheets, 'donor-fonts.css', 'lifelogx.lx.css', 'stargo-fusion.css'])
     .replace('<body ', '<body class="stargo-dark-page" ')
-    .replace('</body>', '<script src="js/stargo-video-defer.js" defer></script><script src="js/capability-blocks.js" defer></script>');
+    .replace('</body>', '<script src="js/stargo-video-defer.js" defer></script><script src="js/capability-blocks.js" defer></script></body>');   // keep </body>: tools/chrome.mjs attaches the forms and tabs scripts in front of it
 
   /* The projects band is four of cinery's own case-study clips — the owner
      asked for them back on 2026-09-15 (「恢复原模版」) after a still-image
@@ -1845,7 +1859,11 @@ PAGES['notices.html'] = (lang) => {
   h = setLink(h, 'Back to blog', { href: 'index.html', text: t(N.back) });
   h = h.replace(/url\(&quot;assets\/[^&]*blog-1\.webp&quot;\)/, `url(&quot;${BRAND.wide}&quot;)`);   // the post banner photo
   [['699b6466d5f19893993a4dca_Sleek', BRAND.loop], ['699b6466d5f19893993a4d64_blog-2', OS.agents], ['699b6466d5f19893993a4e03_Futuristic', OS.login]].forEach(([k, src]) => { h = swapImg(h, k, src); });
-  h = s(h, '>Related Stories<', `>${t(N.relatedTitle)}<`);
+  /* The post template tags its "Related Stories" band <h1>, a second h1 after
+     the notice's own title. It becomes h2; `.inner-title._02` carries its
+     size, weight and spacing, and Mono's h1/h2 element rules differ only in
+     what those class rules and the page's line-height already set. */
+  h = s(h, '<h1 class="inner-title _02">Related Stories</h1>', `<h2 class="inner-title _02">${t(N.relatedTitle)}</h2>`);
   h = s(h, 'From foundational design to advanced optimization — built for digital growth.', t(N.relatedIntro));
   const cards = [
     ['November 11, 2025', 'The power of simplicity in modern real brand design', 'Learn effective social media marketing tips to engage your audience and build brand loyalty.', 'post_the-power-of-simplicity-in-modern-brand-design.html'],
@@ -1868,7 +1886,9 @@ PAGES['404.html'] = (lang) => {
   const t = (p) => p[lang];
   const { fn: s } = makeSub('404');
   let h = tpl('404.html');
-  h = s(h, '>404 Error Page<', `>${t(C.NOT_FOUND.title)}<`);
+  /* Mono's utility page has no h1; its "404 Error Page" heading is the page's
+     title, so it becomes the h1. `.h2` sets its size, weight and margins. */
+  h = s(h, '<h2 class="h2">404 Error Page</h2>', `<h1 class="h2">${t(C.NOT_FOUND.title)}</h1>`);
   h = s(h, 'The page you are looking for doesn&#x27;t exist or has been moved', t(C.NOT_FOUND.text));
   h = setLink(h, 'Back Home', { href: 'index.html', text: t(C.NOT_FOUND.back) });
   return h;

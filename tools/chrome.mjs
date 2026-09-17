@@ -345,7 +345,20 @@ function scripts(html) {
  *  - internal links never open a new tab;
  *  - external links that do open a new tab carry rel="noopener noreferrer".
  */
-function linkHygiene(html) {
+/* The footer's social links carry no text of their own (they are icons), so
+   their names live in aria-label and title — in the page's language: a Chinese
+   screen reader should not switch to English for three links. */
+const SOCIAL_LABELS = {
+  mail: { zh: '发邮件给 STARGO WORK', en: 'Email STARGO WORK' },
+  whatsapp: { zh: '通过 WhatsApp 联系 STARGO WORK', en: 'WhatsApp STARGO WORK' },
+  site: { zh: 'STARGO 企业官网', en: 'STARGO corporate website' },
+};
+/* The honeypot input's accessible name (tools/blocks/cn-contact.mjs and
+   formMarkup below both write it in English). The wrapper is aria-hidden and
+   off-screen, but the name is still page text. */
+const HONEYPOT_LABEL = { zh: '网站', en: 'Website' };
+
+function linkHygiene(html, lang) {
   let out = html.replace(/<a\b([^>]*)href="#"([^>]*)>([\s\S]*?)<\/a>/g, (m, pre, post, body) => {
     const text = body.replace(/<[^>]+>/g, '');
     const href = /\blogo-first\b/.test(pre + post) ? 'index.html' : /隐私|Privacy/i.test(text) ? 'privacy.html' : /条款|Terms/i.test(text) ? 'terms.html' : null;
@@ -355,7 +368,7 @@ function linkHygiene(html) {
     const href = (tag.match(/href="([^"]*)"/) || [])[1] || '';
     const external = /^(https?:)?\/\//.test(href) || /^(mailto|tel):/.test(href);
     if (/\bsocial-wrapper\b/.test(tag)) {
-      const label = href.startsWith('mailto:') ? 'Email STARGO WORK' : href.includes('wa.me/') ? 'WhatsApp STARGO WORK' : 'STARGO corporate website';
+      const label = SOCIAL_LABELS[href.startsWith('mailto:') ? 'mail' : href.includes('wa.me/') ? 'whatsapp' : 'site'][lang];
       tag = tag.replace('<a ', `<a aria-label="${label}" title="${label}" `);
     }
     if (!external) return tag.replace(/\s*target="_blank"/g, '');
@@ -388,7 +401,24 @@ function formMarkup(html, lang) {
     });
     const consent = lang === 'zh' ? '提交前请阅读我们的 <a href="privacy.html">隐私政策</a>。我们仅用这些信息处理你的申请。' : 'Please read our <a href="privacy.html">Privacy Policy</a>. We use these details to respond to your request.';
     return form.replace('</form>', `<p class="stargo-form-consent">${consent}</p></form>`);
-  });
+  }).replace(/(<div class="stargo-hp" aria-hidden="true"><input )aria-label="Website"( name="website")/g, `$1aria-label="${HONEYPOT_LABEL[lang]}"$2`);
+}
+
+/**
+ * A Chinese sentence ends in 「。」. Two template lines keep an ASCII full stop
+ * after text this site puts in front of it: the demo band's heading (Mono's
+ * "Let's talk." with 「预约企业演示」 in place of the words) and its legal line
+ * ("… Terms and Privacy Policy." with the two link texts swapped). On a phone
+ * the "." even wrapped onto a line of its own. Only a stop that directly
+ * follows a Han character — or the close of a link whose text ends in one —
+ * and ends a text run is changed, and only in the body of a Chinese page.
+ */
+function zhFullStops(html) {
+  const at = html.indexOf('<body');
+  const body = html.slice(at)
+    .replace(/([一-鿿])\.(?=<)/g, '$1。')
+    .replace(/([一-鿿]<\/a>)\.(?=<)/g, '$1。');
+  return html.slice(0, at) + body;
 }
 
 /** Template people and stock photos in the shared chrome → STARGO imagery. */
@@ -467,8 +497,9 @@ export function applyChrome(html, { lang, current }) {
   out = wordmark(out);
   out = chromeImagery(out);
   out = scripts(out);
-  out = linkHygiene(out);
+  out = linkHygiene(out, lang);
   out = formMarkup(out, lang);
+  if (lang === 'zh') out = zhFullStops(out);
   out = uniqueLayoutIds(out);
   out = editorialImages(out, lang);
   // Unhashed local runtimes used to stay stale for a day after deployments.

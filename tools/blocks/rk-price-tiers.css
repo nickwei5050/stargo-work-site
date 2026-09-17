@@ -1,4 +1,4 @@
-/* rk-price-tiers — the two things the extraction could not know.
+/* rk-price-tiers — the things the extraction could not know.
    Everything is scoped under .rk-price-tiers, exactly as the extractor scopes
    its own rules. Nothing here restyles renok: no size, colour, spacing or
    border is invented, and the block ships no motion (renok drives this band
@@ -73,4 +73,22 @@
   .rk-price-tiers .rk-rt-pricing-cards-grid { grid-template-columns: repeat(6, 1fr); }
   .rk-price-tiers .rk-rt-pricing-cards-grid > :nth-child(-n + 3) { grid-column: span 2; }
   .rk-price-tiers .rk-rt-pricing-cards-grid > :nth-child(n + 4) { grid-column: span 3; }
+}
+
+/* ------------------------------------ 3. the section heading is the h1 -- */
+
+/* PRICING.title is the pricing page's own promise and the page has no other
+   h1, so tools/blocks/rk-price-tiers.mjs tags renok's `h2.rt-gap-off` as h1.
+   renok draws that heading through element rules (`.rk-price-tiers h2`), which
+   an h1 does not match; these are those same declarations, with renok's own
+   tokens, for the one h1. Its margins (0 and 0) still come from
+   `.rk-price-tiers .rk-rt-gap-off`, which outranks every h1 element rule.
+   Nothing about the heading's look changes. */
+.rk-price-tiers h1.rk-rt-gap-off {
+  font-family: var(--_font-family---primary-font);
+  color: var(--white);
+  font-size: var(--_font-details---font-size--heading-two);
+  line-height: var(--_font-details---font-line-height--heading-two);
+  font-weight: var(--_font-details---font-weight--semibold);
+  letter-spacing: var(--_font-details---font-letter-spacing--heading-two);
 }
