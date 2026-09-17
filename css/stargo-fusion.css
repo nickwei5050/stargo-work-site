@@ -3070,6 +3070,10 @@ html[lang^="zh"] body:has(#loop) section.ctc h2.h2.for-ctn {
   font-size: min(40px, calc((100vw - 70px) / 7));
   word-break: keep-all;
 }
+/*     The band's legal line (home, capabilities, enterprise) ends with the two
+       link texts and 「。」; the line broke inside 「隐私政策」 at 340–390. The
+       link texts keep one line each. */
+html[lang^="zh"] section.ctc .legal-link { white-space: nowrap; }
 
 /* H16. Notices page, the "Keep reading" band.
    - The three card sentences are plain text. In Chinese they broke inside
