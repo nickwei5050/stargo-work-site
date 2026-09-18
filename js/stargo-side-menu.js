@@ -19,9 +19,14 @@
  *   - closes it on Escape and from the close button with Enter or Space, and
  *     returns focus to the icon, bringing the icon back on screen when the
  *     page has been scrolled past it, so the focus ring can be seen;
- *   - follows the menu's real state, whatever opened or closed it, from the
- *     inline opacity the animation writes on the first menu item — bar the
- *     tail of an opening animation an explicit close has already ended.
+ *   - follows the menu's real state from the inline opacity the animation
+ *     writes on the first menu item. A close speaks for itself, whatever
+ *     closed it; so does an open, with one deliberate exception: for 1500ms
+ *     after an open that has since been closed, a rising opacity is read as
+ *     the tail of that ended open and ignored (OPEN_TAIL below, which says why
+ *     it cannot be narrower). An open through `openMenu()` is never ignored —
+ *     it restarts the window itself — and on these pages that is every open
+ *     there is, the header icon being the only opener tools/chrome.mjs writes.
  * The animations are the template's own; nothing here moves anything but the
  * page's own scroll, and that only far enough to show the icon taking focus.
  * Below 992px the icon, the menu and the close button are not displayed and
@@ -39,7 +44,10 @@
      template's open animation holds the items at opacity 0 for 0.8s and then
      fades them in over 0.25s, and a close does not rewind that tween: a close
      during the first second is followed by the tail of the open it
-     interrupted. 1500ms covers the whole animation with room to spare. */
+     interrupted. (Measured on the built pages: the fade runs from ~0.8s to
+     ~1.1s after the open in both Chromium and WebKit, and the item is left at
+     opacity 1 with the menu shut.) 1500ms covers the whole animation with room
+     to spare. */
   var OPEN_TAIL = 1500;
   var openedAt = 0;
   var closedAt = 0;
@@ -148,8 +156,8 @@
     }
   });
 
-  // Whatever else opens or closes it, follow the first item's opacity: rising
-  // past half means open, falling back to nothing means closed.
+  // Follow the first item's opacity: rising past half means open, falling back
+  // to nothing means closed — whatever did it, bar the one case below.
   if (probe && window.MutationObserver) {
     new MutationObserver(function () {
       var o = parseFloat(probe.style.opacity);
@@ -159,8 +167,21 @@
          open tween kept writing its rising opacity afterwards and was read
          here as a new open, so the menu was put back into the Tab order
          (`inert` off, aria-expanded="true") over a page that had closed it.
-         Only the tail of the open this close ended is ignored — a later open,
-         by the template or by anything else, still speaks for itself. */
+
+         The guard is a clock, and precisely this: a rise is ignored while the
+         last thing this script recorded was a close and the open before it
+         began less than OPEN_TAIL ago. It is no narrower because it cannot be.
+         The tail of an ended open and the opening of a fresh one are the same
+         writes on the same element — held at 0, then rising to 1 — and the
+         menu wrapper reads identically open and closed (it sits behind the
+         page, always display:flex, opacity 1), so nothing in the DOM tells the
+         two apart. An open through openMenu() is unaffected: it sets
+         `openedAt`, which both restarts the window and makes
+         `closedAt > openedAt` false. On these pages that is every open there
+         is — tools/chrome.mjs writes exactly one opener, the header icon, and
+         mouse, touch and keyboard all reach openMenu() through its click. What
+         the window would swallow is an open by some other hand inside 1500ms
+         of an open that was closed; a close is never swallowed. */
       var tail = closedAt > openedAt && (Date.now() - openedAt) < OPEN_TAIL;
       if (o > 0.5 && !isOpen) { if (!tail) setOpen(true); }
       else if (o < 0.02 && lastOpacity >= 0.02 && isOpen) { focusBack(); setOpen(false); }

@@ -30,7 +30,7 @@
    fifth box to slide in from, and adding one would be adding an element. And
    `data-hide-arrows="false"` is a control: a keyframe cannot be clicked.
 
-   EVERY NUMBER BELOW IS READ OFF THE DONOR'S OWN ELEMENT
+   EVERY NUMBER BELOW IS READ OFF THE DONOR'S OWN ELEMENT — BAR ONE
    The slider element carries them, exactly as cinery exported it, and
    tools/blocks/cn-reviews.mjs asserts each one is still there:
 
@@ -39,12 +39,19 @@
      data-easing="ease"          the CSS timing function, by that name
      data-delay="4000"           how long a card is held once it has arrived, ms
      data-autoplay="true"        it advances on its own
-     data-autoplay-limit="0"     for as many rounds as it likes
+     data-autoplay-limit="0"     cinery's word for "as many rounds as it likes"
      data-infinite="true"        the fourth card hands back to the first
      data-disable-swipe="false"  a touch drag moves it
 
-   The fallbacks in the code are those same values, so a re-cut that dropped an
-   attribute would still turn at cinery's speed rather than at some other one.
+   The fallbacks in the code are those same values — for the five it reads back,
+   `duration`, `delay`, `easing`, `autoplay` and `disable-swipe` — so a re-cut
+   that dropped an attribute would still turn at cinery's speed rather than at
+   some other one. TWO THINGS ARE DELIBERATELY NOT THE DONOR'S, and both are in
+   STOPPING below. The code never reads `data-autoplay-limit` at all: it stops
+   after ONE round, where the attribute asks for rounds without end, because
+   motion that starts by itself has to stop by itself (WCAG 2.2.2). And that
+   round starts when the band comes into view, not when the page loads, because
+   this band is thousands of pixels below the fold on both pages it appears on.
    The cycle is `delay` after a card lands plus `duration` to move it on —
    4.5s a card — which is how Webflow's own slider arms its timer: it waits
    `delay`, transitions for `duration`, and re-arms when the transition
@@ -76,13 +83,19 @@
    it started on. An advance moves a card inside the mask, so it moves in the
    reading order too, and moving content that starts by itself has to be
    stoppable (WCAG 2.2.2 Pause, Stop, Hide); after the round the arrows and a
-   swipe are the way on. Webflow's slider stops autoplay on interaction too;
-   the hover, focus and one-round cases are this file's own, and they are what
-   make the stop reachable without a mouse and without a control at all. A
-   reader who has asked their system for less motion never gets the autoplay at
-   all, and their arrow presses cut straight to the next card instead of
-   sliding — the line js/stargo-pricing.js, js/stargo-media.js and
-   tools/blocks/cn-produce.js already take.
+   swipe are the way on. The round is spent in front of a reader, not above
+   one: it starts when the band first comes into view (an IntersectionObserver,
+   at a quarter of the band), because the band's top sits ~5,865px down
+   pricing.html and ~6,154px down en/pricing.html at 1440x900, and a round
+   armed at page load would be over before anyone had scrolled to it — the one
+   turn spent on an empty screen. A browser without IntersectionObserver arms
+   it at load, as this file always did. Webflow's slider stops autoplay on
+   interaction too; the hover, focus and one-round cases are this file's own,
+   and they are what make the stop reachable without a mouse and without a
+   control at all. A reader who has asked their system for less motion never
+   gets the autoplay at all, and their arrow presses cut straight to the next
+   card instead of sliding — the line js/stargo-pricing.js, js/stargo-media.js
+   and tools/blocks/cn-produce.js already take.
 
    All four cards stay in the document and in the accessibility tree at every
    moment; only three of them are outside the mask's clip. A reader on a screen
@@ -158,7 +171,7 @@
        One round shows every card once; after that the arrows and a swipe are
        the way on, and pointing at the band or putting focus in it stops the
        turning at once. */
-    function arm() {
+    function arm() {   /* the next card of the round; `armWhenSeen` starts it */
       window.clearTimeout(timer);
       if (!autoplay) return;
       if (turns >= count) { stop(); return; }
@@ -168,6 +181,34 @@
     function stop() {
       autoplay = false;
       window.clearTimeout(timer);
+    }
+
+    /* And the round is spent in front of a reader rather than above one. This
+       band's top sits ~5,865px down pricing.html (~6,154px down
+       en/pricing.html) at 1440x900, so a round armed at page load would turn
+       itself out while the reader was still on the hero, and the band they
+       eventually scrolled to would already be resting: the one turn spent on
+       an empty screen. It is armed instead the first time a quarter of the
+       band is on screen — ~175px of a ~700px band against a 720–900px
+       viewport, so it fires as the band arrives rather than waiting for it to
+       fill the screen. Nothing else changes: one round, then rest, and a
+       reader who has already stopped it (a pointer that met the band on the
+       way) finds `arm` doing nothing. A browser with no IntersectionObserver
+       arms the round at load, which is what this file did before. */
+    var SEEN = 0.25;
+
+    function armWhenSeen() {
+      if (!autoplay) return;
+      if (typeof IntersectionObserver !== 'function') { arm(); return; }
+      var io = new IntersectionObserver(function (entries) {
+        for (var i = 0; i < entries.length; i++) {
+          if (entries[i].intersectionRatio < SEEN) continue;
+          io.disconnect();
+          arm();
+          return;
+        }
+      }, { threshold: SEEN });
+      io.observe(slider);
     }
 
     /* Each card is exactly one mask wide, so -100% of a card's own width moves
@@ -257,7 +298,7 @@
     }
 
     place(0, 0);
-    arm();
+    armWhenSeen();
   }
 
   function init() {
