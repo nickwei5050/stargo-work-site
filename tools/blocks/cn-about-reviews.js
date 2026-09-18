@@ -38,8 +38,8 @@
    two bands ever appear on one page neither drives the other's slider. If the
    logic below is ever corrected, correct it in both.
 
-   EVERY NUMBER BELOW IS READ OFF THE DONOR'S OWN ELEMENT — BAR ONE. The slider
-   element carries them exactly as cinery exported them, and
+   EVERY NUMBER BELOW IS READ OFF THE DONOR'S OWN ELEMENT — ONE IS NOT OBEYED.
+   The slider element carries them exactly as cinery exported them, and
    tools/blocks/cn-about-reviews.mjs asserts each one is still there:
 
      data-animation="slide"      the transition is a slide, not a crossfade
@@ -89,7 +89,7 @@
    stoppable (WCAG 2.2.2 Pause, Stop, Hide); after the round the arrows and a
    swipe are the way on. The round is spent in front of a reader, not above
    one: it starts when the band first comes into view (an IntersectionObserver,
-   at a quarter of the band), because the band's top sits ~3,667px down
+   at a quarter of the band), because the band's top sits about 3,620-3,670px down
    about.html and ~3,757px down en/about.html at 1440x900, and a round armed at
    page load would be over before anyone had scrolled to it — the one turn
    spent on an empty screen. A browser without IntersectionObserver arms it at

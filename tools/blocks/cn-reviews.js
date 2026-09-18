@@ -30,7 +30,7 @@
    fifth box to slide in from, and adding one would be adding an element. And
    `data-hide-arrows="false"` is a control: a keyframe cannot be clicked.
 
-   EVERY NUMBER BELOW IS READ OFF THE DONOR'S OWN ELEMENT — BAR ONE
+   EVERY NUMBER BELOW IS READ OFF THE DONOR'S OWN ELEMENT — ONE IS NOT OBEYED
    The slider element carries them, exactly as cinery exported it, and
    tools/blocks/cn-reviews.mjs asserts each one is still there:
 
