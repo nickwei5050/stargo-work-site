@@ -42,3 +42,19 @@
    `<br/>`); on the Chinese page `keep-all` stops a clause that meets a narrower
    column from breaking inside a word, so it wraps whole instead. */
 html[lang^="zh"] .rk-stats .rk-rt-text-style-h2 { word-break: keep-all; }
+
+/* The band's picture, when it is one of the owner's own product screenshots
+   (rk-stats.mjs / CAP_V6A.quote.image, owner instruction 2026-09-18). renok's
+   box is 444x278 (1.60) and a screenshot is 16:9, so renok's `cover` would
+   take 11% off its width — the Sales Desk rail on the left and the co-pilot
+   column on the right. `contain` shows the document centre whole in the same
+   box; the 14px it leaves above and below is the band's own white
+   (`.rk-stats` paints rgb(255, 255, 255)), named here so the picture keeps
+   that ground through renok's blur-and-scale reveal, which still animates
+   this same element with its inline transform and its wrapper's data-w-id
+   untouched. Matched on the picture's own folder: renok's photograph and the
+   editorial artwork keep `cover`. */
+.rk-stats .rk-rt-image-apperance[src*="/stargo-product/"] {
+  object-fit: contain;
+  background-color: #fff;
+}

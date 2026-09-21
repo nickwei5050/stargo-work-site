@@ -538,6 +538,23 @@ html[lang^="zh"] .qx-news .qx-h2 { word-break: keep-all; }
    order" left "order" alone on its third line from 1024 up. */
 .qx-news .qx-h2 { text-wrap: balance; }
 
+/* 4. Row 02's picture is the owner's own Sales Desk screenshot (qx-news.mjs,
+      owner instruction 2026-09-18). The donor's thumbnail box is 349x244
+      (1.43) and the screenshot is 16:9, so qubix's `object-fit: cover` would
+      take a fifth off its width — the Sales Desk navigation rail on the left
+      and the extracted-facts panel on the right, i.e. exactly the parts the
+      row's own sentence is about. `contain` shows the whole interface inside
+      the SAME box: the element, its class, its `data-w-id`, the inline IX2
+      transform are untouched (this block applies no hover scale), and the band it
+      leaves is the row's own black — `.blog-item` paints rgb(0, 0, 0), named
+      again here so the picture carries that ground through the row.
+      Matched on the picture's own folder, so a donor photograph or an
+      editorial image in the same slot keeps the donor's `cover`. */
+.qx-news .qx-all-image-cover[src*="/stargo-product/"] {
+  object-fit: contain;
+  background-color: #000;
+}
+
 @font-face {
   font-family: webflow-icons;
   src: url("data:application/x-font-ttf;charset=utf-8;base64,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") format("truetype");
@@ -1974,6 +1991,25 @@ html[lang^="zh"] .qx-projects .qx-project-card-title { word-break: keep-all; }
       already is (css/stargo-fusion.css); the English "Run the work with an AI
       team" left "team" alone on a second line from 390 to 768. */
 .qx-projects .qx-h2.qx-project-title-mw { text-wrap: balance; }
+
+/* 7. The large card's picture, when it is one of the owner's own product
+      screenshots (qx-projects.mjs / CAP_V6A.team.cards[].image, owner
+      instruction 2026-09-18). qubix's full-width card is 1280x615 (2.08) and a
+      screenshot is 16:9, so qubix's `cover` would cut a seventh off the top
+      and the bottom — on SW006 the Expert Teams heading above the five role
+      cards and the completed-task record below them, which is what the card's
+      own sentence describes. `contain` shows the team screen whole in the same
+      box; the band it leaves left and right is the section's own ground
+      (`.home-project-section` paints rgb(15, 15, 15)), named here so the
+      picture keeps that ground through the hover scale (1 → 1.1), which still
+      animates this same element with its data-w-id and the "view" pill over it
+      unchanged. The two portrait cards above are not matched — they keep
+      qubix's `cover` — and neither is any editorial artwork in this slot,
+      because the match is on the picture's own folder. */
+.qx-projects .qx-project-img[src*="/stargo-product/"] {
+  object-fit: contain;
+  background-color: #0f0f0f;
+}
 
 @font-face {
   font-family: webflow-icons;

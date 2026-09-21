@@ -162,7 +162,12 @@ export function render(frag, ctx) {
        it the picture is content). */
     const IMG = /<img src="assets\/qubix\/[^"]+"([^>]*)alt=""([^>]*)>/;
     if (!IMG.test(card)) throw new Error(`qx-projects: card ${i + 1} lost its photograph or its alt attribute`);
-    return card.replace(IMG, (m, a, b) => `<img src="${art(words.image)}"${a.replace(/\s(?:srcset|sizes)="[^"]*"/g, '')}alt="${escapeHtml(t(words.title).replace(/\u200b/g, ''))}"${b.replace(/\s(?:srcset|sizes)="[^"]*"/g, '')}>`);
+    /* `CAP_V6A.team.cards[].image` is an editorial id, or \u2014 since the owner's
+       handoff of 2026-09-18 \u2014 a path written out, for one of their own product
+       screenshots. Both go through tools/editorial-images.mjs for their alt,
+       size and variants; only the folder differs. */
+    const src = words.image.startsWith('assets/') ? words.image : art(words.image);
+    return card.replace(IMG, (m, a, b) => `<img src="${src}"${a.replace(/\s(?:srcset|sizes)="[^"]*"/g, '')}alt="${escapeHtml(t(words.title).replace(/\u200b/g, ''))}"${b.replace(/\s(?:srcset|sizes)="[^"]*"/g, '')}>`);
   });
 
   return top + cards.join('') + tail;

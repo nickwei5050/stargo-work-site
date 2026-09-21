@@ -46,8 +46,19 @@ const PICKS = ['Unified Inbox', 'Buyer Requirement Extraction', 'Account Overvie
  * own editorial art: one intake → a shared track joining separate workspaces;
  * requirements → accounts, products, quotes and orders linked together; the
  * customer view → conversation, interest and history forming one context.
+ *
+ * Row 02 is the exception (owner instruction, 2026-09-18): 「买方需求提取」 says
+ * the product, specification, quantity and deadline are read out of the message
+ * and its attachments, and the owner's own SW028 screenshot is that screen —
+ * one inquiry open in Sales Desk with its attachments, the extracted facts
+ * (意向产品 / 需求数量 / 目的地 / 贸易术语) beside it and the grounded draft
+ * reply under it. An entry may therefore be an editorial id or a path written
+ * out; `pic` below resolves both, and tools/editorial-images.mjs gives either
+ * kind its alt, its size and its variants.
  */
-const ROW_ART = ['os-desktop', 'brand-ontology', 'os-inquiries'];
+const ROW_ART = ['os-desktop', 'assets/stargo-product/sw028-sales-desk-inquiry-reply.webp', 'os-inquiries'];
+/** An editorial id (assets/stargo-editorial) or a path exactly as written. */
+const pic = (v, art) => (v.startsWith('assets/') ? v : art(v));
 
 export const donor = {
   id: 'qx-news',
@@ -174,7 +185,7 @@ export function render(frag, ctx) {
     if (!row.includes('alt=""')) throw new Error(`qx-news: row ${i + 1} lost its image alt attribute`);
     const PHOTO = /<img src="assets\/qubix\/[^"]+"/;
     if (!PHOTO.test(row)) throw new Error(`qx-news: row ${i + 1} lost its qubix photograph`);
-    row = row.replace(PHOTO, `<img src="${art(ROW_ART[i])}"`);
+    row = row.replace(PHOTO, `<img src="${pic(ROW_ART[i], art)}"`);
     return row.replace('alt=""', `alt="${escapeHtml(t(words.text))}"`);
   });
 

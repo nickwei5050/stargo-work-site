@@ -23,9 +23,11 @@
  * roll, the crossfade and the scroll reveal are all bound to exactly those.
  *
  * The photographs were cinery's own — the clapperboard and the lenses in the
- * review screenshot. Since the V6 content (2026-09-16) each row's thumbnail and
- * crossfade background show this site's editorial art instead (ROW_ART below);
- * the <img> elements, their classes and their motion are the donor's. Each
+ * review screenshot. Since the V6 content (2026-09-16) the four full-bleed
+ * crossfade backgrounds show this site's editorial art (ROW_ART below), and
+ * since 2026-09-18 each row's hover thumbnail shows the owner's own screen for
+ * that topic (ROW_SHOT). The <img> elements, their classes and their motion are
+ * the donor's. Each
  * title slot gets a short topic name (CAP_V6A.growth,
  * one language per page) and the type stays at the donor's 8vw nowrap wherever
  * that name fits it.
@@ -55,10 +57,10 @@ export const donor = {
 };
 
 /**
- * The four rows' pictures (V6 §5.2: a topic-matched picture in each existing
- * image position). cinery's own are film-set stock — a clapperboard, lenses —
- * and say nothing about finding customers, so each row's hover thumbnail and
- * its crossfade background take this site's own editorial art, in row order:
+ * The four rows' crossfade backgrounds (V6 §5.2: a topic-matched picture in
+ * each existing image position). cinery's own are film-set stock — a
+ * clapperboard, lenses — and say nothing about finding customers, so each row's
+ * full-bleed background takes this site's own editorial art, in row order:
  * company research → trade signals carried to a customer's destination; trade
  * intelligence → an opportunity path through a port district; reorder
  * judgement → context assembling layer by layer; key decision roles → a key
@@ -66,6 +68,23 @@ export const donor = {
  * variants, sizes and descriptions for them.
  */
 const ROW_ART = ['brand-family-01', 'os-sales-desk', 'os-loading', 'mobile-approvals'];
+
+/* Since 2026-09-18 a row's hover thumbnail is the owner's own Growth OS screen
+   for that topic (主动获客.docx, registered in tools/imagegen/product-assets.json):
+   trade intelligence → 市场论证, reorder judgement → 进口商补货雷达, key decision
+   roles → 采购委员会. Company research has none: 客户 360 was held the same day
+   because it puts $412,000 of lifetime value, an $80,000 deal and a 22% margin
+   on a named company and calls the record verified against Brazil's company
+   register and customs data. A row with no screen (null) keeps the editorial
+   art its background uses, which is what all four had before.
+
+   The crossfade backgrounds keep the editorial art in every row: they are
+   full-bleed, object-fit: cover, under a 65% black overlay, and a 16:9
+   interface cropped to that shape would show its middle third as a dark
+   texture. The thumbnails carry the screens instead, where the whole interface
+   fits (see .cn-service-thumbnail in cn-service.css). */
+const ROW_SHOT = [null, 'gos01-market-thesis', 'gos09-reorder-radar', 'gos05-buying-committee'];
+const shot = (name) => `assets/stargo-product/${name}.webp`;
 
 /** Swap one cinery photograph for editorial art, keeping every other attribute
  *  (class, data-w-id, inline transforms) exactly as the donor wrote it. */
@@ -261,17 +280,18 @@ export function render(frag, ctx) {
     u = setText(u, 'cn-service-description', escapeHtml(t(row.text)));
 
     if (!u.includes(DONOR_ALT)) throw new Error(`cn-service: row ${i + 1} has no ${DONOR_ALT} to replace`);
-    /* The row's thumbnail — its one <img> — becomes the row's editorial art. */
+    /* The row's thumbnail — its one <img> — becomes this row's product screen,
+       or the row's editorial art where no screen is released for it. */
     const thumbs = u.match(/<img\b[^>]*>/g) ?? [];
     if (thumbs.length !== 1) throw new Error(`cn-service: row ${i + 1} should hold one thumbnail, found ${thumbs.length}`);
-    u = u.replace(thumbs[0], toArt(thumbs[0], art(ROW_ART[i])));
+    u = u.replace(thumbs[0], toArt(thumbs[0], ROW_SHOT[i] ? shot(ROW_SHOT[i]) : art(ROW_ART[i])));
     return u.split(DONOR_ALT).join(`alt="${escapeHtml(plain[i])}"`);
   });
 
   /* -------------------------------------------- the crossfade backgrounds -- */
 
   /* Four `.service-bg-image._0N`, one per row and in row order; each shows the
-     same editorial art as its row's thumbnail. */
+     editorial art for that row (ROW_ART), the thumbnail its product screen. */
   let n = 0;
   const back = tail.replace(/<img\b[^>]*alt="Image - Cinery Template"[^>]*>/g, (tag) => {
     const i = n++;

@@ -1446,7 +1446,7 @@ export const NOTICES = {
 <p>Inter、Inter Display、Inter Tight、Instrument Serif 与 42dot Sans，均按 SIL Open Font License 1.1 自托管，不向任何第三方字体服务发起请求。</p>
 <h4>图片素材</h4>
 <p>首页中心视频采用网站所有者提供的第四套模板 Fearless Vision Hero 中的银色轨道动画，已压缩并自托管。它用于品牌概念展示，不是 STARGO 产品操作录像或客户案例。</p>
-<p>本站的业务场景、品牌雕塑与数字角色图像为 AI 生成的概念视觉，用于解释业务关系、协作和治理；不是真实产品截图、员工肖像、客户案例或交付现场照片。中英文页面共用同一套无文字图像。页面中的人物照片、产品与场景照片、示例 Logo 墙、界面示意与装饰图标，来自网站所有者购买的 Webflow 模板随附的已授权设计素材，已镜像到本站自托管，仅作版式示意，不代表真实客户、员工、合作伙伴或客户评价。STARGO 标识与字标为 STARGO 自有作品。</p>
+<p>本站图片分三类。一，产品界面示意：网站所有者提供的 STARGO WORK 界面图，画面中的工作区、任务、客户与金额均为演示数据，不是真实客户账户的截图，也不代表已完成的业务结果。二，概念视觉：业务场景、品牌雕塑与数字角色图像为 AI 生成，用于解释业务关系、协作和治理，不是产品截图或员工肖像，中英文页面共用同一套无文字图像。三，模板素材：人物照片、产品与场景照片、示例 Logo 墙与装饰图标，来自网站所有者购买的 Webflow 模板随附的已授权设计素材，已镜像到本站自托管，仅作版式示意，不代表真实客户、员工、合作伙伴或客户评价。STARGO 标识与字标为 STARGO 自有作品。</p>
 <h4>上游软件</h4>
 <p>站内提到的 Activepieces、Chatwoot、Twenty CRM、WeKnora、Windmill、Playwright、Yente / OpenSanctions、Univer、Puter、Medusa、ERPNext、PostHog、Microsoft SkillOpt、Notion、Google、Reddit、LinkedIn、Facebook、YouTube、Alibaba、WhatsApp 等名称，均为各自所有者的商标或项目名。它们在本站出现是为了让上游身份可查，不表示相关项目对 STARGO 的背书。</p>
 <h4>联系</h4>
@@ -1462,7 +1462,7 @@ export const NOTICES = {
 <p>Inter, Inter Display, Inter Tight, Instrument Serif and 42dot Sans, all self-hosted under the SIL Open Font License 1.1. No request goes to a third-party font service.</p>
 <h4>Imagery</h4>
 <p>The homepage centre film uses the silver orbital animation from the owner-supplied fourth template, Fearless Vision Hero. It is compressed and self-hosted as conceptual brand imagery, not footage of the STARGO product or a customer engagement.</p>
-<p>The business scenes, brand sculptures and digital-role imagery on this site are AI-generated conceptual visuals illustrating business relationships, collaboration and governance. They are not actual product screenshots, employee portraits, customer cases or photographs of a delivery site. Both languages share the same text-free imagery. The people, product and scene photographs, sample logo wall, interface illustrations and decorative icons are licensed design assets shipped with the Webflow templates the site owner purchased, mirrored and self-hosted here for layout illustration only; they do not depict real customers, employees, partners or customer reviews. The STARGO mark and wordmark are STARGO’s own work.</p>
+<p>The pictures on this site fall into three kinds. First, illustrative product interfaces: screens of STARGO WORK supplied by the site owner, whose workspaces, tasks, customers and amounts are demonstration data — they are not screenshots of a real customer’s account and do not show completed business results. Second, conceptual visuals: the business scenes, brand sculptures and digital-role imagery are AI-generated, illustrating business relationships, collaboration and governance rather than product screens or employee portraits, and both languages share the same text-free set. Third, template assets: the people, product and scene photographs, the sample logo wall and the decorative icons are licensed design assets shipped with the Webflow templates the site owner purchased, mirrored and self-hosted here for layout illustration only; they do not depict real customers, employees, partners or customer reviews. The STARGO mark and wordmark are STARGO’s own work.</p>
 <h4>Upstream software</h4>
 <p>Activepieces, Chatwoot, Twenty CRM, WeKnora, Windmill, Playwright, Yente / OpenSanctions, Univer, Puter, Medusa, ERPNext, PostHog, Microsoft SkillOpt, Notion, Google, Reddit, LinkedIn, Facebook, YouTube, Alibaba, WhatsApp and other names mentioned on this site are trademarks or project names of their respective owners. They appear so that upstream identity stays discoverable; none implies endorsement of STARGO.</p>
 <h4>Contact</h4>
@@ -1729,8 +1729,21 @@ export const LX_FEATURE_WORKFORCE = {
      be the shorter one: measured with P04's full wording, every width from 320
      to 1920 broke 「不是各聊各的，而」/「是一起把事做完。」. */
   teamTitle: B('不是各聊各的，而是一起做完。', 'A shared goal, connected work and a coherent result.'),
-  // The template's square tile has a follower count painted into the artwork.
-  tile: { src: 'assets/stargo-motion/orbit-poster.webp', alt: B('银色轨道协同运转的品牌概念画面', 'Brand concept: silver orbital forms moving together') },
+  /* The template's square tile has a follower count painted into the artwork.
+     It carried STARGO's brand still (assets/stargo-motion/orbit-poster.webp);
+     since the owner's handoff of 2026-09-18 it carries the owner's own Expert
+     Teams screen instead. The paragraph beside it is `answersBody` above — a
+     complex task divided between several AI employees, where what matters is
+     「信息能否传递、责任是否明确、结果能否交接」 and a coordinator hands the
+     result to the responsible person — and that screen is exactly that: five
+     named roles on one inquiry, each with what it does, and the finished tasks
+     listed with their owner and time.
+     `alt` is not the picture's description: tools/editorial-images.mjs writes
+     the registered bilingual sentence over it for every image in
+     assets/stargo-product. It has to be non-empty all the same, because an
+     empty alt is how that pass is told a picture is decorative — so it holds
+     the caption that pass appends, which is true of this picture either way. */
+  tile: { src: 'assets/stargo-product/sw006-expert-teams.webp', alt: B('产品界面示意（演示数据）', 'Illustrative product interface · demo data') },
   /* The display line behind the stacked cards; split per character on the
      Chinese page. Two five-character halves: one line of this size holds 5.8
      to 6.4 characters from 320 to 1440. */
@@ -2054,9 +2067,16 @@ export const CAP_V6A = {
      the steps 01 / 02 / 03 of V5 M04's sequence — draft, review and approval,
      the kept version — not counts, so nothing on the band reads as a result.
      Each label is one line of the donor's 24px slot, which is 163px wide at
-     768: six Chinese characters or about fifteen Latin ones. The picture is
-     this site's own editorial art for quoting (precision parts aligned and
-     checked), in place of renok's branding portrait. */
+     768: six Chinese characters or about fifteen Latin ones.
+
+     The picture is this site's own editorial art for quoting (precision parts
+     aligned and checked), in place of renok's branding portrait. The owner's
+     own document screen was placed here on 2026-09-18 and taken out again the
+     same day: renok's picture box is portrait at 768 (260×424), so a 16:9
+     interface sat in two thirds of blank white, and where the box is
+     height:auto the shorter file moved the band below it. The slot is held for
+     a picture that suits it. A value starting with `assets/` is a path as
+     written; anything else is an editorial id (tools/blocks/rk-stats.mjs). */
   quote: {
     steps: [B('按规则起草', 'Drafted by rules'), B('有权人批准', 'Human approval'), B('保留正式版本', 'Version kept')],
     image: 'os-quote-studio',
@@ -2111,7 +2131,15 @@ export const CAP_V6A = {
         href: '#g10', pill: B('员工能力组', 'AI workforce group'), image: 'mobile-agents' },
       { title: B(`团队分工、${ZW}交流、${ZW}并行与接力`, 'Roles, exchange, parallel work and handoffs'),
         text: B('协作示意：市场研究员工找到目标企业，产品员工核对规格，销售员工规划开发，创意员工准备素材；员工之间直接交流、并行推进，统筹角色复核汇总后交负责人确认。图为示意，不是实时运行画面。', 'Illustrative: research finds target accounts, a product specialist checks specifications, sales plans outreach and creative prepares assets; the employees message each other and work in parallel, and a coordinator reviews and consolidates the package for the responsible person to confirm. The picture is an illustration, not a live view.'),
-        href: 'workforce.html#lx-team', pill: B('看团队协作', 'See teamwork'), image: 'brand-family-03' },
+        /* The picture (owner instruction, 2026-09-18) is the owner's own Expert
+           Teams screen, in place of the editorial artwork for parallel work
+           ('brand-family-03'): five named roles dividing one real inquiry
+           between them, with the completed-task record and its owners
+           underneath — which is the card's own sentence, down to the
+           coordinator who consolidates before a person confirms. A value
+           starting with `assets/` is a path as written; anything else is an
+           editorial id (tools/blocks/qx-projects.mjs). */
+        href: 'workforce.html#lx-team', pill: B('看团队协作', 'See teamwork'), image: 'assets/stargo-product/sw006-expert-teams.webp' },
     ],
   },
 };

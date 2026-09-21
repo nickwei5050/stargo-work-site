@@ -280,8 +280,13 @@ function head(html, lang, current) {
     .replace(/<title>[^<]*<\/title>/, `<title>${title}</title>${extra}`)
     .replace(/<meta content="[^"]*" (name|property)="(description|og:description|twitter:description)"\/>/g, `<meta content="${description}" $1="$2"/>`)
     .replace(/<meta content="[^"]*" (name|property)="(og:title|twitter:title)"\/>/g, `<meta content="${title}" $1="$2"/>`)
-    .replace(/<meta content="[^"]*" property="og:image"\/>/, '')
-    .replace(/<meta content="[^"]*" property="twitter:image"\/>/, '')
+    /* The templates' own share images. Both spellings: Mono's exported CMS post
+       writes `name="twitter:image"`, and only `property=` was matched, so
+       notices, privacy and terms — the six pages built from that template —
+       kept a second twitter:image pointing at the template's studio-table
+       photograph while the one written above named our cover. */
+    .replace(/<meta content="[^"]*" (?:name|property)="og:image"\/>/g, '')
+    .replace(/<meta content="[^"]*" (?:name|property)="twitter:image"\/>/g, '')
     .replace(/<meta property="og:type" content="website"\/>/, '')                // regenerated above (article for posts)
     /* The tab icon. It pointed at the wordmark, which is a 139:22 lozenge: in a
        16px tab that is an unreadable smear, which is what the owner saw. The

@@ -34,17 +34,61 @@ const descriptions = {
   'silo-excel': ['需要人工对齐的表格记录', 'Tabular records that require manual reconciliation'],
   'silo-erp': ['彼此隔离的订单状态', 'Order states on disconnected tracks'],
 };
+/* The owner's own product screenshots (tools/imagegen/product-assets.json,
+   handoff of 2026-09-18). They go through this same pass, so a product image
+   gets its size, srcset and alt from one place like every other image here.
+
+   What their alt says, and why. These are generated demonstration interfaces
+   of the product, not photographs of a customer's account: the alt names the
+   surface and then says so, in the page's language. The same sentence is the
+   caption the blocks print under a full-bleed product image. Nothing here may
+   read as a real screenshot, a customer or a result. */
+const products = JSON.parse(readFileSync(new URL('./imagegen/product-assets.json', import.meta.url), 'utf8')).assets;
+for (const a of products) {
+  /* Each id keeps the surface it came from and the source document's own
+     number, so a screen can be found again in the document it was taken from. */
+  const id = a.id.match(/^(?:sw|erp|gos)(\d{2,3})-/);
+  const source = a.sourceFile?.match(/image(\d+)\.(?:png|webp)$/i);
+  if (!id) throw new Error(`Product image ids keep their source number: ${a.id}`);
+  if (source && Number(id[1]) !== Number(source[1])) {
+    throw new Error(`Product image id and source disagree: ${a.id} is ${a.sourceFile}`);
+  }
+  byId.set(a.id, a);
+}
+const productText = {
+  'sw003-ai-workspace-home': ['AI 工作台首页：一句需求进入，左侧是专家、技能、任务与企业知识', 'The AI workspace home: one request goes in, with experts, skills, tasks and company knowledge beside it'],
+  'sw004-experts-library': ['专家库：按职能筛选的专业岗位，每个岗位有技能声明', 'The experts library: specialized roles filtered by function, each with its declared skills'],
+  'sw006-expert-teams': ['专家团队：五个角色围绕同一条询盘分工，并留下完成记录', 'An expert team: five roles divide one inquiry between them and leave a record of what was done'],
+  'sw008-workflow-library': ['工作流库：业务流程的步骤、审批要求与接入状态', 'The workflow library: the steps, approval points and integration status of each business process'],
+  /* Growth OS (主动获客.docx, which the owner made the authority for this
+     engine's imagery on 2026-09-18) and the ERP surface (配图二.docx). These
+     screens carry their own SANDBOX · 只读演示 badge, demonstration amounts
+     and a sample importer's name; the caption every product image gets says
+     the data is a demonstration, and nothing is cropped away to hide it. */
+  'gos10-growth-control-tower': ['增长控制塔：市场信号、商机优先级与今日决策栈，右侧是同一条线索的问答', 'The growth control tower: market signals, prioritized opportunities and the day\u2019s decisions, with questions about the same account beside them'],
+  'gos01-market-thesis': ['市场论证：用贸易数据与公开信息验证一个市场机会，并标注每个来源的用途与权限', 'The market thesis: a market opportunity tested against trade data and public sources, each source labelled with its use and permission'],
+  'gos09-reorder-radar': ['进口商补货雷达：依据历史出货节奏预测下一个采购窗口，并给出置信度', 'The importer reorder radar: the next buying window estimated from shipping history, with its confidence'],
+  'gos11-dormant-reactivation': ['激活与活动：只有业务信号真实变化时才重新联系休眠客户，右侧是明确不再联系的名单', 'Reactivation: dormant accounts are contacted again only when something about their business has verifiably changed, with the do-not-contact list beside it'],
+  'gos05-buying-committee': ['采购委员会：一家客户的决策角色覆盖情况、缺口与分角色的行动计划', 'The buying committee: which decision roles are covered at one account, what is missing and the plan for each role'],
+  'sw028-sales-desk-inquiry-reply': ['Sales Desk：一封询盘的要点提取与带依据的回复草稿', 'Sales Desk: the key facts extracted from an inquiry and a grounded draft reply'],
+  'sw033-sales-desk-document-pack': ['Sales Desk 单据中心：报价、PI 与随附文件的组织', 'The Sales Desk document centre: quotations, proforma invoices and their supporting files'],
+};
+export const PRODUCT_CAPTION = { zh: '产品界面示意（演示数据）', en: 'Illustrative product interface · demo data' };
 export function editorialImages(html, lang) {
   // Also covers inline backgrounds and absolute Open Graph URLs.
   let out = html.replaceAll('assets/stargo/', 'assets/stargo-editorial/');
-  out = out.replace(/<img\b[^>]*>/g, tag => {
-    const id = tag.match(/\bsrc="assets\/stargo-editorial\/([^"/]+)\.(?:webp|png)"/)?.[1];
+  out = out.replace(/<img\b[^>]*>/g, (tag, offset, page) => {
+    const id = tag.match(/\bsrc="assets\/(?:stargo-editorial|stargo-product)\/([^"/]+)\.(?:webp|png)"/)?.[1];
     if (!id) return tag;
     const asset = byId.get(id);
     if (!asset) throw new Error(`Unregistered editorial image: ${id}`);
+    const product = productText[id];
     const decorative = /\balt=""/.test(tag) || id.startsWith('avatar-');
-    const text = descriptions[id]?.[lang === 'zh' ? 0 : 1];
-    const alt = decorative || !text ? '' : `${text}${lang === 'zh' ? '（AI 概念图）' : ' (AI concept illustration)'}`;
+    const text = (product ?? descriptions[id])?.[lang === 'zh' ? 0 : 1];
+    const suffix = product
+      ? (lang === 'zh' ? `。${PRODUCT_CAPTION.zh}` : ` — ${PRODUCT_CAPTION.en}`)
+      : (lang === 'zh' ? '（AI 概念图）' : ' (AI concept illustration)');
+    const alt = decorative || !text ? '' : `${text}${suffix}`;
     let result = tag.replace(/\s(?:alt|srcset|sizes|width|height|decoding)="[^"]*"/g, '');
     const attrs = [`alt="${alt}"`, `width="${asset.width}"`, `height="${asset.height}"`, 'decoding="async"'];
     if (asset.variants.length) {
@@ -52,8 +96,20 @@ export function editorialImages(html, lang) {
       attrs.push(`srcset="${variants.map(v => `${v.src} ${v.width}w`).join(', ')}"`);
       // Do not use sizes=auto: CSS auto-width images in the supplied templates
       // acquire a 300px containment intrinsic size, collapsing wide card art.
+      // The rotating gallery's tiles are a fixed 14rem box at every width, so
+      // they name their own size instead of a viewport fraction — without this
+      // they would download the widest variant for a 224px tile.
+      const tile = /ro-home-header-img/.test(result);
       const small = /photo-image|image-rotator|image-text-rotator|author/.test(result);
-      attrs.push(`sizes="${small ? '(max-width: 767px) 50vw, 400px' : '(max-width: 767px) 100vw, (max-width: 991px) 75vw, 60vw'}"`);
+      /* Boxes that stay small at every width: the homepage stage card (340px
+         at most), the enterprise column's pictures and the capability rows.
+         `for-service` is on the wrapper around the picture, not on the picture,
+         so the test reads the markup immediately before the tag as well. */
+      const card = /for-service|work-image-cover|qx-all-image-cover/.test(page.slice(Math.max(0, offset - 160), offset) + result);
+      /* The capability rows' thumbnail: a fixed box, 12rem x 10rem from 992 and
+         16rem x 12rem from 1440 (cinery.cn2.css), and not drawn below 992. */
+      const thumb = /cn-service-thumbnail/.test(result);
+      attrs.push(`sizes="${tile ? '224px' : thumb ? '(max-width: 1439px) 186px, 250px' : card ? '(max-width: 767px) 45vw, 360px' : small ? '(max-width: 767px) 50vw, 400px' : '(max-width: 767px) 100vw, (max-width: 991px) 75vw, 60vw'}"`);
     }
     return result.replace(/\s*\/?>(\s*)$/, ` ${attrs.join(' ')}/>$1`);
   });

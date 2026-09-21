@@ -250,6 +250,17 @@ jobs:
         timeout-minutes: 30
         run: npm run verify
 
+      - name: Verify the owner's product screenshots
+        # The imagery round of 2026-09-18 added assertions that nothing else
+        # runs: every released screenshot registered with its source hash and
+        # pixel size, present in each declared width, never upscaled, placed on
+        # at least one page, and carrying the alt that says the interface holds
+        # demonstration data — plus the 60 responsive scenarios that check the
+        # pictures are inside their boxes. Without this step those assertions
+        # only ever ran on the author's machine.
+        timeout-minutes: 15
+        run: npm run verify:editorial
+
       - name: Assert the verifiers actually verified all 40 pages
         # The verifiers exit non-zero when they find a problem, but a run that
         # checked nothing at all would still exit zero. This step refuses that:

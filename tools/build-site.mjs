@@ -19,8 +19,9 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 
 import { makeSub, findByClass, removeByClass, elementContaining, extractElement, setInner, setEachInner, setLink, escapeHtml, zhWbr, zhKeep as zhKeepWords } from './lib-html.mjs';
 import { applyChrome, remapLinks, relocateAssets, relocateLinks, assertInternalLinks, stillImage, WORDMARK } from './chrome.mjs';
 import * as C from './copy.mjs';
-import { POSTS, BLOG_UI, postPath, featured, others, coverSrc, coverSrcset, formatDate, renderBody, titleHtml } from './blog.mjs';
+import { POSTS, BLOG_UI, postPath, featured, others, coverSrc, coverSrcset, coverAlt, formatDate, renderBody, titleHtml } from './blog.mjs';
 import { loadBlocks, art, capTitle, DONORS } from './block-lib.mjs';
+import { PRODUCT_CAPTION } from './editorial-images.mjs';
 
 import { SITE } from './paths.mjs';
 
@@ -83,6 +84,39 @@ const OS = { cockpit: IMG('os-cockpit.webp'), desk: IMG('os-sales-desk.webp'), i
 const BRAND = { wide: IMG('brand-glow-wide.webp'), square: IMG('brand-glow-square.webp'), tall: IMG('brand-glow-tall.webp'), ontology: IMG('brand-ontology.webp'), loop: IMG('brand-loop.webp'), family: (n) => IMG(`brand-family-0${n}.webp`) };
 const MOBILE = { approvals: IMG('mobile-approvals.webp'), agents: IMG('mobile-agents.webp'), inquiry: IMG('mobile-inquiry.webp'), core: IMG('mobile-core.webp'), phoneApprovals: IMG('phone-approvals.webp'), phoneAgents: IMG('phone-agents.webp') };
 const SILO = ['email', 'whatsapp', 'excel', 'erp'].map((n) => IMG(`silo-${n}.webp`));
+/* The owner's own product screenshots (handoff of 2026-09-18, registered in
+   tools/imagegen/product-assets.json and described in
+   tools/editorial-images.mjs). They ship from their own folder rather than
+   through IMG, which editorialImages() rewrites from assets/stargo/; that pass
+   recognises both folders and gives every one of these its alt, its width and
+   height and its srcset, exactly as it does the editorial artwork. Only the
+   screens the owner released are named here: six from the first handoff, the
+   Growth OS set from 主动获客.docx and the ERP screen from 配图二.docx. */
+const PROD = (n) => `assets/stargo-product/${n}.webp`;
+const PRODUCT = {
+  workspace: PROD('sw003-ai-workspace-home'),
+  experts: PROD('sw004-experts-library'),
+  teams: PROD('sw006-expert-teams'),
+  workflows: PROD('sw008-workflow-library'),
+  inquiry: PROD('sw028-sales-desk-inquiry-reply'),
+  documents: PROD('sw033-sales-desk-document-pack'),
+  growth: PROD('gos10-growth-control-tower'),
+  market: PROD('gos01-market-thesis'),
+  reorder: PROD('gos09-reorder-radar'),
+  committee: PROD('gos05-buying-committee'),
+  reactivation: PROD('gos11-dormant-reactivation'),
+};
+/* `teams`, `workflows`, `reorder` and `committee` are not placed from this file:
+   the gallery (tools/blocks/ro-gallery.mjs), the capability rows
+   (tools/blocks/cn-service.mjs) and the blog covers (tools/blog-covers.mjs)
+   name their own. They stay here because this map is the one list of what the
+   owner released, and tools/verify-editorial.mjs checks that list against the
+   built pages. */
+/* The names the homepage and the blog builders use for four of these files. */
+PRODUCT.workspaceHome = PRODUCT.workspace;
+PRODUCT.expertsLibrary = PRODUCT.experts;
+PRODUCT.inquiryReply = PRODUCT.inquiry;
+PRODUCT.documentPack = PRODUCT.documents;
 const AVATARS = Array.from({ length: 12 }, (_, i) => IMG(`avatar-${String(i + 1).padStart(2, '0')}.png`));
 /** Replace the src/srcset/sizes of the nth <img> whose src contains `key` (all of them when nth is null). */
 function swapImg(html, key, src, { nth = null, alt = '' } = {}) {
@@ -270,6 +304,11 @@ function fromStudio(spec, lang) {
   TEAM_TPL.forEach(([n, r], i) => { h = teamCard(h, n, r, { name: t(spec.cards[i].name), role: t(spec.cards[i].role), image: spec.images.cards[i] }); });
   // Stock photos (keyboard hands, portraits, a crowd, a face) → STARGO imagery; the four hero
   // backgrounds are CSS and are overridden in stargo-fusion.css (.image-about._01…_04).
+  /* Every picture here is a concept illustration standing beside text that
+     already says what it shows, so they keep swapImg's empty alt — which is
+     also how editorialImages() is told a picture is decoration. (A product
+     screenshot was tried in the third one on 2026-09-18 and reverted the same
+     day; it would have needed a non-empty alt to carry its caption.) */
   [['699b6466d5f19893993a4faf_Coding-Workspace-Close-Up', spec.images.work[0]], ['699b6466d5f19893993a4fa9_Portrait-of-a-Man', spec.images.work[1]], ['699b6466d5f19893993a4f9c_Diverse-Group-Portrait', spec.images.work[2]], ['699b6466d5f19893993a4fa0_about-6', spec.images.quote]]
     .forEach(([k, src]) => { h = swapImg(h, k, src); });
   h = s(h, '(Leadership)', t(spec.noteLabel));
@@ -420,15 +459,51 @@ PAGES['index.html'] = (lang) => {
   {
     const cards = ['699b6466d5f19893993a4d79_work-1.webp', '699b6466d5f19893993a4d34_work-5.webp', '699b6466d5f19893993a4d1a_work-4.webp', '699b6466d5f19893993a4d8f_work-8.webp'];
     cards.forEach((k, i) => { h = swapImg(h, k, SILO[i]); });
-    /* The five stages, in order (V6 §4.6): prospecting — an opportunity path
-       through a port district; trade sales — conversation becoming shared
-       customer context; fulfillment — inspection to dispatch; collection and
-       service — trade signals carried to a customer's destination; retain and
-       improve — an observed, reversible feedback path. The last three changed
-       with the stages: a quotation or command-centre picture no longer matches
-       what those stages now say. */
-    const scenes = [['Scene%20%239.webp', OS.desk], ['Scene%20%235.webp', OS.inquiries], ['Scene%20%2310%20(Light)', OS.trade], ['Scene%20%238.webp', BRAND.family(1)], ['Scene%2018.webp', BRAND.loop]];
-    scenes.forEach(([k, src]) => { h = swapImg(h, k, src); });
+    /* The five stages, in order (V6 §4.6). Four of them carry the owner's own
+       product, each one the screen its own sentence describes:
+
+         (001) 主动获客 「围绕产品和目标市场、客户类型，研究目标企业、背景核对、
+               联系人与采购信号」 — 市场论证 (gos01): a market and a customer type
+               argued from trade data and public sources.
+         (002) 外贸销售 「将主动开发客户与渠道询盘放进 Sales Desk，统一客户记录、
+               回复、产品匹配、报价、审批与 PI」 — sw028, which is that screen:
+               what an inquiry says, and a grounded draft reply beside it.
+         (003) 企业履约 「连接产品、采购、库存、生产、质检、订单和发货资料」 —
+               sw033, the document centre: quotations, PIs and the files that
+               travel with an order.
+         (005) 复购与改进 「关注补货与复购机会」 — 激活与活动 (gos11): dormant
+               accounts re-contacted only where something has verifiably changed.
+
+       (004) 回款与服务 keeps the concept illustration it had — trade signals
+       carried to a customer's destination — because no released screen is about
+       collection, reconciliation or support.
+
+       The four go in with a non-empty alt, which is a marker and not copy:
+       any non-empty value stops tools/editorial-images.mjs treating the image
+       as decoration, and it then writes the registered sentence over it in the
+       page's language. Same route the four core-system panels take with their
+       slot title, and `stillImage` below with 'STARGO OS'. The one concept
+       illustration keeps swapImg's empty alt, which is what it had.
+
+       The card is `.image-wrap.for-service`, `aspect-ratio: 3 / 2`; a 16:9
+       screenshot in it is fitted, not cropped, by H29 in css/stargo-fusion.css.
+
+       001 主动获客 is the market thesis: this stage's own sentence is research
+       around products, target markets and customer types, and that screen is
+       where a market and a customer type are argued from trade data and public
+       sources. The reorder radar is not used here — 补货 is stage 005's word
+       (复购与改进), where 激活与活动 goes instead. The Growth OS panel below
+       shows the control tower, so the two sections do not repeat one picture.
+
+       005 复购与改进 is 激活与活动, the only screen of the eight left in
+       主动获客.docx that passed its release audit (2026-09-21): dormant accounts
+       re-contacted only where something about their business has verifiably
+       changed, with the do-not-contact list beside it — which is what this
+       stage's own sentence says about reorder and repeat business. 004 keeps
+       its artwork: no released screen is about collection or service. */
+    const CONTENT = { alt: 'STARGO WORK' };
+    const scenes = [['Scene%20%239.webp', PRODUCT.market, CONTENT], ['Scene%20%235.webp', PRODUCT.inquiryReply, CONTENT], ['Scene%20%2310%20(Light)', PRODUCT.documentPack, CONTENT], ['Scene%20%238.webp', BRAND.family(1)], ['Scene%2018.webp', PRODUCT.reactivation, CONTENT]];
+    scenes.forEach(([k, src, opts]) => { h = swapImg(h, k, src, opts); });
     // Retain the original grid/zoom animation. The centre is a real video,
     // sourced from the owner's fourth template; surrounding imagery is separate.
     const theatre = [OS.boot, OS.loading, OS.login, OS.desktop, OS.cockpit, OS.agents, OS.inquiries];
@@ -498,6 +573,16 @@ PAGES['index.html'] = (lang) => {
     if (n !== 5) throw new Error(`index: expected 5 links to #loop, found ${n}`);
     h = s(h, '</body>', '<script src="js/stargo-anchor-glide.js" defer></script></body>', { count: 1 });
   }
+  /* V8: the five business stages share one sticky picture box, and Mono's own
+     interactions dim every one of them once the last stage passes the viewport's
+     midline — leaving that box empty until the column itself scrolls out, which
+     is half a viewport height of scrolling (488px measured at 768x1024, 420px at
+     1440x900, 622px at 1920x1080 — the quantity is the height, not the width),
+     and briefly again in the 10px gaps between stages. js/stargo-stage-hold.js
+     shows the stage nearest the midline through those gaps and hands the column
+     straight back to the runtime the moment it lights one. The interaction data
+     is untouched. */
+  h = s(h, '</body>', '<script src="js/stargo-stage-hold.js" defer></script></body>', { count: 1 });
   h = h.replace(/<h3 class="work-title">\d\d<\/h3><h3 class="work-title">©<\/h3>/g, (m, i) => m).replace(/<h3 class="work-title">(26|24|25)<\/h3><h3 class="work-title">©<\/h3>/g, (m) => m);
   {
     let n = 0;
@@ -528,16 +613,36 @@ PAGES['index.html'] = (lang) => {
     if (products === before) throw new Error('index: core-systems heading not found for the mobile variant');
   }
   {
-    // four Scalora dashboard drawings → the four product slots, desktop and mobile variants alike.
-    // Keyed on the start of each slot's name (V6 §4.7), in both languages: the
-    // two engines keep their product names, the two business areas are named
-    // ERP and AI 创作 / AI Creative. Each slot's picture matches what the slot
-    // now says: an opportunity path (prospecting), shared customer context
-    // (sales), components, packaging and fulfillment handoff (operations), and
-    // a camera-like aperture (images and video).
+    /* four pictures → the four product slots, desktop and mobile variants alike.
+       Keyed on the start of each slot's name (V6 §4.7), in both languages: the
+       two engines keep their product names, the two business areas are named
+       ERP and AI 创作 / AI Creative.
+
+       Two of the four are the owner's own screens. Growth OS 「发现目标企业，
+       查清公司与联系人，分析采购信号与开发优先级」 shows the growth control
+       tower (主动获客.docx), the screen this engine is named after. Sales Desk
+       「承接主动开发客户与渠道询盘，统一 CRM、沟通历史、产品匹配、回复与跟进」
+       shows sw028: an inquiry's facts on one side and a grounded draft reply on
+       the other. The other two keep the concept illustration they had — for ERP
+       the component matching, packaging and fulfilment handoff, for AI 创作 a
+       camera-like aperture. The ERP
+       screen the owner sent (配图二.docx, 生产管理) was placed and held the same
+       day: it shows a year of rising monthly production beside 未开始生产工单 0,
+       在建工作订单 0, 制造品价值 ¥0.00 and 完工率 0%, with the setup guide at 0%
+       完成 — an empty tenant carrying a year of production, and those four zeros
+       stay legible at the 692x390 this panel renders. Held for a capture against
+       seeded data. No released screenshot is an image or video workspace.
+
+       The picture keeps its own shape here. `.prodect-dashboard-image` is
+       `width: 100%; height: 100%` inside a `display: flex` block whose own
+       height is its content's, so the `height: 100%` resolves against an
+       indefinite height and the panel is as tall as the picture makes it —
+       measured 692×433.1 for a 1586×992 illustration at 1440 and 692×389.7 for
+       a 1268×714 screenshot, both exactly the file's own ratio. Nothing is
+       cropped and nothing is stretched, so these panels need no rule. */
     const bySystem = {
-      'Growth OS': OS.desk,
-      'Sales Desk': OS.inquiries,
+      'Growth OS': PRODUCT.growth,
+      'Sales Desk': PRODUCT.inquiryReply,
       'ERP': BRAND.family(2),
       'AI 创作': OS.boot, 'AI Creative': OS.boot,
     };
@@ -1364,7 +1469,11 @@ function postPage(post, lang) {
   b = s(b, '>How AI Companions Can Transform Your Life<', `>${titleHtml(post, lang, escapeHtml)}<`, { count: 1 });
   b = s(b, '>Related Items<', `>${t(BLOG_UI.related)}<`, { count: 1 });
   b = s(b, '>More from blog<', `>${t(BLOG_UI.more)}<`, { count: 1 });
-  b = swapImg(b, '6945522d9e13fa6b32ace3c9_Futuristic', coverSrc(post));
+  /* The hero cover. A cover made from one of the owner's product screenshots
+     says in its alt that it is a demonstration interface with demo data, in
+     the words tools/editorial-images.mjs uses for the same pictures elsewhere
+     (tools/blog.mjs coverAlt). The editorial covers stay decorative. */
+  b = swapImg(b, '6945522d9e13fa6b32ace3c9_Futuristic', coverSrc(post), { alt: coverAlt(post, lang) });
   b = b.replace(/(<img[^>]*class="lx-blog-image lx-details")\/>/, (m, tag) => `${tag} srcset="${coverSrcset(post)}" sizes="(max-width: 991px) 100vw, 1180px"/>`);
   if (!b.includes(coverSrcset(post))) throw new Error('post: hero image');
   {
@@ -1580,7 +1689,12 @@ PAGES['enterprise.html'] = (lang) => fromStudio({
   /* V7-LX: card 2 (账号与岗位权限 / Account & role permissions) takes a landscape
      picture again, layered permission boundaries (brand-family-04), so the first
      row reads landscape, landscape, tall as in the template; it had the
-     portrait phone-agents, which made the row short, tall, tall. */
+     portrait phone-agents, which made the row short, tall, tall.
+
+     The column keeps its editorial artwork. A product screenshot was tried in
+     the third slot on 2026-09-18 and reverted the same day: the box is
+     118x90 at 390, 235x208 at 768 and 681x620 on the English page, all far from
+     16:9, so a fitted interface left most of the box empty. */
   images: { work: [OS.cockpit, BRAND.tall, OS.desktop], quote: BRAND.square, cards: [OS.agents, BRAND.family(4), MOBILE.phoneApprovals, BRAND.ontology, OS.login] },
 }, lang);
 
@@ -2087,7 +2201,26 @@ PAGES['notices.html'] = (lang) => {
   h = setInner(h, '<div class="w-richtext">', t(N.body).trim());
   h = setLink(h, 'Back to blog', { href: 'index.html', text: t(N.back) });
   h = h.replace(/url\(&quot;assets\/[^&]*blog-1\.webp&quot;\)/, `url(&quot;${BRAND.wide}&quot;)`);   // the post banner photo
-  [['699b6466d5f19893993a4dca_Sleek', BRAND.loop], ['699b6466d5f19893993a4d64_blog-2', OS.agents], ['699b6466d5f19893993a4e03_Futuristic', OS.login]].forEach(([k, src]) => { h = swapImg(h, k, src); });
+  /* The three "keep reading" cards carry the surface each one is about, from
+     the owner's own product screenshots (the handoff of 2026-09-18):
+       能力 / Capabilities     — "from the workspace to controlled improvement":
+                                 the workspace home, whose own tab row names
+                                 those areas of work;
+       数字员工 / AI Workforce — "(288 specialized AI roles)" and ten functions:
+                                 the experts library, which counts 288 / 288 and
+                                 filters the roster by function;
+       企业管理 / Enterprise   — "see progress, control approvals and budgets,
+                                 check the results": the document centre, with
+                                 the pipeline counters above it and quote
+                                 approval in its navigation.
+     They are 16:9 pictures of an interface in a 1.4:1 box, so the box stops
+     cropping them and holds the picture's own border colour instead
+     (css/stargo-fusion.css, V7-BLOG r3). They go in with the caption as a
+     marker — any non-empty alt stops tools/editorial-images.mjs treating a
+     picture as decoration — and that pass then writes the registered sentence
+     for each screen, in the page's language, over it. */
+  [['699b6466d5f19893993a4dca_Sleek', PRODUCT.workspaceHome], ['699b6466d5f19893993a4d64_blog-2', PRODUCT.expertsLibrary], ['699b6466d5f19893993a4e03_Futuristic', PRODUCT.documentPack]]
+    .forEach(([k, src]) => { h = swapImg(h, k, src, { alt: PRODUCT_CAPTION[lang] }); });
   /* The post template tags its "Related Stories" band <h1>, a second h1 after
      the notice's own title. It becomes h2; `.inner-title._02` carries its
      size, weight and spacing, and Mono's h1/h2 element rules differ only in

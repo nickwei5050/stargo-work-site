@@ -51,3 +51,20 @@ html[lang^="zh"] .qx-news .qx-h2 { word-break: keep-all; }
 /* Balanced in both languages: the English "Sales Desk: from customer to
    order" left "order" alone on its third line from 1024 up. */
 .qx-news .qx-h2 { text-wrap: balance; }
+
+/* 4. Row 02's picture is the owner's own Sales Desk screenshot (qx-news.mjs,
+      owner instruction 2026-09-18). The donor's thumbnail box is 349x244
+      (1.43) and the screenshot is 16:9, so qubix's `object-fit: cover` would
+      take a fifth off its width — the Sales Desk navigation rail on the left
+      and the extracted-facts panel on the right, i.e. exactly the parts the
+      row's own sentence is about. `contain` shows the whole interface inside
+      the SAME box: the element, its class, its `data-w-id`, the inline IX2
+      transform are untouched (this block applies no hover scale), and the band it
+      leaves is the row's own black — `.blog-item` paints rgb(0, 0, 0), named
+      again here so the picture carries that ground through the row.
+      Matched on the picture's own folder, so a donor photograph or an
+      editorial image in the same slot keeps the donor's `cover`. */
+.qx-news .qx-all-image-cover[src*="/stargo-product/"] {
+  object-fit: contain;
+  background-color: #000;
+}

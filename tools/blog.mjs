@@ -40,6 +40,7 @@
  */
 import { B, WORKFORCE_ROLE_GROUPS } from './copy.mjs';
 import { zhWbr } from './lib-html.mjs';
+import { PRODUCT_CAPTION } from './editorial-images.mjs';
 
 /* The blog's own words (V5 P09, V6 §9). The index page's hero was one <h1> and
    nothing else, so `heading` takes V5's headline and `intro` — V5's sentence
@@ -1210,6 +1211,26 @@ export const featured = (n = 4) => POSTS.slice(0, n);
 export const others = (post, n = 3) => POSTS.filter((p) => p.slug !== post.slug).slice(0, n);
 export const coverSrc = (post) => `assets/blog/${post.cover}.webp`;
 export const coverSrcset = (post) => [500, 800].map((w) => `assets/blog/${post.cover}-${w}.webp ${w}w`).concat(`assets/blog/${post.cover}.webp 1200w`).join(', ');
+
+/**
+ * The covers made from the owner's own product screenshots (the handoff of
+ * 2026-09-18). tools/blog-covers.mjs holds which screenshot each one is and
+ * how it is fitted, and checks that its own list is exactly this one, so the
+ * two can never drift apart. The rest are this site's editorial artwork.
+ *
+ * A product screenshot is a demonstration interface, not a photograph of a
+ * customer's account, and everywhere else on the site tools/editorial-images.mjs
+ * says so in the picture's own alt text. A cover is a file in assets/blog/, so
+ * that pass never sees it — the article hero, which is the one place a cover is
+ * shown large enough to read, carries the same sentence from the same place
+ * instead of anything written here. The thumbnails stay decorative (alt=""),
+ * as every card image in these templates is.
+ */
+export const PRODUCT_COVERS = new Set([
+  'stargo-work-visual-guide', 'start-with-one-workflow', 'from-inquiry-to-quote',
+  'ai-operating-system-for-global-trade', '288-ai-employees-not-288-chatbots',
+]);
+export const coverAlt = (post, lang) => (PRODUCT_COVERS.has(post.cover) ? PRODUCT_CAPTION[lang] : '');
 
 /** Dates as the reader expects them. */
 export const formatDate = (iso, lang) => {

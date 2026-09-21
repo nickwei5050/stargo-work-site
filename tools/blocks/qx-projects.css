@@ -98,3 +98,22 @@ html[lang^="zh"] .qx-projects .qx-project-card-title { word-break: keep-all; }
       already is (css/stargo-fusion.css); the English "Run the work with an AI
       team" left "team" alone on a second line from 390 to 768. */
 .qx-projects .qx-h2.qx-project-title-mw { text-wrap: balance; }
+
+/* 7. The large card's picture, when it is one of the owner's own product
+      screenshots (qx-projects.mjs / CAP_V6A.team.cards[].image, owner
+      instruction 2026-09-18). qubix's full-width card is 1280x615 (2.08) and a
+      screenshot is 16:9, so qubix's `cover` would cut a seventh off the top
+      and the bottom — on SW006 the Expert Teams heading above the five role
+      cards and the completed-task record below them, which is what the card's
+      own sentence describes. `contain` shows the team screen whole in the same
+      box; the band it leaves left and right is the section's own ground
+      (`.home-project-section` paints rgb(15, 15, 15)), named here so the
+      picture keeps that ground through the hover scale (1 → 1.1), which still
+      animates this same element with its data-w-id and the "view" pill over it
+      unchanged. The two portrait cards above are not matched — they keep
+      qubix's `cover` — and neither is any editorial artwork in this slot,
+      because the match is on the picture's own folder. */
+.qx-projects .qx-project-img[src*="/stargo-product/"] {
+  object-fit: contain;
+  background-color: #0f0f0f;
+}

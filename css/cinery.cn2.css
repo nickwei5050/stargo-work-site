@@ -6794,3 +6794,27 @@
   .cn-service .cn-content-item { align-items: flex-start; }
 }
 
+/* ------------------------------------------ 6. the rows' thumbnails -- */
+
+/* Three of the four rows' thumbnails are the owner's own screen for that topic
+   (ROW_SHOT in cn-service.mjs); 企业研究 has none — 客户 360 was held — and keeps
+   the editorial art. cinery's box is 12rem x 10rem, and 16rem x 12rem from 1440;
+   its thumbnail is `object-fit: cover`, which on a 16:9 interface keeps only
+   the middle two thirds — the left navigation and the assistant column would be
+   cut away. A screenshot is fitted instead, and the letterbox bands show the plate the
+   wrapper already paints — the <img> declares no ground of its own, because
+   that ground is `#ffffff1a` and painting it twice would make the bands lighter
+   than the 3px frame around them. The box, the radius, the hover and the
+   crossfade it drives are untouched.
+
+   The rule is keyed on the picture's own folder, exactly as the other
+   product-image rules are (H29, L-P1, qx-news, qx-projects): the editorial
+   artwork in row 1 is a 1586x992 picture drawn for `cover`, and fitting it
+   would leave it floating in bands inside a box it was made to fill. A row that
+   goes back to an illustration goes back to `cover` with it.
+
+   Below 992 the donor hides this box (`display: none`) and the picture is still
+   fetched: about 20 kB per row that a phone never draws. The donor's markup is
+   one <img> per row, so nothing here can gate that without changing it. */
+.cn-service .cn-service-thumbnail[src*="/stargo-product/"] { object-fit: contain; }
+

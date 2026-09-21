@@ -224,6 +224,19 @@ body.lx-page .navigation-top .lottie-white { filter: none; }
 @media (min-width: 992px) {
   .sc-scope.products .product-sticky-inner-block > .section-contant-padding { padding-block: 48px; }
   .stargo-switcher .products-cards-right-inner-block { height: 100%; }
+  /* Scalora draws a decorative frame over this section — two 1px rules and four
+     corner dots — at the section's own padding: the verticals at the 40px side
+     padding, the horizontals at the 100px block padding it shipped with. The
+     line above reduces that block padding to 48px so the four panels fit the
+     sticky viewport, which left the top rule 52px inside the first tab, drawn
+     straight through 「Growth OS · 主动获客」 / "Growth OS · Prospecting" (the
+     frame paints above the cards: z-index 2, pointer-events none). The frame
+     follows the padding it belongs to. The dots stay centred on their corners,
+     4px up from the rule, as the donor draws them at every other width. */
+  .sc-scope.products .section-border-02 { top: 48px; }
+  .sc-scope.products .section-border-04 { bottom: 48px; }
+  .sc-scope.products .section-border-bot-01, .sc-scope.products .section-border-bot-02 { top: 44px; }
+  .sc-scope.products .section-border-bot-03, .sc-scope.products .section-border-bot-04 { bottom: 44px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .stargo-switcher [role="tabpanel"], .stargo-switcher .products-card-name-inner-block { transition: none !important; }
@@ -3576,6 +3589,90 @@ html[lang^="en"] .lx-scope .stargo-post :is(.sgc-step-text, .sgc-example span, .
   html[lang^="en"] .lx-scope .stargo-post .sgc-role-lead { grid-column: 1 / -1; }
 }
 html[lang^="en"] .lx-scope .stargo-post :is(.sgc-role-name, .sgc-role-task, .sgc-msg-who, .sgc-msg-text) { text-wrap: balance; }
+
+/* ---- V8-STAGE: the last business stage keeps its picture ------------------
+
+   Mono's five stage rows share one sticky picture box and light it one at a
+   time: SCROLL_INTO_VIEW sets a row's `.service-media-wrap` to opacity 1,
+   SCROLL_OUT_OF_VIEW sets it back to 0, both at a 50% offset, so the row
+   crossing the viewport's midline is the one on screen. Past the last stage
+   nothing is lit and the box sits empty until it scrolls out — half a viewport
+   height, i.e. 488px measured at 768x1024, 420px at 1440x900 and 622px at
+   1920x1080, and 0px with the script.
+
+   js/stargo-stage-hold.js puts this class on the stage nearest the midline, and
+   only while the runtime has nothing lit and the list is still in view — the
+   stage the runtime's own rule would light if its band were continuous. It is `!important`
+   because the runtime writes its own value inline; that way the runtime keeps
+   its state, and removing the class shows whatever it wants at that moment. The
+   donor's own switch has duration 0, so an instant hold matches it. Nothing
+   else about the section changes. */
+.service-media-wrap.sgp-stage-hold { opacity: 1 !important; }
+
+/* ---- V7-BLOG r3: the owner's product screenshots (handoff of 2026-09-18) --
+
+   Five article covers are now screenshots of the product instead of editorial
+   artwork. A screenshot is 16:9 and it is an interface, so tools/blog-covers.mjs
+   fits the whole picture inside the 3:2 cover frame on a flat plate taken from
+   the screenshot's own border, rather than centre-cropping it and losing the
+   left navigation.
+
+   Two boxes then crop that 3:2 frame again — the blog index / story-strip /
+   related card is 1:1 and the homepage card is 3 / 2.3 — and either crop cuts
+   the navigation back off. Both stop cropping for these five covers and paint
+   the same plate colour, so the card still fills its box and the interface
+   inside it is still whole. Nothing else moves: no box changes size, ratio,
+   radius, position, hover or interaction, and the two articles that keep their
+   editorial cover keep the crop they always had. The article hero is already
+   3 / 2, so its picture fills it exactly either way.
+
+   `background-image: none` is for the homepage card only: Mono paints a
+   decorative SVG behind .testimonials-photo which would otherwise show through
+   the plate now that the picture no longer covers the whole box. */
+:is(.lx-blog-image, .blog-grid .testimonials-photo):is(
+  [src$="/stargo-work-visual-guide.webp"],
+  [src$="/start-with-one-workflow.webp"],
+  [src$="/from-inquiry-to-quote.webp"],
+  [src$="/ai-operating-system-for-global-trade.webp"],
+  [src$="/288-ai-employees-not-288-chatbots.webp"]
+) { object-fit: contain; background-image: none; }
+/* The plate of each cover, as written into the file by tools/blog-covers.mjs. */
+:is(.lx-blog-image, .blog-grid .testimonials-photo)[src$="/stargo-work-visual-guide.webp"] { background-color: #021d4d; }
+:is(.lx-blog-image, .blog-grid .testimonials-photo)[src$="/start-with-one-workflow.webp"] { background-color: #001135; }
+:is(.lx-blog-image, .blog-grid .testimonials-photo)[src$="/from-inquiry-to-quote.webp"] { background-color: #e8f1fe; }
+:is(.lx-blog-image, .blog-grid .testimonials-photo)[src$="/ai-operating-system-for-global-trade.webp"] { background-color: #0e2b5a; }
+:is(.lx-blog-image, .blog-grid .testimonials-photo)[src$="/288-ai-employees-not-288-chatbots.webp"] { background-color: #00173c; }
+
+/* The homepage card draws Mono's arrow badge over the top right of the cover
+   (`.button-icon-main.sec`: 50x40, 25px inside the card, and the card's picture
+   starts 15px below the card's own top — measured identical at 360, 390, 480,
+   560, 640, 768, 900, 992, 1100, 1200, 1280, 1366, 1440, 1600 and 1920). The
+   badge therefore reaches exactly 50px into the picture's box at every width,
+   while the box itself is 197px wide at 992 and 309px at 1920 — which is why
+   this band is 50px of that box and not a share of the picture. The picture is
+   `box-sizing: border-box`, so the band takes its space from the picture and
+   moves nothing on the card; the same plate fills it, and the badge lands on
+   the plate at every width. The blog index, the article hero and og:image are
+   untouched: no badge is drawn over them.
+
+   `padding-bottom` balances it optically; the 6px difference is the gap the
+   badge keeps from the interface. */
+.blog-grid .testimonials-photo:is(
+  [src$="/stargo-work-visual-guide.webp"],
+  [src$="/start-with-one-workflow.webp"],
+  [src$="/from-inquiry-to-quote.webp"],
+  [src$="/ai-operating-system-for-global-trade.webp"],
+  [src$="/288-ai-employees-not-288-chatbots.webp"]
+) { padding-top: 56px; padding-bottom: 6px; }
+
+/* The same for the three "keep reading" cards under the third-party notices
+   (tools/build-site.mjs, PAGES['notices.html']). The half-card is about
+   1.4 : 1 and these pictures are 16:9, so the box holds the picture's own
+   border colour instead of cropping 13% off each side of an interface. The
+   band is this page's alone — .blog-photo-overlay exists nowhere else. */
+.blog-flex .blog-photo-overlay[src$="/sw003-ai-workspace-home.webp"] { object-fit: contain; background-color: #0e2b5a; }
+.blog-flex .blog-photo-overlay[src$="/sw004-experts-library.webp"] { object-fit: contain; background-color: #021d4d; }
+.blog-flex .blog-photo-overlay[src$="/sw033-sales-desk-document-pack.webp"] { object-fit: contain; background-color: #e2edfd; }
 /* V7-BLOG-END */
 
 
@@ -4437,6 +4534,28 @@ html[lang="en"] .cn-about-reviews .cn-testimonial-info .cn-text-size-medium { te
   html[lang^="en"] .team-grid .team-content .h2._01.sm._600.lw { font-size: min(1.2rem, calc(4.05vw - 1.6px)); }
 }
 
+/* ---- V7-LX r3: the owner's own product screenshots (2026-09-18) ----------
+
+   One slot on these pages carries one of the screenshots the owner released
+   (tools/imagegen/product-assets.json). The rule does one thing —
+   show a 16:9 interface whole inside the box the template already drew — and
+   is matched on the picture's own folder, so the same slot filled with a
+   template photograph or with this site's editorial artwork is untouched and
+   keeps the fit it has today. No element, class, id, inline style, data-w-id
+   or interaction binding changes, and the rule sets no width, no height, no
+   position and no colour of the layout around it.
+   --------------------------------------------------------------------------- */
+
+/* L-P1. workforce.html — the wide tile beside 「不是各聊各的，而是一起做完。」
+         (`.lx-feature-grid-image`, a class this template gives to one element
+         on one page). The template sets `object-fit: fill` on a 552x312 box
+         (1.769); the screenshot is 1268x714 (1.776), so `fill` would stretch
+         it — very slightly, but stretched all the same. `contain` fits it to
+         the same box and leaves under a pixel, inside the tile's own magenta
+         frame (`.lx-feature-grid-bg`), which therefore needs no plate. */
+.lx-feature-grid-image[src*="/stargo-product/"] { object-fit: contain; }
+
+
 /* V7-LX-END */
 
 
@@ -4931,6 +5050,43 @@ html[lang^="en"] .button-text.w-variant-83ed8c83-4d97-b61d-2146-78e915c17bb4 { t
   .rk-price-compare .rk-rt-pricing-chart-rows { grid-template-columns: minmax(0, 1.2fr) repeat(5, minmax(0, 1fr)); }
   .rk-price-compare .rk-rt-chart-columns.rk-rt-chart-col-1 { container-type: inline-size; }
   .rk-price-compare .rk-rt-pricing-chart-price h2 { font-size: min(var(--_font-details---font-size--heading-two), 100cqi / 3.8); }
+}
+
+/* H29. The four business stages that show one of the owner's own product
+        screenshots (tools/build-site.mjs, the `scenes` list): (001) 主动获客 /
+        "Discover" carries the market thesis, (002) 外贸销售 / "Trade sales"
+        carries sw028, an inquiry with the grounded draft reply beside it,
+        (003) 企业履约 / "Fulfilment" carries sw033, the document centre of
+        quotations, PIs and their files, and (005) 复购与改进 / "Retain &
+        improve" carries the reactivation screen.
+
+        The card is Mono's `.image-wrap.for-service`, `aspect-ratio: 3 / 2`, and
+        the screenshots are 16:9. Mono's `.paralax-image` is `object-fit: cover`,
+        which across that pair of ratios keeps the height and takes a fifth off
+        the width — 82px of a 416px picture at 1440, which is the left
+        navigation rail and the right-hand panel. So these are fitted rather
+        than cropped: the whole interface, on a plate, inside the card Mono drew.
+        (004) 回款与服务 keeps the photograph-like concept illustration `cover`
+        was written for, and the rule is keyed on the file's own folder, so a
+        slot that goes back to an illustration goes back to `cover` with it.
+
+        `height: 100%` replaces the donor's 105%. That over-scan exists for
+        Mono's "Main Image Parallax 10%" (ix2 `a-215`), which moves
+        `.paralax-image` down by a tenth of its height as the page scrolls;
+        measured on the built page at 1440, sampled every 300px down the whole
+        document, all five of these stay at `transform: none` — that interaction
+        is bound to the blog and work cards, not to the service list. With no
+        translate to hide, 105% only held the picture 11px off centre inside a
+        box that clips it.
+
+        The plate is the two screenshots' own edge colour: their four corners
+        and four edge midpoints average #dce9fe and #e0ebfe. The letterbox above
+        and below reads as more of the picture rather than as a bar, and the card
+        keeps Mono's 10px radius and its own `overflow: hidden`. */
+body:has(#loop) .image-wrap.for-service .paralax-image[src*="assets/stargo-product/"] {
+  height: 100%;
+  object-fit: contain;
+  background-color: #dfeafe;
 }
 
 /* V7-HOME-END */

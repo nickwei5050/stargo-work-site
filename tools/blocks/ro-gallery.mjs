@@ -35,12 +35,22 @@
  *                                        rotate(-45deg × n) — a 1200px wheel
  *             img.home-header-img        16/9, rotateX(-90deg) so it stands up
  *
- *   Three wheels of eight, 24 photographs, offset -15° / -30° / 0°. Every one
- *   of them is rototo's own — the owner asked for the template's pictures
- *   ("用 rototo 原图") — so `donor.mirror` keeps its default and
- *   tools/mirror-donor-assets.mjs fetches all 111 files (24 `src` +
- *   their -p-500/800/1080/1600/2000 variants; 5.62 MB) into assets/rototo/.
- *   No image is substituted and none is dropped.
+ *   Three wheels of eight, 24 tiles, offset -15° / -30° / 0°. The cut still
+ *   arrives carrying rototo's own 24 photographs, and it still mirrors them:
+ *   `donor.mirror` keeps its default and tools/mirror-donor-assets.mjs fetches
+ *   all 111 files (24 `src` + their -p-500/800/1080/1600/2000 variants;
+ *   5.62 MB) into assets/rototo/, so the extraction stays reproducible and the
+ *   fragment on disk still resolves. Nothing here deletes them.
+ *
+ *   What the built page shows is no longer those photographs. The owner's
+ *   handoff of 2026-09-18 supplied six screenshots of STARGO WORK's own
+ *   product and authorised them for brand, product and feature imagery, and
+ *   render() stands those six on the 24 spokes — four appearances each, every
+ *   wheel showing all six, no picture twice in a row around a wheel (LAYOUT,
+ *   below, which checks all three of those at module load). Nothing else about
+ *   the block changes: same elements, same classes, same transforms, same
+ *   attributes, same motion. Only each `<img>`'s `src`, and the `srcset`/`sizes`
+ *   pair that named the donor's files, are touched.
  *
  * WHAT THE WORDS BECOME
  *   There are none. The block is 24 `<img>` elements and 28 `<div>`s; rototo
@@ -118,6 +128,82 @@ export const donor = {
 /** rototo's own alt text on the 24 wheel photographs, as the cut ships it. */
 const ALTS = { 'hero image': 23, office: 1 };
 
+/** The six screenshots the owner approved (handoff of 2026-09-18), registered in
+    tools/imagegen/product-assets.json. LAYOUT indexes this list. */
+const TILES = [
+  'sw003-ai-workspace-home',
+  'sw004-experts-library',
+  'sw006-expert-teams',
+  'sw008-workflow-library',
+  'sw028-sales-desk-inquiry-reply',
+  'sw033-sales-desk-document-pack',
+];
+
+/* WHICH PICTURE STANDS ON WHICH SPOKE.
+
+   Three wheels of eight is 24 places for six pictures, so each shows four
+   times. Each row below is one wheel, in the DOM's own order, which inside a
+   wheel is the angular order: 0°, −45°, −90°, −135°, −180°, −225°, −270°, −315°
+   (rototo's class names skip `fifth`; SPOKES holds the sequence and render()
+   asserts the markup still comes in it). Eight places and six pictures means
+   two of the six repeat inside a wheel; a different two repeat in each wheel,
+   which is what makes the totals come out at four each while every wheel still
+   shows all six.
+
+   BUT A WHEEL IS NOT WHAT A READER SEES. The three wheels are coaxial and are
+   offset from each other — `.ro-first` rotate(−15deg), `.ro-second`
+   rotate(−30deg), `.ro-third` rotate(0) in css/rototo.ro.css, which is also
+   where rototo's own unwind lands them — so their spokes interleave. Reading
+   round the screen from 0° the tiles come:
+
+       third[0] (0°) · first[0] (−15°) · second[0] (−30°) · third[1] (−45°) …
+
+   which is RING below: 24 tiles, three per 45° cluster, closing back on
+   third[0]. Neighbours on one wheel are 45° and two other tiles apart; the
+   tiles actually beside each other on screen belong to different wheels. So the
+   repeat to avoid is a repeat in RING, and the check below asks for more than
+   that: no picture twice within any three consecutive tiles, i.e. never twice
+   inside one 45° cluster and never in two touching ones. That is what the
+   checks below assert; the gaps between one picture's four appearances run from
+   5 to 8 tiles, which no rule here constrains further. */
+const LAYOUT = [
+  [2, 4, 2, 0, 5, 4, 3, 1],   // .ro-first,  −15°
+  [5, 0, 5, 4, 3, 1, 2, 0],   // .ro-second, −30°
+  [3, 1, 3, 1, 2, 0, 5, 4],   // .ro-third,    0°
+];
+
+/** rototo's spoke order inside a wheel. There is no `fifth`: the donor skips it. */
+const SPOKES = ['', 'ro-first', 'ro-second', 'ro-third', 'ro-fourth', 'ro-sixth', 'ro-seventh', 'ro-eighth'];
+
+/** The 24 tiles in the order a reader meets them: third, first, second, spoke by spoke. */
+const RING = Array.from({ length: SPOKES.length * 3 }, (_, i) => LAYOUT[[2, 0, 1][i % 3]][Math.floor(i / 3)]);
+
+/* Everything LAYOUT promises, checked where LAYOUT is written rather than
+   trusted, because none of it is visible by reading the rows: every wheel shows
+   all six pictures, no picture stands on two cyclically neighbouring spokes of
+   a wheel, each picture appears exactly four times over the 24, and no picture
+   appears twice within any three consecutive tiles of RING. Editing the rows
+   above without keeping all four fails the build. */
+{
+  const count = new Map();
+  LAYOUT.forEach((wheel, w) => {
+    if (wheel.length !== SPOKES.length) throw new Error(`ro-gallery: wheel ${w} has ${wheel.length} spokes, not ${SPOKES.length}`);
+    wheel.forEach((tile, i) => {
+      if (!TILES[tile]) throw new Error(`ro-gallery: wheel ${w} spoke ${i} names picture ${tile}, which is not one of the six`);
+      if (tile === wheel[(i + 1) % wheel.length]) throw new Error(`ro-gallery: ${TILES[tile]} stands on neighbouring spokes ${i} and ${(i + 1) % wheel.length} of wheel ${w}`);
+      count.set(tile, (count.get(tile) ?? 0) + 1);
+    });
+    if (new Set(wheel).size !== TILES.length) throw new Error(`ro-gallery: wheel ${w} shows ${new Set(wheel).size} of the ${TILES.length} pictures`);
+  });
+  TILES.forEach((id, tile) => { if (count.get(tile) !== 4) throw new Error(`ro-gallery: ${id} stands on ${count.get(tile) ?? 0} spokes, not 4`); });
+  RING.forEach((tile, i) => {
+    for (const step of [1, 2]) {
+      const j = (i + step) % RING.length;
+      if (tile === RING[j]) throw new Error(`ro-gallery: ${TILES[tile]} is ${step} tile(s) from itself on screen, at ring positions ${i} and ${j}`);
+    }
+  });
+}
+
 export function render(frag, ctx) {
   let html = frag;
 
@@ -125,26 +211,34 @@ export function render(frag, ctx) {
      ever re-cut and that stops being true, fail here rather than ship a
      silently shorter gallery. */
   const wheels = (html.match(/class="ro-home-header-group /g) ?? []).length;
-  if (wheels !== 3) throw new Error(`ro-gallery: rototo turns three wheels, found ${wheels}`);
+  if (wheels !== LAYOUT.length) throw new Error(`ro-gallery: rototo turns three wheels, found ${wheels}`);
   const spokes = (html.match(/class="ro-home-header-img-wrap/g) ?? []).length;
   if (spokes !== 24) throw new Error(`ro-gallery: expected 24 photographs (3 × 8), found ${spokes}`);
   if (/>[^<>\s][^<>]*</.test(html.replace(/<img[^>]*>/g, ''))) {
     throw new Error('ro-gallery: the cut has grown text; rototo ships none, and the owner asked for none');
   }
 
-  /* Every image is mirrored, none is substituted: the build refuses a
-     reference that is not on disk, so a surviving CDN url is a build failure,
-     not a runtime one. Checked here anyway because this block's whole content
-     is images. */
+  /* Every image the cut arrives with is mirrored, none of it is a live url: the
+     build refuses a reference that is not on disk, so a surviving CDN url is a
+     build failure, not a runtime one. Checked here anyway because this block's
+     whole content is images — and it runs before the substitution below, so it
+     is rototo's own references that are checked, as it was written to do. */
   if (/https?:\/\//.test(html)) {
     throw new Error(`ro-gallery: an off-origin url survived the cut: ${html.match(/https?:\/\/[^"' ]+/)[0]}`);
   }
 
-  /* The words. rototo's alt text names its own imagined products in English on
-     a page that reads Chinese only, and no true Chinese caption exists for a
-     stock render, so the photographs are announced as what they are here:
-     decoration behind the hero's own copy. Same line qx-orbit takes with its
-     eight orbit photographs. */
+  /* THE WORDS. rototo's alt text names its own imagined products in English on
+     a page that reads Chinese only, so it goes; and the tiles stay announced as
+     nothing after the substitution below, for the reason they were emptied in
+     the first place. Six pictures on 24 spokes is each one read out four times,
+     behind the hero's own copy, by a wheel that is turning while it is read —
+     decoration, whatever it is a picture of. Each of the six is announced in
+     full where it is content: tools/editorial-images.mjs writes the registered
+     sentence onto the five-stage and core-system slots further down this same
+     page. Same line qx-orbit takes with its eight orbit photographs.
+
+     `alt=""` is also what tells tools/editorial-images.mjs to leave them silent
+     (its `decorative` test), so emptying them here is the whole decision. */
   for (const [alt, n] of Object.entries(ALTS)) {
     const found = (html.match(new RegExp(`alt="${alt}"`, 'g')) ?? []).length;
     if (found !== n) throw new Error(`ro-gallery: expected ${n} × alt="${alt}", found ${found}`);
@@ -153,35 +247,69 @@ export function render(frag, ctx) {
   const named = html.match(/alt="[^"]+"/g);
   if (named) throw new Error(`ro-gallery: an alt attribute still names something: ${named[0]}`);
 
-  /* THE SIZE THE BROWSER IS TOLD TO FETCH.
-     Every one of these images ships six variants (500/800/1080/1600/2000/2544w)
-     and a `sizes` that rototo wrote for its own page, where the photograph is
-     full-bleed: `(max-width: <n>px) 100vw, <n>px`. Here it is not. The tile is
-     `.ro-home-header-img-wrap { width: 14rem }` — 261px at 1920, 224px at 1439
-     — so `100vw` tells the browser it needs about seven times the pixels it
-     will draw, and it duly fetches the 2000w file (85.2 KB) for a 261px box
-     when the 500w one (16.4 KB) is the right plate. Measured over the 24
-     photographs that is 1.59 MB where ~0.39 MB will do at 1x, ~0.74 MB at 2x.
+  /* THE PICTURES. The owner's six screenshots replace rototo's 24 photographs,
+     one spoke at a time, in LAYOUT's order.
 
-     Nothing about the pictures or the motion changes: same files, same
-     srcset, same wheel — only which of the six plates the browser is told to
-     pick. The owner authorised this one attribute.
+     The donor's tag is edited, not rebuilt: whatever else rototo put on it —
+     `loading`, its classes, any data attribute a later cut might carry — comes
+     through untouched, and the wheel's own transforms live on the wrapping
+     `<div>`, which is not rewritten at all. Three attributes are decided here:
+     `src` becomes the approved file, and `srcset`/`sizes` go, because they name
+     files that are no longer being shown.
 
-     The numbers are 14rem evaluated at the top of each range rototo's own
-     `--layout--size-font-base` is constant over (it is
-     `clamp(768px,100vw,1920px) / (1440/unit)`, and `unit` steps 24/16/15/14 at
-     991/1280/1440/1920). The top of each range is used, never the middle, so
-     the value never under-states the box and the browser is never talked into
-     a plate coarser than the tile. Below 768 the block is `display: none` and
-     the images are never laid out, so the first entry is academic.
+     `.ro-gallery .ro-home-header-img` is `aspect-ratio: 16/9; object-fit: cover`
+     inside a `width: 14rem` wrapper (css/rototo.ro.css) and all six screenshots
+     are 1268×714 — 1.7759 against the box's 1.7778 — so `cover` scales them to
+     the tile's width and takes 0.13px off the height, about a fifteenth of a
+     pixel top and bottom on the 224px tile. Nothing is cropped in any sense a
+     reader could see and no interface loses an edge, so the donor's `cover`
+     stays and the box is not touched.
 
-       ≤991    14rem at 991  = 231px        ≤1439  14rem at 1439 = 224px
-       ≤1919   14rem at 1919 = 280px        ≥1920  14rem at 1920 = 261px */
-  const SIZES = '(max-width: 991px) 231px, (max-width: 1439px) 224px, (max-width: 1919px) 280px, 261px';
-  const before = (html.match(/ sizes="[^"]*"/g) ?? []).length;
-  if (before !== 24) throw new Error(`ro-gallery: expected 24 sizes attributes to retarget, found ${before}`);
-  html = html.replace(/ sizes="[^"]*"/g, ` sizes="${SIZES}"`);
-  if ((html.match(/100vw/g) ?? []).length) throw new Error('ro-gallery: a donor `100vw` sizes hint survived');
+     The spoke's modifier class is checked against SPOKES as we go, because
+     LAYOUT's "no two neighbours alike" is a claim about angular order and the
+     only thing making DOM order equal angular order is that rototo emitted the
+     wraps in it. */
+  const hadSrcset = (html.match(/ srcset="[^"]*"/g) ?? []).length;
+  const hadSizes = (html.match(/ sizes="[^"]*"/g) ?? []).length;
+  if (hadSrcset !== 24 || hadSizes !== 24) throw new Error(`ro-gallery: expected 24 srcset and 24 sizes attributes to drop, found ${hadSrcset} and ${hadSizes}`);
+  let n = 0;
+  html = html.replace(/<div class="ro-home-header-img-wrap([^"]*)">(<img\b[^>]*class="ro-home-header-img"\/>)<\/div>/g, (whole, mod, img) => {
+    const w = Math.floor(n / SPOKES.length), s = n % SPOKES.length;
+    n += 1;
+    if (mod.trim() !== SPOKES[s]) throw new Error(`ro-gallery: wheel ${w} spoke ${s} is "${mod.trim()}", expected "${SPOKES[s]}" — the wheels no longer come in angular order`);
+    const src = `assets/stargo-product/${TILES[LAYOUT[w][s]]}.webp`;
+    return `<div class="ro-home-header-img-wrap${mod}">${img.replace(/ (?:srcset|sizes)="[^"]*"/g, '').replace(/src="[^"]*"/, `src="${src}"`)}</div>`;
+  });
+  if (n !== 24) throw new Error(`ro-gallery: substituted ${n} of 24 tiles`);
+  if (/assets\/rototo\//.test(html)) throw new Error('ro-gallery: a donor photograph survived the substitution');
+  if ((html.match(/ sizes="[^"]*"/g) ?? []).length || (html.match(/ srcset="[^"]*"/g) ?? []).length) {
+    throw new Error('ro-gallery: a donor srcset/sizes hint survived');
+  }
+  if ((html.match(/class="ro-home-header-img"/g) ?? []).length !== 24) {
+    throw new Error('ro-gallery: a tile lost its `ro-home-header-img` class, which is what sizes it');
+  }
+
+  /* THE SIZE THE BROWSER IS TOLD TO FETCH — now decided in one place, with
+     every other picture on the site. tools/editorial-images.mjs looks each
+     product image up in its manifest and writes back `width`, `height`,
+     `srcset` (480 / 768 / 1024 / 1268w) and a `sizes` it picks by class: the
+     `ro-home-header-img` tiles get `sizes="224px"`, their own box, instead of a
+     viewport fraction. That is why the class is asserted above, and it is what
+     makes the tile fetch the 480-wide plate rather than the 1268-wide original.
+
+     224px is 14rem, and the rem is rototo's own `--layout--size-font-base`
+     (`clamp(768px,100vw,1920px) / (1440/unit)`, `unit` stepping 24/16/15/14 at
+     991/1280/1440/1920). Evaluated at the top of each range that expression is
+     constant over, the tile is 231px ≤991, 224px ≤1439, 280px ≤1919 and 261px
+     from 1920 — measured on the built page it is 224.0px at 1440 and 261.3px at
+     1920, which is those numbers. One hint has to serve all four, and 224px is
+     it: every one of them selects the 480 plate, and 480 is wider than the
+     widest the tile ever gets, so the picture is never resampled up at 1x. On a
+     2x screen at 1920 the true box would ask for the 768 plate and gets the 480
+     — a tile 261px across, behind the hero's own copy, on a wheel that is
+     turning. The whole gallery is 24 of these; the 480s are ~25 KB each where
+     the originals are ~90 KB. Below 768 the block is `display: none` and the
+     tiles are never laid out at all. */
 
   /* ctx is unused: this block changes no words because it has none. Touch it
      so the contract in tools/blocks/README.md stays visible at the call site. */

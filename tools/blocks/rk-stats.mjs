@@ -236,8 +236,13 @@ export function render(frag, ctx) {
   const img = IMG.exec(html);
   if (!img) throw new Error('rk-stats: renok\'s branding photograph is not where the donor put it');
   if ((html.match(/<img /g) ?? []).length !== 1) throw new Error('rk-stats: the band should hold one photograph');
+  /* `CAP_V6A.quote.image` is an editorial id, or — since the owner's handoff of
+     2026-09-18 — a path written out, for one of their own product screenshots.
+     Either kind goes through tools/editorial-images.mjs for its alt, its size
+     and its variants; only the folder differs. */
+  const src = Q.image.startsWith('assets/') ? Q.image : art(Q.image);
   html = html.replace(IMG, img[0]
-    .replace(/src="[^"]*"/, `src="${art(Q.image)}"`)
+    .replace(/src="[^"]*"/, `src="${src}"`)
     .replace(/\s(?:srcset|sizes)="[^"]*"/g, '')
     .replace('alt="Home-one-branding-identity"', `alt="${escapeHtml(t(story.label))}"`));
   if (html.includes('home-one-branding-identity')) throw new Error('rk-stats: a variant of renok\'s photograph survived the swap');

@@ -1,0 +1,288 @@
+{
+  "note": "Written by tools/blog-covers.mjs. Each cover file, the recipe it was made with and the sha256 of the bytes that recipe produced. A rerun rebuilds only the files whose recipe or bytes no longer match.",
+  "generator": "tools/blog-covers.mjs + tools/blog-covers.py (Pillow)",
+  "files": {
+    "assets/blog/stargo-work-visual-guide.webp": {
+      "recipe": {
+        "source": "assets/stargo-product/sw004-experts-library.webp",
+        "mode": "contain",
+        "canvas": [
+          1200,
+          800
+        ],
+        "pad": 0.02,
+        "plate": "#021d4d",
+        "quality": 82
+      },
+      "sha256": "b0d85a023bf93b92941462d234d6bcf0ae1c3aa122aadb05a2ceb3a7220a2acb"
+    },
+    "assets/blog/stargo-work-visual-guide-800.webp": {
+      "recipe": {
+        "source": "assets/stargo-product/sw004-experts-library.webp",
+        "mode": "contain",
+        "canvas": [
+          800,
+          533
+        ],
+        "pad": 0.02,
+        "plate": "#021d4d",
+        "quality": 82
+      },
+      "sha256": "1da4c7d056abf05e1bedf0d3925f9f731ca4c8aa031a5d2ab45f82b54b4e06bf"
+    },
+    "assets/blog/stargo-work-visual-guide-500.webp": {
+      "recipe": {
+        "source": "assets/stargo-product/sw004-experts-library.webp",
+        "mode": "contain",
+        "canvas": [
+          500,
+          333
+        ],
+        "pad": 0.02,
+        "plate": "#021d4d",
+        "quality": 82
+      },
+      "sha256": "a33ce5bac7867fee1048286152d2fcf95d7c02d3e48a521d5802c5eccad1990d"
+    },
+    "assets/blog/start-with-one-workflow.webp": {
+      "recipe": {
+        "source": "assets/stargo-product/sw008-workflow-library.webp",
+        "mode": "contain",
+        "canvas": [
+          1200,
+          800
+        ],
+        "pad": 0.02,
+        "plate": "#001135",
+        "quality": 82
+      },
+      "sha256": "ba813d6b18a3e2acb415d4a0b62d150bb1d13ad24cc8d7650106cddd8a7f3f50"
+    },
+    "assets/blog/start-with-one-workflow-800.webp": {
+      "recipe": {
+        "source": "assets/stargo-product/sw008-workflow-library.webp",
+        "mode": "contain",
+        "canvas": [
+          800,
+          533
+        ],
+        "pad": 0.02,
+        "plate": "#001135",
+        "quality": 82
+      },
+      "sha256": "ad8b6f7d9e4cfedba6760315f4bed56a251d5a7440c7ad8985244d969bcfad40"
+    },
+    "assets/blog/start-with-one-workflow-500.webp": {
+      "recipe": {
+        "source": "assets/stargo-product/sw008-workflow-library.webp",
+        "mode": "contain",
+        "canvas": [
+          500,
+          333
+        ],
+        "pad": 0.02,
+        "plate": "#001135",
+        "quality": 82
+      },
+      "sha256": "5a398dfbc24e7c079d06ea31325703d5d25eed0f4424be595088df591fdc5386"
+    },
+    "assets/blog/from-inquiry-to-quote.webp": {
+      "recipe": {
+        "source": "assets/stargo-product/sw028-sales-desk-inquiry-reply.webp",
+        "mode": "contain",
+        "canvas": [
+          1200,
+          800
+        ],
+        "pad": 0.02,
+        "plate": "#e8f1fe",
+        "quality": 82
+      },
+      "sha256": "5230511c24bdda558ed35a35963aa7f8794574f3774738bd53a26447387ed571"
+    },
+    "assets/blog/from-inquiry-to-quote-800.webp": {
+      "recipe": {
+        "source": "assets/stargo-product/sw028-sales-desk-inquiry-reply.webp",
+        "mode": "contain",
+        "canvas": [
+          800,
+          533
+        ],
+        "pad": 0.02,
+        "plate": "#e8f1fe",
+        "quality": 82
+      },
+      "sha256": "ecb9800aaed9f24d00cc8201c2efa9ef731e052c100e613d4735632a4b9dacee"
+    },
+    "assets/blog/from-inquiry-to-quote-500.webp": {
+      "recipe": {
+        "source": "assets/stargo-product/sw028-sales-desk-inquiry-reply.webp",
+        "mode": "contain",
+        "canvas": [
+          500,
+          333
+        ],
+        "pad": 0.02,
+        "plate": "#e8f1fe",
+        "quality": 82
+      },
+      "sha256": "48e57fb758966ba19313c2148b9fffd02661ee0fe7490498b848d9c1ae9dbd36"
+    },
+    "assets/blog/approval-gates-for-ai-in-trade.webp": {
+      "recipe": {
+        "source": "assets/stargo-editorial/os-cockpit.webp",
+        "mode": "cover",
+        "canvas": [
+          1200,
+          800
+        ],
+        "quality": 82
+      },
+      "sha256": "ee27322ef031067cdca5f2eee6fb7a7c04675ddb4cfd44ac3c9ec41ea7010fa6"
+    },
+    "assets/blog/approval-gates-for-ai-in-trade-800.webp": {
+      "recipe": {
+        "source": "assets/stargo-editorial/os-cockpit.webp",
+        "mode": "cover",
+        "canvas": [
+          800,
+          533
+        ],
+        "quality": 82
+      },
+      "sha256": "f9bc281d4498024fafe4017896da2fa441eda6f3d6dc99ba38e2c179c41055c0"
+    },
+    "assets/blog/approval-gates-for-ai-in-trade-500.webp": {
+      "recipe": {
+        "source": "assets/stargo-editorial/os-cockpit.webp",
+        "mode": "cover",
+        "canvas": [
+          500,
+          333
+        ],
+        "quality": 82
+      },
+      "sha256": "9c750442eecfe5fe1ed38d5a2100db28c0b5cc823315aa1b3ef546c9d641f844"
+    },
+    "assets/blog/ai-operating-system-for-global-trade.webp": {
+      "recipe": {
+        "source": "assets/stargo-product/sw003-ai-workspace-home.webp",
+        "mode": "contain",
+        "canvas": [
+          1200,
+          800
+        ],
+        "pad": 0.02,
+        "plate": "#0e2b5a",
+        "quality": 82
+      },
+      "sha256": "ca0e47d814b9aae4e0d130723a954d4db359b127960161b6496926536d9ef2f2"
+    },
+    "assets/blog/ai-operating-system-for-global-trade-800.webp": {
+      "recipe": {
+        "source": "assets/stargo-product/sw003-ai-workspace-home.webp",
+        "mode": "contain",
+        "canvas": [
+          800,
+          533
+        ],
+        "pad": 0.02,
+        "plate": "#0e2b5a",
+        "quality": 82
+      },
+      "sha256": "44f587055dee4fc66bbb527a8de7395cde27e11b656d8ec3ee010de33e5e8423"
+    },
+    "assets/blog/ai-operating-system-for-global-trade-500.webp": {
+      "recipe": {
+        "source": "assets/stargo-product/sw003-ai-workspace-home.webp",
+        "mode": "contain",
+        "canvas": [
+          500,
+          333
+        ],
+        "pad": 0.02,
+        "plate": "#0e2b5a",
+        "quality": 82
+      },
+      "sha256": "16041ab57b3faba44a960775c3c77981201f949e8997ab363437cb9c502baf8c"
+    },
+    "assets/blog/288-ai-employees-not-288-chatbots.webp": {
+      "recipe": {
+        "source": "assets/stargo-product/sw006-expert-teams.webp",
+        "mode": "contain",
+        "canvas": [
+          1200,
+          800
+        ],
+        "pad": 0.02,
+        "plate": "#00173c",
+        "quality": 82
+      },
+      "sha256": "4f58a9826fd23b7d9c54d6b7dfe4f9c67c6169bd8aac3c894d5c864c09f09999"
+    },
+    "assets/blog/288-ai-employees-not-288-chatbots-800.webp": {
+      "recipe": {
+        "source": "assets/stargo-product/sw006-expert-teams.webp",
+        "mode": "contain",
+        "canvas": [
+          800,
+          533
+        ],
+        "pad": 0.02,
+        "plate": "#00173c",
+        "quality": 82
+      },
+      "sha256": "089e7362b5c400eeb50a58f9dbf0b904ceb46ab1b4600f6da8e277bda23e25f4"
+    },
+    "assets/blog/288-ai-employees-not-288-chatbots-500.webp": {
+      "recipe": {
+        "source": "assets/stargo-product/sw006-expert-teams.webp",
+        "mode": "contain",
+        "canvas": [
+          500,
+          333
+        ],
+        "pad": 0.02,
+        "plate": "#00173c",
+        "quality": 82
+      },
+      "sha256": "8e62a05a2e9e8f9b34ff7ee38a4f1951bce59136aa15c01b4db91a6896800c00"
+    },
+    "assets/blog/enterprise-ontology-explained.webp": {
+      "recipe": {
+        "source": "assets/stargo-editorial/brand-ontology.webp",
+        "mode": "cover",
+        "canvas": [
+          1200,
+          800
+        ],
+        "quality": 82
+      },
+      "sha256": "59742f841400a2c3a0801e9f969382c93afbe89c43deb853bee860b3e76e20eb"
+    },
+    "assets/blog/enterprise-ontology-explained-800.webp": {
+      "recipe": {
+        "source": "assets/stargo-editorial/brand-ontology.webp",
+        "mode": "cover",
+        "canvas": [
+          800,
+          533
+        ],
+        "quality": 82
+      },
+      "sha256": "0a9ade1a146718448fe5e51b373a232268f671353314ab932877a234defb080c"
+    },
+    "assets/blog/enterprise-ontology-explained-500.webp": {
+      "recipe": {
+        "source": "assets/stargo-editorial/brand-ontology.webp",
+        "mode": "cover",
+        "canvas": [
+          500,
+          333
+        ],
+        "quality": 82
+      },
+      "sha256": "d88a973738b0c1affe706ab39852d52828dae56c493d19e2125b3bafae8c3722"
+    }
+  }
+}
