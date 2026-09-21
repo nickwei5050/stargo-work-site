@@ -1,5 +1,6 @@
 /**
- * 一个外贸闭环 / One closed loop — the title card that opens the loop section.
+ * 一条业务主线 / One business journey — the title card that opens the nine-step
+ * section (HOME_LOOP_TABLE.title).
  *
  * Donor: renok's "Award winning /Studio" card at the top of index.html's
  * `.rt-wave-vector-main-wrapper.rt-v2` section. Three centred lines of
@@ -45,9 +46,10 @@
  * so a single mirrored file could not carry both; the donor's originals are
  * still mirrored into assets/renok by try-block and left untouched.
  *
- * The labels are the loop's first and last stages — CAP_JUMPS[0] 获客/Buyers on
- * the chip beside the first line, CAP_JUMPS[3] 订单/Orders beside the last — the
- * two ends that "closed loop" joins. The donor has two chips, so two labels.
+ * The labels are the journey's two ends — CAP_JUMPS[0] 获客/Prospects on the
+ * chip beside the first line, CAP_JUMPS[3] 经营/Operations beside the last —
+ * the front and the back office the one business journey joins. The donor has
+ * two chips, so two labels.
  */
 import { setText } from '../block-lib.mjs';
 
@@ -128,18 +130,24 @@ export function render(frag, ctx) {
 
   /* Three slots, three lines. The donor breaks "Award / winning / Studio" and
      sets the last line in the italic serif, which has no CJK glyphs: the accent
-     therefore stays a Latin fragment on both pages, as the hero's already does
+     therefore stays out of Chinese on both pages, as the hero's already does
      (CAPABILITY_SHOWCASE.heroAccent). English: the title's own last word behind
-     the donor's slash. Chinese: the title split at its phrase break — 一个外贸 /
-     闭环 — and the same "/loop" for the accent, so the two pages share one mark. */
+     the donor's slash ("One / business / /journey"). Chinese: the title split
+     at its phrase break — 一条业务 / 主线, the same four-and-two shape the old
+     一个外贸 / 闭环 had — and, since an English word has no place on the
+     Chinese page, the accent is the step count the rows below number up to
+     ("/09"): digits are the one thing the serif draws that reads the same in
+     both languages. */
+  const steps = C.HOME_LOOP_TABLE.rows?.length;
+  if (steps !== 9) throw new Error(`rk-award: the accent counts the loop's nine steps, found ${steps}`);
   const lines = lang === 'zh'
-    ? ['一个外贸', '闭环', '/loop']
+    ? ['一条业务', '主线', `/${String(steps).padStart(2, '0')}`]
     : (() => {
         const words = title.split(' ');
         if (words.length !== 3) throw new Error(`rk-award: "${title}" does not split into the donor's three lines`);
         return [words[0], words[1], `/${words[2]}`];
       })();
-  if (lang === 'zh' && title !== '一个外贸闭环') throw new Error(`rk-award: the Chinese title changed to "${title}"; re-split it`);
+  if (lang === 'zh' && title !== '一条业务主线') throw new Error(`rk-award: the Chinese title changed to "${title}"; re-split it`);
 
   let html = frag;
   /* The donor's lines end in a `<br/>` inside the div (lines 1 and 2); it is

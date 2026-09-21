@@ -10,14 +10,14 @@
   var WA = '+86 187 7512 7878';
   var zh = (document.documentElement.getAttribute('lang') || '').indexOf('zh') === 0;
   var T = zh ? {
-    sent: '已收到，我们会在一个工作日内联系你。',
+    sent: '已收到你的演示需求，我们会根据提交的联系方式与你沟通。',   // V5 P07: no response time is promised
     sentNews: '订阅申请已收到。',
     fallback: '暂时无法确认提交结果。请重试，或点击下方邮件链接联系 ' + TO + '；WhatsApp ' + WA + '。',
     emailLink: '通过邮件发送',
     invalid: '请填写姓名和有效的邮箱地址。',
     busy: '发送中…',
   } : {
-    sent: 'Received. We will be in touch within one working day.',
+    sent: 'Your demo request has been received. We will follow up using the contact details provided.',
     sentNews: 'Your subscription request has been received.',
     fallback: 'Submission confirmation is unavailable right now. Retry, or use the email link below to contact ' + TO + '; WhatsApp ' + WA + '.',
     emailLink: 'Send by email',

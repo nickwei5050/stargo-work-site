@@ -142,3 +142,86 @@ export function setLink(html, label, { href, text, all = false } = {}) {
 export function escapeHtml(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
+
+/* ---- Chinese line breaks between words ------------------------------------
+   A browser may break Chinese text between any two characters, so a heading
+   narrower than its sentence can split a word across lines (「询盘」 as
+   「询 / 盘」). These helpers cut a Chinese string into pieces that a line must
+   not break inside, so a page can allow breaks only between them:
+
+     zhWbr(text)   escaped text with <wbr> between the pieces — for text laid
+                   out as one run and styled `word-break: keep-all` (which
+                   removes every other break between characters);
+     zhKeep(text)  escaped text with each piece of two or more characters in
+                   <span class="zh-keep">, styled `white-space: nowrap` — for
+                   text a script splits into one box per character, where
+                   keep-all cannot reach.
+
+   The pieces are ICU's word segments (Intl.Segmenter, built into Node), with
+   two repairs. The dictionary leaves some two-character trade words as two
+   single characters (询|盘, 获|客, 商|机, 营|销, 账|号, 逐|项), so a single
+   character that is not a function word of its own joins the single
+   character after it, or else the word before it, or else the word after it.
+   Punctuation stays with the piece it closes (、，：…) or opens (「（…), and
+   so do the structural particles 的 地 得 之 了 着 过, which a line should not
+   start with. Spaces stay spaces: they are break points already. A piece is
+   a word or a short phrase, so it always fits a phone's line. */
+const ZH_CHAR = /^\p{Script=Han}$/u;
+const ZH_ANY = /\p{Script=Han}/u;
+/** Characters that are words on their own; a line may break before or after them. */
+const ZH_FREE = new Set([...'与和及或并而在于按把被对从向往给让将由为以就都也还又再更最很不仍已']);
+/** Particles that belong to the word before them. */
+const ZH_TAIL = new Set([...'的地得之了着过']);
+const ZH_CLOSE = /^[、，。；：！？）》」』〉】”’…·—%]+$/;
+const ZH_OPEN = /^[（《「『〈【“‘]+$/;
+const ZH_TRIM = /^[（《「『〈【“‘]+|[、，。；：！？）》」』〉】”’…·—%]+$/g;
+let zhSegmenter = null;
+
+export function zhPieces(text) {
+  const src = String(text);
+  zhSegmenter ??= new Intl.Segmenter('zh-CN', { granularity: 'word' });
+  const raw = [...zhSegmenter.segment(src)].map((s) => s.segment);
+  const space = (p) => /^\s+$/.test(p);
+  /* punctuation onto its neighbour */
+  const glued = [];
+  let open = '';
+  for (const p of raw) {
+    if (ZH_OPEN.test(p)) { open += p; continue; }
+    const prev = glued[glued.length - 1];
+    if (ZH_CLOSE.test(p) && glued.length && !space(prev)) { glued[glued.length - 1] += p; continue; }
+    /* 的 on its own, or joined by the dictionary to a locative (建设|中的) */
+    const tail = ZH_TAIL.has(p) || /^[中上下里内外前后间][的地得之]$/u.test(p);
+    if (tail && glued.length && !space(prev) && ZH_ANY.test(prev) && !ZH_CLOSE.test(prev.slice(-1))) { glued[glued.length - 1] += p; continue; }
+    glued.push(open + p);
+    open = '';
+  }
+  if (open) glued.push(open);
+  /* lone characters onto a neighbouring word */
+  const bare = (p) => p.replace(ZH_TRIM, '');
+  const closed = (p) => /[、，。；：！？）》」』〉】”’…·—%]$/.test(p);
+  const single = (p) => p !== undefined && ZH_CHAR.test(bare(p)) && !ZH_FREE.has(bare(p));
+  const word = (p) => p !== undefined && !space(p) && ZH_ANY.test(p) && !ZH_FREE.has(bare(p));
+  const out = [];
+  for (let i = 0; i < glued.length; i++) {
+    const p = glued[i];
+    const next = glued[i + 1];
+    const prev = out[out.length - 1];
+    if (!single(p)) out.push(p);
+    else if (!closed(p) && single(next)) { out.push(p + next); i++; }
+    else if (word(prev) && !closed(prev)) out[out.length - 1] = prev + p;
+    else if (!closed(p) && word(next)) glued[i + 1] = p + next;
+    else out.push(p);
+  }
+  if (out.join('') !== src) throw new Error(`zhPieces changed the text of "${src}"`);
+  return out;
+}
+
+export function zhWbr(text) {
+  const pieces = zhPieces(text);
+  const space = (p) => /^\s+$/.test(p);
+  return pieces.map((p, i) => (i && !space(p) && !space(pieces[i - 1]) ? '<wbr>' : '') + escapeHtml(p)).join('');
+}
+
+export function zhKeep(text, cls = 'zh-keep') {
+  return zhPieces(text).map((p) => (/^\s+$/.test(p) || [...p].length < 2 ? escapeHtml(p) : `<span class="${cls}">${escapeHtml(p)}</span>`)).join('');
+}

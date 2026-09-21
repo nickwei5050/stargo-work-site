@@ -8,7 +8,7 @@
  * really covered the site:
  *
  *   - verify-site's report.json exists and holds one entry per committed page
- *     (all 38: every root page, every article, and the English mirror of both),
+ *     (all 40: every root page, every article, and the English mirror of both),
  *     each with HTTP 200 and no recorded error;
  *   - verify-integrity's results exist, cover every page, and all pass;
  *   - verify-interactions' results exist, are not empty, and all pass.

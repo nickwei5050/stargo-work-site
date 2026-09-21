@@ -14,7 +14,7 @@ try{for(const lang of['','en/'])for(const width of[390,1440]){
    assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
    if(width===390){const menu=p.locator('.menu-button');await menu.click();await p.waitForTimeout(550);assert.equal(await menu.getAttribute('aria-expanded'),'true');await p.keyboard.press('Escape');await p.waitForTimeout(500);assert.equal(await menu.getAttribute('aria-expanded'),'false');}
    if(name==='pricing'){await p.locator('.w-tab-link').first().focus();await p.keyboard.press('End');await p.waitForTimeout(650);assert.equal(await p.locator('.w-tab-link').nth(1).getAttribute('aria-selected'),'true');}
-   if(name==='contact'){await p.locator('#email-form').evaluate(e=>e.requestSubmit());assert(await p.locator('#email-form .stargo-form-note').isVisible());}
+   if(name==='contact'){await p.locator('form[data-stargo-form="contact"]').evaluate(e=>e.requestSubmit());assert(await p.locator('form[data-stargo-form="contact"] .stargo-form-note').isVisible());}
    assert.deepEqual(errors,[]);results.push({id,pass:true});console.log('PASS Edge',id);
   }catch(e){results.push({id,pass:false,error:e.message});console.log('FAIL Edge',id,e.message);}
  }await p.close();

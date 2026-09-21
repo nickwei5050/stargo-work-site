@@ -112,7 +112,7 @@ const server = createServer((reqst, res) => {
       headers['content-length'] = String(end - start + 1);
       res.writeHead(206, headers);
       if (method === 'HEAD') return res.end();
-      return createReadStream(hit.full, { start, end }).pipe(res);
+      return send(createReadStream(hit.full, { start, end }), res);
     }
     res.writeHead(416, { ...headers, 'content-range': `bytes */${hit.size}` });
     return res.end();
@@ -121,10 +121,52 @@ const server = createServer((reqst, res) => {
   headers['content-length'] = String(hit.size);
   res.writeHead(200, headers);
   if (method === 'HEAD') return res.end();
-  createReadStream(hit.full).pipe(res);
+  send(createReadStream(hit.full), res);
 });
 
+/**
+ * Pipe a file to the response, and survive the client hanging up.
+ *
+ * A browser abandons requests all the time — a <video> that has buffered
+ * enough, a page navigated away from mid-download, a range request the media
+ * element no longer wants. When it does, the read stream and the response both
+ * emit `error` (ECONNRESET / EPIPE). An unhandled `error` on a stream is an
+ * uncaught exception, and node exits the process.
+ *
+ * That is not theoretical: it is what kept killing this server part-way
+ * through tools/verify-restore.mjs. The run would stop at 14, 30 or 87 of ~300
+ * checks with no failure reported and no stack printed, which reads exactly
+ * like a finished run that happened to be short — the most expensive kind of
+ * wrong, because the missing checks look like passing ones. The verifier now
+ * re-probes the server after it finishes for the same reason.
+ *
+ * A client that has gone away is not an error this server can do anything
+ * about, so it is swallowed and the stream destroyed; anything else is logged
+ * and the response ended, but the process stays up either way. A test server
+ * that dies under its own test suite is worse than a slow one.
+ */
+function send(stream, res) {
+  const stop = (e) => {
+    stream.destroy();
+    if (e && !/ECONNRESET|EPIPE|ERR_STREAM_PREMATURE_CLOSE/.test(e.code || e.message || '')) {
+      console.error(`serve: ${e.message}`);
+    }
+    if (!res.writableEnded) res.end();
+  };
+  stream.on('error', stop);
+  res.on('error', stop);
+  res.on('close', () => stream.destroy());
+  return stream.pipe(res);
+}
+
 server.on('error', (e) => { console.error(`serve: ${e.message}`); process.exit(1); });
+/* Last resort. Nothing above should throw asynchronously any more, but this
+   server exists to be hammered by a browser for twenty minutes at a time, and
+   staying up on an unexpected socket error is always the right call for it. */
+process.on('uncaughtException', (e) => {
+  if (/ECONNRESET|EPIPE|ERR_STREAM_PREMATURE_CLOSE/.test(e.code || e.message || '')) return;
+  console.error(`serve: uncaught ${e.stack || e.message}`);
+});
 server.listen(PORT, HOST, () => console.log(`serving ${ROOT} at http://${HOST}:${PORT}/`));
 
 /* CI stops this with SIGTERM/SIGINT; exit without a stack trace. */

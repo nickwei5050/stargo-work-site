@@ -1,0 +1,426 @@
+/* rk-price-compare — the hand-written rules, and only the hand-written rules.
+
+   Everything is scoped under .rk-price-compare, exactly as the extractor scopes
+   its own output, and there are four things here and nothing else:
+
+     1. renok's `body` declarations, which never travel with a cut section;
+     2. the rule Webflow wrote against a generated node id, which is not a class
+        and so is not extracted either;
+     3. the one declaration in renok that counts its plans instead of describing
+        them, re-stated with this site's count;
+     4. below 768, where renok's own answer counts its plans too and cannot be
+        re-stated — five priced columns do not fit a phone at any count — the
+        same chart given the presentation a phone can read: renok's six cells per
+        row kept in six real tracks, the label column pinned, the row scrolled
+        sideways inside the chart. 4 exists because 3 stops at 768 and renok's
+        touch grid collapsed underneath it.
+
+   Every number below is renok's own — quoted from
+   tools/templates/renok/css/renok.app.shared.b851cf614.css, or measured on the
+   rendered block in a headless Chromium at renok's own sizes in renok's own
+   Inter Tight (css/donor-fonts.css → assets/fonts/donor), at a 1440 viewport
+   with no scrollbar unless another width is named; section 4's numbers are all
+   measured at 767 and below, and say so. Nothing here invents a colour, a size,
+   a spacing or a border.
+
+   THERE IS NO MOTION IN THIS FILE, and none is missing. Every reveal in the cut
+   is IX2: eleven SCROLL_INTO_VIEW events, one per chart row plus one on the
+   chart itself, running rk-a-24 / rk-a-25 / rk-a-28 / rk-a-89 … rk-a-94 at
+   delays from 100ms to 1000ms — and tools/donor-lib.mjs carries IX2 (checked on
+   the extraction: 11 events, 9 action lists). renok's pricing.html authors no
+   ix3 timeline over this section and loads no GSAP, and the
+   `html.w-mod-js:not(.w-mod-ix)` pre-init rules in its <head> only restate, for
+   two mobile breakpoints, the same translate/opacity/blur that the inline
+   `style` attributes on those rows already carry — and those attributes travel
+   with the cut. */
+
+/* ---------------------------------------------- 1. renok's `body` rule -- */
+
+/* renok keeps its typeface, its size, its leading and its text colour on `body`
+   (…b851cf614.css:2147), and a `body` rule does not travel with a cut section —
+   the extractor carries element rules and class rules, and the only `body`
+   declarations it takes are the custom properties a donor re-tunes per
+   breakpoint. Three of this block's six kinds of text are drawn by inheritance
+   alone, and would otherwise come out in whatever the host page puts on its own
+   body:
+
+     .rt-text-color-premium-grey   all 19 feature labels down the left column.
+                                   The rule sets a colour and nothing else.
+     the period under a price      `<div>Per month</div>` carries no class at
+                                   all: family, size, leading and colour all
+                                   come from `body`.
+     a value cell                  since 2026-09-15 the six quantity rows put
+                                   words where the donor put its tick glyph,
+                                   inside the donor's own `w-layout-hflex`,
+                                   which carries no type class either. So this
+                                   rule is what draws them, at renok's own body
+                                   size — the same inheritance as the period
+                                   under a price.
+
+   The other three set their own type: `.rt-text-style-h5` (the left column's
+   header) and `.rt-text-style-h6` (the plan names) are complete type rules, and
+   the prices are an `h2`, which the extractor carries as an element rule.
+
+   These are the six declarations of renok's own `body` rule, through renok's
+   own tokens — which the extractor already writes onto this same scope root —
+   and nothing more. The inherited `color` is renok's white, which is what this
+   chart is drawn in on renok's own page. Same restoration every renok block in
+   this directory makes, for the same reason. */
+.rk-price-compare {
+  font-family: var(--_font-family---primary-font);
+  color: var(--white);
+  font-size: var(--_font-details---font-size--body);
+  line-height: var(--_font-details---font-line-height--body);
+  font-weight: var(--_font-details---font-weight--regular);
+  letter-spacing: var(--_font-details---font-letter-spacing--body);
+}
+
+/* -------------------------------------- 2. the rules Webflow wrote by id -- */
+
+/* Webflow places the chart's left-hand cells with two rules written against
+   generated node ids — `#w-node-cacecf34-…-532bb1, …532bcd, …532bdd, …532bed,
+   …532bfd, …532c0d, …532c1d, …532c2d, …532c3d` at :11327 and again at :11434,
+   one id per `.rt-chart-left-col` — and tools/donor-lib.mjs carries class rules
+   and element rules, not id rules. Neither travels with the cut, so both are
+   restated here. This is exactly what tools/blocks/README.md keeps this file
+   for: "rules Webflow wrote against a generated node id (#w-node-…), which is
+   not a class and so is not extracted".
+
+   They are restated against `.rt-chart-left-col`, the class all nine of those
+   ids sit on, rather than against the ids themselves: this chart draws 19
+   feature rows where renok has 8, so its ids cannot stay unique and
+   tools/blocks/rk-price-compare.mjs drops them (see `dropNodeId` there, and
+   tools/verify-integrity.mjs:16, which rejects a duplicate id outright). The
+   declarations are renok's own, verbatim.
+
+   Without the first of them every feature label would sit centred in its track
+   instead of against the track's left edge — which is the one thing that makes
+   the left column read as a column rather than as a caption. */
+.rk-price-compare .rk-rt-chart-left-col {
+  place-self: center start;
+}
+
+/* renok's own mobile treatment for these two cells — `grid-area: span 1 / span 4`
+   on the label (:11430) and on the empty top-left cell, so the label stops being
+   a column and becomes a full-width centred line above the plan cells — USED TO
+   BE RESTATED HERE, and was removed on 2026-09-16. It is renok's answer to four
+   plan cells in renok's own four tracks (:10258); with five it is the direct
+   cause of the collapse section 4 describes, and section 4 replaces it. The
+   `span 4` is gone rather than re-tuned to `span 5`, because below 768 this
+   chart no longer stacks the label over the row at all: it keeps the label as a
+   real column and pins it. Nothing else in renok's ≤767 block is touched. */
+
+/* --------------------------- 3. five plan columns in a grid drawn for four -- */
+
+/* `.rt-pricing-chart-rows { grid-template-columns: 1.2fr 1fr 1fr 1fr 1fr }`
+   (:5213) is the one rule in renok that counts its plans instead of describing
+   them: a label column and one track per plan, because renok sells four.
+   PRICING sells five, tools/blocks/rk-price-compare.mjs emits five columns from
+   renok's own units, and six children in five tracks wrap — measured, the fifth
+   plan drops onto a second line underneath the label column, in every row of
+   the chart at once, and every row doubles in height (141px → 281px).
+
+   So the count is re-stated, and only the count: one more `1fr`, renok's own
+   1.2 : 1 ratio between the label column and a plan column untouched, and
+   nothing at all about how a single column is drawn.
+
+     measured at a 1440 viewport, chart 1410px wide
+       renok, four plans    label 325.4    plan 271.2 × 4
+       here,  five plans    label 272.9    plan 227.4 × 5
+
+   Which leaves 207.4px of content in a plan column (less 2 × .625rem of
+   `.rt-chart-columns` padding) and 262.9px in the label column (less .625rem of
+   `.rt-chart-left-col` padding-right). Every slot holds its words there: the
+   widest price is ¥40,000 at 151.0px, the widest plan name "Global Acquisition"
+   at 156.3px, the widest period "/ first year total" at 117.9px and the header
+   "Capability" at 94.5px. The feature labels wrap — at most two lines in Chinese
+   and three in English inside 262.9px — and never drive a row: every feature row
+   measured 141px in both languages, and the chart 3292px over its 22 rows.
+
+   WHAT 2026-09-15 PUT IN A PLAN CELL, AND WHAT IT DID NOT MOVE. Six of the rows
+   now carry words where the tick glyph stood (see rk-price-compare.mjs), so the
+   chart is 19 feature rows instead of 22 and a plan cell has to hold a short
+   string on six of them. Every box above is renok's own and none of them moved;
+   the block was not rebuilt for that change, so the lines below are ARITHMETIC
+   from the widths already recorded here, not a fresh headless run:
+
+     the widest value cell   zh 「中英文 + 3 个语种」, ten characters — narrower than
+                             the ¥40,000 price (151.0px) the same column already
+                             holds on one line.
+                             en "Chinese and English + 3 languages", 33
+                             characters — wider than 207.4px, so it wraps to two
+                             lines, against the three that renok's own
+                             "Unlimited e-mail notification" takes in a narrower
+                             slot. Every other value cell is one short line
+                             (3 / 20 / 20 个 / 中英文 / 18 种语言 / 定制 / Custom).
+
+   Two wrapped lines of body type are about 52px inside a cell whose padding is
+   2 × 1.5625rem, well under the 141px a row already measures for its three-line
+   left-hand label, so no value cell drives a row and the row height stands where
+   renok set it. Nothing about a cell's own drawing changed: same element, same
+   classes, same padding, same borders, same min-height.
+
+   FROM 768px UP, and that floor is measured rather than guessed. Forced on at
+   every width, six tracks hold until 564px in English and 504px in Chinese —
+   `1fr` floors at min-content, and a price cell's min-content is its h2 plus
+   2 × .625rem of padding — so at its 768px floor the rule has 204px of margin
+   and can never reach a width it cannot hold. Measured across 1920, 1440, 1280,
+   1100, 1024, 992, 991, 900, 860, 800 and 768 in both languages: six tracks on
+   one line in every row, nothing clipped, and no horizontal scroll on the
+   document.
+
+   ONE THING RE-MEASURED AT 768 ON 2026-09-16 AND LEFT ALONE, because it belongs
+   to this rule and not to section 4. `1fr` is `minmax(auto, 1fr)` and a price
+   cell's min-content — its h2 or its period, plus 2 × .625rem — is large enough
+   at the bottom of this rule's range to floor the tracks, so the PRICE row comes
+   out on a different set of tracks from every other row. Measured on the built
+   page, track starts across the row, header against price row:
+
+     @768  zh  0/142.8/261.9/380.9/499.9/619   vs  0/119.1/244/374.8/506.5/638.7
+           en  the same header                 vs  0/96.1/220.9/351.8/483.5/615.7
+     @800  zh drift 12.4px      en drift 20.9px
+     @830  zh drift 5.3px       en drift 5.3px
+     @860  zh 0px               en 0px         — and 0px at 900, 950, 992, 1024.
+
+   So the worst case is 23.7px in Chinese and 46.7px in English, both at 768, and
+   the register closes by 860. The prices stay in order, on one line, unclipped,
+   each still overlapping its own plan name; what they do not do between 768 and
+   ~850 is line up exactly with it. Untouched here: the only ways to move that
+   floor are renok's own 1.2 : 1 ratio, renok's own h2 size, or a shorter price
+   string in tools/copy.mjs, and by tools/blocks/README.md all three are reported
+   rather than restyled. It predates section 4 and section 4 cannot reach it —
+   `@media (max-width: 767px)` does not apply at 768.
+
+   768 is also where renok stops describing this chart the way it describes it
+   above: at 767 it re-draws the whole thing for touch (four tracks, no cell
+   borders, the label spanning the row — :10250, :10258, :11430). This rule stops
+   dead at that line and always did. What runs below it is no longer renok's
+   four-track grid: the 4 + 1 wrap that grid produces from five plan cells is the
+   collapse this block shipped until 2026-09-16, and section 4 is what runs there
+   now. Every measurement in this section is a ≥768px measurement and none of it
+   describes a phone. */
+@media screen and (min-width: 768px) {
+  .rk-price-compare .rk-rt-pricing-chart-rows {
+    grid-template-columns: 1.2fr 1fr 1fr 1fr 1fr 1fr;
+  }
+}
+
+/* --------------- 4. the same chart on a phone: a pinned label and a scroller -- */
+
+/* THE DEFECT THIS SECTION FIXES, measured on the built page before it existed,
+   at 430 and 390 on pricing.html, with the reveal walked DOWNWARDS to the foot
+   of the chart (these toggleActions reverse on upward scroll, so a frame taken
+   after scrolling back up shows a half-closed animation, not a layout):
+
+     renok draws FOUR plan cells below 768 and this chart has FIVE, so the six
+     children of every row fell 4 + 1 into renok's four tracks.
+
+       header row @430  four names on one line at x = 15 / 115 / 215 / 315, each
+                        100px wide, and 企业版 alone on a second line at x = 15 —
+                        the same x as 标准版, directly under it. At 390 the same
+                        thing at x = 15 / 105 / 195 / 285, 90px wide.
+       price row @430   three prices on the first line (x = 15 / 122 / 233, the
+                        cells 107 / 112 / 112px — min-content, because a price
+                        cell cannot go under its own h2), ¥40,000 half off the
+                        screen at x = 345 + 113, and 定制 on a third line at
+                        x = 15. Identical at 390.
+       every row        two or three lines instead of one. Row heights: the
+                        header 106.6px, the price row 199.7px, a feature row
+                        159.7px — against the 62 / 107 / 77px they measure now.
+                        The chart stood 3355.7px tall over its 21 rows.
+       the label column gone. `.rt-chart-left-col` spans the row and centres
+                        (renok :11430), so 官网核心页面 was a caption at x = 168
+                        (@430) / x = 148 (@390) above its own row instead of a
+                        column beside it, and the chart read as 21 captions.
+       clipped          「¥40,000」 laid out at [355, 448] against a 430px screen
+                        and again against a 390px one, and 「/ 首年」 at
+                        [384, 419]. The document did not scroll — main-content
+                        clips — so the price was cut, not reachable: 「¥40,00」 at
+                        430 and 「¥40」 over a bare 「/」 at 390.
+
+   WHY A SCROLLER AND NOT ONE CARD PER PLAN. Both were on the table and only one
+   is reachable from a stylesheet. This chart's markup is ROW-MAJOR: 21 sibling
+   `.rt-pricing-chart-rows` grids, each holding one `.rt-chart-left-col` and then
+   five `.rt-chart-columns` in plan order. A card per plan is COLUMN-MAJOR — it
+   needs the five cells of every row dealt out to five different cards — and no
+   CSS re-orders children across 21 separate grids. It would mean re-emitting the
+   chart in a second shape in rk-price-compare.mjs, which is what
+   tools/blocks/README.md forbids ("Change words, never structure"), and shipping
+   BOTH shapes would print all 23 values and all 19 labels on the page twice.
+   A horizontally scrollable table with a pinned label column needs no markup at
+   all, keeps the one DOM the desktop uses, and restores the two attributions the
+   defect broke: a value stays in the row its feature label names, and in the
+   column its plan name heads.
+
+   WHAT IT DRAWS, AND WHERE EVERY NUMBER COMES FROM. Every width below is the
+   LAID-OUT width of that string on the built page — a range measured over the
+   element with `white-space: nowrap`, not a canvas estimate, so renok's negative
+   letter-spacing is in it — taken at 390 in renok's own Inter Tight
+   (css/donor-fonts.css → assets/fonts/donor), where renok's own ≤767 type is in
+   force: h2 25px / 31.25px, body and value cells 14px, `.rt-text-style-h6` 16px,
+   `.rt-text-style-h5` 17px, `.rt-chart-columns` padding .625rem .625rem 1.25rem
+   with min-height 60px (:10250), `.rt-chart-left-col` padding-right .625rem
+   (:5227).
+
+     a plan track    8rem = 128px, less 2 × .625rem of renok's padding = 108px of
+                     content. The binding string is the widest price, 「¥40,000」
+                     at 92.6px — the same string on both pages, with 「¥30,000」
+                     0.3px behind it — so the smallest honest track is 112.6px
+                     and this one carries 15.4px of slack. Nothing else in the
+                     column needs more: the period is 35.6px (「/ 首年」) or 89.4px
+                     ("/ first year total"); the widest plan name is 77.6px
+                     (「全球获客版」) or 121.0px ("Global Acquisition", which fits on
+                     one line below 480 where renok drops `.rt-chart-top-tag` to
+                     .2rem of padding and leaves 121.6px (:11093), and takes two
+                     lines from 480 to 767 where that padding is .3rem and leaves
+                     118.4px, breaking at its space to "Acquisition" at 75.3px —
+                     measured, the English header row is 62px tall at 430 and
+                     87px at 767); and the widest value cell is 110.7px (「中英文
+                     + 3 个语种」) or 209.7px ("Chinese and English + 3 languages",
+                     whose longest unbreakable run is "languages" at 62.1px).
+                     The three that exceed 108px wrap at a space, inside their
+                     own cell, under their own plan.
+     the label track 7.5rem = 120px, less .625rem of padding and the .0625rem
+                     rule = 109px of content. It holds the header — 「能力」 33.0px
+                     / "Capability" 71.6px — and the longest run in any feature
+                     label that cannot break at a space, which in English is
+                     "12-month" at 103.3px and can in fact break at its hyphen;
+                     Chinese labels break between characters. Labels wrap to two
+                     to four lines and are what sets a row height now, which is
+                     why the chart comes out SHORTER than the collapse it
+                     replaces: at 390, 1765px against 3355.7px in Chinese, and
+                     2076.1px in English.
+     the row         7.5rem + 5 × 8rem = 47.5rem = 760px on every row, so the six
+                     tracks line up down the whole chart and the header row
+                     stands over the columns it names. Measured at 320, 360, 375,
+                     390, 412 and 430 on both pages: the six tracks start at
+                     0 / 120 / 248 / 376 / 504 / 632 in EVERY one of the 21 rows,
+                     the same six numbers at every width.
+
+   `width: max-content` is what makes the row box 760px rather than the width of
+   the scrollport: without it the tracks would overflow a 360px row and renok's
+   `border-bottom` (:5208) would stop 400px short of the cells it underlines.
+   `min-width: 100%` guards only the other direction — at 767px the scrollport is
+   737px and the row is wider, so it never engages today.
+
+   THE PINNED COLUMN. `position: sticky; left: 0` on the label cell, which is a
+   grid item — measured rather than assumed, because a positioned grid item is
+   constrained by its grid area and whether it stays put at all is a question
+   about the browser, not about the rule. It does: scrolled to the end (maxScroll
+   400px at 390, 470px at 320) the label cells sit 0px from the chart's
+   content-left while the first plan cell has gone to -280px / -350px.
+
+     background-color  var(--black), renok's own token on this scope root, and
+                       the colour `.rt-pricing-v1-list` already paints behind the
+                       chart below 991 (:8990) — computed rgb(0, 0, 0) on this
+                       page. A pinned cell has plan cells sliding under it, so it
+                       cannot be transparent; this invents no colour, it repeats
+                       the one already behind it.
+     border-right      .0625rem solid #fff3, renok's own spelling of a rule — the
+                       border it gives `.rt-chart-columns` (:5190) and every
+                       row's border-bottom (:5208). It draws the pinned edge, the
+                       one line renok never had to draw because it never pinned
+                       anything. NOTHING ELSE GAINS A BORDER: renok's
+                       `border-left-style: none` on the plan cells below 768
+                       (:10250) stands, so the touch chart stays as borderless as
+                       renok drew it.
+     stretch + flex    the cell fills its track instead of taking renok's desktop
+                       `place-self: center start`, because a sticky box masks
+                       only what its own box covers and a shrink-to-fit label
+                       would let 定制 slide past it in the gap. `display: flex;
+                       align-items: center` puts the label back on the vertical
+                       centre — the centring renok gives every other cell in the
+                       row (:5190) — and `text-align: left` overrides renok's
+                       ≤767 `text-align: center` (:10256) for the same reason
+                       section 2's desktop rule sets `start`: against the track's
+                       left edge is what makes the column read as a column.
+
+   THE SCROLLPORT. `overflow-x: auto` on `.rt-pricing-chart` and deliberately
+   nothing else, so `overflow-y` computes to `auto` rather than `visible`. That
+   is the point: on a platform with classic, space-taking scrollbars the
+   horizontal bar eats about 15px of an auto-height box, and `overflow-y: hidden`
+   would answer that by CUTTING the last row — the one defect this section exists
+   to end. `auto` can only scroll, never clip. At rest it does not even do that:
+   measured with overlay scrollbars, chart offsetHeight = clientHeight =
+   scrollHeight = 1765px in Chinese and 2076px in English, and no cell reaches
+   past the end of the scrollable area — 0.0px of overhang at every width tested.
+   `overscroll-behavior-x: contain` keeps a sideways swipe on the chart from
+   chaining into the browser's back gesture.
+
+   WHAT THIS DOES NOT DO, STATED RATHER THAN HIDDEN. The plan names live in the
+   chart's own header row. That row scrolls sideways WITH the columns, so a
+   column never drifts off its name; but it scrolls UP out of the viewport with
+   the page, exactly as the desktop table's header does, and this file cannot pin
+   it — `overflow-x: auto` makes the chart its own scrollport, and `position:
+   sticky; top` inside a scrollport that never scrolls vertically pins nothing.
+   Deep in the chart a phone reader attributes a column by its position and the
+   pinned label, as a desktop reader does.
+
+   THE REVEAL STILL RUNS, and the chart is now its scrollport. Each row slides up
+   3.14rem into place (rk-a-24 / rk-a-25 / rk-a-28 / rk-a-89 … rk-a-94, see the
+   head of this file), so mid-reveal a row sits up to 3.14rem below its final
+   place at an opacity ramping from 0 and the chart is briefly scrollable by that
+   much. Nothing is clipped and nothing on the page moves. Verified by walking
+   DOWN to the foot of the chart and measuring there.
+
+   MEASURED AT 320 / 360 / 375 / 390 / 412 / 430 / 767 / 768, on pricing.html and
+   en/pricing.html, plus 1440 to confirm section 3's desktop grid is untouched.
+   412 and 430 are in that list because earlier passes on this site skipped them
+   and that is where defects hid. At every width below 768, on both pages:
+
+     document scrollWidth − clientWidth   0px, at all seven widths.
+     the 21 rows                          6 cells each, all six on ONE line, at
+                                          the same six x positions in every row.
+     clipped inside its own cell          none. Nothing reaches past the end of
+                                          the scrollable area either: 0.0px.
+     the pinned label                     at full scroll (470px of it at 320,
+                                          400px at 390, 360px at 430) every one
+                                          of the 20 label cells sits 0px from the
+                                          chart's content-left, while the 标准版 /
+                                          Standard cell has gone to −350 / −280 /
+                                          −240. 「¥40,000 / 首年」 and 定制 are then
+                                          both fully on screen, which is the
+                                          price the defect cut.
+     row heights                          zh 62 / 107 / 77 … 77, chart 1765px;
+                                          en 62 / 107 / 77 … 77 with the language
+                                          rows at 130, chart 2076.1px. Against
+                                          106.6 / 199.7 / 159.7 and 3355.7px
+                                          before.
+
+   At 768 and 1440 nothing in this section applies and nothing in the chart
+   changed: same 6-track desktop grid, same row heights, same 0px page overflow.
+   The one thing 768 does show is section 3's own price-row floor, recorded
+   there. */
+@media screen and (max-width: 767px) {
+  .rk-price-compare .rk-rt-pricing-chart {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+  }
+
+  .rk-price-compare .rk-rt-pricing-chart-rows {
+    grid-template-columns: 7.5rem repeat(5, 8rem);
+    width: max-content;
+    min-width: 100%;
+  }
+
+  /* The label cell, and the empty top-left cell of the header row above it —
+     the one Webflow node id this block keeps, because that element is emitted
+     once and carries no class to hang a rule on. They are one pinned column and
+     have to be drawn as one. */
+  .rk-price-compare .rk-rt-chart-left-col,
+  .rk-price-compare #w-node-cacecf34-e427-8fd7-d839-092b3e532ba3-a96158b4 {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    justify-self: stretch;
+    align-self: stretch;
+    background-color: var(--black);
+    border-right: .0625rem solid #fff3;
+  }
+
+  .rk-price-compare .rk-rt-chart-left-col {
+    display: flex;
+    align-items: center;
+    text-align: left;
+  }
+}

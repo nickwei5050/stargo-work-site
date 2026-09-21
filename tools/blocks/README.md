@@ -48,11 +48,21 @@ perfect port of the template block, changing the words and nothing else. The
 review document (F:/stargo 网站/.docx/word/media/imageN.png) shows exactly which
 block each section is, with the template's own photographs in place.
 
-- **The template's images stay.** Do NOT substitute this site's artwork. Leave
-  `donor.mirror` at its default (`assets/<donor>`): every CDN photo, poster, clip
-  and icon the block uses is rewritten to a local copy and fetched by
-  `node tools/try-block.mjs <id>`. Use `images`/`imageStems`/`cssImages` only to
-  *drop* something that cannot ship (map to `'none'`), never to swap a picture.
+- **The template's images stay, EXCEPT where the owner's own product imagery
+  replaces them (owner instruction, 2026-09-18).** The original rule was: never
+  substitute this site's artwork for the donor's photographs. The owner has now
+  authorised replacing *brand, product and feature* pictures with the product
+  screenshots supplied in the 2026-09-18 handoff (registered in
+  `tools/imagegen/product-assets.json`, described and given their alt text in
+  `tools/editorial-images.mjs`). Everything else about that rule is unchanged:
+  keep `donor.mirror` at its default (`assets/<donor>`) so every CDN photo,
+  poster, clip and icon still mirrors locally, keep real brand marks, functional
+  icons, decorative textures and masks, and use `images`/`imageStems`/`cssImages`
+  to *drop* something that cannot ship (map to `'none'`). A swap must keep the
+  element, its classes, its interaction ids and the donor's geometry: only the
+  file behind it changes, plus the minimum of `aspect-ratio` / `object-fit` /
+  padding needed to show a 16:9 interface without cutting its navigation. Do not
+  restore a template photograph over a placed product image in a later pass.
 - **The template's type, sizes, colours and layout stay.** Do not add CSS that
   changes a font-size, a width, a colour or a layout the donor set. If our words
   do not fit a slot, change the words — use the shorter form (a capability's

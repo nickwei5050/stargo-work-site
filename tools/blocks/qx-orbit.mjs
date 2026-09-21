@@ -1,5 +1,5 @@
 /**
- * 一个外贸闭环 — the loop's intro: the orbit hero out of qubix's index.html.
+ * 一条业务主线 — the nine steps' intro: the orbit hero out of qubix's index.html.
  *
  * Donor: a dotted ring with a two-line word in the middle ("Qubix" / "Studio"),
  * eight photographs parked around it in `.images-rotated-box`, and on the right
@@ -30,8 +30,9 @@
  *   (1fr 4fr 1fr) that auto-places its children, so removing the column itself
  *   would slide the ring into the 1fr column and the tags into the 4fr one. The
  *   `.hero-left-box` div is therefore kept — with its w-node id, data-w-id and
- *   inline style — and only its contents go. Its grid cell is what keeps the
- *   ring in the middle.
+ *   inline style — and the social links and the place name go. Its grid cell is
+ *   what keeps the ring in the middle; its caption slot now carries the line
+ *   that ties the nine steps to the homepage's five stages (see render).
  *
  * Motion — read this before wondering why the block ships a .css:
  *   - The arrow bob (e-77 → a-11, SCROLL_INTO_VIEW on the mouse link) is IX2 and
@@ -108,15 +109,26 @@ export function render(frag, ctx) {
   let html = frag;
 
   /* ------------------------------------------------ the left column ---- */
-  /* Keep the cell, drop the social links and the Los Angeles line. The box's
-     contents run up to the ring's own grid item, which is the next sibling. */
+  /* Keep the cell, drop the social links, and give the donor's own caption
+     slot — `.hero-left-bottom-box > .body`, where qubix wrote "Based In Los
+     Angeles" — the one sentence this section owes the reader (V5 P02): these
+     nine steps are the same business journey as the homepage's five stages,
+     read in detail, not a second system (HOME_LOOP_TABLE.note). The globe icon
+     that sat beside the place name goes with it: it was a location marker.
+     The box's contents run up to the ring's own grid item, which is the next
+     sibling. */
+  const note = C.HOME_LOOP_TABLE?.note;
+  if (!note) throw new Error('qx-orbit: HOME_LOOP_TABLE.note is missing — the section must say how the nine steps relate to the five stages');
   const LEFT = /(<div id="w-node-_95c2694c[^"]*" data-w-id="95c2694c-a097-148d-d560-40e2eb648777"[^>]*class="qx-hero-left-box">)([\s\S]*?)(<\/div><div id="w-node-c6f775c5)/;
   if (!LEFT.test(html)) throw new Error('qx-orbit: the hero-left-box shell is not where the donor put it');
   html = html.replace(LEFT, (m, open, inner, close) => {
-    if (!/facebook\.com|Based In Los Angeles/.test(inner)) {
+    if (!/class="qx-hero-socail-link/.test(inner)) {
       throw new Error('qx-orbit: the left column no longer holds the social links; re-check the cut');
     }
-    return `${open}${close}`;
+    const BOTTOM = /<div class="qx-hero-left-bottom-box"><img [^>]*alt="Image"\/><div class="qx-body">Based In Los Angeles<\/div><\/div>/;
+    const bottom = BOTTOM.exec(inner);
+    if (!bottom) throw new Error('qx-orbit: the left column lost its caption slot (hero-left-bottom-box > body)');
+    return `${open}<div class="qx-hero-left-bottom-box"><div class="qx-body qx-orbit-note">${escapeHtml(t(note))}</div></div>${close}`;
   });
 
   /* ---------------------------------------------------- the ring ---- */

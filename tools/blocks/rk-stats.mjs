@@ -1,5 +1,6 @@
 /**
- * 成果 03 — 在商务可控的前提下出报价 / Prepare quotations with commercial control.
+ * 03 — 报价有依据，利润有边界，文件有版本 / Ground the price. Review the margin.
+ * Keep the version. (V5 M04, V6 §5.4)
  *
  * Donor: renok's statistics band. A display number and a heading on the left, a
  * photograph beside three odometer counters, and a closing paragraph under them.
@@ -25,13 +26,16 @@
  *
  * That means a figure can be set truthfully without touching the mechanism: one
  * cell per column changes, the strips, the transforms and the ids stay. What it
- * does not license is inventing a metric, so the three reels carry the only
- * numbers this page can stand behind — arithmetic over CAPABILITY_GROUPS, which
- * the catalogue further down the same page lists item by item. A renamed
- * capability fails the build rather than quietly changing a published figure.
+ * does not license is inventing a metric. The reels used to carry catalogue
+ * counts (10 / 12 / 157), which beside a quotation heading still read like
+ * results; V6 §5.4 asks for the band to explain the work instead, so they now
+ * land on 01 / 02 / 03 — the three steps of the quotation sequence (draft,
+ * check and approve, keep the approved version) named in the labels under
+ * them. Two digits are exactly the donor's two columns, so nothing is cloned
+ * and a-37 runs as shipped.
  *
- * Columns repeat: a three-digit figure gets a third `.rt-counter` cloned from
- * the first. a-37 addresses its targets by selector under `useEventTarget:
+ * Columns repeat: a three-digit figure would get a third `.rt-counter` cloned
+ * from the first. a-37 addresses its targets by selector under `useEventTarget:
  * CHILDREN`, so a cloned column animates with the rest and carries no id of its
  * own (the only `data-w-id` in a counter is on the box).
  */
@@ -144,44 +148,39 @@ function reel(box, value) {
 /* --------------------------------------------------------------- render --- */
 
 export function render(frag, ctx) {
-  const { C, t, escapeHtml } = ctx;
+  const { C, lang, t, escapeHtml, art } = ctx;
   const S = C.CAPABILITY_SHOWCASE;
-  const n = 2;                                     // outcome 03, "quote with commercial control"
+  const n = 2;                                     // story 03, quotations
   const story = S.stories[n];
   if (!story) throw new Error('rk-stats: CAPABILITY_SHOWCASE.stories has no third outcome');
+  const Q = C.CAP_V6A?.quote;
+  if (!Q?.steps || !Q.image || !Q.button?.href || !Q.facts?.href) throw new Error('rk-stats: CAP_V6A.quote needs steps, image, button and facts');
+  for (const k of ['promise', 'connection', 'availability']) {
+    if (!story[k]) throw new Error(`rk-stats: story 3 has no ${k} — the quotation paragraph must say it`);
+  }
 
-  /* Every capability this outcome names is resolved against the register, both
-     because the block must not drift from the catalogue and because the group it
-     labels below is derived from them rather than asserted here. */
+  /* Every capability this story names is resolved against the register, both
+     because the block must not drift from the catalogue and because the groups
+     it links to below are derived from them rather than asserted here: the
+     button goes to the group the picks sit in (07), the product-facts pointer
+     to the story's other group (06). */
   const groups = story.picks.map((name) => capability(C, name).group);
   const home = groups[0];
-  if (groups.some((g) => g !== home)) throw new Error('rk-stats: outcome 03 no longer sits in one capability group');
-  if (!story.groups?.includes(home.n)) throw new Error(`rk-stats: group ${home.n} is not among the outcome's own groups`);
+  if (groups.some((g) => g !== home)) throw new Error('rk-stats: story 3 no longer sits in one capability group');
+  if (!story.groups?.includes(home.n)) throw new Error(`rk-stats: group ${home.n} is not among the story's own groups`);
   const otherN = story.groups.find((g) => g !== home.n);
-  const other = C.CAPABILITY_GROUPS.find((g) => g.n === otherN);
-  if (!other) throw new Error(`rk-stats: the outcome's second group ${otherN} is not in CAPABILITY_GROUPS`);
-  const total = C.CAPABILITY_GROUPS.reduce((sum, g) => sum + g.items.length, 0);
+  if (!C.CAPABILITY_GROUPS.some((g) => g.n === otherN)) throw new Error(`rk-stats: the story's second group ${otherN} is not in CAPABILITY_GROUPS`);
+  if (Q.button.href !== `#g${home.n}`) throw new Error(`rk-stats: the button should open #g${home.n}, CAP_V6A.quote says ${Q.button.href}`);
+  if (Q.facts.href !== `#g${otherN}`) throw new Error(`rk-stats: the product-facts pointer should open #g${otherN}, CAP_V6A.quote says ${Q.facts.href}`);
 
-  /* Three counts, three labels, in the order the donor draws them.
-
-     Each label names, in the catalogue's own words, the set its figure counts,
-     and carries the group number so the same group is not called "10" here and
-     "07" in the accordion further down the page. It is the group's label and
-     nothing else because the slot is one line of 24px type 296px wide, which
-     renok fills with "Project completed" (184px): "07 Quote & Commercial"
-     measures 239px and holds that line, while the earlier "capabilities in 07
-     Quote & Commercial" measured 379px and wrapped every label onto two, which
-     grew the band 138px past renok's and pushed the photograph off the top of
-     its row. What the figures count is said once, in the sentence under them. */
-  const inGroup = (g) => `${g.n} ${t(g.name)}`;
-  const figures = [
-    [home.items.length, inGroup(home)],
-    [other.items.length, inGroup(other)],
-    [total, t(S.catalogueLabel)],
-  ];
-  for (const [v] of figures) {
-    if (!Number.isInteger(v) || v < 1 || v > 999) throw new Error(`rk-stats: ${v} does not fit a counter`);
-  }
+  /* Three steps, three labels, in the order the donor draws them. The reels
+     land on 01 / 02 / 03 — step numbers, not results (see the note at the top
+     of this file). Each label is the step's name and nothing else because the
+     slot is one line of 24px type, 296px wide at 1440 and 163px at 768, which
+     renok fills with "Project completed": a label that wraps grows the band
+     and pushed the photograph off the top of its row when it was tried. */
+  if (Q.steps.length !== 3) throw new Error(`rk-stats: renok draws three counters, CAP_V6A.quote has ${Q.steps.length} steps`);
+  const figures = Q.steps.map((label, i) => [String(i + 1).padStart(2, '0'), t(label)]);
 
   let html = frag;
 
@@ -193,33 +192,64 @@ export function render(frag, ctx) {
   if (boxes.length !== 3) throw new Error(`rk-stats: renok draws three counters, found ${boxes.length}`);
   for (let i = boxes.length - 1; i >= 0; i--) {
     const [a, b] = boxes[i];
-    html = html.slice(0, a) + reel(html.slice(a, b), figures[i][0]) + html.slice(b);
+    const value = figures[i][0];
+    if (!/^\d\d$/.test(value)) throw new Error(`rk-stats: step ${value} is not the two digits the donor's two columns hold`);
+    html = html.slice(0, a) + reel(html.slice(a, b), value) + html.slice(b);
   }
 
-  /* ---- what each counter counts ---- */
+  /* ---- what each step is ---- */
   const label = '<div class="rk-rt-text-style-h4 rk-rt-text-color-black">';
   figures.forEach((f, i) => { html = fillNth(html, label, i, escapeHtml(f[1]), 'counter labels'); });
 
   /* ---- the words around them ---- */
-  /* The display slot is the number the capability map already gives this
-     outcome (its card reads 03 and its anchor is #story-3), so the band reads as
-     that card enlarged. Latin digits, which is what this 150px face has. */
+  /* The display slot is the section's own number — the third showcase, whose
+     anchor is #story-3. Latin digits, which is what this 150px face has. */
   html = setText(html, 'rk-rt-big-text', String(n + 1).padStart(2, '0'));
-  html = setText(html, 'rk-rt-text-style-h2', escapeHtml(t(story.label)));
-  /* The promise, then the scope note: a band of counts drawn from the register
-     has to say that the register is what it is counting. */
-  html = setText(html, 'rk-rt-gap-off', `${escapeHtml(t(story.promise))} ${escapeHtml(t(S.scopeNote))}`);
-  /* The button keeps two copies of its label, one rolling up behind the other. */
-  html = setTextAll(html, 'rk-rt-button-text', escapeHtml(t(S.cardButton)));
+  /* V6's heading has three clauses — 报价有依据，利润有边界，文件有版本 — and a
+     line break anywhere else splits a word (the h2 holds nine characters a line
+     at 992 and eleven on a phone), so each clause is its own line: split after
+     each comma in Chinese and after each full stop in English, joined by the
+     `<br/>` renok's own display lines use. */
+  const clauses = t(story.label).split(lang === 'zh' ? /(?<=，)/ : /(?<=\.)\s+/);
+  if (clauses.length !== 3) throw new Error(`rk-stats: the heading should read as three clauses, found ${clauses.length}`);
+  html = setText(html, 'rk-rt-text-style-h2', clauses.map((c) => escapeHtml(c)).join('<br/>'));
+  /* The paragraph (V5 M04): how a quote is prepared and controlled, that
+     approval, sending and receipt are three separate facts, what still depends
+     on connected systems, and the scope note — then a pointer to where the
+     product facts behind a price live (#g06). */
+  const gap = lang === 'zh' ? '' : ' ';
+  const para = [story.promise, story.connection, story.availability, S.scopeNote].map((p) => escapeHtml(t(p))).join(gap);
+  html = setText(html, 'rk-rt-gap-off',
+    `${para}${gap}${escapeHtml(t(Q.facts.lead))}${lang === 'zh' ? '' : ' '}<a class="rk-stats-link" href="${Q.facts.href}">${escapeHtml(t(Q.facts.label))}</a>${lang === 'zh' ? '。' : '.'}`);
+  /* The button keeps two copies of its label, one rolling up behind the other,
+     and opens this section's detail in the catalogue. */
+  html = setTextAll(html, 'rk-rt-button-text', escapeHtml(t(Q.button.label)));
 
-  /* ---- the two words that live in attributes ---- */
-  for (const [from, to] of [
-    ['href="contact-two.html"', 'href="contact.html"'],
-    ['alt="Home-one-branding-identity"', `alt="${escapeHtml(t(story.label))}"`],
-  ]) {
-    if (!html.includes(from)) throw new Error(`rk-stats: ${from} is not in the fragment`);
-    html = html.split(from).join(to);
-  }
+  /* ---- the picture ----
+     renok's branding portrait (a visor and a raincoat) said nothing about
+     quoting. It becomes this site's own editorial art for the section —
+     precision parts aligned and checked — through the same src the rest of the
+     page uses (tools/editorial-images.mjs then writes its variants, sizes and
+     description). The <img> keeps its inline blur/scale and the wrapper its
+     data-w-id, so renok's reveal plays exactly as before. */
+  const IMG = /<img src="assets\/renok\/69848bf2fc68c14ed4c0e5a6_home-one-branding-identity\.webp"[^>]*>/;
+  const img = IMG.exec(html);
+  if (!img) throw new Error('rk-stats: renok\'s branding photograph is not where the donor put it');
+  if ((html.match(/<img /g) ?? []).length !== 1) throw new Error('rk-stats: the band should hold one photograph');
+  /* `CAP_V6A.quote.image` is an editorial id, or — since the owner's handoff of
+     2026-09-18 — a path written out, for one of their own product screenshots.
+     Either kind goes through tools/editorial-images.mjs for its alt, its size
+     and its variants; only the folder differs. */
+  const src = Q.image.startsWith('assets/') ? Q.image : art(Q.image);
+  html = html.replace(IMG, img[0]
+    .replace(/src="[^"]*"/, `src="${src}"`)
+    .replace(/\s(?:srcset|sizes)="[^"]*"/g, '')
+    .replace('alt="Home-one-branding-identity"', `alt="${escapeHtml(t(story.label))}"`));
+  if (html.includes('home-one-branding-identity')) throw new Error('rk-stats: a variant of renok\'s photograph survived the swap');
+
+  /* ---- the word that lives in an attribute ---- */
+  if (!html.includes('href="contact-two.html"')) throw new Error('rk-stats: href="contact-two.html" is not in the fragment');
+  html = html.split('href="contact-two.html"').join(`href="${Q.button.href}"`);
 
   /* Fail loudly rather than ship a slot that quietly missed. */
   const donorWords = ['Awards', 'Creative solutions', 'Let&#x27;s talk', 'Project completed',

@@ -1,0 +1,328 @@
+/* cn-about-reviews — only what the cut cannot carry out of cinery.
+
+   Three kinds of thing live here, and nothing else:
+
+     1. the grid placement cinery wrote against Webflow's generated `#w-node-…`
+        ids, which are not classes and so are invisible to a class-driven
+        extractor (checked against this cut's own extraction: zero `#w-node`
+        rules came across, and thirteen are needed);
+     2. what cinery's <body> and `:root` supplied — its typeface, colour, size,
+        leading and weight, the one heading token Webflow left escaped, and the
+        two properties this site's own `p` rule leaks into the block;
+     3. the donor motion tools/donor-lib.mjs cannot carry, which here is four
+        ix3 (GSAP) timelines, replayed with the donor's own numbers.
+
+   Every value in 1 and 2 is copied verbatim from
+   tools/templates/cinery/css/cinery.app.shared.3e3418b8f.css and scoped under
+   the block root exactly as the extractor scopes its own output. Nothing here
+   sets a size, colour, spacing or layout the donor did not already set.
+
+   WHAT IS NOT HERE, so the next reader does not go looking:
+
+     · no placement rule. The cut is a whole `<section>` and brings its own air:
+       `.cn-padding-section-large` is `padding: 8rem 0` (6rem ≤767, 5rem ≤479),
+       and cinery's own hairline closes it. The two arrows hang `-5rem` below a
+       slider that carries `margin-bottom: 4rem`, i.e. about 1rem below the
+       component, and that 8rem foot clears them with room to spare — which is
+       the one thing tools/blocks/cn-reviews.css had to add for itself, because
+       it cuts the bare component out of somebody else's column.
+     · no background-color. `donor.ground` in tools/blocks/cn-about-reviews.mjs
+       already paints the block root with cinery's own `body` black; the reason
+       it is set there rather than here, and why #000 under the About page's
+       #000002 is the right call, is written out in that file.
+     · no `isolation`. tools/blocks/cn-service.css needs it because its moved
+       ground painted over a `z-index: -1` layer; every positioned layer in this
+       cut is at a positive z (`.heading-wrap` 5, `.button-text` 5, Webflow's
+       own slider chrome 2–3), so the ground stays underneath on its own.
+     · nothing for the slider. `.w-slider` is a Webflow component, not an
+       interaction, and it cannot be replayed as keyframes — four slides in one
+       `white-space: nowrap` mask have no fifth box for the fourth to hand the
+       first, and `Previous` / `Next` are controls, which no keyframe can be.
+       tools/blocks/cn-about-reviews.js replays it from the slider's own data
+       attributes. */
+
+
+/* ------------------------------------------- 1. the #w-node grid rules -- */
+
+/* Webflow puts an element's grid position on a generated `#w-node-…` id, not on
+   a class, so the extractor never sees these. Thirteen are in this cut and
+   every one matters.
+
+   ONE, at every width: the button. `.top-content-grid` is `1fr 1fr` with one
+   explicit row, so the heading takes the first cell and the button the second;
+   `place-self: end` is what puts the button on the heading's baseline at the
+   right-hand edge of the grid instead of stretched across the top of its cell.
+
+   FOUR, at every width: the lower half of each card.
+   `.testimonial-content-grid` is `grid-template-rows: auto auto; height: 100%`,
+   so its second row is as tall as whatever is left of the card under the quote.
+   Without `align-self: end` the mark, the speaker and the concept line sit at
+   the TOP of that leftover space instead of on the card's floor, and they float
+   differently in every card because the quotes are different lengths. This is
+   the rule that lines the four cards' feet up with each other.
+
+   TWO, below 992: the heading grid folds. `.heading-wrap` takes the full width
+   and the button drops to a second row at the left — which is also why nothing
+   below 992 has to worry about the heading squeezing the button's track.
+
+   EIGHT, below 768: the card stacks. `.testimonial-grid` is a `.w-layout-grid`,
+   i.e. `grid-template-columns: 1fr 1fr`, and cinery keeps both columns at every
+   width — it hands the portrait and the content block a full-width row each of
+   a two-column grid instead. Without these the portrait keeps half a phone's
+   width (`.testimonial-image-wrap` is `height: 30rem` under 768 and `20rem`
+   under 480, the height cinery drew for a full-width picture) and the quote is
+   set in the other half.
+
+   ONE, below 480: cinery restates the heading's full-width span in a selector
+   it shares with three ids belonging to other parts of its home page. Only ours
+   is written here; the other three are not in this cut.
+
+   Donor rules, in donor order, at the donor's own breakpoints. */
+.cn-about-reviews #w-node-_5ff8cede-17dc-e41f-3894-39badfa11c18-805165a1 { place-self: end; }
+.cn-about-reviews #w-node-_13b75589-1ed7-6d9c-5b18-094d91b3b0e3-805165a1,
+.cn-about-reviews #w-node-_13b75589-1ed7-6d9c-5b18-094d91b3b101-805165a1,
+.cn-about-reviews #w-node-_13b75589-1ed7-6d9c-5b18-094d91b3b11f-805165a1,
+.cn-about-reviews #w-node-_13b75589-1ed7-6d9c-5b18-094d91b3b13d-805165a1 { align-self: end; }
+
+@media screen and (max-width: 991px) {
+  .cn-about-reviews #w-node-_5ff8cede-17dc-e41f-3894-39badfa11c0f-805165a1 { grid-area: 1 / 1 / 2 / 3; }
+  .cn-about-reviews #w-node-_5ff8cede-17dc-e41f-3894-39badfa11c18-805165a1 { grid-area: 2 / 1 / 3 / 3; justify-self: start; }
+}
+
+@media screen and (max-width: 767px) {
+  .cn-about-reviews #w-node-_13b75589-1ed7-6d9c-5b18-094d91b3b0d0-805165a1 { grid-area: 1 / 1 / 2 / 3; }
+  .cn-about-reviews #w-node-_13b75589-1ed7-6d9c-5b18-094d91b3b0d2-805165a1 { grid-area: 2 / 1 / 3 / 3; }
+  .cn-about-reviews #w-node-_13b75589-1ed7-6d9c-5b18-094d91b3b0ee-805165a1 { grid-area: 1 / 1 / 2 / 3; }
+  .cn-about-reviews #w-node-_13b75589-1ed7-6d9c-5b18-094d91b3b0f0-805165a1 { grid-area: 2 / 1 / 3 / 3; }
+  .cn-about-reviews #w-node-_13b75589-1ed7-6d9c-5b18-094d91b3b10c-805165a1 { grid-area: 1 / 1 / 2 / 3; }
+  .cn-about-reviews #w-node-_13b75589-1ed7-6d9c-5b18-094d91b3b10e-805165a1 { grid-area: 2 / 1 / 3 / 3; }
+  .cn-about-reviews #w-node-_13b75589-1ed7-6d9c-5b18-094d91b3b12a-805165a1 { grid-area: 1 / 1 / 2 / 3; }
+  .cn-about-reviews #w-node-_13b75589-1ed7-6d9c-5b18-094d91b3b12c-805165a1 { grid-area: 2 / 1 / 3 / 3; }
+}
+
+@media screen and (max-width: 479px) {
+  .cn-about-reviews #w-node-_5ff8cede-17dc-e41f-3894-39badfa11c0f-805165a1 { grid-area: 1 / 1 / 2 / 3; }
+}
+
+
+/* --------------------------------------------- 2. what <body> supplied -- */
+
+/* cinery's own `body` rule, restated on the block root. A cut section never
+   brings <body> along, and almost every word in this band is set in inherited
+   type: of the block's text slots only `.cn-heading-style-h2` names a family
+   and only `.cn-text-size-regular` names a colour. Dropped onto the About page
+   the pill, both arrow words, the button label, the four quotes, the four
+   speaker lines and the four concept lines would all be drawn in Mono's Inter
+   at Mono's 14px/1.1/500/#000 — black type on a #232324 card. Donor rule,
+   verbatim:
+
+     body { background-color: var(--background-color--primary-background);
+            font-family: var(--_typography---font-family--primary);
+            color: var(--primary-color--white);
+            font-size: var(--_sizes---fixed--small);
+            line-height: 1.4;
+            font-weight: var(--_typography---font-weight--regular); }
+
+   `background-color` is left out because `donor.ground` already paints the
+   block root with the same `#000` that variable resolves to. The rest is as
+   cinery wrote it, variables and all: the extractor copies cinery's `:root`
+   onto the scope root, so the names still resolve here. */
+.cn-about-reviews {
+  font-family: var(--_typography---font-family--primary);
+  color: var(--primary-color--white);
+  font-size: var(--_sizes---fixed--small);
+  line-height: 1.4;
+  font-weight: var(--_typography---font-weight--regular);
+}
+
+/* The heading's leading, which is a token the extractor cannot read.
+
+   Webflow left this variable's name escaped —
+   `--_typography---h2--h2-line-height\<deleted\|variable-dce8260e-…\>` — and
+   donor-lib's `:root` scan matches `--[\w-]+` names only, so the one token both
+   of this block's heading rules ask for never arrives. Checked against this
+   cut's own extraction: the name appears twice in the emitted sheet, on
+   `.cn-about-reviews h2` and on `.cn-about-reviews .cn-heading-style-h2`, and
+   zero times in the scope root's variable block.
+
+   With it undefined the declaration is invalid at computed-value time and both
+   `<h2>`s fall back to the leading they inherit. That matters twice over: the
+   gradient each line is painted with (`linear-gradient(180deg, white 40%, #000
+   100%)`, `background-clip: text`) is laid over the element box, so a taller
+   box stretches the fade; and `.cn-title-wrapper` is `overflow: hidden`, i.e.
+   the mask the reveal below rises through. Measured on cinery's own page with
+   its own Overused Grotesk SemiBold, at the donor's `100%` the line box is
+   exactly as tall as the type at every breakpoint — 192px at 192px, 160 at 160,
+   128 at 128, 56 at 56 — so the mask clips nothing and the fade covers exactly
+   the letters.
+
+   cinery declares the token `100%` on `:root` and restates it as `100%` at each
+   of its three breakpoints, so one unconditional declaration is exactly what
+   the donor computes at every width. The five other heading tokens cinery
+   escapes the same way are not restored: this block has no h1, h3, h4, h5
+   or h6. */
+.cn-about-reviews {
+  --_typography---h2--h2-line-height\<deleted\|variable-dce8260e-414c-a934-1b6e-a3323274e042\>: 100%;
+}
+
+/* cinery's two `p` rules are `{ margin-top; margin-bottom }` and
+   `{ font-size; margin-bottom; line-height }` — nothing else, so a cinery
+   paragraph is opaque and tracks normally. This site's own `p` rule
+   (css/monof-template.app.shared.ed8969994.css) adds `opacity: .7` and
+   `letter-spacing: -.5px`, and neither property is in the extracted
+   `.cn-about-reviews p`, so both leak through onto the six `<p>` elements this
+   block has — the four pull quotes, which are the largest type in the cards and
+   the thing a reader looks at first, and the button's two label copies. Put
+   back what the donor computes. Same repair, for the same reason, as
+   tools/blocks/cn-reviews.css and tools/blocks/cn-service.css. */
+.cn-about-reviews p { opacity: 1; letter-spacing: normal; }
+
+
+/* ------------------------------ 3. the motion the cut leaves behind ------ */
+
+/* Four ix3 (GSAP) timelines touch this section and not one of them can travel:
+   donor-lib returns `{events, actionLists}` (IX2) only, and this site registers
+   no interactions with the ix3 runtime it ships. Their definitions were read
+   out of tools/templates/cinery/js/app.9d009f54.b1680441e3b493e5.js, and the
+   two numbers the runtime resolves itself — ease indices and the default
+   duration — out of js/app.schunk.25099a4fefa544e6.js, the ix3 runtime this
+   site already loads on every page:
+
+     i-84a682e6  wf:hover on class `main-button`    → t-bf9e6807
+     i-d68dbd1d  wf:hover on class `left-arrow`     → t-e56d8ac2   } page-scoped
+     i-d5b715fb  wf:hover on class `right-arrow`    → t-96695666   } to cinery's
+                                                                     home page
+     i-9f439e20  wf:scroll on class `heading-wrap`  → t-864fc814
+
+   *** The two arrow timelines are the difference between this block and
+   tools/blocks/cn-reviews.css, which writes no motion at all. On pricing.html
+   the same two rolls are IX2 (a-45 … a-48, fired by e-248 … e-251 against
+   `data-w-id`s the pricing arrows carry) and they travel with the cut. On the
+   home page they are ix3 and the arrows carry no `data-w-id` at all — asserted
+   in tools/blocks/cn-about-reviews.mjs, which refuses the cut if one ever turns
+   up. Same visible roll, different machinery, opposite conclusion. *** */
+
+/* --- the three hover rolls (t-bf9e6807, t-e56d8ac2, t-96695666) ----------
+
+   All three are the same action with a different target:
+
+     targets   `.button-text` / `.slide-text` within the trigger
+     timing    { duration: .4, position: 0, stagger: { amount: .4 }, ease: 12 }
+     property  "wf:transform": { yPercent: [null, "-100%"] }
+     splitText { type: "chars" }
+
+   Ease 12 is index 12 of the ix3 runtime's own table ("none", "power1.in",
+   "power1.out", "power1.inOut", "power2.in", "power2.out", "power2.inOut",
+   "power3.in", …), i.e. gsap `power4.inOut`, which is quintic in-out.
+
+   THE DONOR'S GEOMETRY. `.button-text-wrap` is `flex-flow: column;
+   justify-content: flex-start; height: 1.125rem; overflow: hidden` — an 18px
+   window holding two `.button-text` copies at 1rem/1.2, i.e. 19.2px each; and
+   `.slide-text-wrap` is `flex-flow: column; height: 1.5rem; overflow: hidden` —
+   a 24px window holding two `.slide-text` copies at 1rem/1.4, i.e. 22.4px each.
+   (They do not shrink to fit: an overflow-hidden flex item still keeps its
+   automatic minimum size, which here is its own line box.) At rest the first
+   copy fills the window and the second sits below it, clipped. `yPercent:
+   -100%` lifts both by one copy's own height: the first leaves through the top,
+   the second takes its place. cn-about-reviews.mjs writes the same word into
+   both copies of all three pairs precisely because of this — write one and the
+   hover shows the donor's.
+
+   WHAT IS REDUCED. The donor splits each label into characters and staggers
+   them across 0.4s, so its roll runs 0.8s end to end. Splitting characters
+   means rewriting the label into spans at runtime, which is DOM structure, and
+   the brief is 「仅仅针对文字进行改动」 — so each label rolls as one piece here
+   and takes the action's own 0.4s. Nothing else changes: same trigger, same
+   direction, same distance, same easing, same window.
+
+   WHY A TRANSITION AND NOT @keyframes. A Webflow hover timeline with
+   `hover: "each"` plays forward on mouseenter and back on mouseleave. A
+   one-shot keyframe animation cannot come back; a transition does exactly this,
+   in both directions, for free.
+
+   THE EASING. `cubic-bezier(.84, 0, .16, 1)` is the bezier nearest quintic
+   in-out — max deviation 0.0305 of the travel, which over a 22.4px roll is
+   0.68px, i.e. under a device pixel at 1x. tools/blocks/ro-gallery.css fitted
+   and measured the same curve for the same ease index, and
+   tools/blocks/cn-about.css replays the button roll with it. */
+.cn-about-reviews .cn-main-button .cn-button-text,
+.cn-about-reviews .cn-left-arrow .cn-slide-text,
+.cn-about-reviews .cn-right-arrow .cn-slide-text {
+  transition: transform .4s cubic-bezier(.84, 0, .16, 1);
+}
+.cn-about-reviews .cn-main-button:hover .cn-button-text,
+.cn-about-reviews .cn-left-arrow:hover .cn-slide-text,
+.cn-about-reviews .cn-right-arrow:hover .cn-slide-text {
+  transform: translateY(-100%);
+}
+
+/* --- the heading's arrival (t-864fc814) ---------------------------------
+
+   The same site-scoped interaction tools/blocks/cn-produce.css replays for the
+   one other cinery cut that owns a `.top-title` / `.bottom-title` pair, with
+   the same numbers, because it is the same timeline:
+
+     i-9f439e20   wf:scroll on class `heading-wrap`, scrollTriggerConfig
+                  { start: "top 85%", enter: "play",
+                    leave / enterBack / leaveBack: "none" }
+     t-864fc814   ta-7549a871  .top-title     y 110% → 0%, position 0
+                  ta-f06a78d6  .bottom-title  y 110% → 0%, position 0.3
+                  both tt:2 (fromTo), ease 6, duration unset
+
+   Ease 6 is `power2.inOut`; an action with no duration takes the runtime's
+   DEFAULTS.DURATION = 0.5s. `.cn-title-wrapper` is the donor's own mask
+   (`position: relative; overflow: hidden`, and exactly as tall as the line it
+   holds — measured on cinery's own page at 192/160/128/56px for the four
+   breakpoints), so 110% puts the line clear of it.
+
+   The donor's action splits each line box out with SplitText and staggers them;
+   both of this block's headings are one line box at every width (measured:
+   「四个」/「岗位」 and "Four"/"Roles" never wrap — see the table in
+   cn-about-reviews.mjs), so there is nothing to stagger and the line rises
+   whole. No span is added, which is what the brief requires.
+
+   The resting page is the one without either class:
+   tools/blocks/cn-about-reviews.js adds `cn-about-reviews-armed` only once its
+   observer is watching, and swaps it for `cn-about-reviews-reveal` when the
+   heading arrives. No JS, no observer, or a reader who asked for less motion,
+   and the heading simply stands there — it is never hidden by a rule that has
+   nothing to un-hide it. (cinery's own anti-FOUC rule, which does hide
+   `.top-title` and `.bottom-title` until its runtime stamps `w-mod-ix3`, lives
+   in an inline `<style>` in the donor's `<head>`; donor-lib reads only the
+   donor's stylesheet, so it does not travel and nothing here re-creates it.)
+   `backwards` fill holds the bottom line down through its 0.3s offset and lets
+   both lines return to the page's own state when the animation ends. */
+@keyframes cn-about-reviews-title-rise {
+  from { transform: translateY(110%); }
+  to   { transform: translateY(0%); }
+}
+.cn-about-reviews.cn-about-reviews-armed .cn-top-title,
+.cn-about-reviews.cn-about-reviews-armed .cn-bottom-title {
+  transform: translateY(110%);
+}
+.cn-about-reviews.cn-about-reviews-reveal .cn-top-title,
+.cn-about-reviews.cn-about-reviews-reveal .cn-bottom-title {
+  animation: cn-about-reviews-title-rise .5s cubic-bezier(.65, 0, .35, 1) backwards;
+}
+.cn-about-reviews.cn-about-reviews-reveal .cn-bottom-title {
+  animation-delay: .3s;
+}
+
+/* A reader who has asked their system for less motion gets the block as it is
+   drawn — the pill, the heading, the card, every word in place, nothing sliding
+   and nothing turning. The three labels still swap for their identical twins,
+   instantly, so no word is lost, and tools/blocks/cn-about-reviews.js hands the
+   slider over to the arrows without animating it. Same line js/stargo-pricing.js,
+   js/stargo-media.js, tools/blocks/cn-produce.css and tools/blocks/cn-about.css
+   already take. */
+@media (prefers-reduced-motion: reduce) {
+  .cn-about-reviews .cn-main-button .cn-button-text,
+  .cn-about-reviews .cn-left-arrow .cn-slide-text,
+  .cn-about-reviews .cn-right-arrow .cn-slide-text {
+    transition: none;
+  }
+  .cn-about-reviews.cn-about-reviews-reveal .cn-top-title,
+  .cn-about-reviews.cn-about-reviews-reveal .cn-bottom-title {
+    animation: none;
+  }
+}

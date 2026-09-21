@@ -1,5 +1,13 @@
 /**
- * 能力图谱开篇 + 第一个成果 — the chapter opening and story-01 in one block.
+ * Growth OS 主动获客 — story-01 of the capability showcase (V6 §5.2).
+ *
+ * `<span id="story-1">` is an empty anchor in front of this block
+ * (tools/build-site.mjs); the block itself is the whole Growth OS section: the
+ * engine's name in the pill, 主动 / 获客 in the display heading, a lead that says
+ * how thin evidence is treated and where approved prospects go, and V6's four
+ * topics — company research, trade intelligence, reorder judgement, key
+ * decision roles — as the four rows, with a button to the six-part detail in
+ * the catalogue (#g02).
  *
  * Donor: cinery's "Video / Services" home section (index.html). It opens on a
  * gradient split heading — an eyebrow pill over two `.title-wrapper` lines, the
@@ -14,13 +22,15 @@
  * keeps its own data-w-id, its `_0N` class and its inline transforms — the
  * roll, the crossfade and the scroll reveal are all bound to exactly those.
  *
- * The photographs are cinery's own — the clapperboard and the lenses in the
- * review screenshot. Nothing is mapped, so `mirror` (the default,
- * assets/cinery) keeps every thumbnail and every crossfade background and
- * try-block fetches them into place. The brief is a perfect port with only the
- * words changed, so each title slot gets the shortest name the register has —
- * the Chinese name on the Chinese page, the product name on the English page —
- * and the type stays at the donor's 8vw nowrap wherever that name fits it.
+ * The photographs were cinery's own — the clapperboard and the lenses in the
+ * review screenshot. Since the V6 content (2026-09-16) the four full-bleed
+ * crossfade backgrounds show this site's editorial art (ROW_ART below), and
+ * since 2026-09-18 each row's hover thumbnail shows the owner's own screen for
+ * that topic (ROW_SHOT). The <img> elements, their classes and their motion are
+ * the donor's. Each
+ * title slot gets a short topic name (CAP_V6A.growth,
+ * one language per page) and the type stays at the donor's 8vw nowrap wherever
+ * that name fits it.
  *
  * The block paints no ground of its own: every word in it is white and only
  * cinery's `body { background-color: #000 }` stood behind it, so the ground is
@@ -46,16 +56,79 @@ export const donor = {
   ground: '#000',
 };
 
+/**
+ * The four rows' crossfade backgrounds (V6 §5.2: a topic-matched picture in
+ * each existing image position). cinery's own are film-set stock — a
+ * clapperboard, lenses — and say nothing about finding customers, so each row's
+ * full-bleed background takes this site's own editorial art, in row order:
+ * company research → trade signals carried to a customer's destination; trade
+ * intelligence → an opportunity path through a port district; reorder
+ * judgement → context assembling layer by layer; key decision roles → a key
+ * decision held at an approval point. tools/editorial-images.mjs writes the
+ * variants, sizes and descriptions for them.
+ */
+const ROW_ART = ['brand-family-01', 'os-sales-desk', 'os-loading', 'mobile-approvals'];
+
+/* Since 2026-09-18 a row's hover thumbnail is the owner's own Growth OS screen
+   for that topic (主动获客.docx, registered in tools/imagegen/product-assets.json):
+   trade intelligence → 市场论证, reorder judgement → 进口商补货雷达, key decision
+   roles → 采购委员会. Company research has none: 客户 360 was held the same day
+   because it puts $412,000 of lifetime value, an $80,000 deal and a 22% margin
+   on a named company and calls the record verified against Brazil's company
+   register and customs data. A row with no screen (null) keeps the editorial
+   art its background uses, which is what all four had before.
+
+   The crossfade backgrounds keep the editorial art in every row: they are
+   full-bleed, object-fit: cover, under a 65% black overlay, and a 16:9
+   interface cropped to that shape would show its middle third as a dark
+   texture. The thumbnails carry the screens instead, where the whole interface
+   fits (see .cn-service-thumbnail in cn-service.css). */
+const ROW_SHOT = [null, 'gos01-market-thesis', 'gos09-reorder-radar', 'gos05-buying-committee'];
+const shot = (name) => `assets/stargo-product/${name}.webp`;
+
+/** Swap one cinery photograph for editorial art, keeping every other attribute
+ *  (class, data-w-id, inline transforms) exactly as the donor wrote it. */
+function toArt(tag, src) {
+  if (!/src="assets\/cinery\//.test(tag)) throw new Error(`cn-service: expected a cinery photograph, found ${tag.slice(0, 80)}`);
+  return tag.replace(/src="[^"]*"/, `src="${src}"`).replace(/\s(?:srcset|sizes)="[^"]*"/g, '');
+}
+
 /** Every image in the cut carries this one alt string. */
 const DONOR_ALT = 'alt="Image - Cinery Template"';
 /** The donor's button goes to a page this site does not have. */
 const DONOR_HREF = 'href="services.html"';
 
+/**
+ * Product names the Chinese page writes in Latin letters on purpose (the owner's
+ * positioning: Growth OS and Sales Desk are the two engines). Everything else
+ * Latin on the Chinese page is still a leak and still fails the build.
+ */
+const ZH_PRODUCT_NAMES = /Growth OS|Sales Desk/g;
+
 export function render(frag, ctx) {
-  const { C, lang, t, escapeHtml, capTitle } = ctx;
+  const { C, lang, t, escapeHtml, art } = ctx;
   const S = C.CAPABILITY_SHOWCASE;
   const story = S.stories[0];
   if (!story) throw new Error('cn-service: CAPABILITY_SHOWCASE.stories has no entry 0');
+  /* V6 §5.2: this block is the Growth OS section (#story-1 is the empty anchor
+     in front of it). Its own words — the pill, the heading, the four rows'
+     titles and lines, the detail link — are CAP_V6A.growth; the lead is the
+     story's promise and connection, the note under it its output and
+     availability. */
+  const G = C.CAP_V6A?.growth;
+  if (!G?.eyebrow || !G.headTop || !G.headBottom || !G.button?.href || !G.rows) {
+    throw new Error('cn-service: CAP_V6A.growth needs eyebrow, headTop, headBottom, button and rows');
+  }
+  for (const k of ['promise', 'connection', 'output', 'availability']) {
+    if (!story[k]) throw new Error(`cn-service: story 0 has no ${k} — the section must say it`);
+  }
+  /* The rows are the story's first four picks, and G.rows words exactly those
+     four: a pick that changed without its row (or the other way round) fails
+     here rather than printing a register name the section never meant. */
+  const rowKeys = Object.keys(G.rows);
+  if (rowKeys.length !== 4 || rowKeys.some((k, i) => k !== story.picks[i])) {
+    throw new Error(`cn-service: CAP_V6A.growth.rows (${rowKeys.join(' / ')}) must be story 0's first four picks (${story.picks.slice(0, 4).join(' / ')})`);
+  }
 
   /* ------------------------------------------------------------ the cut -- */
 
@@ -83,20 +156,44 @@ export function render(frag, ctx) {
   const splitAt = head.indexOf(BOTTOM);
   if (splitAt < 0) throw new Error('cn-service: .bottom-title is not in the cut — the split heading needs both lines');
 
-  let open = setText(head.slice(0, splitAt), 'cn-heading-style-h2', escapeHtml(t(S.headlineTop)))
-    + setText(head.slice(splitAt), 'cn-heading-style-h2', escapeHtml(t(S.headlineBottom)));
+  /* The heading slot is the donor's 10–12rem display pair, two characters a
+     line in Chinese (see CAPABILITY_SHOWCASE.headlineTop for the 992px
+     measurement) and one short word in English: 主动 / 获客, Find / Leads. The
+     "Every" / "Job" pair it used to carry stays with the break band further
+     down the page (cn-produce), which still prints it. */
+  if (lang === 'zh' && [t(G.headTop), t(G.headBottom)].some((s) => [...s].length > 2)) {
+    throw new Error('cn-service: a Chinese heading line holds two characters at most');
+  }
+  let open = setText(head.slice(0, splitAt), 'cn-heading-style-h2', escapeHtml(t(G.headTop)))
+    + setText(head.slice(splitAt), 'cn-heading-style-h2', escapeHtml(t(G.headBottom)));
 
   /* cinery's pill holds two words ("OU SOLUTIONS", 81px) inside an
      `overflow: hidden` box set solid at `line-height: 1`, so it holds one short
-     line and nothing more. The chapter's own eyebrow is that line; the story's
-     label is 350px of text and would need the pill rebuilt to carry it. */
-  open = setText(open, 'cn-subtitle', escapeHtml(t(S.eyebrow)));
+     line and nothing more. It names the engine: Growth OS. */
+  open = setText(open, 'cn-subtitle', escapeHtml(t(G.eyebrow)));
 
-  /* A roll-over button: two copies of the word, kept in step. */
-  open = setTextAll(open, 'cn-button-text', escapeHtml(t(S.cardButton)));
+  /* The lead. cinery's opening has a heading and a button and no sentence, but
+     V6 §5.2 requires two statements in readable text — evidence that is too
+     thin is marked for checking rather than guessed, and approved prospects go
+     to Sales Desk with their research — plus what the section produces and
+     what it depends on. They go where the donor's button already sits: the
+     `.content-item` cell, bottom-right beside the heading from 992 up and
+     under it below that, as two paragraphs above the button. Written in the
+     block's own description type (tools/blocks/cn-service.css, section 5). */
+  const CELL = '<div id="w-node-_41c40c61-fc21-de03-d653-91a5d71e76a4-805165a1" class="cn-content-item">';
+  if (!open.includes(CELL)) throw new Error('cn-service: the button cell (.content-item) is not where the donor put it');
+  const gap = lang === 'zh' ? '' : ' ';
+  open = open.replace(CELL, `${CELL}<p class="cn-service-lede">${escapeHtml(`${t(story.promise)}${gap}${t(story.connection)}`)}</p>` +
+    `<p class="cn-service-lede cn-service-lede-note">${escapeHtml(`${t(story.output)}${gap}${t(story.availability)}`)}</p>`);
+
+  /* A roll-over button: two copies of the word, kept in step. It opens the
+     full six-part Growth OS detail in the catalogue (#g02), not the contact
+     form: the page's contact doors are the break band and the closing section. */
+  open = setTextAll(open, 'cn-button-text', escapeHtml(t(G.button.label)));
 
   if (!open.includes(DONOR_HREF)) throw new Error(`cn-service: the opening button no longer carries ${DONOR_HREF}`);
-  open = open.split(DONOR_HREF).join('href="contact.html"');
+  if (!C.CAPABILITY_GROUPS.some((g) => `#g${g.n}` === G.button.href)) throw new Error(`cn-service: ${G.button.href} is not a catalogue group`);
+  open = open.split(DONOR_HREF).join(`href="${G.button.href}"`);
 
   /* ----------------------------------------------------------- the rows -- */
 
@@ -112,8 +209,8 @@ export function render(frag, ctx) {
      four names fit at its own size — so a split that appears only below 992
      would need a second treatment; assert rather than ship it silently. */
   const names = units.map((_, i) => {
-    const cap = capability(C, story.picks[i]);
-    return capTitle(cap.name, cap.zhName ?? '');
+    capability(C, story.picks[i]);   // still a register entry: a renamed pick fails the build
+    return t(G.rows[story.picks[i]].title);
   });
   const len = (s) => (lang === 'zh' ? [...s].length : s.length);
   const wideFlags = names.map((s) => (lang === 'zh' ? len(s) >= 6 : len(s) >= 11));
@@ -125,7 +222,8 @@ export function render(frag, ctx) {
 
   const filled = units.map((unit, i) => {
     const cap = capability(C, story.picks[i]);
-    const title = capTitle(cap.name, cap.zhName ?? '');
+    const row = G.rows[story.picks[i]];
+    const title = names[i];
     plain.push(title);
 
     /* Every title begins with the donor's own bullet; it is copied out of the
@@ -174,25 +272,41 @@ export function render(frag, ctx) {
     if (!marker.trim()) throw new Error(`cn-service: row ${i + 1} lost the ▶ marker its kicker is drawn with`);
     u = setText(u, 'cn-service-subitle', marker + escapeHtml(t(cap.group.name)));
 
-    /* The register's own gloss, so this page cannot describe a capability
-       differently from the catalogue below it. */
-    u = setText(u, 'cn-service-description', escapeHtml(t(cap.gloss)));
+    /* The row's line in this section's story (CAP_V6A.growth): what the
+       research is for here, two of them carrying V6's required statements —
+       unsupported demand is marked for checking, approved prospects go to
+       Sales Desk. The kicker above still names the catalogue group the entry
+       sits in, where the register's own wording is. */
+    u = setText(u, 'cn-service-description', escapeHtml(t(row.text)));
 
     if (!u.includes(DONOR_ALT)) throw new Error(`cn-service: row ${i + 1} has no ${DONOR_ALT} to replace`);
+    /* The row's thumbnail — its one <img> — becomes this row's product screen,
+       or the row's editorial art where no screen is released for it. */
+    const thumbs = u.match(/<img\b[^>]*>/g) ?? [];
+    if (thumbs.length !== 1) throw new Error(`cn-service: row ${i + 1} should hold one thumbnail, found ${thumbs.length}`);
+    u = u.replace(thumbs[0], toArt(thumbs[0], ROW_SHOT[i] ? shot(ROW_SHOT[i]) : art(ROW_ART[i])));
     return u.split(DONOR_ALT).join(`alt="${escapeHtml(plain[i])}"`);
   });
 
   /* -------------------------------------------- the crossfade backgrounds -- */
 
-  /* Four `.service-bg-image._0N`, one per row and in row order. */
+  /* Four `.service-bg-image._0N`, one per row and in row order; each shows the
+     editorial art for that row (ROW_ART), the thumbnail its product screen. */
   let n = 0;
-  const back = tail.replace(/alt="Image - Cinery Template"/g, () => `alt="${escapeHtml(plain[n++] ?? '')}"`);
+  const back = tail.replace(/<img\b[^>]*alt="Image - Cinery Template"[^>]*>/g, (tag) => {
+    const i = n++;
+    return toArt(tag, art(ROW_ART[i] ?? ROW_ART[0])).replace(DONOR_ALT, `alt="${escapeHtml(plain[i] ?? '')}"`);
+  });
   if (n !== 4) throw new Error(`cn-service: expected four background images behind the rows, found ${n}`);
+  if (/assets\/cinery\//.test(back)) throw new Error('cn-service: a cinery photograph survived behind the rows');
 
   const html = open + filled.join('') + back;
   if (html.includes('Cinery')) throw new Error('cn-service: donor copy survives in the rendered block');
-  if (lang === 'zh' && /[A-Za-z]{3,}/.test(html.replace(/<[^>]+>/g, ' '))) {
-    throw new Error('cn-service: Latin words on the Chinese page — a capability without a zhName leaked its product name');
+  /* Latin words on the Chinese page are a leak — except the two engine names,
+     which the Chinese copy writes as they are (ZH_PRODUCT_NAMES, and only
+     those two strings, not the words in them). */
+  if (lang === 'zh' && /[A-Za-z]{3,}/.test(html.replace(/<[^>]+>/g, ' ').replace(ZH_PRODUCT_NAMES, ' '))) {
+    throw new Error('cn-service: Latin words on the Chinese page — only Growth OS and Sales Desk may appear in Latin letters');
   }
   return html;
 }

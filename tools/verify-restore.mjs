@@ -17,6 +17,7 @@ import assert from 'node:assert/strict';
 import { mkdirSync, writeFileSync, readFileSync, existsSync } from 'node:fs';
 import { SITE_PAGES } from './chrome.mjs';
 import { POSTS, postPath } from './blog.mjs';
+import { ABOUT } from './copy.mjs';
 
 import { SITE, req } from './paths.mjs';
 const pw = req('@playwright/test');
@@ -76,8 +77,14 @@ const TEXT_AUDIT = `(() => {
     if (!rects.length) continue;
     const box = rects.reduce((b, r) => ({ left: Math.min(b.left, r.left), top: Math.min(b.top, r.top), right: Math.max(b.right, r.right), bottom: Math.max(b.bottom, r.bottom) }), { left: 1e9, top: 1e9, right: -1e9, bottom: -1e9 });
     if (box.bottom < 0 || box.top > vh) continue;              // not on screen right now
+    // Text inside a collapsed clipping container (a closed accordion row) is not
+    // painted at all, wherever its glyph boxes fall. The capability catalogue's
+    // closed rows now hold several screens of detail, so those boxes reach the
+    // footer when the page is scrolled to its end; they are not "covered" text.
+    const clips = clipsOf(el);
+    if (clips.some((c) => { const cr = c.getBoundingClientRect(); return cr.width < 4 || cr.height < 4; })) continue;
     // 1. clipped by an overflow-hidden ancestor (tolerance 2px)
-    for (const c of clipsOf(el)) {
+    for (const c of clips) {
       const cr = c.getBoundingClientRect();
       if (cr.width < 4 || cr.height < 4) continue;                                 // collapsed containers are animation states, not clipping
       const cut = box.top < cr.top - 4 || box.bottom > cr.bottom + 4 || box.left < cr.left - 4 || box.right > cr.right + 4;
@@ -147,10 +154,15 @@ for (const width of WIDTHS.filter((w) => [390, 768, 1024, 1280, 1440, 1920].incl
         // The accordion cards open and close as the section scrolls, moving their copy through an
         // overflow-hidden box. What must hold: every card reaches a state in which its copy and title
         // are both fully inside the open card, and the copy never runs into the title.
-        const boxes = await page.evaluate(() => [...document.querySelectorAll('.lx-expandable-item')].map((card, i) => { const c = card.getBoundingClientRect(); const t = card.querySelector('.lx-expandable-text'); const tr = t.getBoundingClientRect(); const title = card.querySelector('.lx-expandable-icon-text'); const ti = title.getBoundingClientRect(); return { i, card: [c.top, c.bottom], text: [tr.top, tr.bottom], title: [ti.top, ti.bottom], height: c.height, textHeight: tr.height }; }));
+        // Since V7-LX r2 (css/stargo-fusion.css, V7-LX) the card content is a wrapping column laid
+        // out from the bottom: once the copy no longer fits above the icon row it moves WHOLE into
+        // a second column beside the card, where the card's overflow clips it, instead of being
+        // sliced line by line. Such copy is not on screen, so "inside" also requires the copy to
+        // sit within the card horizontally.
+        const boxes = await page.evaluate(() => [...document.querySelectorAll('.lx-expandable-item')].map((card, i) => { const c = card.getBoundingClientRect(); const t = card.querySelector('.lx-expandable-text'); const tr = t.getBoundingClientRect(); const title = card.querySelector('.lx-expandable-icon-text'); const ti = title.getBoundingClientRect(); return { i, card: [c.top, c.bottom], cardX: [c.left, c.right], text: [tr.top, tr.bottom], textX: [tr.left, tr.right], title: [ti.top, ti.bottom], height: c.height, textHeight: tr.height }; }));
         cardCount = boxes.length;
         for (const b of boxes) {
-          const inside = b.text[0] >= b.card[0] - 1 && b.text[1] <= b.card[1] + 1 && b.title[0] >= b.card[0] - 1 && b.title[1] <= b.card[1] + 1;
+          const inside = b.text[0] >= b.card[0] - 1 && b.text[1] <= b.card[1] + 1 && b.textX[0] >= b.cardX[0] - 1 && b.textX[1] <= b.cardX[1] + 1 && b.title[0] >= b.card[0] - 1 && b.title[1] <= b.card[1] + 1;
           if (inside && b.height > 200) { readableCards.add(b.i); assert(b.text[1] <= b.title[0] + 1, `card ${b.i} copy runs into its title @${f}: ${JSON.stringify(b)}`); assert(b.textHeight <= b.height * 0.6, `card ${b.i} copy takes ${Math.round(b.textHeight)}px of a ${Math.round(b.height)}px card @${f}`); }
         }
         if (f === 0.42 || f === 0.82) await page.screenshot({ path: `${OUT}/${id}-sticky-${f}.png` });
@@ -262,11 +274,17 @@ for (const width of WIDTHS.filter((w) => [390, 768, 1280, 1440].includes(w))) fo
     for (const r of orb.rects) { const overlap = Math.max(0, Math.min(r[2], orb.orb[2]) - Math.max(r[0], orb.orb[0])) * Math.max(0, Math.min(r[3], orb.orb[3]) - Math.max(r[1], orb.orb[1])); assert(overlap < 40, `ladder orb overlaps the title glyphs: ${JSON.stringify({ r, orb: orb.orb })}`); }
     assert(orb.lines <= (width < 768 ? 4 : 3), `ladder title wraps into ${orb.lines} lines`);
     await page.screenshot({ path: `${OUT}/${id}-ladder.png` });
-    // partner wall: eight sample cards, flip animation intact, labelled as a sample
+    // partner wall: eight sample cards, flip animation intact, and NO caption
     assert.equal(await page.locator('.partner-grid .partner-card').count(), 8, 'eight partner cards');
     assert.equal(await page.locator('.partner-grid .card-side.is-back img').count(), 8, 'flip backs');
-    const caption = await page.locator('.bottom-grid._1.grd .top-text').first().innerText();
-    assert(/示例|sample/i.test(caption), `partner caption marks the sample: ${caption}`);
+    /* The owner removed the wall's sample labels on 2026-09-10. The assertion
+       is inverted rather than deleted: with the template's own marks still in
+       the grid, the wall must make no claim about them at all, so the caption
+       has to stay empty — and it must never silently fall back to the
+       template's "(Partners)" or to 「我们服务过的品牌」, which would be a
+       statement about customers this site does not have. */
+    const caption = (await page.locator('.bottom-grid._1.grd .top-text').first().innerText()).trim();
+    assert.equal(caption, '', `partner wall must carry no caption while its logos are the template's: "${caption}"`);
     await scrollTo(page, (await secTop(page, '.partner-grid')).top - 200); await page.waitForTimeout(1600);
     await page.screenshot({ path: `${OUT}/${id}-partners.png` });
     // scenario cards (sticky testimonials): portrait film present, four cards, illustrative labels, mark, through the scroll
@@ -324,14 +342,50 @@ for (const lang of ['', 'en/']) {
     // About
     let h = await head(`${BASE}/${lang}about.html`);
     assert.match(h.canonical, /\/(en\/)?about$/); assert.equal(h.hreflang.length, 3); assert(h.ld[0]['@graph'].some((n) => n['@type'] === 'AboutPage'));
-    assert.equal(await page.locator('.lx-about-image-holder img').count(), 4, 'four role circles');
-    const names = await page.locator('.lx-about-name').allInnerTexts();
-    assert.deepEqual(names, ['Market Signal Agent', 'Quote Agent', 'Follow-up Agent', 'Orchestrator']);
-    assert.equal(await page.locator('.lx-careers_01-item[href$="contact.html"]').count(), 5, 'five workflow entry points to contact');
-    assert.match(await page.locator('.lx-button.lx-is-secondary').innerText(), /预约演示|Book a demo/);
+    /* The About page was rebuilt on cinery (2026-09-15): the owner asked for
+       「about页面也拿cinery模版替换」 and chose 「介绍带 + 项目网格 + 评价」. The
+       Lifelogx circles, careers rows and rich-text story are no longer on it,
+       so the assertions that named them are replaced rather than deleted —
+       what they were really protecting is that this page still introduces the
+       company, still names the four AI-employee roles, and still reaches the
+       contact page. Each of those is asserted below against what now draws it.
+
+       This is the second time a hard-coded list here went stale behind a
+       rebuild (the first was the four role names, held in English against a
+       Chinese page). Both now read from ABOUT, so a rename cannot break the
+       gate for a page that is correct. */
+    assert.equal(await page.locator('.cn-about, .cn-about-projects, .cn-about-reviews').count(), 3, 'the three cinery bands');
+    /* textContent, not innerText: innerText returns only what is RENDERED, and
+       these labels are hidden until their scroll reveal fires, so innerText
+       reads '' on a page that is perfectly correct. */
+    const roles = (await page.locator('.cn-about-projects').evaluate((e) => e.textContent)).replace(/\s+/g, ' ');
+    for (const c of ABOUT.circles) {
+      const label = c.label[lang === 'en/' ? 'en' : 'zh'];
+      assert(roles.includes(label), `About names the role ${label}`);
+    }
+    /* The tiles play cinery's own four clips. They were briefly replaced by four
+       still images on 2026-09-15 and the owner reverted that the same day —
+       「11.3 MB 无引用的 cinery 案例片，帮我恢复原模版」 — so these three assertions
+       are the inverted form of the ones that swap put here, kept rather than
+       deleted so the band stays guarded either way. Each tile is one `<video>`
+       with an mp4 and a webm; the band's only `<img>`s are the two copies of the
+       STARGO wordmark each tile stacks for its hover roll (8 in all). What must
+       NOT come back with the clips is a client name, a year or a logoipsum
+       mark — the role names asserted above are what the tile line says. */
+    assert.equal(await page.locator('.cn-about-projects video').count(), 4, 'four donor clips');
+    assert.equal(await page.locator('.cn-about-projects source').count(), 8, 'an mp4 and a webm per clip');
+    assert.equal(await page.locator('.cn-about-projects img.stargo-still').count(), 0,
+      'the still-image version of this band was reverted; the tiles play the template clips');
+    /* And every one of them is served from this origin. `data-src` as well as
+       `src`, so wiring js/stargo-video-defer.js into the About page later does
+       not turn this into a false failure. */
+    const clipSrcs = await page.locator('.cn-about-projects source')
+      .evaluateAll((ss) => ss.map((s) => s.getAttribute('src') || s.getAttribute('data-src')));
+    for (const src of clipSrcs) assert.match(src ?? '', /(?:^|\/)assets\/cinery\//, `clip served locally: ${src}`);
+    assert(await page.locator('.cn-about a[href$="contact.html"]').count() >= 1, 'About reaches the contact page');
+    const intro = await page.locator('.cn-about').innerText();
+    assert(intro.replace(/\s+/g, '').length > 40, 'the introduction band carries its paragraph');
     for (const f of [0.35, 0.6, 0.85]) { const H = await page.evaluate(() => document.documentElement.scrollHeight); await scrollTo(page, H * f); await page.waitForTimeout(700); }
-    const story = await page.locator('.lx-about-rich-text p').first().evaluate((p) => ({ op: getComputedStyle(p).opacity, text: p.textContent.length }));
-    assert(story.text > 40, 'story text present');
     await page.screenshot({ path: `${OUT}/${L}-about-story.png` });
     await scrollTo(page, 0); await page.waitForTimeout(500);
     await page.screenshot({ path: `${OUT}/${L}-about-hero.png` });
@@ -358,7 +412,8 @@ for (const lang of ['', 'en/']) {
       assert(bp && bp.headline === post.title[L] && bp.datePublished === post.date && bp.author.name === 'STARGO WORK' && bp.image.includes('assets/blog/'), 'BlogPosting');
       assert.equal(g.find((n) => n['@type'] === 'BreadcrumbList').itemListElement.length, 3, 'breadcrumbs');
       assert(h.h2h3.filter((x) => x.startsWith('H3')).length >= 3, 'article sections use h3');
-      assert.equal(await page.locator('a.lx-related-item').count(), POSTS.length - 1, 'related links');
+      // postPage() lists up to five other articles (others(post, 5) in tools/build-site.mjs).
+      assert.equal(await page.locator('a.lx-related-item').count(), Math.min(5, POSTS.length - 1), 'related links');
       assert.equal(await page.locator('.lx-blog-item a').count(), 3, 'more from the blog');
       const rel = await page.locator('a.lx-related-item, .lx-blog-item a').evaluateAll((as) => as.map((a) => a.getAttribute('href')));
       assert(rel.every((r) => /^\.\.\/blog\//.test(r)) && !rel.includes(`../blog/${post.slug}.html`), `related links leave the article: ${rel.join(' ')}`);

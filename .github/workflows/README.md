@@ -8,9 +8,9 @@ GitHub 的 Actions 页面上手动点 “Run workflow” 运行。
 It runs on every pull request targeting `main`, on every push to a `release/**`
 branch, and on demand from the Actions tab.
 
-**绿灯的意思**：分支里提交的 38 个页面，正好等于源代码重新构建出来的页面；并且真实的
+**绿灯的意思**：分支里提交的 40 个页面，正好等于源代码重新构建出来的页面；并且真实的
 Chromium 浏览器把每一页都打开过，没有发现问题。
-**Green means**: the 38 pages committed in the branch are exactly what a fresh
+**Green means**: the 40 pages committed in the branch are exactly what a fresh
 build produces, and a real Chromium opened every one of them and found nothing
 wrong.
 
@@ -109,7 +109,7 @@ The real content check — three scripts:
 On failure, the full-page screenshots and the result JSON are uploaded as an
 artifact at the bottom of the run page, so you can look at what broke.
 
-### 7. `Assert the verifiers actually verified all 38 pages`
+### 7. `Assert the verifiers actually verified all 40 pages`
 
 这是一道防“假绿灯”的闸。**一个什么都没检查的检查，不算通过。**
 如果报告里少了任何一个已提交的页面，或者某个验证脚本压根没产出结果，这一步会红。

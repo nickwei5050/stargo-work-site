@@ -16,11 +16,12 @@
  * stops matching fails the build rather than shipping an agency's copy.
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 'node:fs';
-import { makeSub, findByClass, removeByClass, elementContaining, extractElement, setInner, setEachInner, setLink, escapeHtml } from './lib-html.mjs';
+import { makeSub, findByClass, removeByClass, elementContaining, extractElement, setInner, setEachInner, setLink, escapeHtml, zhWbr, zhKeep as zhKeepWords } from './lib-html.mjs';
 import { applyChrome, remapLinks, relocateAssets, relocateLinks, assertInternalLinks, stillImage, WORDMARK } from './chrome.mjs';
 import * as C from './copy.mjs';
-import { POSTS, BLOG_UI, postPath, featured, others, coverSrc, coverSrcset, formatDate } from './blog.mjs';
+import { POSTS, BLOG_UI, postPath, featured, others, coverSrc, coverSrcset, coverAlt, formatDate, renderBody, titleHtml } from './blog.mjs';
 import { loadBlocks, art, capTitle, DONORS } from './block-lib.mjs';
+import { PRODUCT_CAPTION } from './editorial-images.mjs';
 
 import { SITE } from './paths.mjs';
 
@@ -83,6 +84,39 @@ const OS = { cockpit: IMG('os-cockpit.webp'), desk: IMG('os-sales-desk.webp'), i
 const BRAND = { wide: IMG('brand-glow-wide.webp'), square: IMG('brand-glow-square.webp'), tall: IMG('brand-glow-tall.webp'), ontology: IMG('brand-ontology.webp'), loop: IMG('brand-loop.webp'), family: (n) => IMG(`brand-family-0${n}.webp`) };
 const MOBILE = { approvals: IMG('mobile-approvals.webp'), agents: IMG('mobile-agents.webp'), inquiry: IMG('mobile-inquiry.webp'), core: IMG('mobile-core.webp'), phoneApprovals: IMG('phone-approvals.webp'), phoneAgents: IMG('phone-agents.webp') };
 const SILO = ['email', 'whatsapp', 'excel', 'erp'].map((n) => IMG(`silo-${n}.webp`));
+/* The owner's own product screenshots (handoff of 2026-09-18, registered in
+   tools/imagegen/product-assets.json and described in
+   tools/editorial-images.mjs). They ship from their own folder rather than
+   through IMG, which editorialImages() rewrites from assets/stargo/; that pass
+   recognises both folders and gives every one of these its alt, its width and
+   height and its srcset, exactly as it does the editorial artwork. Only the
+   screens the owner released are named here: six from the first handoff, the
+   Growth OS set from 主动获客.docx and the ERP screen from 配图二.docx. */
+const PROD = (n) => `assets/stargo-product/${n}.webp`;
+const PRODUCT = {
+  workspace: PROD('sw003-ai-workspace-home'),
+  experts: PROD('sw004-experts-library'),
+  teams: PROD('sw006-expert-teams'),
+  workflows: PROD('sw008-workflow-library'),
+  inquiry: PROD('sw028-sales-desk-inquiry-reply'),
+  documents: PROD('sw033-sales-desk-document-pack'),
+  growth: PROD('gos10-growth-control-tower'),
+  market: PROD('gos01-market-thesis'),
+  reorder: PROD('gos09-reorder-radar'),
+  committee: PROD('gos05-buying-committee'),
+  reactivation: PROD('gos11-dormant-reactivation'),
+};
+/* `teams`, `workflows`, `reorder` and `committee` are not placed from this file:
+   the gallery (tools/blocks/ro-gallery.mjs), the capability rows
+   (tools/blocks/cn-service.mjs) and the blog covers (tools/blog-covers.mjs)
+   name their own. They stay here because this map is the one list of what the
+   owner released, and tools/verify-editorial.mjs checks that list against the
+   built pages. */
+/* The names the homepage and the blog builders use for four of these files. */
+PRODUCT.workspaceHome = PRODUCT.workspace;
+PRODUCT.expertsLibrary = PRODUCT.experts;
+PRODUCT.inquiryReply = PRODUCT.inquiry;
+PRODUCT.documentPack = PRODUCT.documents;
 const AVATARS = Array.from({ length: 12 }, (_, i) => IMG(`avatar-${String(i + 1).padStart(2, '0')}.png`));
 /** Replace the src/srcset/sizes of the nth <img> whose src contains `key` (all of them when nth is null). */
 function swapImg(html, key, src, { nth = null, alt = '' } = {}) {
@@ -96,6 +130,62 @@ function swapImg(html, key, src, { nth = null, alt = '' } = {}) {
   });
   if (!hit) throw new Error(`swapImg: no <img> with ${key}${nth != null ? ` #${nth}` : ''}`);
   return out;
+}
+/* V7-LX: the last clause of a Chinese paragraph as one unit.
+   Several paragraphs end with an availability clause (「高级改进仍在完善。」,
+   「更深入的团队交流仍在完善。」). Chinese may break between any two
+   characters, and `text-wrap: pretty` did not stop 「…仍在」/「完善。」 at 390 or
+   「…高级」/「改进仍在完善。」 at 1024. The clause after the last Chinese
+   punctuation mark is wrapped in `.lx-v7-tail`, which css/stargo-fusion.css
+   (V7-LX) sets as an inline-block on the Chinese pages: it moves to the next
+   line whole when it does not fit, and wraps inside itself only if it is
+   longer than a whole line. Whatever the clause says, it is never split at
+   its end. English is returned unchanged. */
+function zhTail(text, lang) {
+  if (lang !== 'zh') return text;
+  const m = text.match(/^([\s\S]*[，。；：])([^，。；：<>]+。)$/);
+  return m ? `${m[1]}<span class="lx-v7-tail">${m[2]}</span>` : text;
+}
+/* V7-LX: short Chinese phrases kept on one line, for text the page's reveal
+   splits into one inline-block per character (js/stargo-splittext-cjk.js),
+   where `word-break` cannot reach and any two characters may part: the
+   enterprise cockpit paragraph read 「管得」/「住，查得清。」 at 1440, a step
+   「定目」/「标与验收标准。」 at 320. Every run of at most `max` characters
+   that ends at 、，。；： — and every “quoted term” with the punctuation after
+   it — becomes a `.stargo-keep` span (white-space: nowrap, zh only, in
+   css/stargo-fusion.css V7-LX); the split happens inside the span, so the
+   reveal is unchanged. Longer runs still break anywhere, so nothing can
+   overflow a line that holds `max` characters. English is unchanged. */
+function zhKeep(text, lang, max = 5) {
+  if (lang !== 'zh') return text;
+  const wrap = (m) => `<span class="stargo-keep">${m}</span>`;
+  return text
+    .replace(/“[^“”<>]{1,8}”[。，、；：」]*/g, wrap)
+    .replace(new RegExp(`(?<=^|[、，。；：」\\s>])[\\u3400-\\u9fff]{1,${max}}[、，。；：]+(?![^<]*</span>)`, 'g'), wrap);
+}
+/* V7-LX: an English display line of two or more short sentences, one
+   `.lx-v7-sentence` span each (inline-block, balanced; css/stargo-fusion.css
+   V7-LX), so a line break falls between sentences before it falls inside
+   one: "Know the / company. Keep / work moving." became "Know the company." /
+   "Keep work moving.". Chinese and one-sentence lines are returned as they
+   are. */
+function enSentences(text, lang) {
+  if (lang !== 'en') return text;
+  const parts = text.split(/(?<=[.!?])\s+/);
+  return parts.length < 2 ? text : parts.map((p) => `<span class="lx-v7-sentence">${p}</span>`).join(' ');
+}
+/* V7-LX r2: an English display line whose last word must not stand alone:
+   the space before that word is a no-break space, so the balanced heading
+   breaks one word earlier — "Observe / the workflow" (320-390), "not left /
+   to memory." (320), "Keep / useful methods." and "Withdraw / ineffective
+   changes." (320-1279) instead of a lone "workflow", "memory.", "methods."
+   or "changes.". css/stargo-fusion.css (V7-LX) sizes the closing card's two
+   lines and the big line so the joined pair fits its column. Chinese is
+   returned as it is. */
+function enGlue(text, lang) {
+  if (lang !== 'en') return text;
+  const at = text.lastIndexOf(' ');
+  return at < 0 ? text : `${text.slice(0, at)}\u00a0${text.slice(at + 1)}`;
 }
 const CHECK = 'assets/69a01660589c516ba5f0f917/69a9086623545093091785d8_check-icon.svg';
 const CROSS = 'assets/69a01660589c516ba5f0f917/69a91f28a82e2c7b982d5703_cancel-circle-icon.svg';
@@ -144,6 +234,29 @@ const TEAM_TPL = [['Adrian Keller', '(Founder)'], ['Luca Moretti', '(Lead Produc
 function fromStudio(spec, lang) {
   const t = (p) => (typeof p === 'string' ? p : p[lang]);
   const { fn: s } = makeSub(spec.name);
+  /* The studio layout has fixed places: four sticky hero panels, three stat
+     rows and five team cards. Checked by count up front, so a list that grows
+     or shrinks in copy.mjs fails here by name instead of as an undefined
+     deep inside a replacement. */
+  [['story', 4], ['stats', 3], ['cards', 5]].forEach(([k, n]) => {
+    if (spec[k]?.length !== n) throw new Error(`${spec.name}: ${k} needs ${n} entries, has ${spec[k]?.length}`);
+  });
+  if (!spec.approach?.length) throw new Error(`${spec.name}: approach has no lines`);
+  /* A stat that lists its items must count them (V6 §8: the number in front
+     of 「项管理控制：…」 is the number of controls the sentence names), and
+     each item must actually be in the sentence on both pages. The sentence
+     joins the items with 「、」 and with commas, so an item that holds one of
+     those reads as two and the figure would look wrong to anyone counting. */
+  spec.stats.forEach((st, i) => {
+    if (!st.items) return;
+    if (st.value !== String(st.items.length)) throw new Error(`${spec.name}: stat ${i} says ${st.value} but lists ${st.items.length}`);
+    for (const lng of ['zh', 'en']) {
+      const missing = st.items.filter((x) => !st.text[lng].includes(x[lng]));
+      if (missing.length) throw new Error(`${spec.name}: stat ${i} (${lng}) does not name ${missing.map((x) => x[lng]).join(', ')}`);
+      const split = st.items.filter((x) => /[、，,；;]/.test(x[lng]));
+      if (split.length) throw new Error(`${spec.name}: stat ${i} (${lng}) item reads as two: ${split.map((x) => x[lng]).join(' | ')}`);
+    }
+  });
   let h = tpl('studio.html');
   h = s(h, '(Our Studio ©26)', t(spec.eyebrow));
   h = s(h, '>About Mōno™<', `>${t(spec.h1)}<`);
@@ -152,10 +265,26 @@ function fromStudio(spec, lang) {
     h = setInner(h, `<p class="top-text for-abt t0${i + 1}">`, t(spec.story[i].text));
   });
   h = s(h, '(Introduction)', t(spec.introLabel));
-  h = setInner(h, '<h2 class="h2 _01 sm _600">', t(spec.intro));
+  h = setInner(h, '<h2 class="h2 _01 sm _600">', zhKeep(t(spec.intro), lang, 4));
   h = removeByClass(h, 'div', 'as-seen');
   h = s(h, '(Approach)', t(spec.approachLabel));
-  ['Think clearly.', 'Design precisely.', 'Build intelligently.', 'Refine continuously.'].forEach((x, i) => { h = s(h, x, t(spec.approach[i]), { count: 1 }); });
+  /* Mono's approach block is one paragraph of four short <br/>-separated
+     lines. The enterprise page (the only caller) puts its numbered delivery
+     order there: six steps, each a name and what it involves, which run to
+     two lines in the paragraph's 121 + 363px grid at 1440 (fewer than 15
+     characters a line). As bare lines the second line of a step started under
+     its number and the next step's number was lost in the text, so each step
+     is its own <span class="ent-step">: the number in one track, the words in
+     the next (stargo-fusion.css, V6-F block). Spans, not blocks, because a
+     <p> may only hold phrasing content. The paragraph is still split into
+     words and letters by the Webflow/GSAP reveal; that split keeps nested
+     elements, so the reveal is unchanged — checked in the browser. */
+  const steps = spec.approach.map((x) => {
+    const m = /^(\d{2}) (\S[\s\S]*)$/.exec(t(x));
+    if (!m) throw new Error(`${spec.name}: approach line "${t(x)}" does not start with a two-digit step number`);
+    return `<span class="ent-step"><span class="ent-step-n">${m[1]}</span><span class="ent-step-t">${zhKeep(m[2], lang, 8)}</span></span>`;
+  });
+  h = s(h, 'Think clearly. <br/>Design precisely. <br/>Build intelligently. <br/>Refine continuously.<br/>', steps.join(''), { count: 1 });
   h = setLink(h, 'Begin collaboration', { href: spec.approachButton.href, text: t(spec.approachButton.label) });
   h = s(h, '(Stats)', t(spec.statsLabel));
   [['30', spec.stats[0]], ['80', spec.stats[1]], ['+7', spec.stats[2]]].forEach(([old, st]) => {
@@ -166,7 +295,7 @@ function fromStudio(spec, lang) {
     h = h.slice(0, i) + `<h2 class="h2 _01">${st.value}</h2></div><div><p class="top-text">${t(st.text)}` + h.slice(end);
   });
   h = s(h, '(Success stories)', t(spec.quoteLabel));
-  h = setInner(h, '<div class="top-text for-sst">', t(spec.quote.text));
+  h = setInner(h, '<div class="top-text for-sst">', zhKeep(t(spec.quote.text), lang, 4));
   h = s(h, '>Elena Rossi<', `>${t(spec.quote.who)}<`);
   h = s(h, '>Marketing Director at Auralis®<', `>${t(spec.quote.where)}<`);
   h = h.replace(/<img[^>]*class="logo-absolute"[^>]*\/>/, '');
@@ -175,6 +304,11 @@ function fromStudio(spec, lang) {
   TEAM_TPL.forEach(([n, r], i) => { h = teamCard(h, n, r, { name: t(spec.cards[i].name), role: t(spec.cards[i].role), image: spec.images.cards[i] }); });
   // Stock photos (keyboard hands, portraits, a crowd, a face) → STARGO imagery; the four hero
   // backgrounds are CSS and are overridden in stargo-fusion.css (.image-about._01…_04).
+  /* Every picture here is a concept illustration standing beside text that
+     already says what it shows, so they keep swapImg's empty alt — which is
+     also how editorialImages() is told a picture is decoration. (A product
+     screenshot was tried in the third one on 2026-09-18 and reverted the same
+     day; it would have needed a non-empty alt to carry its caption.) */
   [['699b6466d5f19893993a4faf_Coding-Workspace-Close-Up', spec.images.work[0]], ['699b6466d5f19893993a4fa9_Portrait-of-a-Man', spec.images.work[1]], ['699b6466d5f19893993a4f9c_Diverse-Group-Portrait', spec.images.work[2]], ['699b6466d5f19893993a4fa0_about-6', spec.images.quote]]
     .forEach(([k, src]) => { h = swapImg(h, k, src); });
   h = s(h, '(Leadership)', t(spec.noteLabel));
@@ -276,7 +410,12 @@ PAGES['index.html'] = (lang) => {
     const inner = C.HOME_HERO_LIST.map((l) => `<p class="top-text big">${t(l)}<!--$--><br/><!--/$--></p>`).join('');
     h = h.slice(0, flex.start) + `<div class="flex-top">${inner}</div>` + h.slice(flex.end);
   }
-  for (const [old, pair, opts] of C.HOME_MONO) h = s(h, old, t(pair), opts);
+  /* V7-HOME: the (从哪里开始？) heading is split into one box per character, so
+     any two characters could part (「订/单交付」 at 768-1440, 「交/付」 at 390).
+     On the Chinese page each of its words goes in a nowrap `.zh-keep` span, as
+     the capability page's closing line does (css/stargo-fusion.css V7-HOME H20). */
+  const START_HEADING = 'Expand your scope with marketing, SEO, or content creation.';
+  for (const [old, pair, opts] of C.HOME_MONO) h = s(h, old, old === START_HEADING && lang === 'zh' ? zhKeepWords(t(pair)) : t(pair), opts);
   // Shorter hero copy on phones (swapped in before the text animation splits lines).
   h = h.replace(/<p class="top-text big nm">/, `<p class="top-text big nm" data-mobile-text="${escapeHtml(t(C.HOME_MOBILE.heroSupport))}">`);
 
@@ -320,8 +459,51 @@ PAGES['index.html'] = (lang) => {
   {
     const cards = ['699b6466d5f19893993a4d79_work-1.webp', '699b6466d5f19893993a4d34_work-5.webp', '699b6466d5f19893993a4d1a_work-4.webp', '699b6466d5f19893993a4d8f_work-8.webp'];
     cards.forEach((k, i) => { h = swapImg(h, k, SILO[i]); });
-    const scenes = [['Scene%20%239.webp', OS.desk], ['Scene%20%235.webp', OS.inquiries], ['Scene%20%2310%20(Light)', OS.cockpit], ['Scene%20%238.webp', OS.quote], ['Scene%2018.webp', OS.agents]];
-    scenes.forEach(([k, src]) => { h = swapImg(h, k, src); });
+    /* The five stages, in order (V6 §4.6). Four of them carry the owner's own
+       product, each one the screen its own sentence describes:
+
+         (001) 主动获客 「围绕产品和目标市场、客户类型，研究目标企业、背景核对、
+               联系人与采购信号」 — 市场论证 (gos01): a market and a customer type
+               argued from trade data and public sources.
+         (002) 外贸销售 「将主动开发客户与渠道询盘放进 Sales Desk，统一客户记录、
+               回复、产品匹配、报价、审批与 PI」 — sw028, which is that screen:
+               what an inquiry says, and a grounded draft reply beside it.
+         (003) 企业履约 「连接产品、采购、库存、生产、质检、订单和发货资料」 —
+               sw033, the document centre: quotations, PIs and the files that
+               travel with an order.
+         (005) 复购与改进 「关注补货与复购机会」 — 激活与活动 (gos11): dormant
+               accounts re-contacted only where something has verifiably changed.
+
+       (004) 回款与服务 keeps the concept illustration it had — trade signals
+       carried to a customer's destination — because no released screen is about
+       collection, reconciliation or support.
+
+       The four go in with a non-empty alt, which is a marker and not copy:
+       any non-empty value stops tools/editorial-images.mjs treating the image
+       as decoration, and it then writes the registered sentence over it in the
+       page's language. Same route the four core-system panels take with their
+       slot title, and `stillImage` below with 'STARGO OS'. The one concept
+       illustration keeps swapImg's empty alt, which is what it had.
+
+       The card is `.image-wrap.for-service`, `aspect-ratio: 3 / 2`; a 16:9
+       screenshot in it is fitted, not cropped, by H29 in css/stargo-fusion.css.
+
+       001 主动获客 is the market thesis: this stage's own sentence is research
+       around products, target markets and customer types, and that screen is
+       where a market and a customer type are argued from trade data and public
+       sources. The reorder radar is not used here — 补货 is stage 005's word
+       (复购与改进), where 激活与活动 goes instead. The Growth OS panel below
+       shows the control tower, so the two sections do not repeat one picture.
+
+       005 复购与改进 is 激活与活动, the only screen of the eight left in
+       主动获客.docx that passed its release audit (2026-09-21): dormant accounts
+       re-contacted only where something about their business has verifiably
+       changed, with the do-not-contact list beside it — which is what this
+       stage's own sentence says about reorder and repeat business. 004 keeps
+       its artwork: no released screen is about collection or service. */
+    const CONTENT = { alt: 'STARGO WORK' };
+    const scenes = [['Scene%20%239.webp', PRODUCT.market, CONTENT], ['Scene%20%235.webp', PRODUCT.inquiryReply, CONTENT], ['Scene%20%2310%20(Light)', PRODUCT.documentPack, CONTENT], ['Scene%20%238.webp', BRAND.family(1)], ['Scene%2018.webp', PRODUCT.reactivation, CONTENT]];
+    scenes.forEach(([k, src, opts]) => { h = swapImg(h, k, src, opts); });
     // Retain the original grid/zoom animation. The centre is a real video,
     // sourced from the owner's fourth template; surrounding imagery is separate.
     const theatre = [OS.boot, OS.loading, OS.login, OS.desktop, OS.cockpit, OS.agents, OS.inquiries];
@@ -380,6 +562,27 @@ PAGES['index.html'] = (lang) => {
   // The "work" cards point at the loop table below.
   for (const p of ['project_forma-digital.html', 'project_one-step.html', 'project_nero-vision.html', 'project_bold-moves.html']) h = s(h, `href="${p}"`, 'href="#loop"');
   h = setLink(h, t(C.HOME_MONO.find(([o]) => o === 'View all work')[1]), { href: '#loop' });
+  /* V7-HOME: the band just above #loop shrinks by 100px while the page scrolls
+     past it, and Webflow's glide aims at where #loop was at click time, so
+     「看业务主线」 and the four cards landed with the section's top 100px above
+     the screen at 992px and up. js/stargo-anchor-glide.js re-measures the
+     target on every frame (as the intelligence page's hero buttons do). */
+  {
+    let n = 0;
+    h = h.replace(/<a\b([^>]*?) href="#loop"/g, (m, pre) => { n++; return `<a${pre} data-stargo-anchor="" href="#loop"`; });
+    if (n !== 5) throw new Error(`index: expected 5 links to #loop, found ${n}`);
+    h = s(h, '</body>', '<script src="js/stargo-anchor-glide.js" defer></script></body>', { count: 1 });
+  }
+  /* V8: the five business stages share one sticky picture box, and Mono's own
+     interactions dim every one of them once the last stage passes the viewport's
+     midline — leaving that box empty until the column itself scrolls out, which
+     is half a viewport height of scrolling (488px measured at 768x1024, 420px at
+     1440x900, 622px at 1920x1080 — the quantity is the height, not the width),
+     and briefly again in the 10px gaps between stages. js/stargo-stage-hold.js
+     shows the stage nearest the midline through those gaps and hands the column
+     straight back to the runtime the moment it lights one. The interaction data
+     is untouched. */
+  h = s(h, '</body>', '<script src="js/stargo-stage-hold.js" defer></script></body>', { count: 1 });
   h = h.replace(/<h3 class="work-title">\d\d<\/h3><h3 class="work-title">©<\/h3>/g, (m, i) => m).replace(/<h3 class="work-title">(26|24|25)<\/h3><h3 class="work-title">©<\/h3>/g, (m) => m);
   {
     let n = 0;
@@ -390,7 +593,13 @@ PAGES['index.html'] = (lang) => {
   // Scalora modules. The nine-stage table now lives on the capabilities page:
   // the homepage tells the loop once (five stages) and drills into four systems.
   const sub = (name, fragment, list) => { const { fn } = makeSub(name); let f = fragment; for (const [old, pair, opts] of list) f = fn(f, old, t(pair), opts); return f; };
-  let hero = frag('hero.html').replace(/<h1 /g, '<h2 ').replace(/<\/h1>/g, '</h2>');
+  /* Scalora's hero writes its two title lines as bare `<h1>` tags. The page's
+     one h1 is Mono's hero wordmark, so both become h2 — every tag, with or
+     without attributes, open and close alike (a `<h1 ` pattern used to miss the
+     bare tags and shipped `<h1>…</h2>`). `.sc-scope .hero-title-block h2` in
+     stargo-fusion.css restores the h1 type scale, so nothing moves. */
+  let hero = frag('hero.html').replace(/<h1(?=[\s>])/g, '<h2').replace(/<\/h1>/g, '</h2>');
+  if (/<\/?h1[\s>]/.test(hero)) throw new Error('index: a level-one heading survives in the Scalora hero');
   hero = addRootClass(sub('sc-hero', hero, C.HOME_SC_HERO), 'sc-scope').replace(/^<section class="/, '<section id="loop" class="');
   hero = hero.replace(/<div class="hero-description-block"><div>/, `<div class="hero-description-block"><div data-mobile-text="${escapeHtml(t(C.HOME_MOBILE.scHero))}">`);
   let products = addRootClass(sub('sc-products', frag('products.html'), C.HOME_SC_PRODUCTS), 'sc-scope');
@@ -404,21 +613,49 @@ PAGES['index.html'] = (lang) => {
     if (products === before) throw new Error('index: core-systems heading not found for the mobile variant');
   }
   {
-    // four Scalora dashboard drawings → the four STARGO OS systems, desktop and mobile variants alike
-    // Keyed on both languages' product names: the Chinese page names them in
-    // Chinese (增长系统 / 客户全景 / 报价工作台 / 贸易执行), so matching only the
-    // English prefix would throw on the very page this map exists to fill.
+    /* four pictures → the four product slots, desktop and mobile variants alike.
+       Keyed on the start of each slot's name (V6 §4.7), in both languages: the
+       two engines keep their product names, the two business areas are named
+       ERP and AI 创作 / AI Creative.
+
+       Two of the four are the owner's own screens. Growth OS 「发现目标企业，
+       查清公司与联系人，分析采购信号与开发优先级」 shows the growth control
+       tower (主动获客.docx), the screen this engine is named after. Sales Desk
+       「承接主动开发客户与渠道询盘，统一 CRM、沟通历史、产品匹配、回复与跟进」
+       shows sw028: an inquiry's facts on one side and a grounded draft reply on
+       the other. The other two keep the concept illustration they had — for ERP
+       the component matching, packaging and fulfilment handoff, for AI 创作 a
+       camera-like aperture. The ERP
+       screen the owner sent (配图二.docx, 生产管理) was placed and held the same
+       day: it shows a year of rising monthly production beside 未开始生产工单 0,
+       在建工作订单 0, 制造品价值 ¥0.00 and 完工率 0%, with the setup guide at 0%
+       完成 — an empty tenant carrying a year of production, and those four zeros
+       stay legible at the 692x390 this panel renders. Held for a capture against
+       seeded data. No released screenshot is an image or video workspace.
+
+       The picture keeps its own shape here. `.prodect-dashboard-image` is
+       `width: 100%; height: 100%` inside a `display: flex` block whose own
+       height is its content's, so the `height: 100%` resolves against an
+       indefinite height and the panel is as tall as the picture makes it —
+       measured 692×433.1 for a 1586×992 illustration at 1440 and 692×389.7 for
+       a 1268×714 screenshot, both exactly the file's own ratio. Nothing is
+       cropped and nothing is stretched, so these panels need no rule. */
     const bySystem = {
-      'Growth OS': OS.desk, '增长系统': OS.desk,
-      'Customer 360': OS.inquiries, '客户全景': OS.inquiries,
-      'Quote Studio': OS.quote, '报价工作台': OS.quote,
-      'Trade Execution': OS.trade, '贸易执行': OS.trade,
+      'Growth OS': PRODUCT.growth,
+      'Sales Desk': PRODUCT.inquiryReply,
+      'ERP': BRAND.family(2),
+      'AI 创作': OS.boot, 'AI Creative': OS.boot,
     };
+    const used = new Set();
+    let slots = 0;
     products = products.replace(/<div class="products-cards-dashboard-block[^"]*">[\s\S]*?<h3 class="heading-style-h4">([^<]*)<\/h3>/g, (block, title) => {
       const key = Object.keys(bySystem).find((k) => title.startsWith(k));
-      if (!key) throw new Error(`index: unknown system ${title}`);
-      return block.replace(/<img[^>]*class="prodect-dashboard-image"\/>/, `<img src="${bySystem[key]}" loading="lazy" alt="${escapeHtml(title)}" class="prodect-dashboard-image"/>`);
+      if (!key) throw new Error(`index: unknown product slot ${title}`);
+      used.add(bySystem[key]); slots++;
+      // `title` is already HTML text (it may carry &amp;), so it is not escaped a second time.
+      return block.replace(/<img[^>]*class="prodect-dashboard-image"\/>/, `<img src="${bySystem[key]}" loading="lazy" alt="${title.replace(/"/g, '&quot;')}" class="prodect-dashboard-image"/>`);
     });
+    if (slots !== 8 || used.size !== 4) throw new Error(`index: expected 8 product panels (4 desktop + 4 phone) showing 4 pictures, found ${slots} showing ${used.size}`);
     if (/prodect-dashboard-0\d\.svg/.test(products)) throw new Error('index: Scalora dashboard drawing survives');
   }
   const integration = addRootClass(sub('sc-integration', frag('integration.html'), C.HOME_SC_INTEGRATION), 'sc-scope');
@@ -498,12 +735,188 @@ function homeIntro(html, lang) {
   const intro = renderBlock('og-intro', lang);
   const OPEN = '<div class="og-intro">';
   if (!intro.startsWith(OPEN)) throw new Error('index: the intro block did not come back wrapped in its scope');
-  const overlay = `<div class="og-intro" data-og-intro="" aria-hidden="true">${intro.slice(OPEN.length)}`;
+  /* offgrid tags its bracketed headline <h1>. Here it is an aria-hidden overlay
+     that removes itself, and the homepage already has its h1 (Mono's hero), so
+     the tag becomes a div. Its look is carried by `.og-intro
+     .og-heading-style-h1…` class rules, which outrank offgrid's `.og-intro h1`
+     element rules on every property those set; js/stargo-intro.js finds it by
+     class. */
+  const body = intro.slice(OPEN.length).replace(/<h1(?=[\s>])/g, '<div').replace(/<\/h1>/g, '</div>');
+  if (/<\/?h1[\s>]/.test(body)) throw new Error('index: the opening animation still carries a level-one heading');
+  const overlay = `<div class="og-intro" data-og-intro="" aria-hidden="true">${body}`;
   if (!html.includes('<body>')) throw new Error('index: no <body> to put the opening animation in front of');
   return html.replace('<body>', `<body>${overlay}`);
 }
 
-/* ---- intelligence.html / workforce.html — lifelogx homepage ----------- */
+/* ---- the enterprise ontology list inside the lifelogx sticky section -------
+   THE DEFECT: the page shipped six objects (客户 / 询盘 / 报价 / 订单 / 出货 /
+   任务) but no viewport ever showed more than three of them. Measured on the
+   served page before this change, walking DOWN only (these templates reverse
+   their reveal on upward scroll, so a frame taken after scrolling back up is a
+   half-closed animation, not the layout):
+
+       width   客户    询盘    报价    订单    出货    任务
+       390     358x42 358x42 358x42  0x0    0x0    0x0
+       430     398x42 398x42 398x42  0x0    0x0    0x0     <- 412/430 were the
+       768      0x0    0x0    0x0   224x42 224x42 224x42      widths no earlier
+       1024     0x0    0x0    0x0   309x42 309x42 309x42      pass measured at
+       1440     0x0    0x0    0x0   416x42 416x42 416x42
+
+   The 0x0 boxes are not a reveal mid-frame: those headings sit under an
+   ancestor at display:none. Half the catalogue was unreachable at every single
+   width, while every card's eyebrow already promised 「客户 ▪ 报价 ▪ 订单」.
+
+   WHY IT HAPPENED: the donor ships the SAME three texts twice, in two sibling
+   wrappers that css/lifelogx.lx.css switches at 767px —
+
+     .lx-home-features-texts.lx-hide-desktop   display:none,  flex below 768
+     .lx-hero-home-text-holder.lx-hide-mobile-landscape   flex,  none below 768
+
+   — so Lifelogx can show its three features inline between the picture cards on
+   a phone and in the scroll-synced right-hand column on a desktop. It is a
+   REPOSITIONING device for one list, not a way to carry two. This build read
+   the six slots as six distinct objects (spec.cards.slice(0, 6) fed straight
+   into both wrappers), which silently cut the list in half at the breakpoint.
+
+   THE FIX, and why it is shaped this way: each wrapper now carries the whole
+   list, which is exactly what the donor does — the two wrappers are mutually
+   exclusive, so nothing is ever on screen twice.
+
+     - 客户 / 询盘 / 报价 lose the `lx-hide-desktop` breakpoint switch and stand
+       in the left column at every width. Nothing binds to that class but the
+       display rule above; the interactions bind to .lx-expandable-item.lx-_N
+       and .lx-home-features-texts.lx-_N, which are untouched here.
+     - 订单 / 出货 / 任务 stay in the donor's right-hand sticky column, still
+       driven by lx-a-39 / lx-a-65 (STYLE_OPACITY + TRANSFORM_MOVE at y=±100%
+       of each block's own height), so the desktop cross-fade is byte-for-byte
+       the donor's.
+     - and three clones of the donor's own mobile unit — the same markup, the
+       same `lx-hide-desktop` class the donor uses for precisely this purpose —
+       mirror that trio inline below 768, where the right-hand column is gone.
+
+   Rejected: simply deleting both `lx-hide-*` switches. It measures green (all
+   six get a box at all five widths) but it puts the donor's overlapping
+   opacity carousel on a phone, where .lx-sitcky-section is height:auto instead
+   of 300vh. Measured at 430x900: 订单 and 出货 never reach opacity 0.95 while
+   fully inside the viewport — the scroll range is too short for a three-step
+   cross-fade — and below 479px .lx-hero-home-text-holder picks up the donor's
+   `text-align:center`, so that trio would be centred while the trio above it
+   stays ranged left. Cloning the unit the donor already wrote for phones keeps
+   the phone layout the donor's plain inline list.
+
+   AFTER, same downward walk, every heading's widest box and the number of
+   copies of it that are not under a display:none ancestor:
+
+       width   客户    询盘    报价    订单    出货    任务     copies visible
+       320    288x42 288x42 288x42 288x42 288x42 288x42   1 each
+       360    328x42 328x42 328x42 328x42 328x42 328x42   1 each
+       375    343x42 343x42 343x42 343x42 343x42 343x42   1 each
+       390    358x42 358x42 358x42 358x42 358x42 358x42   1 each
+       393    361x42 361x42 361x42 361x42 361x42 361x42   1 each
+       412    380x42 380x42 380x42 380x42 380x42 380x42   1 each
+       430    398x42 398x42 398x42 398x42 398x42 398x42   1 each
+       768    224x42 224x42 224x42 224x42 224x42 224x42   1 each
+       834    246x42 246x42 246x42 246x42 246x42 246x42   1 each
+       1024   309x42 309x42 309x42 309x42 309x42 309x42   1 each
+       1440   416x42 416x42 416x42 416x42 416x42 416x42   1 each
+
+   Also walked at the three breakpoint edges the donor switches on — 479/480,
+   767/768 and 991/992 — and on en/intelligence.html, with the same result. The
+   three phone clones carry the only second DOM copy of 订单 / 出货 / 任务 and
+   it is display:none from 768 up, so nothing is ever on screen twice.
+
+   The desktop cross-fade is untouched: sampling the walk every 40px, the
+   sticky trio peaks at opacity 0.94 / 0.92 / 1.00 at 1024 with this change and
+   at 0.98 / 0.91 / 1.00 with the new left-column texts forced back to
+   display:none. Same numbers, so the sub-1.0 readings are the sampling step
+   landing beside a continuous cross-fade, not anything this change caused. */
+function lxOntologyList(b, spec, t, name, lang) {
+  const PLAIN = '<div class="lx-home-features-texts">';
+  const MOBILE = '<div class="lx-home-features-texts lx-hide-desktop">';
+  const found = b.split(MOBILE).length - 1;
+  if (found !== 3) throw new Error(`${name}: expected 3 ${MOBILE} units in the donor, found ${found}`);
+  if (b.includes(PLAIN)) throw new Error(`${name}: the donor already has an unswitched features-texts unit`);
+
+  // Off with the breakpoint switch: these three now stand at every width.
+  b = b.split(MOBILE).join(PLAIN);
+
+  // Clone the last one three times, switch back on, for the phone mirror of the
+  // right-hand column. Same unit, same markup — cloning a unit is how this repo
+  // repeats a donor row, and nothing in it carries a data-w-id to collide.
+  const unit = extractElement(b, b.lastIndexOf(PLAIN), 'div');
+  const clone = MOBILE + unit.text.slice(PLAIN.length);
+  for (const marker of ['<h3 class="lx-heading-style-h3 lx-home-feature">', '<div class="lx-text-size-regular lx-text-weight-light">']) {
+    if (clone.split(marker).length - 1 !== 1) throw new Error(`${name}: the cloned ontology unit does not hold exactly one ${marker}`);
+  }
+  b = b.slice(0, unit.end) + clone.repeat(3) + b.slice(unit.end);
+
+  /* Slot order down the document: three unswitched units in the left column,
+     three phone-only clones after them, the donor's three sticky units in the
+     right column, then the story card, which shares these two classes. */
+  const objects = spec.cards.slice(0, 6);
+  const inLeftColumn = objects.slice(0, 3);          // 客户 / 询盘 / 报价
+  const inStickyColumn = objects.slice(3, 6);        // 订单 / 出货 / 任务
+  const slots = [...inLeftColumn, ...inStickyColumn, ...inStickyColumn];
+  b = setEachInner(b, '<h3 class="lx-heading-style-h3 lx-home-feature">', [...slots.map((c) => t(c.title)), t(spec.feat2Card.title)]);
+  b = setEachInner(b, '<div class="lx-text-size-regular lx-text-weight-light">', [...slots.map((c) => t(c.text)), zhTail(t(spec.feat2Card.text), lang)]);
+
+  // Every object once in each wrapper, and the wrappers never overlap.
+  for (const c of objects) {
+    const n = b.split(`<h3 class="lx-heading-style-h3 lx-home-feature">${t(c.title)}</h3>`).length - 1;
+    if (n !== (inLeftColumn.includes(c) ? 1 : 2)) throw new Error(`${name}: ${t(c.title)} appears ${n} times`);
+  }
+  return b;
+}
+
+/* ---- the plain-explanations section on intelligence.html (V6 §7) ----------
+   V6 asks for readable places for enterprise knowledge, the relationship map,
+   one customer across systems, proactive work, long-running tasks and memory,
+   with the knowledge base and the relationship map explained apart. The
+   Lifelogx homepage has no slot that holds a paragraph — its text lives in
+   headlines, fixed-height cards and marquee bubbles — so this adds ONE section
+   (an approved V6 type-B addition) with the copy in
+   C.LX_INTELLIGENCE_CONTEXT.
+
+   Built from the page's own vocabulary: .lx-section / .lx-padding-global /
+   .lx-container-medium / .lx-padding-section-medium for the frame, the h2 and
+   h4 heading styles, the eyebrow (.lx-home-features-small-texts .lx-subtext)
+   and the regular text style. Its grid and card outline are in the V6-E block
+   of css/stargo-fusion.css and copy .lx-story-grid (gap, top margin) and
+   .lx-story-grid-item.lx-_3 (1px #262627, 23px radius).
+
+   Deliberately static. Nothing in it carries a class that the Lifelogx
+   interactions bind to (tools/fragments/lx-ix.json binds .lx-fade-in-*,
+   .lx-content, .lx-sitcky-section and others by class), so the IX engine never
+   starts it at opacity 0, and it reads the same without JavaScript. It also
+   avoids `.lx-home-feature` and `.lx-home-features-texts`: lxOntologyList()
+   counts the first, and the sticky cross-fade styles the second.
+
+   It goes in front of the 288-roles section: after 「不再 等提醒 / 等回复 /
+   丢上下文」, before the team card and the closing card on improvement, which
+   is the one topic of the seven this section leaves to its existing slot. */
+function lxContextSection(ctx, t) {
+  if (ctx?.items?.length !== 6) throw new Error(`intelligence: expected 6 context items, found ${ctx?.items?.length}`);
+  const items = ctx.items.map((it) => {
+    for (const k of ['group', 'title', 'text']) if (!t(it[k])) throw new Error(`intelligence: context item without ${k}`);
+    // A no-break space before each arrow, so a line never starts with "→".
+    if (it.flow && !t(it.flow).includes(' → ')) throw new Error('intelligence: context flow without " → " steps');
+    const flow = it.flow ? `<p class="lx-text-size-regular lx-context-flow">${t(it.flow).replaceAll(' → ', '\u00a0→ ')}</p>` : '';
+    return `<div class="lx-context-item"><div class="lx-home-features-small-texts"><div class="lx-subtext">${t(it.group)}</div></div>`
+      + `<h3 class="lx-heading-style-h4">${t(it.title)}</h3>`
+      + `<p class="lx-text-size-regular lx-text-weight-light">${t(it.text)}</p>${flow}</div>`;
+  }).join('');
+  return `<div id="lx-context" class="lx-section lx-context"><div class="lx-padding-global"><div class="lx-container-medium"><div class="lx-padding-section-medium">`
+    + `<div class="lx-context-head"><h2 class="lx-heading-style-h2 lx-context-title"><span class="lx-context-pink">${t(ctx.title)}</span><span>${t(ctx.titleSub)}</span></h2>`
+    + `<p class="lx-text-size-medium lx-context-lede">${t(ctx.lede)}</p></div>`
+    + `<div class="lx-context-grid">${items}</div>`
+    + `<div class="lx-context-note"><div class="lx-home-features-small-texts"><div class="lx-subtext">${t(ctx.noteLabel)}</div></div>`
+    + `<p class="lx-text-size-regular lx-text-color-grey">${t(ctx.note)}</p></div>`
+    + `</div></div></div></div>`;
+}
+
+/* ---- intelligence.html — lifelogx homepage -----------------------------
+   The only caller is PAGES['intelligence.html'] below; workforce.html moved to
+   the Lifelogx feature template and no longer comes through here. */
 function lxPage(spec, lang, name) {
   const t = (p) => (typeof p === 'string' ? p : p[lang]);
   const { fn: s } = makeSub(name);
@@ -515,7 +928,14 @@ function lxPage(spec, lang, name) {
   b = s(b, 'Get it on Market Play', t(spec.store2.sub));
   b = setLink(b, t(spec.store1.name), { href: spec.store1.href });
   b = setLink(b, t(spec.store2.name), { href: spec.store2.href });
-  b = s(b, 'The friend who never forgets.', t(spec.heroDesc));
+  /* V7: the two hero buttons glide with js/stargo-anchor-glide.js, which
+     re-measures the target on every frame. Webflow's own glide aimed at where
+     the closing card was at click time, and below 768px the expandable cards
+     collapse on the way, so #lx-evolution was reached ~888px too far down. */
+  for (const { href } of [spec.store1, spec.store2]) {
+    b = s(b, `<a href="${href}" class="lx-big-button`, `<a href="${href}" data-stargo-anchor="" class="lx-big-button`, { count: 1 });
+  }
+  b = s(b, 'The friend who never forgets.', enSentences(t(spec.heroDesc), lang));
   b = s(b, 'Natural, human-like chats that keep users engaged and understood.', t(spec.features[0].text));
   b = s(b, '<h3 class="lx-expandable-text">Interaction</h3>', `<h3 class="lx-expandable-text">${t(spec.features[0].title)}</h3>`);
   b = s(b, 'Smooth, intuitive actions that make every tap feel effortless.', t(spec.features[1].text));
@@ -523,15 +943,33 @@ function lxPage(spec, lang, name) {
   b = s(b, 'Ready made features your users already expect.', t(spec.features[2].text));
   b = s(b, '<h3 class="lx-expandable-text">Organised</h3>', `<h3 class="lx-expandable-text">${t(spec.features[2].title)}</h3>`);
   for (const [k, v] of Object.entries(spec.tags)) b = s(b, `>${k}<`, `>${t(v)}<`);
-  // six carousel cards plus the story card share these two classes
-  b = setEachInner(b, '<h3 class="lx-heading-style-h3 lx-home-feature">', [...spec.cards.slice(0, 6).map((c) => t(c.title)), t(spec.feat2Card.title)]);
-  b = setEachInner(b, '<div class="lx-text-size-regular lx-text-weight-light">', [...spec.cards.slice(0, 6).map((c) => t(c.text)), t(spec.feat2Card.text)]);
+  b = lxOntologyList(b, spec, t, name, lang);
+  /* V7-LX: each card's small caps label names that card (C.LX_INTELLIGENCE
+     cardTags / teamTags). The template's label — the three LX_TAGS words with
+     a dot between — sits above the six object cards (left column, phone
+     clones of 订单 / 出货 / 任务, sticky column) and above the team card, in
+     that document order; the team card's label also carries IX attributes,
+     so it is matched by its class and its template words only. */
+  {
+    if (spec.cardTags?.length !== 6 || !spec.teamTags) throw new Error(`${name}: a small caps label for each of the six cards and the team card`);
+    const [w1, w2, w3] = ['CARDS', 'transfers', 'financing'].map((k) => t(spec.tags[k]));
+    const re = new RegExp(`(class="lx-home-features-small-texts">)<div class="lx-subtext">${w1}</div>(<img[^>]*>)<div class="lx-subtext">${w2}</div><img[^>]*><div class="lx-subtext">${w3}</div>`, 'g');
+    const order = [0, 1, 2, 3, 4, 5, 3, 4, 5].map((i) => t(spec.cardTags[i])).concat([t(spec.teamTags)]);
+    let k = 0;
+    b = b.replace(re, (m, open, dot) => {
+      const items = order[k++];
+      if (!items) return m;
+      return open + items.map((w) => `<div class="lx-subtext">${escapeHtml(w)}</div>`).join(dot);
+    });
+    if (k !== order.length) throw new Error(`${name}: expected ${order.length} template card labels, found ${k}`);
+    if (b.includes(`<div class="lx-subtext">${w1}</div>`)) throw new Error(`${name}: a template card label survives`);
+  }
   spec.gradient.forEach((g, i) => {
     const re = new RegExp(`(class="lx-heading-style-h1 lx-_${i + 1}">)[^<]*(</h3>)`);
     if (!re.test(b)) throw new Error(`${name}: gradient heading ${i + 1}`);
-    b = b.replace(re, `$1${t(g)}$2`);
+    b = b.replace(re, `$1${enGlue(t(g), lang)}$2`);
   });
-  b = s(b, '>Is this you<', `>${t(spec.bigText)}<`);
+  b = s(b, '>Is this you<', `>${enGlue(t(spec.bigText), lang)}<`);
   const bubbleOriginals = ["I'll remember that for later", "It's too boring to document.", "I can't be bothered.", "I'll remember that", "No way I'm writing all that", 'Documenting can be a drag sometimes', 'IT Support', 'Logistics Analyst', "It's just not on my priority list", 'I prefer to keep it in my head..', "Maybe I'll get to it eventually.", "I'd rather focus on the fun parts."];
   const order = [7, 0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11]; // longest-first originals mapped back to the spec order
   bubbleOriginals.forEach((orig, i) => {
@@ -539,31 +977,125 @@ function lxPage(spec, lang, name) {
     const target = t(spec.bubbles[order[i]]);
     if (b.includes(html)) b = s(b, html, target); else b = s(b, orig, target);
   });
+  /* V7-LX: the left-moving marquee rows loop without overlap. IX2 (lx-a-35)
+     moves each of a row's two copies by -100% of ITS OWN width over 60s, so
+     the two copies must be equally wide. The template's second copy swapped
+     one bubble for another (here 6 for 2), and with this copy the copies were
+     3684 and 3895px wide at zh 1440: the second one slid 211px into the first
+     over each loop and covered 「一份报价在等负责人批准。」. Both copies are now
+     the same six bubbles, 0-4 and 6. Bubble 5, the quote waiting for approval,
+     is not lost: the right-moving row ends every copy with it. There are two
+     such rows (the section repeats its pair of rows), handled alike. */
+  {
+    const OPEN = '<div class="lx-cta-list-left">';
+    const found = b.split(OPEN).length - 1;
+    if (found !== 4) throw new Error(`${name}: expected two left-moving marquee rows of two copies, found ${found} copies`);
+    const bubble = (i) => t(spec.bubbles[i]);
+    const texts = (html) => [...html.matchAll(/<p class="lx-testimonial-text">([^<]*)<\/p>/g)].map((m) => m[1]);
+    const expectA = [0, 1, 2, 3, 4, 5].map(bubble).join('|');
+    const expectB = [0, 1, 6, 3, 4, 5].map(bubble).join('|');
+    let from = 0;
+    for (let row = 0; row < 2; row++) {
+      const a = extractElement(b, b.indexOf(OPEN, from), 'div');
+      if (b.indexOf(OPEN, a.end) !== a.end) throw new Error(`${name}: marquee row ${row + 1}: the two copies are not adjacent`);
+      const second = extractElement(b, a.end, 'div');
+      if (texts(a.text).join('|') !== expectA || texts(second.text).join('|') !== expectB) {
+        throw new Error(`${name}: marquee row ${row + 1} no longer holds bubbles 0-5 / 0,1,6,3,4,5`);
+      }
+      const unit = s(a.text, `<p class="lx-testimonial-text">${bubble(5)}</p>`, `<p class="lx-testimonial-text">${bubble(6)}</p>`, { count: 1 });
+      b = b.slice(0, a.start) + unit + unit + b.slice(second.end);
+      from = a.start + unit.length * 2;
+    }
+  }
   ['_1', '_2', '_3', '_4'].forEach((k, i) => {
     const re = new RegExp(`(class="lx-big-gradient-text lx-${k}">)[^<]*(</h3>)`, 'g');
     if (!re.test(b)) throw new Error(`${name}: gradient word ${k}`);
     b = b.replace(re, `$1${t(spec.words[i])}$2`);
   });
   b = s(b, '<h3 class="lx-heading-style-h1 lx-pink">Add your Notes in minutes</h3>', `<h3 class="lx-heading-style-h1 lx-pink">${t(spec.feat2Title)}</h3>`);
-  b = s(b, '<h3 class="lx-heading-style-h1">As simple as talking</h3>', `<h3 class="lx-heading-style-h1">${t(spec.feat2Sub)}</h3>`);
+  b = s(b, '<h3 class="lx-heading-style-h1">As simple as talking</h3>', `<h3 class="lx-heading-style-h1">${enSentences(t(spec.feat2Sub), lang)}</h3>`);
   b = setLink(b, 'Get started', { href: spec.feat2Button.href, text: t(spec.feat2Button.label) });
   b = s(b, 'Your story, <br/>Your memories, <br/>Your moments', spec.feat2Lines.map(t).join(' <br/>'));
-  b = s(b, '>Your AI companion<', `>${t(spec.ctaTitle)}<`);
-  b = s(b, 'class="lx-cta-text lx-_2nd">As simple as talking</h4>', `class="lx-cta-text lx-_2nd">${t(spec.ctaSub)}</h4>`);
+  b = s(b, '>Your AI companion<', `>${enGlue(t(spec.ctaTitle), lang)}<`);
+  b = s(b, 'class="lx-cta-text lx-_2nd">As simple as talking</h4>', `class="lx-cta-text lx-_2nd">${enGlue(t(spec.ctaSub), lang)}</h4>`);
   b = s(b, 'class="lx-cta-logo-text">Lifelogx</div>', `class="lx-cta-logo-text">${t(spec.ctaLogo)}</div>`);
   b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
-  b = s(b, 'The smartest friend you’ll ever have.', t(spec.ctaDesc));
-  // Imagery stays the template's own (owner decision, 2026-09-06): the phone screens, the
+  // V7-LX: on the Chinese page the paragraph also breaks between words only
+  // (<wbr> + keep-all, css/stargo-fusion.css V7-LX): its column is narrower
+  // since it stopped running under the portrait, and it read 「是」/「否」.
+  // The word list cuts 「从成败中复盘出」 as 从|成败|中复|盘出; it is kept as
+  // 「从成败中」「复盘出」 (「复」/「盘」 at 820 otherwise).
+  b = s(b, 'The smartest friend you’ll ever have.', lang === 'zh'
+    ? zhTail(t(spec.ctaDesc), lang).replace(/^[^<]+/, (head) => zhWbr(head)).replace('从<wbr>成败<wbr>中复<wbr>盘出', '从成败中<wbr>复盘出')
+    : t(spec.ctaDesc));
+  // The plain-explanations section (see lxContextSection) opens the 288-roles
+  // section's slot in the document: after the "no writing" band, before the
+  // team card. The marker is that section's own opening, which is unique.
+  // The 288-roles section also gets a class of its own, `lx-team-section`:
+  // workforce.html has a `.lx-flex-text-center` heading pair too (its article
+  // strip), and the V6-E line-breaking rule for 「288 个岗位，」 must not reach it.
+  {
+    const TEAM = '<div class="lx-section"><div class="lx-padding-global"><div class="lx-container-medium"><div class="lx-padding-section-medium"><div class="w-layout-hflex lx-flex-text-center">';
+    const at = b.indexOf(TEAM);
+    if (at < 0 || b.split(TEAM).length !== 2) throw new Error(`${name}: expected one 288-roles section opening`);
+    if (!(b.indexOf('lx-section lx-no-writing') < at && at < b.indexOf('class="lx-cta-wrapper"'))) throw new Error(`${name}: the 288-roles section is no longer between the "no writing" band and the closing card`);
+    const tagged = TEAM.replace('<div class="lx-section">', '<div class="lx-section lx-team-section">');
+    b = b.slice(0, at) + lxContextSection(C.LX_INTELLIGENCE_CONTEXT, t) + tagged + b.slice(at + TEAM.length);
+  }
+  // Imagery stays the template's own (owner decision, 2026-09-06): the phone frames, the
   // translucent overlays of the gradient and "no writing" sections, the closing card's image and
   // the avatars in the scenario bubbles are all part of the composition the pink palette was
-  // designed around. Only their template alt text goes.
+  // designed around. Only their template alt text goes. The painted phone screens are the
+  // exception (V7-LX, below): they carried readable template interfaces and brand names.
   if ((b.match(/lx-author-image-medium/g) ?? []).length !== 48) throw new Error(`${name}: avatar bubbles changed`);
+  /* V7-LX, the one exception, on both pages: the four phone-screen pictures
+     inside the three phone mockups (hero, team card, phone features) have the
+     template's interface painted in — a chat that names a design tool, a
+     message list with addresses and Polish lines, a card wall with a video
+     app's name, a dating screen ("New faces on here"). STARGO's four
+     phone-format concept pictures (887x1774, text-free) take those slots: the
+     screens are object-fit: cover in the same frame, so the crop and the
+     cycling animation are unchanged, and they stay decorative (alt=""). */
+  {
+    const SCREENS = [
+      ['iPhone%2013%20Pro%20Max%20-%203', MOBILE.inquiry],   // a chat → conversation becomes customer knowledge
+      ['iPhone%2013%20Pro%20Max%20-%204', MOBILE.approvals], // a message list → a decision held at an approval gate
+      ['iPhone%2016%20Pro%20-%201', MOBILE.agents],          // a card wall → parallel tasks at a shared junction
+      ['iPhone%2016%20Pro%20-%202', MOBILE.core],            // the first screen → shared enterprise context
+    ];
+    for (const [key, src] of SCREENS) {
+      if ((b.match(new RegExp(`<img\\b[^>]*${key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'g')) ?? []).length !== 3) throw new Error(`${name}: expected the phone screen ${key} in three mockups`);
+      b = swapImg(b, key, src);
+    }
+  }
+  /* V7-LX: the hand-held phone of the "no writing" band (no-writing-sc) is a
+     cut-out composite whose screen carries the template's English interface
+     and a video app's name, on both pages. The composite stays (hand, frame,
+     cut-out edge); a text-free screen (MOBILE.core, shared context: the band
+     says 「不再丢上下文」) is laid over its screen. The layer is a sibling of
+     the photograph with the photograph's own class, so the band's IX2
+     (lx-a-68, `.lx-no-writing-image`, children of the trigger) moves and
+     scales both together, and it copies the photograph's initial transform.
+     css/stargo-fusion.css (V7-LX) places the screen on the photograph's
+     object-fit box, rounds it and keeps the fingertips in front. */
+  {
+    const re = /(<img src="assets\/6929b6c693cb856e01ef7c05\/694d149575edcf4ee403b317_no-writing-sc\.avif"[^>]*?style="([^"]*)"[^>]*class="lx-no-writing-image"\/>)/g;
+    const hits = b.match(re) ?? [];
+    if (hits.length !== 1) throw new Error(`${name}: expected one hand-held phone photograph (no-writing-sc), found ${hits.length}`);
+    b = b.replace(re, (m, tag, style) => `${tag}<div class="lx-no-writing-image stargo-nw-screen" style="${style}" aria-hidden="true"><div class="stargo-nw-frame"><img src="${MOBILE.core}" loading="lazy" alt="" class="stargo-nw-art"/></div></div>`);
+  }
   b = b.replace(/<div([^>]*)class="([^"]*\blx-gradient-section\b[^"]*)"/, '<div id="lx-more"$1class="$2"');
   b = b.replace(/<div class="lx-cta-wrapper">/, '<div id="lx-evolution" class="lx-cta-wrapper">');
   b = b.replace('class="lx-sitcky-section"', `id="${name === 'intelligence' ? 'lx-ontology' : 'lx-teams'}" class="lx-sitcky-section"`);
   if (!b.includes('id="lx-more"') || !b.includes('id="lx-evolution"')) throw new Error(`${name}: anchor ids`);
   if (/Lifelogx|Tomato|lifelog/i.test(b)) throw new Error(`${name}: template brand survives`);
-  return inMonoShell(b + bigMark(), ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
+  // V6 §7: the page explains the layer in business terms. The architecture
+  // labels it used to lead with must not come back through any slot.
+  {
+    const jargon = b.match(/企业本体|前置部署|调度中枢|自我进化|提示词|模型权重|Ontology|Embedded FDE|Orchestrator|Evolution|model weights|\bprompts?\b/);
+    if (jargon) throw new Error(`${name}: architecture wording "${jargon[0]}" is back on the page`);
+  }
+  return inMonoShell(b + bigMark() + '<script src="js/stargo-anchor-glide.js" defer></script>', ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
 }
 PAGES['intelligence.html'] = (lang) => lxPage(C.LX_INTELLIGENCE, lang, 'intelligence');
 /* ---- workforce.html — lifelogx feature page ----------------------------
@@ -578,59 +1110,180 @@ PAGES['workforce.html'] = (lang) => {
   let b = frag('lx-feature.html');
 
   /* hero */
-  b = s(b, '>Think it once<', `>${t(W.heroPink)}<`);
-  b = s(b, '>Remember it forever<', `>${t(W.heroWhite)}<`);
-  b = s(b, 'Each feature focuses on reducing friction between thought and action.', t(W.heroDesc));
+  b = s(b, '>Think it once<', `>${t(W.heroPink)}<`, { count: 1 });
+  b = s(b, '>Remember it forever<', `>${t(W.heroWhite)}<`, { count: 1 });
+  /* V7-LX: a figure keeps the Chinese word after it on its line (「288 个」,
+     「288 指」); the lede breaks only at punctuation and spaces there
+     (css/stargo-fusion.css V7-LX), so the space after a figure became a line
+     end: 「…也不是 288」/「个相同的…」. The space before the figure still breaks. */
+  b = s(b, 'Each feature focuses on reducing friction between thought and action.', lang === 'zh' ? t(W.heroDesc).replace(/(\d) (?=[\u3400-\u9fff])/g, '$1\u00a0') : t(W.heroDesc), { count: 1 });
   b = s(b, '>Download<', `>${t(W.heroButton)}<`);
 
-  /* the five role cards, repeated once for the marquee loop */
+  /* The five role cards, repeated once for the marquee loop. They are examples
+     (V6 §6.1): the grey label that was the template's "Views" says so on every
+     card, so all five roles must carry the same label, and the figure slot
+     carries the role group. The collage card in the desktop item below is a
+     sixth example with its own group, and it shares the fifth card's template
+     figure (125.5M), so it is written first, inside its own element, before
+     the marquee's figures are replaced two by two. It also gets a class of its
+     own: its name, 「报告 AI 员工」, wraps to two lines on a phone, and
+     css/stargo-fusion.css (V6-D) parks that taller panel lower there. */
+  if (W.roles.length !== 5) throw new Error(`workforce: the marquee has five role cards, copy has ${W.roles.length}`);
+  for (const r of W.roles) {
+    if (t(r.dept) !== t(W.roles[0].dept)) throw new Error(`workforce: role "${t(r.name)}" is labelled "${t(r.dept)}", the others "${t(W.roles[0].dept)}"`);
+  }
+  if (lang === 'zh' && t(W.roles[0].dept) !== '岗位示例') throw new Error('workforce: the role cards must be labelled 岗位示例 (V6 §6.1)');
+  {
+    const card = findByClass(b, 'a', 'lx-organized-mind-card');
+    if (!card) throw new Error('workforce: the collage role card (.lx-organized-mind-card) is gone');
+    let inner = s(card.text, '<div class="lx-text-size-tiny">125.5M</div>', `<div class="lx-text-size-tiny">${t(W.extraRole.owns)}</div>`, { count: 1 });
+    inner = s(inner, 'class="lx-organized-mind-card w-inline-block"', 'class="lx-organized-mind-card lx-v6-collage-card w-inline-block"', { count: 1 });
+    b = b.slice(0, card.start) + inner + b.slice(card.end);
+  }
+  /* V7-LX: a Chinese role name keeps 「AI 员工」 together (a `.stargo-keep`
+     span, white-space: nowrap), so a name that wraps in its card reads 「市场研究」/「AI 员工」, not
+     「市场研究 AI 员」/「工」 (768 and the collage card at 390). */
+  const roleName = (name) => (lang === 'zh' ? t(name).replace(/ AI 员工$/, ' <span class="stargo-keep">AI 员工</span>') : t(name));
   const NAMES = ['Philip', 'Arlene', 'Marjorie', 'Collen', 'Greg'];
   const FIGURES = ['99.6M', '88.3', '16.2M', '73.7M', '125.5M'];
   NAMES.forEach((person, i) => {
-    b = s(b, `<div class="lx-name-text">${person}</div>`, `<div class="lx-name-text">${t(W.roles[i].name)}</div>`, { count: 2 });
+    b = s(b, `<div class="lx-name-text">${person}</div>`, `<div class="lx-name-text">${roleName(W.roles[i].name)}</div>`, { count: 2 });
   });
   FIGURES.forEach((fig, i) => {
-    b = b.split(`<div class="lx-text-size-tiny">${fig}</div>`).join(`<div class="lx-text-size-tiny">${t(W.roles[i].owns)}</div>`);
+    b = s(b, `<div class="lx-text-size-tiny">${fig}</div>`, `<div class="lx-text-size-tiny">${t(W.roles[i].owns)}</div>`, { count: 2 });
   });
-  b = b.split('<div class="lx-text-size-tiny lx-text-color-grey">Views</div>')
-    .join(`<div class="lx-text-size-tiny lx-text-color-grey">${t(W.roles[0].dept)}</div>`);
+  b = s(b, '<div class="lx-text-size-tiny lx-text-color-grey">Views</div>',
+    `<div class="lx-text-size-tiny lx-text-color-grey">${t(W.roles[0].dept)}</div>`, { count: 11 });
   // the template's cards link to the studio's own social accounts
   b = b.replace(/href="https:\/\/(?:www\.)?(?:linkedin|instagram|facebook|x|twitter|tiktok|youtube)\.com[^"]*"/g, 'href="contact.html"');
   // the fifth card and the panel button are placeholders in the template
   b = b.split('href="#"').join('href="contact.html"');
 
-  /* what the team gets done */
-  b = s(b, '>Here is what you can get done with Us<', `>${t(W.doTitle)}<`);
+  /* The pink panel: what a role is, how work is handed to a team, and the
+     browser desktop it happens in (M10, M14). The panel heading gets a class
+     so the Chinese page can keep it from breaking inside a phrase
+     (css/stargo-fusion.css, V6-D). */
+  b = s(b, 'class="lx-heading-style-h3 lx-bold-black-text">Here is what you can get done with Us<',
+    `class="lx-heading-style-h3 lx-bold-black-text lx-v6-panel-title">${t(W.doTitle)}<`, { count: 1 });
   [['Interaction', 'Instantly find what you need dates, notes, or activities without digging around.'],
    ['Conversation', 'Chat freely with your AI, your friends, or even your thoughts.'],
    ['Organized Mind', 'Stay on top of everything with a clear overview of your world.']]
     .forEach(([title, text], i) => {
       b = s(b, `>${title}<`, `>${t(W.abilities[i].title)}<`, { count: 1 });
-      b = s(b, text, t(W.abilities[i].text));
+      b = s(b, text, t(W.abilities[i].text), { count: 1 });
     });
   ['See priorities at a glance', 'Track projects and people', 'Stay focused on what matters', 'Keep distractions out']
-    .forEach((line, i) => { b = s(b, line, t(W.bullets[i])); });
+    .forEach((line, i) => { b = s(b, line, t(W.bullets[i]), { count: 1 }); });
 
   /* the two feature cards over the pink panel */
   b = s(b, '>Your Best Friend AI<', `>${t(W.cardA.title)}<`);
-  b = s(b, 'More than an assistant—it’s the friend who listens, remembers, and keeps life simple.', t(W.cardA.text));
+  b = s(b, 'More than an assistant—it’s the friend who listens, remembers, and keeps life simple.', zhTail(t(W.cardA.text), lang));
   b = s(b, '>Memory That Sticks<', `>${t(W.cardB.title)}<`);
   b = s(b, 'From quick notes to deep thoughts, nothing slips through the cracks.', t(W.cardB.text));
 
-  /* the three rotating answer cards and the confirmation card they sit behind */
-  b = s(b, 'Ready‑made features your usersalready expect.', t(W.stackedCard));
-  b = s(b, '>Chatting on the fly with your AI companion<', `>${t(W.answersCards[0])}<`);
-  b = s(b, '>Quickly capture and share ideas<', `>${t(W.answersCards[1])}<`);
-  b = b.split('>An online account that means business<').join(`>${t(W.phoneTitle)}<`);
-  b = b.split('>An online account thatmeans business<').join(`>${t(W.phoneTitle)}<`);
-  b = s(b, '>Easy day-to-day banking<', `>${t(W.phoneSub)}<`);
-  b = s(b, 'Easy day-to-day banking: local IBAN, freeMastercards, instant &amp; international transfers,financing solutions. All included in your plan.', t(W.answersBody));
-  b = s(b, '<div class="lx-name-text">Dancing for you</div>', `<div class="lx-name-text">${t(W.extraRole.name)}</div>`);
+  /* The three stacked cards: the team scenario in M11's order, each card
+     labelled an illustration with its step number (V6 §6.3).
+     V7-LX: the label's last word, the dot and the number never part (no-break
+     spaces): "Illustrative scenario" / "· 01" at 320. English headings are
+     written as clauses, one `.lx-v7-clause` span each (inline-block,
+     css/stargo-fusion.css V7-LX), so a heading breaks at its comma first:
+     "Check the results," / "then a person decides" instead of a lone
+     "decides" (768-1920). */
+  const clauses = (text) => (lang === 'en' && text.includes(', ')
+    ? text.split(/(?<=,) /).map((c) => `<span class="lx-v7-clause">${escapeHtml(c)}</span>`).join(' ')
+    : escapeHtml(text));
+  if (W.answersCards.length !== 2) throw new Error('workforce: two rotating cards follow the stacked one');
+  [['Ready‑made features your usersalready expect.', W.stackedCard],
+   ['Chatting on the fly with your AI companion', W.answersCards[0]],
+   ['Quickly capture and share ideas', W.answersCards[1]]]
+    .forEach(([orig, copy], i) => {
+      b = s(b, `<h4 class="lx-heading-style-h4">${orig}</h4>`,
+        `<div class="lx-subtext lx-v6-scene-label">${escapeHtml(t(W.sceneLabel)).replace(/ (?=[^ ]*$)/, '\u00a0')}\u00a0·\u00a00${i + 1}</div>`
+        + `<h4 class="lx-heading-style-h4">${clauses(t(copy))}</h4>`, { count: 1 });
+    });
+  /* The second card's picture was two chat bubbles with English words painted
+     into the image ("That's correct", "Ok"), on both language pages. The
+     bubbles are now page text — what the roles say to each other (P04) —
+     beside the template's own text-free blob, which the icon loops on the
+     other two cards already use. Same holder, same place in the card; the
+     arrangement is css/stargo-fusion.css, V6-D. */
+  {
+    const bubbles = b.match(/<img\b[^>]*6942c7318ab7f0a234efab41_Group%2034\.png[^>]*>/g) ?? [];
+    if (bubbles.length !== 1) throw new Error(`workforce: expected the one chat-bubble picture in the second card, found ${bubbles.length}`);
+    if (W.chat.length !== 3) throw new Error('workforce: the second card carries P04\'s three messages');
+    const BLOB = 'assets/6929b6c693cb856e01ef7c05/6942c685459bddbfc09cab06_Vector%20(7).png';
+    if (!b.includes(`src="${BLOB}"`)) throw new Error('workforce: the blob artwork the chat reuses is no longer in the icon loops');
+    b = s(b, bubbles[0], `<div class="lx-v6-chat"><img src="${BLOB}" loading="lazy" alt="" class="lx-v6-chat-blob"/>`
+      + `<div class="lx-v6-chat-lines">${W.chat.map((m) => `<p class="lx-v6-chat-line">${escapeHtml(t(m))}</p>`).join('')}</div></div>`, { count: 1 });
+  }
+  /* The confirmation card and the team paragraph's heading were one template
+     string in two spellings; they now say different things: the note beside
+     the desktop item names the desktop, the heading closes the scenario. */
+  b = s(b, '>An online account that means business<', `>${t(W.phoneTitle)}<`, { count: 1 });
+  b = s(b, '<h3 class="lx-heading-style-h3">An online account thatmeans business</h3>',
+    `<h3 class="lx-heading-style-h3 lx-v6-team-title">${t(W.teamTitle)}</h3>`, { count: 1 });
+  b = s(b, '>Easy day-to-day banking<', `>${t(W.phoneSub)}<`, { count: 1 });
+  b = s(b, 'Easy day-to-day banking: local IBAN, freeMastercards, instant &amp; international transfers,financing solutions. All included in your plan.', t(W.answersBody), { count: 1 });
+  b = s(b, '<div class="lx-name-text">Dancing for you</div>', `<div class="lx-name-text">${roleName(W.extraRole.name)}</div>`, { count: 1 });
 
-  /* the answers block */
-  b = s(b, '>All your answers here<', `>${t(W.answersTitle)}<`);
+  /* The display line behind the cards. The template left it unbalanced (its
+     own four words never needed it); the class lets the Chinese page balance
+     its two five-character halves (css/stargo-fusion.css, V6-D). */
+  b = s(b, '<div class="lx-big-text-on-gradient">All your answers here</div>',
+    `<div class="lx-big-text-on-gradient lx-v6-team-display">${t(W.answersTitle)}</div>`, { count: 1 });
   ['CARDS', 'transfers', 'financing'].forEach((tab, i) => { b = s(b, `>${tab}<`, `>${t(W.answerTabs[i])}<`, { count: 1 }); });
   b = s(b, '>Get the app<', `>${t(W.answersButton)}<`);
+  /* The team scenario is where capabilities #story-6 sends 「看团队协作」
+     (V6 §12: a details link lands on its topic). */
+  b = s(b, 'class="lx-section lx-answers-card-section-holder"', 'id="lx-team" class="lx-section lx-answers-card-section-holder"', { count: 1 });
+
+  /* The ten role groups (V6 §6.2), the one block this page adds. It goes after
+     the pink panel — after 「有岗位的 AI」, before the team scenario — and it
+     is the template's own careers list from its About page (lx-about.html:
+     .lx-careers_sticky-grid, a sticky heading beside .lx-careers_01-list), in
+     the page's standard .lx-section shell. Rows are <div>s, not the template's
+     <a>s: a role group is not a link. Every row shows the group and its count,
+     which is what a phone keeps when the grid folds to one column. No IX
+     attribute: the block is static, so nothing about the page's animation
+     timeline changes. */
+  {
+    const R = C.WORKFORCE_ROLE_GROUPS;
+    if (R.groups.length !== 10) throw new Error(`workforce: V6 §6.2 lists ten role groups, copy has ${R.groups.length}`);
+    const sum = R.groups.reduce((n, g) => n + g.count, 0);
+    if (!R.groups.every((g) => Number.isInteger(g.count) && g.count > 0)) throw new Error('workforce: every role group needs a positive whole count');
+    if (sum !== R.total.count) throw new Error(`workforce: the role groups add up to ${sum}, the total row says ${R.total.count}`);
+    if (R.total.count !== 288) throw new Error(`workforce: the role directory is 288 roles (V5 M10, V6 §6.2); the table totals ${R.total.count}`);
+    if (R.titleChunks.zh.join('') !== '十类岗位，一个可按任务组织的数字团队。') throw new Error('workforce: the role-group heading is no longer P04\'s');
+    if (!t(R.note).includes('288')) throw new Error('workforce: the note under the total must say what 288 counts');
+    if (R.titleChunks.en.length !== 2) throw new Error('workforce: the English role-group heading is P04\'s two sentences, one chunk each');
+    const title = lang === 'zh'
+      ? R.titleChunks.zh.map(escapeHtml).join('<wbr>')
+      : R.titleChunks.en.map((c) => `<span class="lx-v6-roster-chunk">${escapeHtml(c)}</span>`).join(' ');
+    /* M10's five steps. The space before each arrow becomes a no-break space,
+       so a line can end on "→" but never begin with one. */
+    const steps = t(R.flow).split(' → ');
+    if (steps.length !== 5) throw new Error(`workforce: the role-group flow is M10's five steps joined by " → ", found ${steps.length}`);
+    const flow = steps.map(escapeHtml).join('&nbsp;→ ');
+    const row = (name, count, extra = '') => `<div class="lx-careers_01-item lx-v6-roster-row${extra}" role="listitem">`
+      + `<div class="lx-careers-item-name"><div>${escapeHtml(t(name))}</div></div>`
+      + `<div class="lx-careers-item-name lx-v6-roster-count"><div>${count}</div><div class="lx-careers-text">${escapeHtml(t(R.unit))}</div></div></div>`;
+    const block = '<div id="lx-role-groups" class="lx-careers_wrapper lx-v6-roster"><div class="lx-section"><div class="lx-padding-global">'
+      + '<div class="lx-container-medium"><div class="lx-padding-section-medium"><div class="lx-careers_sticky-grid">'
+      + '<div class="lx-grid-content"><div class="lx-sticky-content"><div class="lx-header-container-left"><div class="lx-text-align-left">'
+      + `<h2 class="lx-heading-style-h2 lx-v6-roster-title">${title}</h2>`
+      + `<p class="lx-careers-text lx-v6-roster-intro">${escapeHtml(t(R.intro))}</p>`
+      + `<p class="lx-careers-text lx-v6-roster-flow">${flow}</p>`
+      + '</div></div></div></div>'
+      + '<div class="lx-grid-content"><div class="lx-careers_01-list" role="list">'
+      + R.groups.map((g) => row(g.name, g.count)).join('')
+      + row(R.total.name, R.total.count, ' lx-v6-roster-total')
+      + `</div><p class="lx-careers-text lx-v6-roster-note">${escapeHtml(t(R.note))}</p></div>`
+      + '</div></div></div></div></div></div>';
+    const AT = '<div data-w-id="dc3f430b-880a-bd0a-232f-0f7008c64b95" class="lx-gradient-anim-holder-feature">';
+    b = s(b, AT, block + AT, { count: 1 });
+    const pos = { block: b.indexOf('id="lx-role-groups"'), panel: b.indexOf('lx-capabilites-section-bg'), cards: b.indexOf('lx-answers-card-section') };
+    if (!(pos.panel < pos.block && pos.block < pos.cards)) throw new Error(`workforce: the role groups must sit between the pink panel and the team cards (${JSON.stringify(pos)})`);
+  }
 
   /* the article strip: our own posts */
   b = s(b, '>Stories<', `>${t(W.storiesTitle)}<`);
@@ -676,7 +1329,86 @@ PAGES['about.html'] = (lang) => {
   b = s(b, '<a href="#" class="lx-careers_01-item w-inline-block">', '<a href="contact.html" class="lx-careers_01-item w-inline-block">', { count: 5 });
   b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
   if (/Lifelogx|Lina Elsen|Amira|Mila Eron|Oren|Full Time|Part Time|Contract<|>Download</.test(b)) throw new Error('about: template copy survives');
-  return inMonoShell(b + bigMark(), ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
+
+  /* The page the owner asked for (2026-09-10): 「about页面也拿cinery模版替换成我们
+     现有的about模版，仅改变文字」, with its composition chosen on 2026-09-15:
+     「介绍带 + 项目网格 + 评价」.
+
+     cinery ships no About page — only index.html and pricing.html — so the
+     three blocks below are cut from its HOME page, which is where its
+     introduction band, its work grid and its testimonial band live.
+
+     The Lifelogx page above is still built, and deliberately: every assertion
+     it makes about that template keeps running, so a donor re-cut fails here
+     rather than silently in some later release. What it can no longer do is
+     carry copy cinery has no slot for — `ABOUT.storyTitle`/`story`,
+     `ABOUT.values` and `ABOUT.startTitle`/`starts` are drawn by none of the
+     three blocks. That is a real content loss, the owner has been told which
+     entries it costs, and they stay in copy.mjs so the swap destroys nothing
+     and putting them back is one block away. */
+  void b;
+  const aboutBody = [
+    renderBlock('cn-about', lang),
+    renderBlock('cn-about-projects', lang),
+    renderBlock('cn-about-reviews', lang),
+  ].join('\n');
+
+  const aboutSheets = [...new Set(Object.values(DONORS).map((d) => d.sheet))]
+    .filter((f) => existsSync(`${SITE}/css/${f}`));
+  let out = inMonoShell(aboutBody + bigMark(), [...aboutSheets, 'donor-fonts.css', 'lifelogx.lx.css', 'stargo-fusion.css'])
+    .replace('<body ', '<body class="stargo-dark-page" ')
+    .replace('</body>', '<script src="js/stargo-video-defer.js" defer></script><script src="js/capability-blocks.js" defer></script></body>');   // keep </body>: tools/chrome.mjs attaches the forms and tabs scripts in front of it
+
+  /* The projects band is four of cinery's own case-study clips — the owner
+     asked for them back on 2026-09-15 (「恢复原模版」) after a still-image
+     version. They are `<video autoplay loop muted playsinline>` with no
+     `preload`, so a browser takes the first playable source and starts it while
+     the page is still parsing: measured, 4 posters + 4 mp4 = 4,193,766 bytes
+     fetched before the reader has scrolled anywhere near the band, on a page
+     that previously fetched almost nothing.
+
+     This is the same mechanism the capability page already uses for cinery's
+     27-card break band, applied here for the same reason. It changes no
+     element, class, interaction id, poster or frame — the clips are the
+     template's clips, drawn exactly as the template draws them; the url simply
+     waits in `data-src` until js/stargo-video-defer.js restores it as the band
+     comes near. One line to delete if the owner would rather they load at
+     once. */
+  {
+    const sources = (out.match(/<source /g) ?? []).length;
+    out = out.replace(/<video\b[^>]*>[\s\S]*?<\/video>/g, (v) => (v.includes('<source ') ? v
+      .replace('<video', '<video data-defer')
+      .replace(/\spreload="[^"]*"/, ' preload="none"')
+      .replace(/(<source[^>]*?)\ssrc=/g, '$1 data-src=') : v));
+    if (sources && !(out.match(/<source[^>]* data-src=/g) ?? []).length) {
+      throw new Error('about: the projects clips were not deferred');
+    }
+
+    /* Deferring `<source src>` alone did NOT work here, and the measurement
+       said so: with only that in place the live page still fetched 5.66 MB of
+       video before the reader had scrolled, and the DOM showed four sources
+       deferred and four live. The four live ones were put back by Webflow's
+       own `w-background-video` runtime, which reads the wrapper's
+       `data-video-urls` on init and sets a source itself — so the component
+       re-added exactly what the build had just taken away.
+
+       Renaming the attribute is what actually stops it: the runtime looks for
+       `data-video-urls`, finds nothing, and leaves the element alone, so the
+       `<video>` plays from its own two `<source>` children — which are the ones
+       js/stargo-video-defer.js restores when the band comes near. The clips,
+       their posters, the box, its classes and the hover are all untouched; the
+       only thing that changes is who decides when the file is fetched.
+
+       The poster attribute is deliberately left alone: the four posters are
+       138,816 bytes in total and they are what the reader sees until the clip
+       arrives. */
+    const wrappers = (out.match(/\sdata-video-urls=/g) ?? []).length;
+    out = out.replace(/\sdata-video-urls=/g, ' data-defer-video-urls=');
+    if (wrappers && (out.match(/\sdata-video-urls=/g) ?? []).length) {
+      throw new Error('about: a data-video-urls survived, Webflow will fetch the clip eagerly');
+    }
+  }
+  return out;
 };
 
 /* ---- blog.html — lifelogx blog index ------------------------------------ */
@@ -685,7 +1417,35 @@ PAGES['blog.html'] = (lang) => {
   const t = (p) => (typeof p === 'string' ? p : p[lang]);
   const { fn: s } = makeSub('blog');
   let b = frag('lx-blog.html');
-  b = s(b, '>Discover Our Featured Stories<', `>${t(BLOG_UI.heading)}<`);
+  /* The hero (V5 P09): the headline, then the one sentence that says what these
+     articles are for.
+
+     The headline breaks after its comma on the Chinese page, and only there.
+     Chinese headings are balanced (css/stargo-fusion.css, `text-wrap: balance`
+     on `.lx-scope .lx-heading-style-h1`), and balance treats every character
+     as a break point: it evened this one into 「把 AI 放进真实业」/「务，看懂每一步。」
+     at every width from 390 to 1920, splitting 业务 across the lines. The break
+     keeps the two clauses whole. Where the first clause is wider than the
+     measure (≤479, at 2.7rem) balance still evens that clause alone — 「把 AI
+     放进」/「真实业务，」 over 「看懂每一步。」 — so no width splits a word. The
+     English heading has spaces to break at and gets no <br>; its balance rule
+     is the V6-G block in css/stargo-fusion.css.
+
+     The paragraph is the template's own description pair — the
+     `.lx-feature-description-holder` > `.lx-text-size-regular` that the
+     Lifelogx about hero puts under its <h1> (tools/fragments/lx-about.html) —
+     placed inside `.lx-blog-title-big`, which is already a centred column. Its
+     spacing is the V6-G rule in css/stargo-fusion.css. One element, no new
+     class of type, and the card grid below is untouched. */
+  const heading = escapeHtml(t(BLOG_UI.heading));
+  const headingHtml = lang === 'zh' ? heading.replace('，', '，<br/>') : heading;
+  if (lang === 'zh' && (headingHtml.match(/<br\/>/g) ?? []).length !== 1) {
+    throw new Error('blog: the Chinese heading must carry exactly one full-width comma to break after');
+  }
+  /* The intro may carry <wbr> (tools/blog.mjs BLOG_UI): the Chinese one is
+     drawn keep-all, and those are its break points inside long phrases. */
+  const intro = escapeHtml(t(BLOG_UI.intro)).replace(/&lt;wbr&gt;/g, '<wbr>');
+  b = s(b, '>Discover Our Featured Stories</h1></div>', `>${headingHtml}</h1><div class="lx-feature-description-holder stargo-blog-intro"><div class="lx-text-size-regular">${intro}</div></div></div>`, { count: 1 });
   b = blogCards(b, 'lx-blog-list', 'lx-blog-item', POSTS, lang, LX_CARD);
   b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
   if (/Lifelogx|Companion|Moments in Motion|Conversational AI/.test(b)) throw new Error('blog: template copy survives');
@@ -705,20 +1465,32 @@ function postPage(post, lang) {
     const items = others(post, 5).map((p) => `<a role="listitem" href="${postPath(p)}" class="lx-related-item w-dyn-item"><div class="lx-text-size-regular">${escapeHtml(t(p.title))}</div><div class="lx-text-size-small lx-text-size-grey">${escapeHtml(t(p.description))}</div></a>`).join('');
     b = b.slice(0, list.start) + list.text.replace(/>[\s\S]*<\/div>$/, `>${items}</div>`) + b.slice(list.end);
   }
-  b = s(b, '>How AI Companions Can Transform Your Life<', `>${escapeHtml(t(post.title))}<`, { count: 1 });
+  // The heading, in phrases on the Chinese page (tools/blog.mjs titleHtml says why).
+  b = s(b, '>How AI Companions Can Transform Your Life<', `>${titleHtml(post, lang, escapeHtml)}<`, { count: 1 });
   b = s(b, '>Related Items<', `>${t(BLOG_UI.related)}<`, { count: 1 });
   b = s(b, '>More from blog<', `>${t(BLOG_UI.more)}<`, { count: 1 });
-  b = swapImg(b, '6945522d9e13fa6b32ace3c9_Futuristic', coverSrc(post));
+  /* The hero cover. A cover made from one of the owner's product screenshots
+     says in its alt that it is a demonstration interface with demo data, in
+     the words tools/editorial-images.mjs uses for the same pictures elsewhere
+     (tools/blog.mjs coverAlt). The editorial covers stay decorative. */
+  b = swapImg(b, '6945522d9e13fa6b32ace3c9_Futuristic', coverSrc(post), { alt: coverAlt(post, lang) });
   b = b.replace(/(<img[^>]*class="lx-blog-image lx-details")\/>/, (m, tag) => `${tag} srcset="${coverSrcset(post)}" sizes="(max-width: 991px) 100vw, 1180px"/>`);
   if (!b.includes(coverSrcset(post))) throw new Error('post: hero image');
   {
     // The rich-text block carries the interaction's initial state inline (opacity 0, data-w-id): keep its tag, replace its content.
+    // renderBody() prints the answer paragraph, the 「要点速览」 takeaways, the
+    // sections and charts, and the 「常见问题」 FAQ (the FAQPage structured data
+    // in tools/chrome.mjs reads the same pairs). `stargo-post` scopes the V7-BLOG
+    // rules in css/stargo-fusion.css to article bodies.
     const rich = findByClass(b, 'div', 'lx-text-rich-text');
     if (!rich) throw new Error('post: rich text block');
-    b = b.slice(0, rich.start) + rich.text.slice(0, rich.text.indexOf('>') + 1) + t(post.body).trim() + '</div>' + b.slice(rich.end);
+    const open = rich.text.slice(0, rich.text.indexOf('>') + 1).replace('class="lx-text-rich-text ', 'class="lx-text-rich-text stargo-post ');
+    if (!open.includes('stargo-post')) throw new Error('post: rich text class');
+    b = b.slice(0, rich.start) + open + renderBody(post, lang) + '</div>' + b.slice(rich.end);
   }
   // Date and byline under the title; the template's CMS page shows neither.
-  b = b.replace('<div class="lx-blog-details-image-holder">', `<p class="lx-post-meta"><time datetime="${post.date}">${formatDate(post.date, lang)}</time> · ${t(BLOG_UI.byline)} · <a href="blog.html">${t(BLOG_UI.all)}</a></p><div class="lx-blog-details-image-holder">`);
+  // The separators stay with the part before them (&nbsp;), so no line starts with 「·」.
+  b = b.replace('<div class="lx-blog-details-image-holder">', `<p class="lx-post-meta"><time datetime="${post.date}">${formatDate(post.date, lang)}</time>&nbsp;· <span class="lx-post-by">${t(BLOG_UI.byline)}</span>&nbsp;· <a href="blog.html">${t(BLOG_UI.all)}</a></p><div class="lx-blog-details-image-holder">`);
   if (!b.includes('lx-post-meta')) throw new Error('post: meta line');
   b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
   if (/Lifelogx|Companion|Moments in Motion|Conversational AI|Small Support/.test(b)) throw new Error(`post ${post.slug}: template copy survives`);
@@ -761,7 +1533,7 @@ PAGES['pricing.html'] = (lang) => {
     let k = 0;
     c = c.replace(/(class="pricing-card-price">)[^<]*(<)/g, (_, a, b) => `${a}${k++ === 0 ? t(spec.price) : spec.renewal === 'ask' ? t(P.renewalPrice) : spec.renewal === 'custom' ? t(spec.price) : spec.renewal === 'demo' ? t(spec.price) : spec.renewal}${b}`);
     let u = 0;
-    c = c.replace(/(class="heading-style-h6">)[^<]*(<)/g, (_, a, b) => `${a}${u++ === 0 ? unitOf(spec.unit) : (spec.renewal === 'ask' ? t(P.unitYear) : unitOf(spec.unit === 'first' ? 'year' : spec.unit))}${b}`);
+    c = c.replace(/(class="heading-style-h6">)[^<]*(<)/g, (_, a, b) => `${a}${u++ === 0 ? unitOf(spec.unit) : (spec.renewal === 'ask' ? '' : unitOf(spec.unit === 'first' ? 'year' : spec.unit))}${b}`);
     const paras = [t(spec.desc), ...spec.items.map(t)];
     let pi = 0;
     c = c.replace(/(<div class="paragraph-p1">)[^<]*(<\/div>)/g, (_, a, b) => `${a}${paras[pi++] ?? ''}${b}`);
@@ -838,26 +1610,92 @@ PAGES['pricing.html'] = (lang) => {
   faq = faq.replace(/<h2>Frequently asked questions<\/h2>/, `<h2>${t(P.faqTitle)}</h2>`);
   {
     let q = 0;
-    faq = faq.replace(/(<div class="heading-style-h6">)[^<]*(<\/div>)/g, (_, a, b) => `${a}${t(P.faq[q++][0])}${b}`);
+    /* V7-HOME: on the Chinese page each question marks its word boundaries
+       (<wbr>) and css/stargo-fusion.css (V7-HOME H22) breaks only there: at
+       320 「模型费用包/含在内吗？」 and 「多品/牌」 split words. 「¥」 stays with
+       its figure. */
+    const question = (text) => (lang === 'zh' ? zhWbr(text).replace(/¥<wbr>/g, '¥') : text);
+    faq = faq.replace(/(<div class="heading-style-h6">)[^<]*(<\/div>)/g, (_, a, b) => `${a}${question(t(P.faq[q++][0]))}${b}`);
     if (q !== 10) throw new Error(`pricing: ${q} faq questions`);
     let an = 0;
     faq = faq.replace(/(<div class="paragraph-p2">)[^<]*(<\/div>)/g, (_, a, b) => `${a}${t(P.faq[an++][1])}${b}`);
     if (an !== 10) throw new Error(`pricing: ${an} faq answers`);
   }
-  let body = [hero, plans, cta, faq].join('\n');
-  body = localise(scClasses(body));
-  body = body.replace(/alt="(Pricing Card Icon|Check Icon|Close Icon|Arrow Dowen)"/g, 'alt=""');
-  if (/Scalora|\$\d/.test(body)) throw new Error('pricing: template copy or dollar price survives');
-  body = `<div class="sc-scope sc-page">\n${body}\n</div>`;
-  return inMonoShell(body, ['scalora-modules.sc.css', 'stargo-fusion.css'])
+  /* The page the owner asked for (2026-09-10): 「定价页面要重新做，现在这个模版和
+     我们的主题不太搭，拿cinery模版和RENOK的模版来变成我们的」— cinery's styling
+     as the page's voice, renok's tier grid as its structure, and cinery's
+     review composition to close it.
+
+     Scalora's own hero and plan cards are what that replaces, so they are no
+     longer in the body. The code above still builds them, and deliberately:
+     every assertion it makes about Scalora's markup keeps running, so the day
+     that template changes shape the build says so here rather than in some
+     later release where the cards are wanted again. `cta` and `faq` stay on the
+     page — they are this site's own words (ten real questions and answers),
+     not the template's, and the owner asked for a new pricing page, not a
+     shorter one.
+
+     Order is the owner's own reading order, image by image: the cinery header
+     (图一), renok's toggle and five tier cards (图三), renok's comparison table
+     (图四), cinery's all-features card (图二), then the reviews (图五). */
+  const scPart = (() => {
+    let sc = [cta, faq].join('\n');
+    sc = localise(scClasses(sc));
+    sc = sc.replace(/alt="(Pricing Card Icon|Check Icon|Close Icon|Arrow Dowen)"/g, 'alt=""');
+    if (/Scalora|\$\d/.test(sc)) throw new Error('pricing: template copy or dollar price survives');
+    return `<div class="sc-scope sc-page">\n${sc}\n</div>`;
+  })();
+
+  const body = [
+    renderBlock('cn-price-hero', lang),
+    renderBlock('rk-price-tiers', lang),
+    renderBlock('rk-price-compare', lang),
+    renderBlock('cn-price-card', lang),
+    renderBlock('cn-reviews', lang),
+    scPart,
+  ].join('\n');
+
+  /* Every donor sheet, the way the capability page does it, so adding a block
+     to this page never means remembering to link its styles — that is exactly
+     how the first cinery blocks shipped unstyled. js/capability-blocks.js is
+     the concatenation of every tools/blocks/<id>.js; cn-reviews ships one, so
+     this page needs it. */
+  const donorSheets = [...new Set(Object.values(DONORS).map((d) => d.sheet))]
+    .filter((f) => existsSync(`${SITE}/css/${f}`));
+  return inMonoShell(body, [...donorSheets, 'donor-fonts.css', 'scalora-modules.sc.css', 'stargo-fusion.css'])
     .replace('<body ', '<body class="stargo-dark-page stargo-pricing-lx" ')
-    .replace('</body>', '<script src="js/stargo-pricing.js"></script></body>');
+    .replace('</body>', '<script src="js/stargo-pricing.js"></script><script src="js/capability-blocks.js" defer></script></body>');
 };
 
 /* ---- enterprise.html — Mono studio ------------------------------------ */
+/* Pictures by what sits beside them (V6 §8.2, §10). All are the site's own
+   concept illustrations; editorialImages() gives each its alt and marks it as
+   one. The three pictures in the column beside the text sit, in order, next
+   to the owner cockpit (work lanes converging on one command centre), the six
+   delivery steps (a track climbing level by level — the second slot is the
+   tallest, about square at 1440, so a portrait picture loses less to the
+   cover crop than a landscape one) and the numbers — roles, controls and the
+   deployment options (one track joining separate workspaces). The five
+   cards, in order: capabilities and apps (instruments laid out on one board),
+   account and role permissions (specialized roles on a shared foundation),
+   approvals (a controlled, reversible approval path), work and result
+   records (business records linked together) and account connection and
+   protection (a gated passage through explicit boundaries). No picture is
+   used twice on the page, the four hero panels included (their pictures are
+   CSS, in the V6-F block of stargo-fusion.css). The legacy UI mock-ups with
+   invented figures are not used here. */
 PAGES['enterprise.html'] = (lang) => fromStudio({
   name: 'enterprise', ...C.ENTERPRISE, cards: C.ENTERPRISE.cards,
-  images: { work: [OS.agents, OS.login, OS.trade], quote: BRAND.square, cards: [OS.agents, OS.login, MOBILE.phoneApprovals, OS.trade, BRAND.ontology] },
+  /* V7-LX: card 2 (账号与岗位权限 / Account & role permissions) takes a landscape
+     picture again, layered permission boundaries (brand-family-04), so the first
+     row reads landscape, landscape, tall as in the template; it had the
+     portrait phone-agents, which made the row short, tall, tall.
+
+     The column keeps its editorial artwork. A product screenshot was tried in
+     the third slot on 2026-09-18 and reverted the same day: the box is
+     118x90 at 390, 235x208 at 768 and 681x620 on the English page, all far from
+     16:9, so a fitted interface left most of the box empty. */
+  images: { work: [OS.cockpit, BRAND.tall, OS.desktop], quote: BRAND.square, cards: [OS.agents, BRAND.family(4), MOBILE.phoneApprovals, BRAND.ontology, OS.login] },
 }, lang);
 
 /* ---- capabilities.html — Mono work-1 + table -------------------------- */
@@ -891,9 +1729,19 @@ PAGES['capabilities.html'] = (lang) => {
     h = h.replace(WORK_MAIN, `<div class="macro-intro"><p class="top-text">${escapeHtml(t(K.macroCaption))}</p><h2 class="h2">${escapeHtml(t(K.macroTitle))}</h2><p class="top-text big">${escapeHtml(t(K.macroLede))}</p></div><div class="spacer-m"></div>${WORK_MAIN}`);
   }
 
-  const years = h.match(/<h3 class="work-title">\d\d<\/h3><h3 class="work-title">©<\/h3>/g);
-  if (!years || years.length !== 4) throw new Error('capabilities: expected 4 year pairs');
-  years.forEach((y, i) => { h = h.replace(y, `<h3 class="work-title">${K.macro[i].groups.length}</h3><h3 class="work-title">${t(K.unit)}</h3>`); });
+  /* Each pair sits alone in the card panel's `.copy-flex` row. Each area's
+     one-line description (V5 P02) follows that row inside the card's glass
+     panel: without it the four cards named an area and a number and nothing
+     about the work. `.macro-desc` exists on this page only and is styled in
+     css/stargo-fusion.css (V6-A block); the homepage's cards share the panel
+     rules and are untouched. */
+  const years = h.match(/<div class="copy-flex"><h3 class="work-title">\d\d<\/h3><h3 class="work-title">©<\/h3><\/div>/g);
+  if (!years || years.length !== 4) throw new Error('capabilities: expected 4 year pairs, each alone in its .copy-flex row');
+  years.forEach((y, i) => {
+    if (!K.macro[i].desc) throw new Error(`capabilities: area ${i + 1} has no description`);
+    h = h.replace(y, `<div class="copy-flex"><h3 class="work-title">${K.macro[i].groups.length}</h3><h3 class="work-title">${t(K.unit)}</h3></div>` +
+      `<p class="macro-desc">${escapeHtml(t(K.macro[i].desc))}</p>`);
+  });
 
   h = s(h, 'id="Pricing"', 'id="start"');
   h = s(h, '(Pricing)', t(K.ladderCaption));
@@ -918,11 +1766,27 @@ PAGES['capabilities.html'] = (lang) => {
   h = setLink(h, 'Book a call', { href: K.card1.button.href, text: t(K.card1.button.label) });
   h = setLink(h, 'Book a call', { href: K.card2.button.href, text: t(K.card2.button.label) });
   h = s(h, '(FAQ)', t(K.faqCaption));
+  /* The questions are plain button text, so at 360–375 the browser broke them
+     inside a word or before the last character: 「…有什么区 / 别？」,
+     「…都要换掉 / 吗？」. On the Chinese page each word is a `.zh-keep` span,
+     like the closing line below (css/stargo-fusion.css V7-CAP, #start). A
+     question that ends on a word of one or two characters keeps the word
+     before it too, so the last line is never just 「用吗？」 (320–360:
+     「…都能直接 / 用吗？」 became 「…都能 / 直接用吗？」). */
+  const zhQuestion = (text) => zhKeepWords(text).replace(
+    /<span class="zh-keep">([^<]+)<\/span><span class="zh-keep">([^<]+)<\/span>$/,
+    (m, a, b) => ([...b.replace(/[？?！!。]/g, '')].length <= 2 ? `<span class="zh-keep">${a}${b}</span>` : m));
   [['What services does your agency offer?', 0], ['How do you determine the right strategy?', 1], ['How long does a typical project take?', 2], ['Do you work with businesses in any industry?', 3]]
-    .forEach(([q, i]) => { h = s(h, `>${q}<`, `>${t(K.faq[i][0])}<`, { count: 1 }); });
+    .forEach(([q, i]) => { h = s(h, `>${q}<`, `>${lang === 'zh' ? zhQuestion(t(K.faq[i][0])) : t(K.faq[i][0])}<`, { count: 1 }); });
   h = setEachInner(h, '<p class="paragraph">', K.faq.map((f) => t(f[1])));
   h = s(h, '(Looking for more?)', t(K.moreLabel));
-  h = s(h, 'Expand your scope with marketing, SEO, or content creation.', t(K.more));
+  /* The closing line is a large heading that GSAP splits into one box per
+     character, so the browser may break it anywhere: it read 「仍/在」,
+     「直/接」, 「建/设」, 「部/分」 or 「说/明」 depending on the width. On the
+     Chinese page each word goes in a nowrap span (tools/lib-html.mjs, zhKeep — imported here as zhKeepWords;
+     css/stargo-fusion.css, V7-CAP), so any wording of this sentence breaks
+     between words only. */
+  h = s(h, 'Expand your scope with marketing, SEO, or content creation.', lang === 'zh' ? zhKeepWords(t(K.more)) : t(K.more));
   h = setLink(h, 'Contact us', { href: 'contact.html', text: t(K.moreButton) });
 
 
@@ -974,8 +1838,12 @@ function capabilityShowcase(C, lang) {
      screenshots are in F:/stargo 网站/.docx/word/media. A block knows how to
      fill itself (tools/blocks/<id>.mjs); here we only put them in order and hang
      the anchors the nav and the floating pill jump to. */
+  /* `#atlas` used to hang on the first chapter, so every "complete catalogue"
+     link on the page landed on the prospecting opener instead of the
+     catalogue. It now sits on the catalogue section itself (below); this
+     chapter is reached as #story-1, the zero-size anchor in front of it. */
   const CHAPTERS = [
-    { id: 'cn-service', anchor: 'atlas' },        // 找到买家 heading + 01 (image9, image11)
+    { id: 'cn-service' },                         // 找到买家 heading + 01 (image9, image11)
     { id: 'qx-news', anchor: 'story-2' },         // 02 把对话变成理解 (image13)
     { id: 'rk-stats', anchor: 'story-3' },        // 03 报价 (image15)
     /* image17 (the break: a small circle in a white band) and image18 (the cards
@@ -1002,26 +1870,134 @@ function capabilityShowcase(C, lang) {
        id: the cn-faq block on this page carries the same interaction under that
        id (tools/donor-lib.mjs keeps donor ids), and one event drives both. */
     .replace('<div data-w-id="cn-capmap-row"', `<div id="${id}" data-w-id="e9dfc491-ce9f-1abc-547e-929be71d3026"`)
-    .replace(/<h2 class="cn-accordion-heading">[\s\S]*?<\/h2>/, `<h2 class="cn-accordion-heading">${escapeHtml(title)}</h2>`)
+    /* A Chinese group name may wrap only between its words (<wbr> between
+       them, `keep-all` in css/stargo-fusion.css V7-CAP): at 320 and 360 the
+       names broke inside a word — 「沟/通」, 「履/约」, 「经/营」, 「上下/文」. */
+    .replace(/<h2 class="cn-accordion-heading">[\s\S]*?<\/h2>/, `<h2 class="cn-accordion-heading">${lang === 'zh' ? zhWbr(title) : escapeHtml(title)}</h2>`)
     .replace(/<div class="cn-accordion-content-block">[\s\S]*?<\/div><\/div><\/div>$/, `<div class="cn-accordion-content-block">${body}</div></div></div>`);
-  const catalogue = C.CAPABILITY_GROUPS.map((g) => catRow(`g${g.n}`, `${g.n} ${t(g.name)}`,
-    g.items.map(([name, gloss, zhName]) =>
-      `<p class="cn-accordion-answer-text"><strong>${capTitle(lang)(name, zhName)}</strong> ${escapeHtml(t(gloss))}</p>`).join('')));
+  /* Each group opens onto what it does before what it lists (V6 §5.8):
+     its public one-line summary, then the V5 detail — per topic a lede, the
+     detail items, the value / boundary line, the business outputs and that
+     topic's availability note — and only then the register entries as the
+     index. Everything stays inside the donor's answer block, which IX2 opens
+     to its natural height, so a longer answer is never clipped; with no
+     script at all the answers simply stand open.
 
+     The donor answer is a <p>, and a list or a table cannot sit inside one,
+     so the detail is its own block of <p>, <ul>, <table> and <h3> elements.
+     Each of them, sub-headings and table included, carries the class the
+     donor styles and animates (`cn-accordion-answer-text`): the row's hover
+     interaction slides every element with that class sideways, and a block
+     without it would be left behind. A list carries it on its items and a
+     table on itself, never on a child as well, or that child would slide
+     twice. cn-lede / cn-out / cn-note were reserved for this in
+     css/stargo-fusion.css, and the V6-C rules there space the rest. */
+  const TEXT = 'cn-accordion-answer-text';
+  const L = C.CATALOGUE_LABELS;
+  const DETAIL = C.CATALOGUE_DETAIL;
+  {
+    const groups = C.CAPABILITY_GROUPS.map((g) => g.n);
+    const missing = groups.filter((n) => !DETAIL[n]);
+    const extra = Object.keys(DETAIL).filter((n) => !groups.includes(n));
+    if (missing.length || extra.length) {
+      throw new Error(`capabilities: catalogue detail must match the groups (missing ${missing.join(',') || '-'}, unknown ${extra.join(',') || '-'})`);
+    }
+    /* Every V5 detail item the catalogue carries, exactly once: a topic
+       moved between groups must not vanish from both or print twice. */
+    const seen = Object.values(DETAIL).flatMap((d) => d.parts.flatMap((p) => p.points.map((x) => x.id)));
+    const count = (id) => seen.filter((x) => x === id).length;
+    const wrong = C.CATALOGUE_V5_ITEMS.filter((id) => count(id) !== 1);
+    if (wrong.length) throw new Error(`capabilities: V5 items not placed exactly once in the catalogue: ${wrong.map((id) => `${id}×${count(id)}`).join(', ')}`);
+    /* M02–M16 each have a home in at least one group (M01 is the homepage's). */
+    const topics = new Set(Object.values(DETAIL).flatMap((d) => d.sources));
+    const unplaced = Array.from({ length: 15 }, (_, i) => `M${String(i + 2).padStart(2, '0')}`).filter((m) => !topics.has(m));
+    if (unplaced.length) throw new Error(`capabilities: V5 topics with no catalogue group: ${unplaced.join(', ')}`);
+    for (const [n, d] of Object.entries(DETAIL)) {
+      if (!d.summary || !d.parts.length) throw new Error(`capabilities: g${n} detail needs a summary and at least one part`);
+      d.parts.forEach((p, i) => {
+        if (!p.points.length) throw new Error(`capabilities: g${n} part ${i + 1} has no detail items`);
+        if (d.parts.length > 1 && !p.heading) throw new Error(`capabilities: g${n} has several parts, so part ${i + 1} needs a sub-heading`);
+      });
+    }
+  }
+  /* The ten role groups add up to the 288 the sub-heading states — V6 §6.2,
+     and the figure is a directory size, which the part's own availability
+     note says. A changed count fails here instead of shipping a wrong sum. */
+  for (const p of Object.values(DETAIL).flatMap((d) => d.parts)) {
+    if (!p.roles) continue;
+    const sum = p.roles.rows.reduce((n, [, k]) => n + k, 0);
+    if (p.roles.rows.length !== 10 || sum !== p.roles.total) {
+      throw new Error(`capabilities: role table has ${p.roles.rows.length} groups summing to ${sum}, expected 10 summing to ${p.roles.total}`);
+    }
+    for (const l of ['zh', 'en']) {
+      if (!p.heading[l].includes(String(p.roles.total))) throw new Error(`capabilities: the role table's heading (${l}) must state ${p.roles.total}`);
+    }
+  }
+  const txt = (v) => escapeHtml(t(v));
+  const roleTable = (r) =>
+    `<table class="${TEXT} cn-cat-table"><caption>${txt(r.caption)}</caption>` +
+    `<thead><tr><th scope="col">${txt(r.head[0])}</th><th scope="col">${txt(r.head[1])}</th></tr></thead><tbody>` +
+    r.rows.map(([name, k]) => `<tr><th scope="row">${txt(name)}</th><td>${k}</td></tr>`).join('') +
+    `</tbody><tfoot><tr><th scope="row">${txt(r.sum)}</th><td>${r.total}</td></tr></tfoot></table>`;
+  const part = (p) => [
+    p.heading ? `<h3 class="${TEXT} cn-cat-sub">${txt(p.heading)}</h3>` : '',
+    p.lede ? `<p class="${TEXT} cn-cat-lede">${txt(p.lede)}</p>` : '',
+    p.roles ? roleTable(p.roles) : '',
+    `<ul class="cn-cat-points">${p.points.map((x) =>
+      `<li class="${TEXT}"><strong>${txt(x.title)}</strong> ${txt(x.text)}</li>`).join('')}</ul>`,
+    p.value ? `<p class="${TEXT} cn-cat-value">${txt(p.value)}</p>` : '',
+    p.outputs ? `<p class="${TEXT} cn-out"><strong>${txt(L.outputs)}</strong> ${txt(p.outputs)}</p>` : '',
+    p.availability ? `<p class="${TEXT} cn-note"><strong>${txt(L.availability)}</strong> ${txt(p.availability)}</p>` : '',
+  ].join('');
+  const detail = (n) => `<div class="cn-cat-detail">` +
+    `<p class="${TEXT} cn-lede">${txt(DETAIL[n].summary)}</p>` +
+    DETAIL[n].parts.map(part).join('') + `</div>`;
+
+  const catalogue = C.CAPABILITY_GROUPS.map((g) => catRow(`g${g.n}`, `${g.n} ${t(g.name)}`,
+    detail(g.n) +
+    `<h3 class="${TEXT} cn-cat-sub cn-cat-index">${txt(L.register)}</h3>` +
+    g.items.map(([name, gloss, zhName]) =>
+      `<p class="${TEXT}"><strong>${capTitle(lang)(name, zhName)}</strong> ${escapeHtml(t(gloss))}</p>`).join('')));
+  /* Nothing that carries the class may sit inside another element that
+     carries it (it would slide twice), and every text block of the answer
+     must carry it (or it would not slide at all). */
+  for (const row of catalogue) {
+    const block = row.slice(row.indexOf('<div class="cn-accordion-content-block">'));
+    if (/<(?:ul|caption|div)\b[^>]*class="[^"]*cn-accordion-answer-text/.test(block)) {
+      throw new Error('capabilities: a catalogue container carries cn-accordion-answer-text as well as its children');
+    }
+    const loose = block.match(/<(?:p|h3|table|li)\b(?![^>]*cn-accordion-answer-text)[^>]*>/g);
+    if (loose) throw new Error(`capabilities: catalogue blocks without cn-accordion-answer-text: ${loose.slice(0, 3).join(' ')}`);
+  }
+
+  /* The band states the register's size and what that size means: groups and
+     entries in the register, not a count of live features (V6 §5.8). */
   const total = C.CAPABILITY_GROUPS.reduce((n, g) => n + g.items.length, 0);
+  const count = L.count(C.CAPABILITY_GROUPS.length, total);
+  if (!t(count.size).includes(String(total))) throw new Error('capabilities: the band count must state the register total');
   const band = (label, note) =>
     `<div class="cn-band"><div class="cn-band-label">${escapeHtml(label)}</div>` +
-    `<div class="cn-band-note">${escapeHtml(note)}</div></div>`;
+    `<div class="cn-band-note">${escapeHtml(note)} <span class="cn-band-count">` +
+    `<span>${txt(count.size)}</span>${lang === 'zh' ? '' : ' '}<span>${txt(count.meaning)}</span></span></div></div>`;
 
   showcaseHero = renderBlock('rk-hero', lang);
 
-  /* The first chapter carries both #atlas (hero button, stage rows) and #story-1
-     (the floating pill); a zero-size anchor takes the second name. */
+  /* #story-1 (the floating pill) is a zero-size anchor in front of the first
+     chapter. #atlas — the hero button, the stage rows and every "complete
+     catalogue" link — is the catalogue section.
+
+     js/stargo-catalogue.js opens a group when the address names it
+     (capabilities.html#g08, from another page or a link on this one) through
+     the row's own IX2 click, and keeps a click inside an open answer from
+     closing it. It is attached here, beside the markup it drives, rather
+     than in the page's script list; `defer` runs it after the parse like the
+     page's other deferred scripts, and chrome.mjs versions and relocates its
+     src like any other. */
   return `<span id="story-1"></span>` + chapters +
-    `<section class="cn-capmap"><div class="cn-capmap-inner">` +
-    band(t(S.catalogueLabel), `${t(S.catalogueNote)} ${C.CAPABILITY_GROUPS.length} ${lang === 'zh' ? '个能力组 · ' : 'groups · '}${total}${lang === 'zh' ? ' 项能力。' : ' capabilities.'}`) +
+    `<section id="atlas" class="cn-capmap"><div class="cn-capmap-inner">` +
+    band(t(S.catalogueLabel), t(S.catalogueNote)) +
     `<div class="cn-faq-container">${catalogue.join('')}</div>` +
-    `</div></section>`;
+    `</div></section><script src="js/stargo-catalogue.js" defer></script>`;
 }
 
   const rows = C.CAPABILITY_GROUPS.flatMap((g) => g.items.map(([item, gloss], i) => [
@@ -1088,7 +2064,7 @@ function capabilityShowcase(C, lang) {
     h = h.replace(bundleTag, '$1<script src="js/stargo-video-defer.js" defer></script><script src="js/capability-blocks.js" defer></script>');
   }
   // Assign by buyer meaning, not image sequence: growth, customer context,
-  // commercial fulfilment, workforce/governance. Parallel-team art belongs
+  // commercial fulfillment, workforce/governance. Parallel-team art belongs
   // at the homepage Workforce door, not beneath the Commercial label.
   const familyArt = [BRAND.family(1), OS.inquiries, BRAND.family(2), BRAND.family(4)];
   ['699b6466d5f19893993a4d79_work-1.webp', '699b6466d5f19893993a4d1a_work-4.webp', '699b6466d5f19893993a4d34_work-5.webp', '699b6466d5f19893993a4d8f_work-8.webp']
@@ -1103,7 +2079,11 @@ PAGES['contact.html'] = (lang) => {
   const { fn: s } = makeSub('contact');
   let h = tpl('contact_contact-1.html');
   h = s(h, '(Contact)', t(K.eyebrow));
-  h = s(h, 'Let’s Connect', t(K.h1));
+  /* V5 P07's question. The class is a hook for the V6-G balance rule in
+     css/stargo-fusion.css: unbalanced, the English question left "first?" on a
+     line of its own at 320, 390 and 1024. `h1.inner-title` is shared by other
+     pages, so the rule is scoped to this one heading rather than to the class. */
+  h = s(h, '<h1 class="inner-title">Let’s Connect</h1>', `<h1 class="inner-title stargo-contact-title">${t(K.h1)}</h1>`, { count: 1 });
   // The quote card keeps the template design (portrait film, gradient, mark); the mark is STARGO's and the rating slot names the card.
   h = h.replace(/<img[^>]*class="logo-testi-1"[^>]*\/>/, `<img src="${WORDMARK}" loading="lazy" alt="STARGO WORK" class="logo-testi-1 stargo-card-mark"/>`);
   h = s(h, '>★★★★★<', `>${t(K.quoteLabel)}<`);
@@ -1117,7 +2097,7 @@ PAGES['contact.html'] = (lang) => {
   h = s(h, '>Category<', `>${t(K.fields.category)}<`);
   h = s(h, '>Message<', `>${t(K.fields.message)}<`);
   h = s(h, '>Select one...<', `>${t(K.selectPlaceholder)}<`);
-  // twelve workflow entry points instead of the template's three options
+  // V5 P07's nine interest labels instead of the template's three options
   h = h.replace(/<option value="First">First choice<\/option><option value="Second">Second choice<\/option><option value="Third">Third choice<\/option>/,
     K.options.map((o, i) => `<option value="${i + 1}">${t(o)}</option>`).join(''));
   if (h.includes('First choice')) throw new Error('contact: select options');
@@ -1133,6 +2113,61 @@ PAGES['contact.html'] = (lang) => {
   if (!/<video id="[^"]+-video"/.test(h)) throw new Error('contact: quote card video');
   h = h.replace(/(<form id="email-form"[^>]*>)/, '$1<div class="stargo-hp" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"/></div>');
   if (!h.includes('stargo-hp')) throw new Error('contact: form not found');
+
+  /* The form column the owner asked for (2026-09-10): 「联系页面也拿cinery模版来
+     改但我要保留原网站如图6的这个」, settled on 2026-09-15 as B2 — keep this
+     page's own two columns and its quote card, and swap ONLY the right-hand
+     form for cinery's card.
+
+     So everything above still runs: Mono's form is built, its fields filled,
+     its honeypot added and every assertion it makes kept — and then the whole
+     `.w-form` element it lives in is replaced by tools/blocks/cn-contact.mjs,
+     which renders exactly that shape (one `.w-form` root, the form, then
+     `.w-form-done` and `.w-form-fail` as siblings after it). The block carries
+     this site's own ten fields and every hook js/stargo-forms.js and
+     functions/api/contact.js read; what it takes from cinery is the card.
+
+     Scoped through `.form-amin` because `w-form` is Webflow's own class and
+     the page carries more than one. */
+  {
+    const col = findByClass(h, 'div', 'form-amin');
+    const card = findByClass(col.text, 'div', 'w-form');
+    if (!card.text.includes('stargo-hp')) throw new Error('contact: the .w-form inside .form-amin is not the one holding the form');
+    const rebuilt = col.text.slice(0, card.start) + renderBlock('cn-contact', lang) + col.text.slice(card.end);
+    h = h.slice(0, col.start) + rebuilt + h.slice(col.end);
+  }
+  /* The block's styles. This page does not go through inMonoShell — it is the
+     Mono contact template returned whole — so the donor sheets the other pages
+     get there have to be linked here, after Mono's own. Without this the
+     cinery card renders with Mono's default form styling and nothing says so:
+     measured before this line existed, the card's background computed
+     `rgba(0,0,0,0)` and the fields were Mono's white inputs. That is the same
+     silent failure the first cinery blocks shipped with, and it is silent
+     precisely because an unstyled form still submits. */
+  {
+    const monoLink = /<link href="css\/monof-template\.app\.shared\.[a-f0-9]+\.css" rel="stylesheet" type="text\/css"\/>/;
+    if (!monoLink.test(h)) throw new Error('contact: Mono stylesheet link not found, cannot attach the donor sheets');
+    const sheets = [...new Set(Object.values(DONORS).map((d) => d.sheet))]
+      .filter((f) => existsSync(`${SITE}/css/${f}`))
+      .concat('donor-fonts.css')
+      .map((f) => `<link href="css/${f}" rel="stylesheet" type="text/css"/>`)
+      .join('\n');
+    h = h.replace(monoLink, (m) => `${m}\n${sheets}`);
+    if (!h.includes(`css/${DONORS.cinery.sheet}`)) throw new Error('contact: the cinery sheet did not attach; the form card would be unstyled');
+  }
+
+  /* The quote card is the other column and is untouched — 「图6」 is why B2 was
+     chosen over replacing the page. Assert it survived the splice. */
+  if (!/<video id="[^"]+-video"/.test(h)) throw new Error('contact: the quote card lost its portrait film in the swap');
+  /* Not the number of forms on the page — the Mono shell carries a second one
+     in its footer — but the number that reach this site's endpoint. Exactly
+     one form may post to /api/contact, and it must be the one that came out of
+     the block with its honeypot. */
+  if ((h.match(/action="\/api\/contact"/g) ?? []).length !== 1) {
+    throw new Error(`contact: expected exactly one form posting to /api/contact, found ${(h.match(/action="\/api\/contact"/g) ?? []).length}`);
+  }
+  if ((h.match(/name="website"/g) ?? []).length !== 1) throw new Error('contact: expected exactly one honeypot after the swap');
+
   return h.replace(/<body\b/, '<body class="stargo-contact-page"');
 };
 
@@ -1166,8 +2201,31 @@ PAGES['notices.html'] = (lang) => {
   h = setInner(h, '<div class="w-richtext">', t(N.body).trim());
   h = setLink(h, 'Back to blog', { href: 'index.html', text: t(N.back) });
   h = h.replace(/url\(&quot;assets\/[^&]*blog-1\.webp&quot;\)/, `url(&quot;${BRAND.wide}&quot;)`);   // the post banner photo
-  [['699b6466d5f19893993a4dca_Sleek', BRAND.loop], ['699b6466d5f19893993a4d64_blog-2', OS.agents], ['699b6466d5f19893993a4e03_Futuristic', OS.login]].forEach(([k, src]) => { h = swapImg(h, k, src); });
-  h = s(h, '>Related Stories<', `>${t(N.relatedTitle)}<`);
+  /* The three "keep reading" cards carry the surface each one is about, from
+     the owner's own product screenshots (the handoff of 2026-09-18):
+       能力 / Capabilities     — "from the workspace to controlled improvement":
+                                 the workspace home, whose own tab row names
+                                 those areas of work;
+       数字员工 / AI Workforce — "(288 specialized AI roles)" and ten functions:
+                                 the experts library, which counts 288 / 288 and
+                                 filters the roster by function;
+       企业管理 / Enterprise   — "see progress, control approvals and budgets,
+                                 check the results": the document centre, with
+                                 the pipeline counters above it and quote
+                                 approval in its navigation.
+     They are 16:9 pictures of an interface in a 1.4:1 box, so the box stops
+     cropping them and holds the picture's own border colour instead
+     (css/stargo-fusion.css, V7-BLOG r3). They go in with the caption as a
+     marker — any non-empty alt stops tools/editorial-images.mjs treating a
+     picture as decoration — and that pass then writes the registered sentence
+     for each screen, in the page's language, over it. */
+  [['699b6466d5f19893993a4dca_Sleek', PRODUCT.workspaceHome], ['699b6466d5f19893993a4d64_blog-2', PRODUCT.expertsLibrary], ['699b6466d5f19893993a4e03_Futuristic', PRODUCT.documentPack]]
+    .forEach(([k, src]) => { h = swapImg(h, k, src, { alt: PRODUCT_CAPTION[lang] }); });
+  /* The post template tags its "Related Stories" band <h1>, a second h1 after
+     the notice's own title. It becomes h2; `.inner-title._02` carries its
+     size, weight and spacing, and Mono's h1/h2 element rules differ only in
+     what those class rules and the page's line-height already set. */
+  h = s(h, '<h1 class="inner-title _02">Related Stories</h1>', `<h2 class="inner-title _02">${t(N.relatedTitle)}</h2>`);
   h = s(h, 'From foundational design to advanced optimization — built for digital growth.', t(N.relatedIntro));
   const cards = [
     ['November 11, 2025', 'The power of simplicity in modern real brand design', 'Learn effective social media marketing tips to engage your audience and build brand loyalty.', 'post_the-power-of-simplicity-in-modern-brand-design.html'],
@@ -1190,7 +2248,9 @@ PAGES['404.html'] = (lang) => {
   const t = (p) => p[lang];
   const { fn: s } = makeSub('404');
   let h = tpl('404.html');
-  h = s(h, '>404 Error Page<', `>${t(C.NOT_FOUND.title)}<`);
+  /* Mono's utility page has no h1; its "404 Error Page" heading is the page's
+     title, so it becomes the h1. `.h2` sets its size, weight and margins. */
+  h = s(h, '<h2 class="h2">404 Error Page</h2>', `<h1 class="h2">${t(C.NOT_FOUND.title)}</h1>`);
   h = s(h, 'The page you are looking for doesn&#x27;t exist or has been moved', t(C.NOT_FOUND.text));
   h = setLink(h, 'Back Home', { href: 'index.html', text: t(C.NOT_FOUND.back) });
   return h;

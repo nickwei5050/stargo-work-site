@@ -84,7 +84,11 @@
       Painted in the donor's own black so the list reads over what it crosses,
       spaced on the donor's own node gap; picks are `.qx-body` and keep the
       donor's body type and colour. Below 479 the donor lets everything flow,
-      and so does the panel. */
+      and so does the panel.
+      These are the places a list starts from. On narrower or shorter screens
+      (tablets, 480–1279) some of them land on a neighbouring node or run out
+      of the pinned frame; tools/blocks/qx-whatwedo.js then moves that list,
+      with inline left/top/width, to the nearest place that is clear. */
 .qx-whatwedo .qx-whatwedo-panel { --qx-gap: var(--_common-spacing---spacing-medium);
   display: flex; flex-flow: column; gap: var(--qx-gap);
   position: absolute; width: 100%; top: 0; left: calc(100% + var(--qx-gap));
@@ -98,4 +102,50 @@
   .qx-whatwedo .qx-wrapper-main-services-two .qx-whatwedo-panel,
   .qx-whatwedo .qx-wrapper-main-services-three .qx-whatwedo-panel,
   .qx-whatwedo .qx-whatwedo-four .qx-whatwedo-panel { position: static; width: auto; margin-top: var(--qx-gap); }
+}
+
+/* 8. Between 768 and 991 the two bottom nodes overlap by 13px.
+      The donor puts `-three` at `left: 46%` and rule 2 above puts the clone at
+      `left: 0%`; both nodes are 336px wide. That is fine on the donor's own
+      desktop, where 46% is far past the first node's right edge, but the nodes
+      stop shrinking while the column does: measured on the built page, the
+      clone runs 33..369 and `-three` starts at 356 (768px viewport) and
+      144..480 against 467 (991px) — 13px of overlap at both, which lands on the
+      last character of the left paragraph and the first of the right, and reads
+      as two sentences printed on top of each other.
+
+      46% -> 52% is the whole fix: it puts `-three` at 365.6 of a 703px column
+      against the clone's 337, a 28px gutter, and keeps it inside the column
+      (365.6 + 336 = 701.6). Below 768 rule 3 already lifts the clone onto its
+      own line and above 991 the column is wide enough for the donor's own 46%
+      (measured at 1024: 40..376 against 474, clear), so neither side of this
+      band is touched. */
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .qx-whatwedo .qx-wrapper-main-services.qx-wrapper-main-services-three:not(.qx-whatwedo-four) {
+    left: 52%;
+  }
+}
+
+/* 9. The condition that closes a panel (qx-whatwedo.mjs) — a connection is not
+      live until authorized, an improvement is approved before use. Same body
+      type as the lines above it, set off by a hairline on the donor's own
+      node gap so it reads as the panel's footnote, not as one more line. */
+.qx-whatwedo .qx-whatwedo-caveat {
+  border-top: 1px solid rgba(255, 255, 255, .16);
+  padding-top: var(--qx-gap);
+}
+
+/* 10. Between 480 and 767 the donor stacks the first two nodes: node 01 at
+       `top: 2vw`, node 02 at `margin-top: 25%` of the column. The English
+       node 01 is two lines taller than the Chinese one (a four-line promise
+       under a one-line title, 131px in a 492px column), so its last line ran
+       under node 02's title — measured at 600: node 01 at 98..229, node 02
+       from 209 — and while node 01 was open (it comes forward, rule 5) it hid
+       the top of that title and took its clicks. Node 02 starts 4rem lower in
+       English, which clears node 01 across the band (at 480, where the column
+       is 432px and node 01 wraps to five lines, too). */
+@media screen and (min-width: 480px) and (max-width: 767px) {
+  html[lang^="en"] .qx-whatwedo .qx-wrapper-main-services.qx-wrapper-main-services-two {
+    margin-top: calc(25% + 4rem);
+  }
 }

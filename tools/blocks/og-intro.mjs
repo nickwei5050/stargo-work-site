@@ -145,14 +145,25 @@ export const donor = {
 };
 
 /** `STARGO OS`, resolved against copy.mjs rather than typed here. */
+/**
+ * What the brackets say. The owner set it to STARGO WORK (2026-09-10):
+ * 「改名字叫STARGO WORK , 不叫OS, 但是字左右两边的符号要保留」 — the site's own
+ * name, and the `[` `]` offgrid draws around it stay exactly as they are (they
+ * are donor markup either side of the span, and nothing here touches them).
+ *
+ * It is written here rather than read out of `HOME_THEATRE`, which is where it
+ * used to come from. That constant is the line at the centre of the homepage's
+ * workspace film, and since the V6 copy (2026-09-16) it is a sentence
+ * (「同一个工作空间，连接日常经营。」), not a product name — the opening and that
+ * section do not name the same thing, so deriving one from the other would be
+ * wrong here. The check below is what keeps this honest: the name must be one
+ * the site actually uses.
+ */
 function productName(C) {
-  const theatre = C.HOME_THEATRE;
-  if (!theatre?.zh || theatre.zh !== theatre.en) {
-    throw new Error('og-intro: HOME_THEATRE should carry the same product name in both languages');
-  }
-  const name = theatre.zh.split(' ©')[0].trim();
-  if (!/^STARGO [A-Z]+$/.test(name)) {
-    throw new Error(`og-intro: expected the OS product name in HOME_THEATRE, got "${theatre.zh}"`);
+  const name = 'STARGO WORK';
+  const known = [C.HOME_THEATRE?.zh?.split(' ©')[0].trim(), 'STARGO WORK'].filter(Boolean);
+  if (!known.includes(name)) {
+    throw new Error(`og-intro: "${name}" is not a name this site uses (${known.join(', ')})`);
   }
   return name;
 }
@@ -191,29 +202,31 @@ export function render(frag, ctx) {
   if (!CREDITS.test(html)) throw new Error('og-intro: the copyright section is not where offgrid put it');
   html = html.replace(CREDITS, '');
 
-  /* Each tile's link to a donor case-study page, and the "view" button inside
-     it. The tile div, its data-w-id and its photograph all stay. */
-  const TILE_LINK = /<a id="from-top" href="works_[^"]*" class="og-cms-link w-inline-block"><div style="opacity:0" class="og-cms-button"><div class="og-text-size-small og-text-weight-medium">view<\/div><\/div><\/a>/g;
-  const links = (html.match(TILE_LINK) ?? []).length;
-  if (links !== TILES) throw new Error(`og-intro: expected ${TILES} tile links to remove, found ${links}`);
-  html = html.replace(TILE_LINK, '');
+  /* ------------------------------------------------------ the mosaic goes ---- */
 
-  /* The tiles are decoration inside an aria-hidden overlay, and their alt text
-     is the donor's own project names. */
-  const alts = (html.match(/<img[^>]* alt="[^"]*" class="og-image"\/>/g) ?? []).length;
-  if (alts !== TILES) throw new Error(`og-intro: expected ${TILES} mosaic photographs, found ${alts}`);
-  html = html.replace(/(<img[^>]*) alt="[^"]*"( class="og-image"\/>)/g, '$1 alt=""$2');
+  /* The owner watched the opening and cut the middle out of it (2026-09-10):
+     「第二张图片这么多照片墙不要了，就是图三的字幕接着就是图一Rototo模版的这个
+     效果」 — the bracketed name, then rototo's wipe, then the homepage. The
+     thirty-six-tile works mosaic that ran between them is gone.
 
-  /* The photographs are 4.4 MB the homepage did not carry before, and they are
-     not wanted until the mosaic's turn ~2.2s in. `fetchpriority="low"` moves
-     them behind the page's own render-blocking work in the browser's fetch
-     queue; nothing about the tween, the element, its class or its loading
-     attribute changes. */
-  html = html.replace(/(<img[^>]*) loading="eager"( style="filter:blur\(0px\)")/g,
-    '$1 loading="eager" fetchpriority="low" decoding="async"$2');
-  if ((html.match(/fetchpriority="low"/g) ?? []).length !== TILES) {
-    throw new Error('og-intro: the mosaic photographs did not take their fetch priority');
-  }
+     It is removed from the markup, not merely left untweened. The tiles were
+     36 photographs at 4.25 MB, eagerly fetched on every first visit to the
+     homepage, and a hidden element still downloads its `src`. Cutting the
+     section is what actually gets those megabytes back — it is by far the
+     largest single item on the page.
+
+     The cut still runs from offgrid's hero through the close of its works
+     section, because that is one contiguous slice of the donor and the hero's
+     own markup depends on nothing being resected around it; the works section
+     is removed here, at its own boundary, so the slice stays honest about
+     where it came from. */
+  const WORKS = /<section class="og-works-section">[\s\S]*<\/section>/;
+  if (!WORKS.test(html)) throw new Error('og-intro: the works section is not where offgrid put it');
+  const removed = html.match(WORKS)[0];
+  const tiles = (removed.match(/class="og-image"/g) ?? []).length;
+  if (tiles !== TILES) throw new Error(`og-intro: expected to remove ${TILES} mosaic photographs, found ${tiles}`);
+  html = html.replace(WORKS, '');
+  if (/og-image|og-cms-link|works_/.test(html)) throw new Error('og-intro: something of the mosaic survived its removal');
 
   /* ------------------------------------------------------------ the wipe ---- */
 
@@ -230,8 +243,9 @@ export function render(frag, ctx) {
     throw new Error('og-intro: donor copy or a donor link survives in the rendered block');
   }
   if ((html.match(/<a\b/g) ?? []).length) throw new Error('og-intro: an anchor survives inside an aria-hidden overlay');
-  /* The headline, its bracketed span, and one per tile. */
+  /* The headline and its bracketed span. The thirty-six that belonged to the
+     mosaic left with it. */
   const wids = (html.match(/data-w-id=/g) ?? []).length;
-  if (wids !== TILES + 2) throw new Error(`og-intro: expected ${TILES + 2} data-w-ids to survive, found ${wids}`);
+  if (wids !== 2) throw new Error(`og-intro: expected 2 data-w-ids to survive, found ${wids}`);
   return html;
 }

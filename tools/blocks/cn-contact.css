@@ -1,0 +1,177 @@
+/* cn-contact — only what the cut could not carry out of cinery.
+
+   Two things:
+
+     1. cinery's <body> declarations, which never travel with a cut section;
+     2. ONE repair: the colour of the <select>, which cinery wrote for a ground
+        this card does not have.
+
+   Every value in 1 is copied verbatim from
+   tools/templates/cinery/css/cinery.app.shared.3e3418b8f.css and scoped under
+   the block root exactly as the extractor scopes its own output. The values in
+   2 are cinery's own two colours, put back in the roles cinery's own rule was
+   written to give them. Nothing here sets a size, spacing, typeface or layout
+   the donor did not already set, and no new colour is invented.
+
+   WHAT THIS FILE NO LONGER CARRIES, and why (plan B2, 2026-09-15)
+     It used to give the block root 4–10rem of padding-top, to give back the
+     room `.contact-form-block { top: -4rem … -10rem }` took when it lifted the
+     card up over cinery's video wheel. The block is now cut at the card
+     (`div.contact-form-wrapper.w-form`), so `.contact-form-block` is outside
+     the cut, its rules are not extracted, the lift does not happen, and there
+     is nothing to give back. Left in, that padding would simply have pushed the
+     card down inside the Mono column it drops into.
+
+   FOUR THINGS THIS FILE DELIBERATELY DOES NOT CARRY, each one checked rather
+   than assumed:
+
+     no #w-node rules      Webflow writes grid placement onto generated
+                           `#w-node-…` ids, which are not classes and so are
+                           invisible to the extractor — cn-service.css and
+                           cn-faq.css both have to put those back. This cut has
+                           no such id in it at all.
+     no line-height tokens cinery leaves six heading line-height variables with
+                           escaped names (`--…-line-height\<deleted|variable-…\>`)
+                           that the extractor's `--[\w-]+` scan cannot read, so
+                           blocks with an <h2> in them have to restate the token.
+                           This block has no h1–h6 and, since plan B2 drops
+                           cinery's `div.form-heading`, no heading at all: its
+                           words are ten `<label>`s, thirteen `<option>`s, a
+                           button value and the two form-state notices.
+     no `p` repair         cn-service and cn-faq both put back `opacity: 1;
+                           letter-spacing: normal`, because this site's own `p`
+                           rule adds `opacity: .7` and `letter-spacing: -.5px`
+                           and neither is in the extracted `p` rule. No word
+                           cinery draws in this block is a paragraph — every
+                           field's words are a `<label>` and the two form-state
+                           notices are divs inside divs — so that rule has
+                           nothing of the donor's to leak onto. The two `p`
+                           elements that do stand inside the card are this
+                           site's own, not cinery's: `.stargo-form-note`, which
+                           tools/blocks/cn-contact.mjs puts in for
+                           js/stargo-forms.js to write into, and
+                           `.stargo-form-consent`, which tools/chrome.mjs
+                           appends to every form on the site. Both already have
+                           their own rules in css/stargo-fusion.css. Restating
+                           cinery's body values over them here would be this
+                           block styling markup it does not own — and the
+                           consent line in particular is meant to read as this
+                           site's small print, the same way it does on every
+                           other form.
+     no replayed motion    the cut carries no `data-w-id`, so no IX2 event and
+                           no action list binds to it, and cinery's contact.html
+                           has no inline GSAP — its only inline scripts are
+                           Webflow's `w-mod-js` and `w-mod-ix3` class stamps.
+                           Nothing about this block moves in the donor, so
+                           nothing is replayed here. */
+
+
+/* --------------------------------------------- 1. what <body> supplied -- */
+
+/* cinery's own `body` rule, restated on the block root. A cut never brings
+   <body> along, so on this site the block would inherit the contact page's own
+   Inter / 14px / 1.1 / 500 instead. It matters for every word in the card: none
+   of `.cn-form-label`, `.cn-form-input`, `.cn-button` or the two form-state
+   notices sets a typeface, and the notices set neither size nor leading, so all
+   of them inherit from here. Donor rule, verbatim:
+
+     body { background-color: var(--background-color--primary-background);
+            font-family: var(--_typography---font-family--primary);
+            color: var(--primary-color--white);
+            font-size: var(--_sizes---fixed--small);
+            line-height: 1.4;
+            font-weight: var(--_typography---font-weight--regular); }
+
+   `background-color` is left out, and `donor.ground` no longer sets it either.
+   The block is now a card that paints itself (`.cn-contact-form-wrapper`,
+   `--primary-color--dark` = #232324) and the Mono column it drops into is white
+   (`.section { background-color: var(--color--first-color) }`), so painting the
+   block root black would have shown as four black notches outside the card's
+   2rem corner radius. Every variable named here is defined on `.cn-contact` by
+   the extractor's own `:root` copy, at the base size and again at each of
+   cinery's breakpoints.
+
+   `html { font-size }` is NOT restated, and does not need to be: neither cinery
+   nor the Mōno template this site is built from declares one — both ship
+   Webflow's normalize, whose `html` rule sets only `text-size-adjust`,
+   `font-family` and `height` — so a `rem` is the user agent's own on both, and
+   every rem in the extracted sheet already resolves to what it resolves to in
+   the donor. */
+.cn-contact {
+  font-family: var(--_typography---font-family--primary);
+  color: var(--primary-color--white);
+  font-size: var(--_sizes---fixed--small);
+  line-height: 1.4;
+  font-weight: var(--_typography---font-weight--regular);
+}
+
+
+/* ------------------------------------------ 2. the select's colour, put --
+   ------------------------------------------    back in its donor's roles --
+
+   THE ONE RULE IN THIS PORT THAT DOES NOT SHIP THE DONOR'S LITERAL VALUE, and
+   the reasoning is recorded here in full because that is the only thing that
+   makes it a port rather than a preference.
+
+   cinery's rule, verbatim, from its own stylesheet
+   (tools/templates/cinery/css/cinery.app.shared.3e3418b8f.css:3489), which
+   reaches the generated sheet as
+   `.cn-contact .cn-form-input.is-select-input` (css/cinery.cn2.css:2664):
+
+     .form-input.is-select-input { color: #222; }
+
+   `#222` is cinery's "dark text on a light ground" value — it uses the same
+   one, four lines earlier, for `.form-input::placeholder` (…:3479). But the
+   field it is applied to is not light. `.form-input` sets
+   `background-color: var(--border-color--primary-border)` = `#ffffff1a`, and on
+   this card that composites over `--primary-color--dark` (#232324) to
+   rgb(57, 57, 58). Measured, WCAG 2.1 relative luminance, in a browser with
+   these two stylesheets loaded in build order:
+
+     #222 on rgb(57,57,58)     1.38 : 1     ← cinery's literal value
+     #fff on rgb(57,57,58)    11.54 : 1     ← what the other nine inputs use
+     #222 on #fff             15.91 : 1     ← a popup on a light system ground
+
+   (The first two read 1.39 and 11.46 if the composite is computed from the
+   exact `1a` alpha rather than the `0.1` getComputedStyle serialises it to.
+   Nothing in the argument turns on the second decimal place.)
+
+   1.38:1 is not a dim control, it is an unreadable one: the closed select's
+   text cannot be made out at all. It never showed in the donor because cinery
+   ships no `<select>` anywhere in its export and every one of its four
+   `placeholder` attributes is empty — the rule and its twin have simply never
+   been drawn. This site's field set brings the select the rule was written for,
+   and drawing it for the first time is what exposes the mismatch.
+
+   Restoring the LITERAL value would ship a form control nobody can read.
+   Inventing a third colour would be restyling the donor. So the port restores
+   the rule's INTENT, with the donor's own two colours:
+
+     the closed control   `var(--primary-color--white)` — cinery's own white,
+                          and already what `.cn-form-input` gives the other nine
+                          fields on this card (…:3466). The select now reads
+                          exactly like the inputs above it, which is what
+                          `.form-input` says it should.
+     the popup list       `#222` on `var(--primary-color--white)` — cinery's own
+                          dark-on-light pair, now stated explicitly on `option`
+                          so the twelve entries stay legible on the platforms
+                          that paint the list on a light ground rather than
+                          inheriting the field's translucent one.
+
+   Same move, same reasoning as the type-size note in tools/blocks/ro-gallery.css:
+   the cut cannot carry the condition the donor's value assumed, so the donor's
+   own value is restated for the condition that is actually there.
+
+   Specificity is deliberate and checked: `.cn-contact .cn-form-input.is-select-input`
+   is (0,3,0), identical to the extracted rule, and a block's css is appended to
+   its donor's stylesheet AFTER the extracted rules, so this wins on source
+   order without a `!important` and without raising specificity. The class stays
+   on the element in the markup — nothing is stripped. */
+.cn-contact .cn-form-input.is-select-input {
+  color: var(--primary-color--white);
+}
+
+.cn-contact .cn-form-input.is-select-input option {
+  color: #222;
+  background-color: var(--primary-color--white);
+}

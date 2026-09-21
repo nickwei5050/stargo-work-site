@@ -1,0 +1,212 @@
+/* cn-about — only what the cut could not carry out of cinery.
+
+   Three things live here and nothing else:
+
+     1. cinery's <body> declarations, which never travel with a cut section;
+     2. two properties this site's own `p` rule adds and cinery's does not, and
+        which therefore leak onto the block's paragraph and its button label;
+     3. one ix3 (GSAP) timeline — the button label's roll — which
+        tools/donor-lib.mjs cannot carry, replayed with the donor's own numbers.
+
+   Everything in 1 and 2 is copied verbatim out of
+   tools/templates/cinery/css/cinery.app.shared.3e3418b8f.css and scoped under
+   the block root exactly as the extractor scopes its own output. Nothing here
+   sets a size, colour, spacing or layout the donor did not already set.
+
+   What is NOT here, and why, so the next reader does not go looking:
+
+     · no placement rule. ro-gallery.css has one because that block is dropped
+       into a `position: relative` hero band; this one is a full-width
+       `<section>` in normal flow, and the About page's own container
+       (`.lx-scope { display: block; width: 100% }`, css/stargo-fusion.css:137)
+       gives it the whole page width, which is what cinery gives it too.
+     · no `#w-node-…` grid rules. cn-service.css needs nine of them; this cut
+       contains no `w-node` id at all (checked against the donor page: zero
+       occurrences inside the section), because nothing in it is grid-placed —
+       the card is a flex column and the social row is a flex row.
+     · no heading line-height token. cn-service.css and cn-produce.css restore
+       `--_typography---h2--h2-line-height\<deleted|…\>`, the one variable name
+       Webflow left escaped; this block has no h1–h6, so none of the six
+       escaped heading tokens is asked for.
+     · no ground. `donor.ground` is not set in tools/blocks/cn-about.mjs and no
+       background-color is written here either: `.cn-intro-background` is a
+       full-width block child painting the donor's own theatre photograph at
+       `background-size: cover`, so the block covers itself at every width. The
+       two `.cn-intro-opacity` fades resolve to
+       `--background-color--primary-background` = #000, and the About page is
+       #000002 — `.lx-scope` (css/stargo-fusion.css:137) inside `body.lx-page`
+       (:153) — two parts in 255 of blue apart, so the band still dissolves into
+       the page above and below it the way it does on cinery's own black page. */
+
+/* --------------------------------------------- 1. what <body> supplied -- */
+
+/* cinery's own `body` rule, restated on the block root. Verbatim:
+
+     body { background-color: var(--background-color--primary-background);
+            font-family: var(--_typography---font-family--primary);
+            color: var(--primary-color--white);
+            font-size: var(--_sizes---fixed--small);
+            line-height: 1.4;
+            font-weight: var(--_typography---font-weight--regular); }
+
+   `background-color` is the one declaration left out — see the note above.
+
+   Without the rest, the block inherits this site's own body instead. Mono's
+   values, read out of css/monof-template.app.shared.ed8969994.css:
+
+     body { font-family: var(--font--primary-font);       Inter, sans-serif
+            color:       var(--color--second-color);      #000
+            font-size:   var(--button--font-size);        14px
+            line-height: var(--line-height--page-line-height);   1.1
+            font-weight: var(--font-weight--500);         500
+            cursor: none }
+
+   (`cursor: none` is the sixth declaration and is deliberately NOT restated:
+   css/stargo-fusion.css:138 already hands the pointer back to every `a`,
+   `button` and `[role="button"]` inside `.lx-scope`, which is what the About
+   page's body is, and the block's six links are all `a`.)
+
+   `color` is the one that matters most here and it is not cosmetic. The whole
+   of this block's copy sits inside `.cn-intro-content-block`, whose background
+   is `var(--primary-color--dark)` = #232324, and the extracted
+   `.cn-text-size-large` sets font-size, line-height and weight but NOT colour —
+   so the paragraph would be drawn in Mono's #000 on that #232324 card. Computed
+   from the two colours (WCAG relative luminance: #232324 is 0.01685, #000 is 0,
+   white is 1; ratio = (L+.05)/(l+.05)), that is 1.34:1 — the introduction would
+   be, in practice, invisible. cinery's `--primary-color--white`, which is the
+   keyword `white`, gives 15.71:1 on the same card.
+
+   `font-family` is the other one: nothing inside this cut names a font of its
+   own — not `.cn-text-size-large`, not `.cn-main-button`, not
+   `.cn-button-text` — so every word in the block would be set in Inter rather
+   than the Overused Grotesk the extractor already mirrored into
+   assets/cinery/ and declared with cinery's own `@font-face` rules.
+
+   `font-size`, `line-height` and `font-weight` are restated with them because
+   they are one rule in the donor and because anything sized in `em` inside the
+   block resolves against them. */
+.cn-about {
+  font-family: var(--_typography---font-family--primary);
+  color: var(--primary-color--white);
+  font-size: var(--_sizes---fixed--small);
+  line-height: 1.4;
+  font-weight: var(--_typography---font-weight--regular);
+}
+
+/* --------------------------------------------- 2. what our `p` rule adds -- */
+
+/* cinery's two `p` rules are `{ margin-top; margin-bottom }` and
+   `{ font-size; margin-bottom; line-height }` — nothing else, so a cinery
+   paragraph is opaque and tracks normally. Mono's is
+
+     p { opacity: .7;
+         font-size: var(--font--work-title);
+         line-height: var(--line-height--paragraph-line-height);
+         font-weight: var(--font-weight--500);
+         letter-spacing: -.5px;
+         margin-bottom: 10px; }
+
+   and of those six, four have a counterpart in the extracted rules and two do
+   not. So `opacity: .7` and `letter-spacing: -.5px` leak straight through onto
+   the two `<p>` elements this block has — the introduction paragraph and both
+   copies of the button label — dimming white type that cinery draws at full
+   strength and pulling the tracking in by half a pixel per character. Put back
+   what the donor computes. Same repair cn-service.css makes, for the same
+   reason. */
+.cn-about p { opacity: 1; letter-spacing: normal; }
+
+/* ------------------------------ 3. the motion the cut leaves behind ------- */
+
+/* cinery drives this section three ways. Two of them arrive on their own:
+
+     · the five social glyphs' roll — IX2 events (MOUSE_OVER -> action list
+       `a`, MOUSE_OUT -> `a-2`) bound to the five `data-w-id`s on
+       `.social-link`, which tools/donor-lib.mjs extracts and namespaces; ten
+       events and two action lists came across with this cut.
+     · `.main-button { transition: all .35s }` with `:hover { transform:
+         scale(.95) }` — plain css in cinery's own sheet, extracted as
+       `.cn-about .cn-main-button:hover`.
+
+   The third does not, and this is it: the button LABEL's roll.
+
+     interaction i-84a682e6   trigger wf:hover on class `main-button`
+                              (controlType "standard", pluginConfig
+                              { type: "mouseenter", hover: "each" })
+     timeline    t-bf9e6807   ta-4d1b04ff  targets `.button-text` within the
+                              trigger; timing { duration: .4, position: 0,
+                              stagger: { amount: .4 }, ease: 12 };
+                              properties { "wf:transform":
+                                { yPercent: [null, "-100%"] } };
+                              splitText { type: "chars" }
+
+   Read out of tools/templates/cinery/js/app.9d009f54.b1680441e3b493e5.js.
+   Ease 12 is index 12 of the ix3 runtime's own table in
+   js/app.schunk.25099a4fefa544e6.js — ["none","power1.in","power1.out",
+   "power1.inOut","power2.in","power2.out","power2.inOut","power3.in",…] — i.e.
+   gsap `power4.inOut`, which is quintic in-out.
+
+   Why it cannot travel: ix3 is GSAP data and donor-lib returns
+   `{events, actionLists}` (IX2) only. This site does ship the ix3 runtime
+   (js/app.schunk.25099a4fefa544e6.js is on every page, about.html included),
+   but it registers no interactions with it: no file under js/ CALLS
+   `ix3.getInstance().register([…])`, and the only place that string appears at
+   all is inside the prose of tools/blocks/cn-about.js, which
+   tools/capability-donors.mjs concatenates verbatim into
+   js/capability-blocks.js. So no donor timeline fires. The real fix is in
+   tools/donor-lib.mjs and tools/fuse-ix.mjs, shared files this block may not
+   edit; the same note is in
+   tools/blocks/cn-produce.css, which replays cinery's heading reveal for the
+   same reason.
+
+   WHAT THE DONOR'S GEOMETRY IS. `.button-text-wrap` is `flex-flow: column;
+   justify-content: flex-start; height: 1.125rem; overflow: hidden` — an 18px
+   window — and it holds TWO `.button-text` copies at `font-size: 1rem;
+   line-height: 1.2`, i.e. 19.2px each. (They do not shrink to fit: an
+   overflow-hidden flex item still keeps its automatic minimum size, which here
+   is its own line box.) At rest the first copy fills the window and the second
+   sits below it, clipped. `yPercent: -100%` lifts both by 19.2px: the first
+   leaves through the top, the second takes its place. cn-about.mjs writes the
+   same word into both copies precisely because of this — write one and the
+   hover shows the donor's.
+
+   WHAT IS REDUCED. The donor splits the label into characters and staggers
+   them across 0.4s, so its roll runs 0.8s end to end. Splitting characters
+   means rewriting the label into spans at runtime, which is DOM structure, and
+   the brief is 「仅仅针对文字进行改动」 — so the label rolls as one piece here
+   and the roll takes the action's own 0.4s. Nothing else changes: same
+   trigger, same direction, same distance, same easing, same window.
+
+   WHY A TRANSITION AND NOT @keyframes. Webflow's hover timeline with
+   `hover: "each"` plays forward on mouseenter and back on mouseleave. A
+   one-shot keyframe animation cannot come back; a transition does exactly
+   this, in both directions, for free.
+
+   THE EASING. `cubic-bezier(.84, 0, .16, 1)` is the bezier nearest quintic
+   in-out — max deviation 0.0305 of the travel, which over a 19.2px roll is
+   0.59px, i.e. under a device pixel at 1x. tools/blocks/ro-gallery.css fitted
+   and measured the same curve for the same ease index; it also overrides with
+   `linear()` where the number matters, which over half a pixel it does not. */
+.cn-about .cn-main-button .cn-button-text {
+  transition: transform .4s cubic-bezier(.84, 0, .16, 1);
+}
+.cn-about .cn-main-button:hover .cn-button-text {
+  transform: translateY(-100%);
+}
+
+/* The paragraph's own arrival — ix3 timeline `t-a0ad7ea5`, fired by
+   `i-7405f602` — is NOT replayed here, and cannot be: it splits the paragraph
+   into LINES and masks each one, and a stylesheet cannot find a line box. It
+   lives in tools/blocks/cn-about.js instead, which uses the gsap / SplitText /
+   ScrollTrigger this site already loads on every page and the timeline's own
+   numbers. Nothing in this file hides the paragraph, so a page that never runs
+   that script simply shows it — which is the same guarantee cn-produce.css
+   writes down for its heading. */
+
+/* A reader who has asked their system for less motion gets the block as it is
+   drawn — the photograph, the card, the glyphs, every word in place, nothing
+   sliding. The label still swaps for its identical twin, instantly, so no word
+   is lost. Same line js/stargo-pricing.js, js/stargo-media.js and
+   tools/blocks/cn-produce.css already take. */
+@media (prefers-reduced-motion: reduce) {
+  .cn-about .cn-main-button .cn-button-text { transition: none; }
+}

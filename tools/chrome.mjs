@@ -19,7 +19,7 @@ import { editorialImages } from './editorial-images.mjs';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { CAP_JUMPS, NAV, SECONDARY, MORE, LANG_SWITCH, CHROME, META, CONTACT_INFO, SITE_URL } from './copy.mjs';
-import { POSTS, BLOG_UI, postPath, coverSrc } from './blog.mjs';
+import { POSTS, BLOG_UI, postPath, coverSrc, faqEntities, wordCount } from './blog.mjs';
 
 /** Every page the build produces, as root-relative names. */
 export const SITE_PAGES = [...NAV, ...SECONDARY, ...MORE].map((n) => n.href).concat(POSTS.map(postPath));
@@ -123,7 +123,19 @@ function topNav(html, L, current) {
 function overlayMenu(html, L, current) {
   const flex = findByClass(html, 'div', 'nav-top-flex');
   if (!flex) {
-    if (!html.includes('menu-wrapper')) return html.replace(/<div class="menu-button w-nav-button">[\s\S]*?<\/div><\/div>/, '');
+    /* A header with no side menu behind it: the 404 page, whose Mono template
+       ships the header alone. Its two-line icon has nothing to open (a plain
+       <div> that ignored clicks and could not be focused), so it goes. The
+       header's own menu button stays: it is Webflow's collapsed navigation, the
+       same button every other page uses below 992px, and without it a phone
+       or tablet had no way off the 404 page but the logo. */
+    if (!html.includes('menu-wrapper')) {
+      const icon = /<div data-w-id="[^"]*" class="circle-wrap">(?:<div class="line-divider-menu [^"]*"><\/div>)+<\/div>/g;
+      const n = (html.match(icon) ?? []).length;
+      if (n !== 1) throw new Error(`chrome: expected one side menu icon on a page without a side menu, found ${n}`);
+      if (!html.includes('<div class="menu-button w-nav-button">')) throw new Error('chrome: header menu button not found');
+      return html.replace(icon, '');
+    }
     throw new Error('chrome: overlay menu not found');
   }
   const item = findByClass(flex.text, 'div', 'menu-item');
@@ -213,15 +225,29 @@ function head(html, lang, current) {
   if (current === 'blog.html') {
     graph.push({
       '@type': 'Blog', '@id': `${blogUrl}#blog`, url: blogUrl, name: `STARGO WORK ${BLOG_UI.section[lang]}`, description, inLanguage, publisher: { '@id': ORG_ID },
-      blogPost: POSTS.map((p) => ({ '@type': 'BlogPosting', '@id': `${cleanUrl(lang, postPath(p))}#article`, headline: p.title[lang], url: cleanUrl(lang, postPath(p)), datePublished: p.date, image: `${SITE_URL}/${coverSrc(p)}` })),
+      blogPost: POSTS.map((p) => ({ '@type': 'BlogPosting', '@id': `${cleanUrl(lang, postPath(p))}#article`, headline: p.title[lang], url: cleanUrl(lang, postPath(p)), datePublished: p.date, dateModified: p.modified ?? p.date, image: `${SITE_URL}/${coverSrc(p)}` })),
     });
   }
   if (post) {
+    /* BlogPosting. `wordCount` is tools/blog.mjs wordCount() over the printed
+       article (body, takeaways, FAQ): words on English pages, characters on
+       Chinese pages (each Han character one, each Latin or numeric run one).
+       `about` is the product the blog explains; `mentions` names the product
+       engines an article is about (schema.org Thing), where it lists any. */
     graph.push({
       '@type': 'BlogPosting', '@id': `${self}#article`, headline: post.title[lang], description, image: ogImage, url: self, mainEntityOfPage: { '@id': self },
-      datePublished: post.date, dateModified: post.modified ?? post.date, inLanguage, keywords: post.keywords.join(', '),
+      datePublished: post.date, dateModified: post.modified ?? post.date, inLanguage, keywords: post.keywords[lang].join(', '),
+      ...(post.section ? { articleSection: post.section[lang] } : {}),
+      wordCount: wordCount(post, lang),
+      about: { '@type': 'SoftwareApplication', name: 'STARGO WORK', applicationCategory: 'BusinessApplication', operatingSystem: 'Web', url: `${SITE_URL}/` },
+      ...(post.mentions?.length ? { mentions: post.mentions.map((name) => ({ '@type': 'Thing', name })) } : {}),
       author: { '@type': 'Organization', '@id': ORG_ID, name: 'STARGO WORK' }, publisher: { '@id': ORG_ID }, isPartOf: { '@id': `${blogUrl}#blog` },
     });
+    /* The article's visible 「常见问题」 section (tools/blog.mjs renderFaq) as
+       structured data: the same questions and answers, word for word. */
+    if (post.faq?.length) {
+      graph.push({ '@type': 'FAQPage', '@id': `${self}#faq`, url: self, inLanguage, isPartOf: { '@id': self }, mainEntity: faqEntities(post, lang) });
+    }
     graph.push({
       '@type': 'BreadcrumbList', '@id': `${self}#breadcrumb`, itemListElement: [
         { '@type': 'ListItem', position: 1, name: NAV[0].label[lang], item: cleanUrl(lang, 'index.html') },
@@ -242,11 +268,11 @@ function head(html, lang, current) {
     `<meta property="og:locale" content="${lang === 'zh' ? 'zh_CN' : 'en_US'}"/>`,
     `<meta property="og:image" content="${ogImage}"/>`,
     post ? '<meta property="og:image:width" content="1200"/><meta property="og:image:height" content="800"/>' : '<meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/>',
-    ...(post ? [`<meta property="article:published_time" content="${post.date}"/>`, `<meta property="article:modified_time" content="${post.modified ?? post.date}"/>`, `<meta property="article:section" content="${BLOG_UI.section[lang]}"/>`, ...post.keywords.map((k) => `<meta property="article:tag" content="${k}"/>`)] : []),
+    ...(post ? [`<meta property="article:published_time" content="${post.date}"/>`, `<meta property="article:modified_time" content="${post.modified ?? post.date}"/>`, `<meta property="article:section" content="${(post.section ?? BLOG_UI.section)[lang]}"/>`, ...post.keywords[lang].map((k) => `<meta property="article:tag" content="${k}"/>`)] : []),
     '<meta name="twitter:card" content="summary_large_image"/>',
     `<meta name="twitter:image" content="${ogImage}"/>`,
     '<meta name="theme-color" content="#0d0906"/>',
-    `<script type="application/ld+json">${JSON.stringify(ld)}</script>`,
+    `<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>`,   // no "</script>" can end the block early
   ].join('');
   let out = html
     .replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/g, '')   // the template's own structured data
@@ -254,8 +280,13 @@ function head(html, lang, current) {
     .replace(/<title>[^<]*<\/title>/, `<title>${title}</title>${extra}`)
     .replace(/<meta content="[^"]*" (name|property)="(description|og:description|twitter:description)"\/>/g, `<meta content="${description}" $1="$2"/>`)
     .replace(/<meta content="[^"]*" (name|property)="(og:title|twitter:title)"\/>/g, `<meta content="${title}" $1="$2"/>`)
-    .replace(/<meta content="[^"]*" property="og:image"\/>/, '')
-    .replace(/<meta content="[^"]*" property="twitter:image"\/>/, '')
+    /* The templates' own share images. Both spellings: Mono's exported CMS post
+       writes `name="twitter:image"`, and only `property=` was matched, so
+       notices, privacy and terms — the six pages built from that template —
+       kept a second twitter:image pointing at the template's studio-table
+       photograph while the one written above named our cover. */
+    .replace(/<meta content="[^"]*" (?:name|property)="og:image"\/>/g, '')
+    .replace(/<meta content="[^"]*" (?:name|property)="twitter:image"\/>/g, '')
     .replace(/<meta property="og:type" content="website"\/>/, '')                // regenerated above (article for posts)
     /* The tab icon. It pointed at the wordmark, which is a 139:22 lozenge: in a
        16px tab that is an unreadable smear, which is what the owner saw. The
@@ -327,6 +358,7 @@ function scripts(html) {
   }
   if (!out.includes('js/stargo-forms.js')) out = out.replace('</body>', '<script src="js/stargo-forms.js"></script></body>');
   if (!out.includes('js/stargo-tabs.js')) out = out.replace('</body>', '<script src="js/stargo-tabs.js"></script></body>');
+  if (out.includes('id="stargo-side-menu"') && !out.includes('js/stargo-side-menu.js')) out = out.replace('</body>', '<script src="js/stargo-side-menu.js"></script></body>');
   if (out.includes('data-stargo-video') && !out.includes('js/stargo-media.js')) out = out.replace('</body>', '<script src="js/stargo-media.js"></script></body>');
   out = out.replace(
     'const nav = document.querySelector(".menu-bottom");',
@@ -345,7 +377,77 @@ function scripts(html) {
  *  - internal links never open a new tab;
  *  - external links that do open a new tab carry rel="noopener noreferrer".
  */
-function linkHygiene(html) {
+/* The footer's social links carry no text of their own (they are icons), so
+   their names live in aria-label and title — in the page's language: a Chinese
+   screen reader should not switch to English for three links. */
+const SOCIAL_LABELS = {
+  mail: { zh: '发邮件给 STARGO WORK', en: 'Email STARGO WORK' },
+  whatsapp: { zh: '通过 WhatsApp 联系 STARGO WORK', en: 'WhatsApp STARGO WORK' },
+  site: { zh: 'STARGO 企业官网', en: 'STARGO corporate website' },
+};
+const socialKind = (href) => (href.startsWith('mailto:') ? 'mail' : href.includes('wa.me/') ? 'whatsapp' : 'site');
+
+/* The icon on each of those buttons says where it goes. The template drew an
+   Instagram camera, an X logo and a third-party star on them; STARGO has no
+   accounts there, and the buttons lead to the corporate website, WhatsApp and
+   e-mail. Each now carries a plain line glyph for its destination — a globe, a
+   speech bubble, an envelope — drawn in the template's icon style: white, 16px,
+   centred in the same 40px round tile (the X tile's square `sq` variant goes,
+   so the three match), and still the `.social-icon` the template's hover lift
+   moves. The glyph is decoration; the button's name is its aria-label.
+   The about page's intro card shows the same three channels (V7-LX,
+   tools/blocks/cn-about.mjs CHANNELS): the paths below are that card's paths,
+   point for point, so the site draws one icon set. */
+const SOCIAL_GLYPH = (paths) => `<svg class="social-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${paths}</svg>`;
+const SOCIAL_ICONS = {
+  site: SOCIAL_GLYPH('<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9s1.3-6.4 3.8-9z"/>'),
+  whatsapp: SOCIAL_GLYPH('<path d="M20.5 11.6a8.4 8.4 0 0 1-12.2 7.5L3.5 20.5l1.4-4.6A8.4 8.4 0 1 1 20.5 11.6z"/>'),
+  mail: SOCIAL_GLYPH('<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/>'),
+};
+const TEMPLATE_SOCIAL_ART = /instagram%20|twitter%20|_contra\.png/;
+
+function socialIcons(html) {
+  const out = html.replace(/<a\b[^>]*\bclass="social-wrapper\b[^"]*"[^>]*>[\s\S]*?<\/a>/g, (a) => {
+    const href = (a.match(/href="([^"]*)"/) || [])[1] || '';
+    const img = /<img\b[^>]*\bclass="social-icon\b[^"]*"[^>]*\/>/;
+    if (!img.test(a)) throw new Error('chrome: a social button has no icon to replace');
+    return a.replace(/class="social-wrapper sq /, 'class="social-wrapper ').replace(img, SOCIAL_ICONS[socialKind(href)]);
+  });
+  if (TEMPLATE_SOCIAL_ART.test(out)) throw new Error('chrome: a template social-network icon survives');
+  return out;
+}
+
+/**
+ * The desktop side menu (from 992px): the header's two-line icon opens it, the
+ * round close button closes it — Webflow click interactions on plain <div>s.
+ * The icon becomes a named button that says what it controls, the close button
+ * a named button, and the menu and the close button start `inert`: the menu
+ * sits behind the page while closed, and its links (at opacity 0) used to be
+ * the first sixteen Tab stops of every desktop page. js/stargo-side-menu.js
+ * lifts `inert` while the menu is open and handles Enter, Space and Escape.
+ * The 404 page has no side menu; overlayMenu() takes its icon away and leaves it
+ * the header's menu button below 992px.
+ */
+const SIDE_MENU_LABELS = { open: { zh: '菜单', en: 'Menu' }, close: { zh: '关闭菜单', en: 'Close menu' } };
+function sideMenu(html, lang) {
+  if (!html.includes('<div class="menu-wrapper">')) return html;
+  const one = (out, from, to, what) => {
+    const n = out.split(from).length - 1;
+    if (n !== 1) throw new Error(`chrome: expected one ${what}, found ${n}`);
+    return out.replace(from, to);
+  };
+  let out = html;
+  out = one(out, '<div class="menu-wrapper">', '<div class="menu-wrapper" id="stargo-side-menu" inert="">', 'side menu');
+  out = one(out, 'class="circle-wrap">', `class="circle-wrap" role="button" tabindex="0" aria-label="${SIDE_MENU_LABELS.open[lang]}" aria-expanded="false" aria-controls="stargo-side-menu">`, 'side menu icon');
+  out = one(out, 'class="fixed-close-button">', `class="fixed-close-button" role="button" tabindex="0" aria-label="${SIDE_MENU_LABELS.close[lang]}" inert="">`, 'side menu close button');
+  return out;
+}
+/* The honeypot input's accessible name (tools/blocks/cn-contact.mjs and
+   formMarkup below both write it in English). The wrapper is aria-hidden and
+   off-screen, but the name is still page text. */
+const HONEYPOT_LABEL = { zh: '网站', en: 'Website' };
+
+function linkHygiene(html, lang) {
   let out = html.replace(/<a\b([^>]*)href="#"([^>]*)>([\s\S]*?)<\/a>/g, (m, pre, post, body) => {
     const text = body.replace(/<[^>]+>/g, '');
     const href = /\blogo-first\b/.test(pre + post) ? 'index.html' : /隐私|Privacy/i.test(text) ? 'privacy.html' : /条款|Terms/i.test(text) ? 'terms.html' : null;
@@ -355,7 +457,7 @@ function linkHygiene(html) {
     const href = (tag.match(/href="([^"]*)"/) || [])[1] || '';
     const external = /^(https?:)?\/\//.test(href) || /^(mailto|tel):/.test(href);
     if (/\bsocial-wrapper\b/.test(tag)) {
-      const label = href.startsWith('mailto:') ? 'Email STARGO WORK' : href.includes('wa.me/') ? 'WhatsApp STARGO WORK' : 'STARGO corporate website';
+      const label = SOCIAL_LABELS[socialKind(href)][lang];
       tag = tag.replace('<a ', `<a aria-label="${label}" title="${label}" `);
     }
     if (!external) return tag.replace(/\s*target="_blank"/g, '');
@@ -388,7 +490,59 @@ function formMarkup(html, lang) {
     });
     const consent = lang === 'zh' ? '提交前请阅读我们的 <a href="privacy.html">隐私政策</a>。我们仅用这些信息处理你的申请。' : 'Please read our <a href="privacy.html">Privacy Policy</a>. We use these details to respond to your request.';
     return form.replace('</form>', `<p class="stargo-form-consent">${consent}</p></form>`);
-  });
+  }).replace(/(<div class="stargo-hp" aria-hidden="true"><input )aria-label="Website"( name="website")/g, `$1aria-label="${HONEYPOT_LABEL[lang]}"$2`);
+}
+
+/**
+ * Names the page's Webflow runtime writes in English when the markup has none:
+ * the menu button ("menu") and each form, with its two notices ("<data-name>",
+ * "… success", "… failure" — "Email Form", "Subscribe", "Contact Form"). The
+ * runtime keeps a name that is already there (it tests the success notice's
+ * name before naming the form), so the Chinese pages carry their own. The
+ * English pages keep the runtime's names.
+ */
+const FORM_NAMES = {
+  newsletter: { form: '订阅表单', done: '订阅成功提示', fail: '订阅失败提示' },
+  contact: { form: '预约演示表单', done: '提交成功提示', fail: '提交失败提示' },
+};
+function zhRuntimeNames(html) {
+  let out = html.replace(/<div class="menu-button w-nav-button">/g, '<div class="menu-button w-nav-button" aria-label="菜单">');
+  const FORM = /<form\b[^>]*\sdata-stargo-form="(newsletter|contact)"[^>]*>/g;
+  const parts = [];
+  let last = 0;
+  for (const m of out.matchAll(FORM)) {
+    const names = FORM_NAMES[m[1]];
+    const close = out.indexOf('</form>', m.index);
+    const next = out.slice(close).search(/<form\b/);
+    const end = next === -1 ? out.length : close + next;
+    let tail = out.slice(close, end);
+    const done = /(<div class="[^"]*\bw-form-done\b[^"]*")/;
+    const fail = /(<div class="[^"]*\bw-form-fail\b[^"]*")/;
+    if (!done.test(tail) || !fail.test(tail)) throw new Error('chrome: a form has no Webflow success/failure notice after it');
+    tail = tail.replace(done, `$1 aria-label="${names.done}"`).replace(fail, `$1 aria-label="${names.fail}"`);
+    parts.push(out.slice(last, m.index), m[0].replace(/^<form\b/, `<form aria-label="${names.form}"`), out.slice(m.index + m[0].length, close), tail);
+    last = end;
+  }
+  parts.push(out.slice(last));
+  out = parts.join('');
+  return out;
+}
+
+/**
+ * A Chinese sentence ends in 「。」. Two template lines keep an ASCII full stop
+ * after text this site puts in front of it: the demo band's heading (Mono's
+ * "Let's talk." with 「预约企业演示」 in place of the words) and its legal line
+ * ("… Terms and Privacy Policy." with the two link texts swapped). On a phone
+ * the "." even wrapped onto a line of its own. Only a stop that directly
+ * follows a Han character — or the close of a link whose text ends in one —
+ * and ends a text run is changed, and only in the body of a Chinese page.
+ */
+function zhFullStops(html) {
+  const at = html.indexOf('<body');
+  const body = html.slice(at)
+    .replace(/([一-鿿])\.(?=<)/g, '$1。')
+    .replace(/([一-鿿]<\/a>)\.(?=<)/g, '$1。');
+  return html.slice(0, at) + body;
 }
 
 /** Template people and stock photos in the shared chrome → STARGO imagery. */
@@ -466,9 +620,12 @@ export function applyChrome(html, { lang, current }) {
   for (const [a, b] of CHROME) out = opt(out, a, b[lang]);
   out = wordmark(out);
   out = chromeImagery(out);
+  out = sideMenu(out, lang);
   out = scripts(out);
-  out = linkHygiene(out);
+  out = linkHygiene(out, lang);
+  out = socialIcons(out);
   out = formMarkup(out, lang);
+  if (lang === 'zh') out = zhRuntimeNames(zhFullStops(out));
   out = uniqueLayoutIds(out);
   out = editorialImages(out, lang);
   // Unhashed local runtimes used to stay stale for a day after deployments.

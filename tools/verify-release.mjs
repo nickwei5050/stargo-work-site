@@ -96,9 +96,11 @@ try {
     await page.goto(`${BASE}/${lang}capabilities`, { waitUntil: 'load', timeout: NAV });
     await page.waitForTimeout(1500);
     const expected = ['brand-family-01', 'os-inquiries', 'brand-family-02', 'brand-family-04'];   // capabilities page keeps its generated art
-    const actual = await page.locator('a[href="#g01"] img,a[href="#g04"] img,a[href="#g07"] img,a[href="#g10"] img').evaluateAll(imgs => imgs.map(i => i.getAttribute('src').split('/').pop().replace(/\.webp$/, '')));
+    // The four area cards only: the V6 showcases link to groups too.
+    const actual = await page.locator('.wrok-wrapper a[href="#g01"] img,.wrok-wrapper a[href="#g04"] img,.wrok-wrapper a[href="#g07"] img,.wrok-wrapper a[href="#g10"] img')
+      .evaluateAll(imgs => imgs.map(i => i.getAttribute('src').split('/').pop().replace(/\.webp$/, '')));
     assert.deepEqual(actual, expected, 'capability image/meaning mapping');
-    await page.locator('a[href="#g04"]').scrollIntoViewIfNeeded();
+    await page.locator('.wrok-wrapper a[href="#g04"]').scrollIntoViewIfNeeded();
     await page.waitForTimeout(900);
     await page.screenshot({ path: `${OUT}/${lang ? 'en' : 'zh'}-capabilities-art.png` });
     scenarios.push(`${lang || 'zh/'}capabilities-390`);

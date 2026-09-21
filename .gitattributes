@@ -61,3 +61,4 @@ assets/** linguist-generated=true
 *.md   text eol=lf
 *.yml  text eol=lf
 *.txt  text eol=lf
+*.py   text eol=lf

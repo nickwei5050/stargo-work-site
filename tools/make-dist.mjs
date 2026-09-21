@@ -1,6 +1,8 @@
 /**
  * Assemble dist/ — the site files only (no tools/, no templates, no .git) —
- * plus Cloudflare Pages `_headers`, robots.txt and sitemap.xml. Wrangler
+ * plus Cloudflare Pages `_headers`, robots.txt, sitemap.xml and llms.txt (a
+ * Markdown summary of the product, its pages and its articles for AI answer
+ * engines, generated from tools/copy.mjs and tools/blog.mjs). Wrangler
  * compiles the root functions/ directory separately; never publish its source
  * in the static output directory. Deploy with:
  *
@@ -16,8 +18,8 @@
  * longer exists in the source tree is removed one by one.
  */
 import { mkdirSync, copyFileSync, readdirSync, writeFileSync, unlinkSync, rmdirSync, chmodSync, existsSync } from 'node:fs';
-import { SITE_URL } from './copy.mjs';
-import { SITE_PAGES } from './chrome.mjs';
+import { SITE_URL, META, NAV, MORE, SECONDARY, WORKFORCE_ROLE_GROUPS } from './copy.mjs';
+import { SITE_PAGES, cleanUrl } from './chrome.mjs';
 import { POSTS, postPath } from './blog.mjs';
 
 import { SITE } from './paths.mjs';
@@ -33,7 +35,7 @@ const walk = (dir, rel, out) => {
 };
 for (const f of readdirSync(SITE)) if (f.endsWith('.html')) wanted.add(f);
 for (const d of ['en', 'blog', 'assets', 'css', 'js']) if (existsSync(`${SITE}/${d}`)) walk(`${SITE}/${d}`, d, wanted);
-const GENERATED = ['_headers', 'robots.txt', 'sitemap.xml'];
+const GENERATED = ['_headers', 'robots.txt', 'sitemap.xml', 'llms.txt'];
 for (const g of GENERATED) wanted.add(g);
 
 for (const rel of wanted) {
@@ -67,6 +69,9 @@ writeFileSync(`${DIST}/_headers`, [
   '/api/*',
   '  ! Cache-Control',
   '  Cache-Control: no-store',
+  // llms.txt carries Chinese as well as English: say it is UTF-8 text.
+  '/llms.txt',
+  '  Content-Type: text/plain; charset=utf-8',
   '',
 ].join('\n'));
 
@@ -87,6 +92,87 @@ for (const p of pages) {
 }
 writeFileSync(`${DIST}/sitemap.xml`, `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls.join('\n')}\n</urlset>\n`);
 writeFileSync(`${DIST}/robots.txt`, `User-agent: *\nAllow: /\nDisallow: /api/\nSitemap: ${SITE_URL}/sitemap.xml\n`);
+
+/* llms.txt (the llmstxt.org layout: a title, a one-line summary, then link
+   lists). Everything a reader can check against the site: the product
+   definition (V5 G01), the owner's current availability statuses of
+   2026-09-17 (in English, then in Chinese), the ten role groups and their
+   counts, every main page with its meta description and every article with
+   its description, both languages, clean URLs. Nothing here is new copy that
+   the pages do not already say. */
+{
+  const groups = WORKFORCE_ROLE_GROUPS.groups;
+  const total = groups.reduce((s, g) => s + g.count, 0);
+  const pageName = (lang, page) => (page === 'index.html' ? NAV[0].label[lang] : META[page].title[lang]);
+  const pageLine = (lang, page) => `- [${pageName(lang, page)}](${cleanUrl(lang, page)}): ${META[page].description[lang]}`;
+  const main = [...NAV, ...MORE].map((n) => n.href);
+  const postLine = (lang, p) => `- [${p.title[lang]}](${cleanUrl(lang, postPath(p))}): ${p.description[lang]}`;
+  const llms = [
+    '# STARGO WORK',
+    '',
+    '> A browser-based desktop AI operating system for manufacturing and global trade enterprises. 面向制造业与外贸企业的网页桌面级 AI 企业操作系统。',
+    '',
+    'STARGO WORK brings disconnected business work into one browser-based desktop. Growth OS (proactive customer acquisition) and Sales Desk (trade sales) are the two core engines; ERP and fulfillment, AI creative work, 288 specialized AI roles, enterprise knowledge and the business relationship map, proactive work and memory, the browser desktop and owner visibility and controls support them. Principle: delegate the work, keep the authority. Capabilities are enabled in phases according to each company’s configuration and agreed delivery scope.',
+    '',
+    'STARGO WORK 把企业日常经营中分散的工作放进同一个网页桌面：Growth OS 主动获客与 Sales Desk 外贸销售是两大核心引擎，ERP 与履约、AI 创作、288 个专业数字岗位、企业知识与业务关系图、主动工作与记忆、网页桌面，以及老板驾驶舱与管理控制围绕它们协同。原则：把工作交给 AI，把决定权留在企业。各项能力按企业配置与交付范围分阶段开放。',
+    '',
+    '## Key facts',
+    '',
+    '- Growth OS finds dealers, importers, wholesalers and target accounts, researches them, ranks opportunities and prepares outreach plans; approved prospects move into Sales Desk with their context. Core workflows are being built out; live data sources and outreach are connected by authorization.',
+    '- Sales Desk brings inquiries and messages into one intake and carries customer records, product fit, replies, follow-up, quotes and PI to the order handoff. The workspace exists; live channel messaging and business handoffs are connected and validated one by one.',
+    '- Quotes and PI follow company-approved prices, discount permissions and margin guardrails. Live prices, contracts, signatures and documents depend on connected enterprise systems; approval and sending are separate controls.',
+    '- ERP and commerce application foundations exist; cross-system work and AI actions are configured and accepted per enterprise. Delivery, finance, logistics and service coordination arrive in stages through connected systems; filings, payments and professional reviews are confirmed by authorized people.',
+    `- 288 is the size of a directory of specialized AI roles across ten enterprise role groups: ${groups.map((g) => `${g.name.en} ${g.count}`).join(', ')} (total ${total}). It is not a claim to replace 288 people; the employees enabled, the size of a collaboration and permitted actions follow the company’s configuration, budget and access.`,
+    '- AI teamwork is available: several AI employees form a team for one task, message each other, work in parallel, and a coordinating role checks and consolidates one result for a person to confirm. Collaboration rounds, budgets and permitted actions are capped; work can be stopped at any time; human approval, pause and takeover remain; shared task context does not grant other employees’ permissions; external actions need an authorized approval.',
+    '- One-click AI video is available: brief, script, storyboard, visuals, voiceover, captions and export of a playable, exportable file in portrait, landscape or square, with a reviewable production plan, individually redone shots and recorded versions and costs. Finished videos are reviewed by people before publishing; generation runs within the services and credits the company enables; assets must be ones the company may use.',
+    '- Viral creative adaptation is available: an authorized reference video is analyzed for structure and rebuilt around your product and brand as three original directions. It never copies footage, faces, voices, music, logos or watermarks, and viral performance is not guaranteed.',
+    '- AI images and brand content: the creative workspace is present; one-click marketing-kit production and local checks are being integrated; publishing to external channels needs separate authorization.',
+    '- Enterprise knowledge and the business relationship map have foundations; richer relationships and enterprise templates arrive in stages. Proactive work, unified long-term memory and advanced improvement are still evolving; proactive work is not consciousness or unrestricted autonomy.',
+    '- The browser desktop comes first; voice, automation, external actions, native clients, mobile and mini-programs follow in phases by enabled scope. Owner dashboards show metrics only from connected data.',
+    '- Human control: authorized people approve quotations, outreach, important commitments, official filings and payments. Approved is not sent, and sent is not received or done.',
+    '',
+    // The same facts in Chinese, in the site's own terms: most buyers ask in Chinese.
+    '## 要点（中文）',
+    '',
+    '- Growth OS 寻找经销商、进口商、批发商和目标企业，完成背调、判断商机并准备开发计划；确认后的客户连同背景转入 Sales Desk。核心流程建设中，真实数据与客户触达按授权接入。',
+    '- Sales Desk 统一询盘与消息入口，把客户资料、产品匹配、回复、跟进、报价和 PI 连到订单交接。工作台已经具备；各渠道真实收发与业务交接逐项连接、验证。',
+    '- 报价与 PI 按企业确认的价格、折扣权限和利润边界起草；真实价格、合同、签章与单证按企业系统接通；批准与发送分别受控。',
+    '- 已有 ERP 与商城应用基础，跨系统协同和 AI 操作按企业配置验收；履约、财务、物流与服务按已接入的系统分阶段交付；正式申报、付款和专业审阅由有权人员确认。',
+    `- 288 是专业数字岗位目录的数量，覆盖十类企业职能：${groups.map((g) => `${g.name.zh} ${g.count}`).join('、')}（合计 ${total}）。不代表替代 288 名真人；实际启用的员工、协作规模与可执行动作，按企业配置、预算和权限确定。`,
+    '- AI 团队协作现已可用：多位 AI 员工为同一任务组队、互发消息、并行处理，由统筹角色检查并汇总成一个结果交人确认。协作轮次、预算和可执行动作都有上限，随时可以叫停；人工审批、暂停与接管始终保留；共享任务信息不授予其他员工的权限；对外动作须经授权审批。',
+    '- AI 一键生成视频现已可用：制作需求、脚本、分镜、画面、配音、字幕到导出，交付竖版、横版或方版的可播放、可导出视频文件；生成前先审阅制作方案，失败镜头单独重做，版本与成本有记录。成片经人工审核后发布；生成按企业开通的服务与额度运行；所用素材须是企业有权使用的。',
+    '- 爆款结构再创作现已可用：拆解有权使用的参考视频的结构，结合自身产品与品牌形成三个原创方向。不复制原片、人脸、声音、音乐、标志或水印，不承诺必成爆款。',
+    '- AI 作图与品牌内容：创意工作室已有基础；商品营销套件的一键编排与局部检查持续整合；发布到外部渠道需单独授权。',
+    '- 企业知识与业务关系图已有基础，更丰富的关联和企业资料模板逐步完善。主动工作、统一长期记忆与高级改进持续完善；主动工作不是人的意识，也不是无限制的自主决定。',
+    '- 网页桌面是当前重点；语音、自动化、对外动作、原生客户端、移动端和小程序按开放范围分阶段推进。老板驾驶舱的指标只来自已接入的数据。',
+    '- 人的决定权：报价、对外触达、重要承诺、正式申报和资金支付由有权人员批准。已批准不等于已发送，已发送不等于已收到或已办完。',
+    '',
+    '## Pages',
+    '',
+    ...main.map((p) => pageLine('en', p)),
+    '',
+    '## 页面（中文）',
+    '',
+    ...main.map((p) => pageLine('zh', p)),
+    '',
+    '## Articles',
+    '',
+    ...POSTS.map((p) => postLine('en', p)),
+    '',
+    '## 文章（中文）',
+    '',
+    ...POSTS.map((p) => postLine('zh', p)),
+    '',
+    '## Optional',
+    '',
+    ...SECONDARY.map((n) => pageLine('en', n.href)),
+    ...SECONDARY.map((n) => pageLine('zh', n.href)),
+    `- [Sitemap](${SITE_URL}/sitemap.xml): every page in both languages with hreflang alternates.`,
+    '',
+  ].join('\n');
+  if (total !== 288) throw new Error(`llms.txt: role groups add up to ${total}`);
+  writeFileSync(`${DIST}/llms.txt`, llms);
+}
 
 // Prune what the source tree no longer has.
 const present = new Set();

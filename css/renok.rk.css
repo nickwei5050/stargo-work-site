@@ -1362,6 +1362,1311 @@
   font-weight: normal;
   font-style: normal;
 }
+.rk-price-compare {
+  --_font-family---primary-font: "Inter Tight", sans-serif;
+  --white: white;
+  --_font-details---font-size--body: 1rem;
+  --_font-details---font-line-height--body: 162.5%;
+  --_font-details---font-weight--regular: 400;
+  --_font-details---font-letter-spacing--body: 0rem;
+  --_font-details---font-size--heading-one: clamp(35px, 7vw, 100px);
+  --_font-details---font-line-height--heading-one: 100%;
+  --_font-details---font-weight--semibold: 600;
+  --_font-details---font-letter-spacing--heading-one: -.1rem;
+  --_font-details---font-size--heading-two: 1.875rem;
+  --_font-details---font-line-height--heading-two: 125%;
+  --_font-details---font-letter-spacing--heading-two: -.05625rem;
+  --_font-details---font-size--heading-three: 1.625rem;
+  --_font-details---font-line-height--heading-three: 133.33%;
+  --_font-details---font-letter-spacing--heading-three: -.04875rem;
+  --_font-details---font-size--heading-four: 1.375rem;
+  --_font-details---font-line-height--heading-four: 141.67%;
+  --_font-details---font-letter-spacing--heading-four: -.04125rem;
+  --_font-details---font-size--heading-five: 1.125rem;
+  --_font-details---font-line-height--heading-five: 150%;
+  --_font-details---font-letter-spacing--heading-five: -.03375rem;
+  --_font-details---font-size--heading-six: 1.0625rem;
+  --_font-details---font-line-height--heading-six: 155.56%;
+  --_font-details---font-letter-spacing--heading-six: -.031875rem;
+  --black: #000;
+  --concrete-gray: #979797;
+  --_font-details---font-size--menu-text: 1.25rem;
+  --_font-details---font-line-height--menu-text: 130%;
+  --_font-details---font-weight--medium: 500;
+  --_font-details---font-letter-spacing--menu-text: -.025rem;
+  --_font-details---font-size--sub-text: .875rem;
+  --_font-details---font-line-height--sub-text: 171.42%;
+  --_font-details---font-letter-spacing--sub-text: .0875rem;
+  --_font-details---font-size--extra-big-text: clamp(35px, 10vw, 240px);
+  --_font-details---font-letter-spacing--extra-big-text: -.1rem;
+  --_font-details---font-size--big-text: clamp(35px, 10vw, 150px);
+  --_font-details---font-letter-spacing--big-text: -.4125rem;
+  --_font-details---font-size--medium-text: clamp(35px, 15vw, 60px);
+  --_font-details---font-letter-spacing--medium-text: -.1125rem;
+  --_container---container-extra-large: 114.375rem;
+  --_gap---gutter-space: .9375rem;
+  --_container---containner-medium: 95.625rem;
+  --_gap---section-gap-small: 8.75rem;
+  --_font-family---secondary-font: "Instrument Serif", sans-serif;
+  --black-opacity-twenty: #0003;
+  --_gap---section-gap-big: 9.375rem;
+  --charcoal-gray: #585858;
+  --white-opacity-twenty: #fff3;
+  --_container---container-large: 101.25rem;
+  --_font-details---font-size--small-text: .75rem;
+  --_container---container-small: 82.5rem;
+  --_container---container-tiny: 68.75rem;
+  --platinum-gray: #e8e8e8;
+  --silver-gray: #acacac;
+  --_font-family---menu-font: Inter, sans-serif;
+  --_font-details---font-weight--bold: 700;
+}
+.rk-price-compare img { border: 0; }
+.rk-price-compare img { vertical-align: middle;
+  max-width: 100%;
+  display: inline-block; }
+.rk-price-compare h1, .rk-price-compare h2, .rk-price-compare h3, .rk-price-compare h4, .rk-price-compare h5, .rk-price-compare h6 { margin-bottom: 10px;
+  font-weight: bold; }
+.rk-price-compare h2 { margin-top: 20px;
+  font-size: 32px;
+  line-height: 36px; }
+.rk-price-compare .w-container { max-width: 940px;
+  margin-left: auto;
+  margin-right: auto; }
+.rk-price-compare .w-container:before, .rk-price-compare .w-container:after { content: " ";
+  grid-area: 1 / 1 / 2 / 2;
+  display: table; }
+.rk-price-compare .w-container:after { clear: both; }
+.rk-price-compare .w-container .w-row { margin-left: -10px;
+  margin-right: -10px; }
+@media screen and (max-width: 991px) {
+  .rk-price-compare .w-container { max-width: 728px; }
+}
+@media screen and (max-width: 767px) {
+  .rk-price-compare .w-row, .rk-price-compare .w-container .w-row { margin-left: 0;
+    margin-right: 0; }
+}
+@media screen and (max-width: 479px) {
+  .rk-price-compare .w-container { max-width: none; }
+}
+.rk-price-compare .w-layout-vflex { flex-direction: column;
+  align-items: flex-start;
+  display: flex; }
+.rk-price-compare .w-layout-hflex { flex-direction: row;
+  align-items: flex-start;
+  display: flex; }
+.rk-price-compare .w-layout-blockcontainer { max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block; }
+@media screen and (max-width: 991px) {
+  .rk-price-compare .w-layout-blockcontainer { max-width: 728px; }
+}
+@media screen and (max-width: 767px) {
+  .rk-price-compare .w-layout-blockcontainer { max-width: none; }
+}
+.rk-price-compare h2 { font-family: var(--_font-family---primary-font);
+  color: var(--white);
+  font-size: var(--_font-details---font-size--heading-two);
+  line-height: var(--_font-details---font-line-height--heading-two);
+  font-weight: var(--_font-details---font-weight--semibold);
+  letter-spacing: var(--_font-details---font-letter-spacing--heading-two);
+  margin-top: 1.25rem;
+  margin-bottom: .625rem; }
+.rk-price-compare img { object-fit: cover;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  display: inline-block; }
+.rk-price-compare .rk-rt-background-black { background-color: var(--black); }
+.rk-price-compare .rk-rt-text-style-h5 { font-family: var(--_font-family---primary-font);
+  color: var(--white);
+  font-size: var(--_font-details---font-size--heading-five);
+  line-height: var(--_font-details---font-line-height--heading-five);
+  font-weight: var(--_font-details---font-weight--semibold);
+  letter-spacing: var(--_font-details---font-letter-spacing--heading-five); }
+.rk-price-compare .rk-rt-text-style-h5.rt-active { z-index: 10;
+  color: var(--black); }
+.rk-price-compare .rk-rt-text-style-h6 { font-family: var(--_font-family---primary-font);
+  color: var(--white);
+  font-size: var(--_font-details---font-size--heading-six);
+  line-height: var(--_font-details---font-line-height--heading-six);
+  font-weight: var(--_font-details---font-weight--semibold);
+  letter-spacing: var(--_font-details---font-letter-spacing--heading-six); }
+.rk-price-compare .rk-rt-container-xl { max-width: var(--_container---container-extra-large);
+  padding-right: var(--_gap---gutter-space);
+  padding-left: var(--_gap---gutter-space); }
+.rk-price-compare .rk-rt-gap-off { margin-top: 0;
+  margin-bottom: 0; }
+.rk-price-compare .rk-rt-gap-off.rt-change-align { text-align: right; }
+.rk-price-compare .rk-rt-gap-off.rt-text-color-black.rt-bototm-gap { margin-bottom: 1.25rem; }
+.rk-price-compare .rt-button-wrap.rt-overflow-hidden.rt-radius-xl.rk-rt-background-black { background-color: var(--black); }
+.rk-price-compare .rk-rt-text-style-h6-2 { color: #000;
+  letter-spacing: -.033rem;
+  font-family: Inter Tight, sans-serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.45; }
+.rk-price-compare .rk-rt-gap-off-2 { margin: 0; }
+.rk-price-compare .rk-rt-gap-off-2.rt-answer { padding-bottom: 1.875rem; }
+.rk-price-compare .rk-rt-chart-columns { border-left: .0625rem solid #fff3;
+  justify-content: center;
+  align-items: center;
+  min-height: 5.625rem;
+  padding: 1.5625rem .625rem; }
+.rk-price-compare .rk-rt-chart-columns.rk-rt-chart-col-1 { justify-content: center;
+  align-items: center; }
+.rk-price-compare .rk-rt-pricing-chart-price { grid-column-gap: .375rem;
+  grid-row-gap: .375rem; }
+.rk-price-compare .rk-rt-pricing-chart-rows { grid-column-gap: 0rem;
+  grid-row-gap: 0rem;
+  border-bottom: .0625rem solid #fff3;
+  grid-template-rows: auto;
+  grid-template-columns: 1.2fr 1fr 1fr 1fr 1fr;
+  grid-auto-columns: 1fr;
+  display: grid; }
+.rk-price-compare .rk-rt-chart-top-tag { border-left: .0625rem solid #fff3;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 1.25rem;
+  padding-left: .625rem;
+  padding-right: .625rem; }
+.rk-price-compare .rk-rt-chart-left-col { padding-right: .625rem; }
+.rk-price-compare .rk-rt-pricing-v1-content-2 { grid-column-gap: 3.125rem;
+  grid-row-gap: 3.125rem; }
+.rk-price-compare .rk-rt-pricing-v1-list { padding-top: var(--_gap---section-gap-small);
+  padding-bottom: var(--_gap---section-gap-big); }
+.rk-price-compare .rk-rt-pricing-chart { width: 100%; }
+.rk-price-compare .rk-rt-pricing-v1-content-2-heading { max-width: 29.375rem; }
+.rk-price-compare .rk-rt-text-color-premium-grey { color: var(--platinum-gray); }
+.rk-price-compare .rk-rt-desktop-text-center { text-align: center; }
+.rk-price-compare .rt-icons-logo-boxes.rk-rt-background-black { background-color: #000; }
+@media screen and (min-width: 1280px) {
+  .rk-price-compare { --_container---container-extra-large: 114.375rem; --_container---containner-medium: 95.625rem; --_container---container-large: 101.25rem; --_container---container-small: 82.5rem; --_container---container-tiny: 68.75rem; --_font-details---font-size--body: 1rem; --_font-details---font-line-height--body: 162.5%; --_font-details---font-weight--regular: 400; --_font-details---font-letter-spacing--body: 0rem; --_font-details---font-size--heading-one: clamp(35px, 15vw, 100px); --_font-details---font-line-height--heading-one: 100%; --_font-details---font-weight--semibold: 600; --_font-details---font-letter-spacing--heading-one: -.3rem; --_font-details---font-size--heading-two: 2.5rem; --_font-details---font-line-height--heading-two: 125%; --_font-details---font-letter-spacing--heading-two: -.075rem; --_font-details---font-size--heading-three: 1.875rem; --_font-details---font-line-height--heading-three: 133.33%; --_font-details---font-letter-spacing--heading-three: -.05625rem; --_font-details---font-size--heading-four: 1.5rem; --_font-details---font-line-height--heading-four: 141.67%; --_font-details---font-letter-spacing--heading-four: -.045rem; --_font-details---font-size--heading-five: 1.25rem; --_font-details---font-line-height--heading-five: 150%; --_font-details---font-letter-spacing--heading-five: -.0375rem; --_font-details---font-size--heading-six: 1.125rem; --_font-details---font-line-height--heading-six: 155.56%; --_font-details---font-letter-spacing--heading-six: -.03375rem; --_font-details---font-size--menu-text: 1.25rem; --_font-details---font-line-height--menu-text: 130%; --_font-details---font-weight--medium: 500; --_font-details---font-letter-spacing--menu-text: -.025rem; --_font-details---font-size--sub-text: .875rem; --_font-details---font-line-height--sub-text: 171.42%; --_font-details---font-letter-spacing--sub-text: .0875rem; --_font-details---font-size--extra-big-text: clamp(35px, 15vw, 240px); --_font-details---font-letter-spacing--extra-big-text: -.75rem; --_font-details---font-size--big-text: clamp(35px, 15vw, 150px); --_font-details---font-letter-spacing--big-text: -.4125rem; --_font-details---font-size--medium-text: clamp(35px, 15vw, 60px); --_font-details---font-letter-spacing--medium-text: -.1125rem; --_font-details---font-size--small-text: .75rem; --_font-details---font-weight--bold: 700; --_font-family---primary-font: "Inter Tight", sans-serif; --_font-family---secondary-font: "Instrument Serif", sans-serif; --_font-family---menu-font: Inter, sans-serif; --_gap---gutter-space: .9375rem; --_gap---section-gap-small: 8.75rem; --_gap---section-gap-big: 9.375rem; }
+  .rk-price-compare .rk-rt-chart-columns.rk-rt-chart-col-1, .rk-price-compare .rk-rt-chart-top-tag { justify-content: center;
+    align-items: center; }
+}
+@media screen and (min-width: 1920px) {
+  .rk-price-compare { --white: white; --black: #000; --concrete-gray: #979797; --black-opacity-twenty: #0003; --charcoal-gray: #585858; --white-opacity-twenty: #fff3; --platinum-gray: #e8e8e8; --silver-gray: #acacac; }
+  .rk-price-compare .rt-text-style-h4.rt-text-color-light-gray.rt-active, .rk-price-compare .rk-rt-text-style-h5.rt-active { color: var(--black); }
+  .rk-price-compare .rk-rt-features-point { padding-left: 4.0625rem; }
+}
+@media screen and (max-width: 991px) {
+  .rk-price-compare { --_font-details---font-size--body: .9375rem; --_font-details---font-line-height--body: 162.5%; --_font-details---font-weight--regular: 400; --_font-details---font-letter-spacing--body: 0rem; --_font-details---font-size--heading-one: clamp(35px, 7vw, 100px); --_font-details---font-line-height--heading-one: 100%; --_font-details---font-weight--semibold: 600; --_font-details---font-letter-spacing--heading-one: -.1rem; --_font-details---font-size--heading-two: 1.875rem; --_font-details---font-line-height--heading-two: 125%; --_font-details---font-letter-spacing--heading-two: -.05625rem; --_font-details---font-size--heading-three: 1.625rem; --_font-details---font-line-height--heading-three: 133.33%; --_font-details---font-letter-spacing--heading-three: -.04875rem; --_font-details---font-size--heading-four: 1.375rem; --_font-details---font-line-height--heading-four: 141.67%; --_font-details---font-letter-spacing--heading-four: -.04125rem; --_font-details---font-size--heading-five: 1.125rem; --_font-details---font-line-height--heading-five: 150%; --_font-details---font-letter-spacing--heading-five: -.03375rem; --_font-details---font-size--heading-six: 1.0625rem; --_font-details---font-line-height--heading-six: 155.56%; --_font-details---font-letter-spacing--heading-six: -.031875rem; --_font-details---font-size--menu-text: 1.25rem; --_font-details---font-line-height--menu-text: 130%; --_font-details---font-weight--medium: 500; --_font-details---font-letter-spacing--menu-text: -.025rem; --_font-details---font-size--sub-text: .875rem; --_font-details---font-line-height--sub-text: 171.42%; --_font-details---font-letter-spacing--sub-text: .0875rem; --_font-details---font-size--extra-big-text: clamp(35px, 10vw, 240px); --_font-details---font-letter-spacing--extra-big-text: -.1rem; --_font-details---font-size--big-text: clamp(35px, 10vw, 150px); --_font-details---font-letter-spacing--big-text: -.2125rem; --_font-details---font-size--medium-text: clamp(35px, 15vw, 60px); --_font-details---font-letter-spacing--medium-text: -.1125rem; --_font-details---font-size--small-text: .75rem; --_font-details---font-weight--bold: 700; --_font-family---primary-font: "Inter Tight", sans-serif; --_font-family---secondary-font: "Instrument Serif", sans-serif; --_font-family---menu-font: Inter, sans-serif; --_container---container-extra-large: 114.375rem; --_container---containner-medium: 95.625rem; --_container---container-large: 101.25rem; --_container---container-small: 82.5rem; --_container---container-tiny: 68.75rem; --_gap---gutter-space: .9375rem; --_gap---section-gap-small: 3.4375rem; --_gap---section-gap-big: 3.75rem; --white: white; --black: #000; --concrete-gray: #979797; --black-opacity-twenty: #0003; --charcoal-gray: #585858; --white-opacity-twenty: #fff3; --platinum-gray: #e8e8e8; --silver-gray: #acacac; }
+  .rk-price-compare .rk-rt-container-xl { max-width: var(--_container---container-extra-large); }
+  .rk-price-compare .rk-rt-gap-off.rt-change-align { text-align: left; }
+  .rk-price-compare .rk-rt-pricing-chart-rows { text-align: left; }
+  .rk-price-compare .rk-rt-pricing-v1-list { background-color: var(--black);
+    padding-top: 0; }
+}
+@media screen and (max-width: 767px) {
+  .rk-price-compare { --_font-details---font-size--body: .875rem; --_font-details---font-line-height--body: 162.5%; --_font-details---font-weight--regular: 400; --_font-details---font-letter-spacing--body: 0rem; --_font-details---font-size--heading-one: clamp(35px, 7vw, 100px); --_font-details---font-line-height--heading-one: 100%; --_font-details---font-weight--semibold: 600; --_font-details---font-letter-spacing--heading-one: -.1rem; --_font-details---font-size--heading-two: 1.5625rem; --_font-details---font-line-height--heading-two: 125%; --_font-details---font-letter-spacing--heading-two: -.046875rem; --_font-details---font-size--heading-three: 1.375rem; --_font-details---font-line-height--heading-three: 133.33%; --_font-details---font-letter-spacing--heading-three: -.04125rem; --_font-details---font-size--heading-four: 1.25rem; --_font-details---font-line-height--heading-four: 141.67%; --_font-details---font-letter-spacing--heading-four: -.0375rem; --_font-details---font-size--heading-five: 1.0625rem; --_font-details---font-line-height--heading-five: 150%; --_font-details---font-letter-spacing--heading-five: -.031875rem; --_font-details---font-size--heading-six: 1rem; --_font-details---font-line-height--heading-six: 155.56%; --_font-details---font-letter-spacing--heading-six: -.03rem; --_font-details---font-size--menu-text: 1.25rem; --_font-details---font-line-height--menu-text: 130%; --_font-details---font-weight--medium: 500; --_font-details---font-letter-spacing--menu-text: -.025rem; --_font-details---font-size--sub-text: .875rem; --_font-details---font-line-height--sub-text: 171.42%; --_font-details---font-letter-spacing--sub-text: .0875rem; --_font-details---font-size--extra-big-text: clamp(35px, 10vw, 240px); --_font-details---font-letter-spacing--extra-big-text: 0rem; --_font-details---font-size--big-text: clamp(35px, 10vw, 150px); --_font-details---font-letter-spacing--big-text: -.1rem; --_font-details---font-size--medium-text: clamp(35px, 5vw, 60px); --_font-details---font-letter-spacing--medium-text: -.1125rem; --_font-details---font-size--small-text: .75rem; --_font-details---font-weight--bold: 700; --_font-family---primary-font: "Inter Tight", sans-serif; --_font-family---secondary-font: "Instrument Serif", sans-serif; --_font-family---menu-font: Inter, sans-serif; --_container---container-extra-large: 114.375rem; --_container---containner-medium: 95.625rem; --_container---container-large: 101.25rem; --_container---container-small: 82.5rem; --_container---container-tiny: 68.75rem; --_gap---gutter-space: .9375rem; --_gap---section-gap-small: 3.4375rem; --_gap---section-gap-big: 3.75rem; --white: white; --black: #000; --concrete-gray: #979797; --black-opacity-twenty: #0003; --charcoal-gray: #585858; --white-opacity-twenty: #fff3; --platinum-gray: #e8e8e8; --silver-gray: #acacac; }
+  .rk-price-compare .rk-rt-chart-columns { border-left-style: none;
+    min-height: 60px;
+    padding: .625rem .625rem 1.25rem; }
+  .rk-price-compare .rk-rt-pricing-chart-rows { text-align: center;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    padding-top: 1rem; }
+  .rk-price-compare .rk-rt-chart-top-tag { border-left-style: none;
+    padding-left: .3rem;
+    padding-right: .3rem; }
+  .rk-price-compare .rk-rt-pricing-v1-content-2 { grid-column-gap: 1rem;
+    grid-row-gap: 1rem; }
+}
+@media screen and (max-width: 479px) {
+  .rk-price-compare { --_font-details---font-size--body: .875rem; --_font-details---font-line-height--body: 162.5%; --_font-details---font-weight--regular: 400; --_font-details---font-letter-spacing--body: 0rem; --_font-details---font-size--heading-one: clamp(35px, 7vw, 100px); --_font-details---font-line-height--heading-one: 100%; --_font-details---font-weight--semibold: 600; --_font-details---font-letter-spacing--heading-one: -.1rem; --_font-details---font-size--heading-two: 1.5625rem; --_font-details---font-line-height--heading-two: 125%; --_font-details---font-letter-spacing--heading-two: -.046875rem; --_font-details---font-size--heading-three: 1.375rem; --_font-details---font-line-height--heading-three: 133.33%; --_font-details---font-letter-spacing--heading-three: -.04125rem; --_font-details---font-size--heading-four: 1.25rem; --_font-details---font-line-height--heading-four: 141.67%; --_font-details---font-letter-spacing--heading-four: -.0375rem; --_font-details---font-size--heading-five: 1.0625rem; --_font-details---font-line-height--heading-five: 150%; --_font-details---font-letter-spacing--heading-five: -.031875rem; --_font-details---font-size--heading-six: 1rem; --_font-details---font-line-height--heading-six: 155.56%; --_font-details---font-letter-spacing--heading-six: -.03rem; --_font-details---font-size--menu-text: 1.25rem; --_font-details---font-line-height--menu-text: 130%; --_font-details---font-weight--medium: 500; --_font-details---font-letter-spacing--menu-text: -.025rem; --_font-details---font-size--sub-text: .875rem; --_font-details---font-line-height--sub-text: 171.42%; --_font-details---font-letter-spacing--sub-text: .0875rem; --_font-details---font-size--extra-big-text: clamp(35px, 10vw, 240px); --_font-details---font-letter-spacing--extra-big-text: 0rem; --_font-details---font-size--big-text: clamp(35px, 10vw, 150px); --_font-details---font-letter-spacing--big-text: -.1rem; --_font-details---font-size--medium-text: clamp(35px, 5vw, 60px); --_font-details---font-letter-spacing--medium-text: -.1125rem; --_font-details---font-size--small-text: .75rem; --_font-details---font-weight--bold: 700; --_font-family---primary-font: "Inter Tight", sans-serif; --_font-family---secondary-font: "Instrument Serif", sans-serif; --_font-family---menu-font: Inter, sans-serif; --_container---container-extra-large: 114.375rem; --_container---containner-medium: 95.625rem; --_container---container-large: 101.25rem; --_container---container-small: 82.5rem; --_container---container-tiny: 68.75rem; --_gap---gutter-space: .9375rem; --_gap---section-gap-small: 3.4375rem; --_gap---section-gap-big: 3.75rem; --white: white; --black: #000; --concrete-gray: #979797; --black-opacity-twenty: #0003; --charcoal-gray: #585858; --white-opacity-twenty: #fff3; --platinum-gray: #e8e8e8; --silver-gray: #acacac; }
+  .rk-price-compare .rk-rt-gap-off.rt-mobile-text-center, .rk-price-compare .rt-text-color-black.rt-mobile-align-center { text-align: center; }
+  .rk-price-compare .rk-rt-pricing-chart-price { justify-content: center;
+    align-items: center;
+    font-size: 14px; }
+  .rk-price-compare .rk-rt-chart-top-tag { padding-left: .2rem;
+    padding-right: .2rem; }
+  .rk-price-compare .rk-rt-pricing-v1-list { padding-bottom: var(--_gap---section-gap-big); }
+}
+/* ---- rk-price-compare: hand-written, from tools/blocks/rk-price-compare.css ---- */
+/* rk-price-compare — the hand-written rules, and only the hand-written rules.
+
+   Everything is scoped under .rk-price-compare, exactly as the extractor scopes
+   its own output, and there are four things here and nothing else:
+
+     1. renok's `body` declarations, which never travel with a cut section;
+     2. the rule Webflow wrote against a generated node id, which is not a class
+        and so is not extracted either;
+     3. the one declaration in renok that counts its plans instead of describing
+        them, re-stated with this site's count;
+     4. below 768, where renok's own answer counts its plans too and cannot be
+        re-stated — five priced columns do not fit a phone at any count — the
+        same chart given the presentation a phone can read: renok's six cells per
+        row kept in six real tracks, the label column pinned, the row scrolled
+        sideways inside the chart. 4 exists because 3 stops at 768 and renok's
+        touch grid collapsed underneath it.
+
+   Every number below is renok's own — quoted from
+   tools/templates/renok/css/renok.app.shared.b851cf614.css, or measured on the
+   rendered block in a headless Chromium at renok's own sizes in renok's own
+   Inter Tight (css/donor-fonts.css → assets/fonts/donor), at a 1440 viewport
+   with no scrollbar unless another width is named; section 4's numbers are all
+   measured at 767 and below, and say so. Nothing here invents a colour, a size,
+   a spacing or a border.
+
+   THERE IS NO MOTION IN THIS FILE, and none is missing. Every reveal in the cut
+   is IX2: eleven SCROLL_INTO_VIEW events, one per chart row plus one on the
+   chart itself, running rk-a-24 / rk-a-25 / rk-a-28 / rk-a-89 … rk-a-94 at
+   delays from 100ms to 1000ms — and tools/donor-lib.mjs carries IX2 (checked on
+   the extraction: 11 events, 9 action lists). renok's pricing.html authors no
+   ix3 timeline over this section and loads no GSAP, and the
+   `html.w-mod-js:not(.w-mod-ix)` pre-init rules in its <head> only restate, for
+   two mobile breakpoints, the same translate/opacity/blur that the inline
+   `style` attributes on those rows already carry — and those attributes travel
+   with the cut. */
+
+/* ---------------------------------------------- 1. renok's `body` rule -- */
+
+/* renok keeps its typeface, its size, its leading and its text colour on `body`
+   (…b851cf614.css:2147), and a `body` rule does not travel with a cut section —
+   the extractor carries element rules and class rules, and the only `body`
+   declarations it takes are the custom properties a donor re-tunes per
+   breakpoint. Three of this block's six kinds of text are drawn by inheritance
+   alone, and would otherwise come out in whatever the host page puts on its own
+   body:
+
+     .rt-text-color-premium-grey   all 19 feature labels down the left column.
+                                   The rule sets a colour and nothing else.
+     the period under a price      `<div>Per month</div>` carries no class at
+                                   all: family, size, leading and colour all
+                                   come from `body`.
+     a value cell                  since 2026-09-15 the six quantity rows put
+                                   words where the donor put its tick glyph,
+                                   inside the donor's own `w-layout-hflex`,
+                                   which carries no type class either. So this
+                                   rule is what draws them, at renok's own body
+                                   size — the same inheritance as the period
+                                   under a price.
+
+   The other three set their own type: `.rt-text-style-h5` (the left column's
+   header) and `.rt-text-style-h6` (the plan names) are complete type rules, and
+   the prices are an `h2`, which the extractor carries as an element rule.
+
+   These are the six declarations of renok's own `body` rule, through renok's
+   own tokens — which the extractor already writes onto this same scope root —
+   and nothing more. The inherited `color` is renok's white, which is what this
+   chart is drawn in on renok's own page. Same restoration every renok block in
+   this directory makes, for the same reason. */
+.rk-price-compare {
+  font-family: var(--_font-family---primary-font);
+  color: var(--white);
+  font-size: var(--_font-details---font-size--body);
+  line-height: var(--_font-details---font-line-height--body);
+  font-weight: var(--_font-details---font-weight--regular);
+  letter-spacing: var(--_font-details---font-letter-spacing--body);
+}
+
+/* -------------------------------------- 2. the rules Webflow wrote by id -- */
+
+/* Webflow places the chart's left-hand cells with two rules written against
+   generated node ids — `#w-node-cacecf34-…-532bb1, …532bcd, …532bdd, …532bed,
+   …532bfd, …532c0d, …532c1d, …532c2d, …532c3d` at :11327 and again at :11434,
+   one id per `.rt-chart-left-col` — and tools/donor-lib.mjs carries class rules
+   and element rules, not id rules. Neither travels with the cut, so both are
+   restated here. This is exactly what tools/blocks/README.md keeps this file
+   for: "rules Webflow wrote against a generated node id (#w-node-…), which is
+   not a class and so is not extracted".
+
+   They are restated against `.rt-chart-left-col`, the class all nine of those
+   ids sit on, rather than against the ids themselves: this chart draws 19
+   feature rows where renok has 8, so its ids cannot stay unique and
+   tools/blocks/rk-price-compare.mjs drops them (see `dropNodeId` there, and
+   tools/verify-integrity.mjs:16, which rejects a duplicate id outright). The
+   declarations are renok's own, verbatim.
+
+   Without the first of them every feature label would sit centred in its track
+   instead of against the track's left edge — which is the one thing that makes
+   the left column read as a column rather than as a caption. */
+.rk-price-compare .rk-rt-chart-left-col {
+  place-self: center start;
+}
+
+/* renok's own mobile treatment for these two cells — `grid-area: span 1 / span 4`
+   on the label (:11430) and on the empty top-left cell, so the label stops being
+   a column and becomes a full-width centred line above the plan cells — USED TO
+   BE RESTATED HERE, and was removed on 2026-09-16. It is renok's answer to four
+   plan cells in renok's own four tracks (:10258); with five it is the direct
+   cause of the collapse section 4 describes, and section 4 replaces it. The
+   `span 4` is gone rather than re-tuned to `span 5`, because below 768 this
+   chart no longer stacks the label over the row at all: it keeps the label as a
+   real column and pins it. Nothing else in renok's ≤767 block is touched. */
+
+/* --------------------------- 3. five plan columns in a grid drawn for four -- */
+
+/* `.rt-pricing-chart-rows { grid-template-columns: 1.2fr 1fr 1fr 1fr 1fr }`
+   (:5213) is the one rule in renok that counts its plans instead of describing
+   them: a label column and one track per plan, because renok sells four.
+   PRICING sells five, tools/blocks/rk-price-compare.mjs emits five columns from
+   renok's own units, and six children in five tracks wrap — measured, the fifth
+   plan drops onto a second line underneath the label column, in every row of
+   the chart at once, and every row doubles in height (141px → 281px).
+
+   So the count is re-stated, and only the count: one more `1fr`, renok's own
+   1.2 : 1 ratio between the label column and a plan column untouched, and
+   nothing at all about how a single column is drawn.
+
+     measured at a 1440 viewport, chart 1410px wide
+       renok, four plans    label 325.4    plan 271.2 × 4
+       here,  five plans    label 272.9    plan 227.4 × 5
+
+   Which leaves 207.4px of content in a plan column (less 2 × .625rem of
+   `.rt-chart-columns` padding) and 262.9px in the label column (less .625rem of
+   `.rt-chart-left-col` padding-right). Every slot holds its words there: the
+   widest price is ¥40,000 at 151.0px, the widest plan name "Global Acquisition"
+   at 156.3px, the widest period "/ first year total" at 117.9px and the header
+   "Capability" at 94.5px. The feature labels wrap — at most two lines in Chinese
+   and three in English inside 262.9px — and never drive a row: every feature row
+   measured 141px in both languages, and the chart 3292px over its 22 rows.
+
+   WHAT 2026-09-15 PUT IN A PLAN CELL, AND WHAT IT DID NOT MOVE. Six of the rows
+   now carry words where the tick glyph stood (see rk-price-compare.mjs), so the
+   chart is 19 feature rows instead of 22 and a plan cell has to hold a short
+   string on six of them. Every box above is renok's own and none of them moved;
+   the block was not rebuilt for that change, so the lines below are ARITHMETIC
+   from the widths already recorded here, not a fresh headless run:
+
+     the widest value cell   zh 「中英文 + 3 个语种」, ten characters — narrower than
+                             the ¥40,000 price (151.0px) the same column already
+                             holds on one line.
+                             en "Chinese and English + 3 languages", 33
+                             characters — wider than 207.4px, so it wraps to two
+                             lines, against the three that renok's own
+                             "Unlimited e-mail notification" takes in a narrower
+                             slot. Every other value cell is one short line
+                             (3 / 20 / 20 个 / 中英文 / 18 种语言 / 定制 / Custom).
+
+   Two wrapped lines of body type are about 52px inside a cell whose padding is
+   2 × 1.5625rem, well under the 141px a row already measures for its three-line
+   left-hand label, so no value cell drives a row and the row height stands where
+   renok set it. Nothing about a cell's own drawing changed: same element, same
+   classes, same padding, same borders, same min-height.
+
+   FROM 768px UP, and that floor is measured rather than guessed. Forced on at
+   every width, six tracks hold until 564px in English and 504px in Chinese —
+   `1fr` floors at min-content, and a price cell's min-content is its h2 plus
+   2 × .625rem of padding — so at its 768px floor the rule has 204px of margin
+   and can never reach a width it cannot hold. Measured across 1920, 1440, 1280,
+   1100, 1024, 992, 991, 900, 860, 800 and 768 in both languages: six tracks on
+   one line in every row, nothing clipped, and no horizontal scroll on the
+   document.
+
+   ONE THING RE-MEASURED AT 768 ON 2026-09-16 AND LEFT ALONE, because it belongs
+   to this rule and not to section 4. `1fr` is `minmax(auto, 1fr)` and a price
+   cell's min-content — its h2 or its period, plus 2 × .625rem — is large enough
+   at the bottom of this rule's range to floor the tracks, so the PRICE row comes
+   out on a different set of tracks from every other row. Measured on the built
+   page, track starts across the row, header against price row:
+
+     @768  zh  0/142.8/261.9/380.9/499.9/619   vs  0/119.1/244/374.8/506.5/638.7
+           en  the same header                 vs  0/96.1/220.9/351.8/483.5/615.7
+     @800  zh drift 12.4px      en drift 20.9px
+     @830  zh drift 5.3px       en drift 5.3px
+     @860  zh 0px               en 0px         — and 0px at 900, 950, 992, 1024.
+
+   So the worst case is 23.7px in Chinese and 46.7px in English, both at 768, and
+   the register closes by 860. The prices stay in order, on one line, unclipped,
+   each still overlapping its own plan name; what they do not do between 768 and
+   ~850 is line up exactly with it. Untouched here: the only ways to move that
+   floor are renok's own 1.2 : 1 ratio, renok's own h2 size, or a shorter price
+   string in tools/copy.mjs, and by tools/blocks/README.md all three are reported
+   rather than restyled. It predates section 4 and section 4 cannot reach it —
+   `@media (max-width: 767px)` does not apply at 768.
+
+   768 is also where renok stops describing this chart the way it describes it
+   above: at 767 it re-draws the whole thing for touch (four tracks, no cell
+   borders, the label spanning the row — :10250, :10258, :11430). This rule stops
+   dead at that line and always did. What runs below it is no longer renok's
+   four-track grid: the 4 + 1 wrap that grid produces from five plan cells is the
+   collapse this block shipped until 2026-09-16, and section 4 is what runs there
+   now. Every measurement in this section is a ≥768px measurement and none of it
+   describes a phone. */
+@media screen and (min-width: 768px) {
+  .rk-price-compare .rk-rt-pricing-chart-rows {
+    grid-template-columns: 1.2fr 1fr 1fr 1fr 1fr 1fr;
+  }
+}
+
+/* --------------- 4. the same chart on a phone: a pinned label and a scroller -- */
+
+/* THE DEFECT THIS SECTION FIXES, measured on the built page before it existed,
+   at 430 and 390 on pricing.html, with the reveal walked DOWNWARDS to the foot
+   of the chart (these toggleActions reverse on upward scroll, so a frame taken
+   after scrolling back up shows a half-closed animation, not a layout):
+
+     renok draws FOUR plan cells below 768 and this chart has FIVE, so the six
+     children of every row fell 4 + 1 into renok's four tracks.
+
+       header row @430  four names on one line at x = 15 / 115 / 215 / 315, each
+                        100px wide, and 企业版 alone on a second line at x = 15 —
+                        the same x as 标准版, directly under it. At 390 the same
+                        thing at x = 15 / 105 / 195 / 285, 90px wide.
+       price row @430   three prices on the first line (x = 15 / 122 / 233, the
+                        cells 107 / 112 / 112px — min-content, because a price
+                        cell cannot go under its own h2), ¥40,000 half off the
+                        screen at x = 345 + 113, and 定制 on a third line at
+                        x = 15. Identical at 390.
+       every row        two or three lines instead of one. Row heights: the
+                        header 106.6px, the price row 199.7px, a feature row
+                        159.7px — against the 62 / 107 / 77px they measure now.
+                        The chart stood 3355.7px tall over its 21 rows.
+       the label column gone. `.rt-chart-left-col` spans the row and centres
+                        (renok :11430), so 官网核心页面 was a caption at x = 168
+                        (@430) / x = 148 (@390) above its own row instead of a
+                        column beside it, and the chart read as 21 captions.
+       clipped          「¥40,000」 laid out at [355, 448] against a 430px screen
+                        and again against a 390px one, and 「/ 首年」 at
+                        [384, 419]. The document did not scroll — main-content
+                        clips — so the price was cut, not reachable: 「¥40,00」 at
+                        430 and 「¥40」 over a bare 「/」 at 390.
+
+   WHY A SCROLLER AND NOT ONE CARD PER PLAN. Both were on the table and only one
+   is reachable from a stylesheet. This chart's markup is ROW-MAJOR: 21 sibling
+   `.rt-pricing-chart-rows` grids, each holding one `.rt-chart-left-col` and then
+   five `.rt-chart-columns` in plan order. A card per plan is COLUMN-MAJOR — it
+   needs the five cells of every row dealt out to five different cards — and no
+   CSS re-orders children across 21 separate grids. It would mean re-emitting the
+   chart in a second shape in rk-price-compare.mjs, which is what
+   tools/blocks/README.md forbids ("Change words, never structure"), and shipping
+   BOTH shapes would print all 23 values and all 19 labels on the page twice.
+   A horizontally scrollable table with a pinned label column needs no markup at
+   all, keeps the one DOM the desktop uses, and restores the two attributions the
+   defect broke: a value stays in the row its feature label names, and in the
+   column its plan name heads.
+
+   WHAT IT DRAWS, AND WHERE EVERY NUMBER COMES FROM. Every width below is the
+   LAID-OUT width of that string on the built page — a range measured over the
+   element with `white-space: nowrap`, not a canvas estimate, so renok's negative
+   letter-spacing is in it — taken at 390 in renok's own Inter Tight
+   (css/donor-fonts.css → assets/fonts/donor), where renok's own ≤767 type is in
+   force: h2 25px / 31.25px, body and value cells 14px, `.rt-text-style-h6` 16px,
+   `.rt-text-style-h5` 17px, `.rt-chart-columns` padding .625rem .625rem 1.25rem
+   with min-height 60px (:10250), `.rt-chart-left-col` padding-right .625rem
+   (:5227).
+
+     a plan track    8rem = 128px, less 2 × .625rem of renok's padding = 108px of
+                     content. The binding string is the widest price, 「¥40,000」
+                     at 92.6px — the same string on both pages, with 「¥30,000」
+                     0.3px behind it — so the smallest honest track is 112.6px
+                     and this one carries 15.4px of slack. Nothing else in the
+                     column needs more: the period is 35.6px (「/ 首年」) or 89.4px
+                     ("/ first year total"); the widest plan name is 77.6px
+                     (「全球获客版」) or 121.0px ("Global Acquisition", which fits on
+                     one line below 480 where renok drops `.rt-chart-top-tag` to
+                     .2rem of padding and leaves 121.6px (:11093), and takes two
+                     lines from 480 to 767 where that padding is .3rem and leaves
+                     118.4px, breaking at its space to "Acquisition" at 75.3px —
+                     measured, the English header row is 62px tall at 430 and
+                     87px at 767); and the widest value cell is 110.7px (「中英文
+                     + 3 个语种」) or 209.7px ("Chinese and English + 3 languages",
+                     whose longest unbreakable run is "languages" at 62.1px).
+                     The three that exceed 108px wrap at a space, inside their
+                     own cell, under their own plan.
+     the label track 7.5rem = 120px, less .625rem of padding and the .0625rem
+                     rule = 109px of content. It holds the header — 「能力」 33.0px
+                     / "Capability" 71.6px — and the longest run in any feature
+                     label that cannot break at a space, which in English is
+                     "12-month" at 103.3px and can in fact break at its hyphen;
+                     Chinese labels break between characters. Labels wrap to two
+                     to four lines and are what sets a row height now, which is
+                     why the chart comes out SHORTER than the collapse it
+                     replaces: at 390, 1765px against 3355.7px in Chinese, and
+                     2076.1px in English.
+     the row         7.5rem + 5 × 8rem = 47.5rem = 760px on every row, so the six
+                     tracks line up down the whole chart and the header row
+                     stands over the columns it names. Measured at 320, 360, 375,
+                     390, 412 and 430 on both pages: the six tracks start at
+                     0 / 120 / 248 / 376 / 504 / 632 in EVERY one of the 21 rows,
+                     the same six numbers at every width.
+
+   `width: max-content` is what makes the row box 760px rather than the width of
+   the scrollport: without it the tracks would overflow a 360px row and renok's
+   `border-bottom` (:5208) would stop 400px short of the cells it underlines.
+   `min-width: 100%` guards only the other direction — at 767px the scrollport is
+   737px and the row is wider, so it never engages today.
+
+   THE PINNED COLUMN. `position: sticky; left: 0` on the label cell, which is a
+   grid item — measured rather than assumed, because a positioned grid item is
+   constrained by its grid area and whether it stays put at all is a question
+   about the browser, not about the rule. It does: scrolled to the end (maxScroll
+   400px at 390, 470px at 320) the label cells sit 0px from the chart's
+   content-left while the first plan cell has gone to -280px / -350px.
+
+     background-color  var(--black), renok's own token on this scope root, and
+                       the colour `.rt-pricing-v1-list` already paints behind the
+                       chart below 991 (:8990) — computed rgb(0, 0, 0) on this
+                       page. A pinned cell has plan cells sliding under it, so it
+                       cannot be transparent; this invents no colour, it repeats
+                       the one already behind it.
+     border-right      .0625rem solid #fff3, renok's own spelling of a rule — the
+                       border it gives `.rt-chart-columns` (:5190) and every
+                       row's border-bottom (:5208). It draws the pinned edge, the
+                       one line renok never had to draw because it never pinned
+                       anything. NOTHING ELSE GAINS A BORDER: renok's
+                       `border-left-style: none` on the plan cells below 768
+                       (:10250) stands, so the touch chart stays as borderless as
+                       renok drew it.
+     stretch + flex    the cell fills its track instead of taking renok's desktop
+                       `place-self: center start`, because a sticky box masks
+                       only what its own box covers and a shrink-to-fit label
+                       would let 定制 slide past it in the gap. `display: flex;
+                       align-items: center` puts the label back on the vertical
+                       centre — the centring renok gives every other cell in the
+                       row (:5190) — and `text-align: left` overrides renok's
+                       ≤767 `text-align: center` (:10256) for the same reason
+                       section 2's desktop rule sets `start`: against the track's
+                       left edge is what makes the column read as a column.
+
+   THE SCROLLPORT. `overflow-x: auto` on `.rt-pricing-chart` and deliberately
+   nothing else, so `overflow-y` computes to `auto` rather than `visible`. That
+   is the point: on a platform with classic, space-taking scrollbars the
+   horizontal bar eats about 15px of an auto-height box, and `overflow-y: hidden`
+   would answer that by CUTTING the last row — the one defect this section exists
+   to end. `auto` can only scroll, never clip. At rest it does not even do that:
+   measured with overlay scrollbars, chart offsetHeight = clientHeight =
+   scrollHeight = 1765px in Chinese and 2076px in English, and no cell reaches
+   past the end of the scrollable area — 0.0px of overhang at every width tested.
+   `overscroll-behavior-x: contain` keeps a sideways swipe on the chart from
+   chaining into the browser's back gesture.
+
+   WHAT THIS DOES NOT DO, STATED RATHER THAN HIDDEN. The plan names live in the
+   chart's own header row. That row scrolls sideways WITH the columns, so a
+   column never drifts off its name; but it scrolls UP out of the viewport with
+   the page, exactly as the desktop table's header does, and this file cannot pin
+   it — `overflow-x: auto` makes the chart its own scrollport, and `position:
+   sticky; top` inside a scrollport that never scrolls vertically pins nothing.
+   Deep in the chart a phone reader attributes a column by its position and the
+   pinned label, as a desktop reader does.
+
+   THE REVEAL STILL RUNS, and the chart is now its scrollport. Each row slides up
+   3.14rem into place (rk-a-24 / rk-a-25 / rk-a-28 / rk-a-89 … rk-a-94, see the
+   head of this file), so mid-reveal a row sits up to 3.14rem below its final
+   place at an opacity ramping from 0 and the chart is briefly scrollable by that
+   much. Nothing is clipped and nothing on the page moves. Verified by walking
+   DOWN to the foot of the chart and measuring there.
+
+   MEASURED AT 320 / 360 / 375 / 390 / 412 / 430 / 767 / 768, on pricing.html and
+   en/pricing.html, plus 1440 to confirm section 3's desktop grid is untouched.
+   412 and 430 are in that list because earlier passes on this site skipped them
+   and that is where defects hid. At every width below 768, on both pages:
+
+     document scrollWidth − clientWidth   0px, at all seven widths.
+     the 21 rows                          6 cells each, all six on ONE line, at
+                                          the same six x positions in every row.
+     clipped inside its own cell          none. Nothing reaches past the end of
+                                          the scrollable area either: 0.0px.
+     the pinned label                     at full scroll (470px of it at 320,
+                                          400px at 390, 360px at 430) every one
+                                          of the 20 label cells sits 0px from the
+                                          chart's content-left, while the 标准版 /
+                                          Standard cell has gone to −350 / −280 /
+                                          −240. 「¥40,000 / 首年」 and 定制 are then
+                                          both fully on screen, which is the
+                                          price the defect cut.
+     row heights                          zh 62 / 107 / 77 … 77, chart 1765px;
+                                          en 62 / 107 / 77 … 77 with the language
+                                          rows at 130, chart 2076.1px. Against
+                                          106.6 / 199.7 / 159.7 and 3355.7px
+                                          before.
+
+   At 768 and 1440 nothing in this section applies and nothing in the chart
+   changed: same 6-track desktop grid, same row heights, same 0px page overflow.
+   The one thing 768 does show is section 3's own price-row floor, recorded
+   there. */
+@media screen and (max-width: 767px) {
+  .rk-price-compare .rk-rt-pricing-chart {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+  }
+
+  .rk-price-compare .rk-rt-pricing-chart-rows {
+    grid-template-columns: 7.5rem repeat(5, 8rem);
+    width: max-content;
+    min-width: 100%;
+  }
+
+  /* The label cell, and the empty top-left cell of the header row above it —
+     the one Webflow node id this block keeps, because that element is emitted
+     once and carries no class to hang a rule on. They are one pinned column and
+     have to be drawn as one. */
+  .rk-price-compare .rk-rt-chart-left-col,
+  .rk-price-compare #w-node-cacecf34-e427-8fd7-d839-092b3e532ba3-a96158b4 {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    justify-self: stretch;
+    align-self: stretch;
+    background-color: var(--black);
+    border-right: .0625rem solid #fff3;
+  }
+
+  .rk-price-compare .rk-rt-chart-left-col {
+    display: flex;
+    align-items: center;
+    text-align: left;
+  }
+}
+
+@font-face {
+  font-family: webflow-icons;
+  src: url("data:application/x-font-ttf;charset=utf-8;base64,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") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+.rk-price-tiers {
+  --_font-family---primary-font: "Inter Tight", sans-serif;
+  --white: white;
+  --_font-details---font-size--body: 1rem;
+  --_font-details---font-line-height--body: 162.5%;
+  --_font-details---font-weight--regular: 400;
+  --_font-details---font-letter-spacing--body: 0rem;
+  --_font-details---font-size--heading-one: clamp(35px, 7vw, 100px);
+  --_font-details---font-line-height--heading-one: 100%;
+  --_font-details---font-weight--semibold: 600;
+  --_font-details---font-letter-spacing--heading-one: -.1rem;
+  --_font-details---font-size--heading-two: 1.875rem;
+  --_font-details---font-line-height--heading-two: 125%;
+  --_font-details---font-letter-spacing--heading-two: -.05625rem;
+  --_font-details---font-size--heading-three: 1.625rem;
+  --_font-details---font-line-height--heading-three: 133.33%;
+  --_font-details---font-letter-spacing--heading-three: -.04875rem;
+  --_font-details---font-size--heading-four: 1.375rem;
+  --_font-details---font-line-height--heading-four: 141.67%;
+  --_font-details---font-letter-spacing--heading-four: -.04125rem;
+  --_font-details---font-size--heading-five: 1.125rem;
+  --_font-details---font-line-height--heading-five: 150%;
+  --_font-details---font-letter-spacing--heading-five: -.03375rem;
+  --_font-details---font-size--heading-six: 1.0625rem;
+  --_font-details---font-line-height--heading-six: 155.56%;
+  --_font-details---font-letter-spacing--heading-six: -.031875rem;
+  --black: #000;
+  --concrete-gray: #979797;
+  --_font-details---font-size--menu-text: 1.25rem;
+  --_font-details---font-line-height--menu-text: 130%;
+  --_font-details---font-weight--medium: 500;
+  --_font-details---font-letter-spacing--menu-text: -.025rem;
+  --_font-details---font-size--sub-text: .875rem;
+  --_font-details---font-line-height--sub-text: 171.42%;
+  --_font-details---font-letter-spacing--sub-text: .0875rem;
+  --_font-details---font-size--extra-big-text: clamp(35px, 10vw, 240px);
+  --_font-details---font-letter-spacing--extra-big-text: -.1rem;
+  --_font-details---font-size--big-text: clamp(35px, 10vw, 150px);
+  --_font-details---font-letter-spacing--big-text: -.4125rem;
+  --_font-details---font-size--medium-text: clamp(35px, 15vw, 60px);
+  --_font-details---font-letter-spacing--medium-text: -.1125rem;
+  --_container---container-extra-large: 114.375rem;
+  --_gap---gutter-space: .9375rem;
+  --_container---containner-medium: 95.625rem;
+  --_gap---section-gap-small: 8.75rem;
+  --_font-family---secondary-font: "Instrument Serif", sans-serif;
+  --black-opacity-twenty: #0003;
+  --_gap---section-gap-big: 9.375rem;
+  --charcoal-gray: #585858;
+  --white-opacity-twenty: #fff3;
+  --_container---container-large: 101.25rem;
+  --_font-details---font-size--small-text: .75rem;
+  --_container---container-small: 82.5rem;
+  --_container---container-tiny: 68.75rem;
+  --platinum-gray: #e8e8e8;
+  --silver-gray: #acacac;
+  --_font-family---menu-font: Inter, sans-serif;
+  --_font-details---font-weight--bold: 700;
+}
+.rk-price-tiers article, .rk-price-tiers aside, .rk-price-tiers details, .rk-price-tiers figcaption, .rk-price-tiers figure, .rk-price-tiers footer, .rk-price-tiers header, .rk-price-tiers hgroup, .rk-price-tiers main, .rk-price-tiers menu, .rk-price-tiers nav, .rk-price-tiers section, .rk-price-tiers summary { display: block; }
+.rk-price-tiers a { background-color: #0000; }
+.rk-price-tiers img { border: 0; }
+.rk-price-tiers img { vertical-align: middle;
+  max-width: 100%;
+  display: inline-block; }
+.rk-price-tiers .w-inline-block { max-width: 100%;
+  display: inline-block; }
+.rk-price-tiers h1, .rk-price-tiers h2, .rk-price-tiers h3, .rk-price-tiers h4, .rk-price-tiers h5, .rk-price-tiers h6 { margin-bottom: 10px;
+  font-weight: bold; }
+.rk-price-tiers h2 { margin-top: 20px;
+  font-size: 32px;
+  line-height: 36px; }
+.rk-price-tiers .w-container { max-width: 940px;
+  margin-left: auto;
+  margin-right: auto; }
+.rk-price-tiers .w-container:before, .rk-price-tiers .w-container:after { content: " ";
+  grid-area: 1 / 1 / 2 / 2;
+  display: table; }
+.rk-price-tiers .w-container:after { clear: both; }
+.rk-price-tiers .w-container .w-row { margin-left: -10px;
+  margin-right: -10px; }
+@media screen and (max-width: 991px) {
+  .rk-price-tiers .w-container { max-width: 728px; }
+}
+@media screen and (max-width: 767px) {
+  .rk-price-tiers .w-row, .rk-price-tiers .w-container .w-row { margin-left: 0;
+    margin-right: 0; }
+}
+@media screen and (max-width: 479px) {
+  .rk-price-tiers .w-container { max-width: none; }
+}
+.rk-price-tiers .w-layout-vflex { flex-direction: column;
+  align-items: flex-start;
+  display: flex; }
+.rk-price-tiers .w-layout-hflex { flex-direction: row;
+  align-items: flex-start;
+  display: flex; }
+.rk-price-tiers .w-layout-blockcontainer { max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block; }
+@media screen and (max-width: 991px) {
+  .rk-price-tiers .w-layout-blockcontainer { max-width: 728px; }
+}
+@media screen and (max-width: 767px) {
+  .rk-price-tiers .w-layout-blockcontainer { max-width: none; }
+}
+.rk-price-tiers h2 { font-family: var(--_font-family---primary-font);
+  color: var(--white);
+  font-size: var(--_font-details---font-size--heading-two);
+  line-height: var(--_font-details---font-line-height--heading-two);
+  font-weight: var(--_font-details---font-weight--semibold);
+  letter-spacing: var(--_font-details---font-letter-spacing--heading-two);
+  margin-top: 1.25rem;
+  margin-bottom: .625rem; }
+.rk-price-tiers a { color: var(--white);
+  text-decoration: none; }
+.rk-price-tiers img { object-fit: cover;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  display: inline-block; }
+.rk-price-tiers .rk-rt-background-black { background-color: var(--black); }
+.rk-price-tiers .rk-rt-text-style-h4 { font-family: var(--_font-family---primary-font);
+  color: var(--white);
+  font-size: var(--_font-details---font-size--heading-four);
+  line-height: var(--_font-details---font-line-height--heading-four);
+  font-weight: var(--_font-details---font-weight--semibold);
+  letter-spacing: var(--_font-details---font-letter-spacing--heading-four); }
+.rk-price-tiers .rk-rt-text-style-h4.rk-rt-text-color-light-gray.rt-active { z-index: 10; }
+.rk-price-tiers .rk-rt-text-style-h6 { font-family: var(--_font-family---primary-font);
+  color: var(--white);
+  font-size: var(--_font-details---font-size--heading-six);
+  line-height: var(--_font-details---font-line-height--heading-six);
+  font-weight: var(--_font-details---font-weight--semibold);
+  letter-spacing: var(--_font-details---font-letter-spacing--heading-six); }
+.rk-price-tiers .rk-rt-button-text { font-family: var(--_font-family---primary-font);
+  color: var(--white);
+  font-size: var(--_font-details---font-size--body);
+  line-height: var(--_font-details---font-line-height--body);
+  font-weight: var(--_font-details---font-weight--semibold);
+  letter-spacing: var(--_font-details---font-letter-spacing--body); }
+.rk-price-tiers .rk-rt-button-text.rk-rt-text-two { z-index: 5;
+  position: absolute;
+  transform: translate(0, 120%); }
+.rk-price-tiers .rk-rt-button-text.rk-rt-text-two.rt-v2, .rk-price-tiers .rk-rt-button-text.rk-rt-text-one { color: var(--black); }
+.rk-price-tiers .rk-rt-button-text.rk-rt-text-one.rt-v2 { color: var(--white); }
+.rk-price-tiers .rk-rt-medium-text { font-size: var(--_font-details---font-size--medium-text);
+  line-height: var(--_font-details---font-line-height--heading-one);
+  font-weight: var(--_font-details---font-weight--semibold);
+  letter-spacing: var(--_font-details---font-letter-spacing--medium-text); }
+.rk-price-tiers .rk-rt-container-xl { max-width: var(--_container---container-extra-large);
+  padding-right: var(--_gap---gutter-space);
+  padding-left: var(--_gap---gutter-space); }
+.rk-price-tiers .rt-home-v1-hero.rk-rt-overflow-hidden.rt-change { padding-bottom: 0; }
+.rk-price-tiers .rt-home-v1-hero-main.rk-rt-position-relative { z-index: 30; }
+.rk-price-tiers .rk-rt-gap-off { margin-top: 0;
+  margin-bottom: 0; }
+.rk-price-tiers .rk-rt-gap-off.rt-change-align { text-align: right; }
+.rk-price-tiers .rk-rt-gap-off.rk-rt-text-color-black.rt-bototm-gap { margin-bottom: 1.25rem; }
+.rk-price-tiers .rk-rt-button-full-wrap { justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  display: flex;
+  position: relative; }
+.rk-price-tiers .rk-rt-button-text-wrap { z-index: 2;
+  grid-column-gap: .2rem;
+  grid-row-gap: .2rem;
+  margin-right: 2rem;
+  position: relative;
+  overflow: visible;
+  transform: translate(0, .2rem); }
+.rk-price-tiers .rk-rt-button-icon-block { z-index: 3;
+  grid-column-gap: .625rem;
+  background-color: var(--white);
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  width: .5rem;
+  height: .5rem;
+  margin-top: auto;
+  margin-bottom: auto;
+  position: absolute;
+  top: 46%;
+  right: 0%; }
+.rk-price-tiers .rk-rt-button-icon-block.rt-v2 { background-color: var(--black); }
+.rk-price-tiers .rk-rt-button { flex-flow: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  display: inline-block;
+  position: relative; }
+.rk-price-tiers .rk-rt-button.rk-rt-full-width.rt-event-none { pointer-events: none; }
+.rk-price-tiers .rk-rt-button-background-circle { background-color: var(--black);
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  width: .5rem;
+  height: .5rem;
+  margin-top: auto;
+  margin-bottom: auto;
+  position: absolute;
+  top: 46%;
+  right: 0%; }
+.rk-price-tiers .rk-rt-button-background-circle.rt-v2 { background-color: var(--white); }
+.rk-price-tiers .rk-rt-button-wrap { grid-column-gap: .6875rem;
+  grid-row-gap: 0rem;
+  background-color: var(--white);
+  border: .0625rem solid #fff0;
+  justify-content: center;
+  align-items: center;
+  height: 2.25rem;
+  padding: .1rem .875rem .4rem 1.375rem; }
+.rk-price-tiers .rk-rt-button-wrap.rk-rt-overflow-hidden.rk-rt-radius-xl.rk-rt-background-black { background-color: var(--black); }
+.rk-price-tiers .rk-rt-button-wrap.rt-change { height: 2.625rem; }
+.rk-price-tiers .rt-home-v1-hero-bottom.rk-rt-overflow-hidden.rt-change { justify-content: flex-start;
+  align-items: center;
+  max-width: 46.8894rem;
+  margin-left: auto;
+  margin-right: auto; }
+.rk-price-tiers .rt-home-v1-hero-bottom.rt-change.rk-rt-overflow-hidden.rt-change-align { justify-content: flex-start;
+  align-items: flex-start; }
+.rk-price-tiers .rk-rt-radius-xl { border-radius: 6.25rem; }
+.rk-price-tiers .rk-rt-text-color-black { color: var(--black); }
+.rk-price-tiers .rk-rt-position-relative { position: relative; }
+.rk-price-tiers .rk-rt-full-width { width: 100%; }
+.rk-price-tiers .rk-rt-text-style-h6-2 { color: #000;
+  letter-spacing: -.033rem;
+  font-family: Inter Tight, sans-serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.45; }
+.rk-price-tiers .rk-rt-price-yearly-box { justify-content: center;
+  align-items: center;
+  padding-bottom: .1875rem;
+  position: relative; }
+.rk-price-tiers .rk-rt-pricing-card-heading-wrap { grid-column-gap: 1.375rem;
+  grid-row-gap: 1.375rem;
+  flex-flow: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-bottom: 2.5rem; }
+.rk-price-tiers .rk-rt-pricing-card-v3-list-wrapper { grid-column-gap: 1rem;
+  grid-row-gap: 1rem; }
+.rk-price-tiers .rk-rt-pricing-v1-main { grid-column-gap: 1.75rem;
+  grid-row-gap: 1.75rem;
+  justify-content: center;
+  align-items: stretch;
+  width: 100%; }
+.rk-price-tiers .rk-rt-pricing-card-items { grid-column-gap: 1.1rem;
+  grid-row-gap: 1.1rem; }
+.rk-price-tiers .rk-rt-pricing-list-items { grid-column-gap: .625rem;
+  grid-row-gap: .625rem;
+  justify-content: flex-start;
+  align-items: center; }
+.rk-price-tiers .rk-rt-card-price-wrap { position: relative; }
+.rk-price-tiers .rk-rt-toggle { border: .0625rem solid var(--white-opacity-twenty);
+  cursor: pointer;
+  border-radius: 1.25rem;
+  justify-content: space-between;
+  align-items: center;
+  width: 5.06438rem;
+  height: 2.45938rem;
+  padding: .1rem .3rem; }
+.rk-price-tiers .rk-rt-price-box { grid-column-gap: .625rem;
+  grid-row-gap: .625rem;
+  justify-content: flex-start;
+  align-items: flex-end; }
+.rk-price-tiers .rk-rt-pricing-toggle-wrap { grid-column-gap: .625rem;
+  grid-row-gap: .625rem;
+  justify-content: center;
+  align-items: center; }
+.rk-price-tiers .rk-rt-toggle-ball { background-color: var(--white);
+  border-radius: 50%;
+  width: 1.8rem;
+  height: 1.8rem; }
+.rk-price-tiers .rk-rt-pricing-card { -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  background-color: #58585833;
+  align-items: stretch; }
+.rk-price-tiers .rk-rt-pricing-card.rk-rt-border-right { border-right: .0625rem solid var(--white-opacity-twenty); }
+.rk-price-tiers .rk-rt-card-price { grid-column-gap: .7rem;
+  grid-row-gap: .7rem;
+  justify-content: flex-start;
+  align-items: flex-end;
+  margin-bottom: .875rem;
+  position: relative; }
+.rk-price-tiers .rk-rt-pricing-card-v2-price { grid-column-gap: .625rem;
+  grid-row-gap: .625rem;
+  justify-content: center;
+  align-items: center; }
+.rk-price-tiers .rk-rt-pricing-cards-grid { border: .0625rem solid var(--white-opacity-twenty);
+  grid-template-rows: auto;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-auto-columns: 1fr;
+  width: 100%;
+  display: grid; }
+.rk-price-tiers .rk-rt-text-color-light-gray { color: var(--concrete-gray); }
+.rk-price-tiers .rk-rt-text-color-light-gray.rt-active { z-index: 10;
+  color: var(--black); }
+.rk-price-tiers .rk-rt-pricing-card-v3-list { grid-column-gap: 1.5625rem;
+  grid-row-gap: 1.5625rem;
+  border-top: .0625rem solid var(--white-opacity-twenty);
+  border-bottom: .0625rem solid var(--white-opacity-twenty);
+  align-items: stretch;
+  padding: 2.5rem 1.875rem 3.4375rem;
+  position: relative; }
+.rk-price-tiers .rk-rt-pricing-card-v3-top { padding: 2.1875rem 1.875rem 2.5rem;
+  position: relative; }
+.rk-price-tiers .rk-rt-pricing-v1 { z-index: 1;
+  padding-top: var(--_gap---section-gap-small);
+  padding-bottom: var(--_gap---section-gap-big);
+  position: relative; }
+.rk-price-tiers .rk-rt-pricing-card-bottom { grid-column-gap: .9375rem;
+  grid-row-gap: .9375rem;
+  justify-content: center;
+  align-items: center;
+  padding: 1.25rem; }
+.rk-price-tiers .rk-rt-pricing-v1-top { justify-content: space-between;
+  margin-bottom: 3.125rem; }
+.rk-price-tiers .rk-rt-pricing-v1-top.rt-change-align { grid-column-gap: 3.125rem;
+  grid-row-gap: 3.125rem;
+  flex-flow: column;
+  justify-content: space-between;
+  align-items: center; }
+.rk-price-tiers .rk-rt-pricing-v1-top.rt-change-align.rt-change { margin-bottom: 0; }
+.rk-price-tiers .rk-rt-pricing-v1-top-heading { max-width: 34.6875rem; }
+.rk-price-tiers .rk-rt-overflow-hidden { overflow: hidden; }
+.rk-price-tiers .rk-rt-pricing-top-right { grid-column-gap: 1.875rem;
+  grid-row-gap: 1.875rem;
+  flex-flow: column;
+  flex: 0 35%;
+  justify-content: flex-start;
+  align-items: flex-start;
+  display: flex; }
+.rk-price-tiers .rk-rt-pricing-top-right-bottom { grid-column-gap: 1.25rem;
+  grid-row-gap: 1.25rem; }
+.rk-price-tiers .rk-rt-pricing-top-right-bottom.rt-change-align { justify-content: center;
+  align-items: center; }
+.rk-price-tiers .rk-rt-pricing-save-wrapper { grid-column-gap: .4375rem;
+  grid-row-gap: .4375rem;
+  justify-content: space-between;
+  align-items: center; }
+.rk-price-tiers .rk-rt-pricing-pecentage-wrapper { background-color: #ffffff1a;
+  border-radius: 6.25rem;
+  justify-content: center;
+  align-items: center;
+  width: 2.21063rem;
+  height: 1.3125rem; }
+.rk-price-tiers .rk-rt-small-text { font-size: var(--_font-details---font-size--small-text); }
+.rk-price-tiers .rk-rt-popular-wrapper { background-color: var(--white);
+  border-radius: 6.25rem;
+  justify-content: center;
+  align-items: center;
+  width: 5.4rem;
+  height: 1.4375rem;
+  position: absolute;
+  inset: 2.5rem 3.125rem auto auto; }
+.rk-price-tiers .rk-rt-monthly-wrapper, .rk-price-tiers .rk-rt-yearly-wrapper { width: 100%; }
+.rk-price-tiers .rt-about-creative-top-text.rk-rt-one { margin-right: -4.2rem; }
+.rk-price-tiers .rt-about-creative-top-text.rk-rt-two { flex-flow: column;
+  justify-content: flex-end;
+  align-items: stretch;
+  margin-left: -4.4rem; }
+.rk-price-tiers .rk-rt-gap-off-2 { margin: 0; }
+.rk-price-tiers .rk-rt-gap-off-2.rt-answer { padding-bottom: 1.875rem; }
+.rk-price-tiers .rk-rt-text-style-h4-2 { color: #000;
+  letter-spacing: -.045rem;
+  font-family: Inter Tight, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.41; }
+.rk-price-tiers .rt-faq-toggle-icon.rk-rt-position-relative { justify-content: center;
+  align-items: center;
+  display: flex; }
+.rk-price-tiers .rt-about-branding-image.rk-rt-two, .rk-price-tiers .rt-about-branding-image.rt-three, .rk-price-tiers .rt-about-branding-image.rt-four, .rk-price-tiers .rt-about-branding-image.rt-five { position: absolute;
+  inset: 0%; }
+.rk-price-tiers .rk-rt-pricing-v1-content-2 { grid-column-gap: 3.125rem;
+  grid-row-gap: 3.125rem; }
+.rk-price-tiers .rk-rt-pricing-v1-list { padding-top: var(--_gap---section-gap-small);
+  padding-bottom: var(--_gap---section-gap-big); }
+.rk-price-tiers .rk-rt-pricing-v1-content-2-heading { max-width: 29.375rem; }
+.rk-price-tiers .rk-rt-yearly-wrap, .rk-price-tiers .rk-rt-monthly-wrap { position: relative; }
+.rk-price-tiers .rk-rt-yearly-wrap-line { background-color: var(--white);
+  height: .0625rem;
+  position: absolute;
+  inset: auto 0% 4%; }
+.rk-price-tiers .rk-rt-text-color-premium-grey { color: var(--platinum-gray); }
+.rk-price-tiers .rt-icons-logo-boxes.rk-rt-background-black { background-color: #000; }
+.rk-price-tiers .rt-bg-line-animation-line.rk-rt-two { background-image: linear-gradient(#0000 5%, #ffffff4d); }
+.rk-price-tiers .rt-bg-line-animation-line.rk-rt-two.rt-second { top: auto;
+  bottom: 100%; }
+@media screen and (min-width: 1280px) {
+  .rk-price-tiers { --_container---container-extra-large: 114.375rem; --_container---containner-medium: 95.625rem; --_container---container-large: 101.25rem; --_container---container-small: 82.5rem; --_container---container-tiny: 68.75rem; --_font-details---font-size--body: 1rem; --_font-details---font-line-height--body: 162.5%; --_font-details---font-weight--regular: 400; --_font-details---font-letter-spacing--body: 0rem; --_font-details---font-size--heading-one: clamp(35px, 15vw, 100px); --_font-details---font-line-height--heading-one: 100%; --_font-details---font-weight--semibold: 600; --_font-details---font-letter-spacing--heading-one: -.3rem; --_font-details---font-size--heading-two: 2.5rem; --_font-details---font-line-height--heading-two: 125%; --_font-details---font-letter-spacing--heading-two: -.075rem; --_font-details---font-size--heading-three: 1.875rem; --_font-details---font-line-height--heading-three: 133.33%; --_font-details---font-letter-spacing--heading-three: -.05625rem; --_font-details---font-size--heading-four: 1.5rem; --_font-details---font-line-height--heading-four: 141.67%; --_font-details---font-letter-spacing--heading-four: -.045rem; --_font-details---font-size--heading-five: 1.25rem; --_font-details---font-line-height--heading-five: 150%; --_font-details---font-letter-spacing--heading-five: -.0375rem; --_font-details---font-size--heading-six: 1.125rem; --_font-details---font-line-height--heading-six: 155.56%; --_font-details---font-letter-spacing--heading-six: -.03375rem; --_font-details---font-size--menu-text: 1.25rem; --_font-details---font-line-height--menu-text: 130%; --_font-details---font-weight--medium: 500; --_font-details---font-letter-spacing--menu-text: -.025rem; --_font-details---font-size--sub-text: .875rem; --_font-details---font-line-height--sub-text: 171.42%; --_font-details---font-letter-spacing--sub-text: .0875rem; --_font-details---font-size--extra-big-text: clamp(35px, 15vw, 240px); --_font-details---font-letter-spacing--extra-big-text: -.75rem; --_font-details---font-size--big-text: clamp(35px, 15vw, 150px); --_font-details---font-letter-spacing--big-text: -.4125rem; --_font-details---font-size--medium-text: clamp(35px, 15vw, 60px); --_font-details---font-letter-spacing--medium-text: -.1125rem; --_font-details---font-size--small-text: .75rem; --_font-details---font-weight--bold: 700; --_font-family---primary-font: "Inter Tight", sans-serif; --_font-family---secondary-font: "Instrument Serif", sans-serif; --_font-family---menu-font: Inter, sans-serif; --_gap---gutter-space: .9375rem; --_gap---section-gap-small: 8.75rem; --_gap---section-gap-big: 9.375rem; }
+  .rk-price-tiers .rt-about-creative-top-text.rk-rt-one { margin-right: -5rem; }
+  .rk-price-tiers .rt-about-creative-top-text.rk-rt-two { margin-left: -5rem; }
+}
+@media screen and (min-width: 1440px) {
+  .rk-price-tiers .rk-rt-pricing-top-right { grid-column-gap: 4.375rem;
+    grid-row-gap: 4.375rem;
+    flex-basis: 30%; }
+}
+@media screen and (min-width: 1920px) {
+  .rk-price-tiers { --white: white; --black: #000; --concrete-gray: #979797; --black-opacity-twenty: #0003; --charcoal-gray: #585858; --white-opacity-twenty: #fff3; --platinum-gray: #e8e8e8; --silver-gray: #acacac; }
+  .rk-price-tiers .rk-rt-text-style-h4.rk-rt-text-color-light-gray.rt-active, .rk-price-tiers .rt-text-style-h5.rt-active { color: var(--black); }
+  .rk-price-tiers .rk-rt-button-wrap.rk-rt-overflow-hidden.rk-rt-radius-xl:where(.w-variant-481dd2c8-6079-0a0d-cefa-2b098faff087) { height: 2.625rem; }
+  .rk-price-tiers .rk-rt-pricing-v1 { border-top: .0625rem solid #000; }
+  .rk-price-tiers .rk-rt-pricing-top-right { flex-basis: 21.8333%; }
+  .rk-price-tiers .rt-about-creative-top-text.rk-rt-one { margin-right: -6rem; }
+  .rk-price-tiers .rt-about-creative-top-text.rk-rt-two { margin-left: -6.6rem; }
+}
+@media screen and (max-width: 991px) {
+  .rk-price-tiers { --_font-details---font-size--body: .9375rem; --_font-details---font-line-height--body: 162.5%; --_font-details---font-weight--regular: 400; --_font-details---font-letter-spacing--body: 0rem; --_font-details---font-size--heading-one: clamp(35px, 7vw, 100px); --_font-details---font-line-height--heading-one: 100%; --_font-details---font-weight--semibold: 600; --_font-details---font-letter-spacing--heading-one: -.1rem; --_font-details---font-size--heading-two: 1.875rem; --_font-details---font-line-height--heading-two: 125%; --_font-details---font-letter-spacing--heading-two: -.05625rem; --_font-details---font-size--heading-three: 1.625rem; --_font-details---font-line-height--heading-three: 133.33%; --_font-details---font-letter-spacing--heading-three: -.04875rem; --_font-details---font-size--heading-four: 1.375rem; --_font-details---font-line-height--heading-four: 141.67%; --_font-details---font-letter-spacing--heading-four: -.04125rem; --_font-details---font-size--heading-five: 1.125rem; --_font-details---font-line-height--heading-five: 150%; --_font-details---font-letter-spacing--heading-five: -.03375rem; --_font-details---font-size--heading-six: 1.0625rem; --_font-details---font-line-height--heading-six: 155.56%; --_font-details---font-letter-spacing--heading-six: -.031875rem; --_font-details---font-size--menu-text: 1.25rem; --_font-details---font-line-height--menu-text: 130%; --_font-details---font-weight--medium: 500; --_font-details---font-letter-spacing--menu-text: -.025rem; --_font-details---font-size--sub-text: .875rem; --_font-details---font-line-height--sub-text: 171.42%; --_font-details---font-letter-spacing--sub-text: .0875rem; --_font-details---font-size--extra-big-text: clamp(35px, 10vw, 240px); --_font-details---font-letter-spacing--extra-big-text: -.1rem; --_font-details---font-size--big-text: clamp(35px, 10vw, 150px); --_font-details---font-letter-spacing--big-text: -.2125rem; --_font-details---font-size--medium-text: clamp(35px, 15vw, 60px); --_font-details---font-letter-spacing--medium-text: -.1125rem; --_font-details---font-size--small-text: .75rem; --_font-details---font-weight--bold: 700; --_font-family---primary-font: "Inter Tight", sans-serif; --_font-family---secondary-font: "Instrument Serif", sans-serif; --_font-family---menu-font: Inter, sans-serif; --_container---container-extra-large: 114.375rem; --_container---containner-medium: 95.625rem; --_container---container-large: 101.25rem; --_container---container-small: 82.5rem; --_container---container-tiny: 68.75rem; --_gap---gutter-space: .9375rem; --_gap---section-gap-small: 3.4375rem; --_gap---section-gap-big: 3.75rem; --white: white; --black: #000; --concrete-gray: #979797; --black-opacity-twenty: #0003; --charcoal-gray: #585858; --white-opacity-twenty: #fff3; --platinum-gray: #e8e8e8; --silver-gray: #acacac; }
+  .rk-price-tiers .rk-rt-text-style-h4.rt-responsive-text-change { font-size: var(--_font-details---font-size--heading-six);
+    line-height: var(--_font-details---font-line-height--heading-six);
+    letter-spacing: var(--_font-details---font-letter-spacing--heading-six); }
+  .rk-price-tiers .rt-big-text.rk-rt-text-color-black.rt-change { font-size: var(--_font-details---font-size--heading-one);
+    letter-spacing: var(--_font-details---font-letter-spacing--heading-one); }
+  .rk-price-tiers .rk-rt-container-xl { max-width: var(--_container---container-extra-large); }
+  .rk-price-tiers .rt-home-v1-hero-main.rk-rt-position-relative { z-index: 100; }
+  .rk-price-tiers .rk-rt-gap-off.rt-change-align { text-align: left; }
+  .rk-price-tiers .rt-home-v1-hero-bottom.rk-rt-overflow-hidden.rt-change { max-width: 35rem; }
+  .rk-price-tiers .rk-rt-price-yearly-box { padding-bottom: .125rem; }
+  .rk-price-tiers .rk-rt-pricing-card-heading-wrap { margin-bottom: 2rem; }
+  .rk-price-tiers .rk-rt-pricing-card-v3-list-wrapper { grid-column-gap: .5rem;
+    grid-row-gap: .5rem; }
+  .rk-price-tiers .rk-rt-pricing-v1-main { align-items: stretch; }
+  .rk-price-tiers .rk-rt-pricing-list-items { justify-content: flex-start;
+    align-items: flex-start; }
+  .rk-price-tiers .rk-rt-pricing-card { border: .0625rem solid var(--white-opacity-twenty); }
+  .rk-price-tiers .rk-rt-pricing-cards-grid { grid-column-gap: 1.875rem;
+    grid-row-gap: 1.875rem;
+    border-style: none;
+    grid-template-columns: repeat(auto-fit, minmax(18.15rem, 1fr)); }
+  .rk-price-tiers .rk-rt-pricing-card-v3-list { grid-column-gap: 1.875rem;
+    grid-row-gap: 1.875rem;
+    padding: 1.25rem; }
+  .rk-price-tiers .rk-rt-pricing-card-v3-top { padding: 1.25rem; }
+  .rk-price-tiers .rk-rt-pricing-v1 { padding-bottom: var(--_gap---section-gap-big);
+    background-color: var(--black); }
+  .rk-price-tiers .rk-rt-pricing-v1-top { grid-column-gap: 1.25rem;
+    grid-row-gap: 1.25rem;
+    margin-bottom: 2rem; }
+  .rk-price-tiers .rk-rt-pricing-v1-top.rt-change-align.rt-change { grid-column-gap: 1.875rem;
+    grid-row-gap: 1.875rem; }
+  .rk-price-tiers .rk-rt-pricing-top-right { flex: 1; }
+  .rk-price-tiers .rk-rt-popular-wrapper { top: 1.25rem;
+    right: 1.25rem; }
+  .rk-price-tiers .rt-about-logo-item.rk-rt-position-relative { padding-top: 2.5rem;
+    padding-bottom: 2.5rem; }
+  .rk-price-tiers .rt-about-creative-top-text.rk-rt-one { margin-right: -3rem; }
+  .rk-price-tiers .rt-about-creative-top-text.rk-rt-two { margin-left: -3rem; }
+  .rk-price-tiers .rk-rt-pricing-v1-list { background-color: var(--black);
+    padding-top: 0; }
+}
+@media screen and (max-width: 767px) {
+  .rk-price-tiers { --_font-details---font-size--body: .875rem; --_font-details---font-line-height--body: 162.5%; --_font-details---font-weight--regular: 400; --_font-details---font-letter-spacing--body: 0rem; --_font-details---font-size--heading-one: clamp(35px, 7vw, 100px); --_font-details---font-line-height--heading-one: 100%; --_font-details---font-weight--semibold: 600; --_font-details---font-letter-spacing--heading-one: -.1rem; --_font-details---font-size--heading-two: 1.5625rem; --_font-details---font-line-height--heading-two: 125%; --_font-details---font-letter-spacing--heading-two: -.046875rem; --_font-details---font-size--heading-three: 1.375rem; --_font-details---font-line-height--heading-three: 133.33%; --_font-details---font-letter-spacing--heading-three: -.04125rem; --_font-details---font-size--heading-four: 1.25rem; --_font-details---font-line-height--heading-four: 141.67%; --_font-details---font-letter-spacing--heading-four: -.0375rem; --_font-details---font-size--heading-five: 1.0625rem; --_font-details---font-line-height--heading-five: 150%; --_font-details---font-letter-spacing--heading-five: -.031875rem; --_font-details---font-size--heading-six: 1rem; --_font-details---font-line-height--heading-six: 155.56%; --_font-details---font-letter-spacing--heading-six: -.03rem; --_font-details---font-size--menu-text: 1.25rem; --_font-details---font-line-height--menu-text: 130%; --_font-details---font-weight--medium: 500; --_font-details---font-letter-spacing--menu-text: -.025rem; --_font-details---font-size--sub-text: .875rem; --_font-details---font-line-height--sub-text: 171.42%; --_font-details---font-letter-spacing--sub-text: .0875rem; --_font-details---font-size--extra-big-text: clamp(35px, 10vw, 240px); --_font-details---font-letter-spacing--extra-big-text: 0rem; --_font-details---font-size--big-text: clamp(35px, 10vw, 150px); --_font-details---font-letter-spacing--big-text: -.1rem; --_font-details---font-size--medium-text: clamp(35px, 5vw, 60px); --_font-details---font-letter-spacing--medium-text: -.1125rem; --_font-details---font-size--small-text: .75rem; --_font-details---font-weight--bold: 700; --_font-family---primary-font: "Inter Tight", sans-serif; --_font-family---secondary-font: "Instrument Serif", sans-serif; --_font-family---menu-font: Inter, sans-serif; --_container---container-extra-large: 114.375rem; --_container---containner-medium: 95.625rem; --_container---container-large: 101.25rem; --_container---container-small: 82.5rem; --_container---container-tiny: 68.75rem; --_gap---gutter-space: .9375rem; --_gap---section-gap-small: 3.4375rem; --_gap---section-gap-big: 3.75rem; --white: white; --black: #000; --concrete-gray: #979797; --black-opacity-twenty: #0003; --charcoal-gray: #585858; --white-opacity-twenty: #fff3; --platinum-gray: #e8e8e8; --silver-gray: #acacac; }
+  .rk-price-tiers .rk-rt-button-text-wrap { grid-column-gap: 0rem;
+    grid-row-gap: 0rem; }
+  .rk-price-tiers .rk-rt-price-yearly-box { padding-bottom: .0625rem; }
+  .rk-price-tiers .rk-rt-pricing-card-heading-wrap { margin-bottom: 1.25rem; }
+  .rk-price-tiers .rk-rt-pricing-card-items { grid-template-rows: auto auto;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    grid-auto-columns: 1fr; }
+  .rk-price-tiers .rk-rt-toggle { width: 3.1875rem;
+    height: 1.5rem; }
+  .rk-price-tiers .rk-rt-toggle-ball { width: 1.0625rem;
+    height: 1.0625rem; }
+  .rk-price-tiers .rk-rt-pricing-cards-grid { grid-column-gap: 1.25rem;
+    grid-row-gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+  .rk-price-tiers .rk-rt-pricing-card-v3-top { padding-bottom: .6rem; }
+  .rk-price-tiers .rt-about-creative-top-text.rk-rt-one { margin-right: 0; }
+  .rk-price-tiers .rt-about-creative-top-text.rk-rt-two { margin-left: 0; }
+  .rk-price-tiers .rt-blog-featured-image-wrapper.rk-rt-overflow-hidden { padding-bottom: 2.5rem; }
+  .rk-price-tiers .rk-rt-pricing-v1-content-2 { grid-column-gap: 1rem;
+    grid-row-gap: 1rem; }
+}
+@media screen and (max-width: 479px) {
+  .rk-price-tiers { --_font-details---font-size--body: .875rem; --_font-details---font-line-height--body: 162.5%; --_font-details---font-weight--regular: 400; --_font-details---font-letter-spacing--body: 0rem; --_font-details---font-size--heading-one: clamp(35px, 7vw, 100px); --_font-details---font-line-height--heading-one: 100%; --_font-details---font-weight--semibold: 600; --_font-details---font-letter-spacing--heading-one: -.1rem; --_font-details---font-size--heading-two: 1.5625rem; --_font-details---font-line-height--heading-two: 125%; --_font-details---font-letter-spacing--heading-two: -.046875rem; --_font-details---font-size--heading-three: 1.375rem; --_font-details---font-line-height--heading-three: 133.33%; --_font-details---font-letter-spacing--heading-three: -.04125rem; --_font-details---font-size--heading-four: 1.25rem; --_font-details---font-line-height--heading-four: 141.67%; --_font-details---font-letter-spacing--heading-four: -.0375rem; --_font-details---font-size--heading-five: 1.0625rem; --_font-details---font-line-height--heading-five: 150%; --_font-details---font-letter-spacing--heading-five: -.031875rem; --_font-details---font-size--heading-six: 1rem; --_font-details---font-line-height--heading-six: 155.56%; --_font-details---font-letter-spacing--heading-six: -.03rem; --_font-details---font-size--menu-text: 1.25rem; --_font-details---font-line-height--menu-text: 130%; --_font-details---font-weight--medium: 500; --_font-details---font-letter-spacing--menu-text: -.025rem; --_font-details---font-size--sub-text: .875rem; --_font-details---font-line-height--sub-text: 171.42%; --_font-details---font-letter-spacing--sub-text: .0875rem; --_font-details---font-size--extra-big-text: clamp(35px, 10vw, 240px); --_font-details---font-letter-spacing--extra-big-text: 0rem; --_font-details---font-size--big-text: clamp(35px, 10vw, 150px); --_font-details---font-letter-spacing--big-text: -.1rem; --_font-details---font-size--medium-text: clamp(35px, 5vw, 60px); --_font-details---font-letter-spacing--medium-text: -.1125rem; --_font-details---font-size--small-text: .75rem; --_font-details---font-weight--bold: 700; --_font-family---primary-font: "Inter Tight", sans-serif; --_font-family---secondary-font: "Instrument Serif", sans-serif; --_font-family---menu-font: Inter, sans-serif; --_container---container-extra-large: 114.375rem; --_container---containner-medium: 95.625rem; --_container---container-large: 101.25rem; --_container---container-small: 82.5rem; --_container---container-tiny: 68.75rem; --_gap---gutter-space: .9375rem; --_gap---section-gap-small: 3.4375rem; --_gap---section-gap-big: 3.75rem; --white: white; --black: #000; --concrete-gray: #979797; --black-opacity-twenty: #0003; --charcoal-gray: #585858; --white-opacity-twenty: #fff3; --platinum-gray: #e8e8e8; --silver-gray: #acacac; }
+  .rk-price-tiers .rk-rt-gap-off.rt-mobile-text-center, .rk-price-tiers .rk-rt-text-color-black.rt-mobile-align-center { text-align: center; }
+  .rk-price-tiers .rk-rt-pricing-card-heading-wrap { margin-bottom: 1.3rem; }
+  .rk-price-tiers .rk-rt-pricing-v1 { background-color: var(--black); }
+  .rk-price-tiers .rk-rt-pricing-v1-top { grid-column-gap: 1.25rem;
+    grid-row-gap: 1.25rem;
+    flex-flow: wrap;
+    grid-template-rows: auto;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    grid-auto-columns: 1fr;
+    display: grid; }
+  .rk-price-tiers .rk-rt-pricing-v1-top.rt-change-align.rt-change { display: flex; }
+  .rk-price-tiers .rk-rt-pricing-top-right.rt-change { justify-content: center;
+    align-items: center; }
+  .rk-price-tiers .rk-rt-pricing-v1-list { padding-bottom: var(--_gap---section-gap-big); }
+}
+/* ---- rk-price-tiers: hand-written, from tools/blocks/rk-price-tiers.css ---- */
+/* rk-price-tiers — the things the extraction could not know.
+   Everything is scoped under .rk-price-tiers, exactly as the extractor scopes
+   its own rules. Nothing here restyles renok: no size, colour, spacing or
+   border is invented, and the block ships no motion (renok drives this band
+   entirely with IX2 — a-25 on the toggle's entrance, a-35/a-36 on the click —
+   and tools/donor-lib.mjs carries IX2, namespacing the class selectors inside
+   the payload the same way it namespaces the markup. renok's index.html loads
+   no GSAP and authors no ix3 timeline for this section, so there is nothing to
+   replay as keyframes). The one mark drawn here that renok does not draw is
+   section 5's dot, which stands in for renok's tick on the renewal-term rows,
+   in the tick's own box and colour. */
+
+/* ---------------------------------------------------- 1. renok's `body` -- */
+
+/* renok keeps its typeface, its size, its leading and its text colour on
+   `body`, and a `body` rule does not travel with a cut section — the
+   extractor carries element rules and class rules, and the only `body`
+   declarations it takes are the custom properties a donor re-tunes per
+   breakpoint. Four things in this block are drawn by inheritance alone and
+   would otherwise come out in whatever the host page puts on its own body:
+     .rt-medium-text          every price (¥10,000 … 定制). Sets only size,
+                              line-height, weight and letter-spacing — no
+                              family, no colour — so it is the block's largest
+                              type and the most visibly wrong one.
+     .rt-small-text           the save line and the "Most popular" pill: size
+                              only.
+     .rt-text-color-premium-grey / .rt-text-color-light-gray
+                              every card sentence, every feature line and every
+                              price unit: colour only.
+     the period note          the div under each button carries no class at all.
+   These are the six declarations of renok's own `body` rule, through renok's
+   own tokens (which the extractor writes onto this same scope root) and
+   nothing more. The inherited `color` is renok's white; the one text node that
+   needs black — "Most popular" on its white pill — overrides it with
+   `.rt-text-color-black`, exactly as it does on renok. */
+.rk-price-tiers {
+  font-family: var(--_font-family---primary-font);
+  color: var(--white);
+  font-size: var(--_font-details---font-size--body);
+  line-height: var(--_font-details---font-line-height--body);
+  font-weight: var(--_font-details---font-weight--regular);
+  letter-spacing: var(--_font-details---font-letter-spacing--body);
+}
+
+/* ------------------------------- 2. five tiers in a grid drawn for three -- */
+
+/* `.rt-pricing-cards-grid { grid-template-columns: 1fr 1fr 1fr }` is the one
+   rule in renok that counts its plans rather than describing them: three
+   equal tracks because renok sells three plans. PRICING sells five
+   (标准版, 上线版, 增长版, 全球获客版, 企业版), the block emits five cards from
+   renok's own three units, and five items in three tracks wrap 3 + 2 and leave
+   the last cell of the bordered box empty — measured in renok's own page at
+   1440, a 464.4 × 772.4px hole with the grid's 1px border down its right side
+   and the section's black showing through where a card should be.
+
+   So the count is re-stated, and only the count. Six tracks; the first three
+   cards span two each and the last two span three each:
+
+     measured at 1440 (container 1424.67px, grid 1394.67px)
+       renok, three cards        464.44   464.45   464.45
+       here,  five cards         464.4    464.4    464.4   696.7   696.7
+
+   The first row is the donor's card to a tenth of a pixel; the second row's
+   two cards divide the same width between them, and the divider between them
+   is `.rt-border-right`, which the module puts on every card except the one at
+   its row's right edge — renok's own rule, since renok's own third card is the
+   borderless one.
+
+   Only from 992px up, because that is the only band where renok fixes the
+   track count. At 991 and below renok already replaces it with
+   `repeat(auto-fit, minmax(18.15rem, 1fr))` plus 1.875rem gaps and a full
+   border on each card (1.25rem/15rem minimum below 767), which flows five
+   cards without being told anything — so this rule must not reach there. */
+@media screen and (min-width: 992px) {
+  .rk-price-tiers .rk-rt-pricing-cards-grid { grid-template-columns: repeat(6, 1fr); }
+  .rk-price-tiers .rk-rt-pricing-cards-grid > :nth-child(-n + 3) { grid-column: span 2; }
+  .rk-price-tiers .rk-rt-pricing-cards-grid > :nth-child(n + 4) { grid-column: span 3; }
+}
+
+/* ------------------------------------ 3. the section heading is the h1 -- */
+
+/* PRICING.title is the pricing page's own promise and the page has no other
+   h1, so tools/blocks/rk-price-tiers.mjs tags renok's `h2.rt-gap-off` as h1.
+   renok draws that heading through element rules (`.rk-price-tiers h2`), which
+   an h1 does not match; these are those same declarations, with renok's own
+   tokens, for the one h1. Its margins (0 and 0) still come from
+   `.rk-price-tiers .rk-rt-gap-off`, which outranks every h1 element rule.
+   Nothing about the heading's look changes. */
+.rk-price-tiers h1.rk-rt-gap-off {
+  font-family: var(--_font-family---primary-font);
+  color: var(--white);
+  font-size: var(--_font-details---font-size--heading-two);
+  line-height: var(--_font-details---font-line-height--heading-two);
+  font-weight: var(--_font-details---font-weight--semibold);
+  letter-spacing: var(--_font-details---font-letter-spacing--heading-two);
+}
+
+/* ------------------------------- 4. the two period labels are now tabs -- */
+
+/* tools/blocks/rk-price-tiers.js makes 首年价格 / 续费 (First-year total /
+   Renewal) the switch's keyboard and touch controls. As text they are 22.7px
+   tall; a transparent layer 6px above and below makes each a 34px target on a
+   phone without moving a pixel of renok's row: the labels are already
+   `position: relative`, and a pseudo-element takes no room. */
+.rk-price-tiers .rk-rt-monthly-wrap::before,
+.rk-price-tiers .rk-rt-yearly-wrap::before {
+  content: "";
+  position: absolute;
+  inset: -6px -4px;
+}
+
+/* ------------------------- 5. renewal terms carry a dot, not a tick -- */
+
+/* On the renewal grid the three first-year packages list the pricing FAQ's
+   renewal terms (PRICING.renewalTerms), one of which is a negative — 「不等于
+   每年都重复交付」 / "not a promise of repeated annual content production".
+   renok's tick means "included", so tools/blocks/rk-price-tiers.mjs gives
+   those rows `.stargo-renewal-term` and puts an empty, aria-hidden
+   `.stargo-renewal-dot` where the tick's <img> was. Every other row, in both
+   grids, keeps the tick.
+
+   The dot takes the tick's own box so nothing in the row moves: renok's
+   `img { display: inline-block; vertical-align: middle }` with the SVG's
+   intrinsic 20 × 20 (its `width/height: 100%` resolve to auto in the
+   shrink-wrapped cell), measured 20 × 20 at 390, 768 and 1440 in both
+   languages, in a cell 20px wide and one body line tall; the text starts
+   30px from the row's edge. The mark is the tick's white (`--white`), a 6px
+   disc centred in that box. It is drawn as a border rather than a background
+   so it stays visible under forced colours. */
+.rk-price-tiers .stargo-renewal-term .stargo-renewal-dot {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  width: 20px;
+  height: 20px;
+}
+.rk-price-tiers .stargo-renewal-term .stargo-renewal-dot::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  box-sizing: border-box;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border: 3px solid var(--white);
+  border-radius: 50%;
+}
+
+@font-face {
+  font-family: webflow-icons;
+  src: url("data:application/x-font-ttf;charset=utf-8;base64,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") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
 .rk-stats {
   --_font-family---primary-font: "Inter Tight", sans-serif;
   --white: white;
@@ -1921,6 +3226,32 @@
    anchors this way (`scroll-margin-top` on the lifelogx sections). Stated in
    vh because the dead band is a share of the viewport, not a fixed height. */
 .rk-stats { scroll-margin-top: 12vh; }
+
+/* The pointer at the end of the quotation paragraph (rk-stats.mjs) is this
+   site's own inline link, the only one in the band: it takes the paragraph's
+   face and colour, and an underline says it is a link. */
+.rk-stats .rk-stats-link { color: inherit; text-decoration: underline; text-underline-offset: .2em; cursor: pointer; }
+
+/* The heading is three clauses on three lines (rk-stats.mjs joins them with
+   `<br/>`); on the Chinese page `keep-all` stops a clause that meets a narrower
+   column from breaking inside a word, so it wraps whole instead. */
+html[lang^="zh"] .rk-stats .rk-rt-text-style-h2 { word-break: keep-all; }
+
+/* The band's picture, when it is one of the owner's own product screenshots
+   (rk-stats.mjs / CAP_V6A.quote.image, owner instruction 2026-09-18). renok's
+   box is 444x278 (1.60) and a screenshot is 16:9, so renok's `cover` would
+   take 11% off its width — the Sales Desk rail on the left and the co-pilot
+   column on the right. `contain` shows the document centre whole in the same
+   box; the 14px it leaves above and below is the band's own white
+   (`.rk-stats` paints rgb(255, 255, 255)), named here so the picture keeps
+   that ground through renok's blur-and-scale reveal, which still animates
+   this same element with its inline transform and its wrapper's data-w-id
+   untouched. Matched on the picture's own folder: renok's photograph and the
+   editorial artwork keep `cover`. */
+.rk-stats .rk-rt-image-apperance[src*="/stargo-product/"] {
+  object-fit: contain;
+  background-color: #fff;
+}
 
 @font-face {
   font-family: webflow-icons;
@@ -2558,5 +3889,40 @@
    nothing, so nothing of renok's is overridden here. */
 @media screen and (min-width: 992px) {
   .rk-testimonials .rk-rt-carlo-logo { max-width: 4.875rem; }
+}
+
+/* The theme names (rk-testimonials.mjs) sit in a slot about 110–145px wide
+   beside the check badge, five or six Chinese characters a line. Every
+   character is a break point, so 「订单与付款节点」 ended 「…节」/「点」 and
+   「生产进度与质检」 before it ended 「…质」/「检」. The Chinese names carry a
+   zero-width space where a phrase ends (产品、物料 / 与采购); `keep-all` makes
+   those, and the punctuation, the only places a name wraps, and `balance`
+   evens the two lines. Measured at 992–1920 every name breaks at its mark;
+   at 768 and on the phone slider each fits on one line. The type is renok's. */
+html[lang^="zh"] .rk-testimonials .rk-rt-responsive-text-change { word-break: keep-all; text-wrap: balance; }
+
+/* The role line is a link to the catalogue group (#g08). It keeps renok's
+   grey and type from `.rt-text-color-light-gray`; the underline says it is a
+   link. */
+.rk-testimonials .rk-testimonials-link { color: inherit; text-decoration: underline; text-underline-offset: .2em; cursor: pointer; }
+
+/* V6 review fixes (2026-09-17).
+   1. The narrow second card (262–308px wide between 768 and 991) wraps its
+      longer theme name to three lines, and renok's flex row then stretched the
+      badge picture beside it to 48×133 and squeezed the tick to 9×9. The badge
+      keeps its own 48×56 box at the top of the row and the tick keeps its size;
+      the link to the catalogue stays on one line. */
+.rk-testimonials .rk-rt-testimonial-card-details-image { align-self: flex-start; }
+.rk-testimonials .rk-rt-testimonial-tick-icon { flex-shrink: 0; }
+.rk-testimonials .rk-testimonials-link { white-space: nowrap; }
+/* 2. Below 480px renok hides the two card rows and shows a slider that this
+      site does not drive (no autoplay, no arrows, no swipe), so only the first
+      of the six themes could ever be read on a phone — and the other five carry
+      the payment, filing and delivery conditions V6 requires. On phones the six
+      cards are shown as renok's own single-column rows instead, and the idle
+      slider is hidden. */
+@media screen and (max-width: 479px) {
+  .rk-testimonials .rk-rt-mobile-display-none { display: grid; }
+  .rk-testimonials .rk-rt-mobile-slider { display: none; }
 }
 

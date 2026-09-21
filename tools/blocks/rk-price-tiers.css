@@ -1,0 +1,148 @@
+/* rk-price-tiers — the things the extraction could not know.
+   Everything is scoped under .rk-price-tiers, exactly as the extractor scopes
+   its own rules. Nothing here restyles renok: no size, colour, spacing or
+   border is invented, and the block ships no motion (renok drives this band
+   entirely with IX2 — a-25 on the toggle's entrance, a-35/a-36 on the click —
+   and tools/donor-lib.mjs carries IX2, namespacing the class selectors inside
+   the payload the same way it namespaces the markup. renok's index.html loads
+   no GSAP and authors no ix3 timeline for this section, so there is nothing to
+   replay as keyframes). The one mark drawn here that renok does not draw is
+   section 5's dot, which stands in for renok's tick on the renewal-term rows,
+   in the tick's own box and colour. */
+
+/* ---------------------------------------------------- 1. renok's `body` -- */
+
+/* renok keeps its typeface, its size, its leading and its text colour on
+   `body`, and a `body` rule does not travel with a cut section — the
+   extractor carries element rules and class rules, and the only `body`
+   declarations it takes are the custom properties a donor re-tunes per
+   breakpoint. Four things in this block are drawn by inheritance alone and
+   would otherwise come out in whatever the host page puts on its own body:
+     .rt-medium-text          every price (¥10,000 … 定制). Sets only size,
+                              line-height, weight and letter-spacing — no
+                              family, no colour — so it is the block's largest
+                              type and the most visibly wrong one.
+     .rt-small-text           the save line and the "Most popular" pill: size
+                              only.
+     .rt-text-color-premium-grey / .rt-text-color-light-gray
+                              every card sentence, every feature line and every
+                              price unit: colour only.
+     the period note          the div under each button carries no class at all.
+   These are the six declarations of renok's own `body` rule, through renok's
+   own tokens (which the extractor writes onto this same scope root) and
+   nothing more. The inherited `color` is renok's white; the one text node that
+   needs black — "Most popular" on its white pill — overrides it with
+   `.rt-text-color-black`, exactly as it does on renok. */
+.rk-price-tiers {
+  font-family: var(--_font-family---primary-font);
+  color: var(--white);
+  font-size: var(--_font-details---font-size--body);
+  line-height: var(--_font-details---font-line-height--body);
+  font-weight: var(--_font-details---font-weight--regular);
+  letter-spacing: var(--_font-details---font-letter-spacing--body);
+}
+
+/* ------------------------------- 2. five tiers in a grid drawn for three -- */
+
+/* `.rt-pricing-cards-grid { grid-template-columns: 1fr 1fr 1fr }` is the one
+   rule in renok that counts its plans rather than describing them: three
+   equal tracks because renok sells three plans. PRICING sells five
+   (标准版, 上线版, 增长版, 全球获客版, 企业版), the block emits five cards from
+   renok's own three units, and five items in three tracks wrap 3 + 2 and leave
+   the last cell of the bordered box empty — measured in renok's own page at
+   1440, a 464.4 × 772.4px hole with the grid's 1px border down its right side
+   and the section's black showing through where a card should be.
+
+   So the count is re-stated, and only the count. Six tracks; the first three
+   cards span two each and the last two span three each:
+
+     measured at 1440 (container 1424.67px, grid 1394.67px)
+       renok, three cards        464.44   464.45   464.45
+       here,  five cards         464.4    464.4    464.4   696.7   696.7
+
+   The first row is the donor's card to a tenth of a pixel; the second row's
+   two cards divide the same width between them, and the divider between them
+   is `.rt-border-right`, which the module puts on every card except the one at
+   its row's right edge — renok's own rule, since renok's own third card is the
+   borderless one.
+
+   Only from 992px up, because that is the only band where renok fixes the
+   track count. At 991 and below renok already replaces it with
+   `repeat(auto-fit, minmax(18.15rem, 1fr))` plus 1.875rem gaps and a full
+   border on each card (1.25rem/15rem minimum below 767), which flows five
+   cards without being told anything — so this rule must not reach there. */
+@media screen and (min-width: 992px) {
+  .rk-price-tiers .rk-rt-pricing-cards-grid { grid-template-columns: repeat(6, 1fr); }
+  .rk-price-tiers .rk-rt-pricing-cards-grid > :nth-child(-n + 3) { grid-column: span 2; }
+  .rk-price-tiers .rk-rt-pricing-cards-grid > :nth-child(n + 4) { grid-column: span 3; }
+}
+
+/* ------------------------------------ 3. the section heading is the h1 -- */
+
+/* PRICING.title is the pricing page's own promise and the page has no other
+   h1, so tools/blocks/rk-price-tiers.mjs tags renok's `h2.rt-gap-off` as h1.
+   renok draws that heading through element rules (`.rk-price-tiers h2`), which
+   an h1 does not match; these are those same declarations, with renok's own
+   tokens, for the one h1. Its margins (0 and 0) still come from
+   `.rk-price-tiers .rk-rt-gap-off`, which outranks every h1 element rule.
+   Nothing about the heading's look changes. */
+.rk-price-tiers h1.rk-rt-gap-off {
+  font-family: var(--_font-family---primary-font);
+  color: var(--white);
+  font-size: var(--_font-details---font-size--heading-two);
+  line-height: var(--_font-details---font-line-height--heading-two);
+  font-weight: var(--_font-details---font-weight--semibold);
+  letter-spacing: var(--_font-details---font-letter-spacing--heading-two);
+}
+
+/* ------------------------------- 4. the two period labels are now tabs -- */
+
+/* tools/blocks/rk-price-tiers.js makes 首年价格 / 续费 (First-year total /
+   Renewal) the switch's keyboard and touch controls. As text they are 22.7px
+   tall; a transparent layer 6px above and below makes each a 34px target on a
+   phone without moving a pixel of renok's row: the labels are already
+   `position: relative`, and a pseudo-element takes no room. */
+.rk-price-tiers .rk-rt-monthly-wrap::before,
+.rk-price-tiers .rk-rt-yearly-wrap::before {
+  content: "";
+  position: absolute;
+  inset: -6px -4px;
+}
+
+/* ------------------------- 5. renewal terms carry a dot, not a tick -- */
+
+/* On the renewal grid the three first-year packages list the pricing FAQ's
+   renewal terms (PRICING.renewalTerms), one of which is a negative — 「不等于
+   每年都重复交付」 / "not a promise of repeated annual content production".
+   renok's tick means "included", so tools/blocks/rk-price-tiers.mjs gives
+   those rows `.stargo-renewal-term` and puts an empty, aria-hidden
+   `.stargo-renewal-dot` where the tick's <img> was. Every other row, in both
+   grids, keeps the tick.
+
+   The dot takes the tick's own box so nothing in the row moves: renok's
+   `img { display: inline-block; vertical-align: middle }` with the SVG's
+   intrinsic 20 × 20 (its `width/height: 100%` resolve to auto in the
+   shrink-wrapped cell), measured 20 × 20 at 390, 768 and 1440 in both
+   languages, in a cell 20px wide and one body line tall; the text starts
+   30px from the row's edge. The mark is the tick's white (`--white`), a 6px
+   disc centred in that box. It is drawn as a border rather than a background
+   so it stays visible under forced colours. */
+.rk-price-tiers .stargo-renewal-term .stargo-renewal-dot {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  width: 20px;
+  height: 20px;
+}
+.rk-price-tiers .stargo-renewal-term .stargo-renewal-dot::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  box-sizing: border-box;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border: 3px solid var(--white);
+  border-radius: 50%;
+}

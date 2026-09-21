@@ -71,3 +71,38 @@
 @media screen and (min-width: 992px) {
   .rk-testimonials .rk-rt-carlo-logo { max-width: 4.875rem; }
 }
+
+/* The theme names (rk-testimonials.mjs) sit in a slot about 110–145px wide
+   beside the check badge, five or six Chinese characters a line. Every
+   character is a break point, so 「订单与付款节点」 ended 「…节」/「点」 and
+   「生产进度与质检」 before it ended 「…质」/「检」. The Chinese names carry a
+   zero-width space where a phrase ends (产品、物料 / 与采购); `keep-all` makes
+   those, and the punctuation, the only places a name wraps, and `balance`
+   evens the two lines. Measured at 992–1920 every name breaks at its mark;
+   at 768 and on the phone slider each fits on one line. The type is renok's. */
+html[lang^="zh"] .rk-testimonials .rk-rt-responsive-text-change { word-break: keep-all; text-wrap: balance; }
+
+/* The role line is a link to the catalogue group (#g08). It keeps renok's
+   grey and type from `.rt-text-color-light-gray`; the underline says it is a
+   link. */
+.rk-testimonials .rk-testimonials-link { color: inherit; text-decoration: underline; text-underline-offset: .2em; cursor: pointer; }
+
+/* V6 review fixes (2026-09-17).
+   1. The narrow second card (262–308px wide between 768 and 991) wraps its
+      longer theme name to three lines, and renok's flex row then stretched the
+      badge picture beside it to 48×133 and squeezed the tick to 9×9. The badge
+      keeps its own 48×56 box at the top of the row and the tick keeps its size;
+      the link to the catalogue stays on one line. */
+.rk-testimonials .rk-rt-testimonial-card-details-image { align-self: flex-start; }
+.rk-testimonials .rk-rt-testimonial-tick-icon { flex-shrink: 0; }
+.rk-testimonials .rk-testimonials-link { white-space: nowrap; }
+/* 2. Below 480px renok hides the two card rows and shows a slider that this
+      site does not drive (no autoplay, no arrows, no swipe), so only the first
+      of the six themes could ever be read on a phone — and the other five carry
+      the payment, filing and delivery conditions V6 requires. On phones the six
+      cards are shown as renok's own single-column rows instead, and the idle
+      slider is hidden. */
+@media screen and (max-width: 479px) {
+  .rk-testimonials .rk-rt-mobile-display-none { display: grid; }
+  .rk-testimonials .rk-rt-mobile-slider { display: none; }
+}
