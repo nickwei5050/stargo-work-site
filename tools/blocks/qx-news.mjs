@@ -27,6 +27,7 @@
  *     scope root, so the markup here carries no inline style of its own.
  */
 import { setText, capability } from '../block-lib.mjs';
+import { SALES_ROWS } from '../replaceables.mjs';
 
 /** The story this block carries: CAPABILITY_SHOWCASE.stories[1]. */
 const STORY = 1;
@@ -56,7 +57,7 @@ const PICKS = ['Unified Inbox', 'Buyer Requirement Extraction', 'Account Overvie
  * out; `pic` below resolves both, and tools/editorial-images.mjs gives either
  * kind its alt, its size and its variants.
  */
-const ROW_ART = ['os-desktop', 'assets/stargo-product/sw028-sales-desk-inquiry-reply.webp', 'os-inquiries'];
+const ROW_ART = SALES_ROWS;
 /** An editorial id (assets/stargo-editorial) or a path exactly as written. */
 const pic = (v, art) => (v.startsWith('assets/') ? v : art(v));
 

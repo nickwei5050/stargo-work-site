@@ -7,3 +7,4 @@ dist/
 tmp/imagegen/
 output/imagegen/
 node_modules/
+artifacts/

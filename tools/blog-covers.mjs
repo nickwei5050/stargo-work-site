@@ -49,6 +49,7 @@ import { spawnSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { SITE } from './paths.mjs';
 import { POSTS, PRODUCT_COVERS } from './blog.mjs';
+import { PRODUCT, editorialFile } from './replaceables.mjs';
 
 const OUT = 'assets/blog';
 const RECORD = 'tools/imagegen/blog-covers.json';
@@ -61,31 +62,31 @@ const SIZES = [[1200, 800], [800, 533], [500, 333]];
    (V7-BLOG r3) for the card boxes that letterbox the cover further. */
 const COVERS = {
   'stargo-work-visual-guide': {                     // the whole product, from the front door inwards
-    source: 'assets/stargo-product/sw004-experts-library.webp', fit: 'contain', plate: '#021d4d',
+    source: PRODUCT.experts, fit: 'contain', plate: '#021d4d',
     why: 'the guide counts 288 roles across ten functions; the experts library is that catalogue, filtered by function',
   },
   'start-with-one-workflow': {                      // one business process, defined and picked up
-    source: 'assets/stargo-product/sw008-workflow-library.webp', fit: 'contain', plate: '#001135',
+    source: PRODUCT.workflows, fit: 'contain', plate: '#001135',
     why: 'the workflow library: each process with its steps, its approval points and its integration status',
   },
   'from-inquiry-to-quote': {                        // the surface the article walks through
-    source: 'assets/stargo-product/sw028-sales-desk-inquiry-reply.webp', fit: 'contain', plate: '#e8f1fe',
+    source: PRODUCT.inquiry, fit: 'contain', plate: '#e8f1fe',
     why: 'an inquiry with the facts pulled out of it and a grounded draft reply beside it',
   },
   'approval-gates-for-ai-in-trade': {               // the view an approver works from
-    source: 'assets/stargo-editorial/os-cockpit.webp', fit: 'cover',
+    source: editorialFile('os-cockpit'), fit: 'cover',
     why: 'kept: no approved product screenshot shows an approval gate',
   },
   'ai-operating-system-for-global-trade': {         // the operating system itself
-    source: 'assets/stargo-product/sw003-ai-workspace-home.webp', fit: 'contain', plate: '#0e2b5a',
+    source: PRODUCT.workspace, fit: 'contain', plate: '#0e2b5a',
     why: 'the workspace home: one request goes in, with experts, tasks and company knowledge beside it',
   },
   '288-ai-employees-not-288-chatbots': {            // the roster the article explains
-    source: 'assets/stargo-product/sw006-expert-teams.webp', fit: 'contain', plate: '#00173c',
+    source: PRODUCT.teams, fit: 'contain', plate: '#00173c',
     why: 'five roles divide one inquiry between them and leave a record of what each finished',
   },
   'enterprise-ontology-explained': {                // the model of the business
-    source: 'assets/stargo-editorial/brand-ontology.webp', fit: 'cover',
+    source: editorialFile('brand-ontology'), fit: 'cover',
     why: 'kept: no approved product screenshot shows the enterprise knowledge model',
   },
 };

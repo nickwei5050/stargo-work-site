@@ -5,75 +5,75 @@
     {
       "id": "os-cockpit",
       "src": "assets/stargo-editorial/os-cockpit.webp",
-      "width": 1586,
-      "height": 992,
-      "bytes": 115256,
-      "originalSha256": "22b4ea6c0ff34b245fa942c8139ed322ce45970cc35003673df44665a32e0ead",
+      "width": 1672,
+      "height": 941,
+      "bytes": 147534,
+      "originalSha256": "2ea8e7985c2f93be5f06052e988381c70458946ed326ecb528b1951d242cb54d",
       "variants": [
         {
           "src": "assets/stargo-editorial/os-cockpit-400.webp",
           "width": 400,
-          "bytes": 13974
+          "bytes": 15338
         },
         {
           "src": "assets/stargo-editorial/os-cockpit-800.webp",
           "width": 800,
-          "bytes": 40978
+          "bytes": 44430
         },
         {
           "src": "assets/stargo-editorial/os-cockpit-1200.webp",
           "width": 1200,
-          "bytes": 72676
+          "bytes": 78584
         }
       ]
     },
     {
       "id": "os-sales-desk",
       "src": "assets/stargo-editorial/os-sales-desk.webp",
-      "width": 1586,
-      "height": 992,
-      "bytes": 197466,
-      "originalSha256": "4b81234678a86f75b7c34a73de0ffe6abf8127bdb983bd3b3097d0fab7e1fa14",
+      "width": 1672,
+      "height": 941,
+      "bytes": 113380,
+      "originalSha256": "f48094e9705dd258a21b6651e7c5cc8f1ac2d28a852b017b050ff43caf7b24cb",
       "variants": [
         {
           "src": "assets/stargo-editorial/os-sales-desk-400.webp",
           "width": 400,
-          "bytes": 18392
+          "bytes": 11080
         },
         {
           "src": "assets/stargo-editorial/os-sales-desk-800.webp",
           "width": 800,
-          "bytes": 63668
+          "bytes": 32790
         },
         {
           "src": "assets/stargo-editorial/os-sales-desk-1200.webp",
           "width": 1200,
-          "bytes": 121326
+          "bytes": 60312
         }
       ]
     },
     {
       "id": "os-inquiries",
       "src": "assets/stargo-editorial/os-inquiries.webp",
-      "width": 1586,
-      "height": 992,
-      "bytes": 92706,
-      "originalSha256": "a541f1aadddfb4838e065a8287b798fae88ed6fd81db7b26beedc592049352e1",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 98168,
+      "originalSha256": "6e4bb92be2faf704596acae95f4874943a0a152d6b64fc688eb49ab32227b37a",
       "variants": [
         {
           "src": "assets/stargo-editorial/os-inquiries-400.webp",
           "width": 400,
-          "bytes": 7468
+          "bytes": 12606
         },
         {
           "src": "assets/stargo-editorial/os-inquiries-800.webp",
           "width": 800,
-          "bytes": 26092
+          "bytes": 34036
         },
         {
           "src": "assets/stargo-editorial/os-inquiries-1200.webp",
           "width": 1200,
-          "bytes": 54830
+          "bytes": 59716
         }
       ]
     },
@@ -155,25 +155,25 @@
     {
       "id": "os-desktop",
       "src": "assets/stargo-editorial/os-desktop.webp",
-      "width": 1586,
-      "height": 992,
-      "bytes": 93754,
-      "originalSha256": "77637cc32c27ac9454d53d7bff4a277f3895c9b586aa89444ab42811b3207662",
+      "width": 1672,
+      "height": 941,
+      "bytes": 148370,
+      "originalSha256": "ce8d4b5c316425ad8468e5cbc24cca638b3a2e09a749ee339b9373315c674bfd",
       "variants": [
         {
           "src": "assets/stargo-editorial/os-desktop-400.webp",
           "width": 400,
-          "bytes": 10388
+          "bytes": 14822
         },
         {
           "src": "assets/stargo-editorial/os-desktop-800.webp",
           "width": 800,
-          "bytes": 30290
+          "bytes": 44050
         },
         {
           "src": "assets/stargo-editorial/os-desktop-1200.webp",
           "width": 1200,
-          "bytes": 55832
+          "bytes": 78716
         }
       ]
     },
@@ -205,25 +205,25 @@
     {
       "id": "os-boot",
       "src": "assets/stargo-editorial/os-boot.webp",
-      "width": 1586,
-      "height": 992,
-      "bytes": 129098,
-      "originalSha256": "478562406b1bcd2d17218f7be84fc7a13f2df746a1bcbc275ddea7d9325073b5",
+      "width": 1280,
+      "height": 720,
+      "bytes": 56972,
+      "originalSha256": "14037447ad0e10ed575b4ba492d7e3eee8b0071ac01ad1765c49eb18e75f8b1b",
       "variants": [
         {
           "src": "assets/stargo-editorial/os-boot-400.webp",
           "width": 400,
-          "bytes": 9564
+          "bytes": 9258
         },
         {
           "src": "assets/stargo-editorial/os-boot-800.webp",
           "width": 800,
-          "bytes": 34468
+          "bytes": 26186
         },
         {
           "src": "assets/stargo-editorial/os-boot-1200.webp",
           "width": 1200,
-          "bytes": 73920
+          "bytes": 47674
         }
       ]
     },
@@ -400,25 +400,25 @@
     {
       "id": "brand-family-02",
       "src": "assets/stargo-editorial/brand-family-02.webp",
-      "width": 1586,
-      "height": 992,
-      "bytes": 54916,
-      "originalSha256": "0d8a91ea61962cf4b3564436962bea133f507aa74390f5c17b8ff3cf309bbd96",
+      "width": 1280,
+      "height": 720,
+      "bytes": 63492,
+      "originalSha256": "81e2d18d65c5a835ae97c4af0ef3254841c70c74e454d999dd557ad589315765",
       "variants": [
         {
           "src": "assets/stargo-editorial/brand-family-02-400.webp",
           "width": 400,
-          "bytes": 7402
+          "bytes": 11306
         },
         {
           "src": "assets/stargo-editorial/brand-family-02-800.webp",
           "width": 800,
-          "bytes": 19428
+          "bytes": 30370
         },
         {
           "src": "assets/stargo-editorial/brand-family-02-1200.webp",
           "width": 1200,
-          "bytes": 33898
+          "bytes": 55116
         }
       ]
     },
@@ -697,8 +697,8 @@
       "src": "assets/stargo-editorial/og-cover.png",
       "width": 1200,
       "height": 630,
-      "bytes": 981825,
-      "originalSha256": "431308302a1f9a27077573b728e551f99520443a3c49c6a1845b95a51554aede",
+      "bytes": 848525,
+      "originalSha256": "59958a31408355dcdffd396c5419dde8390dc9373b9997c77953256d480a429f",
       "variants": []
     },
     {

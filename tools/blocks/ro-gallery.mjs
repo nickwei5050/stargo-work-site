@@ -104,6 +104,7 @@
  *   three tweens stay independent in the order GSAP itself emitted them.
  */
 import { DONORS } from '../block-lib.mjs';
+import { GALLERY_TILES } from '../replaceables.mjs';
 
 export const donor = {
   id: 'ro-gallery',
@@ -129,15 +130,9 @@ export const donor = {
 const ALTS = { 'hero image': 23, office: 1 };
 
 /** The six screenshots the owner approved (handoff of 2026-09-18), registered in
-    tools/imagegen/product-assets.json. LAYOUT indexes this list. */
-const TILES = [
-  'sw003-ai-workspace-home',
-  'sw004-experts-library',
-  'sw006-expert-teams',
-  'sw008-workflow-library',
-  'sw028-sales-desk-inquiry-reply',
-  'sw033-sales-desk-document-pack',
-];
+    tools/imagegen/product-assets.json. LAYOUT indexes this list. Slot list:
+    tools/replaceables.mjs GALLERY_TILES. */
+const TILES = GALLERY_TILES;
 
 /* WHICH PICTURE STANDS ON WHICH SPOKE.
 

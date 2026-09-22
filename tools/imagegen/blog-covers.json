@@ -14,7 +14,7 @@
         "plate": "#021d4d",
         "quality": 82
       },
-      "sha256": "b0d85a023bf93b92941462d234d6bcf0ae1c3aa122aadb05a2ceb3a7220a2acb"
+      "sha256": "044e3919606523e97c686e0f24306d1ee76854da19a9d3506f3bccdab7275568"
     },
     "assets/blog/stargo-work-visual-guide-800.webp": {
       "recipe": {
@@ -28,7 +28,7 @@
         "plate": "#021d4d",
         "quality": 82
       },
-      "sha256": "1da4c7d056abf05e1bedf0d3925f9f731ca4c8aa031a5d2ab45f82b54b4e06bf"
+      "sha256": "d11bb22a89d1fabc2322411995d514ce3c3f3c7395e6ae5192d10213e57be49e"
     },
     "assets/blog/stargo-work-visual-guide-500.webp": {
       "recipe": {
@@ -42,7 +42,7 @@
         "plate": "#021d4d",
         "quality": 82
       },
-      "sha256": "a33ce5bac7867fee1048286152d2fcf95d7c02d3e48a521d5802c5eccad1990d"
+      "sha256": "901afc2eb37a644fee5936f1b21a8b5894714f1a7ea0dddd3d6d4570c09d6a94"
     },
     "assets/blog/start-with-one-workflow.webp": {
       "recipe": {
@@ -56,7 +56,7 @@
         "plate": "#001135",
         "quality": 82
       },
-      "sha256": "ba813d6b18a3e2acb415d4a0b62d150bb1d13ad24cc8d7650106cddd8a7f3f50"
+      "sha256": "342817473ed9bb406664376d8d619cf430676dc6d889a60a31fe310bbe94b5f7"
     },
     "assets/blog/start-with-one-workflow-800.webp": {
       "recipe": {
@@ -70,7 +70,7 @@
         "plate": "#001135",
         "quality": 82
       },
-      "sha256": "ad8b6f7d9e4cfedba6760315f4bed56a251d5a7440c7ad8985244d969bcfad40"
+      "sha256": "9ef058ce80bc927d73a2ddab8caeb5cde0f5c939f2662f950f64868756f2d531"
     },
     "assets/blog/start-with-one-workflow-500.webp": {
       "recipe": {
@@ -84,7 +84,7 @@
         "plate": "#001135",
         "quality": 82
       },
-      "sha256": "5a398dfbc24e7c079d06ea31325703d5d25eed0f4424be595088df591fdc5386"
+      "sha256": "f5d2935974056369492fc1f6f95ec30f6937284159b4089c800a604c26363531"
     },
     "assets/blog/from-inquiry-to-quote.webp": {
       "recipe": {
@@ -98,7 +98,7 @@
         "plate": "#e8f1fe",
         "quality": 82
       },
-      "sha256": "5230511c24bdda558ed35a35963aa7f8794574f3774738bd53a26447387ed571"
+      "sha256": "4356c2badc44a521f42476a84ab51e89951993f205d63ebcd52bfa8cc8922c87"
     },
     "assets/blog/from-inquiry-to-quote-800.webp": {
       "recipe": {
@@ -112,7 +112,7 @@
         "plate": "#e8f1fe",
         "quality": 82
       },
-      "sha256": "ecb9800aaed9f24d00cc8201c2efa9ef731e052c100e613d4735632a4b9dacee"
+      "sha256": "037cb5adad66111f996bf8afdfb5922eb290937ea1faa4c8bb6a7828a41033f3"
     },
     "assets/blog/from-inquiry-to-quote-500.webp": {
       "recipe": {
@@ -126,7 +126,7 @@
         "plate": "#e8f1fe",
         "quality": 82
       },
-      "sha256": "48e57fb758966ba19313c2148b9fffd02661ee0fe7490498b848d9c1ae9dbd36"
+      "sha256": "f4f5f78292b6900c62d09e2d213737c5483ae66ea470caf7411fcf155a66c566"
     },
     "assets/blog/approval-gates-for-ai-in-trade.webp": {
       "recipe": {
@@ -138,7 +138,7 @@
         ],
         "quality": 82
       },
-      "sha256": "ee27322ef031067cdca5f2eee6fb7a7c04675ddb4cfd44ac3c9ec41ea7010fa6"
+      "sha256": "6f8399eb7fde1f1451f015e54ed09f2afae655fe07944fa94f64d5ffe6a70355"
     },
     "assets/blog/approval-gates-for-ai-in-trade-800.webp": {
       "recipe": {
@@ -150,7 +150,7 @@
         ],
         "quality": 82
       },
-      "sha256": "f9bc281d4498024fafe4017896da2fa441eda6f3d6dc99ba38e2c179c41055c0"
+      "sha256": "3fb615ab3089e1efcd6247b369fcebeaf39a6bed73ed686e57fcf750b919e3d1"
     },
     "assets/blog/approval-gates-for-ai-in-trade-500.webp": {
       "recipe": {
@@ -162,7 +162,7 @@
         ],
         "quality": 82
       },
-      "sha256": "9c750442eecfe5fe1ed38d5a2100db28c0b5cc823315aa1b3ef546c9d641f844"
+      "sha256": "a71bddc6351a5a09603f7e98faf5d68af25f39fe5dccdd1e6416610beb780508"
     },
     "assets/blog/ai-operating-system-for-global-trade.webp": {
       "recipe": {
@@ -176,7 +176,7 @@
         "plate": "#0e2b5a",
         "quality": 82
       },
-      "sha256": "ca0e47d814b9aae4e0d130723a954d4db359b127960161b6496926536d9ef2f2"
+      "sha256": "53477e1605c33c97e80d34e5637942eec43b2201eaf350ae1337888a9fc990b1"
     },
     "assets/blog/ai-operating-system-for-global-trade-800.webp": {
       "recipe": {
@@ -190,7 +190,7 @@
         "plate": "#0e2b5a",
         "quality": 82
       },
-      "sha256": "44f587055dee4fc66bbb527a8de7395cde27e11b656d8ec3ee010de33e5e8423"
+      "sha256": "45f6a2c39357fc6d04e8775b4a0d90e348c3bbf1526f79a06442aebacc3b2df9"
     },
     "assets/blog/ai-operating-system-for-global-trade-500.webp": {
       "recipe": {
@@ -204,7 +204,7 @@
         "plate": "#0e2b5a",
         "quality": 82
       },
-      "sha256": "16041ab57b3faba44a960775c3c77981201f949e8997ab363437cb9c502baf8c"
+      "sha256": "86a7d85c8b19653de39a667abb60851b27652bbf24af33a284c7764a933e904e"
     },
     "assets/blog/288-ai-employees-not-288-chatbots.webp": {
       "recipe": {
@@ -218,7 +218,7 @@
         "plate": "#00173c",
         "quality": 82
       },
-      "sha256": "4f58a9826fd23b7d9c54d6b7dfe4f9c67c6169bd8aac3c894d5c864c09f09999"
+      "sha256": "5f0822612d8d8fe4a924c0972cb6e083fd0bda17b1925f62c451a04caa1e2939"
     },
     "assets/blog/288-ai-employees-not-288-chatbots-800.webp": {
       "recipe": {
@@ -232,7 +232,7 @@
         "plate": "#00173c",
         "quality": 82
       },
-      "sha256": "089e7362b5c400eeb50a58f9dbf0b904ceb46ab1b4600f6da8e277bda23e25f4"
+      "sha256": "190014ef10eaa8aa0d849b17a9008c2ac44eb9fd3d821e9540d0d5576d9a513e"
     },
     "assets/blog/288-ai-employees-not-288-chatbots-500.webp": {
       "recipe": {
@@ -246,7 +246,7 @@
         "plate": "#00173c",
         "quality": 82
       },
-      "sha256": "8e62a05a2e9e8f9b34ff7ee38a4f1951bce59136aa15c01b4db91a6896800c00"
+      "sha256": "cb08a5922c8bff6940d95816f68556dd9240cdd559253fc3c165c4123601406f"
     },
     "assets/blog/enterprise-ontology-explained.webp": {
       "recipe": {

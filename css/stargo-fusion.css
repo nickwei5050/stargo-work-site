@@ -100,8 +100,8 @@
 /* 4. Sticky product switcher: the pinned panel fills the viewport while
       pinned. The template pins a 666px panel with 100px of air above and
       below; here the pinned block is one screen tall and the panel grows
-      into it. The dashboard image keeps its natural size (a 700px raster
-      upscaled would blur) and is centred in the taller panel. */
+      into it. Curated screenshots are ~1600px wide, so the dashboard plate
+      may grow past the donor’s 700px cap without upscaling a soft raster. */
 @media (min-width: 992px) {
   .sc-scope.products .product-sticky-inner-block {
     height: 100vh;
@@ -116,11 +116,24 @@
     box-sizing: border-box;
     justify-content: center;
   }
+  .sc-scope.products .prodect-dashboard-image-block {
+    max-width: min(1040px, 100%);
+  }
   .sc-scope.products .products-cards-dashboard-block img {
     max-width: 100%;
-    max-height: calc(100vh - 96px - 94px - 200px);
+    max-height: calc(100vh - 96px - 94px - 72px);
     width: auto;
+    height: auto;
   }
+}
+
+/* Hero rotating gallery: slightly larger tiles so product screenshots stay
+   legible in the orbit without dominating the sticky video grid. */
+@media (min-width: 992px) {
+  .ro-gallery .ro-home-header-img-wrap { width: 18rem; }
+}
+@media (min-width: 1440px) {
+  .ro-gallery .ro-home-header-img-wrap { width: 20rem; }
 }
 
 /* ======================================================================

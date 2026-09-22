@@ -47,6 +47,7 @@
  * cut section's lost <body> belongs.
  */
 import { setText, setTextAll, capability } from '../block-lib.mjs';
+import { PLACED } from '../replaceables.mjs';
 
 /** The story this block carries: CAPABILITY_SHOWCASE.stories[4]. */
 const STORY = 4;
@@ -55,7 +56,7 @@ const HEADING_GROUP = '09';
 /** V6 §5.6: seven topics, the donor accordion's count plus two clones. */
 const TOPICS = 7;
 /** The one editorial picture (tools/editorial-images.mjs gives it its alt, size and srcset). */
-const PICTURE = 'os-boot';
+const PICTURE = PLACED.creativePicture;
 
 export const donor = {
   id: 'cn-faq',
