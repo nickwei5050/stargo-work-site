@@ -440,29 +440,18 @@
 
 /* ---------------------------------------------------------- 3. the overlay
 
-   The intro is drawn over the finished homepage and then removed. It has to be
-   opaque from the very first paint — otherwise the page it is introducing
-   flashes past underneath — so it is painted by this stylesheet, in the
-   document's <head>, and not by script.
-
-   Two gates decide whether it is ever shown, and both of them are settled
-   before the first frame:
-
-     - `html.w-mod-js`. The class Webflow's own head snippet writes on every
-       page of this site, synchronously, before anything renders. With no
-       JavaScript there is nothing to play the intro and nothing to take it
-       away, so the overlay must not appear at all. rototo guards its own
-       loader with the same class (`html.w-mod-js:not(.w-mod-ix3) :is(…,
-       .page-loader-column, …) { visibility: hidden !important }` in its head).
-     - `prefers-reduced-motion`. A reader who has asked their system for less
-       motion goes straight to the homepage: the overlay is never displayed, and
-       tools/blocks/og-intro.js takes the node out of the document as well. The
-       same line js/stargo-pricing.js, js/stargo-media.js and
-       tools/blocks/cn-produce.js already take. */
-.og-intro { display: none; }
-
-@media (prefers-reduced-motion: no-preference) {
-  html.w-mod-js .og-intro { display: block; }
+   The overlay used to cover the homepage from the first paint and then wipe
+   away. On the live site that splash stuck: `html.w-mod-js .og-intro` set
+   `display: block`, so `[STARGO WORK]` sat over the brand film until the wipe
+   script finished, and a stalled script left it there until the 15s ceiling.
+   First paint is the homepage itself — the orbit poster and the cockpit still
+   — so the overlay is never displayed. tools/blocks/og-intro.js still removes
+   the node as soon as it runs. The geometry below is unchanged, for the case
+   the sequence is started again. */
+.og-intro {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 .og-intro {

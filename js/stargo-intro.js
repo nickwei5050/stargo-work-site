@@ -30,15 +30,10 @@
    0.015s random stagger — and the beat it then holds before lifting is
    ta-ae57309f's own `position: .5`.
 
-   Reduced motion, and anything that goes wrong. A reader who has asked for less
-   motion never sees the overlay at all (tools/blocks/og-intro.css never
-   displays it) and this script takes it out of the document. So does a browser
-   with no GSAP on the page, and so does a connection too slow for the sequence
-   to finish under the ceiling — see the budget below. Above all of that,
-   og-intro.css stops the overlay covering the page fifteen seconds after the
-   first paint whatever has happened here, including this file never arriving;
-   the timeout at the foot of this file is the same promise again, for the case
-   where the sequence starts and then stalls.
+   The splash is retired. First paint is the homepage (orbit poster, cockpit
+   stills). tools/blocks/og-intro.css never displays the overlay, and this
+   script removes the node before any donor timeline can run. The sequence
+   below is kept with the donor timings, and is not started.
 
    The overlay is `aria-hidden`, holds nothing focusable, and this script never
    moves focus; when the sequence ends the node is removed from the document, so
@@ -56,6 +51,11 @@
     if (failsafe) window.clearTimeout(failsafe);
     if (root.parentNode) root.parentNode.removeChild(root);
   }
+
+  /* Never play the splash. CSS already keeps it off the first paint; this
+     takes the node out so it cannot cover the brand film or the cockpit. */
+  finish();
+  return;
 
   try {
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) { finish(); return; }

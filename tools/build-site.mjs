@@ -670,8 +670,9 @@ PAGES['index.html'] = (lang) => {
  * `aria-hidden` because it is decoration announcing nothing, and it holds
  * nothing focusable: og-intro.mjs takes the donor's anchors out for exactly
  * that reason. tools/chrome.mjs attaches js/stargo-intro.js when it sees
- * `data-og-intro`, and og-intro.css decides whether the overlay is ever shown
- * (never without JavaScript, never under prefers-reduced-motion).
+ * `data-og-intro`. og-intro.css never displays the overlay: first paint is
+ * the brand film (orbit poster) and the cockpit stills, and the script
+ * removes the node immediately.
  */
 /**
  * A donor block, one module each in tools/blocks.
