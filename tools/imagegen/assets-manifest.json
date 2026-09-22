@@ -205,25 +205,25 @@
     {
       "id": "os-boot",
       "src": "assets/stargo-editorial/os-boot.webp",
-      "width": 1672,
-      "height": 941,
-      "bytes": 107390,
-      "originalSha256": "9f8d828cd2e3c353043067484f7d0426aaf5d60d0120244ef779fcf73f017d8a",
+      "width": 1280,
+      "height": 720,
+      "bytes": 56972,
+      "originalSha256": "14037447ad0e10ed575b4ba492d7e3eee8b0071ac01ad1765c49eb18e75f8b1b",
       "variants": [
         {
           "src": "assets/stargo-editorial/os-boot-400.webp",
           "width": 400,
-          "bytes": 11224
+          "bytes": 9258
         },
         {
           "src": "assets/stargo-editorial/os-boot-800.webp",
           "width": 800,
-          "bytes": 30226
+          "bytes": 26186
         },
         {
           "src": "assets/stargo-editorial/os-boot-1200.webp",
           "width": 1200,
-          "bytes": 54062
+          "bytes": 47674
         }
       ]
     },
@@ -400,25 +400,25 @@
     {
       "id": "brand-family-02",
       "src": "assets/stargo-editorial/brand-family-02.webp",
-      "width": 1672,
-      "height": 941,
-      "bytes": 90160,
-      "originalSha256": "f7b9f94fb45f7f9b90fed7059cdef1414bbe90954ee6abcc8f0ece3e639e21f5",
+      "width": 1280,
+      "height": 720,
+      "bytes": 63492,
+      "originalSha256": "81e2d18d65c5a835ae97c4af0ef3254841c70c74e454d999dd557ad589315765",
       "variants": [
         {
           "src": "assets/stargo-editorial/brand-family-02-400.webp",
           "width": 400,
-          "bytes": 11826
+          "bytes": 11306
         },
         {
           "src": "assets/stargo-editorial/brand-family-02-800.webp",
           "width": 800,
-          "bytes": 30008
+          "bytes": 30370
         },
         {
           "src": "assets/stargo-editorial/brand-family-02-1200.webp",
           "width": 1200,
-          "bytes": 51070
+          "bytes": 55116
         }
       ]
     },

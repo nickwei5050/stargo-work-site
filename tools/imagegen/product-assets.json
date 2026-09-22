@@ -237,14 +237,14 @@
    "id": "sw006-expert-teams",
    "sw": "SW006",
    "src": "assets/stargo-product/sw006-expert-teams.webp",
-   "width": 1672,
-   "height": 941,
-   "bytes": 118638,
-   "sourceFile": "curated-assets/module-digital-workforce.webp",
-   "sourceSha256": "01c7e53c6973a0f7b60cc0981d3b77c4cfe335e6c318be9af4d7ab7e20ecb312",
+   "width": 1280,
+   "height": 720,
+   "bytes": 65808,
+   "sourceFile": "uploads/module-agents-pure-ui.png",
+   "sourceSha256": "d0fdbc8c553e4d3fc582d54383deb5ab5b8716660640e5f0ba8b24c013ecfbb4",
    "sourcePixels": [
-    1672,
-    941
+    1280,
+    720
    ],
    "crop": "none",
    "upscaled": false,
@@ -252,17 +252,17 @@
     {
      "src": "assets/stargo-product/sw006-expert-teams-480.webp",
      "width": 480,
-     "bytes": 15864
+     "bytes": 14342
     },
     {
      "src": "assets/stargo-product/sw006-expert-teams-768.webp",
      "width": 768,
-     "bytes": 31918
+     "bytes": 28818
     },
     {
      "src": "assets/stargo-product/sw006-expert-teams-1024.webp",
      "width": 1024,
-     "bytes": 48648
+     "bytes": 45066
     }
    ]
   },
