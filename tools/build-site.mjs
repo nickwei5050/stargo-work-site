@@ -22,7 +22,7 @@ import * as C from './copy.mjs';
 import { POSTS, BLOG_UI, postPath, featured, others, coverSrc, coverSrcset, coverAlt, formatDate, renderBody, titleHtml } from './blog.mjs';
 import { loadBlocks, art, capTitle, DONORS } from './block-lib.mjs';
 import { PRODUCT_CAPTION } from './editorial-images.mjs';
-
+import { HERO, HOME_MODULES, HOME_STAGES, NOTICES_CARDS } from './replaceables.mjs';
 import { SITE } from './paths.mjs';
 
 /** The capability page's donor blocks, one module each in tools/blocks. */
@@ -92,31 +92,10 @@ const SILO = ['email', 'whatsapp', 'excel', 'erp'].map((n) => IMG(`silo-${n}.web
    height and its srcset, exactly as it does the editorial artwork. Only the
    screens the owner released are named here: six from the first handoff, the
    Growth OS set from 主动获客.docx and the ERP screen from 配图二.docx. */
-const PROD = (n) => `assets/stargo-product/${n}.webp`;
-const PRODUCT = {
-  workspace: PROD('sw003-ai-workspace-home'),
-  experts: PROD('sw004-experts-library'),
-  teams: PROD('sw006-expert-teams'),
-  workflows: PROD('sw008-workflow-library'),
-  inquiry: PROD('sw028-sales-desk-inquiry-reply'),
-  documents: PROD('sw033-sales-desk-document-pack'),
-  growth: PROD('gos10-growth-control-tower'),
-  market: PROD('gos01-market-thesis'),
-  reorder: PROD('gos09-reorder-radar'),
-  committee: PROD('gos05-buying-committee'),
-  reactivation: PROD('gos11-dormant-reactivation'),
-};
-/* `teams`, `workflows`, `reorder` and `committee` are not placed from this file:
-   the gallery (tools/blocks/ro-gallery.mjs), the capability rows
-   (tools/blocks/cn-service.mjs) and the blog covers (tools/blog-covers.mjs)
-   name their own. They stay here because this map is the one list of what the
-   owner released, and tools/verify-editorial.mjs checks that list against the
-   built pages. */
-/* The names the homepage and the blog builders use for four of these files. */
-PRODUCT.workspaceHome = PRODUCT.workspace;
-PRODUCT.expertsLibrary = PRODUCT.experts;
-PRODUCT.inquiryReply = PRODUCT.inquiry;
-PRODUCT.documentPack = PRODUCT.documents;
+/* Released product screenshots, the hero film and the homepage module-card
+   pictures live in tools/replaceables.mjs. `teams`, `workflows`, `reorder`
+   and `committee` are placed by the gallery, the capability rows and the blog
+   covers, which read that same list. */
 const AVATARS = Array.from({ length: 12 }, (_, i) => IMG(`avatar-${String(i + 1).padStart(2, '0')}.png`));
 /** Replace the src/srcset/sizes of the nth <img> whose src contains `key` (all of them when nth is null). */
 function swapImg(html, key, src, { nth = null, alt = '' } = {}) {
@@ -502,20 +481,20 @@ PAGES['index.html'] = (lang) => {
        stage's own sentence says about reorder and repeat business. 004 keeps
        its artwork: no released screen is about collection or service. */
     const CONTENT = { alt: 'STARGO WORK' };
-    const scenes = [['Scene%20%239.webp', PRODUCT.market, CONTENT], ['Scene%20%235.webp', PRODUCT.inquiryReply, CONTENT], ['Scene%20%2310%20(Light)', PRODUCT.documentPack, CONTENT], ['Scene%20%238.webp', BRAND.family(1)], ['Scene%2018.webp', PRODUCT.reactivation, CONTENT]];
+    const scenes = [['Scene%20%239.webp', HOME_STAGES[0].file, CONTENT], ['Scene%20%235.webp', HOME_STAGES[1].file, CONTENT], ['Scene%20%2310%20(Light)', HOME_STAGES[2].file, CONTENT], ['Scene%20%238.webp', HOME_STAGES[3].file], ['Scene%2018.webp', HOME_STAGES[4].file, CONTENT]];
     scenes.forEach(([k, src, opts]) => { h = swapImg(h, k, src, opts); });
     // Retain the original grid/zoom animation. The centre is a real video,
     // sourced from the owner's fourth template; surrounding imagery is separate.
-    const theatre = [OS.boot, OS.loading, OS.login, OS.desktop, OS.cockpit, OS.agents, OS.inquiries];
+    const theatre = HERO.theatre;
     const ids = [...h.matchAll(/class="video-bg-animation w-background-video w-background-video-atom"><video id="([^"]+)-video"/g)].map((m) => m[1]);
     const inTheatre = ids.filter((id) => h.indexOf(`id="${id}-video"`) > h.indexOf('<section class="video-section"') && h.indexOf(`id="${id}-video"`) < h.indexOf('<section id="compare"'));
     if (inTheatre.length !== 7) throw new Error(`index: expected 7 theatre videos, found ${inTheatre.length}`);
     inTheatre.forEach((id, i) => {
       h = stillImage(h, id, theatre[i], 'STARGO OS');
-      if (i === 3) {
+      if (i === HERO.centreIndex) {
         const marker = `<img src="${theatre[i]}" alt="STARGO OS" loading="lazy" class="stargo-still"/>`;
         if (!h.includes(marker)) throw new Error('index: centre media marker missing');
-        h = h.replace(marker, `<video id="stargo-brand-film" data-stargo-video loop muted playsinline preload="none" poster="assets/stargo-motion/orbit-poster.webp" aria-label="${lang === 'zh' ? '银色轨道协同运转的品牌概念动画' : 'Brand film: silver orbital forms moving together'}"><source src="assets/stargo-motion/orbit.mp4" type="video/mp4"/></video>`);
+        h = h.replace(marker, `<video id="stargo-brand-film" data-stargo-video loop muted playsinline preload="none" poster="${HERO.poster}" aria-label="${lang === 'zh' ? '银色轨道协同运转的品牌概念动画' : 'Brand film: silver orbital forms moving together'}"><source src="${HERO.film}" type="video/mp4"/></video>`);
       }
     });
     const mediaLabel = lang === 'zh' ? '播放视频' : 'Play video';
@@ -640,12 +619,7 @@ PAGES['index.html'] = (lang) => {
        measured 692×433.1 for a 1586×992 illustration at 1440 and 692×389.7 for
        a 1268×714 screenshot, both exactly the file's own ratio. Nothing is
        cropped and nothing is stretched, so these panels need no rule. */
-    const bySystem = {
-      'Growth OS': PRODUCT.growth,
-      'Sales Desk': PRODUCT.inquiryReply,
-      'ERP': BRAND.family(2),
-      'AI 创作': OS.boot, 'AI Creative': OS.boot,
-    };
+    const bySystem = HOME_MODULES;
     const used = new Set();
     let slots = 0;
     products = products.replace(/<div class="products-cards-dashboard-block[^"]*">[\s\S]*?<h3 class="heading-style-h4">([^<]*)<\/h3>/g, (block, title) => {
@@ -2219,7 +2193,7 @@ PAGES['notices.html'] = (lang) => {
      marker — any non-empty alt stops tools/editorial-images.mjs treating a
      picture as decoration — and that pass then writes the registered sentence
      for each screen, in the page's language, over it. */
-  [['699b6466d5f19893993a4dca_Sleek', PRODUCT.workspaceHome], ['699b6466d5f19893993a4d64_blog-2', PRODUCT.expertsLibrary], ['699b6466d5f19893993a4e03_Futuristic', PRODUCT.documentPack]]
+  [['699b6466d5f19893993a4dca_Sleek', NOTICES_CARDS[0]], ['699b6466d5f19893993a4d64_blog-2', NOTICES_CARDS[1]], ['699b6466d5f19893993a4e03_Futuristic', NOTICES_CARDS[2]]]
     .forEach(([k, src]) => { h = swapImg(h, k, src, { alt: PRODUCT_CAPTION[lang] }); });
   /* The post template tags its "Related Stories" band <h1>, a second h1 after
      the notice's own title. It becomes h2; `.inner-title._02` carries its

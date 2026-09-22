@@ -41,6 +41,7 @@
  * needs so the four photographs still sit above it.
  */
 import { setText, setTextAll, capability } from '../block-lib.mjs';
+import { GROWTH_ROWS } from '../replaceables.mjs';
 
 export const donor = {
   id: 'cn-service',
@@ -67,7 +68,7 @@ export const donor = {
  * decision held at an approval point. tools/editorial-images.mjs writes the
  * variants, sizes and descriptions for them.
  */
-const ROW_ART = ['brand-family-01', 'os-sales-desk', 'os-loading', 'mobile-approvals'];
+const ROW_ART = GROWTH_ROWS.map((row) => row.art);
 
 /* Since 2026-09-18 a row's hover thumbnail is the owner's own Growth OS screen
    for that topic (主动获客.docx, registered in tools/imagegen/product-assets.json):
@@ -83,7 +84,7 @@ const ROW_ART = ['brand-family-01', 'os-sales-desk', 'os-loading', 'mobile-appro
    interface cropped to that shape would show its middle third as a dark
    texture. The thumbnails carry the screens instead, where the whole interface
    fits (see .cn-service-thumbnail in cn-service.css). */
-const ROW_SHOT = [null, 'gos01-market-thesis', 'gos09-reorder-radar', 'gos05-buying-committee'];
+const ROW_SHOT = GROWTH_ROWS.map((row) => row.shot);
 const shot = (name) => `assets/stargo-product/${name}.webp`;
 
 /** Swap one cinery photograph for editorial art, keeping every other attribute

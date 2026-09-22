@@ -8,6 +8,8 @@
  * [templateString, pair, options] applied in sequence (long strings first,
  * so a short word never matches inside a sentence that is about to change).
  */
+import { STORY_ART, PLACED } from './replaceables.mjs';
+
 export const B = (zh, en) => ({ zh, en });
 
 export const LANGS = ['zh', 'en'];
@@ -1743,7 +1745,7 @@ export const LX_FEATURE_WORKFORCE = {
      assets/stargo-product. It has to be non-empty all the same, because an
      empty alt is how that pass is told a picture is decorative — so it holds
      the caption that pass appends, which is true of this picture either way. */
-  tile: { src: 'assets/stargo-product/sw006-expert-teams.webp', alt: B('产品界面示意（演示数据）', 'Illustrative product interface · demo data') },
+  tile: { src: PLACED.workforceTile, alt: B('产品界面示意（演示数据）', 'Illustrative product interface · demo data') },
   /* The display line behind the stacked cards; split per character on the
      Chinese page. Two five-character halves: one line of this size holds 5.8
      to 6.4 characters from 320 to 1440. */
@@ -1780,7 +1782,7 @@ export const ABOUT = {
     { label: B('跟进 AI 员工', 'Follow-up AI'), image: 'assets/stargo/avatar-05.png' },
     { label: B('统筹 AI 员工', 'Coordination AI'), image: 'assets/stargo/avatar-06.png' },
   ],
-  bigImage: { src: 'assets/stargo-motion/orbit-poster.webp', alt: B('银色轨道协同运转的品牌概念画面', 'Brand concept: silver orbital forms moving together') },
+  bigImage: { src: PLACED.aboutBigImage, alt: B('银色轨道协同运转的品牌概念画面', 'Brand concept: silver orbital forms moving together') },
   storyTitle: B('我们的来历', 'Our story'),
   story: B(`<p>STARGO WORK 不是从一份 SaaS 产品需求表开始的。它出自真实的制造与外贸业务：怎么找客户、怎么判断客户、怎么快速回复、怎么管产品知识、报价、审批、做 PI、管订单、备出口单证、持续跟进，以及怎么让增长不再只靠加人。</p>
 <p>我们的做法是先走进企业的真实流程：软件适应企业，而不是反过来。业务规则、产品知识和审批边界，从实际工作里整理出来，再放进系统。</p>
@@ -1861,7 +1863,7 @@ export const CAPABILITY_SHOWCASE = {
 
   stories: [
     {
-      image: 'os-cockpit',
+      image: STORY_ART.growthOs,
       /* Growth OS, proactive acquisition (V5 M02, V6 §5.2). tools/blocks/
          cn-service.mjs prints `promise` + `connection` as the section's lead
          and `output` + `availability` under it; the four rows are the first
@@ -1875,7 +1877,7 @@ export const CAPABILITY_SHOWCASE = {
       availability: B('核心流程建设中，真实数据与客户触达按授权接入。', 'Core workflows are developing; live sources and outreach require authorization.'),
     },
     {
-      image: 'os-sales-desk',
+      image: STORY_ART.salesDesk,
       /* Sales Desk (V5 M03, V6 §5.3). The heading is V6's; tools/blocks/qx-news.mjs
          prints `promise` then `availability` in the left column, and its three
          rows keep the intake / requirements / customer-context split. */
@@ -1890,7 +1892,7 @@ export const CAPABILITY_SHOWCASE = {
       availability: B('已有业务工作台；渠道收发、价格和业务交接逐项接通与验证。', 'The workspace exists; messaging, price sources and business handoffs are integrated and validated one by one.'),
     },
     {
-      image: 'os-quote-studio',
+      image: STORY_ART.quote,
       /* Quotations, PI and commercial records (V5 M04, V6 §5.4). The heading's
          three clauses are drawn as three lines by tools/blocks/rk-stats.mjs,
          which splits it at 「，」 / ". "; the paragraph is `promise`, then
@@ -1904,7 +1906,7 @@ export const CAPABILITY_SHOWCASE = {
       availability: B('报价与 PI 持续完善；真实价格、合同、签章与单证按企业系统接通。', 'Quotes and PI are evolving; live prices, contracts, signatures and documents depend on connected enterprise systems.'),
     },
     {
-      image: 'os-trade-execution',
+      image: STORY_ART.erp,
       /* ERP and fulfillment (V5 M05 + M06, V6 §5.5). The marquee is `label`; the
          six cards are CAP_V6A.operations (six operating themes, not register
          items). The boundary is said on the two cards it belongs to. */
@@ -1918,7 +1920,7 @@ export const CAPABILITY_SHOWCASE = {
       caveat: B('正式申报、签发与资金支付仍由相应有权人员和机构处理；单据准备与流程协同不替代专业合规审查。', 'Official filings, issuance and payments stay with the authorized people and institutions; document preparation and workflow support do not replace professional compliance review.'),
     },
     {
-      image: 'brand-family-01',
+      image: STORY_ART.creative,
       label: B('为产品和市场做内容', 'Create content for products and markets'),
       groups: ['09', '03'],
       promise: B('产品和销售素材，用的就是销售流程那一份审核过的产品资料，再按买家和答案引擎找得到的方式组织。', 'Product and sales material is produced from the same approved product information the sales workflow uses, then structured so buyers and answer engines can find it.'),
@@ -1927,7 +1929,7 @@ export const CAPABILITY_SHOWCASE = {
       connection: B('发出去的内容，又回流到上面的买家研究和询盘处理。', 'Published material feeds the buyer research and inquiry handling above.'),
     },
     {
-      image: 'os-agent-center',
+      image: STORY_ART.team,
       /* AI roles working as a team (V5 M10 + M11, V6 §5.7). The three cards
          are CAP_V6A.team; `output` fills the two-line slot beside the heading. */
       label: B('让 AI 团队把活干完', 'Run the work with an AI team'),
@@ -1954,7 +1956,7 @@ export const CAPABILITY_SHOWCASE = {
   foundationsLabel: B('每项业务的四个基础', 'What every area rests on'),
   foundations: [
     {
-      image: 'brand-ontology',
+      image: STORY_ART.knowledge,
       label: B('企业知识与业务关系', 'Knowledge and business relationships'),
       groups: ['06', '12'],
       promise: B('知识库是企业资料室；业务关系把客户、产品、报价、订单与负责人对应起来。回答依据企业确认的资料，资料冲突或过期时提示核实。', 'The knowledge base is the company’s reference room; business relationships connect customers, products, quotes, orders and owners. Answers rest on approved company sources, and conflicting or outdated material is flagged.'),
@@ -1968,7 +1970,7 @@ export const CAPABILITY_SHOWCASE = {
       caveat: B('知识与业务关联已有基础，更深的关联按接入情况逐步完善。', 'Foundations exist; richer relationships arrive in stages.'),
     },
     {
-      image: 'os-desktop',
+      image: STORY_ART.desktop,
       label: B('按授权连接业务系统', 'Connections, by authorization'),
       groups: ['11'],
       promise: B('邮箱、网盘、CRM、ERP 与业务平台按企业授权接入，明确哪些能看、哪些能改、哪些要审批。列出的连接完成配置与授权前，不算已经接通。', 'Email, drives, CRM, ERP and business platforms connect through enterprise authorization, defining what can be read, changed or needs approval. A listed connection is not live until it is configured and authorized.'),
@@ -1982,7 +1984,7 @@ export const CAPABILITY_SHOWCASE = {
       caveat: B('目录里列出的连接，完成配置与授权后才算接通。', 'A listed connection is live only once configured and authorized.'),
     },
     {
-      image: 'os-login',
+      image: STORY_ART.login,
       label: B('权限、审批与记录', 'Approvals and records'),   // one line in English: a two-line label rose into node 04's open panel
       groups: ['13'],
       promise: B('哪些工作可以自动推进、哪些要复核、哪些必须审批，由企业决定。重要动作都留下记录：谁做的、依据什么、结果如何。', 'The company decides what may proceed on its own, what needs review and what needs approval. Important actions leave a record: who acted, on what basis and with what result.'),
@@ -1995,7 +1997,7 @@ export const CAPABILITY_SHOWCASE = {
       ],
     },
     {
-      image: 'brand-loop',
+      image: STORY_ART.improvement,
       label: B('经过验证的改进', 'Improvement you can check'),
       groups: ['14'],
       promise: B('从成功和失败中整理可改进的工作方法、岗位技能与流程，先测试、比较、批准，再逐步采用；效果不足时可以撤回。', 'Better working methods, role skills and processes are drawn from successes and failures, then tested, compared and approved before gradual adoption — and withdrawn if they fall short.'),
@@ -2079,7 +2081,7 @@ export const CAP_V6A = {
      written; anything else is an editorial id (tools/blocks/rk-stats.mjs). */
   quote: {
     steps: [B('按规则起草', 'Drafted by rules'), B('有权人批准', 'Human approval'), B('保留正式版本', 'Version kept')],
-    image: 'os-quote-studio',
+    image: STORY_ART.quoteBand,
     button: { label: B('报价能力详情', 'Quotation details'), href: '#g07' },
     /* The paragraph's closing pointer to where product facts live. */
     facts: { lead: B('价格与产品事实的依据，见', 'For the product facts behind a price, see'), label: B('产品与企业知识', 'Products & enterprise knowledge'), href: '#g06' },
@@ -2139,7 +2141,7 @@ export const CAP_V6A = {
            coordinator who consolidates before a person confirms. A value
            starting with `assets/` is a path as written; anything else is an
            editorial id (tools/blocks/qx-projects.mjs). */
-        href: 'workforce.html#lx-team', pill: B('看团队协作', 'See teamwork'), image: 'assets/stargo-product/sw006-expert-teams.webp' },
+        href: 'workforce.html#lx-team', pill: B('看团队协作', 'See teamwork'), image: PLACED.teamCard },
     ],
   },
 };

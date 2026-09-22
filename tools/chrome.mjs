@@ -20,16 +20,18 @@ import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { CAP_JUMPS, NAV, SECONDARY, MORE, LANG_SWITCH, CHROME, META, CONTACT_INFO, SITE_URL } from './copy.mjs';
 import { POSTS, BLOG_UI, postPath, coverSrc, faqEntities, wordCount } from './blog.mjs';
+import { OG, OS_ART } from './replaceables.mjs';
 
 /** Every page the build produces, as root-relative names. */
 export const SITE_PAGES = [...NAV, ...SECONDARY, ...MORE].map((n) => n.href).concat(POSTS.map(postPath));
 export const ALL_PAGES = new Set([...SITE_PAGES, '404.html']);
 export const WORDMARK = 'assets/brand/stargo-wordmark-600.png';
 const AVATAR = 'assets/stargo/avatar-core.png';
-const OG_IMAGE = 'assets/stargo/og-cover.png';
+/** Share cover. Token is rewritten to OG.file (og-cover.png, 1200×630). See tools/replaceables.mjs. */
+const OG_IMAGE = OG.token;
 
 /** Product screens that replace the template's photo strips (overlay menu) and image rotator (contact band). */
-export const SCREENS = ['os-cockpit', 'os-sales-desk', 'os-inquiries', 'os-agent-center', 'os-quote-studio', 'os-trade-execution', 'os-desktop', 'os-login', 'os-boot', 'os-loading'].map((n) => `assets/stargo/${n}.webp`);
+export const SCREENS = Object.values(OS_ART).map((n) => `assets/stargo/${n}.webp`);
 
 /** Template pages that no longer exist and where each now lives. Real pages are never listed here. */
 const LEGACY = {
