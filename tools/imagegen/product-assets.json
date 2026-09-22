@@ -1,19 +1,19 @@
 {
- "note": "Owner-supplied product interface screenshots (handoffs: STARGO_WORK_官网配图替换交接包_2026-09-18, 配图二.docx for ERP, 主动获客.docx for Growth OS — the last is authoritative for acquisition imagery). WebP derivatives of the supplied originals, never upscaled, never cropped: 480/768/1024 plus the original width. Captions and alt text live in tools/editorial-images.mjs (productText); every one is an illustrative interface with demonstration data.",
+ "note": "Owner-supplied product interface screenshots. WebP derivatives of the supplied originals, never upscaled, never cropped: 480/768/1024 plus the original width. Captions and alt text live in tools/editorial-images.mjs (productText); every one is an illustrative interface with demonstration data. The 2026-09-22 curated pack superseded the four prior-pass leftovers that were still the older 1268px stills: gos01 ← product-growth.webp (增长分析), gos09 ← alt-control.webp (控制中心), gos11 ← alt-home.webp (首页工作台), sw033 ← product-sales.webp (销售工作台). Filenames stayed so every slot that already pointed at them kept its place.",
  "authorization": "Owner instruction 2026-09-18: brand/product/feature imagery may be replaced with these images; layout, colours, type, animation and interactions stay as they are.",
  "assets": [
   {
    "id": "gos01-market-thesis",
    "sw": "GOS01",
    "src": "assets/stargo-product/gos01-market-thesis.webp",
-   "width": 1268,
-   "height": 714,
-   "bytes": 95600,
-   "sourceFile": "主动获客.docx/word/media/image1.png",
-   "sourceSha256": "f62e1801725df37ac3d577288e1d1734cb18a6d704186470d852212ab70e1a85",
+   "width": 1672,
+   "height": 941,
+   "bytes": 116932,
+   "sourceFile": "curated-assets/product-growth.webp",
+   "sourceSha256": "e4e7c6477b24a6a3498580bd2014371a4297c553881f269005aa6ad8ae34f2b5",
    "sourcePixels": [
-    1268,
-    714
+    1672,
+    941
    ],
    "crop": "none",
    "upscaled": false,
@@ -21,17 +21,17 @@
     {
      "src": "assets/stargo-product/gos01-market-thesis-480.webp",
      "width": 480,
-     "bytes": 21860
+     "bytes": 15742
     },
     {
      "src": "assets/stargo-product/gos01-market-thesis-768.webp",
      "width": 768,
-     "bytes": 45246
+     "bytes": 32484
     },
     {
      "src": "assets/stargo-product/gos01-market-thesis-1024.webp",
      "width": 1024,
-     "bytes": 70288
+     "bytes": 51674
     }
    ]
   },
@@ -72,14 +72,14 @@
    "id": "gos09-reorder-radar",
    "sw": "GOS09",
    "src": "assets/stargo-product/gos09-reorder-radar.webp",
-   "width": 1268,
-   "height": 714,
-   "bytes": 89128,
-   "sourceFile": "主动获客.docx/word/media/image9.png",
-   "sourceSha256": "d97d9ce9499e22eff1fa88c531268207e8dc325bfc623852f3985f2fe52b375a",
+   "width": 1677,
+   "height": 938,
+   "bytes": 118346,
+   "sourceFile": "curated-assets/alt-control.webp",
+   "sourceSha256": "250ae7e02038fb6d2c8d1384f1d8dc9a6b5f264f575c725a547306304a4d8c52",
    "sourcePixels": [
-    1268,
-    714
+    1677,
+    938
    ],
    "crop": "none",
    "upscaled": false,
@@ -87,17 +87,17 @@
     {
      "src": "assets/stargo-product/gos09-reorder-radar-480.webp",
      "width": 480,
-     "bytes": 20984
+     "bytes": 15282
     },
     {
      "src": "assets/stargo-product/gos09-reorder-radar-768.webp",
      "width": 768,
-     "bytes": 42792
+     "bytes": 33104
     },
     {
      "src": "assets/stargo-product/gos09-reorder-radar-1024.webp",
      "width": 1024,
-     "bytes": 64308
+     "bytes": 51576
     }
    ]
   },
@@ -138,14 +138,14 @@
    "id": "gos11-dormant-reactivation",
    "sw": "GOS11",
    "src": "assets/stargo-product/gos11-dormant-reactivation.webp",
-   "width": 1268,
-   "height": 714,
-   "bytes": 91966,
-   "sourceFile": "主动获客.docx/word/media/image11.png",
-   "sourceSha256": "fa91ee212786b7bbf125e2bb1baa9123e258313aa6818f0cc50e666c373fcb61",
+   "width": 1672,
+   "height": 941,
+   "bytes": 108418,
+   "sourceFile": "curated-assets/alt-home.webp",
+   "sourceSha256": "a95bd57d7145569073754c0214ac5bdeea1b923469ceee402152a4d252c7ab31",
    "sourcePixels": [
-    1268,
-    714
+    1672,
+    941
    ],
    "crop": "none",
    "upscaled": false,
@@ -153,17 +153,17 @@
     {
      "src": "assets/stargo-product/gos11-dormant-reactivation-480.webp",
      "width": 480,
-     "bytes": 20976
+     "bytes": 16934
     },
     {
      "src": "assets/stargo-product/gos11-dormant-reactivation-768.webp",
      "width": 768,
-     "bytes": 42262
+     "bytes": 33150
     },
     {
      "src": "assets/stargo-product/gos11-dormant-reactivation-1024.webp",
      "width": 1024,
-     "bytes": 66264
+     "bytes": 50998
     }
    ]
   },
@@ -336,14 +336,14 @@
    "id": "sw033-sales-desk-document-pack",
    "sw": "SW033",
    "src": "assets/stargo-product/sw033-sales-desk-document-pack.webp",
-   "width": 1268,
-   "height": 714,
-   "bytes": 67946,
-   "sourceFile": "originals/sw033-sales-desk-document-pack.png",
-   "sourceSha256": "2795615a1227b1429be44ca24a10cacc32e9cba23419f8eb8b91f058c0342b86",
+   "width": 1672,
+   "height": 941,
+   "bytes": 117936,
+   "sourceFile": "curated-assets/product-sales.webp",
+   "sourceSha256": "f48094e9705dd258a21b6651e7c5cc8f1ac2d28a852b017b050ff43caf7b24cb",
    "sourcePixels": [
-    1268,
-    714
+    1672,
+    941
    ],
    "crop": "none",
    "upscaled": false,
@@ -351,17 +351,17 @@
     {
      "src": "assets/stargo-product/sw033-sales-desk-document-pack-480.webp",
      "width": 480,
-     "bytes": 16436
+     "bytes": 14954
     },
     {
      "src": "assets/stargo-product/sw033-sales-desk-document-pack-768.webp",
      "width": 768,
-     "bytes": 32332
+     "bytes": 32020
     },
     {
      "src": "assets/stargo-product/sw033-sales-desk-document-pack-1024.webp",
      "width": 1024,
-     "bytes": 49520
+     "bytes": 51456
     }
    ]
   }

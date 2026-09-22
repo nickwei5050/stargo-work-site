@@ -70,10 +70,11 @@ export const donor = {
  */
 const ROW_ART = GROWTH_ROWS.map((row) => row.art);
 
-/* Since 2026-09-18 a row's hover thumbnail is the owner's own Growth OS screen
-   for that topic (主动获客.docx, registered in tools/imagegen/product-assets.json):
-   trade intelligence → 市场论证, reorder judgement → 进口商补货雷达, key decision
-   roles → 采购委员会. Company research has none: 客户 360 was held the same day
+/* Since 2026-09-18 a row's hover thumbnail is the owner's own screen for that
+   topic (tools/imagegen/product-assets.json). From 2026-09-22 the two older
+   stills are curated pack screens: trade intelligence → 增长分析 (gos01),
+   reorder judgement → 控制中心 (gos09), key decision roles → 采购委员会
+   (gos05, unchanged). Company research has none: 客户 360 was held the same day
    because it puts $412,000 of lifetime value, an $80,000 deal and a 22% margin
    on a named company and calls the record verified against Brazil's company
    register and customs data. A row with no screen (null) keeps the editorial
