@@ -4,15 +4,15 @@ const { assets } = JSON.parse(readFileSync(new URL('./imagegen/assets-manifest.j
 if (assets.length !== 43) throw new Error('All 43 editorial images must exist before building');
 const byId = new Map(assets.map(a => [a.id, a]));
 const descriptions = {
-  'os-cockpit': ['多个工作轨道汇聚到一个指挥中心', 'Work lanes converge at a shared command centre'],
-  'os-sales-desk': ['港口与制造园区间的一条市场机会路径', 'An opportunity path through a port and manufacturing district'],
-  'os-inquiries': ['客户对话、兴趣与历史汇集成共享上下文', 'Conversation, interest and history form shared customer context'],
+  'os-cockpit': ['总控制台：工作轨道与关键决策汇聚到一个指挥视图', 'The command cockpit: work lanes and key decisions in one control view'],
+  'os-sales-desk': ['销售工作台：询盘、跟进与回复草稿同屏推进', 'The sales desk: inquiries, follow-ups and draft replies on one surface'],
+  'os-inquiries': ['客户对话：兴趣、历史与待办汇集成共享上下文', 'Customer inbox: interest, history and next actions as shared context'],
   'os-agent-center': ['专业工具沿并行轨道协作', 'Specialized instruments collaborate along parallel work lanes'],
   'os-quote-studio': ['精密零件的匹配与校验', 'Precision components aligned and checked for fit'],
   'os-trade-execution': ['制造交付区从检验到装运的连续流程', 'A continuous path from inspection to dispatch'],
-  'os-desktop': ['连接不同业务工作空间的一条共享轨道', 'One shared track connects business workspaces'],
+  'os-desktop': ['系统地图：连接不同业务工作空间的共享桌面', 'System map: one shared desktop connecting business workspaces'],
   'os-login': ['受控通道与清晰的权限边界', 'A controlled passage through explicit permission boundaries'],
-  'os-boot': ['精密金属光圈开启', 'A precision metal aperture opening'],
+  'os-boot': ['AI 创作工作室：图片与视频任务从同一创作台发起', 'AI creative studio: image and video work starts from one creative desk'],
   'os-loading': ['企业上下文逐层就位', 'Enterprise context assembling layer by layer'],
   'brand-glow-wide': ['相互连接的银色轨道雕塑', 'An interconnected silver orbital sculpture'],
   'brand-glow-square': ['三片相互协作的钛银曲面', 'Three coordinated titanium surfaces'],
@@ -20,7 +20,7 @@ const descriptions = {
   'brand-ontology': ['客户、沟通、产品、报价、订单与任务的关系', 'Relationships among accounts, conversation, products, quotes, orders and tasks'],
   'brand-loop': ['观察、评估与可回退的反馈路径', 'An observation, evaluation and reversible feedback path'],
   'brand-family-01': ['从贸易市场信号到客户目的地', 'From trade signals to a customer destination'],
-  'brand-family-02': ['零件匹配、包装与履约交接', 'Component matching, packaging and fulfillment handoff'],
+  'brand-family-02': ['企业资源计划：生产、库存与履约状态同屏可见', 'ERP: production, inventory and fulfillment status on one screen'],
   'brand-family-03': ['专业分工与并行执行', 'Specialized roles and parallel execution'],
   'brand-family-04': ['共享上下文、权限边界与可控进化', 'Shared context, permission boundaries and governed evolution'],
   'mobile-approvals': ['关键决策在审批点等待', 'A key decision held at an approval gate'],
@@ -72,6 +72,14 @@ const productText = {
   'gos05-buying-committee': ['采购委员会：一家客户的决策角色覆盖情况、缺口与分角色的行动计划', 'The buying committee: which decision roles are covered at one account, what is missing and the plan for each role'],
   'sw028-sales-desk-inquiry-reply': ['Sales Desk：一封询盘的要点提取与带依据的回复草稿', 'Sales Desk: the key facts extracted from an inquiry and a grounded draft reply'],
   'sw033-sales-desk-document-pack': ['Sales Desk 单据中心：报价、PI 与随附文件的组织', 'The Sales Desk document centre: quotations, proforma invoices and their supporting files'],
+  /* Curated 2026-09-22 UI stills that keep editorial filenames (module cards /
+     story art slots) but are product interfaces with demonstration data. */
+  'brand-family-02': ['企业资源计划：生产、库存与履约状态同屏可见', 'ERP: production, inventory and fulfillment status on one screen'],
+  'os-boot': ['AI 创作工作室：图片与视频任务从同一创作台发起', 'AI creative studio: image and video work starts from one creative desk'],
+  'os-cockpit': ['总控制台：工作轨道与关键决策汇聚到一个指挥视图', 'The command cockpit: work lanes and key decisions in one control view'],
+  'os-sales-desk': ['销售工作台：询盘、跟进与回复草稿同屏推进', 'The sales desk: inquiries, follow-ups and draft replies on one surface'],
+  'os-inquiries': ['客户对话：兴趣、历史与待办汇集成共享上下文', 'Customer inbox: interest, history and next actions as shared context'],
+  'os-desktop': ['系统地图：连接不同业务工作空间的共享桌面', 'System map: one shared desktop connecting business workspaces'],
 };
 export const PRODUCT_CAPTION = { zh: '产品界面示意（演示数据）', en: 'Illustrative product interface · demo data' };
 export function editorialImages(html, lang) {
@@ -100,6 +108,7 @@ export function editorialImages(html, lang) {
       // they name their own size instead of a viewport fraction — without this
       // they would download the widest variant for a 224px tile.
       const tile = /ro-home-header-img/.test(result);
+      const dashboard = /prodect-dashboard-image/.test(result);
       const small = /photo-image|image-rotator|image-text-rotator|author/.test(result);
       /* Boxes that stay small at every width: the homepage stage card (340px
          at most), the enterprise column's pictures and the capability rows.
@@ -109,7 +118,9 @@ export function editorialImages(html, lang) {
       /* The capability rows' thumbnail: a fixed box, 12rem x 10rem from 992 and
          16rem x 12rem from 1440 (cinery.cn2.css), and not drawn below 992. */
       const thumb = /cn-service-thumbnail/.test(result);
-      attrs.push(`sizes="${tile ? '224px' : thumb ? '(max-width: 1439px) 186px, 250px' : card ? '(max-width: 767px) 45vw, 360px' : small ? '(max-width: 767px) 50vw, 400px' : '(max-width: 767px) 100vw, (max-width: 991px) 75vw, 60vw'}"`);
+      /* Gallery tiles are ~18–20rem after the curated-asset pass; the core-system
+         dashboard plate may grow to 1040px on desktop (css/stargo-fusion.css). */
+      attrs.push(`sizes="${tile ? '(max-width: 1439px) 288px, 320px' : dashboard ? '(max-width: 991px) 92vw, (max-width: 1439px) 70vw, 1040px' : thumb ? '(max-width: 1439px) 186px, 250px' : card ? '(max-width: 767px) 45vw, 360px' : small ? '(max-width: 767px) 50vw, 400px' : '(max-width: 767px) 100vw, (max-width: 991px) 75vw, 60vw'}"`);
     }
     return result.replace(/\s*\/?>(\s*)$/, ` ${attrs.join(' ')}/>$1`);
   });

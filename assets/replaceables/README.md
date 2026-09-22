@@ -1,8 +1,10 @@
 # Visual replaceables — STARGO WORK (`stargo.pages.dev`)
 
-Reserved slots for the next image pass. The machine-readable list is [`tools/replaceables.mjs`](../../tools/replaceables.mjs). The pages are generated; do not hunt paths through `index.html`.
+Reserved slots for the image pass. The machine-readable list is [`tools/replaceables.mjs`](../../tools/replaceables.mjs). The pages are generated; do not hunt paths through `index.html`.
 
-This site is the WORK marketing site. It is not `www.stargomoto.com`. Nothing in this folder is new artwork.
+The 2026-09-22 curated WebP set is wired in place (same filenames + regenerated width variants). See [`CURATED-PASS.md`](./CURATED-PASS.md) for the filename → slot table and unused alternates under `alternates/`.
+
+This site is the WORK marketing site. It is not `www.stargomoto.com`.
 
 ## How to swap
 

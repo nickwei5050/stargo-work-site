@@ -39,14 +39,14 @@
    "id": "gos05-buying-committee",
    "sw": "GOS05",
    "src": "assets/stargo-product/gos05-buying-committee.webp",
-   "width": 1268,
-   "height": 714,
-   "bytes": 89136,
-   "sourceFile": "主动获客.docx/word/media/image5.png",
-   "sourceSha256": "b2ed816eb28de055e5ac9d3c5e5a7d082b112f36de988ae41916a239dae45d75",
+   "width": 1672,
+   "height": 941,
+   "bytes": 104448,
+   "sourceFile": "curated-assets/product-crm.webp",
+   "sourceSha256": "8aac41093efc583a6071ea15307b409ce94b60ddf0214664d4140c6ec52cb9fa",
    "sourcePixels": [
-    1268,
-    714
+    1672,
+    941
    ],
    "crop": "none",
    "upscaled": false,
@@ -54,17 +54,17 @@
     {
      "src": "assets/stargo-product/gos05-buying-committee-480.webp",
      "width": 480,
-     "bytes": 19980
+     "bytes": 15532
     },
     {
      "src": "assets/stargo-product/gos05-buying-committee-768.webp",
      "width": 768,
-     "bytes": 41482
+     "bytes": 31118
     },
     {
      "src": "assets/stargo-product/gos05-buying-committee-1024.webp",
      "width": 1024,
-     "bytes": 64794
+     "bytes": 46086
     }
    ]
   },
@@ -105,14 +105,14 @@
    "id": "gos10-growth-control-tower",
    "sw": "GOS10",
    "src": "assets/stargo-product/gos10-growth-control-tower.webp",
-   "width": 1268,
-   "height": 714,
-   "bytes": 95270,
-   "sourceFile": "主动获客.docx/word/media/image10.png",
-   "sourceSha256": "90adf0417bf123b0a81be652f0f90e327482aa886b3c1876f7e47d1a250a7eb4",
+   "width": 1774,
+   "height": 887,
+   "bytes": 128964,
+   "sourceFile": "curated-assets/module-growth-os.webp",
+   "sourceSha256": "2be5d68c716f17fd8ec9c1a4d62fbcba2e028a591d22d3c8b7e2bcb948d27b8c",
    "sourcePixels": [
-    1268,
-    714
+    1774,
+    887
    ],
    "crop": "none",
    "upscaled": false,
@@ -120,17 +120,17 @@
     {
      "src": "assets/stargo-product/gos10-growth-control-tower-480.webp",
      "width": 480,
-     "bytes": 22798
+     "bytes": 15080
     },
     {
      "src": "assets/stargo-product/gos10-growth-control-tower-768.webp",
      "width": 768,
-     "bytes": 45624
+     "bytes": 31908
     },
     {
      "src": "assets/stargo-product/gos10-growth-control-tower-1024.webp",
      "width": 1024,
-     "bytes": 69716
+     "bytes": 50606
     }
    ]
   },
@@ -171,14 +171,14 @@
    "id": "sw003-ai-workspace-home",
    "sw": "SW003",
    "src": "assets/stargo-product/sw003-ai-workspace-home.webp",
-   "width": 1268,
-   "height": 714,
-   "bytes": 61854,
-   "sourceFile": "originals/sw003-ai-workspace-home.png",
-   "sourceSha256": "2701688cf555c8df8caf7fe24625b4cdaa9787fbf27862c3e26bf25843242670",
+   "width": 1672,
+   "height": 941,
+   "bytes": 147534,
+   "sourceFile": "curated-assets/product-cockpit.webp",
+   "sourceSha256": "2ea8e7985c2f93be5f06052e988381c70458946ed326ecb528b1951d242cb54d",
    "sourcePixels": [
-    1268,
-    714
+    1672,
+    941
    ],
    "crop": "none",
    "upscaled": false,
@@ -186,17 +186,17 @@
     {
      "src": "assets/stargo-product/sw003-ai-workspace-home-480.webp",
      "width": 480,
-     "bytes": 14960
+     "bytes": 19470
     },
     {
      "src": "assets/stargo-product/sw003-ai-workspace-home-768.webp",
      "width": 768,
-     "bytes": 29892
+     "bytes": 40708
     },
     {
      "src": "assets/stargo-product/sw003-ai-workspace-home-1024.webp",
      "width": 1024,
-     "bytes": 45340
+     "bytes": 62470
     }
    ]
   },
@@ -204,14 +204,14 @@
    "id": "sw004-experts-library",
    "sw": "SW004",
    "src": "assets/stargo-product/sw004-experts-library.webp",
-   "width": 1268,
-   "height": 714,
-   "bytes": 100442,
-   "sourceFile": "originals/sw004-experts-library.png",
-   "sourceSha256": "c503c077f41480204a2359afb74b3ecc9ab78a0f636ba76251d1daded49925b1",
+   "width": 1672,
+   "height": 941,
+   "bytes": 143054,
+   "sourceFile": "curated-assets/product-apps.webp",
+   "sourceSha256": "ea17f0145777e53e62323cba358b0a03eb094d0c6b0b7bdb03261833c043a6bc",
    "sourcePixels": [
-    1268,
-    714
+    1672,
+    941
    ],
    "crop": "none",
    "upscaled": false,
@@ -219,17 +219,17 @@
     {
      "src": "assets/stargo-product/sw004-experts-library-480.webp",
      "width": 480,
-     "bytes": 22916
+     "bytes": 17966
     },
     {
      "src": "assets/stargo-product/sw004-experts-library-768.webp",
      "width": 768,
-     "bytes": 47624
+     "bytes": 37932
     },
     {
      "src": "assets/stargo-product/sw004-experts-library-1024.webp",
      "width": 1024,
-     "bytes": 73762
+     "bytes": 58916
     }
    ]
   },
@@ -237,14 +237,14 @@
    "id": "sw006-expert-teams",
    "sw": "SW006",
    "src": "assets/stargo-product/sw006-expert-teams.webp",
-   "width": 1268,
-   "height": 714,
-   "bytes": 116822,
-   "sourceFile": "originals/sw006-expert-teams.png",
-   "sourceSha256": "7410220e2323fa795ad3a1d3960b463b4ff2b9f4f7a56cb37f73400dcf20efc9",
+   "width": 1672,
+   "height": 941,
+   "bytes": 118638,
+   "sourceFile": "curated-assets/module-digital-workforce.webp",
+   "sourceSha256": "01c7e53c6973a0f7b60cc0981d3b77c4cfe335e6c318be9af4d7ab7e20ecb312",
    "sourcePixels": [
-    1268,
-    714
+    1672,
+    941
    ],
    "crop": "none",
    "upscaled": false,
@@ -252,17 +252,17 @@
     {
      "src": "assets/stargo-product/sw006-expert-teams-480.webp",
      "width": 480,
-     "bytes": 25616
+     "bytes": 15864
     },
     {
      "src": "assets/stargo-product/sw006-expert-teams-768.webp",
      "width": 768,
-     "bytes": 55166
+     "bytes": 31918
     },
     {
      "src": "assets/stargo-product/sw006-expert-teams-1024.webp",
      "width": 1024,
-     "bytes": 83424
+     "bytes": 48648
     }
    ]
   },
@@ -270,14 +270,14 @@
    "id": "sw008-workflow-library",
    "sw": "SW008",
    "src": "assets/stargo-product/sw008-workflow-library.webp",
-   "width": 1268,
-   "height": 714,
-   "bytes": 115588,
-   "sourceFile": "originals/sw008-workflow-library.png",
-   "sourceSha256": "b5ea3df1fb6cf75142291b573c43a37522bf77c85423e6b380a7688fa68638a0",
+   "width": 1672,
+   "height": 941,
+   "bytes": 85948,
+   "sourceFile": "curated-assets/product-workflow.webp",
+   "sourceSha256": "be79effea180a7b373aae6b95ddc414f6d82f2078a0ceedbcada337ed027a8b3",
    "sourcePixels": [
-    1268,
-    714
+    1672,
+    941
    ],
    "crop": "none",
    "upscaled": false,
@@ -285,17 +285,17 @@
     {
      "src": "assets/stargo-product/sw008-workflow-library-480.webp",
      "width": 480,
-     "bytes": 26442
+     "bytes": 13894
     },
     {
      "src": "assets/stargo-product/sw008-workflow-library-768.webp",
      "width": 768,
-     "bytes": 54338
+     "bytes": 27334
     },
     {
      "src": "assets/stargo-product/sw008-workflow-library-1024.webp",
      "width": 1024,
-     "bytes": 83768
+     "bytes": 39820
     }
    ]
   },
@@ -303,14 +303,14 @@
    "id": "sw028-sales-desk-inquiry-reply",
    "sw": "SW028",
    "src": "assets/stargo-product/sw028-sales-desk-inquiry-reply.webp",
-   "width": 1268,
-   "height": 714,
-   "bytes": 76776,
-   "sourceFile": "originals/sw028-sales-desk-inquiry-reply.png",
-   "sourceSha256": "6e9fcf49aa50a5aa7a0a08e595ac532528a20d2f2f62c743295f25e0b74980c2",
+   "width": 1672,
+   "height": 941,
+   "bytes": 101358,
+   "sourceFile": "curated-assets/module-sales-desk.webp",
+   "sourceSha256": "fbc1a0e424093fc64f66268a35e1905e457dcd41ac1c386a0cf875b41b83e812",
    "sourcePixels": [
-    1268,
-    714
+    1672,
+    941
    ],
    "crop": "none",
    "upscaled": false,
@@ -318,17 +318,17 @@
     {
      "src": "assets/stargo-product/sw028-sales-desk-inquiry-reply-480.webp",
      "width": 480,
-     "bytes": 17502
+     "bytes": 12614
     },
     {
      "src": "assets/stargo-product/sw028-sales-desk-inquiry-reply-768.webp",
      "width": 768,
-     "bytes": 35784
+     "bytes": 26750
     },
     {
      "src": "assets/stargo-product/sw028-sales-desk-inquiry-reply-1024.webp",
      "width": 1024,
-     "bytes": 54864
+     "bytes": 41888
     }
    ]
   },
