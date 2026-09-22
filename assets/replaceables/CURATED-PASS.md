@@ -19,7 +19,8 @@ and Sales Desk are unchanged. Rebuild regenerates blog covers that source
 
 | Curated file | Wired to | Why |
 | --- | --- | --- |
-| `hero.webp` | `assets/stargo-motion/orbit-poster.webp` | Hero film poster / About large still. Orbit film unchanged. |
+| `product-cockpit.webp` (cleaner) | `assets/stargo-motion/orbit-poster.webp` | Hero film poster / About large still. Prefer cockpit over busy home (`hero.webp` / 首页). Orbit film unchanged. |
+| ~~`hero.webp`~~ | kept as `alternates/hero-home-v1.webp` | Previous busy home poster — not used for hero after design feedback |
 | `module-growth-os.webp` | `assets/stargo-product/gos10-growth-control-tower.webp` (+480/768/1024) | Growth OS core-system card |
 | `module-sales-desk.webp` | `assets/stargo-product/sw028-sales-desk-inquiry-reply.webp` (+variants) | Sales Desk core-system card + stage 002 |
 | `module-erp.webp` → **pure-UI** | `assets/stargo-editorial/brand-family-02.webp` (+400/800/1200) | ERP core-system card |
