@@ -60,18 +60,19 @@ const productText = {
   'sw004-experts-library': ['专家库：按职能筛选的专业岗位，每个岗位有技能声明', 'The experts library: specialized roles filtered by function, each with its declared skills'],
   'sw006-expert-teams': ['专家团队：五个角色围绕同一条询盘分工，并留下完成记录', 'An expert team: five roles divide one inquiry between them and leave a record of what was done'],
   'sw008-workflow-library': ['工作流库：业务流程的步骤、审批要求与接入状态', 'The workflow library: the steps, approval points and integration status of each business process'],
-  /* Growth OS (主动获客.docx, which the owner made the authority for this
-     engine's imagery on 2026-09-18) and the ERP surface (配图二.docx). These
-     screens carry their own SANDBOX · 只读演示 badge, demonstration amounts
-     and a sample importer's name; the caption every product image gets says
-     the data is a demonstration, and nothing is cropped away to hide it. */
+  /* Growth OS. gos10 stays the control tower from the curated pack.
+     gos01 / gos09 / gos11 were the older 1268px stills; on 2026-09-22 they
+     took the remaining pack screens with the closest narrative
+     (growth analytics, control centre, workspace home). Those screens are
+     demonstration interfaces, including a not-started analytics runtime on
+     the growth view. Nothing is cropped. */
   'gos10-growth-control-tower': ['增长控制塔：市场信号、商机优先级与今日决策栈，右侧是同一条线索的问答', 'The growth control tower: market signals, prioritized opportunities and the day\u2019s decisions, with questions about the same account beside them'],
-  'gos01-market-thesis': ['市场论证：用贸易数据与公开信息验证一个市场机会，并标注每个来源的用途与权限', 'The market thesis: a market opportunity tested against trade data and public sources, each source labelled with its use and permission'],
-  'gos09-reorder-radar': ['进口商补货雷达：依据历史出货节奏预测下一个采购窗口，并给出置信度', 'The importer reorder radar: the next buying window estimated from shipping history, with its confidence'],
-  'gos11-dormant-reactivation': ['激活与活动：只有业务信号真实变化时才重新联系休眠客户，右侧是明确不再联系的名单', 'Reactivation: dormant accounts are contacted again only when something about their business has verifiably changed, with the do-not-contact list beside it'],
+  'gos01-market-thesis': ['增长分析：从使用数据观察产品与业务的变化；演示环境里分析服务未在当前主机启动', 'Growth analytics: product and business movement read from usage data; in this demonstration the analytics runtime is not started on the current host'],
+  'gos09-reorder-radar': ['控制中心：本组应用的运行状态、延迟与相关能力域', 'Control centre: health, latency and the capability domains for this group of applications'],
+  'gos11-dormant-reactivation': ['全能工作台：对话、应用与语音控制台从同一个入口进入', 'The workspace home: conversation, applications and the voice console from one entrance'],
   'gos05-buying-committee': ['采购委员会：一家客户的决策角色覆盖情况、缺口与分角色的行动计划', 'The buying committee: which decision roles are covered at one account, what is missing and the plan for each role'],
   'sw028-sales-desk-inquiry-reply': ['Sales Desk：一封询盘的要点提取与带依据的回复草稿', 'Sales Desk: the key facts extracted from an inquiry and a grounded draft reply'],
-  'sw033-sales-desk-document-pack': ['Sales Desk 单据中心：报价、PI 与随附文件的组织', 'The Sales Desk document centre: quotations, proforma invoices and their supporting files'],
+  'sw033-sales-desk-document-pack': ['Sales Desk：询盘要点、报价草稿与单据中心在同一工作台', 'Sales Desk: the inquiry, a draft quote and the document centre on one workbench'],
   /* Curated 2026-09-22 UI stills that keep editorial filenames (module cards /
      story art slots) but are product interfaces with demonstration data. */
   'brand-family-02': ['企业资源计划：生产、库存与履约状态同屏可见', 'ERP: production, inventory and fulfillment status on one screen'],

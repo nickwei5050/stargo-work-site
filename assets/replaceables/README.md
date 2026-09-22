@@ -2,7 +2,7 @@
 
 Reserved slots for the image pass. The machine-readable list is [`tools/replaceables.mjs`](../../tools/replaceables.mjs). The pages are generated; do not hunt paths through `index.html`.
 
-The 2026-09-22 curated WebP set is wired in place (same filenames + regenerated width variants). See [`CURATED-PASS.md`](./CURATED-PASS.md) for the filename → slot table and unused alternates under `alternates/`.
+The 2026-09-22 curated WebP set is wired in place (same filenames + regenerated width variants). A follow-up on the same day replaced the four older 1268px leftovers (`gos01`, `gos09`, `gos11`, `sw033`) with the remaining pack stills. See [`CURATED-PASS.md`](./CURATED-PASS.md) for both tables. Unused alternates under `alternates/` are the busy home poster and the WebP twin of the share cover.
 
 This site is the WORK marketing site. It is not `www.stargomoto.com`.
 

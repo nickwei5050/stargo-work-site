@@ -39,10 +39,42 @@ and Sales Desk are unchanged. Rebuild regenerates blog covers that source
 
 | File | Note |
 | --- | --- |
-| `alternates/product-growth.webp` | 增长分析 — same conceptual slot as gos10; module-growth-os won the Growth OS card |
-| `alternates/alt-home.webp` | Optional hero/home alternate |
-| `alternates/alt-control.webp` | Optional control-centre alternate |
+| `alternates/hero-home-v1.webp` | Previous busy home poster — not used for the hero after design feedback |
 | `alternates/og-cover.webp` | WebP twin of the PNG cover |
+
+## Leftover prior-pass stills (2026-09-22 follow-up)
+
+gos01, gos09, gos11 and sw033 were still the older 1268×714 screens. They now
+use curated pack files. Paths and slot wiring did not change; width variants
+were regenerated. Blog covers do not source these four, so they were left as
+they were.
+
+| Kept filename | Pack file | Narrative | Where it shows |
+| --- | --- | --- | --- |
+| `gos01-market-thesis.webp` | `product-growth.webp` (增长分析) | Growth | Homepage stage 001; capability trade-intelligence thumbnail |
+| `gos09-reorder-radar.webp` | `alt-control.webp` (控制中心) | Cockpit / control | Capability reorder thumbnail |
+| `gos11-dormant-reactivation.webp` | `alt-home.webp` (首页工作台) | Workspace home | Homepage stage 005 |
+| `sw033-sales-desk-document-pack.webp` | `product-sales.webp` (销售工作台2) | Sales | Homepage stage 003, hero gallery, notices card. Same pixels as `os-sales-desk.webp` |
+
+`product-growth.webp` is the growth-analytics composite. Its own copy says the
+analytics runtime is not started on the demonstration host. `alt-control.webp`
+is the control-centre composite; the application table includes a register-token
+column and an `sslip.io` host. Both were placed because this pass was asked to
+use the remaining pack files. They are illustrative demonstration screens.
+
+### Scan of the other product and editorial stills
+
+Already on the curated chrome or the pure-UI follow-up (unchanged this pass):
+Growth OS card, Sales Desk card, ERP card, AI studio card, digital-workforce
+card, workspace/experts, workflow library, buying committee, inbox, system map,
+hero poster, Open Graph cover.
+
+Left as atmosphere, not replaced: full-bleed concept stills whose frames are
+`object-fit: cover` (quote studio, dispatch bay, agent lanes, login, loading,
+ontology, loop, brand family, glows) and the silo, phone and avatar sets. No
+remaining pack still is a collection, approval-gate or knowledge-model screen,
+and a 16:9 interface cropped into those full-bleed frames only shows the middle
+third. Stage 004 (回款与服务) stays `brand-family-01` for the same reason.
 
 ## Display size
 

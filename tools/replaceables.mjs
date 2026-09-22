@@ -74,7 +74,10 @@ export const OS_ART = {
   loading: 'os-loading',
 };
 
-/** Released product screenshots. Stems match tools/imagegen/product-assets.json. */
+/** Released product screenshots. Stems match tools/imagegen/product-assets.json.
+ *  gos01, gos09, gos11 and sw033 keep these names; their pixels are the
+ *  2026-09-22 curated stills (growth analytics, control centre, workspace
+ *  home, sales workbench). */
 export const PRODUCT_IDS = {
   workspace: 'sw003-ai-workspace-home',
   experts: 'sw004-experts-library',

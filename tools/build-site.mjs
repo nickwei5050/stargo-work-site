@@ -439,19 +439,20 @@ PAGES['index.html'] = (lang) => {
     const cards = ['699b6466d5f19893993a4d79_work-1.webp', '699b6466d5f19893993a4d34_work-5.webp', '699b6466d5f19893993a4d1a_work-4.webp', '699b6466d5f19893993a4d8f_work-8.webp'];
     cards.forEach((k, i) => { h = swapImg(h, k, SILO[i]); });
     /* The five stages, in order (V6 §4.6). Four of them carry the owner's own
-       product, each one the screen its own sentence describes:
+       product. The sentences stayed; on 2026-09-22 the three older 1268px
+       stills were swapped for curated pack screens (filenames unchanged):
 
-         (001) 主动获客 「围绕产品和目标市场、客户类型，研究目标企业、背景核对、
-               联系人与采购信号」 — 市场论证 (gos01): a market and a customer type
-               argued from trade data and public sources.
-         (002) 外贸销售 「将主动开发客户与渠道询盘放进 Sales Desk，统一客户记录、
-               回复、产品匹配、报价、审批与 PI」 — sw028, which is that screen:
-               what an inquiry says, and a grounded draft reply beside it.
-         (003) 企业履约 「连接产品、采购、库存、生产、质检、订单和发货资料」 —
-               sw033, the document centre: quotations, PIs and the files that
-               travel with an order.
-         (005) 复购与改进 「关注补货与复购机会」 — 激活与活动 (gos11): dormant
-               accounts re-contacted only where something has verifiably changed.
+         (001) 主动获客 — gos01 is now 增长分析 (product-growth.webp), the
+               growth-narrative screen that was still unused. It is not the
+               control tower: that picture is the Growth OS panel below, so
+               the two sections do not repeat.
+         (002) 外贸销售 — sw028, an inquiry with a grounded draft reply.
+         (003) 企业履约 — sw033 is now the second Sales Desk workbench
+               (product-sales.webp): the inquiry, a draft quote, and the
+               document centre in the same chrome as the other curated stills.
+         (005) 复购与改进 — gos11 is now the workspace home (alt-home.webp).
+               The pack has no separate reactivation still; this is the
+               remaining home screen, fitted in the same card.
 
        (004) 回款与服务 keeps the concept illustration it had — trade signals
        carried to a customer's destination — because no released screen is about
@@ -466,20 +467,8 @@ PAGES['index.html'] = (lang) => {
 
        The card is `.image-wrap.for-service`, `aspect-ratio: 3 / 2`; a 16:9
        screenshot in it is fitted, not cropped, by H29 in css/stargo-fusion.css.
-
-       001 主动获客 is the market thesis: this stage's own sentence is research
-       around products, target markets and customer types, and that screen is
-       where a market and a customer type are argued from trade data and public
-       sources. The reorder radar is not used here — 补货 is stage 005's word
-       (复购与改进), where 激活与活动 goes instead. The Growth OS panel below
-       shows the control tower, so the two sections do not repeat one picture.
-
-       005 复购与改进 is 激活与活动, the only screen of the eight left in
-       主动获客.docx that passed its release audit (2026-09-21): dormant accounts
-       re-contacted only where something about their business has verifiably
-       changed, with the do-not-contact list beside it — which is what this
-       stage's own sentence says about reorder and repeat business. 004 keeps
-       its artwork: no released screen is about collection or service. */
+       gos01 and gos11 are dark chrome, so their plates are their own edge
+       colour rather than the light plate the pale screens use. */
     const CONTENT = { alt: 'STARGO WORK' };
     const scenes = [['Scene%20%239.webp', HOME_STAGES[0].file, CONTENT], ['Scene%20%235.webp', HOME_STAGES[1].file, CONTENT], ['Scene%20%2310%20(Light)', HOME_STAGES[2].file, CONTENT], ['Scene%20%238.webp', HOME_STAGES[3].file], ['Scene%2018.webp', HOME_STAGES[4].file, CONTENT]];
     scenes.forEach(([k, src, opts]) => { h = swapImg(h, k, src, opts); });
