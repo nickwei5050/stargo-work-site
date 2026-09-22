@@ -347,10 +347,9 @@ function scripts(html) {
     out = out.replace('<script src="js/app.fused.js"', '<script src="js/stargo-mobile-copy.js"></script><script src="js/app.fused.js"');
     if (!out.includes('js/stargo-mobile-copy.js')) throw new Error('chrome: bundle script tag not found');
   }
-  /* The homepage still carries the opening overlay markup (tools/blocks/og-intro.*).
-     css/offgrid.og.css never displays it, so the first paint is the brand film
-     and the cockpit stills. This script only removes the node; it does not play
-     the wipe. `defer` keeps it after the classic scripts. */
+  /* The homepage builder does not emit the opening overlay. If a stale
+     `data-og-intro` node is ever present, this script removes it and does not
+     play the wipe. `defer` keeps it after the classic scripts. */
   if (out.includes('data-og-intro') && !out.includes('js/stargo-intro.js')) {
     out = out.replace('</body>', '<script src="js/stargo-intro.js" defer></script></body>');
     if (!out.includes('js/stargo-intro.js')) throw new Error('chrome: no </body> to attach the opening animation to');
