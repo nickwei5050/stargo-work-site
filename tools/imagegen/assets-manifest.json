@@ -5,25 +5,25 @@
     {
       "id": "os-cockpit",
       "src": "assets/stargo-editorial/os-cockpit.webp",
-      "width": 1672,
-      "height": 941,
-      "bytes": 147534,
-      "originalSha256": "2ea8e7985c2f93be5f06052e988381c70458946ed326ecb528b1951d242cb54d",
+      "width": 1600,
+      "height": 900,
+      "bytes": 55500,
+      "originalSha256": "1f5470b3e883a731f49e1e4cffbc6a7d3219cc7da22538f3ad50d80accaedc59",
       "variants": [
         {
           "src": "assets/stargo-editorial/os-cockpit-400.webp",
           "width": 400,
-          "bytes": 15338
+          "bytes": 8198
         },
         {
           "src": "assets/stargo-editorial/os-cockpit-800.webp",
           "width": 800,
-          "bytes": 44430
+          "bytes": 20886
         },
         {
           "src": "assets/stargo-editorial/os-cockpit-1200.webp",
           "width": 1200,
-          "bytes": 78584
+          "bytes": 36290
         }
       ]
     },
@@ -55,50 +55,50 @@
     {
       "id": "os-inquiries",
       "src": "assets/stargo-editorial/os-inquiries.webp",
-      "width": 1536,
-      "height": 1024,
-      "bytes": 98168,
-      "originalSha256": "6e4bb92be2faf704596acae95f4874943a0a152d6b64fc688eb49ab32227b37a",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 44152,
+      "originalSha256": "a837045b39c4624eeff168f648ce9fc6abbc91b204c583e5af3f2e75218ad88b",
       "variants": [
         {
           "src": "assets/stargo-editorial/os-inquiries-400.webp",
           "width": 400,
-          "bytes": 12606
+          "bytes": 8960
         },
         {
           "src": "assets/stargo-editorial/os-inquiries-800.webp",
           "width": 800,
-          "bytes": 34036
+          "bytes": 22564
         },
         {
           "src": "assets/stargo-editorial/os-inquiries-1200.webp",
           "width": 1200,
-          "bytes": 59716
+          "bytes": 38702
         }
       ]
     },
     {
       "id": "os-agent-center",
       "src": "assets/stargo-editorial/os-agent-center.webp",
-      "width": 1586,
-      "height": 992,
-      "bytes": 54084,
-      "originalSha256": "47e4545de11dabf6810433e254dccd8b2a2407fa6582f92626ffacd53ab5647b",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 99334,
+      "originalSha256": "bd9bde3c6252b5e32498c6f32d61cae6b17ddfbe5dc3aea9231cf35dccf190cb",
       "variants": [
         {
           "src": "assets/stargo-editorial/os-agent-center-400.webp",
           "width": 400,
-          "bytes": 7378
+          "bytes": 12186
         },
         {
           "src": "assets/stargo-editorial/os-agent-center-800.webp",
           "width": 800,
-          "bytes": 19134
+          "bytes": 35190
         },
         {
           "src": "assets/stargo-editorial/os-agent-center-1200.webp",
           "width": 1200,
-          "bytes": 33788
+          "bytes": 63620
         }
       ]
     },
@@ -180,25 +180,25 @@
     {
       "id": "os-login",
       "src": "assets/stargo-editorial/os-login.webp",
-      "width": 1586,
-      "height": 992,
-      "bytes": 59294,
-      "originalSha256": "4402aa5f07cdd2b9328bc112d284c0004300dd58731e5c76b5d6859d76a22034",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 69612,
+      "originalSha256": "2405a789d8069600095fdf47717a3aaab9f487afeb4ec49bdf231fa7e3cb77e1",
       "variants": [
         {
           "src": "assets/stargo-editorial/os-login-400.webp",
           "width": 400,
-          "bytes": 7204
+          "bytes": 15142
         },
         {
           "src": "assets/stargo-editorial/os-login-800.webp",
           "width": 800,
-          "bytes": 18522
+          "bytes": 37640
         },
         {
           "src": "assets/stargo-editorial/os-login-1200.webp",
           "width": 1200,
-          "bytes": 34088
+          "bytes": 61794
         }
       ]
     },
@@ -230,25 +230,25 @@
     {
       "id": "os-loading",
       "src": "assets/stargo-editorial/os-loading.webp",
-      "width": 1587,
-      "height": 991,
-      "bytes": 55016,
-      "originalSha256": "4614db8f1a9473d151180ab5dfaa98c962014d30a085f5842baaa69f0cedca61",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 35332,
+      "originalSha256": "37aca3cf9f50923170dc561f7d6bb6cf35400bd288efdaedc78085681ff7685a",
       "variants": [
         {
           "src": "assets/stargo-editorial/os-loading-400.webp",
           "width": 400,
-          "bytes": 5686
+          "bytes": 7312
         },
         {
           "src": "assets/stargo-editorial/os-loading-800.webp",
           "width": 800,
-          "bytes": 16212
+          "bytes": 18136
         },
         {
           "src": "assets/stargo-editorial/os-loading-1200.webp",
           "width": 1200,
-          "bytes": 32236
+          "bytes": 29742
         }
       ]
     },
@@ -400,25 +400,25 @@
     {
       "id": "brand-family-02",
       "src": "assets/stargo-editorial/brand-family-02.webp",
-      "width": 1280,
-      "height": 720,
-      "bytes": 63492,
-      "originalSha256": "81e2d18d65c5a835ae97c4af0ef3254841c70c74e454d999dd557ad589315765",
+      "width": 1600,
+      "height": 900,
+      "bytes": 83398,
+      "originalSha256": "3df7e3672f6f09bc8026f683aee8834a82db5b13ea78439ad775132bbf0bc125",
       "variants": [
         {
           "src": "assets/stargo-editorial/brand-family-02-400.webp",
           "width": 400,
-          "bytes": 11306
+          "bytes": 15320
         },
         {
           "src": "assets/stargo-editorial/brand-family-02-800.webp",
           "width": 800,
-          "bytes": 30370
+          "bytes": 34994
         },
         {
           "src": "assets/stargo-editorial/brand-family-02-1200.webp",
           "width": 1200,
-          "bytes": 55116
+          "bytes": 56074
         }
       ]
     },

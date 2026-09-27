@@ -1,369 +1,369 @@
 {
- "note": "Owner-supplied product interface screenshots. WebP derivatives of the supplied originals, never upscaled, never cropped: 480/768/1024 plus the original width. Captions and alt text live in tools/editorial-images.mjs (productText); every one is an illustrative interface with demonstration data. The 2026-09-22 curated pack superseded the four prior-pass leftovers that were still the older 1268px stills: gos01 ← product-growth.webp (增长分析), gos09 ← alt-control.webp (控制中心), gos11 ← alt-home.webp (首页工作台), sw033 ← product-sales.webp (销售工作台). Filenames stayed so every slot that already pointed at them kept its place.",
- "authorization": "Owner instruction 2026-09-18: brand/product/feature imagery may be replaced with these images; layout, colours, type, animation and interactions stay as they are.",
- "assets": [
-  {
-   "id": "gos01-market-thesis",
-   "sw": "GOS01",
-   "src": "assets/stargo-product/gos01-market-thesis.webp",
-   "width": 1672,
-   "height": 941,
-   "bytes": 116932,
-   "sourceFile": "curated-assets/product-growth.webp",
-   "sourceSha256": "e4e7c6477b24a6a3498580bd2014371a4297c553881f269005aa6ad8ae34f2b5",
-   "sourcePixels": [
-    1672,
-    941
-   ],
-   "crop": "none",
-   "upscaled": false,
-   "variants": [
+  "note": "Owner-supplied product interface screenshots. WebP derivatives of the supplied originals, never upscaled, never cropped: 480/768/1024 plus the original width. Captions and alt text live in tools/editorial-images.mjs (productText); every one is an illustrative interface with demonstration data. The 2026-09-22 curated pack superseded the four prior-pass leftovers that were still the older 1268px stills: gos01 ← product-growth.webp (增长分析), gos09 ← alt-control.webp (控制中心), gos11 ← alt-home.webp (首页工作台), sw033 ← product-sales.webp (销售工作台). Filenames stayed so every slot that already pointed at them kept its place.",
+  "authorization": "Owner instruction 2026-09-18: brand/product/feature imagery may be replaced with these images; layout, colours, type, animation and interactions stay as they are.",
+  "assets": [
     {
-     "src": "assets/stargo-product/gos01-market-thesis-480.webp",
-     "width": 480,
-     "bytes": 15742
+      "id": "gos01-market-thesis",
+      "sw": "GOS01",
+      "src": "assets/stargo-product/gos01-market-thesis.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 116932,
+      "sourceFile": "curated-assets/product-growth.webp",
+      "sourceSha256": "e4e7c6477b24a6a3498580bd2014371a4297c553881f269005aa6ad8ae34f2b5",
+      "sourcePixels": [
+        1672,
+        941
+      ],
+      "crop": "none",
+      "upscaled": false,
+      "variants": [
+        {
+          "src": "assets/stargo-product/gos01-market-thesis-480.webp",
+          "width": 480,
+          "bytes": 15742
+        },
+        {
+          "src": "assets/stargo-product/gos01-market-thesis-768.webp",
+          "width": 768,
+          "bytes": 32484
+        },
+        {
+          "src": "assets/stargo-product/gos01-market-thesis-1024.webp",
+          "width": 1024,
+          "bytes": 51674
+        }
+      ]
     },
     {
-     "src": "assets/stargo-product/gos01-market-thesis-768.webp",
-     "width": 768,
-     "bytes": 32484
+      "id": "gos05-buying-committee",
+      "sw": "GOS05",
+      "src": "assets/stargo-product/gos05-buying-committee.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 104448,
+      "sourceFile": "curated-assets/product-crm.webp",
+      "sourceSha256": "8aac41093efc583a6071ea15307b409ce94b60ddf0214664d4140c6ec52cb9fa",
+      "sourcePixels": [
+        1672,
+        941
+      ],
+      "crop": "none",
+      "upscaled": false,
+      "variants": [
+        {
+          "src": "assets/stargo-product/gos05-buying-committee-480.webp",
+          "width": 480,
+          "bytes": 15532
+        },
+        {
+          "src": "assets/stargo-product/gos05-buying-committee-768.webp",
+          "width": 768,
+          "bytes": 31118
+        },
+        {
+          "src": "assets/stargo-product/gos05-buying-committee-1024.webp",
+          "width": 1024,
+          "bytes": 46086
+        }
+      ]
     },
     {
-     "src": "assets/stargo-product/gos01-market-thesis-1024.webp",
-     "width": 1024,
-     "bytes": 51674
+      "id": "gos09-reorder-radar",
+      "sw": "GOS09",
+      "src": "assets/stargo-product/gos09-reorder-radar.webp",
+      "width": 1677,
+      "height": 938,
+      "bytes": 118346,
+      "sourceFile": "curated-assets/alt-control.webp",
+      "sourceSha256": "250ae7e02038fb6d2c8d1384f1d8dc9a6b5f264f575c725a547306304a4d8c52",
+      "sourcePixels": [
+        1677,
+        938
+      ],
+      "crop": "none",
+      "upscaled": false,
+      "variants": [
+        {
+          "src": "assets/stargo-product/gos09-reorder-radar-480.webp",
+          "width": 480,
+          "bytes": 15282
+        },
+        {
+          "src": "assets/stargo-product/gos09-reorder-radar-768.webp",
+          "width": 768,
+          "bytes": 33104
+        },
+        {
+          "src": "assets/stargo-product/gos09-reorder-radar-1024.webp",
+          "width": 1024,
+          "bytes": 51576
+        }
+      ]
+    },
+    {
+      "id": "gos10-growth-control-tower",
+      "sw": "GOS10",
+      "src": "assets/stargo-product/gos10-growth-control-tower.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 144198,
+      "sourceFile": "owner-handoff-2026-09-27/peitu2-growth-os.png",
+      "sourceSha256": "bc37eb81405deffd3a6479361701cf5cbd6f2404d052ae7b1f00d5fdec5c23a5",
+      "sourcePixels": [
+        1672,
+        941
+      ],
+      "crop": "none",
+      "upscaled": false,
+      "variants": [
+        {
+          "src": "assets/stargo-product/gos10-growth-control-tower-480.webp",
+          "width": 480,
+          "bytes": 22818
+        },
+        {
+          "src": "assets/stargo-product/gos10-growth-control-tower-768.webp",
+          "width": 768,
+          "bytes": 45686
+        },
+        {
+          "src": "assets/stargo-product/gos10-growth-control-tower-1024.webp",
+          "width": 1024,
+          "bytes": 69028
+        }
+      ]
+    },
+    {
+      "id": "gos11-dormant-reactivation",
+      "sw": "GOS11",
+      "src": "assets/stargo-product/gos11-dormant-reactivation.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 108418,
+      "sourceFile": "curated-assets/alt-home.webp",
+      "sourceSha256": "a95bd57d7145569073754c0214ac5bdeea1b923469ceee402152a4d252c7ab31",
+      "sourcePixels": [
+        1672,
+        941
+      ],
+      "crop": "none",
+      "upscaled": false,
+      "variants": [
+        {
+          "src": "assets/stargo-product/gos11-dormant-reactivation-480.webp",
+          "width": 480,
+          "bytes": 16934
+        },
+        {
+          "src": "assets/stargo-product/gos11-dormant-reactivation-768.webp",
+          "width": 768,
+          "bytes": 33150
+        },
+        {
+          "src": "assets/stargo-product/gos11-dormant-reactivation-1024.webp",
+          "width": 1024,
+          "bytes": 50998
+        }
+      ]
+    },
+    {
+      "id": "sw003-ai-workspace-home",
+      "sw": "SW003",
+      "src": "assets/stargo-product/sw003-ai-workspace-home.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 147534,
+      "sourceFile": "curated-assets/product-cockpit.webp",
+      "sourceSha256": "2ea8e7985c2f93be5f06052e988381c70458946ed326ecb528b1951d242cb54d",
+      "sourcePixels": [
+        1672,
+        941
+      ],
+      "crop": "none",
+      "upscaled": false,
+      "variants": [
+        {
+          "src": "assets/stargo-product/sw003-ai-workspace-home-480.webp",
+          "width": 480,
+          "bytes": 19470
+        },
+        {
+          "src": "assets/stargo-product/sw003-ai-workspace-home-768.webp",
+          "width": 768,
+          "bytes": 40708
+        },
+        {
+          "src": "assets/stargo-product/sw003-ai-workspace-home-1024.webp",
+          "width": 1024,
+          "bytes": 62470
+        }
+      ]
+    },
+    {
+      "id": "sw004-experts-library",
+      "sw": "SW004",
+      "src": "assets/stargo-product/sw004-experts-library.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 143054,
+      "sourceFile": "curated-assets/product-apps.webp",
+      "sourceSha256": "ea17f0145777e53e62323cba358b0a03eb094d0c6b0b7bdb03261833c043a6bc",
+      "sourcePixels": [
+        1672,
+        941
+      ],
+      "crop": "none",
+      "upscaled": false,
+      "variants": [
+        {
+          "src": "assets/stargo-product/sw004-experts-library-480.webp",
+          "width": 480,
+          "bytes": 17966
+        },
+        {
+          "src": "assets/stargo-product/sw004-experts-library-768.webp",
+          "width": 768,
+          "bytes": 37932
+        },
+        {
+          "src": "assets/stargo-product/sw004-experts-library-1024.webp",
+          "width": 1024,
+          "bytes": 58916
+        }
+      ]
+    },
+    {
+      "id": "sw006-expert-teams",
+      "sw": "SW006",
+      "src": "assets/stargo-product/sw006-expert-teams.webp",
+      "width": 1280,
+      "height": 720,
+      "bytes": 65808,
+      "sourceFile": "uploads/module-agents-pure-ui.png",
+      "sourceSha256": "d0fdbc8c553e4d3fc582d54383deb5ab5b8716660640e5f0ba8b24c013ecfbb4",
+      "sourcePixels": [
+        1280,
+        720
+      ],
+      "crop": "none",
+      "upscaled": false,
+      "variants": [
+        {
+          "src": "assets/stargo-product/sw006-expert-teams-480.webp",
+          "width": 480,
+          "bytes": 14342
+        },
+        {
+          "src": "assets/stargo-product/sw006-expert-teams-768.webp",
+          "width": 768,
+          "bytes": 28818
+        },
+        {
+          "src": "assets/stargo-product/sw006-expert-teams-1024.webp",
+          "width": 1024,
+          "bytes": 45066
+        }
+      ]
+    },
+    {
+      "id": "sw008-workflow-library",
+      "sw": "SW008",
+      "src": "assets/stargo-product/sw008-workflow-library.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 85948,
+      "sourceFile": "curated-assets/product-workflow.webp",
+      "sourceSha256": "be79effea180a7b373aae6b95ddc414f6d82f2078a0ceedbcada337ed027a8b3",
+      "sourcePixels": [
+        1672,
+        941
+      ],
+      "crop": "none",
+      "upscaled": false,
+      "variants": [
+        {
+          "src": "assets/stargo-product/sw008-workflow-library-480.webp",
+          "width": 480,
+          "bytes": 13894
+        },
+        {
+          "src": "assets/stargo-product/sw008-workflow-library-768.webp",
+          "width": 768,
+          "bytes": 27334
+        },
+        {
+          "src": "assets/stargo-product/sw008-workflow-library-1024.webp",
+          "width": 1024,
+          "bytes": 39820
+        }
+      ]
+    },
+    {
+      "id": "sw028-sales-desk-inquiry-reply",
+      "sw": "SW028",
+      "src": "assets/stargo-product/sw028-sales-desk-inquiry-reply.webp",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 90938,
+      "sourceFile": "owner-handoff-2026-09-27/peitu2-sales-desk.png",
+      "sourceSha256": "33e97cb4f22369ccdf2f0b7a05fb5605ef55305de450383a777abf0b605cb6cd",
+      "sourcePixels": [
+        1448,
+        1086
+      ],
+      "crop": "none",
+      "upscaled": false,
+      "variants": [
+        {
+          "src": "assets/stargo-product/sw028-sales-desk-inquiry-reply-480.webp",
+          "width": 480,
+          "bytes": 15862
+        },
+        {
+          "src": "assets/stargo-product/sw028-sales-desk-inquiry-reply-768.webp",
+          "width": 768,
+          "bytes": 33712
+        },
+        {
+          "src": "assets/stargo-product/sw028-sales-desk-inquiry-reply-1024.webp",
+          "width": 1024,
+          "bytes": 51966
+        }
+      ]
+    },
+    {
+      "id": "sw033-sales-desk-document-pack",
+      "sw": "SW033",
+      "src": "assets/stargo-product/sw033-sales-desk-document-pack.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 117936,
+      "sourceFile": "curated-assets/product-sales.webp",
+      "sourceSha256": "f48094e9705dd258a21b6651e7c5cc8f1ac2d28a852b017b050ff43caf7b24cb",
+      "sourcePixels": [
+        1672,
+        941
+      ],
+      "crop": "none",
+      "upscaled": false,
+      "variants": [
+        {
+          "src": "assets/stargo-product/sw033-sales-desk-document-pack-480.webp",
+          "width": 480,
+          "bytes": 14954
+        },
+        {
+          "src": "assets/stargo-product/sw033-sales-desk-document-pack-768.webp",
+          "width": 768,
+          "bytes": 32020
+        },
+        {
+          "src": "assets/stargo-product/sw033-sales-desk-document-pack-1024.webp",
+          "width": 1024,
+          "bytes": 51456
+        }
+      ]
     }
-   ]
-  },
-  {
-   "id": "gos05-buying-committee",
-   "sw": "GOS05",
-   "src": "assets/stargo-product/gos05-buying-committee.webp",
-   "width": 1672,
-   "height": 941,
-   "bytes": 104448,
-   "sourceFile": "curated-assets/product-crm.webp",
-   "sourceSha256": "8aac41093efc583a6071ea15307b409ce94b60ddf0214664d4140c6ec52cb9fa",
-   "sourcePixels": [
-    1672,
-    941
-   ],
-   "crop": "none",
-   "upscaled": false,
-   "variants": [
-    {
-     "src": "assets/stargo-product/gos05-buying-committee-480.webp",
-     "width": 480,
-     "bytes": 15532
-    },
-    {
-     "src": "assets/stargo-product/gos05-buying-committee-768.webp",
-     "width": 768,
-     "bytes": 31118
-    },
-    {
-     "src": "assets/stargo-product/gos05-buying-committee-1024.webp",
-     "width": 1024,
-     "bytes": 46086
-    }
-   ]
-  },
-  {
-   "id": "gos09-reorder-radar",
-   "sw": "GOS09",
-   "src": "assets/stargo-product/gos09-reorder-radar.webp",
-   "width": 1677,
-   "height": 938,
-   "bytes": 118346,
-   "sourceFile": "curated-assets/alt-control.webp",
-   "sourceSha256": "250ae7e02038fb6d2c8d1384f1d8dc9a6b5f264f575c725a547306304a4d8c52",
-   "sourcePixels": [
-    1677,
-    938
-   ],
-   "crop": "none",
-   "upscaled": false,
-   "variants": [
-    {
-     "src": "assets/stargo-product/gos09-reorder-radar-480.webp",
-     "width": 480,
-     "bytes": 15282
-    },
-    {
-     "src": "assets/stargo-product/gos09-reorder-radar-768.webp",
-     "width": 768,
-     "bytes": 33104
-    },
-    {
-     "src": "assets/stargo-product/gos09-reorder-radar-1024.webp",
-     "width": 1024,
-     "bytes": 51576
-    }
-   ]
-  },
-  {
-   "id": "gos10-growth-control-tower",
-   "sw": "GOS10",
-   "src": "assets/stargo-product/gos10-growth-control-tower.webp",
-   "width": 1774,
-   "height": 887,
-   "bytes": 128964,
-   "sourceFile": "curated-assets/module-growth-os.webp",
-   "sourceSha256": "2be5d68c716f17fd8ec9c1a4d62fbcba2e028a591d22d3c8b7e2bcb948d27b8c",
-   "sourcePixels": [
-    1774,
-    887
-   ],
-   "crop": "none",
-   "upscaled": false,
-   "variants": [
-    {
-     "src": "assets/stargo-product/gos10-growth-control-tower-480.webp",
-     "width": 480,
-     "bytes": 15080
-    },
-    {
-     "src": "assets/stargo-product/gos10-growth-control-tower-768.webp",
-     "width": 768,
-     "bytes": 31908
-    },
-    {
-     "src": "assets/stargo-product/gos10-growth-control-tower-1024.webp",
-     "width": 1024,
-     "bytes": 50606
-    }
-   ]
-  },
-  {
-   "id": "gos11-dormant-reactivation",
-   "sw": "GOS11",
-   "src": "assets/stargo-product/gos11-dormant-reactivation.webp",
-   "width": 1672,
-   "height": 941,
-   "bytes": 108418,
-   "sourceFile": "curated-assets/alt-home.webp",
-   "sourceSha256": "a95bd57d7145569073754c0214ac5bdeea1b923469ceee402152a4d252c7ab31",
-   "sourcePixels": [
-    1672,
-    941
-   ],
-   "crop": "none",
-   "upscaled": false,
-   "variants": [
-    {
-     "src": "assets/stargo-product/gos11-dormant-reactivation-480.webp",
-     "width": 480,
-     "bytes": 16934
-    },
-    {
-     "src": "assets/stargo-product/gos11-dormant-reactivation-768.webp",
-     "width": 768,
-     "bytes": 33150
-    },
-    {
-     "src": "assets/stargo-product/gos11-dormant-reactivation-1024.webp",
-     "width": 1024,
-     "bytes": 50998
-    }
-   ]
-  },
-  {
-   "id": "sw003-ai-workspace-home",
-   "sw": "SW003",
-   "src": "assets/stargo-product/sw003-ai-workspace-home.webp",
-   "width": 1672,
-   "height": 941,
-   "bytes": 147534,
-   "sourceFile": "curated-assets/product-cockpit.webp",
-   "sourceSha256": "2ea8e7985c2f93be5f06052e988381c70458946ed326ecb528b1951d242cb54d",
-   "sourcePixels": [
-    1672,
-    941
-   ],
-   "crop": "none",
-   "upscaled": false,
-   "variants": [
-    {
-     "src": "assets/stargo-product/sw003-ai-workspace-home-480.webp",
-     "width": 480,
-     "bytes": 19470
-    },
-    {
-     "src": "assets/stargo-product/sw003-ai-workspace-home-768.webp",
-     "width": 768,
-     "bytes": 40708
-    },
-    {
-     "src": "assets/stargo-product/sw003-ai-workspace-home-1024.webp",
-     "width": 1024,
-     "bytes": 62470
-    }
-   ]
-  },
-  {
-   "id": "sw004-experts-library",
-   "sw": "SW004",
-   "src": "assets/stargo-product/sw004-experts-library.webp",
-   "width": 1672,
-   "height": 941,
-   "bytes": 143054,
-   "sourceFile": "curated-assets/product-apps.webp",
-   "sourceSha256": "ea17f0145777e53e62323cba358b0a03eb094d0c6b0b7bdb03261833c043a6bc",
-   "sourcePixels": [
-    1672,
-    941
-   ],
-   "crop": "none",
-   "upscaled": false,
-   "variants": [
-    {
-     "src": "assets/stargo-product/sw004-experts-library-480.webp",
-     "width": 480,
-     "bytes": 17966
-    },
-    {
-     "src": "assets/stargo-product/sw004-experts-library-768.webp",
-     "width": 768,
-     "bytes": 37932
-    },
-    {
-     "src": "assets/stargo-product/sw004-experts-library-1024.webp",
-     "width": 1024,
-     "bytes": 58916
-    }
-   ]
-  },
-  {
-   "id": "sw006-expert-teams",
-   "sw": "SW006",
-   "src": "assets/stargo-product/sw006-expert-teams.webp",
-   "width": 1280,
-   "height": 720,
-   "bytes": 65808,
-   "sourceFile": "uploads/module-agents-pure-ui.png",
-   "sourceSha256": "d0fdbc8c553e4d3fc582d54383deb5ab5b8716660640e5f0ba8b24c013ecfbb4",
-   "sourcePixels": [
-    1280,
-    720
-   ],
-   "crop": "none",
-   "upscaled": false,
-   "variants": [
-    {
-     "src": "assets/stargo-product/sw006-expert-teams-480.webp",
-     "width": 480,
-     "bytes": 14342
-    },
-    {
-     "src": "assets/stargo-product/sw006-expert-teams-768.webp",
-     "width": 768,
-     "bytes": 28818
-    },
-    {
-     "src": "assets/stargo-product/sw006-expert-teams-1024.webp",
-     "width": 1024,
-     "bytes": 45066
-    }
-   ]
-  },
-  {
-   "id": "sw008-workflow-library",
-   "sw": "SW008",
-   "src": "assets/stargo-product/sw008-workflow-library.webp",
-   "width": 1672,
-   "height": 941,
-   "bytes": 85948,
-   "sourceFile": "curated-assets/product-workflow.webp",
-   "sourceSha256": "be79effea180a7b373aae6b95ddc414f6d82f2078a0ceedbcada337ed027a8b3",
-   "sourcePixels": [
-    1672,
-    941
-   ],
-   "crop": "none",
-   "upscaled": false,
-   "variants": [
-    {
-     "src": "assets/stargo-product/sw008-workflow-library-480.webp",
-     "width": 480,
-     "bytes": 13894
-    },
-    {
-     "src": "assets/stargo-product/sw008-workflow-library-768.webp",
-     "width": 768,
-     "bytes": 27334
-    },
-    {
-     "src": "assets/stargo-product/sw008-workflow-library-1024.webp",
-     "width": 1024,
-     "bytes": 39820
-    }
-   ]
-  },
-  {
-   "id": "sw028-sales-desk-inquiry-reply",
-   "sw": "SW028",
-   "src": "assets/stargo-product/sw028-sales-desk-inquiry-reply.webp",
-   "width": 1672,
-   "height": 941,
-   "bytes": 101358,
-   "sourceFile": "curated-assets/module-sales-desk.webp",
-   "sourceSha256": "fbc1a0e424093fc64f66268a35e1905e457dcd41ac1c386a0cf875b41b83e812",
-   "sourcePixels": [
-    1672,
-    941
-   ],
-   "crop": "none",
-   "upscaled": false,
-   "variants": [
-    {
-     "src": "assets/stargo-product/sw028-sales-desk-inquiry-reply-480.webp",
-     "width": 480,
-     "bytes": 12614
-    },
-    {
-     "src": "assets/stargo-product/sw028-sales-desk-inquiry-reply-768.webp",
-     "width": 768,
-     "bytes": 26750
-    },
-    {
-     "src": "assets/stargo-product/sw028-sales-desk-inquiry-reply-1024.webp",
-     "width": 1024,
-     "bytes": 41888
-    }
-   ]
-  },
-  {
-   "id": "sw033-sales-desk-document-pack",
-   "sw": "SW033",
-   "src": "assets/stargo-product/sw033-sales-desk-document-pack.webp",
-   "width": 1672,
-   "height": 941,
-   "bytes": 117936,
-   "sourceFile": "curated-assets/product-sales.webp",
-   "sourceSha256": "f48094e9705dd258a21b6651e7c5cc8f1ac2d28a852b017b050ff43caf7b24cb",
-   "sourcePixels": [
-    1672,
-    941
-   ],
-   "crop": "none",
-   "upscaled": false,
-   "variants": [
-    {
-     "src": "assets/stargo-product/sw033-sales-desk-document-pack-480.webp",
-     "width": 480,
-     "bytes": 14954
-    },
-    {
-     "src": "assets/stargo-product/sw033-sales-desk-document-pack-768.webp",
-     "width": 768,
-     "bytes": 32020
-    },
-    {
-     "src": "assets/stargo-product/sw033-sales-desk-document-pack-1024.webp",
-     "width": 1024,
-     "bytes": 51456
-    }
-   ]
-  }
- ]
+  ]
 }
