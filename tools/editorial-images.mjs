@@ -11,7 +11,7 @@ const descriptions = {
   'os-quote-studio': ['精密零件的匹配与校验', 'Precision components aligned and checked for fit'],
   'os-trade-execution': ['制造交付区从检验到装运的连续流程', 'A continuous path from inspection to dispatch'],
   'os-desktop': ['系统地图：连接不同业务工作空间的共享桌面', 'System map: one shared desktop connecting business workspaces'],
-  'os-login': ['受控通道与清晰的权限边界', 'A controlled passage through explicit permission boundaries'],
+  'os-login': ['准入核验：受控通道只为确认过的身份开放', 'Admission checks: the controlled passage opens only for verified identities'],
   'os-boot': ['AI 创作工作室：图片与视频任务从同一创作台发起', 'AI creative studio: image and video work starts from one creative desk'],
   'os-loading': ['企业上下文逐层就位', 'Enterprise context assembling layer by layer'],
   'brand-glow-wide': ['相互连接的银色轨道雕塑', 'An interconnected silver orbital sculpture'],
