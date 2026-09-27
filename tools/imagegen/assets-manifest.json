@@ -1,822 +1,822 @@
 {
-  "engine": "built-in-image-gen",
-  "count": 43,
-  "assets": [
+ "engine": "built-in-image-gen",
+ "count": 43,
+ "assets": [
+  {
+   "id": "os-cockpit",
+   "src": "assets/stargo-editorial/os-cockpit.webp",
+   "width": 1600,
+   "height": 900,
+   "bytes": 55500,
+   "originalSha256": "1f5470b3e883a731f49e1e4cffbc6a7d3219cc7da22538f3ad50d80accaedc59",
+   "variants": [
     {
-      "id": "os-cockpit",
-      "src": "assets/stargo-editorial/os-cockpit.webp",
-      "width": 1600,
-      "height": 900,
-      "bytes": 55500,
-      "originalSha256": "1f5470b3e883a731f49e1e4cffbc6a7d3219cc7da22538f3ad50d80accaedc59",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/os-cockpit-400.webp",
-          "width": 400,
-          "bytes": 8198
-        },
-        {
-          "src": "assets/stargo-editorial/os-cockpit-800.webp",
-          "width": 800,
-          "bytes": 20886
-        },
-        {
-          "src": "assets/stargo-editorial/os-cockpit-1200.webp",
-          "width": 1200,
-          "bytes": 36290
-        }
-      ]
+     "src": "assets/stargo-editorial/os-cockpit-400.webp",
+     "width": 400,
+     "bytes": 8198
     },
     {
-      "id": "os-sales-desk",
-      "src": "assets/stargo-editorial/os-sales-desk.webp",
-      "width": 1672,
-      "height": 941,
-      "bytes": 113380,
-      "originalSha256": "f48094e9705dd258a21b6651e7c5cc8f1ac2d28a852b017b050ff43caf7b24cb",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/os-sales-desk-400.webp",
-          "width": 400,
-          "bytes": 11080
-        },
-        {
-          "src": "assets/stargo-editorial/os-sales-desk-800.webp",
-          "width": 800,
-          "bytes": 32790
-        },
-        {
-          "src": "assets/stargo-editorial/os-sales-desk-1200.webp",
-          "width": 1200,
-          "bytes": 60312
-        }
-      ]
+     "src": "assets/stargo-editorial/os-cockpit-800.webp",
+     "width": 800,
+     "bytes": 20886
     },
     {
-      "id": "os-inquiries",
-      "src": "assets/stargo-editorial/os-inquiries.webp",
-      "width": 1254,
-      "height": 1254,
-      "bytes": 44152,
-      "originalSha256": "a837045b39c4624eeff168f648ce9fc6abbc91b204c583e5af3f2e75218ad88b",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/os-inquiries-400.webp",
-          "width": 400,
-          "bytes": 8960
-        },
-        {
-          "src": "assets/stargo-editorial/os-inquiries-800.webp",
-          "width": 800,
-          "bytes": 22564
-        },
-        {
-          "src": "assets/stargo-editorial/os-inquiries-1200.webp",
-          "width": 1200,
-          "bytes": 38702
-        }
-      ]
-    },
-    {
-      "id": "os-agent-center",
-      "src": "assets/stargo-editorial/os-agent-center.webp",
-      "width": 1536,
-      "height": 1024,
-      "bytes": 99334,
-      "originalSha256": "bd9bde3c6252b5e32498c6f32d61cae6b17ddfbe5dc3aea9231cf35dccf190cb",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/os-agent-center-400.webp",
-          "width": 400,
-          "bytes": 12186
-        },
-        {
-          "src": "assets/stargo-editorial/os-agent-center-800.webp",
-          "width": 800,
-          "bytes": 35190
-        },
-        {
-          "src": "assets/stargo-editorial/os-agent-center-1200.webp",
-          "width": 1200,
-          "bytes": 63620
-        }
-      ]
-    },
-    {
-      "id": "os-quote-studio",
-      "src": "assets/stargo-editorial/os-quote-studio.webp",
-      "width": 1586,
-      "height": 992,
-      "bytes": 60952,
-      "originalSha256": "3c19d4e59a3e16dbbfedf7a9e1ab85cb8f0aae30505dfedcfa16a29d1f8a019d",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/os-quote-studio-400.webp",
-          "width": 400,
-          "bytes": 8532
-        },
-        {
-          "src": "assets/stargo-editorial/os-quote-studio-800.webp",
-          "width": 800,
-          "bytes": 22282
-        },
-        {
-          "src": "assets/stargo-editorial/os-quote-studio-1200.webp",
-          "width": 1200,
-          "bytes": 39266
-        }
-      ]
-    },
-    {
-      "id": "os-trade-execution",
-      "src": "assets/stargo-editorial/os-trade-execution.webp",
-      "width": 1586,
-      "height": 992,
-      "bytes": 113692,
-      "originalSha256": "c9110387e7cf7507152a3e8037a34fa5273d41da134a7cbd90dc932f6fe9af89",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/os-trade-execution-400.webp",
-          "width": 400,
-          "bytes": 14098
-        },
-        {
-          "src": "assets/stargo-editorial/os-trade-execution-800.webp",
-          "width": 800,
-          "bytes": 41094
-        },
-        {
-          "src": "assets/stargo-editorial/os-trade-execution-1200.webp",
-          "width": 1200,
-          "bytes": 72840
-        }
-      ]
-    },
-    {
-      "id": "os-desktop",
-      "src": "assets/stargo-editorial/os-desktop.webp",
-      "width": 1672,
-      "height": 941,
-      "bytes": 148370,
-      "originalSha256": "ce8d4b5c316425ad8468e5cbc24cca638b3a2e09a749ee339b9373315c674bfd",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/os-desktop-400.webp",
-          "width": 400,
-          "bytes": 14822
-        },
-        {
-          "src": "assets/stargo-editorial/os-desktop-800.webp",
-          "width": 800,
-          "bytes": 44050
-        },
-        {
-          "src": "assets/stargo-editorial/os-desktop-1200.webp",
-          "width": 1200,
-          "bytes": 78716
-        }
-      ]
-    },
-    {
-      "id": "os-login",
-      "src": "assets/stargo-editorial/os-login.webp",
-      "width": 1254,
-      "height": 1254,
-      "bytes": 69612,
-      "originalSha256": "2405a789d8069600095fdf47717a3aaab9f487afeb4ec49bdf231fa7e3cb77e1",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/os-login-400.webp",
-          "width": 400,
-          "bytes": 15142
-        },
-        {
-          "src": "assets/stargo-editorial/os-login-800.webp",
-          "width": 800,
-          "bytes": 37640
-        },
-        {
-          "src": "assets/stargo-editorial/os-login-1200.webp",
-          "width": 1200,
-          "bytes": 61794
-        }
-      ]
-    },
-    {
-      "id": "os-boot",
-      "src": "assets/stargo-editorial/os-boot.webp",
-      "width": 1280,
-      "height": 720,
-      "bytes": 56972,
-      "originalSha256": "14037447ad0e10ed575b4ba492d7e3eee8b0071ac01ad1765c49eb18e75f8b1b",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/os-boot-400.webp",
-          "width": 400,
-          "bytes": 9258
-        },
-        {
-          "src": "assets/stargo-editorial/os-boot-800.webp",
-          "width": 800,
-          "bytes": 26186
-        },
-        {
-          "src": "assets/stargo-editorial/os-boot-1200.webp",
-          "width": 1200,
-          "bytes": 47674
-        }
-      ]
-    },
-    {
-      "id": "os-loading",
-      "src": "assets/stargo-editorial/os-loading.webp",
-      "width": 1254,
-      "height": 1254,
-      "bytes": 35332,
-      "originalSha256": "37aca3cf9f50923170dc561f7d6bb6cf35400bd288efdaedc78085681ff7685a",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/os-loading-400.webp",
-          "width": 400,
-          "bytes": 7312
-        },
-        {
-          "src": "assets/stargo-editorial/os-loading-800.webp",
-          "width": 800,
-          "bytes": 18136
-        },
-        {
-          "src": "assets/stargo-editorial/os-loading-1200.webp",
-          "width": 1200,
-          "bytes": 29742
-        }
-      ]
-    },
-    {
-      "id": "brand-glow-wide",
-      "src": "assets/stargo-editorial/brand-glow-wide.webp",
-      "width": 1586,
-      "height": 992,
-      "bytes": 38226,
-      "originalSha256": "8a69741d595aa5d8fcf4eec38f4fcd1a9b6f1731f6e9ad6840a086510f68517f",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/brand-glow-wide-400.webp",
-          "width": 400,
-          "bytes": 5494
-        },
-        {
-          "src": "assets/stargo-editorial/brand-glow-wide-800.webp",
-          "width": 800,
-          "bytes": 13980
-        },
-        {
-          "src": "assets/stargo-editorial/brand-glow-wide-1200.webp",
-          "width": 1200,
-          "bytes": 24252
-        }
-      ]
-    },
-    {
-      "id": "brand-glow-square",
-      "src": "assets/stargo-editorial/brand-glow-square.webp",
-      "width": 1254,
-      "height": 1254,
-      "bytes": 59924,
-      "originalSha256": "e791a8272ec344d53e759fd92aa6f822781a2c31aa1045aab324ea8135d85f96",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/brand-glow-square-400.webp",
-          "width": 400,
-          "bytes": 7580
-        },
-        {
-          "src": "assets/stargo-editorial/brand-glow-square-800.webp",
-          "width": 800,
-          "bytes": 25034
-        },
-        {
-          "src": "assets/stargo-editorial/brand-glow-square-1200.webp",
-          "width": 1200,
-          "bytes": 49740
-        }
-      ]
-    },
-    {
-      "id": "brand-glow-tall",
-      "src": "assets/stargo-editorial/brand-glow-tall.webp",
-      "width": 1122,
-      "height": 1402,
-      "bytes": 93798,
-      "originalSha256": "f3fb2a6d1d710b50bce8c318c7d65444b1d25e6b3adeaeca18956c318a2994b3",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/brand-glow-tall-400.webp",
-          "width": 400,
-          "bytes": 15136
-        },
-        {
-          "src": "assets/stargo-editorial/brand-glow-tall-800.webp",
-          "width": 800,
-          "bytes": 48400
-        }
-      ]
-    },
-    {
-      "id": "brand-ontology",
-      "src": "assets/stargo-editorial/brand-ontology.webp",
-      "width": 1586,
-      "height": 992,
-      "bytes": 81338,
-      "originalSha256": "7946424bffcee743a48f9bc0b29089f3bf59f9f3e7bcf06eca10af812f605a17",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/brand-ontology-400.webp",
-          "width": 400,
-          "bytes": 8970
-        },
-        {
-          "src": "assets/stargo-editorial/brand-ontology-800.webp",
-          "width": 800,
-          "bytes": 26500
-        },
-        {
-          "src": "assets/stargo-editorial/brand-ontology-1200.webp",
-          "width": 1200,
-          "bytes": 48696
-        }
-      ]
-    },
-    {
-      "id": "brand-loop",
-      "src": "assets/stargo-editorial/brand-loop.webp",
-      "width": 1586,
-      "height": 992,
-      "bytes": 70314,
-      "originalSha256": "df7d1a9ee7317ce65968a18e63b36c37b336e91668ac0405a625a3a99981d5c7",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/brand-loop-400.webp",
-          "width": 400,
-          "bytes": 9750
-        },
-        {
-          "src": "assets/stargo-editorial/brand-loop-800.webp",
-          "width": 800,
-          "bytes": 24934
-        },
-        {
-          "src": "assets/stargo-editorial/brand-loop-1200.webp",
-          "width": 1200,
-          "bytes": 43880
-        }
-      ]
-    },
-    {
-      "id": "brand-family-01",
-      "src": "assets/stargo-editorial/brand-family-01.webp",
-      "width": 1586,
-      "height": 992,
-      "bytes": 136220,
-      "originalSha256": "555195eaf507565b510d739c24e1343bca5faa6f1e17d9d386b132b9aed5f1a8",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/brand-family-01-400.webp",
-          "width": 400,
-          "bytes": 14162
-        },
-        {
-          "src": "assets/stargo-editorial/brand-family-01-800.webp",
-          "width": 800,
-          "bytes": 43514
-        },
-        {
-          "src": "assets/stargo-editorial/brand-family-01-1200.webp",
-          "width": 1200,
-          "bytes": 83498
-        }
-      ]
-    },
-    {
-      "id": "brand-family-02",
-      "src": "assets/stargo-editorial/brand-family-02.webp",
-      "width": 1600,
-      "height": 900,
-      "bytes": 83398,
-      "originalSha256": "3df7e3672f6f09bc8026f683aee8834a82db5b13ea78439ad775132bbf0bc125",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/brand-family-02-400.webp",
-          "width": 400,
-          "bytes": 15320
-        },
-        {
-          "src": "assets/stargo-editorial/brand-family-02-800.webp",
-          "width": 800,
-          "bytes": 34994
-        },
-        {
-          "src": "assets/stargo-editorial/brand-family-02-1200.webp",
-          "width": 1200,
-          "bytes": 56074
-        }
-      ]
-    },
-    {
-      "id": "brand-family-03",
-      "src": "assets/stargo-editorial/brand-family-03.webp",
-      "width": 1586,
-      "height": 992,
-      "bytes": 64330,
-      "originalSha256": "bcd1d57be58752368fa348b780f7607ddfa067f16fbcf574da41b03ba62e31bf",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/brand-family-03-400.webp",
-          "width": 400,
-          "bytes": 8082
-        },
-        {
-          "src": "assets/stargo-editorial/brand-family-03-800.webp",
-          "width": 800,
-          "bytes": 23308
-        },
-        {
-          "src": "assets/stargo-editorial/brand-family-03-1200.webp",
-          "width": 1200,
-          "bytes": 40734
-        }
-      ]
-    },
-    {
-      "id": "brand-family-04",
-      "src": "assets/stargo-editorial/brand-family-04.webp",
-      "width": 1586,
-      "height": 992,
-      "bytes": 104244,
-      "originalSha256": "964a020764e98f68838a8e42156b1b32d34ad24f185d4879591f0bf125967584",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/brand-family-04-400.webp",
-          "width": 400,
-          "bytes": 10876
-        },
-        {
-          "src": "assets/stargo-editorial/brand-family-04-800.webp",
-          "width": 800,
-          "bytes": 33748
-        },
-        {
-          "src": "assets/stargo-editorial/brand-family-04-1200.webp",
-          "width": 1200,
-          "bytes": 63096
-        }
-      ]
-    },
-    {
-      "id": "mobile-approvals",
-      "src": "assets/stargo-editorial/mobile-approvals.webp",
-      "width": 887,
-      "height": 1774,
-      "bytes": 24442,
-      "originalSha256": "31c9419f5c5fe35bf625faf2da6459077ee1d47462695a0e7828d1fe325c6e64",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/mobile-approvals-400.webp",
-          "width": 400,
-          "bytes": 7076
-        },
-        {
-          "src": "assets/stargo-editorial/mobile-approvals-800.webp",
-          "width": 800,
-          "bytes": 18606
-        }
-      ]
-    },
-    {
-      "id": "mobile-agents",
-      "src": "assets/stargo-editorial/mobile-agents.webp",
-      "width": 887,
-      "height": 1774,
-      "bytes": 42318,
-      "originalSha256": "20467ca9c66ebe824eff63ebe9932b32fe6161b07a992ca5f62226cb818f9a7b",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/mobile-agents-400.webp",
-          "width": 400,
-          "bytes": 13770
-        },
-        {
-          "src": "assets/stargo-editorial/mobile-agents-800.webp",
-          "width": 800,
-          "bytes": 34398
-        }
-      ]
-    },
-    {
-      "id": "mobile-inquiry",
-      "src": "assets/stargo-editorial/mobile-inquiry.webp",
-      "width": 887,
-      "height": 1774,
-      "bytes": 38430,
-      "originalSha256": "ddbfb81fa1b749ea6e9e7bfd0f62506230a2f281ab303ca3acab63cea5b0d398",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/mobile-inquiry-400.webp",
-          "width": 400,
-          "bytes": 11346
-        },
-        {
-          "src": "assets/stargo-editorial/mobile-inquiry-800.webp",
-          "width": 800,
-          "bytes": 29776
-        }
-      ]
-    },
-    {
-      "id": "mobile-core",
-      "src": "assets/stargo-editorial/mobile-core.webp",
-      "width": 887,
-      "height": 1774,
-      "bytes": 52462,
-      "originalSha256": "9491ebdb13bb731fc87bb565235c51d8ea4e5d89fc19f89147c5bb1da2d3ef60",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/mobile-core-400.webp",
-          "width": 400,
-          "bytes": 16250
-        },
-        {
-          "src": "assets/stargo-editorial/mobile-core-800.webp",
-          "width": 800,
-          "bytes": 40812
-        }
-      ]
-    },
-    {
-      "id": "phone-approvals",
-      "src": "assets/stargo-editorial/phone-approvals.webp",
-      "width": 1122,
-      "height": 1402,
-      "bytes": 26308,
-      "originalSha256": "3e04d761077a9328d2e2aaca89632217c6d1f4a573a2cf2e1311a59d97398cbe",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/phone-approvals-400.webp",
-          "width": 400,
-          "bytes": 4910
-        },
-        {
-          "src": "assets/stargo-editorial/phone-approvals-800.webp",
-          "width": 800,
-          "bytes": 13194
-        }
-      ]
-    },
-    {
-      "id": "phone-agents",
-      "src": "assets/stargo-editorial/phone-agents.webp",
-      "width": 1122,
-      "height": 1402,
-      "bytes": 44384,
-      "originalSha256": "0819130c2a2e86a55a5b42ff6151c969d4229a4a8dbd686c9f064f7496becfd0",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/phone-agents-400.webp",
-          "width": 400,
-          "bytes": 9198
-        },
-        {
-          "src": "assets/stargo-editorial/phone-agents-800.webp",
-          "width": 800,
-          "bytes": 24602
-        }
-      ]
-    },
-    {
-      "id": "silo-email",
-      "src": "assets/stargo-editorial/silo-email.webp",
-      "width": 1586,
-      "height": 992,
-      "bytes": 42042,
-      "originalSha256": "a01563bd748018520bf4b733ad266999dde45339abe719a83c0f7e2f3d44edb6",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/silo-email-400.webp",
-          "width": 400,
-          "bytes": 6634
-        },
-        {
-          "src": "assets/stargo-editorial/silo-email-800.webp",
-          "width": 800,
-          "bytes": 15470
-        },
-        {
-          "src": "assets/stargo-editorial/silo-email-1200.webp",
-          "width": 1200,
-          "bytes": 25418
-        }
-      ]
-    },
-    {
-      "id": "silo-whatsapp",
-      "src": "assets/stargo-editorial/silo-whatsapp.webp",
-      "width": 1586,
-      "height": 992,
-      "bytes": 36232,
-      "originalSha256": "d0d698e5696b08e4ddc15e32a82c493584883e9f6b7fad5374af781f2fcc894d",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/silo-whatsapp-400.webp",
-          "width": 400,
-          "bytes": 4742
-        },
-        {
-          "src": "assets/stargo-editorial/silo-whatsapp-800.webp",
-          "width": 800,
-          "bytes": 11982
-        },
-        {
-          "src": "assets/stargo-editorial/silo-whatsapp-1200.webp",
-          "width": 1200,
-          "bytes": 21216
-        }
-      ]
-    },
-    {
-      "id": "silo-excel",
-      "src": "assets/stargo-editorial/silo-excel.webp",
-      "width": 1586,
-      "height": 992,
-      "bytes": 82392,
-      "originalSha256": "7aee087f2e725b45254e4715b64d29b21fc7621ea08771e2df102105d06bf6cd",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/silo-excel-400.webp",
-          "width": 400,
-          "bytes": 8808
-        },
-        {
-          "src": "assets/stargo-editorial/silo-excel-800.webp",
-          "width": 800,
-          "bytes": 28360
-        },
-        {
-          "src": "assets/stargo-editorial/silo-excel-1200.webp",
-          "width": 1200,
-          "bytes": 51924
-        }
-      ]
-    },
-    {
-      "id": "silo-erp",
-      "src": "assets/stargo-editorial/silo-erp.webp",
-      "width": 1586,
-      "height": 992,
-      "bytes": 61700,
-      "originalSha256": "acea5eb6f40afe1de2d6840a019d15c60894962a46c897af8223160f6766aba1",
-      "variants": [
-        {
-          "src": "assets/stargo-editorial/silo-erp-400.webp",
-          "width": 400,
-          "bytes": 8150
-        },
-        {
-          "src": "assets/stargo-editorial/silo-erp-800.webp",
-          "width": 800,
-          "bytes": 21382
-        },
-        {
-          "src": "assets/stargo-editorial/silo-erp-1200.webp",
-          "width": 1200,
-          "bytes": 37658
-        }
-      ]
-    },
-    {
-      "id": "og-cover",
-      "src": "assets/stargo-editorial/og-cover.png",
-      "width": 1200,
-      "height": 630,
-      "bytes": 848525,
-      "originalSha256": "59958a31408355dcdffd396c5419dde8390dc9373b9997c77953256d480a429f",
-      "variants": []
-    },
-    {
-      "id": "avatar-01",
-      "src": "assets/stargo-editorial/avatar-01.png",
-      "width": 256,
-      "height": 256,
-      "bytes": 85062,
-      "originalSha256": "40948dc83bdd71edfc5fc71a717e134f178c52565e7245aa8d1b7030f575b129",
-      "variants": []
-    },
-    {
-      "id": "avatar-02",
-      "src": "assets/stargo-editorial/avatar-02.png",
-      "width": 256,
-      "height": 256,
-      "bytes": 75226,
-      "originalSha256": "bf9d0c82956f52398a3634ec27e28cc6ff2532d04a5338dd8de63e4a34a7ce42",
-      "variants": []
-    },
-    {
-      "id": "avatar-03",
-      "src": "assets/stargo-editorial/avatar-03.png",
-      "width": 256,
-      "height": 256,
-      "bytes": 63903,
-      "originalSha256": "4bd1eb05f39bd6c53b0f0715b8c8275405e3419abd12125d751916c841914596",
-      "variants": []
-    },
-    {
-      "id": "avatar-04",
-      "src": "assets/stargo-editorial/avatar-04.png",
-      "width": 256,
-      "height": 256,
-      "bytes": 146118,
-      "originalSha256": "5f49bb4ae5e00810054b032a5207e17211a229eac3dd9875e1d95f8083c4bf54",
-      "variants": []
-    },
-    {
-      "id": "avatar-05",
-      "src": "assets/stargo-editorial/avatar-05.png",
-      "width": 256,
-      "height": 256,
-      "bytes": 81043,
-      "originalSha256": "0e7c6c138c6a758329990aa16cf9b3df47ed0214fddc2fe4812afcbdb72e0947",
-      "variants": []
-    },
-    {
-      "id": "avatar-06",
-      "src": "assets/stargo-editorial/avatar-06.png",
-      "width": 256,
-      "height": 256,
-      "bytes": 76398,
-      "originalSha256": "393166534bbc73aa611e835a17fd854d233c9799a575e367de6e8d88905e2565",
-      "variants": []
-    },
-    {
-      "id": "avatar-07",
-      "src": "assets/stargo-editorial/avatar-07.png",
-      "width": 256,
-      "height": 256,
-      "bytes": 83430,
-      "originalSha256": "cc2d132e67178025c618315e53f857b3b658c5d9604e6587657d0a2386a1895e",
-      "variants": []
-    },
-    {
-      "id": "avatar-08",
-      "src": "assets/stargo-editorial/avatar-08.png",
-      "width": 256,
-      "height": 256,
-      "bytes": 84954,
-      "originalSha256": "57088964d0a8a62319e94f2874bc5315a69e6310fa16fcc48e815ef9ffb05445",
-      "variants": []
-    },
-    {
-      "id": "avatar-09",
-      "src": "assets/stargo-editorial/avatar-09.png",
-      "width": 256,
-      "height": 256,
-      "bytes": 130122,
-      "originalSha256": "553f3f703251342621b832ce09fba31c80c8d22f9d109fdbfefca34ca57936ec",
-      "variants": []
-    },
-    {
-      "id": "avatar-10",
-      "src": "assets/stargo-editorial/avatar-10.png",
-      "width": 256,
-      "height": 256,
-      "bytes": 75176,
-      "originalSha256": "3a12ca48c1da20972ebdcfed9c58276dc670e5cdfff3c54acadfb42fc96ee774",
-      "variants": []
-    },
-    {
-      "id": "avatar-11",
-      "src": "assets/stargo-editorial/avatar-11.png",
-      "width": 256,
-      "height": 256,
-      "bytes": 62849,
-      "originalSha256": "2a1ed64f889bedc28eafef4342b87ed500b5d1cfa9169f002e0dc445ec62ee6d",
-      "variants": []
-    },
-    {
-      "id": "avatar-12",
-      "src": "assets/stargo-editorial/avatar-12.png",
-      "width": 256,
-      "height": 256,
-      "bytes": 76958,
-      "originalSha256": "48c7359c7261fe052ce640c6ee5022e76d908a1581f88ada1ec9ffd393351bc4",
-      "variants": []
-    },
-    {
-      "id": "avatar-core",
-      "src": "assets/stargo-editorial/avatar-core.png",
-      "width": 256,
-      "height": 256,
-      "bytes": 133193,
-      "originalSha256": "54fa46bc2b0bb192f334fb0834d3b667b8bce20298c4724823c4fb3a32d5e21c",
-      "variants": []
+     "src": "assets/stargo-editorial/os-cockpit-1200.webp",
+     "width": 1200,
+     "bytes": 36290
     }
-  ]
+   ]
+  },
+  {
+   "id": "os-sales-desk",
+   "src": "assets/stargo-editorial/os-sales-desk.webp",
+   "width": 1600,
+   "height": 900,
+   "bytes": 100750,
+   "originalSha256": "e63ba6ae364f4a90e663a94b009b6d397e2f6efd4b8efd9a8eabf69cf7e834aa",
+   "variants": [
+    {
+     "src": "assets/stargo-editorial/os-sales-desk-400.webp",
+     "width": 400,
+     "bytes": 13698
+    },
+    {
+     "src": "assets/stargo-editorial/os-sales-desk-800.webp",
+     "width": 800,
+     "bytes": 35698
+    },
+    {
+     "src": "assets/stargo-editorial/os-sales-desk-1200.webp",
+     "width": 1200,
+     "bytes": 64110
+    }
+   ]
+  },
+  {
+   "id": "os-inquiries",
+   "src": "assets/stargo-editorial/os-inquiries.webp",
+   "width": 1254,
+   "height": 1254,
+   "bytes": 44152,
+   "originalSha256": "a837045b39c4624eeff168f648ce9fc6abbc91b204c583e5af3f2e75218ad88b",
+   "variants": [
+    {
+     "src": "assets/stargo-editorial/os-inquiries-400.webp",
+     "width": 400,
+     "bytes": 8960
+    },
+    {
+     "src": "assets/stargo-editorial/os-inquiries-800.webp",
+     "width": 800,
+     "bytes": 22564
+    },
+    {
+     "src": "assets/stargo-editorial/os-inquiries-1200.webp",
+     "width": 1200,
+     "bytes": 38702
+    }
+   ]
+  },
+  {
+   "id": "os-agent-center",
+   "src": "assets/stargo-editorial/os-agent-center.webp",
+   "width": 1536,
+   "height": 1024,
+   "bytes": 99334,
+   "originalSha256": "bd9bde3c6252b5e32498c6f32d61cae6b17ddfbe5dc3aea9231cf35dccf190cb",
+   "variants": [
+    {
+     "src": "assets/stargo-editorial/os-agent-center-400.webp",
+     "width": 400,
+     "bytes": 12186
+    },
+    {
+     "src": "assets/stargo-editorial/os-agent-center-800.webp",
+     "width": 800,
+     "bytes": 35190
+    },
+    {
+     "src": "assets/stargo-editorial/os-agent-center-1200.webp",
+     "width": 1200,
+     "bytes": 63620
+    }
+   ]
+  },
+  {
+   "id": "os-quote-studio",
+   "src": "assets/stargo-editorial/os-quote-studio.webp",
+   "width": 1536,
+   "height": 1024,
+   "bytes": 103248,
+   "originalSha256": "6cd9d67838a093cc81cfc6f57565275e198632623f56bf100d74eca5833e6dcc",
+   "variants": [
+    {
+     "src": "assets/stargo-editorial/os-quote-studio-400.webp",
+     "width": 400,
+     "bytes": 13876
+    },
+    {
+     "src": "assets/stargo-editorial/os-quote-studio-800.webp",
+     "width": 800,
+     "bytes": 39082
+    },
+    {
+     "src": "assets/stargo-editorial/os-quote-studio-1200.webp",
+     "width": 1200,
+     "bytes": 68448
+    }
+   ]
+  },
+  {
+   "id": "os-trade-execution",
+   "src": "assets/stargo-editorial/os-trade-execution.webp",
+   "width": 1600,
+   "height": 900,
+   "bytes": 180796,
+   "originalSha256": "1cf45d429badd42bd1780a6fddda322c70461eefa72683e3cdd96a54ce258e4c",
+   "variants": [
+    {
+     "src": "assets/stargo-editorial/os-trade-execution-400.webp",
+     "width": 400,
+     "bytes": 21730
+    },
+    {
+     "src": "assets/stargo-editorial/os-trade-execution-800.webp",
+     "width": 800,
+     "bytes": 65636
+    },
+    {
+     "src": "assets/stargo-editorial/os-trade-execution-1200.webp",
+     "width": 1200,
+     "bytes": 113836
+    }
+   ]
+  },
+  {
+   "id": "os-desktop",
+   "src": "assets/stargo-editorial/os-desktop.webp",
+   "width": 1600,
+   "height": 900,
+   "bytes": 143590,
+   "originalSha256": "0b0494848deaa4d822794011ad69ce365569a6c07ab6b38e2633b91d55a3f7e7",
+   "variants": [
+    {
+     "src": "assets/stargo-editorial/os-desktop-400.webp",
+     "width": 400,
+     "bytes": 15346
+    },
+    {
+     "src": "assets/stargo-editorial/os-desktop-800.webp",
+     "width": 800,
+     "bytes": 47296
+    },
+    {
+     "src": "assets/stargo-editorial/os-desktop-1200.webp",
+     "width": 1200,
+     "bytes": 88246
+    }
+   ]
+  },
+  {
+   "id": "os-login",
+   "src": "assets/stargo-editorial/os-login.webp",
+   "width": 1254,
+   "height": 1254,
+   "bytes": 69612,
+   "originalSha256": "2405a789d8069600095fdf47717a3aaab9f487afeb4ec49bdf231fa7e3cb77e1",
+   "variants": [
+    {
+     "src": "assets/stargo-editorial/os-login-400.webp",
+     "width": 400,
+     "bytes": 15142
+    },
+    {
+     "src": "assets/stargo-editorial/os-login-800.webp",
+     "width": 800,
+     "bytes": 37640
+    },
+    {
+     "src": "assets/stargo-editorial/os-login-1200.webp",
+     "width": 1200,
+     "bytes": 61794
+    }
+   ]
+  },
+  {
+   "id": "os-boot",
+   "src": "assets/stargo-editorial/os-boot.webp",
+   "width": 1280,
+   "height": 720,
+   "bytes": 56972,
+   "originalSha256": "14037447ad0e10ed575b4ba492d7e3eee8b0071ac01ad1765c49eb18e75f8b1b",
+   "variants": [
+    {
+     "src": "assets/stargo-editorial/os-boot-400.webp",
+     "width": 400,
+     "bytes": 9258
+    },
+    {
+     "src": "assets/stargo-editorial/os-boot-800.webp",
+     "width": 800,
+     "bytes": 26186
+    },
+    {
+     "src": "assets/stargo-editorial/os-boot-1200.webp",
+     "width": 1200,
+     "bytes": 47674
+    }
+   ]
+  },
+  {
+   "id": "os-loading",
+   "src": "assets/stargo-editorial/os-loading.webp",
+   "width": 1254,
+   "height": 1254,
+   "bytes": 35332,
+   "originalSha256": "37aca3cf9f50923170dc561f7d6bb6cf35400bd288efdaedc78085681ff7685a",
+   "variants": [
+    {
+     "src": "assets/stargo-editorial/os-loading-400.webp",
+     "width": 400,
+     "bytes": 7312
+    },
+    {
+     "src": "assets/stargo-editorial/os-loading-800.webp",
+     "width": 800,
+     "bytes": 18136
+    },
+    {
+     "src": "assets/stargo-editorial/os-loading-1200.webp",
+     "width": 1200,
+     "bytes": 29742
+    }
+   ]
+  },
+  {
+   "id": "brand-glow-wide",
+   "src": "assets/stargo-editorial/brand-glow-wide.webp",
+   "width": 1484,
+   "height": 1060,
+   "bytes": 118602,
+   "originalSha256": "91bfb6209cc86a11222ed4ddc0d3d4980aebd655cf950d294272c6e27820e0d4",
+   "variants": [
+    {
+     "src": "assets/stargo-editorial/brand-glow-wide-400.webp",
+     "width": 400,
+     "bytes": 15838
+    },
+    {
+     "src": "assets/stargo-editorial/brand-glow-wide-800.webp",
+     "width": 800,
+     "bytes": 44030
+    },
+    {
+     "src": "assets/stargo-editorial/brand-glow-wide-1200.webp",
+     "width": 1200,
+     "bytes": 82456
+    }
+   ]
+  },
+  {
+   "id": "brand-glow-square",
+   "src": "assets/stargo-editorial/brand-glow-square.webp",
+   "width": 1254,
+   "height": 1254,
+   "bytes": 112960,
+   "originalSha256": "49c85b4828a19bdb44cfa17e272c001904dea8e28ffcbb1ad702a9391d0568b1",
+   "variants": [
+    {
+     "src": "assets/stargo-editorial/brand-glow-square-400.webp",
+     "width": 400,
+     "bytes": 18200
+    },
+    {
+     "src": "assets/stargo-editorial/brand-glow-square-800.webp",
+     "width": 800,
+     "bytes": 54514
+    },
+    {
+     "src": "assets/stargo-editorial/brand-glow-square-1200.webp",
+     "width": 1200,
+     "bytes": 98464
+    }
+   ]
+  },
+  {
+   "id": "brand-glow-tall",
+   "src": "assets/stargo-editorial/brand-glow-tall.webp",
+   "width": 1254,
+   "height": 1254,
+   "bytes": 60676,
+   "originalSha256": "ae0b7416646978a1742e38cdba35eb402519c71fa0c66c0616d9224ff80aaafd",
+   "variants": [
+    {
+     "src": "assets/stargo-editorial/brand-glow-tall-400.webp",
+     "width": 400,
+     "bytes": 13428
+    },
+    {
+     "src": "assets/stargo-editorial/brand-glow-tall-800.webp",
+     "width": 800,
+     "bytes": 30844
+    },
+    {
+     "src": "assets/stargo-editorial/brand-glow-tall-1200.webp",
+     "width": 1200,
+     "bytes": 51856
+    }
+   ]
+  },
+  {
+   "id": "brand-ontology",
+   "src": "assets/stargo-editorial/brand-ontology.webp",
+   "width": 1254,
+   "height": 1254,
+   "bytes": 67186,
+   "originalSha256": "a6ee1c7db8b15102523827fc587ccdfa80b585869b9bd6edc167469b9d185ea4",
+   "variants": [
+    {
+     "src": "assets/stargo-editorial/brand-ontology-400.webp",
+     "width": 400,
+     "bytes": 13808
+    },
+    {
+     "src": "assets/stargo-editorial/brand-ontology-800.webp",
+     "width": 800,
+     "bytes": 34280
+    },
+    {
+     "src": "assets/stargo-editorial/brand-ontology-1200.webp",
+     "width": 1200,
+     "bytes": 56902
+    }
+   ]
+  },
+  {
+   "id": "brand-loop",
+   "src": "assets/stargo-editorial/brand-loop.webp",
+   "width": 1536,
+   "height": 1024,
+   "bytes": 128588,
+   "originalSha256": "220aad0938f35aaff25d6c4effe2cd18bb3ba55ed9b4de577d0d09cf2ec9d39d",
+   "variants": [
+    {
+     "src": "assets/stargo-editorial/brand-loop-400.webp",
+     "width": 400,
+     "bytes": 15874
+    },
+    {
+     "src": "assets/stargo-editorial/brand-loop-800.webp",
+     "width": 800,
+     "bytes": 46406
+    },
+    {
+     "src": "assets/stargo-editorial/brand-loop-1200.webp",
+     "width": 1200,
+     "bytes": 84948
+    }
+   ]
+  },
+  {
+   "id": "brand-family-01",
+   "src": "assets/stargo-editorial/brand-family-01.webp",
+   "width": 1247,
+   "height": 742,
+   "bytes": 55784,
+   "originalSha256": "c5ec162ef21f898c04915f04ec354be5fc08aed03d55e7dbab5d567171fd85df",
+   "variants": [
+    {
+     "src": "assets/stargo-editorial/brand-family-01-400.webp",
+     "width": 400,
+     "bytes": 12294
+    },
+    {
+     "src": "assets/stargo-editorial/brand-family-01-800.webp",
+     "width": 800,
+     "bytes": 29878
+    },
+    {
+     "src": "assets/stargo-editorial/brand-family-01-1200.webp",
+     "width": 1200,
+     "bytes": 49410
+    }
+   ]
+  },
+  {
+   "id": "brand-family-02",
+   "src": "assets/stargo-editorial/brand-family-02.webp",
+   "width": 1600,
+   "height": 900,
+   "bytes": 83398,
+   "originalSha256": "3df7e3672f6f09bc8026f683aee8834a82db5b13ea78439ad775132bbf0bc125",
+   "variants": [
+    {
+     "src": "assets/stargo-editorial/brand-family-02-400.webp",
+     "width": 400,
+     "bytes": 15320
+    },
+    {
+     "src": "assets/stargo-editorial/brand-family-02-800.webp",
+     "width": 800,
+     "bytes": 34994
+    },
+    {
+     "src": "assets/stargo-editorial/brand-family-02-1200.webp",
+     "width": 1200,
+     "bytes": 56074
+    }
+   ]
+  },
+  {
+   "id": "brand-family-03",
+   "src": "assets/stargo-editorial/brand-family-03.webp",
+   "width": 1254,
+   "height": 1254,
+   "bytes": 84880,
+   "originalSha256": "18533e479ca9738304e4dc7d28ffab0d10127f15d79af72f85c138011229badd",
+   "variants": [
+    {
+     "src": "assets/stargo-editorial/brand-family-03-400.webp",
+     "width": 400,
+     "bytes": 17416
+    },
+    {
+     "src": "assets/stargo-editorial/brand-family-03-800.webp",
+     "width": 800,
+     "bytes": 44176
+    },
+    {
+     "src": "assets/stargo-editorial/brand-family-03-1200.webp",
+     "width": 1200,
+     "bytes": 73728
+    }
+   ]
+  },
+  {
+   "id": "brand-family-04",
+   "src": "assets/stargo-editorial/brand-family-04.webp",
+   "width": 1600,
+   "height": 900,
+   "bytes": 68274,
+   "originalSha256": "712bf988887a3dba09269a3a36e50a56d526d8cf6d4f58cab1002d04b7f2e5bc",
+   "variants": [
+    {
+     "src": "assets/stargo-editorial/brand-family-04-400.webp",
+     "width": 400,
+     "bytes": 12260
+    },
+    {
+     "src": "assets/stargo-editorial/brand-family-04-800.webp",
+     "width": 800,
+     "bytes": 28094
+    },
+    {
+     "src": "assets/stargo-editorial/brand-family-04-1200.webp",
+     "width": 1200,
+     "bytes": 44768
+    }
+   ]
+  },
+  {
+   "id": "mobile-approvals",
+   "src": "assets/stargo-editorial/mobile-approvals.webp",
+   "width": 752,
+   "height": 941,
+   "bytes": 23448,
+   "originalSha256": "ede9e724c6fa9b90b88120f2f19b97322f306cd8b7287b65074cbd987f95680f",
+   "variants": [
+    {
+     "src": "assets/stargo-editorial/mobile-approvals-400.webp",
+     "width": 400,
+     "bytes": 10590
+    }
+   ]
+  },
+  {
+   "id": "mobile-agents",
+   "src": "assets/stargo-editorial/mobile-agents.webp",
+   "width": 940,
+   "height": 1254,
+   "bytes": 36066,
+   "originalSha256": "8519e83a02bd15ffa9896b865c0bd51707604e7e6d9fe94e100ea0fe75f847c5",
+   "variants": [
+    {
+     "src": "assets/stargo-editorial/mobile-agents-400.webp",
+     "width": 400,
+     "bytes": 12454
+    },
+    {
+     "src": "assets/stargo-editorial/mobile-agents-800.webp",
+     "width": 800,
+     "bytes": 28148
+    }
+   ]
+  },
+  {
+   "id": "mobile-inquiry",
+   "src": "assets/stargo-editorial/mobile-inquiry.webp",
+   "width": 705,
+   "height": 941,
+   "bytes": 30370,
+   "originalSha256": "42ef305ae0f5aba7e66faeb3490257633349207e45d7b6013b2d9645106d0989",
+   "variants": [
+    {
+     "src": "assets/stargo-editorial/mobile-inquiry-400.webp",
+     "width": 400,
+     "bytes": 13796
+    }
+   ]
+  },
+  {
+   "id": "mobile-core",
+   "src": "assets/stargo-editorial/mobile-core.webp",
+   "width": 619,
+   "height": 904,
+   "bytes": 33180,
+   "originalSha256": "e31d53f63c1b36750a2971894f1052e00f1169786da8ef6f494236a3ea5ce5c6",
+   "variants": [
+    {
+     "src": "assets/stargo-editorial/mobile-core-400.webp",
+     "width": 400,
+     "bytes": 17454
+    }
+   ]
+  },
+  {
+   "id": "phone-approvals",
+   "src": "assets/stargo-editorial/phone-approvals.webp",
+   "width": 1484,
+   "height": 1060,
+   "bytes": 74438,
+   "originalSha256": "b17cf7ad7e16d666845b0f6ed07873a221a9973a65608cc823c1c46a73b4c301",
+   "variants": [
+    {
+     "src": "assets/stargo-editorial/phone-approvals-400.webp",
+     "width": 400,
+     "bytes": 12600
+    },
+    {
+     "src": "assets/stargo-editorial/phone-approvals-800.webp",
+     "width": 800,
+     "bytes": 31276
+    },
+    {
+     "src": "assets/stargo-editorial/phone-approvals-1200.webp",
+     "width": 1200,
+     "bytes": 53344
+    }
+   ]
+  },
+  {
+   "id": "phone-agents",
+   "src": "assets/stargo-editorial/phone-agents.webp",
+   "width": 1600,
+   "height": 900,
+   "bytes": 59552,
+   "originalSha256": "bcf41e50b4002483d41a536a1abe19ab2a320de8f7a7e6e57c90b2e6b8d2e286",
+   "variants": [
+    {
+     "src": "assets/stargo-editorial/phone-agents-400.webp",
+     "width": 400,
+     "bytes": 7674
+    },
+    {
+     "src": "assets/stargo-editorial/phone-agents-800.webp",
+     "width": 800,
+     "bytes": 20834
+    },
+    {
+     "src": "assets/stargo-editorial/phone-agents-1200.webp",
+     "width": 1200,
+     "bytes": 37202
+    }
+   ]
+  },
+  {
+   "id": "silo-email",
+   "src": "assets/stargo-editorial/silo-email.webp",
+   "width": 1536,
+   "height": 1024,
+   "bytes": 92544,
+   "originalSha256": "96fdfe3d5230479cd51b82869d3f2e564d8f333ebccc8398e3ff7ab2c297299c",
+   "variants": [
+    {
+     "src": "assets/stargo-editorial/silo-email-400.webp",
+     "width": 400,
+     "bytes": 12156
+    },
+    {
+     "src": "assets/stargo-editorial/silo-email-800.webp",
+     "width": 800,
+     "bytes": 34062
+    },
+    {
+     "src": "assets/stargo-editorial/silo-email-1200.webp",
+     "width": 1200,
+     "bytes": 61296
+    }
+   ]
+  },
+  {
+   "id": "silo-whatsapp",
+   "src": "assets/stargo-editorial/silo-whatsapp.webp",
+   "width": 1448,
+   "height": 1086,
+   "bytes": 90938,
+   "originalSha256": "33e97cb4f22369ccdf2f0b7a05fb5605ef55305de450383a777abf0b605cb6cd",
+   "variants": [
+    {
+     "src": "assets/stargo-editorial/silo-whatsapp-400.webp",
+     "width": 400,
+     "bytes": 11884
+    },
+    {
+     "src": "assets/stargo-editorial/silo-whatsapp-800.webp",
+     "width": 800,
+     "bytes": 36450
+    },
+    {
+     "src": "assets/stargo-editorial/silo-whatsapp-1200.webp",
+     "width": 1200,
+     "bytes": 65384
+    }
+   ]
+  },
+  {
+   "id": "silo-excel",
+   "src": "assets/stargo-editorial/silo-excel.webp",
+   "width": 1254,
+   "height": 1254,
+   "bytes": 109444,
+   "originalSha256": "5782079d1a653c07d949cc495a41cd029525af5c46ea8e1ec4a2a9a44c439ac5",
+   "variants": [
+    {
+     "src": "assets/stargo-editorial/silo-excel-400.webp",
+     "width": 400,
+     "bytes": 18718
+    },
+    {
+     "src": "assets/stargo-editorial/silo-excel-800.webp",
+     "width": 800,
+     "bytes": 55184
+    },
+    {
+     "src": "assets/stargo-editorial/silo-excel-1200.webp",
+     "width": 1200,
+     "bytes": 97280
+    }
+   ]
+  },
+  {
+   "id": "silo-erp",
+   "src": "assets/stargo-editorial/silo-erp.webp",
+   "width": 1600,
+   "height": 900,
+   "bytes": 78426,
+   "originalSha256": "c6227178a549632adfe14360812fdc96938e1e7974571b86a6bdab7e573a3dbe",
+   "variants": [
+    {
+     "src": "assets/stargo-editorial/silo-erp-400.webp",
+     "width": 400,
+     "bytes": 11408
+    },
+    {
+     "src": "assets/stargo-editorial/silo-erp-800.webp",
+     "width": 800,
+     "bytes": 29602
+    },
+    {
+     "src": "assets/stargo-editorial/silo-erp-1200.webp",
+     "width": 1200,
+     "bytes": 50856
+    }
+   ]
+  },
+  {
+   "id": "og-cover",
+   "src": "assets/stargo-editorial/og-cover.png",
+   "width": 1200,
+   "height": 630,
+   "bytes": 848525,
+   "originalSha256": "59958a31408355dcdffd396c5419dde8390dc9373b9997c77953256d480a429f",
+   "variants": []
+  },
+  {
+   "id": "avatar-01",
+   "src": "assets/stargo-editorial/avatar-01.png",
+   "width": 256,
+   "height": 256,
+   "bytes": 85062,
+   "originalSha256": "40948dc83bdd71edfc5fc71a717e134f178c52565e7245aa8d1b7030f575b129",
+   "variants": []
+  },
+  {
+   "id": "avatar-02",
+   "src": "assets/stargo-editorial/avatar-02.png",
+   "width": 256,
+   "height": 256,
+   "bytes": 75226,
+   "originalSha256": "bf9d0c82956f52398a3634ec27e28cc6ff2532d04a5338dd8de63e4a34a7ce42",
+   "variants": []
+  },
+  {
+   "id": "avatar-03",
+   "src": "assets/stargo-editorial/avatar-03.png",
+   "width": 256,
+   "height": 256,
+   "bytes": 63903,
+   "originalSha256": "4bd1eb05f39bd6c53b0f0715b8c8275405e3419abd12125d751916c841914596",
+   "variants": []
+  },
+  {
+   "id": "avatar-04",
+   "src": "assets/stargo-editorial/avatar-04.png",
+   "width": 256,
+   "height": 256,
+   "bytes": 146118,
+   "originalSha256": "5f49bb4ae5e00810054b032a5207e17211a229eac3dd9875e1d95f8083c4bf54",
+   "variants": []
+  },
+  {
+   "id": "avatar-05",
+   "src": "assets/stargo-editorial/avatar-05.png",
+   "width": 256,
+   "height": 256,
+   "bytes": 81043,
+   "originalSha256": "0e7c6c138c6a758329990aa16cf9b3df47ed0214fddc2fe4812afcbdb72e0947",
+   "variants": []
+  },
+  {
+   "id": "avatar-06",
+   "src": "assets/stargo-editorial/avatar-06.png",
+   "width": 256,
+   "height": 256,
+   "bytes": 76398,
+   "originalSha256": "393166534bbc73aa611e835a17fd854d233c9799a575e367de6e8d88905e2565",
+   "variants": []
+  },
+  {
+   "id": "avatar-07",
+   "src": "assets/stargo-editorial/avatar-07.png",
+   "width": 256,
+   "height": 256,
+   "bytes": 83430,
+   "originalSha256": "cc2d132e67178025c618315e53f857b3b658c5d9604e6587657d0a2386a1895e",
+   "variants": []
+  },
+  {
+   "id": "avatar-08",
+   "src": "assets/stargo-editorial/avatar-08.png",
+   "width": 256,
+   "height": 256,
+   "bytes": 84954,
+   "originalSha256": "57088964d0a8a62319e94f2874bc5315a69e6310fa16fcc48e815ef9ffb05445",
+   "variants": []
+  },
+  {
+   "id": "avatar-09",
+   "src": "assets/stargo-editorial/avatar-09.png",
+   "width": 256,
+   "height": 256,
+   "bytes": 130122,
+   "originalSha256": "553f3f703251342621b832ce09fba31c80c8d22f9d109fdbfefca34ca57936ec",
+   "variants": []
+  },
+  {
+   "id": "avatar-10",
+   "src": "assets/stargo-editorial/avatar-10.png",
+   "width": 256,
+   "height": 256,
+   "bytes": 75176,
+   "originalSha256": "3a12ca48c1da20972ebdcfed9c58276dc670e5cdfff3c54acadfb42fc96ee774",
+   "variants": []
+  },
+  {
+   "id": "avatar-11",
+   "src": "assets/stargo-editorial/avatar-11.png",
+   "width": 256,
+   "height": 256,
+   "bytes": 62849,
+   "originalSha256": "2a1ed64f889bedc28eafef4342b87ed500b5d1cfa9169f002e0dc445ec62ee6d",
+   "variants": []
+  },
+  {
+   "id": "avatar-12",
+   "src": "assets/stargo-editorial/avatar-12.png",
+   "width": 256,
+   "height": 256,
+   "bytes": 76958,
+   "originalSha256": "48c7359c7261fe052ce640c6ee5022e76d908a1581f88ada1ec9ffd393351bc4",
+   "variants": []
+  },
+  {
+   "id": "avatar-core",
+   "src": "assets/stargo-editorial/avatar-core.png",
+   "width": 256,
+   "height": 256,
+   "bytes": 133193,
+   "originalSha256": "54fa46bc2b0bb192f334fb0834d3b667b8bce20298c4724823c4fb3a32d5e21c",
+   "variants": []
+  }
+ ]
 }
