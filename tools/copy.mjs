@@ -162,7 +162,9 @@ export const META = {
   /* Titles and descriptions: V5 part F. The build appends 「 — STARGO WORK」 to
      every title but the homepage's (tools/chrome.mjs head()), so the page
      titles below carry no brand of their own. */
-  'index.html': { title: B('STARGO WORK — 网页桌面级 AI 企业操作系统', 'STARGO WORK — Enterprise AI Desktop'), description: B('以 Growth OS 主动获客与 Sales Desk 外贸闭环为核心，连接 ERP、营销内容、企业知识与 288 个跨部门数字岗位。功能按企业配置与交付范围开放。', 'Growth OS and Sales Desk connect acquisition and trade sales with operations, creative work and 288 AI roles. Availability is configuration-dependent.') },
+  /* The homepage sells OPEN WORK since 2026-10-09 (HOME_OW); its title and
+     description say what the page says. */
+  'index.html': { title: B('STARGO WORK — 外贸工厂的 AI 工作台', 'STARGO WORK — The AI workspace for export manufacturers'), description: B('STARGO WORK 是外贸工厂的 AI 工作台。核心应用 OPEN WORK 像聊天一样用：分析询盘、写英文回复、出 PI、找新客户、给老板出周报。AI 起草，你来拍板。', 'STARGO WORK is the AI workspace for export manufacturers. Its core app, OPEN WORK, works like a chat: analyse inquiries, draft replies and PIs, find buyers, brief the boss. AI drafts; you decide.') },
   'intelligence.html': { title: B('企业智能', 'Enterprise Intelligence'), description: B('让 AI 带着企业知识、客户历史、业务关系和工作目标做事，了解主动提醒、长期任务、记忆与持续改进的分阶段能力。', 'Connect company knowledge, customer history and business context with goals, proactive reminders, ongoing tasks, memory and controlled improvement.') },
   'capabilities.html': { title: B('功能全景', 'Capabilities'), description: B('从获客、销售、报价与 PI，到 ERP、履约、AI 图片视频、数字员工、企业知识和管理控制，了解完整功能与开放条件。', 'Explore growth, sales, quotations, ERP, fulfillment, AI images and video, knowledge, teamwork and management—with clear availability conditions.') },
   'workforce.html': { title: B('288 个专业数字岗位', '288 Specialized AI Roles'), description: B('覆盖十类企业职能，按任务选择员工、组织团队、交流信息并接力交付；实际启用和协作范围依企业配置开放。', 'Explore ten role groups and task-based teams. Activation, communication and permitted work depend on enterprise configuration and delivery scope.') },
@@ -572,6 +574,239 @@ export const HOME_SC_INTEGRATION = [
   ['Scalora connects your CRM, website, ads, and commerce tools into one intelligent automation system.',
     B('找客户的信息来源、与客户沟通的渠道、发布内容的平台，各司其职。STARGO WORK 在企业授权与已接入范围内，把相关信息交给同一套客户、销售与跟进流程。显示平台名称不表示所有渠道默认开通，也不表示具备全部收发权限。', 'Research sources, conversation channels and publishing platforms serve different purposes. Within authorized integrations, STARGO WORK connects their activity to shared customer, sales and follow-up workflows. A listed platform is not a promise of default access or full read-and-write permissions.')],
 ];
+
+/* ================================================== homepage (OPEN WORK) ===
+   The homepage since 2026-10-09 (owner: 「图片好小…把我们系统卖出去」). The
+   system is STARGO WORK, its core app OPEN WORK; the page sells the chat
+   workspace with its own product renders (tools/openwork/, demo data) and
+   replaces the Mono homepage's narrative sections. Read by tools/ow-blocks/.
+
+   What may be said here, and nothing more:
+   - what this file already says elsewhere and the owner approved (prices, 5
+     standard accounts, one setup + one training session, approvals before
+     outward actions, traceable records, who approves is the company's call,
+     contact details);
+   - what the OPEN WORK interface shows (app names exactly as its sidebar, the
+     five quick actions, 「工具操作遵循当前授权；外部客户发送未启用。」 and the
+     approval bars), and the demo data inside the renders, always as demo data.
+   Everything buyer-plan.md marks 【需确认】 (reply times, pilot terms, data
+   residency, channel status, account prices, what the composer footnote means
+   in operation) stays off the page. No measured-sounding numbers.
+
+   Trade terms (PI, MOQ, FOB, CRM, ERP) and the product names are the only
+   Latin on the Chinese page; tools/verify-site.mjs knows them.
+
+   [[…]] in a title marks its key phrase, which the page sets in the blue
+   gradient (owner's poster style, 2026-10-09). The product's own wording,
+   from the owner's latest OPEN WORK home screen: it calls itself
+   「AI 外贸业务执行系统」, its tagline starts 「连接全球市场，加速业务增长。」
+   (English: "From China to the World"), its quick tasks are grouped as
+   主动获客 / 询盘处理 / 客户跟进 / 报价与 PI / 内容增长 / 企业知识库 /
+   制造与合规, and its digital office shows 288 名数字员工. The small floating
+   cards on the product windows carry interface wording or demo-safe facts
+   only — never a statistic. */
+const OW_WA_TEXT = B('你好，我想看 OPEN WORK 演示，我们做____', 'Hi, I’d like to see an OPEN WORK demo. We make ____');
+export const HOME_OW = {
+  demoLabel: B('预约 30 分钟演示', 'Book a 30-minute demo'),
+  whatsappLabel: B('WhatsApp 直接问', 'Ask on WhatsApp'),
+  whatsappHref: B(`${CONTACT_INFO.whatsappHref}?text=${encodeURIComponent(OW_WA_TEXT.zh)}`, `${CONTACT_INFO.whatsappHref}?text=${encodeURIComponent(OW_WA_TEXT.en)}`),
+  badge: B('演示数据', 'Demo data'),
+  zoom: B('放大查看', 'Enlarge'),
+  zoomFull: B('查看完整界面', 'View the full screen'),
+  close: B('关闭', 'Close'),
+  /* Under every OPEN WORK shot on the English page the reader is told the UI is
+     Chinese; the Chinese page says what is real (the layout) and what is not. */
+  shotNote: B('OPEN WORK 实际界面布局，对话内容均为演示数据。', 'OPEN WORK as it looks today, shown in Chinese. Every conversation is demo data.'),
+
+  /* S1 */
+  hero: {
+    eyebrow: B('OPEN WORK · AI 外贸业务执行系统', 'OPEN WORK · the AI execution system for export teams'),
+    slogan: B('连接全球市场，加速业务增长。', 'From China to the World'),
+    float: B('15 个应用 · 一个对话框', '15 apps · one chat box'),
+    title: [B('询盘进来，AI 先读懂、先回复、先报价。', 'Inquiries in. Replies and quotes drafted.'), B('发不发，你来批。', 'Nothing goes out until you approve.')],
+    lead: B('STARGO WORK 是外贸工厂的 AI 工作台。核心应用 OPEN WORK 像聊天一样用：分析询盘、写英文回复、出 PI、找新客户、给老板出周报。',
+      'STARGO WORK is the AI workspace for export manufacturers. Its core app, OPEN WORK, works like a chat: analyse inquiries, draft replies and PIs, find buyers, brief the boss.'),
+    /* The three callouts on ow02-inquiry; `hot` is the box in tools/openwork/hotspots.json they point at. */
+    callouts: [
+      { hot: 'crm', text: B('查了客户CRM和企业知识库', 'Checked your CRM and knowledge base') },
+      { hot: 'price', text: B('按价格表算出 FOB 宁波 US$3.85', 'Priced from your list: US$3.85 FOB Ningbo') },
+      { hot: 'approve', text: B('点「批准」才发出', 'Sent only after you approve') },
+    ],
+    calloutsLabel: B('这张图里 AI 做了三件事', 'What AI did in this screen'),
+  },
+
+  /* S2 — the four sentences the homepage has carried since V6 (zh unchanged). */
+  pain: {
+    eyebrow: B('今天的外贸部', 'Your export team today'),
+    title: B('工具很多，[[靠人连接]]。', 'Plenty of tools. [[People still hold it together.]]'),
+    cards: [
+      { icon: 'mail', where: B('邮箱', 'Email'), text: B('询盘来了，还要重新整理', 'Every inquiry gets retyped by hand') },
+      { icon: 'chat', where: B('聊天窗口', 'Chat apps'), text: B('窗口很多，客户信息分散', 'Customer chats are spread across apps') },
+      { icon: 'sheet', where: B('表格', 'Spreadsheets'), text: B('客户在表格，跟进靠人记', 'Customers live in sheets; follow-up lives in memory') },
+      { icon: 'box', where: B('订单后台', 'Back office'), text: B('订单在后台，销售还在追问', 'Order status sits in the back office; sales keeps asking') },
+    ],
+    close: B('OPEN WORK 把这四件事放进一个对话框。', 'OPEN WORK puts all four into one chat.'),
+    more: B('看它怎么做', 'See how'),
+  },
+
+  /* S3 — the showcase. Each tab's lines come from the steps printed in its image. */
+  showcase: {
+    eyebrow: B('OPEN WORK', 'OPEN WORK'),
+    title: B('[[一个对话框]]，干外贸部每天的活。', '[[One chat box]] for the work your export team does every day.'),
+    lead: B('外贸部最常做的四件事。每一件，AI 都写明读了什么、做了什么；要发出去的东西，先交给你批。',
+      'Four jobs your export team does every day. For each one, AI shows what it read and what it did, and anything going out waits for you.'),
+    tablist: B('四个工作场景', 'Four everyday jobs'),
+    kicker: B('演示场景', 'Demo scenario'),
+    labels: { read: B('读了什么', 'What it read'), did: B('AI 做了什么', 'What AI did'), approve: B('你批什么', 'What you approve') },
+    defaultTab: 'quote',
+    tabs: [
+      { key: 'inquiry', icon: 'search', shot: 'ow02-inquiry', card: 'ow12-inquiry-card', label: B('分析询盘并回复', 'Analyse an inquiry'),
+        float: B('对外发送需要你确认', 'Sending needs your confirmation'),
+        summary: B('瑞典客户要 500 只定制丝印的保温杯：AI 查客户CRM、查规格、MOQ 和交期，按价格表算出 FOB 价，写好英文回复，等你批准。',
+          'A Swedish buyer wants 500 vacuum flasks with their logo: AI checks the CRM, MOQ and lead time, prices it from your list and drafts the reply for your approval.'),
+        read: B('客户原文、客户CRM，企业知识库里的规格、MOQ 和标准交期，以及价格表。', 'The buyer’s email, your customer CRM, the specs, MOQ and lead time in your knowledge base, and your price list.'),
+        did: B('识别询盘要素，判断询盘质量为 A；按价格表算出 US$3.85/只 FOB 宁波；写好英文回复草稿。', 'Pulls out the key facts, rates the inquiry A, prices it at US$3.85/pc FOB Ningbo and writes the reply in English.'),
+        approve: B('回复草稿。对外发送需要你确认，点「批准」后才由销售工作台发出。', 'The reply. Nothing reaches the customer until you click Approve; then the Sales Workbench sends it.') },
+      { key: 'quote', icon: 'file', shot: 'ow03-quote', card: 'ow13-quote-card', label: B('起草报价单 · PI', 'Draft a quote · PI'),
+        float: B('价格低于标准价 → 自动交经理审批', 'Under list price → goes to the manager'),
+        summary: B('PI 自动套公司抬头和银行信息。单价比标准价低 4.2%，自动交销售经理审批，批准前不会发给客户。',
+          'The PI uses your letterhead and bank details. It is 4.2% under list price, so it goes to the sales manager first.'),
+        read: B('客户CRM 和销售工作台里这位客户的询盘上下文，以及中英双语 PI 模板。', 'The customer and inquiry context in your CRM and Sales Workbench, and your bilingual PI template.'),
+        did: B('出 PI：明细、FOB 宁波总价、付款与交期条款；价格校验发现单价低于标准价 4.2%。', 'Builds the PI — line items, FOB Ningbo total, payment and lead-time terms — and flags a unit price 4.2% under list.'),
+        approve: B('低于标准价，PI 已提交给销售经理审批；批准前不会发给客户。', 'Because it is under list, the PI waits for the sales manager. It is not sent before approval.') },
+      { key: 'outreach', icon: 'spark', shot: 'ow04-outreach', card: 'ow14-outreach-card', label: B('主动获客 · 开发信', 'Prospecting · outreach'),
+        float: B('每封开发信都要你确认才发', 'Every email waits for your OK'),
+        summary: B('找 5 家北欧零售商，和客户CRM 去重、排除已有客户；开发信每封都要你确认才发。',
+          'Five Nordic retailers, de-duplicated against your CRM; every email waits for your OK.'),
+        read: B('主动获客按行业、地区和门店规模筛选，补全公司信号与采购联系人。', 'Prospecting filters by industry, region and store count, then adds company signals and buying contacts.'),
+        did: B('按匹配度排出 5 家目标客户，与客户CRM 去重排除 2 家已有客户，起草英文开发信。', 'Ranks five target accounts by fit, drops two already in your customer CRM and drafts the English email.'),
+        approve: B('每封开发信发送前，都需要你确认。', 'Every outreach email waits for your confirmation before it is sent.') },
+      { key: 'brief', icon: 'chart', shot: 'ow05-brief', card: 'ow15-brief-card', label: B('老板看板 · 周报', 'Owner Dashboard · weekly brief'),
+        float: B('等你拍板的事，一屏看完', 'Your decisions, on one screen'),
+        summary: B('老板问一句“这周有什么要我拍板的”，询盘、报价、赢单、待批一屏说清。',
+          'Ask “what needs my decision this week?” and get inquiries, quotes, wins and approvals on one screen.'),
+        read: B('老板看板里的询盘、报价、订单和回款，并按同一口径对比上周。', 'Inquiries, quotes, orders and payments from the Owner Dashboard, compared with last week on the same basis.'),
+        did: B('一句话说清本周：38 封询盘从哪来、报了多少、赢了几单，并整理出 4 件等你拍板的事。', 'Sums up the week in one line — where 38 inquiries came from, how many were quoted and won — and lists four decisions for you.'),
+        approve: B('需要你决定的 4 件事，其中 2 件今天到期，点一下就能去审批。', 'The four items waiting for you, two due today, each one click from review.') },
+    ],
+    quick: {
+      line: B('点一下快捷操作，或者直接打字。选择后只填入输入框，不会自动发送。', 'Tap a shortcut or just type. Shortcuts only fill the box; nothing is sent automatically.'),
+      label: B('五个快捷操作', 'The five quick actions'),
+      actions: [B('起草开发信', 'Draft outreach'), B('分析询盘并回复', 'Analyse an inquiry and reply'), B('跟进客户', 'Follow up customers'), B('起草报价单 / PI', 'Draft a quote / PI'), B('整理企业资料', 'Organise company material')],
+    },
+    cta: B('用你的询盘约一场演示', 'Book a demo with your own inquiry'),
+  },
+
+  /* S4 — only what the site already claims: approval before anything goes
+     out, prices from the company's list with approval under it, a record of
+     every step and approval. The composer footnote is quoted, never explained. */
+  governance: {
+    eyebrow: B('审批与留痕', 'Approvals and records'),
+    title: B('AI 起草，[[你来拍板]]。', 'AI drafts. [[You decide.]]'),
+    float: B('审批中 · 批准前不会发给客户', 'In approval · not sent before it is approved'),
+    lead: B('AI 可以替你查资料、算价格、写草稿；报价、对外触达这些关键动作，按企业规则由人批准。',
+      'AI can look things up, price and draft. Quotes, outreach and other consequential steps follow your rules and need a person’s approval.'),
+    rules: [
+      { icon: 'shield', title: B('对外发送，先过你这关', 'Nothing leaves without approval'),
+        text: B('每封回复、开发信和 PI 都先写成草稿，要有权人点「批准」才会发出。', 'Every reply, outreach email and PI starts as a draft. It goes out only after someone with authority clicks Approve.'),
+        ui: B('对外发送需要你确认 · 批准后由销售工作台发出', 'Sending to a customer needs your confirmation · the Sales Workbench sends it once approved') },
+      { icon: 'tag', title: B('价格按价格表，越线要审批', 'Prices come from your list'),
+        text: B('报价从企业价格表和企业知识库里取。单价低于标准价，PI 自动交销售经理审批，批准前不会发给客户。', 'Quotes use your price list and knowledge base. Anything under list price goes to the sales manager and is not sent before approval.'),
+        ui: B('价格校验 · 单价低于标准价 4.2%，需要销售经理审批', 'Price check · unit price 4.2% under list; needs the sales manager’s approval') },
+      { icon: 'list', title: B('每一步都有记录', 'Every step is on record'),
+        text: B('AI 写明每一步读了哪个应用、用了什么数据；谁做了什么、谁批准，都有记录。', 'AI shows which app it read and what data it used at each step. Who did what, and who approved it, is on record.'),
+        ui: B('已完成 4 个步骤 · 识别询盘要素 · 查询客户CRM · 检索企业知识库 · 按价格表测算报价', '4 steps done · read the inquiry · checked the customer CRM · searched the knowledge base · priced from the list') },
+    ],
+    uiNote: B('界面原文 · 演示数据', 'Interface wording · demo data'),
+    captions: {
+      pi: B('价格校验：单价低于标准价 4.2%，PI 交销售经理审批，批准前不会发给客户。', 'Price check: 4.2% under list, so the PI waits for the sales manager and is not sent before approval.'),
+      bar: B('回复草稿下的审批栏：对外发送需要你确认。', 'The approval bar under a reply draft: sending needs your confirmation.'),
+    },
+    cta: B('看安全与接入', 'See security & setup'),
+  },
+
+  /* S5 — three outcomes, no numbers. */
+  outcomes: {
+    eyebrow: B('老板最关心的三件事', 'What owners care about'),
+    title: B('回得快、报得准、[[人走客户留]]。', 'Faster replies. Consistent quotes. [[Customers stay when people leave.]]'),
+    cards: [
+      { icon: 'bolt', title: B('回得快', 'Faster replies'), apps: [B('客户CRM', 'Customer CRM'), B('企业知识库', 'Knowledge Base')],
+        text: B('询盘进来，AI 先查齐客户和产品资料，写好带价格的英文回复草稿，等你确认。', 'When an inquiry lands, AI gathers the customer and product facts and drafts a priced reply in English, ready for you to approve.') },
+      { icon: 'tag', title: B('报得准', 'Consistent quotes'), apps: [B('企业知识库', 'Knowledge Base'), B('销售工作台', 'Sales Workbench')],
+        text: B('价格、MOQ、交期从企业知识库和价格表来，不靠业务员记；低于标准价，自动交经理审批。', 'Prices, MOQ and lead times come from your knowledge base and price list, not from someone’s memory. Anything under list goes to a manager.') },
+      { icon: 'users', title: B('人走客户留', 'Customers stay'), apps: [B('客户CRM', 'Customer CRM'), B('销售工作台', 'Sales Workbench')],
+        text: B('客户、聊天、报价都留在公司的客户CRM里。谁接手，都能从上一次往来接着跟。', 'Customers, conversations and quotes stay in the company’s customer CRM, so whoever takes over picks up from the last exchange.') },
+    ],
+  },
+
+  /* S7 — the sidebar, grouped as buyer-plan S7. Names exactly as the UI. */
+  apps: {
+    eyebrow: B('15 个应用', '15 apps'),
+    title: B('一个工作台，[[15 个应用]]。', 'One workspace, [[15 apps.]]'),
+    lead: B('OPEN WORK 侧栏里的 15 个应用，AI 在对话里按需调用：查客户、查资料、出报价、看经营。',
+      'The 15 apps in the OPEN WORK sidebar. AI calls on them inside the chat — to look up customers, check product facts, quote and report.'),
+    groups: [
+      { icon: 'spark', title: B('获客与销售', 'Sales & prospecting'), line: B('找客户、接询盘，一直跟到成交。', 'Find buyers, take inquiries, follow through to the order.'),
+        apps: [B('主动获客', 'Prospecting'), B('销售工作台', 'Sales Workbench'), B('客户CRM', 'Customer CRM'), B('渠道接入', 'Channels')] },
+      { icon: 'chart', title: B('经营', 'Operations'), line: B('订单、库存、商城和经营数据。', 'Orders, stock, your online store and the numbers.'),
+        apps: [B('企业ERP', 'ERP'), B('商城后端管理', 'Store Admin'), B('增长分析', 'Growth Analytics'), B('老板看板', 'Owner Dashboard')] },
+      { icon: 'flow', title: B('自动化与知识', 'Automation & knowledge'), line: B('把流程跑起来，把经验留下来。', 'Keep processes running and keep what the team learns.'),
+        apps: [B('自动化中心', 'Automation Center'), B('工作流引擎', 'Workflow Engine'), B('企业知识库', 'Knowledge Base'), B('记忆与进化', 'Memory & Evolution')] },
+      { icon: 'gear', title: B('管理与平台', 'Admin & platform'), line: B('后台管理、288 名数字员工所在的数字办公室，以及 AI 网关。', 'Administration, the digital office with its 288 digital staff, and the AI gateway.'),
+        apps: [B('控制中心', 'Control Center'), B('STARGO AI 数字办公室', 'STARGO AI Digital Office'), B('New API（AI 网关）', 'New API (AI Gateway)')] },
+    ],
+    /* the quick-task groups on the OPEN WORK home screen, as the product names them */
+    tasksLabel: B('首页快捷任务', 'Quick tasks on the home screen'),
+    tasks: [B('主动获客', 'Prospecting'), B('询盘处理', 'Inquiries'), B('客户跟进', 'Follow-up'), B('报价与 PI', 'Quotes & PI'), B('内容增长', 'Content growth'), B('企业知识库', 'Knowledge base'), B('制造与合规', 'Manufacturing & compliance')],
+    cta: B('看全部功能', 'See all features'),
+  },
+
+  /* S9 — the published prices, nothing else. */
+  pricing: {
+    eyebrow: B('定价', 'Pricing'),
+    title: B('[[¥10,000 / 年起]]，先跑通一条流程。', '[[From ¥10,000 a year.]] Start with one workflow.'),
+    lead: B('标准版是年度软件订阅。需要官网、内容和获客服务时，再选服务包。', 'Standard is the annual software subscription. Add a website, content and acquisition package when you need one.'),
+    currency: B('', 'Prices in Chinese yuan (CNY).'),
+    plans: [
+      { name: B('标准版', 'Standard'), price: B('¥10,000', '¥10,000'), unit: B('首年 · 按年续费', 'first year · renews yearly'),
+        text: B('年度软件订阅：最多 5 个标准用户账号，配置一次、培训一次。', 'Annual software subscription: up to 5 standard user accounts, one setup and one training session.'), main: true },
+      { name: B('上线版', 'Launch'), price: B('¥20,000', '¥20,000'), unit: B('首年总价', 'first-year total'), text: B('软件订阅 + 建站与内容服务', 'Subscription + website & content services') },
+      { name: B('增长版', 'Growth'), price: B('¥30,000', '¥30,000'), unit: B('首年总价', 'first-year total'), text: B('软件订阅 + 建站与内容服务', 'Subscription + website & content services') },
+      { name: B('全球获客版', 'Global Acquisition'), price: B('¥40,000', '¥40,000'), unit: B('首年总价', 'first-year total'), text: B('软件订阅 + 建站与内容服务', 'Subscription + website & content services') },
+      { name: B('企业版', 'Enterprise'), price: B('按需定制', 'Custom'), unit: B('', ''), text: B('多公司、多品牌、复杂审批与私有化部署', 'Multiple entities and brands, complex approvals, private deployment') },
+    ],
+    cta: B('看完整定价', 'See full pricing'),
+  },
+
+  /* S10 — four buyer questions, answered with established facts only; where a
+     detail is not established, the answer stops at what is and offers the demo. */
+  faq: {
+    eyebrow: B('常见问题', 'FAQ'),
+    title: B('买之前，[[你一定会问的]]。', 'What you’ll ask [[before you buy.]]'),
+    items: [
+      [B('AI 会不会自己给客户发东西？', 'Will AI send anything to customers on its own?'),
+        B('不会。回复、开发信和 PI 都先写成草稿，界面上写明“对外发送需要你确认”，点「批准」之后才由销售工作台发出。报价、对外触达这些动作，也按企业设定的规则审批。演示时可以现场走一遍。',
+          'No. Replies, outreach emails and PIs start as drafts. The screen says sending to a customer needs your confirmation, and the Sales Workbench sends only after you click Approve. Quotes and outreach also follow the approval rules your company sets. We can walk through it live in the demo.')],
+      [B('AI 会不会乱报价？', 'Will AI quote the wrong price?'),
+        B('价格从企业价格表和企业知识库里取，每一步写明依据。单价低于标准价时，PI 会自动交给销售经理审批，批准前不会发给客户。哪些报价需要审批、由谁批准，企业自己定。',
+          'Prices come from your price list and knowledge base, and each step shows its source. If a unit price is under list, the PI goes to the sales manager and is not sent before approval. Your company decides which quotes need approval and who approves them.')],
+      [B('业务员离职，客户会不会被带走？', 'If a salesperson leaves, do the customers leave too?'),
+        B('客户、聊天和报价都留在公司的客户CRM和销售工作台里，谁接手都能看到之前的往来。账号和权限怎么分，演示时可以按你们的分工一起看。',
+          'Customers, conversations and quotes stay in the company’s customer CRM and Sales Workbench, so whoever takes over can see every earlier exchange. In the demo we can go through how accounts and permissions would map to your team.')],
+      [B('多久能用起来？', 'How soon can we start?'),
+        B('标准版包含一次配置和一次培训。建议先跑通“询盘 → 报价”这一条：把产品资料和价格表放进企业知识库，就可以开始起草。具体要多久，取决于你的资料情况，演示时可以一起评估。',
+          'Standard includes one setup session and one training session. We suggest starting with inquiry-to-quote: put your product information and price list into the knowledge base and drafting can begin. How long that takes depends on your material; we can assess it together in the demo.')],
+    ],
+  },
+
+  /* S11 — the demo band. The form is the site's own (tools/chrome.mjs formMarkup). */
+  contact: {
+    eyebrow: B('预约演示', 'Book a demo'),
+    title: B('带一封真实询盘，[[30 分钟看它跑一遍]]。', 'Bring one real inquiry. [[Watch it run in 30 minutes.]]'),
+    lead: B('留下姓名、公司和邮箱，我们会联系你约时间。想先问问，也可以直接发 WhatsApp。', 'Leave your name, company and email and we will get in touch to schedule it. Prefer to ask first? Message us on WhatsApp.'),
+    email: B('邮件', 'Email'),
+  },
+};
 
 /* ====================================================== lifelogx pages === */
 
@@ -1447,8 +1682,7 @@ export const NOTICES = {
 <h4>字体</h4>
 <p>Inter、Inter Display、Inter Tight、Instrument Serif 与 42dot Sans，均按 SIL Open Font License 1.1 自托管，不向任何第三方字体服务发起请求。</p>
 <h4>图片素材</h4>
-<p>首页中心视频采用网站所有者提供的第四套模板 Fearless Vision Hero 中的银色轨道动画，已压缩并自托管。它用于品牌概念展示，不是 STARGO 产品操作录像或客户案例。</p>
-<p>本站图片分三类。一，产品界面示意：网站所有者提供的 STARGO WORK 界面图，画面中的工作区、任务、客户与金额均为演示数据，不是真实客户账户的截图，也不代表已完成的业务结果。二，概念视觉：业务场景、品牌雕塑与数字角色图像为 AI 生成，用于解释业务关系、协作和治理，不是产品截图或员工肖像，中英文页面共用同一套无文字图像。三，模板素材：人物照片、产品与场景照片、示例 Logo 墙与装饰图标，来自网站所有者购买的 Webflow 模板随附的已授权设计素材，已镜像到本站自托管，仅作版式示意，不代表真实客户、员工、合作伙伴或客户评价。STARGO 标识与字标为 STARGO 自有作品。</p>
+<p>本站图片分三类。一，产品界面示意：网站所有者提供的 STARGO WORK 界面图，以及按 OPEN WORK 实际界面布局重建的演示渲染图（首页），画面中的工作区、对话、任务、客户与金额均为演示数据，不是真实客户账户的截图，也不代表已完成的业务结果。二，概念视觉：业务场景、品牌雕塑与数字角色图像为 AI 生成，用于解释业务关系、协作和治理，不是产品截图或员工肖像，中英文页面共用同一套无文字图像。三，模板素材：人物照片、产品与场景照片与装饰图标，来自网站所有者购买的 Webflow 模板随附的已授权设计素材，已镜像到本站自托管，仅作版式示意，不代表真实客户、员工、合作伙伴或客户评价。STARGO 标识与字标为 STARGO 自有作品。</p>
 <h4>上游软件</h4>
 <p>站内提到的 Activepieces、Chatwoot、Twenty CRM、WeKnora、Windmill、Playwright、Yente / OpenSanctions、Univer、Puter、Medusa、ERPNext、PostHog、Microsoft SkillOpt、Notion、Google、Reddit、LinkedIn、Facebook、YouTube、Alibaba、WhatsApp 等名称，均为各自所有者的商标或项目名。它们在本站出现是为了让上游身份可查，不表示相关项目对 STARGO 的背书。</p>
 <h4>联系</h4>
@@ -1463,8 +1697,7 @@ export const NOTICES = {
 <h4>Fonts</h4>
 <p>Inter, Inter Display, Inter Tight, Instrument Serif and 42dot Sans, all self-hosted under the SIL Open Font License 1.1. No request goes to a third-party font service.</p>
 <h4>Imagery</h4>
-<p>The homepage centre film uses the silver orbital animation from the owner-supplied fourth template, Fearless Vision Hero. It is compressed and self-hosted as conceptual brand imagery, not footage of the STARGO product or a customer engagement.</p>
-<p>The pictures on this site fall into three kinds. First, illustrative product interfaces: screens of STARGO WORK supplied by the site owner, whose workspaces, tasks, customers and amounts are demonstration data — they are not screenshots of a real customer’s account and do not show completed business results. Second, conceptual visuals: the business scenes, brand sculptures and digital-role imagery are AI-generated, illustrating business relationships, collaboration and governance rather than product screens or employee portraits, and both languages share the same text-free set. Third, template assets: the people, product and scene photographs, the sample logo wall and the decorative icons are licensed design assets shipped with the Webflow templates the site owner purchased, mirrored and self-hosted here for layout illustration only; they do not depict real customers, employees, partners or customer reviews. The STARGO mark and wordmark are STARGO’s own work.</p>
+<p>The pictures on this site fall into three kinds. First, illustrative product interfaces: screens of STARGO WORK supplied by the site owner, and renders that rebuild the real OPEN WORK layout (homepage), whose workspaces, conversations, tasks, customers and amounts are demonstration data — they are not screenshots of a real customer’s account and do not show completed business results. Second, conceptual visuals: the business scenes, brand sculptures and digital-role imagery are AI-generated, illustrating business relationships, collaboration and governance rather than product screens or employee portraits, and both languages share the same text-free set. Third, template assets: the people, product and scene photographs and the decorative icons are licensed design assets shipped with the Webflow templates the site owner purchased, mirrored and self-hosted here for layout illustration only; they do not depict real customers, employees, partners or customer reviews. The STARGO mark and wordmark are STARGO’s own work.</p>
 <h4>Upstream software</h4>
 <p>Activepieces, Chatwoot, Twenty CRM, WeKnora, Windmill, Playwright, Yente / OpenSanctions, Univer, Puter, Medusa, ERPNext, PostHog, Microsoft SkillOpt, Notion, Google, Reddit, LinkedIn, Facebook, YouTube, Alibaba, WhatsApp and other names mentioned on this site are trademarks or project names of their respective owners. They appear so that upstream identity stays discoverable; none implies endorsement of STARGO.</p>
 <h4>Contact</h4>

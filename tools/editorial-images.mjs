@@ -47,7 +47,9 @@ const products = JSON.parse(readFileSync(new URL('./imagegen/product-assets.json
 for (const a of products) {
   /* Each id keeps the surface it came from and the source document's own
      number, so a screen can be found again in the document it was taken from. */
-  const id = a.id.match(/^(?:sw|erp|gos)(\d{2,3})-/);
+  /* ow = OPEN WORK renders (tools/openwork/): the number is the render's
+     own, not a source document's, and the source is a render, not imageNN. */
+  const id = a.id.match(/^(?:sw|erp|gos)(\d{2,3})-/) ?? a.id.match(/^ow(\d{2})-/);
   const source = a.sourceFile?.match(/image(\d+)\.(?:png|webp)$/i);
   if (!id) throw new Error(`Product image ids keep their source number: ${a.id}`);
   if (source && Number(id[1]) !== Number(source[1])) {
@@ -81,7 +83,26 @@ const productText = {
   'os-sales-desk': ['销售工作台：询盘、跟进与回复草稿同屏推进', 'The sales desk: inquiries, follow-ups and draft replies on one surface'],
   'os-inquiries': ['客户对话：兴趣、历史与待办汇集成共享上下文', 'Customer inbox: interest, history and next actions as shared context'],
   'os-desktop': ['系统地图：连接不同业务工作空间的共享桌面', 'System map: one shared desktop connecting business workspaces'],
+  /* OPEN WORK (2026-10-09): HTML rebuilds of the real chat workspace, rendered
+     by tools/openwork/render.mjs. Layout, app list, quick actions and the
+     composer footnote are the real interface; every conversation is demo data. */
+  'ow01-home': ['OPEN WORK 新聊天：左侧是 15 个应用，输入框下方是起草开发信、分析询盘并回复、跟进客户、起草报价单 / PI、整理企业资料五个快捷操作', 'OPEN WORK new chat: the 15 apps on the left and five quick actions under the message box — draft outreach, analyse an inquiry and reply, follow up customers, draft a quote or PI, organise company material'],
+  'ow02-inquiry': ['OPEN WORK 分析询盘并回复：一封瑞典客户的询盘，查了客户CRM 和企业知识库，按价格表算出 FOB 宁波报价，英文回复草稿等你点「批准」', 'OPEN WORK analysing an inquiry: a Swedish buyer\u2019s request checked against the customer CRM and the knowledge base, priced FOB Ningbo from the price list, with an English reply waiting for your approval'],
+  'ow03-quote': ['OPEN WORK 起草 PI：套用公司抬头和银行信息，单价低于标准价 4.2%，已交销售经理审批，批准前不会发给客户', 'OPEN WORK drafting a PI: company letterhead and bank details applied; the unit price is 4.2% under list, so it waits for the sales manager and is not sent before approval'],
+  'ow04-outreach': ['OPEN WORK 起草开发信：主动获客筛出 5 家北欧零售商，与客户CRM 去重，每封开发信发送前都要你确认', 'OPEN WORK drafting outreach: five Nordic retailers found by Prospecting, de-duplicated against the customer CRM, each email waiting for your confirmation'],
+  'ow05-brief': ['OPEN WORK 本周业务简报：询盘、报价、赢单和等你审批的 4 件事在一屏说清', 'OPEN WORK weekly brief: inquiries, quotes, wins and the four items awaiting your decision on one screen'],
+  'ow06-follow': ['OPEN WORK 跟进客户：读客户CRM 时间线，找出样品未回复、报价未回复和到了补货周期的客户，跟进消息起草好，逐条等你确认', 'OPEN WORK customer follow-up: the customer CRM timeline shows who has not answered a sample or a quote and who is due to reorder; drafted follow-ups wait for your approval one by one'],
+  'ow12-inquiry-card': ['询盘回复草稿：英文回复已写好，对外发送需要你确认，点「批准」才发出', 'An inquiry reply draft: the English reply is written, and nothing goes out until you press Approve'],
+  'ow13-quote-card': ['PI 卡片：明细、FOB 宁波总价和付款条件，审批中，批准前不会发给客户', 'A PI card: line items, the FOB Ningbo total and payment terms, in approval and not sent before it is approved'],
+  'ow14-outreach-card': ['目标客户表：5 家北欧零售商的国家、类型、信号和匹配度', 'The prospect list: five Nordic retailers with country, type, buying signal and match score'],
+  'ow15-brief-card': ['老板简报卡片：新询盘、已报价、赢单、待你审批，以及需要你决定的 4 件事', 'The weekly brief card: new inquiries, quotes, wins, pending approvals and the four decisions waiting for you'],
+  'ow16-follow-card': ['建议跟进卡片：4 位客户的跟进理由和起草好的消息，发送前逐条等你确认', 'Suggested follow-ups: four customers, why each is due and a drafted message, each waiting for your approval'],
+  'ow20-apps': ['OPEN WORK 侧栏：老板看板、客户CRM、主动获客、销售工作台、企业ERP 等 15 个应用', 'The OPEN WORK sidebar: 15 apps including Owner Dashboard, Customer CRM, Prospecting, Sales Workbench and ERP'],
+  'ow21-pi-check': ['价格校验：单价低于标准价 4.2%，PI 自动交销售经理审批，批准前不会发给客户', 'Price check: 4.2% under list price, so the PI goes to the sales manager and is not sent to the customer before approval'],
+  'ow22-approval-bar': ['回复草稿下的审批栏：对外发送需要你确认，批准后由销售工作台发出', 'The approval bar under a reply draft: sending to a customer needs your confirmation, and the Sales Workbench sends it once approved'],
+  'ow23-quick-actions': ['OPEN WORK 输入框和五个快捷操作：选择后只填入输入框，不会自动发送', 'The OPEN WORK message box and five quick actions: a shortcut only fills the box and never sends on its own'],
 };
+for (const a of products) if (a.id.startsWith('ow') && !productText[a.id]) throw new Error(`OPEN WORK image without alt text: ${a.id}`);
 export const PRODUCT_CAPTION = { zh: '产品界面示意（演示数据）', en: 'Illustrative product interface · demo data' };
 export function editorialImages(html, lang) {
   // Also covers inline backgrounds and absolute Open Graph URLs.
@@ -98,7 +119,10 @@ export function editorialImages(html, lang) {
       ? (lang === 'zh' ? `。${PRODUCT_CAPTION.zh}` : ` — ${PRODUCT_CAPTION.en}`)
       : (lang === 'zh' ? '（AI 概念图）' : ' (AI concept illustration)');
     const alt = decorative || !text ? '' : `${text}${suffix}`;
-    let result = tag.replace(/\s(?:alt|srcset|sizes|width|height|decoding)="[^"]*"/g, '');
+    /* A block that knows its own display width names it in data-sizes
+       (the OPEN WORK shots: 1200px on desktop); it replaces the guess below. */
+    const named = tag.match(/\sdata-sizes="([^"]*)"/)?.[1];
+    let result = tag.replace(/\s(?:alt|srcset|sizes|width|height|decoding|data-sizes)="[^"]*"/g, '');
     const attrs = [`alt="${alt}"`, `width="${asset.width}"`, `height="${asset.height}"`, 'decoding="async"'];
     if (asset.variants.length) {
       const variants = [...asset.variants, asset];
@@ -121,7 +145,8 @@ export function editorialImages(html, lang) {
       const thumb = /cn-service-thumbnail/.test(result);
       /* Gallery tiles are ~18–20rem after the curated-asset pass; the core-system
          dashboard plate may grow to 1040px on desktop (css/stargo-fusion.css). */
-      attrs.push(`sizes="${tile ? '(max-width: 1439px) 288px, 320px' : dashboard ? '(max-width: 991px) 92vw, (max-width: 1439px) 70vw, 1040px' : thumb ? '(max-width: 1439px) 186px, 250px' : card ? '(max-width: 767px) 45vw, 360px' : small ? '(max-width: 767px) 50vw, 400px' : '(max-width: 767px) 100vw, (max-width: 991px) 75vw, 60vw'}"`);
+      if (named) attrs.push(`sizes="${named}"`);
+      else attrs.push(`sizes="${tile ? '(max-width: 1439px) 288px, 320px' : dashboard ? '(max-width: 991px) 92vw, (max-width: 1439px) 70vw, 1040px' : thumb ? '(max-width: 1439px) 186px, 250px' : card ? '(max-width: 767px) 45vw, 360px' : small ? '(max-width: 767px) 50vw, 400px' : '(max-width: 767px) 100vw, (max-width: 991px) 75vw, 60vw'}"`);
     }
     return result.replace(/\s*\/?>(\s*)$/, ` ${attrs.join(' ')}/>$1`);
   });

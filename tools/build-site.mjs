@@ -22,7 +22,8 @@ import * as C from './copy.mjs';
 import { POSTS, BLOG_UI, postPath, featured, others, coverSrc, coverSrcset, coverAlt, formatDate, renderBody, titleHtml } from './blog.mjs';
 import { loadBlocks, art, capTitle, DONORS } from './block-lib.mjs';
 import { PRODUCT_CAPTION } from './editorial-images.mjs';
-import { HERO, HOME_MODULES, HOME_STAGES, NOTICES_CARDS } from './replaceables.mjs';
+import { NOTICES_CARDS } from './replaceables.mjs';
+import { renderHome, lightbox as owLightbox } from './ow-blocks/index.mjs';
 import { SITE } from './paths.mjs';
 
 /** The capability page's donor blocks, one module each in tools/blocks. */
@@ -69,7 +70,6 @@ const localise = (s) => s.replace(SCALORA_CDN, (_, rel) => `assets/${rel.replace
 /** Scalora classes renamed when its stylesheet was namespaced (see css/scalora-modules.sc.css). */
 const SC_RENAME = new Set(['container', 'hero', 'navbar', 'menu-button', 'footer', 'white', 'faq-item', 'error-message', 'contact-card', 'button-text', 'pricing-card', 'color-block', 'utility-page-wrap', 'utility-page-content']);
 const scClasses = (html) => html.replace(/class="([^"]*)"/g, (_, v) => `class="${v.split(/\s+/).filter(Boolean).map((c) => (SC_RENAME.has(c) ? 'sc-' + c : c)).join(' ')}"`);
-const addRootClass = (fragment, token) => fragment.replace(/^(<section\b[^>]*class=")/, `$1${token} `);
 
 const ABSTRACT = [
   'assets/699b6466d5f19893993a4c2c/699b6466d5f19893993a4dca_Sleek%20Container%20Set.webp',
@@ -83,7 +83,6 @@ const IMG = (n) => `assets/stargo/${n}`;
 const OS = { cockpit: IMG('os-cockpit.webp'), desk: IMG('os-sales-desk.webp'), inquiries: IMG('os-inquiries.webp'), agents: IMG('os-agent-center.webp'), quote: IMG('os-quote-studio.webp'), trade: IMG('os-trade-execution.webp'), desktop: IMG('os-desktop.webp'), login: IMG('os-login.webp'), boot: IMG('os-boot.webp'), loading: IMG('os-loading.webp') };
 const BRAND = { wide: IMG('brand-glow-wide.webp'), square: IMG('brand-glow-square.webp'), tall: IMG('brand-glow-tall.webp'), ontology: IMG('brand-ontology.webp'), loop: IMG('brand-loop.webp'), family: (n) => IMG(`brand-family-0${n}.webp`) };
 const MOBILE = { approvals: IMG('mobile-approvals.webp'), agents: IMG('mobile-agents.webp'), inquiry: IMG('mobile-inquiry.webp'), core: IMG('mobile-core.webp'), phoneApprovals: IMG('phone-approvals.webp'), phoneAgents: IMG('phone-agents.webp') };
-const SILO = ['email', 'whatsapp', 'excel', 'erp'].map((n) => IMG(`silo-${n}.webp`));
 /* The owner's own product screenshots (handoff of 2026-09-18, registered in
    tools/imagegen/product-assets.json and described in
    tools/editorial-images.mjs). They ship from their own folder rather than
@@ -363,7 +362,24 @@ function inMonoShell(body, extraCss) {
 
 const PAGES = {};
 
-/* ---- index.html — Mono homepage + three Scalora modules --------------- */
+/* ---- index.html — the OPEN WORK homepage inside the Mono chrome ---------
+   Since 2026-10-09 the homepage sells the product with its own screens
+   (owner: 「图片好小，根本看不清楚系统的东西…把我们系统卖出去」; the round's
+   spec supersedes the old "change the words only" rule for this page — see
+   tools/blocks/README.md). What stays of the Mono homepage is the chrome
+   tools/chrome.mjs rewrites (top navigation, overlay menu, floating pill,
+   footer), the FAQ accordion and the demo form. Everything between the
+   navigation and the footer is tools/ow-blocks: hero → pain → product showcase
+   → approvals → outcomes → 15 apps → pricing → FAQ → demo band.
+
+   Gone from the page, with their stylesheets and scripts: the giant wordmark
+   hero with its photo strips and rotating gallery (rototo, offgrid), the
+   template logo wall (no wall at all unless assets/brands/ holds real logos),
+   the scenario portraits and their film, the fashion banner, the black
+   letter-by-letter marquee, the video theatre, the five small stage pictures,
+   the core-systems switcher and channel band (Scalora), the 288 card, the
+   approval glass card and the blog grid (the blog stays in the navigation and
+   the footer). */
 PAGES['index.html'] = (lang) => {
   const t = (p) => (typeof p === 'string' ? p : p[lang]);
   const { fn: s } = makeSub('home');
@@ -377,26 +393,6 @@ PAGES['index.html'] = (lang) => {
   h = h.replace(/<script type="text\/javascript">WebFont\.load\([\s\S]*?<\/script>/, '');
   if (/webfont|WebFont\.load|googleapis/.test(h)) throw new Error('index: Google Fonts loader survives');
   h = localise(h);
-  h = h.replace(/<link href="css\/monof-template\.app\.shared\.[a-f0-9]+\.css" rel="stylesheet" type="text\/css"\/>/, (m) => `${m}
-<link href="css/inter.css" rel="stylesheet" type="text/css"/>`);
-
-  // Hero list: the five pillars the page then walks through (loop, workforce,
-  // ontology, approval, evolution). The template's five service names stay
-  // only in the numbered stage list, where HOME_MONO turns them into stages.
-  {
-    const flex = findByClass(h, 'div', 'flex-top');
-    if (!flex) throw new Error('index: hero list');
-    const inner = C.HOME_HERO_LIST.map((l) => `<p class="top-text big">${t(l)}<!--$--><br/><!--/$--></p>`).join('');
-    h = h.slice(0, flex.start) + `<div class="flex-top">${inner}</div>` + h.slice(flex.end);
-  }
-  /* V7-HOME: the (从哪里开始？) heading is split into one box per character, so
-     any two characters could part (「订/单交付」 at 768-1440, 「交/付」 at 390).
-     On the Chinese page each of its words goes in a nowrap `.zh-keep` span, as
-     the capability page's closing line does (css/stargo-fusion.css V7-HOME H20). */
-  const START_HEADING = 'Expand your scope with marketing, SEO, or content creation.';
-  for (const [old, pair, opts] of C.HOME_MONO) h = s(h, old, old === START_HEADING && lang === 'zh' ? zhKeepWords(t(pair)) : t(pair), opts);
-  // Shorter hero copy on phones (swapped in before the text animation splits lines).
-  h = h.replace(/<p class="top-text big nm">/, `<p class="top-text big nm" data-mobile-text="${escapeHtml(t(C.HOME_MOBILE.heroSupport))}">`);
 
   // ---- template residue: the "Pages / Get Template" navigator and its dropdown
   {
@@ -405,247 +401,62 @@ PAGES['index.html'] = (lang) => {
     h = h.slice(0, nav.start) + h.slice(nav.end);
     if (/template-navigator|Get Template/.test(h)) throw new Error('index: template navigator survives');
   }
-  // The template's client logos on the sticky cards and the flip cards → the STARGO mark; the image card's logo goes.
-  h = h.replace(/<img[^>]*class="logo-testi-1"[^>]*\/>/g, `<img src="${WORDMARK}" loading="lazy" alt="STARGO WORK" class="logo-testi-1 stargo-card-mark"/>`);
-  h = h.replace(/<img[^>]*class="logo-absolute"[^>]*\/>/g, '');
-  // "Meet the AI workforce" goes to the workforce page, not to a pricing anchor.
-  h = s(h, 'href="#Pricing"', 'href="workforce.html"', { count: 1 });
-  h = s(h, 'id="Pricing"', 'id="compare"', { count: 1 });
-  // The stats block became the pricing ladder: its button goes to pricing.
+
+  // ---- the page body: the template's hero track goes, and of its page content
+  // only the footer stays; the FAQ accordion and the demo form are lifted out of
+  // the sections they sat in and handed to the new blocks.
   {
-    const a = h.indexOf('<section class="section drk"'); const z = h.indexOf('<section class="section with-minus"', a);
-    if (a === -1 || z === -1) throw new Error('index: stats section');
-    let sec = h.slice(a, z);
-    const label = t(C.HOME_MONO.find(([o]) => o === 'Let&#x27;s talk')[1]);
-    sec = setLink(sec, label, { href: 'pricing.html', text: lang === 'zh' ? '查看定价' : 'See pricing' });
-    sec = sec.replace('<p class="top-text half">', `<p class="top-text half" data-mobile-text="${escapeHtml(t(C.HOME_MOBILE.ladder))}">`);
-    if (!sec.includes('data-mobile-text')) throw new Error('index: ladder paragraph');
-    // The template pins its orb 50px from the left of a centred title and indents the first line
-    // past it, which only works for the first line the template happened to have. Inline the orb
-    // before the first character so it travels with the text in both languages and at every width.
-    const orbOpen = '<div class="video-logo for-sct">';
-    const orbAt = sec.indexOf(orbOpen);
-    if (orbAt === -1) throw new Error('index: ladder orb');
-    const orb = extractElement(sec, orbAt, 'div');
-    sec = sec.slice(0, orb.start) + sec.slice(orb.end);
-    const inline = `<span class="video-logo for-sct stargo-inline-orb">${orb.text.slice(orbOpen.length, -'</div>'.length)}</span>`;
-    sec = sec.replace(/(<h2 id="[^"]*" class="h2 for-stats">)/, (m) => m + inline);
-    if (!sec.includes('stargo-inline-orb')) throw new Error('index: ladder orb placement');
-    h = h.slice(0, a) + sec + h.slice(z);
+    const track = findByClass(h, 'div', 'hero-track');
+    if (!track) throw new Error('index: hero track not found');
+    h = h.slice(0, track.start) + h.slice(track.end);
+    const page = findByClass(h, 'div', 'page-content');
+    if (!page) throw new Error('index: page content not found');
+    const footer = findByClass(page.text, 'div', 'footer');
+    const faqWrapper = findByClass(page.text, 'div', 'faq-wrapper');
+    const contactBand = findByClass(page.text, 'section', 'ctc');
+    const form = contactBand && findByClass(contactBand.text, 'div', 'w-form');
+    if (!footer || !faqWrapper || !form) throw new Error('index: footer, FAQ accordion or demo form not found in the template');
+    // Brand wall: real logos from assets/brands/, or no wall at all.
+    const brands = existsSync(`${SITE}/assets/brands`) ? readdirSync(`${SITE}/assets/brands`).filter((f) => /\.(svg|png|webp|jpg|jpeg)$/i.test(f)).sort() : [];
+    const ctx = { lang, t, C, faqWrapper: faqWrapper.text, formHtml: form.text, brands };
+    h = h.slice(0, page.start) + `<div class="page-content">${renderHome(ctx)}${footer.text}</div>` + h.slice(page.end);
+    // The lightbox sits outside .main-content, whose transform would otherwise
+    // be the containing block of anything fixed inside it.
+    h = s(h, '<div class="preloader">', `${owLightbox(ctx)}<div class="preloader">`, { count: 1 });
   }
-
-  // ---- imagery: the problem cards, the five stages, the OS "theatre", the sticky card, the ladder card, the four doors
+  /* Two template decorations the new page does not use: the full-screen
+     crosshair that stood in for the mouse pointer (css/stargo-ow.css gives the
+     pointer back) and the "view work / read more" cursor label of the removed
+     project and article cards, with the stills it carried. */
+  for (const cls of ['plus-line-wrapper', 'text-tool-tip']) {
+    const el = findByClass(h, 'div', cls);
+    if (!el) throw new Error(`index: ${cls} not found`);
+    h = h.slice(0, el.start) + h.slice(el.end);
+  }
+  /* The small orb beside the wordmark (navigation, overlay menu, footer) is
+     the template's looping film, 1.7 MB as MP4 plus 4.9 MB as WebM, to draw a
+     30px circle. On this page it is one frame of that film, as a still (the
+     film's own poster is its dark first frame, before the orb appears):
+       ffmpeg -ss 2 -i assets/699b6466d5f19893993a4bf2/699b6466d5f19893993a4f47_magical_orb_remix_mp4.mp4 \
+         -frames:v 1 -vf scale=132:132:flags=lanczos -c:v libwebp -quality 90 assets/brand/stargo-orb-still.webp
+     132px is the orb box's 66px (.logo-bg, 220% of the 30px circle) at 2x. */
   {
-    const cards = ['699b6466d5f19893993a4d79_work-1.webp', '699b6466d5f19893993a4d34_work-5.webp', '699b6466d5f19893993a4d1a_work-4.webp', '699b6466d5f19893993a4d8f_work-8.webp'];
-    cards.forEach((k, i) => { h = swapImg(h, k, SILO[i]); });
-    /* The five stages, in order (V6 §4.6). Four of them carry the owner's own
-       product. The sentences stayed; on 2026-09-22 the three older 1268px
-       stills were swapped for curated pack screens (filenames unchanged):
-
-         (001) 主动获客 — gos01 is now 增长分析 (product-growth.webp), the
-               growth-narrative screen that was still unused. It is not the
-               control tower: that picture is the Growth OS panel below, so
-               the two sections do not repeat.
-         (002) 外贸销售 — sw028, an inquiry with a grounded draft reply.
-         (003) 企业履约 — sw033 is now the second Sales Desk workbench
-               (product-sales.webp): the inquiry, a draft quote, and the
-               document centre in the same chrome as the other curated stills.
-         (005) 复购与改进 — gos11 is now the workspace home (alt-home.webp).
-               The pack has no separate reactivation still; this is the
-               remaining home screen, fitted in the same card.
-
-       (004) 回款与服务 keeps the concept illustration it had — trade signals
-       carried to a customer's destination — because no released screen is about
-       collection, reconciliation or support.
-
-       The four go in with a non-empty alt, which is a marker and not copy:
-       any non-empty value stops tools/editorial-images.mjs treating the image
-       as decoration, and it then writes the registered sentence over it in the
-       page's language. Same route the four core-system panels take with their
-       slot title, and `stillImage` below with 'STARGO OS'. The one concept
-       illustration keeps swapImg's empty alt, which is what it had.
-
-       The card is `.image-wrap.for-service`, `aspect-ratio: 3 / 2`; a 16:9
-       screenshot in it is fitted, not cropped, by H29 in css/stargo-fusion.css.
-       gos01 and gos11 are dark chrome, so their plates are their own edge
-       colour rather than the light plate the pale screens use. */
-    const CONTENT = { alt: 'STARGO WORK' };
-    const scenes = [['Scene%20%239.webp', HOME_STAGES[0].file, CONTENT], ['Scene%20%235.webp', HOME_STAGES[1].file, CONTENT], ['Scene%20%2310%20(Light)', HOME_STAGES[2].file, CONTENT], ['Scene%20%238.webp', HOME_STAGES[3].file], ['Scene%2018.webp', HOME_STAGES[4].file, CONTENT]];
-    scenes.forEach(([k, src, opts]) => { h = swapImg(h, k, src, opts); });
-    // Retain the original grid/zoom animation. The centre is a real video,
-    // sourced from the owner's fourth template; surrounding imagery is separate.
-    const theatre = HERO.theatre;
-    const ids = [...h.matchAll(/class="video-bg-animation w-background-video w-background-video-atom"><video id="([^"]+)-video"/g)].map((m) => m[1]);
-    const inTheatre = ids.filter((id) => h.indexOf(`id="${id}-video"`) > h.indexOf('<section class="video-section"') && h.indexOf(`id="${id}-video"`) < h.indexOf('<section id="compare"'));
-    if (inTheatre.length !== 7) throw new Error(`index: expected 7 theatre videos, found ${inTheatre.length}`);
-    inTheatre.forEach((id, i) => {
-      h = stillImage(h, id, theatre[i], 'STARGO OS');
-      if (i === HERO.centreIndex) {
-        const marker = `<img src="${theatre[i]}" alt="STARGO OS" loading="lazy" class="stargo-still"/>`;
-        if (!h.includes(marker)) throw new Error('index: centre media marker missing');
-        h = h.replace(marker, `<video id="stargo-brand-film" data-stargo-video loop muted playsinline preload="none" poster="${HERO.poster}" aria-label="${lang === 'zh' ? '银色轨道协同运转的品牌概念动画' : 'Brand film: silver orbital forms moving together'}"><source src="${HERO.film}" type="video/mp4"/></video>`);
-      }
-    });
-    const mediaLabel = lang === 'zh' ? '播放视频' : 'Play video';
-    h = h.replace('<div class="sticky-video-section">', `<div class="sticky-video-section"><button class="stargo-media-toggle" type="button" aria-controls="stargo-brand-film" aria-pressed="false" data-play-label="${mediaLabel}" data-pause-label="${lang === 'zh' ? '暂停视频' : 'Pause video'}">${mediaLabel}</button>`);
-    const play = elementContaining(h, 'class="play-video w-inline-block w-lightbox"', 'a');
-    h = h.slice(0, play.start) + h.slice(play.end);
-    if (/youtube|embedly|w-lightbox/.test(h)) throw new Error('index: lightbox survives');
-    // The sticky card's portrait film and the contact band's group photograph stay as the
-    // template designed them (licensed template assets; the copy marks the cards as scenarios).
-    const stickyVideo = [...h.matchAll(/<video id="([^"]+)-video"/g)].map((m) => m[1]).find((id) => h.slice(h.indexOf('<section class="testimonials-section"'), h.indexOf('<section class="section drk"')).includes(`id="${id}-video"`));
-    if (!stickyVideo) throw new Error('index: sticky card video');
-    h = swapImg(h, '699b6466d5f19893993a4f1a_Sunset-Serenity', BRAND.square);
-    h = swapImg(h, '699b6466d5f19893993a4efc_Smiling%20Bearded', IMG('avatar-core.png'));   // the chat card's bearded-man avatar → the core orb
-    // The blog grid: the template's four cards, filled with the four newest articles.
-    h = blogCards(h, 'blog-grid', 'w-dyn-item', featured(4), lang, { image: 'testimonials-photo', date: 'data-text ab', title: 'blog-txt', sizes: '(max-width: 767px) 100vw, (max-width: 991px) 50vw, 25vw' });
+    const ORB_POSTER = 'assets/brand/stargo-orb-still.webp';
+    const orbs = [...h.matchAll(/class="logo-bg[^"]*\bw-background-video\b[^"]*"><video id="([^"]+)-video"/g)].map((m) => m[1]);
+    if (!orbs.length) throw new Error('index: no orb films found in the chrome');
+    for (const id of orbs) h = stillImage(h, id, ORB_POSTER, '');
+    if (/<video\b/.test(h)) throw new Error('index: a video survives on the homepage');
   }
-  const D = C.HOME_DUP_DESC;
-  h = s(h, D.original, t(D.first), { nth: 0 });
-  h = s(h, D.original, t(D.second), { nth: 0 });
   h = h.replace(/(class="(?:top-text logo[^"]*|h1)">)Studio(<)/g, '$1WORK$2');
   h = h.replace(/<title>Mōno™<\/title>/, '<title>STARGO</title>');
-  h = s(h, '© 2026 Mōno™ Studio', '© 2026 STARGO WORK');
+  h = s(h, '© 2026 Mōno™ Studio', '© 2026 STARGO WORK');   // the footer line; tools/copy.mjs CHROME drops its trailing " -"
   h = h.split('Mōno™').join('STARGO');
 
-  // Brand wall: real logos from assets/brands/, or no wall at all.
-  const brands = existsSync(`${SITE}/assets/brands`) ? readdirSync(`${SITE}/assets/brands`).filter((f) => /\.(svg|png|webp|jpg|jpeg)$/i.test(f)).sort() : [];
-  const grid = elementContaining(h, 'class="partner-grid"', 'div', { up: 1 });
-  if (!grid.text.startsWith('<div class="margin-50">')) throw new Error('index: partner grid wrapper');
-  if (brands.length) {
-    const card = findByClass(grid.text, 'div', 'partner-card');
-    const cards = brands.map((f, i) => card.text
-      .replace(/card-wrapper _0\d/, `card-wrapper _0${(i % 8) + 1}`)
-      .replace(/<img[^>]*class="front-logo-img"[^>]*\/>|(<div class="front-logo">)<img[^>]*\/>/, (m, open) => `${open ?? ''}<img src="assets/brands/${f}" loading="lazy" alt="" class="brand-logo"/>`)
-      .replace(/(<div class="back-logo">)<img[^>]*\/>/, `$1<img src="assets/brands/${brands[(i + 1) % brands.length]}" loading="lazy" alt="" class="brand-logo"/>`));
-    const inner = findByClass(grid.text, 'div', 'partner-grid');
-    const rebuilt = grid.text.slice(0, inner.start) + inner.text.replace(/>[\s\S]*<\/div>$/, `>${cards.join('')}</div>`) + grid.text.slice(inner.end);
-    h = h.slice(0, grid.start) + rebuilt + h.slice(grid.end);
-    h = s(h, '(Partners)', t(C.HOME_BRAND_WALL.caption));
-  } else {
-    // Template wall kept (flip animation and all), labelled as a sample.
-    h = s(h, '(Partners)', t(C.HOME_BRAND_WALL.captionSample));
-  }
-
-  // The "work" cards point at the loop table below.
-  for (const p of ['project_forma-digital.html', 'project_one-step.html', 'project_nero-vision.html', 'project_bold-moves.html']) h = s(h, `href="${p}"`, 'href="#loop"');
-  h = setLink(h, t(C.HOME_MONO.find(([o]) => o === 'View all work')[1]), { href: '#loop' });
-  /* V7-HOME: the band just above #loop shrinks by 100px while the page scrolls
-     past it, and Webflow's glide aims at where #loop was at click time, so
-     「看业务主线」 and the four cards landed with the section's top 100px above
-     the screen at 992px and up. js/stargo-anchor-glide.js re-measures the
-     target on every frame (as the intelligence page's hero buttons do). */
-  {
-    let n = 0;
-    h = h.replace(/<a\b([^>]*?) href="#loop"/g, (m, pre) => { n++; return `<a${pre} data-stargo-anchor="" href="#loop"`; });
-    if (n !== 5) throw new Error(`index: expected 5 links to #loop, found ${n}`);
-    h = s(h, '</body>', '<script src="js/stargo-anchor-glide.js" defer></script></body>', { count: 1 });
-  }
-  /* V8: the five business stages share one sticky picture box, and Mono's own
-     interactions dim every one of them once the last stage passes the viewport's
-     midline — leaving that box empty until the column itself scrolls out, which
-     is half a viewport height of scrolling (488px measured at 768x1024, 420px at
-     1440x900, 622px at 1920x1080 — the quantity is the height, not the width),
-     and briefly again in the 10px gaps between stages. js/stargo-stage-hold.js
-     shows the stage nearest the midline through those gaps and hands the column
-     straight back to the runtime the moment it lights one. The interaction data
-     is untouched. */
-  h = s(h, '</body>', '<script src="js/stargo-stage-hold.js" defer></script></body>', { count: 1 });
-  h = h.replace(/<h3 class="work-title">\d\d<\/h3><h3 class="work-title">©<\/h3>/g, (m, i) => m).replace(/<h3 class="work-title">(26|24|25)<\/h3><h3 class="work-title">©<\/h3>/g, (m) => m);
-  {
-    let n = 0;
-    h = h.replace(/<h3 class="work-title">(?:26|25|24)<\/h3><h3 class="work-title">©<\/h3>/g, () => `<h3 class="work-title">0${++n}</h3><h3 class="work-title"></h3>`);
-    if (n !== 4) throw new Error(`index: expected 4 work cards, found ${n}`);
-  }
-
-  // Scalora modules. The nine-stage table now lives on the capabilities page:
-  // the homepage tells the loop once (five stages) and drills into four systems.
-  const sub = (name, fragment, list) => { const { fn } = makeSub(name); let f = fragment; for (const [old, pair, opts] of list) f = fn(f, old, t(pair), opts); return f; };
-  /* Scalora's hero writes its two title lines as bare `<h1>` tags. The page's
-     one h1 is Mono's hero wordmark, so both become h2 — every tag, with or
-     without attributes, open and close alike (a `<h1 ` pattern used to miss the
-     bare tags and shipped `<h1>…</h2>`). `.sc-scope .hero-title-block h2` in
-     stargo-fusion.css restores the h1 type scale, so nothing moves. */
-  let hero = frag('hero.html').replace(/<h1(?=[\s>])/g, '<h2').replace(/<\/h1>/g, '</h2>');
-  if (/<\/?h1[\s>]/.test(hero)) throw new Error('index: a level-one heading survives in the Scalora hero');
-  hero = addRootClass(sub('sc-hero', hero, C.HOME_SC_HERO), 'sc-scope').replace(/^<section class="/, '<section id="loop" class="');
-  hero = hero.replace(/<div class="hero-description-block"><div>/, `<div class="hero-description-block"><div data-mobile-text="${escapeHtml(t(C.HOME_MOBILE.scHero))}">`);
-  let products = addRootClass(sub('sc-products', frag('products.html'), C.HOME_SC_PRODUCTS), 'sc-scope');
-  {
-    // The section heading is eight characters a line on desktop and ten on
-    // phones; the two languages' strings are shaped for those widths, and the
-    // phone form travels the same data-mobile-text route as the hero copy.
-    const title = t(C.HOME_SC_PRODUCTS[1][1]);
-    const before = products;
-    products = products.replace(`<h2>${title}</h2>`, `<h2 data-mobile-text="${escapeHtml(t(C.HOME_MOBILE.products))}">${title}</h2>`);
-    if (products === before) throw new Error('index: core-systems heading not found for the mobile variant');
-  }
-  {
-    /* four pictures → the four product slots, desktop and mobile variants alike.
-       Keyed on the start of each slot's name (V6 §4.7), in both languages: the
-       two engines keep their product names, the two business areas are named
-       ERP and AI 创作 / AI Creative.
-
-       Two of the four are the owner's own screens. Growth OS 「发现目标企业，
-       查清公司与联系人，分析采购信号与开发优先级」 shows the growth control
-       tower (主动获客.docx), the screen this engine is named after. Sales Desk
-       「承接主动开发客户与渠道询盘，统一 CRM、沟通历史、产品匹配、回复与跟进」
-       shows sw028: an inquiry's facts on one side and a grounded draft reply on
-       the other. The other two keep the concept illustration they had — for ERP
-       the component matching, packaging and fulfilment handoff, for AI 创作 a
-       camera-like aperture. The ERP
-       screen the owner sent (配图二.docx, 生产管理) was placed and held the same
-       day: it shows a year of rising monthly production beside 未开始生产工单 0,
-       在建工作订单 0, 制造品价值 ¥0.00 and 完工率 0%, with the setup guide at 0%
-       完成 — an empty tenant carrying a year of production, and those four zeros
-       stay legible at the 692x390 this panel renders. Held for a capture against
-       seeded data. No released screenshot is an image or video workspace.
-
-       The picture keeps its own shape here. `.prodect-dashboard-image` is
-       `width: 100%; height: 100%` inside a `display: flex` block whose own
-       height is its content's, so the `height: 100%` resolves against an
-       indefinite height and the panel is as tall as the picture makes it —
-       measured 692×433.1 for a 1586×992 illustration at 1440 and 692×389.7 for
-       a 1268×714 screenshot, both exactly the file's own ratio. Nothing is
-       cropped and nothing is stretched, so these panels need no rule. */
-    const bySystem = HOME_MODULES;
-    const used = new Set();
-    let slots = 0;
-    products = products.replace(/<div class="products-cards-dashboard-block[^"]*">[\s\S]*?<h3 class="heading-style-h4">([^<]*)<\/h3>/g, (block, title) => {
-      const key = Object.keys(bySystem).find((k) => title.startsWith(k));
-      if (!key) throw new Error(`index: unknown product slot ${title}`);
-      used.add(bySystem[key]); slots++;
-      // `title` is already HTML text (it may carry &amp;), so it is not escaped a second time.
-      return block.replace(/<img[^>]*class="prodect-dashboard-image"\/>/, `<img src="${bySystem[key]}" loading="lazy" alt="${title.replace(/"/g, '&quot;')}" class="prodect-dashboard-image"/>`);
-    });
-    if (slots !== 8 || used.size !== 4) throw new Error(`index: expected 8 product panels (4 desktop + 4 phone) showing 4 pictures, found ${slots} showing ${used.size}`);
-    if (/prodect-dashboard-0\d\.svg/.test(products)) throw new Error('index: Scalora dashboard drawing survives');
-  }
-  const integration = addRootClass(sub('sc-integration', frag('integration.html'), C.HOME_SC_INTEGRATION), 'sc-scope');
-  const insertBefore = (html, anchor, fragment, label) => { const i = html.indexOf(anchor); if (i === -1) throw new Error(`insertion anchor not found for ${label}`); return html.slice(0, i) + fragment + '\n' + html.slice(i); };
-  h = insertBefore(h, '<section class="section with-minus"', hero, 'four-layer stack');
-  h = insertBefore(h, '<section class="video-section"', products + integration, 'switcher + channels band');
-  /* 旋转图片展示 — rototo's rotating gallery, in the empty band of the hero's own
-     footer: after the four dots and above 「© 2026 STARGO WORK」, which is the box
-     the owner drew in red. It goes in as a third child of `.hero`; that element's
-     other two children are position:absolute with explicit offsets and so is the
-     block, so nothing on the page moves — measured with and without it at
-     390/768/991/1366/1920 in both languages, every rect identical. The cut, and
-     why each of rototo's three animations had to be replayed as CSS rather than
-     carried, is documented in tools/blocks/ro-gallery.mjs. */
-  {
-    const dots = `${'<div class="circle-divider"></div>'.repeat(4)}</div></div>`;
-    const copyright = '<div class="container-bottom bottom add-max-cnt">';
-    const at = h.indexOf(dots + copyright);
-    if (at === -1) throw new Error('index: the hero band between the four dots and the copyright row is not where it was');
-    h = h.slice(0, at + dots.length) + renderBlock('ro-gallery', lang) + h.slice(at + dots.length);
-  }
   const monoLink = /<link href="css\/monof-template\.app\.shared\.[a-f0-9]+\.css" rel="stylesheet" type="text\/css"\/>/;
-  /* offgrid's sheet still ships with the homepage because the retired opening
-     block's rules live in it. The overlay itself is not in the document —
-     see homeIntro(). The sheet goes before scalora's and before
-     stargo-fusion.css, the same order the capability page puts donor sheets in. */
-  h = h.replace(monoLink, (m) => `${m}\n<link href="css/${DONORS.offgrid.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/${DONORS.rototo.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/scalora-modules.sc.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>`);
+  if (!monoLink.test(h)) throw new Error('index: Mono stylesheet link not found');
+  h = h.replace(monoLink, (m) => `${m}\n<link href="css/inter.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-ow.css" rel="stylesheet" type="text/css"/>`);
+  h = s(h, '<body>', '<body class="ow-home">', { count: 1 });
+  h = s(h, '</body>', '<script src="js/stargo-ow.js" defer></script></body>', { count: 1 });
   h = homeIntro(h, lang);
   return h;
 };
@@ -2237,7 +2048,10 @@ PAGES['404.html'] = (lang) => {
 const FORBIDDEN = [
   /Mōno™ Studio/, /monostudio/i, /Awwwards/, /Lorem/i, /cal\.com/, /Tomato Store/, /Market Play/,
   /Forma Digital/, /Nero Vision/, /One Step/, /Bold Moves/, /Auralis/, /Light[\s\u00a0]Studio/, /Joda Trump/, /Elena Rossi/, /Adrian Keller/, /Camila Verga/,
-  /\$\s?\d/, /logoipsum/i, /Get Template/, /template-navigator/, /youtube\.com/, /embedly/,
+  /* A template's dollar price ("$2,000", "$174M"). The OPEN WORK renders' demo
+     prices are quoted on the homepage as "US$3.85" (always with the currency
+     prefix the interface itself prints), so only a bare "$" is forbidden. */
+  /(?<!US)\$\s?\d/, /logoipsum/i, /Get Template/, /template-navigator/, /youtube\.com/, /embedly/,
   // stock photography that shipped with the templates
   /Young%20Man%20Smiling/, /Sunset-Serenity/, /Joyful-Group/, /Red-Hat-Portrait/, /work-\d+\.webp/, /work7\.webp/, /Matcha-Latte/, /Party-Scene/, /Scene%20/, /Portrait-of-a-Man/, /Diverse-Group/, /Coding-Workspace/, /Sleek%20Container/, /Futuristic/, /blog-\d\.webp/, /about-6/,
   // lifelogx template people, its CMS article images and its brand

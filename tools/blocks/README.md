@@ -43,6 +43,18 @@ export function render(frag, ctx) { … }
 
 ## Rules — read these before anything else
 
+> **Superseded for the homepage (owner, 2026-10-09).** The owner's requests this
+> round — 「有些图片好小，根本看不清楚系统的东西」, 「把我们系统卖出去」,
+> 「发挥出你最强的实力和审美，我的图片不对你也可以不用」 — replace the
+> "change the words only" rule below for the pages and sections rebuilt in that
+> round. The zh and en homepages are no longer a port of the Mono homepage: their
+> sections between the navigation and the footer are this site's own markup in
+> `tools/ow-blocks/` (styles `css/stargo-ow.css`, behaviour `js/stargo-ow.js`,
+> words `HOME_OW` in `tools/copy.mjs`), built around the OPEN WORK renders. The
+> Mono chrome, the FAQ accordion and the demo form are kept. Every other page
+> and every block in this folder still follows the rules below until a later
+> round says otherwise.
+
 The owner's brief, verbatim: **"要求完美复刻移植，仅仅针对文字进行改动"** — a
 perfect port of the template block, changing the words and nothing else. The
 review document (F:/stargo 网站/.docx/word/media/imageN.png) shows exactly which

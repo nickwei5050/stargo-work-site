@@ -25,8 +25,11 @@ mkdirSync(SHOTS, { recursive: true });
 const NAMES = [...SITE_PAGES, '404.html'];
 const PAGES = process.env.ONLY ? process.env.ONLY.split(',') : [...NAMES, ...NAMES.map((n) => `en/${n}`)];
 
-/** Latin tokens that are supposed to be there. */
-const ALLOWED = /^(STARGO|WORK|7\.0|AI|CRM|R[0-4]|E\d\d|WF\d\d|jq|json|fp\.[a-z-]+|tests?\/[\w./-]+|[\w.-]+\.(mjs|json)|Activepieces|Chatwoot|MoneyPrinterTurbo|WeKnora|Yente|OpenSanctions|Evolution|Console|Reddit|GEO|Identity|Spine|Playwright|Twenty|Firecrawl|Univer|ModLens|AgentTeams|Infinite|Canvas|Corey|Haines|Marketing|Skills|Puter|Windmill|ERPNext|Medusa|StaffDeck|PostHog|OpenAI|Codex|Channel|Plugin|SDK|Ava|Leo|Mia|Emma|Noah|Scout|Alex|Luna|Owen|Felix|Fiona|Sara|Tara|Moto|Verde|Distribuidora|Subscribe|CIF|Santos|IP67|INMETRO|SG-EM-750|Type-2|PROV-O|SQLite|MIT|OFL|SIL|GSAP|SplitText|ScrollTrigger|Lenis|Lottie|Webflow|jQuery|Inter|Display|Instrument|Serif|Mōno™?|Scalora|Startup|GreenSock|LICENSE|live-verified|demo-verified|pilot|roadmap|research-preview|test-[\w-]+|approval\/asked|DEMO-[\w-]+|first-party|registry|capabilities|workflows|providers|length|select|approvalRequired|true|campaign|DNA|GTM|KYC|MCP|ETL|provider|Open|Font|License|SIL|OFL|STARGO|Nothing|SG|Ontology|Forward|Deployed|Proactive|Evolution|Engine|Observer|Evaluation|Canary|Promote|Rollback|Foundation|Launch|Growth|Global|Acquisition|Enterprise|Custom|Cloud|Reddit|LinkedIn|Facebook|YouTube|WhatsApp|Email|Alibaba|Google|Maps|Trade|Signal|Revenue|Excel|ERP|Loop|Intelligence|Capabilities|Workforce|Quote|Studio|Execution|Customer|Unified|Inbox|Agent|Agents|Teams|Orchestrator|Follow-up|Market|Research|Importer|Dealer|Discovery|Buying|Committee|Product|Matching|Approval|Gate|Human-in-the-Loop|Scheduled|Routines|Event-Driven|Always-On|Pages|Cloudflare|Resend|HTML|CSS|tools\/visuals|WORK|Boss|Cockpit|Command|Center|Orbital|Workspace|Mission|Control|Execution|View|System|Map|App|Library|Desktop|Shell|Mobile|Companion|Notification|Voice|Console)$/;
+/** Latin tokens that are supposed to be there. OPEN (the core app, OPEN WORK),
+    FOB and MOQ (trade terms, like PI/CRM/ERP) and New / API (the sidebar app
+    「New API（AI 网关）」, named exactly as the interface names it) since the
+    2026-10-09 homepage. */
+const ALLOWED = /^(STARGO|WORK|OPEN|FOB|MOQ|New|API|7\.0|AI|CRM|R[0-4]|E\d\d|WF\d\d|jq|json|fp\.[a-z-]+|tests?\/[\w./-]+|[\w.-]+\.(mjs|json)|Activepieces|Chatwoot|MoneyPrinterTurbo|WeKnora|Yente|OpenSanctions|Evolution|Console|Reddit|GEO|Identity|Spine|Playwright|Twenty|Firecrawl|Univer|ModLens|AgentTeams|Infinite|Canvas|Corey|Haines|Marketing|Skills|Puter|Windmill|ERPNext|Medusa|StaffDeck|PostHog|OpenAI|Codex|Channel|Plugin|SDK|Ava|Leo|Mia|Emma|Noah|Scout|Alex|Luna|Owen|Felix|Fiona|Sara|Tara|Moto|Verde|Distribuidora|Subscribe|CIF|Santos|IP67|INMETRO|SG-EM-750|Type-2|PROV-O|SQLite|MIT|OFL|SIL|GSAP|SplitText|ScrollTrigger|Lenis|Lottie|Webflow|jQuery|Inter|Display|Instrument|Serif|Mōno™?|Scalora|Startup|GreenSock|LICENSE|live-verified|demo-verified|pilot|roadmap|research-preview|test-[\w-]+|approval\/asked|DEMO-[\w-]+|first-party|registry|capabilities|workflows|providers|length|select|approvalRequired|true|campaign|DNA|GTM|KYC|MCP|ETL|provider|Open|Font|License|SIL|OFL|STARGO|Nothing|SG|Ontology|Forward|Deployed|Proactive|Evolution|Engine|Observer|Evaluation|Canary|Promote|Rollback|Foundation|Launch|Growth|Global|Acquisition|Enterprise|Custom|Cloud|Reddit|LinkedIn|Facebook|YouTube|WhatsApp|Email|Alibaba|Google|Maps|Trade|Signal|Revenue|Excel|ERP|Loop|Intelligence|Capabilities|Workforce|Quote|Studio|Execution|Customer|Unified|Inbox|Agent|Agents|Teams|Orchestrator|Follow-up|Market|Research|Importer|Dealer|Discovery|Buying|Committee|Product|Matching|Approval|Gate|Human-in-the-Loop|Scheduled|Routines|Event-Driven|Always-On|Pages|Cloudflare|Resend|HTML|CSS|tools\/visuals|WORK|Boss|Cockpit|Command|Center|Orbital|Workspace|Mission|Control|Execution|View|System|Map|App|Library|Desktop|Shell|Mobile|Companion|Notification|Voice|Console)$/;
 
 const browser = await chromium.launch();
 let failures = 0;
@@ -73,7 +76,10 @@ for (const page of PAGES) {
     }
     return [...out];
   });
-  const residue = page.startsWith('en/') ? [] : latin.filter((t) => !t.split(/[\s·（）()「」【】、，。：:；;/·—–-]+/).filter(Boolean).every((w) => !/[A-Za-z]{3,}/.test(w) || ALLOWED.test(w)));
+  /* Words are cut at Chinese characters too: the interface writes app names
+     as 「客户CRM」 and 「企业ERP」 with no space, and the token to judge there is
+     "CRM", not "客户CRM". */
+  const residue = page.startsWith('en/') ? [] : latin.filter((t) => !t.split(/[\s·（）()「」【】、，。：:；;/·—–\p{Script=Han}-]+/u).filter(Boolean).every((w) => !/[A-Za-z]{3,}/.test(w) || ALLOWED.test(w)));
 
   // Internal links must resolve to a file in the site root.
   const hrefs = await p.evaluate(() => [...document.querySelectorAll('a[href]')].map((a) => a.getAttribute('href')));
