@@ -23,7 +23,7 @@ import { POSTS, BLOG_UI, postPath, featured, others, coverSrc, coverSrcset, cove
 import { loadBlocks, art, capTitle, DONORS } from './block-lib.mjs';
 import { PRODUCT_CAPTION } from './editorial-images.mjs';
 import { NOTICES_CARDS } from './replaceables.mjs';
-import { renderHome, lightbox as owLightbox } from './ow-blocks/index.mjs';
+import { renderHome, lightbox as owLightbox, stickyBar as owStickyBar } from './ow-blocks/index.mjs';
 import { SITE } from './paths.mjs';
 
 /** The capability page's donor blocks, one module each in tools/blocks. */
@@ -422,7 +422,7 @@ PAGES['index.html'] = (lang) => {
     h = h.slice(0, page.start) + `<div class="page-content">${renderHome(ctx)}${footer.text}</div>` + h.slice(page.end);
     // The lightbox sits outside .main-content, whose transform would otherwise
     // be the containing block of anything fixed inside it.
-    h = s(h, '<div class="preloader">', `${owLightbox(ctx)}<div class="preloader">`, { count: 1 });
+    h = s(h, '<div class="preloader">', `${owLightbox(ctx)}${owStickyBar(ctx)}<div class="preloader">`, { count: 1 });
   }
   /* Two template decorations the new page does not use: the full-screen
      crosshair that stood in for the mouse pointer (css/stargo-ow.css gives the
@@ -447,6 +447,9 @@ PAGES['index.html'] = (lang) => {
     for (const id of orbs) h = stillImage(h, id, ORB_POSTER, '');
     if (/<video\b/.test(h)) throw new Error('index: a video survives on the homepage');
   }
+  /* The footer's button says what every other demo button on this page says
+     (the shared chrome calls it 「预约演示」 elsewhere). */
+  h = s(h, '<p class="top-text for-b">Let’s Collaborate</p>', `<p class="top-text for-b">${escapeHtml(t(C.HOME_OW.demoLabel))}</p>`, { count: 1 });
   h = h.replace(/(class="(?:top-text logo[^"]*|h1)">)Studio(<)/g, '$1WORK$2');
   h = h.replace(/<title>Mōno™<\/title>/, '<title>STARGO</title>');
   h = s(h, '© 2026 Mōno™ Studio', '© 2026 STARGO WORK');   // the footer line; tools/copy.mjs CHROME drops its trailing " -"
@@ -455,6 +458,11 @@ PAGES['index.html'] = (lang) => {
   const monoLink = /<link href="css\/monof-template\.app\.shared\.[a-f0-9]+\.css" rel="stylesheet" type="text\/css"\/>/;
   if (!monoLink.test(h)) throw new Error('index: Mono stylesheet link not found');
   h = h.replace(monoLink, (m) => `${m}\n<link href="css/inter.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-ow.css" rel="stylesheet" type="text/css"/>`);
+  /* Smooth scrolling follows the visitor's motion setting: with reduced
+     motion, Lenis moves the page as far as the wheel says, at once. */
+  h = s(h, 'const lenis = new Lenis({\n smooth: true,\n lerp: 0.08,', 'const owStill = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;\nconst lenis = new Lenis({\n smooth: !owStill,\n smoothWheel: !owStill,\n lerp: owStill ? 1 : 0.08,', { count: 1 });
+  /* the template footer is a <div>: name it as the page's footer landmark */
+  h = s(h, '<div data-wf--footer--variant="base" class="footer">', '<div data-wf--footer--variant="base" class="footer" role="contentinfo">', { count: 1 });
   h = s(h, '<body>', '<body class="ow-home">', { count: 1 });
   h = s(h, '</body>', '<script src="js/stargo-ow.js" defer></script></body>', { count: 1 });
   h = homeIntro(h, lang);

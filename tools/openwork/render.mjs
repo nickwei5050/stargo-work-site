@@ -59,12 +59,19 @@ const pages = scenes(icon);
 for (const [name, html] of Object.entries(pages)) writeFileSync(`${WORK}/${name}.html`, html);
 
 /* ---- what to render ------------------------------------------------------ */
-/* app:  full app 1280×880 @2x → main 1600 wide, variants 800/1200/2400.
-   card: phone card, 390 CSS px @3x (1170 px) → main 1170, variant 780.
-   crop: desktop crop @2x of the page's .shot → main = render width.
-   apps: the sidebar from the brand row through the last app @2x.          */
+/* app:   full app 1280×880 @2x → main 1600 wide, variants 800/1200/2400.
+   focus: the chat column alone, 800 CSS px @3x (2400 px) → main 1600,
+          variants 1200/1800/2400; shown about 1140px wide on desktop, so its
+          13.5px interface text reads at about 19px, and the 2400 file keeps
+          a retina screen at 2 device pixels per image pixel or better.
+   card:  phone card, 390 CSS px @3x (1170 px) → main 1170, variant 780.
+   gate:  a close-up in phone typography, 380 CSS px @3x → main 1140, 760.
+   crop:  desktop crop @2x of the page's .shot → main = render width.
+   apps:  the sidebar from the brand row through the last app @3x.         */
 const APP = { viewport: [1280, 880], dsf: 2, main: 1600, variants: [800, 1200, 2400] };
+const FOCUS = { viewport: [800, 1400], dsf: 3, main: 1600, variants: [1200, 1800, 2400] };
 const CARD = { viewport: [390, 844], dsf: 3, variants: [780] };
+const GATE = { viewport: [380, 1000], dsf: 3, variants: [760] };
 const SHOTS = [
   { id: 'ow01-home', page: 'home', kind: 'app', scene: 'home · 新聊天 + 快捷操作' },
   { id: 'ow02-inquiry', page: 'inquiry', kind: 'app', scene: 'inquiry · 分析询盘并回复' },
@@ -72,14 +79,19 @@ const SHOTS = [
   { id: 'ow04-outreach', page: 'outreach', kind: 'app', scene: 'outreach · 起草开发信' },
   { id: 'ow05-brief', page: 'brief', kind: 'app', scene: 'brief · 老板看板周报' },
   { id: 'ow06-follow', page: 'follow', kind: 'app', scene: 'follow · 跟进客户' },
+  { id: 'ow32-inquiry-focus', page: 'inquiry-focus', kind: 'focus', scene: 'inquiry · 对话栏（桌面展示）' },
+  { id: 'ow33-quote-focus', page: 'quote-focus', kind: 'focus', scene: 'quote · 对话栏（桌面展示）' },
+  { id: 'ow34-outreach-focus', page: 'outreach-focus', kind: 'focus', scene: 'outreach · 对话栏（桌面展示）' },
+  { id: 'ow35-brief-focus', page: 'brief-focus', kind: 'focus', scene: 'brief · 对话栏（桌面展示）' },
   { id: 'ow12-inquiry-card', page: 'inquiry-card', kind: 'card', scene: 'inquiry · 回复草稿 + 审批栏（手机）' },
   { id: 'ow13-quote-card', page: 'quote-card', kind: 'card', scene: 'quote · PI 卡（手机）' },
   { id: 'ow14-outreach-card', page: 'outreach-card', kind: 'card', scene: 'outreach · 目标客户表（手机）' },
   { id: 'ow15-brief-card', page: 'brief-card', kind: 'card', scene: 'brief · 指标 + 需要你决定（手机）' },
   { id: 'ow16-follow-card', page: 'follow-card', kind: 'card', scene: 'follow · 建议跟进（手机）' },
-  { id: 'ow20-apps', page: 'home', kind: 'apps', scene: 'home · 侧栏 15 个应用', variants: [] },
-  { id: 'ow21-pi-check', page: 'pi-check', kind: 'crop', width: 970, scene: 'quote · 价格校验 + PI + 审批中', variants: [720, 1080, 1440] },
-  { id: 'ow22-approval-bar', page: 'approval-bar', kind: 'crop', width: 820, scene: 'inquiry · 回复草稿 + 对外发送需要你确认', variants: [720, 1080] },
+  { id: 'ow20-apps', page: 'home', kind: 'apps', scene: 'home · 侧栏 15 个应用', variants: [520] },
+  { id: 'ow21-pi-check', page: 'pi-check', kind: 'gate', scene: 'quote · 价格校验 + PI 审批中（特写）' },
+  { id: 'ow22-approval-bar', page: 'approval-bar', kind: 'gate', scene: 'inquiry · 回复草稿 + 对外发送需要你确认（特写）' },
+  { id: 'ow24-step-log', page: 'step-log', kind: 'gate', scene: 'follow · 每一步读了什么（特写）' },
   { id: 'ow23-quick-actions', page: 'quick-actions', kind: 'crop', width: 1000, scene: 'home · 输入框 + 快捷操作', variants: [720, 1200] },
 ];
 const chosen = only.length ? SHOTS.filter(s => only.includes(s.id)) : SHOTS;
@@ -119,7 +131,7 @@ async function checkLayout(p, id) {
     }
     for (const el of document.querySelectorAll('.card, .metric, .steps')) if (el.scrollWidth > el.clientWidth + 1) out.push(`horizontal overflow in ${el.className}: ${el.textContent.trim().slice(0, 40)}`);
     /* Truncated text: an ellipsis or a clipped line hides demo content the page talks about. */
-    for (const el of document.querySelectorAll('.chat span, .draft, .btn, .tag, .chip, .mail, td, .tx')) {
+    for (const el of document.querySelectorAll('.chat span, .draft, .btn, .tag, .chip, .mail:not(.excerpt), td, .tx')) {
       if (el.getClientRects().length && (el.scrollWidth > el.clientWidth + 1 || el.scrollHeight > el.clientHeight + 1) && getComputedStyle(el).overflow !== 'visible') out.push(`truncated: ${el.textContent.trim().slice(0, 50)}`);
     }
     return out;
@@ -130,7 +142,7 @@ async function checkLayout(p, id) {
 const records = [];
 const hot = {};
 for (const s of chosen) {
-  const spec = s.kind === 'app' || s.kind === 'apps' ? APP : s.kind === 'card' ? CARD : { viewport: [s.width, 900], dsf: 2 };
+  const spec = s.kind === 'app' ? APP : s.kind === 'apps' ? { ...APP, dsf: 3 } : s.kind === 'focus' ? FOCUS : s.kind === 'card' ? CARD : s.kind === 'gate' ? GATE : { viewport: [s.width, 900], dsf: 2 };
   const p = await open(s.page, spec.viewport, spec.dsf);
   await checkLayout(p, s.id);
   const file = `${WORK}/${s.id}.png`;
@@ -153,7 +165,7 @@ for (const s of chosen) {
 
   const png = readFileSync(file);
   const meta = await sharp(png).metadata();
-  const mainWidth = Math.min(s.kind === 'app' ? APP.main : meta.width, meta.width);
+  const mainWidth = Math.min(spec.main && s.kind !== 'apps' ? spec.main : meta.width, meta.width);
   const encode = (w) => sharp(png).resize({ width: w, withoutEnlargement: true, kernel: 'lanczos3' })
     .webp({ quality: 85, effort: 6, smartSubsample: true }).toBuffer();
   const mainBuf = await encode(mainWidth);
@@ -177,7 +189,7 @@ for (const s of chosen) {
     sourceFile: `.wrangler/openwork/${s.id}.png`,
     sourceSha256: sha(png),
     sourcePixels: [meta.width, meta.height],
-    crop: s.kind === 'app' ? 'none' : s.kind === 'card' ? 'focus-card' : 'focus-crop',
+    crop: s.kind === 'app' ? 'none' : s.kind === 'card' ? 'focus-card' : s.kind === 'focus' ? 'focus-chat' : 'focus-crop',
     upscaled: false,
     renderer: 'tools/openwork/render.mjs',
     scene: s.scene,

@@ -192,9 +192,9 @@
    "src": "assets/stargo-product/ow02-inquiry.webp",
    "width": 1600,
    "height": 1100,
-   "bytes": 94136,
+   "bytes": 92782,
    "sourceFile": ".wrangler/openwork/ow02-inquiry.png",
-   "sourceSha256": "5c70a02cc17d86c2c15438d14d5210659ddd26de7921dd229e16e08d6bc9d647",
+   "sourceSha256": "10b3ce0ca02a585cbcbe1b76e6877688ee42cb9e419066e2c5fc950459f5d4ec",
    "sourcePixels": [
     2560,
     1760
@@ -211,17 +211,17 @@
     {
      "src": "assets/stargo-product/ow02-inquiry-800.webp",
      "width": 800,
-     "bytes": 32416
+     "bytes": 32006
     },
     {
      "src": "assets/stargo-product/ow02-inquiry-1200.webp",
      "width": 1200,
-     "bytes": 62830
+     "bytes": 62060
     },
     {
      "src": "assets/stargo-product/ow02-inquiry-2400.webp",
      "width": 2400,
-     "bytes": 153974
+     "bytes": 151940
     }
    ]
   },
@@ -231,9 +231,9 @@
    "src": "assets/stargo-product/ow03-quote.webp",
    "width": 1600,
    "height": 1100,
-   "bytes": 88852,
+   "bytes": 88760,
    "sourceFile": ".wrangler/openwork/ow03-quote.png",
-   "sourceSha256": "3217fc391bc1d321b6ee4c75d95b49edc9e470c12b38487e8c4cadd4beca4cc2",
+   "sourceSha256": "0e2ba3ae403f8dab3fa7165edab24d0f2392d469aacef146ddeee1c79012f3eb",
    "sourcePixels": [
     2560,
     1760
@@ -250,17 +250,17 @@
     {
      "src": "assets/stargo-product/ow03-quote-800.webp",
      "width": 800,
-     "bytes": 30836
+     "bytes": 30954
     },
     {
      "src": "assets/stargo-product/ow03-quote-1200.webp",
      "width": 1200,
-     "bytes": 59802
+     "bytes": 59654
     },
     {
      "src": "assets/stargo-product/ow03-quote-2400.webp",
      "width": 2400,
-     "bytes": 147010
+     "bytes": 146626
     }
    ]
   },
@@ -387,9 +387,9 @@
    "src": "assets/stargo-product/ow12-inquiry-card.webp",
    "width": 1170,
    "height": 1104,
-   "bytes": 63588,
+   "bytes": 59956,
    "sourceFile": ".wrangler/openwork/ow12-inquiry-card.png",
-   "sourceSha256": "1e694d203aee40e31b559b3d4a0e4b552749e0ff8c1c73e463fae4bb59a24216",
+   "sourceSha256": "a1b5f37e7230366b34e718e7d7539c019b2e3860cb452c8743d01099761851dc",
    "sourcePixels": [
     1170,
     1104
@@ -406,7 +406,7 @@
     {
      "src": "assets/stargo-product/ow12-inquiry-card-780.webp",
      "width": 780,
-     "bytes": 41854
+     "bytes": 39104
     }
    ]
   },
@@ -530,14 +530,14 @@
    "id": "ow20-apps",
    "sw": "OW20",
    "src": "assets/stargo-product/ow20-apps.webp",
-   "width": 470,
-   "height": 1146,
-   "bytes": 29146,
+   "width": 705,
+   "height": 1719,
+   "bytes": 46610,
    "sourceFile": ".wrangler/openwork/ow20-apps.png",
-   "sourceSha256": "0fc26c24f7c14002c68ccd0ec1aa2ad074e064588f44546244153fc8fdb4c892",
+   "sourceSha256": "d76487a87b3c880762bb0a26b6e9473986fbc4fd45df30d7d41cae5cc3c958b9",
    "sourcePixels": [
-    470,
-    1146
+    705,
+    1719
    ],
    "crop": "focus-crop",
    "upscaled": false,
@@ -545,46 +545,42 @@
    "scene": "home · 侧栏 15 个应用",
    "render": {
     "cssWidth": 235,
-    "scale": 2
+    "scale": 3
    },
-   "variants": []
+   "variants": [
+    {
+     "src": "assets/stargo-product/ow20-apps-520.webp",
+     "width": 520,
+     "bytes": 34044
+    }
+   ]
   },
   {
    "id": "ow21-pi-check",
    "sw": "OW21",
    "src": "assets/stargo-product/ow21-pi-check.webp",
-   "width": 1940,
-   "height": 1086,
-   "bytes": 65896,
+   "width": 1140,
+   "height": 1263,
+   "bytes": 52346,
    "sourceFile": ".wrangler/openwork/ow21-pi-check.png",
-   "sourceSha256": "190e286147b1191c310ff2620dd9fdf9faf0fe2a078f4e6878c97c29ed8b6da0",
+   "sourceSha256": "aea711aa1e0c346874bc0be2aded5a567bb214a8e91ba4195b318100768e7d01",
    "sourcePixels": [
-    1940,
-    1086
+    1140,
+    1263
    ],
    "crop": "focus-crop",
    "upscaled": false,
    "renderer": "tools/openwork/render.mjs",
-   "scene": "quote · 价格校验 + PI + 审批中",
+   "scene": "quote · 价格校验 + PI 审批中（特写）",
    "render": {
-    "cssWidth": 970,
-    "scale": 2
+    "cssWidth": 380,
+    "scale": 3
    },
    "variants": [
     {
-     "src": "assets/stargo-product/ow21-pi-check-720.webp",
-     "width": 720,
-     "bytes": 17550
-    },
-    {
-     "src": "assets/stargo-product/ow21-pi-check-1080.webp",
-     "width": 1080,
-     "bytes": 32044
-    },
-    {
-     "src": "assets/stargo-product/ow21-pi-check-1440.webp",
-     "width": 1440,
-     "bytes": 46826
+     "src": "assets/stargo-product/ow21-pi-check-760.webp",
+     "width": 760,
+     "bytes": 33808
     }
    ]
   },
@@ -592,33 +588,28 @@
    "id": "ow22-approval-bar",
    "sw": "OW22",
    "src": "assets/stargo-product/ow22-approval-bar.webp",
-   "width": 1640,
-   "height": 468,
-   "bytes": 33946,
+   "width": 1140,
+   "height": 1128,
+   "bytes": 55202,
    "sourceFile": ".wrangler/openwork/ow22-approval-bar.png",
-   "sourceSha256": "d094b03c56397ce1683965ec01da1095313cc038f70b0d1161ade26d9cfcdee4",
+   "sourceSha256": "1edb0cd34b4c78945337658844a3736c4ee43856317312bc4cd54c89e8ef5347",
    "sourcePixels": [
-    1640,
-    468
+    1140,
+    1128
    ],
    "crop": "focus-crop",
    "upscaled": false,
    "renderer": "tools/openwork/render.mjs",
-   "scene": "inquiry · 回复草稿 + 对外发送需要你确认",
+   "scene": "inquiry · 回复草稿 + 对外发送需要你确认（特写）",
    "render": {
-    "cssWidth": 820,
-    "scale": 2
+    "cssWidth": 380,
+    "scale": 3
    },
    "variants": [
     {
-     "src": "assets/stargo-product/ow22-approval-bar-720.webp",
-     "width": 720,
-     "bytes": 12556
-    },
-    {
-     "src": "assets/stargo-product/ow22-approval-bar-1080.webp",
-     "width": 1080,
-     "bytes": 22000
+     "src": "assets/stargo-product/ow22-approval-bar-760.webp",
+     "width": 760,
+     "bytes": 35158
     }
    ]
   },
@@ -653,6 +644,191 @@
      "src": "assets/stargo-product/ow23-quick-actions-1200.webp",
      "width": 1200,
      "bytes": 12236
+    }
+   ]
+  },
+  {
+   "id": "ow24-step-log",
+   "sw": "OW24",
+   "src": "assets/stargo-product/ow24-step-log.webp",
+   "width": 1140,
+   "height": 1083,
+   "bytes": 50604,
+   "sourceFile": ".wrangler/openwork/ow24-step-log.png",
+   "sourceSha256": "3b001cf7bbeef8ca6b9e2f7c099874e0d04587bc90e748672ad335037a2051a9",
+   "sourcePixels": [
+    1140,
+    1083
+   ],
+   "crop": "focus-crop",
+   "upscaled": false,
+   "renderer": "tools/openwork/render.mjs",
+   "scene": "follow · 每一步读了什么（特写）",
+   "render": {
+    "cssWidth": 380,
+    "scale": 3
+   },
+   "variants": [
+    {
+     "src": "assets/stargo-product/ow24-step-log-760.webp",
+     "width": 760,
+     "bytes": 33268
+    }
+   ]
+  },
+  {
+   "id": "ow32-inquiry-focus",
+   "sw": "OW32",
+   "src": "assets/stargo-product/ow32-inquiry-focus.webp",
+   "width": 1600,
+   "height": 1446,
+   "bytes": 100030,
+   "sourceFile": ".wrangler/openwork/ow32-inquiry-focus.png",
+   "sourceSha256": "889a2a38253ff39bd4604019f93f5917f9764de869b6602ba7c9159af7b26f89",
+   "sourcePixels": [
+    2400,
+    2169
+   ],
+   "crop": "focus-chat",
+   "upscaled": false,
+   "renderer": "tools/openwork/render.mjs",
+   "scene": "inquiry · 对话栏（桌面展示）",
+   "render": {
+    "cssWidth": 800,
+    "scale": 3
+   },
+   "variants": [
+    {
+     "src": "assets/stargo-product/ow32-inquiry-focus-1200.webp",
+     "width": 1200,
+     "bytes": 72432
+    },
+    {
+     "src": "assets/stargo-product/ow32-inquiry-focus-1800.webp",
+     "width": 1800,
+     "bytes": 117694
+    },
+    {
+     "src": "assets/stargo-product/ow32-inquiry-focus-2400.webp",
+     "width": 2400,
+     "bytes": 157506
+    }
+   ]
+  },
+  {
+   "id": "ow33-quote-focus",
+   "sw": "OW33",
+   "src": "assets/stargo-product/ow33-quote-focus.webp",
+   "width": 1600,
+   "height": 1384,
+   "bytes": 97352,
+   "sourceFile": ".wrangler/openwork/ow33-quote-focus.png",
+   "sourceSha256": "568c05e6e6056789da5012bdd9520d5a0282cb8fa906fdde12203278c47d746d",
+   "sourcePixels": [
+    2400,
+    2076
+   ],
+   "crop": "focus-chat",
+   "upscaled": false,
+   "renderer": "tools/openwork/render.mjs",
+   "scene": "quote · 对话栏（桌面展示）",
+   "render": {
+    "cssWidth": 800,
+    "scale": 3
+   },
+   "variants": [
+    {
+     "src": "assets/stargo-product/ow33-quote-focus-1200.webp",
+     "width": 1200,
+     "bytes": 70000
+    },
+    {
+     "src": "assets/stargo-product/ow33-quote-focus-1800.webp",
+     "width": 1800,
+     "bytes": 109806
+    },
+    {
+     "src": "assets/stargo-product/ow33-quote-focus-2400.webp",
+     "width": 2400,
+     "bytes": 149986
+    }
+   ]
+  },
+  {
+   "id": "ow34-outreach-focus",
+   "sw": "OW34",
+   "src": "assets/stargo-product/ow34-outreach-focus.webp",
+   "width": 1600,
+   "height": 1350,
+   "bytes": 90480,
+   "sourceFile": ".wrangler/openwork/ow34-outreach-focus.png",
+   "sourceSha256": "a21baea7a089de630a037afaecba75131d5cda2ce5625a9d360ebc4bce334009",
+   "sourcePixels": [
+    2400,
+    2025
+   ],
+   "crop": "focus-chat",
+   "upscaled": false,
+   "renderer": "tools/openwork/render.mjs",
+   "scene": "outreach · 对话栏（桌面展示）",
+   "render": {
+    "cssWidth": 800,
+    "scale": 3
+   },
+   "variants": [
+    {
+     "src": "assets/stargo-product/ow34-outreach-focus-1200.webp",
+     "width": 1200,
+     "bytes": 65084
+    },
+    {
+     "src": "assets/stargo-product/ow34-outreach-focus-1800.webp",
+     "width": 1800,
+     "bytes": 105610
+    },
+    {
+     "src": "assets/stargo-product/ow34-outreach-focus-2400.webp",
+     "width": 2400,
+     "bytes": 144128
+    }
+   ]
+  },
+  {
+   "id": "ow35-brief-focus",
+   "sw": "OW35",
+   "src": "assets/stargo-product/ow35-brief-focus.webp",
+   "width": 1600,
+   "height": 1428,
+   "bytes": 75866,
+   "sourceFile": ".wrangler/openwork/ow35-brief-focus.png",
+   "sourceSha256": "e385fd3a9d7d5dc8c00be454ebba49d47790c621888cca34e0d2bbc2f9c00133",
+   "sourcePixels": [
+    2400,
+    2142
+   ],
+   "crop": "focus-chat",
+   "upscaled": false,
+   "renderer": "tools/openwork/render.mjs",
+   "scene": "brief · 对话栏（桌面展示）",
+   "render": {
+    "cssWidth": 800,
+    "scale": 3
+   },
+   "variants": [
+    {
+     "src": "assets/stargo-product/ow35-brief-focus-1200.webp",
+     "width": 1200,
+     "bytes": 55114
+    },
+    {
+     "src": "assets/stargo-product/ow35-brief-focus-1800.webp",
+     "width": 1800,
+     "bytes": 88084
+    },
+    {
+     "src": "assets/stargo-product/ow35-brief-focus-2400.webp",
+     "width": 2400,
+     "bytes": 120066
     }
    ]
   },

@@ -37,17 +37,33 @@ export const srcset = (a) => [...a.variants, a].sort((x, y) => x.width - y.width
 /** Text with its [[key phrase]] markers removed — for attributes and labels. */
 export const plain = (text) => String(text).replace(/\[\[|\]\]/g, '');
 
+/* Words the segmenter splits but a line must not: 标准|价, 人走|客户留, 上下|文 …
+   A number and its measure word stay together too (30 分钟, 4 件事, 20 个). */
+const ZH_GLUE = ['人走客户留', '给老板', '销售工作台', '企业知识库', '客户CRM', '企业ERP', '标准价', '价格表', '上下文', '公司信号', '资料', '草稿', '工作台', '知识库', '开发信', '销售经理', '办公室', '往来', '自己定', '多久', '批准', '有权人', '交给', '分工'];
+const glueRe = ZH_GLUE.map((w) => [new RegExp([...w].join('(?:<wbr>)?'), 'g'), w]);
+function zhGlue(html) {
+  let out = html;
+  for (const [re, w] of glueRe) out = out.replace(re, w);
+  return out.replace(/(\d) (?=(?:<wbr>)?[分个天件封家位只种年项])/g, '$1&nbsp;').replace(/([\u4e00-\u9fff]) (?=[\d.,]+%)/g, '$1&nbsp;');
+}
+
 /**
- * Heading text: on the Chinese page it breaks only between words (css:
- * keep-all), and a [[key phrase]] becomes `.ow-hl`, the blue gradient.
+ * Text of a heading or a paragraph: on the Chinese page it breaks only
+ * between words (css: keep-all on every .ow text block), and a [[key phrase]]
+ * becomes `.ow-hl`, the blue gradient (kept on one line on the Chinese page).
  */
 export function heading(lang, text) {
   /* no break inside a Latin or numeric run such as "US$3.85" or "OPEN WORK" */
-  const run = (x) => (lang === 'zh' ? zhWbr(x).replace(/([A-Za-z0-9$.,%/])<wbr>(?=[A-Za-z0-9$.,%/])/g, '$1') : escapeHtml(x));
+  const run = (x) => (lang === 'zh' ? zhGlue(zhWbr(x).replace(/([A-Za-z0-9$.,%/])<wbr>(?=[A-Za-z0-9$.,%/])/g, '$1')) : escapeHtml(x));
   const parts = String(text).split(/\[\[|\]\]/);
   if (parts.length % 2 === 0) throw new Error(`ow-blocks: unbalanced [[ ]] in "${text}"`);
-  return parts.map((x, i) => (!x ? '' : i % 2 ? `<span class="ow-hl">${run(x)}</span>` : run(x))).join('');
+  /* a key phrase is one unit on the Chinese page (white-space: nowrap; a <wbr>
+     inside it would still break it in Chromium) */
+  const whole = (x) => (lang === 'zh' ? zhGlue(escapeHtml(x)) : escapeHtml(x));
+  return parts.map((x, i) => (!x ? '' : i % 2 ? `<span class="ow-hl">${whole(x)}</span>` : run(x))).join('');
 }
+/** Body copy: the same rules as a heading. */
+export const para = heading;
 
 /** A small white glass card laid over the edge of a product window (interface wording or demo-safe facts only). */
 export const floatCard = (text, { icon = 'check', cls = '' } = {}) => `<span class="ow-float${cls ? ` ${cls}` : ''}" aria-hidden="true"><span class="ow-float-ico">${ICON[icon]}</span>${escapeHtml(text)}</span>`;
@@ -58,33 +74,52 @@ export function button(href, label, { kind = 'primary', icon = null, external = 
 }
 
 /**
- * A framed product shot. Desktop shows `id` (a 1280×880@2x full-app render, or
- * a crop); below 992px a `<picture>` source swaps in `card`, the phone render
- * of the same scene, so no 1280-wide interface is squeezed onto a phone or a
- * tablet (at 768 it would be shown at 55%, its text under 8px).
- * The whole picture is a button that opens the lightbox (js/stargo-ow.js) on
- * the widest file in the img's srcset. The 「演示数据」 badge is HTML.
+ * A framed product shot. Desktop shows `id` (a full-app render, the chat
+ * column alone, or a close-up); below 992px a `<picture>` source swaps in
+ * `card`, the phone render of the same scene, so no 1280-wide interface is
+ * squeezed onto a phone or a tablet.
+ *
+ * The picture is a button that opens the lightbox (js/stargo-ow.js) on the
+ * widest file of the srcset that is showing. `zoomW` is the width in CSS px
+ * the lightbox shows it at as a minimum (it scrolls if the screen is
+ * narrower), `zoomX` the point, as a fraction of the width, it centres on.
+ *
+ * Nothing is drawn over the interface: the 「演示数据」 badge and the
+ * 「点图放大」 hint sit in the window's title bar, and on phone cards (no title
+ * bar) in a row above the card. Both are HTML.
  */
-export function shot({ id, card = null, lang, t, O, sizes, eager = false, frame = 'window', title = 'OPEN WORK', label, cls = '', extra = '', floats = '' }) {
+export function shot({ id, card = null, lang, t, O, sizes, eager = false, title = 'OPEN WORK', label, cls = '', extra = '', floats = '', zoomW = 0, zoomX = 0.5 }) {
   const a = asset(id);
   const source = card ? (() => {
     const c = asset(card);
-    return `<source media="(max-width: 991px)" srcset="${srcset(c)}" sizes="(max-width: 767px) calc(100vw - 40px), 480px" width="${c.width}" height="${c.height}"/>`;
+    return `<source media="(max-width: 991px)" srcset="${srcset(c)}" sizes="(max-width: 599px) calc(100vw - 40px), 560px" width="${c.width}" height="${c.height}"/>`;
   })() : '';
   const load = eager ? ' loading="eager" fetchpriority="high"' : ' loading="lazy"';
   /* alt is a marker: any non-empty value makes the image pass write the
      registered sentence for `id` in the page's language. */
   const img = `<img src="${a.src}" alt="OPEN WORK" data-sizes="${esc(sizes)}" class="ow-shot-img"${load}/>`;
-  /* a macOS-style window: traffic lights, a white title bar, the badge on its right */
-  const bar = frame === 'window' ? `<div class="ow-frame-bar"><span class="ow-lights" aria-hidden="true"><i></i><i></i><i></i></span>${title ? `<span class="ow-frame-title" aria-hidden="true">${escapeHtml(title)}</span>` : ''}<span class="ow-badge" aria-hidden="true">${escapeHtml(t(O.badge))}</span></div>` : '';
-  const zoomLabel = `${t(O.zoom)}${lang === 'zh' ? '：' : ': '}${plain(label)}`;
-  return `<figure class="ow-shot ow-shot--${frame}${card ? ' ow-shot--card' : ''}${cls ? ` ${cls}` : ''}" data-ow-shot="${id}">`
+  const badge = `<span class="ow-badge" aria-hidden="true">${escapeHtml(t(O.badge))}</span>`;
+  const hint = `<span class="ow-hint" data-ow-hint aria-hidden="true">${ICON.zoom}<span>${escapeHtml(t(O.zoomHint))}</span></span>`;
+  /* a macOS-style window: traffic lights, a title, the hint and the badge on the right */
+  const bar = `<div class="ow-frame-bar"><span class="ow-lights" aria-hidden="true"><i></i><i></i><i></i></span>${title ? `<span class="ow-frame-title" aria-hidden="true">${escapeHtml(title)}</span>` : ''}${hint}${badge}</div>`;
+  const meta = card ? `<div class="ow-shot-meta" aria-hidden="true">${hint}${badge}</div>` : '';
+  const zoomLabel = t(O.zoomOf).replace('{label}', plain(label));
+  const zoomAttrs = `${zoomW ? ` data-ow-zoom-w="${zoomW}"` : ''}${zoomX !== 0.5 ? ` data-ow-zoom-x="${zoomX}"` : ''}`;
+  return `<figure class="ow-shot ow-shot--window${card ? ' ow-shot--card' : ''}${cls ? ` ${cls}` : ''}" data-ow-shot="${id}">${meta}`
     + `<div class="ow-frame">${bar}<div class="ow-frame-body">`
-    + `<button type="button" class="ow-zoom" data-ow-zoom aria-label="${esc(zoomLabel)}" aria-haspopup="dialog" aria-controls="ow-lightbox">`
+    + `<button type="button" class="ow-zoom" data-ow-zoom${zoomAttrs} aria-label="${esc(zoomLabel)}" aria-haspopup="dialog" aria-controls="ow-lightbox">`
     + (source ? `<picture>${source}${img}</picture>` : img)
-    + `<span class="ow-zoom-hint" aria-hidden="true">${ICON.zoom}</span></button>`
-    + `<span class="ow-badge ow-badge--body" aria-hidden="true">${esc(t(O.badge))}</span>`
-    + `${extra}</div></div>${floats}</figure>`;
+    + `</button>${extra}</div></div>${floats}</figure>`;
+}
+
+/** Numbered pins on a shot, at boxes of tools/openwork/hotspots.json: `[{ n, box: [id, key], at }]`. */
+export function pins(list) {
+  return `<div class="ow-pins">${list.map(({ n, box: [id, key], at = 'left' }) => {
+    const b = hotspot(id, key);
+    const x = at === 'left' ? b.x : Math.min(b.x + b.w + 1.3, 99);
+    const y = at === 'left' ? b.y + Math.min(b.h / 2, 6) : b.y + b.h / 2;
+    return `<span class="ow-pin" style="--x:${x.toFixed(2)}%;--y:${y.toFixed(2)}%" aria-hidden="true">${n}</span>`;
+  }).join('')}</div>`;
 }
 
 /* Line icons, 24px grid, drawn for this page in the outline style of the
@@ -106,6 +141,8 @@ export const ICON = {
   down: svg('<path d="M12 5v14M6 13l6 6 6-6"/>', 'ow-ico ow-ico--arrow'),
   whatsapp: svg('<path d="M20.5 11.6a8.4 8.4 0 0 1-12.2 7.5L3.5 20.5l1.4-4.6A8.4 8.4 0 1 1 20.5 11.6z"/><path d="M9 9.5c0 2.8 2.2 5 5 5"/>'),
   zoom: svg('<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>'),
+  pen: svg('<path d="M12 20h8"/><path d="M16.4 3.6a2 2 0 0 1 2.9 2.9L7.5 18.3 3.5 19.5l1.2-4z"/>'),
+  book: svg('<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20"/>'),
   check: svg('<path d="m5 12.5 4.5 4.5L19 7.5"/>'),
   bolt: svg('<path d="M13 3 5 13.5h6L10 21l8-10.5h-6z"/>'),
   users: svg('<circle cx="9" cy="8.5" r="3.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 5.2a3.5 3.5 0 0 1 0 6.6M18 14.3c1.8.8 3 2.6 3 4.7"/>'),

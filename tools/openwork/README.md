@@ -51,10 +51,16 @@ would be cut off), a button or tag wraps, or text is truncated.
 | id | scene | render | files |
 |---|---|---|---|
 | `ow01-home` … `ow06-follow` | full app: home, inquiry, quote/PI, outreach, weekly brief, follow-up | 1280×880 CSS px @2x = 2560×1760 | main 1600w (q85) + 800/1200/2400 |
+| `ow32-inquiry-focus` … `ow35-brief-focus` | the chat column of ow02–ow05 alone (no sidebar, title bar or composer), for the desktop showcase | 800 CSS px wide @3x = 2400w | main 1600w + 1200/1800/2400 |
 | `ow12-inquiry-card` … `ow16-follow-card` | phone cards, no sidebar, 15px phone type | 390 CSS px wide @3x = 1170w | main 1170w + 780 |
-| `ow20-apps` | sidebar, brand row through New API（AI 网关） | @2x | main only |
-| `ow21-pi-check` | price-check step + PI card + 审批中 bar, card 930 CSS px | @2x | main + 720/1080/1440 |
-| `ow22-approval-bar` | reply draft card with 对外发送需要你确认 + 批准 | @2x | main + 720/1080 |
-| `ow23-quick-actions` | message box, footnote and the quick actions | @2x | main + 720/1200 |
+| `ow20-apps` | sidebar, brand row through New API（AI 网关） | @3x (705w) | main + 520 |
+| `ow21-pi-check` | close-up: price-check steps + the PI's number and its 审批中 bar | 380 CSS px in phone type @3x = 1140w | main + 760 |
+| `ow22-approval-bar` | close-up: the reply draft's first lines and 对外发送需要你确认 + 批准 | 380 CSS px in phone type @3x | main + 760 |
+| `ow24-step-log` | close-up: 哪些客户该跟进了？ and the three steps AI wrote down | 380 CSS px in phone type @3x | main + 760 |
+| `ow23-quick-actions` | message box, footnote and the quick actions (not placed on the homepage since 2026-10-09 review) | @2x | main + 720/1200 |
+
+The reply bars say 「对外发送需要你确认」 only. Which app sends a message
+after approval, and what the composer footnote means, is on the owner's list;
+do not add either to a scene until the owner confirms it.
 
 Never upscaled: every main file and variant is at most the render's width.

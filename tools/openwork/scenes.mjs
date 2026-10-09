@@ -234,6 +234,22 @@ body.narrow .fup>.i{width:17px;height:17px;margin-top:3px}
 body.narrow .fup .hd{font-size:15px;flex-wrap:wrap}
 body.narrow .fup .hd small{font-size:13.5px}
 body.narrow .fup .why{font-size:13.5px;margin-top:2px}
+body.narrow .steps{padding:11px 14px 9px;border-radius:14px}
+body.narrow .steps .h{font-size:14px;gap:8px;padding-bottom:6px}
+body.narrow .steps .h .i{width:16px;height:16px}
+body.narrow .step{font-size:15px;line-height:1.5;padding:5px 0;gap:9px}
+body.narrow .step .i{width:16px;height:16px;margin-top:3px}
+body.narrow .step small{display:block;font-size:13.5px;line-height:1.45;margin-top:1px}
+body.narrow .step small .dot{display:none}
+body.narrow .msg-a>p{font-size:15px;line-height:1.6}
+body.narrow .msg-u{font-size:15px;max-width:none;padding:11px 16px;border-radius:18px}
+body.narrow .pi-head + .tot{border-top:1px solid var(--line)}
+/* an excerpt of a long draft: the first lines, fading out */
+.mail.excerpt{max-height:7.4em;overflow:hidden;-webkit-mask-image:linear-gradient(180deg,#000 55%,transparent);mask-image:linear-gradient(180deg,#000 55%,transparent)}
+body.narrow .mail.excerpt{max-height:9.6em}
+/* focus conversation: the chat column alone, no sidebar, no title bar, no composer */
+body.convo .shot{padding:22px 20px 20px}
+body.convo .msg-u{margin-left:auto}
 body.narrow .fup .draft{font-size:13.5px;white-space:normal;text-wrap:pretty;overflow:visible;line-height:1.5;padding:7px 11px;margin-top:7px}
 `;
 }
@@ -270,8 +286,8 @@ ${body}
   /** Cards only, on the workspace ground, `width` CSS px wide (focus or narrow mode). */
   const shot = (title, mode, width, body) => doc(title, mode, `<div class="shot" style="width:${width}px"><div class="msg-a">${body}</div></div>`);
 
-  const steps = (head, list) => `<div class="steps"><div class="h">${icon('circle-check')}${head}</div>
-${list.map(([t, sub, warn, hot]) => `<div class="step${warn ? ' warn' : ''}"${hot ? ` data-hot="${hot}"` : ''}>${icon(warn ? 'triangle-alert' : 'check')}<div>${t}${sub ? ` <small>· ${sub}</small>` : ''}</div></div>`).join('\n')}</div>`;
+  const steps = (head, list) => `<div class="steps" data-hot="steps"><div class="h">${icon('circle-check')}${head}</div>
+${list.map(([t, sub, warn, hot]) => `<div class="step${warn ? ' warn' : ''}"${hot ? ` data-hot="${hot}"` : ''}>${icon(warn ? 'triangle-alert' : 'check')}<div>${t}${sub ? ` <small><span class="dot">· </span>${sub}</small>` : ''}</div></div>`).join('\n')}</div>`;
   const bar = (msg, buttons) => `<div class="bar" data-hot="bar">${icon('shield-check')}<span class="msg">${msg}</span><span class="sp"></span><span class="btns">${buttons}</span></div>`;
   const btn = (label, ic, pri = false, hot = '') => `<span class="btn${pri ? ' pri' : ''}"${hot ? ` data-hot="${hot}"` : ''}>${ic ? icon(ic) : ''}${label}</span>`;
 
@@ -284,12 +300,12 @@ ${list.map(([t, sub, warn, hot]) => `<div class="step${warn ? ' warn' : ''}"${ho
     ['检索企业知识库', 'SVF-500 规格、MOQ 300、标准交期 25 天', false, 'kb'],
     ['按价格表测算报价', 'FOB 宁波 · 含单色丝印', false, 'pricing'],
   ]);
-  const inquiryFacts = `<div class="card"><div class="ch">${icon('clipboard-list')}关键信息<span class="tag a">可报价</span></div>
+  const inquiryFacts = `<div class="card" data-hot="facts"><div class="ch">${icon('clipboard-list')}关键信息<span class="tag a">可报价</span></div>
 <dl class="kv"><dt>产品</dt><dd>SVF-500 保温杯 500 ml · 304</dd><dt>数量</dt><dd>500 只（MOQ 300）</dd><dt>定制</dt><dd>单色丝印 logo · 打样 5 天</dd><dt>报价</dt><dd data-hot="price">US$ 3.85 / 只 · FOB 宁波</dd><dt>交期</dt><dd>大货 25 天 + 海运约 32 天</dd><dt>客户</dt><dd>新客户 · 已建档到客户CRM</dd></dl></div>`;
   const inquiryReply = `<div class="card" data-hot="reply"><div class="ch">${icon('mail')}回复草稿 · English</div>
 <div class="mail">Hi Erik,
 Thanks for your inquiry. 500 pcs of our <span class="nb">SVF-500</span> vacuum flask (500 ml, 304 stainless) with your logo in one colour: <span class="nb">US$ 3.85/pc</span> FOB Ningbo. MOQ 300; samples 5 days, production 25 days. To reach Gothenburg before 20 Dec we'd need your <span class="nb">go-ahead</span> by 8 Nov…</div>
-${bar('<span class="nb">对外发送需要你确认 ·</span> <span class="nb">批准后由销售工作台发出</span>', btn('修改', 'pencil') + btn('复制', 'copy') + btn('批准', 'check', true, 'approve'))}</div>`;
+${bar('<span class="nb">对外发送需要你确认</span>', btn('修改', 'pencil') + btn('复制', 'copy') + btn('批准', 'check', true, 'approve'))}</div>`;
 
   /* ---- quote / PI ------------------------------------------------------- */
   const quoteSteps = steps('已完成 3 个步骤', [
@@ -372,6 +388,59 @@ ${FOLLOWS.slice(0, n).map(([c, k, why, draft]) => `<div class="fup">${icon('cloc
 </div>
 ${bar('每条跟进消息发送前都需要你确认', btn('逐条修改', 'pencil') + btn('逐条批准', 'check', true, 'approve'))}</div>`;
 
+  const followSteps = steps('已完成 3 个步骤', [
+    ['读取客户CRM时间线', '近 30 天的往来与报价记录'],
+    ['检查报价与样品状态', '销售工作台 · 报价与寄样记录'],
+    ['对比补货周期', '老客户的历史下单间隔'],
+  ]);
+  /* The PI card reduced to its number and its approval bar — the part the
+     price rule is about. */
+  const piGate = `<div class="card" data-hot="pi">
+<div class="ch">${icon('file-text')}PI-2026-1108 · 形式发票 · 演示数据</div>
+${bar('<span class="tag w">审批中</span> <span class="nb">已提交给 销售经理 ·</span> <span class="nb">批准前不会发给客户</span>', btn('导出 PDF', 'file-down') + btn('在销售工作台查看', 'briefcase'))}
+</div>`;
+  /* The reply draft's first lines and its approval bar. */
+  const replyGate = `<div class="card" data-hot="reply"><div class="ch">${icon('mail')}回复草稿 · English</div>
+<div class="mail excerpt">Hi Erik,
+Thanks for your inquiry. 500 pcs of our <span class="nb">SVF-500</span> vacuum flask (500 ml, 304 stainless) with your logo in one colour: <span class="nb">US$ 3.85/pc</span> FOB Ningbo. MOQ 300; samples 5 days, production 25 days…</div>
+${bar('<span class="nb">对外发送需要你确认</span>', btn('修改', 'pencil') + btn('复制', 'copy') + btn('批准', 'check', true, 'approve'))}</div>`;
+
+  /* Each conversation once: the question, and the answer under it. The full
+     app, the focus render (the chat column alone, for the desktop showcase)
+     and the crops all take them from here, so they never disagree. */
+  const CONVO = {
+    inquiry: { title: 'Nordhem Living · 询盘', ask: inquiryAsk, body: `${inquirySteps}
+<p><b>询盘质量：A。</b>需求完整，交期可以满足：12 月 20 日前到港，需在 11 月 8 日前确认订单。</p>
+${inquiryFacts}
+${inquiryReply}` },
+    quote: { title: 'Nordhem Living · PI', ask: `<div class="msg-u">按 Nordhem Living 询盘里的条件出一份 PI，定金 30%，余款发货前付清。</div>`, body: `${quoteSteps}
+${piCard}
+<p>PI 已保存到销售工作台。销售经理批准后，我把 PDF 和英文邮件草稿准备好，等你确认；客户付定金后，提醒你下生产单<span class="nb">（企业ERP）</span>。</p>
+<p class="note">如果想守住标准价，可以改成 US$ 4.02 / 只并保留免费印 logo，我可以同时出两个版本供客户选择。</p>` },
+    outreach: { title: '北欧户外家居 · 开发信', ask: `<div class="msg-u">找 5 家北欧做户外和家居的零售商，排除已有客户，再起草一封开发信。</div>`, body: `${steps('已完成 3 个步骤', [
+  ['主动获客：按行业、地区、规模筛选', '北欧 · 户外 / 家居零售 · 门店 5–80 家'],
+  ['补全公司信号与联系人', '采购 / 品类负责人'],
+  ['与客户CRM去重', '排除 2 家已有客户', false, 'dedupe'],
+])}
+${prospects}
+${outreachMail}` },
+    brief: { title: '本周业务简报', ask: `<div class="msg-u">这周业务怎么样？有什么需要我拍板的？</div>`, body: `${steps('已完成 3 个步骤', [
+  ['汇总老板看板', '询盘、报价、订单、回款'],
+  ['对比上周', '同口径'],
+  ['整理待你审批事项', '4 项'],
+])}
+<p><b>一句话：</b>询盘比上周多 12%，增量主要来自官网的北欧家居客户；回复速度稳定在 6 小时内。有 4 件事等你拍板，其中 2 件今天到期。</p>
+${metrics}
+${sources}
+${decisions}` },
+    follow: { title: '本周该跟进的客户', ask: `<div class="msg-u">哪些客户该跟进了？</div>`, body: `${followSteps}
+<p><b>今天建议跟进 4 位客户。</b>每位的跟进消息都按各自的往来记录起草好了，发送前逐条等你确认。</p>
+${followCard(4)}` },
+  };
+  const appOf = (k) => app(CONVO[k].title, `${CONVO[k].ask}\n<div class="msg-a">\n${CONVO[k].body}\n</div>`);
+  /** The chat column alone at `width` CSS px (desktop showcase, 3x). */
+  const convo = (k, width = 800) => doc(CONVO[k].title, 'focus convo', `<div class="shot" style="width:${width}px">${CONVO[k].ask}<div class="msg-a">${CONVO[k].body}</div></div>`);
+
   const pages = {
     /* full app, 1280×880 */
     home: app('新聊天', `<div class="stage"><div class="hello"><h1>有什么可以帮你?</h1>
@@ -385,56 +454,17 @@ ${bar('每条跟进消息发送前都需要你确认', btn('逐条修改', 'penc
     <span class="chip">${icon('book-open')}整理企业资料</span>
     <span class="chip">更多模板…</span>
   </div></div></div></div>`, { home: true }),
+    inquiry: appOf('inquiry'),
+    quote: appOf('quote'),
+    outreach: appOf('outreach'),
+    brief: appOf('brief'),
+    follow: appOf('follow'),
 
-    inquiry: app('Nordhem Living · 询盘', `${inquiryAsk}
-<div class="msg-a">
-${inquirySteps}
-<p><b>询盘质量：A。</b>需求完整，交期可以满足：12 月 20 日前到港，需在 11 月 8 日前确认订单。</p>
-${inquiryFacts}
-${inquiryReply}
-</div>`),
-
-    quote: app('Nordhem Living · PI', `<div class="msg-u">按 Nordhem Living 询盘里的条件出一份 PI，定金 30%，余款发货前付清。</div>
-<div class="msg-a">
-${quoteSteps}
-${piCard}
-<p>PI 已保存到销售工作台。销售经理批准后，我会把 PDF 和英文邮件一起放进待发送队列，并在客户付定金后提醒你下生产单（企业ERP）。</p>
-<p class="note">如果想守住标准价，可以改成 US$ 4.02 / 只并保留免费印 logo，我可以同时出两个版本供客户选择。</p></div>`),
-
-    outreach: app('北欧户外家居 · 开发信', `<div class="msg-u">找 5 家北欧做户外和家居的零售商，排除已有客户，再起草一封开发信。</div>
-<div class="msg-a">
-${steps('已完成 3 个步骤', [
-  ['主动获客：按行业、地区、规模筛选', '北欧 · 户外 / 家居零售 · 门店 5–80 家'],
-  ['补全公司信号与联系人', '采购 / 品类负责人'],
-  ['与客户CRM去重', '排除 2 家已有客户', false, 'dedupe'],
-])}
-${prospects}
-${outreachMail}
-</div>`),
-
-    brief: app('本周业务简报', `<div class="msg-u">这周业务怎么样？有什么需要我拍板的？</div>
-<div class="msg-a">
-${steps('已完成 3 个步骤', [
-  ['汇总老板看板', '询盘、报价、订单、回款'],
-  ['对比上周', '同口径'],
-  ['整理待你审批事项', '4 项'],
-])}
-<p><b>一句话：</b>询盘比上周多 12%，增量主要来自官网的北欧家居客户；回复速度稳定在 6 小时内。有 4 件事等你拍板，其中 2 件今天到期。</p>
-${metrics}
-${sources}
-${decisions}
-</div>`),
-
-    follow: app('本周该跟进的客户', `<div class="msg-u">哪些客户该跟进了？</div>
-<div class="msg-a">
-${steps('已完成 3 个步骤', [
-  ['读取客户CRM时间线', '近 30 天的往来与报价记录'],
-  ['检查报价与样品状态', '销售工作台 · 报价与寄样记录'],
-  ['对比补货周期', '老客户的历史下单间隔'],
-])}
-<p><b>今天建议跟进 4 位客户。</b>每位的跟进消息都按各自的往来记录起草好了，发送前逐条等你确认。</p>
-${followCard(4)}
-</div>`),
+    /* desktop showcase: the conversation column alone, 800 CSS px @3x */
+    'inquiry-focus': convo('inquiry'),
+    'quote-focus': convo('quote'),
+    'outreach-focus': convo('outreach'),
+    'brief-focus': convo('brief'),
 
     /* phone cards, 390 CSS px wide @3x */
     'inquiry-card': shot('回复草稿', 'focus narrow', 390, inquiryReply),
@@ -443,9 +473,14 @@ ${followCard(4)}
     'brief-card': shot('本周业务简报', 'focus narrow', 390, `${metrics}\n${decisions}`),
     'follow-card': shot('跟进客户', 'focus narrow', 390, followCard(4)),
 
+    /* the three rules of the approvals section, as tight close-ups in phone
+       typography (380 CSS px @3x): the price check with the PI in approval,
+       the approval bar under a reply, and the record of what AI read */
+    'pi-check': shot('PI 价格校验', 'focus narrow', 380, `${quoteSteps}\n${piGate}`),
+    'approval-bar': shot('对外发送审批', 'focus narrow', 380, `<p><b>询盘质量：A。</b>需求完整，交期可以满足。英文回复已按价格表报价：</p>\n${replyGate}`),
+    'step-log': shot('执行记录', 'focus narrow', 380, `${CONVO.follow.ask}\n${followSteps}\n<p><b>今天建议跟进 4 位客户。</b>每条跟进消息都按往来记录起草好，发送前逐条等你确认。</p>`),
+
     /* desktop crops @2x */
-    'pi-check': shot('PI 价格校验', 'focus', 970, `${quoteSteps}\n${piCard}`),
-    'approval-bar': shot('对外发送审批', 'focus', 820, inquiryReply),
     'quick-actions': shot('快捷操作', 'focus', 1000, `<div style="padding:4px 90px 0">${composer()}
   <div class="addrow"><b>${icon('plus')}添加</b>选择后只填入输入框，不会自动发送</div>
   <div class="chips">

@@ -86,21 +86,27 @@ const productText = {
   /* OPEN WORK (2026-10-09): HTML rebuilds of the real chat workspace, rendered
      by tools/openwork/render.mjs. Layout, app list, quick actions and the
      composer footnote are the real interface; every conversation is demo data. */
-  'ow01-home': ['OPEN WORK 新聊天：左侧是 15 个应用，输入框下方是起草开发信、分析询盘并回复、跟进客户、起草报价单 / PI、整理企业资料五个快捷操作', 'OPEN WORK new chat: the 15 apps on the left and five quick actions under the message box — draft outreach, analyse an inquiry and reply, follow up customers, draft a quote or PI, organise company material'],
-  'ow02-inquiry': ['OPEN WORK 分析询盘并回复：一封瑞典客户的询盘，查了客户CRM 和企业知识库，按价格表算出 FOB 宁波报价，英文回复草稿等你点「批准」', 'OPEN WORK analysing an inquiry: a Swedish buyer\u2019s request checked against the customer CRM and the knowledge base, priced FOB Ningbo from the price list, with an English reply waiting for your approval'],
-  'ow03-quote': ['OPEN WORK 起草 PI：套用公司抬头和银行信息，单价低于标准价 4.2%，已交销售经理审批，批准前不会发给客户', 'OPEN WORK drafting a PI: company letterhead and bank details applied; the unit price is 4.2% under list, so it waits for the sales manager and is not sent before approval'],
+  'ow01-home': ['OPEN WORK 新聊天：左侧是 15 个应用，输入框下方是起草开发信、分析询盘并回复、跟进客户、起草报价单 / PI、整理企业资料五个快捷操作', 'OPEN WORK new chat: the 15 apps on the left and five quick actions under the message box (draft outreach, analyze an inquiry and reply, follow up customers, draft a quote or PI, organize company material)'],
+  'ow02-inquiry': ['OPEN WORK 分析询盘并回复：一封瑞典客户的询盘，查了客户CRM 和企业知识库，按价格表算出 FOB 宁波报价，英文回复草稿等你点「批准」', 'OPEN WORK analyzing an inquiry: a Swedish buyer\u2019s request checked against the customer CRM and the knowledge base, priced FOB Ningbo from the price list, with an English reply waiting for your approval'],
+  'ow03-quote': ['OPEN WORK 起草 PI：套用公司抬头和银行信息，单价低于标准价 4.2%，已交销售经理审批，批准前不会发给客户', 'OPEN WORK drafting a PI: company letterhead and bank details applied; the unit price is 4.2% below standard, so it waits for the sales manager and is not sent before approval'],
   'ow04-outreach': ['OPEN WORK 起草开发信：主动获客筛出 5 家北欧零售商，与客户CRM 去重，每封开发信发送前都要你确认', 'OPEN WORK drafting outreach: five Nordic retailers found by Prospecting, de-duplicated against the customer CRM, each email waiting for your confirmation'],
   'ow05-brief': ['OPEN WORK 本周业务简报：询盘、报价、赢单和等你审批的 4 件事在一屏说清', 'OPEN WORK weekly brief: inquiries, quotes, wins and the four items awaiting your decision on one screen'],
   'ow06-follow': ['OPEN WORK 跟进客户：读客户CRM 时间线，找出样品未回复、报价未回复和到了补货周期的客户，跟进消息起草好，逐条等你确认', 'OPEN WORK customer follow-up: the customer CRM timeline shows who has not answered a sample or a quote and who is due to reorder; drafted follow-ups wait for your approval one by one'],
+  /* the chat column of ow02–ow05 alone, for the desktop showcase */
+  'ow32-inquiry-focus': ['OPEN WORK 对话：分析一封瑞典客户的询盘，查了客户CRM 和企业知识库，按价格表算出 FOB 宁波报价，英文回复草稿等你点「批准」', 'An OPEN WORK chat analyzing a Swedish buyer\u2019s inquiry: checked against the customer CRM and the knowledge base, priced FOB Ningbo from the price list, with an English reply waiting for your approval'],
+  'ow33-quote-focus': ['OPEN WORK 对话：起草 PI，套用公司抬头和银行信息，单价低于标准价 4.2%，已交销售经理审批，批准前不会发给客户', 'An OPEN WORK chat drafting a PI: letterhead and bank details applied; the unit price is 4.2% below standard, so it waits for the sales manager and is not sent before approval'],
+  'ow34-outreach-focus': ['OPEN WORK 对话：主动获客筛出 5 家北欧零售商，与客户CRM 去重，开发信发送前要你确认', 'An OPEN WORK chat on prospecting: five Nordic retailers, de-duplicated against the customer CRM, and an outreach email waiting for your confirmation'],
+  'ow35-brief-focus': ['OPEN WORK 对话：本周业务简报，询盘、报价、赢单和等你决定的 4 件事', 'An OPEN WORK chat with the weekly brief: inquiries, quotes, wins and the four decisions waiting for you'],
   'ow12-inquiry-card': ['询盘回复草稿：英文回复已写好，对外发送需要你确认，点「批准」才发出', 'An inquiry reply draft: the English reply is written, and nothing goes out until you press Approve'],
   'ow13-quote-card': ['PI 卡片：明细、FOB 宁波总价和付款条件，审批中，批准前不会发给客户', 'A PI card: line items, the FOB Ningbo total and payment terms, in approval and not sent before it is approved'],
   'ow14-outreach-card': ['目标客户表：5 家北欧零售商的国家、类型、信号和匹配度', 'The prospect list: five Nordic retailers with country, type, buying signal and match score'],
   'ow15-brief-card': ['老板简报卡片：新询盘、已报价、赢单、待你审批，以及需要你决定的 4 件事', 'The weekly brief card: new inquiries, quotes, wins, pending approvals and the four decisions waiting for you'],
   'ow16-follow-card': ['建议跟进卡片：4 位客户的跟进理由和起草好的消息，发送前逐条等你确认', 'Suggested follow-ups: four customers, why each is due and a drafted message, each waiting for your approval'],
   'ow20-apps': ['OPEN WORK 侧栏：老板看板、客户CRM、主动获客、销售工作台、企业ERP 等 15 个应用', 'The OPEN WORK sidebar: 15 apps including Owner Dashboard, Customer CRM, Prospecting, Sales Workbench and ERP'],
-  'ow21-pi-check': ['价格校验：单价低于标准价 4.2%，PI 自动交销售经理审批，批准前不会发给客户', 'Price check: 4.2% under list price, so the PI goes to the sales manager and is not sent to the customer before approval'],
-  'ow22-approval-bar': ['回复草稿下的审批栏：对外发送需要你确认，批准后由销售工作台发出', 'The approval bar under a reply draft: sending to a customer needs your confirmation, and the Sales Workbench sends it once approved'],
+  'ow21-pi-check': ['价格校验：单价低于标准价 4.2%，PI-2026-1108 已提交销售经理审批，批准前不会发给客户', 'Price check: the unit price is 4.2% below standard, so PI-2026-1108 waits for the sales manager and is not sent to the customer before approval'],
+  'ow22-approval-bar': ['回复草稿和它的审批栏：对外发送需要你确认，点「批准」才发出', 'A reply draft and its approval bar: sending to a customer needs your confirmation, and nothing goes out until you click Approve'],
   'ow23-quick-actions': ['OPEN WORK 输入框和五个快捷操作：选择后只填入输入框，不会自动发送', 'The OPEN WORK message box and five quick actions: a shortcut only fills the box and never sends on its own'],
+  'ow24-step-log': ['执行记录：找该跟进的客户时，AI 写明读了客户CRM 时间线、销售工作台的报价与寄样记录、老客户的下单间隔', 'The step record: to find customers due a follow-up, AI notes that it read the customer CRM timeline, quote and sample records in the Sales Workbench, and past reorder intervals'],
 };
 for (const a of products) if (a.id.startsWith('ow') && !productText[a.id]) throw new Error(`OPEN WORK image without alt text: ${a.id}`);
 export const PRODUCT_CAPTION = { zh: '产品界面示意（演示数据）', en: 'Illustrative product interface · demo data' };
@@ -116,7 +122,8 @@ export function editorialImages(html, lang) {
     const decorative = /\balt=""/.test(tag) || id.startsWith('avatar-');
     const text = (product ?? descriptions[id])?.[lang === 'zh' ? 0 : 1];
     const suffix = product
-      ? (lang === 'zh' ? `。${PRODUCT_CAPTION.zh}` : ` — ${PRODUCT_CAPTION.en}`)
+      /* the OPEN WORK renders are its Chinese interface: an English reader is told so */
+      ? (lang === 'zh' ? `。${PRODUCT_CAPTION.zh}` : ` — ${id.startsWith('ow') ? 'Illustrative product interface, shown in Chinese · demo data' : PRODUCT_CAPTION.en}`)
       : (lang === 'zh' ? '（AI 概念图）' : ' (AI concept illustration)');
     const alt = decorative || !text ? '' : `${text}${suffix}`;
     /* A block that knows its own display width names it in data-sizes

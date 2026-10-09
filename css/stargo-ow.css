@@ -19,7 +19,7 @@ body.ow-home {
   --ow-white: #ffffff;
   --ow-ink: #0f172a;
   --ow-ink-2: #475569;
-  --ow-ink-3: #94a3b8;
+  --ow-ink-3: #5b6b84;   /* 5.4:1 on white, 4.9:1 on the pale-blue ground (was #94a3b8, 2.6:1) */
   --ow-line: #e2e8f0;
   --ow-line-2: #edf1f8;
   --ow-blue-1: #1d4ed8;
@@ -31,13 +31,29 @@ body.ow-home {
   --ow-success: #16a34a;
   --ow-font: Inter, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
   --ow-shadow: 0 60px 120px -40px rgba(29, 78, 216, .28), 0 24px 48px -24px rgba(15, 23, 42, .18), 0 1px 3px rgba(15, 23, 42, .06);
+  --ow-ui: #f6f4f0;        /* the OPEN WORK workspace ground */
+  --ow-ui-line: #e3dfd9;
+  --ow-shadow-ui: 0 50px 100px -40px rgba(40, 30, 15, .26), 0 18px 36px -24px rgba(40, 30, 15, .18), 0 2px 6px rgba(0, 0, 0, .05);
   --ow-shadow-sm: 0 24px 48px -24px rgba(29, 78, 216, .22), 0 1px 3px rgba(15, 23, 42, .06);
   --ow-glass: rgba(255, 255, 255, .78);
-  --ow-pad: 120px;
+  --ow-pad: 96px;
   --ow-gutter: 40px;
   --ow-bar: 40px;
   background: var(--ow-ground);
 }
+/* The template's opening curtain (a black full-screen 「STARGO」 that lifts
+   after ~0.7s) and the load animation that slides the whole page up from
+   10% of its height kept the first screen dark or moving for 2–4 s. This
+   page has no curtain and does not move on load: its heading and buttons
+   are there on the first paint. (The interaction still runs; it has nothing
+   to move: the transform here is the template's own resting value.) */
+body.ow-home .preloader { display: none !important; }
+body.ow-home .main-content { transform: translate(0) !important; }
+/* The template's floating pill repeats the navigation with other words and
+   sat over the hero's steps; the demo bar (.ow-sticky) takes its place. */
+body.ow-home .menu-bottom { display: none !important; }
+body.ow-home :focus-visible { outline-color: var(--ow-accent); }
+
 /* The side menu sits behind the page (z-index 222 under .main-content's 333)
    and the template's sections were what covered it; the page itself does now. */
 body.ow-home .main-content { background: var(--ow-ground); }
@@ -67,11 +83,13 @@ body.ow-home .ow-zoom, body.ow-home .ow-zoom * { cursor: zoom-in; }
 .ow-wrap { width: min(1280px, calc(100% - 2 * var(--ow-gutter))); margin-inline: auto; }
 .ow-sec { position: relative; padding-block: var(--ow-pad); }
 .ow-sec--white { background: var(--ow-white); }
-/* pale-blue sections: the poster ground, with light coming in from the edges */
+/* pale-blue sections: the poster ground, with light coming in from the
+   edges. They start and end in white, so the page reads as one continuous
+   sheet rather than stripes. */
 .ow-sec--glow { background:
-  radial-gradient(60% 50% at 0% 0%, rgba(59, 130, 246, .10), transparent 70%),
-  radial-gradient(50% 45% at 100% 100%, rgba(29, 78, 216, .08), transparent 70%),
-  linear-gradient(180deg, var(--ow-ground) 0%, var(--ow-ground-2) 100%); }
+  radial-gradient(42% 46% at 0% 30%, rgba(59, 130, 246, .11), transparent 72%),
+  radial-gradient(40% 44% at 100% 72%, rgba(29, 78, 216, .09), transparent 72%),
+  linear-gradient(180deg, #fff 0%, var(--ow-ground) 16%, var(--ow-ground-2) 84%, #fff 100%); }
 
 .ow-eyebrow { margin-bottom: 18px; font-size: 14px; font-weight: 600; line-height: 1.4; color: var(--ow-accent); }
 html[lang^="en"] .ow-eyebrow { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
@@ -84,7 +102,9 @@ html[lang^="en"] .ow-h3 { letter-spacing: -.01em; }
 /* the key phrase of a headline: the blue gradient of the posters */
 .ow-hl, .ow-h1-2 { background: var(--ow-grad-text); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
 @media (forced-colors: active) { .ow-hl, .ow-h1-2 { background: none; color: CanvasText; -webkit-text-fill-color: CanvasText; } }
-html[lang^="zh"] .ow :is(.ow-h1, .ow-h2, .ow-h3, .ow-lead, .ow-sec-lead, .ow-pain-text, .ow-pain-close > span) { word-break: keep-all; overflow-wrap: anywhere; }
+html[lang^="zh"] .ow :is(.ow-h1, .ow-h2, .ow-h3, .ow-lead, .ow-sec-lead, .ow-pain-text, .ow-pain-close > span, .ow-panel-sum, .ow-quick-line, .ow-shot-note, .ow-step dd, .ow-out-card > p, .ow-gate-text p, .ow-group-body > p, .ow-plan-text, .ow-note-t, .ow-faq .paragraph, .ow-faq-more-l) { word-break: keep-all; overflow-wrap: anywhere; }
+html[lang^="zh"] .ow .ow-hl { white-space: nowrap; }
+.ow :is(.ow-faq .paragraph, .stargo-form-consent, .ow-step dd, .ow-out-card > p, .ow-gate-text p) { text-wrap: pretty; }
 html[lang^="en"] .ow :is(.ow-h1, .ow-h2) { text-wrap: balance; }
 .ow-sec-head { max-width: 800px; }
 .ow-sec-head--center { margin-inline: auto; text-align: center; }
@@ -112,69 +132,69 @@ html[lang^="en"] .ow :is(.ow-h1, .ow-h2) { text-wrap: balance; }
 
 /* ---- product windows --------------------------------------------------- */
 .ow-shot { position: relative; }
-.ow-frame { position: relative; overflow: hidden; border: 1px solid rgba(15, 23, 42, .08); border-radius: 18px; background: #fff; box-shadow: var(--ow-shadow); }
-.ow-shot--plain .ow-frame { border-radius: 16px; box-shadow: var(--ow-shadow-sm); }
-.ow-frame-bar { position: relative; display: flex; align-items: center; height: var(--ow-bar); padding: 0 14px; border-bottom: 1px solid var(--ow-line-2); background: #fff; }
+.ow-frame { position: relative; overflow: hidden; border: 1px solid var(--ow-ui-line); border-radius: 18px; background: var(--ow-ui); box-shadow: var(--ow-shadow-ui); }
+.ow-frame-bar { position: relative; display: flex; align-items: center; gap: 10px; height: var(--ow-bar); padding: 0 10px 0 14px; border-bottom: 1px solid var(--ow-ui-line); background: var(--ow-ui); }
 .ow-lights { display: flex; gap: 8px; }
 .ow-lights i { width: 12px; height: 12px; border-radius: 50%; background: #ff5f57; box-shadow: inset 0 0 0 .5px rgba(0, 0, 0, .12); }
 .ow-lights i:nth-child(2) { background: #febc2e; }
 .ow-lights i:nth-child(3) { background: #28c840; }
-.ow-frame-title { position: absolute; left: 50%; transform: translateX(-50%); font-size: 12px; font-weight: 600; letter-spacing: .1em; color: var(--ow-ink-3); white-space: nowrap; }
-.ow-frame-bar .ow-badge { position: static; margin-left: auto; }
+.ow-frame-title { position: absolute; left: 50%; transform: translateX(-50%); font-size: 12.5px; font-weight: 600; letter-spacing: .04em; color: #57534e; white-space: nowrap; }
+.ow-frame-bar .ow-badge { position: static; }
+/* 「点图放大」: beside the picture, in the title bar (phones: above the card) */
+.ow-hint { display: inline-flex; align-items: center; gap: 6px; margin-left: auto; padding: 4px 8px; border-radius: 8px; color: #57534e; font-size: 12.5px; font-weight: 500; line-height: 1.2; white-space: nowrap; cursor: zoom-in; transition: background-color .15s ease, color .15s ease; }
+.ow-hint .ow-ico { width: 14px; height: 14px; }
+.ow-hint:hover, .ow-shot:has(.ow-zoom:hover) .ow-hint { background: rgba(28, 28, 30, .06); color: var(--ow-ink); }
+.ow-shot-meta { display: none; }
 .ow-frame-body { position: relative; }
 .ow-zoom { position: relative; display: block; width: 100%; margin: 0; padding: 0; border: 0; border-radius: 0; background: none; text-align: left; }
 .ow-zoom:focus-visible { outline-offset: -3px; }
 .ow-zoom picture { display: block; }
 .ow-shot-img { display: block; width: 100%; height: auto; }
-.ow-zoom-hint { position: absolute; right: 14px; bottom: 14px; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: rgba(15, 23, 42, .78); color: #fff; opacity: 0; transform: scale(.92); transition: opacity .18s ease, transform .18s ease; pointer-events: none; }
-.ow-zoom-hint .ow-ico { width: 17px; height: 17px; }
-.ow-zoom:hover .ow-zoom-hint, .ow-zoom:focus-visible .ow-zoom-hint { opacity: 1; transform: none; }
-@media (hover: none) { .ow-zoom-hint { opacity: .9; transform: none; width: 34px; height: 34px; } }
-.ow-badge { position: absolute; top: 12px; right: 12px; z-index: 2; padding: 3px 10px; border: 1px solid var(--ow-line); border-radius: 999px; background: rgba(255, 255, 255, .85); color: var(--ow-ink); font-size: 12px; font-weight: 500; line-height: 1.5; white-space: nowrap; pointer-events: none; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
-/* a window carries its badge in the title bar; the copy in the body is for
-   phone cards, whose title bar is hidden, and for frames without a bar */
-.ow-shot--window .ow-badge--body { display: none; }
-.ow-shot-note { margin-top: 20px; font-size: 13px; line-height: 1.5; color: var(--ow-ink-3); text-align: center; }
+.ow-badge { display: inline-block; padding: 3px 10px; border: 1px solid var(--ow-ui-line); border-radius: 999px; background: #fff; color: var(--ow-ink); font-size: 12px; font-weight: 500; line-height: 1.5; white-space: nowrap; pointer-events: none; }
+.ow-shot-note { margin-top: 20px; font-size: 13.5px; line-height: 1.55; color: var(--ow-ink-2); text-align: center; }
 
 /* small white glass cards over a window's edge */
 .ow-float { position: absolute; z-index: 3; display: inline-flex; align-items: center; gap: 10px; max-width: 320px; padding: 10px 16px 10px 10px; border: 1px solid rgba(255, 255, 255, .9); border-radius: 14px; background: var(--ow-glass); color: var(--ow-ink); font-size: 14px; font-weight: 600; line-height: 1.35; box-shadow: 0 18px 40px -16px rgba(29, 78, 216, .35), 0 2px 6px rgba(15, 23, 42, .06); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4); pointer-events: none; }
 .ow-float-ico { display: grid; place-items: center; flex: none; width: 30px; height: 30px; border-radius: 9px; background: var(--ow-grad); color: #fff; }
 .ow-float-ico .ow-ico { width: 16px; height: 16px; stroke-width: 2; }
  /* straddling the window's bottom edge, over the ground of the screen, never over its controls */
-.ow-float--bl { left: 20.5%; bottom: -22px; }
 .ow-float--br { right: 40px; bottom: -22px; }
 
+
 /* ---- S1 hero ---------------------------------------------------------- */
-.ow-hero { position: relative; padding-top: calc(11vh + 40px); padding-bottom: 100px; background:
-  radial-gradient(48% 40% at 0% 8%, rgba(59, 130, 246, .16), transparent 70%),
-  radial-gradient(40% 36% at 100% 0%, rgba(29, 78, 216, .12), transparent 70%),
-  radial-gradient(60% 40% at 50% 100%, rgba(59, 130, 246, .10), transparent 70%),
-  linear-gradient(180deg, var(--ow-ground) 0%, var(--ow-ground-2) 100%); }
+.ow-hero { position: relative; padding-top: calc(8vh + 44px); padding-bottom: 88px; background:
+  radial-gradient(48% 34% at 0% 6%, rgba(59, 130, 246, .16), transparent 70%),
+  radial-gradient(40% 30% at 100% 0%, rgba(29, 78, 216, .12), transparent 70%),
+  radial-gradient(70% 36% at 50% 62%, rgba(59, 130, 246, .10), transparent 72%),
+  linear-gradient(180deg, var(--ow-ground) 0%, var(--ow-ground-2) 58%, #fff 100%); }
 .ow-eyebrow--pill { display: inline-flex; align-items: center; gap: 8px; margin: 0; padding: 6px 14px 6px 8px; border: 1px solid rgba(37, 99, 235, .18); border-radius: 999px; background: rgba(255, 255, 255, .75); color: var(--ow-ink-2); font-size: 14px; font-weight: 500; letter-spacing: 0; text-transform: none; box-shadow: 0 6px 16px -10px rgba(37, 99, 235, .45); }
 html[lang^="en"] .ow-eyebrow--pill { font-size: 14px; letter-spacing: 0; text-transform: none; }
 .ow-spark { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--ow-grad); color: #fff; }
 .ow-spark .ow-ico { width: 13px; height: 13px; stroke-width: 2; }
-.ow-h1 { max-width: 1140px; margin-top: 26px; }
+.ow-h1 { max-width: 1140px; margin-top: 24px; }
 .ow-h1 > span { display: block; }
-.ow-hero-row { display: grid; grid-template-columns: minmax(0, 680px) auto; align-items: end; justify-content: space-between; gap: 28px 56px; margin-top: 30px; }
-.ow-cta-col { display: grid; justify-items: end; gap: 14px; }
-.ow-cta-row { display: flex; flex-wrap: wrap; gap: 12px; }
-.ow-slogan { color: var(--ow-ink-3); font-size: 14px; letter-spacing: .18em; }
+/* one left-aligned column: promise, what it is, the two buttons, the slogan */
+.ow-hero .ow-lead { max-width: 780px; margin-top: 22px; }
+.ow-cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+.ow-slogan { margin-top: 18px; color: var(--ow-ink-3); font-size: 14px; letter-spacing: .04em; }
 .ow-slogan::before { content: ""; display: inline-block; width: 28px; height: 1px; margin-right: 12px; vertical-align: middle; background: linear-gradient(90deg, transparent, var(--ow-blue-2)); }
 html[lang^="en"] .ow-slogan { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-size: 21px; letter-spacing: .01em; color: #64748b; }
-.ow-hero-stage { position: relative; margin-top: 64px; }
+.ow-hero-stage { position: relative; margin-top: 52px; }
 .ow-pins { position: absolute; inset: 0; pointer-events: none; }
 .ow-pin { position: absolute; left: var(--x); top: var(--y); display: grid; place-items: center; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; background: var(--ow-grad); color: #fff; font-size: 13px; font-weight: 700; line-height: 1; box-shadow: 0 0 0 5px rgba(59, 130, 246, .18), 0 4px 10px rgba(29, 78, 216, .4); }
 .ow-notes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 20px; }
 .ow-note { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; border: 1px solid var(--ow-line); border-radius: 14px; background: #fff; font-size: 15px; font-weight: 500; line-height: 1.5; color: var(--ow-ink); }
 .ow-note-n { display: grid; place-items: center; flex: none; width: 22px; height: 22px; margin-top: 1px; border-radius: 50%; background: var(--ow-grad); color: #fff; font-size: 12px; font-weight: 700; line-height: 1; }
-@media (min-width: 1200px) {
+@media (min-width: 1440px) {
   /* The three sentences as glass cards on the empty ground right of the chat
-     column, each level with its number. The image starts below the title bar. */
+     column, each level with the number it explains and joined to it by a
+     short line (so the card carries no second number). The image starts
+     below the title bar. A card ends at least 32px from the screen's edge;
+     narrower than 1440 they are the numbered row under the picture. */
   .ow-notes { position: absolute; top: calc(var(--ow-bar) + 1px); right: 0; bottom: 1px; left: 0; display: block; margin: 0; pointer-events: none; }
-  .ow-note { position: absolute; top: var(--y); left: calc(87.5% + 24px); width: calc(12.5% + 8px); padding: 10px 12px; border-color: rgba(255, 255, 255, .9); background: var(--ow-glass); font-size: 13.5px; line-height: 1.45; transform: translateY(-50%); box-shadow: 0 18px 36px -16px rgba(29, 78, 216, .35), 0 1px 2px rgba(15, 23, 42, .05); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4); pointer-events: auto; }
-  .ow-note::before { content: ""; position: absolute; top: 50%; left: -11px; width: 11px; height: 1px; background: var(--ow-blue-2); opacity: .7; }
-  html[lang^="zh"] .ow-note-t { word-break: keep-all; overflow-wrap: anywhere; }
+  .ow-note { position: absolute; top: var(--y); left: calc(87.5% + 29px); width: min(230px, calc(50vw - 541px)); padding: 10px 12px; border-color: rgba(255, 255, 255, .9); background: rgba(255, 255, 255, .86); font-size: 13.5px; line-height: 1.45; transform: translateY(-50%); box-shadow: 0 18px 36px -16px rgba(29, 78, 216, .35), 0 1px 2px rgba(15, 23, 42, .05); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4); pointer-events: auto; }
+  .ow-note .ow-note-n { display: none; }
+  .ow-note::before { content: ""; position: absolute; top: 50%; left: -13px; width: 13px; height: 1.5px; background: var(--ow-blue-2); }
 }
 
 /* ---- logo wall (real logos only) ---------------------------------------- */
@@ -184,13 +204,15 @@ html[lang^="en"] .ow-slogan { font-family: "Instrument Serif", Georgia, serif; f
 .ow-logos-grid img { height: 32px; width: auto; filter: grayscale(1); opacity: .75; }
 
 /* ---- S2 pain ---------------------------------------------------------- */
+/* the closing line hands over to the showcase right below, so less air after it */
+.ow-pain { padding-bottom: calc(var(--ow-pad) * .6); }
 .ow-pain .ow-sec-head { max-width: none; }
 .ow-pain-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 48px; }
-.ow-pain-card { display: flex; flex-direction: column; gap: 44px; min-height: 196px; padding: 24px; border: 1px solid var(--ow-line); border-radius: 18px; background: linear-gradient(180deg, #fbfcff 0%, #f4f7fd 100%); }
+.ow-pain-card { display: flex; flex-direction: column; gap: 16px; padding: 22px 24px 24px; border: 1px solid var(--ow-line); border-radius: 18px; background: linear-gradient(180deg, #fbfcff 0%, #f4f7fd 100%); }
 .ow-pain-top { display: flex; align-items: center; gap: 12px; color: var(--ow-ink-3); font-size: 14px; font-weight: 500; }
 .ow-pain-ico { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--ow-line); border-radius: 13px; background: #fff; color: #64748b; }
 .ow-pain-n { margin-left: auto; font-size: 13px; font-variant-numeric: tabular-nums; }
-.ow-pain-text { margin-top: auto; font-size: 21px; line-height: 1.4; font-weight: 650; color: var(--ow-ink); }
+.ow-pain-text { font-size: 21px; line-height: 1.4; font-weight: 650; color: var(--ow-ink); }
 html[lang^="en"] .ow-pain-text { font-size: 19px; letter-spacing: -.01em; }
 .ow-pain-close { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px; margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--ow-line); font-size: 24px; line-height: 1.4; font-weight: 650; }
 html[lang^="en"] .ow-pain-close { letter-spacing: -.015em; }
@@ -213,37 +235,47 @@ html[lang^="en"] .ow-pain-close { letter-spacing: -.015em; }
 html:not(.w-mod-js) .ow-panel[hidden] { display: block; }
 html:not(.w-mod-js) .ow-tablist-wrap { display: none; }
 .ow-panel-text { max-width: 1200px; margin: 0 auto 36px; }
-.ow-panel-sum { max-width: 860px; margin: 0 auto; font-size: 20px; line-height: 1.6; font-weight: 500; text-align: center; color: var(--ow-ink); }
+.ow-panel-sum { max-width: 880px; margin: 0 auto; font-size: 20px; line-height: 1.6; font-weight: 500; text-align: center; color: var(--ow-ink); }
+/* centred two-liner: even lines (css/stargo-fusion.css gives every zh <p> `pretty`, so this needs the weight) */
+html body.ow-home .ow p.ow-panel-sum { text-wrap: balance; }
 .ow-kicker { display: inline-block; margin-right: 10px; padding: 3px 9px; border-radius: 7px; background: var(--ow-accent-soft); color: var(--ow-accent); font-size: 12px; font-weight: 600; line-height: 1.4; vertical-align: 2px; white-space: nowrap; }
 .ow-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 28px 0 0; border: 1px solid rgba(255, 255, 255, .9); border-radius: 18px; background: rgba(255, 255, 255, .72); box-shadow: 0 16px 40px -28px rgba(29, 78, 216, .45), inset 0 0 0 1px rgba(15, 23, 42, .04); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
 .ow-step { padding: 18px 22px 20px; }
 .ow-step + .ow-step { border-left: 1px solid var(--ow-line); }
-.ow-step dt { margin-bottom: 6px; font-size: 13px; font-weight: 600; color: var(--ow-ink-3); }
+.ow-step dt { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 13.5px; font-weight: 600; color: var(--ow-ink-3); }
+/* the same 1 / 2 / 3 as the pins on the picture below */
+.ow-step-n { display: grid; place-items: center; flex: none; width: 20px; height: 20px; border-radius: 50%; background: var(--ow-grad); color: #fff; font-size: 11.5px; font-weight: 700; line-height: 1; }
 .ow-step--approve dt { color: var(--ow-accent); }
 .ow-step dd { font-size: 15px; line-height: 1.65; color: var(--ow-ink); }
-.ow-panel .ow-shot { max-width: 1200px; margin-inline: auto; }
-.ow-show > .ow-wrap > .ow-shot-note { margin-top: 24px; }
-.ow-quick { margin-top: 72px; text-align: center; }
-.ow-quick-shot { max-width: 1000px; margin: 0 auto; }
-.ow-quick-chips { display: none; }
-.ow-quick-line { margin-top: 20px; font-size: 16px; color: var(--ow-ink-2); }
+/* the chat column alone, at up to 1140px: about 1.4× the interface's size */
+.ow-panel .ow-shot { max-width: 1140px; margin-inline: auto; }
+.ow-show > .ow-wrap > .ow-shot-note { margin-top: 28px; }
+.ow-pins-note::after { content: " · "; }
+.ow-quick { margin-top: 56px; text-align: center; }
+/* the five quick actions, drawn as the interface draws its chips */
+.ow-quick-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.ow-quick-chips li { display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 16px; border: 1px solid #dcd8d1; border-radius: 999px; background: #faf9f6; color: #26252a; font-size: 15px; line-height: 1; white-space: nowrap; box-shadow: 0 1px 2px rgba(30, 25, 20, .04); }
+.ow-quick-chips .ow-ico { width: 17px; height: 17px; color: #4f4d49; }
+.ow-quick-line { margin-top: 18px; font-size: 16px; color: var(--ow-ink-2); }
 .ow-sec-cta { display: flex; justify-content: center; margin-top: 44px; }
 
 /* ---- S4 governance ---------------------------------------------------- */
-.ow-gov-top { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px 72px; align-items: start; }
-.ow-rules { display: grid; gap: 12px; }
-.ow-rule { display: grid; grid-template-columns: 48px minmax(0, 1fr); column-gap: 18px; padding: 20px 22px; border: 1px solid var(--ow-line); border-radius: 18px; background: linear-gradient(180deg, #fff 0%, #fafcff 100%); }
-.ow-rule-ico { grid-row: span 3; }
-.ow-rule > p { grid-column: 2; margin-top: 6px; font-size: 16px; line-height: 1.65; color: var(--ow-ink-2); }
-.ow-ui-line { display: none; }
-.ow-gov-shots { display: grid; gap: 64px; margin-top: 80px; }
-.ow-gov-shot { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 32px; align-items: center; }
-.ow-gov-shot--pi .ow-shot { grid-column: 1 / span 8; grid-row: 1; }
-.ow-gov-shot--pi .ow-cap { grid-column: 9 / span 4; grid-row: 1; }
-.ow-gov-shot--bar .ow-shot { grid-column: 4 / span 9; grid-row: 1; max-width: 840px; justify-self: end; width: 100%; }
-.ow-gov-shot--bar .ow-cap { grid-column: 1 / span 3; grid-row: 1; }
-.ow-cap { display: flex; align-items: flex-start; gap: 12px; font-size: 17px; line-height: 1.65; color: var(--ow-ink-2); }
-.ow-cap-n { display: grid; place-items: center; flex: none; width: 24px; height: 24px; margin-top: 3px; border-radius: 50%; background: var(--ow-grad); color: #fff; font-size: 12px; font-weight: 700; line-height: 1; }
+.ow-gov-head { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 20px 72px; align-items: end; max-width: none; }
+.ow-gov-head .ow-sec-lead { margin-top: 0; }
+.ow-gov-head .ow-head-link { margin-top: 14px; }
+.ow-gates { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin-top: 52px; }
+.ow-gate { display: flex; flex-direction: column; min-width: 0; }
+.ow-gate .ow-frame { border-radius: 16px; box-shadow: 0 30px 60px -36px rgba(40, 30, 15, .3), 0 2px 6px rgba(0, 0, 0, .04); }
+/* the title sits after the lights, so the hint and the badge have room */
+.ow-gate .ow-frame-title { position: static; transform: none; margin-left: 4px; }
+/* side by side, the three windows are as tall as the tallest close-up, each
+   picture centred on the interface's own ground */
+.ow-gate .ow-frame-body { display: flex; align-items: center; aspect-ratio: 1140 / 1263; background: var(--ow-ui); }
+.ow-gate .ow-zoom { flex: 1; }
+.ow-gate-text { display: grid; grid-template-columns: 44px minmax(0, 1fr); column-gap: 14px; row-gap: 6px; padding: 22px 6px 0; }
+.ow-gate-text .ow-tile { grid-row: span 2; width: 44px; height: 44px; border-radius: 13px; }
+.ow-gate-text .ow-h3 { font-size: 19px; }
+.ow-gate-text p { font-size: 15.5px; line-height: 1.7; color: var(--ow-ink-2); }
 
 /* ---- S5 outcomes ------------------------------------------------------ */
 .ow-out-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 52px; }
@@ -260,7 +292,8 @@ html:not(.w-mod-js) .ow-tablist-wrap { display: none; }
 .ow-apps-grid { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 88px; align-items: center; }
 .ow-apps-side .ow-shot { width: 262px; margin-inline: auto; }
 .ow-apps-side .ow-frame-body { background: #f0eeea; }
-.ow-apps-side .ow-frame-bar { padding-inline: 12px; }
+.ow-apps-side .ow-frame-bar { padding-inline: 12px 8px; gap: 6px; }
+.ow-apps-side .ow-hint > span { display: none; }   /* icon only in the narrow sidebar window */
 .ow-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px 48px; margin-top: 44px; }
 .ow-group { display: flex; align-items: flex-start; gap: 16px; }
 .ow-group-body { min-width: 0; }
@@ -271,7 +304,10 @@ html:not(.w-mod-js) .ow-tablist-wrap { display: none; }
 .ow-tasks-label { margin-bottom: 12px; font-size: 13px; font-weight: 600; color: var(--ow-ink-3); }
 
 /* ---- S9 pricing ------------------------------------------------------- */
-.ow-price-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px 72px; align-items: start; }
+.ow-price-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); grid-template-rows: auto 1fr; column-gap: 72px; align-items: start; }
+.ow-price-grid > .ow-sec-head { grid-column: 1; grid-row: 1; }
+.ow-price-grid > .ow-plans { grid-column: 2; grid-row: 1 / span 2; }
+.ow-price-grid > .ow-price-cta { grid-column: 1; grid-row: 2; }
 .ow-plans { overflow: hidden; border: 1px solid rgba(255, 255, 255, .9); border-radius: 20px; background: rgba(255, 255, 255, .86); box-shadow: var(--ow-shadow-sm), inset 0 0 0 1px rgba(15, 23, 42, .04); }
 .ow-plan { display: grid; grid-template-columns: 130px 170px minmax(0, 1fr); gap: 4px 20px; align-items: baseline; padding: 20px 28px; border-top: 1px solid var(--ow-line-2); }
 .ow-plan:first-child { border-top: 0; }
@@ -285,6 +321,11 @@ html:not(.w-mod-js) .ow-tablist-wrap { display: none; }
 
 /* ---- S10 FAQ (the template accordion, restyled) ------------------------ */
 .ow-faq-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px 72px; align-items: start; }
+.ow-faq-more { margin-top: 36px; padding: 22px 24px; border: 1px solid var(--ow-line); border-radius: 18px; background: linear-gradient(180deg, #fbfcff, #f4f7fd); }
+.ow-faq-more-t { font-size: 18px; font-weight: 650; line-height: 1.4; color: var(--ow-ink); }
+.ow-faq-more-l { margin-top: 4px; font-size: 15px; line-height: 1.6; color: var(--ow-ink-2); }
+.ow-faq-more-b { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 16px; }
+.ow-faq-more-b .ow-btn--secondary { height: 44px; padding-inline: 16px; font-size: 15px; }
 .ow-faq .faq-wrapper { display: block; max-width: none; margin: 0; border-top: 1px solid var(--ow-line); }
 .ow-faq .toggle-wrapper { margin: 0; border-bottom: 1px solid var(--ow-line); border-radius: 0; background: none; }
 .ow-faq .toggle-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 24px 0; color: var(--ow-ink); font-family: var(--ow-font); font-size: 18px; font-weight: 600; letter-spacing: 0; line-height: 1.45; text-decoration: none; }
@@ -313,10 +354,14 @@ body.ow-home .footer { margin-top: 0; }
 .ow-contact .grid-form { gap: 12px; }
 .ow-contact .text-field { width: 100%; min-height: 52px; margin: 0; padding: 0 16px; border: 1px solid var(--ow-line); border-radius: 12px; background: #fff; color: var(--ow-ink); font-family: var(--ow-font); font-size: 16px; font-weight: 400; }
 .ow-contact .text-field::placeholder { color: var(--ow-ink-3); opacity: 1; }
+.ow-field { display: grid; gap: 6px; min-width: 0; }
+.ow-field-l { margin: 0; font-size: 13.5px; font-weight: 600; line-height: 1.3; color: var(--ow-ink-2); }
+.ow-contact-about { margin-top: 28px; }
 .ow-contact .text-field:focus { border-color: var(--ow-blue-2); background: #fff; outline: 0; box-shadow: 0 0 0 4px rgba(59, 130, 246, .15); }
 .ow-contact .button { width: 100%; height: 52px; margin-top: 4px; padding: 0 20px; border: 0; border-radius: 12px; background: var(--ow-grad); color: #fff; font-family: var(--ow-font); font-size: 16px; font-weight: 600; letter-spacing: 0; box-shadow: 0 12px 28px -12px rgba(37, 99, 235, .75); }
 .ow-contact .button:hover { filter: brightness(1.06); }
-.ow-contact .stargo-form-consent { margin: 4px 0 0; font-size: 13px; line-height: 1.6; color: var(--ow-ink-3); opacity: 1; }
+.ow-contact .stargo-form-consent { margin: 4px 0 0; font-size: 13px; line-height: 1.6; color: var(--ow-ink-2); opacity: 1; }
+.ow-contact .stargo-form-consent a { color: var(--ow-accent); text-decoration: underline; text-underline-offset: 2px; }
 .ow-contact .stargo-form-note { margin: 4px 0 0; font-size: 14px; color: var(--ow-ink-2); opacity: 1; }
 .ow-contact .w-form-done { padding: 20px; border-radius: 12px; background: #ecfdf3; color: var(--ow-success); text-align: left; }
 .ow-contact .w-form-fail { margin-top: 12px; padding: 14px 16px; border-radius: 12px; background: #fef2f2; color: #b42318; text-align: left; }
@@ -329,37 +374,75 @@ body.ow-home .footer { margin-top: 0; }
 .ow-lightbox-bar .ow-badge { position: static; }
 .ow-lightbox-close { display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 0; border-radius: 10px; background: transparent; color: var(--ow-ink); }
 .ow-lightbox-close:hover { background: var(--ow-accent-soft); }
-.ow-lightbox-body { overflow: auto; overscroll-behavior: contain; background: #f3f1ed; }
-.ow-lightbox-img { display: block; width: 100%; height: auto; max-height: calc(94vh - 54px); object-fit: contain; }
+.ow-lightbox-body { flex: 1 1 auto; min-height: 0; overflow: auto; overscroll-behavior: contain; background: var(--ow-ui, #f6f4f0); }
+.ow-lightbox-body:focus-visible { outline: 2px solid var(--ow-accent, #2563eb); outline-offset: -4px; }
+/* js/stargo-ow.js sets the width; the picture keeps its proportions and the body scrolls */
+.ow-lightbox-img { display: block; width: 100%; max-width: none; height: auto; margin-inline: auto; }
+
+/* ---- demo bar (replaces the floating pill on this page) ------------------ */
+.ow-sticky { position: fixed; left: 50%; bottom: 20px; z-index: 500; display: flex; align-items: center; gap: 6px; padding: 6px; border: 1px solid rgba(255, 255, 255, .9); border-radius: 16px; background: rgba(255, 255, 255, .88); font-family: var(--ow-font); box-shadow: 0 20px 44px -16px rgba(15, 23, 42, .38), 0 0 0 1px rgba(15, 23, 42, .06); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4); opacity: 0; visibility: hidden; transform: translate(-50%, 140%); transition: transform .28s ease, opacity .28s ease, visibility 0s linear .28s; }
+.ow-sticky.is-on { opacity: 1; visibility: visible; transform: translate(-50%, 0); transition: transform .28s ease, opacity .28s ease; }
+.ow-sticky .ow-btn { height: 46px; padding-inline: 22px; }
+.ow-sticky-wa { display: inline-flex; align-items: center; gap: 8px; height: 46px; padding: 0 16px; border-radius: 12px; color: var(--ow-ink); font-size: 15px; font-weight: 600; text-decoration: none; white-space: nowrap; }
+.ow-sticky-wa .ow-ico { width: 18px; height: 18px; }
+.ow-sticky-wa:hover { background: var(--ow-accent-soft); color: var(--ow-blue-1); }
+
+/* ---- footer (template chrome) on this page --------------------------------
+   One sentence per line with air between them, the demo button in the page's
+   primary style, and no newsletter box competing with the demo band. */
+body.ow-home .footer-part-1 .h2 { line-height: 1.3; }
+body.ow-home .footer .contact-info.for-button { background: var(--ow-grad); box-shadow: 0 12px 28px -12px rgba(59, 130, 246, .8); }
+body.ow-home .footer .contact-info.for-button .top-text { color: #fff; }
+body.ow-home .footer .contact-info.for-button .bg-change { display: none; }
+body.ow-home .footer .footer-lft > .margin-40, body.ow-home .footer .footer-lft > .margin-30 { display: none; }
+body.ow-home .footer :focus-visible { outline-color: #93c5fd; }
+@media (min-width: 768px) {
+  body.ow-home .footer-part-1 .h2 > br:first-of-type { display: none; }
+}
 
 /* ---- responsive -------------------------------------------------------- */
 @media (max-width: 1199px) {
-  .ow-gov-shot { grid-template-columns: minmax(0, 1fr); row-gap: 20px; }
-  .ow-gov-shot :is(.ow-shot, .ow-cap) { grid-column: 1 !important; grid-row: auto !important; }
-  .ow-gov-shot--bar .ow-shot { justify-self: stretch; max-width: none; }
-  .ow-gov-shot .ow-cap { order: 2; max-width: 720px; }
   .ow-plan { grid-template-columns: 110px 150px minmax(0, 1fr); padding-inline: 22px; }
   .ow-apps-grid { gap: 56px; grid-template-columns: 280px minmax(0, 1fr); }
   .ow-float--br { right: 24px; }
+  .ow-gates { gap: 16px; }
 }
 @media (max-width: 991px) {
-  body.ow-home { --ow-pad: 96px; --ow-gutter: 32px; }
-  .ow-hero-row { grid-template-columns: minmax(0, 1fr); align-items: start; }
-  .ow-cta-col { justify-items: start; }
+  body.ow-home { --ow-pad: 88px; --ow-gutter: 32px; }
   .ow-pain-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .ow-tablist-wrap { justify-content: flex-start; overflow-x: auto; margin-inline: calc(-1 * var(--ow-gutter)); padding: 4px var(--ow-gutter) 12px; scrollbar-width: none; }
   .ow-tablist-wrap::-webkit-scrollbar { display: none; }
-  .ow-gov-top, .ow-price-grid, .ow-faq-grid { grid-template-columns: minmax(0, 1fr); }
+  .ow-gov-head, .ow-faq-grid { grid-template-columns: minmax(0, 1fr); }
+  .ow-price-grid { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; row-gap: 32px; }
+  .ow-price-grid > :is(.ow-sec-head, .ow-plans, .ow-price-cta) { grid-column: 1; grid-row: auto; }
+  .ow-price-cta { margin-top: 0; }
+  .ow-gates { grid-template-columns: minmax(0, 1fr); gap: 48px; max-width: 480px; margin-inline: auto; }
+  .ow-gate .ow-frame-body { aspect-ratio: auto; }
   .ow-out-grid { grid-template-columns: minmax(0, 1fr); }
   .ow-apps-grid { grid-template-columns: minmax(0, 1fr); gap: 48px; }
   .ow-apps-main { order: -1; }
-  .ow-quick-shot { display: none; }
-  .ow-quick-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
-  .ow-quick-chips li { padding: 8px 14px; border: 1px solid var(--ow-line); border-radius: 999px; background: #fff; font-size: 14px; line-height: 1.4; color: var(--ow-ink); }
   .ow-contact-card { grid-template-columns: minmax(0, 1fr); padding: 48px; }
+  /* Below 992px every product window shows its phone card (the <picture>
+     source in tools/ow-blocks/shared.mjs), at most 560px wide. The numbered
+     pins and the glass cards are placed for the desktop render, so they go. */
+  .ow-pins, .ow-shot--card .ow-float, .ow-pins-note { display: none; }
+  .ow .ow-shot--card, .ow-hero-stage { max-width: 560px; margin-inline: auto; }
+  /* phone cards: the card render draws its own card on the interface's
+     ground, so the page adds no second frame around it; the badge and the
+     hint sit in a row above it, never on the interface */
+  .ow-shot--card .ow-frame { overflow: visible; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+  .ow-shot--card .ow-frame-bar { display: none; }
+  .ow-shot--card .ow-shot-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 4px 8px; }
+  .ow-shot--card .ow-shot-meta .ow-hint { margin-left: 0; padding-left: 2px; color: var(--ow-ink-2); }
+  .ow-shot--card .ow-frame-body::after { content: ""; position: absolute; inset: 6px; z-index: -1; border-radius: 20px; box-shadow: 0 30px 60px -30px rgba(29, 78, 216, .35); }
+  .ow-shot--card .ow-frame-body { isolation: isolate; }
+  /* the three callouts as one compact numbered list under the card */
+  .ow-notes { grid-template-columns: minmax(0, 1fr); gap: 0; margin-top: 18px; padding: 4px 16px; border: 1px solid var(--ow-line); border-radius: 14px; background: rgba(255, 255, 255, .8); }
+  .ow-note { padding: 11px 0; border: 0; border-radius: 0; background: none; font-size: 15px; }
+  .ow-note + .ow-note { border-top: 1px solid var(--ow-line-2); }
 }
 @media (max-width: 767px) {
-  body.ow-home { --ow-pad: 64px; --ow-gutter: 20px; }
+  body.ow-home { --ow-pad: 56px; --ow-gutter: 20px; }
   .ow { font-size: 16px; }
   .ow-hero { padding-top: calc(11vh + 24px); padding-bottom: 64px; }
   .ow-eyebrow--pill { font-size: 13px; }
@@ -368,75 +451,89 @@ body.ow-home .footer { margin-top: 0; }
   .ow-h2 { font-size: 28px; line-height: 1.25; }
   html[lang^="en"] .ow-h2 { font-size: 29px; line-height: 1.12; }
   .ow-lead, .ow-sec-lead { font-size: 16px; line-height: 1.7; }
-  .ow-hero-row { margin-top: 20px; gap: 24px; }
-  .ow-cta-col { justify-items: stretch; }
-  .ow-cta-row { display: grid; grid-template-columns: minmax(0, 1fr); }
+  .ow-hero .ow-lead { margin-top: 18px; }
+  .ow-cta-row { display: grid; grid-template-columns: minmax(0, 1fr); margin-top: 24px; }
   .ow-cta-row .ow-btn { width: 100%; }
-  .ow-slogan { text-align: center; }
-  .ow-hero-stage { margin-top: 40px; }
-  .ow-pins, .ow-float { display: none; }
-  .ow-notes { grid-template-columns: minmax(0, 1fr); gap: 10px; margin-top: 16px; }
-  .ow-note { padding: 12px 14px; font-size: 15px; }
-  /* phone cards: the card render draws its own card on the interface's
-     ground, so the page adds no second frame around it */
-  .ow-shot--card .ow-frame { overflow: visible; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
-  .ow-shot--card .ow-frame-bar { display: none; }
-  .ow-shot--card .ow-frame-body::after { content: ""; position: absolute; inset: 6px; z-index: -1; border-radius: 20px; box-shadow: 0 30px 60px -30px rgba(29, 78, 216, .35); }
-  .ow-shot--card .ow-zoom-hint { right: 18px; bottom: 18px; }
-  .ow-shot--card .ow-frame-body { isolation: isolate; }
-  .ow-shot--card .ow-badge--body { display: block; top: 16px; right: 16px; }
+  .ow-slogan { margin-top: 16px; text-align: center; }
+  .ow-hero-stage { margin-top: 36px; }
+  .ow-float { display: none; }
   .ow-frame { border-radius: 14px; }
   .ow-pain-grid { grid-template-columns: minmax(0, 1fr); gap: 10px; margin-top: 32px; }
-  .ow-pain-card { flex-direction: row; align-items: center; gap: 16px; min-height: 0; padding: 16px; }
+  .ow-pain-card { flex-direction: row; align-items: center; gap: 16px; padding: 16px; }
   .ow-pain-top { flex: none; }
   .ow-pain-where, .ow-pain-n { display: none; }
   .ow-pain-text { margin: 0; font-size: 17px; }
   html[lang^="en"] .ow-pain-text { font-size: 16px; }
   .ow-pain-close { margin-top: 28px; padding-top: 24px; font-size: 19px; }
   .ow-show .ow-sec-head { margin-bottom: 32px; text-align: left; }
-  .ow-tab { height: 40px; padding: 0 14px; font-size: 14px; }
   .ow-panel { margin-top: 20px; }
   .ow-panel-text { margin-bottom: 20px; }
   .ow-panel-sum { font-size: 17px; text-align: left; }
+  html body.ow-home .ow p.ow-panel-sum { text-wrap: pretty; }
   .ow-steps { grid-template-columns: minmax(0, 1fr); margin-top: 18px; }
   .ow-step { padding: 14px 16px; }
   .ow-step + .ow-step { border-left: 0; border-top: 1px solid var(--ow-line); }
   .ow-step dd { font-size: 15px; }
-  .ow-quick { margin-top: 48px; }
+  .ow-quick { margin-top: 40px; }
+  .ow-quick-chips { gap: 8px; }
+  .ow-quick-chips li { height: 38px; padding: 0 13px; font-size: 14px; }
+  .ow-quick-chips .ow-ico { width: 15px; height: 15px; }
   .ow-quick-line { font-size: 15px; }
   .ow-sec-cta .ow-btn { width: 100%; }
-  .ow-gov-shots { display: none; }
-  .ow-ui-line { display: block; grid-column: 2; margin-top: 12px; padding: 10px 12px; border: 1px solid var(--ow-line); border-radius: 10px; background: #f8faff; font-size: 13px; line-height: 1.55; color: var(--ow-ink); }
-  .ow-ui-tag { display: block; margin-bottom: 4px; font-size: 11px; font-weight: 600; letter-spacing: .02em; color: var(--ow-ink-3); }
-  .ow-rule { grid-template-columns: 44px minmax(0, 1fr); column-gap: 14px; padding: 18px 16px; }
-  .ow-rule .ow-tile, .ow-group .ow-tile { width: 44px; height: 44px; border-radius: 13px; }
+  .ow-gov-head .ow-sec-lead { margin-top: 4px; }
+  .ow-gates { gap: 40px; margin-top: 36px; }
+  /* phones: only the price check is new here (the hero card is the approval
+     bar, and the showcase prints every scene's steps); the other two rules
+     stand on their words */
+  .ow-gate:not(:nth-child(2)) .ow-shot { display: none; }
+  .ow-gate:not(:nth-child(2)) .ow-gate-text { padding-top: 0; }
+  .ow-gate-text { padding: 18px 2px 0; }
+  .ow-gate-text .ow-h3 { font-size: 18px; }
+  .ow-gate-text p { font-size: 15px; }
+  .ow-group .ow-tile { width: 44px; height: 44px; border-radius: 13px; }
   .ow-h3 { font-size: 18px; }
   .ow-out-grid { margin-top: 32px; gap: 12px; }
   .ow-out-card { display: grid; grid-template-columns: 44px minmax(0, 1fr); column-gap: 14px; row-gap: 6px; padding: 20px 18px; }
   .ow-out-card .ow-tile { grid-row: span 3; width: 44px; height: 44px; margin: 0; border-radius: 13px; }
   .ow-out-title { font-size: 21px; }
   .ow-out-card > p { font-size: 15px; line-height: 1.65; }
-  .ow-out-card .ow-chips { padding-top: 6px; }
+  .ow-out-card .ow-chips { display: none; }
+  /* smaller app chips, so a card's or a group's apps share one or two rows */
+  .ow-chips { gap: 6px; }
+  .ow-chips li { padding: 2px 9px; font-size: 12.5px; }
   /* the 15 apps are named in the groups; the sidebar picture is for wider screens */
   .ow-apps-side { display: none; }
   .ow-groups { grid-template-columns: minmax(0, 1fr); gap: 26px; margin-top: 32px; }
   .ow-group { gap: 14px; }
-  .ow-tasks { margin-top: 28px; padding: 16px; }
-  .ow-plan { grid-template-columns: minmax(0, 1fr) auto; gap: 6px 16px; padding: 18px 20px; }
+  .ow-tasks { display: none; }   /* the home screen's task groups: a desktop aside */
+  .ow-price-grid { row-gap: 24px; }
+  .ow-plan { grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; padding: 15px 18px; }
+  .ow-plan--main { padding-block: 20px; }
   .ow-plan-text { grid-column: 1 / -1; }
   .ow-plan-price { text-align: right; }
   .ow-plan-note { padding-inline: 20px; }
+  .ow-price-cta .ow-btn { width: 100%; }
+  .ow-faq-more { margin-top: 24px; padding: 18px; }
   .ow-faq .toggle-header { padding: 20px 0; font-size: 16px; }
   .ow-faq .toggle-top { gap: 12px; }
   .ow-faq .toggle-space { padding: 0 8px 22px 28px; }
   .ow-faq .toggle-space .paragraph { font-size: 15px; }
   .ow-contact-card { padding: 28px 20px; border-radius: 20px; }
   .ow-contact .grid-form { grid-template-columns: minmax(0, 1fr); }
-  .ow-lightbox { width: 100vw; max-height: 100dvh; height: 100dvh; border: 0; border-radius: 0; }
-  /* On a phone the full screen stays full size and pans, rather than shrinking to unreadable. */
-  .ow-lightbox-body { flex: 1; }
-  .ow-lightbox-img { width: 1200px; max-width: none; max-height: none; }
+  .ow-lightbox { width: 100vw; max-width: 100vw; max-height: 100dvh; height: 100dvh; border: 0; border-radius: 0; }
+  .ow-sticky { left: 12px; right: 12px; bottom: 12px; transform: translateY(140%); }
+  .ow-sticky.is-on { transform: none; }
+  .ow-sticky .ow-btn { flex: 1; padding-inline: 14px; }
+  .ow-sticky-wa { padding: 0 12px; }
+  body.ow-home .footer .container { padding-inline: 20px; }
+}
+/* phones: the four scenes as a 2 × 2 grid of buttons, all visible at once */
+@media (max-width: 599px) {
+  .ow-tablist-wrap { overflow: visible; margin-inline: 0; padding: 0; }
+  .ow-tablist { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; gap: 4px; }
+  .ow-tab { justify-content: center; min-height: 48px; height: auto; padding: 8px 10px; font-size: 14px; line-height: 1.3; white-space: normal; text-align: center; }
+  .ow-tab .ow-ico { width: 16px; height: 16px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ow *, .ow-lightbox * { animation: none !important; transition: none !important; }
+  .ow *, .ow-lightbox *, .ow-sticky { animation: none !important; transition: none !important; }
 }

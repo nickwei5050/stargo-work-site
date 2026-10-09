@@ -307,6 +307,13 @@ html[lang="en"] .menu-bottom { max-width: 720px; }
 /* 12. Keyboard users get a visible focus ring (the template hides the cursor
        and relies on hover states only). */
 a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible { outline: 2px solid #e8823a; outline-offset: 3px; }
+/* Webflow's `.w-input:focus { outline: 0 }` (class weight) beat the rule above
+   on the newsletter field and the template's form fields: they had no ring. */
+.w-input:focus-visible, .w-select:focus-visible, .w-button:focus-visible, .subscribe-field-main:focus-visible, .text-field:focus-visible { outline: 2px solid #e8823a; outline-offset: 3px; }
+/* Motion off: no opening curtain on any Mono page. */
+@media (prefers-reduced-motion: reduce) {
+  .preloader { display: none !important; }
+}
 
 /* 13. Mobile navigation: 44px tap targets and no page scroll while the
        Webflow nav overlay is open. */
