@@ -51,8 +51,11 @@ would be cut off), a button or tag wraps, or text is truncated.
 | id | scene | render | files |
 |---|---|---|---|
 | `ow01-home` … `ow06-follow` | full app: home, inquiry, quote/PI, outreach, weekly brief, follow-up | 1280×880 CSS px @2x = 2560×1760 | main 1600w (q85) + 800/1200/2400 |
+| `ow07-welcome` | full app: the real OPEN WORK home view (welcome hero 「你好，欢迎使用 OPEN WORK / 你的 AI 外贸业务执行系统」, 快速任务 tabs, six task cards, composer) | 1280×880 CSS px @2x | main 1600w + 800/1200/2400 |
+| `ow08-crm` … `ow11-staff` | chat on the left, an app open in OPEN WORK's right-hand panel: 广交会名片 → 客户CRM, 报价未回复 → 自动化中心, 定金到账 → 企业ERP 生产工单, 新询盘派工 → 专家 (STARGO 数字员工 288 名) | 1280×880 CSS px @2x | main 1600w + 800/1200/2400 |
 | `ow32-inquiry-focus` … `ow35-brief-focus` | the chat column of ow02–ow05 alone (no sidebar, title bar or composer), for the desktop showcase | 800 CSS px wide @3x = 2400w | main 1600w + 1200/1800/2400 |
 | `ow12-inquiry-card` … `ow16-follow-card` | phone cards, no sidebar, 15px phone type | 390 CSS px wide @3x = 1170w | main 1170w + 780 |
+| `ow17-crm-card`, `ow18-automation-card`, `ow19-erp-card`, `ow25-staff-card` | phone cards of ow08–ow11: the chat's steps and the app's content as one column (customer list, flow, work order and materials, roster), 15px phone type | 390 CSS px wide @3x = 1170w | main 1170w + 780 |
 | `ow20-apps` | sidebar, brand row through New API（AI 网关） | @3x (705w) | main + 520 |
 | `ow21-pi-check` | close-up: price-check steps + the PI's number and its 审批中 bar | 380 CSS px in phone type @3x = 1140w | main + 760 |
 | `ow22-approval-bar` | close-up: the reply draft's first lines and 对外发送需要你确认 + 批准 | 380 CSS px in phone type @3x | main + 760 |
@@ -64,3 +67,16 @@ after approval, and what the composer footnote means, is on the owner's list;
 do not add either to a scene until the owner confirms it.
 
 Never upscaled: every main file and variant is at most the render's width.
+
+`ow24` is the step-record close-up (`ow24-step-log`); the digital-employee phone
+card is therefore `ow25-staff-card`.
+
+## Blog covers
+
+The seven article covers (`assets/blog/*.webp`) are these renders fitted into a
+1200×800 frame as a window on one plate colour: `node tools/blog-covers.mjs`
+(Pillow; `tools/blog-covers.py` draws the frame). Which render belongs to which
+article is the `COVERS` table in `tools/blog-covers.mjs`; its recipe records the
+sha256 of the source render, so re-rendering a scene here and re-running that
+script rebuilds exactly the covers made from it. A cover source must be an
+`ow<nn>-` render registered by `render.mjs`.

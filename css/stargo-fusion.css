@@ -2859,36 +2859,38 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
    lines of the long guide (.sgp-value / .sgp-cond), the call to action
    (.sgp-cta) and the FAQ (.sgp-faq). Everything here is scoped to that block,
    except the blog index hero and the Chinese heading punctuation at the end.
-   Palette and type are lifelogx's own: the pink primary, its deep tertiary,
-   the dark border and greys, "42 Dotsans" for headings and Inter for text. */
-.lx-scope .stargo-post {
-  --sg-accent: var(--_semantics---primary, #e393bd);
-  --sg-hot: var(--_primitives---primary--secondary, #f938a1);
-  --sg-deep: var(--_primitives---primary--tertiary, #500b38);
-  --sg-line: var(--_primitives---primary--border-dark, #292829);
-  --sg-card: #121113;
-  --sg-card-2: #1a191c;
-  --sg-panel: #0b0a0c;
-  --sg-muted: var(--_primitives---primary--text-grey, #989898);
-  --sg-soft: #c9c7cb;
-  --sg-ink: #16060f;
-  --sg-head: var(--_ui-styles---fonts--heading, "42 Dotsans", Arial, sans-serif);
+   Palette and type are the OPEN WORK pages' own since 2026-10-09 (review
+   fixes): the articles sit on the light owShell page (tools/ow-blocks/blog.mjs)
+   in the site's blue and ink, Inter for headings and text; `.ow-post-body`
+   is the article column that holds the body. */
+.ow-post-body .stargo-post {
+  --sg-accent: var(--ow-accent, #2563eb);
+  --sg-hot: #3b82f6;
+  --sg-deep: #1d4ed8;
+  --sg-line: #e2e8f0;
+  --sg-card: #ffffff;
+  --sg-card-2: #f4f7fd;
+  --sg-panel: #f8faff;
+  --sg-muted: #5b6b84;
+  --sg-soft: #475569;
+  --sg-ink: #ffffff;   /* text on an accent fill */
+  --sg-head: var(--ow-font, Inter, sans-serif);
 }
-.lx-scope .stargo-post h3 { text-wrap: balance; }
-.lx-scope .stargo-post h3[id] { scroll-margin-top: 6rem; }
+.ow-post-body .stargo-post h3 { text-wrap: balance; }
+.ow-post-body .stargo-post h3[id] { scroll-margin-top: 6rem; }
 @media (max-width: 479px) {
-  .lx-scope .stargo-post h3 { font-size: 1.7rem; line-height: 1.25; }
+  .ow-post-body .stargo-post h3 { font-size: 1.7rem; line-height: 1.25; }
 }
 
 /* Key takeaways, right under the answer paragraph. */
-.lx-scope .stargo-post .sgp-takeaways {
+.ow-post-body .stargo-post .sgp-takeaways {
   margin: 1.75rem 0 2.25rem;
   padding: 1.25rem 1.4rem 1.1rem;
-  border: 1px solid rgba(227, 147, 189, .38);
+  border: 1px solid rgba(37, 99, 235, .22);
   border-radius: 1rem;
-  background: linear-gradient(135deg, rgba(80, 11, 56, .62), rgba(18, 17, 19, .96) 70%);
+  background: linear-gradient(135deg, #eaf1ff, #ffffff 70%);
 }
-.lx-scope .stargo-post .sgp-takeaways-title {
+.ow-post-body .stargo-post .sgp-takeaways-title {
   margin: 0 0 .8rem;
   font-family: var(--sg-head);
   font-size: .95rem;
@@ -2897,15 +2899,15 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
   text-transform: uppercase;
   color: var(--sg-accent);
 }
-.lx-scope .stargo-post .sgp-takeaways ul { list-style: none; margin: 0; padding: 0; overflow: visible; }
-.lx-scope .stargo-post .sgp-takeaways li {
+.ow-post-body .stargo-post .sgp-takeaways ul { list-style: none; margin: 0; padding: 0; overflow: visible; }
+.ow-post-body .stargo-post .sgp-takeaways li {
   position: relative;
   margin: 0 0 .55rem;
   padding-left: 1.55rem;
   line-height: 1.6;
 }
-.lx-scope .stargo-post .sgp-takeaways li:last-child { margin-bottom: 0; }
-.lx-scope .stargo-post .sgp-takeaways li::before {
+.ow-post-body .stargo-post .sgp-takeaways li:last-child { margin-bottom: 0; }
+.ow-post-body .stargo-post .sgp-takeaways li::before {
   content: "";
   position: absolute;
   left: .1rem;
@@ -2914,20 +2916,20 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
   height: .6rem;
   border-radius: 50%;
   background: var(--sg-accent);
-  box-shadow: 0 0 0 4px rgba(227, 147, 189, .16);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, .14);
 }
 
 /* The long guide's contents list. */
-.lx-scope .stargo-post .sgp-toc {
+.ow-post-body .stargo-post .sgp-toc {
   margin: 0 0 2.5rem;
   padding: 1.2rem 1.4rem;
   border: 1px solid var(--sg-line);
   border-radius: 1rem;
   background: var(--sg-panel);
 }
-.lx-scope .stargo-post .sgp-toc-title { margin: 0 0 .75rem; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--sg-muted); }
-.lx-scope .stargo-post .sgp-toc ol { list-style: none; margin: 0; padding: 0; overflow: visible; counter-reset: sgtoc; columns: 2 17rem; column-gap: 2rem; }
-.lx-scope .stargo-post .sgp-toc li {
+.ow-post-body .stargo-post .sgp-toc-title { margin: 0 0 .75rem; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--sg-muted); }
+.ow-post-body .stargo-post .sgp-toc ol { list-style: none; margin: 0; padding: 0; overflow: visible; counter-reset: sgtoc; columns: 2 17rem; column-gap: 2rem; }
+.ow-post-body .stargo-post .sgp-toc li {
   counter-increment: sgtoc;
   position: relative;
   break-inside: avoid;
@@ -2936,47 +2938,47 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
   font-size: .92rem;
   line-height: 1.45;
 }
-.lx-scope .stargo-post .sgp-toc li::before {
+.ow-post-body .stargo-post .sgp-toc li::before {
   content: counter(sgtoc, decimal-leading-zero);
   position: absolute;
   left: 0;
   color: var(--sg-accent);
   font-variant-numeric: tabular-nums;
 }
-.lx-scope .stargo-post .sgp-toc a { color: inherit; text-decoration: none; }
-.lx-scope .stargo-post .sgp-toc a:hover,
-.lx-scope .stargo-post .sgp-toc a:focus-visible { color: var(--sg-accent); text-decoration: underline; }
+.ow-post-body .stargo-post .sgp-toc a { color: inherit; text-decoration: none; }
+.ow-post-body .stargo-post .sgp-toc a:hover,
+.ow-post-body .stargo-post .sgp-toc a:focus-visible { color: var(--sg-accent); text-decoration: underline; }
 
 /* Value and availability lines under each guide section. */
-.lx-scope .stargo-post :is(.sgp-value, .sgp-cond) {
+.ow-post-body .stargo-post :is(.sgp-value, .sgp-cond) {
   margin: 0 0 .65rem;
   padding: .1rem 0 .1rem .9rem;
   border-left: 2px solid var(--sg-line);
   font-size: .95rem;
   line-height: 1.65;
 }
-.lx-scope .stargo-post .sgp-value { border-left-color: var(--sg-accent); }
-.lx-scope .stargo-post .sgp-cond { color: var(--sg-soft); }
-.lx-scope .stargo-post .sgp-value strong { color: var(--sg-accent); font-weight: 600; }
-.lx-scope .stargo-post .sgp-cond strong { color: #fffffe; font-weight: 600; }
+.ow-post-body .stargo-post .sgp-value { border-left-color: var(--sg-accent); }
+.ow-post-body .stargo-post .sgp-cond { color: var(--sg-soft); }
+.ow-post-body .stargo-post .sgp-value strong { color: var(--sg-accent); font-weight: 600; }
+.ow-post-body .stargo-post .sgp-cond strong { color: #0f172a; font-weight: 600; }
 
 /* The closing call to action. */
-.lx-scope .stargo-post .sgp-cta {
+.ow-post-body .stargo-post .sgp-cta {
   margin: 2.5rem 0 0;
   padding: 1.1rem 1.35rem;
-  border: 1px solid rgba(227, 147, 189, .3);
+  border: 1px solid rgba(37, 99, 235, .22);
   border-radius: 1rem;
-  background: var(--sg-card);
+  background: #eaf1ff;
   font-weight: 500;
   line-height: 1.6;
 }
-.lx-scope .stargo-post .sgp-cta a { font-weight: 600; white-space: nowrap; }
+.ow-post-body .stargo-post .sgp-cta a { font-weight: 600; white-space: nowrap; }
 
 /* FAQ at the end of every article (the same words as its FAQPage data). */
-.lx-scope .stargo-post .sgp-faq { margin-top: 3.5rem; padding-top: .5rem; border-top: 1px solid var(--sg-line); }
-.lx-scope .stargo-post .sgp-faq h3 { margin-top: 2rem; }
-.lx-scope .stargo-post .sgp-faq-item { padding: 1.1rem 0 1.15rem; border-bottom: 1px solid var(--sg-line); }
-.lx-scope .stargo-post .sgp-faq-item h4 {
+.ow-post-body .stargo-post .sgp-faq { margin-top: 3.5rem; padding-top: .5rem; border-top: 1px solid var(--sg-line); }
+.ow-post-body .stargo-post .sgp-faq h3 { margin-top: 2rem; }
+.ow-post-body .stargo-post .sgp-faq-item { padding: 1.1rem 0 1.15rem; border-bottom: 1px solid var(--sg-line); }
+.ow-post-body .stargo-post .sgp-faq-item h4 {
   margin: 0 0 .5rem;
   font-family: var(--_ui-styles---fonts--text, Inter, sans-serif);
   font-size: 1.1rem;
@@ -2984,7 +2986,7 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
   line-height: 1.45;
   letter-spacing: normal;
 }
-.lx-scope .stargo-post .sgp-faq-item p { margin: 0; color: var(--sg-soft); }
+.ow-post-body .stargo-post .sgp-faq-item p { margin: 0; color: var(--sg-soft); }
 
 /* ---- charts --------------------------------------------------------------
    figure.sgc is a size container: every chart lays itself out for the width
@@ -2993,7 +2995,7 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
    of chart width. Webflow's rich-text sheet shrinks figures to 60% and hides
    the text of any div inside a figure (`.w-richtext figure div`); both are
    undone here. Text is real text; the bars and frames are decoration. */
-.lx-scope .stargo-post figure.sgc {
+.ow-post-body .stargo-post figure.sgc {
   container-type: inline-size;
   position: relative;
   box-sizing: border-box;
@@ -3003,20 +3005,20 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
   padding: 1.25rem;
   border: 1px solid var(--sg-line);
   border-radius: 1.25rem;
-  background: radial-gradient(120% 80% at 0% 0%, rgba(80, 11, 56, .42), transparent 62%), var(--sg-panel);
-  color: #fffffe;
+  background: radial-gradient(120% 80% at 0% 0%, rgba(59, 130, 246, .08), transparent 62%), var(--sg-panel);
+  color: #0f172a;
   font-family: var(--_ui-styles---fonts--text, Inter, sans-serif);
   font-size: 1rem;
 }
-.lx-scope .stargo-post figure.sgc div { color: inherit; font-size: inherit; }
-.lx-scope .stargo-post .sgc :is(ul, ol) { list-style: none; margin: 0; padding: 0; overflow: visible; }
-.lx-scope .stargo-post .sgc :is(li, p) { margin: 0; opacity: 1; letter-spacing: normal; line-height: 1.45; }
-.lx-scope .stargo-post .sgc strong { font-weight: 600; }
-.lx-scope .stargo-post .sgc-cap { display: flex; flex-wrap: wrap; align-items: baseline; gap: .4rem .7rem; margin: 0 0 1.15rem; text-align: left; }
-.lx-scope .stargo-post .sgc-no {
+.ow-post-body .stargo-post figure.sgc div { color: inherit; font-size: inherit; }
+.ow-post-body .stargo-post .sgc :is(ul, ol) { list-style: none; margin: 0; padding: 0; overflow: visible; }
+.ow-post-body .stargo-post .sgc :is(li, p) { margin: 0; opacity: 1; letter-spacing: normal; line-height: 1.45; }
+.ow-post-body .stargo-post .sgc strong { font-weight: 600; }
+.ow-post-body .stargo-post .sgc-cap { display: flex; flex-wrap: wrap; align-items: baseline; gap: .4rem .7rem; margin: 0 0 1.15rem; text-align: left; }
+.ow-post-body .stargo-post .sgc-no {
   flex: none;
   padding: .15rem .6rem;
-  border: 1px solid rgba(227, 147, 189, .45);
+  border: 1px solid rgba(37, 99, 235, .3);
   border-radius: 999px;
   color: var(--sg-accent);
   font-size: .72rem;
@@ -3024,14 +3026,14 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
   text-transform: uppercase;
   white-space: nowrap;
 }
-.lx-scope .stargo-post .sgc-title { flex: 1 1 14rem; min-width: 0; font-family: var(--sg-head); font-size: 1.2rem; line-height: 1.35; }
-.lx-scope .stargo-post .sgc .sgc-label { margin: 1rem 0 .5rem; color: var(--sg-muted); font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; }
-.lx-scope .stargo-post .sgc .sgc-note { margin-top: 1.1rem; color: var(--sg-muted); font-size: .82rem; line-height: 1.6; }
-.lx-scope .stargo-post .sgc-idx { color: var(--sg-accent); font-size: .72rem; font-variant-numeric: tabular-nums; letter-spacing: .06em; }
+.ow-post-body .stargo-post .sgc-title { flex: 1 1 14rem; min-width: 0; font-family: var(--sg-head); font-size: 1.2rem; line-height: 1.35; }
+.ow-post-body .stargo-post .sgc .sgc-label { margin: 1rem 0 .5rem; color: var(--sg-muted); font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; }
+.ow-post-body .stargo-post .sgc .sgc-note { margin-top: 1.1rem; color: var(--sg-muted); font-size: .82rem; line-height: 1.6; }
+.ow-post-body .stargo-post .sgc-idx { color: var(--sg-accent); font-size: .72rem; font-variant-numeric: tabular-nums; letter-spacing: .06em; }
 
 /* Steps: a card per step, joined by an arrow badge in the gap. */
-.lx-scope .stargo-post .sgc-flow { --sgc-gap: 1rem; display: grid; gap: var(--sgc-gap); }
-.lx-scope .stargo-post .sgc-step {
+.ow-post-body .stargo-post .sgc-flow { --sgc-gap: 1rem; display: grid; gap: var(--sgc-gap); }
+.ow-post-body .stargo-post .sgc-step {
   position: relative;
   display: grid;
   grid-template-columns: 1.7rem minmax(0, 1fr);
@@ -3043,12 +3045,12 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
   border-radius: .85rem;
   background: var(--sg-card);
 }
-.lx-scope .stargo-post .sgc-step > .sgc-idx { grid-row: 1 / span 3; padding-top: .22rem; }
-.lx-scope .stargo-post .sgc-step-title { font-size: 1rem; line-height: 1.35; }
-.lx-scope .stargo-post .sgc-tag { color: var(--sg-accent); font-size: .8rem; }
-.lx-scope .stargo-post .sgc-step-text { color: var(--sg-soft); font-size: .85rem; line-height: 1.5; }
-.lx-scope .stargo-post :is(.sgc-flow > li, .sgc-lanes > *, .sgc-team > *) { position: relative; }
-.lx-scope .stargo-post :is(.sgc-flow > li + li, .sgc-lanes > * + *, .sgc-team > * + *)::before {
+.ow-post-body .stargo-post .sgc-step > .sgc-idx { grid-row: 1 / span 3; padding-top: .22rem; }
+.ow-post-body .stargo-post .sgc-step-title { font-size: 1rem; line-height: 1.35; }
+.ow-post-body .stargo-post .sgc-tag { color: var(--sg-accent); font-size: .8rem; }
+.ow-post-body .stargo-post .sgc-step-text { color: var(--sg-soft); font-size: .85rem; line-height: 1.5; }
+.ow-post-body .stargo-post :is(.sgc-flow > li, .sgc-lanes > *, .sgc-team > *) { position: relative; }
+.ow-post-body .stargo-post :is(.sgc-flow > li + li, .sgc-lanes > * + *, .sgc-team > * + *)::before {
   content: "↓";
   position: absolute;
   z-index: 1;
@@ -3059,45 +3061,45 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
   place-items: center;
   width: 1.35rem;
   height: 1.35rem;
-  border: 1px solid rgba(227, 147, 189, .5);
+  border: 1px solid rgba(37, 99, 235, .3);
   border-radius: 50%;
   background: var(--sg-panel);
   color: var(--sg-accent);
   font-size: .72rem;
   line-height: 1;
 }
-.lx-scope .stargo-post .sgc-back { display: flex; align-items: center; gap: .5rem; margin-top: 1rem; color: var(--sg-soft); font-size: .88rem; }
-.lx-scope .stargo-post .sgc-back-icon { flex: none; color: var(--sg-accent); font-size: 1.15rem; line-height: 1; }
-.lx-scope .stargo-post .sgc .sgc-motto { margin-top: 1.4rem; text-align: center; color: var(--sg-accent); font-family: var(--sg-head); font-size: 1.1rem; line-height: 1.4; }
+.ow-post-body .stargo-post .sgc-back { display: flex; align-items: center; gap: .5rem; margin-top: 1rem; color: var(--sg-soft); font-size: .88rem; }
+.ow-post-body .stargo-post .sgc-back-icon { flex: none; color: var(--sg-accent); font-size: 1.15rem; line-height: 1; }
+.ow-post-body .stargo-post .sgc .sgc-motto { margin-top: 1.4rem; text-align: center; color: var(--sg-accent); font-family: var(--sg-head); font-size: 1.1rem; line-height: 1.4; }
 
 /* Rows once the chart is wide enough: the arrow moves into the column gap. */
 @container (min-width: 480px) {
-  .lx-scope .stargo-post :is(.sgc-flow-3, .sgc-flow-6) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .lx-scope .stargo-post :is(.sgc-flow-4) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .lx-scope .stargo-post :is(.sgc-flow-3, .sgc-flow-4, .sgc-flow-6) .sgc-step { grid-template-columns: 1fr; }
-  .lx-scope .stargo-post :is(.sgc-flow-3, .sgc-flow-4, .sgc-flow-6) .sgc-step > .sgc-idx { grid-row: auto; padding: 0 0 .2rem; }
-  .lx-scope .stargo-post :is(.sgc-flow-3, .sgc-flow-4, .sgc-flow-6) > li + li::before { content: "→"; left: calc(var(--sgc-gap) / -2 - 1px); top: 50%; }
-  .lx-scope .stargo-post .sgc-flow-4 > li:nth-child(2n + 1)::before,
-  .lx-scope .stargo-post .sgc-flow-6 > li:nth-child(3n + 1)::before { content: none; }
+  .ow-post-body .stargo-post :is(.sgc-flow-3, .sgc-flow-6) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .ow-post-body .stargo-post :is(.sgc-flow-4) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ow-post-body .stargo-post :is(.sgc-flow-3, .sgc-flow-4, .sgc-flow-6) .sgc-step { grid-template-columns: 1fr; }
+  .ow-post-body .stargo-post :is(.sgc-flow-3, .sgc-flow-4, .sgc-flow-6) .sgc-step > .sgc-idx { grid-row: auto; padding: 0 0 .2rem; }
+  .ow-post-body .stargo-post :is(.sgc-flow-3, .sgc-flow-4, .sgc-flow-6) > li + li::before { content: "→"; left: calc(var(--sgc-gap) / -2 - 1px); top: 50%; }
+  .ow-post-body .stargo-post .sgc-flow-4 > li:nth-child(2n + 1)::before,
+  .ow-post-body .stargo-post .sgc-flow-6 > li:nth-child(3n + 1)::before { content: none; }
 }
 @container (min-width: 600px) {
-  .lx-scope .stargo-post .sgc-flow-5 { --sgc-gap: .9rem; grid-template-columns: repeat(5, minmax(0, 1fr)); }
-  .lx-scope .stargo-post .sgc-flow-5 .sgc-step { grid-template-columns: 1fr; padding: .85rem .75rem; }
-  .lx-scope .stargo-post .sgc-flow-5 .sgc-step > .sgc-idx { grid-row: auto; padding: 0 0 .25rem; }
-  .lx-scope .stargo-post .sgc-flow-5 > li + li::before { content: "→"; left: calc(var(--sgc-gap) / -2 - 1px); top: 50%; }
+  .ow-post-body .stargo-post .sgc-flow-5 { --sgc-gap: .9rem; grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .ow-post-body .stargo-post .sgc-flow-5 .sgc-step { grid-template-columns: 1fr; padding: .85rem .75rem; }
+  .ow-post-body .stargo-post .sgc-flow-5 .sgc-step > .sgc-idx { grid-row: auto; padding: 0 0 .25rem; }
+  .ow-post-body .stargo-post .sgc-flow-5 > li + li::before { content: "→"; left: calc(var(--sgc-gap) / -2 - 1px); top: 50%; }
   /* The five start steps carry a sentence each; in five columns of ~110px
      that ran to four lines and split 「影/响」 and 「客/户」. They are rows
      instead: number, step, sentence, joined by a down arrow under the number. */
-  .lx-scope .stargo-post .sgc-flow-5.sgc-numbered { --sgc-gap: .6rem; grid-template-columns: minmax(0, 1fr); }
-  .lx-scope .stargo-post .sgc-flow-5.sgc-numbered .sgc-step { grid-template-columns: 3rem minmax(8rem, 13rem) minmax(0, 1fr); align-items: baseline; column-gap: 1rem; padding: .75rem 1rem; }
-  .lx-scope .stargo-post .sgc-numbered .sgc-step > .sgc-idx { grid-row: auto; padding: 0; font-family: var(--sg-head); font-size: 1.6rem; line-height: 1; letter-spacing: 0; }
-  .lx-scope .stargo-post .sgc-flow-5.sgc-numbered > li + li::before { content: "↓"; left: 1.95rem; top: calc(var(--sgc-gap) / -2 - 1px); }
-  html[lang^="zh"] .lx-scope .stargo-post .sgc-flow-5.sgc-numbered .sgc-step { grid-template-columns: 3rem 8.5rem minmax(0, 1fr); }
+  .ow-post-body .stargo-post .sgc-flow-5.sgc-numbered { --sgc-gap: .6rem; grid-template-columns: minmax(0, 1fr); }
+  .ow-post-body .stargo-post .sgc-flow-5.sgc-numbered .sgc-step { grid-template-columns: 3rem minmax(8rem, 13rem) minmax(0, 1fr); align-items: baseline; column-gap: 1rem; padding: .75rem 1rem; }
+  .ow-post-body .stargo-post .sgc-numbered .sgc-step > .sgc-idx { grid-row: auto; padding: 0; font-family: var(--sg-head); font-size: 1.6rem; line-height: 1; letter-spacing: 0; }
+  .ow-post-body .stargo-post .sgc-flow-5.sgc-numbered > li + li::before { content: "↓"; left: 1.95rem; top: calc(var(--sgc-gap) / -2 - 1px); }
+  html[lang^="zh"] .ow-post-body .stargo-post .sgc-flow-5.sgc-numbered .sgc-step { grid-template-columns: 3rem 8.5rem minmax(0, 1fr); }
 }
 
 /* Chips. */
-.lx-scope .stargo-post .sgc-chips { display: flex; flex-wrap: wrap; gap: .4rem; }
-.lx-scope .stargo-post .sgc-chips li {
+.ow-post-body .stargo-post .sgc-chips { display: flex; flex-wrap: wrap; gap: .4rem; }
+.ow-post-body .stargo-post .sgc-chips li {
   padding: .3rem .7rem;
   border: 1px solid var(--sg-line);
   border-radius: 999px;
@@ -3105,35 +3107,36 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
   font-size: .82rem;
   line-height: 1.35;
 }
-.lx-scope .stargo-post .sgc-chips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); }
-.lx-scope .stargo-post .sgc-chips-grid li { border-radius: .6rem; }
-.lx-scope .stargo-post .sgc-chips-solid li { border-color: transparent; background: var(--sg-accent); color: var(--sg-ink); font-weight: 600; }
-.lx-scope .stargo-post .sgc .sgc-traits { margin-top: 1.1rem; }
-.lx-scope .stargo-post .sgc-traits li { color: var(--sg-soft); }
+.ow-post-body .stargo-post .sgc-chips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); }
+.ow-post-body .stargo-post .sgc-chips-grid li { border-radius: .6rem; }
+.ow-post-body .stargo-post .sgc-chips-solid li { border-color: transparent; background: var(--sg-accent); color: var(--sg-ink); font-weight: 600; }
+.ow-post-body .stargo-post .sgc .sgc-traits { margin-top: 1.1rem; }
+.ow-post-body .stargo-post .sgc-traits li { color: var(--sg-soft); }
 
 /* (2) Growth OS → Sales Desk. */
-.lx-scope .stargo-post .sgc-lanes { --sgc-gap: 1.1rem; display: grid; gap: var(--sgc-gap); }
-.lx-scope .stargo-post :is(.sgc-lane, .sgc-duo-card, .sgc-team > div) {
+.ow-post-body .stargo-post .sgc-lanes { --sgc-gap: 1.1rem; display: grid; gap: var(--sgc-gap); }
+.ow-post-body .stargo-post :is(.sgc-lane, .sgc-duo-card, .sgc-team > div) {
   padding: 1rem;
   border: 1px solid var(--sg-line);
   border-radius: 1rem;
-  background: rgba(18, 17, 19, .92);
+  background: rgba(255, 255, 255, .92);
 }
-.lx-scope .stargo-post .sgc .sgc-lane-title { margin: 0 0 .1rem; font-family: var(--sg-head); font-size: 1.05rem; line-height: 1.35; }
-.lx-scope .stargo-post .sgc-lane > .sgc-label:first-of-type { margin-top: .6rem; }
-.lx-scope .stargo-post .sgc .sgc-profile { margin: .75rem 0 1rem; color: var(--sg-accent); font-size: .85rem; }
-.lx-scope .stargo-post .sgc-lane .sgc-flow { margin-top: 1rem; }
-.lx-scope .stargo-post .sgc-handoff {
+.ow-post-body .stargo-post .sgc .sgc-lane-title { margin: 0 0 .1rem; font-family: var(--sg-head); font-size: 1.05rem; line-height: 1.35; }
+.ow-post-body .stargo-post .sgc-lane > .sgc-label:first-of-type { margin-top: .6rem; }
+.ow-post-body .stargo-post .sgc .sgc-profile { margin: .75rem 0 1rem; color: var(--sg-accent); font-size: .85rem; }
+.ow-post-body .stargo-post .sgc-lane .sgc-flow { margin-top: 1rem; }
+.ow-post-body .stargo-post .sgc-handoff {
   padding: 1rem;
-  border: 1px solid rgba(227, 147, 189, .5);
+  border: 1px solid rgba(37, 99, 235, .4);
   border-radius: 1rem;
-  background: linear-gradient(135deg, var(--sg-deep), #22091a);
+  background: linear-gradient(135deg, var(--sg-deep), #2563eb);
+  color: #ffffff;
 }
-.lx-scope .stargo-post .sgc-handoff-title strong { font-size: 1.05rem; }
-.lx-scope .stargo-post .sgc .sgc-handoff-text { margin-top: .25rem; color: #f2d7e6; font-size: .86rem; line-height: 1.5; }
-.lx-scope .stargo-post .sgc-handoff .sgc-label { color: #f2d7e6; }
-.lx-scope .stargo-post .sgc-chain { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem 0; }
-.lx-scope .stargo-post .sgc-chain li {
+.ow-post-body .stargo-post .sgc-handoff-title strong { font-size: 1.05rem; }
+.ow-post-body .stargo-post .sgc .sgc-handoff-text { margin-top: .25rem; color: #e0ebff; font-size: .86rem; line-height: 1.5; }
+.ow-post-body .stargo-post .sgc-handoff .sgc-label { color: #e0ebff; }
+.ow-post-body .stargo-post .sgc-chain { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem 0; }
+.ow-post-body .stargo-post .sgc-chain li {
   position: relative;
   padding: .32rem .7rem;
   border-radius: .5rem;
@@ -3141,8 +3144,8 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
   font-size: .86rem;
   font-weight: 600;
 }
-.lx-scope .stargo-post .sgc-chain li + li { margin-left: 1.35rem; }
-.lx-scope .stargo-post .sgc-chain li + li::before {
+.ow-post-body .stargo-post .sgc-chain li + li { margin-left: 1.35rem; }
+.ow-post-body .stargo-post .sgc-chain li + li::before {
   content: "→";
   position: absolute;
   left: -1.05rem;
@@ -3153,8 +3156,8 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
 }
 
 /* (3) The role directory as bars. */
-.lx-scope .stargo-post .sgc-bars { display: grid; gap: .7rem; }
-.lx-scope .stargo-post .sgc-bar {
+.ow-post-body .stargo-post .sgc-bars { display: grid; gap: .7rem; }
+.ow-post-body .stargo-post .sgc-bar {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   grid-template-areas: "name value" "track track";
@@ -3162,12 +3165,12 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
   column-gap: .75rem;
   row-gap: .3rem;
 }
-.lx-scope .stargo-post .sgc-bar-name { grid-area: name; font-size: .9rem; line-height: 1.35; }
-.lx-scope .stargo-post .sgc-bar-value { grid-area: value; color: var(--sg-muted); font-size: .8rem; white-space: nowrap; }
-.lx-scope .stargo-post .sgc-bar-value strong { color: #fffffe; font-size: 1rem; font-variant-numeric: tabular-nums; }
-.lx-scope .stargo-post .sgc-bar-track { grid-area: track; display: block; height: .55rem; overflow: hidden; border-radius: 999px; background: #1f1e21; }
-.lx-scope .stargo-post .sgc-bar-fill { display: block; width: var(--sgc-share, 0%); height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--sg-deep), var(--sg-hot) 55%, var(--sg-accent)); }
-.lx-scope .stargo-post .sgc-total {
+.ow-post-body .stargo-post .sgc-bar-name { grid-area: name; font-size: .9rem; line-height: 1.35; }
+.ow-post-body .stargo-post .sgc-bar-value { grid-area: value; color: var(--sg-muted); font-size: .8rem; white-space: nowrap; }
+.ow-post-body .stargo-post .sgc-bar-value strong { color: #0f172a; font-size: 1rem; font-variant-numeric: tabular-nums; }
+.ow-post-body .stargo-post .sgc-bar-track { grid-area: track; display: block; height: .55rem; overflow: hidden; border-radius: 999px; background: #e2e8f0; }
+.ow-post-body .stargo-post .sgc-bar-fill { display: block; width: var(--sgc-share, 0%); height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--sg-deep), var(--sg-hot) 55%, var(--sg-accent)); }
+.ow-post-body .stargo-post .sgc-total {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
@@ -3177,20 +3180,20 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
   border-top: 1px solid var(--sg-line);
   font-weight: 600;
 }
-.lx-scope .stargo-post .sgc-total-value { color: var(--sg-muted); font-size: .85rem; }
-.lx-scope .stargo-post .sgc-total-value strong { color: var(--sg-accent); font-family: var(--sg-head); font-size: 1.8rem; line-height: 1; font-weight: 500; }
+.ow-post-body .stargo-post .sgc-total-value { color: var(--sg-muted); font-size: .85rem; }
+.ow-post-body .stargo-post .sgc-total-value strong { color: var(--sg-accent); font-family: var(--sg-head); font-size: 1.8rem; line-height: 1; font-weight: 500; }
 @container (min-width: 520px) {
-  .lx-scope .stargo-post .sgc-bar { grid-template-columns: minmax(8rem, 14rem) minmax(0, 1fr) 4.75rem; grid-template-areas: "name track value"; align-items: center; }
-  .lx-scope .stargo-post .sgc-bar-track { height: .8rem; }
-  .lx-scope .stargo-post .sgc-bar-value { text-align: right; }
+  .ow-post-body .stargo-post .sgc-bar { grid-template-columns: minmax(8rem, 14rem) minmax(0, 1fr) 4.75rem; grid-template-areas: "name track value"; align-items: center; }
+  .ow-post-body .stargo-post .sgc-bar-track { height: .8rem; }
+  .ow-post-body .stargo-post .sgc-bar-value { text-align: right; }
 }
 
 /* (4) AI teamwork. */
-.lx-scope .stargo-post .sgc-team { --sgc-gap: 1.1rem; display: grid; gap: var(--sgc-gap); }
-.lx-scope .stargo-post .sgc .sgc-quote { font-family: var(--sg-head); font-size: 1.25rem; line-height: 1.35; }
-.lx-scope .stargo-post .sgc-team-brief .sgc-label { margin-top: 0; }
-.lx-scope .stargo-post .sgc .sgc-aside { margin-top: .5rem; color: var(--sg-muted); font-size: .75rem; }
-.lx-scope .stargo-post .sgc .sgc-hub {
+.ow-post-body .stargo-post .sgc-team { --sgc-gap: 1.1rem; display: grid; gap: var(--sgc-gap); }
+.ow-post-body .stargo-post .sgc .sgc-quote { font-family: var(--sg-head); font-size: 1.25rem; line-height: 1.35; }
+.ow-post-body .stargo-post .sgc-team-brief .sgc-label { margin-top: 0; }
+.ow-post-body .stargo-post .sgc .sgc-aside { margin-top: .5rem; color: var(--sg-muted); font-size: .75rem; }
+.ow-post-body .stargo-post .sgc .sgc-hub {
   display: grid;
   justify-items: center;
   gap: .15rem;
@@ -3199,30 +3202,31 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
   padding: .9rem 1.2rem;
   border-radius: 999px;
   background: radial-gradient(circle at 30% 25%, var(--sg-hot), var(--sg-deep) 72%);
-  box-shadow: 0 0 0 6px rgba(227, 147, 189, .12);
+  box-shadow: 0 0 0 6px rgba(37, 99, 235, .12);
+  color: #ffffff;
   text-align: center;
 }
-.lx-scope .stargo-post .sgc-hub strong { font-family: var(--sg-head); font-size: 1.15rem; font-weight: 500; }
-.lx-scope .stargo-post .sgc-hub span { color: #f7e1ec; font-size: .78rem; line-height: 1.35; }
-.lx-scope .stargo-post .sgc-roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: .5rem; }
-.lx-scope .stargo-post .sgc-role { display: grid; align-content: start; gap: .15rem; padding: .7rem .8rem; border: 1px solid var(--sg-line); border-radius: .75rem; background: var(--sg-card-2); }
-.lx-scope .stargo-post .sgc-role-name { font-size: .92rem; line-height: 1.3; }
-.lx-scope .stargo-post .sgc-role-task { color: var(--sg-soft); font-size: .8rem; line-height: 1.4; }
-.lx-scope .stargo-post .sgc-role-lead { border-color: rgba(227, 147, 189, .55); background: #251220; }
-.lx-scope .stargo-post .sgc-msgs { display: grid; gap: .45rem; }
-.lx-scope .stargo-post .sgc-msg {
+.ow-post-body .stargo-post .sgc-hub strong { font-family: var(--sg-head); font-size: 1.15rem; font-weight: 500; }
+.ow-post-body .stargo-post .sgc-hub span { color: #eef4ff; font-size: .78rem; line-height: 1.35; }
+.ow-post-body .stargo-post .sgc-roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: .5rem; }
+.ow-post-body .stargo-post .sgc-role { display: grid; align-content: start; gap: .15rem; padding: .7rem .8rem; border: 1px solid var(--sg-line); border-radius: .75rem; background: var(--sg-card-2); }
+.ow-post-body .stargo-post .sgc-role-name { font-size: .92rem; line-height: 1.3; }
+.ow-post-body .stargo-post .sgc-role-task { color: var(--sg-soft); font-size: .8rem; line-height: 1.4; }
+.ow-post-body .stargo-post .sgc-role-lead { border-color: rgba(37, 99, 235, .4); background: #eaf1ff; }
+.ow-post-body .stargo-post .sgc-msgs { display: grid; gap: .45rem; }
+.ow-post-body .stargo-post .sgc-msg {
   display: grid;
   gap: .1rem;
   padding: .5rem .75rem;
-  border: 1px solid rgba(227, 147, 189, .28);
+  border: 1px solid rgba(37, 99, 235, .2);
   border-radius: .8rem .8rem .8rem .2rem;
-  background: rgba(80, 11, 56, .35);
+  background: #eef4ff;
 }
-.lx-scope .stargo-post .sgc-msg-who { color: var(--sg-accent); font-size: .72rem; line-height: 1.35; }
-.lx-scope .stargo-post .sgc-msg-text { font-size: .88rem; }
-.lx-scope .stargo-post .sgc-team-out .sgc-label { margin-top: 0; }
-.lx-scope .stargo-post .sgc-outlist li { padding: .45rem 0; border-bottom: 1px solid var(--sg-line); font-size: .92rem; font-weight: 500; }
-.lx-scope .stargo-post .sgc .sgc-review {
+.ow-post-body .stargo-post .sgc-msg-who { color: var(--sg-accent); font-size: .72rem; line-height: 1.35; }
+.ow-post-body .stargo-post .sgc-msg-text { font-size: .88rem; }
+.ow-post-body .stargo-post .sgc-team-out .sgc-label { margin-top: 0; }
+.ow-post-body .stargo-post .sgc-outlist li { padding: .45rem 0; border-bottom: 1px solid var(--sg-line); font-size: .92rem; font-weight: 500; }
+.ow-post-body .stargo-post .sgc .sgc-review {
   display: flex;
   justify-content: center;
   gap: .45rem;
@@ -3239,17 +3243,17 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
    column's width at 768 and 1440: 「开拓一个新/的目标市/场」, and "Human
    review" on two lines.) */
 @container (min-width: 640px) {
-  .lx-scope .stargo-post .sgc-team { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); align-items: start; }
-  .lx-scope .stargo-post .sgc-team-brief { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: baseline; gap: .2rem 1rem; }
-  .lx-scope .stargo-post .sgc .sgc-team-brief :is(.sgc-label, .sgc-aside) { margin: 0; }
-  .lx-scope .stargo-post .sgc-team-brief .sgc-quote { flex: 1 1 auto; }
-  .lx-scope .stargo-post .sgc-team > .sgc-team-out::before { content: "→"; left: calc(var(--sgc-gap) / -2 - 1px); top: 3rem; }
-  .lx-scope .stargo-post .sgc-roles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .lx-scope .stargo-post .sgc-role-lead { grid-column: 1 / -1; }
+  .ow-post-body .stargo-post .sgc-team { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); align-items: start; }
+  .ow-post-body .stargo-post .sgc-team-brief { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: baseline; gap: .2rem 1rem; }
+  .ow-post-body .stargo-post .sgc .sgc-team-brief :is(.sgc-label, .sgc-aside) { margin: 0; }
+  .ow-post-body .stargo-post .sgc-team-brief .sgc-quote { flex: 1 1 auto; }
+  .ow-post-body .stargo-post .sgc-team > .sgc-team-out::before { content: "→"; left: calc(var(--sgc-gap) / -2 - 1px); top: 3rem; }
+  .ow-post-body .stargo-post .sgc-roles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ow-post-body .stargo-post .sgc-role-lead { grid-column: 1 / -1; }
 }
 
 /* (5) One-click video. */
-.lx-scope .stargo-post .sgc .sgc-brief {
+.ow-post-body .stargo-post .sgc .sgc-brief {
   display: grid;
   gap: .3rem;
   margin-bottom: 1.1rem;
@@ -3258,10 +3262,10 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
   border-radius: 1rem;
   background: var(--sg-card);
 }
-.lx-scope .stargo-post .sgc-brief .sgc-label { margin: 0; }
-.lx-scope .stargo-post .sgc-brief .sgc-quote { font-size: 1.1rem; }
-.lx-scope .stargo-post .sgc-pills { display: flex; flex-wrap: wrap; align-items: center; gap: .55rem 0; }
-.lx-scope .stargo-post .sgc-pill {
+.ow-post-body .stargo-post .sgc-brief .sgc-label { margin: 0; }
+.ow-post-body .stargo-post .sgc-brief .sgc-quote { font-size: 1.1rem; }
+.ow-post-body .stargo-post .sgc-pills { display: flex; flex-wrap: wrap; align-items: center; gap: .55rem 0; }
+.ow-post-body .stargo-post .sgc-pill {
   position: relative;
   display: inline-flex;
   align-items: baseline;
@@ -3274,13 +3278,13 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
   font-weight: 600;
   white-space: nowrap;
 }
-.lx-scope .stargo-post .sgc-pill + .sgc-pill { margin-left: 1.3rem; }
-.lx-scope .stargo-post .sgc-pill + .sgc-pill::before { content: "→"; position: absolute; left: -1.02rem; top: 50%; transform: translateY(-50%); color: var(--sg-accent); font-weight: 400; }
-.lx-scope .stargo-post .sgc-pill:last-child { border-color: transparent; background: var(--sg-accent); color: var(--sg-ink); }
-.lx-scope .stargo-post .sgc-pill:last-child .sgc-idx { color: var(--sg-deep); }
-.lx-scope .stargo-post .sgc-video-grid { display: grid; gap: 1rem; margin-top: .4rem; }
-.lx-scope .stargo-post .sgc-beats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
-.lx-scope .stargo-post .sgc-frame-beat {
+.ow-post-body .stargo-post .sgc-pill + .sgc-pill { margin-left: 1.3rem; }
+.ow-post-body .stargo-post .sgc-pill + .sgc-pill::before { content: "→"; position: absolute; left: -1.02rem; top: 50%; transform: translateY(-50%); color: var(--sg-accent); font-weight: 400; }
+.ow-post-body .stargo-post .sgc-pill:last-child { border-color: transparent; background: var(--sg-accent); color: var(--sg-ink); }
+.ow-post-body .stargo-post .sgc-pill:last-child .sgc-idx { color: rgba(255, 255, 255, .82); }
+.ow-post-body .stargo-post .sgc-video-grid { display: grid; gap: 1rem; margin-top: .4rem; }
+.ow-post-body .stargo-post .sgc-beats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
+.ow-post-body .stargo-post .sgc-frame-beat {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -3289,77 +3293,77 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
   padding: .6rem .7rem;
   border: 1px solid var(--sg-line);
   border-radius: .7rem;
-  background: linear-gradient(165deg, #2b0f21, var(--sg-card) 70%);
+  background: linear-gradient(165deg, #eaf1ff, var(--sg-card) 70%);
   font-size: .86rem;
   font-weight: 600;
   line-height: 1.3;
 }
-.lx-scope .stargo-post .sgc-formats { display: flex; align-items: flex-end; justify-content: space-around; gap: .75rem; padding: .25rem 0; }
-.lx-scope .stargo-post .sgc-format { display: grid; justify-items: center; gap: .3rem; text-align: center; font-size: .82rem; }
-.lx-scope .stargo-post .sgc-shape { display: block; border: 2px solid var(--sg-accent); border-radius: .35rem; background: rgba(227, 147, 189, .12); }
-.lx-scope .stargo-post .sgc-shape-portrait { width: 2.3rem; height: 4.1rem; }
-.lx-scope .stargo-post .sgc-shape-landscape { width: 5.4rem; height: 3.05rem; }
-.lx-scope .stargo-post .sgc-shape-square { width: 3.3rem; height: 3.3rem; }
-.lx-scope .stargo-post .sgc-format-ratio { color: var(--sg-muted); font-size: .75rem; font-variant-numeric: tabular-nums; }
+.ow-post-body .stargo-post .sgc-formats { display: flex; align-items: flex-end; justify-content: space-around; gap: .75rem; padding: .25rem 0; }
+.ow-post-body .stargo-post .sgc-format { display: grid; justify-items: center; gap: .3rem; text-align: center; font-size: .82rem; }
+.ow-post-body .stargo-post .sgc-shape { display: block; border: 2px solid var(--sg-accent); border-radius: .35rem; background: rgba(37, 99, 235, .1); }
+.ow-post-body .stargo-post .sgc-shape-portrait { width: 2.3rem; height: 4.1rem; }
+.ow-post-body .stargo-post .sgc-shape-landscape { width: 5.4rem; height: 3.05rem; }
+.ow-post-body .stargo-post .sgc-shape-square { width: 3.3rem; height: 3.3rem; }
+.ow-post-body .stargo-post .sgc-format-ratio { color: var(--sg-muted); font-size: .75rem; font-variant-numeric: tabular-nums; }
 @container (min-width: 560px) {
-  .lx-scope .stargo-post .sgc-video-grid { grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); align-items: start; }
-  .lx-scope .stargo-post .sgc-beats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .lx-scope .stargo-post .sgc-frame-beat { min-height: 6.5rem; }
+  .ow-post-body .stargo-post .sgc-video-grid { grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); align-items: start; }
+  .ow-post-body .stargo-post .sgc-beats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .ow-post-body .stargo-post .sgc-frame-beat { min-height: 6.5rem; }
 }
 
 /* (6) Proactive loop: examples under the steps. */
-.lx-scope .stargo-post .sgc-examples { display: grid; gap: .5rem; }
-.lx-scope .stargo-post .sgc-example { display: grid; gap: .2rem; padding: .7rem .85rem; border-left: 2px solid var(--sg-accent); border-radius: 0 .7rem .7rem 0; background: var(--sg-card); }
-.lx-scope .stargo-post .sgc-example strong { font-size: .92rem; }
-.lx-scope .stargo-post .sgc-example span { color: var(--sg-soft); font-size: .84rem; line-height: 1.5; }
+.ow-post-body .stargo-post .sgc-examples { display: grid; gap: .5rem; }
+.ow-post-body .stargo-post .sgc-example { display: grid; gap: .2rem; padding: .7rem .85rem; border-left: 2px solid var(--sg-accent); border-radius: 0 .7rem .7rem 0; background: var(--sg-card); }
+.ow-post-body .stargo-post .sgc-example strong { font-size: .92rem; }
+.ow-post-body .stargo-post .sgc-example span { color: var(--sg-soft); font-size: .84rem; line-height: 1.5; }
 @container (min-width: 560px) {
-  .lx-scope .stargo-post .sgc-examples { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .ow-post-body .stargo-post .sgc-examples { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
 /* (8) Owner control trio. */
-.lx-scope .stargo-post .sgc-trio { display: grid; gap: .6rem; }
-.lx-scope .stargo-post .sgc-trio-item { display: grid; align-content: start; gap: .3rem; padding: 1rem; border: 1px solid var(--sg-line); border-radius: .9rem; background: var(--sg-card); }
-.lx-scope .stargo-post .sgc-trio-title { font-family: var(--sg-head); font-size: 1.45rem; font-weight: 500; line-height: 1.2; }
+.ow-post-body .stargo-post .sgc-trio { display: grid; gap: .6rem; }
+.ow-post-body .stargo-post .sgc-trio-item { display: grid; align-content: start; gap: .3rem; padding: 1rem; border: 1px solid var(--sg-line); border-radius: .9rem; background: var(--sg-card); }
+.ow-post-body .stargo-post .sgc-trio-title { font-family: var(--sg-head); font-size: 1.45rem; font-weight: 500; line-height: 1.2; }
 @container (min-width: 520px) {
-  .lx-scope .stargo-post .sgc-trio { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .ow-post-body .stargo-post .sgc-trio { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
 /* (9) Availability. */
-.lx-scope .stargo-post .sgc-statuses { display: grid; gap: .6rem; }
-.lx-scope .stargo-post .sgc-status { display: grid; align-content: start; gap: .55rem; padding: .9rem 1rem; border: 1px solid var(--sg-line); border-radius: .9rem; background: var(--sg-card); }
-.lx-scope .stargo-post .sgc-status-title { display: flex; align-items: center; gap: .5rem; font-size: .98rem; line-height: 1.35; }
-.lx-scope .stargo-post .sgc-status-title::before { content: ""; flex: none; width: .65rem; height: .65rem; border: 2px solid var(--sg-muted); border-radius: 50%; }
-.lx-scope .stargo-post .sgc-status-now { border-color: rgba(227, 147, 189, .6); background: linear-gradient(135deg, rgba(80, 11, 56, .7), var(--sg-card) 75%); }
-.lx-scope .stargo-post .sgc-status-now .sgc-status-title::before { border-color: var(--sg-accent); background: var(--sg-accent); }
-.lx-scope .stargo-post .sgc-status-base .sgc-status-title::before { border-color: var(--sg-accent); background: linear-gradient(90deg, var(--sg-accent) 50%, transparent 50%); }
-.lx-scope .stargo-post .sgc-status-next { border-style: dashed; }
-.lx-scope .stargo-post .sgc-status ul { display: grid; gap: .35rem; }
-.lx-scope .stargo-post .sgc-status li li,
-.lx-scope .stargo-post .sgc-status ul > li { position: relative; padding-left: .95rem; color: var(--sg-soft); font-size: .85rem; line-height: 1.5; }
-.lx-scope .stargo-post .sgc-status ul > li::before { content: ""; position: absolute; left: 0; top: .62em; width: .35rem; height: .35rem; border-radius: 50%; background: var(--sg-muted); }
+.ow-post-body .stargo-post .sgc-statuses { display: grid; gap: .6rem; }
+.ow-post-body .stargo-post .sgc-status { display: grid; align-content: start; gap: .55rem; padding: .9rem 1rem; border: 1px solid var(--sg-line); border-radius: .9rem; background: var(--sg-card); }
+.ow-post-body .stargo-post .sgc-status-title { display: flex; align-items: center; gap: .5rem; font-size: .98rem; line-height: 1.35; }
+.ow-post-body .stargo-post .sgc-status-title::before { content: ""; flex: none; width: .65rem; height: .65rem; border: 2px solid var(--sg-muted); border-radius: 50%; }
+.ow-post-body .stargo-post .sgc-status-now { border-color: rgba(37, 99, 235, .4); background: linear-gradient(135deg, #eaf1ff, var(--sg-card) 75%); }
+.ow-post-body .stargo-post .sgc-status-now .sgc-status-title::before { border-color: var(--sg-accent); background: var(--sg-accent); }
+.ow-post-body .stargo-post .sgc-status-base .sgc-status-title::before { border-color: var(--sg-accent); background: linear-gradient(90deg, var(--sg-accent) 50%, transparent 50%); }
+.ow-post-body .stargo-post .sgc-status-next { border-style: dashed; }
+.ow-post-body .stargo-post .sgc-status ul { display: grid; gap: .35rem; }
+.ow-post-body .stargo-post .sgc-status li li,
+.ow-post-body .stargo-post .sgc-status ul > li { position: relative; padding-left: .95rem; color: var(--sg-soft); font-size: .85rem; line-height: 1.5; }
+.ow-post-body .stargo-post .sgc-status ul > li::before { content: ""; position: absolute; left: 0; top: .62em; width: .35rem; height: .35rem; border-radius: 50%; background: var(--sg-muted); }
 @container (min-width: 560px) {
-  .lx-scope .stargo-post .sgc-statuses { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ow-post-body .stargo-post .sgc-statuses { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 /* (10) Knowledge and the relationship map. */
-.lx-scope .stargo-post .sgc-duo { display: grid; gap: .75rem; }
-.lx-scope .stargo-post .sgc-duo-card { display: grid; align-content: start; gap: .8rem; }
-.lx-scope .stargo-post .sgc-checks { display: grid; gap: .3rem; }
-.lx-scope .stargo-post .sgc-checks li { position: relative; padding-left: 1.3rem; color: var(--sg-soft); font-size: .86rem; }
-.lx-scope .stargo-post .sgc-checks li::before { content: "✓"; position: absolute; left: 0; color: var(--sg-accent); }
-.lx-scope .stargo-post .sgc-questions { display: grid; gap: .35rem; }
-.lx-scope .stargo-post .sgc-questions li { padding: .45rem .7rem; border-radius: .6rem .6rem .6rem .15rem; background: rgba(80, 11, 56, .4); font-size: .86rem; }
-.lx-scope .stargo-post .sgc-chain-core li { background: var(--sg-deep); }
+.ow-post-body .stargo-post .sgc-duo { display: grid; gap: .75rem; }
+.ow-post-body .stargo-post .sgc-duo-card { display: grid; align-content: start; gap: .8rem; }
+.ow-post-body .stargo-post .sgc-checks { display: grid; gap: .3rem; }
+.ow-post-body .stargo-post .sgc-checks li { position: relative; padding-left: 1.3rem; color: var(--sg-soft); font-size: .86rem; }
+.ow-post-body .stargo-post .sgc-checks li::before { content: "✓"; position: absolute; left: 0; color: var(--sg-accent); }
+.ow-post-body .stargo-post .sgc-questions { display: grid; gap: .35rem; }
+.ow-post-body .stargo-post .sgc-questions li { padding: .45rem .7rem; border-radius: .6rem .6rem .6rem .15rem; background: #eef4ff; font-size: .86rem; }
+.ow-post-body .stargo-post .sgc-chain-core li { background: var(--sg-deep); color: #ffffff; }
 @container (min-width: 560px) {
-  .lx-scope .stargo-post .sgc-duo { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ow-post-body .stargo-post .sgc-duo { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 479px) {
-  .lx-scope .stargo-post figure.sgc { margin-left: 0; margin-right: 0; padding: 1rem .85rem; border-radius: 1rem; }
-  .lx-scope .stargo-post :is(.sgp-takeaways, .sgp-toc) { padding: 1rem; }
-  .lx-scope .stargo-post .sgp-toc ol { columns: 1; }
-  .lx-scope .stargo-post .sgc-title { font-size: 1.08rem; }
-  .lx-scope .stargo-post .sgp-cta a { white-space: normal; }
+  .ow-post-body .stargo-post figure.sgc { margin-left: 0; margin-right: 0; padding: 1rem .85rem; border-radius: 1rem; }
+  .ow-post-body .stargo-post :is(.sgp-takeaways, .sgp-toc) { padding: 1rem; }
+  .ow-post-body .stargo-post .sgp-toc ol { columns: 1; }
+  .ow-post-body .stargo-post .sgc-title { font-size: 1.08rem; }
+  .ow-post-body .stargo-post .sgp-cta a { white-space: normal; }
 }
 
 /* Blog index hero (V5 P09).
@@ -3422,7 +3426,7 @@ html[lang^="zh"] .lx-scope .lx-post-meta { word-break: keep-all; overflow-wrap: 
   font-display: swap;
 }
 html[lang^="zh"] .lx-scope :is(.lx-blog-hero-title, .lx-blog-title, .lx-blog-title-holder),
-html[lang^="zh"] .lx-scope .stargo-post :is(h3, .sgc-title, .sgc-quote, .sgc-lane-title, .sgc-hub strong, .sgc-trio-title, .sgc-motto, .sgp-takeaways-title) {
+html[lang^="zh"] .ow-post-body .stargo-post :is(h3, .sgc-title, .sgc-quote, .sgc-lane-title, .sgc-hub strong, .sgc-trio-title, .sgc-motto, .sgp-takeaways-title) {
   font-family: "Stargo CJK Punct", var(--_ui-styles---fonts--heading, "42 Dotsans"), Arial, sans-serif;
 }
 /* With the comma and the stop now at the left of their em box, their empty
@@ -3445,13 +3449,13 @@ html[lang^="zh"] .lx-scope .lx-blog-hero-title :is(.gsap_split_word:has(+ br), .
    narrowest line); balance evens the lines. Product names never split
    (.sgp-nw). English: the FAQ questions and chart titles are balanced, like
    the section headings above. */
-.lx-scope .stargo-post .sgp-nw { white-space: nowrap; }
-html[lang^="zh"] .lx-scope .stargo-post :is(h3, .sgp-faq-item h4, .sgc-title, .sgc-quote, .sgc-motto, .sgc-profile) {
+.ow-post-body .stargo-post .sgp-nw { white-space: nowrap; }
+html[lang^="zh"] .ow-post-body .stargo-post :is(h3, .sgp-faq-item h4, .sgc-title, .sgc-quote, .sgc-motto, .sgc-profile) {
   word-break: keep-all;
   overflow-wrap: anywhere;
   text-wrap: balance;
 }
-.lx-scope .stargo-post :is(.sgp-faq-item h4, .sgc-title) { text-wrap: balance; }
+.ow-post-body .stargo-post :is(.sgp-faq-item h4, .sgc-title) { text-wrap: balance; }
 
 /* English article titles: the heading, the cards (blog index, "More from the
    blog") and the related list left "work" or "PI" alone on a last line at
@@ -3466,8 +3470,8 @@ html[lang^="en"] .lx-scope :is(.lx-blog-title-holder, .lx-blog-title, .lx-relate
    headings (tools/blog.mjs inline()); it split 「视/频」, 「一/切」 and
    「接得/住」 at 320–768. Both languages: balanced, which left no single
    "proactively?" or "do?" on a second line. */
-.lx-scope .stargo-post .sgp-toc li { text-wrap: balance; }
-html[lang^="zh"] .lx-scope .stargo-post .sgp-toc li { word-break: keep-all; overflow-wrap: anywhere; }
+.ow-post-body .stargo-post .sgp-toc li { text-wrap: balance; }
+html[lang^="zh"] .ow-post-body .stargo-post .sgp-toc li { word-break: keep-all; overflow-wrap: anywhere; }
 
 /* Chinese chart text — step titles and descriptions, the scenario examples,
    the availability items, the hand-off line, the lane titles — and the
@@ -3477,26 +3481,26 @@ html[lang^="zh"] .lx-scope .stargo-post .sgp-toc li { word-break: keep-all; over
    phrase longer than the narrowest card (checked there), and the word
    boundaries of the call to action. Descriptions keep `pretty`, titles are
    balanced (below). */
-html[lang^="zh"] .lx-scope .stargo-post :is(.sgc-step-title, .sgc-step-text, .sgc-example span, .sgc-status li, .sgc-handoff-text, .sgc-lane-title, .sgp-cta) {
+html[lang^="zh"] .ow-post-body .stargo-post :is(.sgc-step-title, .sgc-step-text, .sgc-example span, .sgc-status li, .sgc-handoff-text, .sgc-lane-title, .sgp-cta) {
   word-break: keep-all;
   overflow-wrap: anywhere;
 }
 /* Both languages: the descriptions and the call to action end on more than
    one word ("signs / off", "the authorized / scope", "Request a / demo."). */
-.lx-scope .stargo-post :is(.sgc-step-text, .sgc-example span, .sgc-status li, .sgc-handoff-text, .sgp-cta) { text-wrap: pretty; }
+.ow-post-body .stargo-post :is(.sgc-step-text, .sgc-example span, .sgc-status li, .sgc-handoff-text, .sgp-cta) { text-wrap: pretty; }
 /* English card lines are short (two or three lines): balanced, as `pretty`
    still left "Extract requirements; / organize attachments and / drawings". */
-html[lang^="en"] .lx-scope .stargo-post :is(.sgc-step-text, .sgc-example span, .sgc-status li, .sgc-handoff-text) { text-wrap: balance; }
+html[lang^="en"] .ow-post-body .stargo-post :is(.sgc-step-text, .sgc-example span, .sgc-status li, .sgc-handoff-text) { text-wrap: balance; }
 /* The link is short in both languages («预约企业演示», "Request a demo") and
    never splits, at any width ("Request a / demo." and 「预约企业演/示」 at 320). */
 @media (max-width: 479px) {
-  .lx-scope .stargo-post .sgp-cta a { white-space: nowrap; }
+  .ow-post-body .stargo-post .sgp-cta a { white-space: nowrap; }
 }
 
 /* Card titles in the charts are balanced in both languages, like the chart
    titles: "Connected and validated one by / one", "Assign roles and /
    approvals", "Customer development & / marketing" left one word alone. */
-.lx-scope .stargo-post :is(.sgc-step-title, .sgc-status-title, .sgc-lane-title, .sgc-bar-name, .sgc-frame-beat) { text-wrap: balance; }
+.ow-post-body .stargo-post :is(.sgc-step-title, .sgc-status-title, .sgc-lane-title, .sgc-bar-name, .sgc-frame-beat) { text-wrap: balance; }
 
 /* Arrow chains. They wrapped with the last box alone on a row, the arrow
    starting that row: 「报价 → PI → 订单 → 售后 / → 复购」 (390), "Customer →
@@ -3511,24 +3515,24 @@ html[lang^="en"] .lx-scope .stargo-post :is(.sgc-step-text, .sgc-example span, .
    of a step that starts a row (it would sit left of the first column) is not
    drawn. The last step fills what is left of its row (2 | 2 | 2 | 1 → the last
    step across both columns; 4 | 3 → the last across two). */
-.lx-scope .stargo-post .sgc .sgc-pills {
+.ow-post-body .stargo-post .sgc .sgc-pills {
   display: grid;
   grid-template-columns: repeat(var(--sgc-pc, 2), auto);
   gap: .55rem var(--sgc-pg, 1.1rem);
   overflow: clip;
 }
-.lx-scope .stargo-post .sgc .sgc-pill { justify-content: center; padding: .38rem .65rem; }
-.lx-scope .stargo-post .sgc-pill + .sgc-pill { margin-left: 0; }
-.lx-scope .stargo-post .sgc-pill + .sgc-pill::before { left: calc(var(--sgc-pg, 1.1rem) / -2 - 1px); transform: translate(-50%, -50%); }
-.lx-scope .stargo-post .sgc-pill:last-child { grid-column: span var(--sgc-last, 2); }
+.ow-post-body .stargo-post .sgc .sgc-pill { justify-content: center; padding: .38rem .65rem; }
+.ow-post-body .stargo-post .sgc-pill + .sgc-pill { margin-left: 0; }
+.ow-post-body .stargo-post .sgc-pill + .sgc-pill::before { left: calc(var(--sgc-pg, 1.1rem) / -2 - 1px); transform: translate(-50%, -50%); }
+.ow-post-body .stargo-post .sgc-pill:last-child { grid-column: span var(--sgc-last, 2); }
 /* Needed: Chinese 275 / 373 / 647px for 3 / 4 / 7 columns, English 240 /
    357 / 487px for 2 / 3 / 4 (seven English steps need 794px, more than an
    article column has). */
-@container (min-width: 290px) { html[lang^="zh"] .lx-scope .stargo-post .sgc-pills { --sgc-pc: 3; --sgc-last: 3; } }
-@container (min-width: 375px) { html[lang^="en"] .lx-scope .stargo-post .sgc-pills { --sgc-pc: 3; --sgc-last: 3; } }
-@container (min-width: 390px) { html[lang^="zh"] .lx-scope .stargo-post .sgc-pills { --sgc-pc: 4; --sgc-pg: 1.3rem; --sgc-last: 2; } }
-@container (min-width: 505px) { html[lang^="en"] .lx-scope .stargo-post .sgc-pills { --sgc-pc: 4; --sgc-pg: 1.3rem; --sgc-last: 2; } }
-@container (min-width: 680px) { html[lang^="zh"] .lx-scope .stargo-post .sgc-pills { --sgc-pc: 7; --sgc-last: 1; } }
+@container (min-width: 290px) { html[lang^="zh"] .ow-post-body .stargo-post .sgc-pills { --sgc-pc: 3; --sgc-last: 3; } }
+@container (min-width: 375px) { html[lang^="en"] .ow-post-body .stargo-post .sgc-pills { --sgc-pc: 3; --sgc-last: 3; } }
+@container (min-width: 390px) { html[lang^="zh"] .ow-post-body .stargo-post .sgc-pills { --sgc-pc: 4; --sgc-pg: 1.3rem; --sgc-last: 2; } }
+@container (min-width: 505px) { html[lang^="en"] .ow-post-body .stargo-post .sgc-pills { --sgc-pc: 4; --sgc-pg: 1.3rem; --sgc-last: 2; } }
+@container (min-width: 680px) { html[lang^="zh"] .ow-post-body .stargo-post .sgc-pills { --sgc-pc: 7; --sgc-last: 1; } }
 
 /* The two chains keep their natural box widths (in a grid, English "Quote →
    PI → Order" did not fit at 320). Where the whole chain does not fit on one
@@ -3537,21 +3541,21 @@ html[lang^="en"] .lx-scope .stargo-post :is(.sgc-step-text, .sgc-example span, .
    loses its arrow and indent. Needed on one line (chart width): business
    chain 355px Chinese, 430px English (it sits in a lane); core 299px /
    412px, and 609px / 836px once the two cards stand side by side. */
-.lx-scope .stargo-post .sgc-chain::after { content: var(--sgc-break, none); flex: 0 0 100%; order: 1; }
-.lx-scope .stargo-post .sgc-chain li:nth-last-child(-n + 2) { order: var(--sgc-row2, 0); margin-top: var(--sgc-row2-gap, 0); }
-.lx-scope .stargo-post .sgc-chain li + li:nth-last-child(2) { margin-left: var(--sgc-row2-indent, 1.35rem); }
-.lx-scope .stargo-post .sgc-chain li + li:nth-last-child(2)::before { content: var(--sgc-row2-arrow, "→"); }
+.ow-post-body .stargo-post .sgc-chain::after { content: var(--sgc-break, none); flex: 0 0 100%; order: 1; }
+.ow-post-body .stargo-post .sgc-chain li:nth-last-child(-n + 2) { order: var(--sgc-row2, 0); margin-top: var(--sgc-row2-gap, 0); }
+.ow-post-body .stargo-post .sgc-chain li + li:nth-last-child(2) { margin-left: var(--sgc-row2-indent, 1.35rem); }
+.ow-post-body .stargo-post .sgc-chain li + li:nth-last-child(2)::before { content: var(--sgc-row2-arrow, "→"); }
 @container (width < 372px) {
-  html[lang^="zh"] .lx-scope .stargo-post .sgc-lane .sgc-chain { row-gap: 0; --sgc-break: ""; --sgc-row2: 2; --sgc-row2-gap: .45rem; --sgc-row2-indent: 0; --sgc-row2-arrow: none; }
+  html[lang^="zh"] .ow-post-body .stargo-post .sgc-lane .sgc-chain { row-gap: 0; --sgc-break: ""; --sgc-row2: 2; --sgc-row2-gap: .45rem; --sgc-row2-indent: 0; --sgc-row2-arrow: none; }
 }
 @container (width < 446px) {
-  html[lang^="en"] .lx-scope .stargo-post .sgc-lane .sgc-chain { row-gap: 0; --sgc-break: ""; --sgc-row2: 2; --sgc-row2-gap: .45rem; --sgc-row2-indent: 0; --sgc-row2-arrow: none; }
+  html[lang^="en"] .ow-post-body .stargo-post .sgc-lane .sgc-chain { row-gap: 0; --sgc-break: ""; --sgc-row2: 2; --sgc-row2-gap: .45rem; --sgc-row2-indent: 0; --sgc-row2-arrow: none; }
 }
 @container (width < 312px) or ((width >= 560px) and (width < 625px)) {
-  html[lang^="zh"] .lx-scope .stargo-post .sgc-chain-core { row-gap: 0; --sgc-break: ""; --sgc-row2: 2; --sgc-row2-gap: .45rem; --sgc-row2-indent: 0; --sgc-row2-arrow: none; }
+  html[lang^="zh"] .ow-post-body .stargo-post .sgc-chain-core { row-gap: 0; --sgc-break: ""; --sgc-row2: 2; --sgc-row2-gap: .45rem; --sgc-row2-indent: 0; --sgc-row2-arrow: none; }
 }
 @container (width < 428px) or (width >= 560px) {
-  html[lang^="en"] .lx-scope .stargo-post .sgc-chain-core { row-gap: 0; --sgc-break: ""; --sgc-row2: 2; --sgc-row2-gap: .45rem; --sgc-row2-indent: 0; --sgc-row2-arrow: none; }
+  html[lang^="en"] .ow-post-body .stargo-post .sgc-chain-core { row-gap: 0; --sgc-break: ""; --sgc-row2: 2; --sgc-row2-gap: .45rem; --sgc-row2-indent: 0; --sgc-row2-arrow: none; }
 }
 
 @container (min-width: 600px) {
@@ -3560,23 +3564,23 @@ html[lang^="en"] .lx-scope .stargo-post :is(.sgc-step-text, .sgc-example span, .
      second dot. The card is a little tighter and the line a little smaller,
      so each label fits; if one ever wraps, it wraps after a dot, between
      whole items (tools/blog.mjs chartLoop), and balanced. */
-  html[lang^="zh"] .lx-scope .stargo-post .sgc-flow-5:not(.sgc-numbered) .sgc-step { padding: .85rem .55rem; }
-  html[lang^="zh"] .lx-scope .stargo-post .sgc-flow-5:not(.sgc-numbered) .sgc-step-text { font-size: .8rem; text-wrap: balance; }
+  html[lang^="zh"] .ow-post-body .stargo-post .sgc-flow-5:not(.sgc-numbered) .sgc-step { padding: .85rem .55rem; }
+  html[lang^="zh"] .ow-post-body .stargo-post .sgc-flow-5:not(.sgc-numbered) .sgc-step-text { font-size: .8rem; text-wrap: balance; }
   /* English: five columns of about 100px stacked every two-word title
      ("Proactive / acquisition", "Repeat / growth") and most tags and labels.
      The loop runs three and two, the second row centred, like the other
      wrapped step rows (no arrow at a row start). */
-  html[lang^="en"] .lx-scope .stargo-post .sgc-flow-5:not(.sgc-numbered) { grid-template-columns: repeat(6, minmax(0, 1fr)); }
-  html[lang^="en"] .lx-scope .stargo-post .sgc-flow-5:not(.sgc-numbered) > li { grid-column: span 2; }
-  html[lang^="en"] .lx-scope .stargo-post .sgc-flow-5:not(.sgc-numbered) > li:nth-child(4) { grid-column: 2 / span 2; }
-  html[lang^="en"] .lx-scope .stargo-post .sgc-flow-5:not(.sgc-numbered) > li:nth-child(4)::before { content: none; }
+  html[lang^="en"] .ow-post-body .stargo-post .sgc-flow-5:not(.sgc-numbered) { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  html[lang^="en"] .ow-post-body .stargo-post .sgc-flow-5:not(.sgc-numbered) > li { grid-column: span 2; }
+  html[lang^="en"] .ow-post-body .stargo-post .sgc-flow-5:not(.sgc-numbered) > li:nth-child(4) { grid-column: 2 / span 2; }
+  html[lang^="en"] .ow-post-body .stargo-post .sgc-flow-5:not(.sgc-numbered) > li:nth-child(4)::before { content: none; }
 }
 @container (min-width: 560px) {
   /* English storyboard beats: four beats of about 70px beside the formats
      read "The / product", "The / benefits", "The next / step". Two by two
      they hold each beat on one line. */
-  html[lang^="en"] .lx-scope .stargo-post .sgc-beats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  html[lang^="en"] .lx-scope .stargo-post .sgc-frame-beat { min-height: 5.25rem; }
+  html[lang^="en"] .ow-post-body .stargo-post .sgc-beats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  html[lang^="en"] .ow-post-body .stargo-post .sgc-frame-beat { min-height: 5.25rem; }
 }
 
 /* The date line under an article title: the date and the author stay whole,
@@ -3605,10 +3609,10 @@ html[lang^="en"] .lx-scope .stargo-post :is(.sgc-step-text, .sgc-example span, .
    "Product specialist → Creative / specialist" and "Target account list
    handed / over"; they break evenly too. */
 @container (max-width: 639.98px) {
-  html[lang^="en"] .lx-scope .stargo-post .sgc-roles { grid-template-columns: repeat(auto-fit, minmax(max(min(100%, 11rem), calc(50% - .25rem)), 1fr)); }
-  html[lang^="en"] .lx-scope .stargo-post .sgc-role-lead { grid-column: 1 / -1; }
+  html[lang^="en"] .ow-post-body .stargo-post .sgc-roles { grid-template-columns: repeat(auto-fit, minmax(max(min(100%, 11rem), calc(50% - .25rem)), 1fr)); }
+  html[lang^="en"] .ow-post-body .stargo-post .sgc-role-lead { grid-column: 1 / -1; }
 }
-html[lang^="en"] .lx-scope .stargo-post :is(.sgc-role-name, .sgc-role-task, .sgc-msg-who, .sgc-msg-text) { text-wrap: balance; }
+html[lang^="en"] .ow-post-body .stargo-post :is(.sgc-role-name, .sgc-role-task, .sgc-msg-who, .sgc-msg-text) { text-wrap: balance; }
 
 /* ---- V8-STAGE: the last business stage keeps its picture ------------------
 
@@ -3629,22 +3633,20 @@ html[lang^="en"] .lx-scope .stargo-post :is(.sgc-role-name, .sgc-role-task, .sgc
    else about the section changes. */
 .service-media-wrap.sgp-stage-hold { opacity: 1 !important; }
 
-/* ---- V7-BLOG r3: the owner's product screenshots (handoff of 2026-09-18) --
+/* ---- V7-BLOG r3 (rewritten 2026-10-09): one set of covers ----------------
 
-   Five article covers are now screenshots of the product instead of editorial
-   artwork. A screenshot is 16:9 and it is an interface, so tools/blog-covers.mjs
-   fits the whole picture inside the 3:2 cover frame on a flat plate taken from
-   the screenshot's own border, rather than centre-cropping it and losing the
-   left navigation.
+   All seven article covers are renders of the OPEN WORK interface
+   (tools/blog-covers.mjs): the whole 16:11 app is fitted inside the 3:2 cover
+   frame as a window on one flat plate, so a centre crop would cut the sidebar
+   or the right-hand panel off every one of them.
 
    Two boxes then crop that 3:2 frame again — the blog index / story-strip /
-   related card is 1:1 and the homepage card is 3 / 2.3 — and either crop cuts
-   the navigation back off. Both stop cropping for these five covers and paint
-   the same plate colour, so the card still fills its box and the interface
-   inside it is still whole. Nothing else moves: no box changes size, ratio,
-   radius, position, hover or interaction, and the two articles that keep their
-   editorial cover keep the crop they always had. The article hero is already
-   3 / 2, so its picture fills it exactly either way.
+   related card is 1:1 — and a crop cuts the window back off. They stop
+   cropping for the covers and paint the same plate colour (PLATE in
+   tools/blog-covers.mjs), so the card still fills its box and the window inside
+   it is still whole. Nothing else moves: no box changes size, ratio, radius,
+   position, hover or interaction. The article hero is already 3 / 2, so its
+   picture fills it exactly either way.
 
    `background-image: none` is for the homepage card only: Mono paints a
    decorative SVG behind .testimonials-photo which would otherwise show through
@@ -3653,15 +3655,11 @@ html[lang^="en"] .lx-scope .stargo-post :is(.sgc-role-name, .sgc-role-task, .sgc
   [src$="/stargo-work-visual-guide.webp"],
   [src$="/start-with-one-workflow.webp"],
   [src$="/from-inquiry-to-quote.webp"],
+  [src$="/approval-gates-for-ai-in-trade.webp"],
   [src$="/ai-operating-system-for-global-trade.webp"],
-  [src$="/288-ai-employees-not-288-chatbots.webp"]
-) { object-fit: contain; background-image: none; }
-/* The plate of each cover, as written into the file by tools/blog-covers.mjs. */
-:is(.lx-blog-image, .blog-grid .testimonials-photo)[src$="/stargo-work-visual-guide.webp"] { background-color: #021d4d; }
-:is(.lx-blog-image, .blog-grid .testimonials-photo)[src$="/start-with-one-workflow.webp"] { background-color: #001135; }
-:is(.lx-blog-image, .blog-grid .testimonials-photo)[src$="/from-inquiry-to-quote.webp"] { background-color: #e8f1fe; }
-:is(.lx-blog-image, .blog-grid .testimonials-photo)[src$="/ai-operating-system-for-global-trade.webp"] { background-color: #0e2b5a; }
-:is(.lx-blog-image, .blog-grid .testimonials-photo)[src$="/288-ai-employees-not-288-chatbots.webp"] { background-color: #00173c; }
+  [src$="/288-ai-employees-not-288-chatbots.webp"],
+  [src$="/enterprise-ontology-explained.webp"]
+) { object-fit: contain; background-image: none; background-color: #e9eefb; }
 
 /* The homepage card draws Mono's arrow badge over the top right of the cover
    (`.button-icon-main.sec`: 50x40, 25px inside the card, and the card's picture
@@ -3681,8 +3679,10 @@ html[lang^="en"] .lx-scope .stargo-post :is(.sgc-role-name, .sgc-role-task, .sgc
   [src$="/stargo-work-visual-guide.webp"],
   [src$="/start-with-one-workflow.webp"],
   [src$="/from-inquiry-to-quote.webp"],
+  [src$="/approval-gates-for-ai-in-trade.webp"],
   [src$="/ai-operating-system-for-global-trade.webp"],
-  [src$="/288-ai-employees-not-288-chatbots.webp"]
+  [src$="/288-ai-employees-not-288-chatbots.webp"],
+  [src$="/enterprise-ontology-explained.webp"]
 ) { padding-top: 56px; padding-bottom: 6px; }
 
 /* The same for the three "keep reading" cards under the third-party notices
@@ -5120,3 +5120,31 @@ body:has(#loop) .image-wrap.for-service .paralax-image[src*="gos11-dormant-react
 }
 
 /* V7-HOME-END */
+
+/* ---- C2 pass 2 (2026-10-09): the top navigation of buyer-plan S0 ---------
+   产品 · 安全与接入 · 定价 · 关于 · EN · 【预约演示】 (tools/chrome.mjs topNav).
+   数字员工, 提醒与记忆 and 博客 are in the same list as `.stargo-nav-more`:
+   not in the desktop bar (they are in the overlay menu and the footer), but
+   in the phone menu, which is this list collapsed and a phone's only menu. */
+.navigation-top .nav-menu.first .stargo-nav-cta { background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%); box-shadow: 0 10px 22px -12px rgba(37, 99, 235, .8), inset 0 1px 0 rgba(255, 255, 255, .22); cursor: pointer; }
+.navigation-top .nav-menu.first .stargo-nav-cta .navigation-text-main { justify-content: center; margin: 0 !important; transform: none !important; color: #fff; letter-spacing: 0; }
+.navigation-top .nav-menu.first .stargo-nav-cta:hover { filter: brightness(1.06); }
+.navigation-top .nav-menu.first .stargo-nav-cta:focus-visible { outline: 2px solid #1d4ed8; outline-offset: 3px; }
+@media (min-width: 992px) {
+  .navigation-top .nav-menu.first { align-items: center; }
+  .navigation-top .nav-menu.first .stargo-nav-more { display: none; }
+  .navigation-top .nav-menu.first .stargo-nav-cta { display: inline-flex; align-items: center; justify-content: center; height: 40px; margin-left: 8px; padding: 0 20px; border-radius: 999px; }
+  .navigation-top .nav-menu.first .stargo-nav-cta .navigation-text-main { font-size: 15px; font-weight: 600; }
+}
+@media (max-width: 991px) {
+  body .navigation-top .w-nav-overlay .nav-menu.first { padding: 8px 20px 20px; }
+  body .navigation-top .w-nav-overlay .stargo-nav-more .navigation-text-main { color: #475569; font-size: 17px; font-weight: 500; }
+  body .navigation-top .w-nav-overlay .button-link:not(.stargo-nav-more) + .stargo-nav-more { margin-top: 6px; border-top: 1px solid #e2e8f0; padding-top: 14px; }
+  body .navigation-top .w-nav-overlay .stargo-nav-cta { display: flex; justify-content: center; align-items: center; min-height: 48px; margin-top: 14px; border-radius: 12px; }
+  body .navigation-top .w-nav-overlay .stargo-nav-cta .navigation-text-main { color: #fff; font-size: 16px; font-weight: 600; }
+}
+
+/* Skip link (tools/chrome.mjs skipLink): off-screen until a keyboard user focuses it, then a visible pill
+   in the top-left corner above the navigation. */
+.stargo-skip { position: absolute; left: 16px; top: -64px; z-index: 100000; padding: 12px 18px; border-radius: 10px; background: #0f172a; color: #fff; font: 600 15px/1.2 Inter, 'PingFang SC', 'Microsoft YaHei', sans-serif; text-decoration: none; }
+.stargo-skip:focus, .stargo-skip:focus-visible { top: 16px; outline: 2px solid #93c5fd; outline-offset: 2px; }

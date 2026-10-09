@@ -57,6 +57,9 @@
     isOpen = open;
     if (open) {
       openedAt = Date.now();
+      /* css/stargo-ow.css holds the page still while it loads; this lets the
+         open animation move it aside, or the menu would stay behind it. */
+      document.body.classList.add('ow-menu-used');
       menu.removeAttribute('inert');
       close.removeAttribute('inert');
     } else {

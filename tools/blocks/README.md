@@ -54,6 +54,24 @@ export function render(frag, ctx) { … }
 > Mono chrome, the FAQ accordion and the demo form are kept. Every other page
 > and every block in this folder still follows the rules below until a later
 > round says otherwise.
+>
+> **Phase C2 (2026-10-09): four more pages.** capabilities (「产品」), workforce,
+> intelligence (「主动提醒与记忆」) and enterprise (「安全与接入」) are built the
+> same way (`tools/ow-blocks/pages.mjs`, words `PAGE_OW` in `tools/copy.mjs`).
+> No page renders rk-hero, rk-award, qx-orbit, rk-insight, cn-service, qx-news,
+> rk-stats, rk-testimonials, cn-faq, cn-produce, qx-projects or qx-whatwedo any
+> more; their modules and fragments stay here (tools/capability-donors.mjs still
+> extracts them) but nothing places them.
+>
+> **Phase C2 pass 2 (2026-10-09): the rest.** pricing, about, contact, privacy,
+> terms, notices and 404 are built the same way (`tools/ow-blocks/site-pages.mjs`,
+> words `SITE_OW` plus `PRICING` / `ABOUT` / `LEGAL` / `NOTICES` in
+> `tools/copy.mjs`). No page renders cn-about, cn-about-projects,
+> cn-about-reviews, cn-contact, cn-price-hero, cn-price-card, cn-reviews,
+> rk-price-tiers or rk-price-compare any more (the pricing comparison is
+> derived from the same `PRICING` data in site-pages.mjs, with the same rules:
+> ticks only from a level's own items or a declared `PRICING.inherits` step).
+> Only the blog index and the articles still use donor (lifelogx) markup.
 
 The owner's brief, verbatim: **"要求完美复刻移植，仅仅针对文字进行改动"** — a
 perfect port of the template block, changing the words and nothing else. The

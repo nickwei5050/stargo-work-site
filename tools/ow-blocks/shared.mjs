@@ -31,6 +31,14 @@ export function hotspot(id, key) {
   return box;
 }
 
+/* Renders whose right-hand app panel (客户CRM, 自动化中心, 企业ERP, the 数字员工
+   roster) was drawn for this site, not rebuilt from an owner screenshot of
+   that app, and their phone cards: the note under them says 「界面示意」
+   (copy.mjs HOME_OW.shotNoteIllustrative), not 「实际界面布局」. */
+export const ILLUSTRATIVE = new Set(['ow08-crm', 'ow09-automation', 'ow10-erp', 'ow11-staff', 'ow17-crm-card', 'ow18-automation-card', 'ow19-erp-card', 'ow25-staff-card']);
+/** The note for the shots `ids` (any of them illustrative → the illustrative note). */
+export const shotNoteFor = (O, ...ids) => (ids.flat().some((id) => ILLUSTRATIVE.has(id)) ? O.shotNoteIllustrative : O.shotNote);
+
 /** srcset of a render: its variants and its main file, narrowest first. */
 export const srcset = (a) => [...a.variants, a].sort((x, y) => x.width - y.width).map((v) => `${v.src} ${v.width}w`).join(', ');
 
@@ -88,12 +96,17 @@ export function button(href, label, { kind = 'primary', icon = null, external = 
  * 「点图放大」 hint sit in the window's title bar, and on phone cards (no title
  * bar) in a row above the card. Both are HTML.
  */
-export function shot({ id, card = null, lang, t, O, sizes, eager = false, title = 'OPEN WORK', label, cls = '', extra = '', floats = '', zoomW = 0, zoomX = 0.5 }) {
+export function shot({ id, card = null, deskOnly = false, lang, t, O, sizes, eager = false, title = 'OPEN WORK', label, cls = '', extra = '', floats = '', zoomW = 0, zoomX = 0.5 }) {
   const a = asset(id);
+  /* `deskOnly`: a full-app render with no phone card (ow07-welcome). Below
+     992px the page hides it (.ow-shot--desk) and says the same in words, and
+     this 1x1 source keeps a phone from downloading the 1600px file. */
+  if (deskOnly && card) throw new Error(`ow-blocks: ${id} has a phone card and is desk-only`);
   const source = card ? (() => {
     const c = asset(card);
     return `<source media="(max-width: 991px)" srcset="${srcset(c)}" sizes="(max-width: 599px) calc(100vw - 40px), 560px" width="${c.width}" height="${c.height}"/>`;
-  })() : '';
+  })() : deskOnly ? '<source media="(max-width: 991px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" width="1" height="1"/>' : '';
+  if (deskOnly) cls = `ow-shot--desk${cls ? ` ${cls}` : ''}`;
   const load = eager ? ' loading="eager" fetchpriority="high"' : ' loading="lazy"';
   /* alt is a marker: any non-empty value makes the image pass write the
      registered sentence for `id` in the page's language. */
@@ -150,4 +163,7 @@ export const ICON = {
   gear: svg('<circle cx="12" cy="12" r="3"/><path d="M12 2.8v2.4M12 18.8v2.4M4.2 7.5l2 1.2M17.8 15.3l2 1.2M4.2 16.5l2-1.2M17.8 8.7l2-1.2"/><path d="M12 5.2a6.8 6.8 0 1 1 0 13.6 6.8 6.8 0 0 1 0-13.6z"/>'),
   apps: svg('<rect x="3.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.8"/>'),
   close: svg('<path d="M6 6l12 12M18 6 6 18"/>'),
+  info: svg('<circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.6v.2"/>'),
+  pin: svg('<path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/>'),
+  plus: svg('<path d="M12 5v14M5 12h14"/>', 'ow-ico ow-ico--plus'),
 };

@@ -7,7 +7,12 @@
  *
  * Rules for content: real product explanation only — no invented customer
  * stories, no named clients, no author credentials, no ranking promises, and
- * the availability conditions of the product sources kept beside each claim.
+ * what is available today said once per article in one short status
+ * paragraph (the guide's last section), not as a disclaimer under every claim.
+ * The product is STARGO WORK, its core app OPEN WORK (an AI workspace for
+ * export manufacturers); the 15 apps carry their sidebar names (主动获客, 销售工作台,
+ * 老板看板 …). The retired wording (Growth OS, Sales Desk, web desktop, AI
+ * operating system, 数字岗位 …) fails the check at the foot of this file.
  * Business language only: no technology brands, no internal or architecture
  * names (the banned list at the foot of this file is checked at build time).
  * Chinese text carries Chinese only, apart from the product and trade names in
@@ -34,7 +39,8 @@
  * no canvas, no libraries. Their styles are the V7-BLOG block of
  * css/stargo-fusion.css.
  *
- * Limits checked at build time: titles ≤ 26 characters (zh) / ≤ 70 (en);
+ * Limits checked at build time: titles ≤ 26 characters (zh) / ≤ 46 (en: the
+ * page title adds " — STARGO WORK", so the <title> stays within 60);
  * descriptions 50–80 characters (zh) / 120–160 (en); 3–5 takeaways; 3–8 FAQ
  * pairs. Slugs, dates and covers are URLs and never change.
  */
@@ -56,14 +62,16 @@ export const BLOG_UI = {
   intro: B('从客户开发、销售报价，到企业知识、数字员工<wbr>和管理控制，逐步理解<wbr>一条业务流程<wbr>如何被连接、执行与核对。', 'Explore how customer acquisition, sales, quotations, enterprise knowledge, AI roles and management controls connect work and make its outcomes checkable.'),
   related: B('相关文章', 'Related articles'),
   more: B('更多文章', 'More from the blog'),
-  all: B('查看全部文章', 'View All Articles'),
+  all: B('查看全部文章', 'View all articles'),
   byline: B('STARGO WORK 团队', 'The STARGO WORK team'),   // the brand never splits across lines
   section: B('博客', 'Blog'),
   takeaways: B('要点速览', 'Key takeaways'),
   faq: B('常见问题', 'Frequently asked questions'),
   toc: B('本文目录', 'In this guide'),
   value: B('对老板的价值：', 'Value for the owner: '),
-  condition: B('开放条件：', 'Availability: '),
+  learnMore: B('了解更多：', 'Learn more: '),
+  read: B('阅读全文', 'Read the article'),
+  list: B('全部文章', 'All articles'),
 };
 
 /* ------------------------------------------------------------ helpers -- */
@@ -83,7 +91,7 @@ const figNo = (n, lang) => (lang === 'zh' ? `图 ${n}` : `Figure ${n}`);
    mark as <wbr> and keeps the product names whole; bare() drops it wherever
    the text is plain (the FAQ structured data). The check at the foot of this
    file measures every phrase. */
-const KEEP = /STARGO WORK|Growth OS|Sales Desk|one-click/g;
+const KEEP = /STARGO WORK|OPEN WORK|one-click/g;
 const bare = (s) => String(s).replace(/\|/g, '');
 const keepNames = (html) => html.replace(KEEP, (m) => `<span class="sgp-nw">${m}</span>`);
 const inline = (s) => keepNames(esc(s).replace(/\|/g, '<wbr>'));
@@ -122,11 +130,11 @@ const two = (n) => String(n).padStart(2, '0');
 
 /* (1) The business loop — V4 guide p. 3. */
 const LOOP = {
-  title: B('核心业务全景：先找客户，再把生意做完整', 'The business loop: find customers, then complete the business'),
+  title: B('业务主线：先找客户，再把生意做完整', 'The business journey: find customers, then complete the business'),
   stages: [
-    [B('主动获客', 'Proactive acquisition'), B('Growth OS', 'Growth OS'), B('找客户 · 判机会', 'Find and qualify')],
-    [B('外贸成交', 'Trade sales'), B('Sales Desk', 'Sales Desk'), B('沟通 · 报价 · PI', 'Engage and quote')],
-    [B('企业履约', 'Fulfillment'), B('ERP 与交付', 'ERP and delivery'), B('采购 · 生产 · 库存', 'Source and deliver')],
+    [B('主动获客', 'Proactive acquisition'), B('背调与开发信', 'Research and outreach'), B('找客户 · 判机会', 'Find and qualify')],
+    [B('外贸成交', 'Trade sales'), B('销售工作台', 'Sales Workbench'), B('沟通 · 报价 · PI', 'Engage and quote')],
+    [B('企业履约', 'Fulfillment'), B('企业ERP', 'ERP'), B('采购 · 生产 · 库存', 'Source and deliver')],
     [B('经营协同', 'Business coordination'), B('财务与服务', 'Finance and service'), B('回款 · 售后 · 渠道', 'Collect and support')],
     [B('复购增长', 'Repeat growth'), B('留存与增长', 'Retention and growth'), B('补货 · 唤醒 · 复盘', 'Retain and improve')],
   ],
@@ -144,11 +152,11 @@ export function chartLoop(lang, n) {
     `<ol class="sgc-flow sgc-flow-5">${items}</ol><p class="sgc-back"><span class="sgc-back-icon" aria-hidden="true">↻</span>${esc(tx(LOOP.back, lang))}</p>`);
 }
 
-/* (2) Growth OS to Sales Desk — V4 guide pp. 5 and 7. */
+/* (2) Prospecting to the Sales Workbench — V4 guide pp. 5 and 7. */
 const PIPE = {
-  title: B('从 Growth OS 到 Sales Desk：找到客户，接着谈成', 'From Growth OS to Sales Desk: find the customer, then win the business'),
-  growth: B('Growth OS · 主动获客', 'Growth OS · proactive acquisition'),
-  sourcesLabel: B('数据来源（按授权接入）', 'Sources (authorized access only)'),
+  title: B('从主动获客到销售工作台：找到客户，接着谈成', 'From Prospecting to the Sales Workbench: find the customer, then win the business'),
+  growth: B('主动获客', 'Prospecting · proactive acquisition'),
+  sourcesLabel: B('数据来源（经你授权）', 'Sources (with your authorization)'),
   sources: B(['公开搜索', '企业官网', '地图商家', '社交平台', '展会线索', '授权贸易数据'], ['Public search', 'Company websites', 'Map listings', 'Social channels', 'Trade shows', 'Authorized trade data']),
   profile: B('目标客户画像：产品\u00a0×\u00a0市场\u00a0×\u00a0客户类型', 'Ideal customer profile: product\u00a0×\u00a0market\u00a0×\u00a0buyer type'),   // the three terms stay on one line
   steps: [
@@ -157,14 +165,14 @@ const PIPE = {
     [B('判断什么时候|值得跟进', 'Spot opportunities backed by evidence'), B('采购信号、补货周期、供应商变化、商业价值', 'Buying signals, reorder patterns, supplier changes and value')],
     [B('形成可执行的|开发计划', 'Prepare the outreach plan'), B('多语言话术、跟进计划、展会线索与沉睡客户唤醒', 'Multilingual playbooks, follow-ups, trade-show leads and reactivation')],
   ],
-  handoff: B('确认客户 → 转入 Sales Desk', 'Approved prospect → Sales Desk'),
+  handoff: B('确认客户 → 转入销售工作台', 'Approved prospect → Sales Workbench'),
   handoffText: B('带上来源、背调、产品兴趣与下一步任务，不必重新录入。', 'Source, research, product interests and next actions travel with it — no re-entry.'),
   outLabel: B('交付给销售', 'Sales-ready outputs'),
   outputs: B(['客户清单', '联系人信息', '商机简报', '开发计划'], ['Prospect list', 'Contact details', 'Opportunity brief', 'Outreach plan']),
-  sales: B('Sales Desk · 外贸销售', 'Sales Desk · trade sales'),
+  sales: B('销售工作台 · 外贸销售', 'Sales Workbench · trade sales'),
   intakeLabel: B('多渠道入口', 'Intake'),
-  intake: B(['企业邮件', 'WhatsApp', '阿里国际站', '网站询盘', '主动开发客户'], ['Email', 'WhatsApp', 'Alibaba.com', 'Website inquiries', 'Growth OS prospects']),
-  crmLabel: B('客户全景 · CRM', 'A complete customer view · CRM'),
+  intake: B(['企业邮件', 'WhatsApp', '阿里国际站', '网站询盘', '主动开发客户'], ['Email', 'WhatsApp', 'Alibaba.com', 'Website inquiries', 'Prospecting leads']),
+  crmLabel: B('客户档案 · 客户CRM', 'The customer file · Customer CRM'),
   crm: B(['公司 / 联系人', '需求 / 产品兴趣', '商机 / 负责人', '沟通 / 报价记录'], ['Company / people', 'Requirements / products', 'Opportunity / owner', 'Messages / quotes']),
   work: [
     [B('理解需求', 'Understand'), B('提取规格、数量、市场、交期，整理附件与图纸', 'Extract requirements; organize attachments and drawings')],
@@ -173,7 +181,7 @@ const PIPE = {
   ],
   chainLabel: B('之后的业务链', 'What follows'),
   chain: B(['报价', 'PI', '订单', '售后', '复购'], ['Quote', 'PI', 'Order', 'Support', 'Reorder']),
-  note: B('真实数据与客户触达按授权接入；各渠道真实收发与业务交接逐项连接、验证。', 'Live data and outreach require authorization; live channel messaging and business handoffs are connected and validated one by one.'),
+  note: B('真实数据和对外触达要接入你公司的账号，并经你授权；各渠道的收发，演示时逐项确认。', 'Live data and outreach need your company’s accounts and your authorization; each channel is confirmed in the demo.'),
 };
 export function chartPipeline(lang, n) {
   const P = PIPE;
@@ -199,10 +207,10 @@ export function chartPipeline(lang, n) {
 /* (3) The 288 role directory — V4 guide p. 21; the counts are the site's own
    (WORKFORCE_ROLE_GROUPS in tools/copy.mjs), largest first. */
 const ROLES = {
-  title: B('288 个专业数字岗位：十类企业职能', '288 specialized AI roles across ten enterprise functions'),
-  unit: B('个岗位', 'roles'),
+  title: B('288 名数字员工：十类企业职能', '288 digital employees across ten enterprise functions'),
+  unit: B('名', 'staff'),
   total: B('合计', 'Total'),
-  note: B('288 是岗位目录数量，不代表替代 288 名真人员工；实际启用的员工、协作规模与可执行动作，按企业配置、预算和权限确定。', '288 is the size of the role directory, not a claim to replace 288 people. The employees enabled, the size of a collaboration and permitted actions follow configuration, budget and access.'),
+  note: B('288 是数字员工名册的规模，不代表替代 288 名真人员工；实际启用的员工、协作规模与可执行动作，按企业配置、预算和权限确定。', '288 is the size of the staff directory, not a claim to replace 288 people. The employees enabled, the size of a collaboration and permitted actions follow configuration, budget and access.'),
 };
 export function chartRoles(lang, n, { note = true } = {}) {
   const groups = [...WORKFORCE_ROLE_GROUPS.groups].sort((a, b) => b.count - a.count);
@@ -218,7 +226,7 @@ export function chartRoles(lang, n, { note = true } = {}) {
 
 /* (4) AI teamwork — V4 guide p. 23; available since 2026-09-17 (owner). */
 const TEAM = {
-  title: B('多 AI 员工协作：不是各聊各的，而是一起把事做完', 'AI teamwork: not separate chats, but one job finished together'),
+  title: B('多名数字员工协作：不是各聊各的，而是一起把事做完', 'AI teamwork: not separate chats, but one job finished together'),
   briefLabel: B('老板交办', 'The business brief'),
   brief: B('“开拓一个|新的目标市场”', '“Develop a new target market.”'),
   scenario: B('场景示意', 'Illustrative scenario'),
@@ -306,7 +314,7 @@ const PROACTIVE = {
     [B('事情快到期了', 'A deadline is approaching'), B('订单交期临近，提醒核对|生产与运输安排。', 'A delivery date is close; check production and shipping.')],
     [B('有内容需要你决定', 'A decision needs you'), B('报价或对外内容待确认，整理依据交给有权人。', 'A quote or outbound content awaits sign-off; the context goes to the right person.')],
   ],
-  note: B('主动工作仍受权限与审批约束，不是人的意识，也不是无限制的自主决定；企业级主动工作、统一长期记忆和高级改进持续完善。', 'Permissions and approvals still apply: proactive work is not consciousness or unrestricted autonomy. Enterprise-wide proactive work, unified long-term memory and advanced improvement are still evolving.'),
+  note: B('主动工作仍受权限与审批约束，不是人的意识，也不是无限制的自主决定；企业级主动工作、统一长期记忆和高级改进开通到哪一步，演示时确认。', 'Permissions and approvals still apply: proactive work is not consciousness or unrestricted autonomy. How much enterprise-wide proactive work, unified long-term memory and advanced improvement you get is confirmed in the demo.'),
 };
 export function chartProactive(lang, n) {
   const P = PROACTIVE;
@@ -337,7 +345,7 @@ export function chartStart(lang, n) {
 
 /* (8) Owner control — V4 guide p. 31. */
 const OWNER = {
-  title: B('老板驾驶舱：看得见、管得住、查得清', 'Owner control: visible, controllable, traceable'),
+  title: B('老板看板：看得见、管得住、查得清', 'Owner Dashboard: visible, controllable, traceable'),
   items: [
     [B('看得见', 'Visible'), B('客户到哪一步，任务由谁做，哪里需要关注。', 'Customer progress, task owners and what needs attention.')],
     [B('管得住', 'Controllable'), B('报价、触达、付款等关键动作，有人把关。', 'Quotes, outreach and payments stay under authorized human control.')],
@@ -350,23 +358,7 @@ export function chartOwner(lang, n) {
   return figure('owner', n, lang, OWNER.title, `<ul class="sgc-trio">${items}</ul>`, OWNER.note);
 }
 
-/* (9) What is available — the owner's statuses of 2026-09-17 over V4 p. 33. */
-const STATUS = {
-  title: B('开放情况：哪些现在可用，哪些按条件开放', 'Availability: what is ready now and what depends on conditions'),
-  cols: [
-    ['now', B('现已可用', 'Available now'), B(['AI 团队协作：组队、互发消息、并行处理、汇总交付', 'AI 一键生成视频：从制作需求到可导出的成片', '爆款结构再创作：参考结构到三个原创方向'], ['AI teamwork: form a team, message, work in parallel, deliver one result', 'One-click AI video: from a brief to an exportable film', 'Viral creative adaptation: from a reference structure to three original directions'])],
-    ['base', B('已有基础，按企业配置启用', 'Foundations in place, enabled by configuration'), B(['网页桌面、客户管理与企业知识', 'Sales Desk 业务工作台', '创意工作室、ERP 与商城应用'], ['Browser desktop, customer management and enterprise knowledge', 'The Sales Desk workspace', 'Creative workspace, ERP and commerce applications'])],
-    ['link', B('逐项连接与验收', 'Connected and validated one by one'), B(['Growth OS 真实数据与客户触达，按授权接入', '各渠道真实收发与业务交接', '真实价格、合同、签章、单证、物流与财务'], ['Growth OS live data and outreach, by authorization', 'Live channel messaging and business handoffs', 'Live prices, contracts, signatures, documents, logistics and finance'])],
-    ['next', B('持续完善', 'Still evolving'), B(['Growth OS 核心流程', '商品营销套件的|一键编排与局部检查', '企业级主动工作、统一长期记忆与高级改进', '原生客户端、移动端与小程序'], ['Growth OS core workflows', 'One-click marketing-kit production and local checks', 'Enterprise-wide proactive work, unified long-term memory and advanced improvement', 'Native clients, mobile and mini-programs'])],
-  ],
-  note: B('现已可用的能力，也在企业开通的服务、额度和权限内运行。实际交付以企业配置与确认范围为准；发布到外部渠道、正式申报与资金支付由有权人员确认。', 'Available capabilities also run within the services, credits and access a company enables. Delivery follows the enterprise configuration and agreed scope; publishing to external channels, official filings and payments are confirmed by authorized people.'),
-};
-export function chartStatus(lang, n) {
-  const cols = STATUS.cols.map(([key, h, items]) => `<li class="sgc-status sgc-status-${key}"><strong class="sgc-status-title">${esc(tx(h, lang))}</strong><ul>${tx(items, lang).map((x) => `<li>${inline(x)}</li>`).join('')}</ul></li>`).join('');
-  return figure('status', n, lang, STATUS.title, `<ul class="sgc-statuses">${cols}</ul>`, STATUS.note);
-}
-
-/* (10) Knowledge and the relationship map — V4 guide p. 25. */
+/* (9) Knowledge and the relationship map — V4 guide p. 25. */
 const CONTEXT = {
   title: B('企业资料室与业务关系图', 'The reference room and the business relationship map'),
   roomTitle: B('企业知识库：公司知道什么', 'Enterprise knowledge: what the company knows'),
@@ -422,7 +414,7 @@ const plain = (html) => html.replace(/<[^>]+>/g, ' ').replace(/&[a-z]+;|&#\d+;/g
 /**
  * schema.org wordCount of the printed article (body, takeaways and FAQ).
  * English: words. Chinese: characters — every Han character counts one, and
- * each Latin or numeric run (Growth OS, AI, 288) counts one, as a Chinese
+ * each Latin or numeric run (主动获客, AI, 288) counts one, as a Chinese
  * word count does. Punctuation and spaces are not counted.
  */
 export function wordCount(post, lang) {
@@ -433,33 +425,33 @@ export function wordCount(post, lang) {
 
 /* ------------------------------------------------------------ articles -- */
 
-/** The long-form guide (V4 visual guide, 2026-09-16, with the owner's statuses of 2026-09-17). */
+/** The long-form guide (V4 visual guide, 2026-09-16; rewritten 2026-10-09 around OPEN WORK, the core app). */
 const GUIDE_SECTIONS = [
   {
     id: 'guide-loop',
     h: B('一套系统，怎样连接|从获客到经营？', 'How does one system connect acquisition to operations?'),
-    text: B('<p>Growth OS 与 Sales Desk 是业务主线：先主动找到客户、判断机会，再把沟通、报价、PI 和订单交接放进同一条销售链。ERP、内容生产、数字员工、企业知识和管理工具围绕主线协同，结果持续沉淀，进入下一轮增长。</p>',
-      '<p>Growth OS and Sales Desk lead the journey: find customers and qualify opportunities, then carry conversations, quotes, PIs and order handoffs along one sales chain. Operations, creative work, AI employees, enterprise knowledge and management tools support that line, and every outcome feeds the next growth cycle.</p>'),
+    text: B('<p>主动获客与销售工作台是业务主线：先主动找到客户、判断机会，再把沟通、报价、PI 和订单交接放进同一条销售链。企业ERP、内容生产、数字员工、企业知识库和老板看板围绕主线协同，结果持续沉淀，进入下一轮增长。</p>',
+      '<p>Prospecting and the Sales Workbench lead the journey: find customers and qualify opportunities, then carry conversations, quotes, PIs and order handoffs along one sales chain. The ERP, creative work, digital employees, the Knowledge Base and the Owner Dashboard support that line, and every outcome feeds the next growth cycle.</p>'),
     fig: chartLoop,
     value: B('少一些信息搬运和反复交接，多一些有依据的推进和可核对的结果。', 'less copying and fewer handoffs; more evidence-backed progress and results you can check.'),
-    cond: B('核心流程持续完善，能力按企业配置与交付范围开放。见<a href="capabilities.html#atlas">完整能力目录</a>。', 'core workflows keep evolving; capabilities open by configuration and agreed scope. See the <a href="capabilities.html#atlas">full catalogue</a>.'),
+    more: B('<a href="capabilities.html#atlas">完整功能目录</a>。', 'the <a href="capabilities.html#atlas">full catalogue</a>.'),
   },
   {
     id: 'guide-growth',
-    h: B('Growth OS：怎样主动|把商机找出来？', 'Growth OS: how are opportunities found proactively?'),
-    text: B('<p>Growth OS 不只整理已有询盘。它围绕产品、目标市场和客户画像，从公开搜索、企业官网、地图、社交平台、展会和授权贸易数据中寻找经销商、进口商与目标企业；结合采购信号、补货周期和联系人背调排出开发优先级，再准备多语言开发邮件与跟进计划。证据不足时标注待核实，不编造需求。</p>',
-      '<p>Growth OS goes beyond incoming inquiries. Around your products, markets and customer profile, it finds dealers, importers and target accounts through public search, company websites, maps, social channels, trade shows and authorized trade data; ranks them by buying signals, reorder patterns and contact research; and prepares multilingual outreach and follow-up plans. Thin evidence is flagged, never filled in.</p>'),
+    h: B('主动获客：怎样主动|把商机找出来？', 'Prospecting: how are opportunities found proactively?'),
+    text: B('<p>主动获客不只整理已有询盘。它围绕产品、目标市场和客户画像，从公开搜索、企业官网、地图、社交平台、展会和授权贸易数据中寻找经销商、进口商与目标企业；结合采购信号、补货周期和联系人背调排出开发优先级，再准备多语言开发邮件与跟进计划。证据不足时标注待核实，不编造需求。</p>',
+      '<p>Prospecting goes beyond incoming inquiries. Around your products, markets and customer profile, it finds dealers, importers and target accounts through public search, company websites, maps, social channels, trade shows and authorized trade data; ranks them by buying signals, reorder patterns and contact research; and prepares multilingual outreach and follow-up plans. Thin evidence is flagged, never filled in.</p>'),
     value: B('把“到处找客户”变成有目标、有证据、有优先级的开发。', 'scattered prospecting becomes targeted, evidence-backed and prioritized.'),
-    cond: B('核心流程建设中，真实数据与客户触达按授权接入。见<a href="capabilities.html#g02">主动获客与商机判断</a>。', 'core workflows are being built out; live data and outreach are connected by authorization. See <a href="capabilities.html#g02">Customer acquisition</a>.'),
+    more: B('<a href="capabilities.html#g02">主动获客与商机判断</a>。', '<a href="capabilities.html#g02">Customer acquisition</a>.'),
   },
   {
     id: 'guide-sales',
-    h: B('Sales Desk：客户怎样|一步步走向订单？', 'Sales Desk: how does a customer become an order?'),
-    text: B('<p>Sales Desk 承接 Growth OS 确认的客户和各渠道询盘：邮件、网站、WhatsApp 与阿里国际站的消息集中处理，从来信和附件中读出需求，客户资料、沟通记录、报价和订单汇成客户全景。回复以产品参数、价格政策、MOQ 和贸易条款为依据；跟进、提醒和人工接管都保留，避免重复触达。</p>',
-      '<p>Sales Desk takes over approved prospects and inquiries from every channel. Email, website, WhatsApp and Alibaba.com messages arrive in one place, requirements are read from messages and attachments, and records, conversations, quotes and orders form a complete customer view. Replies rest on specifications, pricing policy, MOQ and trade terms; follow-ups, reminders and human takeover prevent duplicate outreach.</p>'),
+    h: B('销售工作台：客户怎样|一步步走向订单？', 'Sales Workbench: how does a customer become an order?'),
+    text: B('<p>销售工作台承接主动获客确认的客户和各渠道询盘：邮件、网站、WhatsApp 与阿里国际站的消息集中处理，从来信和附件中读出需求，客户资料、沟通记录、报价和订单汇成一份完整的客户档案。回复以产品参数、价格政策、MOQ 和贸易条款为依据；跟进、提醒和人工接管都保留，避免重复触达。</p>',
+      '<p>The Sales Workbench takes over approved prospects and inquiries from every channel. Email, website, WhatsApp and Alibaba.com messages arrive in one place, requirements are read from messages and attachments, and records, conversations, quotes and orders form one complete customer file. Replies rest on specifications, pricing policy, MOQ and trade terms; follow-ups, reminders and human takeover prevent duplicate outreach.</p>'),
     fig: chartPipeline,
     value: B('换人接手也有完整背景，沟通一路连到报价、订单与复购。', 'anyone can pick up an account with full context, from conversation to quote, order and reorder.'),
-    cond: B('工作台已经具备；各渠道真实收发与业务交接逐项连接、验证。见<a href="capabilities.html#g04">询盘与多渠道沟通</a>。', 'the workspace exists; live channels and handoffs are connected and validated one by one. See <a href="capabilities.html#g04">Inquiries and conversations</a>.'),
+    more: B('<a href="capabilities.html#g04">询盘与多渠道沟通</a>。', '<a href="capabilities.html#g04">Inquiries and conversations</a>.'),
   },
   {
     id: 'guide-quotes',
@@ -467,23 +459,22 @@ const GUIDE_SECTIONS = [
     text: B('<p>报价按配置、数量、币种和贸易条款起草，关联价格表、历史报价、折扣权限和利润边界，AI 不自行编价；价格与重要承诺由有权人批准，确认后转为 PI 并保留批准版本。合同条款核对，以及商业发票、装箱单、原产地证与 Form E 资料、提单等单证的准备与归档，也在这条链上协同。</p>',
       '<p>Quotes are drafted from configuration, quantity, currency and trade terms, using price lists, quote history, discount permissions and margin guardrails; AI never invents prices. Authorized people approve prices and commitments, and an agreed quote becomes a PI with its approved version kept. Contract clause checks run on the same chain, together with the preparation and filing of commercial invoices, packing lists, certificates of origin and Form E materials, and bills of lading.</p>'),
     value: B('价格有依据，利润有边界，文件有版本；批准与发送分别受控。', 'grounded prices, protected margins, versioned documents — and approval kept separate from sending.'),
-    cond: B('真实价格、合同、签章与单证按企业系统接通；正式签发由相应机构完成。见<a href="capabilities.html#g07">报价、PI 与商业文件</a>。', 'live prices, contracts, signatures and documents depend on connected systems; official issuance stays with the authorized bodies. See <a href="capabilities.html#g07">Quotations and PI</a>.'),
+    more: B('<a href="capabilities.html#g07">报价、PI 与商业文件</a>。', '<a href="capabilities.html#g07">Quotations and PI</a>.'),
   },
   {
     id: 'guide-erp',
     h: B('ERP 与商城：前端拿订单，后台接得住吗？', 'ERP and commerce: can the back office keep up?'),
-    text: B('<p>销售与经营后台在同一个桌面：产品档案与物料清单保持一致，订单需求衔接采购与到货，库存告诉业务员能不能交，生产、质检与交期逐步关联销售承诺，订单与发票相互对应。商品目录、商城后台和经销商门户也可按需衔接。</p>',
-      '<p>Sales and the back office share one desktop. Product records and bills of materials stay consistent, order demand links to purchasing and incoming goods, stock shows what can be delivered, production, quality and lead times connect to sales promises, and orders match invoices. Catalogs, storefront administration and dealer portals connect as required.</p>'),
+    text: B('<p>销售与经营后台在同一个工作台：产品档案与物料清单保持一致，订单需求衔接采购与到货，库存告诉业务员能不能交，生产、质检与交期逐步关联销售承诺，订单与发票相互对应。商品目录、商城后台和经销商门户也可按需衔接。</p>',
+      '<p>Sales and the back office share one workspace. Product records and bills of materials stay consistent, order demand links to purchasing and incoming goods, stock shows what can be delivered, production, quality and lead times connect to sales promises, and orders match invoices. Catalogs, storefront administration and dealer portals connect as required.</p>'),
     value: B('接单前知道能不能交，承诺时知道何时交，交付后记录对得上。', 'know whether you can deliver, when, and that the records agree afterwards.'),
-    cond: B('已有 ERP 与商城应用基础；跨系统协同和 AI 操作按企业配置验收。见<a href="capabilities.html#g08">ERP、订单与履约</a>。', 'ERP and commerce foundations exist; cross-system work and AI actions are configured and accepted per company. See <a href="capabilities.html#g08">ERP and fulfillment</a>.'),
+    more: B('<a href="capabilities.html#g08">ERP、订单与履约</a>。', '<a href="capabilities.html#g08">ERP and fulfillment</a>.'),
   },
   {
     id: 'guide-delivery',
     h: B('成交之后，交付、回款与复购谁来跟？', 'After the sale, who follows delivery, payment and reorders?'),
     text: B('<p>成交只是中间节点。订金、生产、质检、发货和客户确认按任务、负责人和期限组织，延期和资料缺失会被标出；物流、应收、对账和出口退税资料有进度提醒；售后、保修、备件和复购机会持续沉淀，高频问题回流产品与销售知识。</p>',
       '<p>A sale is a milestone, not the end. Deposits, production, quality checks, shipment and customer confirmation are organized by task, owner and deadline, with delays and missing records flagged. Logistics, receivables, reconciliation and export-rebate materials come with reminders, and support, warranty, spare parts and reorder opportunities are retained, with recurring issues fed back into product and sales knowledge.</p>'),
-    value: B('从获客到回款、售后与复购，形成新一轮增长的闭环。', 'acquisition through payment, support and reorders closes into one growth loop.'),
-    cond: B('按订单、物流、财务与服务系统的接入分阶段交付；正式申报、付款和专业审阅由有权人员确认。', 'delivered in stages through connected order, logistics, finance and service systems; authorized people confirm filings, payments and professional reviews.'),
+    value: B('从获客到回款、售后与复购，一环接一环，进入新一轮增长。', 'from acquisition to payment, support and reorders, each step feeds the next round of growth.'),
   },
   {
     id: 'guide-images',
@@ -491,7 +482,7 @@ const GUIDE_SECTIONS = [
     text: B('<p>从自己的产品照片与参数、品牌标志与配色、目标市场与渠道出发，生成和编辑主图、场景图、卖点海报、详情页、图册和社媒素材；营销套件一次规划整组图片与文案，不准确的外观或参数可以局部修正，官网与搜索内容支持多语言和 SEO / GEO 规划。</p>',
       '<p>Starting from your own product photos and facts, logo, colors, market and channel, you generate and edit hero images, scenes, benefit posters, detail pages, catalogs and social assets. A marketing kit plans a full set of images and copy at once, inaccurate visuals or specifications can be corrected locally, and website and search content comes with multilingual and SEO and GEO planning.</p>'),
     value: B('同一套产品事实，持续产出销售、官网、商城和社媒素材。', 'one set of product facts feeds sales, website, commerce and social assets.'),
-    cond: B('创意工作室已有基础；商品营销套件的一键编排与局部检查持续整合；对外发布需单独授权。见<a href="capabilities.html#creative-images">AI 作图与图片编辑</a>。', 'the creative workspace is present; one-click marketing-kit production and local checks are being integrated; external publishing needs separate authorization. See <a href="capabilities.html#creative-images">AI images</a>.'),
+    more: B('<a href="capabilities.html#creative-images">AI 作图与图片编辑</a>。', '<a href="capabilities.html#creative-images">AI images</a>.'),
   },
   {
     id: 'guide-video',
@@ -500,7 +491,7 @@ const GUIDE_SECTIONS = [
       '<p>One brief becomes a video project. From product facts, audience, language, duration and format, a production plan is prepared for review; then the visuals are generated, voiceover, captions, music and a branded end card are added, and a portrait, landscape or square film is exported. A failed shot is redone on its own, and versions and costs are recorded.</p>'),
     fig: chartVideo,
     value: B('交付的是可播放、可导出的视频文件，而不只是一句“已完成”。', 'a playable, exportable video file, not just a message saying it is done.'),
-    cond: B('现已可用。成片经人工审核后发布；按企业开通的服务与额度生成；素材须有权使用。见<a href="capabilities.html#creative-video">AI 一键生成视频</a>。', 'available now. People review finished videos before publishing; generation runs within enabled services and credits; assets must be ones you may use. See <a href="capabilities.html#creative-video">One-click video</a>.'),
+    more: B('<a href="capabilities.html#creative-video">AI 一键生成视频</a>。', '<a href="capabilities.html#creative-video">One-click video</a>.'),
   },
   {
     id: 'guide-viral',
@@ -508,33 +499,33 @@ const GUIDE_SECTIONS = [
     text: B('<p>不是。它先拆解一段有权使用的参考视频：开场怎样吸引人，镜头怎样安排，卖点何时出现，怎样引导行动。然后换成自己的产品、品牌和市场，规划三个原创方向并写明变化点，再进入制作、审核和多尺寸输出。卖点只取自已确认的产品事实。</p>',
       '<p>No. It first takes an authorized reference video apart: how it hooks, how shots are paced, when benefits appear and how it asks for action. Then it rebuilds that structure around your product, brand and market as three original directions with the changes stated, followed by production, review and output in several formats. Claims come only from your verified product facts.</p>'),
     value: B('学会有效内容的思路，做出自己品牌的原创内容。', 'learn what works and turn it into original content for your brand.'),
-    cond: B('现已可用。不复制原片、人脸、声音、音乐、标志或水印；参考须有权使用；不承诺必成爆款。见<a href="capabilities.html#creative-viral">爆款结构再创作</a>。', 'available now. No copied footage, faces, voices, music, logos or watermarks; the reference must be authorized; viral results are not guaranteed. See <a href="capabilities.html#creative-viral">Viral adaptation</a>.'),
+    more: B('<a href="capabilities.html#creative-viral">爆款结构再创作</a>。不复制原片、人脸、声音、音乐、标志或水印，参考须有权使用，不承诺必成爆款。', '<a href="capabilities.html#creative-viral">Viral adaptation</a>. No copied footage, faces, voices, music, logos or watermarks; the reference must be authorized; viral results are not guaranteed.'),
   },
   {
     id: 'guide-workforce',
-    h: B('288 个数字员工|覆盖哪些岗位？', 'Which jobs do the 288 AI employees cover?'),
-    text: B('<p>288 个专业岗位分布在十类企业职能中，不只服务外贸。每个岗位可以配置职责、技能、企业知识、可用工具、权限和运行记录；老板提出目标，选择员工或团队，查看成果并批准关键动作。</p>',
-      '<p>The 288 specialized roles span ten enterprise functions, not export sales alone. Each can be configured with responsibilities, skills, enterprise knowledge, tools, access and a run history. An owner sets a goal, picks employees or a team, reviews the results and approves key actions.</p>'),
+    h: B('288 名数字员工|覆盖哪些职能？', 'Which functions do the 288 digital employees cover?'),
+    text: B('<p>288 名数字员工分布在十类企业职能中，不只服务外贸。每名数字员工可以配置职责、技能、企业知识、可用工具、权限和运行记录；老板提出目标，选择员工或团队，查看成果并批准关键动作。在 OPEN WORK 里，它们就在 STARGO AI 数字办公室这个应用里。</p>',
+      '<p>The 288 digital employees span ten enterprise functions, not export sales alone. Each can be configured with responsibilities, skills, enterprise knowledge, tools, access and a run history. An owner sets a goal, picks employees or a team, reviews the results and approves key actions. In OPEN WORK they live in the STARGO AI Digital Office app.</p>'),
     fig: (lang, n) => chartRoles(lang, n, { note: false }),
-    value: B('一份按任务选用的专业岗位目录，而不是一堆相同的聊天窗口。', 'a directory of professional roles chosen by task, not a stack of identical chat windows.'),
-    cond: B('288 是岗位目录数量，不代表替代 288 名真人；启用的员工、协作规模与可执行动作按企业配置、预算和权限确定。见<a href="workforce.html#lx-role-groups">岗位目录</a>。', '288 is the size of the role directory, not 288 people replaced; enabled employees, team size and permitted actions follow configuration, budget and access. See the <a href="workforce.html#lx-role-groups">role directory</a>.'),
+    value: B('一份按任务选用的数字员工名册，而不是一堆相同的聊天窗口。', 'a roster of digital employees chosen by task, not a stack of identical chat windows.'),
+    more: B('<a href="workforce.html#lx-role-groups">数字员工名册</a>。288 是名册的规模，不代表替代 288 名真人；启用的员工、协作规模与可执行动作按企业配置、预算和权限确定。', 'the <a href="workforce.html#lx-role-groups">staff roster</a>. 288 is the size of the roster, not 288 people replaced; enabled employees, team size and permitted actions follow configuration, budget and access.'),
   },
   {
     id: 'guide-teamwork',
-    h: B('多个 AI 员工怎样|一起把事做完？', 'How do several AI employees finish one job together?'),
-    text: B('<p>复杂任务可以交给一支 AI 团队：按岗位、技能和权限组队，成员之间发送定向消息、提问、补充信息和交接结果，研究、销售、产品与内容子任务并行处理，再由统筹角色检查并合成一个交付包，交人确认。暂停或接管之后，工作仍能继续。</p>',
-      '<p>A complex task can go to an AI team. Members are chosen by role, skills and access; they send each other directed messages, ask questions, add context and hand over results; research, sales, product and content subtasks run in parallel; and a coordinating role checks and combines the work into one package for a person to confirm. Work continues after a pause or takeover.</p>'),
+    h: B('多名数字员工怎样|一起把事做完？', 'How do several digital employees finish one job together?'),
+    text: B('<p>复杂任务可以交给一支数字员工团队：按岗位、技能和权限组队，成员之间发送定向消息、提问、补充信息和交接结果，研究、销售、产品与内容子任务并行处理，再由统筹角色检查并合成一个交付包，交人确认。暂停或接管之后，工作仍能继续。</p>',
+      '<p>A complex task can go to a team of digital employees. Members are chosen by role, skills and access; they send each other directed messages, ask questions, add context and hand over results; research, sales, product and content subtasks run in parallel; and a coordinating role checks and combines the work into one package for a person to confirm. Work continues after a pause or takeover.</p>'),
     fig: chartTeam,
     value: B('信息能传递，责任有归属，结果能交接。', 'information flows, ownership is clear and the result can be handed over.'),
-    cond: B('现已可用。协作轮次、预算和动作有上限，随时可叫停；人工审批与接管始终保留；共享任务信息不授予他人权限；对外动作须经授权审批。见<a href="workforce.html#lx-team">协作场景</a>。', 'available now. Rounds, budgets and actions are capped and work can be stopped; human approval and takeover remain; shared task context does not grant other employees’ permissions; external actions need an authorized approval. See the <a href="workforce.html#lx-team">team scenario</a>.'),
+    more: B('<a href="workforce.html#lx-team">协作场景</a>。协作轮次、预算和动作有上限，随时可叫停；共享任务信息不授予他人权限；对外动作须经授权审批。', 'the <a href="workforce.html#lx-team">team scenario</a>. Rounds, budgets and actions are capped and work can be stopped; shared task context does not grant other employees’ permissions; external actions need an authorized approval.'),
   },
   {
     id: 'guide-context',
     h: B('AI 怎样读懂你的公司？', 'How does AI come to understand your company?'),
     text: B('<p>企业知识库是公司的资料室，产品、价格政策、认证和合同模板都记录来源与版本，回答时引用依据。业务关系图把客户、产品、报价、订单、任务和负责人联系起来，回答“是不是同一个客户、价格用哪一版、谁来负责”。导入资料先审核，再成为企业认可的依据。</p>',
-      '<p>The knowledge base is the company’s reference room: products, pricing policies, certifications and contract templates carry their source and version, and answers cite them. The relationship map links customers, products, quotes, orders, tasks and owners, answering which customer this is, which price applies and who is responsible. Imported material is reviewed before it counts as company fact.</p>'),
+      '<p>The Knowledge Base is the company’s reference room: products, pricing policies, certifications and contract templates carry their source and version, and answers cite them. The relationship map links customers, products, quotes, orders, tasks and owners, answering which customer this is, which price applies and who is responsible. Imported material is reviewed before it counts as company fact.</p>'),
     value: B('AI 带着企业背景做事，不用每次重新解释。', 'AI works in your business context instead of starting from scratch.'),
-    cond: B('知识与业务关联已有基础；更丰富的关联和资料模板逐步完善。见<a href="intelligence.html#lx-context">企业智能</a>。', 'knowledge and context foundations exist; richer relationships and templates arrive in stages. See <a href="intelligence.html#lx-context">Enterprise Intelligence</a>.'),
+    more: B('<a href="intelligence.html#lx-context">记忆与进化</a>。', '<a href="intelligence.html#lx-context">Memory &amp; Evolution</a>.'),
   },
   {
     id: 'guide-proactive',
@@ -543,34 +534,35 @@ const GUIDE_SECTIONS = [
       '<p>No. Proactive means watching connected customers, orders and tasks for opportunities, deadlines and exceptions, proposing an evidence-backed next step and acting within authorized scope — and pausing for a person when evidence or permission is missing. Useful experience becomes long-term memory, and improvements are tested and approved before use and withdrawn if they fall short.</p>'),
     fig: chartProactive,
     value: B('重要的机会、期限和决定，会主动送到你面前。', 'opportunities, deadlines and decisions come to you without being chased.'),
-    cond: B('已有基础；企业级主动工作、统一长期记忆与高级改进持续完善，主动不等于人的意识或无限制的自主。见<a href="capabilities.html#g14">长期经验与持续改进</a>。', 'foundations exist; enterprise-wide proactive work, unified memory and advanced improvement are still evolving, and proactive never means consciousness or unrestricted autonomy. See <a href="capabilities.html#g14">Retained experience</a>.'),
+    more: B('<a href="capabilities.html#g14">长期经验与持续改进</a>。主动不等于人的意识，也不等于无限制的自主。', '<a href="capabilities.html#g14">Retained experience</a>. Proactive never means consciousness or unrestricted autonomy.'),
   },
   {
-    id: 'guide-desktop',
-    h: B('为什么说|一个浏览器|就是工作空间？', 'Why is a browser enough for the whole workspace?'),
-    text: B('<p>它像一台企业专属电脑：多个应用窗口、文件和数字员工在同一个桌面里；AI 帮忙整理表格、文档、翻译和报告；语音可以转成纪要和待办；在授权环境中处理网页、表单和上传下载，不绕过登录与安全验证；邮箱、网盘、CRM 和 ERP 按企业授权连接。</p>',
-      '<p>It works like a company-specific computer: application windows, files and AI employees share one desktop. AI helps with spreadsheets, documents, translation and reports; speech becomes notes and tasks; routine web work, forms, uploads and downloads run in an authorized environment without bypassing sign-in or security checks; and email, drives, CRM and ERP connect through company authorization.</p>'),
-    value: B('少在工具之间来回切换，入口、文件和数字员工集中在一处。', 'less switching between tools, with entry points, files and AI employees in one place.'),
-    cond: B('网页桌面为当前重点；语音、自动化、对外动作及其他终端按开放范围分阶段推进。见<a href="capabilities.html#g01">工作空间与经营总览</a>。', 'the browser desktop comes first; voice, automation, external actions and other clients follow in phases by enabled scope. See <a href="capabilities.html#g01">Workspace overview</a>.'),
+    id: 'guide-workspace',
+    h: B('为什么说|一个对话框|就够用？', 'Why is one chat box enough for the whole workspace?'),
+    text: B('<p>OPEN WORK 的入口是一个对话框，左边的侧栏是 15 个应用：客户CRM、企业知识库、销售工作台、企业ERP……你说一句话，AI 去对应的应用里查资料、写草稿，整理表格、文档、翻译和报告；语音可以转成纪要和待办；在授权环境中处理网页、表单和上传下载，不绕过登录与安全验证；邮箱、网盘、CRM 和 ERP 按企业授权连接。</p>',
+      '<p>OPEN WORK starts from one chat box, with the 15 apps in a sidebar beside it: Customer CRM, Knowledge Base, Sales Workbench, ERP and the rest. You say what you need, and AI goes into the right app to look things up and draft, and puts together spreadsheets, documents, translations and reports; speech becomes notes and tasks; routine web work, forms, uploads and downloads run in an authorized environment without bypassing sign-in or security checks; and email, drives, CRM and ERP connect through company authorization.</p>'),
+    value: B('少在工具之间来回切换，入口、文件和数字员工集中在一处。', 'less switching between tools, with entry points, files and digital employees in one place.'),
+    more: B('<a href="capabilities.html#g01">工作空间与经营总览</a>。语音、自动化、对外动作和其他终端开通到哪一步，演示时确认。', '<a href="capabilities.html#g01">Workspace overview</a>. Which voice, automation, external-action and client features you get is confirmed in the demo.'),
   },
   {
     id: 'guide-owner',
     h: B('老板怎样看清经营、管住关键动作？', 'How does an owner see the business and control key actions?'),
-    text: B('<p>老板驾驶舱汇总客户、商机、报价、订单、审批和异常；任务总控显示目标、步骤、负责人和结果，区分进行中、待核对与已验证完成；控制中心管理数据同步与系统状态。报价、触达和付款按规则交有权人批准，动作、成本与结果都有记录，并可设置预算边界。</p>',
-      '<p>The owner’s cockpit summarizes customers, opportunities, quotes, orders, approvals and exceptions; the task overview shows goals, steps, owners and results, separating work in progress, results awaiting a check and verified completion; the control center manages data synchronization and system status. Quotes, outreach and payments go to authorized people, and actions, costs and results are recorded within budget limits.</p>'),
+    text: B('<p>老板看板汇总客户、商机、报价、订单、审批和异常；任务总控显示目标、步骤、负责人和结果，区分进行中、待核对与已验证完成；控制中心管理数据同步与系统状态。报价、触达和付款按规则交有权人批准，动作、成本与结果都有记录，并可设置预算边界。</p>',
+      '<p>The Owner Dashboard summarizes customers, opportunities, quotes, orders, approvals and exceptions; the task overview shows goals, steps, owners and results, separating work in progress, results awaiting a check and verified completion; the Control Center manages data synchronization and system status. Quotes, outreach and payments go to authorized people, and actions, costs and results are recorded within budget limits.</p>'),
     fig: chartOwner,
     value: B('不必盯着 AI，只需盯住经营重点。', 'you watch the business, not the AI.'),
-    cond: B('管理与控制已有基础；看板数据和自动动作按真实接入验收，指标只来自已接入的数据。见<a href="enterprise.html">企业管理与交付</a>。', 'management foundations exist; dashboards and automated actions are accepted against real connections, and metrics come only from connected data. See <a href="enterprise.html">Enterprise control and delivery</a>.'),
+    more: B('<a href="enterprise.html">安全与接入</a>。看板指标只来自已接入的数据。', '<a href="enterprise.html">Security &amp; setup</a>. Dashboard metrics come only from connected data.'),
   },
   {
     id: 'guide-start',
     h: B('企业从哪里开始，哪些已经可用？', 'Where should a company start, and what is available now?'),
-    text: B('<p>先跑通一件事，再扩大到整个企业：选一条最影响经营的业务，准备资料，连接授权账号，安排员工与审批，再用真实样本验证。能打开某个应用，不等于跨模块的工作都已验收，演示与交付应逐项确认。</p>',
-      '<p>Prove one thing first, then grow: choose the workflow that matters most, prepare the context, connect authorized accounts, assign employees and approvals, and validate with real cases. Opening an application does not mean every cross-module workflow is accepted, so demos and delivery are confirmed item by item.</p>'),
-    fig: (lang, n) => chartStart(lang, n) + chartStatus(lang, n + 1),
-    figs: 2,
+    text: B('<p>先跑通一件事，再扩大到整个企业：选一条最影响经营的业务，准备资料，连接授权账号，安排员工与审批，再用真实样本验证。</p>',
+      '<p>Prove one thing first, then grow: choose the workflow that matters most, prepare the context, connect authorized accounts, assign employees and approvals, and validate with real cases.</p>'),
+    fig: chartStart,
+    tail: B('<p class="sgp-status"><strong>现状：</strong>团队协作、一键视频和爆款结构再创作现已可用，在企业开通的服务、额度和权限内运行，成片经人工审核后发布。其余应用按企业配置启用；真实渠道收发、价格、合同、单证、物流和财务，要接入你公司的系统和账号，企业级主动工作和统一长期记忆仍在完善。能打开某个应用，不等于跨应用的工作都已验收，所以演示和交付都逐项确认。</p>',
+      '<p class="sgp-status"><strong>Status:</strong> AI teamwork, one-click video and viral adaptation are available now, within the services, credits and access a company enables, and people review finished videos before publishing. The other apps are enabled by configuration. Live channels, prices, contracts, documents, logistics and finance need your company’s systems and accounts connected, and enterprise-wide proactive work and unified long-term memory are still evolving. Opening an app does not mean every cross-app workflow is accepted, so demos and delivery are confirmed item by item.</p>'),
     value: B('先看到一条流程的真实成果，再决定扩大到哪里。', 'real results from one workflow before deciding where to expand.'),
-    cond: B('实际交付以企业配置与确认范围为准，行业扩展分阶段推进。方案见<a href="pricing.html">定价</a>。', 'delivery follows the agreed scope, and industry extensions are phased. See <a href="pricing.html">Pricing</a>.'),
+    more: B('方案见<a href="pricing.html">定价</a>。', 'plans are on the <a href="pricing.html">pricing page</a>.'),
   },
 ];
 
@@ -580,18 +572,18 @@ function guideBody(lang) {
   const sections = GUIDE_SECTIONS.map((s) => {
     const fig = s.fig ? s.fig(lang, n + 1) : '';
     if (s.fig) n += s.figs ?? 1;
-    return `<h3 id="${s.id}">${esc(s.h[lang])}</h3>${s.text[lang]}${fig}`
+    return `<h3 id="${s.id}">${esc(s.h[lang])}</h3>${s.text[lang]}${fig}${s.tail ? s.tail[lang] : ''}`
       + `<p class="sgp-value"><strong>${esc(BLOG_UI.value[lang])}</strong>${esc(s.value[lang])}</p>`
-      + `<p class="sgp-cond"><strong>${esc(BLOG_UI.condition[lang])}</strong>${s.cond[lang]}</p>`;
+      + (s.more ? `<p class="sgp-cond"><strong>${esc(BLOG_UI.learnMore[lang])}</strong>${s.more[lang]}</p>` : '');
   }).join('\n');
   const lead = lang === 'zh'
-    ? '<p>STARGO WORK 是一套面向制造业与外贸企业的网页桌面级 AI 企业操作系统：以 Growth OS 主动获客和 Sales Desk 外贸销售为主线，把企业经营、内容生产、企业知识和 288 个专业数字岗位连接在同一个工作空间里，关键决定由人掌握。</p>'
-      + '<p>本文按业务顺序讲清十六个主题：每一项做什么，对老板有什么价值，需要满足哪些条件。</p>'
-    : '<p>STARGO WORK is a browser-based desktop AI operating system for manufacturing and global trade enterprises. Growth OS for proactive acquisition and Sales Desk for trade sales lead the business, while operations, creative work, enterprise knowledge and 288 specialized AI roles support them in one workspace — and people keep the decisions.</p>'
-      + '<p>This guide covers sixteen topics in business order: what each one does, what it is worth to an owner and what it depends on.</p>';
+    ? '<p>STARGO WORK 是面向制造业与外贸企业的 AI 工作台，核心应用 OPEN WORK 像聊天一样用：在对话里交代任务，AI 去客户CRM、企业知识库、主动获客、企业ERP 等 15 个应用里查资料、写草稿，关键动作由人批准。</p>'
+      + '<p>本文按业务顺序讲清十六个主题：每一项做什么，对老板有什么价值。哪些现在可用，见最后一节。</p>'
+    : '<p>STARGO WORK is an AI workspace for manufacturers and exporters. Its core app, OPEN WORK, works like a chat: you ask, and AI looks things up and drafts across 15 apps such as the Customer CRM, Knowledge Base, Prospecting and ERP, while people approve the key actions.</p>'
+      + '<p>This guide covers sixteen topics in business order: what each one does and what it is worth to an owner. What is available today is in the last section.</p>';
   const end = lang === 'zh'
-    ? '<p class="sgp-cta">想从哪条业务开始？<a href="contact.html">预约企业演示</a>——把工作交给 AI，把决定权留在企业。</p>'
-    : '<p class="sgp-cta">Which workflow would you start with? <a href="contact.html">Request a demo</a> — delegate the work, keep the authority.</p>';
+    ? '<p class="sgp-cta">想从哪条业务开始？<a href="contact.html">预约演示</a>——把工作交给 AI，把决定权留在企业。</p>'
+    : '<p class="sgp-cta">Which workflow would you start with? <a href="contact.html">Book a demo</a> — delegate the work, keep the authority.</p>';
   return `${lead}${toc}\n${sections}\n${end}`;
 }
 
@@ -620,26 +612,26 @@ export const POSTS = [
     modified: '2026-09-17',
     cover: 'stargo-work-visual-guide',
     section: B('产品解读', 'Product guides'),
-    keywords: B(['STARGO WORK', 'AI 企业操作系统', 'Growth OS', 'Sales Desk', '数字员工', '外贸 AI'], ['STARGO WORK', 'AI operating system', 'Growth OS', 'Sales Desk', 'AI employees', 'AI for manufacturers']),
-    mentions: ['Growth OS', 'Sales Desk'],
-    title: B('STARGO WORK 图文详解：从获客到经营', 'STARGO WORK, explained: one\u00a0system from acquisition to operations'),   // "one system" never splits (the heading broke "one / system" at 1280–1920)
+    keywords: B(['STARGO WORK', 'OPEN WORK', 'AI 工作台', '数字员工', '外贸 AI'], ['STARGO WORK', 'OPEN WORK', 'AI workspace', 'digital employees', 'AI for manufacturers']),
+    mentions: ['OPEN WORK'],
+    title: B('STARGO WORK 图文详解：从获客到经营', 'STARGO WORK guide: from leads to operations'),
     titleChunks: ['STARGO ', 'WORK ', '图文详解：', '从获客', '到经营'],
-    description: B('一篇读懂 STARGO WORK：两大核心引擎、业务循环、288 个数字岗位、AI 团队协作与一键视频，以及每项能力的价值和开放条件。', 'A complete guide to STARGO WORK: two core engines, the business loop, 288 AI roles, AI teamwork and one-click video, with each one’s value and availability.'),
+    description: B('一篇读懂 STARGO WORK 和核心应用 OPEN WORK：获客、报价、履约，288 名数字员工、团队协作与一键视频，以及哪些现在可用。', 'A guide to STARGO WORK and its core app OPEN WORK: prospecting, quotes, fulfillment, 288 digital employees, teamwork, one-click video and what is live today.'),
     takeaways: [
-      B('一个网页桌面，两大核心引擎：Growth OS 主动获客，Sales Desk 外贸销售。', 'One browser desktop, two core engines: Growth OS for acquisition and Sales Desk for trade sales.'),
-      B('业务循环：主动获客 → 外贸成交 → 企业履约 → 经营协同 → 复购增长。', 'The loop: acquisition → trade sales → fulfillment → business coordination → repeat growth.'),
-      B('288 个专业数字岗位覆盖十类职能；AI 团队协作、一键视频与爆款再创作现已可用，在开通的服务、额度和权限内运行。', '288 specialized roles across ten functions; AI teamwork, one-click video and viral adaptation are available now, within the services, credits and access a company enables.'),
+      B('核心应用 OPEN WORK 是一个对话框：交代任务，AI 去 15 个应用里干活，发出前由你批准。', 'The core app, OPEN WORK, is one chat box: ask, and AI works across 15 apps, with your approval before anything goes out.'),
+      B('业务主线：主动获客 → 外贸成交 → 企业履约 → 经营协同 → 复购增长。', 'The journey: acquisition → trade sales → fulfillment → business coordination → repeat growth.'),
+      B('288 名数字员工覆盖十类职能；团队协作、一键视频与爆款再创作现已可用，在开通的服务、额度和权限内运行。', '288 digital employees across ten functions; teamwork, one-click video and viral adaptation are available now, within the services, credits and access a company enables.'),
       B('报价、触达、付款等关键动作由有权人员批准；已批准不等于已发送。', 'Authorized people approve quotes, outreach and payments; approved is not the same as sent.'),
       B('从一条业务流程开始，用真实样本验证，再按企业配置扩大范围。', 'Start with one workflow, validate it with real cases, then expand by configuration.'),
     ],
     body: B(guideBody('zh'), guideBody('en')),
     faq: [
       Q('STARGO WORK 到底是什么？', 'What is STARGO WORK?',
-        '它是一套面向制造业与外贸企业的网页桌面级 AI 企业操作系统。以 Growth OS 主动获客和 Sales Desk 外贸销售为业务主线，连接企业经营、内容生产、知识和数字员工，并保留人的审批与决定权。',
-        'It is a browser-based desktop AI operating system for manufacturing and global trade enterprises. Growth OS and Sales Desk lead the business journey, supported by operations, creative work, enterprise knowledge and AI roles, with people retaining approval and decision authority.'),
-      Q('Growth OS 与 Sales Desk 有什么区别？', 'How do Growth OS and Sales Desk differ?',
-        'Growth OS 主要解决“去哪里找客户、谁值得开发、下一步怎样联系”；Sales Desk 主要解决“怎样理解客户、持续跟进、报价并交接订单”。确认后的客户连同背景和任务进入销售流程，而不是重复录入。',
-        'Growth OS focuses on finding accounts, qualifying opportunities and planning engagement. Sales Desk focuses on understanding customers, following up, quoting and handing over orders. Approved prospects carry their context and next actions into the sales process.'),
+        '它是面向制造业与外贸企业的 AI 工作台，核心应用叫 OPEN WORK。你在对话里交代任务，AI 去客户CRM、企业知识库、销售工作台等应用里查资料、写草稿；报价、对外触达这类动作先交给有权人批准。',
+        'It is an AI workspace for manufacturers and exporters, and its core app is OPEN WORK. You ask in a chat, and AI works across apps such as the Customer CRM, Knowledge Base and Sales Workbench to look things up and draft; quotes and outreach wait for an authorized person.'),
+      Q('主动获客与|销售工作台有什么区别？', 'How do Prospecting and the Sales Workbench differ?',
+        '主动获客主要解决“去哪里找客户、谁值得开发、下一步怎样联系”；销售工作台主要解决“怎样理解客户、持续跟进、报价并交接订单”。确认后的客户连同背景和任务进入销售流程，而不是重复录入。',
+        'Prospecting focuses on finding accounts, qualifying opportunities and planning engagement. The Sales Workbench focuses on understanding customers, following up, quoting and handing over orders. Approved prospects carry their context and next actions into the sales process.'),
       Q('它只适用于外贸部门吗？', 'Is it only for the export department?',
         '不是。核心从主动获客与外贸销售切入，同时覆盖 ERP、商城、采购库存、生产质检、财务履约、内容创作、知识、办公及管理协同。具体工作能否直接执行，取决于企业配置和已连接系统。',
         'No. Acquisition and trade sales are the starting point, while the scope also covers operations, commerce, purchasing, stock, production, quality, finance coordination, creative work, knowledge, office tasks and management. Executable work depends on configuration and connected systems.'),
@@ -650,11 +642,11 @@ export const POSTS = [
         '不是。这里指借鉴开场、节奏、镜头安排和转化逻辑，再用自己的产品与品牌制作原创内容。不直接复制原片、人脸、声音、音乐、标志或水印，也不保证生成内容一定成为爆款。',
         'No. It studies hooks, pacing, shot structure and calls to action, then develops original content for your product and brand. It does not copy footage, faces, voices, music, logos or watermarks, and it does not guarantee viral performance.'),
       Q('主动工作是不是让 AI 自己决定一切？', 'Does proactive work mean AI decides everything?',
-        '不是。主动工作指关注客户、订单、期限和异常，提出下一步建议，并在授权范围内推进任务。企业级主动工作、统一长期记忆和高级改进持续完善；关键判断仍由人负责。',
-        'No. It means tracking customers, orders, deadlines and exceptions, recommending next steps and progressing authorized work. Enterprise-wide proactive work, unified long-term memory and advanced improvement are still evolving, and people remain responsible for consequential judgment.'),
+        '不是。主动工作指关注客户、订单、期限和异常，提出下一步建议，并在授权范围内推进任务。企业级主动工作、统一长期记忆和高级改进开通到哪一步，演示时确认；关键判断仍由人负责。',
+        'No. It means tracking customers, orders, deadlines and exceptions, recommending next steps and progressing authorized work. How much enterprise-wide proactive work, unified long-term memory and advanced improvement you get is confirmed in the demo, and people remain responsible for consequential judgment.'),
       Q('所有渠道和全部功能|现在都能直接用吗？', 'Is every channel and feature available right away?',
-        '不能仅凭功能介绍这样判断。AI 团队协作、一键视频和爆款再创作现已可用，并在企业开通的服务、额度和权限内运行；部分应用已有基础，按企业配置启用；真实渠道、客户交接、价格、物流和财务需要逐项连接与验收；企业级主动工作和统一长期记忆仍在完善。',
-        'A capability description is not proof of availability. AI teamwork, one-click video and viral adaptation are available now, within the services, credits and access a company enables. Some applications have foundations and are enabled by configuration; live channels, handoffs, prices, logistics and finance are connected and validated one by one; enterprise-wide proactive work and unified long-term memory are still evolving.'),
+        '不能仅凭功能介绍这样判断。AI 团队协作、一键视频和爆款再创作现已可用，并在企业开通的服务、额度和权限内运行；部分应用已有基础，按企业配置启用；真实渠道、客户交接、价格、物流和财务要接入你公司的系统和账号，演示时逐项确认；企业级主动工作和统一长期记忆仍在完善。',
+        'A capability description is not proof of availability. AI teamwork, one-click video and viral adaptation are available now, within the services, credits and access a company enables. Some applications have foundations and are enabled by configuration; live channels, handoffs, prices, logistics and finance need your company’s systems and accounts, confirmed item by item in the demo; enterprise-wide proactive work and unified long-term memory are still evolving.'),
       Q('能自动签发证书、报关退税或代替专业判断吗？', 'Does it issue certificates or replace professional review?',
         '相关能力是资料准备、核对、跟进与流程协同，不等于官方签发、申报受理或获批。资金支付、合同法律审阅、贸易合规等重要事项，仍由相应机构或企业有权人员确认。',
         'The scope is preparation, checking, follow-up and workflow coordination — not official issuance, acceptance or approval. Payments, legal contract review and trade-compliance decisions remain with the relevant institutions or authorized people.'),
@@ -666,8 +658,8 @@ export const POSTS = [
     modified: '2026-09-17',
     cover: 'start-with-one-workflow',
     section: B('落地方法', 'Getting started'),
-    keywords: B(['AI 落地', '企业引入 AI', '业务流程', '数字员工', '审批'], ['AI adoption', 'first AI workflow', 'implementation steps', 'AI employees', 'human approval']),
-    title: B('从一条流程开始：AI 落地的五个步骤', 'Start with one workflow: five steps to put AI to work'),
+    keywords: B(['AI 落地', '企业引入 AI', '业务流程', '数字员工', '审批'], ['AI adoption', 'first AI workflow', 'implementation steps', 'Digital employees', 'human approval']),
+    title: B('从一条流程开始：AI 落地的五个步骤', 'Start with one workflow: 5 steps to adopt AI'),
     titleChunks: ['从一条流程', '开始：', 'AI ', '落地的', '五个步骤'],
     description: B('企业引入 AI 不必一次改造所有部门。先选一条最影响经营的流程，按五个步骤跑通并用真实样本验证，再扩大范围。', 'You don’t need to change every department at once. Pick the workflow that matters most, run it through five steps with real cases, then expand the scope.'),
     takeaways: [
@@ -690,6 +682,7 @@ export const POSTS = [
 <li><strong>出口单证：</strong>商业发票、装箱单、原产地证和 Form E 资料靠人工逐项核对。</li>
 <li><strong>营销素材：</strong>产品图片、详情页和多语言文案，总是赶不上上新的节奏。</li>
 </ul>
+<p>在 STARGO WORK 的核心应用 OPEN WORK 里，这五类起点分别对应主动获客、销售工作台、报价与 PI、企业ERP 与出口单证、内容增长。先开一条，其余以后再开。</p>
 <h3>五个步骤分别做什么？</h3>
 ${chartStart('zh', 1)}
 <p><strong>第一步，选一条业务。</strong>写清要解决的问题、涉及哪些人，以及怎样才算做成，比如回复是否更及时、报价是否有据可查。</p>
@@ -698,11 +691,11 @@ ${chartStart('zh', 1)}
 <p><strong>第四步，安排员工与审批。</strong>明确由哪些数字员工执行、谁来确认、遇到异常由谁接管，并设好预算和可执行动作的边界。</p>
 <p><strong>第五步，验证真实成果。</strong>用真实样本核对结果：不是页面能打开，也不是 AI 说一句“已完成”，而是业务结果确实达到目标。确认有效，再扩大范围。</p>
 <h3>人在这条流程里|负责什么？</h3>
-<p>从第一条流程开始就要设好审批。AI 负责准备资料、形成草稿和提出建议；报价、对外触达、重要承诺和付款等关键动作，由企业有权人员决定。批准、发送和结果核对分开处理，每一步都留有记录。这就是 STARGO WORK 的原则：把工作交给 AI，把决定权留在企业。</p>
+<p>从第一条流程开始就要设好审批。AI 负责准备资料、形成草稿和提出建议；报价、对外触达、重要承诺和付款等关键动作，由企业有权人员决定。在 OPEN WORK 里，AI 起草的回复、报价和开发信先等你批准，再由你决定是否发出。批准、发送和结果核对分开处理，每一步都留有记录。这就是 STARGO WORK 的原则：把工作交给 AI，把决定权留在企业。</p>
 <h3>跑通之后，怎样扩大范围？</h3>
-<p>第一条流程验证有效后，再按企业配置与交付范围，逐步开放更多业务板块和数字岗位。各项能力的开放条件不同：Growth OS 的真实数据与客户触达按授权接入；Sales Desk 的渠道收发和业务交接逐项连接、验证；ERP、履约与财务协同按企业已接入的系统分阶段交付。</p>
-<p>实施步骤见<a href="enterprise.html">企业管理与交付</a>，各业务板块见<a href="capabilities.html#atlas">完整能力目录</a>，方案见<a href="pricing.html">定价</a>。</p>
-<p class="sgp-cta">想先改善哪条流程？<a href="contact.html">预约企业演示</a>，我们一起把它拆成五步。</p>`,
+<p>第一条流程验证有效后，再按企业配置与交付范围，逐步开放更多应用和数字员工。真实数据、渠道收发、对外触达和 ERP、财务这些动作，要接入你公司的系统和账号；每一项开通到哪一步，演示时逐项确认，各应用的现状见<a href="capabilities.html#atlas">产品页的功能目录</a>。</p>
+<p>实施步骤见<a href="enterprise.html">安全与接入</a>，各个应用见<a href="capabilities.html#atlas">完整功能目录</a>，方案见<a href="pricing.html">定价</a>。</p>
+<p class="sgp-cta">想先改善哪条流程？<a href="contact.html">预约演示</a>，我们一起把它拆成五步。</p>`,
     `
 <p>The safest way to bring AI into a company is to pick the one workflow that matters most, run it through five steps and prove it with real cases — then expand to other departments.</p>
 <h3>Why not change every department at once?</h3>
@@ -717,19 +710,20 @@ ${chartStart('zh', 1)}
 <li><strong>Export documents:</strong> commercial invoices, packing lists, certificates of origin and Form E materials are checked line by line by hand.</li>
 <li><strong>Marketing assets:</strong> product images, detail pages and multilingual copy never keep up with new launches.</li>
 </ul>
+<p>In OPEN WORK, the core app of STARGO WORK, these five starting points map to Prospecting, the Sales Workbench, quotes and PI, the ERP and export documents, and content. Open one first; the rest can wait.</p>
 <h3>What happens in each of the five steps?</h3>
 ${chartStart('en', 1)}
 <p><strong>1. Choose a workflow.</strong> Write down the problem, the people involved and what success looks like — for example, faster replies or quotes that can be traced back to approved prices.</p>
 <p><strong>2. Prepare the context.</strong> Bring in only the products, customers, knowledge and business rules this workflow needs. Uploaded material is reviewed first, before it counts as approved company information.</p>
 <p><strong>3. Connect your accounts.</strong> Connect existing email, drives, CRM and ERP through company authorization. A full replacement should not be assumed; what is kept, connected or adjusted is decided system by system.</p>
-<p><strong>4. Assign roles and approvals.</strong> Decide which AI employees do the work, who approves, who takes over when something goes wrong, and which budgets and actions are allowed.</p>
+<p><strong>4. Assign roles and approvals.</strong> Decide which digital employees do the work, who approves, who takes over when something goes wrong, and which budgets and actions are allowed.</p>
 <p><strong>5. Validate the result.</strong> Check real cases. A page that opens, or an AI message saying “done”, is not the test; the business result is. Expand only once it holds.</p>
 <h3>What do people do in the workflow?</h3>
-<p>Approvals belong in the first workflow, not after scale. AI organizes information, drafts and recommends next steps; authorized people decide quotations, outreach, important commitments and payments. Approval, sending and checking the outcome are separate steps, each with a record. That is the STARGO WORK principle: delegate the work, keep the authority.</p>
+<p>Approvals belong in the first workflow, not after scale. AI organizes information, drafts and recommends next steps; authorized people decide quotations, outreach, important commitments and payments. In OPEN WORK, the replies, quotes and outreach AI drafts wait for your approval before anything is sent. Approval, sending and checking the outcome are separate steps, each with a record. That is the STARGO WORK principle: delegate the work, keep the authority.</p>
 <h3>How do you expand after the first workflow?</h3>
-<p>Once the first workflow proves useful, more business areas and AI roles open in phases, according to configuration and the agreed delivery scope. Conditions differ by capability: Growth OS connects live data and outreach by authorization; Sales Desk connects and validates channel messaging and business handoffs one by one; ERP, fulfillment and finance coordination are delivered in stages through the systems a company connects.</p>
-<p>See <a href="enterprise.html">Enterprise control and delivery</a> for the implementation steps, the <a href="capabilities.html#atlas">full capability catalogue</a> for every business area, and <a href="pricing.html">Pricing</a> for plans.</p>
-<p class="sgp-cta">Which workflow would you fix first? <a href="contact.html">Request a demo</a> and we will break it into five steps with you.</p>`),
+<p>Once the first workflow proves useful, more apps and digital employees are switched on, according to configuration and the agreed delivery scope. Live data, channel messaging, outreach, ERP and finance need your company’s systems and accounts; how far each one goes is confirmed item by item in the demo, and the status of every app is in <a href="capabilities.html#atlas">the product catalog</a>.</p>
+<p>See <a href="enterprise.html">Security &amp; setup</a> for the implementation steps, the <a href="capabilities.html#atlas">full catalogue</a> for every app, and <a href="pricing.html">Pricing</a> for plans.</p>
+<p class="sgp-cta">Which workflow would you fix first? <a href="contact.html">Book a demo</a> and we will break it into five steps with you.</p>`),
     faq: [
       Q('企业应该从哪里开始？', 'Where should an enterprise start?',
         '先选一条最重要的业务流程，准备产品、客户、知识和规则，连接授权账号，安排数字员工与审批，再用真实样本验证成果。跑通后再扩大范围，而不是第一天就改造全部部门。',
@@ -739,10 +733,10 @@ ${chartStart('en', 1)}
         'A complete replacement should not be assumed. STARGO WORK aims to connect existing accounts and information in one workspace. Which systems are retained, integrated or adjusted depends on the enterprise’s software and access permissions.'),
       Q('第一条流程需要准备什么？', 'What does the first workflow need?',
         '这条流程涉及的产品、客户、知识和业务规则，以及企业授权的业务账号；同时要明确由哪些数字员工执行、谁来审批、出现异常时谁来接管。',
-        'The products, customers, knowledge and business rules that workflow touches, plus the business accounts the company authorizes. It also needs clear roles: which AI employees do the work, who approves and who takes over when something goes wrong.'),
+        'The products, customers, knowledge and business rules that workflow touches, plus the business accounts the company authorizes. It also needs clear roles: which digital employees do the work, who approves and who takes over when something goes wrong.'),
       Q('跑通第一条流程后，怎样扩大范围？', 'How does the scope grow after that?',
-        '用真实样本确认有效后，按企业配置与交付范围逐步开放更多业务板块和数字岗位。各项能力的开放条件不同，需要逐项确认。',
-        'Once real cases confirm the first workflow works, more business areas and AI roles open in phases according to configuration and the agreed delivery scope. Each capability has its own conditions, so each is confirmed separately.'),
+        '用真实样本确认有效后，按企业配置与交付范围逐步开放更多应用和数字员工。各项能力的接入条件不同，需要逐项确认。',
+        'Once real cases confirm the first workflow works, more apps and digital employees are switched on according to configuration and the agreed delivery scope. Each capability has its own conditions, so each is confirmed separately.'),
     ],
   },
   {
@@ -751,75 +745,77 @@ ${chartStart('en', 1)}
     modified: '2026-09-17',
     cover: 'from-inquiry-to-quote',
     section: B('销售与报价', 'Sales and quoting'),
-    keywords: B(['Sales Desk', '询盘处理', '外贸报价', 'PI', '报价审批'], ['Sales Desk', 'inquiry handling', 'export quotation', 'proforma invoice', 'quote approval']),
-    mentions: ['Sales Desk', 'Growth OS'],
-    title: B('Sales Desk：从询盘到批准的报价与 PI', 'Sales Desk: from inquiry to an approved quote and PI'),
-    titleChunks: ['Sales ', 'Desk：', '从询盘', '到批准的', '报价与 PI'],
-    description: B('Sales Desk 把需求理解、客户记录、产品匹配、报价草稿、审批和 PI 放进同一条销售链。批准不等于发送，关键价格由有权人决定。', 'How Sales Desk takes an inquiry through customer context, product fit, a policy-based quote, approval and PI — and why approving a quote is not sending it.'),
+    keywords: B(['销售工作台', '询盘处理', '外贸报价', 'PI', '报价审批'], ['Sales Workbench', 'inquiry handling', 'export quotation', 'proforma invoice', 'quote approval']),
+    mentions: ['OPEN WORK'],
+    title: B('销售工作台：从询盘到批准的报价与 PI', 'From inquiry to quote and PI with OPEN WORK'),
+    titleChunks: ['销售工作台：', '从询盘', '到批准的', '报价与 PI'],
+    description: B('销售工作台把需求理解、客户记录、产品匹配、报价草稿、审批和 PI 放进同一条销售链。批准不等于发送，关键价格由有权人决定。', 'How OPEN WORK takes an inquiry through customer context, product fit, a policy-based quote, approval and PI — and why approving a quote is not sending it.'),
     takeaways: [
       B('询盘、客户记录、产品匹配、报价和 PI 在同一条销售链上推进。', 'Inquiries, customer records, product fit, quotes and PIs move along one sales chain.'),
       B('报价按企业确认的价格表、折扣权限和利润边界起草，AI 不自行编价。', 'Quotes follow approved price lists, discount permissions and margin guardrails; AI never invents prices.'),
       B('批准与发送分别受控：已批准不等于已发送，已发送不等于已办完。', 'Approval and sending are separate controls: approved is not sent, and sent is not done.'),
-      B('渠道收发与业务交接逐项连接、验证；真实价格与单证按企业系统接通。', 'Channels and handoffs are validated one by one; live prices and documents need connected systems.'),
+      B('真实价格、渠道收发和单证要接入你公司的系统和账号，演示时逐项确认。', 'Live prices, channel messaging and documents need your company’s systems and accounts; each is confirmed in the demo.'),
     ],
     body: B(`
-<p>Sales Desk 把一封询盘推进成经过批准的报价与 PI：先读懂需求、对上客户和产品，再按企业确认的价格规则起草报价，交有权人批准；批准之后要不要发出、何时发出，是另一个单独受控的动作。</p>
+<p>在 OPEN WORK 的销售工作台里，一封询盘会被推进成经过批准的报价与 PI：先读懂需求、对上客户和产品，再按企业确认的价格规则起草报价，交有权人批准；批准之后要不要发出、何时发出，是另一个单独受控的动作。</p>
 <h3>为什么报价|总是从电子表格开始？</h3>
 <p>一封询盘进来，业务员要先判断客户是谁、来自哪个市场、想买什么；再翻产品文件找参数，打开上一次的报价表对照价格，找老板确认折扣和利润，最后手工做成报价单。</p>
 <p>每一步都在不同的窗口里，判断和确认的过程很少留下记录；客户改了数量，旧版本还可能被误发出去。</p>
-<h3>询盘进来后，Sales Desk 先做什么？</h3>
+<h3>询盘进来后，销售工作台先做什么？</h3>
 <ul>
 <li><strong>统一入口：</strong>企业邮件、网站询盘、WhatsApp、阿里国际站等渠道的消息集中处理，区分新询盘、历史消息、状态回执、垃圾信息和异常线索。</li>
 <li><strong>读懂需求：</strong>识别产品、规格、数量、市场、预算和交期，整理客户发来的目录、表格、图片和图纸，并提示缺失的信息。</li>
-<li><strong>客户全景：</strong>公司、联系人、来源、负责人、商机阶段、沟通时间线、报价和订单记录放在一起，换人接手也有完整背景。</li>
+<li><strong>客户档案：</strong>公司、联系人、来源、负责人、商机阶段、沟通时间线、报价和订单记录放在一起，换人接手也有完整背景。</li>
 <li><strong>有依据的回复：</strong>查询产品参数、价格政策、MOQ、包装、认证、交期和贸易条款，辅助产品匹配、翻译和多语言回复；缺少真实资料时明确提示，不编造。</li>
 </ul>
-<p>Growth OS 确认过的客户也从这里接续，来源、背调和下一步任务一并带入，不必重复建档。</p>
+<p>主动获客里确认过的客户也从这里接续，来源、背调和下一步任务一并带入，不必重复建档。</p>
 <h3>报价草稿从哪里来？</h3>
 <ol>
 <li><strong>按规则报价：</strong>按产品配置、数量、包装、币种和贸易条款形成草稿，关联价格表、历史报价、折扣权限和利润边界。价格来自企业确认的数据，AI 不自行编价。</li>
 <li><strong>由有权人批准：</strong>价格、折扣、利润和重要承诺交给有权人员确认，审批时能看到这份报价的依据和来龙去脉。</li>
 <li><strong>保留正式版本：</strong>批准后的报价转为 PI，保留条款、金额、付款节点和批准版本；客户修改数量或配置时，变更有记录，降低错发旧版本的风险。</li>
 </ol>
+<p>在 OPEN WORK 里，可以直接说“分析这封询盘并回复”或点“起草报价单 / PI”：AI 先查客户CRM 和企业知识库，再按价格表算出报价草稿；单价低于标准价时，自动交销售经理审批，批准前不会发给客户。</p>
 <h3>批准了，为什么|还不算“发出去”？</h3>
 <p>在 STARGO WORK 里，报价批准与实际发送分别受控。批准，说明价格和条款已由有权人确认；发送，是另一个需要授权的对外动作；客户是否收到、后续是否成交，还要继续核对。</p>
 <p>已批准不等于已发送，已发送也不等于已收到或已办完。三种状态分开记录，管理者看到的就是真实进度。</p>
 <h3>合同、单证和订单怎样接上？</h3>
 <p>合同模板、条款核对与版本管理在同一条链上协同，电子签和法律审阅按企业流程衔接。商业发票、装箱单、原产地证与 Form E 资料、提单等外贸单证可以准备、核对和归档，正式签发由相应机构完成。确认的订单再交接给履约、售后和复购跟进。</p>
 <h3>现在能用到什么程度？</h3>
-<p>Sales Desk 业务工作台已经具备；各渠道的真实收发与业务交接需逐项连接、验证。报价与 PI 持续完善，真实价格、合同、签章与单证按企业系统接通。详见能力目录中的<a href="capabilities.html#g04">询盘与多渠道沟通</a>、<a href="capabilities.html#g05">CRM 与客户全景</a>和<a href="capabilities.html#g07">报价、PI 与商业文件</a>。</p>
-<p class="sgp-cta">想看一封真实询盘怎样走到 PI？<a href="contact.html">预约企业演示</a>。</p>`,
+<p>销售工作台已经具备。各渠道的真实收发、真实价格、合同、签章与单证，要接入你公司的系统和账号，演示时逐项确认。详见功能目录中的<a href="capabilities.html#g04">询盘与多渠道沟通</a>、<a href="capabilities.html#g05">客户CRM 与客户档案</a>和<a href="capabilities.html#g07">报价、PI 与商业文件</a>。</p>
+<p class="sgp-cta">想看一封真实询盘怎样走到 PI？<a href="contact.html">预约演示</a>。</p>`,
     `
-<p>Sales Desk carries an inquiry through to an approved quote and PI: it reads the request, matches it to the customer and your products, drafts the quote from company-approved pricing and routes it to an authorized person. Sending it afterwards is a separate, controlled action.</p>
+<p>In OPEN WORK, the Sales Workbench carries an inquiry through to an approved quote and PI: it reads the request, matches it to the customer and your products, drafts the quote from company-approved pricing and routes it to an authorized person. Sending it afterwards is a separate, controlled action.</p>
 <h3>Why does quoting still start in a spreadsheet?</h3>
 <p>When an inquiry arrives, a salesperson first works out who the customer is, which market they are in and what they want. Then come the product files for specifications, last time’s price sheet, a call to the boss about discount and margin, and a quotation built by hand.</p>
 <p>Every step sits in a different window, few of the judgements are recorded, and when the customer changes a quantity, an outdated version can still go out.</p>
-<h3>What does Sales Desk do when an inquiry arrives?</h3>
+<h3>What does the Sales Workbench do when an inquiry arrives?</h3>
 <ul>
 <li><strong>One intake:</strong> enterprise email, website inquiries, WhatsApp and Alibaba.com messages are organized in one place, separating new inquiries from history, delivery notices, spam and unusual leads.</li>
 <li><strong>The request, understood:</strong> products, specifications, quantities, markets, budgets and deadlines are extracted; catalogs, spreadsheets, images and drawings are organized; missing information is flagged.</li>
 <li><strong>A complete customer view:</strong> company, contacts, source, owner, opportunity stage, conversation timeline, quotes and orders sit together, so whoever picks up the account has the full context.</li>
 <li><strong>Grounded replies:</strong> specifications, pricing policy, MOQ, packaging, certifications, lead times and trade terms support product matching, translation and multilingual replies. When a fact is not on file, the draft says so.</li>
 </ul>
-<p>Prospects approved in Growth OS continue here too, with their source, research and next actions attached, so nobody re-enters them.</p>
+<p>Prospects approved in Prospecting continue here too, with their source, research and next actions attached, so nobody re-enters them.</p>
 <h3>Where does the quote draft come from?</h3>
 <ol>
 <li><strong>Draft by policy:</strong> configuration, quantity, packaging, currency and trade terms are combined with price lists, quote history, discount permissions and margin guardrails. Prices come from company-approved data; AI does not invent them.</li>
 <li><strong>Approve by authority:</strong> price, discount, margin and important commitments go to the person authorized to confirm them, together with the reasoning behind the numbers.</li>
 <li><strong>Keep the approved version:</strong> the approved quote becomes a PI with its terms, amounts, payment milestones and an approved snapshot. When the customer changes quantity or configuration, the change is recorded, which reduces the risk of sending an obsolete version.</li>
 </ol>
+<p>In OPEN WORK you can simply say “analyze this inquiry and reply” or pick “draft a quote / PI”: AI checks the Customer CRM and the Knowledge Base, then prices the draft from the price list. When the unit price is below the standard price it goes to the sales manager for approval, and nothing reaches the customer before that.</p>
 <h3>If the quote is approved, why isn’t it sent?</h3>
 <p>In STARGO WORK, approving a quote and sending it are separate controls. Approval means an authorized person has confirmed the price and terms. Sending is a second, outbound action that needs its own authorization. Whether the customer received it, and what happened next, is checked after that.</p>
 <p>Approved is not sent, and sent is not received or done. The three states are recorded separately, so managers see real progress.</p>
 <h3>How do contracts, documents and orders follow?</h3>
 <p>Contract templates, clause checks and versions are coordinated on the same chain; e-signatures and legal review connect through the company’s own processes. Commercial invoices, packing lists, certificates of origin and Form E materials, and bills of lading can be prepared, checked and filed, while official issuance stays with the authorized bodies. Confirmed orders are then handed to fulfillment, support and repeat-sales follow-up.</p>
 <h3>What is available today?</h3>
-<p>The Sales Desk workspace exists; live channel messaging and business handoffs are connected and validated one by one. Quotes and PI continue to improve, and live prices, contracts, signatures and documents depend on the enterprise systems that are connected. See <a href="capabilities.html#g04">Inquiries and customer conversations</a>, <a href="capabilities.html#g05">CRM and customer context</a> and <a href="capabilities.html#g07">Quotations, PI and commercial records</a> in the capability catalogue.</p>
-<p class="sgp-cta">Want to see a real inquiry become a PI? <a href="contact.html">Request a demo</a>.</p>`),
+<p>The Sales Workbench exists. Live channel messaging, live prices, contracts, signatures and documents need your company’s systems and accounts, and each is confirmed in the demo. See <a href="capabilities.html#g04">Inquiries and customer conversations</a>, <a href="capabilities.html#g05">CRM and customer context</a> and <a href="capabilities.html#g07">Quotations, PI and commercial records</a> in the catalogue.</p>
+<p class="sgp-cta">Want to see a real inquiry become a PI? <a href="contact.html">Book a demo</a>.</p>`),
     faq: [
-      Q('Growth OS 与 Sales Desk 有什么区别？', 'How do Growth OS and Sales Desk differ?',
-        'Growth OS 主要解决“去哪里找客户、谁值得开发、下一步怎样联系”；Sales Desk 主要解决“怎样理解客户、持续跟进、报价并交接订单”。确认后的客户连同背景和任务进入销售流程，而不是重复录入。',
-        'Growth OS focuses on finding accounts, qualifying opportunities and planning engagement. Sales Desk focuses on understanding customers, following up, quoting and handing over orders. Approved prospects carry their context and next actions into the sales process.'),
+      Q('主动获客与|销售工作台有什么区别？', 'How do Prospecting and the Sales Workbench differ?',
+        '主动获客主要解决“去哪里找客户、谁值得开发、下一步怎样联系”；销售工作台主要解决“怎样理解客户、持续跟进、报价并交接订单”。确认后的客户连同背景和任务进入销售流程，而不是重复录入。',
+        'Prospecting focuses on finding accounts, qualifying opportunities and planning engagement. The Sales Workbench focuses on understanding customers, following up, quoting and handing over orders. Approved prospects carry their context and next actions into the sales process.'),
       Q('报价里的价格从哪里来？', 'Where do the prices in a quote come from?',
         '来自企业确认的价格表、历史报价、折扣权限和利润边界。AI 按这些规则起草报价，不自行编价；缺少真实资料时会明确提示。',
         'From company-approved price lists, quote history, discount permissions and margin guardrails. AI drafts within those rules and does not invent prices; when a fact is missing, it says so.'),
@@ -827,8 +823,8 @@ ${chartStart('en', 1)}
         '批准与发送是两个分开受控的动作。批准说明价格和条款已由有权人确认；发送是另一个需要授权的对外动作，发出后还要核对客户是否收到。',
         'Approval and sending are separately controlled. Approval confirms the price and terms; sending is a further outbound action that needs its own authorization, and receipt is checked afterwards.'),
       Q('所有渠道现在都能直接接通吗？', 'Are all channels connected right away?',
-        'Sales Desk 业务工作台已经具备；企业邮件、WhatsApp、阿里国际站和网站询盘等渠道的真实收发与业务交接，需要逐项连接和验证。',
-        'The Sales Desk workspace exists. Live messaging and business handoffs for enterprise email, WhatsApp, Alibaba.com and website inquiries are connected and validated one by one.'),
+        '销售工作台已经具备；企业邮件、WhatsApp、阿里国际站和网站询盘等渠道的真实收发与业务交接，要接入你公司的账号，演示时逐项确认。',
+        'The Sales Workbench exists. Live messaging and business handoffs for enterprise email, WhatsApp, Alibaba.com and website inquiries need your company’s accounts connected, and each is confirmed in the demo.'),
     ],
   },
   {
@@ -837,10 +833,10 @@ ${chartStart('en', 1)}
     modified: '2026-09-17',
     cover: 'approval-gates-for-ai-in-trade',
     section: B('管理与控制', 'Management and control'),
-    keywords: B(['AI 审批', '人工确认', '老板驾驶舱', '预算控制', '人工接管'], ['AI approvals', 'human review', 'owner cockpit', 'budget limits', 'human takeover']),
-    title: B('谁来做决定：审批、记录、预算与接管', 'Who decides? Approvals, records, budgets and human takeover'),
+    keywords: B(['AI 审批', '人工确认', '老板看板', '预算控制', '人工接管'], ['AI approvals', 'human review', 'owner dashboard', 'budget limits', 'human takeover']),
+    title: B('谁来做决定：审批、记录、预算与接管', 'Who decides? Approvals, budgets, takeover'),
     titleChunks: ['谁来做决定：', '审批、', '记录、', '预算与接管'],
-    description: B('AI 可以准备报价、消息和文件，但关键动作由有权人员决定。本文说明哪些动作要审批、审批时看什么，以及预算、暂停接管和老板驾驶舱。', 'AI prepares quotes, messages and documents; authorized people make the key calls. What needs approval, what approvers see and how owners stay in control.'),
+    description: B('AI 可以准备报价、消息和文件，但关键动作由有权人员决定。本文说明哪些动作要审批、审批时看什么，以及预算、暂停接管和老板看板。', 'AI prepares quotes, messages and documents; authorized people make the key calls. What needs approval, what approvers see and how owners stay in control.'),
     takeaways: [
       B('AI 准备资料和草稿，报价、触达、承诺和付款由有权人员审批。', 'AI prepares; authorized people approve quotes, outreach, commitments and payments.'),
       B('审批时看得到依据、内容、费用和边界，而不是一个孤立的按钮。', 'Approvers see the grounds, content, cost and limits — not an isolated button.'),
@@ -848,7 +844,7 @@ ${chartStart('en', 1)}
       B('预算与协作轮次有上限，任务随时可暂停、由人接管。', 'Budgets and collaboration rounds are capped; any task can be paused or taken over.'),
     ],
     body: B(`
-<p>在 STARGO WORK 里，关键决定始终由企业有权人员做出：AI 准备资料、草稿和建议，报价、对外触达、付款等动作按企业规则审批；动作、批准、成本和结果都有记录，工作可以随时暂停或由人接管。</p>
+<p>在 STARGO WORK 的核心应用 OPEN WORK 里，关键决定始终由企业有权人员做出：AI 准备资料、草稿和建议，报价、对外触达、付款等动作按企业规则审批；动作、批准、成本和结果都有记录，工作可以随时暂停或由人接管。</p>
 <h3>为什么 AI 能做事之后，管理更重要？</h3>
 <p>AI 只回答问题时，最坏的结果是一个错误的答案。当 AI 开始起草报价、准备 PI、回复客户、整理单证，权限、审批、记录和预算就不再是附加功能，而是产品本身。</p>
 <p>老板要看到的不只是“AI 很忙”，而是谁在做什么、钱花在哪里、客户推进到哪一步、哪里需要自己决定。</p>
@@ -872,14 +868,14 @@ ${chartStart('en', 1)}
 <li><strong>出错即停：</strong>执行失败时报告并停止，或交由人工处理，失败不藏起来。</li>
 <li><strong>暂停与接管：</strong>任何时候都可以暂停任务、由人接管，处理完再继续。</li>
 </ul>
-<h3>老板驾驶舱里看什么？</h3>
-<p>老板驾驶舱汇总客户、商机、报价、订单、跟进、待审批事项和异常；任务总控显示目标、任务、执行步骤、负责人、失败原因与结果；控制中心统一管理数据同步、应用和系统运行状态。所有指标只来自已接入的数据，缺失时明确显示，不用估算填满。</p>
+<h3>老板看板里看什么？</h3>
+<p>老板看板汇总客户、商机、报价、订单、跟进、待审批事项和异常；任务总控显示目标、任务、执行步骤、负责人、失败原因与结果；控制中心统一管理数据同步、应用和系统运行状态。所有指标只来自已接入的数据，缺失时明确显示，不用估算填满。</p>
 ${chartOwner('zh', 1)}
 <h3>现在能用到什么程度？</h3>
-<p>管理与控制已有基础；看板数据、自动动作和高级分析按真实接入验收。实施步骤与管理边界见<a href="enterprise.html">企业管理与交付</a>，相关能力见<a href="capabilities.html#g13">权限、审批与经营控制</a>和<a href="capabilities.html#g01">工作空间与经营总览</a>。</p>
-<p class="sgp-cta">想先确定哪些动作必须由你批准？<a href="contact.html">预约企业演示</a>。</p>`,
+<p>管理与控制已有基础；看板数据、自动动作和高级分析按真实接入验收。实施步骤与管理边界见<a href="enterprise.html">安全与接入</a>，相关能力见<a href="capabilities.html#g13">权限、审批与经营控制</a>和<a href="capabilities.html#g01">工作空间与经营总览</a>。</p>
+<p class="sgp-cta">想先确定哪些动作必须由你批准？<a href="contact.html">预约演示</a>。</p>`,
     `
-<p>In STARGO WORK, authorized people make the consequential decisions. AI prepares the information, drafts and recommendations; quotes, outreach and payments follow the company’s approval rules; actions, approvals, costs and results are recorded; and work can be paused or taken over at any time.</p>
+<p>In OPEN WORK, the core app of STARGO WORK, authorized people make the consequential decisions. AI prepares the information, drafts and recommendations; quotes, outreach and payments follow the company’s approval rules; actions, approvals, costs and results are recorded; and work can be paused or taken over at any time.</p>
 <h3>Why does control matter more once AI can act?</h3>
 <p>When AI only answers questions, the worst outcome is a wrong answer. Once it drafts quotes, prepares PIs, replies to customers and organizes trade documents, permissions, approvals, records and budgets stop being extras and become part of the product.</p>
 <p>An owner needs more than busy AI: who is doing what, where the money goes, how far each customer has progressed and which decisions are waiting for them.</p>
@@ -903,23 +899,23 @@ ${chartOwner('zh', 1)}
 <li><strong>Stop on failure:</strong> failed work is reported and stopped, or handed to a person. Failures are not hidden.</li>
 <li><strong>Pause and takeover:</strong> any task can be paused and taken over by a person, then resumed.</li>
 </ul>
-<h3>What does the owner’s cockpit show?</h3>
-<p>The owner’s cockpit summarizes customers, opportunities, quotes, orders, follow-ups, pending approvals and exceptions. The task overview shows goals, tasks, steps, owners, failure reasons and results. The control center brings data synchronization, applications and system status together. Every metric comes from connected data only; where data is missing, the dashboard says so instead of estimating.</p>
+<h3>What does the Owner Dashboard show?</h3>
+<p>The Owner Dashboard summarizes customers, opportunities, quotes, orders, follow-ups, pending approvals and exceptions. The task overview shows goals, tasks, steps, owners, failure reasons and results. The control center brings data synchronization, applications and system status together. Every metric comes from connected data only; where data is missing, the dashboard says so instead of estimating.</p>
 ${chartOwner('en', 1)}
 <h3>What is available today?</h3>
-<p>Management and control foundations exist; dashboard data, automated actions and advanced analytics are accepted against verified data connections. See <a href="enterprise.html">Enterprise control and delivery</a> for implementation steps and limits, and <a href="capabilities.html#g13">Permissions, approvals and control</a> and <a href="capabilities.html#g01">Workspace and business overview</a> in the catalogue.</p>
-<p class="sgp-cta">Want to decide which actions must come to you? <a href="contact.html">Request a demo</a>.</p>`),
+<p>Management and control foundations exist; dashboard data, automated actions and advanced analytics are accepted against verified data connections. See <a href="enterprise.html">Security &amp; setup</a> for implementation steps and limits, and <a href="capabilities.html#g13">Permissions, approvals and control</a> and <a href="capabilities.html#g01">Workspace and business overview</a> in the catalogue.</p>
+<p class="sgp-cta">Want to decide which actions must come to you? <a href="contact.html">Book a demo</a>.</p>`),
     faq: [
       Q('报价、发消息和付款等|关键动作谁决定？', 'Who controls consequential actions?',
         '由企业有权人员决定。AI 可以准备资料、形成草稿和提出建议；报价、对外触达、重要承诺、正式申报和资金支付等事项按企业规则审批。批准、发送和实际结果核对分别处理。',
         'Authorized people do. AI can organize information, prepare drafts and recommend next steps. Quotations, outreach, important commitments, official submissions and payments remain subject to enterprise approval rules. Approval, delivery and outcome checks are distinct steps.'),
-      Q('老板驾驶舱里的数字从哪里来？', 'Where do the cockpit’s numbers come from?',
+      Q('老板看板里的数字从哪里来？', 'Where do the dashboard’s numbers come from?',
         '只来自已经接入的业务数据。缺少数据的指标会明确显示为缺失，不用估算填满；看板数据和自动动作按真实接入验收。',
         'Only from business data that has been connected. Missing metrics are shown as missing rather than estimated, and dashboard data and automated actions are accepted against real connections.'),
       Q('AI 执行出错时会怎样？', 'What happens when AI work fails?',
         '失败时报告并停止，或交由人工处理；失败的证据会保留下来，方便修复或复核，不会被当作已完成。',
         'It is reported and stopped, or handed to a person. The evidence is kept for recovery or review, and the task is never marked as done.'),
-      Q('多个 AI 员工共享任务信息，会不会越权？', 'Can AI employees exceed their permissions by sharing task information?',
+      Q('多个数字员工共享任务信息，会不会越权？', 'Can digital employees exceed their permissions by sharing task information?',
         '不会因此获得额外权限。共享任务上下文不等于共享全部企业数据，也不会让一位员工获得另一位员工的权限；对外动作仍需有权人员审批。',
         'No. Shared task context does not open all company data or transfer another employee’s permissions, and external actions still need an authorized approval.'),
     ],
@@ -930,19 +926,19 @@ ${chartOwner('en', 1)}
     modified: '2026-09-17',
     cover: 'ai-operating-system-for-global-trade',
     section: B('产品解读', 'Product guides'),
-    keywords: B(['AI 企业操作系统', '网页桌面', '制造业 AI', '外贸 AI', 'Growth OS'], ['AI operating system', 'browser-based desktop', 'AI for manufacturers', 'AI for exporters', 'Growth OS']),
-    mentions: ['Growth OS', 'Sales Desk'],
-    title: B('什么是网页桌面级 AI 企业操作系统', 'What is a browser-based AI operating system for manufacturers?'),
-    titleChunks: ['什么是', '网页桌面级 ', 'AI ', '企业', '操作系统'],
-    description: B('STARGO WORK 面向制造业与外贸企业。本文说明网页桌面级 AI 企业操作系统和聊天工具的区别、两大核心引擎，以及从获客到复购的业务循环。', 'STARGO WORK is a browser-based desktop AI operating system for manufacturers and exporters: how it differs from chat, its two engines and the business loop.'),
+    keywords: B(['AI 工作台', 'OPEN WORK', '外贸 AI', '制造业 AI', '数字员工'], ['AI workspace', 'OPEN WORK', 'AI for exporters', 'AI for manufacturers', 'digital employees']),
+    mentions: ['OPEN WORK'],
+    title: B('什么是外贸 AI 工作台', 'What is an AI workspace for exporters?'),
+    titleChunks: ['什么是', '外贸 ', 'AI ', '工作台'],
+    description: B('STARGO WORK 是外贸工厂的 AI 工作台，核心应用 OPEN WORK 像聊天一样用。本文说明它和聊天工具的区别、15 个应用与业务主线。', 'STARGO WORK is an AI workspace for export manufacturers; OPEN WORK is its core app. How it differs from chat tools, what its 15 apps do and how work flows.'),
     takeaways: [
-      B('在浏览器里打开的企业工作桌面，连接应用、文件、客户、知识与数字员工。', 'A company workspace in the browser that connects apps, files, customers, knowledge and AI employees.'),
-      B('两大核心引擎：Growth OS 主动获客，Sales Desk 外贸销售。', 'Two core engines: Growth OS for acquisition and Sales Desk for trade sales.'),
-      B('业务循环：主动获客 → 外贸成交 → 企业履约 → 经营协同 → 复购增长。', 'The loop: acquisition → trade sales → fulfillment → business coordination → repeat growth.'),
+      B('在对话里交代任务，AI 去客户CRM、企业知识库、企业ERP 等 15 个应用里干活。', 'Ask in a chat, and AI works across 15 apps such as the Customer CRM, Knowledge Base and ERP.'),
+      B('主线是主动获客和销售工作台：先找到客户，再把沟通、报价和 PI 推进到订单。', 'The main line is Prospecting and the Sales Workbench: find customers, then carry quotes and PIs to orders.'),
+      B('业务主线：主动获客 → 外贸成交 → 企业履约 → 经营协同 → 复购增长。', 'The journey: acquisition → trade sales → fulfillment → business coordination → repeat growth.'),
       B('关键决定由人批准；各项能力按企业配置与交付范围开放。', 'People approve key decisions; capabilities open by configuration and agreed scope.'),
     ],
     body: B(`
-<p>网页桌面级 AI 企业操作系统，是在浏览器里打开的一张企业工作桌面：业务应用、文件、客户、知识和数字员工都在里面，围绕同一条业务流程协同工作。STARGO WORK 面向制造业与外贸企业，以 Growth OS 主动获客和 Sales Desk 外贸销售为两大核心引擎。</p>
+<p>外贸 AI 工作台，是把一个对话框接到企业全部业务应用上的工作方式：你在对话里交代任务，AI 去客户CRM、企业知识库、销售工作台、企业ERP 等应用里查资料、写草稿、整理文件，要对外发出的内容先交给有权人批准。STARGO WORK 面向制造业与外贸企业，它的核心应用叫 OPEN WORK。</p>
 <h3>为什么说它|不是又多了一个工具？</h3>
 <p>制造业和外贸企业并不缺软件：邮箱收询盘，聊天工具谈客户，电子表格记报价，ERP 管订单。缺的是把这些工作连起来的一层——知道客户、询盘、报价、订单和任务之间是什么关系，并在这些关系上推进工作。</p>
 <p>目标不是再加一个工具，而是减少业务断点：少一些信息搬运和反复交接，多一些有依据的推进、清楚的责任和可核对的结果。</p>
@@ -952,34 +948,26 @@ ${chartOwner('en', 1)}
 <li><strong>连着业务和责任：</strong>工作落在客户记录、报价、订单和任务上，谁负责、下一步是什么都清楚。</li>
 <li><strong>结果要核对：</strong>关键动作由有权人批准，一次文字回答不会被当作业务已经完成。</li>
 </ul>
-<h3>两大核心引擎|分别做什么？</h3>
-<p><strong>Growth OS</strong> 解决“去哪里找客户、谁值得开发、下一步怎样联系”：围绕产品、目标市场和客户类型寻找经销商、进口商、批发商和目标企业，整理背调、联系人、采购信号与开发优先级。确认后的客户连同背景和任务转入 Sales Desk。</p>
-<p><strong>Sales Desk</strong> 解决“怎样理解客户、持续跟进、报价并交接订单”：统一询盘与消息入口，把客户资料、历史沟通、产品匹配、回复草稿、跟进、报价和 PI 放进同一条销售链。</p>
-<h3>其他能力怎样配合|这两条主线？</h3>
+<h3>OPEN WORK 里的两条主线|分别做什么？</h3>
+<p><strong>主动获客</strong>解决“去哪里找客户、谁值得开发、下一步怎样联系”：围绕产品、目标市场和客户类型寻找经销商、进口商、批发商和目标企业，整理背调、联系人、采购信号与开发优先级。确认后的客户连同背景和任务转入销售工作台。</p>
+<p><strong>销售工作台</strong>解决“怎样理解客户、持续跟进、报价并交接订单”：统一询盘与消息入口，把客户资料、历史沟通、产品匹配、回复草稿、跟进、报价和 PI 放进同一条销售链。</p>
+<h3>其他应用怎样配合|这两条主线？</h3>
 <ul>
-<li><strong>ERP 与履约：</strong>连接产品物料、采购、库存、生产质检、订单发票与商城业务，再衔接物流、财务、单证和售后。</li>
-<li><strong>AI 创作：</strong>产品图片、详情页、图册、多语言内容，以及一键生成视频和爆款结构再创作。</li>
-<li><strong>288 个数字员工：</strong>覆盖十类企业职能的专业岗位，可以按任务组队协作。</li>
-<li><strong>企业知识与业务关系图：</strong>让 AI 知道公司知道什么，也知道事情之间怎样关联、由谁负责。</li>
-<li><strong>老板驾驶舱与管理控制：</strong>看重点、看异常、做审批，费用和结果都可核对。</li>
+<li><strong>企业ERP 与履约：</strong>连接产品物料、采购、库存、生产质检、订单发票与商城业务，再衔接物流、财务、单证和售后。</li>
+<li><strong>内容增长：</strong>产品图片、详情页、图册、多语言内容，以及一键生成视频和爆款结构再创作。</li>
+<li><strong>288 名数字员工：</strong>覆盖十类企业职能，可以按任务组队协作，在 STARGO AI 数字办公室里派工。</li>
+<li><strong>企业知识库与记忆：</strong>让 AI 知道公司知道什么，也知道事情之间怎样关联、由谁负责。</li>
+<li><strong>老板看板与管理控制：</strong>看重点、看异常、做审批，费用和结果都可核对。</li>
 </ul>
 <h3>一条完整的业务循环|是什么样？</h3>
 ${chartLoop('zh', 1)}
 <p>主动获客找到客户、判断机会；外贸成交完成沟通、报价和 PI；企业履约衔接采购、生产和库存；经营协同跟进回款、售后和渠道；复购增长关注补货、唤醒和复盘。客户与业务结果持续沉淀，进入下一轮增长。</p>
 <h3>现在能用到什么程度？</h3>
-<p>各项能力按企业配置与交付范围开放，条件各不相同：</p>
-<ul>
-<li><strong>现已可用：</strong>AI 团队协作、一键生成视频和爆款结构再创作，在企业开通的服务、额度和权限内运行；协作轮次与预算有上限，成片经人工审核后发布，对外动作须经授权审批。</li>
-<li><strong>Growth OS：</strong>核心流程建设中，真实数据与客户触达按授权接入。</li>
-<li><strong>Sales Desk：</strong>工作台已经具备，各渠道真实收发与业务交接逐项连接、验证；真实价格、合同、签章与单证按企业系统接通。</li>
-<li><strong>ERP 与履约：</strong>已有 ERP 与商城应用基础，跨系统协同和 AI 操作按企业配置验收；物流、财务与服务按已接入的系统分阶段交付。</li>
-<li><strong>创作、知识与管理：</strong>创意工作室已有基础，商品营销套件的一键编排与局部检查持续整合；企业知识与业务关系图已有基础，更丰富的关联逐步完善；看板指标只来自已接入的数据。</li>
-<li><strong>使用终端：</strong>网页桌面是当前重点；语音、自动化和对外动作按开放范围推进，原生客户端、移动端和小程序分阶段完善。</li>
-</ul>
-<p>更深一层的原理见<a href="intelligence.html">企业智能</a>，全部能力见<a href="capabilities.html">功能全景</a>，岗位目录见<a href="workforce.html">数字员工</a>。</p>
-<p class="sgp-cta">想看它在你的业务里怎样运转？<a href="contact.html">预约企业演示</a>。</p>`,
+<p>数字员工团队协作、一键生成视频和爆款结构再创作现已可用，在企业开通的服务、额度和权限内运行，对外动作须经授权审批。其他应用的现状，统一写在<a href="capabilities.html#atlas">产品页的功能目录</a>里；你公司实际开通哪些，演示时逐项确认。</p>
+<p>想了解记忆与提醒，见<a href="intelligence.html">主动提醒与记忆</a>；全部功能见<a href="capabilities.html">产品</a>；数字员工名册见<a href="workforce.html">数字员工</a>。</p>
+<p class="sgp-cta">想看它在你的业务里怎样运转？<a href="contact.html">预约演示</a>。</p>`,
     `
-<p>A browser-based desktop AI operating system is a company workspace you open in a browser: business applications, files, customers, knowledge and AI employees sit together and work on the same business process. STARGO WORK is built for manufacturers and exporters, with Growth OS for proactive acquisition and Sales Desk for trade sales as its two core engines.</p>
+<p>An AI workspace for exporters connects one chat box to all of a company’s business apps. You ask for something in the chat, AI looks things up, drafts and organizes files in apps such as the Customer CRM, Knowledge Base, Sales Workbench and ERP, and anything that goes outside the company waits for an authorized person. STARGO WORK is built for manufacturers and exporters, and its core app is called OPEN WORK.</p>
 <h3>Why is it not just one more tool?</h3>
 <p>Manufacturers and exporters do not lack software. Email receives the inquiry, a chat app holds the conversation, a spreadsheet keeps the quote and the ERP tracks the order. What is missing is the layer that connects the work — one that knows how customers, inquiries, quotes, orders and tasks relate, and moves work forward on top of those relationships.</p>
 <p>The goal is fewer disconnected handoffs, not another tool: less copying and re-explaining, more evidence-backed progress, clear ownership and results you can check.</p>
@@ -989,36 +977,28 @@ ${chartLoop('zh', 1)}
 <li><strong>It is tied to business records and owners.</strong> Work lands on customer records, quotes, orders and tasks, each with a clear owner and next step.</li>
 <li><strong>Results are checked.</strong> Authorized people approve consequential actions, and a text answer is never treated as finished work.</li>
 </ul>
-<h3>What do the two core engines do?</h3>
-<p><strong>Growth OS</strong> answers where to find customers, who is worth pursuing and how to reach them next. It looks for dealers, importers, wholesalers and target accounts around your products, markets and buyer types, and turns research, contacts, buying signals and priorities into a plan. Approved prospects move into Sales Desk with their context and next actions.</p>
-<p><strong>Sales Desk</strong> answers how to understand a customer, keep following up, quote and hand over the order. It brings inquiries and messages into one intake and puts customer records, conversations, product fit, reply drafts, follow-ups, quotes and PIs on one sales chain.</p>
-<h3>How do the other capabilities support the two engines?</h3>
+<h3>What do the two main lines in OPEN WORK do?</h3>
+<p><strong>Prospecting</strong> answers where to find customers, who is worth pursuing and how to reach them next. It looks for dealers, importers, wholesalers and target accounts around your products, markets and buyer types, and turns research, contacts, buying signals and priorities into a plan. Approved prospects move into the Sales Workbench with their context and next actions.</p>
+<p><strong>The Sales Workbench</strong> answers how to understand a customer, keep following up, quote and hand over the order. It brings inquiries and messages into one intake and puts customer records, conversations, product fit, reply drafts, follow-ups, quotes and PIs on one sales chain.</p>
+<h3>How do the other apps support those two lines?</h3>
 <ul>
 <li><strong>ERP and fulfillment:</strong> products, materials, purchasing, stock, production, quality, orders, invoices and commerce, followed by logistics, finance, documents and support.</li>
-<li><strong>AI creative work:</strong> product images, detail pages, catalogs and multilingual content, plus one-click video and viral creative adaptation.</li>
-<li><strong>288 AI employees:</strong> specialized roles across ten enterprise functions that can team up by task.</li>
-<li><strong>Enterprise knowledge and the business relationship map:</strong> what the company knows, how things connect and who is responsible.</li>
-<li><strong>Owner visibility and control:</strong> priorities, exceptions and approvals, with costs and results you can check.</li>
+<li><strong>Content growth:</strong> product images, detail pages, catalogs and multilingual content, plus one-click video and viral creative adaptation.</li>
+<li><strong>288 digital employees:</strong> specialized staff across ten enterprise functions that can team up by task, dispatched from the STARGO AI Digital Office.</li>
+<li><strong>Knowledge Base and memory:</strong> what the company knows, how things connect and who is responsible.</li>
+<li><strong>Owner Dashboard and control:</strong> priorities, exceptions and approvals, with costs and results you can check.</li>
 </ul>
-<h3>What does the complete business loop look like?</h3>
+<h3>What does the complete business journey look like?</h3>
 ${chartLoop('en', 1)}
 <p>Proactive acquisition finds and qualifies customers. Trade sales handles conversations, quotes and PIs. Fulfillment connects purchasing, production and stock. Business coordination follows payments, support and channels. Repeat growth watches reorders, reactivation and reviews. Customer context and outcomes then feed the next cycle.</p>
 <h3>How much of it can you use today?</h3>
-<p>Capabilities open according to configuration and the agreed delivery scope, and the conditions differ:</p>
-<ul>
-<li><strong>Available now:</strong> AI teamwork, one-click video and viral creative adaptation, within the services, credits and access a company enables. Collaboration rounds and budgets are capped, finished videos are reviewed by people before publishing, and external actions need an authorized approval.</li>
-<li><strong>Growth OS:</strong> core workflows are being built out; live data and outreach are connected by authorization.</li>
-<li><strong>Sales Desk:</strong> the workspace exists; live channel messaging and business handoffs are connected and validated one by one, and live prices, contracts, signatures and documents depend on connected enterprise systems.</li>
-<li><strong>ERP and fulfillment:</strong> ERP and commerce foundations exist; cross-system work and AI actions are configured and accepted per company, and logistics, finance and service arrive in stages through connected systems.</li>
-<li><strong>Creative work, knowledge and control:</strong> the creative workspace is present, with one-click marketing-kit production and local checks being integrated; knowledge and relationship-map foundations exist, with richer relationships arriving in stages; dashboard metrics come only from connected data.</li>
-<li><strong>Devices:</strong> the browser desktop comes first; voice, automation and external actions follow by enabled scope, and native clients, mobile and mini-programs are phased.</li>
-</ul>
-<p>Read the principles on <a href="intelligence.html">Enterprise Intelligence</a>, every business area on <a href="capabilities.html">Capabilities</a> and the role directory on <a href="workforce.html">AI Workforce</a>.</p>
-<p class="sgp-cta">Want to see it run on your own business? <a href="contact.html">Request a demo</a>.</p>`),
+<p>AI teamwork between digital employees, one-click video and viral creative adaptation are available now, within the services, credits and access a company enables, and external actions need an authorized approval. The status of every other app is kept in one place, <a href="capabilities.html#atlas">the product catalog</a>; what your company gets is confirmed item by item in the demo.</p>
+<p>For reminders and memory, see <a href="intelligence.html">Proactive Reminders &amp; Memory</a>; for every feature, see <a href="capabilities.html">Product</a>; for the roster, see <a href="workforce.html">AI Staff</a>.</p>
+<p class="sgp-cta">Want to see it run on your own business? <a href="contact.html">Book a demo</a>.</p>`),
     faq: [
       Q('STARGO WORK 到底是什么？', 'What is STARGO WORK?',
-        '它是一套面向制造业与外贸企业的网页桌面级 AI 企业操作系统。以 Growth OS 主动获客和 Sales Desk 外贸销售为业务主线，连接企业经营、内容生产、知识和数字员工，并保留人的审批与决定权。',
-        'It is a browser-based desktop AI operating system for manufacturing and global trade enterprises. Growth OS and Sales Desk lead the business journey, supported by operations, creative work, enterprise knowledge and AI roles, with people retaining approval and decision authority.'),
+        '它是面向制造业与外贸企业的 AI 工作台，核心应用叫 OPEN WORK。你在对话里交代任务，AI 去客户CRM、企业知识库、销售工作台等应用里查资料、写草稿；报价、对外触达这类动作先交给有权人批准。',
+        'It is an AI workspace for manufacturers and exporters, and its core app is OPEN WORK. You ask in a chat, and AI works across apps such as the Customer CRM, Knowledge Base and Sales Workbench to look things up and draft; quotes and outreach wait for an authorized person.'),
       Q('它和单独使用一个 AI 聊天窗口有什么区别？', 'How is this different from using a standalone AI chat?',
         '重点不在对话形式，而在任务是否连接了企业资料、客户历史、业务应用、责任、审批和结果。STARGO WORK 围绕完整业务流程组织这些信息与工作，而不把一次文字回答当作业务已经完成。',
         'The focus is not the chat format. It is whether the work connects enterprise information, customer history, business applications, ownership, approvals and results. STARGO WORK organizes those elements around a business workflow rather than equating a text answer with completed work.'),
@@ -1026,8 +1006,8 @@ ${chartLoop('en', 1)}
         '不是。核心从主动获客与外贸销售切入，同时覆盖 ERP、商城、采购库存、生产质检、财务履约、内容创作、知识、办公及管理协同。具体工作能否直接执行，取决于企业配置和已连接系统。',
         'No. Acquisition and trade sales are the starting point, while the scope also covers operations, commerce, purchasing, stock, production, quality, finance coordination, creative work, knowledge, office tasks and management. Executable work depends on configuration and connected systems.'),
       Q('需要安装客户端吗？', 'Do we need to install a client?',
-        '当前重点是在浏览器里使用的网页桌面；原生电脑客户端、移动端与小程序按路线分阶段完善，具体范围以企业确认的交付内容为准。',
-        'The current focus is the browser-based desktop. Native desktop clients, mobile and mini-programs are phased roadmap items, and the actual scope follows what each company agrees.'),
+        '当前重点是在浏览器里使用 OPEN WORK；原生电脑客户端、移动端与小程序的范围，演示时确认，以企业确认的交付内容为准。',
+        'The current focus is using OPEN WORK in a browser. The scope for native computer clients, mobile and mini-programs is confirmed in the demo and follows what each company agrees.'),
     ],
   },
   {
@@ -1036,25 +1016,25 @@ ${chartLoop('en', 1)}
     modified: '2026-09-17',
     cover: '288-ai-employees-not-288-chatbots',
     section: B('数字员工', 'AI workforce'),
-    keywords: B(['数字员工', 'AI 员工', 'AI 团队协作', '288 个岗位', '岗位目录'], ['AI employees', 'AI workforce', 'AI teamwork', '288 AI roles', 'role directory']),
-    title: B('288 个数字员工：怎样组队、沟通、交付', '288 AI roles: how AI employees team up, talk and deliver'),
-    titleChunks: ['288 个', '数字员工：', '怎样组队、', '沟通、', '交付'],
-    description: B('288 是覆盖十类企业职能的专业岗位目录。多位 AI 员工现已可以组成团队、互发消息、并行工作，由统筹角色汇总成一个结果交人确认。', '288 is a directory of specialized roles across ten functions. AI employees can now form teams, message each other, work in parallel and deliver one result.'),
+    keywords: B(['数字员工', '288 名数字员工', '数字员工团队协作', '数字员工名册', 'OPEN WORK'], ['digital employees', 'AI staff', 'AI teamwork', '288 digital employees', 'staff directory']),
+    title: B('288 名数字员工：怎样组队、沟通、交付', '288 digital employees: teaming up to deliver'),
+    titleChunks: ['288 名', '数字员工：', '怎样组队、', '沟通、', '交付'],
+    description: B('288 是覆盖十类企业职能的数字员工名册。多名数字员工现已可以组成团队、互发消息、并行工作，由统筹角色汇总成一个结果交人确认。', 'STARGO’s 288 digital employees cover ten enterprise functions and can now team up: they message each other, work in parallel and hand one result to a person.'),
     takeaways: [
-      B('288 是覆盖十类企业职能的专业岗位目录，不代表替代 288 名真人。', '288 is a directory of specialized roles across ten functions, not 288 people replaced.'),
-      B('多位 AI 员工现已可以组队：互发消息、并行处理、由统筹角色汇总。', 'AI employees can team up now: direct messages, parallel work, one consolidated result.'),
+      B('288 是覆盖十类企业职能的数字员工名册，不代表替代 288 名真人。', '288 is a roster of digital employees across ten functions, not 288 people replaced.'),
+      B('多名数字员工现已可以组队：互发消息、并行处理、由统筹角色汇总。', 'Digital employees can team up now: direct messages, parallel work, one consolidated result.'),
       B('协作轮次、预算和动作有上限，随时可以叫停，人工审批与接管始终保留。', 'Rounds, budgets and actions are capped; work can be stopped; approval and takeover remain.'),
       B('共享任务信息不等于共享权限，对外动作须经授权审批。', 'Shared task context is not shared permission; external actions need an authorized approval.'),
     ],
     body: B(`
-<p>288 是 STARGO WORK 的专业数字岗位目录，覆盖十类企业职能；遇到复杂任务，多位 AI 员工可以组成团队，互相发消息、并行处理，再由统筹角色汇总成一个结果，交给人确认。这项团队协作能力现已可用。</p>
-<h3>288 个岗位|分布在哪些职能？</h3>
-<p>数字员工不只服务外贸销售，十类岗位的分布如下：</p>
+<p>STARGO WORK 有 288 名数字员工，覆盖十类企业职能；遇到复杂任务，多名数字员工可以组成团队，互相发消息、并行处理，再由统筹角色汇总成一个结果，交给人确认。这项团队协作能力现已可用。在 OPEN WORK 里，数字员工在 STARGO AI 数字办公室这个应用里派工、查看。</p>
+<h3>288 名数字员工|分布在哪些职能？</h3>
+<p>数字员工不只服务外贸销售，十类职能的分布如下：</p>
 ${chartRoles('zh', 1, { note: false })}
-<p>288 指岗位目录的数量，不代表替代 288 名真人员工。实际启用哪些员工、一次协作的规模有多大、允许执行哪些动作，都按企业的配置、预算和权限确定。</p>
-<h3>一个 AI 员工和一个聊天窗口|有什么不同？</h3>
-<p>聊天窗口从一段空白对话开始，回答完就结束。一个 AI 员工可以配置职责、技能、企业知识、可用工具、权限、任务和运行记录：它知道自己负责什么，能用企业的哪些资料，哪些动作必须先请示人。</p>
-<h3>一支 AI 团队怎样组成？</h3>
+<p>288 指数字员工名册的规模，不代表替代 288 名真人员工。实际启用哪些员工、一次协作的规模有多大、允许执行哪些动作，都按企业的配置、预算和权限确定。</p>
+<h3>一名数字员工|和一个聊天窗口|有什么不同？</h3>
+<p>聊天窗口从一段空白对话开始，回答完就结束。一名数字员工可以配置职责、技能、企业知识、可用工具、权限、任务和运行记录：它知道自己负责什么，能用企业的哪些资料，哪些动作必须先请示人。</p>
+<h3>一支数字员工团队|怎样组成？</h3>
 <p>负责人提出业务目标后，按岗位、技能、企业知识、工具权限和任务复杂度查找合适的员工，组成一支小团队，并写清每位成员的职责：谁做研究，谁定销售策略，谁核对产品，谁准备素材，谁负责复核与统筹。</p>
 <h3>团队成员之间|怎样沟通？</h3>
 ${chartTeam('zh', 2)}
@@ -1074,17 +1054,17 @@ ${chartTeam('zh', 2)}
 </ul>
 <h3>老板怎样交办工作？</h3>
 <p>流程只有五步：交办业务目标 → 选择员工或团队 → 分配任务 → 查看工作成果 → 批准关键动作。需要判断或遇到异常时，随时由人接手。</p>
-<p>十类岗位与协作场景见数字员工页的<a href="workforce.html#lx-role-groups">岗位目录</a>和<a href="workforce.html#lx-team">协作场景</a>，能力条目见<a href="capabilities.html#g10">数字员工与团队协作</a>。</p>
-<p class="sgp-cta">想看一支 AI 团队怎样完成你的任务？<a href="contact.html">预约企业演示</a>。</p>`,
+<p>十类职能与协作场景见数字员工页的<a href="workforce.html#lx-role-groups">数字员工名册</a>和<a href="workforce.html#lx-team">协作场景</a>，功能条目见<a href="capabilities.html#g10">数字员工与团队协作</a>。</p>
+<p class="sgp-cta">想看一支数字员工团队怎样完成你的任务？<a href="contact.html">预约演示</a>。</p>`,
     `
-<p>288 is the size of STARGO WORK’s directory of specialized AI roles across ten enterprise functions. For complex work, several AI employees can form a team, message each other, work in parallel and hand a single result — consolidated by a coordinating role — to a person for review. This teamwork is available now.</p>
-<h3>Which functions do the 288 roles cover?</h3>
-<p>AI employees are not limited to export sales. The ten role groups break down like this:</p>
+<p>STARGO WORK has 288 digital employees across ten enterprise functions. For complex work, several of them can form a team, message each other, work in parallel and hand a single result — consolidated by a coordinating role — to a person for review. This teamwork is available now. In OPEN WORK, digital employees are dispatched and followed in the STARGO AI Digital Office app.</p>
+<h3>Which functions do the 288 digital employees cover?</h3>
+<p>Digital employees are not limited to export sales. The ten groups break down like this:</p>
 ${chartRoles('en', 1, { note: false })}
-<p>288 counts the roles in the directory; it is not a claim to replace 288 people. Which employees are enabled, how large a collaboration can be and which actions are permitted all follow the company’s configuration, budget and access.</p>
-<h3>How is an AI employee different from a chat window?</h3>
-<p>A chat window starts from a blank conversation and ends after the answer. An AI employee can be configured with responsibilities, skills, enterprise knowledge, permitted tools, access, tasks and a run history. It knows what it is responsible for, which company information it may use and which actions must be cleared with a person first.</p>
-<h3>How is an AI team formed?</h3>
+<p>288 is the size of the roster; it is not a claim to replace 288 people. Which employees are enabled, how large a collaboration can be and which actions are permitted all follow the company’s configuration, budget and access.</p>
+<h3>How is a digital employee different from a chat window?</h3>
+<p>A chat window starts from a blank conversation and ends after the answer. A digital employee can be configured with responsibilities, skills, enterprise knowledge, permitted tools, access, tasks and a run history. It knows what it is responsible for, which company information it may use and which actions must be cleared with a person first.</p>
+<h3>How is a team of digital employees formed?</h3>
 <p>Once a manager sets a business goal, suitable employees are matched by role, skills, enterprise knowledge, tool access and task complexity, and a small team is formed with explicit responsibilities: who researches, who plans the sales approach, who checks the product, who prepares the assets and who reviews and coordinates.</p>
 <h3>How do team members talk to each other?</h3>
 ${chartTeam('en', 2)}
@@ -1104,18 +1084,18 @@ ${chartTeam('en', 2)}
 </ul>
 <h3>How does an owner delegate?</h3>
 <p>Five steps: set the business goal → select employees or a team → assign work → inspect the outputs → approve key actions. When judgment is needed or something unusual happens, a person takes over.</p>
-<p>See the <a href="workforce.html#lx-role-groups">role directory</a> and the <a href="workforce.html#lx-team">team scenario</a> on the AI Workforce page, and <a href="capabilities.html#g10">AI workforce and teamwork</a> in the catalogue.</p>
-<p class="sgp-cta">Want to see an AI team take on one of your tasks? <a href="contact.html">Request a demo</a>.</p>`),
+<p>See the <a href="workforce.html#lx-role-groups">staff directory</a> and the <a href="workforce.html#lx-team">team scenario</a> on the AI Staff page, and <a href="capabilities.html#g10">AI workforce and teamwork</a> in the catalogue.</p>
+<p class="sgp-cta">Want to see a team of digital employees take on one of your tasks? <a href="contact.html">Book a demo</a>.</p>`),
     faq: [
-      Q('288 个数字员工是什么意思？', 'What does “288 digital employees” mean?',
-        '它表示 288 个可按任务选择的专业数字岗位，覆盖十类企业职能，不只外贸销售。每个岗位可配置职责、知识、技能和权限；多位员工可以组成团队，互相沟通、分工完成同一项任务。288 不等于替代 288 名真人，实际启用的员工、协作规模及操作范围受配置、预算和权限约束。',
-        'It denotes 288 specialized, task-selectable roles across ten enterprise role groups — not trade sales alone. Each role can be configured with responsibilities, knowledge, skills and access, and several can form a team, message each other and complete one task together. The number is not a claim to replace 288 people; the employees enabled, the size of a collaboration and permitted actions depend on configuration, budget and access.'),
-      Q('多个 AI 员工怎样配合？', 'How do AI employees work together?',
+      Q('288 名数字员工是什么意思？', 'What does “288 digital employees” mean?',
+        '它表示 STARGO 有 288 名可按任务选择的数字员工，覆盖十类企业职能，不只外贸销售。每个岗位可配置职责、知识、技能和权限；多位员工可以组成团队，互相沟通、分工完成同一项任务。288 不等于替代 288 名真人，实际启用的员工、协作规模及操作范围受配置、预算和权限约束。',
+        'It denotes 288 task-selectable digital employees across ten enterprise function groups — not trade sales alone. Each role can be configured with responsibilities, knowledge, skills and access, and several can form a team, message each other and complete one task together. The number is not a claim to replace 288 people; the employees enabled, the size of a collaboration and permitted actions depend on configuration, budget and access.'),
+      Q('多个数字员工怎样配合？', 'How do digital employees work together?',
         '围绕同一目标分工，互相发消息、提问和交接信息，并行处理研究、产品、销售或内容工作，再由统筹角色复核与汇总。任务保留责任、期限、下一步和人工接管；协作轮次与预算有上限，随时可以叫停。',
         'They divide a shared goal into roles, message each other, ask questions and hand over context, and work on research, products, sales or content in parallel. A coordinating role checks and consolidates the results. Ownership, deadlines, next steps and human takeover stay visible; rounds and budgets are capped, and the work can be stopped at any time.'),
-      Q('企业会一次启用全部 288 个岗位吗？', 'Does a company enable all 288 roles at once?',
-        '不一定。启用哪些员工、一次协作有多大规模、允许执行哪些动作，都按企业的配置、预算和权限确定，可以从一条流程需要的几个岗位开始。',
-        'Not necessarily. Which employees are enabled, how large a collaboration is and which actions are allowed follow the company’s configuration, budget and access. You can start with the few roles one workflow needs.'),
+      Q('企业会一次启用全部 288 名数字员工吗？', 'Does a company enable all 288 digital employees at once?',
+        '不一定。启用哪些员工、一次协作有多大规模、允许执行哪些动作，都按企业的配置、预算和权限确定，可以从一条流程需要的几名数字员工开始。',
+        'Not necessarily. Which employees are enabled, how large a collaboration is and which actions are allowed follow the company’s configuration, budget and access. You can start with the few digital employees one workflow needs.'),
       Q('AI 团队可以自己给客户发消息吗？', 'Can an AI team message customers on its own?',
         '对外动作需要有权人员批准。团队可以准备客户清单、开发策略和消息草稿，是否发出由企业按规则决定。',
         'External actions need an authorized approval. The team can prepare prospect lists, outreach plans and message drafts; whether anything is sent is decided under company rules.'),
@@ -1128,7 +1108,7 @@ ${chartTeam('en', 2)}
     cover: 'enterprise-ontology-explained',
     section: B('企业知识', 'Enterprise knowledge'),
     keywords: B(['企业知识库', '业务关系图', '企业上下文', '客户数据', 'AI 理解企业'], ['enterprise knowledge base', 'business relationship map', 'business context', 'customer records', 'company knowledge for AI']),
-    title: B('企业知识与业务关系图：让 AI 读懂公司', 'Enterprise knowledge and the business relationship map, explained'),
+    title: B('企业知识与业务关系图：让 AI 读懂公司', 'Company knowledge and the relationship map'),
     titleChunks: ['企业知识', '与', '业务关系图：', '让 AI ', '读懂公司'],
     description: B('知识库回答公司知道什么，业务关系图说明客户、产品、报价、订单和负责人之间怎样关联。两者一起，让 AI 带着企业背景做事。', 'The knowledge base holds what your company knows; the relationship map links customers, products, quotes, orders and owners, so AI works in real context.'),
     takeaways: [
@@ -1138,7 +1118,7 @@ ${chartTeam('en', 2)}
       B('导入资料先审核，不会直接变成企业认可的事实。', 'Imported material is reviewed first and never becomes approved fact automatically.'),
     ],
     body: B(`
-<p>企业知识回答“公司知道什么”，业务关系图说明“这些事之间怎样关联、现在由谁负责”；两者合在一起，AI 才能带着企业背景做事，而不是每次从头解释。</p>
+<p>企业知识回答“公司知道什么”，业务关系图说明“这些事之间怎样关联、现在由谁负责”；两者合在一起，AI 才能带着企业背景做事，而不是每次从头解释。在 OPEN WORK 里，前者是企业知识库，后者属于记忆与进化。</p>
 <h3>为什么|只读文件还不够？</h3>
 <p>CRM 里有客户，ERP 里有订单，邮箱里有询盘，网盘里有产品文件。它们各自正确，却互相不知道对方。</p>
 <p>AI 如果只读到几份孤立的文件，就不知道这份报价属于哪个客户、这个订单来自哪次报价、这件事该由谁来推进，回答常常“差一点”。</p>
@@ -1150,7 +1130,7 @@ ${chartTeam('en', 2)}
 <li><strong>发现过期或冲突：</strong>资料过期或互相矛盾时提示核实，不自行挑一份来用。</li>
 </ul>
 <h3>业务关系图连接什么？</h3>
-<p>业务关系图把客户、联系人、产品、询盘、商机、报价、订单、文件、任务和员工联系起来，说明当前状态、发生过什么、下一步由谁推进。人和 AI 员工依据的是同一张图。</p>
+<p>业务关系图把客户、联系人、产品、询盘、商机、报价、订单、文件、任务和员工联系起来，说明当前状态、发生过什么、下一步由谁推进。人和数字员工依据的是同一张图。</p>
 ${chartContext('zh', 1)}
 <p>它帮 AI 回答三个日常问题：</p>
 <ul>
@@ -1161,10 +1141,10 @@ ${chartContext('zh', 1)}
 <h3>新企业的资料|怎样接入？</h3>
 <p>产品、客户、规则等结构化模板帮助新企业接入。导入的资料先进入待审核区域，确认后再逐步连接正式业务来源，不会把上传的文件直接当成企业认可的事实。</p>
 <h3>现在能用到什么程度？</h3>
-<p>企业知识与业务关联已有基础；更丰富的业务关联和企业资料模板按接入情况逐步完善。详见企业智能页的<a href="intelligence.html#lx-context">业务理解</a>部分，以及能力目录中的<a href="capabilities.html#g06">产品与企业知识</a>和<a href="capabilities.html#g12">企业业务关系与上下文</a>。</p>
-<p class="sgp-cta">想看你的产品和客户资料怎样被连接起来？<a href="contact.html">预约企业演示</a>。</p>`,
+<p>企业知识与业务关联已有基础；更丰富的业务关联和企业资料模板按接入情况逐步完善。详见主动提醒与记忆页的<a href="intelligence.html#lx-context">记忆与进化</a>部分，以及功能目录中的<a href="capabilities.html#g06">产品与企业知识</a>和<a href="capabilities.html#g12">企业业务关系与上下文</a>。</p>
+<p class="sgp-cta">想看你的产品和客户资料怎样被连接起来？<a href="contact.html">预约演示</a>。</p>`,
     `
-<p>Enterprise knowledge answers what your company knows; the business relationship map shows how those things connect and who is responsible right now. Together they let AI work with real business context instead of starting from a blank explanation every time.</p>
+<p>Enterprise knowledge answers what your company knows; the business relationship map shows how those things connect and who is responsible right now. Together they let AI work with real business context instead of starting from a blank explanation every time. In OPEN WORK, the first is the Knowledge Base and the second sits in Memory &amp; Evolution.</p>
 <h3>Why is reading files not enough?</h3>
 <p>The CRM has customers, the ERP has orders, the mailbox has inquiries and the shared drive has product files. Each is correct on its own, and none of them knows about the others.</p>
 <p>If AI only reads a handful of isolated files, it cannot tell which customer a quote belongs to, which quote an order came from or who should move a task forward — which is why its answers are so often almost right.</p>
@@ -1176,7 +1156,7 @@ ${chartContext('zh', 1)}
 <li><strong>Outdated or conflicting material flagged:</strong> when documents are out of date or contradict each other, the conflict is raised for checking instead of one being picked silently.</li>
 </ul>
 <h3>What does the relationship map connect?</h3>
-<p>The business relationship map links customers, contacts, products, inquiries, opportunities, quotes, orders, documents, tasks and employees, showing the current status, what has happened and who owns the next step. People and AI employees work from the same picture.</p>
+<p>The business relationship map links customers, contacts, products, inquiries, opportunities, quotes, orders, documents, tasks and employees, showing the current status, what has happened and who owns the next step. People and digital employees work from the same picture.</p>
 ${chartContext('en', 1)}
 <p>It helps AI answer three everyday questions:</p>
 <ul>
@@ -1187,8 +1167,8 @@ ${chartContext('en', 1)}
 <h3>How does a new company bring its information in?</h3>
 <p>Structured templates for products, customers and rules help a new company get started. Imported material is staged for review first and connected to authoritative sources step by step; an upload never becomes approved company fact automatically.</p>
 <h3>What is available today?</h3>
-<p>Foundations for enterprise knowledge and business context exist; richer relationships and enterprise templates arrive in stages as sources are connected. Read the <a href="intelligence.html#lx-context">business context</a> section of Enterprise Intelligence, and see <a href="capabilities.html#g06">Products and enterprise knowledge</a> and <a href="capabilities.html#g12">Business relationships and context</a> in the catalogue.</p>
-<p class="sgp-cta">Want to see how your product and customer information would connect? <a href="contact.html">Request a demo</a>.</p>`),
+<p>Foundations for enterprise knowledge and business context exist; richer relationships and enterprise templates arrive in stages as sources are connected. Read the <a href="intelligence.html#lx-context">Memory &amp; Evolution</a> section of Proactive Reminders &amp; Memory, and see <a href="capabilities.html#g06">Products and enterprise knowledge</a> and <a href="capabilities.html#g12">Business relationships and context</a> in the catalogue.</p>
+<p class="sgp-cta">Want to see how your product and customer information would connect? <a href="contact.html">Book a demo</a>.</p>`),
     faq: [
       Q('知识库和业务关系图|有什么区别？', 'How do the knowledge base and the relationship map differ?',
         '知识库是企业资料室，回答公司知道什么；业务关系图把客户、产品、报价、订单和负责人联系起来，说明事情之间怎样关联、下一步由谁推进。',
@@ -1213,24 +1193,46 @@ export const coverSrc = (post) => `assets/blog/${post.cover}.webp`;
 export const coverSrcset = (post) => [500, 800].map((w) => `assets/blog/${post.cover}-${w}.webp ${w}w`).concat(`assets/blog/${post.cover}.webp 1200w`).join(', ');
 
 /**
- * The covers made from the owner's own product screenshots (the handoff of
- * 2026-09-18). tools/blog-covers.mjs holds which screenshot each one is and
- * how it is fitted, and checks that its own list is exactly this one, so the
- * two can never drift apart. The rest are this site's editorial artwork.
+ * Every cover is a render of the OPEN WORK interface (tools/openwork/render.mjs)
+ * fitted into the cover frame by tools/blog-covers.mjs, which holds which render
+ * is which article and checks that its own list is exactly this one.
  *
- * A product screenshot is a demonstration interface, not a photograph of a
- * customer's account, and everywhere else on the site tools/editorial-images.mjs
- * says so in the picture's own alt text. A cover is a file in assets/blog/, so
- * that pass never sees it — the article hero, which is the one place a cover is
- * shown large enough to read, carries the same sentence from the same place
- * instead of anything written here. The thumbnails stay decorative (alt=""),
- * as every card image in these templates is.
+ * A render is a demonstration interface, not a photograph of a customer's
+ * account, and everywhere else on the site tools/editorial-images.mjs says so
+ * in the picture's own alt text. A cover is a file in assets/blog/, so that pass
+ * never sees it — the article hero, which is the one place a cover is shown
+ * large enough to read, says what the cover shows and adds the same caption.
+ * The thumbnails stay decorative (alt=""), as every card image in these
+ * templates is.
  */
+/** The OPEN WORK render each cover is cropped from (tools/blog-covers.mjs makes the files from it). */
+export const COVER_RENDER = {
+  'stargo-work-visual-guide': 'ow07-welcome',
+  'start-with-one-workflow': 'ow09-automation',
+  'from-inquiry-to-quote': 'ow02-inquiry',
+  'approval-gates-for-ai-in-trade': 'ow03-quote',
+  'ai-operating-system-for-global-trade': 'ow01-home',
+  '288-ai-employees-not-288-chatbots': 'ow11-staff',
+  'enterprise-ontology-explained': 'ow08-crm',
+};
 export const PRODUCT_COVERS = new Set([
-  'stargo-work-visual-guide', 'start-with-one-workflow', 'from-inquiry-to-quote',
-  'ai-operating-system-for-global-trade', '288-ai-employees-not-288-chatbots',
+  'stargo-work-visual-guide', 'start-with-one-workflow', 'from-inquiry-to-quote', 'approval-gates-for-ai-in-trade',
+  'ai-operating-system-for-global-trade', '288-ai-employees-not-288-chatbots', 'enterprise-ontology-explained',
 ]);
-export const coverAlt = (post, lang) => (PRODUCT_COVERS.has(post.cover) ? PRODUCT_CAPTION[lang] : '');
+const COVER_ALT = {
+  'stargo-work-visual-guide': ['OPEN WORK 欢迎页：你的 AI 外贸业务执行系统，快速任务、六张任务卡片和输入框', 'The OPEN WORK welcome page: quick tasks, six task cards and the message box of an AI workspace for foreign trade'],
+  'start-with-one-workflow': ['OPEN WORK 自动化中心：每天 9 点找出报价 3 天未回复的客户并起草跟进邮件，发送前等你批准', 'OPEN WORK Automation Center: every morning it finds quotes unanswered for 3 days and drafts follow-ups, which wait for your approval'],
+  'from-inquiry-to-quote': ['OPEN WORK 分析询盘并回复：查了客户CRM 和企业知识库，按价格表算出报价，英文回复草稿等你批准', 'OPEN WORK analyzing an inquiry: checked against the customer CRM and the knowledge base, priced from the price list, with an English reply waiting for your approval'],
+  'approval-gates-for-ai-in-trade': ['OPEN WORK 起草 PI：单价低于标准价，已交销售经理审批，批准前不会发给客户', 'OPEN WORK drafting a PI: the unit price is below standard, so it waits for the sales manager and is not sent before approval'],
+  'ai-operating-system-for-global-trade': ['OPEN WORK 新聊天：左侧是 15 个应用，输入框下方是五个快捷操作', 'OPEN WORK new chat: the 15 apps on the left and five quick actions under the message box'],
+  '288-ai-employees-not-288-chatbots': ['OPEN WORK 派工：新询盘交给数字员工分头处理，右侧是 STARGO 数字员工 288 名的花名册', 'OPEN WORK dispatching a new inquiry to digital employees, with the roster of 288 STARGO digital employees in the right-hand panel'],
+  'enterprise-ontology-explained': ['OPEN WORK 客户CRM：广交会名片查重建档，公司、联系人、来源和状态留在同一份档案里', 'OPEN WORK customer CRM: trade-fair business cards de-duplicated and filed, with company, contact, source and status kept in one record'],
+};
+export const coverAlt = (post, lang) => {
+  const text = COVER_ALT[post.cover]?.[lang === 'zh' ? 0 : 1];
+  if (!text) return '';
+  return lang === 'zh' ? `${text}。${PRODUCT_CAPTION.zh}` : `${text} — Illustrative product interface, shown in Chinese · demo data`;
+};
 
 /** Dates as the reader expects them. */
 export const formatDate = (iso, lang) => {
@@ -1248,11 +1250,17 @@ const BANNED = [
   /Capability Center/i, /Identity (&|&amp;) Permission/i, /Approval Service/i, /Audit Ledger/i, /Credential Management/i,
   /Canary/i, /灰度发布/, /提示词/, /\bprompts?\b/i, /Orchestrat/i, /\bAgents?\b/i, /Customer 360/i, /秒级组队/,
   /model weights/i, /\btenants?\b/i, /\bSkills?\b/, /\bWorkflows?\b/, /并非同时|不是同时|同时运行|not concurrent|concurren/i,
+  /* Retired positioning (owner, 2026-10-09; buyer-plan §5): the product is STARGO WORK with its core app OPEN WORK. */
+  /Growth OS/, /Sales Desk/, /Trade OS/, /StaffDeck/, /\bDSH\b/, /网页桌面|桌面级|桌面/, /desktop/i, /企业操作系统|operating system/i,
+  /开放条件/, /数字岗位/, /老板驾驶舱/, /两大(核心)?引擎|two (core )?engines/i, /闭环|全景|赋能|底座|AI 产能/, /前置部署|forward[- ]deployed/i,
+  /OpenAI|ChatGPT/, /\b298\b/, /Open Work|OpenWork/,
+  /* one honest status line per page, not a hedge per section (review, 2026-10-09; tools/build-site.mjs RETIRED) */
+  /分阶段开放|分阶段完善|分阶段推进|按授权接入|持续完善|建设中|逐项接通|逐条接通|逐项连接|两大/, /continues? to evolve|(?:is|are) phased|in phases|being built out|validated one by one/i,
 ];
 const BANNED_ZH = [/Boss Cockpit/i, /Mission Control/i, /Control Center/i, /\bFDE\b/];
 /* Latin words a Chinese page may carry: the brand, the two product names and
    the trade abbreviations the owner allows. */
-const ZH_LATIN = new Set(['STARGO', 'WORK', 'Growth', 'OS', 'Sales', 'Desk', 'AI', 'ERP', 'CRM', 'PI', 'SKU', 'MOQ', 'HS', 'SEO', 'GEO', 'WhatsApp', 'Form', 'E']);
+const ZH_LATIN = new Set(['STARGO', 'WORK', 'OPEN', 'AI', 'ERP', 'CRM', 'PI', 'SKU', 'MOQ', 'HS', 'SEO', 'GEO', 'WhatsApp', 'Form', 'E']);
 const visible = (html) => html.replace(/<[^>]+>/g, ' ');
 const count = (s) => [...s].length;
 /* Chinese heading phrases (inline() above): the widest run between two break
@@ -1277,17 +1285,16 @@ const phrasesOf = (html) => html
 const CARD_PHRASES = [
   [LOOP.stages.map((x) => x[0]), 5.5, 'loop step title'],
   [LOOP.stages.flatMap((x) => x[2].zh.split(' · ')).map((zh) => ({ zh })), 7, 'loop label item'],
-  [PIPE.steps.map((x) => x[0]), 9.5, 'Growth OS step title'],
-  [PIPE.steps.map((x) => x[1]), 11.5, 'Growth OS step line'],
-  [PIPE.work.map((x) => x[0]), 6.5, 'Sales Desk step title'],
-  [PIPE.work.map((x) => x[1]), 8, 'Sales Desk step line'],
+  [PIPE.steps.map((x) => x[0]), 9.5, 'Prospecting step title'],
+  [PIPE.steps.map((x) => x[1]), 11.5, 'Prospecting step line'],
+  [PIPE.work.map((x) => x[0]), 6.5, 'the Sales Workbench step title'],
+  [PIPE.work.map((x) => x[1]), 8, 'the Sales Workbench step line'],
   [PROACTIVE.steps.map((x) => x[0]), 7, 'proactive step title'],
   [PROACTIVE.steps.map((x) => x[1]), 8.5, 'proactive step line'],
   [PROACTIVE.examples.map((x) => x[1]), 11, 'proactive example'],
   [START.steps.map((x) => x[0]), 8, 'start step title'],
   [START.steps.map((x) => x[1]), 13.5, 'start step line'],
   [OWNER.items.map((x) => x[1]), 9.5, 'owner card line'],
-  [STATUS.cols.flatMap((c) => c[2].zh).map((zh) => ({ zh })), 15, 'availability item'],
   [[PIPE.handoffText], 16, 'hand-off line'],
   [[PIPE.growth, PIPE.sales, CONTEXT.roomTitle, CONTEXT.mapTitle], 13, 'lane title'],
 ];
@@ -1304,7 +1311,7 @@ for (const post of POSTS) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(post.date) || (post.modified && post.modified < post.date)) fail('dates');
   const { title: T, description: D } = post;
   if (count(T.zh) > 26) fail(`Chinese title is ${count(T.zh)} characters (max 26)`);
-  if (count(T.en) > 70) fail(`English title is ${count(T.en)} characters (max 70)`);
+  if (count(T.en) > 46) fail(`English title is ${count(T.en)} characters (max 46: with " — STARGO WORK" the <title> stays within 60)`);
   if (count(D.zh) < 50 || count(D.zh) > 80) fail(`Chinese description is ${count(D.zh)} characters (50–80)`);
   if (count(D.en) < 120 || count(D.en) > 160) fail(`English description is ${count(D.en)} characters (120–160)`);
   if (/["<>&]/.test(T.zh + T.en + D.zh + D.en)) fail('titles and descriptions are printed into attributes: no " < > &');

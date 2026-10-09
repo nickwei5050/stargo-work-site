@@ -208,6 +208,12 @@ function rewriteSelectorList(list) {
 
 // Stylesheet lives in css/, so its asset URLs are one level up.
 let css = namespaceCss(localise(author)).split('url("assets/').join('url("../assets/').split("url('assets/").join("url('../assets/").split('url(assets/').join('url(../assets/');
+// 42dot Sans ships as five 2.5 MB TTFs (11,172 Hangul syllables this Chinese/English site never
+// sets). tools/subset-42dot.py writes Hangul-free WOFF2 faces (~37 KB each) into assets/fonts/;
+// point the @font-face rules at them. The unused extrabold fallback in the bold rule goes too.
+const DOT_WEIGHT = { light: 300, regular: 400, medium: 500, bold: 700 };
+css = css.replace(/src:\s*url\("[^"]*42dotsans-(light|regular|medium|bold)\.ttf"\)\s*format\("truetype"\)(?:,\s*url\("[^"]*42dotsans-extrabold\.ttf"\)\s*format\("truetype"\))?;/g,
+  (_, face) => `src: url("../assets/fonts/42dotsans-${DOT_WEIGHT[face]}-latin.woff2") format("woff2");`);
 css = `/* lifelogx author layer, namespaced "${NS}" and scoped to .${SCOPE} by tools/lifelogx-prepare.mjs. Do not edit by hand. */\n` + css;
 mkdirSync(`${SITE}/css`, { recursive: true });
 writeFileSync(`${SITE}/css/lifelogx.lx.css`, css, 'utf8');

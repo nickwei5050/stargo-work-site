@@ -26,6 +26,24 @@ try {
    const qs=p.locator('.faq-question-block');assert.equal(await qs.count(),10);
    for(let i=0;i<10;i++){const q=qs.nth(i);await q.scrollIntoViewIfNeeded();await q.focus();await p.keyboard.press('Enter');await p.waitForTimeout(500);assert.equal(await q.getAttribute('aria-expanded'),'true');await p.keyboard.press('Escape');await p.waitForTimeout(500);assert.equal(await q.getAttribute('aria-expanded'),'false');}
   });
+  /* The desktop side menu sits behind the page and is shown by moving the page
+     aside (review 2026-10-09: on the OPEN WORK pages a rule that held the page
+     still on load also held it still here, and the menu opened invisibly).
+     Opened by mouse and by keyboard, its first link must be what is on screen
+     at its own centre, and the keyboard's focus must be on it. */
+  if(width===1440) await check(`${lang}pricing 1440 side menu shows its links`,async()=>{
+   await p.evaluate(()=>{if(typeof lenis!=='undefined')lenis.scrollTo(0,{immediate:true});else scrollTo(0,0);});await p.waitForTimeout(400);
+   const trigger=p.locator('[aria-controls="stargo-side-menu"]');
+   const onTop=()=>p.evaluate(()=>{const a=document.querySelector('#stargo-side-menu .menu-item a[href]');const r=a.getBoundingClientRect();const e=document.elementFromPoint(r.left+r.width/2,r.top+r.height/2);return {hit:!!e&&(e===a||a.contains(e)),focused:document.activeElement===a,what:e?e.tagName+'.'+e.className:'none'};});
+   await trigger.click();await p.waitForTimeout(1500);
+   assert.equal(await trigger.getAttribute('aria-expanded'),'true');
+   let r=await onTop();assert(r.hit,`mouse: the first menu link is covered by ${r.what}`);
+   await p.keyboard.press('Escape');await p.waitForTimeout(1500);
+   assert.equal(await trigger.getAttribute('aria-expanded'),'false');
+   await trigger.focus();await p.keyboard.press('Enter');await p.waitForTimeout(1500);
+   r=await onTop();assert(r.focused,'keyboard: focus is not on the first menu link');assert(r.hit,`keyboard: the focused link is covered by ${r.what}`);
+   await p.keyboard.press('Escape');await p.waitForTimeout(1500);
+  });
   if(width===390) await check(`${lang}dark mobile menu open/close/language`,async()=>{
    await p.evaluate(()=>scrollTo(0,0));await p.waitForTimeout(500);
    const menu=p.locator('.menu-button');await menu.click();await p.waitForTimeout(600);
@@ -39,8 +57,10 @@ try {
  }
  for(const lang of ['', 'en/']){
   const p=await browser.newPage({viewport:{width:390,height:844}});
-  // Intelligence keeps the lifelogx homepage and its in-page anchors; workforce moved to
-  // the lifelogx feature template, whose hero button books a demo instead.
+  // Intelligence keeps its in-page anchors (#lx-ontology, the memory section). Since
+  // 2026-10-09 (C2) the four product pages are built like the homepage
+  // (tools/ow-blocks/pages.mjs): the workforce hero's first button books a demo,
+  // and the product page's catalogue opens the group an address names.
   await check(`${lang}intelligence anchor lands`,async()=>{
    await p.goto(BASE+'/'+lang+'intelligence.html');await p.waitForTimeout(1000);
    await p.locator('a[href="#lx-ontology"]').click();await p.waitForTimeout(1800);
@@ -48,10 +68,16 @@ try {
   });
   await check(`${lang}workforce hero cta`,async()=>{
    await p.goto(BASE+'/'+lang+'workforce.html');await p.waitForTimeout(1200);
-   const btn=p.locator('.lx-feature-description-holder a, .lx-hero-features a.lx-button').first();
+   const btn=p.locator('.ow-hero .ow-cta-row a.ow-hero-cta');
    assert.equal(await btn.count(),1,'hero button');
    await btn.click();await p.waitForURL(u=>/contact/.test(u.pathname),{timeout:15000});
    assert.equal(await p.locator('form').count()>0,true,'lands on the contact form');
+  });
+  await check(`${lang}capabilities catalogue opens the named group`,async()=>{
+   await p.goto(BASE+'/'+lang+'capabilities.html#g08');await p.waitForTimeout(1200);
+   assert.equal(await p.locator('details#g08').evaluate(d=>d.open),true,'#g08 open');
+   assert.equal(await p.locator('details.ow-cat-g[open]').count(),1,'only the named group');
+   const box=await p.locator('#g08 .ow-cat-body').boundingBox();assert(box&&box.height>40,'its detail is shown');
   });
   await check(`${lang}short contact and newsletter relay`,async()=>{
    const original=globalThis.fetch;const mails=[];globalThis.fetch=async(url,opts)=>{mails.push(JSON.parse(opts.body));return Response.json({id:'fixture'});};

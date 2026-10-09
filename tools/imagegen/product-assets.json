@@ -382,6 +382,201 @@
    ]
   },
   {
+   "id": "ow07-welcome",
+   "sw": "OW07",
+   "src": "assets/stargo-product/ow07-welcome.webp",
+   "width": 1600,
+   "height": 1100,
+   "bytes": 109736,
+   "sourceFile": ".wrangler/openwork/ow07-welcome.png",
+   "sourceSha256": "89449b2ee79cc015c38553417ffe250c97c98e30207b1f06bdae31d5ae40c7c1",
+   "sourcePixels": [
+    2560,
+    1760
+   ],
+   "crop": "none",
+   "upscaled": false,
+   "renderer": "tools/openwork/render.mjs",
+   "scene": "welcome · 欢迎页（OPEN WORK 首页）",
+   "render": {
+    "cssWidth": 1280,
+    "scale": 2
+   },
+   "variants": [
+    {
+     "src": "assets/stargo-product/ow07-welcome-800.webp",
+     "width": 800,
+     "bytes": 39140
+    },
+    {
+     "src": "assets/stargo-product/ow07-welcome-1200.webp",
+     "width": 1200,
+     "bytes": 74134
+    },
+    {
+     "src": "assets/stargo-product/ow07-welcome-2400.webp",
+     "width": 2400,
+     "bytes": 181042
+    }
+   ]
+  },
+  {
+   "id": "ow08-crm",
+   "sw": "OW08",
+   "src": "assets/stargo-product/ow08-crm.webp",
+   "width": 1600,
+   "height": 1100,
+   "bytes": 112292,
+   "sourceFile": ".wrangler/openwork/ow08-crm.png",
+   "sourceSha256": "f08aacc5433ebb00983ad8a2a988549d34dbd9428cf11c7effab3123797722f3",
+   "sourcePixels": [
+    2560,
+    1760
+   ],
+   "crop": "none",
+   "upscaled": false,
+   "renderer": "tools/openwork/render.mjs",
+   "scene": "crm · 广交会名片 → 客户CRM（右侧面板）",
+   "render": {
+    "cssWidth": 1280,
+    "scale": 2
+   },
+   "variants": [
+    {
+     "src": "assets/stargo-product/ow08-crm-800.webp",
+     "width": 800,
+     "bytes": 41660
+    },
+    {
+     "src": "assets/stargo-product/ow08-crm-1200.webp",
+     "width": 1200,
+     "bytes": 75126
+    },
+    {
+     "src": "assets/stargo-product/ow08-crm-2400.webp",
+     "width": 2400,
+     "bytes": 183748
+    }
+   ]
+  },
+  {
+   "id": "ow09-automation",
+   "sw": "OW09",
+   "src": "assets/stargo-product/ow09-automation.webp",
+   "width": 1600,
+   "height": 1100,
+   "bytes": 96210,
+   "sourceFile": ".wrangler/openwork/ow09-automation.png",
+   "sourceSha256": "1923a65d4d4f3c0521fbeece7bd52482577011d25ffcc7b2aa4d37e68b9376b2",
+   "sourcePixels": [
+    2560,
+    1760
+   ],
+   "crop": "none",
+   "upscaled": false,
+   "renderer": "tools/openwork/render.mjs",
+   "scene": "automation · 报价未回复 → 自动化中心（右侧面板）",
+   "render": {
+    "cssWidth": 1280,
+    "scale": 2
+   },
+   "variants": [
+    {
+     "src": "assets/stargo-product/ow09-automation-800.webp",
+     "width": 800,
+     "bytes": 34190
+    },
+    {
+     "src": "assets/stargo-product/ow09-automation-1200.webp",
+     "width": 1200,
+     "bytes": 61946
+    },
+    {
+     "src": "assets/stargo-product/ow09-automation-2400.webp",
+     "width": 2400,
+     "bytes": 156936
+    }
+   ]
+  },
+  {
+   "id": "ow10-erp",
+   "sw": "OW10",
+   "src": "assets/stargo-product/ow10-erp.webp",
+   "width": 1600,
+   "height": 1100,
+   "bytes": 85610,
+   "sourceFile": ".wrangler/openwork/ow10-erp.png",
+   "sourceSha256": "9a5477fcc3add17a837d7dc9412d43b435561c073ba2ab0348b3cf450bcdd53e",
+   "sourcePixels": [
+    2560,
+    1760
+   ],
+   "crop": "none",
+   "upscaled": false,
+   "renderer": "tools/openwork/render.mjs",
+   "scene": "erp · 定金到账 → 企业ERP 生产工单（右侧面板）",
+   "render": {
+    "cssWidth": 1280,
+    "scale": 2
+   },
+   "variants": [
+    {
+     "src": "assets/stargo-product/ow10-erp-800.webp",
+     "width": 800,
+     "bytes": 30838
+    },
+    {
+     "src": "assets/stargo-product/ow10-erp-1200.webp",
+     "width": 1200,
+     "bytes": 56718
+    },
+    {
+     "src": "assets/stargo-product/ow10-erp-2400.webp",
+     "width": 2400,
+     "bytes": 138640
+    }
+   ]
+  },
+  {
+   "id": "ow11-staff",
+   "sw": "OW11",
+   "src": "assets/stargo-product/ow11-staff.webp",
+   "width": 1600,
+   "height": 1100,
+   "bytes": 130236,
+   "sourceFile": ".wrangler/openwork/ow11-staff.png",
+   "sourceSha256": "18ff2dd2ac1027e8808d6f53179082f48bbd3368612e2acf8e49a8da31555627",
+   "sourcePixels": [
+    2560,
+    1760
+   ],
+   "crop": "none",
+   "upscaled": false,
+   "renderer": "tools/openwork/render.mjs",
+   "scene": "staff · 新询盘派工 → 数字员工花名册（右侧面板）",
+   "render": {
+    "cssWidth": 1280,
+    "scale": 2
+   },
+   "variants": [
+    {
+     "src": "assets/stargo-product/ow11-staff-800.webp",
+     "width": 800,
+     "bytes": 46016
+    },
+    {
+     "src": "assets/stargo-product/ow11-staff-1200.webp",
+     "width": 1200,
+     "bytes": 84516
+    },
+    {
+     "src": "assets/stargo-product/ow11-staff-2400.webp",
+     "width": 2400,
+     "bytes": 218610
+    }
+   ]
+  },
+  {
    "id": "ow12-inquiry-card",
    "sw": "OW12",
    "src": "assets/stargo-product/ow12-inquiry-card.webp",
@@ -523,6 +718,93 @@
      "src": "assets/stargo-product/ow16-follow-card-780.webp",
      "width": 780,
      "bytes": 75152
+    }
+   ]
+  },
+  {
+   "id": "ow17-crm-card",
+   "sw": "OW17",
+   "src": "assets/stargo-product/ow17-crm-card.webp",
+   "width": 1170,
+   "height": 2508,
+   "bytes": 103274,
+   "sourceFile": ".wrangler/openwork/ow17-crm-card.png",
+   "sourceSha256": "75ace09ea95be62d6ed96775c0a3b78861b9092074014b735036bb99295ebcb2",
+   "sourcePixels": [
+    1170,
+    2508
+   ],
+   "crop": "focus-card",
+   "upscaled": false,
+   "renderer": "tools/openwork/render.mjs",
+   "scene": "crm · 名片建档（手机）",
+   "render": {
+    "cssWidth": 390,
+    "scale": 3
+   },
+   "variants": [
+    {
+     "src": "assets/stargo-product/ow17-crm-card-780.webp",
+     "width": 780,
+     "bytes": 66342
+    }
+   ]
+  },
+  {
+   "id": "ow18-automation-card",
+   "sw": "OW18",
+   "src": "assets/stargo-product/ow18-automation-card.webp",
+   "width": 1170,
+   "height": 2085,
+   "bytes": 69408,
+   "sourceFile": ".wrangler/openwork/ow18-automation-card.png",
+   "sourceSha256": "e20346ea658b7132362509fcf80fcad377d6ac8db7fc28d720d696a63ff42cc2",
+   "sourcePixels": [
+    1170,
+    2085
+   ],
+   "crop": "focus-card",
+   "upscaled": false,
+   "renderer": "tools/openwork/render.mjs",
+   "scene": "automation · 自动跟进流程（手机）",
+   "render": {
+    "cssWidth": 390,
+    "scale": 3
+   },
+   "variants": [
+    {
+     "src": "assets/stargo-product/ow18-automation-card-780.webp",
+     "width": 780,
+     "bytes": 44816
+    }
+   ]
+  },
+  {
+   "id": "ow19-erp-card",
+   "sw": "OW19",
+   "src": "assets/stargo-product/ow19-erp-card.webp",
+   "width": 1170,
+   "height": 2673,
+   "bytes": 101210,
+   "sourceFile": ".wrangler/openwork/ow19-erp-card.png",
+   "sourceSha256": "9a041a6b375d1669f1e545ea9d0fd742000a128e209597fb157d9cc680352ab1",
+   "sourcePixels": [
+    1170,
+    2673
+   ],
+   "crop": "focus-card",
+   "upscaled": false,
+   "renderer": "tools/openwork/render.mjs",
+   "scene": "erp · 生产工单（手机）",
+   "render": {
+    "cssWidth": 390,
+    "scale": 3
+   },
+   "variants": [
+    {
+     "src": "assets/stargo-product/ow19-erp-card-780.webp",
+     "width": 780,
+     "bytes": 66396
     }
    ]
   },
@@ -673,6 +955,35 @@
      "src": "assets/stargo-product/ow24-step-log-760.webp",
      "width": 760,
      "bytes": 33268
+    }
+   ]
+  },
+  {
+   "id": "ow25-staff-card",
+   "sw": "OW25",
+   "src": "assets/stargo-product/ow25-staff-card.webp",
+   "width": 1170,
+   "height": 1932,
+   "bytes": 79148,
+   "sourceFile": ".wrangler/openwork/ow25-staff-card.png",
+   "sourceSha256": "2a3c7137844a3e9460a9f3ba01722c15d46306684f9a35a42e08b913e25ac960",
+   "sourcePixels": [
+    1170,
+    1932
+   ],
+   "crop": "focus-card",
+   "upscaled": false,
+   "renderer": "tools/openwork/render.mjs",
+   "scene": "staff · 数字员工派工（手机）",
+   "render": {
+    "cssWidth": 390,
+    "scale": 3
+   },
+   "variants": [
+    {
+     "src": "assets/stargo-product/ow25-staff-card-780.webp",
+     "width": 780,
+     "bytes": 50812
     }
    ]
   },

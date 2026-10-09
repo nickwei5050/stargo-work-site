@@ -27,10 +27,14 @@ const DIST = `${SITE}/dist`;
 mkdirSync(DIST, { recursive: true });
 
 const wanted = new Set();
+// Source files kept in the repo but never requested by a page: the five 2.5 MB 42dot Sans TTFs
+// (the pages load the Hangul-free WOFF2 subsets that tools/subset-42dot.py writes into assets/fonts/).
+const SOURCE_ONLY = /42dotsans-(light|regular|medium|bold|extrabold)\.ttf$/;
 const walk = (dir, rel, out) => {
   for (const e of readdirSync(dir, { withFileTypes: true })) {
     const r = rel ? `${rel}/${e.name}` : e.name;
-    if (e.isDirectory()) walk(`${dir}/${e.name}`, r, out); else out.add(r);
+    if (e.isDirectory()) walk(`${dir}/${e.name}`, r, out);
+    else if (out !== wanted || !SOURCE_ONLY.test(e.name)) out.add(r);   // the prune pass lists dist as it is, source-only files included
   }
 };
 for (const f of readdirSync(SITE)) if (f.endsWith('.html')) wanted.add(f);
@@ -110,41 +114,41 @@ writeFileSync(`${DIST}/robots.txt`, `User-agent: *\nAllow: /\nDisallow: /api/\nS
   const llms = [
     '# STARGO WORK',
     '',
-    '> A browser-based desktop AI operating system for manufacturing and global trade enterprises. 面向制造业与外贸企业的网页桌面级 AI 企业操作系统。',
+    '> The AI workspace for export manufacturers. Its core app, OPEN WORK, works like a chat: analyze inquiries, draft replies, quotes and PIs, find new buyers and give the owner a weekly brief — AI drafts, you decide. 外贸工厂的 AI 工作台，核心应用 OPEN WORK 像聊天一样用。',
     '',
-    'STARGO WORK brings disconnected business work into one browser-based desktop. Growth OS (proactive customer acquisition) and Sales Desk (trade sales) are the two core engines; ERP and fulfillment, AI creative work, 288 specialized AI roles, enterprise knowledge and the business relationship map, proactive work and memory, the browser desktop and owner visibility and controls support them. Principle: delegate the work, keep the authority. Capabilities are enabled in phases according to each company’s configuration and agreed delivery scope.',
+    'STARGO WORK is the system; OPEN WORK is its core app. You ask in a chat, and AI works across the 15 apps in OPEN WORK’s sidebar — Owner Dashboard, Automation Center, Customer CRM, Knowledge Base, Prospecting, Sales Workbench, ERP, Growth Analytics, Workflow Engine, Channels, Store Admin, Control Center, Memory & Evolution, STARGO AI Digital Office and New API (AI Gateway) — to look things up and draft replies, quotes, PIs and outreach. Anything that goes to a customer waits for an authorized person. Principle: delegate the work, keep the authority. Capabilities are enabled in phases according to each company’s configuration and agreed delivery scope. Product images on the site are demonstration interfaces with demo data, shown in Chinese.',
     '',
-    'STARGO WORK 把企业日常经营中分散的工作放进同一个网页桌面：Growth OS 主动获客与 Sales Desk 外贸销售是两大核心引擎，ERP 与履约、AI 创作、288 个专业数字岗位、企业知识与业务关系图、主动工作与记忆、网页桌面，以及老板驾驶舱与管理控制围绕它们协同。原则：把工作交给 AI，把决定权留在企业。各项能力按企业配置与交付范围分阶段开放。',
+    'STARGO WORK 是外贸工厂的 AI 工作台，核心应用是 OPEN WORK。在对话里交代任务，AI 去侧栏里的 15 个应用——老板看板、自动化中心、客户CRM、企业知识库、主动获客、销售工作台、企业ERP、增长分析、工作流引擎、渠道接入、商城后端管理、控制中心、记忆与进化、STARGO AI 数字办公室、New API（AI 网关）——查资料、写回复、报价、PI 和开发信；要发给客户的内容，先由有权人批准。原则：把工作交给 AI，把决定权留在企业。各项能力按企业配置与交付范围分阶段开放。站内产品图是带演示数据的演示界面。',
     '',
     '## Key facts',
     '',
-    '- Growth OS finds dealers, importers, wholesalers and target accounts, researches them, ranks opportunities and prepares outreach plans; approved prospects move into Sales Desk with their context. Core workflows are being built out; live data sources and outreach are connected by authorization.',
-    '- Sales Desk brings inquiries and messages into one intake and carries customer records, product fit, replies, follow-up, quotes and PI to the order handoff. The workspace exists; live channel messaging and business handoffs are connected and validated one by one.',
+    '- Prospecting finds dealers, importers, wholesalers and target accounts, researches them, ranks opportunities and prepares outreach plans; approved prospects move into the Sales Workbench with their context. Core workflows are being built out; live data sources and outreach are connected by authorization.',
+    '- The Sales Workbench brings inquiries and messages into one intake and carries customer records, product fit, replies, follow-up, quotes and PI to the order handoff. It exists; live channel messaging and business handoffs are connected and validated one by one.',
     '- Quotes and PI follow company-approved prices, discount permissions and margin guardrails. Live prices, contracts, signatures and documents depend on connected enterprise systems; approval and sending are separate controls.',
-    '- ERP and commerce application foundations exist; cross-system work and AI actions are configured and accepted per enterprise. Delivery, finance, logistics and service coordination arrive in stages through connected systems; filings, payments and professional reviews are confirmed by authorized people.',
-    `- 288 is the size of a directory of specialized AI roles across ten enterprise role groups: ${groups.map((g) => `${g.name.en} ${g.count}`).join(', ')} (total ${total}). It is not a claim to replace 288 people; the employees enabled, the size of a collaboration and permitted actions follow the company’s configuration, budget and access.`,
-    '- AI teamwork is available: several AI employees form a team for one task, message each other, work in parallel, and a coordinating role checks and consolidates one result for a person to confirm. Collaboration rounds, budgets and permitted actions are capped; work can be stopped at any time; human approval, pause and takeover remain; shared task context does not grant other employees’ permissions; external actions need an authorized approval.',
+    '- ERP and commerce application foundations exist; cross-app work and AI actions are configured and accepted per enterprise. Delivery, finance, logistics and service coordination arrive in stages through connected systems; filings, payments and professional reviews are confirmed by authorized people.',
+    `- STARGO WORK has 288 digital employees across ten enterprise function groups: ${groups.map((g) => `${g.name.en} ${g.count}`).join(', ')} (total ${total}). 288 is the size of the roster, not a claim to replace 288 people; the employees enabled, the size of a collaboration and permitted actions follow the company’s configuration, budget and access.`,
+    '- AI teamwork is available: several digital employees form a team for one task, message each other, work in parallel, and a coordinating role checks and consolidates one result for a person to confirm. Collaboration rounds, budgets and permitted actions are capped; work can be stopped at any time; human approval, pause and takeover remain; shared task context does not grant other employees’ permissions; external actions need an authorized approval.',
     '- One-click AI video is available: brief, script, storyboard, visuals, voiceover, captions and export of a playable, exportable file in portrait, landscape or square, with a reviewable production plan, individually redone shots and recorded versions and costs. Finished videos are reviewed by people before publishing; generation runs within the services and credits the company enables; assets must be ones the company may use.',
     '- Viral creative adaptation is available: an authorized reference video is analyzed for structure and rebuilt around your product and brand as three original directions. It never copies footage, faces, voices, music, logos or watermarks, and viral performance is not guaranteed.',
     '- AI images and brand content: the creative workspace is present; one-click marketing-kit production and local checks are being integrated; publishing to external channels needs separate authorization.',
-    '- Enterprise knowledge and the business relationship map have foundations; richer relationships and enterprise templates arrive in stages. Proactive work, unified long-term memory and advanced improvement are still evolving; proactive work is not consciousness or unrestricted autonomy.',
-    '- The browser desktop comes first; voice, automation, external actions, native clients, mobile and mini-programs follow in phases by enabled scope. Owner dashboards show metrics only from connected data.',
+    '- The Knowledge Base and the business relationship map (Memory & Evolution) have foundations; richer relationships and enterprise templates arrive in stages. Proactive work, unified long-term memory and advanced improvement are still evolving; proactive work is not consciousness or unrestricted autonomy.',
+    '- OPEN WORK runs in a browser; voice, automation, external actions, native clients, mobile and mini-programs follow in phases by enabled scope. The Owner Dashboard shows metrics only from connected data.',
     '- Human control: authorized people approve quotations, outreach, important commitments, official filings and payments. Approved is not sent, and sent is not received or done.',
     '',
     // The same facts in Chinese, in the site's own terms: most buyers ask in Chinese.
     '## 要点（中文）',
     '',
-    '- Growth OS 寻找经销商、进口商、批发商和目标企业，完成背调、判断商机并准备开发计划；确认后的客户连同背景转入 Sales Desk。核心流程建设中，真实数据与客户触达按授权接入。',
-    '- Sales Desk 统一询盘与消息入口，把客户资料、产品匹配、回复、跟进、报价和 PI 连到订单交接。工作台已经具备；各渠道真实收发与业务交接逐项连接、验证。',
+    '- 主动获客寻找经销商、进口商、批发商和目标企业，完成背调、判断商机并准备开发计划；确认后的客户连同背景转入销售工作台。核心流程建设中，真实数据与客户触达按授权接入。',
+    '- 销售工作台统一询盘与消息入口，把客户资料、产品匹配、回复、跟进、报价和 PI 连到订单交接。工作台已经具备；各渠道真实收发与业务交接逐项连接、验证。',
     '- 报价与 PI 按企业确认的价格、折扣权限和利润边界起草；真实价格、合同、签章与单证按企业系统接通；批准与发送分别受控。',
-    '- 已有 ERP 与商城应用基础，跨系统协同和 AI 操作按企业配置验收；履约、财务、物流与服务按已接入的系统分阶段交付；正式申报、付款和专业审阅由有权人员确认。',
-    `- 288 是专业数字岗位目录的数量，覆盖十类企业职能：${groups.map((g) => `${g.name.zh} ${g.count}`).join('、')}（合计 ${total}）。不代表替代 288 名真人；实际启用的员工、协作规模与可执行动作，按企业配置、预算和权限确定。`,
-    '- AI 团队协作现已可用：多位 AI 员工为同一任务组队、互发消息、并行处理，由统筹角色检查并汇总成一个结果交人确认。协作轮次、预算和可执行动作都有上限，随时可以叫停；人工审批、暂停与接管始终保留；共享任务信息不授予其他员工的权限；对外动作须经授权审批。',
+    '- 已有 ERP 与商城应用基础，跨应用协同和 AI 操作按企业配置验收；履约、财务、物流与服务按已接入的系统分阶段交付；正式申报、付款和专业审阅由有权人员确认。',
+    `- STARGO WORK 有 288 名数字员工，覆盖十类企业职能：${groups.map((g) => `${g.name.zh} ${g.count}`).join('、')}（合计 ${total}）。288 是名册的规模，不代表替代 288 名真人；实际启用的员工、协作规模与可执行动作，按企业配置、预算和权限确定。`,
+    '- 数字员工团队协作现已可用：多名数字员工为同一任务组队、互发消息、并行处理，由统筹角色检查并汇总成一个结果交人确认。协作轮次、预算和可执行动作都有上限，随时可以叫停；人工审批、暂停与接管始终保留；共享任务信息不授予其他员工的权限；对外动作须经授权审批。',
     '- AI 一键生成视频现已可用：制作需求、脚本、分镜、画面、配音、字幕到导出，交付竖版、横版或方版的可播放、可导出视频文件；生成前先审阅制作方案，失败镜头单独重做，版本与成本有记录。成片经人工审核后发布；生成按企业开通的服务与额度运行；所用素材须是企业有权使用的。',
     '- 爆款结构再创作现已可用：拆解有权使用的参考视频的结构，结合自身产品与品牌形成三个原创方向。不复制原片、人脸、声音、音乐、标志或水印，不承诺必成爆款。',
     '- AI 作图与品牌内容：创意工作室已有基础；商品营销套件的一键编排与局部检查持续整合；发布到外部渠道需单独授权。',
-    '- 企业知识与业务关系图已有基础，更丰富的关联和企业资料模板逐步完善。主动工作、统一长期记忆与高级改进持续完善；主动工作不是人的意识，也不是无限制的自主决定。',
-    '- 网页桌面是当前重点；语音、自动化、对外动作、原生客户端、移动端和小程序按开放范围分阶段推进。老板驾驶舱的指标只来自已接入的数据。',
+    '- 企业知识库与业务关系图（记忆与进化）已有基础，更丰富的关联和企业资料模板逐步完善。主动工作、统一长期记忆与高级改进持续完善；主动工作不是人的意识，也不是无限制的自主决定。',
+    '- OPEN WORK 在浏览器里使用；语音、自动化、对外动作、原生客户端、移动端和小程序按开放范围分阶段推进。老板看板的指标只来自已接入的数据。',
     '- 人的决定权：报价、对外触达、重要承诺、正式申报和资金支付由有权人员批准。已批准不等于已发送，已发送不等于已收到或已办完。',
     '',
     '## Pages',

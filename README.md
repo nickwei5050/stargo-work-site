@@ -13,7 +13,7 @@ interactions kept intact; the words and the information architecture are STARGO'
 | `capabilities.html` | the nine-stage loop, then 14 capability groups | Mono work page + two tables |
 | `workforce.html` | who is on the AI team: roles, what each one owns, what the team gets done | Lifelogx **feature** page |
 | `about.html` | what STARGO WORK is, where it comes from, how it is built; five workflow entry points | Lifelogx about page |
-| `blog.html`, `blog/<slug>.html` | articles (data in `tools/blog.mjs`, one structure: answer, key takeaways, sections, FAQ with matching FAQPage data): the illustrated STARGO WORK guide with its web charts, starting with one workflow, Sales Desk from inquiry to PI, who decides, the browser-based AI operating system, 288 AI roles and teamwork, enterprise knowledge and the relationship map | Lifelogx blog and article pages |
+| `blog.html`, `blog/<slug>.html` | articles (data in `tools/blog.mjs`, one structure: answer, key takeaways, sections, FAQ with matching FAQPage data): the illustrated STARGO WORK guide with its web charts, starting with one workflow, Sales Desk from inquiry to PI, who decides, the browser-based AI operating system, 288 AI roles and teamwork, enterprise knowledge and the relationship map | OPEN WORK design (`tools/ow-blocks/blog.mjs`, since 2026-10-09; was the Lifelogx blog and article pages) |
 | `pricing.html` | the AI ladder: Standard → Launch → Growth → Global Acquisition → Enterprise, with a first-year / renewal switch, the plan comparison and ten pricing questions | cinery pricing header and price card, renok tier band and comparison chart, cinery reviews, Scalora closing band and FAQ |
 | `enterprise.html` | delegate the work, keep the authority | Mono studio page |
 | `contact.html` | start with one workflow | Mono contact page |
@@ -23,8 +23,9 @@ interactions kept intact; the words and the information architecture are STARGO'
 
 ```bash
 node tools/imagegen/prepare-assets.mjs # only after new generated originals: encode responsive artwork + manifest
-NODE_USE_ENV_PROXY=1 node tools/lifelogx-prepare.mjs   # only after changing tools/templates/lifelogx: mirrors assets, namespaces CSS, cuts five page fragments plus two snippets (the closing wordmark, the pricing block), exports interactions
-node tools/blog-covers.mjs           # only after adding an article: re-encodes its cover into assets/blog/
+NODE_USE_ENV_PROXY=1 node tools/lifelogx-prepare.mjs   # no page uses the Lifelogx layout since 2026-10-09 (the blog moved to the OPEN WORK design); kept for history. Only after changing tools/templates/lifelogx: mirrors assets, namespaces CSS, cuts five page fragments plus two snippets (the closing wordmark, the pricing block), exports interactions
+python3 tools/subset-42dot.py       # no page loads css/lifelogx.lx.css since 2026-10-09; only after re-mirroring the 42dot Sans TTFs: writes the Hangul-free WOFF2 faces css/lifelogx.lx.css loads (assets/fonts/42dotsans-*-latin.woff2, ~37 KB each instead of 2.5 MB); needs fonttools + brotli
+node tools/blog-covers.mjs           # only after adding an article or re-rendering its OPEN WORK scene: crops its 2:1 cover (tools/blog.mjs COVER_RENDER + the region in BOX) into assets/blog/; needs python + Pillow
 node tools/openwork/render.mjs       # only after changing an OPEN WORK scene (tools/openwork/scenes.mjs): renders the ow* product images and the share cover, registers them; needs STARGO_TOOL_PACKAGE for sharp/fonts/icons (tools/openwork/README.md)
 node tools/mirror-donor-assets.mjs   # fetches the donor templates' own photography/video into assets/<donor>/ (Webflow exports never bundle images); idempotent, driven by tools/fragments/donor-assets.json
 node tools/capability-donors.mjs     # only after changing a capability-page block: cuts each block out of its donor template (tools/blocks/*.mjs say which), writes tools/fragments/<id>.html, the reduced per-donor stylesheet, and the interaction payload

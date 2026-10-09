@@ -8,9 +8,10 @@
  */
 import { esc, heading, para, button } from './shared.mjs';
 
-export function render({ lang, t, C, faqWrapper }) {
+export function render({ lang, t, C, faqWrapper, faq }) {
   const O = C.HOME_OW;
-  const F = O.faq;
+  /* a product page passes its own four questions (same shape as HOME_OW.faq) */
+  const F = faq ?? O.faq;
   let html = faqWrapper;
   if (!html.startsWith('<div class="faq-wrapper">')) throw new Error('ow faq: template accordion not found');
   const n = (html.match(/class="toggle-wrapper"/g) ?? []).length;

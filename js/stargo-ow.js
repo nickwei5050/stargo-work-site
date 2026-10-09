@@ -1,8 +1,11 @@
-/* OPEN WORK homepage behaviour (tools/ow-blocks): the showcase tabs, the
-   product-shot lightbox and the demo bar. Hand-written, no dependencies,
-   loaded with defer on the two homepages only. Without it every showcase
-   panel is shown in turn (css/stargo-ow.css), the pictures stay as they are
-   and the demo bar never appears. */
+/* OPEN WORK page behaviour (tools/ow-blocks): the showcase tabs, the
+   product-shot lightbox, the demo bar, the product page's folded catalogue,
+   the pricing questions and the contact form's plan. Hand-written, no
+   dependencies, loaded with defer on every page tools/build-site.mjs builds
+   with owShell (all but the blog). Without it every
+   showcase panel is shown in turn (css/stargo-ow.css), the pictures stay as
+   they are, the catalogue groups open by hand and the demo bar never
+   appears. */
 (function () {
   'use strict';
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -45,16 +48,30 @@
   var sets = document.querySelectorAll('[data-ow-tabs]');
   for (var s = 0; s < sets.length; s++) initTabs(sets[s]);
 
-  /* ---- demo bar: in once the hero's buttons are gone, out at the demo band */
+  /* ---- demo bar: in once the hero's buttons are gone, out at the demo band,
+     and out while it would sit on a product shot (it used to cover the
+     showcase's own words, 「批准前不会发给客户」). Its box is read without the
+     slide-in transform (offset*), so the test does not depend on whether it
+     is showing. */
   (function () {
     var bar = document.querySelector('[data-ow-sticky]');
     var cta = document.querySelector('.ow-hero .ow-cta-row');
     var demo = document.getElementById('demo');
     if (!bar || !cta || !demo) return;
+    var shots = document.querySelectorAll('.ow-shot .ow-frame, .ow-shot-meta, [data-ow-avoid]');
     var on = false;
+    function overShot() {
+      var top = bar.offsetTop - 8, bottom = bar.offsetTop + bar.offsetHeight + 8;
+      var left = bar.offsetLeft - 8, right = bar.offsetLeft + bar.offsetWidth + 8;
+      for (var i = 0; i < shots.length; i++) {
+        var r = shots[i].getBoundingClientRect();
+        if (r.width && r.top < bottom && r.bottom > top && r.left < right && r.right > left) return true;
+      }
+      return false;
+    }
     function update() {
       var h = window.innerHeight || document.documentElement.clientHeight;
-      var show = cta.getBoundingClientRect().bottom < 0 && demo.getBoundingClientRect().top > h * 0.85;
+      var show = cta.getBoundingClientRect().bottom < 0 && demo.getBoundingClientRect().top > h * 0.85 && !overShot();
       if (show === on) return;
       on = show;
       bar.classList.toggle('is-on', show);
@@ -65,6 +82,68 @@
     window.addEventListener('scroll', queue, { passive: true });
     window.addEventListener('resize', queue);
     update();
+  })();
+
+  /* ---- folded catalogue (product page): open the group an address names
+     (capabilities.html#g08, from an article or a link on the page), and the
+     「全部展开 / 全部收起」 button. Without this script every group is a plain
+     <details> the reader opens by hand. */
+  (function () {
+    function openTarget() {
+      var id = '';
+      try { id = decodeURIComponent(location.hash.slice(1)); } catch (e) { return; }
+      var el = id && document.getElementById(id);
+      var d = el && (el.tagName === 'DETAILS' ? el : el.closest && el.closest('details'));
+      if (d && !d.open) d.open = true;
+    }
+    openTarget();
+    window.addEventListener('hashchange', openTarget);
+    var all = document.querySelectorAll('[data-ow-expand]');
+    for (var i = 0; i < all.length; i++) {
+      (function (btn) {
+        var root = document.querySelector(btn.getAttribute('data-ow-expand'));
+        if (!root) return;
+        var label = btn.querySelector('span');
+        btn.addEventListener('click', function () {
+          var on = btn.getAttribute('aria-pressed') !== 'true';
+          var groups = root.querySelectorAll('details');
+          for (var j = 0; j < groups.length; j++) groups[j].open = on;
+          btn.setAttribute('aria-pressed', String(on));
+          if (label) label.textContent = btn.getAttribute(on ? 'data-label-close' : 'data-label-open');
+        });
+      })(all[i]);
+    }
+  })();
+
+  /* ---- pricing questions (<details>): aria-expanded follows the answer, and
+     Escape closes an open one. Without this script they still open and close. */
+  (function () {
+    var items = document.querySelectorAll('[data-ow-faq] details');
+    for (var i = 0; i < items.length; i++) {
+      (function (d) {
+        var q = d.querySelector('summary');
+        if (!q) return;
+        function sync() { q.setAttribute('aria-expanded', String(d.open)); }
+        d.addEventListener('toggle', sync);
+        q.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && d.open) { e.preventDefault(); d.open = false; sync(); }
+        });
+        sync();
+      })(items[i]);
+    }
+  })();
+
+  /* ---- the demo form names the plan a pricing card linked from
+     (contact.html?plan=growth …); without the script the select says
+     「还没决定」 and the reader picks one. */
+  (function () {
+    var sel = document.querySelector('[data-ow-plan]');
+    if (!sel) return;
+    var m = /[?&]plan=([a-z-]+)/.exec(location.search);
+    if (!m) return;
+    for (var i = 0; i < sel.options.length; i++) {
+      if (sel.options[i].value === m[1]) { sel.selectedIndex = i; break; }
+    }
   })();
 
   /* ---- lightbox ---------------------------------------------------------

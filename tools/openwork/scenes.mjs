@@ -251,6 +251,180 @@ body.narrow .mail.excerpt{max-height:9.6em}
 body.convo .shot{padding:22px 20px 20px}
 body.convo .msg-u{margin-left:auto}
 body.narrow .fup .draft{font-size:13.5px;white-space:normal;text-wrap:pretty;overflow:visible;line-height:1.5;padding:7px 11px;margin-top:7px}
+
+/* ---- welcome (the real OPEN WORK home view) ---------------------------- */
+.wtop{height:56px;flex:none;display:flex;align-items:center;gap:18px;padding:0 22px}
+.crumb{display:flex;align-items:center;gap:8px;font-size:14.5px;color:var(--ink)}
+.crumb b{font-weight:700;letter-spacing:.02em}
+.crumb span{color:var(--ink3)}
+.crumb .i{width:14px;height:14px;color:var(--ink2)}
+.wsearch{flex:1;max-width:430px;margin-left:auto;margin-right:auto;height:36px;border:1px solid var(--line);background:#fbfaf8;border-radius:10px;display:flex;align-items:center;gap:9px;padding:0 13px;color:#9a968f;font-size:12.5px}
+.wsearch .i{width:15px;height:15px;color:var(--ink2)}
+.wbody{flex:1;min-height:0;overflow:hidden;padding:0 26px;display:flex;flex-direction:column}
+.whero{position:relative;overflow:hidden;border-radius:16px;padding:30px 30px 28px;background:linear-gradient(115deg,#e9f1fd 0%,#f1f5fc 46%,#e6eefb 100%);border:1px solid #dfe7f5}
+.whero .globe{position:absolute;right:-60px;top:-70px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle at 40% 40%,rgba(255,255,255,.9),rgba(214,228,250,.4) 55%,rgba(196,214,245,.0) 70%);}
+.whero .dots{position:absolute;right:20px;top:-20px;width:380px;height:300px;opacity:.55;background-image:radial-gradient(#9fb7e3 1.1px,transparent 1.2px);background-size:9px 9px;-webkit-mask-image:radial-gradient(ellipse 60% 55% at 60% 45%,#000 40%,transparent 72%);mask-image:radial-gradient(ellipse 60% 55% at 60% 45%,#000 40%,transparent 72%)}
+.whero small{position:relative;display:block;font-size:11px;letter-spacing:.14em;color:#5d6b85;font-weight:600}
+.whero h1{position:relative;margin:6px 0 2px;font-size:31px;font-weight:800;letter-spacing:.01em;color:#101828}
+.whero h2{position:relative;margin:0 0 10px;font-size:20px;font-weight:500;color:#344054}
+.whero p{position:relative;margin:0;font-size:13.5px;line-height:1.75;color:#475467;max-width:470px}
+.whero .script{position:absolute;right:46px;bottom:34px;font-family:'Brush Script MT','Segoe Script',cursive;font-style:italic;font-size:25px;color:#2c3e66;transform:rotate(-8deg);letter-spacing:.01em}
+.wsec{display:flex;align-items:baseline;gap:10px;margin:24px 2px 3px}
+.wsec b{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:700}
+.wsec b .i{width:18px;height:18px;color:#101828;fill:#101828}
+.wsec a{margin-left:auto;font-size:12.5px;color:var(--ink2);display:flex;align-items:center;gap:4px;text-decoration:none}
+.wsec a .i{width:14px;height:14px}
+.wsub{font-size:13px;color:var(--ink3);margin:0 2px 14px}
+.wtabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:nowrap}
+.wtab{height:33px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:#fbfaf8;font-size:13px;display:flex;align-items:center;color:#26252a;white-space:nowrap}
+.wtab.on{background:#e3ecfb;border-color:#c9d9f6;color:#1446ad;font-weight:600}
+.wcards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.wcard{position:relative;border:1px solid var(--line);border-radius:13px;padding:16px 16px 15px;background:#fff}
+.wcard .ic{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;margin-bottom:8px}
+.wcard .ic .i{width:18px;height:18px}
+.wcard b{display:block;font-size:14.5px;font-weight:700;margin-bottom:4px}
+.wcard p{margin:0;font-size:12.5px;line-height:1.6;color:#5c5a56}
+.wcard .go{position:absolute;right:13px;top:14px;width:16px;height:16px;color:var(--ink2)}
+.wcomp{margin:16px 0 24px;margin-top:auto;border:1px solid #dcd8d1;background:#fff;border-radius:16px;padding:12px 12px 10px 16px;box-shadow:0 1px 2px rgba(30,25,20,.04)}
+.wcomp .ph{font-size:13.5px;color:#9a968f;margin-bottom:12px}
+.wcomp .row{display:flex;align-items:center;gap:8px}
+.wcomp .pill{height:30px;padding:0 11px;border:1px solid var(--line);border-radius:999px;display:flex;align-items:center;gap:6px;font-size:12.5px;color:#26252a;background:#fbfaf8;white-space:nowrap}
+.wcomp .pill .i{width:14px;height:14px}
+.wcomp .plus{width:30px;padding:0;justify-content:center}
+.wcomp .mode{margin-left:auto}
+.wcomp .go2{width:36px;height:36px;border-radius:50%;background:#16161a;color:#fff;display:grid;place-items:center}
+.wcomp .go2 .i{width:17px;height:17px;stroke-width:2.4}
+/* ---- split: chat + an app open in the right panel ----------------------- */
+.split{flex:1;min-height:0;display:flex;border-top:1px solid var(--line)}
+.top .tl{display:flex;align-items:center;gap:10px}
+.top .bmark{display:flex;align-items:center;gap:6px;font-weight:700;letter-spacing:.02em;color:#141a33}
+.top .bmark .spark{width:14px;height:14px}
+.top .sep{color:var(--ink3)}
+.split .chatcol{width:440px;flex:none;display:flex;flex-direction:column;border-right:1px solid var(--line)}
+.split .chatcol .thread{padding:12px 18px 0}
+.split .chatcol .col{width:100%;max-width:none}
+.split .chatcol .msg-u{max-width:100%}
+.split .chatcol .dock{padding:6px 18px 12px}
+.panel{flex:1;min-width:0;display:flex;flex-direction:column;background:#fbfaf8}
+.ptabs{height:42px;flex:none;display:flex;align-items:center;gap:2px;padding:0 10px;border-bottom:1px solid var(--line);background:#f3f1ed}
+.ptab{height:30px;padding:0 11px;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink2);border-radius:7px;white-space:nowrap}
+.ptab .i{width:13px;height:13px}
+.ptab.on{background:#fff;color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.ptab.on .x{width:12px;height:12px;color:var(--ink3);margin-left:2px}
+.ptabs .tools{margin-left:auto;display:flex;gap:10px;color:var(--ink3);padding-right:4px}
+.ptabs .tools .i{width:14px;height:14px}
+.app2{flex:1;min-height:0;display:flex}
+.app2 .nav2{width:160px;flex:none;border-right:1px solid var(--line);padding:12px 8px;background:#f8f7f4}
+.app2 .nav2 .ws{display:flex;align-items:center;gap:7px;font-weight:700;font-size:13.5px;padding:0 6px 10px}
+.app2 .nav2 .ws i{width:20px;height:20px;border-radius:5px;background:#16161a;color:#fff;font-style:normal;font-size:10px;font-weight:700;display:grid;place-items:center}
+.app2 .nav2 .lb{font-size:12px;color:var(--ink3);padding:6px 6px 4px}
+.app2 .nav2 .it{display:flex;align-items:center;gap:8px;height:30px;padding:0 6px;border-radius:6px;font-size:13px;color:#33312d}
+.app2 .nav2 .it .i{width:14px;height:14px;color:var(--ink2)}
+.app2 .nav2 .it.on{background:#e8e5df;font-weight:600}
+.app2 .body2{flex:1;min-width:0;display:flex;flex-direction:column;background:#fff}
+.app2 .hd2{height:48px;flex:none;display:flex;align-items:center;gap:10px;padding:0 14px;border-bottom:1px solid #eeebe6;font-size:14.5px;font-weight:600}
+.app2 .hd2 .i{width:15px;height:15px;color:var(--ink2)}
+.app2 .hd2 .cnt{font-weight:400;color:var(--ink3);font-size:13px}
+.app2 .hd2 .btn .i{color:inherit}
+.app2 .hd2 .btn{margin-left:auto}
+.app2 .tb{height:40px;flex:none;display:flex;align-items:center;gap:14px;padding:0 14px;border-bottom:1px solid #eeebe6;font-size:13px;color:var(--ink2)}
+.app2 .tb .i{width:13px;height:13px;vertical-align:-2px;margin-right:4px}
+.app2 .tb .r{margin-left:auto;display:flex;gap:14px}
+.app2 table{font-size:13px}
+.app2 th{font-size:12.5px;padding:8px 8px 8px 10px;background:#fafaf8}
+.app2 td{padding:9px 8px 9px 10px;border-bottom:1px solid #f0eee9}
+.app2 td:last-child,.app2 th:last-child{padding-right:14px}
+.app2 tr.new td{background:#f3f8ff}
+.app2 tr.merge td{background:#fffaf0}
+.app2 .co{display:flex;align-items:center;gap:7px;font-weight:500}
+.app2 .co i{width:20px;height:20px;border-radius:4px;font-style:normal;font-size:10px;font-weight:700;display:grid;place-items:center;color:#fff}
+.app2 .who{display:flex;align-items:center;gap:6px}
+.app2 .who i{width:18px;height:18px;border-radius:50%;background:#e8e5df;font-style:normal;font-size:9.5px;display:grid;place-items:center;color:#4f4d49}
+.foot2,.app2 .foot2{height:40px;flex:none;display:flex;align-items:center;gap:12px;padding:0 14px;border-top:1px solid #eeebe6;font-size:12.5px;color:var(--ink3);margin-top:auto}
+.tog{display:inline-block;width:28px;height:16px;border-radius:999px;background:#d8d4cd;position:relative;vertical-align:middle}
+.tog::after{content:'';position:absolute;left:2px;top:2px;width:12px;height:12px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.tog.on{background:#1756d6}
+.tog.on::after{left:14px}
+.flowname{font-weight:500}
+.flowname small{display:block;color:var(--ink3);font-size:12px;font-weight:400}
+.mods{display:flex;flex-wrap:wrap;gap:6px;padding:10px 14px;border-bottom:1px solid #eeebe6}
+.mod{display:flex;align-items:center;gap:6px;height:30px;padding:0 10px 0 6px;border:1px solid #e6e3dd;border-radius:8px;font-size:13px;background:#fff}
+.mod b{width:18px;height:18px;border-radius:5px;display:grid;place-items:center;color:#fff}
+.mod b .i{width:11px;height:11px;stroke-width:2.2}
+.mod.on{border-color:#c9d9f6;background:#f3f7ff;font-weight:600;color:#1446ad}
+.formcard{margin:12px 14px;border:1px solid #e6e3dd;border-radius:10px;overflow:hidden}
+.formcard .fh{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#fafaf8;border-bottom:1px solid #eeebe6;font-size:13.5px;font-weight:600}
+.formcard .fh .tag{margin-left:auto}
+.fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px 14px;padding:11px 12px;font-size:13px}
+.fgrid span{display:block;color:var(--ink3);font-size:12px}
+
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 6px;padding:11px 14px;font-size:12.5px}
+.flow .fsw{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.flow .fs{display:flex;align-items:center;gap:5px;height:26px;padding:0 9px;border:1px solid var(--line);border-radius:7px;background:#fff;white-space:nowrap}
+.flow .fs .i{width:13px;height:13px;color:var(--ink2)}
+.flow .fs.gate{border-color:#c9d9f6;background:#f3f7ff;color:#1446ad;font-weight:600}
+.flow .fs.gate .i{color:#1446ad}
+.flow .arr{width:13px;height:13px;color:var(--ink3)}
+.runs{margin:4px 14px 0;border:1px solid #eeebe6;border-radius:10px;overflow:hidden}
+.runs .rh{display:flex;align-items:center;gap:7px;padding:9px 12px;background:#fafaf8;border-bottom:1px solid #eeebe6;font-size:13px;font-weight:600;color:var(--ink2)}
+.runs .rh .i{width:14px;height:14px}
+.run{display:flex;align-items:center;gap:9px;padding:9px 12px;border-bottom:1px solid #f0eee9;font-size:13px}
+.run:last-child{border-bottom:0}
+.run .dot{width:8px;height:8px;border-radius:50%;flex:none}
+.run .dot.a{background:#1f8a4c}.run .dot.w{background:#d38a12}.run .dot.b{background:#1756d6}
+.run b{font-weight:600;white-space:nowrap}
+.run .rt{color:var(--ink2);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.run em{font-style:normal;color:var(--ink3);white-space:nowrap}
+
+.staffhd{padding:14px 16px 6px;background:#fff}
+.staffhd h3{margin:0;display:flex;align-items:baseline;gap:8px;font-size:19px;font-weight:800}
+.staffhd h3 small{font-size:13px;font-weight:400;color:var(--ink3)}
+.staffhd p{margin:5px 0 10px;font-size:13px;color:var(--ink2);line-height:1.6}
+.staffhd .sbox{height:32px;border:1px solid var(--line);border-radius:8px;display:flex;align-items:center;gap:8px;padding:0 11px;font-size:13px;color:#9a968f;max-width:320px}
+.staffhd .sbox .i{width:14px;height:14px}
+.chipsx{display:flex;gap:6px;padding:8px 16px 10px;background:#fff;border-bottom:1px solid #eeebe6;flex-wrap:nowrap;overflow:hidden}
+.chipx{height:28px;padding:0 10px;border:1px solid #e6e3dd;border-radius:999px;font-size:12px;display:flex;align-items:center;gap:4px;white-space:nowrap;color:#3a3935}
+.chipx b{font-weight:600;color:var(--ink3)}
+.chipx.on{background:#16161a;color:#fff;border-color:#16161a}
+.chipx.on b{color:#cfcfd4}
+.sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:10px 16px;background:#fbfaf8;flex:1;min-height:0;overflow:hidden;align-content:start}
+.scard{border:1px solid #e6e3dd;border-radius:11px;background:#fff;padding:10px 13px 9px}
+.scard .top2{display:flex;gap:9px;align-items:center}
+.scard .av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:15px;font-weight:700;color:#fff;flex:none}
+.scard b{display:block;font-size:14px;font-weight:700}
+.scard small{display:block;font-size:12px;color:var(--ink3)}
+.scard .ok{display:flex;align-items:center;gap:4px;font-size:11.5px;color:#1f8a4c}
+.scard .ok::before{content:'';width:6px;height:6px;border-radius:50%;background:#1f8a4c}
+.scard p{margin:8px 0 7px;font-size:12.5px;line-height:1.55;color:#4f4d49}
+.scard .dep{display:inline-block;font-size:11.5px;padding:2px 7px;border-radius:5px;background:#f1efeb;color:#5d5a55}
+.scard .st{display:flex;gap:12px;margin-top:8px;font-size:12px;color:var(--ink3)}
+.scard .st b{display:inline;font-size:12px;color:var(--ink);font-weight:600}
+.scard.hl{border-color:#c9d9f6;box-shadow:0 0 0 2px #e5edfb}
+
+/* ---- phone cards of the split scenes (crm / automation / erp / staff) ----- */
+.clist{padding:2px 14px}
+.crow{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid #ece9e4}
+.crow:last-child{border-bottom:0}
+.crow .lg{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;font-size:14px;font-weight:700;color:#fff;flex:none;font-style:normal}
+.crow .lg.round{border-radius:50%}
+.crow .bd{flex:1;min-width:0}
+.crow .bd b{display:block;font-weight:600;font-size:12.5px}
+.crow .bd small{display:block;color:var(--ink3);font-size:12px}
+.crow .tag{margin-left:auto}
+.crow.hl{margin:0 -14px;padding-left:14px;padding-right:14px;background:#fffaf0}
+body.narrow .clist{padding:2px 14px}
+body.narrow .crow{padding:11px 0;gap:12px}
+body.narrow .crow.hl{padding-left:14px;padding-right:14px}
+body.narrow .crow .lg{width:38px;height:38px;font-size:16px}
+body.narrow .crow .bd b{font-size:15px;line-height:1.35}
+body.narrow .crow .bd small{font-size:13.5px;line-height:1.45;margin-top:1px}
+body.narrow .flow{flex-direction:column;align-items:stretch;gap:0;padding:12px 14px 6px}
+body.narrow .flow .fs{height:40px;font-size:14.5px;padding:0 13px;gap:10px;border-radius:10px}
+body.narrow .flow .fs .i{width:16px;height:16px}
+body.narrow .flow .arr{align-self:center;width:16px;height:16px;margin:2px 0}
+body.narrow .fgrid{grid-template-columns:1fr 1fr;gap:10px 14px;padding:12px 14px;font-size:14.5px}
+body.narrow .fgrid span{font-size:12.5px}
+body.narrow .kv{grid-template-columns:auto 1fr;gap:8px 18px;font-size:14.5px;padding:12px 14px}
 `;
 }
 
@@ -288,6 +462,15 @@ ${body}
 
   const steps = (head, list) => `<div class="steps" data-hot="steps"><div class="h">${icon('circle-check')}${head}</div>
 ${list.map(([t, sub, warn, hot]) => `<div class="step${warn ? ' warn' : ''}"${hot ? ` data-hot="${hot}"` : ''}>${icon(warn ? 'triangle-alert' : 'check')}<div>${t}${sub ? ` <small><span class="dot">· </span>${sub}</small>` : ''}</div></div>`).join('\n')}</div>`;
+
+  /** Chat on the left, an app open in the right panel (the real OPEN WORK app panel with tabs). */
+  const split = (title, tabs, activeTab, chatBody, panelBody) => doc(title, '', `<div class="app">
+<main class="main">
+  <div class="top"><span class="tl"><span class="iconbtn">${icon('panel-left')}</span><b class="bmark">${icon('sparkle', 'spark').replace('stroke="currentColor"', 'stroke="#1756d6" fill="#1756d6"')}OPEN WORK</b><span class="sep">/</span><b>${title}</b></span><span class="iconbtn">${icon('panel-right')}</span></div>
+  <div class="split"><div class="chatcol"><div class="thread"><div class="col">${chatBody}</div></div><div class="dock"><div class="col">${composer('继续追问，或输入 / 选择操作')}</div></div></div>
+  <div class="panel"><div class="ptabs">${tabs.map((t, i) => `<span class="ptab${i === activeTab ? ' on' : ''}">${t}${i === activeTab ? icon('x', 'x') : ''}</span>`).join('')}<span class="tools">${icon('circle-help')}${icon('rotate-cw')}${icon('external-link')}</span></div>${panelBody}</div></div>
+</main></div>`);
+
   const bar = (msg, buttons) => `<div class="bar" data-hot="bar">${icon('shield-check')}<span class="msg">${msg}</span><span class="sp"></span><span class="btns">${buttons}</span></div>`;
   const btn = (label, ic, pri = false, hot = '') => `<span class="btn${pri ? ' pri' : ''}"${hot ? ` data-hot="${hot}"` : ''}>${ic ? icon(ic) : ''}${label}</span>`;
 
@@ -466,12 +649,228 @@ ${followCard(4)}` },
     'outreach-focus': convo('outreach'),
     'brief-focus': convo('brief'),
 
+
+    /* ---- welcome: the real OPEN WORK home view (owner screenshot 2026-10-09) ---- */
+    welcome: doc('欢迎', '', `<div class="app">${sidebar(null)}
+<main class="main">
+  <div class="wtop"><div class="crumb"><b>STARGO</b><span>/</span>Agent Workspace ${icon('chevron-down')}</div>
+  <div class="wsearch">${icon('search')}搜索对话、任务、客户、产品等…（⌘ K）</div></div>
+  <div class="wbody">
+    <div class="whero" data-hot="hero"><div class="globe"></div><div class="dots"></div>
+      <small>GOOD AFTERNOON</small>
+      <h1>你好，欢迎使用 OPEN WORK</h1>
+      <h2>你的 AI 外贸业务执行系统</h2>
+      <p>连接全球市场，加速业务增长。用 AI 重塑外贸工作方式，从市场洞察到客户成交，让复杂的全球业务变得简单高效。</p>
+      <span class="script">From China to the World</span>
+    </div>
+    <div class="wsec"><b>${icon('sparkle')}快速任务</b><a>查看全部 ${icon('arrow-right')}</a></div>
+    <div class="wsub">从一个任务开始，让 AI 帮你完成专业的外贸业务工作。</div>
+    <div class="wtabs" data-hot="tabs">${['主动获客', '询盘处理', '客户跟进', '报价与 PI', '内容增长', '企业知识库', '制造与合规'].map((t, i) => `<span class="wtab${i === 0 ? ' on' : ''}">${t}</span>`).join('')}</div>
+    <div class="wcards" data-hot="cards">${[
+      ['search', '#2f6fed', '#e8f0fe', '潜在客户搜索方案', '帮我制定目标市场潜在客户搜索方案，包含搜索策略、关键词和高质量客户来源。'],
+      ['users', '#16a34a', '#e7f6ec', '客户筛选条件', '根据我提供的客户资料，整理潜在客户筛选条件，并生成客户分层列表。'],
+      ['file-text', '#7c3aed', '#f1eafe', '外贸开发信', '为这款产品起草一封专业的外贸开发信，先给我审核，再生成不同版本。'],
+      ['chart-column', '#ea7a12', '#fdf0e2', '梳理市场场景需求', '分析目标市场的应用场景、客户需求和信息来源，输出市场机会洞察。'],
+      ['receipt-text', '#dc2626', '#fde8e8', '报价与 PI 生成', '根据客户需求生成专业的报价单和形式发票（PI），支持多语言版本。'],
+      ['shield-check', '#0d9488', '#e2f5f2', '客户背调', '整合公开信息，分析客户背景、信用状况和合作风险，生成尽调报告。'],
+    ].map(([ic, c, bg, t, d]) => `<div class="wcard"><span class="ic" style="background:${bg};color:${c}">${icon(ic)}</span>${icon('arrow-right', 'go')}<b>${t}</b><p>${d}</p></div>`).join('')}</div>
+    <div class="wcomp" data-hot="composer"><div class="ph">描述你的需求，或直接下达任务…</div>
+      <div class="row"><span class="pill plus">${icon('plus')}</span><span class="pill">${icon('globe')}联网搜索</span><span class="pill">${icon('book-open')}企业知识库</span><span class="pill">${icon('wrench')}工具 ${icon('chevron-down')}</span><span class="pill mode">${icon('sparkle')}Agent ${icon('chevron-down')}</span><span class="go2">${icon('arrow-up')}</span></div>
+    </div>
+  </div>
+</main></div>`),
+
+    /* ---- split scenes: the chat drives an app open in the right panel ---------- */
+    crm: split('广交会名片整理', ['老板看板', '客户CRM', '自动化中心', '插件'], 1, `<div class="msg-u">把今天广交会收的 6 张名片录进客户CRM，查重后建档，再给每家起草一封跟进邮件。</div>
+<div class="msg-a">
+${steps('已完成 4 个步骤', [
+  ['识别名片', '6 张 · 公司、联系人、职位、邮箱'],
+  ['与客户CRM查重', '1 家已是客户，已合并到原档案', false, 'merge'],
+  ['新建 5 家公司与联系人', '来源：广交会 2026 秋'],
+  ['起草 5 封跟进邮件', '按展位上聊到的产品', false, 'drafts'],
+])}
+<p>5 家新客户已建档，来源和展会上聊到的产品都记在档案里。跟进邮件发送前逐封等你确认。</p>
+<div class="card"><div class="ch">${icon('mail')}跟进邮件草稿 · 1 / 5<span class="tag g">Brightwell Home</span></div>
+<div class="mail"><b>Subject: Great meeting you at the Canton Fair</b>
+Hi Lena, thanks for stopping by our booth. As promised, here are the specs and FOB prices for the 500 ml vacuum flask, with logo options from 300 pcs…</div>
+${bar('5 封待你确认', btn('逐封查看', 'mail') + btn('批准', 'check', true, 'approve'))}</div>
+</div>`, `<div class="app2"><div class="nav2"><div class="ws"><i>SG</i>客户CRM</div>
+<div class="lb">工作台</div>
+${[['building-2', '公司', true], ['user', '人员'], ['target', '商机'], ['list-checks', '任务'], ['sticky-note', '备注'], ['workflow', '工作流程']].map(([ic, t, on]) => `<div class="it${on ? ' on' : ''}">${icon(ic)}${t}</div>`).join('')}
+</div><div class="body2">
+<div class="hd2">${icon('building-2')}公司 <span class="cnt">· 全部公司 128</span>${btn('新公司', 'plus', true)}</div>
+<div class="tb"><span>${icon('list-filter')}来源：广交会 2026 秋</span><span>${icon('arrow-down-up')}最近创建</span><span class="r"><span>筛选</span><span>排序</span></span></div>
+<table data-hot="table"><thead><tr><th>名称</th><th>国家</th><th>联系人</th><th>感兴趣的产品</th><th>负责人</th><th>状态</th></tr></thead><tbody>
+${[
+  ['B', '#2f6fed', 'Brightwell Home GmbH', '德国', 'Lena Vogt · 采购经理', '保温杯 500 ml', '王强', 'new'],
+  ['C', '#16a34a', 'Casa Lume S.r.l.', '意大利', 'Marco Rinaldi · 品类经理', '咖啡随行杯', '李娜', 'new'],
+  ['N', '#ea7a12', 'Norte Cozinha Lda', '葡萄牙', 'Inês Duarte · 采购', '焖烧罐', '王强', 'new'],
+  ['K', '#7c3aed', 'Kestrel Outdoor Ltd', '英国', 'Tom Hughes · 买手', '户外水壶 750 ml', '李娜', 'new'],
+  ['V', '#0d9488', 'Valmora Trading SA', '西班牙', 'Lucía Prieto · 总经理', '礼盒套装', '王强', 'new'],
+  ['K', '#dc2626', 'Kotikulma Oy', '芬兰', 'Aino Laine · 采购', '保温杯 500 ml', '李娜', 'merge'],
+  ['N', '#475569', 'Nordhem Living AB', '瑞典', 'Erik Lund · 采购', '保温杯 500 ml', '李娜', '已报价'],
+  ['F', '#475569', 'Fjällvik Outdoor AB', '瑞典', 'Anna Berg · 品类经理', '户外水壶 750 ml', '王强', '跟进中'],
+  ['T', '#475569', 'Tallvik Hem AB', '瑞典', 'Maja Ek · 采购', '保温杯 500 ml', '李娜', '样品中'],
+  ['M', '#475569', 'Merituuli Oy', '芬兰', 'Jari Koski · 买手', '随行杯 400 ml', '王强', '已报价'],
+  ['B', '#475569', 'Brattberg Sport AS', '挪威', 'Ola Dahl · 总经理', '运动水壶', '王强', '账期审批'],
+  ['K', '#475569', 'Kalvø Outdoor AS', '挪威', 'Lars Moe · 采购', '户外水壶 750 ml', '李娜', '老客户'],
+].map(([l, c, n, k, p, prod, o, st]) => `<tr class="${st === 'new' || st === 'merge' ? st : ''}"><td><span class="co"><i style="background:${c}">${l}</i>${n}</span></td><td>${k}</td><td>${p}</td><td>${prod}</td><td><span class="who"><i>${o[0]}</i>${o}</span></td><td>${st === 'new' ? '<span class="tag b">新建</span>' : st === 'merge' ? '<span class="tag w">已合并</span>' : `<span class="tag g">${st}</span>`}</td></tr>`).join('\n')}
+</tbody></table>
+<div class="foot2">共 128 家 · 本次新建 5 · 合并 1<span style="margin-left:auto">演示数据</span></div>
+</div></div>`),
+
+    automation: split('报价未回复 · 自动跟进', ['老板看板', '客户CRM', '自动化中心', '插件'], 2, `<div class="msg-u">每天早上 9 点，帮我找出报价超过 3 天没回复的客户，起草跟进邮件，等我批准再发。</div>
+<div class="msg-a">
+${steps('已完成 3 个步骤', [
+  ['在自动化中心创建流程', '每天 09:00 · 读取销售工作台的报价记录'],
+  ['试运行一次', '找到 2 位客户：Merituuli Oy、Havbris Home', false, 'test'],
+  ['跟进草稿放进待审批', '发送前逐封等你确认', false, 'gate'],
+])}
+<p>流程已开启。以后每天 9 点自动检查，只起草、不自动发送；你批准后才发出。</p>
+<div class="card"><div class="ch">${icon('workflow')}报价 3 天未回复 → 起草跟进<span class="tag a">已开启</span></div>
+<div class="flow">${[['calendar-clock', '每天 09:00'], ['briefcase', '读取报价记录'], ['list-filter', '3 天未回复'], ['mail', '起草跟进邮件'], ['shield-check', '等你批准']].map(([ic, t], i, a) => `<span class="fsw"><span class="fs${i === a.length - 1 ? ' gate' : ''}">${icon(ic)}${t}</span>${i < a.length - 1 ? icon('chevron-right', 'arr') : ''}</span>`).join('')}</div>
+${bar('2 封草稿待你确认', btn('查看草稿', 'mail') + btn('批准', 'check', true, 'approve'))}</div>
+</div>`, `<div class="app2"><div class="nav2"><div class="ws"><i>${icon('zap').replace('class="i ', 'style="width:11px;height:11px;color:#fff" class="i ')}</i>自动化中心</div>
+<div class="lb">工作台</div>
+${[['workflow', '自动化流程', true], ['history', '运行记录'], ['plug', '连接器'], ['variable', '数据变量']].map(([ic, t, on]) => `<div class="it${on ? ' on' : ''}">${icon(ic)}${t}</div>`).join('')}
+</div><div class="body2">
+<div class="hd2">${icon('workflow')}自动化流程 <span class="cnt">· 6 个</span>${btn('新建流程', 'plus', true)}</div>
+<div class="tb"><span>${icon('search')}搜索流程</span><span class="r"><span>状态</span><span>触发方式</span></span></div>
+<table data-hot="table"><thead><tr><th>流程</th><th>触发</th><th>最近运行</th><th>状态</th></tr></thead><tbody>
+${[
+  ['报价 3 天未回复 → 起草跟进', '只起草 · 发送前需批准', '每天 09:00', '刚刚 · 找到 2 位', true, 'new'],
+  ['新询盘 → 分析并起草回复', '回复需批准后发出', '收到新询盘', '12 分钟前', true, ''],
+  ['样品寄出 7 天 → 提醒业务员', '提醒到负责人', '每天 10:00', '今天 10:00', true, ''],
+  ['老客户到补货周期 → 起草补货提醒', '只起草', '每周一 08:30', '周一 08:30', true, ''],
+  ['每周一 → 生成老板周报', '推送到老板看板', '每周一 08:00', '周一 08:00', true, ''],
+  ['展会名片 → 建档到客户CRM', '查重后建档', '手动运行', '昨天 18:20', false, ''],
+].map(([n, sub, trig, last, on, cls]) => `<tr class="${cls}"><td><span class="flowname">${n}<small>${sub}</small></span></td><td>${trig}</td><td>${last}</td><td><span class="tog${on ? ' on' : ''}"></span></td></tr>`).join('\n')}
+</tbody></table>
+<div class="runs"><div class="rh">${icon('history')}最近运行</div>
+${[['报价 3 天未回复 → 起草跟进', '刚刚', '找到 2 位客户 · 起草 2 封 · 等待批准', 'w'], ['新询盘 → 分析并起草回复', '12 分钟前', 'Nordhem Living · 回复草稿已生成 · 等待批准', 'w'], ['样品寄出 7 天 → 提醒业务员', '今天 10:00', '提醒李娜跟进 Tallvik Hem AB', 'a'], ['每周一 → 生成老板周报', '周一 08:00', '已推送到老板看板', 'a']].map(([n, t, r, k]) => `<div class="run"><span class="dot ${k}"></span><b>${n}</b><span class="rt">${r}</span><em>${t}</em></div>`).join('')}
+</div>
+<div class="foot2">发送类动作默认需要批准<span style="margin-left:auto">演示数据</span></div>
+</div></div>`),
+
+    erp: split('Nordhem Living · 下生产单', ['老板看板', '客户CRM', '企业ERP', '插件'], 2, `<div class="msg-u">Nordhem Living 的定金到了，帮我下生产单，顺便看看 SVF-500 的库存和交期。</div>
+<div class="msg-a">
+${steps('已完成 4 个步骤', [
+  ['读取 PI-2026-1108', '500 只 SVF-500 + 500 个礼盒'],
+  ['确认定金到账', '30% · US$ 630.00'],
+  ['检查库存与产能', '杯体可用 1,200 只 · 礼盒需采购 500 个', true, 'stock'],
+  ['生成生产工单草稿', 'WO-2026-0457 · 交期 12 月 2 日', false, 'wo'],
+])}
+<p>工单和礼盒采购单都已起草好，交期能赶上 12 月 20 日到港。确认后会下达到生产，并通知仓库备料。</p>
+<div class="card"><div class="ch">${icon('shopping-cart')}采购单草稿 PO-0921<span class="tag w">待确认</span></div>
+<dl class="kv"><dt>物料</dt><dd>礼盒 GB-01</dd><dt>数量</dt><dd>500 个</dd><dt>供应商</dt><dd>常用供应商 · 宁波</dd><dt>到货</dt><dd>11 月 18 日前</dd></dl>
+${bar('下达前需要你确认', btn('查看工单', 'clipboard-list') + btn('确认下达', 'check', true, 'approve'))}</div>
+</div>`, `<div class="app2" style="flex-direction:column"><div class="body2">
+<div class="hd2">${icon('building-2')}企业ERP <span class="cnt">· 生产</span>${btn('新建工单', 'plus', true)}</div>
+<div class="mods" data-hot="mods">${[['building', '组织', '#64748b'], ['wallet', '会计', '#2f6fed'], ['boxes', '资产', '#0d9488'], ['shopping-cart', '采购', '#ea7a12'], ['factory', '生产', '#1756d6', true], ['folder-kanban', '项目', '#7c3aed'], ['badge-check', '质量', '#16a34a'], ['receipt-text', '销售', '#dc2626'], ['package', '库存', '#0891b2'], ['truck', '委外', '#a16207']].map(([ic, t, c, on]) => `<span class="mod${on ? ' on' : ''}"><b style="background:${c}">${icon(ic)}</b>${t}</span>`).join('')}</div>
+<div class="formcard" data-hot="wo"><div class="fh">${icon('clipboard-list')}生产工单 WO-2026-0457<span class="tag w">草稿 · 待确认</span></div>
+<div class="fgrid"><div><span>产品</span>SVF-500 保温杯 500 ml</div><div><span>数量</span>500 只</div><div><span>关联订单</span>PI-2026-1108</div><div><span>计划开工</span>2026-11-10</div><div><span>计划完工</span>2026-12-02</div><div><span>车间</span>二车间 · 丝印线</div></div></div>
+<table><thead><tr><th>物料</th><th class="n">需求</th><th class="n">可用库存</th><th>状态</th></tr></thead><tbody>
+<tr><td>304 不锈钢杯体 500 ml</td><td class="n">500</td><td class="n">1,200</td><td><span class="tag a">充足</span></td></tr>
+<tr><td>杯盖组件（黑色）</td><td class="n">500</td><td class="n">860</td><td><span class="tag a">充足</span></td></tr>
+<tr><td>丝印油墨 · 单色</td><td class="n">2 kg</td><td class="n">6 kg</td><td><span class="tag a">充足</span></td></tr>
+<tr class="merge"><td>牛皮纸礼盒 GB-01</td><td class="n">500</td><td class="n">0</td><td><span class="tag w">采购单草稿 PO-0921</span></td></tr>
+</tbody></table>
+<div class="runs"><div class="rh">${icon('factory')}近期工单</div>
+${[['WO-2026-0456', 'Kotikulma Oy · 随行杯 400 ml × 800', '生产中 · 完成 62%', 'b'], ['WO-2026-0455', 'Kalvø Outdoor AS · 户外水壶 750 ml × 1,200', '质检中', 'w'], ['WO-2026-0452', 'Fjällvik Outdoor AB · 样品 20 只', '已完工 · 已寄样', 'a']].map(([n, t, r, k]) => `<div class="run"><span class="dot ${k}"></span><b>${n}</b><span class="rt">${t}</span><em>${r}</em></div>`).join('')}
+</div>
+<div class="foot2">下达后通知仓库备料<span style="margin-left:auto">演示数据</span></div>
+</div></div>`),
+
+
+    staff: split('Kalvø Outdoor · 新询盘派工', ['老板看板', '自动化中心', '客户CRM', '专家'], 3, `<div class="msg-u">Kalvø Outdoor 发来新询盘，要 1,200 只 750 ml 户外水壶。安排合适的数字员工处理，报价出来先给我看。</div>
+<div class="msg-a">
+${steps('企业调度长已派工 · 4 步', [
+  ['询盘接待员', '读取询盘 · 提取产品、数量、交期'],
+  ['客户档案管家', '老客户 · 上次下单 92 天前 · 历史价 US$ 4.10', false, 'history'],
+  ['客户背调员', '近期新开 2 家门店 · 付款记录良好'],
+  ['报价员', '按价格表出报价草稿 · 老客户价', false, 'quote'],
+])}
+<p>报价草稿已放进销售工作台：1,200 只 × US$ 4.05，FOB 宁波，交期 28 天。发给客户前等你确认。</p>
+<div class="card"><div class="ch">${icon('receipt-text')}报价草稿 · Kalvø Outdoor AS<span class="tag w">待你确认</span></div>
+<dl class="kv"><dt>产品</dt><dd>户外水壶 750 ml</dd><dt>数量</dt><dd>1,200 只</dd><dt>单价</dt><dd>US$ 4.05 FOB</dd><dt>交期</dt><dd>28 天</dd></dl>
+${bar('发送前需要你确认', btn('查看报价', 'file-text') + btn('批准', 'check', true, 'approve'))}</div>
+</div>`, `<div class="body2" style="flex:1;display:flex;flex-direction:column;min-height:0">
+<div class="staffhd"><h3>STARGO 数字员工 <small>288 名 · 只读展示</small></h3>
+<p>按职能分组的数字员工花名册。每位都有自己的技能、资料和 SOP，由企业调度长统一派工。</p>
+<div class="sbox">${icon('search')}搜索姓名、岗位、职责或员工 ID</div></div>
+<div class="chipsx">${[['全部', 288, true], ['企业通用支持', 15], ['客户开发与市场', 50], ['销售', 16], ['客户服务', 5], ['风控与合规', 20], ['供应链', 4]].map(([t, n, on]) => `<span class="chipx${on ? ' on' : ''}">${t} <b>${n}</b></span>`).join('')}</div>
+<div class="sgrid" data-hot="staff">${[
+  ['调', '#1e293b', '企业调度长', '企业任务分发与调度', '接到具体业务请求时先由它判断，派给合适的数字员工。', '企业通用支持', 1, 12, 0],
+  ['询', '#1756d6', '询盘接待员', '外贸询盘接待', '买家通过邮件、WhatsApp 或网站来询盘时，读取并整理要素。', '销售', 1, 2, 0, true],
+  ['背', '#0d9488', '客户背调员', '客户背景调查', '大额报价或给新客户账期前，核查背景与合作风险。', '客户开发与市场', 1, 2, 1],
+  ['报', '#dc2626', '报价员', '报价与成本核对', '需要价格、报价单、PI 或成本拆分时，按价格表起草。', '销售', 2, 3, 1, true],
+  ['档', '#7c3aed', '客户档案管家', '客户档案管理', '跨渠道保持客户记录准确：建档、更新、合并重复。', '客户服务', 1, 2, 0],
+  ['增', '#ea7a12', '增长调度员', '增长任务分发与执行', '市场进入、开发计划与内容增长的入口。', '客户开发与市场', 1, 3, 1],
+  ['营', '#be185d', 'AI 首席营销官', '市场营销与品牌', '制定市场计划、上新策略与渠道组合。', '客户开发与市场', 1, 4, 1],
+  ['析', '#0891b2', '市场分析师', '市场分析与需求研判', '评估市场规模、进入方式与需求变化。', '客户开发与市场', 1, 3, 0],
+  ['研', '#4d7c0f', '客户研究员', '客户画像与需求研究', '刻画理想客户、采购角色与待办任务。', '客户开发与市场', 1, 2, 0],
+].map(([l, c, n, sub, d, dep, a, b, sop, hl]) => `<div class="scard${hl ? ' hl' : ''}"><div class="top2"><span class="av" style="background:${c}">${l}</span><div><b>${n}</b><small>${sub}</small><span class="ok">在岗 · 由调度长派工</span></div></div><p>${d}</p><span class="dep">${dep}</span><div class="st"><span>资料 <b>${a}</b></span><span>技能 <b>${b}</b></span><span>SOP <b>${sop}</b></span></div></div>`).join('')}</div>
+<div class="foot2">288 名数字员工 · 只读展示<span style="margin-left:auto">演示数据</span></div>
+</div>`),
+
     /* phone cards, 390 CSS px wide @3x */
     'inquiry-card': shot('回复草稿', 'focus narrow', 390, inquiryReply),
     'quote-card': shot('PI', 'focus narrow', 390, piCard),
     'outreach-card': shot('目标客户', 'focus narrow', 390, prospects),
     'brief-card': shot('本周业务简报', 'focus narrow', 390, `${metrics}\n${decisions}`),
     'follow-card': shot('跟进客户', 'focus narrow', 390, followCard(4)),
+
+    /* phone cards of the split scenes, 390 CSS px wide @3x: what the chat did and
+       what the right-hand app now shows, as one column */
+    'crm-card': shot('客户CRM', 'focus narrow', 390, `${steps('已完成 4 个步骤', [
+  ['识别名片', '6 张 · 公司、联系人、职位、邮箱'],
+  ['与客户CRM查重', '1 家已是客户，已合并到原档案'],
+  ['新建 5 家公司与联系人', '来源：广交会 2026 秋'],
+  ['起草 5 封跟进邮件', '按展位上聊到的产品'],
+])}
+<div class="card" data-hot="table"><div class="ch">${icon('building-2')}客户CRM · 公司<span class="tag b">新建 5</span></div>
+<div class="clist">${[
+  ['B', '#2f6fed', 'Brightwell Home GmbH', '德国 · 保温杯 500 ml', 'new'],
+  ['C', '#16a34a', 'Casa Lume S.r.l.', '意大利 · 咖啡随行杯', 'new'],
+  ['N', '#ea7a12', 'Norte Cozinha Lda', '葡萄牙 · 焖烧罐', 'new'],
+  ['K', '#7c3aed', 'Kestrel Outdoor Ltd', '英国 · 户外水壶 750 ml', 'new'],
+  ['V', '#0d9488', 'Valmora Trading SA', '西班牙 · 礼盒套装', 'new'],
+  ['K', '#dc2626', 'Kotikulma Oy', '芬兰 · 已是客户', 'merge'],
+].map(([l, c, n, sub, st]) => `<div class="crow${st === 'merge' ? ' hl' : ''}"><i class="lg" style="background:${c}">${l}</i><div class="bd"><b>${n}</b><small>${sub}</small></div>${st === 'new' ? '<span class="tag b">新建</span>' : '<span class="tag w">已合并</span>'}</div>`).join('')}</div>
+${bar('5 封跟进邮件待你确认', btn('逐封查看', 'mail') + btn('批准', 'check', true, 'approve'))}</div>`),
+    'automation-card': shot('自动化中心', 'focus narrow', 390, `${steps('已完成 3 个步骤', [
+  ['在自动化中心创建流程', '每天 09:00 · 读取销售工作台的报价记录'],
+  ['试运行一次', '找到 2 位客户：Merituuli Oy、Havbris Home'],
+  ['跟进草稿放进待审批', '发送前逐封等你确认'],
+])}
+<div class="card" data-hot="flow"><div class="ch">${icon('workflow')}报价 3 天未回复 → 起草跟进<span class="tag a">已开启</span></div>
+<div class="flow">${[['calendar-clock', '每天 09:00'], ['briefcase', '读取报价记录'], ['list-filter', '3 天未回复'], ['mail', '起草跟进邮件'], ['shield-check', '等你批准']].map(([ic, t], i, a) => `<span class="fs${i === a.length - 1 ? ' gate' : ''}">${icon(ic)}${t}</span>${i < a.length - 1 ? icon('chevron-down', 'arr') : ''}`).join('')}</div>
+${bar('2 封草稿待你确认', btn('查看草稿', 'mail') + btn('批准', 'check', true, 'approve'))}</div>`),
+    'erp-card': shot('企业ERP', 'focus narrow', 390, `${steps('已完成 4 个步骤', [
+  ['读取 PI-2026-1108', '500 只 SVF-500 + 500 个礼盒'],
+  ['确认定金到账', '30% · US$ 630.00'],
+  ['检查库存与产能', '杯体可用 1,200 只 · 礼盒需采购 500 个', true],
+  ['生成生产工单草稿', 'WO-2026-0457 · 交期 12 月 2 日'],
+])}
+<div class="card" data-hot="wo"><div class="ch">${icon('clipboard-list')}生产工单 WO-2026-0457<span class="tag w">待确认</span></div>
+<div class="fgrid"><div><span>产品</span>SVF-500 保温杯</div><div><span>数量</span>500 只</div><div><span>关联订单</span>PI-2026-1108</div><div><span>车间</span>二车间 · 丝印线</div><div><span>计划开工</span>2026-11-10</div><div><span>计划完工</span>2026-12-02</div></div>
+<div class="clist" style="border-top:1px solid var(--line)">${[
+  ['杯体 304 · 500 ml', '需求 500 · 库存 1,200', '充足', 'a'],
+  ['杯盖组件（黑色）', '需求 500 · 库存 860', '充足', 'a'],
+  ['丝印油墨 · 单色', '需求 2 kg · 库存 6 kg', '充足', 'a'],
+  ['牛皮纸礼盒 GB-01', '需求 500 · 库存 0', '采购单草稿', 'w'],
+].map(([n, sub, st, k]) => `<div class="crow${k === 'w' ? ' hl' : ''}"><div class="bd"><b>${n}</b><small>${sub}</small></div><span class="tag ${k}">${st}</span></div>`).join('')}</div>
+${bar('下达前需要你确认', btn('查看工单', 'clipboard-list') + btn('确认下达', 'check', true, 'approve'))}</div>`),
+    'staff-card': shot('数字员工派工', 'focus narrow', 390, `<div class="card" data-hot="staff"><div class="ch">${icon('users')}企业调度长已派工 · 4 步<span class="tag b">数字员工</span></div>
+<div class="clist">${[
+  ['询', '#1756d6', '询盘接待员', '读取询盘 · 提取产品、数量、交期'],
+  ['档', '#7c3aed', '客户档案管家', '老客户 · 上次下单 92 天前 · 历史价 US$ 4.10'],
+  ['背', '#0d9488', '客户背调员', '近期新开 2 家门店 · 付款记录良好'],
+  ['报', '#dc2626', '报价员', '按价格表出报价草稿 · 老客户价'],
+].map(([l, c, n, sub]) => `<div class="crow"><i class="lg round" style="background:${c}">${l}</i><div class="bd"><b>${n}</b><small>${sub}</small></div></div>`).join('')}</div></div>
+<div class="card"><div class="ch">${icon('receipt-text')}报价草稿 · Kalvø Outdoor AS<span class="tag w">待你确认</span></div>
+<dl class="kv"><dt>产品</dt><dd>户外水壶 750 ml</dd><dt>数量</dt><dd>1,200 只</dd><dt>单价</dt><dd>US$ 4.05 FOB</dd><dt>交期</dt><dd>28 天</dd></dl>
+${bar('发送前需要你确认', btn('查看报价', 'file-text') + btn('批准', 'check', true, 'approve'))}</div>`),
 
     /* the three rules of the approvals section, as tight close-ups in phone
        typography (380 CSS px @3x): the price check with the PI in approval,

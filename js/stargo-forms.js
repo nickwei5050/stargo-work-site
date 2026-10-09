@@ -73,6 +73,23 @@
     p.appendChild(document.createElement('br'));
     p.appendChild(link);
   }
+  // Idempotency-Key for one submission (the endpoint accepts [A-Za-z0-9_-]{16,128}). crypto.randomUUID is
+  // missing in older browsers and on non-HTTPS pages, so fall back to getRandomValues, then Math.random.
+  function newId() {
+    try {
+      var c = window.crypto || window.msCrypto;
+      if (c && typeof c.randomUUID === 'function') return c.randomUUID();
+      if (c && c.getRandomValues) {
+        var b = new Uint8Array(16);
+        c.getRandomValues(b);
+        b[6] = (b[6] & 15) | 64; b[8] = (b[8] & 63) | 128;
+        var h = '';
+        for (var i = 0; i < 16; i++) h += (b[i] + 256).toString(16).slice(1);
+        return h.slice(0, 8) + '-' + h.slice(8, 12) + '-' + h.slice(12, 16) + '-' + h.slice(16, 20) + '-' + h.slice(20);
+      }
+    } catch (e) { /* fall through */ }
+    return 'sg-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 12) + Math.random().toString(36).slice(2, 12);
+  }
   function arm(form) {
     var isNews = form.getAttribute('data-stargo-form') === 'newsletter' || (!form.querySelector('textarea') && form.querySelectorAll('input[type="email"]').length === 1 && form.querySelectorAll('input:not([type=hidden]):not([type=submit]):not([name=website])').length <= 2);
     var lastPayload = '', submissionId = '';
@@ -95,23 +112,31 @@
       var submit = form.querySelector('[type=submit]');
       if (submit) submit.disabled = true;
       note(form, T.busy, false);
-      var payload = { form: isNews ? 'newsletter' : 'contact', lang: zh ? 'zh-CN' : 'en', page: location.href, fields: fields, website: hp ? hp.value : '' };
-      var serialized = JSON.stringify(payload);
-      if (serialized !== lastPayload) {
-        lastPayload = serialized;
-        submissionId = crypto.randomUUID();
+      var timer = null;
+      var done = function () { if (timer) clearTimeout(timer); form.removeAttribute('data-stargo-busy'); form.setAttribute('aria-busy', 'false'); if (submit) submit.disabled = false; };
+      try {
+        var payload = { form: isNews ? 'newsletter' : 'contact', lang: zh ? 'zh-CN' : 'en', page: location.href, fields: fields, website: hp ? hp.value : '' };
+        var serialized = JSON.stringify(payload);
+        if (serialized !== lastPayload) {
+          lastPayload = serialized;
+          submissionId = newId();
+        }
+        var ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+        timer = ctrl && setTimeout(function () { ctrl.abort(); }, 12000);
+        fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': submissionId }, body: serialized, signal: ctrl ? ctrl.signal : undefined })
+          .then(function (r) { return r.json().then(function (j) { return { status: r.status, ok: r.ok && j && j.ok, json: j }; }); })
+          .then(function (res) {
+            if (res.ok) { note(form, isNews ? T.sentNews : T.sent, true); return; }
+            if (res.status === 422) { note(form, T.invalid, false); return; }
+            mailto(form, fields, isNews);
+          })
+          .catch(function () { mailto(form, fields, isNews); })
+          .then(done, done);
+      } catch (err) {
+        // Nothing was sent (no fetch, no crypto, a bad payload): clear the busy state and offer the e-mail link.
+        done();
+        mailto(form, fields, isNews);
       }
-      var ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
-      var timer = ctrl && setTimeout(function () { ctrl.abort(); }, 12000);
-      fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': submissionId }, body: serialized, signal: ctrl ? ctrl.signal : undefined })
-        .then(function (r) { return r.json().then(function (j) { return { status: r.status, ok: r.ok && j && j.ok, json: j }; }); })
-        .then(function (res) {
-          if (res.ok) { note(form, isNews ? T.sentNews : T.sent, true); return; }
-          if (res.status === 422) { note(form, T.invalid, false); return; }
-          mailto(form, fields, isNews);
-        })
-        .catch(function () { mailto(form, fields, isNews); })
-        .finally(function () { if (timer) clearTimeout(timer); form.removeAttribute('data-stargo-busy'); form.setAttribute('aria-busy', 'false'); if (submit) submit.disabled = false; });
     }, true);
   }
   var forms = document.querySelectorAll('form');

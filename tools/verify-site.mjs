@@ -84,7 +84,10 @@ for (const page of PAGES) {
   // Internal links must resolve to a file in the site root.
   const hrefs = await p.evaluate(() => [...document.querySelectorAll('a[href]')].map((a) => a.getAttribute('href')));
   const dir = `${SITE}/${page.split('/').slice(0, -1).join('/')}`.replace(/\/$/, '');
-  const broken = [...new Set(hrefs.filter((h) => /\.html(#.*)?$/.test(h) && !/^https?:/.test(h)).map((h) => h.split('#')[0]).filter((h) => !existsSync(`${dir}/${h}`)))];
+  /* Root-absolute links (/pricing.html, /en/pricing.html) resolve from the site
+     root: the 404 pages use them since 2026-10-09 because Cloudflare Pages
+     serves 404.html at whatever depth was asked for. */
+  const broken = [...new Set(hrefs.filter((h) => /\.html([#?].*)?$/.test(h) && !/^https?:/.test(h)).map((h) => h.split(/[#?]/)[0]).filter((h) => !existsSync(h.startsWith('/') ? `${SITE}${h}` : `${dir}/${h}`)))];
   const dangling = [...new Set(hrefs.filter((h) => h === '#' || h === ''))].length;
 
   const ok = status === 200 && errors.length === 0 && failed.length === 0 && external.size === 0 && broken.length === 0;

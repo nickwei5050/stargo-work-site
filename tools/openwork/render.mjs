@@ -79,6 +79,11 @@ const SHOTS = [
   { id: 'ow04-outreach', page: 'outreach', kind: 'app', scene: 'outreach · 起草开发信' },
   { id: 'ow05-brief', page: 'brief', kind: 'app', scene: 'brief · 老板看板周报' },
   { id: 'ow06-follow', page: 'follow', kind: 'app', scene: 'follow · 跟进客户' },
+  { id: 'ow07-welcome', page: 'welcome', kind: 'app', scene: 'welcome · 欢迎页（OPEN WORK 首页）' },
+  { id: 'ow08-crm', page: 'crm', kind: 'app', scene: 'crm · 广交会名片 → 客户CRM（右侧面板）' },
+  { id: 'ow09-automation', page: 'automation', kind: 'app', scene: 'automation · 报价未回复 → 自动化中心（右侧面板）' },
+  { id: 'ow10-erp', page: 'erp', kind: 'app', scene: 'erp · 定金到账 → 企业ERP 生产工单（右侧面板）' },
+  { id: 'ow11-staff', page: 'staff', kind: 'app', scene: 'staff · 新询盘派工 → 数字员工花名册（右侧面板）' },
   { id: 'ow32-inquiry-focus', page: 'inquiry-focus', kind: 'focus', scene: 'inquiry · 对话栏（桌面展示）' },
   { id: 'ow33-quote-focus', page: 'quote-focus', kind: 'focus', scene: 'quote · 对话栏（桌面展示）' },
   { id: 'ow34-outreach-focus', page: 'outreach-focus', kind: 'focus', scene: 'outreach · 对话栏（桌面展示）' },
@@ -88,6 +93,10 @@ const SHOTS = [
   { id: 'ow14-outreach-card', page: 'outreach-card', kind: 'card', scene: 'outreach · 目标客户表（手机）' },
   { id: 'ow15-brief-card', page: 'brief-card', kind: 'card', scene: 'brief · 指标 + 需要你决定（手机）' },
   { id: 'ow16-follow-card', page: 'follow-card', kind: 'card', scene: 'follow · 建议跟进（手机）' },
+  { id: 'ow17-crm-card', page: 'crm-card', kind: 'card', scene: 'crm · 名片建档（手机）' },
+  { id: 'ow18-automation-card', page: 'automation-card', kind: 'card', scene: 'automation · 自动跟进流程（手机）' },
+  { id: 'ow19-erp-card', page: 'erp-card', kind: 'card', scene: 'erp · 生产工单（手机）' },
+  { id: 'ow25-staff-card', page: 'staff-card', kind: 'card', scene: 'staff · 数字员工派工（手机）' },
   { id: 'ow20-apps', page: 'home', kind: 'apps', scene: 'home · 侧栏 15 个应用', variants: [520] },
   { id: 'ow21-pi-check', page: 'pi-check', kind: 'gate', scene: 'quote · 价格校验 + PI 审批中（特写）' },
   { id: 'ow22-approval-bar', page: 'approval-bar', kind: 'gate', scene: 'inquiry · 回复草稿 + 对外发送需要你确认（特写）' },
@@ -125,13 +134,20 @@ async function checkLayout(p, id) {
     const out = [];
     const t = document.querySelector('.thread');
     if (t && t.scrollHeight > t.clientHeight + 1) out.push(`thread overflows by ${t.scrollHeight - t.clientHeight}px (the question at the top would be cut off)`);
-    for (const b of document.querySelectorAll('.btn, .tag, .chip, .nav, .chat')) {
+    /* The apps in the right-hand panel: nothing may be cut off by the panel's edge. */
+    for (const el of document.querySelectorAll('.body2, .wbody, .sgrid')) {
+      if (el.scrollHeight > el.clientHeight + 1) out.push(`panel content cut off by ${el.scrollHeight - el.clientHeight}px: ${el.className}`);
+    }
+    for (const el of document.querySelectorAll('.body2, .chipsx, .wtabs, .mods, .flow, .wcomp .row, .ptabs')) {
+      if (el.scrollWidth > el.clientWidth + 1) out.push(`row cut off at the right edge: ${el.className}`);
+    }
+    for (const b of document.querySelectorAll('.btn, .tag, .chip, .nav, .chat, .wtab, .pill, .chipx, .mod, .ptab, .flow .fs')) {
       const r = b.getBoundingClientRect();
       if (r.width && r.height > parseFloat(getComputedStyle(b).height) + 1) out.push(`wrapped: ${b.textContent.trim()}`);
     }
-    for (const el of document.querySelectorAll('.card, .metric, .steps')) if (el.scrollWidth > el.clientWidth + 1) out.push(`horizontal overflow in ${el.className}: ${el.textContent.trim().slice(0, 40)}`);
+    for (const el of document.querySelectorAll('.card, .metric, .steps, .formcard, .runs, .wcard, .scard')) if (el.scrollWidth > el.clientWidth + 1) out.push(`horizontal overflow in ${el.className}: ${el.textContent.trim().slice(0, 40)}`);
     /* Truncated text: an ellipsis or a clipped line hides demo content the page talks about. */
-    for (const el of document.querySelectorAll('.chat span, .draft, .btn, .tag, .chip, .mail:not(.excerpt), td, .tx')) {
+    for (const el of document.querySelectorAll('.chat span, .draft, .btn, .tag, .chip, .mail:not(.excerpt), td, .tx, .run .rt, .wcard b, .wcard p, .scard b, .scard p, .crow b, .crow small')) {
       if (el.getClientRects().length && (el.scrollWidth > el.clientWidth + 1 || el.scrollHeight > el.clientHeight + 1) && getComputedStyle(el).overflow !== 'visible') out.push(`truncated: ${el.textContent.trim().slice(0, 50)}`);
     }
     return out;

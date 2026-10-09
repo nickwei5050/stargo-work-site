@@ -2,44 +2,46 @@
  * Blog covers, written as 1200/800/500px WebP with plain file names in
  * assets/blog/. One entry per article slug; the article data in tools/blog.mjs
  * refers to the slug, and the build reads the files from there into the article
- * hero, the blog index, the homepage cards, the workforce story strip, the
- * related lists, og:image/twitter:image and the BlogPosting structured data.
+ * hero, the blog index, the workforce story strip, the related lists,
+ * og:image/twitter:image and the BlogPosting structured data.
  *
- * Sources. Five covers are the owner's own product screenshots (the handoff of
- * 2026-09-18, registered in tools/imagegen/product-assets.json): the article
- * shows the STARGO surface it actually describes. Two keep this site's own
- * editorial artwork, because no approved screenshot shows what they are about —
- * approval gates and the enterprise knowledge model. The covers used to be the
- * Mono template's product photography — earbuds, a grey tool on red — which
- * said nothing about any of it. Our own images either way, so no third-party
- * licence or attribution is involved.
+ * One set, one recipe (2026-10-09, revised the same day after review). All
+ * seven covers are crops of OPEN WORK renders made by tools/openwork/render.mjs
+ * (the 2400px variant of each 1280x880 scene): the region the article is about
+ * — the reply draft with its approval bar, the PI waiting for the manager, the
+ * automation list, the roster — at the cover's own 2:1, scaled down, never up.
+ * The first set fitted each whole window into a 3:2 plate; at 395px on the
+ * index the seven grey windows looked alike and none could be read. The window
+ * frame and the 「演示数据」/"Demo data" badge are HTML round the picture
+ * (tools/ow-blocks/blog.mjs), the same frame as every other product picture.
+ * The covers used to be the owner's earlier screenshots (an internal registry
+ * page, an open-source workflow tool's login, the retired desktop) and two
+ * generated artworks; none of that is left, and no third-party product, garbled
+ * label or "open source" claim can come back through this file: a source must
+ * be one of the ow*-ids rendered by tools/openwork/render.mjs and registered in
+ * tools/imagegen/product-assets.json.
  *
- * Fit. The frame is 3:2, the ratio the homepage cards (3 / 2.3) and the blog
- * grid (1:1) both crop from. The homepage card draws a badge over its own
- * copy of the cover; the band that keeps it off the interface is on that card
- * (css/stargo-fusion.css, V7-BLOG r3), not in these files, because the badge is
- * the same size on every card and the cards are not. The editorial artwork is square-ish and is centre
- * cropped to it, as it always was. A product screenshot is 16:9 and is an
- * interface: a centre crop to 3:2 would cut the left navigation off every one
- * of them, so the whole screenshot is fitted inside the frame with a small
- * margin, on one flat colour sampled from the screenshot's own border. The
- * boxes that then crop the 3:2 cover further — the square blog-index card and
- * the homepage card — hold the same colour and stop cropping, in the V7-BLOG r3
- * block of css/stargo-fusion.css. Nothing is cut anywhere.
+ * Which render is which article: tools/blog.mjs COVER_RENDER (the article page
+ * reads it too, for the note under the cover); the region is BOX below.
+ *
+ * Reproducible. The recipe of every file carries the sha256 of its source
+ * render, so a re-rendered OPEN WORK scene rebuilds exactly the covers made
+ * from it, and a cover can never silently keep a picture that no longer
+ * matches its source (the old covers were made from sw003/sw004 files whose
+ * content was later replaced, and would have turned into the wrong pictures on
+ * the next recipe change).
  *
  * sharp is gone. It is not installed by this repository and could not be, so
  * the pixels are Pillow's: this file builds a JSON job and tools/blog-covers.py
- * renders it. The recipe below is still the documentation of how every cover
- * was made.
+ * renders it.
  *
  *   node tools/blog-covers.mjs        # needs python + Pillow, not sharp
  *
  * Idempotent. tools/imagegen/blog-covers.json records each file's recipe and
  * the sha256 of the bytes that recipe produced, so a rerun writes nothing and
- * changes no file — while a changed recipe, a missing file or a file whose
- * bytes drifted is rebuilt, and only that file. A cover that exists but has no
- * record yet is adopted as it stands rather than re-encoded, so switching
- * encoders never rewrites a cover that nobody asked to change.
+ * changes no file — while a changed recipe, a changed source render, a missing
+ * file or a file whose bytes drifted is rebuilt, and only that file. A cover
+ * that exists but has no record yet is adopted as it stands.
  *
  * STARGO_PYTHON names the interpreter if `python3`/`python`/`py` is not it.
  */
@@ -48,78 +50,53 @@ import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { SITE } from './paths.mjs';
-import { POSTS, PRODUCT_COVERS } from './blog.mjs';
-import { PRODUCT, editorialFile } from './replaceables.mjs';
+import { POSTS, PRODUCT_COVERS, COVER_RENDER } from './blog.mjs';
 
 const OUT = 'assets/blog';
 const RECORD = 'tools/imagegen/blog-covers.json';
-/** 1200x800 and the two smaller widths the srcset offers (tools/blog.mjs coverSrcset). */
-const SIZES = [[1200, 800], [800, 533], [500, 333]];
+/** 1200x600 (2:1, also the share image) and the two smaller widths the srcset offers (tools/blog.mjs coverSrcset). */
+const SIZES = [[1200, 600], [800, 400], [500, 250]];
 
-/* `plate` is the flat colour behind a fitted screenshot: the most common colour
-   of that screenshot's own outer border, so the picture does not sit in a band
-   of some other colour. The same value is repeated in css/stargo-fusion.css
-   (V7-BLOG r3) for the card boxes that letterbox the cover further. */
-const COVERS = {
-  'stargo-work-visual-guide': {                     // the whole product, from the front door inwards
-    source: PRODUCT.experts, fit: 'contain', plate: '#021d4d',
-    why: 'the guide counts 288 roles across ten functions; the experts library is that catalogue, filtered by function',
-  },
-  'start-with-one-workflow': {                      // one business process, defined and picked up
-    source: PRODUCT.workflows, fit: 'contain', plate: '#001135',
-    why: 'the workflow library: each process with its steps, its approval points and its integration status',
-  },
-  'from-inquiry-to-quote': {                        // the surface the article walks through
-    source: PRODUCT.inquiry, fit: 'contain', plate: '#e8f1fe',
-    why: 'an inquiry with the facts pulled out of it and a grounded draft reply beside it',
-  },
-  'approval-gates-for-ai-in-trade': {               // the view an approver works from
-    source: editorialFile('os-cockpit'), fit: 'cover',
-    why: 'kept: no approved product screenshot shows an approval gate',
-  },
-  'ai-operating-system-for-global-trade': {         // the operating system itself
-    source: PRODUCT.workspace, fit: 'contain', plate: '#0e2b5a',
-    why: 'the workspace home: one request goes in, with experts, tasks and company knowledge beside it',
-  },
-  '288-ai-employees-not-288-chatbots': {            // the roster the article explains
-    source: PRODUCT.teams, fit: 'contain', plate: '#00173c',
-    why: 'five roles divide one inquiry between them and leave a record of what each finished',
-  },
-  'enterprise-ontology-explained': {                // the model of the business
-    source: editorialFile('brand-ontology'), fit: 'cover',
-    why: 'kept: no approved product screenshot shows the enterprise knowledge model',
-  },
+/* The region of each render the cover shows: x, y, width as fractions of the
+   render (the height follows from the 2:1 canvas, about the box's centre).
+   Chosen by eye against tools/openwork/hotspots.json; the width is at least
+   half the render, so the 2400px source is never enlarged for the 1200 file. */
+const BOX = {
+  'stargo-work-visual-guide':             { box: [0.195, 0.055, 0.79, 0.5745], why: 'the welcome page: the greeting, the quick-task tabs and the first task cards' },
+  'start-with-one-workflow':              { box: [0.34, 0.03, 0.65, 0.4727], why: 'the automation list: each flow, its trigger and its switch' },
+  'from-inquiry-to-quote':                { box: [0.295, 0.44, 0.6, 0.4364], why: 'the facts pulled out of the inquiry and the reply draft waiting for approval' },
+  'approval-gates-for-ai-in-trade':       { box: [0.295, 0.275, 0.6, 0.4364], why: 'the PI, below the price list, sitting with the manager instead of going out' },
+  'ai-operating-system-for-global-trade': { box: [0.0, 0.075, 0.94, 0.6836], why: 'the workspace: the 15 apps on the left, the message box and five quick actions' },
+  '288-ai-employees-not-288-chatbots':    { box: [0.355, 0.11, 0.64, 0.4655], why: 'the roster of 288 digital employees, its groups and the first role cards' },
+  'enterprise-ontology-explained':        { box: [0.33, 0.035, 0.665, 0.4836], why: 'the customer record table the other apps read from' },
 };
-const PAD = 0.02;          // contain: the margin round a fitted screenshot, as a fraction of the frame width
+const source = (slug) => `assets/stargo-product/${COVER_RENDER[slug]}-2400.webp`;
 const QUALITY = 82;        // as the covers have always been encoded
 
 /* Every article has a cover and every cover has an article. */
 const slugs = POSTS.map((p) => p.cover);
-for (const slug of slugs) if (!COVERS[slug]) throw new Error(`blog covers: no source for ${slug}`);
-for (const slug of Object.keys(COVERS)) if (!slugs.includes(slug)) throw new Error(`blog covers: ${slug} is not an article`);
+for (const slug of slugs) if (!COVER_RENDER[slug] || !BOX[slug]) throw new Error(`blog covers: no source or region for ${slug}`);
+for (const slug of [...Object.keys(COVER_RENDER), ...Object.keys(BOX)]) if (!slugs.includes(slug)) throw new Error(`blog covers: ${slug} is not an article`);
 /* One source per cover: two articles must never carry the same picture. */
-const sources = Object.values(COVERS).map((c) => c.source);
+const sources = slugs.map(source);
 if (new Set(sources).size !== sources.length) throw new Error('blog covers: two covers share a source image');
-/* The article pages say which covers are product screenshots (tools/blog.mjs
-   PRODUCT_COVERS drives the hero's disclosure and the plate rules in
-   css/stargo-fusion.css). That list and this one are the same list. */
-const fitted = Object.entries(COVERS).filter(([, c]) => c.fit === 'contain').map(([slug]) => slug);
-if (fitted.length !== PRODUCT_COVERS.size || fitted.some((slug) => !PRODUCT_COVERS.has(slug))) {
-  throw new Error(`blog covers: the fitted covers (${fitted.sort().join(', ')}) and tools/blog.mjs PRODUCT_COVERS (${[...PRODUCT_COVERS].sort().join(', ')}) disagree`);
+/* Every cover is an OPEN WORK render (an `ow<nn>-…` id registered by tools/openwork/render.mjs):
+   no screenshot of any other product, and no sw0xx file whose content can change under it. */
+const productAssets = JSON.parse(readFileSync(`${SITE}/tools/imagegen/product-assets.json`, 'utf8')).assets;
+for (const slug of slugs) {
+  const id = source(slug).match(/^assets\/stargo-product\/(ow\d\d-[a-z-]+)-2400\.webp$/)?.[1];
+  if (!id) throw new Error(`blog covers: ${slug} must be made from an OPEN WORK render (assets/stargo-product/ow<nn>-…-2400.webp), not ${source(slug)}`);
+  if (!productAssets.some((a) => a.id === id && a.renderer === 'tools/openwork/render.mjs')) throw new Error(`blog covers: ${id} is not registered as an OPEN WORK render in tools/imagegen/product-assets.json`);
 }
-for (const [slug, c] of Object.entries(COVERS)) {
-  if ((c.fit === 'contain') !== c.source.startsWith('assets/stargo-product/')) throw new Error(`blog covers: ${slug} is fitted only if it is a product screenshot`);
-  if (c.fit === 'contain' && !/^#[0-9a-f]{6}$/.test(c.plate ?? '')) throw new Error(`blog covers: ${slug} needs a plate colour`);
+/* The article pages say which covers are product renders (tools/blog.mjs PRODUCT_COVERS drives the
+   hero's disclosure). Now that is every article, and the two lists must stay the same list. */
+if (slugs.length !== PRODUCT_COVERS.size || slugs.some((slug) => !PRODUCT_COVERS.has(slug))) {
+  throw new Error(`blog covers: the covers (${[...slugs].sort().join(', ')}) and tools/blog.mjs PRODUCT_COVERS (${[...PRODUCT_COVERS].sort().join(', ')}) disagree`);
 }
 
 const file = (slug, w) => `${OUT}/${slug}${w === 1200 ? '' : `-${w}`}.webp`;
 const sha256 = (rel) => createHash('sha256').update(readFileSync(`${SITE}/${rel}`)).digest('hex');
-const recipeOf = (slug, [w, h]) => {
-  const c = COVERS[slug];
-  return c.fit === 'contain'
-    ? { source: c.source, mode: 'contain', canvas: [w, h], pad: PAD, plate: c.plate, quality: QUALITY }
-    : { source: c.source, mode: 'cover', canvas: [w, h], quality: QUALITY };
-};
+const recipeOf = (slug, [w, h]) => ({ source: source(slug), sourceSha256: sha256(source(slug)), mode: 'focus', box: BOX[slug].box, canvas: [w, h], quality: QUALITY });
 
 mkdirSync(`${SITE}/${OUT}`, { recursive: true });
 const record = existsSync(`${SITE}/${RECORD}`) ? JSON.parse(readFileSync(`${SITE}/${RECORD}`, 'utf8')) : { files: {} };

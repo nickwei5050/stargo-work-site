@@ -1,7 +1,7 @@
 /* lifelogx author layer, namespaced "lx-" and scoped to .lx-scope by tools/lifelogx-prepare.mjs. Do not edit by hand. */
 @font-face {
   font-family: "42 Dotsans";
-  src: url("../assets/6929b6c693cb856e01ef7c05/692d67d4b0a2b150c3655266_42dotsans-bold.ttf") format("truetype"), url("../assets/6929b6c693cb856e01ef7c05/692d67d5a7eafa7f5bc7942b_42dotsans-extrabold.ttf") format("truetype");
+  src: url("../assets/fonts/42dotsans-700-latin.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -9,7 +9,7 @@
 
 @font-face {
   font-family: "42 Dotsans";
-  src: url("../assets/6929b6c693cb856e01ef7c05/692d67d4a6bcca04680071de_42dotsans-regular.ttf") format("truetype");
+  src: url("../assets/fonts/42dotsans-400-latin.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -17,7 +17,7 @@
 
 @font-face {
   font-family: "42 Dotsans";
-  src: url("../assets/6929b6c693cb856e01ef7c05/692d67d5352a9e573a217538_42dotsans-light.ttf") format("truetype");
+  src: url("../assets/fonts/42dotsans-300-latin.woff2") format("woff2");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -25,7 +25,7 @@
 
 @font-face {
   font-family: "42 Dotsans";
-  src: url("../assets/6929b6c693cb856e01ef7c05/692d67d446c2417b55fe26ca_42dotsans-medium.ttf") format("truetype");
+  src: url("../assets/fonts/42dotsans-500-latin.woff2") format("woff2");
   font-weight: 500;
   font-style: normal;
   font-display: swap;

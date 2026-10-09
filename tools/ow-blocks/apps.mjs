@@ -5,9 +5,11 @@
  */
 import { esc, heading, para, plain, button, shot, ICON } from './shared.mjs';
 
-export function render({ lang, t, C }) {
+export function render({ lang, t, C, appsCta }) {
   const O = C.HOME_OW;
   const A = O.apps;
+  /* the product page points the button at its own catalogue */
+  const cta = appsCta ?? { href: 'capabilities.html', label: A.cta };
   const count = A.groups.reduce((n, g) => n + g.apps.length, 0);
   if (count !== 15) throw new Error(`ow apps: the groups name ${count} apps, the sidebar has 15`);
   const groups = A.groups.map((g) => `<li class="ow-group"><span class="ow-tile">${ICON[g.icon]}</span><div class="ow-group-body"><h3 class="ow-h3">${heading(lang, t(g.title))}</h3><p>${para(lang, t(g.line))}</p><ul class="ow-chips">${g.apps.map((a) => `<li>${esc(t(a))}</li>`).join('')}</ul></div></li>`).join('');
@@ -17,6 +19,6 @@ export function render({ lang, t, C }) {
     + `<div class="ow-apps-side">${side}</div>`
     + `<div class="ow-apps-main"><header class="ow-sec-head"><p class="ow-eyebrow">${esc(t(A.eyebrow))}</p><h2 id="ow-apps-title" class="ow-h2">${heading(lang, t(A.title))}</h2><p class="ow-sec-lead">${heading(lang, t(A.lead))}</p></header>`
     + `<ul class="ow-groups">${groups}</ul>${tasks}`
-    + `<p class="ow-head-link">${button('capabilities.html', t(A.cta), { kind: 'secondary' })}</p></div>`
+    + `<p class="ow-head-link">${button(cta.href, t(cta.label), { kind: 'secondary' })}</p></div>`
     + `</div></section>`;
 }
