@@ -11,7 +11,6 @@
  */
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { SITE } from './paths.mjs';
-import { UPSTREAM } from './copy.mjs';
 
 /* The sibling Next.js checkout is not part of this repository; say where it is.
    Default: a sibling directory next to this one. */
@@ -30,10 +29,6 @@ function zh(block, key) {
   return m ? unescape(m[1]) : null;
 }
 function must(cond, msg) { if (!cond) throw new Error(`extract-data: ${msg}`); }
-/* This repository is public, and the owner does not want the upstream software
-   behind the product named where it can be found (2026-10-10; review, round 2):
-   what is written here names none of it (tools/copy.mjs UPSTREAM). */
-const anonymous = (json, what) => { const hit = UPSTREAM.find((re) => re.test(json)); must(!hit, `${what} would name upstream software (${hit})`); return json; };
 
 /* ---- capabilities ------------------------------------------------------ */
 {
@@ -44,15 +39,14 @@ const anonymous = (json, what) => { const hit = UPSTREAM.find((re) => re.test(js
   while ((m = re.exec(src))) {
     const b = m[5];
     caps.push({
-      /* a slug named after an upstream project becomes <domain>-<id> */
-      id: m[1], slug: UPSTREAM.some((re) => re.test(m[2])) ? `${m[4]}-${m[1].toLowerCase()}` : m[2], version: m[3], domain: m[4],
+      id: m[1], slug: m[2], version: m[3], domain: m[4],
       title: zh(b, 'title'), value: zh(b, 'customerValue'),
       status: b.match(/status:\s*"([a-z-]+)"/)[1],
     });
   }
   must(caps.length === 52, `expected 52 capabilities, found ${caps.length}`);
   must(caps.every((c) => c.title && c.value && c.status), 'capability with missing zh fields');
-  writeFileSync(`${OUT}/capabilities.json`, anonymous(JSON.stringify(caps, null, 1), 'capabilities.json'));
+  writeFileSync(`${OUT}/capabilities.json`, JSON.stringify(caps, null, 1));
   const by = (k) => caps.reduce((o, c) => ((o[c[k]] = (o[c[k]] ?? 0) + 1), o), {});
   console.log('capabilities', caps.length, by('status'), by('domain'));
 }
@@ -95,13 +89,12 @@ const anonymous = (json, what) => { const hit = UPSTREAM.find((re) => re.test(js
   const re = /\{\s*id:\s*"([a-z0-9-]+)",\s*upstream:\s*"([^"]+)",\s*capabilities:\s*(\d+),\s*disabled:\s*(\d+),\s*approvalGated:\s*(\d+),\s*status:\s*"([a-z-]+)",(\s*defaultOffProfile:\s*true,)?\s*purpose:\s*\{\s*zh:\s*"([^"]*)"/g;
   let m;
   while ((m = re.exec(src))) {
-    /* the source's id and upstream project name are not kept: a numbered id instead */
-    out.push({ id: `i${String(out.length + 1).padStart(2, '0')}`, capabilities: +m[3], disabled: +m[4], approvalGated: +m[5], status: m[6], defaultOffProfile: !!m[7], purpose: m[8] });
+    out.push({ id: m[1], upstream: m[2], capabilities: +m[3], disabled: +m[4], approvalGated: +m[5], status: m[6], defaultOffProfile: !!m[7], purpose: m[8] });
   }
   must(out.length === 25, `expected 25 integrations, found ${out.length}`);
   const sum = (k) => out.reduce((n, i) => n + i[k], 0);
   must(sum('capabilities') === 202 && sum('disabled') === 26 && sum('approvalGated') === 30, 'integration totals drifted from 202 / 26 / 30');
-  writeFileSync(`${OUT}/integrations.json`, anonymous(JSON.stringify(out, null, 1), 'integrations.json'));
+  writeFileSync(`${OUT}/integrations.json`, JSON.stringify(out, null, 1));
   console.log('integrations', out.length, sum('capabilities'), sum('disabled'), sum('approvalGated'));
 }
 

@@ -95,8 +95,6 @@ All released screens live in `assets/stargo-product/`. Ids:
 
 `sw*` and `gos*` files above are the only product screens this site places. There is no motorcycle-category set.
 
-**OPEN WORK renders (2026-10-09).** `assets/stargo-product/ow*.webp` are rendered by `tools/openwork/render.mjs` from an HTML rebuild of the OPEN WORK chat workspace (demo data in every conversation); ids, sizes and variants are in `tools/imagegen/product-assets.json`, alt text in `tools/editorial-images.mjs`. Change a scene in `tools/openwork/scenes.mjs` and re-render instead of overwriting a file.
-
 ## Open Graph
 
 | | |
@@ -105,6 +103,5 @@ All released screens live in `assets/stargo-product/`. Ids:
 | Generator token | `assets/stargo/og-cover.png` (`OG.token`) |
 | Size | 1200×630 |
 | Meta | `og:image`, `og:image:width`, `og:image:height`, `twitter:image` on every non-article page |
-| Made by | `tools/openwork/render.mjs` (since 2026-10-09): STARGO WORK, one line of positioning and the OPEN WORK inquiry screen (demo data, badged 演示数据) in a window frame. Re-run it with `--only og-cover`; do not hand-edit the PNG. |
 
 Article pages use that article’s cover in `assets/blog/` instead. Do not point those at `og-cover.png`.

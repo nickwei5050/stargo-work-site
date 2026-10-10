@@ -12,17 +12,7 @@ mkdirSync(`${root}${target}`, { recursive: true });
 mkdirSync(`${root}.wrangler/art-review`, { recursive: true });
 const manifest = [];
 const hashes = new Set();
-/* Since 2026-10-09 the share cover is composed by tools/openwork/render.mjs
-   from the OPEN WORK renders, not encoded from its generated original. Keep
-   that file and its entry; re-run tools/openwork/render.mjs to change it. */
-const previous = JSON.parse(readFileSync(`${root}tools/imagegen/assets-manifest.json`, 'utf8')).assets;
 for (const job of catalog) {
-  if (job.id === 'og-cover') {
-    const kept = previous.find(a => a.id === 'og-cover');
-    hashes.add(kept.originalSha256);
-    manifest.push(kept);
-    continue;
-  }
   const input = readFileSync(`${root}output/imagegen/originals/${job.id}.png`);
   const sha256 = createHash('sha256').update(input).digest('hex');
   if (hashes.has(sha256)) throw new Error(`Duplicate generation: ${job.id}`);

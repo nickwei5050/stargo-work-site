@@ -1,6 +1,7 @@
 [
  {
-  "id": "i01",
+  "id": "activepieces",
+  "upstream": "Activepieces",
   "capabilities": 87,
   "disabled": 1,
   "approvalGated": 18,
@@ -9,7 +10,8 @@
   "purpose": "唯一的主业务编排器。对外发出的动作都从这里走，因此这里也是审批闸门最密集的地方。"
  },
  {
-  "id": "i02",
+  "id": "chatwoot",
+  "upstream": "Chatwoot",
   "capabilities": 18,
   "disabled": 2,
   "approvalGated": 2,
@@ -18,7 +20,8 @@
   "purpose": "全渠道会话：邮件、网站会话与消息汇到同一条客户时间线。"
  },
  {
-  "id": "i03",
+  "id": "moneyprinterturbo",
+  "upstream": "MoneyPrinterTurbo",
   "capabilities": 16,
   "disabled": 0,
   "approvalGated": 2,
@@ -27,7 +30,8 @@
   "purpose": "短视频生成与后期处理。"
  },
  {
-  "id": "i04",
+  "id": "weknora",
+  "upstream": "WeKnora",
   "capabilities": 11,
   "disabled": 0,
   "approvalGated": 0,
@@ -36,7 +40,8 @@
   "purpose": "企业知识检索。数字员工引用公司自己的产品与价格事实，而不是生成看起来合理的规格。"
  },
  {
-  "id": "i05",
+  "id": "yente",
+  "upstream": "Yente / OpenSanctions",
   "capabilities": 11,
   "disabled": 0,
   "approvalGated": 0,
@@ -45,7 +50,8 @@
   "purpose": "制裁与拒绝清单筛查。在写入 CRM 之前执行——顺序反了，受制裁方就会变成一条看起来正常的记录。"
  },
  {
-  "id": "i06",
+  "id": "stargo-evolution",
+  "upstream": "STARGO Evolution",
   "capabilities": 11,
   "disabled": 0,
   "approvalGated": 0,
@@ -54,7 +60,8 @@
   "purpose": "能力改进的评测与发布证据。"
  },
  {
-  "id": "i07",
+  "id": "stargo-reddit-geo",
+  "upstream": "STARGO Reddit GEO",
   "capabilities": 8,
   "disabled": 6,
   "approvalGated": 1,
@@ -63,7 +70,8 @@
   "purpose": "社区需求侦察。八项能力中六项当前关闭，只有检索类可用。"
  },
  {
-  "id": "i08",
+  "id": "stargo-identity-spine",
+  "upstream": "STARGO Identity Spine",
   "capabilities": 5,
   "disabled": 0,
   "approvalGated": 1,
@@ -72,7 +80,8 @@
   "purpose": "跨系统身份映射：A 系统里的哪条记录和 B 系统里的哪条是同一个东西。"
  },
  {
-  "id": "i09",
+  "id": "playwright",
+  "upstream": "Playwright",
   "capabilities": 4,
   "disabled": 0,
   "approvalGated": 2,
@@ -81,7 +90,8 @@
   "purpose": "受治理的浏览器取证与外部信息读取。"
  },
  {
-  "id": "i10",
+  "id": "twenty",
+  "upstream": "Twenty CRM",
   "capabilities": 3,
   "disabled": 0,
   "approvalGated": 1,
@@ -90,7 +100,8 @@
   "purpose": "客户与商机记录。写入是 R2，需要人工审批。"
  },
  {
-  "id": "i11",
+  "id": "firecrawl",
+  "upstream": "Firecrawl",
   "capabilities": 2,
   "disabled": 0,
   "approvalGated": 0,
@@ -99,7 +110,8 @@
   "purpose": "公开市场信息检索与抓取。"
  },
  {
-  "id": "i12",
+  "id": "stargo-evolution-console",
+  "upstream": "STARGO Evolution Console",
   "capabilities": 2,
   "disabled": 0,
   "approvalGated": 0,
@@ -108,7 +120,8 @@
   "purpose": "改进提案的人工审阅界面。"
  },
  {
-  "id": "i13",
+  "id": "univer",
+  "upstream": "Univer",
   "capabilities": 1,
   "disabled": 0,
   "approvalGated": 0,
@@ -117,7 +130,8 @@
   "purpose": "成本与毛利测算表等业务交付物。"
  },
  {
-  "id": "i14",
+  "id": "modlens",
+  "upstream": "ModLens",
   "capabilities": 1,
   "disabled": 0,
   "approvalGated": 0,
@@ -126,7 +140,8 @@
   "purpose": "读取买家发来的图纸与样品照片。"
  },
  {
-  "id": "i15",
+  "id": "agent-teams",
+  "upstream": "AgentTeams",
   "capabilities": 1,
   "disabled": 0,
   "approvalGated": 0,
@@ -135,7 +150,8 @@
   "purpose": "并行与委派分析。"
  },
  {
-  "id": "i16",
+  "id": "infinite-canvas",
+  "upstream": "Infinite Canvas",
   "capabilities": 1,
   "disabled": 0,
   "approvalGated": 0,
@@ -144,7 +160,8 @@
   "purpose": "创意与视觉工作面。"
  },
  {
-  "id": "i17",
+  "id": "marketing-skills",
+  "upstream": "Corey Haines Marketing Skills",
   "capabilities": 1,
   "disabled": 0,
   "approvalGated": 0,
@@ -153,7 +170,8 @@
   "purpose": "专项营销技能库。"
  },
  {
-  "id": "i18",
+  "id": "puter-workspace-bridge",
+  "upstream": "Puter",
   "capabilities": 1,
   "disabled": 0,
   "approvalGated": 0,
@@ -162,7 +180,8 @@
   "purpose": "工作台外壳与产出交付。"
  },
  {
-  "id": "i19",
+  "id": "windmill",
+  "upstream": "Windmill",
   "capabilities": 4,
   "disabled": 4,
   "approvalGated": 1,
@@ -171,7 +190,8 @@
   "purpose": "受治理的脚本与 ETL 执行器。当前四项能力全部关闭。"
  },
  {
-  "id": "i20",
+  "id": "erpnext",
+  "upstream": "ERPNext",
   "capabilities": 4,
   "disabled": 4,
   "approvalGated": 1,
@@ -180,7 +200,8 @@
   "purpose": "可选的制造、库存与订单 provider。当前四项能力全部关闭。"
  },
  {
-  "id": "i21",
+  "id": "medusa",
+  "upstream": "Medusa",
   "capabilities": 5,
   "disabled": 5,
   "approvalGated": 1,
@@ -189,7 +210,8 @@
   "purpose": "可选的电商与经销商门户 provider。当前五项能力全部关闭。"
  },
  {
-  "id": "i22",
+  "id": "staffdeck",
+  "upstream": "StaffDeck",
   "capabilities": 1,
   "disabled": 1,
   "approvalGated": 0,
@@ -198,7 +220,8 @@
   "purpose": "实验性的从属数字员工 provider。当前关闭。"
  },
  {
-  "id": "i23",
+  "id": "posthog",
+  "upstream": "PostHog",
   "capabilities": 1,
   "disabled": 1,
   "approvalGated": 0,
@@ -207,7 +230,8 @@
   "purpose": "产品度量。当前关闭。"
  },
  {
-  "id": "i24",
+  "id": "openai-codex",
+  "upstream": "OpenAI Codex",
   "capabilities": 2,
   "disabled": 1,
   "approvalGated": 0,
@@ -216,7 +240,8 @@
   "purpose": "代码生成辅助。两项中一项关闭。"
  },
  {
-  "id": "i25",
+  "id": "stargo-channel-plugin-sdk",
+  "upstream": "STARGO Channel Plugin SDK",
   "capabilities": 1,
   "disabled": 1,
   "approvalGated": 0,
