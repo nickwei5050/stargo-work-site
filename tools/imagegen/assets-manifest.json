@@ -157,23 +157,23 @@
    "src": "assets/stargo-editorial/os-desktop.webp",
    "width": 1600,
    "height": 900,
-   "bytes": 143590,
+   "bytes": 118330,
    "originalSha256": "0b0494848deaa4d822794011ad69ce365569a6c07ab6b38e2633b91d55a3f7e7",
    "variants": [
     {
      "src": "assets/stargo-editorial/os-desktop-400.webp",
      "width": 400,
-     "bytes": 15346
+     "bytes": 13536
     },
     {
      "src": "assets/stargo-editorial/os-desktop-800.webp",
      "width": 800,
-     "bytes": 47296
+     "bytes": 41160
     },
     {
      "src": "assets/stargo-editorial/os-desktop-1200.webp",
      "width": 1200,
-     "bytes": 88246
+     "bytes": 76430
     }
    ]
   },
@@ -482,13 +482,13 @@
    "src": "assets/stargo-editorial/mobile-approvals.webp",
    "width": 752,
    "height": 941,
-   "bytes": 23448,
+   "bytes": 36964,
    "originalSha256": "ede9e724c6fa9b90b88120f2f19b97322f306cd8b7287b65074cbd987f95680f",
    "variants": [
     {
      "src": "assets/stargo-editorial/mobile-approvals-400.webp",
      "width": 400,
-     "bytes": 10590
+     "bytes": 14774
     }
    ]
   },
@@ -497,18 +497,18 @@
    "src": "assets/stargo-editorial/mobile-agents.webp",
    "width": 940,
    "height": 1254,
-   "bytes": 36066,
+   "bytes": 47160,
    "originalSha256": "8519e83a02bd15ffa9896b865c0bd51707604e7e6d9fe94e100ea0fe75f847c5",
    "variants": [
     {
      "src": "assets/stargo-editorial/mobile-agents-400.webp",
      "width": 400,
-     "bytes": 12454
+     "bytes": 13558
     },
     {
      "src": "assets/stargo-editorial/mobile-agents-800.webp",
      "width": 800,
-     "bytes": 28148
+     "bytes": 37600
     }
    ]
   },
@@ -517,13 +517,13 @@
    "src": "assets/stargo-editorial/mobile-inquiry.webp",
    "width": 705,
    "height": 941,
-   "bytes": 30370,
+   "bytes": 25448,
    "originalSha256": "42ef305ae0f5aba7e66faeb3490257633349207e45d7b6013b2d9645106d0989",
    "variants": [
     {
      "src": "assets/stargo-editorial/mobile-inquiry-400.webp",
      "width": 400,
-     "bytes": 13796
+     "bytes": 11052
     }
    ]
   },
@@ -697,7 +697,7 @@
    "src": "assets/stargo-editorial/og-cover.png",
    "width": 1200,
    "height": 630,
-   "bytes": 848525,
+   "bytes": 228533,
    "originalSha256": "59958a31408355dcdffd396c5419dde8390dc9373b9997c77953256d480a429f",
    "variants": []
   },

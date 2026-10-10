@@ -8,7 +8,7 @@
    "src": "assets/stargo-product/gos01-market-thesis.webp",
    "width": 802,
    "height": 941,
-   "bytes": 57652,
+   "bytes": 40682,
    "sourceFile": "owner-handoff-2026-09-27/drive-ui/增长分析.png",
    "sourceSha256": "6f2863d324836b8d966c55e92c3f4367f65bd80e8384aa11dd98fc0b02c6279c",
    "sourcePixels": [
@@ -21,12 +21,12 @@
     {
      "src": "assets/stargo-product/gos01-market-thesis-480.webp",
      "width": 480,
-     "bytes": 26788
+     "bytes": 19596
     },
     {
      "src": "assets/stargo-product/gos01-market-thesis-768.webp",
      "width": 768,
-     "bytes": 50528
+     "bytes": 37810
     }
    ]
   },
@@ -36,7 +36,7 @@
    "src": "assets/stargo-product/gos05-buying-committee.webp",
    "width": 585,
    "height": 423,
-   "bytes": 25686,
+   "bytes": 29002,
    "sourceFile": "owner-handoff-2026-09-27/drive-ui/主动获客7.png",
    "sourceSha256": "007f8b6f12f800a04f762d668cd504fa496a253df71b861eb171d9e7191cdd90",
    "sourcePixels": [
@@ -49,7 +49,7 @@
     {
      "src": "assets/stargo-product/gos05-buying-committee-480.webp",
      "width": 480,
-     "bytes": 17708
+     "bytes": 18676
     }
    ]
   },
@@ -59,7 +59,7 @@
    "src": "assets/stargo-product/gos09-reorder-radar.webp",
    "width": 922,
    "height": 581,
-   "bytes": 49516,
+   "bytes": 46980,
    "sourceFile": "owner-handoff-2026-09-27/drive-ui/控制中心 (1).png",
    "sourceSha256": "5f1e16b3d132df9a4013bb342598e66e4eac4cfbfad78edbc022fcb8be638dfd",
    "sourcePixels": [
@@ -72,12 +72,12 @@
     {
      "src": "assets/stargo-product/gos09-reorder-radar-480.webp",
      "width": 480,
-     "bytes": 17446
+     "bytes": 17670
     },
     {
      "src": "assets/stargo-product/gos09-reorder-radar-768.webp",
      "width": 768,
-     "bytes": 35016
+     "bytes": 35038
     }
    ]
   },
@@ -120,7 +120,7 @@
    "src": "assets/stargo-product/gos11-dormant-reactivation.webp",
    "width": 1672,
    "height": 941,
-   "bytes": 108418,
+   "bytes": 96350,
    "sourceFile": "owner-handoff-2026-09-27/drive-ui/首页 (2).png",
    "sourceSha256": "3b1f05f990db35c4255480327cec932b07df8a83dec588afeba5b7b7c533b0d1",
    "sourcePixels": [
@@ -133,17 +133,17 @@
     {
      "src": "assets/stargo-product/gos11-dormant-reactivation-480.webp",
      "width": 480,
-     "bytes": 17104
+     "bytes": 13288
     },
     {
      "src": "assets/stargo-product/gos11-dormant-reactivation-768.webp",
      "width": 768,
-     "bytes": 33610
+     "bytes": 28642
     },
     {
      "src": "assets/stargo-product/gos11-dormant-reactivation-1024.webp",
      "width": 1024,
-     "bytes": 51800
+     "bytes": 45710
     }
    ]
   },
@@ -153,7 +153,7 @@
    "src": "assets/stargo-product/sw003-ai-workspace-home.webp",
    "width": 1672,
    "height": 941,
-   "bytes": 91786,
+   "bytes": 102670,
    "sourceFile": "owner-handoff-2026-09-27/drive-ui/首页 (1).png",
    "sourceSha256": "9a7096a2c88d9169edb53823da0e2fe0a05601867c91c73c3e4ddb262bbba881",
    "sourcePixels": [
@@ -166,17 +166,17 @@
     {
      "src": "assets/stargo-product/sw003-ai-workspace-home-480.webp",
      "width": 480,
-     "bytes": 14096
+     "bytes": 14654
     },
     {
      "src": "assets/stargo-product/sw003-ai-workspace-home-768.webp",
      "width": 768,
-     "bytes": 28348
+     "bytes": 31516
     },
     {
      "src": "assets/stargo-product/sw003-ai-workspace-home-1024.webp",
      "width": 1024,
-     "bytes": 43484
+     "bytes": 43984
     }
    ]
   },
@@ -186,7 +186,7 @@
    "src": "assets/stargo-product/sw004-experts-library.webp",
    "width": 1672,
    "height": 941,
-   "bytes": 123304,
+   "bytes": 121160,
    "sourceFile": "owner-handoff-2026-09-27/drive-ui/数字员工1.png",
    "sourceSha256": "a3e2e2e2d89e8297f945893d87a4d8aab07aadd356aef93599b0a2d6e3aa12e1",
    "sourcePixels": [
@@ -199,17 +199,17 @@
     {
      "src": "assets/stargo-product/sw004-experts-library-480.webp",
      "width": 480,
-     "bytes": 16894
+     "bytes": 17444
     },
     {
      "src": "assets/stargo-product/sw004-experts-library-768.webp",
      "width": 768,
-     "bytes": 34380
+     "bytes": 35368
     },
     {
      "src": "assets/stargo-product/sw004-experts-library-1024.webp",
      "width": 1024,
-     "bytes": 55712
+     "bytes": 57502
     }
    ]
   },
@@ -219,7 +219,7 @@
    "src": "assets/stargo-product/sw006-expert-teams.webp",
    "width": 1672,
    "height": 941,
-   "bytes": 91566,
+   "bytes": 44504,
    "sourceFile": "owner-handoff-2026-09-27/drive-ui/数字员工2.png",
    "sourceSha256": "cddd6639a8e09a265fa3df2dba8954fa96c6dcc34fa34220839e2899a1ed4a46",
    "sourcePixels": [
@@ -232,17 +232,17 @@
     {
      "src": "assets/stargo-product/sw006-expert-teams-480.webp",
      "width": 480,
-     "bytes": 12446
+     "bytes": 7516
     },
     {
      "src": "assets/stargo-product/sw006-expert-teams-768.webp",
      "width": 768,
-     "bytes": 25910
+     "bytes": 14838
     },
     {
      "src": "assets/stargo-product/sw006-expert-teams-1024.webp",
      "width": 1024,
-     "bytes": 41140
+     "bytes": 22386
     }
    ]
   },
@@ -252,7 +252,7 @@
    "src": "assets/stargo-product/sw008-workflow-library.webp",
    "width": 1672,
    "height": 941,
-   "bytes": 89290,
+   "bytes": 89188,
    "sourceFile": "owner-handoff-2026-09-27/drive-ui/工作流引擎.png",
    "sourceSha256": "5881f9c2e4c07a99b699a9d143a26007662c5a711acd31afa81f39882445ec7e",
    "sourcePixels": [
@@ -265,17 +265,17 @@
     {
      "src": "assets/stargo-product/sw008-workflow-library-480.webp",
      "width": 480,
-     "bytes": 14394
+     "bytes": 13506
     },
     {
      "src": "assets/stargo-product/sw008-workflow-library-768.webp",
      "width": 768,
-     "bytes": 29436
+     "bytes": 31360
     },
     {
      "src": "assets/stargo-product/sw008-workflow-library-1024.webp",
      "width": 1024,
-     "bytes": 44202
+     "bytes": 48894
     }
    ]
   },
@@ -318,7 +318,7 @@
    "src": "assets/stargo-product/sw033-sales-desk-document-pack.webp",
    "width": 1672,
    "height": 941,
-   "bytes": 104638,
+   "bytes": 98186,
    "sourceFile": "owner-handoff-2026-09-27/drive-ui/销售工作台1.png",
    "sourceSha256": "71fdcf37aff1c643b5ff08f994703007c5fe731f8d2dd89b79e4535e1d87d360",
    "sourcePixels": [
@@ -331,17 +331,17 @@
     {
      "src": "assets/stargo-product/sw033-sales-desk-document-pack-480.webp",
      "width": 480,
-     "bytes": 12980
+     "bytes": 14632
     },
     {
      "src": "assets/stargo-product/sw033-sales-desk-document-pack-768.webp",
      "width": 768,
-     "bytes": 27806
+     "bytes": 29128
     },
     {
      "src": "assets/stargo-product/sw033-sales-desk-document-pack-1024.webp",
      "width": 1024,
-     "bytes": 45562
+     "bytes": 46794
     }
    ]
   }
