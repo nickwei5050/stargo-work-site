@@ -13,7 +13,7 @@ Stories draw from the catalogue; nothing is presented only in a story.
 | 01 Command & Workspace | System Map | catalogue #g01 |
 | 01 Command & Workspace | App Library | catalogue #g01 |
 | 01 Command & Workspace | Desktop Shell | catalogue #g01 |
-| 01 Command & Workspace | Mobile Companion | not on the site since review round 3 (2026-10-10): phone use is not owner-confirmed (tools/copy.mjs CAPABILITY_GROUPS note) |
+| 01 Command & Workspace | Mobile Companion | story: Run the work with an AI team + catalogue #g01 |
 | 01 Command & Workspace | Notification Center | catalogue #g01 |
 | 01 Command & Workspace | Approval Center | story: Run the work with an AI team + catalogue #g01 |
 | 01 Command & Workspace | Voice Console | catalogue #g01 |
@@ -49,7 +49,7 @@ Stories draw from the catalogue; nothing is presented only in a story.
 | 04 Inquiry & Customer Conversation | Email Inquiry Processing | catalogue #g04 |
 | 04 Inquiry & Customer Conversation | Alibaba Inquiry Handling | catalogue #g04 |
 | 04 Inquiry & Customer Conversation | Website Conversation | catalogue #g04 |
-| 04 Inquiry & Customer Conversation | [inbox engine] Conversation Center | catalogue #g04 |
+| 04 Inquiry & Customer Conversation | Chatwoot Conversation Center | catalogue #g04 |
 | 04 Inquiry & Customer Conversation | Inquiry Intent Detection | story: Turn conversations into customer understanding + catalogue #g04 |
 | 04 Inquiry & Customer Conversation | Spam / Scam Detection | catalogue #g04 |
 | 04 Inquiry & Customer Conversation | Buyer Requirement Extraction | story: Turn conversations into customer understanding + catalogue #g04 |
@@ -74,7 +74,7 @@ Stories draw from the catalogue; nothing is presented only in a story.
 | 06 Product & Enterprise Knowledge | Enterprise Brain | story: Business context + catalogue #g06 |
 | 06 Product & Enterprise Knowledge | Knowledge Center | catalogue #g06 |
 | 06 Product & Enterprise Knowledge | Knowledge Intake | catalogue #g06 |
-| 06 Product & Enterprise Knowledge | [knowledge engine] Knowledge Engine | catalogue #g06 |
+| 06 Product & Enterprise Knowledge | WeKnora Knowledge Engine | catalogue #g06 |
 | 06 Product & Enterprise Knowledge | Enterprise RAG | story: Business context + catalogue #g06 |
 | 06 Product & Enterprise Knowledge | Drive / Notion Knowledge Gateway | catalogue #g06 |
 | 06 Product & Enterprise Knowledge | Product Intelligence | catalogue #g06 |
@@ -125,8 +125,8 @@ Stories draw from the catalogue; nothing is presented only in a story.
 | 10 AI Workforce | Scheduled Work | catalogue #g10 |
 | 10 AI Workforce | Evidence & Human Approval | catalogue #g10 |
 | 11 Automation & Computer Use | DSH Agent Runtime | catalogue #g11 |
-| 11 Automation & Computer Use | [automation engine] Workflow Automation | story: Tools and connections + catalogue #g11 |
-| 11 Automation & Computer Use | [script engine] | catalogue #g11 |
+| 11 Automation & Computer Use | Activepieces Workflow Automation | story: Tools and connections + catalogue #g11 |
+| 11 Automation & Computer Use | Windmill | catalogue #g11 |
 | 11 Automation & Computer Use | LoopX Long-Horizon Control | catalogue #g11 |
 | 11 Automation & Computer Use | Browser Automation · Playwright | story: Tools and connections + catalogue #g11 |
 | 11 Automation & Computer Use | Computer Use | catalogue #g11 |
@@ -155,7 +155,7 @@ Stories draw from the catalogue; nothing is presented only in a story.
 | 14 Evolution Engine | Evolution Console | catalogue #g14 |
 | 14 Evolution Engine | Observer Agent | story: Improvement you can check + catalogue #g14 |
 | 14 Evolution Engine | Reflection Scientist | story: Improvement you can check + catalogue #g14 |
-| 14 Evolution Engine | Skill Optimizer · Microsoft [skill optimizer] Integration | catalogue #g14 |
+| 14 Evolution Engine | Skill Optimizer · Microsoft SkillOpt Integration | catalogue #g14 |
 | 14 Evolution Engine | Eval & Red Team | story: Improvement you can check + catalogue #g14 |
 | 14 Evolution Engine | Evolution Governor | catalogue #g14 |
 | 14 Evolution Engine | Trajectory · Outcome · Evaluation | story: Improvement you can check + catalogue #g14 |

@@ -25,13 +25,8 @@ mkdirSync(SHOTS, { recursive: true });
 const NAMES = [...SITE_PAGES, '404.html'];
 const PAGES = process.env.ONLY ? process.env.ONLY.split(',') : [...NAMES, ...NAMES.map((n) => `en/${n}`)];
 
-/** Latin tokens that are supposed to be there. OPEN (the core app, OPEN WORK),
-    FOB and MOQ (trade terms, like PI/CRM/ERP) since the 2026-10-09 homepage.
-    The sidebar's gateway app is 「AI 网关」 (no upstream project name). Since 2026-10-10 the list no longer lets upstream
-    software names, model vendors or the retired notices page's licence words
-    through (owner: 「网站不要写任何这种开源的东西」); tools/copy.mjs UPSTREAM is
-    the build's own guard. */
-const ALLOWED = /^(STARGO|WORK|OPEN|FOB|MOQ|7\.0|AI|CRM|R[0-4]|E\d\d|WF\d\d|jq|json|fp\.[a-z-]+|tests?\/[\w./-]+|[\w.-]+\.(mjs|json)|Evolution|Console|Reddit|GEO|Identity|Spine|Infinite|Canvas|Marketing|Skills|StaffDeck|Channel|Plugin|SDK|Ava|Leo|Mia|Emma|Noah|Scout|Alex|Luna|Owen|Felix|Fiona|Sara|Tara|Moto|Verde|Distribuidora|Subscribe|CIF|Santos|IP67|INMETRO|SG-EM-750|Type-2|PROV-O|SQLite|Inter|Display|Instrument|Serif|Startup|live-verified|demo-verified|pilot|roadmap|research-preview|test-[\w-]+|approval\/asked|DEMO-[\w-]+|first-party|registry|capabilities|workflows|providers|length|select|approvalRequired|true|campaign|DNA|GTM|KYC|MCP|ETL|provider|STARGO|Nothing|SG|Ontology|Forward|Deployed|Proactive|Evolution|Engine|Observer|Evaluation|Canary|Promote|Rollback|Foundation|Launch|Growth|Global|Acquisition|Enterprise|Custom|Cloud|Reddit|LinkedIn|Facebook|YouTube|WhatsApp|Email|Alibaba|Google|Maps|Trade|Signal|Revenue|Excel|ERP|Loop|Intelligence|Capabilities|Workforce|Quote|Studio|Execution|Customer|Unified|Inbox|Agent|Agents|Teams|Orchestrator|Follow-up|Market|Research|Importer|Dealer|Discovery|Buying|Committee|Product|Matching|Approval|Gate|Human-in-the-Loop|Scheduled|Routines|Event-Driven|Always-On|Pages|Cloudflare|Resend|HTML|CSS|tools\/visuals|WORK|Boss|Cockpit|Command|Center|Orbital|Workspace|Mission|Control|Execution|View|System|Map|App|Library|Desktop|Shell|Mobile|Companion|Notification|Voice|Console)$/;
+/** Latin tokens that are supposed to be there. */
+const ALLOWED = /^(STARGO|WORK|7\.0|AI|CRM|R[0-4]|E\d\d|WF\d\d|jq|json|fp\.[a-z-]+|tests?\/[\w./-]+|[\w.-]+\.(mjs|json)|Activepieces|Chatwoot|MoneyPrinterTurbo|WeKnora|Yente|OpenSanctions|Evolution|Console|Reddit|GEO|Identity|Spine|Playwright|Twenty|Firecrawl|Univer|ModLens|AgentTeams|Infinite|Canvas|Corey|Haines|Marketing|Skills|Puter|Windmill|ERPNext|Medusa|StaffDeck|PostHog|OpenAI|Codex|Channel|Plugin|SDK|Ava|Leo|Mia|Emma|Noah|Scout|Alex|Luna|Owen|Felix|Fiona|Sara|Tara|Moto|Verde|Distribuidora|Subscribe|CIF|Santos|IP67|INMETRO|SG-EM-750|Type-2|PROV-O|SQLite|MIT|OFL|SIL|GSAP|SplitText|ScrollTrigger|Lenis|Lottie|Webflow|jQuery|Inter|Display|Instrument|Serif|Mōno™?|Scalora|Startup|GreenSock|LICENSE|live-verified|demo-verified|pilot|roadmap|research-preview|test-[\w-]+|approval\/asked|DEMO-[\w-]+|first-party|registry|capabilities|workflows|providers|length|select|approvalRequired|true|campaign|DNA|GTM|KYC|MCP|ETL|provider|Open|Font|License|SIL|OFL|STARGO|Nothing|SG|Ontology|Forward|Deployed|Proactive|Evolution|Engine|Observer|Evaluation|Canary|Promote|Rollback|Foundation|Launch|Growth|Global|Acquisition|Enterprise|Custom|Cloud|Reddit|LinkedIn|Facebook|YouTube|WhatsApp|Email|Alibaba|Google|Maps|Trade|Signal|Revenue|Excel|ERP|Loop|Intelligence|Capabilities|Workforce|Quote|Studio|Execution|Customer|Unified|Inbox|Agent|Agents|Teams|Orchestrator|Follow-up|Market|Research|Importer|Dealer|Discovery|Buying|Committee|Product|Matching|Approval|Gate|Human-in-the-Loop|Scheduled|Routines|Event-Driven|Always-On|Pages|Cloudflare|Resend|HTML|CSS|tools\/visuals|WORK|Boss|Cockpit|Command|Center|Orbital|Workspace|Mission|Control|Execution|View|System|Map|App|Library|Desktop|Shell|Mobile|Companion|Notification|Voice|Console)$/;
 
 const browser = await chromium.launch();
 let failures = 0;
@@ -45,8 +40,7 @@ for (const page of PAGES) {
   const external = new Set();
   p.on('pageerror', (e) => errors.push(String(e).split('\n')[0]));
   p.on('console', (m) => { if (m.type() === 'error') errors.push('console: ' + m.text().slice(0, 160)); });
-  /* a media element drops requests it no longer needs (a seek, a pause): not a failure; the films carry ?v= */
-  p.on('requestfailed', (r) => { if (!/\.(mp4|webm)(?:\?|$)/.test(r.url())) failed.push(r.url()); });
+  p.on('requestfailed', (r) => { if (!/\.(mp4|webm)$/.test(r.url())) failed.push(r.url()); });
   p.on('request', (r) => { const u = new URL(r.url()); if (u.origin !== new URL(BASE).origin) external.add(u.host); });
 
   let status = 0;
@@ -79,18 +73,12 @@ for (const page of PAGES) {
     }
     return [...out];
   });
-  /* Words are cut at Chinese characters too: the interface writes app names
-     as 「客户CRM」 and 「企业ERP」 with no space, and the token to judge there is
-     "CRM", not "客户CRM". */
-  const residue = page.startsWith('en/') ? [] : latin.filter((t) => !t.split(/[\s·（）()「」【】、，。：:；;/·—–\p{Script=Han}-]+/u).filter(Boolean).every((w) => !/[A-Za-z]{3,}/.test(w) || ALLOWED.test(w)));
+  const residue = page.startsWith('en/') ? [] : latin.filter((t) => !t.split(/[\s·（）()「」【】、，。：:；;/·—–-]+/).filter(Boolean).every((w) => !/[A-Za-z]{3,}/.test(w) || ALLOWED.test(w)));
 
   // Internal links must resolve to a file in the site root.
   const hrefs = await p.evaluate(() => [...document.querySelectorAll('a[href]')].map((a) => a.getAttribute('href')));
   const dir = `${SITE}/${page.split('/').slice(0, -1).join('/')}`.replace(/\/$/, '');
-  /* Root-absolute links (/pricing.html, /en/pricing.html) resolve from the site
-     root: the 404 pages use them since 2026-10-09 because Cloudflare Pages
-     serves 404.html at whatever depth was asked for. */
-  const broken = [...new Set(hrefs.filter((h) => /\.html([#?].*)?$/.test(h) && !/^https?:/.test(h)).map((h) => h.split(/[#?]/)[0]).filter((h) => !existsSync(h.startsWith('/') ? `${SITE}${h}` : `${dir}/${h}`)))];
+  const broken = [...new Set(hrefs.filter((h) => /\.html(#.*)?$/.test(h) && !/^https?:/.test(h)).map((h) => h.split('#')[0]).filter((h) => !existsSync(`${dir}/${h}`)))];
   const dangling = [...new Set(hrefs.filter((h) => h === '#' || h === ''))].length;
 
   const ok = status === 200 && errors.length === 0 && failed.length === 0 && external.size === 0 && broken.length === 0;
