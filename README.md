@@ -68,7 +68,14 @@ and loads every page in Chromium. **Green means the committed pages are exactly
 what the build produces and a browser found nothing wrong with them.** A check
 that runs but verifies nothing is deliberately red, not green — see
 `.github/workflows/README.md`, which explains each failure in plain language.
-The workflow deploys nothing and uses no secret; deployment stays manual.
+The verification workflow deploys nothing and uses no secret. Deployment is
+`.github/workflows/deploy.yml`: every push to `main` (that is, every merged pull
+request) runs `make-dist` and uploads `dist/` to the Pages project `stargo` with
+Wrangler, then checks that production answers. It needs the repository secrets
+`CLOUDFLARE_API_TOKEN` (Cloudflare Pages: Edit) and `CLOUDFLARE_ACCOUNT_ID`;
+without them it reports that and deploys nothing. It can also be started by hand
+(Actions → Deploy to Cloudflare Pages → Run workflow). The manual command below
+still works.
 
 Because the built pages are committed and served from the repo root, the
 reproducibility assertion is the check that matters most here: it catches a page
