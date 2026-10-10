@@ -1,7 +1,8 @@
 /**
  * The OPEN WORK homepage, section by section (2026-10-09).
  *
- *   S1 hero → (real logo wall, only with files in assets/brands/) → S2 pain →
+ *   S1 hero → S1b demo video (round 2, 2026-10-10) → (real logo wall, only
+ *   with files in assets/brands/) → S2 pain →
  *   S3 product showcase → S4 governance → S5 outcomes → S7 15 apps →
  *   S9 pricing teaser → S10 FAQ → S11 demo band
  *
@@ -15,6 +16,7 @@
  */
 import { esc, ICON } from './shared.mjs';
 import * as hero from './hero.mjs';
+import * as demoVideo from './demo-video.mjs';
 import * as logos from './logos.mjs';
 import * as pain from './pain.mjs';
 import * as showcase from './showcase.mjs';
@@ -25,7 +27,7 @@ import * as pricing from './pricing.mjs';
 import * as faq from './faq.mjs';
 import * as contact from './contact.mjs';
 
-export const SECTIONS = [hero, logos, pain, showcase, governance, outcomes, apps, pricing, faq, contact];
+export const SECTIONS = [hero, demoVideo, logos, pain, showcase, governance, outcomes, apps, pricing, faq, contact];
 
 /** The page body: every section, in order, inside one <main>. */
 export function renderHome(ctx) {

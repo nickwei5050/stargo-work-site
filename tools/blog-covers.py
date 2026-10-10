@@ -23,7 +23,16 @@ Job file:
                "radius": 0.012,        # frame only: corner radius, as a fraction of the canvas width
                "border": "#cfd8ec",    # frame only: 1px edge of the window
                "shadow": "#1d2b53",    # frame only: colour of the soft shadow under the window
-               "quality": 82}]}
+               "quality": 82,
+               "overlay": {"file": "<absolute path>.png",  # optional: a transparent PNG pasted on top
+                           "pad": 14,              #   its transparent margin, in pixels
+                           "corner": "top-right",  #   where it goes
+                           "inset": 24}}]}        #   its visible edge from the two canvas edges, in pixels
+
+The overlay is the 「演示数据 · Demo data」 chip tools/blog-covers.mjs draws
+(review, round 2) on the share file only (<slug>-share.webp): a share preview
+shows the bare file, without the site's HTML badge. The files the pages show
+carry none (review, round 3), because the window bar's badge already says it.
 
 "focus" is what every blog cover uses since the 2026-10-09 review: one region
 of an OPEN WORK render (the reply draft with its approval bar, the PI, the
@@ -125,6 +134,18 @@ def frame(job, im, canvas, box):
     return out
 
 
+def overlay(out, spec):
+    """Paste the transparent PNG `spec["file"]` so that its visible part sits `inset` pixels from the corner's two edges."""
+    with Image.open(spec["file"]) as chip:
+        chip = chip.convert("RGBA")
+        pad, inset = spec["pad"], spec["inset"]
+        if spec["corner"] != "top-right":
+            raise SystemExit(f"unknown overlay corner: {spec['corner']}")
+        x = out.width - inset - (chip.width - pad)
+        y = inset - pad
+        out.paste(chip, (x, y), chip)
+
+
 def render(job):
     canvas = tuple(job["canvas"])
     with Image.open(job["source"]) as im:
@@ -138,6 +159,8 @@ def render(job):
             x, y, dw, dh = box
             out = Image.new("RGB", canvas, job["plate"])
             out.paste(im.resize((dw, dh), Image.LANCZOS), (x, y))
+    if job.get("overlay"):
+        overlay(out, job["overlay"])
     out.save(job["target"], "WEBP", quality=job.get("quality", 82), method=6)
     return f"{job['target']} {canvas[0]}x{canvas[1]} {job['mode']} {box}"
 

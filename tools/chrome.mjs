@@ -19,8 +19,9 @@ import { editorialImages } from './editorial-images.mjs';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { CAP_JUMPS, NAV, NAV_CTA, SECONDARY, MORE, LANG_SWITCH, CHROME, META, CONTACT_INFO, SITE_URL } from './copy.mjs';
-import { POSTS, BLOG_UI, postPath, coverSrc, coverAlt, faqEntities, wordCount } from './blog.mjs';
+import { POSTS, BLOG_UI, postPath, coverShareSrc, coverAlt, faqEntities, wordCount } from './blog.mjs';
 import { OG, OS_ART } from './replaceables.mjs';
+import { versionAssets } from './asset-version.mjs';
 
 /** Every page the build produces, as root-relative names. */
 export const SITE_PAGES = [...NAV, ...SECONDARY, ...MORE].map((n) => n.href).concat(POSTS.map(postPath));
@@ -241,11 +242,11 @@ function head(html, lang, current) {
   const zh = cleanUrl('zh', current);
   const en = cleanUrl('en', current);
   const inLanguage = lang === 'zh' ? 'zh-CN' : 'en';
-  const ogImage = post ? `${SITE_URL}/${coverSrc(post)}` : `${SITE_URL}/${OG_IMAGE}`;
+  const ogImage = post ? `${SITE_URL}/${coverShareSrc(post)}` : `${SITE_URL}/${OG_IMAGE}`;
   const pageType = current === 'about.html' ? 'AboutPage' : current === 'blog.html' ? 'CollectionPage' : current === 'contact.html' ? 'ContactPage' : 'WebPage';
   const blogUrl = cleanUrl(lang, 'blog.html');
   const graph = [
-    { '@type': 'Organization', '@id': ORG_ID, name: 'STARGO WORK', url: `${SITE_URL}/`, logo: `${SITE_URL}/${WORDMARK}`, email: CONTACT_INFO.email, telephone: CONTACT_INFO.whatsapp, address: { '@type': 'PostalAddress', addressLocality: 'Liuzhou', addressRegion: 'Guangxi', addressCountry: 'CN' }, sameAs: [CONTACT_INFO.siteHref] },
+    { '@type': 'Organization', '@id': ORG_ID, name: 'STARGO WORK', legalName: CONTACT_INFO.company, url: `${SITE_URL}/`, logo: `${SITE_URL}/${WORDMARK}`, email: CONTACT_INFO.email, telephone: CONTACT_INFO.phone, address: { '@type': 'PostalAddress', addressLocality: 'Liuzhou', addressRegion: 'Guangxi', addressCountry: 'CN' }, sameAs: [CONTACT_INFO.siteHref] },
     { '@type': 'WebSite', '@id': SITE_ID, url: `${SITE_URL}/`, name: 'STARGO WORK', inLanguage: ['zh-CN', 'en'], publisher: { '@id': ORG_ID } },
     { '@type': pageType, '@id': self, url: self, name: title, description, inLanguage, isPartOf: { '@id': SITE_ID }, ...(post ? { primaryImageOfPage: ogImage } : {}) },
   ];
@@ -255,7 +256,7 @@ function head(html, lang, current) {
   if (current === 'blog.html') {
     graph.push({
       '@type': 'Blog', '@id': `${blogUrl}#blog`, url: blogUrl, name: `STARGO WORK ${BLOG_UI.section[lang]}`, description, inLanguage, publisher: { '@id': ORG_ID },
-      blogPost: POSTS.map((p) => ({ '@type': 'BlogPosting', '@id': `${cleanUrl(lang, postPath(p))}#article`, headline: p.title[lang], url: cleanUrl(lang, postPath(p)), datePublished: p.date, dateModified: p.modified ?? p.date, image: `${SITE_URL}/${coverSrc(p)}` })),
+      blogPost: POSTS.map((p) => ({ '@type': 'BlogPosting', '@id': `${cleanUrl(lang, postPath(p))}#article`, headline: p.title[lang], url: cleanUrl(lang, postPath(p)), datePublished: p.date, dateModified: p.modified ?? p.date, image: `${SITE_URL}/${coverShareSrc(p)}` })),
     });
   }
   if (post) {
@@ -506,16 +507,40 @@ function uniqueLayoutIds(html) {
   });
 }
 
+/* An input's `autocomplete` token by what it collects (WCAG 1.3.5). The demo
+   form's own fields (tools/ow-blocks/contact.mjs formFields) carry theirs; this
+   covers the template's newsletter e-mail and any plain input without one. */
+const autocompleteFor = (tag) => {
+  const name = (tag.match(/\sname="([^"]*)"/) || [])[1] || '';
+  if (/\stype="email"/.test(tag)) return 'email';
+  if (/^name$/i.test(name)) return 'name';
+  if (/^(?:company|organi[sz]ation|subject|last-name)$/i.test(name)) return 'organization';
+  if (/^(?:phone|tel|mobile)$/i.test(name)) return 'tel';
+  return null;
+};
+const FALLBACK_NAME = { email: { zh: '邮箱', en: 'Email' }, name: { zh: '姓名', en: 'Name' }, organization: { zh: '公司', en: 'Company' }, tel: { zh: '手机 / 微信', en: 'Mobile / WeChat' } };
+
 function formMarkup(html, lang) {
   return html.replace(/<form\b[^>]*>[\s\S]*?<\/form>/g, form => {
     const isNews = /id="Subscribe"/.test(form);
     form = form.replace(/<form\b/, `<form data-stargo-form="${isNews ? 'newsletter' : 'contact'}"`).replace(/method="get"/, 'method="post" action="/api/contact"');
     if (!form.includes('name="website"')) form = form.replace(/(<form[^>]*>)/, '$1<div class="stargo-hp" aria-hidden="true"><input aria-label="Website" name="website" type="text" tabindex="-1" autocomplete="off"/></div>');
+    /* Which form this is, for a post without the script (functions/api/contact.js
+       refuses a body without it); js/stargo-forms.js skips hidden inputs and
+       sends the same value in its JSON. */
+    if (!/\sname="form"/.test(form)) form = form.replace(/(<form[^>]*>)/, `$1<input type="hidden" name="form" value="${isNews ? 'newsletter' : 'contact'}"/>`);
+    /* An input with a visible <label for> is named by it: an aria-label on top
+       would replace the label (and drop its 「（选填）」), so only a bare input,
+       like the newsletter e-mail, gets one. */
+    const labelled = new Set([...form.matchAll(/<label\b[^>]*\bfor="([^"]+)"/g)].map(m => m[1]));
     form = form.replace(/<input\b[^>]*>/g, tag => {
-      if (/type="email"/.test(tag)) return tag.replace('<input ', `<input autocomplete="email" aria-label="${lang === 'zh' ? '邮箱' : 'Email'}" `);
-      if (/name="[Nn]ame"/.test(tag)) return tag.replace('<input ', `<input autocomplete="name" aria-label="${lang === 'zh' ? '姓名' : 'Name'}" `);
-      if (/name="(?:Subject|Last-Name)"/.test(tag)) return tag.replace('<input ', `<input autocomplete="organization" aria-label="${lang === 'zh' ? '公司' : 'Company'}" `);
-      return tag;
+      const kind = autocompleteFor(tag);
+      if (!kind) return tag;
+      const id = (tag.match(/\sid="([^"]*)"/) || [])[1];
+      const add = [];
+      if (!/\sautocomplete=/.test(tag)) add.push(`autocomplete="${kind}"`);
+      if (!/\saria-label=/.test(tag) && !(id && labelled.has(id))) add.push(`aria-label="${FALLBACK_NAME[kind][lang]}"`);
+      return add.length ? tag.replace('<input ', `<input ${add.join(' ')} `) : tag;
     });
     const consent = lang === 'zh' ? '提交前请阅读我们的 <a href="privacy.html">隐私政策</a>。我们仅用这些信息处理你的申请。' : 'Please read our <a href="privacy.html">Privacy Policy</a>. We use these details to respond to your request.';
     return form.replace('</form>', `<p class="stargo-form-consent">${consent}</p></form>`);
@@ -611,7 +636,7 @@ export function remapLinks(html) {
                 : /博客|文章|Blog|Article/i.test(text) ? 'blog.html'
                   : /关于|About/i.test(text) ? 'about.html'
                     : /演示|Demo|联系|Contact|诊断|talk/i.test(text) ? 'contact.html'
-                      : /声明|Notices|Licens/i.test(text) ? 'notices.html'
+                      : /声明|Notices|Licens|条款|Terms/i.test(text) ? 'terms.html'   // the notices page is gone (2026-10-10)
                         : /首页|Home/i.test(text) ? 'index.html'
                           : null;
     return `<a${pre}href="${byText ?? LEGACY[href]}"${post}>${body}</a>`;
@@ -700,9 +725,16 @@ export function applyChrome(html, { lang, current }) {
   // check in CI exists to catch. Folding first makes the token depend on the
   // file's content and nothing else, so the build is reproducible on any
   // checkout. The value is a cache key; what the browser loads is unchanged.
+  //
+  // A stylesheet ships with ?v= keys on the fonts and pictures it names
+  // (tools/make-dist.mjs, tools/asset-version.mjs), and its own key is taken
+  // over that text: a changed font or picture gives the stylesheet a new URL
+  // too, so no cached stylesheet keeps asking for the old file.
   out = out.replace(/((?:src|href)=")((?:css|js)\/[^"?]+\.(?:css|js))"/g, (_, attr, path) => {
     const raw = readFileSync(new URL(`../${path}`, import.meta.url));
-    const content = Buffer.from(raw.toString('latin1').replace(/\r\n/g, '\n'), 'latin1');
+    let text = raw.toString('latin1').replace(/\r\n/g, '\n');
+    if (path.endsWith('.css')) text = versionAssets(text);
+    const content = Buffer.from(text, 'latin1');
     const hash = createHash('sha256').update(content).digest('hex').slice(0, 12);
     return `${attr}${path}?v=${hash}"`;
   });

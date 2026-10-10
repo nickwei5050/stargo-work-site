@@ -520,6 +520,19 @@ button.toggle-header { width: 100%; border: 0; border-radius: 0; background: tra
 @media (max-width: 479px) {
   .footer .footer-small-grid:not(.sec):has(> .flex-item > a.button-link) { grid-template-columns: 1fr 1fr; }
 }
+/* The footer's top row from 768 to 991px: the template places the tagline over
+   columns 1-3 and the demo button over columns 3-4, right-aligned, so the two
+   share column 3. The English button ("Book a 30-minute demo", 224px) is wider
+   than column 4 there, and at 768-790px the tagline's last word ran under it
+   (review, round 2). A row of two flex items instead: the button keeps its
+   width, the tagline wraps in what is left. Flex ignores the template's
+   grid-area rules, so no id selector is needed; from 992px the four columns
+   are wide enough, and below 768px the template stacks them. */
+@media (min-width: 768px) and (max-width: 991px) {
+  .footer .footer-grid { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+  .footer .footer-grid > .footer-part-1 { flex: 1 1 auto; min-width: 0; }
+  .footer .footer-grid > .div-spc { flex: 0 0 auto; }
+}
 
 /* ---------------------------------------------------------------------------
    Intrinsic image dimensions.
@@ -1967,7 +1980,7 @@ html[lang^="zh"] .lx-scope .lx-confirmation-card .lx-text-size-medium { text-wra
       over the cell it names.
 
       Restoring the three columns for the data was tried first and is wrong: at
-      320 the first track is 51px, and 「Activepieces」 and 「Windmill」 are wider
+      320 the first track is 51px, and the two long product names in it are wider
       than that with no break opportunity in them, so they overprint the middle
       column. The rows have to stay stacked.
 
@@ -3651,14 +3664,15 @@ html[lang^="en"] .ow-post-body .stargo-post :is(.sgc-role-name, .sgc-role-task, 
    `background-image: none` is for the homepage card only: Mono paints a
    decorative SVG behind .testimonials-photo which would otherwise show through
    the plate now that the picture no longer covers the whole box. */
+/* `*=`, not `$=`: the build appends ?v=<hash> to every asset URL (review, round 3). */
 :is(.lx-blog-image, .blog-grid .testimonials-photo):is(
-  [src$="/stargo-work-visual-guide.webp"],
-  [src$="/start-with-one-workflow.webp"],
-  [src$="/from-inquiry-to-quote.webp"],
-  [src$="/approval-gates-for-ai-in-trade.webp"],
-  [src$="/ai-operating-system-for-global-trade.webp"],
-  [src$="/288-ai-employees-not-288-chatbots.webp"],
-  [src$="/enterprise-ontology-explained.webp"]
+  [src*="/stargo-work-visual-guide.webp"],
+  [src*="/start-with-one-workflow.webp"],
+  [src*="/from-inquiry-to-quote.webp"],
+  [src*="/approval-gates-for-ai-in-trade.webp"],
+  [src*="/ai-operating-system-for-global-trade.webp"],
+  [src*="/288-ai-staff-not-288-chatbots.webp"],
+  [src*="/enterprise-ontology-explained.webp"]
 ) { object-fit: contain; background-image: none; background-color: #e9eefb; }
 
 /* The homepage card draws Mono's arrow badge over the top right of the cover
@@ -3676,23 +3690,15 @@ html[lang^="en"] .ow-post-body .stargo-post :is(.sgc-role-name, .sgc-role-task, 
    `padding-bottom` balances it optically; the 6px difference is the gap the
    badge keeps from the interface. */
 .blog-grid .testimonials-photo:is(
-  [src$="/stargo-work-visual-guide.webp"],
-  [src$="/start-with-one-workflow.webp"],
-  [src$="/from-inquiry-to-quote.webp"],
-  [src$="/approval-gates-for-ai-in-trade.webp"],
-  [src$="/ai-operating-system-for-global-trade.webp"],
-  [src$="/288-ai-employees-not-288-chatbots.webp"],
-  [src$="/enterprise-ontology-explained.webp"]
+  [src*="/stargo-work-visual-guide.webp"],
+  [src*="/start-with-one-workflow.webp"],
+  [src*="/from-inquiry-to-quote.webp"],
+  [src*="/approval-gates-for-ai-in-trade.webp"],
+  [src*="/ai-operating-system-for-global-trade.webp"],
+  [src*="/288-ai-staff-not-288-chatbots.webp"],
+  [src*="/enterprise-ontology-explained.webp"]
 ) { padding-top: 56px; padding-bottom: 6px; }
 
-/* The same for the three "keep reading" cards under the third-party notices
-   (tools/build-site.mjs, PAGES['notices.html']). The half-card is about
-   1.4 : 1 and these pictures are 16:9, so the box holds the picture's own
-   border colour instead of cropping 13% off each side of an interface. The
-   band is this page's alone — .blog-photo-overlay exists nowhere else. */
-.blog-flex .blog-photo-overlay[src$="/sw003-ai-workspace-home.webp"] { object-fit: contain; background-color: #0e2b5a; }
-.blog-flex .blog-photo-overlay[src$="/sw004-experts-library.webp"] { object-fit: contain; background-color: #021d4d; }
-.blog-flex .blog-photo-overlay[src$="/sw033-sales-desk-document-pack.webp"] { object-fit: contain; background-color: #dae9fd; }
 /* V7-BLOG-END */
 
 
@@ -4579,7 +4585,7 @@ html[lang="en"] .cn-about-reviews .cn-testimonial-info .cn-text-size-medium { te
 /* V7-LX-END */
 
 
-/* V7-HOME-START (home, contact, notices, blog index fixes) */
+/* V7-HOME-START (home, contact, blog index fixes) */
 
 /* H1. The 404 page's title is now its h1 (it was Mono's h2.h2). The Chinese
        heading sweep above balances `h2.h2`; the same for this one heading so
@@ -4824,26 +4830,6 @@ html[lang^="zh"] body:has(#loop) section.ctc h2.h2.for-ctn {
        link texts keep one line each. */
 html[lang^="zh"] section.ctc .legal-link { white-space: nowrap; }
 
-/* H16. Notices page, the "Keep reading" band.
-   - The three card sentences are plain text. In Chinese they broke inside
-     words (「创/作」, 「岗/位」, 「目/录」, 「结/果」); `keep-all` breaks them
-     only at punctuation and spaces (`anywhere` is the fallback for a phrase
-     longer than the card, and keeps the cards' sizes as they are).
-   - In English the side sentence and the card sentences left one word on
-     their last line ("managed.", "workflow.", "improvement."); they are
-     three or four lines long, and balanced lines end none of them on one
-     word. (The Chinese side sentence is split per letter; a break in its
-     copy keeps 「做什么」 and 「谁来做」 whole.)
-   The notice text above the band is not touched. */
-html[lang^="zh"] .blog-text-wrp .margin-10 p {
-  word-break: keep-all;
-  overflow-wrap: anywhere;
-}
-html[lang^="en"] .blog-text-wrp .margin-10 p,
-html[lang^="en"] .max-lft-dvc p.top-text.big {
-  text-wrap: balance;
-}
-
 /* H18/H19. Pricing page, layout only (no price, plan or word changes).
    - The tiers band's head: renok sets the heading beside a 35% column holding
      the paragraph and the first-year / renewal switch. With this page's
@@ -5034,14 +5020,6 @@ html[lang^="zh"] .sc-scope.sc-hero .hero-title-changeing-word { display: flex; }
 html[lang^="en"] body:has(#loop) section.ctc h2.h2.for-ctn { font-size: min(40px, calc((100vw - 70px) / 7.7)); }
 html[lang^="en"] body:has(#loop) .animation-section .cta-sm-title { font-size: min(var(--button--cta-title), calc((100vw - 16px) / 9)); }
 html[lang^="en"] .button-text.w-variant-83ed8c83-4d97-b61d-2146-78e915c17bb4 { text-transform: none; }
-
-/* H26. Notices, English: the (Keep reading) subtitle broke the brand name
-        ("…what STARGO / WORK does", 390–1920 except 1024). Its line reveal
-        re-splits the text on every space, a no-break space included, so the
-        name is a `.sgp-nobr` span (tools/copy.mjs NOTICES.relatedIntro),
-        which the split leaves whole (js/stargo-splittext-cjk.js), set on one
-        line here. */
-.max-lft-dvc p.top-text.big .sgp-nobr { white-space: nowrap; }
 
 /* H27. The 404 page's header menu button (tools/chrome.mjs overlayMenu keeps
         it; the side-menu icon with nothing behind it is gone). Below 992px it

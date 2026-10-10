@@ -24,10 +24,13 @@ export const APPS = [
   ['chart-column', '老板看板'], ['zap', '自动化中心'], ['users', '客户CRM'], ['book-open', '企业知识库'],
   ['sparkles', '主动获客'], ['briefcase', '销售工作台'], ['building-2', '企业ERP'], ['chart-line', '增长分析'],
   ['refresh-cw', '工作流引擎'], ['inbox', '渠道接入'], ['shopping-bag', '商城后端管理'], ['settings', '控制中心'],
-  ['lightbulb', '记忆与进化'], ['sliders-horizontal', 'STARGO AI 数字办公室'], ['ticket', 'New API（AI 网关）'],
+  ['lightbulb', '记忆与进化'], ['sliders-horizontal', 'STARGO AI 数字办公室'], ['ticket', 'AI 网关'],
 ];
-/* The real composer footnote. Keep it exactly. */
-export const FOOTNOTE = '工具操作遵循当前授权；外部客户发送未启用。';
+/* The composer footnote. Round 2 (owner, 2026-10-10: everything is live): the
+   old 「外部客户发送未启用」 said sending to customers was switched off, which no
+   longer holds and clashes with the demo video (已批准 · 已发送). It now states
+   the rule the whole site states: outward sending needs an authorized person. */
+export const FOOTNOTE = '工具操作遵循当前授权；对外发送需有权人批准。';
 
 /* Chat history: business titles instead of the test account's 「你好」 / 「[TEST] E2E…」. */
 const HISTORY = ['Nordhem Living · 询盘', 'Kotikulma 样品寄送', '本周业务简报', 'Brattberg 账期申请', '广交会名片整理'];

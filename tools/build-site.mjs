@@ -27,7 +27,11 @@ import { renderHome, lightbox as owLightbox, stickyBar as owStickyBar } from './
 import { renderProduct, renderWorkforce, renderReminders, renderSecurity } from './ow-blocks/pages.mjs';
 import { renderPricing, renderAbout, renderContact, renderLegal, renderNotFound } from './ow-blocks/site-pages.mjs';
 import { renderBlogIndex, renderPost } from './ow-blocks/blog.mjs';
+import { DEMO_PHONE_MEDIA } from './ow-blocks/demo-video.mjs';
 import { SITE } from './paths.mjs';
+import { Script } from 'node:vm';
+import { stripHtml } from './strip-comments.mjs';
+import { versionAssets, unversionedAssets } from './asset-version.mjs';
 
 const TPL = `${SITE}/tools/templates`;
 const tpl = (f) => readFileSync(`${TPL}/${f}`, 'utf8');
@@ -122,9 +126,9 @@ function owShell(lang, where, render, bodyClass) {
     h = h.slice(0, el.start) + h.slice(el.end);
   }
   /* The orb beside the wordmark becomes a still in tools/chrome.mjs
-     (applyChrome → orbStills), on every page. The OPEN WORK pages carry no
-     other film. */
-  if ((h.match(/<video\b/g) ?? []).length !== (h.match(/class="logo-bg[^"]*\bw-background-video\b[^"]*"><video /g) ?? []).length) throw new Error(`${where}: a video other than the orb is on the page`);
+     (applyChrome → orbStills), on every page. The only other film is the
+     OPEN WORK demo video (round 2), on the two pages that carry it. */
+  assertVideos(h, where, lang);
   /* The footer's button says what every other demo button on this page says
      (the shared chrome calls it 「预约演示」 elsewhere). */
   h = s(h, '<p class="top-text for-b">Let’s Collaborate</p>', `<p class="top-text for-b">${escapeHtml(t(C.HOME_OW.demoLabel))}</p>`, { count: 1 });
@@ -144,6 +148,44 @@ function owShell(lang, where, render, bodyClass) {
   h = s(h, '<body>', `<body class="${bodyClass}">`, { count: 1 });
   h = s(h, '</body>', '<script src="js/stargo-ow.js" defer></script></body>', { count: 1 });
   return h;
+}
+
+/* Films on a page. The template's orb (made a still by tools/chrome.mjs), and
+   the OPEN WORK demo video (tools/ow-blocks/demo-video.mjs) — on the homepage
+   and the product page only, once, in the page's language, exactly as that
+   block writes it: data-ow-demo, muted, playsinline, loop, preload="none",
+   never autoplay (the first load must not fetch the film), data-start, no
+   poster attribute (the still is the <picture> right before it: the phone
+   cut's still for DEMO_PHONE_MEDIA, the desktop one otherwise), and the films
+   of tools/openwork/video.mjs: the desktop MP4 + WebM first — what a browser
+   that ignores `media` on a video source plays without the script — then the
+   phone cut's MP4 + WebM for DEMO_PHONE_MEDIA (js/stargo-ow.js puts only one
+   pair in the video). Any other <video> fails the build. */
+const DEMO_VIDEO_PAGES = new Set(['index', 'capabilities']);
+function assertVideos(h, where, lang) {
+  const orbs = (h.match(/class="logo-bg[^"]*\bw-background-video\b[^"]*"><video /g) ?? []).length;
+  const demos = [...h.matchAll(/<video\b([^>]*)>([\s\S]*?)<\/video>/g)].filter((m) => /\sdata-ow-demo(?=[\s>=])/.test(` ${m[1]}`));
+  const all = (h.match(/<video\b/g) ?? []).length;
+  if (all !== orbs + demos.length) throw new Error(`${where}: a video other than the orb and the demo video is on the page`);
+  if (!demos.length) return;
+  if (!DEMO_VIDEO_PAGES.has(where)) throw new Error(`${where}: the demo video belongs on ${[...DEMO_VIDEO_PAGES].join(' and ')} only`);
+  if (demos.length !== 1) throw new Error(`${where}: ${demos.length} demo videos (one per page)`);
+  const [whole, attrs, inner] = demos[0];
+  const file = (ext) => `assets/stargo-product/ow-demo-${lang}${ext}(?:\\?v=[0-9a-f]{12})?`;
+  const M = `media="${DEMO_PHONE_MEDIA.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')}"`;
+  const need = [/\smuted(?=[\s>])/, /\splaysinline(?=[\s>])/, /\sloop(?=[\s>])/, /\spreload="none"/, /\sdata-start="\d+(?:\.\d+)?"/, /\swidth="1440" height="900"/, /\saria-label="[^"]*(?:演示数据|demo data)[^"]*"/];
+  const missing = need.filter((re) => !re.test(` ${attrs}`));
+  if (missing.length) throw new Error(`${where}: the demo video lacks ${missing.join(', ')}`);
+  if (/\sautoplay\b/.test(attrs)) throw new Error(`${where}: the demo video may not autoplay (it must not load before it is on screen)`);
+  if (/\sposter=/.test(attrs)) throw new Error(`${where}: the demo video's still is the <picture> before it, not a poster attribute (a poster cannot follow the screen width)`);
+  const sources = [...inner.matchAll(/<source\b([^>]*?)\s*\/?>/g)].map((m) => m[1].trim());
+  const want = [
+    new RegExp(`^src="${file('\\.mp4')}" type="video/mp4; codecs=avc1\\.640028"$`), new RegExp(`^src="${file('\\.webm')}" type="video/webm; codecs=vp9"$`),
+    new RegExp(`^${M} src="${file('-phone\\.mp4')}" type="video/mp4; codecs=avc1\\.640028"$`), new RegExp(`^${M} src="${file('-phone\\.webm')}" type="video/webm; codecs=vp9"$`),
+  ];
+  if (sources.length !== 4 || !want.every((re, i) => re.test(sources[i]))) throw new Error(`${where}: the demo video's sources are not the ${lang} MP4 + WebM, then the phone cut's MP4 + WebM: ${sources.join(' | ')}`);
+  const still = new RegExp(`<picture class="ow-demo-poster" aria-hidden="true"><source ${M} srcset="${file('-phone-poster\\.webp')}" width="720" height="1200" type="image/webp"/><img src="${file('-poster\\.webp')}" width="1440" height="900" alt="[^"]*(?:演示数据|demo data)[^"]*" decoding="async"/></picture>$`);
+  if (!still.test(h.slice(0, h.indexOf(whole)))) throw new Error(`${where}: the demo video is not preceded by its still (<picture class="ow-demo-poster">, phone then desktop, in ${lang})`);
 }
 
 PAGES['index.html'] = (lang) => homeIntro(owShell(lang, 'index', renderHome, 'ow-home'), lang);
@@ -219,7 +261,7 @@ function assertNoOpeningSplash(html, where) {
 }
 
 
-/* ---- pricing, about, contact, privacy, terms, notices, 404 (C2 pass 2) --
+/* ---- pricing, about, contact, privacy, terms, 404 (C2 pass 2) ----------
    Built like the homepage and the product pages since 2026-10-09: owShell
    (the Mono navigation, overlay menu, footer, the template's demo form)
    around tools/ow-blocks/site-pages.mjs. They were a Scalora/renok/cinery
@@ -229,14 +271,17 @@ function assertNoOpeningSplash(html, where) {
    Mono's post layout for the legal pages (a globe banner with baked-in
    English; the retired desktop and sw033, a screenshot with real-looking
    names, on notices). The 404 page is made position-independent below
-   (absolutePaths), because Cloudflare Pages serves it at any depth. */
+   (absolutePaths), because Cloudflare Pages serves it at any depth.
+   The third-party notices page is gone since round 2 (owner, 2026-10-10:
+   「移到产品里，网站不要写任何这种开源的东西！我不想被爬取到」): the build no longer
+   emits notices.html, its imagery note is a section of terms.html, and
+   tools/make-dist.mjs writes a 301 for the old address into dist/_redirects. */
 const SITE_PAGES_OW = {
   'pricing.html': renderPricing,
   'about.html': renderAbout,
   'contact.html': renderContact,
   'privacy.html': (ctx) => renderLegal(ctx, C.LEGAL.privacy, 'privacy.html'),
   'terms.html': (ctx) => renderLegal(ctx, C.LEGAL.terms, 'terms.html'),
-  'notices.html': (ctx) => renderLegal(ctx, C.NOTICES, 'notices.html'),
   '404.html': renderNotFound,
 };
 for (const [name, render] of Object.entries(SITE_PAGES_OW)) {
@@ -277,12 +322,12 @@ const FORBIDDEN = [
   // lifelogx template people, its CMS article images and its brand
   /Vibrant%20Orange/, /Stylish%20Portrait/, /Metallic%20Jacket/, /Rectangle%2043/, /69417cf6925a82af26179b70/, /Lifelogx/i, /Lina Elsen/, /Amira Brik/, /Mila Eron/, /Oren Solis/,
 ];
-const ALLOWED = { 'notices.html': [/Mōno™ Studio/] };
+const ALLOWED = {};
 
 /* Pictures that must never stand in for the product, its staff, its customers
    or its reviewers (phase C2, 2026-10-09; impl-spec hard rule 5): the
    templates' stock people, fashion and lifestyle photographs and films, the
-   lifelogx phone mock-up with its glowing orb, the PostHog poster stills, the
+   lifelogx phone mock-up with its glowing orb, the analytics-vendor poster stills, the
    renok 3D cards cut from the retired desktop, the retired desktop itself
    (os-desktop, 「系统地图」) and sw033, a screenshot showing real-looking
    names and companies (a privacy risk). A page fails the build if one of
@@ -339,7 +384,51 @@ const RETIRED = [
      what is not live yet is said once per page, in its status note, and as a
      plain statement (「要接入你公司的账号…，演示时逐项确认」). */
   /分阶段开放|分阶段完善|分阶段推进|按授权接入|持续完善|建设中|逐项接通|逐条接通|逐项连接|两大/, /continues? to evolve|(?:is|are) phased|in phases|being built out|validated one by one/i,
+  /* Round 2 (owner, 2026-10-10: 「可以用了！全部都是完成了的！放心放上官网！」):
+     the features are live, so no page may call them unfinished, still being
+     built or to be confirmed one by one. Connecting a company's own accounts
+     needs its authorization — that is said plainly, not as a hedge. */
+  /仍在完善|还在建设|仍在建设|正在建设|逐项确认|演示时确认|已有基础|已有建设|按企业配置启用|开通到哪一步|按已开通|按已开放|资源配置开放|即将(?:上线|推出|开放)/,
+  /being built|still evolving|still being|confirmed item by item|confirmed (?:in|during) the demo|(?:have|has) (?:working |established )?foundations|foundations exist|coming soon|where (?:voice services are |the capability is )?enabled|enabled by configuration/i,
 ];
+/* The English staff term is 「AI Staff」 (owner, 2026-10-10), in the copy, the
+   blog and the image alt texts (tools/editorial-images.mjs). Fatal, so the old
+   terms cannot come back. */
+const STAFF_TERM = /[Dd]igital employees?|AI employees?|AI staff\b|AI [Ww]orkforce/;
+const STAFF_TERM_FATAL = true;
+const staffTermHits = [];
+
+/* Names of upstream software and open-source wording (owner, 2026-10-10:
+   「网站不要写任何这种开源的东西！我不想被爬取到」), tools/copy.mjs UPSTREAM.
+   Checked against the WHOLE generated page — text, attributes, data-* values,
+   inline scripts and comments — not only its visible words: a crawler reads
+   all of it. tools/make-dist.mjs runs the same list over every file it ships,
+   file names included. */
+function upstreamHits(html) {
+  return C.UPSTREAM.flatMap((re) => { const m = html.match(re); return m ? [`${m[0]} … ${html.slice(Math.max(0, m.index - 40), m.index + 40).replace(/\s+/g, ' ')}`] : []; });
+}
+/* The templates' hide list (`.buy-template-badge, .brix-badges-wrapper,
+   .template-figma-info-wrapper … {display:none!important}`) named the template
+   vendors' badges on every page, and none of those elements is on any page
+   any more. A selector is kept only while an element on the page carries
+   that class (or class prefix); an empty list goes. The Webflow runtime's own
+   badge rule stays: the runtime adds that element itself. */
+function pruneHides(html) {
+  const classes = new Set([...html.matchAll(/\sclass="([^"]*)"/g)].flatMap((m) => m[1].split(/\s+/)).filter(Boolean));
+  const has = (sel) => {
+    const cls = /^\.([\w-]+)$/.exec(sel)?.[1];
+    if (cls) return classes.has(cls);
+    const pre = /^\[class\^=['"]([\w-]+)['"]\]$/.exec(sel)?.[1];
+    if (pre) return [...classes].some((c) => c.startsWith(pre));
+    return true;   // anything else is kept as written
+  };
+  return html.replace(/<style>([^<{}]+)\{display:none!important\}<\/style>/g, (m, list) => {
+    if (/webflow-badge/.test(list)) return m;
+    const keep = list.split(',').map((x) => x.trim()).filter(has);
+    return keep.length ? `<style>${keep.join(',')}{display:none!important}</style>` : '';
+  });
+}
+
 /** The words a visitor, a screen reader, a link preview or a search engine gets from a page. */
 function visibleWords(html) {
   const keep = html.replace(/<script\b(?![^>]*application\/ld\+json)[^>]*>[\s\S]*?<\/script>/g, ' ').replace(/<style\b[^>]*>[\s\S]*?<\/style>/g, ' ');
@@ -404,6 +493,11 @@ for (const lang of C.LANGS) {
     {
       const retired = retiredHits(html);
       if (retired.length) throw new Error(`[${lang}/${name}] retired wording:\n  ${retired.join('\n  ')}`);
+      const staff = visibleWords(html).match(STAFF_TERM);
+      if (staff && STAFF_TERM_FATAL) throw new Error(`[${lang}/${name}] English staff term must be 「AI Staff」: ${staff[0]}`);
+      if (staff) staffTermHits.push(`${lang}/${name}: ${staff[0]}`);
+      const upstream = upstreamHits(html);
+      if (upstream.length) throw new Error(`[${lang}/${name}] upstream software or open-source wording:\n  ${upstream.join('\n  ')}`);
     }
     {
       const stock = stockHits(html);
@@ -417,7 +511,7 @@ for (const lang of C.LANGS) {
     for (const m of html.matchAll(/srcset="([^"]*)"/g)) {
       for (const part of m[1].split(',')) {
         const f = part.trim().split(/\s+/)[0];
-        if (f.startsWith('assets/') && !existsSync(`${SITE}/${decodeURIComponent(f)}`) && !existsSync(`${SITE}/${f}`)) throw new Error(`[${lang}/${name}] missing srcset asset: ${f}`);
+        if (f.startsWith('assets/') && !existsSync(`${SITE}/${decodeURIComponent(f).split('?')[0]}`) && !existsSync(`${SITE}/${f}`)) throw new Error(`[${lang}/${name}] missing srcset asset: ${f}`);
       }
     }
     // Pages in a folder (blog/) link and load one level up; English pages one more.
@@ -427,6 +521,21 @@ for (const lang of C.LANGS) {
     const assetUp = '../'.repeat(depth + (lang === 'en' ? 1 : 0));
     if (assetUp) html = relocateAssets(html, assetUp);
     if (name === '404.html') html = notFoundPage(html, lang);
+    /* No comments ship in a page (review, round 2: they named the purchased
+       templates and the libraries): HTML comments and the comments of inline
+       scripts and styles go (tools/strip-comments.mjs); every stripped script
+       must still compile. */
+    html = stripHtml(html, (code, module) => { if (!module) new Script(code, { filename: `${lang}/${name} (inline script)` }); });
+    html = pruneHides(html);
+    /* Every asset URL carries its file's cache key (review, round 3:
+       /assets/* is immutable for a year, and pictures replaced in place kept
+       their URL): ?v=<sha256-12>, as css/ and js/ always have
+       (tools/asset-version.mjs). A reference left without it fails the build. */
+    html = versionAssets(html);
+    {
+      const left = unversionedAssets(html);
+      if (left.length) throw new Error(`[${lang}/${name}] asset URLs without their ?v= cache key: ${[...new Set(left)].slice(0, 8).join(', ')}`);
+    }
     const out = lang === 'zh' ? `${SITE}/${name}` : `${SITE}/en/${name}`;
     mkdirSync(out.slice(0, out.lastIndexOf('/')), { recursive: true });
     writeFileSync(out, html.replace(/[\t ]+$/gm, ''), 'utf8');
@@ -435,3 +544,4 @@ for (const lang of C.LANGS) {
 }
 console.log(`wrote ${written.length} pages: ${written.join(', ')}`);
 if (stockPending.length) console.log(`stock imagery on exempted pages (STOCK_PENDING): ${stockPending.join(', ')}`);
+if (staffTermHits.length) console.log(`staff term other than 「AI Staff」 (not fatal yet, see STAFF_TERM): ${staffTermHits.join(', ')}`);

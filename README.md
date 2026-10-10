@@ -1,7 +1,7 @@
 # STARGO WORK — official site (static)
 
 Bilingual (中文 at `/`, English at `/en/`) marketing site for STARGO WORK, the
-AI Operating System for Global Trade. Twenty pages per language (eleven
+AI Operating System for Global Trade. Nineteen pages per language (ten
 product/legal pages, About, the blog index and seven articles), built from
 licensed Webflow templates with their layouts, palettes, imagery, animations and
 interactions kept intact; the words and the information architecture are STARGO's.
@@ -17,7 +17,7 @@ interactions kept intact; the words and the information architecture are STARGO'
 | `pricing.html` | the AI ladder: Standard → Launch → Growth → Global Acquisition → Enterprise, with a first-year / renewal switch, the plan comparison and ten pricing questions | cinery pricing header and price card, renok tier band and comparison chart, cinery reviews, Scalora closing band and FAQ |
 | `enterprise.html` | delegate the work, keep the authority | Mono studio page |
 | `contact.html` | start with one workflow | Mono contact page |
-| `privacy.html`, `terms.html`, `notices.html`, `404.html` | utility | Mono post / 404 |
+| `privacy.html`, `terms.html`, `404.html` | utility; both legal pages name the operator, 广西博韦尔传媒科技有限公司, and the terms carry the imagery note (the third-party notices page was removed on 2026-10-10 at the owner's request; `dist/_redirects` answers its old addresses with a 301 to `/terms`) | OPEN WORK design (`tools/ow-blocks/site-pages.mjs`) |
 
 ## Build
 
@@ -25,19 +25,19 @@ interactions kept intact; the words and the information architecture are STARGO'
 node tools/imagegen/prepare-assets.mjs # only after new generated originals: encode responsive artwork + manifest
 NODE_USE_ENV_PROXY=1 node tools/lifelogx-prepare.mjs   # no page uses the Lifelogx layout since 2026-10-09 (the blog moved to the OPEN WORK design); kept for history. Only after changing tools/templates/lifelogx: mirrors assets, namespaces CSS, cuts five page fragments plus two snippets (the closing wordmark, the pricing block), exports interactions
 python3 tools/subset-42dot.py       # no page loads css/lifelogx.lx.css since 2026-10-09; only after re-mirroring the 42dot Sans TTFs: writes the Hangul-free WOFF2 faces css/lifelogx.lx.css loads (assets/fonts/42dotsans-*-latin.woff2, ~37 KB each instead of 2.5 MB); needs fonttools + brotli
-node tools/blog-covers.mjs           # only after adding an article or re-rendering its OPEN WORK scene: crops its 2:1 cover (tools/blog.mjs COVER_RENDER + the region in BOX) into assets/blog/; needs python + Pillow
+node tools/blog-covers.mjs           # only after adding an article or re-rendering its OPEN WORK scene: crops its 2:1 cover (tools/blog.mjs COVER_RENDER + the region in BOX) into assets/blog/ — the pages' 1200/800/500 files, and <slug>-share.webp with its own 「演示数据 · Demo data」 chip for og:image; needs python + Pillow (and Chromium for the chip)
 node tools/openwork/render.mjs       # only after changing an OPEN WORK scene (tools/openwork/scenes.mjs): renders the ow* product images and the share cover, registers them; needs STARGO_TOOL_PACKAGE for sharp/fonts/icons (tools/openwork/README.md)
 node tools/mirror-donor-assets.mjs   # fetches the donor templates' own photography/video into assets/<donor>/ (Webflow exports never bundle images); idempotent, driven by tools/fragments/donor-assets.json
 node tools/capability-donors.mjs     # only after changing a capability-page block: cuts each block out of its donor template (tools/blocks/*.mjs say which), writes tools/fragments/<id>.html, the reduced per-donor stylesheet, and the interaction payload
 node tools/try-block.mjs <id>        # one capability-page block on its own: extract, render both languages, report unfilled slots
 node tools/fuse-ix.mjs               # the one Webflow bundle every page loads (Mono + Scalora + every donor's interaction data)
-node tools/build-site.mjs            # all 40 pages from tools/templates + tools/fragments + tools/copy.mjs + tools/blog.mjs
+node tools/build-site.mjs            # all 38 pages from tools/templates + tools/fragments + tools/copy.mjs + tools/blog.mjs
 node tools/verify-site.mjs           # loads every page in Chromium: JS errors, failed/external requests, dead links, leftover English
 node tools/verify-restore.mjs        # every page × 320…1920 × both languages, scroll states of the sticky sections, clipped/covered text, new-page SEO; ORIG_LX/ORIG_MONO add side-by-side sheets against the original templates; ENGINE=webkit; BASE_URL/BROWSER_PROXY/WIDTHS/NAV_TIMEOUT for a production run
 node tools/verify-visual-upgrade.mjs # bilingual 390/768/1440/1920: switcher, keyboard, video, reduced-motion
 node tools/verify-editorial.mjs     # generated imagery still placed carries alt/size data; responsive page scenarios
 node tools/verify-conversion.mjs    # client fixtures, pricing and resize (no real mail)
-node tools/verify-release.mjs       # production: byte matches for every page and referenced image, browser smoke scenarios; optional BROWSER_PROXY, NAV_TIMEOUT=120000 through a slow proxy
+node tools/verify-release.mjs       # after npm run dist: dist/ is the current build, every file it ships matches BASE_URL byte for byte, routes (clean URLs, 404, notices 301), demo video + product pictures in a browser; dry run: node tools/serve.mjs --root dist --port 4390 & BASE_URL=http://127.0.0.1:4390; optional BROWSER_PROXY, NAV_TIMEOUT=120000 through a slow proxy
 ```
 
 Serve the folder with any static server (for example `python -m http.server 4200`).
@@ -62,7 +62,7 @@ project any more; `tools/paths.mjs` is the single place that answers "where is
 the site".
 
 `.github/workflows/site-verification.yml` runs on every pull request to `main`
-and every push to a `release/**` branch. It rebuilds all 40 pages and asserts
+and every push to a `release/**` branch. It rebuilds all 38 pages and asserts
 the rebuild is byte-identical to what the branch committed, then serves the tree
 and loads every page in Chromium. **Green means the committed pages are exactly
 what the build produces and a browser found nothing wrong with them.** A check
@@ -92,7 +92,7 @@ working tree.
 5. **Only when the scan is clean, deploy** — `node tools/make-dist.mjs` then
    `wrangler pages deploy dist --project-name stargo --branch main`, and verify
    production with `BASE_URL=https://stargo.pages.dev node tools/verify-release.mjs`
-   (byte-for-byte comparison of every page and asset, plus browser scenarios).
+   (byte-for-byte comparison of every file in `dist/`, plus routes and browser scenarios).
 
 Note that `stargo.pages.dev` is where this site is published. `stargomoto.com`
 currently serves a different application (a Vercel/Supabase app) and is not
@@ -109,6 +109,7 @@ is live there, so it is the owner's call, not the build's.
 - **Imagery (owner decision, 2026-09-06; homepage superseded 2026-10-09 — it no longer carries the partner wall, the scenario portraits and film, the fashion band or the contact-band photograph):** the templates' own licensed imagery is kept wherever it carries the composition — the Lifelogx pages (phone frames, translucent overlays of the gradient and "no writing" sections, closing-card image, avatars in the scenario bubbles, pink palette), the Mono homepage partner wall (eight sample logos, shown without a caption since 2026-09-10 and disclosed as a sample on the notices page), the scenario cards (portraits and the portrait film), the contact band photograph behind the glass form and the contact page quote card. Two exceptions since V7 (2026-09-17): the phone screens on the intelligence page, Chinese and English (the four screens in the three phone mockups and the screen of the hand-held phone in the "no writing" band), are the site's text-free editorial phone art, because the template screens showed third-party product names; and the blog covers are the site's own editorial artwork, re-encoded into `assets/blog/` by `tools/blog-covers.mjs`. The 40 AI-generated editorial images that are placed (homepage, capabilities, enterprise, the intelligence phone screens, the shared menu and the share cover, among others) live in `assets/stargo-editorial/` with responsive sizes; `tools/editorial-images.mjs` maps them and supplies bilingual conceptual alt text. The 3 unused generated images are retained on disk and reported by `verify-editorial`.
 - **Generation provenance:** after the owner explicitly authorized the built-in image tool, all 43 images were generated individually. The exact model ID is not exposed by that tool. `tools/imagegen/generated-sources.json` records actual prompts and output filenames; `assets-manifest.json` records dimensions, variants and original hashes. Full-resolution originals are retained locally in ignored `output/imagegen/originals/`. `docs/visual-upgrade-brief.md` documents the art direction. No API key is required to build from committed web assets; only re-encoding requires the retained originals and Sharp.
 - **One repaired donor asset (2026-09-08):** `assets/6929b6c693cb856e01ef7c05/6943ffd9d600184a67b62dff_crosshair-simple-fill 1 (1).png` and its `-p-500` sibling differ deliberately from the copies on the Lifelogx CDN. The donor ships that icon at 768×609 with its ink box at y 72…608, x 72…695 — 72px of margin on the top, left and right and **zero** at the bottom, where the ring is sliced flat mid-arc. The ring is 624px wide, so a circle with those margins needs a 768px canvas: 159px of arc is missing from the file, which is why no CSS could show it whole. The glyph is symmetric about y = 383.5 (measured: mean channel difference 6.78 there against 19.5 one pixel either side — a clean minimum; alpha-only mean 1.57), so every missing row already exists in the file at `767 - y` and the arc was restored by mirroring, not redrawn. The join is cut at row 602 rather than at the file's own last row, because row 608 *is* the crop edge and carries antialiasing with no counterpart; at 602 the seam measures 12.07 against a local row-to-row baseline of 13.73, i.e. below the image's own variation. `tools/lifelogx-prepare.mjs` skips files already on disk (line 128), so a re-run will not undo this; delete the two files first if you ever want the donor's originals back. The crown and bar-chart icons in the same block are **not** touched — their bottoms are flat by design and nothing proves their canvas was ever taller.
+- **OPEN WORK demo video (2026-10-10):** a 16 s silent loop, one inquiry from arrival to 「已批准 · 已发送」 with the 「演示数据」 badge in every frame, rendered from our own HTML by `tools/openwork/video.mjs` into `assets/stargo-product/ow-demo-{zh,en}.{mp4,webm}` + `-poster.webp`, plus a one-column phone cut `ow-demo-{zh,en}-phone.*` (720×1200) that a phone held upright plays instead (chosen by `js/stargo-ow.js`, not by `<source media>`, which older browsers ignore); `tools/ow-blocks/demo-video.mjs` places it under the homepage hero and under the product page's jump links (`preload="none"`, no autoplay attribute: `js/stargo-ow.js` plays it only while it is on screen, from 2 s the first time, never by itself under reduced motion or with the data saver on, with a play/pause button). Re-render: `PLAYWRIGHT_BROWSERS_PATH=… STARGO_TOOL_PACKAGE=… node tools/openwork/video.mjs` (~4 min; see `tools/openwork/README.md`), then `npm run build` — the pages' `?v=` keys follow the files, so the year-long cache of `/assets/*` never serves an old film.
 - **Restored video:** (no longer placed: the homepage theatre it played in was removed on 2026-10-09; the files stay for a later page.) `assets/stargo-motion/` contains the fourth template's orbital film and a frame-derived poster; see its `SOURCE.md`. `js/stargo-media.js` controls lazy playback, pause/resume, offscreen suspension and reduced-motion preference, leaving the original grid/zoom structure intact.
 - **Visual replaceables:** hero film, module cards, product screenshots and the Open Graph cover are named in `assets/replaceables/README.md` and `tools/replaceables.mjs`. Overwrite the named file (and its width variants) and rebuild. Leave `og-cover.png` at 1200×630.
 - **Page scripts:** `js/stargo-forms.js`, `js/stargo-tabs.js` and `js/stargo-ix-arrival.js` (reveals animated elements a reader has already passed when arriving on an anchor or a restored scroll position) load everywhere; `js/stargo-side-menu.js` loads on every page with the desktop side menu (all but 404) and makes it keyboard-operable; `js/stargo-anchor-glide.js` loads on the intelligence page (the homepage dropped it with its sticky sections on 2026-10-09) and re-aims same-page glides whose target moves while the page scrolls. `js/stargo-pricing.js` loads only on the pricing page; its GSAP scroll motion (headline and cards arrive, prices count up, the promoted plan breathes once, comparison rows fade in) is written for the Scalora plan cards, which the rebuilt pricing page no longer draws. Motion is skipped under `prefers-reduced-motion`. `js/stargo-ow.js` loads on the two homepages only: the showcase tabs (WAI-ARIA, arrows/Home/End) and the product-shot lightbox; the homepages load no Scalora, rototo or offgrid stylesheet and no stage-hold, anchor-glide or media script, and draw the navigation orb as a still (`assets/brand/stargo-orb-still.webp`, one frame of the template's orb film) instead of the 6.6 MB film.
@@ -124,6 +125,9 @@ is live there, so it is the owner's call, not the build's.
 - No request leaves the origin: fonts, images and videos are all under `assets/` and `css/`.
 - Every internal link resolves to a page the build produces.
 - No template brand, invented client, placeholder price in dollars, template navigator, YouTube embed, or template stock photograph survives into a page.
+- No page names the upstream software behind the product, says "open source" / 「开源」 or lists licences (owner, 2026-10-10: 「网站不要写任何这种开源的东西！我不想被爬取到」). The list is `UPSTREAM` in `tools/copy.mjs` (the names are stored base64-encoded there, so that this public repository does not spell them out either); `tools/build-site.mjs` checks every generated page against it (the whole page, not only its visible text) and `tools/make-dist.mjs` checks every file it ships, names included.
+- No page calls a feature unfinished, still being built or to be confirmed one by one (owner, 2026-10-10: every feature is live). Connecting a company's own mailbox, channels and systems needs its authorization; the pages say that plainly. The English staff term is "AI Staff".
+- The owner's bank, account, clearing number and taxpayer ID are never published; `CONTACT_INFO` in `tools/copy.mjs` holds only the company name, phone / WhatsApp, WeChat, e-mail, website and city.
 
 ## Deploy (Cloudflare Pages, project `stargo`)
 
@@ -132,9 +136,25 @@ node tools/make-dist.mjs
 node "F:/stargo 网站/stargo-work-website/node_modules/wrangler/bin/wrangler.js" pages deploy dist --project-name stargo --branch main --commit-dirty=true
 ```
 
-`dist/` carries the pages, `assets/`, `css/`, `js/`, `_headers` (cache + security
-headers), `robots.txt`, `sitemap.xml` and `llms.txt` (a Markdown summary of the
-product, its pages and articles for AI answer engines, served as UTF-8 text). Run the deployment command from this
+`dist/` carries the pages the build produces, exactly the files under `assets/`,
+`css/` and `js/` that they reach (followed through stylesheets, scripts, SVG and
+JSON as they ship — without comments, and without the template rules that draw
+a picture for a block no page renders, `tools/css-prune.mjs`; retired,
+unreferenced files stay in the repository and are not published; the few files
+whose repository names carry a template's or vendor's name ship under neutral
+names, `tools/dist-names.mjs`),
+`_headers` (cache + security headers: `/assets/*` immutable for a year,
+which is safe because every asset URL a page or stylesheet writes carries
+`?v=<sha256-12>` of its file, `tools/asset-version.mjs`; the build and
+`make-dist` stop on one without it), `_redirects` (retired addresses, listed in
+`tools/dist-names.mjs` `RETIRED_PAGES` — the notices page and the old
+`288-ai-employees-…` article address — answer 301 with their replacement's
+clean URL; `tools/serve.mjs` honours the file, so `verify-release` checks it
+locally too), `robots.txt`, `sitemap.xml` and `llms.txt` (a
+Markdown summary of the product, its pages and articles for AI answer engines,
+served as UTF-8 text). `make-dist` stops if any shipped file names upstream
+software (see the rules above) — in its name, its text, or the readable strings
+of a binary such as the demo films, which must not name their encoder either. Run the deployment command from this
 repository root: Wrangler compiles the root `functions/` directory separately
 into the backend. Function source files are not copied into the public site.
 

@@ -64,8 +64,8 @@ export function render(frag, ctx) { … }
 > extracts them) but nothing places them.
 >
 > **Phase C2 pass 2 (2026-10-09): the rest.** pricing, about, contact, privacy,
-> terms, notices and 404 are built the same way (`tools/ow-blocks/site-pages.mjs`,
-> words `SITE_OW` plus `PRICING` / `ABOUT` / `LEGAL` / `NOTICES` in
+> terms and 404 are built the same way (`tools/ow-blocks/site-pages.mjs`,
+> words `SITE_OW` plus `PRICING` / `ABOUT` / `LEGAL` in
 > `tools/copy.mjs`). No page renders cn-about, cn-about-projects,
 > cn-about-reviews, cn-contact, cn-price-hero, cn-price-card, cn-reviews,
 > rk-price-tiers or rk-price-compare any more (the pricing comparison is

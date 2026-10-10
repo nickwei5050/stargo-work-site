@@ -1,7 +1,7 @@
 /**
  * S7 — one workspace, 15 apps: the real sidebar (ow20-apps, 2x render) beside
  * the four groups of buyer-plan S7, one plain line each. App names exactly as
- * the sidebar writes them; New API（AI 网关） is named, not explained.
+ * the sidebar writes them; AI 网关 is named, not explained.
  */
 import { esc, heading, para, plain, button, shot, ICON } from './shared.mjs';
 

@@ -24,6 +24,7 @@ import { esc, heading, para, plain, button, shot, floatCard, ICON, shotNoteFor, 
 import * as apps from './apps.mjs';
 import * as faq from './faq.mjs';
 import * as contact from './contact.mjs';
+import * as demoVideo from './demo-video.mjs';
 
 /* The glass card over a shot's bottom-right corner. On the split screens
    (chat + an app panel, ow08–ow11) the panel's status line ends in the
@@ -218,6 +219,7 @@ export function renderProduct(ctx) {
   return `<main class="ow ow-inner" id="main">`
     + pageHero(ctx, P.hero, { id: 'ow07-welcome', phone: tasks })
     + chapterIndex(ctx, P)
+    + demoVideo.render(ctx)   // the homepage's demo video, under the jump links (round 2)
     + P.chapters.map((ch, i) => chapter(ctx, ch, i)).join('')
     + appTabs(ctx, P)
     + apps.render({ ...ctx, appsCta: P.apps.cta })

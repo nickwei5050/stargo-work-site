@@ -111,6 +111,8 @@ html[lang^="en"] .ow-h3 { letter-spacing: -.01em; }
 @media (forced-colors: active) { .ow-hl, .ow-h1-2 { background: none; color: CanvasText; -webkit-text-fill-color: CanvasText; } }
 html[lang^="zh"] .ow :is(.ow-h1, .ow-h2, .ow-h3, .ow-lead, .ow-sec-lead, .ow-pain-text, .ow-pain-close > span, .ow-panel-sum, .ow-quick-line, .ow-shot-note, .ow-step dd, .ow-out-card > p, .ow-gate-text p, .ow-group-body > p, .ow-plan-text, .ow-note-t, .ow-faq .paragraph, .ow-faq-more-l) { word-break: keep-all; overflow-wrap: anywhere; }
 html[lang^="zh"] .ow .ow-hl { white-space: nowrap; }
+/* "30-minute": a number and its hyphenated word on one line (tools/ow-blocks/shared.mjs enGlue) */
+.ow-nb { white-space: nowrap; }
 .ow :is(.ow-faq .paragraph, .stargo-form-consent, .ow-step dd, .ow-out-card > p, .ow-gate-text p) { text-wrap: pretty; }
 html[lang^="en"] .ow :is(.ow-h1, .ow-h2) { text-wrap: balance; }
 .ow-sec-head { max-width: 800px; }
@@ -151,6 +153,19 @@ html[lang^="en"] .ow :is(.ow-h1, .ow-h2) { text-wrap: balance; }
 .ow-hint { display: inline-flex; align-items: center; gap: 6px; margin-left: auto; padding: 4px 8px; border-radius: 8px; color: #57534e; font-size: 12.5px; font-weight: 500; line-height: 1.2; white-space: nowrap; cursor: zoom-in; transition: background-color .15s ease, color .15s ease; }
 .ow-hint .ow-ico { width: 14px; height: 14px; }
 .ow-hint:hover, .ow-shot:has(.ow-zoom:hover) .ow-hint { background: rgba(28, 28, 30, .06); color: var(--ow-ink); }
+/* A narrow window (review, round 3): the centred title ran into 「点图放大」 in
+   the 价格校验 window (「价格校验点图放大」), and in the narrow approval and
+   step-log windows the 「演示数据」 badge was cut off at the right edge. In a
+   title bar under 560px the title follows the lights, the hint shows its icon
+   only (as in the sidebar window), and the badge never shrinks. The bar is the
+   query container: it is a block in its window, so its width never depends on
+   what is in it. */
+.ow-frame-bar { container-type: inline-size; }
+.ow-frame-bar .ow-badge, .ow-frame-bar .ow-hint, .ow-lights { flex: none; }
+@container (max-width: 560px) {
+  .ow-frame-title { position: static; transform: none; min-width: 0; margin-left: 4px; overflow: hidden; text-overflow: ellipsis; }
+  .ow-hint > span { display: none; }
+}
 .ow-shot-meta { display: none; }
 .ow-frame-body { position: relative; }
 .ow-zoom { position: relative; display: block; width: 100%; margin: 0; padding: 0; border: 0; border-radius: 0; background: none; text-align: left; }
@@ -373,6 +388,12 @@ body:is(.ow-home, .ow-page) .footer { margin-top: 0; }
 :is(.ow-contact, .ow-ct-form) .stargo-form-consent { margin: 4px 0 0; font-size: 13px; line-height: 1.6; color: var(--ow-ink-2); opacity: 1; }
 :is(.ow-contact, .ow-ct-form) .stargo-form-consent a { color: var(--ow-accent); text-decoration: underline; text-underline-offset: 2px; }
 :is(.ow-contact, .ow-ct-form) .stargo-form-note { margin: 4px 0 0; font-size: 14px; color: var(--ow-ink-2); opacity: 1; }
+/* a field js/stargo-forms.js flagged (empty required, bad e-mail or phone, or named by a 422) and its message;
+   「发送中…」 and the fallback note keep the neutral colour (data-tone is set only for a validation message) */
+:is(.ow-contact, .ow-ct-form) :is(input, select, textarea)[aria-invalid="true"] { border-color: #d14343; box-shadow: 0 0 0 3px rgba(209, 67, 67, .12); }
+:is(.ow-contact, .ow-ct-form) :is(input, select, textarea)[aria-invalid="true"]:focus { border-color: #d14343; box-shadow: 0 0 0 4px rgba(209, 67, 67, .18); }
+:is(.ow-contact, .ow-ct-form) .stargo-form-note[data-tone="warn"] { color: #b42318; }
+:is(.ow-contact, .ow-ct-form) .ow-req { color: #b42318; }
 :is(.ow-contact, .ow-ct-form) .w-form-done { padding: 20px; border-radius: 12px; background: #ecfdf3; color: var(--ow-success); text-align: left; }
 :is(.ow-contact, .ow-ct-form) .w-form-fail { margin-top: 12px; padding: 14px 16px; border-radius: 12px; background: #fef2f2; color: #b42318; text-align: left; }
 
@@ -535,7 +556,8 @@ body:is(.ow-home, .ow-page) .footer :focus-visible { outline-color: #93c5fd; }
   .ow-faq .toggle-space { padding: 0 8px 22px 28px; }
   .ow-faq .toggle-space .paragraph { font-size: 15px; }
   .ow-contact-card { padding: 28px 20px; border-radius: 20px; }
-  .ow-contact .grid-form { grid-template-columns: minmax(0, 1fr); }
+  /* phones: one field per row in both demo forms, so the plan and focus selects show their whole value (「全球获客版 · ¥40,000」) */
+  :is(.ow-contact, .ow-ct-form) .grid-form { grid-template-columns: minmax(0, 1fr); }
   .ow-lightbox { width: 100vw; max-width: 100vw; max-height: 100dvh; height: 100dvh; border: 0; border-radius: 0; }
   .ow-sticky { left: 12px; right: 12px; bottom: 12px; transform: translateY(140%); }
   .ow-sticky.is-on { transform: none; }
@@ -822,7 +844,7 @@ html:not(.w-mod-js) .ow-cat-all { display: none; }
 html body .ow .ow-sec-head--center p.ow-sec-lead { text-wrap: balance; }
 
 /* ==== the remaining pages (C2 pass 2, 2026-10-09) ========================
-   pricing, about, contact, privacy / terms / notices and 404:
+   pricing, about, contact, privacy / terms and 404:
    tools/ow-blocks/site-pages.mjs. */
 .ow-sr { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
@@ -932,8 +954,10 @@ html[lang^="zh"] .ow :is(.ow-tier-desc, .ow-tier-items li span, .ow-tier-renew s
 .ow-ct-steps p { margin-top: 2px; font-size: 15px; line-height: 1.65; color: var(--ow-ink-2); }
 .ow-ct-form .ow-select { appearance: none; -webkit-appearance: none; padding-right: 42px; background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2355657d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 16px center; cursor: pointer; }
 .ow-ct-form .ow-textarea { min-height: 112px; padding: 14px 16px; line-height: 1.6; resize: vertical; }
+/* the plan and focus selects, one per row: 「全球获客版 · ¥40,000」 and 「网站运营管理 · 按需报价」 show whole at every width */
+.ow-ct-form .ow-ct-extras { grid-template-columns: minmax(0, 1fr); }
 
-/* ---- privacy, terms, notices -------------------------------------------- */
+/* ---- privacy and terms; the related cards (contact) ---------------------- */
 .ow-legal-hero { padding: calc(8vh + 44px) 0 40px; background: radial-gradient(42% 60% at 0% 40%, rgba(59, 130, 246, .10), transparent 72%), linear-gradient(180deg, #fff 0%, var(--ow-ground) 40%, var(--ow-ground-2) 100%); }
 .ow-legal-wrap { max-width: 820px; }
 .ow-legal-hero .ow-h1 { font-size: clamp(32px, 3.4vw, 48px); }
@@ -1091,4 +1115,82 @@ html[lang^="zh"] .ow :is(.ow-tier-desc, .ow-tier-items li span, .ow-tier-renew s
   .ow-post-lead { font-size: 16.5px; }
   .ow-post-body { padding: 32px 0 72px; font-size: 16.5px; }
   .ow-post-body .stargo-post > p:first-child { font-size: 17.5px; }
+}
+
+/* ---- round 2 (2026-10-10): WeChat / phone ways, the company line, the service package ----
+   WeChat has no web link, so its item is a span laid out like the links; the
+   trust line under the ways is plain company facts (operator, 12-hour reply,
+   on-site or online demo); 网站运营管理 is a service package strip under the
+   plans on the pricing page, quoted on request. */
+.ow-contact-ways .ow-way { display: inline-flex; align-items: center; gap: 14px; color: var(--ow-ink); }
+.ow-contact-ways .ow-way span { user-select: all; }
+.ow-contact-ways .ow-way strong { user-select: none; }
+.ow-trust { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; margin: 22px 0 0; padding: 0; list-style: none; font-size: 13.5px; line-height: 1.5; color: var(--ow-ink-2); }
+.ow-trust li { display: inline-flex; align-items: center; gap: 7px; }
+.ow-trust .ow-ico { flex: none; width: 16px; height: 16px; color: var(--ow-accent); }
+.ow-service { margin-top: 12px; }
+.ow-service-l { margin: 0 0 2px; font-size: 12.5px; font-weight: 600; letter-spacing: .02em; color: var(--ow-accent); }
+.ow-start-t .ow-service-l { margin-top: 0; font-size: 12.5px; color: var(--ow-accent); }
+.ow-service .ow-start-b { display: flex; align-items: center; gap: 14px; }
+.ow-service-price { font-size: 15px; font-weight: 600; color: var(--ow-ink); white-space: nowrap; }
+@media (max-width: 767px) {
+  .ow-service .ow-start-b { flex-wrap: wrap; }
+  .ow-trust { font-size: 13px; }
+}
+/* the operating company's name in the footer's © line stays on one line (it broke 「科技/有限公司」 at 390); .sgp-nobr also makes the split-text animation keep it whole (js/stargo-splittext-cjk.js) */
+.footer .stargo-co { white-space: nowrap; }
+.ow-trust li { white-space: nowrap; }
+
+/* ---- the demo video (round 2, 2026-10-10): tools/ow-blocks/demo-video.mjs ----
+   The film is a whole scene (its own blue-white ground, the OPEN WORK window,
+   the step rail), so it sits in a frosted glass bezel with the site's soft
+   blue shadow rather than in a second window, and nothing is laid over it:
+   the 「演示数据」 caption and the play / pause button are under it. Its box
+   has the film's proportions before anything loads (no layout shift). Up to
+   1200px wide, like the product pages' screens; nearly edge to edge on a
+   phone. Behaviour: js/stargo-ow.js. */
+.ow-demo { padding-bottom: calc(var(--ow-pad) * .55); background:
+  radial-gradient(56% 40% at 50% 54%, rgba(59, 130, 246, .13), transparent 72%),
+  radial-gradient(30% 30% at 8% 30%, rgba(29, 78, 216, .06), transparent 70%),
+  linear-gradient(180deg, #fff 0%, var(--ow-ground) 22%, var(--ow-ground-2) 70%, #fff 100%); }
+.ow-hero + .ow-demo { padding-top: calc(var(--ow-pad) * .45); }
+/* above the next section, so the stage's shadow fades over it instead of being cut by its ground */
+.ow-demo { z-index: 1; }
+.ow-demo .ow-sec-head { max-width: 1040px; margin-bottom: 40px; }
+.ow-demo .ow-h2 > span { white-space: nowrap; }
+.ow-demo-fig { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 18px 16px; max-width: 1200px; margin-inline: auto; }
+.ow-demo-stage { grid-column: 1 / -1; position: relative; padding: 10px; border: 1px solid rgba(255, 255, 255, .95); border-radius: 28px; background: rgba(255, 255, 255, .55); box-shadow: var(--ow-shadow), inset 0 1px 0 rgba(255, 255, 255, .9); -webkit-backdrop-filter: blur(16px) saturate(1.4); backdrop-filter: blur(16px) saturate(1.4); }
+/* the screen: the still (a <picture>, phone cut or desktop) under the video, which draws nothing until it has a frame */
+.ow-demo-screen { position: relative; overflow: hidden; aspect-ratio: 1440 / 900; border-radius: 19px; background: #eef3ff; box-shadow: 0 0 0 1px rgba(29, 78, 216, .08); }
+.ow-demo-poster, .ow-demo-poster img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+.ow-demo-poster img { max-width: none; object-fit: cover; }
+.ow-demo-video { position: relative; display: block; width: 100%; height: 100%; object-fit: cover; background: transparent; }
+.ow-demo-fig.is-js .ow-demo-video { cursor: pointer; }
+.ow-demo-cap { grid-row: 2; grid-column: 1; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin: 0; padding-left: 6px; font-size: 14px; line-height: 1.5; color: var(--ow-ink-2); text-align: left; }
+.ow-demo-cap .ow-badge { border-color: rgba(37, 99, 235, .2); color: var(--ow-blue-1); }
+.ow-demo-toggle { grid-row: 2; grid-column: 2; display: inline-flex; align-items: center; gap: 9px; height: 40px; margin-right: 6px; padding: 0 16px 0 6px; border: 1px solid var(--ow-line); border-radius: 999px; background: #fff; color: var(--ow-ink); font-size: 14px; font-weight: 600; line-height: 1; white-space: nowrap; box-shadow: 0 1px 2px rgba(15, 23, 42, .05); transition: border-color .15s ease, color .15s ease, box-shadow .15s ease; }
+.ow-demo-toggle[hidden] { display: none; }
+.ow-demo-toggle:hover { border-color: #c7d2fe; color: var(--ow-blue-1); box-shadow: var(--ow-shadow-sm); }
+.ow-demo-toggle-ico { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--ow-grad); color: #fff; box-shadow: 0 6px 12px -6px rgba(37, 99, 235, .8); }
+.ow-demo-toggle-ico .ow-ico { width: 13px; height: 13px; }
+.ow-demo-pause, .ow-demo-fig.is-playing .ow-demo-play { display: none; }
+.ow-demo-fig.is-playing .ow-demo-pause { display: block; }
+html[lang^="zh"] .ow-demo .ow-h2 { word-break: keep-all; overflow-wrap: anywhere; }
+@media (max-width: 767px) {
+  .ow-demo .ow-sec-head { margin-bottom: 28px; }
+  .ow-demo .ow-h2 > span { display: block; white-space: normal; }
+  /* the caption over two lines (badge, then the words), the button beside it */
+  .ow-demo-cap { flex-direction: column; align-items: flex-start; gap: 6px; }
+  /* nearly edge to edge: 8px from the screen's sides */
+  .ow-demo-fig { margin-inline: calc(8px - var(--ow-gutter)); gap: 14px 10px; }
+  .ow-demo-stage { padding: 5px; border-radius: 18px; }
+  .ow-demo-screen { border-radius: 13px; }
+  .ow-demo-cap { padding-left: calc(var(--ow-gutter) - 8px); font-size: 13px; }
+  .ow-demo-toggle { margin-right: calc(var(--ow-gutter) - 8px); height: 44px; }
+}
+/* phones held upright: the one-column phone cut (720×1200, 3:5), at most 470px wide. The same query as
+   tools/ow-blocks/demo-video.mjs DEMO_PHONE_MEDIA: a phone turned sideways keeps the 16:10 film, which fits it */
+@media (max-width: 640px) and (max-aspect-ratio: 4/3) {
+  .ow-demo-stage { justify-self: center; width: 100%; max-width: 470px; }
+  .ow-demo-screen { aspect-ratio: 720 / 1200; }
 }

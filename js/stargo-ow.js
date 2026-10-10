@@ -1,6 +1,6 @@
 /* OPEN WORK page behaviour (tools/ow-blocks): the showcase tabs, the
    product-shot lightbox, the demo bar, the product page's folded catalogue,
-   the pricing questions and the contact form's plan. Hand-written, no
+   the pricing questions, the contact form's plan and the demo video. Hand-written, no
    dependencies, loaded with defer on every page tools/build-site.mjs builds
    with owShell (all but the blog). Without it every
    showcase panel is shown in turn (css/stargo-ow.css), the pictures stay as
@@ -143,6 +143,120 @@
     if (!m) return;
     for (var i = 0; i < sel.options.length; i++) {
       if (sel.options[i].value === m[1]) { sel.selectedIndex = i; break; }
+    }
+  })();
+
+  /* ---- the demo video (tools/ow-blocks/demo-video.mjs; homepage under the
+     hero, product page under its jump links) ------------------------------
+     Muted and looping, it plays while at least half of it is on screen (or
+     it fills at least half the screen) and pauses when it leaves; under
+     prefers-reduced-motion, or with the
+     browser's data saver on, it never starts by itself. The first time it
+     plays it starts at data-start (the inquiry already in, AI reading it),
+     not at the near-empty first second. The button under it (and a click on
+     the film) plays and pauses it; a pause by hand holds until the reader
+     plays it again. The markup has preload="none" and no autoplay, so until
+     it is on screen the page fetches its still only.
+     The film follows its still: the still's <picture> picks the phone cut by
+     its <source media>, which every browser honours on a picture. On a
+     <video>, Chrome and Firefox honour `media` only since version 120 (older
+     engines play the first source), so the script keeps both pairs of
+     sources — the desktop pair, then the phone pair, which carries `media` —
+     and puts only the pair of the still's cut in the video. If the screen
+     crosses the line later, the pairs swap and the film loads again. Without
+     this script the browser's own controls stay, the desktop film is the
+     first source, and nothing plays by itself. */
+  (function () {
+    var figs = document.querySelectorAll('[data-ow-demo-wrap]');
+    for (var i = 0; i < figs.length; i++) {
+      (function (fig) {
+        var v = fig.querySelector('video[data-ow-demo]');
+        var btn = fig.querySelector('[data-ow-demo-toggle]');
+        if (!v || !btn || typeof v.play !== 'function') return;
+        var text = btn.querySelector('[data-ow-demo-label]');
+        var onScreen = false;
+        var saveData = !!(navigator.connection && navigator.connection.saveData);
+        var wanted = !reduce && !saveData;   // play whenever it is on screen
+        var start = parseFloat(v.getAttribute('data-start')) || 0;
+        var started = false;
+        v.muted = true;
+        v.removeAttribute('controls');
+        btn.hidden = false;
+        fig.classList.add('is-js');
+        function paint() {
+          var playing = !v.paused;
+          fig.classList.toggle('is-playing', playing);
+          btn.setAttribute('aria-label', btn.getAttribute(playing ? 'data-label-pause' : 'data-label-play'));
+          if (text) text.textContent = btn.getAttribute(playing ? 'data-text-pause' : 'data-text-play');
+        }
+        function play() {
+          /* the pair in the video changed since the browser chose its source: choose again now that
+             the film is wanted (load() fetches even under preload="none", so never before) */
+          if (stale) { stale = false; started = false; v.load(); }
+          /* the first play opens at data-start; before any data that sets where loading starts */
+          if (!started) {
+            started = true;
+            if (start && v.currentTime < start) { try { v.currentTime = start; } catch (e) { /* not seekable yet: from the start */ } }
+          }
+          var p = v.play();
+          /* refused (a power saver, a browser that blocks it): wait for the button */
+          if (p && p.catch) p.catch(function (e) { if (e && e.name === 'NotAllowedError') { wanted = false; paint(); } });
+        }
+        function sync() {
+          if (wanted && onScreen) { if (v.paused) play(); }
+          else if (!v.paused) v.pause();
+        }
+        function toggle() {
+          wanted = v.paused;
+          if (wanted) { onScreen = true; play(); } else v.pause();
+        }
+        v.addEventListener('play', paint);
+        v.addEventListener('pause', paint);
+        /* the cut: the query of the still's phone <source>, the pairs of film sources */
+        var line = fig.querySelector('.ow-demo-poster source[media]');
+        var mq = line && window.matchMedia ? window.matchMedia(line.getAttribute('media')) : null;
+        var all = v.querySelectorAll('source'), pairs = { phone: [], desktop: [] };
+        for (var k = 0; k < all.length; k++) pairs[all[k].hasAttribute('media') ? 'phone' : 'desktop'].push(all[k]);
+        /* the browser has chosen among all four already: the first source, the desktop MP4 or WebM
+           (the phone pair, after it, carries media) */
+        var cut = 'desktop', stale = false;
+        /* puts this screen's pair in the video; true when the pair changed (then `stale` until it plays) */
+        function useCut() {
+          var want = mq && mq.matches && pairs.phone.length ? 'phone' : 'desktop';
+          var changed = want !== cut;
+          cut = want;
+          for (var k = 0; k < all.length; k++) if (all[k].parentNode === v) v.removeChild(all[k]);
+          for (var k2 = 0; k2 < pairs[want].length; k2++) v.appendChild(pairs[want][k2]);
+          if (changed) stale = true;
+          return changed;
+        }
+        useCut();
+        if (mq) {
+          var onCut = function () {
+            if (!useCut()) return;
+            if (!v.paused) v.pause();   // sync() plays the new pair if it is on screen
+            started = false;
+            paint();
+            sync();
+          };
+          if (mq.addEventListener) mq.addEventListener('change', onCut); else if (mq.addListener) mq.addListener(onCut);
+        }
+        btn.addEventListener('click', toggle);
+        v.addEventListener('click', toggle);
+        /* on screen: half of the film is visible, or the visible part fills half the
+           screen (a film taller than the screen is never half visible) */
+        if ('IntersectionObserver' in window) {
+          new IntersectionObserver(function (entries) {
+            for (var j = 0; j < entries.length; j++) {
+              var en = entries[j];
+              var screenH = en.rootBounds ? en.rootBounds.height : window.innerHeight;
+              onScreen = en.isIntersecting && (en.intersectionRatio >= 0.49 || en.intersectionRect.height >= screenH * 0.5);
+            }
+            sync();
+          }, { threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5] }).observe(v);
+        }
+        paint();
+      })(figs[i]);
     }
   })();
 

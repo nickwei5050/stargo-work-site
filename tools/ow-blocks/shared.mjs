@@ -55,6 +55,15 @@ function zhGlue(html) {
   return out.replace(/(\d) (?=(?:<wbr>)?[分个天件封家位只种年项])/g, '$1&nbsp;').replace(/([\u4e00-\u9fff]) (?=[\d.,]+%)/g, '$1&nbsp;');
 }
 
+/* English: a number and the word hyphenated to it ("30-minute", "15-second")
+   stay on one line, and so do the product names. Browsers break after a
+   hyphen, and the contact page's heading came out "Book a 30-" / "minute
+   demo." on phones, then "Watch OPEN" / "WORK at work." (review, round 3).
+   A nowrap span rather than U+2011 or a no-break space, which not every
+   fallback font draws and which search and copy-paste read as different
+   characters. */
+const enGlue = (html) => html.replace(/\b(\d+(?:[.,]\d+)?-[A-Za-z]+|(?:OPEN|STARGO) WORK)\b/g, '<span class="ow-nb">$1</span>');
+
 /**
  * Text of a heading or a paragraph: on the Chinese page it breaks only
  * between words (css: keep-all on every .ow text block), and a [[key phrase]]
@@ -62,12 +71,12 @@ function zhGlue(html) {
  */
 export function heading(lang, text) {
   /* no break inside a Latin or numeric run such as "US$3.85" or "OPEN WORK" */
-  const run = (x) => (lang === 'zh' ? zhGlue(zhWbr(x).replace(/([A-Za-z0-9$.,%/])<wbr>(?=[A-Za-z0-9$.,%/])/g, '$1')) : escapeHtml(x));
+  const run = (x) => (lang === 'zh' ? zhGlue(zhWbr(x).replace(/([A-Za-z0-9$.,%/])<wbr>(?=[A-Za-z0-9$.,%/])/g, '$1')) : enGlue(escapeHtml(x)));
   const parts = String(text).split(/\[\[|\]\]/);
   if (parts.length % 2 === 0) throw new Error(`ow-blocks: unbalanced [[ ]] in "${text}"`);
   /* a key phrase is one unit on the Chinese page (white-space: nowrap; a <wbr>
      inside it would still break it in Chromium) */
-  const whole = (x) => (lang === 'zh' ? zhGlue(escapeHtml(x)) : escapeHtml(x));
+  const whole = (x) => (lang === 'zh' ? zhGlue(escapeHtml(x)) : enGlue(escapeHtml(x)));
   return parts.map((x, i) => (!x ? '' : i % 2 ? `<span class="ow-hl">${whole(x)}</span>` : run(x))).join('');
 }
 /** Body copy: the same rules as a heading. */
@@ -165,5 +174,9 @@ export const ICON = {
   close: svg('<path d="M6 6l12 12M18 6 6 18"/>'),
   info: svg('<circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.6v.2"/>'),
   pin: svg('<path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/>'),
+  /* the contact ways added in round 2 (2026-10-10): a handset and a two-bubble chat */
+  phone: svg('<path d="M6.6 3.5h2.6l1.4 4.1-2 1.4a12 12 0 0 0 6.4 6.4l1.4-2 4.1 1.4v2.6a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2z"/>'),
+  wechat: svg('<path d="M15.5 9.2A6.6 5.4 0 1 0 4.4 13.6L3.6 16l2.8-1.3a7.6 7.6 0 0 0 2.6.5"/><path d="M21 14.6c0-2.8-2.7-5-6-5s-6 2.2-6 5 2.7 5 6 5c.8 0 1.5-.1 2.2-.3l2.3 1.1-.6-2a4.6 4.6 0 0 0 2.1-3.8z"/>'),
+  building: svg('<path d="M4 21V5.5A1.5 1.5 0 0 1 5.5 4h8A1.5 1.5 0 0 1 15 5.5V21"/><path d="M15 10h3.5A1.5 1.5 0 0 1 20 11.5V21M3 21h18M8 8h3M8 12h3M8 16h3"/>'),
   plus: svg('<path d="M12 5v14M5 12h14"/>', 'ow-ico ow-ico--plus'),
 };

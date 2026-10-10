@@ -14,6 +14,17 @@
  * index the seven grey windows looked alike and none could be read. The window
  * frame and the 「演示数据」/"Demo data" badge are HTML round the picture
  * (tools/ow-blocks/blog.mjs), the same frame as every other product picture.
+ * On the site that badge is enough, but a share preview (WeChat, LinkedIn, X:
+ * og:image / twitter:image) shows the bare file, so each article also has a
+ * share file, <slug>-share.webp, that carries a 「演示数据 · Demo data」 chip of
+ * its own in the top right corner (review, round 2): one chip for both
+ * languages, because one file serves both, in the demo film's own badge style
+ * (tools/openwork/video-page.mjs .vbadge — white pill, hairline edge, amber
+ * dot). Chromium draws it with the renders' fonts; Pillow pastes it. CHIP below.
+ * The files the pages show (<slug>.webp, -800, -500) have no chip (review,
+ * round 3): under the window bar's own badge the chip said 「演示数据」 a second
+ * time, twice the badge's size on the article hero, over the interface's
+ * 「可报价」 tag.
  * The covers used to be the owner's earlier screenshots (an internal registry
  * page, an open-source workflow tool's login, the retired desktop) and two
  * generated artworks; none of that is left, and no third-party product, garbled
@@ -37,6 +48,11 @@
  *
  *   node tools/blog-covers.mjs        # needs python + Pillow, not sharp
  *
+ * Drawing the chip needs Chromium (this repository's @playwright/test,
+ * PLAYWRIGHT_BROWSERS_PATH) and the renders' fonts (@fontsource-variable/inter,
+ * @fontsource/noto-sans-sc through STARGO_TOOL_PACKAGE, as for
+ * tools/openwork/render.mjs) — only when a cover is rebuilt.
+ *
  * Idempotent. tools/imagegen/blog-covers.json records each file's recipe and
  * the sha256 of the bytes that recipe produced, so a rerun writes nothing and
  * changes no file — while a changed recipe, a changed source render, a missing
@@ -49,13 +65,19 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync, unlinkSync } from '
 import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
-import { SITE } from './paths.mjs';
+import { mkdtempSync, rmSync } from 'node:fs';
+import { pathToFileURL } from 'node:url';
+import { SITE, req } from './paths.mjs';
 import { POSTS, PRODUCT_COVERS, COVER_RENDER } from './blog.mjs';
+import { css as owCss } from './openwork/scenes.mjs';
+import { videoCss } from './openwork/video-page.mjs';
 
 const OUT = 'assets/blog';
 const RECORD = 'tools/imagegen/blog-covers.json';
-/** 1200x600 (2:1, also the share image) and the two smaller widths the srcset offers (tools/blog.mjs coverSrcset). */
+/** The pages' files: 1200x600 (2:1) and the two smaller widths the srcset offers (tools/blog.mjs coverSrcset). */
 const SIZES = [[1200, 600], [800, 400], [500, 250]];
+/** The share file (og:image, twitter:image, BlogPosting image; tools/blog.mjs coverShareSrc): 1200x600 with the chip. */
+const SHARE = [1200, 600];
 
 /* The region of each render the cover shows: x, y, width as fractions of the
    render (the height follows from the 2:1 canvas, about the box's centre).
@@ -67,11 +89,17 @@ const BOX = {
   'from-inquiry-to-quote':                { box: [0.295, 0.44, 0.6, 0.4364], why: 'the facts pulled out of the inquiry and the reply draft waiting for approval' },
   'approval-gates-for-ai-in-trade':       { box: [0.295, 0.275, 0.6, 0.4364], why: 'the PI, below the price list, sitting with the manager instead of going out' },
   'ai-operating-system-for-global-trade': { box: [0.0, 0.075, 0.94, 0.6836], why: 'the workspace: the 15 apps on the left, the message box and five quick actions' },
-  '288-ai-employees-not-288-chatbots':    { box: [0.355, 0.11, 0.64, 0.4655], why: 'the roster of 288 digital employees, its groups and the first role cards' },
+  '288-ai-staff-not-288-chatbots':    { box: [0.355, 0.11, 0.64, 0.4655], why: 'the roster of 288 AI Staff, its groups and the first role cards' },
   'enterprise-ontology-explained':        { box: [0.33, 0.035, 0.665, 0.4836], why: 'the customer record table the other apps read from' },
 };
 const source = (slug) => `assets/stargo-product/${COVER_RENDER[slug]}-2400.webp`;
 const QUALITY = 82;        // as the covers have always been encoded
+/* The demo-data chip: its words, its corner, its distance from the two edges
+   (a fraction of the cover's width), its size (CSS px of the film's badge per
+   1200px of cover: 30px tall there, 54px here) and the padding round it in the
+   PNG Chromium writes (room for its soft shadow). Part of every share file's
+   recipe, so a change here rebuilds every share file. */
+const CHIP = { text: '演示数据 · Demo data', corner: 'top-right', inset: 0.02, scale: 1.8, pad: 8, style: 'video-page.mjs .vbadge + shadow 0 2px 6px rgba(15,23,42,.10)' };
 
 /* Every article has a cover and every cover has an article. */
 const slugs = POSTS.map((p) => p.cover);
@@ -95,8 +123,34 @@ if (slugs.length !== PRODUCT_COVERS.size || slugs.some((slug) => !PRODUCT_COVERS
 }
 
 const file = (slug, w) => `${OUT}/${slug}${w === 1200 ? '' : `-${w}`}.webp`;
+const shareFile = (slug) => `${OUT}/${slug}-share.webp`;
 const sha256 = (rel) => createHash('sha256').update(readFileSync(`${SITE}/${rel}`)).digest('hex');
-const recipeOf = (slug, [w, h]) => ({ source: source(slug), sourceSha256: sha256(source(slug)), mode: 'focus', box: BOX[slug].box, canvas: [w, h], quality: QUALITY });
+const recipeOf = (slug, [w, h], chip = null) => ({ source: source(slug), sourceSha256: sha256(source(slug)), mode: 'focus', box: BOX[slug].box, canvas: [w, h], quality: QUALITY, ...(chip ? { chip } : {}) });
+
+/** The chip as a transparent PNG for each cover width; Chromium, the renders' CSS and fonts. */
+async function drawChips(widths) {
+  const { chromium } = req('@playwright/test');
+  const font = (p) => req.resolve(p);
+  const dir = mkdtempSync(`${tmpdir()}/stargo-chip-`);
+  writeFileSync(`${dir}/chip.css`, owCss({ interCss: font('@fontsource-variable/inter/index.css'), notoDir: font('@fontsource/noto-sans-sc/index.css').replace(/index\.css$/, '') }) + videoCss()
+    + `html,body{background:transparent!important}.chip-pad{display:inline-block;padding:${CHIP.pad}px}.chip-pad .vbadge{margin:0;box-shadow:0 2px 6px rgba(15,23,42,.10)}`);
+  writeFileSync(`${dir}/chip.html`, `<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><link rel="stylesheet" href="chip.css"></head><body><span class="chip-pad"><span class="vbadge"><i></i>${CHIP.text}</span></span></body></html>`);
+  const browser = await chromium.launch({ args: ['--allow-file-access-from-files', '--font-render-hinting=none', '--disable-lcd-text', '--force-color-profile=srgb', '--disable-gpu', '--num-raster-threads=1'] });
+  const files = {};
+  try {
+    for (const w of widths) {
+      const dsf = CHIP.scale * w / 1200;
+      const page = await browser.newPage({ viewport: { width: 640, height: 160 }, deviceScaleFactor: dsf });
+      await page.goto(pathToFileURL(`${dir}/chip.html`).href);
+      await page.evaluate(async () => { document.body.getBoundingClientRect(); await document.fonts.ready; });
+      if (await page.evaluate(() => document.fonts.status) !== 'loaded') throw new Error('blog covers: the chip\'s fonts did not load');
+      files[w] = { file: `${dir}/chip-${w}.png`, pad: Math.round(CHIP.pad * dsf) };
+      await page.locator('.chip-pad').screenshot({ path: files[w].file, omitBackground: true });
+      await page.close();
+    }
+  } finally { await browser.close(); }
+  return { dir, files };
+}
 
 mkdirSync(`${SITE}/${OUT}`, { recursive: true });
 const record = existsSync(`${SITE}/${RECORD}`) ? JSON.parse(readFileSync(`${SITE}/${RECORD}`, 'utf8')) : { files: {} };
@@ -104,9 +158,7 @@ const jobs = [];
 const adopted = [];
 const wanted = [];
 for (const slug of slugs) {
-  for (const size of SIZES) {
-    const target = file(slug, size[0]);
-    const recipe = recipeOf(slug, size);
+  for (const [target, recipe] of [...SIZES.map((size) => [file(slug, size[0]), recipeOf(slug, size)]), [shareFile(slug), recipeOf(slug, SHARE, CHIP)]]) {
     if (!existsSync(`${SITE}/${recipe.source}`)) throw new Error(`blog covers: source missing: ${recipe.source}`);
     const had = record.files?.[target];
     const current = { target, recipe };
@@ -119,9 +171,16 @@ for (const slug of slugs) {
 }
 
 if (jobs.length) {
+  const chipped = jobs.filter(({ recipe }) => recipe.chip);
+  const chips = chipped.length ? await drawChips([...new Set(chipped.map(({ recipe }) => recipe.canvas[0]))]) : null;
   const jobFile = `${tmpdir()}/stargo-blog-covers-${process.pid}.json`;
   writeFileSync(jobFile, JSON.stringify({
-    jobs: jobs.map(({ target, recipe }) => ({ ...recipe, source: `${SITE}/${recipe.source}`, target: `${SITE}/${target}` })),
+    jobs: jobs.map(({ target, recipe }) => {
+      const job = { ...recipe, source: `${SITE}/${recipe.source}`, target: `${SITE}/${target}` };
+      if (!recipe.chip) return job;
+      const chip = chips.files[recipe.canvas[0]];
+      return { ...job, overlay: { file: chip.file, pad: chip.pad, corner: CHIP.corner, inset: Math.round(CHIP.inset * recipe.canvas[0]) } };
+    }),
   }, null, 1));
   const tried = [];
   let ran = null;
@@ -132,6 +191,7 @@ if (jobs.length) {
     break;
   }
   try { unlinkSync(jobFile); } catch { /* the interpreter may have gone before the job file was read */ }
+  if (chips) rmSync(chips.dir, { recursive: true, force: true });
   if (!ran) throw new Error(`blog covers: no python interpreter (${tried.join(', ')}). Set STARGO_PYTHON, and install Pillow.`);
   if (ran.status !== 0) throw new Error(`blog covers: ${ran.exe} failed\n${ran.stderr || ran.stdout}`);
   process.stdout.write(ran.stdout);

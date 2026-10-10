@@ -31,4 +31,21 @@ export const TOOLS = `${SITE}/tools`;
  * to borrow that install's modules instead — useful for sharp, which is a
  * heavy native dependency this repository deliberately does not install.
  */
-export const req = createRequire(process.env.STARGO_TOOL_PACKAGE || import.meta.url);
+const ownReq = createRequire(import.meta.url);
+const toolReq = process.env.STARGO_TOOL_PACKAGE ? createRequire(process.env.STARGO_TOOL_PACKAGE) : null;
+const missing = (e) => e && e.code === 'MODULE_NOT_FOUND';
+/*
+ * With STARGO_TOOL_PACKAGE set, a module is looked up in that install first and,
+ * when it is not there, in this repository's node_modules — so exporting the
+ * variable for the image steps does not break the verifiers (@playwright/test
+ * lives here, sharp lives there).
+ */
+const pick = (fn) => (id, ...rest) => {
+  if (toolReq) {
+    try { return fn(toolReq, id, ...rest); } catch (e) { if (!missing(e)) throw e; }
+  }
+  return fn(ownReq, id, ...rest);
+};
+export const req = Object.assign(pick((r, id) => r(id)), {
+  resolve: pick((r, id, opts) => r.resolve(id, opts)),
+});

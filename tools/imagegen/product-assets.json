@@ -153,9 +153,9 @@
    "src": "assets/stargo-product/ow01-home.webp",
    "width": 1600,
    "height": 1100,
-   "bytes": 45916,
+   "bytes": 45430,
    "sourceFile": ".wrangler/openwork/ow01-home.png",
-   "sourceSha256": "49e58de4ae8a08a86c4fc165130240a927d024d6ae4914c0eddd4be7ece0938a",
+   "sourceSha256": "f9ae64847ad170dee7ca09fa28da061b37a1b1a5166ec3ed03849aa52f097008",
    "sourcePixels": [
     2560,
     1760
@@ -172,17 +172,17 @@
     {
      "src": "assets/stargo-product/ow01-home-800.webp",
      "width": 800,
-     "bytes": 15974
+     "bytes": 15792
     },
     {
      "src": "assets/stargo-product/ow01-home-1200.webp",
      "width": 1200,
-     "bytes": 30450
+     "bytes": 30124
     },
     {
      "src": "assets/stargo-product/ow01-home-2400.webp",
      "width": 2400,
-     "bytes": 75998
+     "bytes": 75264
     }
    ]
   },
@@ -192,9 +192,9 @@
    "src": "assets/stargo-product/ow02-inquiry.webp",
    "width": 1600,
    "height": 1100,
-   "bytes": 92782,
+   "bytes": 92350,
    "sourceFile": ".wrangler/openwork/ow02-inquiry.png",
-   "sourceSha256": "10b3ce0ca02a585cbcbe1b76e6877688ee42cb9e419066e2c5fc950459f5d4ec",
+   "sourceSha256": "c607b9c6d153bd8a85fcc0f3c6d5ade1ead46aa1cd51daaaeca63427858df460",
    "sourcePixels": [
     2560,
     1760
@@ -211,17 +211,17 @@
     {
      "src": "assets/stargo-product/ow02-inquiry-800.webp",
      "width": 800,
-     "bytes": 32006
+     "bytes": 31822
     },
     {
      "src": "assets/stargo-product/ow02-inquiry-1200.webp",
      "width": 1200,
-     "bytes": 62060
+     "bytes": 61710
     },
     {
      "src": "assets/stargo-product/ow02-inquiry-2400.webp",
      "width": 2400,
-     "bytes": 151940
+     "bytes": 151174
     }
    ]
   },
@@ -231,9 +231,9 @@
    "src": "assets/stargo-product/ow03-quote.webp",
    "width": 1600,
    "height": 1100,
-   "bytes": 88760,
+   "bytes": 88270,
    "sourceFile": ".wrangler/openwork/ow03-quote.png",
-   "sourceSha256": "0e2ba3ae403f8dab3fa7165edab24d0f2392d469aacef146ddeee1c79012f3eb",
+   "sourceSha256": "661e3cee59b0371a16a534696fab0f595bae6741fa9656f74e3b044ba782d276",
    "sourcePixels": [
     2560,
     1760
@@ -250,17 +250,17 @@
     {
      "src": "assets/stargo-product/ow03-quote-800.webp",
      "width": 800,
-     "bytes": 30954
+     "bytes": 30798
     },
     {
      "src": "assets/stargo-product/ow03-quote-1200.webp",
      "width": 1200,
-     "bytes": 59654
+     "bytes": 59300
     },
     {
      "src": "assets/stargo-product/ow03-quote-2400.webp",
      "width": 2400,
-     "bytes": 146626
+     "bytes": 145852
     }
    ]
   },
@@ -270,9 +270,9 @@
    "src": "assets/stargo-product/ow04-outreach.webp",
    "width": 1600,
    "height": 1100,
-   "bytes": 85926,
+   "bytes": 85552,
    "sourceFile": ".wrangler/openwork/ow04-outreach.png",
-   "sourceSha256": "10f1fd3fbbf97c710875721d8a57b4f7ea3c5d2b9a0396a936a0eb23f54d244d",
+   "sourceSha256": "f2e08e09398fb2688cd0bbcc55b8b80c53a18e24ea9ccea8489cd2ff29d2e334",
    "sourcePixels": [
     2560,
     1760
@@ -289,17 +289,17 @@
     {
      "src": "assets/stargo-product/ow04-outreach-800.webp",
      "width": 800,
-     "bytes": 30138
+     "bytes": 29942
     },
     {
      "src": "assets/stargo-product/ow04-outreach-1200.webp",
      "width": 1200,
-     "bytes": 55956
+     "bytes": 55624
     },
     {
      "src": "assets/stargo-product/ow04-outreach-2400.webp",
      "width": 2400,
-     "bytes": 142412
+     "bytes": 141642
     }
    ]
   },
@@ -309,9 +309,9 @@
    "src": "assets/stargo-product/ow05-brief.webp",
    "width": 1600,
    "height": 1100,
-   "bytes": 77068,
+   "bytes": 76656,
    "sourceFile": ".wrangler/openwork/ow05-brief.png",
-   "sourceSha256": "1b1bb80b36287def9a54dec378b4ba314dbf6e34ee5e256c17d03e5e649b42d3",
+   "sourceSha256": "f8651df160f33f1110655572efc8a4c552b09a1e586cff913b0d26fdbe1fd358",
    "sourcePixels": [
     2560,
     1760
@@ -328,17 +328,17 @@
     {
      "src": "assets/stargo-product/ow05-brief-800.webp",
      "width": 800,
-     "bytes": 26730
+     "bytes": 26544
     },
     {
      "src": "assets/stargo-product/ow05-brief-1200.webp",
      "width": 1200,
-     "bytes": 50690
+     "bytes": 50352
     },
     {
      "src": "assets/stargo-product/ow05-brief-2400.webp",
      "width": 2400,
-     "bytes": 127756
+     "bytes": 125846
     }
    ]
   },
@@ -348,9 +348,9 @@
    "src": "assets/stargo-product/ow06-follow.webp",
    "width": 1600,
    "height": 1100,
-   "bytes": 88240,
+   "bytes": 87830,
    "sourceFile": ".wrangler/openwork/ow06-follow.png",
-   "sourceSha256": "c02dacecb82eaf7c2b746202d52b9cd45a4f8d98eba3d96a93affd485dace19e",
+   "sourceSha256": "ee6f696822fc076e1602ce1ae0bf811b49e37c96c051e574644302e94410406c",
    "sourcePixels": [
     2560,
     1760
@@ -367,17 +367,17 @@
     {
      "src": "assets/stargo-product/ow06-follow-800.webp",
      "width": 800,
-     "bytes": 29580
+     "bytes": 29382
     },
     {
      "src": "assets/stargo-product/ow06-follow-1200.webp",
      "width": 1200,
-     "bytes": 56930
+     "bytes": 56570
     },
     {
      "src": "assets/stargo-product/ow06-follow-2400.webp",
      "width": 2400,
-     "bytes": 145638
+     "bytes": 144856
     }
    ]
   },
@@ -387,9 +387,9 @@
    "src": "assets/stargo-product/ow07-welcome.webp",
    "width": 1600,
    "height": 1100,
-   "bytes": 109736,
+   "bytes": 109232,
    "sourceFile": ".wrangler/openwork/ow07-welcome.png",
-   "sourceSha256": "89449b2ee79cc015c38553417ffe250c97c98e30207b1f06bdae31d5ae40c7c1",
+   "sourceSha256": "55ac30982fc487106e5f41518025c04a398811f8f5b643fb6e98ab056732e493",
    "sourcePixels": [
     2560,
     1760
@@ -406,17 +406,17 @@
     {
      "src": "assets/stargo-product/ow07-welcome-800.webp",
      "width": 800,
-     "bytes": 39140
+     "bytes": 38934
     },
     {
      "src": "assets/stargo-product/ow07-welcome-1200.webp",
      "width": 1200,
-     "bytes": 74134
+     "bytes": 73688
     },
     {
      "src": "assets/stargo-product/ow07-welcome-2400.webp",
      "width": 2400,
-     "bytes": 181042
+     "bytes": 180190
     }
    ]
   },
@@ -426,9 +426,9 @@
    "src": "assets/stargo-product/ow08-crm.webp",
    "width": 1600,
    "height": 1100,
-   "bytes": 112292,
+   "bytes": 112416,
    "sourceFile": ".wrangler/openwork/ow08-crm.png",
-   "sourceSha256": "f08aacc5433ebb00983ad8a2a988549d34dbd9428cf11c7effab3123797722f3",
+   "sourceSha256": "0f8aea28c98ae9f769c008e24a7749bd797508a23260170af8517e36944f8f9a",
    "sourcePixels": [
     2560,
     1760
@@ -445,17 +445,17 @@
     {
      "src": "assets/stargo-product/ow08-crm-800.webp",
      "width": 800,
-     "bytes": 41660
+     "bytes": 41668
     },
     {
      "src": "assets/stargo-product/ow08-crm-1200.webp",
      "width": 1200,
-     "bytes": 75126
+     "bytes": 75184
     },
     {
      "src": "assets/stargo-product/ow08-crm-2400.webp",
      "width": 2400,
-     "bytes": 183748
+     "bytes": 183970
     }
    ]
   },
@@ -465,9 +465,9 @@
    "src": "assets/stargo-product/ow09-automation.webp",
    "width": 1600,
    "height": 1100,
-   "bytes": 96210,
+   "bytes": 96322,
    "sourceFile": ".wrangler/openwork/ow09-automation.png",
-   "sourceSha256": "1923a65d4d4f3c0521fbeece7bd52482577011d25ffcc7b2aa4d37e68b9376b2",
+   "sourceSha256": "86f42c55abbc889fa8869035824b2523c23f5a7653d6ba42c07de7b62f4edf28",
    "sourcePixels": [
     2560,
     1760
@@ -484,17 +484,17 @@
     {
      "src": "assets/stargo-product/ow09-automation-800.webp",
      "width": 800,
-     "bytes": 34190
+     "bytes": 34204
     },
     {
      "src": "assets/stargo-product/ow09-automation-1200.webp",
      "width": 1200,
-     "bytes": 61946
+     "bytes": 62028
     },
     {
      "src": "assets/stargo-product/ow09-automation-2400.webp",
      "width": 2400,
-     "bytes": 156936
+     "bytes": 157156
     }
    ]
   },
@@ -504,9 +504,9 @@
    "src": "assets/stargo-product/ow10-erp.webp",
    "width": 1600,
    "height": 1100,
-   "bytes": 85610,
+   "bytes": 85622,
    "sourceFile": ".wrangler/openwork/ow10-erp.png",
-   "sourceSha256": "9a5477fcc3add17a837d7dc9412d43b435561c073ba2ab0348b3cf450bcdd53e",
+   "sourceSha256": "1a9110a5156490cc2c4421003ffdee4efa4f2134c15d1fc6d69d36836f96e47f",
    "sourcePixels": [
     2560,
     1760
@@ -523,17 +523,17 @@
     {
      "src": "assets/stargo-product/ow10-erp-800.webp",
      "width": 800,
-     "bytes": 30838
+     "bytes": 30850
     },
     {
      "src": "assets/stargo-product/ow10-erp-1200.webp",
      "width": 1200,
-     "bytes": 56718
+     "bytes": 56796
     },
     {
      "src": "assets/stargo-product/ow10-erp-2400.webp",
      "width": 2400,
-     "bytes": 138640
+     "bytes": 138104
     }
    ]
   },
@@ -543,9 +543,9 @@
    "src": "assets/stargo-product/ow11-staff.webp",
    "width": 1600,
    "height": 1100,
-   "bytes": 130236,
+   "bytes": 130444,
    "sourceFile": ".wrangler/openwork/ow11-staff.png",
-   "sourceSha256": "18ff2dd2ac1027e8808d6f53179082f48bbd3368612e2acf8e49a8da31555627",
+   "sourceSha256": "527a0dd8172858cbded93f9df1953e4f9d6e7fac44ffebc227f73816ff355f61",
    "sourcePixels": [
     2560,
     1760
@@ -562,17 +562,17 @@
     {
      "src": "assets/stargo-product/ow11-staff-800.webp",
      "width": 800,
-     "bytes": 46016
+     "bytes": 46020
     },
     {
      "src": "assets/stargo-product/ow11-staff-1200.webp",
      "width": 1200,
-     "bytes": 84516
+     "bytes": 84576
     },
     {
      "src": "assets/stargo-product/ow11-staff-2400.webp",
      "width": 2400,
-     "bytes": 218610
+     "bytes": 218758
     }
    ]
   },
@@ -814,9 +814,9 @@
    "src": "assets/stargo-product/ow20-apps.webp",
    "width": 705,
    "height": 1719,
-   "bytes": 46610,
+   "bytes": 44386,
    "sourceFile": ".wrangler/openwork/ow20-apps.png",
-   "sourceSha256": "d76487a87b3c880762bb0a26b6e9473986fbc4fd45df30d7d41cae5cc3c958b9",
+   "sourceSha256": "b197edda5e2725ddefdf45e636681f634d5d25c11e2e8b529b3457660b152f51",
    "sourcePixels": [
     705,
     1719
@@ -833,7 +833,7 @@
     {
      "src": "assets/stargo-product/ow20-apps-520.webp",
      "width": 520,
-     "bytes": 34044
+     "bytes": 32982
     }
    ]
   },
@@ -901,9 +901,9 @@
    "src": "assets/stargo-product/ow23-quick-actions.webp",
    "width": 2000,
    "height": 438,
-   "bytes": 23256,
+   "bytes": 23576,
    "sourceFile": ".wrangler/openwork/ow23-quick-actions.png",
-   "sourceSha256": "1f90837df6b3625507f577661b6fd3959b8108fd95bd8dfc55eeba16ef78f193",
+   "sourceSha256": "dffcfcad0116ff16a44968981bec7f5263ef2640f93a1d60cc480568e7fc454f",
    "sourcePixels": [
     2000,
     438
@@ -920,12 +920,12 @@
     {
      "src": "assets/stargo-product/ow23-quick-actions-720.webp",
      "width": 720,
-     "bytes": 5672
+     "bytes": 5676
     },
     {
      "src": "assets/stargo-product/ow23-quick-actions-1200.webp",
      "width": 1200,
-     "bytes": 12236
+     "bytes": 12308
     }
    ]
   },

@@ -7,10 +7,11 @@
  *   about.html     renderAbout      what STARGO WORK / OPEN WORK is, the story,
  *                                   the three principles, where to start
  *   contact.html   renderContact    the demo form (plan preselected from
- *                                   ?plan=…), WhatsApp, how the demo works
- *   privacy.html,  renderLegal      the legal text in one readable column;
- *   terms.html,                     notices adds three OPEN WORK cards
- *   notices.html
+ *                                   ?plan=…), WeChat, phone, WhatsApp, e-mail,
+ *                                   the company line, how the demo works
+ *   privacy.html,  renderLegal      the legal text in one readable column
+ *   terms.html                      (the third-party notices page was removed
+ *                                   on 2026-10-10; its imagery note is in terms)
  *   404.html       renderNotFound   three ways on, at any depth (paths are
  *                                   made absolute in tools/build-site.mjs)
  *
@@ -21,8 +22,7 @@
  * the legal pages (a 810px globe banner with baked-in English, the retired
  * desktop and sw033 on notices). Same shell, pieces and styles as the product
  * pages (tools/ow-blocks/pages.mjs, css/stargo-ow.css). Words: tools/copy.mjs
- * SITE_OW, plus the facts it points at (PRICING, ABOUT, LEGAL, NOTICES,
- * CONTACT_INFO).
+ * SITE_OW, plus the facts it points at (PRICING, ABOUT, LEGAL, CONTACT_INFO).
  */
 import { esc, heading, para, button, ICON, asset } from './shared.mjs';
 import { eyebrow, chips, head, pageHero, cards, section } from './pages.mjs';
@@ -96,10 +96,16 @@ export function renderPricing(ctx) {
   };
   const strip = `<div class="ow-start"><span class="ow-tile">${ICON.flow}</span><div class="ow-start-t"><h2 class="ow-h3">${heading(lang, t(S.start.title))}</h2><p>${para(lang, t(S.start.text))}</p></div>`
     + `<p class="ow-start-b">${button(`contact.html?plan=${key(start)}`, t(start.cta), { kind: 'secondary' })}</p></div>`;
+  /* 网站运营管理: a service package, not an app and not a plan — no price was
+     given, so it is quoted on request (owner, 2026-10-10). It asks through the
+     contact page with ?plan=site-ops, which the form's plan select names. */
+  const V = S.service;
+  const service = `<div class="ow-start ow-service" id="service-website"><span class="ow-tile">${ICON.gear}</span><div class="ow-start-t"><p class="ow-service-l">${esc(t(V.label))}</p><h2 class="ow-h3">${heading(lang, t(V.title))}</h2><p>${para(lang, t(V.text))}</p></div>`
+    + `<p class="ow-start-b"><span class="ow-service-price">${esc(t(V.price))}</span>${button(`contact.html?plan=${V.key}`, t(V.cta), { kind: 'secondary' })}</p></div>`;
   const hero = `<section class="ow-hero ow-hero--page ow-hero--price" aria-labelledby="ow-hero-title"><div class="ow-wrap">`
     + heroHead(ctx, S.hero)
     + `<ol class="ow-tiers" aria-label="${esc(t(S.plansLabel))}">${priced.map(tierCard).join('')}</ol>`
-    + strip + `<p class="ow-price-fine">${para(lang, t(S.note))}</p>`
+    + strip + service + `<p class="ow-price-fine">${para(lang, t(S.note))}</p>`
     + `</div></section>`;
   const faqItems = P.faq;
   if (faqItems.length !== 10) throw new Error(`pricing: ${faqItems.length} questions, the page carries ten`);
@@ -200,7 +206,8 @@ export function renderAbout(ctx) {
   const story = t(AB.story).match(/<p>([\s\S]*?)<\/p>/g).map((p) => p.replace(/<\/?p>/g, ''));
   if (story.length !== 3 || story.some((p) => /</.test(p))) throw new Error('about: the story is three plain paragraphs');
   const storySec = section('ow-sec--white ow-story', 'story', 'ow-story-title',
-    `<div class="ow-split ow-split--story"><div>${head(ctx, A.story, 'ow-story-title')}<p class="ow-story-where">${ICON.pin}<span>${esc(t(A.story.where))}</span></p></div>`
+    `<div class="ow-split ow-split--story"><div>${head(ctx, A.story, 'ow-story-title')}<p class="ow-story-where">${ICON.pin}<span>${esc(t(A.story.where))}</span></p>`
+    + `<p class="ow-story-where">${ICON.building}<span>${lang === 'zh' ? esc(t(A.story.company)) : esc(t(A.story.company)).replace('{company}', `<span lang="zh-CN">${esc(C.CONTACT_INFO.company)}</span>`)}</span></p></div>`
     + `<div class="ow-story-body">${story.map((p) => `<p>${para(lang, p)}</p>`).join('')}</div></div>`);
   const values = AB.values.map((v, i) => {
     const sep = (s, l) => { const at = l === 'zh' ? s.indexOf('：') : s.indexOf(': '); if (at < 0) throw new Error(`about: principle without a title: ${s}`); return [s.slice(0, at), s.slice(at + (l === 'zh' ? 1 : 2))]; };
@@ -216,7 +223,7 @@ export function renderAbout(ctx) {
   return `<main class="ow ow-inner ow-about" id="main">`
     + pageHero(ctx, A.hero, { id: 'ow01-home', phone, moreIcon: 'arrow' })
     + storySec + valuesSec + startsSec
-    + contact.render(ctx)
+    + contact.render({ ...ctx, aboutLink: false })
     + `</main>`;
 }
 
@@ -226,51 +233,38 @@ export function renderAbout(ctx) {
  * The demo form is the template's own `.w-form` (the one the homepage band
  * uses), so tools/chrome.mjs formMarkup() and js/stargo-forms.js treat it like
  * every other demo form: POST /api/contact, honeypot, consent line, the
- * success/failure notices functions/api/contact.js answers. Name and e-mail
- * stay the two required fields (the endpoint requires exactly those); the
- * rest are optional. js/stargo-ow.js preselects the plan a pricing card named
+ * success/failure notices functions/api/contact.js answers. Its first four
+ * fields are the band's (contact.formFields): name, company and mobile / WeChat
+ * are required, e-mail is optional (owner, 2026-10-10; the endpoint requires
+ * exactly those three). The plan, the focus and the message below are optional.
+ * js/stargo-ow.js preselects the plan a pricing card named
  * (contact.html?plan=growth …).
  */
 function demoForm({ lang, t, C, formHtml }) {
   const K = C.SITE_OW.contact;
-  const O = C.HOME_OW;
-  if (!/^<div class="w-form"><form\b/.test(formHtml)) throw new Error('contact: template form not found');
-  if (!formHtml.includes('value="Contact us"')) throw new Error('contact: template submit button not found');
-  let labelled = 0;
-  let form = formHtml.replace('value="Contact us"', `value="${esc(t(O.demoLabel))}"`)
-    .replace(/<input\b[^>]*\bclass="text-field\b[^>]*>/g, (tag) => {
-      const id = tag.match(/\sid="([^"]+)"/)?.[1];
-      const field = /type="email"/.test(tag) ? K.fields.email : K.fields[id];
-      if (!id || !field) throw new Error(`contact: field without id or label: ${tag}`);
-      labelled++;
-      return `<div class="ow-field"><label class="ow-field-l" for="${id}">${esc(t(field))}</label>${tag}</div>`;
-    });
-  if (labelled !== 3) throw new Error(`contact: expected 3 template fields, labelled ${labelled}`);
   const { priced, start } = plansOf(C);
   /* 「增长版 · ¥30,000」: the plan and its price, short enough for the select */
-  const plans = [...priced, start].map((p) => `<option value="${C.SITE_OW.planKeys[p.name.zh]}">${esc(t(p.name))}${p.unit === 'demo' ? '' : ` · ${esc(tx(t, p.price))}`}</option>`).join('');
-  const extra = `<div class="ow-field"><label class="ow-field-l" for="contact-phone">${esc(t(K.fields.phone))}</label><input class="text-field w-input" maxlength="256" name="phone" data-name="Phone" type="text" id="contact-phone" autocomplete="tel"/></div>`
-    + `<div class="grid-form">`
+  const service = C.SITE_OW.pricing.service;
+  const plans = [...priced, start].map((p) => `<option value="${C.SITE_OW.planKeys[p.name.zh]}">${esc(t(p.name))}${p.unit === 'demo' ? '' : ` · ${esc(tx(t, p.price))}`}</option>`).join('')
+    /* the website-operations service package (pricing.html's 「咨询网站运营管理」 links here with ?plan=site-ops) */
+    + `<option value="${service.key}">${esc(t(service.option))}</option>`;
+  /* the plan and the focus each take the form's full width, so a plan and its price are never cut off */
+  const extra = `<div class="grid-form ow-ct-extras">`
     + `<div class="ow-field"><label class="ow-field-l" for="contact-plan">${esc(t(K.fields.plan))}</label><select class="text-field ow-select w-select" name="plan" data-name="Plan" id="contact-plan" data-ow-plan><option value="">${esc(t(K.planNone))}</option>${plans}</select></div>`
     + `<div class="ow-field"><label class="ow-field-l" for="contact-focus">${esc(t(K.fields.focus))}</label><select class="text-field ow-select w-select" name="focus" data-name="Focus" id="contact-focus"><option value="">${esc(t(K.focusNone))}</option>${K.focusOptions.map((o, i) => `<option value="${i + 1}">${esc(t(o))}</option>`).join('')}</select></div>`
     + `</div>`
     + `<div class="ow-field"><label class="ow-field-l" for="contact-message">${esc(t(K.fields.message))}</label><textarea class="text-field ow-textarea w-input" maxlength="5000" name="message" data-name="Message" id="contact-message" placeholder="${esc(t(K.messageHint))}"></textarea></div>`;
-  const at = form.indexOf('<input type="submit"');
-  if (at < 0) throw new Error('contact: submit button not found');
-  form = form.slice(0, at) + extra + form.slice(at);
-  return form;
+  return contact.withFields(formHtml, { lang, t, C }, { where: 'contact', extra });
 }
 
 export function renderContact(ctx) {
   const { lang, t, C } = ctx;
   const K = C.SITE_OW.contact;
   const O = C.HOME_OW;
-  const info = C.CONTACT_INFO;
-  const ways = `<div class="ow-ct-ways"><p class="ow-tasks-label">${esc(t(K.ways.title))}</p><ul class="ow-contact-ways">`
-    + `<li><a href="${esc(t(O.whatsappHref))}" target="_blank" rel="noopener noreferrer">${ICON.whatsapp}<span><strong>WhatsApp</strong>${esc(info.whatsapp)}</span></a></li>`
-    + `<li><a href="mailto:${esc(info.email)}">${ICON.mail}<span><strong>${esc(t(K.ways.email))}</strong>${esc(info.email)}</span></a></li>`
-    + `<li><span class="ow-ct-addr">${ICON.pin}<span><strong>${esc(t(K.ways.address))}</strong>${esc(t(info.address))}</span></span></li>`
-    + `</ul></div>`;
+  const ways = `<div class="ow-ct-ways"><p class="ow-tasks-label">${esc(t(K.ways.title))}</p>`
+    + contact.ways(ctx, { address: true, labels: K.ways })
+    + contact.trust(ctx)
+    + `</div>`;
   const steps = `<div class="ow-ct-steps"><p class="ow-tasks-label">${esc(t(K.steps.title))}</p><ol>${K.steps.list.map(([title, text], i) => `<li><span class="ow-step-n" aria-hidden="true">${i + 1}</span><div><h3 class="ow-h3">${heading(lang, t(title))}</h3><p>${para(lang, t(text))}</p></div></li>`).join('')}</ol></div>`;
   const hero = `<section class="ow-hero ow-hero--page ow-hero--contact" aria-labelledby="ow-hero-title"><div class="ow-wrap ow-ct-grid">`
     /* four grid items: on a desktop the words, the ways and the steps on the
@@ -287,11 +281,10 @@ export function renderContact(ctx) {
   return `<main class="ow ow-inner ow-contact-page" id="main">${hero}${seen}</main>`;
 }
 
-/* ================================================ privacy / terms / notices */
+/* ========================================================= privacy / terms */
 
 /**
- * Small cards with an OPEN WORK close-up (notices' 「继续看」, contact's
- * 「演示里你会看到」). The 「演示数据」 badge sits in a title bar above the
+ * Small cards with an OPEN WORK close-up (contact's 「演示里你会看到」). The 「演示数据」 badge sits in a title bar above the
  * picture, as on every framed shot, never over the interface.
  */
 function shotCards({ lang, t, C }, list, { link = true } = {}) {
@@ -303,7 +296,7 @@ function shotCards({ lang, t, C }, list, { link = true } = {}) {
   }).join('')}</ul>`;
 }
 
-const LEGAL_PAGES = ['privacy.html', 'terms.html', 'notices.html'];
+const LEGAL_PAGES = ['privacy.html', 'terms.html'];
 
 export function renderLegal(ctx, spec, page) {
   const { lang, t, C } = ctx;
@@ -311,17 +304,14 @@ export function renderLegal(ctx, spec, page) {
   if (!LEGAL_PAGES.includes(page)) throw new Error(`legal: ${page} is not a legal page`);
   /* the post template printed 「(©2026-09-05 生效)」: the date alone, in brackets */
   const date = lang === 'zh' ? `（${t(spec.date)}）` : `(${t(spec.date)})`;
-  const names = { 'privacy.html': C.LEGAL.privacy.h1, 'terms.html': C.LEGAL.terms.h1, 'notices.html': C.NOTICES.h1 };
+  const names = { 'privacy.html': C.LEGAL.privacy.h1, 'terms.html': C.LEGAL.terms.h1 };
   const nav = `<nav class="ow-legal-nav" aria-label="${esc(t(L.pagesLabel))}"><ul>${LEGAL_PAGES.map((p) => `<li><a href="${p}"${p === page ? ' aria-current="page"' : ''}>${esc(t(names[p]))}</a></li>`).join('')}</ul></nav>`;
   /* the text's own sub-headings are <h4>; under the page's h1 they are h2 */
   const body = t(spec.body).trim().replace(/<h4>/g, '<h2 class="ow-doc-h">').replace(/<\/h4>/g, '</h2>');
   if (/<h[1345]/.test(body)) throw new Error(`legal: ${page} carries a heading level the page does not use`);
-  const related = page === 'notices.html' ? section('ow-sec--glow ow-related', 'related', 'ow-rel-title',
-    `<h2 id="ow-rel-title" class="ow-h2">${esc(t(L.related))}</h2>${shotCards(ctx, L.notices)}`) : '';
   return `<main class="ow ow-inner ow-legal" id="main">`
     + `<section class="ow-legal-hero" aria-labelledby="ow-hero-title"><div class="ow-wrap ow-legal-wrap">${eyebrow(t, L.eyebrow)}<h1 id="ow-hero-title" class="ow-h1">${esc(t(spec.h1))}</h1><p class="ow-legal-date">${esc(date)}</p>${nav}</div></section>`
     + `<section class="ow-sec ow-sec--white ow-legal-body"><div class="ow-wrap ow-legal-wrap"><article class="ow-doc">${body}</article></div></section>`
-    + related
     + `</main>`;
 }
 

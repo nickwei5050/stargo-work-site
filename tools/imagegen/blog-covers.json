@@ -5,7 +5,7 @@
     "assets/blog/stargo-work-visual-guide.webp": {
       "recipe": {
         "source": "assets/stargo-product/ow07-welcome-2400.webp",
-        "sourceSha256": "4a3749557c776d8bf3423c65f3638c8f55c6c48b0b91b616a0cc468aad795945",
+        "sourceSha256": "119c82573508b7235a50840b272bf3c7f7282652a7a85d5d4916e300ba6165b8",
         "mode": "focus",
         "box": [
           0.195,
@@ -24,7 +24,7 @@
     "assets/blog/stargo-work-visual-guide-800.webp": {
       "recipe": {
         "source": "assets/stargo-product/ow07-welcome-2400.webp",
-        "sourceSha256": "4a3749557c776d8bf3423c65f3638c8f55c6c48b0b91b616a0cc468aad795945",
+        "sourceSha256": "119c82573508b7235a50840b272bf3c7f7282652a7a85d5d4916e300ba6165b8",
         "mode": "focus",
         "box": [
           0.195,
@@ -43,7 +43,7 @@
     "assets/blog/stargo-work-visual-guide-500.webp": {
       "recipe": {
         "source": "assets/stargo-product/ow07-welcome-2400.webp",
-        "sourceSha256": "4a3749557c776d8bf3423c65f3638c8f55c6c48b0b91b616a0cc468aad795945",
+        "sourceSha256": "119c82573508b7235a50840b272bf3c7f7282652a7a85d5d4916e300ba6165b8",
         "mode": "focus",
         "box": [
           0.195,
@@ -59,10 +59,37 @@
       },
       "sha256": "b15679d9674865eff4e80e4441381c8d17fc40ee45724d9fda0c48ae2ebae7c2"
     },
+    "assets/blog/stargo-work-visual-guide-share.webp": {
+      "recipe": {
+        "source": "assets/stargo-product/ow07-welcome-2400.webp",
+        "sourceSha256": "119c82573508b7235a50840b272bf3c7f7282652a7a85d5d4916e300ba6165b8",
+        "mode": "focus",
+        "box": [
+          0.195,
+          0.055,
+          0.79,
+          0.5745
+        ],
+        "canvas": [
+          1200,
+          600
+        ],
+        "quality": 82,
+        "chip": {
+          "text": "演示数据 · Demo data",
+          "corner": "top-right",
+          "inset": 0.02,
+          "scale": 1.8,
+          "pad": 8,
+          "style": "video-page.mjs .vbadge + shadow 0 2px 6px rgba(15,23,42,.10)"
+        }
+      },
+      "sha256": "f929e88bdaf105e35af90a2177d5d6759c38559c6a7beb073d62dbe86f6fb7e8"
+    },
     "assets/blog/start-with-one-workflow.webp": {
       "recipe": {
         "source": "assets/stargo-product/ow09-automation-2400.webp",
-        "sourceSha256": "7046f5794349a53616299c632ebf0698b0647e527fbb8b216f9cfeeabae37921",
+        "sourceSha256": "3baa5ac02bdbaf5d1bb93ea4c323c85aecd4203e5b282c02fd0cef55cc85cdb0",
         "mode": "focus",
         "box": [
           0.34,
@@ -76,12 +103,12 @@
         ],
         "quality": 82
       },
-      "sha256": "5185cfed7e35468e522035528aeb0807f92eb886d52e0e000ecb31f602ed2475"
+      "sha256": "1332e9f4a6105429731e4d676246137c71bf03863689fabfde18fc14e9e4b0fc"
     },
     "assets/blog/start-with-one-workflow-800.webp": {
       "recipe": {
         "source": "assets/stargo-product/ow09-automation-2400.webp",
-        "sourceSha256": "7046f5794349a53616299c632ebf0698b0647e527fbb8b216f9cfeeabae37921",
+        "sourceSha256": "3baa5ac02bdbaf5d1bb93ea4c323c85aecd4203e5b282c02fd0cef55cc85cdb0",
         "mode": "focus",
         "box": [
           0.34,
@@ -95,12 +122,12 @@
         ],
         "quality": 82
       },
-      "sha256": "0c322be4af89cd62c3e929034d620cca33527ea9e202d6bfc2aeae109ecdaf4d"
+      "sha256": "94ce2b91d029367bf11e281dec7dc0b670afa3888209a41c4a6d978778bde458"
     },
     "assets/blog/start-with-one-workflow-500.webp": {
       "recipe": {
         "source": "assets/stargo-product/ow09-automation-2400.webp",
-        "sourceSha256": "7046f5794349a53616299c632ebf0698b0647e527fbb8b216f9cfeeabae37921",
+        "sourceSha256": "3baa5ac02bdbaf5d1bb93ea4c323c85aecd4203e5b282c02fd0cef55cc85cdb0",
         "mode": "focus",
         "box": [
           0.34,
@@ -114,12 +141,39 @@
         ],
         "quality": 82
       },
-      "sha256": "25d525937ba78b85042f360f1a8d5c46a46f09fa0cffc05047b140116fe2fd95"
+      "sha256": "86e5ef82577868826a3dc404ec6b7cea9c8f78a1bcce1756d0f289778ef67d7e"
+    },
+    "assets/blog/start-with-one-workflow-share.webp": {
+      "recipe": {
+        "source": "assets/stargo-product/ow09-automation-2400.webp",
+        "sourceSha256": "3baa5ac02bdbaf5d1bb93ea4c323c85aecd4203e5b282c02fd0cef55cc85cdb0",
+        "mode": "focus",
+        "box": [
+          0.34,
+          0.03,
+          0.65,
+          0.4727
+        ],
+        "canvas": [
+          1200,
+          600
+        ],
+        "quality": 82,
+        "chip": {
+          "text": "演示数据 · Demo data",
+          "corner": "top-right",
+          "inset": 0.02,
+          "scale": 1.8,
+          "pad": 8,
+          "style": "video-page.mjs .vbadge + shadow 0 2px 6px rgba(15,23,42,.10)"
+        }
+      },
+      "sha256": "9cfbc4b3aaabe47b9f4b10064f1b1114959061cab577705b0000f2ba705057dc"
     },
     "assets/blog/from-inquiry-to-quote.webp": {
       "recipe": {
         "source": "assets/stargo-product/ow02-inquiry-2400.webp",
-        "sourceSha256": "47576969a0b8b5af40b7f38ff7ed3c4d386da99de895070c777604a9b6ace496",
+        "sourceSha256": "a348c1793b629149f56e13e94bcff34a4b07eed948eb2bbde9194d761fcf4300",
         "mode": "focus",
         "box": [
           0.295,
@@ -133,12 +187,12 @@
         ],
         "quality": 82
       },
-      "sha256": "5b2204d045ebc586658567db5968e470183355bac204d3a9eb4e4f81cca2e8df"
+      "sha256": "cabd4c621d498b20a946598e1b3ee066a4b5118065b509eca6a977e610758f6a"
     },
     "assets/blog/from-inquiry-to-quote-800.webp": {
       "recipe": {
         "source": "assets/stargo-product/ow02-inquiry-2400.webp",
-        "sourceSha256": "47576969a0b8b5af40b7f38ff7ed3c4d386da99de895070c777604a9b6ace496",
+        "sourceSha256": "a348c1793b629149f56e13e94bcff34a4b07eed948eb2bbde9194d761fcf4300",
         "mode": "focus",
         "box": [
           0.295,
@@ -152,12 +206,12 @@
         ],
         "quality": 82
       },
-      "sha256": "b43249afb13c8bb76036216748750813fb3fac6320c0579b9fa74460a67dd744"
+      "sha256": "7ee5cfab4eb1c2db62e016cc8826394f5a52db694e22a71e0f07dd268b8a4ac0"
     },
     "assets/blog/from-inquiry-to-quote-500.webp": {
       "recipe": {
         "source": "assets/stargo-product/ow02-inquiry-2400.webp",
-        "sourceSha256": "47576969a0b8b5af40b7f38ff7ed3c4d386da99de895070c777604a9b6ace496",
+        "sourceSha256": "a348c1793b629149f56e13e94bcff34a4b07eed948eb2bbde9194d761fcf4300",
         "mode": "focus",
         "box": [
           0.295,
@@ -171,12 +225,39 @@
         ],
         "quality": 82
       },
-      "sha256": "731dcf31b7c8a67d6bef2d84d1d78ccb2503b806649a11d6706040064917429f"
+      "sha256": "d7d9afb61c3fa72440a02e681e28a9f54603834aaa831461a81533c545400139"
+    },
+    "assets/blog/from-inquiry-to-quote-share.webp": {
+      "recipe": {
+        "source": "assets/stargo-product/ow02-inquiry-2400.webp",
+        "sourceSha256": "a348c1793b629149f56e13e94bcff34a4b07eed948eb2bbde9194d761fcf4300",
+        "mode": "focus",
+        "box": [
+          0.295,
+          0.44,
+          0.6,
+          0.4364
+        ],
+        "canvas": [
+          1200,
+          600
+        ],
+        "quality": 82,
+        "chip": {
+          "text": "演示数据 · Demo data",
+          "corner": "top-right",
+          "inset": 0.02,
+          "scale": 1.8,
+          "pad": 8,
+          "style": "video-page.mjs .vbadge + shadow 0 2px 6px rgba(15,23,42,.10)"
+        }
+      },
+      "sha256": "6c92d3befe5834751ad25d640e9cd76379953b57d9a461b18072261ce8bf0fe9"
     },
     "assets/blog/approval-gates-for-ai-in-trade.webp": {
       "recipe": {
         "source": "assets/stargo-product/ow03-quote-2400.webp",
-        "sourceSha256": "6c096382a65aa4657b1d1d62d0c657ed756b966ca48f4d76beafc9d5e4304fc3",
+        "sourceSha256": "e38ad3adcda9dfe4102fa614607c628fef2df18a3594309761e12043eaead1b7",
         "mode": "focus",
         "box": [
           0.295,
@@ -190,12 +271,12 @@
         ],
         "quality": 82
       },
-      "sha256": "b0fb0fdcbb168f2e324e37a42dd4611a65a153f5165b375f5b06102807b69a0e"
+      "sha256": "fe7812490187d1250d1986d1de7a48f7db2fb985d1d8316142164fd481490153"
     },
     "assets/blog/approval-gates-for-ai-in-trade-800.webp": {
       "recipe": {
         "source": "assets/stargo-product/ow03-quote-2400.webp",
-        "sourceSha256": "6c096382a65aa4657b1d1d62d0c657ed756b966ca48f4d76beafc9d5e4304fc3",
+        "sourceSha256": "e38ad3adcda9dfe4102fa614607c628fef2df18a3594309761e12043eaead1b7",
         "mode": "focus",
         "box": [
           0.295,
@@ -209,12 +290,12 @@
         ],
         "quality": 82
       },
-      "sha256": "a9e6a73a22fce0a2150d12d703f466fa28c86a46b0850dd1decc3d2ed0051c63"
+      "sha256": "5e55c4b7f562cc2a8e65e23b060626994ea7bb1b5332be96090da7a0ad9433ac"
     },
     "assets/blog/approval-gates-for-ai-in-trade-500.webp": {
       "recipe": {
         "source": "assets/stargo-product/ow03-quote-2400.webp",
-        "sourceSha256": "6c096382a65aa4657b1d1d62d0c657ed756b966ca48f4d76beafc9d5e4304fc3",
+        "sourceSha256": "e38ad3adcda9dfe4102fa614607c628fef2df18a3594309761e12043eaead1b7",
         "mode": "focus",
         "box": [
           0.295,
@@ -228,12 +309,39 @@
         ],
         "quality": 82
       },
-      "sha256": "04ea00db50646388778fe8c57b315914682e038d6caf8be622f60cf547c3f210"
+      "sha256": "46d8108e6c8e8b16579c8792ac5944c57fa32d12541f1d402394c36b25206805"
+    },
+    "assets/blog/approval-gates-for-ai-in-trade-share.webp": {
+      "recipe": {
+        "source": "assets/stargo-product/ow03-quote-2400.webp",
+        "sourceSha256": "e38ad3adcda9dfe4102fa614607c628fef2df18a3594309761e12043eaead1b7",
+        "mode": "focus",
+        "box": [
+          0.295,
+          0.275,
+          0.6,
+          0.4364
+        ],
+        "canvas": [
+          1200,
+          600
+        ],
+        "quality": 82,
+        "chip": {
+          "text": "演示数据 · Demo data",
+          "corner": "top-right",
+          "inset": 0.02,
+          "scale": 1.8,
+          "pad": 8,
+          "style": "video-page.mjs .vbadge + shadow 0 2px 6px rgba(15,23,42,.10)"
+        }
+      },
+      "sha256": "3edec323f9fc2dfedc3d247e36b818f69a9c1b677cf695b69e0c5a998dd6b906"
     },
     "assets/blog/ai-operating-system-for-global-trade.webp": {
       "recipe": {
         "source": "assets/stargo-product/ow01-home-2400.webp",
-        "sourceSha256": "f74c11acfe58ba9c4e82f064a1f9437d177c9e2b01e780861229152ecbe6ac86",
+        "sourceSha256": "1de2c2a410652b0cfe16e973bea21375e3f41788cda12f0618a0bb38b7ee0538",
         "mode": "focus",
         "box": [
           0,
@@ -247,12 +355,12 @@
         ],
         "quality": 82
       },
-      "sha256": "3e50519657e40fe317b05aa4ea5f791c9fca7ca4d2b5cdaa7cdcd1340042bc12"
+      "sha256": "4c8b4eb0a97e7d93f5879bfe3f4b8fcf08b9c469fcfab444f844745be891f055"
     },
     "assets/blog/ai-operating-system-for-global-trade-800.webp": {
       "recipe": {
         "source": "assets/stargo-product/ow01-home-2400.webp",
-        "sourceSha256": "f74c11acfe58ba9c4e82f064a1f9437d177c9e2b01e780861229152ecbe6ac86",
+        "sourceSha256": "1de2c2a410652b0cfe16e973bea21375e3f41788cda12f0618a0bb38b7ee0538",
         "mode": "focus",
         "box": [
           0,
@@ -266,12 +374,12 @@
         ],
         "quality": 82
       },
-      "sha256": "18c9c9a4c4f13fe8978bd69b9c3f11f36e7d791226674e4364c2cc59e74c236e"
+      "sha256": "87323a266a38cabc9d5c09c42d0f8f63866f6106703445bc52f545d41aec7e00"
     },
     "assets/blog/ai-operating-system-for-global-trade-500.webp": {
       "recipe": {
         "source": "assets/stargo-product/ow01-home-2400.webp",
-        "sourceSha256": "f74c11acfe58ba9c4e82f064a1f9437d177c9e2b01e780861229152ecbe6ac86",
+        "sourceSha256": "1de2c2a410652b0cfe16e973bea21375e3f41788cda12f0618a0bb38b7ee0538",
         "mode": "focus",
         "box": [
           0,
@@ -285,12 +393,39 @@
         ],
         "quality": 82
       },
-      "sha256": "6352ada0e01fa183dbfe7c62408039c8ea27757d218a561f3bd9968d9deb3539"
+      "sha256": "29ac36ec6132edba5482a89bc127b6a1cc029d5f9f9176b14fe33b0280f76206"
     },
-    "assets/blog/288-ai-employees-not-288-chatbots.webp": {
+    "assets/blog/ai-operating-system-for-global-trade-share.webp": {
+      "recipe": {
+        "source": "assets/stargo-product/ow01-home-2400.webp",
+        "sourceSha256": "1de2c2a410652b0cfe16e973bea21375e3f41788cda12f0618a0bb38b7ee0538",
+        "mode": "focus",
+        "box": [
+          0,
+          0.075,
+          0.94,
+          0.6836
+        ],
+        "canvas": [
+          1200,
+          600
+        ],
+        "quality": 82,
+        "chip": {
+          "text": "演示数据 · Demo data",
+          "corner": "top-right",
+          "inset": 0.02,
+          "scale": 1.8,
+          "pad": 8,
+          "style": "video-page.mjs .vbadge + shadow 0 2px 6px rgba(15,23,42,.10)"
+        }
+      },
+      "sha256": "a13b119137f58586605573277e8be034ea4c0ba4be5fa6a61d17b62e081ff552"
+    },
+    "assets/blog/288-ai-staff-not-288-chatbots.webp": {
       "recipe": {
         "source": "assets/stargo-product/ow11-staff-2400.webp",
-        "sourceSha256": "d60f96fe42f3c177ad024aad00650547d329c4cea1ca04c697018ed1d9f5a665",
+        "sourceSha256": "1454cf6a34c2fb39375454a855f58e176aca2452b5e0321e237a320adf04c2a7",
         "mode": "focus",
         "box": [
           0.355,
@@ -304,12 +439,12 @@
         ],
         "quality": 82
       },
-      "sha256": "cc26118532322dd3f6704a3d58ee3ed8e3ccbd11c3635409504b67b659fec788"
+      "sha256": "d76493c1ccdb4863521da6099316e2f152f7b2bc168e8a96bad3f77c3a3bdc67"
     },
-    "assets/blog/288-ai-employees-not-288-chatbots-800.webp": {
+    "assets/blog/288-ai-staff-not-288-chatbots-800.webp": {
       "recipe": {
         "source": "assets/stargo-product/ow11-staff-2400.webp",
-        "sourceSha256": "d60f96fe42f3c177ad024aad00650547d329c4cea1ca04c697018ed1d9f5a665",
+        "sourceSha256": "1454cf6a34c2fb39375454a855f58e176aca2452b5e0321e237a320adf04c2a7",
         "mode": "focus",
         "box": [
           0.355,
@@ -323,12 +458,12 @@
         ],
         "quality": 82
       },
-      "sha256": "d5abb24b8adfade3ad621a52aaae875d215271791efce5cd6eb5f8950f8badff"
+      "sha256": "3dadd88df1bbef63626e8a098010043846967748e7fa4722ae36d8b3deac3b25"
     },
-    "assets/blog/288-ai-employees-not-288-chatbots-500.webp": {
+    "assets/blog/288-ai-staff-not-288-chatbots-500.webp": {
       "recipe": {
         "source": "assets/stargo-product/ow11-staff-2400.webp",
-        "sourceSha256": "d60f96fe42f3c177ad024aad00650547d329c4cea1ca04c697018ed1d9f5a665",
+        "sourceSha256": "1454cf6a34c2fb39375454a855f58e176aca2452b5e0321e237a320adf04c2a7",
         "mode": "focus",
         "box": [
           0.355,
@@ -342,12 +477,39 @@
         ],
         "quality": 82
       },
-      "sha256": "bda3108ca43141eb230278267c397a64635ad22cee1ff35b261c2a11a82e393b"
+      "sha256": "a211091491db242e19233bb5621351cddc474a983a949abc4ed292effd414852"
+    },
+    "assets/blog/288-ai-staff-not-288-chatbots-share.webp": {
+      "recipe": {
+        "source": "assets/stargo-product/ow11-staff-2400.webp",
+        "sourceSha256": "1454cf6a34c2fb39375454a855f58e176aca2452b5e0321e237a320adf04c2a7",
+        "mode": "focus",
+        "box": [
+          0.355,
+          0.11,
+          0.64,
+          0.4655
+        ],
+        "canvas": [
+          1200,
+          600
+        ],
+        "quality": 82,
+        "chip": {
+          "text": "演示数据 · Demo data",
+          "corner": "top-right",
+          "inset": 0.02,
+          "scale": 1.8,
+          "pad": 8,
+          "style": "video-page.mjs .vbadge + shadow 0 2px 6px rgba(15,23,42,.10)"
+        }
+      },
+      "sha256": "0eacfa290ef13fc481b48f6edb59a32ddd79a694a044a4df77f0c9839ffefcfa"
     },
     "assets/blog/enterprise-ontology-explained.webp": {
       "recipe": {
         "source": "assets/stargo-product/ow08-crm-2400.webp",
-        "sourceSha256": "e1024a33dbcefda6ea67ec5a64421adf0685b6d6a94125751cbf3f1f1cad272c",
+        "sourceSha256": "27be795483a089dc012905993e3f7c5948eb655e5df0d770c46de9d35fcc620b",
         "mode": "focus",
         "box": [
           0.33,
@@ -361,12 +523,12 @@
         ],
         "quality": 82
       },
-      "sha256": "933797e601ccf23b4ef466ceb779712c52773766ecc39c5380364c03d3b5dbb3"
+      "sha256": "2d079d8ff1f92754980b3016e594d2076a8ace7a2317071c1fa0f111df92e2cf"
     },
     "assets/blog/enterprise-ontology-explained-800.webp": {
       "recipe": {
         "source": "assets/stargo-product/ow08-crm-2400.webp",
-        "sourceSha256": "e1024a33dbcefda6ea67ec5a64421adf0685b6d6a94125751cbf3f1f1cad272c",
+        "sourceSha256": "27be795483a089dc012905993e3f7c5948eb655e5df0d770c46de9d35fcc620b",
         "mode": "focus",
         "box": [
           0.33,
@@ -380,12 +542,12 @@
         ],
         "quality": 82
       },
-      "sha256": "ca28b4ae4bf94c6cea6e49971ccacf5373bafb4e9611d66790da82b7252bc761"
+      "sha256": "f5e13b8d92d23223910a90df3f6649d9fea48d83d36c38309a29ed86b2bf96f4"
     },
     "assets/blog/enterprise-ontology-explained-500.webp": {
       "recipe": {
         "source": "assets/stargo-product/ow08-crm-2400.webp",
-        "sourceSha256": "e1024a33dbcefda6ea67ec5a64421adf0685b6d6a94125751cbf3f1f1cad272c",
+        "sourceSha256": "27be795483a089dc012905993e3f7c5948eb655e5df0d770c46de9d35fcc620b",
         "mode": "focus",
         "box": [
           0.33,
@@ -399,7 +561,34 @@
         ],
         "quality": 82
       },
-      "sha256": "e526e6916c646e7e0bda9c26238b4bce9e3b00fa96507fdf213290a2dbf04ecf"
+      "sha256": "f1191db2d21d0079df9d061036e2ae94948f12fa21c100373a490e8c974b3120"
+    },
+    "assets/blog/enterprise-ontology-explained-share.webp": {
+      "recipe": {
+        "source": "assets/stargo-product/ow08-crm-2400.webp",
+        "sourceSha256": "27be795483a089dc012905993e3f7c5948eb655e5df0d770c46de9d35fcc620b",
+        "mode": "focus",
+        "box": [
+          0.33,
+          0.035,
+          0.665,
+          0.4836
+        ],
+        "canvas": [
+          1200,
+          600
+        ],
+        "quality": 82,
+        "chip": {
+          "text": "演示数据 · Demo data",
+          "corner": "top-right",
+          "inset": 0.02,
+          "scale": 1.8,
+          "pad": 8,
+          "style": "video-page.mjs .vbadge + shadow 0 2px 6px rgba(15,23,42,.10)"
+        }
+      },
+      "sha256": "d63cd7414172e04f702f41d60f434fd4ba0b7179016eec3730b598f960fd72eb"
     }
   }
 }

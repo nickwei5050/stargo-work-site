@@ -45,11 +45,13 @@ export const NAV = [
 ];
 /** The one button in the top bar. */
 export const NAV_CTA = { href: 'contact.html', label: B('预约演示', 'Book a demo') };
-/** Utility pages: footer and legal rows only, never the product navigation. */
+/** Utility pages: footer and legal rows only, never the product navigation.
+    The third-party notices page is gone (owner, 2026-10-10: 「移到产品里，网站不要
+    写任何这种开源的东西」): its imagery disclosure is a section of terms.html, and
+    dist/_redirects (tools/make-dist.mjs) sends /notices.html to /terms.html. */
 export const SECONDARY = [
   { href: 'privacy.html', label: B('隐私政策', 'Privacy') },
   { href: 'terms.html', label: B('使用条款', 'Terms') },
-  { href: 'notices.html', label: B('第三方声明', 'Notices') },
 ];
 /** Overlay menu, footer and phone menu, not the desktop top bar. Articles live under blog/. */
 export const MORE = [
@@ -71,16 +73,77 @@ export const CAP_JUMPS = [
 ];
 
 export const LANG_SWITCH = B('EN', '中文');
+
+/* Names the site must never carry, anywhere — page text, attributes, data-*
+   values, scripts, stylesheets, file names, sitemap, llms.txt (owner,
+   2026-10-10: 「移到产品里，网站不要写任何这种开源的东西！我不想被爬取到」): the
+   upstream software behind the product, open-source wording, licence listings
+   and template attributions. (A bare 「许可证」 is not banned: a future ICP
+   经营许可证 line must stay possible. The copyright headers inside the shipped
+   jQuery and GSAP files are their licences' required notices and stay.) tools/build-site.mjs checks every generated page
+   against it and tools/make-dist.mjs every file it ships, the demo films
+   included. Word boundaries keep ordinary words out (computer, universal);
+   one name that is also an English number is matched case-sensitively, so
+   the number in a sentence is fine. Channel names customers use (WhatsApp,
+   Alibaba.com, LinkedIn, Google, Facebook, YouTube) describe channels and are
+   not on the list.
+
+   The software names are kept here base64-encoded — [pattern source, flags] —
+   so that this repository, which is public, does not spell out the names it
+   keeps off the site (review, round 2). To read them:
+     node -e "import('./tools/copy.mjs').then(m => console.log(m.UPSTREAM))"
+   To add one: Buffer.from(String.raw`\bName\b`).toString('base64'). */
+const NAMES = [
+  ['XGJBY3RpdmVwaWVjZXNcYg==', 'i'], ['XGJDaGF0d29vdFxi', 'i'], ['XGJUd2VudHlcYg==', ''], ['XGJXZUtub3JhXGI=', 'i'],
+  ['XGJXaW5kbWlsbFxi', 'i'], ['XGJZZW50ZVxi', 'i'], ['XGJPcGVuU2FuY3Rpb25zXGI=', 'i'], ['XGJVbml2ZXJcYg==', 'i'],
+  ['XGJQdXRlclxi', 'i'], ['XGJNZWR1c2EoPzpKUyk/XGI=', 'i'], ['XGJFUlBOZXh0XGI=', 'i'], ['XGJGcmFwcGVcYg==', 'i'],
+  ['XGJQb3N0SG9nXGI=', 'i'], ['XGJTa2lsbE9wdFxi', 'i'], ['XGJNb25leVByaW50ZXIoPzpUdXJibyk/XGI=', 'i'], ['XGJQbGF5d3JpZ2h0XGI=', 'i'],
+  /* the AI gateway app is shown as 「AI 网关」 / "AI Gateway", never under the upstream project's name */
+  ['XGJOZXdbLSBdP0FQSVxifFxibmV3LWFwaVxi', ''],
+].map(([b64, flags]) => new RegExp(Buffer.from(b64, 'base64').toString('utf8'), flags));
+export const UPSTREAM = [
+  ...NAMES,
+  /\bopen[- ]?source\b/i, /开源/, /Open Font License|软件许可证|许可证清单/i,
+  /Webflow[- ](?:template|模板)|模板随附|第三方声明|third[- ]party notices/i,
+];
 /** Production origin — canonical URLs, hreflang, Open Graph and the sitemap. Bind a custom domain and change it here. */
 export const SITE_URL = 'https://stargo.pages.dev';
 
+/* Owner-confirmed company and contact details (round 2, 2026-10-10). The
+   phone is the WhatsApp number. The legal name is Chinese only, on both
+   languages: there is no registered English name, so none is made up. The
+   owner's bank, account, clearing number and taxpayer ID are deliberately NOT
+   here and must never be published on the site. */
 export const CONTACT_INFO = {
+  company: '广西博韦尔传媒科技有限公司',
   email: 'sales@stargomoto.com',
   whatsapp: '+86 187 7512 7878',
   whatsappHref: 'https://wa.me/8618775127878',
+  phone: '+86 187 7512 7878',
+  phoneHref: 'tel:+8618775127878',
+  wechat: '505099021',
   site: 'www.stargomoto.com',
   siteHref: 'https://www.stargomoto.com',
   address: B('柳州 · 广西 · 中国', 'Liuzhou, Guangxi, China'),
+  /* who runs the site, the reply promise and the demo formats, in the words the pages use */
+  operator: B('广西博韦尔传媒科技有限公司（品牌 STARGO）', 'Operated by 广西博韦尔传媒科技有限公司 (STARGO)'),
+  reply: B('12 小时内回复', 'We reply within 12 hours'),
+  demo: B('上门或远程演示', 'On-site or online demo'),
+};
+
+/* The demo-request form's four fields, shared by the homepage band and
+   contact.html (tools/ow-blocks/contact.mjs formFields). Owner, 2026-10-10:
+   name + company + mobile / WeChat are required, e-mail is optional. `key` is
+   the stable key js/stargo-forms.js sends and functions/api/contact.js reads;
+   `required` also decides the marker (a trailing * on the three, 「（选填）」 /
+   "(optional)" on the e-mail). The label without the marker is what lands in
+   the e-mail the endpoint relays. */
+export const FORM_FIELDS = {
+  optional: B('（选填）', ' (optional)'),
+  name: { key: 'name', required: true, label: B('姓名', 'Name') },
+  company: { key: 'company', required: true, label: B('公司', 'Company') },
+  phone: { key: 'phone', required: true, label: B('手机 / 微信', 'Mobile / WeChat'), hint: B('手机号或微信号', 'Mobile number or WeChat ID') },
+  email: { key: 'email', required: false, label: B('邮箱', 'Email'), hint: B('name@company.com', 'name@company.com') },
 };
 
 /** Strings shared by every Mono page (footer, contact band, tooltips). */
@@ -110,7 +173,7 @@ export const CHROME = [
      wording fits both. js/stargo-forms.js writes its own sentence over the
      success notice at run time; these are what stands in the markup. */
   ['Oops! Something went wrong while submitting the form.', B('本次提交未成功，请稍后重试，或使用页面已有的商务联系方式联系。', 'Your request could not be submitted. Please try again later or use the business contact options on this page.')],
-  ['Thank you! Your submission has been received!', B('已收到你的演示需求，我们会根据提交的联系方式与你沟通。', 'Your demo request has been received. We will follow up using the contact details provided.')],
+  ['Thank you! Your submission has been received!', B('已收到你的演示需求，我们会在 12 小时内通过你留下的联系方式回复。', 'Your demo request has been received. We will reply within 12 hours using the contact details you left.')],
   /* The footer copyright, and the dangling hyphen after it.
      Mono ships this line as `<p class="top-text big gray sm">© 2026 Mōno™
      Studio - </p>` — a trailing " - " with nothing after it, in the donor
@@ -130,9 +193,11 @@ export const CHROME = [
      homepage's line reads 「© 2026 STARGO WORK - 」 and neither donor key
      matches it any more. That entry catches it, and every other page passes
      through it unchanged. */
-  ['© 2026 Mōno™ Studio -', B('© 2026 STARGO WORK', '© 2026 STARGO WORK')],
-  ['© 2026 Mōno™ Studio', B('© 2026 STARGO WORK', '© 2026 STARGO WORK')],
-  ['© 2026 STARGO WORK -', B('© 2026 STARGO WORK', '© 2026 STARGO WORK')],
+  /* Round 2 (2026-10-10): the line names the operating company, verbatim in
+     Chinese on both languages (no English legal name exists). */
+  ['© 2026 Mōno™ Studio -', B(`© 2026 STARGO WORK · <span class="stargo-co sgp-nobr">${CONTACT_INFO.company}</span>`, `© 2026 STARGO WORK · <span class="stargo-co sgp-nobr" lang="zh-CN">${CONTACT_INFO.company}</span>`)],
+  ['© 2026 Mōno™ Studio', B(`© 2026 STARGO WORK · <span class="stargo-co sgp-nobr">${CONTACT_INFO.company}</span>`, `© 2026 STARGO WORK · <span class="stargo-co sgp-nobr" lang="zh-CN">${CONTACT_INFO.company}</span>`)],
+  ['© 2026 STARGO WORK -', B(`© 2026 STARGO WORK · <span class="stargo-co sgp-nobr">${CONTACT_INFO.company}</span>`, `© 2026 STARGO WORK · <span class="stargo-co sgp-nobr" lang="zh-CN">${CONTACT_INFO.company}</span>`)],
   ['(Pages)', B('(页面)', '(Pages)')],
   ['(New Projects / Business)', B('(商务合作)', '(Business)')],
   ['(General Inquiries)', B('(一般咨询)', '(General)')],
@@ -160,7 +225,7 @@ export const CHROME = [
   ['>Get in touch<', B('>联系我们<', '>Get in touch<')],
   ['>Terms of use<', B('>使用条款<', '>Terms<')],
   ['>Privacy policy<', B('>隐私政策<', '>Privacy policy<')],
-  ['>Licensing<', B('>第三方声明<', '>Notices<')],
+  ['>Licensing<', B('>使用条款<', '>Terms<')],   // the notices page is gone; tools/chrome.mjs sends this link to terms.html
   ['>contact@monostudio.io<', B(`>${CONTACT_INFO.email}<`, `>${CONTACT_INFO.email}<`)],
   ['>info@monostudio.io<', B(`>${CONTACT_INFO.site}<`, `>${CONTACT_INFO.site}<`)],
   ['>(+1) 930 046 720<', B(`><span class="stargo-wa">WhatsApp </span>${CONTACT_INFO.whatsapp}<`, `><span class="stargo-wa">WhatsApp </span>${CONTACT_INFO.whatsapp}<`)],
@@ -183,18 +248,17 @@ export const META = {
   /* the four product pages (C2, 2026-10-09): titles name what the page shows */
   'intelligence.html': { title: B('主动提醒与记忆', 'Proactive Reminders & Memory'), description: B('该跟进的客户，AI 先替你想起来：OPEN WORK 的记忆与进化、自动化中心盯住报价、样品和补货周期，起草跟进消息，发送前等你确认。', 'OPEN WORK remembers who to follow up. Memory & Evolution and the Automation Center watch quotes, samples and reorders, and draft follow-ups for your approval.') },
   'capabilities.html': { title: B('产品：OPEN WORK 与 15 个应用', 'Product — OPEN WORK and its 15 apps'), description: B('OPEN WORK 是 STARGO WORK 的核心应用：在对话里交代任务，AI 调用客户CRM、企业知识库等 15 个应用起草回复、报价和开发信，发出前由你批准。', 'Ask in a chat and AI works across OPEN WORK’s 15 apps, such as the Customer CRM and Knowledge Base, to draft replies, quotes and outreach that you approve.') },
-  'workforce.html': { title: B('288 名数字员工', '288 AI Staff'), description: B('STARGO 数字员工在 OPEN WORK 里干活：询盘接待员、报价员、客户背调员、客户档案管家……由企业调度长按任务派工，关键动作由人批准。', 'STARGO AI staff work inside OPEN WORK: an inquiry desk, a quoter, a background checker and more, assigned by task, with key actions approved by people.') },
+  'workforce.html': { title: B('288 名数字员工', '288 AI Staff'), description: B('STARGO 数字员工在 OPEN WORK 里干活：询盘接待员、报价员、客户背调员、客户档案管家……由企业调度长按任务派工，关键动作由人批准。', 'STARGO AI Staff work inside OPEN WORK: an inquiry desk, a quoter, a background checker and more, assigned by task, with key actions approved by people.') },
   /* Pricing keeps its live title and description: they are also the page's
      visible hero subtitle, and V5 P08's candidate intro needs its own
      commercial approval. */
   'pricing.html': { title: B('定价：¥10,000 / 年起', 'Pricing — from ¥10,000 a year'), description: B('标准版 ¥10,000 / 年（最多 5 个标准用户）；上线版、增长版、全球获客版含建站与内容服务，首年 ¥20,000 / ¥30,000 / ¥40,000；企业版定制。', 'Standard is ¥10,000 a year (5 accounts). Launch, Growth and Global Acquisition add website and content services at ¥20,000, ¥30,000 and ¥40,000 in year one.') },
-  'enterprise.html': { title: B('安全与接入', 'Security & Setup'), description: B('写给老板和 IT：哪些动作必须由人批准、谁能看什么、每一步怎么留痕，以及 STARGO WORK 怎样逐项接入你现有的邮箱、客户记录、ERP 和文件。', 'For owners and IT: which actions need approval, who can see what, how each step is recorded, and how STARGO WORK connects to your email, CRM and ERP.') },
-  'contact.html': { title: B('预约 30 分钟演示', 'Book a 30-minute demo'), description: B('用 30 分钟看 OPEN WORK 怎样分析询盘、起草英文回复和 PI，发出前由你批准；再围绕你的一条业务流程，聊资料、账号和审批。', 'See in 30 minutes how OPEN WORK analyzes an inquiry and drafts the reply and PI for your approval, then talk through one of your workflows.') },
-  'notices.html': { title: B('第三方声明', 'Third-party notices'), description: B('运行时库、字体、图片素材与上游软件的许可与署名。', 'Licences and attribution for runtime libraries, fonts, imagery and upstream software.') },
+  'enterprise.html': { title: B('安全与接入', 'Security & Setup'), description: B('写给老板和 IT：哪些动作必须由人批准、谁能看什么、每一步怎么留痕，以及 STARGO WORK 怎样经你授权接入现有的邮箱、客户记录、ERP 和文件。', 'For owners and IT: which actions need approval, who can see what, how each step is recorded, and how STARGO WORK connects to your email, CRM and ERP.') },
+  'contact.html': { title: B('预约 30 分钟演示', 'Book a 30-minute demo'), description: B('用 30 分钟看 OPEN WORK 怎样分析询盘、起草英文回复和 PI，发出前由你批准。上门或远程演示均可，12 小时内回复。', 'See in 30 minutes how OPEN WORK analyzes an inquiry and drafts the reply and PI for your approval. On-site or online; we reply within 12 hours.') },
   'about.html': { title: B('关于 · 从真实业务出发', 'About — Built Around Real Work'), description: B('STARGO WORK 出自真实的制造与外贸业务。核心应用 OPEN WORK 把 15 个业务应用放进一个对话，AI 起草，你来拍板。', 'STARGO WORK grew out of real manufacturing and export work. Its core app, OPEN WORK, puts 15 business apps in one chat: AI drafts, you decide.') },
   'blog.html': { title: B('业务实践与产品解读', 'Business Practice & Product Guides'), description: B('了解客户开发、销售报价、企业知识、数字员工协作与管理控制，逐步读懂 AI 如何参与企业工作。', 'Explore customer acquisition, sales, quotations, enterprise knowledge, AI teamwork and management through practical workflow explanations.') },
-  'privacy.html': { title: B('隐私政策', 'Privacy policy'), description: B('本站收集什么、为什么收集、保存多久，以及你的权利。', 'What this site collects, why, for how long, and your rights.') },
-  'terms.html': { title: B('使用条款', 'Terms of use'), description: B('使用本网站的条款：内容、知识产权、价格说明与责任。', 'Terms for using this website: content, intellectual property, pricing notes and liability.') },
+  'privacy.html': { title: B('隐私政策', 'Privacy policy'), description: B('本站收集什么、为什么收集、经过哪里、保存多久，以及你的权利。', 'What this site collects, why, where it travels, for how long, and your rights.') },
+  'terms.html': { title: B('使用条款', 'Terms of use'), description: B('使用本网站的条款：内容、图片说明、知识产权、价格说明与责任。', 'Terms for using this website: content, images, intellectual property, pricing notes and liability.') },
   '404.html': { title: B('页面未找到', 'Page not found'), description: B('这个页面不存在，或已经移走。可以回到首页，或直接看产品与定价。', 'This page does not exist or has moved. Go back to the homepage, or head straight to the product and pricing.') },
 };
 
@@ -229,7 +293,7 @@ export const HOME_BRAND_WALL = {
      outward actions, traceable records, who approves is the company's call,
      contact details);
    - what the OPEN WORK interface shows (app names exactly as its sidebar, the
-     five quick actions, 「工具操作遵循当前授权；外部客户发送未启用。」 and the
+     five quick actions, the composer footnote 「工具操作遵循当前授权；对外发送需有权人批准。」 and the
      approval bars), and the demo data inside the renders, always as demo data.
    Everything buyer-plan.md marks 【需确认】 (reply times, pilot terms, data
    residency, channel status, account prices, what the composer footnote means
@@ -289,6 +353,29 @@ export const HOME_OW = {
       { hot: 'approve', text: B('点「批准」才发出', 'Sent only after you approve') },
     ],
     calloutsLabel: B('这张图里 AI 做了三件事', 'What AI did in this screen'),
+  },
+
+  /* S1b — the demo video under the hero (round 2, 2026-10-10; also on the
+     product page under its jump links): tools/ow-blocks/demo-video.mjs. The
+     film is 16 s with a 0.65 s dissolve back to its first frame, so the story
+     itself is the 15 s of the title. Rendered from our own OPEN WORK page with
+     demo data (tools/openwork/video.mjs); the caption says so once. */
+  demoVideo: {
+    eyebrow: B('产品演示', 'Product demo'),
+    /* one line on a desktop (English: two, between parts), one part per line on a phone */
+    title: [B('15\u00a0秒看懂：', '15 seconds:'), B('一封询盘，', 'from inquiry'), B('怎么变成[[批准后的报价]]。', 'to [[an approved quote]].')],
+    caption: B('询盘、客户和价格均为示例，无声循环', 'Example inquiry, buyer and prices · silent loop'),
+    label: B('OPEN WORK 演示视频（演示数据）：询盘进来，AI 读懂并起草英文回复和 PI；单价低于标准价，交销售经理审批，批准后才发出。',
+      'OPEN WORK demo video (demo data): an inquiry comes in, AI reads it and drafts an English reply and a PI; a price below standard goes to the sales manager and is sent only after approval.'),
+    /* the button under the film: visible word, and its full name for a screen reader */
+    play: B('播放', 'Play'),
+    pause: B('暂停', 'Pause'),
+    playLabel: B('播放演示视频', 'Play the demo video'),
+    pauseLabel: B('暂停演示视频', 'Pause the demo video'),
+    /* inside <video>, for a browser that cannot play it */
+    fallback: B('你的浏览器无法播放这段演示视频。', 'Your browser cannot play this demo video.'),
+    /* the still shown before the film plays (aria-hidden: the video carries the name) */
+    posterAlt: B('OPEN WORK 演示视频画面：PI 和审批栏，销售经理正要点「批准」（演示数据）', 'A frame of the OPEN WORK demo video: the PI and its approval bar, the sales manager about to click Approve (demo data)'),
   },
 
   /* S2 — the four sentences the homepage has carried since V6 (zh unchanged). */
@@ -375,7 +462,7 @@ export const HOME_OW = {
       { icon: 'shield', shot: 'ow22-approval-bar', window: B('对外发送审批', 'Send approval'), title: B('对外发送，先过你这关', 'Nothing leaves without approval'),
         text: B('每封回复、开发信和 PI 都先写成草稿，要有权人点「批准」才会发出。', 'Every reply, outreach email and PI starts as a draft. It goes out only after someone with authority clicks Approve.') },
       { icon: 'tag', shot: 'ow21-pi-check', window: B('价格校验', 'Price check'), title: B('价格按价格表，越线要审批', 'Prices come from your price list'),
-        text: B('报价从企业价格表和企业知识库里取。单价低于标准价，PI 自动交销售经理审批，批准前不会发给客户。', 'Quotes use your price list and knowledge base. Anything below your standard price goes to the sales manager and is not sent before approval.') },
+        text: B('报价从企业价格表和企业知识库里取。单价低于标准价，PI 自动交销售经理审批，批准前不会发给客户。审批人和价格底线，企业自己设。', 'Quotes use your price list and knowledge base. Anything below your standard price goes to the sales manager and is not sent before approval. Your company sets the approver and the price floor.') },
       { icon: 'list', shot: 'ow24-step-log', window: B('执行记录', 'Step record'), title: B('每一步都有记录', 'Every step is on record'),
         text: B('AI 写明每一步读了哪个应用、用了什么数据；谁做了什么、谁批准，都有记录。', 'AI shows which app it read and what data it used at each step. Who did what, and who approved it, is on record.') },
     ],
@@ -405,13 +492,13 @@ export const HOME_OW = {
     groups: [
       { icon: 'spark', title: B('获客与销售', 'Sales & prospecting'), line: B('找客户、接询盘，一直跟到成交。', 'Find buyers, take inquiries, follow through to the order.'),
         apps: [B('主动获客', 'Prospecting'), B('销售工作台', 'Sales Workbench'), B('客户CRM', 'Customer CRM'), B('渠道接入', 'Channel Connections')] },
-      { icon: 'chart', title: B('经营', 'Operations'), line: B('订单、库存、商城和经营数据。', 'Orders, stock, your online store and the numbers.'),
+      { icon: 'chart', title: B('经营', 'Operations'), line: B('订单与库存、商城订单发货，以及经营数据。', 'Orders and stock, shipping for store orders, and the numbers.'),
         apps: [B('企业ERP', 'ERP'), B('商城后端管理', 'Store Admin'), B('增长分析', 'Growth Analytics'), B('老板看板', 'Owner Dashboard')] },
       { icon: 'flow', title: B('自动化与知识', 'Automation & knowledge'), line: B('把流程跑起来，把经验留下来。', 'Keep processes running and keep what the team learns.'),
         apps: [B('自动化中心', 'Automation Center'), B('工作流引擎', 'Workflow Engine'), B('企业知识库', 'Knowledge Base'), B('记忆与进化', 'Memory & Evolution')] },
       /* 288 is the size of the roster (workforce and pricing pages say so), not a head count of staff */
-      { icon: 'gear', title: B('管理与平台', 'Admin & platform'), line: B('后台管理、有 288 名数字员工的数字办公室，以及 AI 网关。', 'Administration, the digital office with its 288 digital employees, and the AI gateway.'),
-        apps: [B('控制中心', 'Control Center'), B('STARGO AI 数字办公室', 'STARGO AI Digital Office'), B('New API（AI 网关）', 'New API (AI Gateway)')] },
+      { icon: 'gear', title: B('管理与平台', 'Admin & platform'), line: B('后台管理、有 288 名数字员工的数字办公室，以及 AI 网关。', 'Administration, the digital office with its 288 AI Staff, and the AI gateway.'),
+        apps: [B('控制中心', 'Control Center'), B('STARGO AI 数字办公室', 'STARGO AI Digital Office'), B('AI 网关', 'AI Gateway')] },
     ],
     /* the quick-task groups on the OPEN WORK home screen, as the product names them */
     tasksLabel: B('欢迎页的七类快速任务', 'Seven quick-task groups on the welcome page'),
@@ -427,7 +514,7 @@ export const HOME_OW = {
   pricing: {
     eyebrow: B('定价', 'Pricing'),
     title: B('[[¥10,000 / 年起]]，先跑通一条流程。', '[[From ¥10,000 a year.]] Start with one workflow.'),
-    lead: B('标准版是年度软件订阅。需要官网、内容和获客服务时，再选服务包。', 'Standard is the annual software subscription. Add a website, content or acquisition package when you need one.'),
+    lead: B('标准版是年度软件订阅。需要官网、内容和获客服务时，再选服务包；官网也可以交给我们运营管理。', 'Standard is the annual software subscription. Add a website, content or acquisition package when you need one, or have us run your website for you.'),
     currency: B('', 'Prices in Chinese yuan (CNY).'),
     plans: [
       { name: B('标准版', 'Standard'), price: B('¥10,000', '¥10,000'), unit: B('首年 · 按年续费', 'first year · renews yearly'),
@@ -449,14 +536,13 @@ export const HOME_OW = {
     moreLine: B('直接问我们，或者带到演示里一起看。', 'Ask us directly, or bring it to the demo.'),
     items: [
       [B('AI 会不会自己给客户发东西？', 'Will AI send anything to customers on its own?'),
-        /* The approvals model only (owner-approved). How and when a message
-           actually leaves (which app sends it, what the composer footnote
-           「外部客户发送未启用」 means) is on the owner list, not stated here. */
+        /* The approvals model only (owner-approved): nothing goes out before an
+           authorized person approves it (the composer footnote says the same). */
         B('不会。回复、开发信和 PI 都先写成草稿，界面上写明「对外发送需要你确认」，要有权人点「批准」才会发出。报价、对外触达这些动作，也按企业设定的规则审批。演示时可以现场走一遍。',
           'No. Replies, outreach emails and PIs start as drafts. The screen says sending to a customer needs your confirmation, and nothing goes out until someone with authority clicks Approve. Quotes and outreach also follow the approval rules your company sets. We can walk through it live in the demo.')],
       [B('AI 会不会乱报价？', 'Will AI quote the wrong price?'),
-        B('价格从企业价格表和企业知识库里取，每一步写明依据。单价低于标准价时，PI 会自动交给销售经理审批，批准前不会发给客户。哪些报价需要审批、由谁批准，企业自己定。',
-          'Prices come from your price list and knowledge base, and each step shows its source. If a unit price is below standard, the PI goes to the sales manager and is not sent before approval. Your company decides which quotes need approval and who approves them.')],
+        B('价格从企业价格表和企业知识库里取，每一步写明依据。单价低于标准价时，PI 会自动交给销售经理审批，批准前不会发给客户。审批人是谁、价格底线多少，都由企业自己设定。',
+          'Prices come from your price list and knowledge base, and each step shows its source. If a unit price is below standard, the PI goes to the sales manager and is not sent before approval. Your company sets who approves and where the price floor is.')],
       [B('业务员离职，客户会不会被带走？', 'If a salesperson leaves, do the customers leave too?'),
         B('客户、聊天和报价都留在公司的客户CRM和销售工作台里，谁接手都能看到之前的往来。账号和权限怎么分，演示时可以按你们的分工一起看。',
           'Customers, conversations and quotes stay in the company’s customer CRM and Sales Workbench, so whoever takes over can see the earlier exchanges recorded there. In the demo we can go through how accounts and permissions would map to your team.')],
@@ -473,11 +559,15 @@ export const HOME_OW = {
   contact: {
     eyebrow: B('预约演示', 'Book a demo'),
     title: B('用一封示例询盘，[[30 分钟看它跑一遍]]。', 'See it run on a sample inquiry [[in 30 minutes.]]'),
-    lead: B('留下姓名、公司和邮箱，我们会联系你约时间。想先问问，也可以直接发 WhatsApp 或邮件。', 'Leave your name, company and email and we will get in touch to schedule it. Prefer to ask first? Message us on WhatsApp or by email.'),
+    lead: B('留下姓名、公司和手机或微信，我们 12 小时内回复，约好时间。上门或远程演示都可以。想先问问，也可以直接加微信或发 WhatsApp。', 'Leave your name, company and phone or WeChat. We reply within 12 hours to set a time, on-site or online. Prefer to ask first? Message us on WeChat or WhatsApp.'),
     email: B('邮件', 'Email'),
+    wechat: B('微信', 'WeChat'),
+    phone: B('电话', 'Phone'),
+    /* the trust line under the ways: real company facts only (owner, 2026-10-10) — no customers, logos or ratings */
+    /* the company is its Chinese legal name on both languages; on the English page "Operated by" says what it is */
+    trust: [{ company: CONTACT_INFO.company, lead: B('', 'Operated by ') }, CONTACT_INFO.reply, CONTACT_INFO.demo],
     about: B('关于 STARGO', 'About STARGO'),
-    /* visible labels of the demo form's fields (the same words chrome.mjs gives them as aria-label) */
-    fields: { Name: B('姓名', 'Name'), 'Last-Name': B('公司', 'Company'), email: B('邮箱', 'Email') },
+    /* the form's fields are FORM_FIELDS (above), the same four as contact.html */
   },
 };
 
@@ -507,7 +597,7 @@ export const PRICING = {
       { name: B('企业版', 'Enterprise'), price: B('定制', 'Custom'), unit: 'none', renewal: 'custom',
         desc: B('多部门、多公司、多品牌、多账号，以及更复杂的审批与系统接入。', 'Multiple departments, companies, brands and accounts, with complex approvals and system integration.'),
         cta: B('联系企业版团队', 'Talk to us'),
-        items: [B('含标准版年度软件订阅，另加：', 'The annual Standard subscription, plus:'), B('大量数字员工与复杂审批', 'A large team of digital employees and complex approvals'), B('现有 CRM · ERP 接入与系统迁移', 'Existing CRM · ERP integration and migration'), B('自定义工作流 · 专属数字员工 · 专属实施顾问', 'Custom workflows · dedicated digital employees · dedicated implementation consultant'), B('私有化部署', 'Private deployment'), B('SLA', 'SLA')] },
+        items: [B('含标准版年度软件订阅，另加：', 'The annual Standard subscription, plus:'), B('大量数字员工与复杂审批', 'A large AI Staff team and complex approvals'), B('现有 CRM · ERP 接入与系统迁移', 'Existing CRM · ERP integration and migration'), B('自定义工作流 · 专属数字员工 · 专属实施顾问', 'Custom workflows · dedicated AI Staff · dedicated implementation consultant'), B('私有化部署', 'Private deployment'), B('SLA', 'SLA')] },
       { name: B('从一条流程开始', 'Start with one workflow'), price: B('演示', 'Demo'), unit: 'demo', renewal: 'demo',
         desc: B('不确定从哪里开始？告诉我们，眼下最拖效率或增长的是哪条流程。', 'Not sure where to begin? Tell us the one workflow that most affects efficiency or growth.'),
         cta: B('预约演示', 'Book a demo'),
@@ -716,9 +806,9 @@ export const PRICING = {
       /* 企业版's own five lines, and its only ticks — it inherits nothing, and
          `customScope` buys it no tick anywhere: it reads 定制 on the six value
          rows above and dashes the four levels' lines it does not state. */
-      B('大量数字员工与复杂审批', 'A large team of digital employees and complex approvals'),
+      B('大量数字员工与复杂审批', 'A large AI Staff team and complex approvals'),
       B('现有 CRM · ERP 接入与系统迁移', 'Existing CRM · ERP integration and migration'),
-      B('自定义工作流 · 专属数字员工 · 专属实施顾问', 'Custom workflows · dedicated digital employees · dedicated implementation consultant'),
+      B('自定义工作流 · 专属数字员工 · 专属实施顾问', 'Custom workflows · dedicated AI Staff · dedicated implementation consultant'),
       B('私有化部署', 'Private deployment'),
       B('SLA', 'SLA'),
     ],
@@ -734,16 +824,16 @@ export const PRICING = {
      开始？」 as its lead paragraph, and both find their answer by the question's
      words. */
   faq: [
-    [B('288 名数字员工是无限使用吗？', 'Are the 288 digital employees unlimited?'), B('不是。288 说的是数字员工名册的规模。实际可用范围、在跑的任务、并发、额度和第三方服务用量，以签约配置为准。', 'No. 288 is the size of the staff directory, not a usage entitlement. Actual access, active workloads, concurrency, credits and third-party usage depend on the contracted configuration.')],
+    [B('288 名数字员工是无限使用吗？', 'Is use of the 288 AI Staff unlimited?'), B('不是。288 说的是数字员工名册的规模。实际可用范围、在跑的任务、并发、额度和第三方服务用量，以签约配置为准。', 'No. 288 is the size of the AI Staff roster, not a usage entitlement. Actual access, active workloads, concurrency, credits and third-party usage depend on the contracted configuration.')],
     [B('首年之后怎么算？', 'What happens after the first year?'), B('软件订阅按年续费。域名、托管与持续制作，按续费方案或第三方实际费用另算。首年建站与内容服务包，不等于每年都重复交付同样的内容量。', 'The software subscription follows its annual renewal terms. Domain, hosting and ongoing production follow the renewal proposal or the relevant third-party charges. A first-year launch package is not a promise of repeated annual content production.')],
     [B('标准版包含什么？', 'What is in Standard?'), B('12 个月云端工作台（最多 5 个标准用户）、企业知识与产品资料首次导入（最多 20 个 SKU）、询盘与 CRM、报价与人工审批、自助线索发现与写入 CRM、年度标准 AI 额度，外加配置一次、培训一次。', 'A 12-month cloud workspace (up to 5 standard users), an initial import of company knowledge and product information (up to 20 SKUs), inquiries and CRM, quotations with human approval, self-service lead discovery with CRM entry, standard annual AI credits, plus one setup session and one training session.')],
     [B('主动获客只在 ¥40,000 的方案里吗？', 'Is AI acquisition only in the ¥40,000 package?'), B('不是。标准版已经包含自助获客：线索发现、公司画像、评分、触达准备与写入 CRM。全球获客版加的是三个月配置后获客运行与 3 份月报，外加它自己的建站与内容交付。', 'No. Standard already includes self-service acquisition: lead discovery, company profiling, scoring, outreach preparation and CRM entry. Global Acquisition adds three months of configured acquisition operation and three monthly reports, alongside its website and content deliverables.')],
     [B('支持私有化部署吗？', 'Is private deployment available?'), B('企业版提供专属环境与私有化部署，面向数据、系统、合规要求更高的企业。', 'Enterprise offers a dedicated environment and private deployment for companies with stricter data, system and compliance requirements.')],
-    [B('能接现有的 CRM 或 ERP 吗？', 'Can it connect to our CRM or ERP?'), B('可以。邮箱、网盘、CRM、ERP 和业务平台，按企业授权接入；哪些信息可以读取、哪些记录可以修改、哪些动作需要审批，按企业逐项确认。系统迁移在企业版里提供。', 'Yes. Email, drives, CRM, ERP and business platforms connect through enterprise authorization; what can be read, what can be changed and what needs approval is confirmed for each company. Migration is part of Enterprise.')],
+    [B('能接现有的 CRM 或 ERP 吗？', 'Can it connect to our CRM or ERP?'), B('可以。邮箱、网盘、CRM、ERP 和业务平台，经企业授权接入，我们帮你配置；哪些信息可以读取、哪些记录可以修改、哪些动作需要审批，由企业自己定。系统迁移在企业版里提供。', 'Yes. Email, drives, CRM, ERP and business platforms connect with your company’s authorization, and we help set them up; your company decides what can be read, what can be changed and what needs approval. Migration is part of Enterprise.')],
     [B('模型费用包含在内吗？', 'Are model costs included?'), B('平台能力与模型 / API / 第三方服务用量分开计。各方案额度不同，超出部分按实际用量计费。', 'Platform capability and model / API / third-party usage are separate; each plan carries its own allowance, with overage billed on use.')],
     [B('培训和实施怎么做？', 'How are training and implementation done?'), B('标准版含一次配置与一次基础培训。企业版配专属实施顾问，把真实流程直接反馈进平台。', 'Standard includes one setup session and one basic training session. Enterprise comes with a dedicated implementation consultant who feeds real workflows straight back into the product.')],
     [B('我们该从哪一级开始？', 'Which level should we start at?'), B('从一条流程开始。挑现在最耗时间、最拖增长的那项工作，先跑通，再决定需要哪一级。', 'Start with one workflow. Pick the work that costs the most time or growth, get it running, then decide which level you need.')],
-    [B('多公司、多品牌怎么办？', 'What about multiple companies or brands?'), B('多部门、多公司、多品牌、多账号，属于企业版：权限、审批、数据边界各自独立，共用同一支数字员工队伍。', 'Multiple departments, companies, brands and accounts belong to Enterprise: separate permissions, approvals and data boundaries on one shared team of digital employees.')],
+    [B('多公司、多品牌怎么办？', 'What about multiple companies or brands?'), B('多部门、多公司、多品牌、多账号，属于企业版：权限、审批、数据边界各自独立，共用同一支数字员工队伍。', 'Multiple departments, companies, brands and accounts belong to Enterprise: separate permissions, approvals and data boundaries on one shared AI Staff team.')],
   ],
 };
 
@@ -776,7 +866,7 @@ const ENT_CONTROLS = [
   B('关键动作审批', 'approval of key actions'),
   B('操作与审批记录', 'activity and approval records'),
   B('登录凭据集中保管', 'secure keeping of sign-in credentials'),
-  B('数字员工的工作边界', 'work limits for AI roles'),
+  B('数字员工的工作边界', 'work limits for AI Staff'),
   B('不同企业的数据相互隔离', 'data kept apart between companies'),
   B('出错即停并报告', 'stop and report on failure'),
   B('新做法先小范围试用', 'small trials before wider use'),
@@ -821,7 +911,7 @@ export const ENTERPRISE = {
      short enough for one line in the table's sticky column at 768 (about ten
      characters wide there). */
   table: {
-    caption: B('(经你授权接入 · 逐项确认)', '(Connected with your authorization · confirmed item by item)'), title: B('业务连接', 'Connections'),
+    caption: B('(经你授权接入)', '(Connected with your authorization)'), title: B('业务连接', 'Connections'),
     headers: [B('(业务)', '(Area)'), B('(可以连接什么)', '(What can connect)'), B('(接入前要确认)', '(Confirm first)')],
     /* Not the whole map: the catalogue group that holds account connection,
        automation and approved actions (V6 §5.8 puts M14 in #g11, 「自动化与日常
@@ -832,7 +922,7 @@ export const ENTERPRISE = {
     rows: [
       [B('客户与沟通', 'Customers & messages'), B('邮箱、即时沟通、贸易平台询盘与 CRM 客户记录', 'Email, messaging, marketplace inquiries and CRM records'), B('可以读取哪些对话，谁能代表企业回复', 'Which conversations may be read, and who may reply for the company')],
       [B('产品与知识', 'Products & knowledge'), B('产品资料、规格图片、价格依据与企业文档', 'Product data, specifications, images, price sources and company documents'), B('哪些资料已经审核，可用于回答与报价', 'Which sources are approved for answers and quotations')],
-      [B('ERP 与商城', 'ERP & commerce'), B('产品物料、采购库存、生产质检、订单与商城业务', 'Products, materials, purchasing, stock, production, quality, orders and online store'), B('可读取的记录、可修改的字段、需要审批的变更', 'Readable records, permitted changes and changes that need approval')],
+      [B('ERP 与商城', 'ERP & commerce'), B('产品物料、采购库存、生产质检、订单与商城发货', 'Products, materials, purchasing, stock, production, quality, orders and store shipping'), B('可读取的记录、可修改的字段、需要审批的变更', 'Readable records, permitted changes and changes that need approval')],
       [B('办公与文件', 'Office & files'), B('网盘、表格、文档与共享文件夹', 'Drives, spreadsheets, documents and shared folders'), B('可以访问哪些文件夹，成果存放在哪里', 'Which folders may be opened, and where outputs are saved')],
       [B('财务、物流及其他业务服务', 'Finance, logistics & other services'), B('收付款、物流、签章与第三方数据', 'Payments, logistics, signatures and third-party data'), B('按企业授权与系统情况开放；付款与正式申报由有权人员把关', 'Opened per authorization and system; payments and official filings stay with authorized people')],
       [B('跨系统自动化', 'Cross-system automation'), B('定时任务、事件触发与数据同步', 'Scheduled work, event triggers and data synchronization'), B('先人工跑通、确认规则，再逐步扩大自动执行范围', 'Run it by hand and agree the rules before automating more of it')],
@@ -854,20 +944,25 @@ const G = (n, en, zh, items) => ({ n, name: B(zh, en), items });
    a trade channel the site names elsewhere (WhatsApp, Alibaba.com / 阿里国际站)
    may stay, and the English name says what the Chinese one says. */
 const I = (name, zhName, zh, en) => [name, B(zh ?? '', en ?? zh ?? ''), zhName ?? name];
+/* Round 3 review: the 「移动办公与任务管理」 / "Mobile Companion" entry is out
+   of group 01. The owner confirmed the features he was asked about as live
+   (2026-10-10), not phone use, and with the old 「移动端范围演示时确认」 hedge
+   gone it read as a mobile app. Put it back only with the owner's word on what
+   works on a phone. */
 export const CAPABILITY_GROUPS = [
-  G('01', 'Workspace & Business Overview', '工作空间与经营总览', [I('Business overview', '企业经营总览', '公司现在在做什么，一屏看完', 'What the business is doing right now, on one screen'), I('Command Center', '企业 AI 指挥中心', '目标交下去，盯着它走完', 'Hand a goal down and watch it carried out'), I('Cloud Workspace', '云端企业工作台', '人和数字员工共用的云端工作台', 'The cloud workspace your team and its digital employees share'), I('Task Control', '数字员工与长任务运行中心', '盯住长时间运行的工作，需要时插手', 'Watch long-running work and step in when needed'), I('Execution View', '任务执行过程', '数字员工做过什么，逐步回放', 'Replay what a digital employee did, step by step'), I('System Map', '系统关系图', '业务记录与各系统之间如何关联', 'How business records and systems connect to each other'), I('App Library', '企业 AI 应用库', '企业为各团队开通的内部应用', 'The internal apps a company turns on for its teams'), I('Multi-task Workspace', '多任务工作空间', '几件事同时开着，各自不丢进度', 'Several tasks open at once, without losing place'), I('Mobile Companion', '移动办公与任务管理', '离开工位也能跟进度、处理审批；移动端范围演示时确认', 'Progress and approvals away from the desk; mobile scope is confirmed in the demo'), I('Notification Center', '企业通知', '什么变了，什么在等你', 'What changed, and what is waiting on you'), I('Approval Center', '审批中心', '所有待决事项排在同一个队列里', 'Every pending decision in one queue'), I('Voice Console', '语音指挥 AI', '用语音提需求、建任务，按已开通的服务使用', 'Speak a request or create a task, where voice services are enabled')]),
-  G('02', 'Customer Acquisition & Opportunity Research', '主动获客与商机判断', [I('Prospecting', '主动获客', '从市场信号到确认后的客户，再交给销售工作台', 'From market signals to approved prospects handed to the Sales Workbench'), I('Trade Signal Accounts', '贸易信号与商机线索', '观察到的贸易活动，沉淀成可跟进的客户', 'Turns observed trade activity into workable accounts'), I('Importer Reorder Radar', '进口商补货雷达', '判断哪些进口商快到补货窗口', 'Estimates which importers may be due to reorder'), I('Competitor Customer Graph', '竞争对手客户图谱', '依据可用的贸易记录，看谁在向同类供应商采购', 'Uses available trade records to see who buys from comparable suppliers'), I('Buying Committee Intelligence', '决策链识别', '谁拍板、谁影响、谁签字', 'Who decides, who influences and who signs'), I('Dealer Opportunity Discovery', '经销商机会发现', '找出产品线正缺你这一块的经销商', 'Finds distributors whose range has a gap you fill'), I('Map-Based Dealer Discovery', '地图经销商发现', '按区域找经销商与分销商', 'Finds distributors and resellers by territory'), I('Opportunity Decisions', '机会决策', '建议跟进、搁置还是放弃，并给出理由', 'Recommends pursue, park or drop, with the reason'), I('Dealer Opportunity Brief', '经销商机会简报', '为何接触这家经销商，一页说清', 'A one-page case for approaching a distributor'), I('Outreach Playbooks', '销售打法生成', '针对这个客户和市场定打法', 'Builds the approach for this account and market'), I('Six-Factor Opportunity Scoring', '六因子机会评分', '按产品、市场、采购信号、联系人、风险与价值六项排序', 'Ranks accounts on product fit, market fit, buying signals, contacts, risk and value'), I('Account Research', '客户研究', '收集企业证据，注明出处', 'Collects company evidence and cites where it came from'), I('Trade Intelligence', '贸易情报', '从现有贸易记录读出需求与走向', 'Reads available trade records for demand and direction'), I('Website AI Sales Engineer', '官网 AI 销售工程师', '官网上回答产品问题，同时留住线索', 'Answers product questions on your site and captures the lead'), I('Dormant Lead Reactivation', '沉睡客户再激活', '给沉睡客户一个重新开口的理由', 'Brings quiet accounts back with a reason to talk'), I('Trade Show Afterburner', '展会线索持续转化', '一叠名片，排成有日期的跟进计划', 'Turns a stack of badges into scheduled follow-up'), I('CRM Automatic Lead Creation', '确认客户写入 CRM', '确认后的客户写入 CRM 并指定负责人，避免重复建档', 'Records the approved account in CRM with an owner, without duplicates'), I('Attribution & Growth Analytics', '结果归因与增长分析', '哪些动作带来了询盘和订单；高级分析按资源配置开放', 'Which actions led to inquiries and orders; advanced analytics depend on resources')]),
+  G('01', 'Workspace & Business Overview', '工作空间与经营总览', [I('Business overview', '企业经营总览', '公司现在在做什么，一屏看完', 'What the business is doing right now, on one screen'), I('Command Center', '企业 AI 指挥中心', '目标交下去，盯着它走完', 'Hand a goal down and watch it carried out'), I('Cloud Workspace', '云端企业工作台', '人和数字员工共用的云端工作台', 'The cloud workspace your team shares with its AI Staff'), I('Task Control', '数字员工与长任务运行中心', '盯住长时间运行的工作，需要时插手', 'Watch long-running work and step in when needed'), I('Execution View', '任务执行过程', '数字员工做过什么，逐步回放', 'Replay what an AI Staff member did, step by step'), I('System Map', '系统关系图', '业务记录与各系统之间如何关联', 'How business records and systems connect to each other'), I('App Library', '企业 AI 应用库', '企业为各团队开通的内部应用', 'The internal apps a company turns on for its teams'), I('Multi-task Workspace', '多任务工作空间', '几件事同时开着，各自不丢进度', 'Several tasks open at once, without losing place'), I('Notification Center', '企业通知', '什么变了，什么在等你', 'What changed, and what is waiting on you'), I('Approval Center', '审批中心', '所有待决事项排在同一个队列里', 'Every pending decision in one queue'), I('Voice Console', '语音指挥 AI', '说一句话，就能提需求、建任务', 'Speak a request and it becomes a task')]),
+  G('02', 'Customer Acquisition & Opportunity Research', '主动获客与商机判断', [I('Prospecting', '主动获客', '从市场信号到确认后的客户，再交给销售工作台', 'From market signals to approved prospects handed to the Sales Workbench'), I('Trade Signal Accounts', '贸易信号与商机线索', '观察到的贸易活动，沉淀成可跟进的客户', 'Turns observed trade activity into workable accounts'), I('Importer Reorder Radar', '进口商补货雷达', '判断哪些进口商快到补货窗口', 'Estimates which importers may be due to reorder'), I('Competitor Customer Graph', '竞争对手客户图谱', '依据可用的贸易记录，看谁在向同类供应商采购', 'Uses available trade records to see who buys from comparable suppliers'), I('Buying Committee Intelligence', '决策链识别', '谁拍板、谁影响、谁签字', 'Who decides, who influences and who signs'), I('Dealer Opportunity Discovery', '经销商机会发现', '找出产品线正缺你这一块的经销商', 'Finds distributors whose range has a gap you fill'), I('Map-Based Dealer Discovery', '地图经销商发现', '按区域找经销商与分销商', 'Finds distributors and resellers by territory'), I('Opportunity Decisions', '机会决策', '建议跟进、搁置还是放弃，并给出理由', 'Recommends pursue, park or drop, with the reason'), I('Dealer Opportunity Brief', '经销商机会简报', '为何接触这家经销商，一页说清', 'A one-page case for approaching a distributor'), I('Outreach Playbooks', '销售打法生成', '针对这个客户和市场定打法', 'Builds the approach for this account and market'), I('Six-Factor Opportunity Scoring', '六因子机会评分', '按产品、市场、采购信号、联系人、风险与价值六项排序', 'Ranks accounts on product fit, market fit, buying signals, contacts, risk and value'), I('Account Research', '客户研究', '收集企业证据，注明出处', 'Collects company evidence and cites where it came from'), I('Trade Intelligence', '贸易情报', '从现有贸易记录读出需求与走向', 'Reads available trade records for demand and direction'), I('Website AI Sales Engineer', '官网 AI 销售工程师', '官网上回答产品问题，同时留住线索', 'Answers product questions on your site and captures the lead'), I('Dormant Lead Reactivation', '沉睡客户再激活', '给沉睡客户一个重新开口的理由', 'Brings quiet accounts back with a reason to talk'), I('Trade Show Afterburner', '展会线索持续转化', '一叠名片，排成有日期的跟进计划', 'Turns a stack of badges into scheduled follow-up'), I('CRM Automatic Lead Creation', '确认客户写入 CRM', '确认后的客户写入 CRM 并指定负责人，避免重复建档', 'Records the approved account in CRM with an owner, without duplicates'), I('Attribution & Growth Analytics', '结果归因与增长分析', '哪些动作带来了询盘和订单', 'Which actions led to inquiries and orders')]),
   G('03', 'Market Channels & Account Discovery', '市场渠道与客户发现', [I('Community Demand Scouting', '社区需求侦察', '在买家提问的社区里被找到', 'Be found in the communities where buyers ask questions'), I('AI Search Visibility', 'AI 搜索时代的可见性', 'AI 搜索时代，内容能被搜到、被引用', 'Content that search engines and AI answers can find and cite'), I('Decision-Maker Outreach', '企业决策人触达', '在决策人活跃的职业平台，经授权后触达', 'Reaches decision-makers on professional networks, with authorization'), I('Social Demand Signals', '社交需求信号', '读你所在品类的社交需求信号', 'Reads social demand signals in your categories'), I('Alibaba.com Inquiry Intake', '阿里国际站询盘接入', '询盘落到同一条客户时间线', 'Inquiries land on the customer record'), I('Video Channel Signals', '视频渠道信号', '买家在搜什么、看什么', 'Tracks what buyers search and watch in your category'), I('WhatsApp Sales', '即时沟通销售', '许多海外买家常用的即时沟通渠道，经授权接入', 'The messaging channel many overseas buyers use, connected with authorization'), I('Email B2B', '邮件开发与跟进', '邮件触达与后续跟进', 'Email outreach and follow-up'), I('Marketplace Connections', '电商平台接入', '平台商品与消息，汇入同一条客户记录', 'Connects marketplace listings and messages to one customer record'), I('New Channel Connections', '新渠道接入', '新渠道接入同一套客户与销售流程', 'New channels join the same customer and sales workflow')]),
   G('04', 'Inquiries & Customer Conversations', '询盘与多渠道沟通', [I('Unified Inbox', '统一收件箱', '各渠道汇入同一队列，客户已对应好', 'Every channel lands in one queue with the customer attached'), I('Email Inquiry Processing', '邮件询盘处理', '读来信，直接打开对应客户记录', 'Reads an inbound email and opens the right customer record'), I('Alibaba.com Inquiry Handling', '阿里国际站询盘处理', '和其他渠道的询盘按同一套流程处理', 'Handled in the same steps as inquiries from other channels'), I('Website Conversation', '官网会话', '官网对话，沉淀为合格询盘', 'Turns a site chat into a qualified inquiry'), I('Conversation Center', '会话中心', '跨渠道的对话集中在一处', 'One place for the conversations across channels'), I('Inquiry Intent Detection', '询盘意图识别', '分清真实采购需求与噪音', 'Separates a real buying request from noise'), I('Spam / Scam Detection', '垃圾与诈骗识别', '假询盘挡在销售队列之外', 'Keeps fake inquiries out of the sales queue'), I('Buyer Requirement Extraction', '买方需求提取', '从自由文本里提取产品、参数、数量与条款', 'Pulls product, spec, quantity and terms out of free text'), I('Company Background Research', '公司背景研究', '回复之前，先核实对方是谁', 'Checks who is asking before you answer'), I('Customer Risk Signals', '客户风险信号', '付款、合规、可信度的疑点，尽早标出', 'Flags payment, compliance and credibility concerns early'), I('Product Matching', '产品匹配', '把提出的需求匹配到已审核产品', 'Matches the stated requirement to approved products'), I('Knowledge-Grounded Reply', '基于企业知识的回复', '依据企业已审核资料起草答复', 'Drafts the answer from approved company sources'), I('Multilingual Reply', '多语言回复', '用买家的语言回复，依据同一份资料', 'Replies in the buyer’s language from the same source material'), I('Human Approval & Escalation', '人工审批与升级', '敏感承诺交给有权限的人', 'Sensitive commitments go to the person allowed to decide'), I('Planned Follow-up', '计划内跟进', '没有回音时，按批准的计划准备下一次触达', 'Prepares the next planned touch, within approved rules, when nothing comes back'), I('Customer Timeline', '客户时间线', '说过什么、发过什么，按时间排成一条', 'One chronological record of everything said and sent')]),
-  G('05', 'CRM & Customer Context', '客户CRM 与客户档案', [I('Customer CRM', '客户与商机记录', '客户、机会与负责人的那本账', 'The record of customers, opportunities and owners'), I('Account Overview', '客户档案', '这个客户的已知信息，一屏看全', 'Everything known about the account on one screen'), I('Customer Workspace', '客户工作间', '每个客户一个工作区，人与数字员工共用', 'A shared workspace per customer for people and digital employees'), I('Contact & Opportunity Management', '联系人与商机管理', '联系人、机会及各自进展', 'Contacts, opportunities and where each one stands'), I('Lead Scoring', '线索评分', '把值得打电话的客户排到最前面', 'Puts the accounts worth calling at the top of the list'), I('Product Interests · Quote History · Order History', '产品兴趣 · 报价历史 · 订单历史', '问过什么、报过什么价、实际买了什么', 'What they asked for, were quoted and actually bought'), I('Customer Tasks & Follow-up Plan', '客户任务与跟进计划', '下次触达、日期、责任人', 'The next touch, its date and who owes it'), I('Decision-Maker Mapping', '决策人映射', '记下谁决策、谁影响、谁签字', 'Records who decides, who influences and who signs'), I('Customer Evidence', '客户证据', '每条判断都留出处', 'Keeps the source behind every claim on the record'), I('CRM Automation', 'CRM 记录维护', '负责人、阶段与下一步按规则更新，少一些手工录入', 'Updates owners, stages and next actions by rule, with less manual entry')]),
+  G('05', 'CRM & Customer Context', '客户CRM 与客户档案', [I('Customer CRM', '客户与商机记录', '客户、机会与负责人的那本账', 'The record of customers, opportunities and owners'), I('Account Overview', '客户档案', '这个客户的已知信息，一屏看全', 'Everything known about the account on one screen'), I('Customer Workspace', '客户工作间', '每个客户一个工作区，人与数字员工共用', 'A shared workspace per customer for people and AI Staff'), I('Contact & Opportunity Management', '联系人与商机管理', '联系人、机会及各自进展', 'Contacts, opportunities and where each one stands'), I('Lead Scoring', '线索评分', '把值得打电话的客户排到最前面', 'Puts the accounts worth calling at the top of the list'), I('Product Interests · Quote History · Order History', '产品兴趣 · 报价历史 · 订单历史', '问过什么、报过什么价、实际买了什么', 'What they asked for, were quoted and actually bought'), I('Customer Tasks & Follow-up Plan', '客户任务与跟进计划', '下次触达、日期、责任人', 'The next touch, its date and who owes it'), I('Decision-Maker Mapping', '决策人映射', '记下谁决策、谁影响、谁签字', 'Records who decides, who influences and who signs'), I('Customer Evidence', '客户证据', '每条判断都留出处', 'Keeps the source behind every claim on the record'), I('CRM Automation', 'CRM 记录维护', '负责人、阶段与下一步按规则更新，少一些手工录入', 'Updates owners, stages and next actions by rule, with less manual entry')]),
   G('06', 'Products & Enterprise Knowledge', '产品与企业知识', [I('Enterprise Brain', '企业大脑', '企业已审核的答案，集中在一处', 'The approved company answer, in one place'), I('Knowledge Center', '知识中心', '已审核的企业答案，在这里保持最新', 'Where approved company answers are kept current'), I('Knowledge Intake', '资料导入', '文档和文件，沉淀成可引用的知识', 'Turns documents and files into answerable knowledge'), I('Knowledge Retrieval', '知识检索', '找出能回答这个问题的那一段', 'Finds the passage that answers the question'), I('Source Retrieval', '原文检索', '取回答案所依据的原文', 'Retrieves the passage an answer is based on'), I('Drive & Document Access', '网盘与文档接入', '直接读团队现有文档，不用先迁移', 'Reads existing team documents without a migration'), I('Product Intelligence', '产品智能', '规格、选配与限制，AI 能据此推理', 'Specifications, options and constraints AI can reason over'), I('Product Center & Library', '产品中心与产品库', '整条流程共用的同一份产品记录', 'One product record the whole workflow reads'), I('Specifications & Images', '产品参数与图片', '买家会追问的那些技术细节', 'The technical detail a buyer asks for'), I('Historical Knowledge & Business Rules', '历史知识与业务规则', '公司以前定过、现在仍然算数的规矩', 'What the company has decided before, and still applies'), I('Evidence Retrieval', '证据检索', '给出答案，附上支撑文档', 'Returns the supporting document with the answer'), I('Source-Grounded Answers', '有据可查的回答', '缺少审核过的来源时明确提示，不编造答案', 'Flags the gap instead of answering without an approved source')]),
   G('07', 'Quotations, PI & Commercial Records', '报价、PI 与商业文件', [I('Quotation Center', '报价中心', '报价从询盘开始，不从空表格开始', 'Builds the quotation from the inquiry, not a blank sheet'), I('Inquiry → Quote', '询盘到报价', '需求直接落成带价格的草稿', 'Carries the request straight into a priced draft'), I('Product Configuration & Quantity', '产品配置与数量计算', '报的到底是什么，数量多少', 'What exactly is being priced, and how many'), I('Commercial Terms', '贸易条件', '套用约定的付款、交期与质保条款', 'Applies the agreed payment, delivery and warranty terms'), I('Pricing Rules', '价格规则', '按你配置的规则定价，不靠猜', 'Prices from your configured rules, not from guesswork'), I('Margin Guardrails', '利润护栏', '报价越过利润线，没人批就过不了', 'Stops a quote crossing the margin line without approval'), I('Historical Price Context', '历史价格参考', '这个买家、这个市场，以前成交价多少', 'Shows what this buyer and market paid before'), I('Approval Workflow', '审批流程', '例外转给有权拍板的人', 'Routes the exception to the person allowed to decide'), I('Quote Versioning', '报价版本', '每一版都留存，改动也留痕', 'Keeps every version and what changed between them'), I('PI Center', '形式发票中心', '批准的报价转成形式发票，发送另行确认', 'Turns the approved quote into a pro forma invoice; sending is a separate step')]),
   G('08', 'ERP, Orders & Fulfillment', 'ERP、订单与履约', [I('Order Management', '订单管理', '从批准的报价一路跟到交付', 'Tracks the order from approved quote to delivery'), I('Trade Fulfillment Follow-up', '外贸履约跟进', '批准的商务条件，带进履约环节', 'Carries approved commercial detail into fulfillment'), I('Payment Milestones', '付款节点', '定金、尾款，以及还差什么没到', 'Tracks deposits, balances and what is still outstanding'), I('Production Status & QC', '生产进度与质检', '货在哪一步，检验过没过', 'Where the goods are, and whether they passed'), I('Packaging & Shipment', '包装与出货', '怎么装运，随货走哪些东西', 'How it ships, and what travels with it'), I('Commercial Invoice · Packing List', '商业发票 · 装箱单', '按批准的订单数据生成，待人复核', 'Prepared from approved order data, ready for review'), I('Certificate of Origin · Form E', '原产地证 · Form E', '整理申请材料；签发仍归主管机构', 'Organizes the application material; issuance stays with the authority'), I('Bill of Lading Workflow', '提单流程', '运输单据跟着货走', 'Keeps shipping documents moving with the shipment'), I('Certification & Battery Documentation', '认证与电池资料', '认证与电池相关材料按目的国备齐', 'Certification and battery files prepared for the destination market'), I('Export Documentation & Workflow', '出口单证与流程', '出口单据从准备到复核的整条链', 'Export documents, from preparation to review'), I('Export Tax Rebate', '六阶段出口退税流程', '按六个阶段整理退税资料、跟踪进度；申报与受理归主管部门', 'Tracks rebate preparation through six stages; filing and acceptance stay with the authorities'), I('CBU / SKD / CKD Workflow Support', '整车 / 半散件 / 全散件流程', '整车、半散件、全散件的装运资料分别整理', 'Keeps built-up, semi- and fully-knocked-down shipments documented separately')]),
-  G('09', 'AI Images, Video & Marketing', 'AI 图片、视频与营销', [I('AI Creative Studio', 'AI 创意工作室', '围绕真实产品，组织产品页所需的图片与销售素材', 'Organizes the images and sales material a product page needs, from real product facts'), I('Content Creation & Global Website Content', '内容生产与全球官网内容', '为你的目标销售站点写产品与市场文案', 'Product and market copy for the sites you sell on'), I('Search & AI-search Content', '搜索优化 · AI 搜索可信内容', '内容结构化，既能被搜到，也能被引用', 'Content structured to be found and to be quoted'), I('Multi-language Content', '多语言内容', '同一个产品故事，覆盖目标市场', 'The same product story across your target markets'), I('Product · Sales · Social Content', '产品 · 销售 · 社交内容', '同一个产品故事，贯通页面、方案与社媒', 'One product story across page, deck and feed'), I('AI Image & Video Workflow', 'AI 图片与视频流程', '按可复用的流程产出产品图片与营销视频', 'Product visuals and marketing videos produced to a repeatable workflow'), I('Viral Structure Adaptation', '爆款结构再创作', '借鉴有效视频的结构，为你的产品做原创改编', 'Adapts a proven video structure into original work for your product'), I('Viral Video Structure · Scene · Speech · Product Analysis', '爆款结构 · 场景 · 语音 · 产品分析', '拆解有效视频的开场、节奏与表达', 'Breaks down a working video’s hook, pacing and messaging'), I('Short-form Clip Editing', '剪辑与短视频', '把产品素材剪成社媒短片，按已开放的能力使用', 'Cuts product footage into short social clips, where the capability is enabled')]),
-  G('10', 'AI Workforce & Teamwork', '数字员工与团队协作', [I('288 Digital Employees', '288 名数字员工', '按岗位分工的数字员工名册，按任务选用', 'A roster organized by job, chosen per task'), I('AI Employee Roster', '数字员工名册', '谁在岗，各自负责什么', 'Who is available, and what each one is for'), I('Workforce Panel', '员工面板', '派活、看进度、复核交回来的结果', 'Assign work, watch progress, review what came back'), I('AI Teams & Collaboration', '动态组队与多数字员工协作', '一个目标，几个专业岗位分工协作，而不是一次问答', 'Several specialists on one goal, not a single chat reply'), I('AI Employee Communication', '数字员工间交流', '员工之间直接发消息、提问与交接，少一些人工转述', 'Employees message each other, ask questions and hand over work, with less relaying by people'), I('Role · Skills · Tools · Memory', '岗位 · 技能 · 工具 · 记忆', '每个员工做什么、懂什么、能用什么、记得什么', 'What an employee does, knows, may use and remembers'), I('Shared Enterprise Context', '共享企业上下文', '同一份业务事实，按各自权限使用', 'One set of business facts, used within each role’s permissions'), I('Task Delegation · Handoff · Parallel Execution', '任务委派 · 交接 · 并行执行', '任务拆开、在岗位间流转、并行推进', 'Work splits, moves between roles and runs at once'), I('Scheduled Work', '定时工作', '按时跑的例行研究与跟进', 'Recurring research and follow-up that runs on time'), I('Evidence & Human Approval', '执行证据与人工审批', '审批人拍板前看的那份记录', 'The record an approver reads before deciding')]),
-  G('11', 'Automation & Everyday Work', '自动化与日常办公', [I('AI Employee Setup', '数字员工工作环境', '为每个数字员工配好工具、划定边界', 'Where a digital employee gets its tools and limits'), I('Workflow Automation', '工作流自动化', '跨应用把步骤连起来，不用写代码', 'Connects steps across apps without custom code'), I('Scheduled Data Jobs', '数据整理与定期作业', '流程需要的数据整理与定期处理', 'Runs the data preparation and routine jobs a workflow needs'), I('Long-Horizon Control', '长任务控制', '长时间任务保留目标与进度，可暂停、恢复和接力', 'Keeps long-running work on its goal, with pause, resume and handoff'), I('Browser Automation', '浏览器自动化', '在授权范围内操作网页工具，不绕过登录与安全验证', 'Works web tools within authorization, without bypassing sign-in or security checks'), I('Screen Operation', '界面操作', '无法对接时，在授权环境中操作界面', 'Operates an interface in an authorized environment when integration is not available'), I('Scheduled Routines · Event-Triggered Workflows', '定时例程 · 事件触发', '按时间跑，或在业务状态变化时跑', 'Runs on a clock, or when the business state changes'), I('Approved Actions & Tool Connections', '授权动作与工具连接', '数字员工获准使用的业务动作与工具', 'The business actions and tools a digital employee is allowed to use'), I('External Connectors', '外部系统连接', '对接团队已在用的系统', 'Reaches the systems your team already runs'), I('Sign-in Safekeeping', '登录凭据保管', '账号密码统一保管，不交给数字员工直接查看', 'Holds the logins so digital employees never see them directly')]),
-  G('12', 'Business Relationships & Context', '企业业务关系与上下文', [I('Business Relationship Map', '企业业务关系图', '客户、报价、订单与责任对应起来，AI 据此推进工作', 'Links customers, quotes, orders and owners so AI works from the same picture'), I('Cross-system Identity', '跨系统身份', '同一个客户，在各个系统里都对得上', 'The same customer across every connected system'), I('Customer, Product, Inquiry & Opportunity Records', '客户 · 产品 · 询盘 · 商机记录', '商务一侧的业务记录', 'The commercial side of the business, as records'), I('Quote, Order, Document & Task Records', '报价 · 订单 · 文件 · 任务记录', '执行这一侧，仍挂回同一个客户', 'The execution side, linked back to the customer'), I('AI Employee & Market Signal Records', '数字员工 · 市场信号记录', '谁做的，由什么触发', 'Who did the work, and what prompted it'), I('Relationships, Permitted Actions & Business Rules', '业务关系 · 可做的动作 · 业务规则', '记录之间如何关联，允许做哪些动作', 'How your records connect and what may be done to them'), I('Enterprise Context', '企业上下文', '数字员工动手前先读的企业状态', 'The company state a digital employee reads before acting'), I('Operational Records', '经营记录', '经营记录保存在哪里，以哪一份为准', 'Where operating records are kept, and which copy is authoritative')]),
-  G('13', 'Permissions, Approvals & Control', '权限、审批与经营控制', [I('Human-in-the-Loop', '人在回路', '明确哪些决定仍须由人来做', 'Names the decisions a person must still make'), I('Key Action Approval', '关键动作审批', '待决事项集中一处，等各自的负责人', 'One place where pending decisions wait for their owner'), I('Capability & App Management', '能力与应用管理', '数字员工能调用什么，以谁的名义', 'What digital employees are allowed to use, and on whose behalf'), I('Permission Control · Identity', '权限控制 · 身份', '谁能看什么、能做什么', 'Who can see what, and who can do what'), I('Identity Check', '身份校验', '数字员工动作之前，先验身份', 'Checks identity before any digital employee acts'), I('Activity Records · AI Employee Evidence · Action History', '操作记录 · 数字员工证据 · 动作历史', '做了什么、哪个数字员工做的、凭谁的授权', 'What was done, by which digital employee, on whose authority'), I('Guardrails', '护栏', '数字员工自己越不过的边界', 'Boundaries a digital employee cannot cross on its own'), I('Company Data Separation', '企业数据隔离', '按公司和品牌分开的数据边界', 'Separate data boundaries per company and brand'), I('Failure Handling · Rollback', '失败处理 · 回滚', '出错时停下来、退回去', 'Stops on an error and puts things back'), I('Work Visibility', '执行可见', '数字员工正在做什么，看得见', 'See what digital employees are doing while they do it')]),
+  G('09', 'AI Images, Video & Marketing', 'AI 图片、视频与营销', [I('AI Creative Studio', 'AI 创意工作室', '围绕真实产品，组织产品页所需的图片与销售素材', 'Organizes the images and sales material a product page needs, from real product facts'), I('Content Creation & Global Website Content', '内容生产与全球官网内容', '为你的目标销售站点写产品与市场文案', 'Product and market copy for the sites you sell on'), I('Search & AI-search Content', '搜索优化 · AI 搜索可信内容', '内容结构化，既能被搜到，也能被引用', 'Content structured to be found and to be quoted'), I('Multi-language Content', '多语言内容', '同一个产品故事，覆盖目标市场', 'The same product story across your target markets'), I('Product · Sales · Social Content', '产品 · 销售 · 社交内容', '同一个产品故事，贯通页面、方案与社媒', 'One product story across page, deck and feed'), I('AI Image & Video Workflow', 'AI 图片与视频流程', '按可复用的流程产出产品图片与营销视频', 'Product visuals and marketing videos produced to a repeatable workflow'), I('Viral Structure Adaptation', '爆款结构再创作', '借鉴有效视频的结构，为你的产品做原创改编', 'Adapts a proven video structure into original work for your product'), I('Viral Video Structure · Scene · Speech · Product Analysis', '爆款结构 · 场景 · 语音 · 产品分析', '拆解有效视频的开场、节奏与表达', 'Breaks down a working video’s hook, pacing and messaging'), I('Short-form Clip Editing', '剪辑与短视频', '把产品素材剪成社媒短片', 'Cuts product footage into short social clips')]),
+  G('10', 'AI Staff & Teamwork', '数字员工与团队协作', [I('288 AI Staff', '288 名数字员工', '按岗位分工的数字员工名册，按任务选用', 'A roster organized by job, chosen per task'), I('AI Staff Roster', '数字员工名册', '谁在岗，各自负责什么', 'Who is available, and what each one is for'), I('Workforce Panel', '员工面板', '派活、看进度、复核交回来的结果', 'Assign work, watch progress, review what came back'), I('AI Teams & Collaboration', '动态组队与多数字员工协作', '一个目标，几个专业岗位分工协作，而不是一次问答', 'Several specialists on one goal, not a single chat reply'), I('AI Staff Communication', '数字员工间交流', '员工之间直接发消息、提问与交接，少一些人工转述', 'AI Staff message each other, ask questions and hand over work, with less relaying by people'), I('Role · Skills · Tools · Memory', '岗位 · 技能 · 工具 · 记忆', '每个员工做什么、懂什么、能用什么、记得什么', 'What each AI Staff member does, knows, may use and remembers'), I('Shared Enterprise Context', '共享企业上下文', '同一份业务事实，按各自权限使用', 'One set of business facts, used within each role’s permissions'), I('Task Delegation · Handoff · Parallel Execution', '任务委派 · 交接 · 并行执行', '任务拆开、在岗位间流转、并行推进', 'Work splits, moves between roles and runs at once'), I('Scheduled Work', '定时工作', '按时跑的例行研究与跟进', 'Recurring research and follow-up that runs on time'), I('Evidence & Human Approval', '执行证据与人工审批', '审批人拍板前看的那份记录', 'The record an approver reads before deciding')]),
+  G('11', 'Automation & Everyday Work', '自动化与日常办公', [I('AI Staff Setup', '数字员工工作环境', '为每个数字员工配好工具、划定边界', 'Where each AI Staff member gets its tools and limits'), I('Workflow Automation', '工作流自动化', '跨应用把步骤连起来，不用写代码', 'Connects steps across apps without custom code'), I('Scheduled Data Jobs', '数据整理与定期作业', '流程需要的数据整理与定期处理', 'Runs the data preparation and routine jobs a workflow needs'), I('Long-Horizon Control', '长任务控制', '长时间任务保留目标与进度，可暂停、恢复和接力', 'Keeps long-running work on its goal, with pause, resume and handoff'), I('Browser Automation', '浏览器自动化', '经你授权操作网页工具，不绕过登录与安全验证', 'Works web tools with your authorization, without bypassing sign-in or security checks'), I('Screen Operation', '界面操作', '无法对接时，在授权环境中操作界面', 'Operates an interface in an authorized environment when integration is not available'), I('Scheduled Routines · Event-Triggered Workflows', '定时例程 · 事件触发', '按时间跑，或在业务状态变化时跑', 'Runs on a clock, or when the business state changes'), I('Approved Actions & Tool Connections', '授权动作与工具连接', '数字员工获准使用的业务动作与工具', 'The business actions and tools an AI Staff member is allowed to use'), I('External Connectors', '外部系统连接', '对接团队已在用的系统', 'Reaches the systems your team already runs'), I('Sign-in Safekeeping', '登录凭据保管', '账号密码统一保管，不交给数字员工直接查看', 'Holds the logins so AI Staff never see them directly')]),
+  G('12', 'Business Relationships & Context', '企业业务关系与上下文', [I('Business Relationship Map', '企业业务关系图', '客户、报价、订单与责任对应起来，AI 据此推进工作', 'Links customers, quotes, orders and owners so AI works from the same picture'), I('Cross-system Identity', '跨系统身份', '同一个客户，在各个系统里都对得上', 'The same customer across every connected system'), I('Customer, Product, Inquiry & Opportunity Records', '客户 · 产品 · 询盘 · 商机记录', '商务一侧的业务记录', 'The commercial side of the business, as records'), I('Quote, Order, Document & Task Records', '报价 · 订单 · 文件 · 任务记录', '执行这一侧，仍挂回同一个客户', 'The execution side, linked back to the customer'), I('AI Staff & Market Signal Records', '数字员工 · 市场信号记录', '谁做的，由什么触发', 'Who did the work, and what prompted it'), I('Relationships, Permitted Actions & Business Rules', '业务关系 · 可做的动作 · 业务规则', '记录之间如何关联，允许做哪些动作', 'How your records connect and what may be done to them'), I('Enterprise Context', '企业上下文', '数字员工动手前先读的企业状态', 'The company state an AI Staff member reads before acting'), I('Operational Records', '经营记录', '经营记录保存在哪里，以哪一份为准', 'Where operating records are kept, and which copy is authoritative')]),
+  G('13', 'Permissions, Approvals & Control', '权限、审批与经营控制', [I('Human-in-the-Loop', '人在回路', '明确哪些决定仍须由人来做', 'Names the decisions a person must still make'), I('Key Action Approval', '关键动作审批', '待决事项集中一处，等各自的负责人', 'One place where pending decisions wait for their owner'), I('Capability & App Management', '能力与应用管理', '数字员工能调用什么，以谁的名义', 'What AI Staff are allowed to use, and on whose behalf'), I('Permission Control · Identity', '权限控制 · 身份', '谁能看什么、能做什么', 'Who can see what, and who can do what'), I('Identity Check', '身份校验', '数字员工动作之前，先验身份', 'Checks identity before any AI Staff member acts'), I('Activity Records · AI Staff Evidence · Action History', '操作记录 · 数字员工证据 · 动作历史', '做了什么、哪个数字员工做的、凭谁的授权', 'What was done, by which AI Staff member, on whose authority'), I('Guardrails', '护栏', '数字员工自己越不过的边界', 'Boundaries an AI Staff member cannot cross on its own'), I('Company Data Separation', '企业数据隔离', '按公司和品牌分开的数据边界', 'Separate data boundaries per company and brand'), I('Failure Handling · Rollback', '失败处理 · 回滚', '出错时停下来、退回去', 'Stops on an error and puts things back'), I('Work Visibility', '执行可见', '数字员工正在做什么，看得见', 'See what AI Staff are doing while they do it')]),
   G('14', 'Retained Experience & Improvement', '长期经验与持续改进', [I('Improvement Review', '改进复核台', '候选改进在这里复核、发布', 'Where proposed improvements are reviewed and released'), I('Work Observation', '执行观察', '观察真实执行，记录发生了什么', 'Watches real execution and records what happened'), I('Outcome Review', '结果复盘', '记录下的结果，沉淀成候选改进', 'Turns recorded outcomes into candidate improvements'), I('Skill Refinement', '技能优化', '按实测结果改进一项技能', 'Improves a skill against measured results'), I('Pre-release Testing', '发布前测试', '发布前先测试，再专门找它的漏洞', 'Tests a change, and looks for its weak points, before release'), I('Change Approval', '改进审批', '未经评测和批准，改动发不出去', 'No change ships without evaluation and approval'), I('Attempts · Outcomes · Scores', '过程 · 结果 · 评分', '试了什么、结果如何、评分多少', 'What was attempted, what resulted, how it scored'), I('Skill Library · Trials', '技能库 · 试验', '候选技能存放和试验的地方', 'Where a proposed skill is kept and tried out'), I('Side-by-side Trials · Staged Release · Rollback', '新旧对比 · 小范围试用 · 回退', '先在小范围试，留下或回滚', 'Test a change on a slice, keep it or take it back'), I('Continuous Improvement', '持续改进', '执行结果经过复核，再用来改进下一次', 'Reviewed results feed into the next run')]),
 ];
 
@@ -877,132 +972,109 @@ export const CAPABILITIES = {
      what is available now (F13) and where to start (F10). */
   faq: [
     [B('它和单独使用一个 AI 聊天窗口有什么区别？', 'How is this different from using a standalone AI chat?'), B('重点不在对话形式，而在任务是否连接了企业资料、客户历史、业务应用、责任、审批和结果。STARGO WORK 围绕完整业务流程组织这些信息与工作，而不把一次文字回答当作业务已经完成。', 'The focus is not the chat format. It is whether the work connects enterprise information, customer history, business applications, ownership, approvals and results. STARGO WORK organizes those elements around a business workflow rather than equating a text answer with completed work.')],
-    [B('现有 CRM、ERP、邮箱和网盘都要换掉吗？', 'Must we replace our current CRM, ERP, email and drives?'), B('不必先假定全部替换。STARGO WORK 的方向是把现有业务账号和资料连接到同一工作空间。具体保留、接入或调整哪些系统，需要结合企业当前软件和权限逐项确认。', 'A complete replacement should not be assumed. STARGO WORK aims to connect existing accounts and information in one workspace. Which systems are retained, integrated or adjusted depends on the enterprise’s software and access permissions.')],
-    [B('所有渠道和全部功能现在都能直接用吗？', 'Is every channel and feature immediately available?'), B('不能仅凭功能介绍这样判断。部分已有应用基础，部分需要企业账号和真实数据接入，企业级主动工作和统一长期记忆等仍在完善。演示与交付应逐项确认，不把能打开页面当作完整流程已经验收。', 'A capability description is not proof of availability. Some applications have foundations, some require enterprise accounts and live data, and enterprise-wide proactive work and unified long-term memory continue to evolve. Confirm each delivery scope and validate the workflow, not just page access.')],
+    [B('现有 CRM、ERP、邮箱和网盘都要换掉吗？', 'Must we replace our current CRM, ERP, email and drives?'), B('不用。STARGO WORK 把你现有的业务账号和资料连接到同一个工作空间。接入你公司自己的邮箱、渠道和系统，需要你授权，我们帮你配置；保留、接入还是调整哪些系统，看你们现在用的软件来定。', 'No. STARGO WORK connects your existing accounts and information in one workspace. Connecting your own mailbox, channels and systems needs your authorization, and we help set it up; which systems you keep, connect or adjust depends on the software you use today.')],
+    [B('所有渠道和全部功能现在都能直接用吗？', 'Is every channel and feature available now?'), B('能。这些功能都已在 OPEN WORK 里可用。要用你公司自己的邮箱、WhatsApp、阿里国际站等渠道和现有系统，需要你授权接入，我们帮你配置好。', 'Yes. These features are all available in OPEN WORK. Using your own mailbox, WhatsApp, Alibaba.com and other channels and systems needs your authorization to connect them, and we help set them up.')],
     [B('企业应该从哪里开始？', 'Where should an enterprise start?'), B('先选一条最重要的业务流程，准备产品、客户、知识和规则，连接授权账号，安排数字员工与审批，再用真实样本验证成果。跑通后再扩大范围，而不是第一天就改造全部部门。', 'Choose one priority workflow. Prepare product, customer, knowledge and policy context, connect authorized accounts, assign roles and approvals, then validate real cases. Expand after that first workflow is proven useful.')],
   ],
 };
 
 /* ============================================================= contact === */
 
-/* ============================================================= notices === */
-
-export const NOTICES = {
-  date: B('2026-09-05 更新', 'Updated 2026-09-05'),
-  h1: B('第三方声明', 'Third-party notices'),
-  body: B(`
-<h4>运行时库</h4>
-<ul>
-<li>Webflow 运行时与交互引擎（随模板导出），jQuery 3.5.1（MIT）</li>
-<li>GSAP 3.15 · SplitText · ScrollTrigger — GreenSock 标准「免费」许可。该许可允许网站实现（含商业用途），但许可方保留全部知识产权并可修改条款</li>
-<li>Lenis（MIT）— 平滑滚动；Lottie（随 Webflow 运行时加载，MIT）— 导航图标动画</li>
-</ul>
-<h4>字体</h4>
-<p>Inter、Inter Display、Inter Tight、Instrument Serif 与 42dot Sans，均按 SIL Open Font License 1.1 自托管，不向任何第三方字体服务发起请求。</p>
-<h4>图片素材</h4>
-<p>本站图片分三类。一，产品界面示意：OPEN WORK 界面的演示渲染图（对话主栏按实际界面布局重建，右侧客户CRM、自动化中心、企业ERP 与数字员工面板为示意），画面中的对话、任务、客户、公司名与金额均为演示数据，不是真实客户账户的截图，也不代表已完成的业务结果；博客封面由同一批渲染图制作。二，概念视觉：菜单里的业务场景图像为 AI 生成，只用于烘托气氛，不是产品截图或员工肖像。三，模板素材：图标与装饰图形来自网站所有者购买的 Webflow 模板随附的已授权设计素材，已镜像到本站自托管。STARGO 标识与字标为 STARGO 自有作品。</p>
-<h4>上游软件</h4>
-<p>Activepieces、Chatwoot、Twenty CRM、WeKnora、Windmill、Playwright、Yente / OpenSanctions、Univer、Puter、Medusa、ERPNext、PostHog、Microsoft SkillOpt、Notion、Google、Reddit、LinkedIn、Facebook、YouTube、Alibaba、WhatsApp 等名称，均为各自所有者的商标或项目名。在这里列出，是为了让上游身份和相应许可可查，不表示相关项目对 STARGO 的背书。</p>
-<h4>联系</h4>
-<p>STARGO WORK · 柳州 · 广西 · 中国 · ${CONTACT_INFO.email} · WhatsApp ${CONTACT_INFO.whatsapp} · ${CONTACT_INFO.site}</p>`,
-  `
-<h4>Runtime libraries</h4>
-<ul>
-<li>Webflow runtime and interaction engine (exported with the templates), jQuery 3.5.1 (MIT)</li>
-<li>GSAP 3.15 · SplitText · ScrollTrigger — GreenSock standard “no charge” licence, which permits website implementation including commercial use while the licensor retains all intellectual property and may amend the terms</li>
-<li>Lenis (MIT) — smooth scrolling; Lottie (loaded by the Webflow runtime, MIT) — navigation icon animation</li>
-</ul>
-<h4>Fonts</h4>
-<p>Inter, Inter Display, Inter Tight, Instrument Serif and 42dot Sans, all self-hosted under the SIL Open Font License 1.1. No request goes to a third-party font service.</p>
-<h4>Imagery</h4>
-<p>The pictures on this site fall into three kinds. First, illustrative product interfaces: renders of OPEN WORK (the chat column rebuilds the real layout; the Customer CRM, Automation Center, ERP and AI staff panels beside it are illustrations), whose conversations, tasks, customers, company names and amounts are demonstration data — they are not screenshots of a real customer’s account and do not show completed business results; the blog covers are made from the same renders. Second, conceptual visuals: the business scenes in the menu are AI-generated and set a mood only; they are not product screens or employee portraits. Third, template assets: the icons and decorative graphics are licensed design assets shipped with the Webflow templates the site owner purchased, mirrored and self-hosted here. The STARGO mark and wordmark are STARGO’s own work.</p>
-<h4>Upstream software</h4>
-<p>Activepieces, Chatwoot, Twenty CRM, WeKnora, Windmill, Playwright, Yente / OpenSanctions, Univer, Puter, Medusa, ERPNext, PostHog, Microsoft SkillOpt, Notion, Google, Reddit, LinkedIn, Facebook, YouTube, Alibaba, WhatsApp and other names listed here are trademarks or project names of their respective owners. They are listed so that upstream identity and the applicable licences stay discoverable; none implies endorsement of STARGO.</p>
-<h4>Contact</h4>
-<p>STARGO WORK · Liuzhou, Guangxi, China · ${CONTACT_INFO.email} · WhatsApp ${CONTACT_INFO.whatsapp} · ${CONTACT_INFO.site}</p>`),
-};
-
 /* =============================================================== legal === */
 
-/** Privacy policy and terms of use: real pages, not placeholder anchors. */
+/** Privacy policy and terms of use: real pages, not placeholder anchors.
+    Round 2 (2026-10-10): both name the operating company (owner-confirmed);
+    the privacy policy says where form data travels (Cloudflare, then Resend in
+    the US) and lists the contact form's phone / WeChat field; the terms carry
+    the imagery note that used to sit on the retired notices page, without any
+    third-party product names. The owner's bank and tax details are never
+    published here. */
 export const LEGAL = {
   privacy: {
-    date: B('2026-09-05 生效', 'Effective 2026-09-05'),
+    date: B('2026-10-10 生效', 'Effective 2026-10-10'),
     h1: B('隐私政策', 'Privacy policy'),
     body: B(`
-<p>本政策说明 STARGO WORK 官方网站（以下简称「本站」）收集哪些信息、为什么收集、保存多久，以及你拥有的权利。本站由 STARGO（柳州 · 广西 · 中国）运营。</p>
+<p>本政策说明 STARGO WORK 官方网站（以下简称「本站」）收集哪些信息、为什么收集、保存多久，以及你拥有的权利。本站由${CONTACT_INFO.company}（品牌 STARGO，柳州 · 广西 · 中国）运营。</p>
 <h4>我们收集什么</h4>
 <ul>
-<li><strong>你主动提交的信息。</strong>通过联系表单或订阅表单提交的姓名、邮箱、公司、WhatsApp、行业、目标市场、团队规模、现有系统与留言内容。这些信息仅用于回复你的咨询、安排演示和发送你订阅的产品更新。</li>
+<li><strong>你主动提交的信息。</strong>通过预约演示表单提交的姓名、公司、手机号或微信号、邮箱（选填）、感兴趣的方案、最想先改善的事和留言内容；订阅表单只收邮箱。这些信息仅用于回复你的咨询、安排演示和发送你订阅的产品更新。</li>
 <li><strong>技术日志。</strong>本站托管在 Cloudflare Pages。访问时的 IP 地址、浏览器类型和请求时间会出现在托管方的标准访问日志中，用于安全防护与故障排查；本站不据此建立访客画像。</li>
 <li><strong>Cookie 与本地存储。</strong>本站不使用分析或广告 Cookie，不加载任何第三方追踪脚本；所有字体、图片与脚本均从本站自身域名加载。</li>
 </ul>
 <h4>如何使用与共享</h4>
-<p>提交时，表单内容先发送至托管于 Cloudflare 的本站接口进行验证；邮件服务配置完成后，通过 Resend 投递到 sales@stargomoto.com，用于处理你的请求。我们不出售你的信息；除完成托管、投递所需的服务商和法律要求外，不向第三方共享。本接口不会将表单内容写入数据库。</p>
+<p>提交时，表单内容先发送至托管于 Cloudflare 的本站接口进行验证，再通过 Resend 投递到 ${CONTACT_INFO.email}，用于处理你的请求。我们不出售你的信息；除完成托管、投递所需的服务商和法律要求外，不向第三方共享。本接口不会将表单内容写入数据库。</p>
 <p>若邮件服务未配置或无法确认投递，页面会保留你填写的内容并提示重试，同时提供邮件链接。只有你主动点击该链接，才会打开自己的邮件客户端；这不代表在线提交已经成功。</p>
+<h4>跨境传输</h4>
+<p>Cloudflare 通过其全球网络传输和处理请求，Resend 是位于美国的邮件服务商，因此你提交的表单内容会在中国境外传输和处理。提交表单，即表示你同意为回复你的咨询而进行这一传输。</p>
 <h4>保存期限</h4>
 <p>咨询信息在处理完毕后最多保存 24 个月；订阅邮箱在你退订前保留。你可以随时要求删除。</p>
 <h4>你的权利</h4>
-<p>你可以随时查询、更正或删除我们持有的关于你的信息，或撤回订阅：发送邮件到 sales@stargomoto.com，或通过 WhatsApp +86 187 7512 7878 联系我们。我们会在 15 个工作日内回复。</p>
+<p>你可以随时查询、更正或删除我们持有的关于你的信息，或撤回订阅：发送邮件到 ${CONTACT_INFO.email}，加微信 ${CONTACT_INFO.wechat}，或通过电话 / WhatsApp ${CONTACT_INFO.phone} 联系我们。我们会在 15 个工作日内处理。</p>
 <h4>未成年人</h4>
 <p>本站面向企业用户，不面向未满 18 周岁的个人收集信息。</p>
 <h4>政策更新</h4>
 <p>政策更新时，本页顶部的生效日期会随之变化。重大变更会在本站显著位置提示。</p>`,
     `
-<p>This policy explains what the STARGO WORK website (“this site”) collects, why, for how long, and the rights you have. The site is operated by STARGO, Liuzhou, Guangxi, China.</p>
+<p>This policy explains what the STARGO WORK website (“this site”) collects, why, for how long, and the rights you have. The site is operated by <span lang="zh-CN">${CONTACT_INFO.company}</span> (brand STARGO), Liuzhou, Guangxi, China.</p>
 <h4>What we collect</h4>
 <ul>
-<li><strong>What you submit.</strong> Name, e-mail, company, WhatsApp, industry, target markets, team size, current systems and your message, sent through the contact or newsletter forms. They are used only to answer your inquiry, arrange a demo and send the product updates you subscribed to.</li>
+<li><strong>What you submit.</strong> Through the demo request form: your name, company, mobile number or WeChat ID, e-mail (optional), the plan you are looking at, what you want to improve first and your message; the newsletter form collects an e-mail address only. They are used only to answer your inquiry, arrange a demo and send the product updates you subscribed to.</li>
 <li><strong>Technical logs.</strong> The site is hosted on Cloudflare Pages. Your IP address, browser type and request time appear in the host’s standard access logs for security and troubleshooting; we do not build visitor profiles from them.</li>
 <li><strong>Cookies and local storage.</strong> The site sets no analytics or advertising cookies and loads no third-party tracking script; fonts, images and scripts are served from this site’s own domain.</li>
 </ul>
 <h4>How it is used and shared</h4>
-<p>When you submit a form, its contents first reach this site’s Cloudflare-hosted endpoint for validation. Once the mail service is configured, Resend delivers them to sales@stargomoto.com to handle your request. We do not sell your information; sharing is limited to service providers needed for hosting and delivery, or as required by law. This endpoint does not write form contents to a database.</p>
+<p>When you submit a form, its contents first reach this site’s Cloudflare-hosted endpoint for validation, and Resend then delivers them to ${CONTACT_INFO.email} to handle your request. We do not sell your information; sharing is limited to service providers needed for hosting and delivery, or as required by law. This endpoint does not write form contents to a database.</p>
 <p>If the mail service is not configured or delivery cannot be confirmed, the page retains your entries, offers a retry and provides an email link. Your own mail client opens only when you choose that link; this does not mean the online submission succeeded.</p>
+<h4>Cross-border transfer</h4>
+<p>Cloudflare carries and processes requests over its global network, and Resend is an e-mail service based in the United States, so what you submit is transferred and processed outside China. By submitting a form you agree to that transfer for the purpose of answering your inquiry.</p>
 <h4>Retention</h4>
 <p>Inquiries are kept for at most 24 months after they are handled; a newsletter address is kept until you unsubscribe. You can ask for deletion at any time.</p>
 <h4>Your rights</h4>
-<p>You can access, correct or delete the information we hold about you, or withdraw a subscription, at any time: write to sales@stargomoto.com or reach us on WhatsApp +86 187 7512 7878. We answer within 15 working days.</p>
+<p>You can access, correct or delete the information we hold about you, or withdraw a subscription, at any time: write to ${CONTACT_INFO.email}, message us on WeChat (${CONTACT_INFO.wechat}) or call or WhatsApp ${CONTACT_INFO.phone}. We handle requests within 15 working days.</p>
 <h4>Minors</h4>
 <p>The site addresses business users and does not knowingly collect information from anyone under 18.</p>
 <h4>Changes</h4>
 <p>When this policy changes, the effective date at the top of this page changes with it. Material changes are announced prominently on the site.</p>`),
   },
   terms: {
-    date: B('2026-09-05 生效', 'Effective 2026-09-05'),
+    date: B('2026-10-10 生效', 'Effective 2026-10-10'),
     h1: B('使用条款', 'Terms of use'),
     body: B(`
-<p>访问或使用 STARGO WORK 官方网站（以下简称「本站」），即表示你接受以下条款。本站由 STARGO（柳州 · 广西 · 中国）运营。</p>
+<p>访问或使用 STARGO WORK 官方网站（以下简称「本站」），即表示你接受以下条款。本站由${CONTACT_INFO.company}（品牌 STARGO，柳州 · 广西 · 中国）运营。</p>
 <h4>内容用途</h4>
 <p>本站内容用于介绍 STARGO WORK 产品与服务。页面中的界面图、公司名、人名与数字均为演示数据，用于说明产品工作方式，不构成对任何真实客户或结果的陈述。</p>
+<h4>图片说明</h4>
+<p>本站的产品图片是 OPEN WORK 的演示渲染图：对话主栏按实际界面布局重建，右侧的客户CRM、自动化中心、企业ERP 与数字员工面板为示意；画面中的对话、任务、客户、公司名与金额都是演示数据，不是真实客户账户的截图，也不代表已完成的业务结果。博客封面由同一批渲染图制作。菜单里的抽象图形由 AI 生成，只作装饰。图标与装饰图形为已获授权的设计素材。</p>
 <h4>价格与方案</h4>
 <p>本站列出的方案与价格为公开参考价，以人民币计。实际服务范围、续费价格、模型与第三方服务用量，以双方签署的合同或订单为准。我们可能在不另行通知的情况下调整本站的方案与价格。</p>
 <h4>知识产权</h4>
-<p>STARGO 标识、字标、产品名称（含 STARGO WORK 与 OPEN WORK）以及本站的文字、界面图与品牌视觉，均归 STARGO 所有。未经书面许可，不得复制、改编或用于商业用途。本站使用的第三方模板、库与字体，其许可见「第三方声明」。</p>
+<p>STARGO 标识、字标、产品名称（含 STARGO WORK 与 OPEN WORK）以及本站的文字、界面图与品牌视觉，均归${CONTACT_INFO.company}（STARGO）所有。未经书面许可，不得复制、改编或用于商业用途。</p>
 <h4>第三方名称</h4>
-<p>站内提到的其他公司、产品与项目名称属于各自所有者，出现在本站是为了说明兼容性或来源，不表示相关方对 STARGO 的背书。</p>
+<p>站内提到的其他公司与产品名称（例如 WhatsApp、阿里国际站等客户常用的渠道）属于各自所有者，只用于说明可以接入的渠道，不表示相关方对 STARGO 的背书。</p>
 <h4>责任限制</h4>
-<p>本站按「现状」提供。在法律允许的范围内，STARGO 不对因使用本站或依赖本站内容而产生的任何间接损失承担责任。本站可能不定期变更或中断，恕不另行通知。</p>
+<p>本站按「现状」提供。在法律允许的范围内，${CONTACT_INFO.company}（STARGO）不对因使用本站或依赖本站内容而产生的任何间接损失承担责任。本站可能不定期变更或中断，恕不另行通知。</p>
 <h4>适用法律</h4>
-<p>本条款适用中华人民共和国法律。因本条款产生的争议，由 STARGO 所在地有管辖权的人民法院管辖。</p>
+<p>本条款适用中华人民共和国法律。因本条款产生的争议，由${CONTACT_INFO.company}所在地有管辖权的人民法院管辖。</p>
 <h4>联系</h4>
-<p>关于本条款的问题：sales@stargomoto.com · WhatsApp +86 187 7512 7878。</p>`,
+<p>关于本条款的问题：${CONTACT_INFO.email} · 微信 ${CONTACT_INFO.wechat} · 电话 / WhatsApp ${CONTACT_INFO.phone}。</p>`,
     `
-<p>By accessing or using the STARGO WORK website (“this site”) you accept the terms below. The site is operated by STARGO, Liuzhou, Guangxi, China.</p>
+<p>By accessing or using the STARGO WORK website (“this site”) you accept the terms below. The site is operated by <span lang="zh-CN">${CONTACT_INFO.company}</span> (brand STARGO), Liuzhou, Guangxi, China.</p>
 <h4>Purpose of the content</h4>
 <p>The site presents the STARGO WORK product and services. Interface images, company names, people and figures on these pages are demonstration data that illustrate how the product works; they make no statement about any real customer or result.</p>
+<h4>About the images</h4>
+<p>The product pictures on this site are demo renders of OPEN WORK: the chat column rebuilds the real layout, and the Customer CRM, Automation Center, ERP and AI Staff panels beside it are illustrations. The conversations, tasks, customers, company names and amounts in them are demo data; they are not screenshots of a real customer’s account and do not show completed business results. The blog covers are made from the same renders. The abstract graphic in the menu is AI-generated decoration. Icons and decorative graphics are licensed design assets.</p>
 <h4>Plans and prices</h4>
 <p>Plans and prices listed here are public reference prices in Chinese yuan. The actual scope of service, renewal price and allowance for model and third-party usage are set by the contract or order signed by both parties. Plans and prices on this site may change without notice.</p>
 <h4>Intellectual property</h4>
-<p>The STARGO mark, wordmark and product names (including STARGO WORK and OPEN WORK), together with the text, interface images and brand visuals on this site, belong to STARGO. They may not be copied, adapted or used commercially without written permission. Third-party templates, libraries and fonts used by the site are licensed as described in the Notices page.</p>
+<p>The STARGO mark, wordmark and product names (including STARGO WORK and OPEN WORK), together with the text, interface images and brand visuals on this site, belong to <span lang="zh-CN">${CONTACT_INFO.company}</span> (STARGO). They may not be copied, adapted or used commercially without written permission.</p>
 <h4>Third-party names</h4>
-<p>Other company, product and project names mentioned on this site belong to their respective owners. They appear to explain compatibility or origin and imply no endorsement of STARGO.</p>
+<p>Other company and product names mentioned on this site (for example WhatsApp, Alibaba.com and other channels customers use) belong to their respective owners. They appear only to describe the channels that can be connected and imply no endorsement of STARGO.</p>
 <h4>Limitation of liability</h4>
-<p>The site is provided as is. To the extent the law allows, STARGO is not liable for indirect loss arising from use of the site or reliance on its content. The site may change or be interrupted at any time without notice.</p>
+<p>The site is provided as is. To the extent the law allows, <span lang="zh-CN">${CONTACT_INFO.company}</span> (STARGO) is not liable for indirect loss arising from use of the site or reliance on its content. The site may change or be interrupted at any time without notice.</p>
 <h4>Governing law</h4>
-<p>These terms are governed by the laws of the People’s Republic of China. Disputes fall under the jurisdiction of the competent people’s court at STARGO’s seat.</p>
+<p>These terms are governed by the laws of the People’s Republic of China. Disputes fall under the jurisdiction of the competent people’s court at the seat of <span lang="zh-CN">${CONTACT_INFO.company}</span>.</p>
 <h4>Contact</h4>
-<p>Questions about these terms: sales@stargomoto.com · WhatsApp +86 187 7512 7878.</p>`),
+<p>Questions about these terms: ${CONTACT_INFO.email} · WeChat ${CONTACT_INFO.wechat} · phone / WhatsApp ${CONTACT_INFO.phone}.</p>`),
   },
 };
 
@@ -1077,7 +1149,7 @@ export const CATALOGUE_DETAIL = {
     parts: [
       {
         heading: B('工作空间', 'The workspace'),
-        lede: B('在 OPEN WORK 的对话里交办任务，AI 按需打开业务应用、处理文件、调用数字员工、连接外部账号并执行授权任务。', 'Hand work over in the OPEN WORK chat: AI opens the business apps it needs, handles files, calls on digital employees, connects accounts and carries out authorized tasks.'),
+        lede: B('在 OPEN WORK 的对话里交办任务，AI 按需打开业务应用、处理文件、调用数字员工、连接外部账号并执行授权任务。', 'Hand work over in the OPEN WORK chat: AI opens the business apps it needs, handles files, calls on AI Staff, connects accounts and carries out authorized tasks.'),
         points: [
           CP('M14-01', '多应用工作空间与文件', 'Multi-app workspace and files',
             '在一个对话里调用多个业务应用和文件，统一资料和业务入口，减少在不同网页与工具之间反复切换。',
@@ -1086,7 +1158,7 @@ export const CATALOGUE_DETAIL = {
       },
       {
         heading: B('经营总览', 'The owner’s overview'),
-        lede: B('老板需要看到的不只是「AI 很忙」，而是谁在做什么、钱花在哪里、客户推进到哪一步、哪里需要自己决定。', 'Business owners need more than busy digital employees: they need visibility into work, cost, customer progress, blockers and decisions requiring their authority.'),
+        lede: B('老板需要看到的不只是「AI 很忙」，而是谁在做什么、钱花在哪里、客户推进到哪一步、哪里需要自己决定。', 'Business owners need more than busy AI Staff: they need visibility into work, cost, customer progress, blockers and decisions requiring their authority.'),
         points: [
           CP('M15-01', '老板看板', 'Business-owner cockpit',
             '汇总客户、商机、报价、订单、跟进、关键审批和异常，形成经营概览；指标只能来自已接入数据，缺失时明确显示。',
@@ -1177,7 +1249,7 @@ export const CATALOGUE_DETAIL = {
           'Use verified product knowledge and policies for specifications, minimum order quantities, packaging, certifications, lead times, terms, product matching and multilingual replies. Flag unavailable facts.'),
         CP('M03-05', '跟进任务与人工协作', 'Follow-up tasks and human collaboration',
           '生成回复草稿、跟进策略、下一步任务和提醒；保留人工审批、人工接管及销售阶段管理，避免多人或多个 AI 重复触达。',
-          'Prepare drafts, follow-up strategies, tasks and reminders, with human review, takeover and pipeline management to reduce duplicate outreach by people or digital employees.'),
+          'Prepare drafts, follow-up strategies, tasks and reminders, with human review, takeover and pipeline management to reduce duplicate outreach by people or AI Staff.'),
       ],
       outputs: B('结构化需求、产品方案、待审核回复与连续的销售跟进记录。', 'Structured requirements, product fit, review-ready replies and continuous sales history.'),
     }],
@@ -1274,14 +1346,14 @@ export const CATALOGUE_DETAIL = {
             '组织库存查询、仓库、出入库、物料流转与缺货信息，让业务人员了解可交付数量，并为后续预警与补货协同提供数据。',
             'Provide inventory, warehouse, stock-movement and shortage information so teams can assess availability and support replenishment and exception workflows.'),
           CP('M05-04', '生产、质量与交期', 'Production, quality and lead times',
-            '跟踪生产任务、物料需求、进度、质检、包装及交期，逐步将生产异常与销售承诺、客户沟通关联起来。',
-            'Coordinate production tasks, material needs, progress, quality checks, packaging and lead times, progressively linking exceptions to sales commitments and customer communication.'),
+            '跟踪生产任务、物料需求、进度、质检、包装及交期，并把生产异常和销售承诺、客户沟通关联起来。',
+            'Coordinate production tasks, material needs, progress, quality checks, packaging and lead times, and link exceptions to sales commitments and customer communication.'),
           CP('M05-05', '订单、开票与经营记录', 'Orders, invoicing and operating records',
             '管理订单、报价、发票、多币种商业记录与相关单据；将客户需求、交易记录和履约状态对应起来，减少重复录入。',
             'Manage orders, quotations, invoices, multi-currency commercial records and supporting documents; align demand, transactions and fulfillment status to reduce duplicate entry.'),
-          CP('M05-06', '商城与经销商业务', 'Commerce and dealer operations',
-            '覆盖商品目录、销售地区、购物车、订单和商城管理后台；可按企业需求衔接品牌商城、经销商门户与客户资源协同。',
-            'Support catalogs, selling regions, carts, orders and commerce administration, with brand storefronts, dealer portals and partner coordination connected as required.'),
+          CP('M05-06', '商城订单与发货', 'Store orders and shipping',
+            '商城后端管理负责商城订单的发货：订单和发货状态在一处查看、处理。',
+            'Store Admin handles shipping for store orders: orders and shipping status in one place.'),
         ],
         value: B('给老板的价值：前端拿订单，后台管交付；ERP、商城与 AI 协同，但不混淆各系统的数据权威。', 'Business value: connect winning orders with delivering them, while ERP, commerce and AI retain clear ownership of business records.'),
         outputs: B('能不能交、什么时候交、交付后记录是否一致，都有相应资料可以核对。', 'Check product availability, delivery timing and the consistency of operating records.'),
@@ -1399,8 +1471,8 @@ export const CATALOGUE_DETAIL = {
             '围绕不同开场、场景或表达角度组织三个版本，明确每版变化点，便于比较创意策略，而非得到三个无法解释的随机结果。',
             'Create three distinct adaptations with declared changes to hooks, scenes or messaging angles, making creative comparisons deliberate rather than random.'),
           CP('M09-05', '生成、审核与多尺寸输出', 'Generate, review and prepare formats',
-            '把新脚本、分镜和素材交给视频制作流程，组织品牌、字幕及多尺寸导出。长视频拆条、竖屏改版与字幕适配按已开放能力执行。',
-            'Pass original scripts, storyboards and assets into the video workflow for branding, captions and format exports. Repurposing and reframing depend on enabled capabilities.'),
+            '把新脚本、分镜和素材交给视频制作流程，组织品牌、字幕及多尺寸导出，也可以把长视频拆条、改成竖屏并适配字幕。',
+            'Pass original scripts, storyboards and assets into the video workflow for branding, captions and format exports, including cutting long videos into clips, reframing for vertical screens and fitting captions.'),
           CP('M09-06', '创意测试与内容资产沉淀', 'Creative testing and reusable learning',
             '保留参考结构、版本差异、制作成本与发布反馈；后续结合渠道数据比较内容表现，积累可复用的企业创意方法。',
             'Retain reference structures, variant differences, production cost and feedback. Where channel data is connected, compare performance and build reusable creative knowledge.'),
@@ -1415,15 +1487,15 @@ export const CATALOGUE_DETAIL = {
      of the roster; the build checks the ten counts add up to it. */
   '10': {
     sources: ['M10', 'M11', 'M16'],
-    summary: B('288 名数字员工，围绕任务选人、组队、交流与接力。', 'Select, team up and coordinate 288 digital employees around shared tasks.'),
+    summary: B('288 名数字员工，围绕任务选人、组队、交流与接力。', 'Select, team up and coordinate 288 AI Staff around shared tasks.'),
     parts: [
       {
-        heading: B('288 名数字员工', '288 digital employees'),
-        lede: B('数字员工不仅服务外贸，也覆盖企业支持、市场、销售、客服、合规、供应链、财务、运营、产品工程与专业服务。', 'Digital employees cover enterprise support, marketing, sales, service, compliance, supply chain, finance, operations, product and engineering, and professional services.'),
+        heading: B('288 名数字员工', '288 AI Staff'),
+        lede: B('数字员工不仅服务外贸，也覆盖企业支持、市场、销售、客服、合规、供应链、财务、运营、产品工程与专业服务。', 'AI Staff cover enterprise support, marketing, sales, service, compliance, supply chain, finance, operations, product and engineering, and professional services.'),
         roles: {
           total: 288,
-          caption: B('十类职能与数量（数字员工名册）', 'Ten function groups and their size (staff roster)'),
-          head: [B('职能类别', 'Function group'), B('数量', 'Digital employees')],
+          caption: B('十类职能与数量（数字员工名册）', 'Ten function groups and their size (AI Staff roster)'),
+          head: [B('职能类别', 'Function group'), B('数量', 'AI Staff')],
           sum: B('合计', 'Total'),
           rows: [
             [B('企业通用支持', 'Enterprise essentials'), 15],
@@ -1444,33 +1516,33 @@ export const CATALOGUE_DETAIL = {
             'Configure responsibilities, skills, enterprise knowledge, permitted tools, access, tasks and run history so each role has a defined job, context and operating scope.'),
           CP('M10-02', '复杂任务怎样组队', 'How a team is formed',
             '按岗位、技能、知识、权限与任务复杂度选择合适员工，明确每个成员的职责，分别处理研究、销售、产品、内容或数据工作。',
-            'Select suitable employees by role, skills, knowledge, access and task complexity. Give members clear responsibilities across research, sales, products, content or data.'),
+            'Select suitable AI Staff by role, skills, knowledge, access and task complexity. Give members clear responsibilities across research, sales, products, content or data.'),
           CP('M10-03', '老板怎样交办工作', 'How an owner delegates',
             '提出业务目标，选择合适员工或团队，查看任务和成果，并批准关键动作。需要判断或遇到异常时保留人工接管。',
-            'Set a business goal, choose employees or a team, inspect tasks and results, and approve key actions. Retain human takeover when judgment or exception handling is needed.'),
+            'Set a business goal, choose AI Staff or a team, inspect tasks and results, and approve key actions. Retain human takeover when judgment or exception handling is needed.'),
           CP('M10-04', '成果怎样接力和管理', 'How results are handed over',
             '记录责任、截止时间、任务状态、结果与下一步；员工之间直接交接，不同成员的工作汇总为可交接的成果。',
             'Track responsibility, deadlines, task status, outcomes and next steps. Members hand work to each other directly, and their outputs are consolidated into a handoff-ready result.'),
         ],
-        value: B('不是「雇用 288 个真人」，而是拥有可按任务选择、配置、派工并组队协作的数字员工名册。', 'This is a directory of professional AI roles for task-based selection, configuration, delegation and teamwork, not a claim to replace 288 people.'),
-        outputs: B('可按任务选用的数字员工目录，以及职责、任务、工作记录与交接成果。', 'A task-selectable roster of digital employees with responsibilities, tasks, work history and handoff-ready outputs.'),
+        value: B('不是「雇用 288 个真人」，而是拥有可按任务选择、配置、派工并组队协作的数字员工名册。', 'This is an AI Staff roster for task-based selection, configuration, delegation and teamwork, not a claim to replace 288 people.'),
+        outputs: B('可按任务选用的数字员工目录，以及职责、任务、工作记录与交接成果。', 'A task-selectable AI Staff roster with responsibilities, tasks, work history and handoff-ready outputs.'),
       },
       {
-        heading: B('多个数字员工交流协作', 'Digital employees working together'),
-        lede: B('一个复杂任务可以交给多个数字员工分工完成。重点不在聊天人数，而在信息能否传递、责任是否明确、结果能否交接。', 'Assign complex work to a bounded team of digital employees. What matters is information exchange, clear ownership and reliable handoff — not the number of chat windows.'),
+        heading: B('多个数字员工交流协作', 'AI Staff working together'),
+        lede: B('一个复杂任务可以交给多个数字员工分工完成。重点不在聊天人数，而在信息能否传递、责任是否明确、结果能否交接。', 'Assign complex work to a bounded AI Staff team. What matters is information exchange, clear ownership and reliable handoff — not the number of chat windows.'),
         points: [
           CP('M11-01', '按任务选人和组队', 'Task-based team formation',
             '根据岗位、技能、企业知识、工具权限与任务复杂度查找合适员工，形成小型团队，并说明各成员职责。',
             'Match roles, skills, enterprise knowledge, permitted tools and task complexity to form a focused team with explicit responsibilities.'),
-          CP('M11-02', '数字员工之间交流信息', 'Communication between digital employees',
+          CP('M11-02', '数字员工之间交流信息', 'Communication between AI Staff',
             '围绕任务支持协作会话、定向消息、问题转交、补充信息与进度通知，减少所有信息都必须由人手工复制的情况。',
-            'Support task-focused conversations, directed messages, questions, context exchange and progress notifications to reduce manual copying between digital employees.'),
+            'Support task-focused conversations, directed messages, questions, context exchange and progress notifications to reduce manual copying between AI Staff.'),
           CP('M11-03', '并行执行与结果汇总', 'Parallel work and result synthesis',
             '让研究、销售、产品、内容或数据员工并行处理不同子任务，由统筹角色检查结果并合成为一个交付包。',
             'Run research, sales, product, content or data subtasks in parallel, then have a coordinating role check and combine outputs into one delivery package.'),
           CP('M11-04', '共享事实，不越权共享', 'Shared facts within permission boundaries',
             '同一客户、产品、任务与审批状态使用共同依据；共享任务上下文不意味着共享所有企业数据，更不会自动获得其他员工的权限。',
-            'Use consistent customer, product, task and approval facts. Sharing context does not grant access to all enterprise data or transfer another employee’s permissions.'),
+            'Use consistent customer, product, task and approval facts. Sharing context does not grant access to all enterprise data or transfer another AI Staff member’s permissions.'),
           CP('M11-05', '责任认领与持续接力', 'Ownership and durable handoffs',
             '记录任务目标、负责人、认领状态、截止时间、证据、失败原因和下一步，让暂停、人工接管与恢复后仍能继续推进。',
             'Track goals, owners, claims, deadlines, evidence, failures and next actions so work can continue through pauses, human takeover and recovery.'),
@@ -1495,8 +1567,8 @@ export const CATALOGUE_DETAIL = {
           '围绕客户清单、产品表、报价表与经营统计整理数据，辅助文件生成、翻译、总结及报告制作；复杂格式按工具能力与模板配置。',
           'Organize customer lists, product tables, quotation sheets and business data; assist document creation, translation, summarization and reporting according to enabled tools and templates.'),
         CP('M14-03', '语音助手与语音转任务', 'Voice assistance and voice-to-task workflows',
-          '通过语音提出需求，衔接转录、对话、知识检索、任务创建与业务跟进；实时语音和具体业务动作按企业开通的服务与配置开放。',
-          'Use speech for transcription, conversation, knowledge retrieval, task creation and follow-up. Realtime voice and specific business actions depend on enabled services and enterprise configuration.'),
+          '通过语音提出需求，衔接转录、对话、知识检索、任务创建与业务跟进；说一句话，就能变成一项任务。',
+          'Use speech for transcription, conversation, knowledge retrieval, task creation and follow-up: say it, and it becomes a task.'),
         CP('M14-04', '云端操作与网页任务', 'Authorized computer and web tasks',
           '在授权环境中搜索网页、操作后台、填写表单、上传下载和整理资料，减少重复手工操作；不绕过登录、安全验证或平台规则。',
           'Carry out authorized web research, portal work, forms, uploads, downloads and file organization to reduce repetitive manual tasks, without bypassing sign-in, security checks or platform rules.'),
@@ -1521,7 +1593,7 @@ export const CATALOGUE_DETAIL = {
       points: [
         CP('M12-03', '企业业务关系图', 'The business relationship map',
           '把客户、联系人、产品、询盘、商机、报价、订单、文件、任务和员工联系起来，说明当前状态、发生了什么、下一步由谁推进。',
-          'Connect customers, contacts, products, inquiries, opportunities, quotes, orders, documents, tasks and employees so teams can understand relationships, current status and responsibility for next steps.'),
+          'Connect customers, contacts, products, inquiries, opportunities, quotes, orders, documents, tasks and AI Staff so teams can understand relationships, current status and responsibility for next steps.'),
         CP('M12-04', '同一个客户，不同记录能对应', 'Identity and cross-system relationships',
           '识别不同系统里是否是同一个客户、产品或订单，保留信息来源与对应依据，减少重复建档、串客户和相互矛盾的信息。',
           'Identify whether records in different systems refer to the same customer, product or order. Retain sources and matching evidence to reduce duplicate records, mixed customer context and conflicting information.'),
@@ -1558,29 +1630,29 @@ export const CATALOGUE_DETAIL = {
         ],
       },
       {
-        heading: B('开通范围与验收', 'What is enabled, and how it is accepted'),
+        heading: B('应用与接入', 'Apps and connections'),
         lede: B('先选择一条关键流程，准备产品、客户、知识与业务规则，连接已有账号，配置员工和审批，再用真实样本验证。', 'Start with one key workflow. Prepare products, customers, knowledge and business rules, connect accounts, configure roles and approvals, and validate real cases.'),
         points: [
           CP('M16-01', '平台与业务应用', 'Platform and business applications',
-            '客户CRM、企业知识库、企业ERP、创意与商城等应用已有基础，按企业配置启用。能打开某个应用，不等于所有跨应用的自动工作都已验收。',
-            'Customer CRM, Knowledge Base, ERP, creative and commerce apps have established foundations and are enabled by configuration. Opening an app does not prove every cross-app workflow is production-ready.'),
+            '客户CRM、企业知识库、企业ERP、创意工具和商城后端管理等应用，在同一个对话里协同工作。',
+            'The Customer CRM, Knowledge Base, ERP, creative tools, Store Admin and the other apps work together from one chat.'),
           CP('M16-02', '核心获客与销售主线', 'Prospecting and Sales Workbench',
-            '主动获客与销售工作台的流程可以在演示里完整走一遍。真实数据、客户交接、商业价格和对外触达，要接入你公司的账号和系统，经你授权后才会使用，演示时逐项确认。',
-            'Prospecting and the Sales Workbench can be walked through end to end in a demo. Live data, customer handoffs, commercial prices and external outreach need your company’s accounts and systems and are used only with your authorization; each is confirmed in the demo.'),
+            '主动获客和销售工作台连成一条线：从找客户、背调、开发信，到询盘、报价和 PI。',
+            'Prospecting and the Sales Workbench form one line, from finding and researching buyers and outreach through to inquiries, quotes and PIs.'),
           /* V5 writes 「原资料仍记录……验收缺口」 — an editor's reference to its
              source records. On the page it says what those records say. */
           CP('M16-03', '视频与爆款再创作', 'Video and creative adaptation',
-            '一键视频与爆款结构再创作已开放，交付的是可播放、可导出的成片文件；成片经人工审核后再发布，生成按企业开通的服务与额度计量。',
-            'One-click video and viral creative adaptation are available, and what they deliver is a playable, exportable video file. Finished videos are reviewed before publishing, and generation runs within the services and credits the company enables.'),
+            '一键视频与爆款结构再创作交付的是可播放、可导出的成片文件；成片经人工审核后再发布，生成按企业开通的服务与额度计量。',
+            'One-click video and viral creative adaptation deliver a playable, exportable video file. Finished videos are reviewed before publishing, and generation runs within the services and credits the company enables.'),
           CP('M16-04', '协作、业务理解与记忆', 'Teamwork, context and memory',
-            '员工组队、互相交流与协作交付已开放；企业知识及业务关联已有建设。企业级主动工作、统一长期记忆与新企业资料接入，按你公司确认的交付范围验收。',
-            'Digital employees can already form teams, communicate and deliver together, and enterprise knowledge and business relationships have foundations. Enterprise-wide proactive work, unified memory and new-enterprise onboarding are accepted against the scope your company agrees.'),
-          CP('M16-05', '高级分析与外部业务系统', 'Analytics and connected business systems',
-            '高级增长分析需要合适的资源配置；财务、物流、签章、客户渠道与第三方数据依企业授权及系统情况开放。正式申报、付款和专业审阅由有权人员把关。',
-            'Advanced growth analytics needs suitable resources. Finance, logistics, signatures, customer channels and third-party data depend on enterprise access and systems. Authorized people retain control of filings, payments and professional reviews.'),
-          CP('M16-06', '行业落地与后续扩展', 'Industry delivery and phased expansion',
-            '按行业提供资料模板、流程配置、企业接入和培训。网页端为当前重点；移动端与原生客户端的范围演示时确认，以企业确认的交付内容为准。',
-            'Industry delivery includes data templates, workflow configuration, onboarding and training. The browser experience is the current focus; mobile and native client scope is confirmed in the demo. Actual delivery follows the enterprise’s agreed scope.'),
+            '数字员工组队、互相交流与协作交付，连同企业知识、业务关联、主动工作和长期记忆。新企业的资料按模板导入。',
+            'AI Staff teamwork, communication and joint delivery, together with company knowledge, business relationships, proactive work and long-term memory. A new company’s material is imported from templates.'),
+          CP('M16-05', '增长分析与外部业务系统', 'Analytics and connected business systems',
+            '增长分析看结果；财务、物流、签章、客户渠道与第三方数据，经企业授权接入；正式申报、付款和专业审阅由有权人员把关。',
+            'Growth analytics shows the results. Finance, logistics, signatures, customer channels and third-party data connect with your company’s authorization. Authorized people retain control of filings, payments and professional reviews.'),
+          CP('M16-06', '行业落地', 'Industry delivery',
+            '按行业提供资料模板、流程配置、企业接入和培训；OPEN WORK 在浏览器里打开就能用。',
+            'Industry delivery includes data templates, workflow configuration, onboarding and training; OPEN WORK runs in the browser.'),
         ],
         value: B('交付顺序：确认目标 → 准备资料 → 连接账号 → 配置员工与审批 → 验证成果 → 逐步扩大范围。', 'Delivery: define goals → prepare context → connect accounts → assign roles and approvals → validate results → expand scope.'),
         outputs: B('一条明确的业务流程、所需资料、责任与审批安排，以及可核对的验收结果。', 'A defined workflow, required context, clear responsibilities and approvals, and checkable acceptance results.'),
@@ -1643,7 +1715,7 @@ export const WORKFORCE_ROLE_GROUPS = {
   ],
   total: { name: B('合计', 'Total'), count: 288 },
   // M10's value line and availability line, P04's scope line.
-  note: B('288 是数字员工名册的规模：可按任务选择、配置、派工并组队协作，不代表替代 288 名真人员工。实际启用的员工、协作规模与操作范围，受企业配置、预算和权限约束。', '288 is the size of the roster: digital employees you select, configure, assign and team up by task. It is not a claim to replace 288 people. The employees enabled, the size of a collaboration and permitted actions depend on configuration, budget and access.'),
+  note: B('288 是数字员工名册的规模：按任务选择、配置、派工并组队协作，不代表替代 288 名真人员工。用哪些员工、几位一起协作、能做哪些动作，由企业按自己的预算和权限来定。', '288 is the size of the AI Staff roster: you select, configure, assign and team them up by task. It is not a claim to replace 288 people. Which AI Staff you use, how many work together and what they may do is set by your company, within its budget and permissions.'),
 };
 
 /* ===== 2026-10-09 C2: the four product pages on the OPEN WORK design =====
@@ -1665,7 +1737,7 @@ const PO_STEPS = (k) => {
 };
 const ROLE = (letter, color, name, job, text, group) => ({ letter, color, name, job, text, group });
 export const PAGE_OW = {
-  statusLabel: B('状态说明', 'Status'),
+  statusLabel: B('说明', 'Note'),
   stepLabels: HOME_OW.showcase.labels,
   appsLabel: B('用到的应用', 'Apps used'),
   demoKicker: HOME_OW.showcase.kicker,
@@ -1707,8 +1779,8 @@ export const PAGE_OW = {
         apps: [B('销售工作台', 'Sales Workbench'), B('企业知识库', 'Knowledge Base')],
         float: B('低于标准价 → 自动交经理审批', 'Below standard price → goes to the manager'), ...PO_STEPS('quote'),
         detail: { shot: 'ow21-pi-check', window: B('价格校验', 'Price check'), title: B('每张 PI 都过一遍价格校验', 'Every PI gets a price check'),
-          text: B('演示里这张 PI 的单价低于标准价 4.2%：价格校验把它标出来，PI 进入审批，销售经理批准前不会发给客户。哪些报价需要审批、由谁批准，企业自己定。',
-            'In the demo the unit price is 4.2% below standard: the price check flags it, the PI goes into approval and nothing reaches the customer before the sales manager approves. Your company decides which quotes need approval and who gives it.') } },
+          text: B('演示里这张 PI 的单价低于标准价 4.2%：价格校验把它标出来，PI 进入审批，销售经理批准前不会发给客户。审批人是谁、价格底线多少，都由企业自己设定。',
+            'In the demo the unit price is 4.2% below standard: the price check flags it, the PI goes into approval and nothing reaches the customer before the sales manager approves. Your company sets who approves and where the price floor is.') } },
       { anchor: 'story-4', key: 'brief', icon: 'chart', shot: 'ow05-brief', card: 'ow15-brief-card',
         eyebrow: B('04 · 老板看板', '04 · Owner Dashboard'), window: B('OPEN WORK · 本周简报', 'OPEN WORK · Weekly brief'),
         title: B('这周要你拍板的事，[[一屏看完]]。', 'This week’s decisions, [[on one screen.]]'),
@@ -1738,11 +1810,11 @@ export const PAGE_OW = {
           float: B('下达前需要你确认', 'Released only after you confirm'),
           summary: B('定金到账后，AI 读取 PI、核对库存与产能，生成生产工单草稿；礼盒库存不够，同时起草采购单。下达前等你确认。',
             'Once the deposit is in, AI reads the PI, checks stock and capacity and drafts the production order; the gift boxes are out of stock, so it drafts a purchase order too. Nothing is released before you confirm.') },
-        { key: 'staff', icon: 'users', shot: 'ow11-staff', card: 'ow25-staff-card', label: B('数字员工 · 派工', 'AI staff · dispatch'), window: B('OPEN WORK · 数字员工', 'OPEN WORK · AI staff'),
+        { key: 'staff', icon: 'users', shot: 'ow11-staff', card: 'ow25-staff-card', label: B('数字员工 · 派工', 'AI Staff · dispatch'), window: B('OPEN WORK · 数字员工', 'OPEN WORK · AI Staff'),
           float: B('发给客户前等你确认', 'Waits for your approval'),
           summary: B('新询盘进来，企业调度长派给询盘接待员、客户档案管家、客户背调员和报价员；报价草稿放进销售工作台，发给客户前等你确认。',
             'A new inquiry arrives and the dispatcher hands it to the inquiry desk, the customer-file keeper, the background checker and the quoter. The quote draft waits in the Sales Workbench for your approval.'),
-          more: { href: 'workforce.html', label: B('认识 288 名数字员工', 'Meet the 288 AI staff') } },
+          more: { href: 'workforce.html', label: B('认识 288 名数字员工', 'Meet the 288 AI Staff') } },
       ],
     },
     apps: { cta: { href: '#atlas', label: B('看完整功能目录', 'See the full catalog') } },
@@ -1768,8 +1840,8 @@ export const PAGE_OW = {
       eyebrow: B('完整目录', 'Full catalog'),
       title: (groups, entries) => B(`${groups} 个能力组，[[${entries} 个条目]]。`, `${groups} groups. [[${entries} entries.]]`),
       lead: B('产品覆盖的全部能力，按组排列，默认收起。点开一组，看它做什么、产出什么，以及包含哪些条目。', 'Everything the product covers, by group and folded by default. Open a group to see what it does, what it produces and the entries it holds.'),
-      status: B('目录列出产品覆盖的功能。有的现在就能用，有的要接入你公司的账号和真实数据，有的还在建设。你公司实际开通哪些，演示和方案沟通时逐项确认。',
-        'The catalog lists what the product covers. Some of it works today, some needs your accounts and real data connected, and some is still being built. What your company gets is confirmed item by item during the demo and scoping.'),
+      status: B('目录里的功能都已在 OPEN WORK 里可用。要用你公司自己的邮箱、渠道和现有系统，需要你授权接入，我们帮你配置好。',
+        'Everything in the catalog is available in OPEN WORK. Using your own mailbox, channels and existing systems needs your authorization to connect them, and we help set them up.'),
       expand: B('全部展开', 'Expand all'),
       collapse: B('全部收起', 'Collapse all'),
       entries: B('个条目', 'entries'),
@@ -1786,11 +1858,11 @@ export const PAGE_OW = {
   workforce: {
     hero: {
       eyebrow: B('STARGO AI 数字办公室', 'STARGO AI Digital Office'),
-      title: [B('288 名数字员工，', '288 AI staff,'), B('按任务派工。', 'assigned by task.')],
+      title: [B('288 名数字员工，', '288 AI Staff,'), B('按任务派工。', 'assigned by task.')],
       lead: B('它们在 OPEN WORK 里干活。新询盘进来，企业调度长把活派给询盘接待员、客户档案管家、客户背调员和报价员；报价草稿放进销售工作台，发给客户前等你确认。',
         'They work inside OPEN WORK. When an inquiry arrives, the dispatcher hands it to the inquiry desk, the customer-file keeper, the background checker and the quoter. The quote draft lands in the Sales Workbench and waits for your approval before it reaches the customer.'),
-      window: B('OPEN WORK · 数字员工', 'OPEN WORK · AI staff'),
-      label: B('数字员工派工', 'Dispatching AI staff'),
+      window: B('OPEN WORK · 数字员工', 'OPEN WORK · AI Staff'),
+      label: B('数字员工派工', 'Dispatching AI Staff'),
       float: B('发给客户前等你确认', 'Waits for your approval'),
       more: { href: '#lx-role-groups', label: B('看十类职能', 'See the ten groups') },
     },
@@ -1807,14 +1879,14 @@ export const PAGE_OW = {
         ROLE(B('背', 'B'), '#0d9488', B('客户背调员', 'Background checker'), B('客户背景调查', 'Customer background checks'), B('大额报价或给新客户账期前，核查背景与合作风险。', 'Checks background and risk before a large quote or payment terms for a new customer.'), B('客户开发与市场', 'Customer development & marketing')),
         ROLE(B('档', 'C'), '#7c3aed', B('客户档案管家', 'Customer-file keeper'), B('客户档案管理', 'Customer records'), B('跨渠道保持客户记录准确：建档、更新、合并重复。', 'Keeps customer records right across channels: creates, updates and merges duplicates.'), B('客户服务', 'Customer service')),
         ROLE(B('增', 'G'), '#ea7a12', B('增长调度员', 'Growth coordinator'), B('增长任务分发与执行', 'Growth tasks'), B('市场进入、开发计划与内容增长的入口。', 'The starting point for entering a market, prospecting plans and content growth.'), B('客户开发与市场', 'Customer development & marketing')),
-        ROLE(B('调', 'D'), '#1e293b', B('企业调度长', 'Dispatcher'), B('企业任务分发与调度', 'Assigning the work'), B('接到具体业务请求时先由它判断，派给合适的数字员工。', 'Looks at each request first and assigns it to the right AI staff.'), B('企业通用支持', 'Enterprise essentials')),
+        ROLE(B('调', 'D'), '#1e293b', B('企业调度长', 'Dispatcher'), B('企业任务分发与调度', 'Assigning the work'), B('接到具体业务请求时先由它判断，派给合适的数字员工。', 'Looks at each request first and assigns it to the right AI Staff member.'), B('企业通用支持', 'Enterprise essentials')),
       ],
     },
     team: {
       eyebrow: B('怎么派工', 'How work is assigned'),
       title: B('一个目标，[[一个团队]]。', 'One goal. [[One team.]]'),
       lead: B('复杂的活可以交给几位数字员工分工完成。重点不在聊天的人数，而在信息能不能传递、责任是否明确、结果能不能交接。',
-        'A complex job can be split between several AI staff. What matters is not how many are chatting, but whether information passes on, who is responsible and whether the result can be handed over.'),
+        'A complex job can be split between several AI Staff members. What matters is not how many are chatting, but whether information passes on, who is responsible and whether the result can be handed over.'),
       steps: [
         { icon: 'chat', title: B('你交办目标', 'You set the goal'), text: B('比如：处理一封新询盘，报价出来先给我看。', 'For example: handle this inquiry and show me the quote first.') },
         { icon: 'users', title: B('调度长派工', 'The dispatcher assigns'), text: B('判断要哪些岗位，派给合适的数字员工。', 'Decides which roles are needed and assigns them.') },
@@ -1826,8 +1898,8 @@ export const PAGE_OW = {
     },
     groups: {
       eyebrow: B('数字员工名册', 'Staff roster'),
-      title: B('288 名，[[分十类]]。', '288 AI staff in [[ten groups.]]'),
-      lead: B('按和外贸业务的远近排列，数字是每一类的人数。', 'Ordered by how close they are to export sales; each number is how many digital employees the group holds.'),
+      title: B('288 名，[[分十类]]。', '288 AI Staff in [[ten groups.]]'),
+      lead: B('按和外贸业务的远近排列，数字是每一类的人数。', 'Ordered by how close they are to export sales; each number is how many AI Staff the group holds.'),
       /* WORKFORCE_ROLE_GROUPS, in this order (the build checks the names and the sum) */
       order: ['销售', '客户开发与市场', '客户服务', '供应链', '风控与合规', '财务', '运营', '企业通用支持', '专业服务', '产品与工程'],
     },
@@ -1847,9 +1919,9 @@ export const PAGE_OW = {
     hero: {
       eyebrow: B('记忆与进化 · 自动化中心', 'Memory & Evolution · Automation Center'),
       title: [B('该跟进的客户，', 'Who to follow up,'), B('AI 先替你想起来。', 'remembered for you.')],
-      /* buyer-plan §3 marks what the follow-up reads as 【需确认】: the lead says what the demo shows, not which records it reads. */
-      lead: B('演示里，问一句「哪些客户该跟进了？」，AI 会列出今天该跟进的客户和原因，并起草好跟进消息。每条发送前，都等你确认。',
-        'In the demo, ask “which customers should I follow up?” and AI lists who is due today and why, and drafts the follow-up. Every message waits for your approval.'),
+      /* what the follow-up reads: owner-confirmed 2026-10-10 (「会的」) — the CRM timeline, quotes and sample status */
+      lead: B('问一句「哪些客户该跟进了？」，AI 读取客户CRM 时间线、报价和寄样状态，列出今天该跟进的客户和原因，并起草好跟进消息。每条发送前，都等你确认。',
+        'Ask “which customers should I follow up?” and AI reads the CRM timeline, quotes and sample status, lists who is due today and why, and drafts the follow-up. Every message waits for your approval.'),
       window: B('OPEN WORK · 跟进客户', 'OPEN WORK · Follow-up'),
       label: B('跟进客户', 'Follow up customers'),
       float: B('每条发送前等你确认', 'Each message waits for your OK'),
@@ -1902,8 +1974,8 @@ export const PAGE_OW = {
         'Every run leaves a record: what was done, whether it met the goal and where a person corrected it. A better method is tested and compared with the current one, used only once approved, and withdrawn if it falls short.'),
       flow: B('发现变化 → 理解上下文 → 提出建议 → 获得确认 → 推进任务 → 核对结果 → 沉淀经验', 'Notice a change → Understand the context → Propose an action → Get approval → Act → Check the result → Retain the lesson'),
     },
-    status: B('企业知识、业务关联、目标推进和受控改进已有基础；企业级主动工作、统一长期记忆和高级改进仍在完善。主动不等于 AI 自己做主，关键判断始终由人负责。',
-      'Knowledge, business context, goal tracking and controlled improvement have working foundations; company-wide proactive work, unified long-term memory and advanced improvement are still being built. Proactive does not mean AI decides on its own: people stay responsible for the judgment calls.'),
+    status: B('主动提醒、长期记忆和持续改进，都已在 OPEN WORK 里可用。主动不等于 AI 自己做主：关键判断始终由人负责。',
+      'Proactive reminders, long-term memory and continuous improvement are all available in OPEN WORK. Proactive does not mean AI decides on its own: people stay responsible for the judgment calls.'),
   },
 
   /* ---- enterprise.html — 「安全与接入」 -------------------------------- */
@@ -1939,7 +2011,7 @@ export const PAGE_OW = {
       float: B('最后一步：等你批准', 'Last step: your approval'),
       points: [
         { icon: 'shield', title: B('出错即停并报告', 'Stops and reports on failure'), text: B('出现异常时停下，由人接手或退回。', 'On an exception, work stops for a person to take over or send back.') },
-        { icon: 'users', title: B('数字员工的工作边界', 'Work limits for AI staff'), text: B('能调用什么、以谁的名义，事先设定。', 'What they may use, and on whose behalf, is set in advance.') },
+        { icon: 'users', title: B('数字员工的工作边界', 'Work limits for AI Staff'), text: B('能调用什么、以谁的名义，事先设定。', 'What they may use, and on whose behalf, is set in advance.') },
         { icon: 'flow', title: B('新做法先小范围试用', 'Small trials first'), text: B('先在部分工作中试，效果不够可以撤回。', 'Tried on part of the work first, and withdrawn if it falls short.') },
       ],
     },
@@ -1957,7 +2029,7 @@ export const PAGE_OW = {
       controlsLabel: B(`${ENT_CONTROLS.length} 项控制`, `${ENT_CONTROLS.length} controls`),
       controls: ENT_CONTROLS,
       deployLabel: B('部署方式', 'Deployment'),
-      deploy: B(`${ENT_DEPLOYMENT.map((x) => x.zh).join('、')}，按企业需求逐项确认。`, `${enList(ENT_DEPLOYMENT.map((x) => x.en), 'or').replace(/^./, (c) => c.toUpperCase())}, confirmed with each company.`),
+      deploy: B(`${ENT_DEPLOYMENT.map((x) => x.zh).join('、')}，按企业需求选择。`, `${enList(ENT_DEPLOYMENT.map((x) => x.en), 'or').replace(/^./, (c) => c.toUpperCase())}, chosen to fit each company.`),
     },
     connect: {
       eyebrow: B('接入', 'Connections'),
@@ -1979,8 +2051,8 @@ export const PAGE_OW = {
       ],
       button: { label: B('联系实施顾问', 'Talk to an implementation consultant'), href: 'contact.html' },
     },
-    status: B('管理与控制已有基础；看板指标、自动动作、跨系统动作和高级分析，要接入真实数据并验收后才算数。能打开某个应用，不等于整条流程已经验收。',
-      'Management and control have working foundations; dashboard figures, automated and cross-system actions and advanced analytics count only once real data is connected and accepted. Opening an app is not the same as an accepted workflow.'),
+    status: B('这一页说的审批、权限、留痕和自动化护栏，都已在 OPEN WORK 里可用。老板看板上的数字来自你接入的真实数据；接入你公司自己的邮箱、渠道和现有系统，需要你授权，我们帮你配置。',
+      'The approvals, permissions, records and automation guardrails on this page are all available in OPEN WORK. Figures on the Owner Dashboard come from the real data you connect; connecting your own mailbox, channels and existing systems needs your authorization, and we help set them up.'),
   },
 };
 
@@ -1989,7 +2061,7 @@ export const PAGE_OW = {
    (tools/ow-blocks/site-pages.mjs, 2026-10-09). Facts only from what the site
    already states: PRICING (prices, inclusions, the comparison data, the ten
    questions), ABOUT (the story and principles), CONTACT_INFO, the demo
-   wording of HOME_OW, LEGAL and NOTICES. */
+   wording of HOME_OW, and LEGAL. */
 const PLAN_KEYS = { 标准版: 'standard', 上线版: 'launch', 增长版: 'growth', 全球获客版: 'global', 企业版: 'enterprise', 从一条流程开始: 'start' };
 export const SITE_OW = {
   planKeys: PLAN_KEYS,
@@ -2015,6 +2087,19 @@ export const SITE_OW = {
     },
     note: B('价格以人民币计，为公开参考价。实际服务范围、续费价格、模型与第三方服务用量，以双方签署的合同或订单为准。',
       'Prices are public reference prices in Chinese yuan (CNY). The actual scope, renewal price and model and third-party usage are set by the contract or order both parties sign.'),
+    /* 网站运营管理 is a service package, not an app (owner, 2026-10-10: 「这个是我们的服务包，
+       就是找我们合作可以帮忙管理」). No price was given: 按需报价. */
+    service: {
+      label: B('服务包', 'Service package'),
+      title: B('网站运营管理', 'Website operations'),
+      text: B('和我们合作，你的官网可以交给我们来运营和管理。', 'Work with us and we run and manage your website for you.'),
+      price: B('按需报价', 'Quoted on request'),
+      cta: B('咨询网站运营管理', 'Ask about website operations'),
+      /* its CTA opens contact.html?plan=site-ops, and the form's plan select has this option */
+      key: 'site-ops',
+      /* short enough for the select on a phone (tools/verify-conversion.mjs measures it) */
+      option: B('网站运营管理 · 按需报价', 'Website operations · on request'),
+    },
     start: {
       title: B('不确定从哪一档开始？', 'Not sure where to start?'),
       text: B('告诉我们眼下最拖效率或增长的那条流程。先跑通它，再决定需要哪一级，不必一次改动整个企业。',
@@ -2047,7 +2132,7 @@ export const SITE_OW = {
       more: { href: 'capabilities.html', label: B('看产品', 'See the product') },
       appsLabel: B('OPEN WORK 里的 15 个应用', 'The 15 apps in OPEN WORK'),
     },
-    story: { eyebrow: B('我们的来历', 'Our story'), title: B('从[[真实业务]]里长出来。', 'Grown out of [[real export work.]]'), where: B('STARGO WORK · 柳州 · 广西 · 中国', 'STARGO WORK · Liuzhou, Guangxi, China') },
+    story: { eyebrow: B('我们的来历', 'Our story'), title: B('从[[真实业务]]里长出来。', 'Grown out of [[real export work.]]'), where: B('STARGO WORK · 柳州 · 广西 · 中国', 'STARGO WORK · Liuzhou, Guangxi, China'), company: B(`由${CONTACT_INFO.company}运营`, 'Operated by {company}') },
     values: { eyebrow: B('三条原则', 'Three principles'), title: B('把工作交给 AI，[[把决定权留在企业]]。', 'Delegate the work. [[Keep the authority.]]'), icons: ['shield', 'flow', 'chart'] },
     starts: {
       eyebrow: B('从一条流程开始', 'Start with one workflow'),
@@ -2067,26 +2152,26 @@ export const SITE_OW = {
     hero: {
       eyebrow: B('预约演示', 'Book a demo'),
       title: [B('预约 30 分钟演示，', 'Book a 30-minute demo.'), B('看 OPEN WORK 干活。', 'Watch OPEN WORK at work.')],
-      lead: B('留下姓名和邮箱，我们会联系你约时间。演示用一封示例询盘走一遍，再围绕你的一条业务流程，看需要哪些资料、账号和审批。想先问问，直接发 WhatsApp。',
-        'Leave your name and email and we will get in touch to schedule it. We run a sample inquiry through OPEN WORK, then look at one of your workflows and the information, accounts and approvals it would need. Prefer to ask first? Message us on WhatsApp.'),
+      lead: B('留下姓名、公司和手机或微信，我们 12 小时内回复，约好时间；上门或远程演示都可以。演示用一封示例询盘走一遍，再围绕你的一条业务流程，看需要哪些资料、账号和审批。想先问问，直接加微信或发 WhatsApp。',
+        'Leave your name, company and phone or WeChat. We reply within 12 hours to set a time, on-site or online. We run a sample inquiry through OPEN WORK, then look at one of your workflows and the information, accounts and approvals it would need. Prefer to ask first? Message us on WeChat or WhatsApp.'),
     },
     formTitle: B('告诉我们你的公司', 'Tell us about your company'),
-    required: B('带 * 的为必填，其余选填。', 'Fields marked * are required; the rest are optional.'),
+    required: B('带 * 的为必填；邮箱和其余项选填。', 'Fields marked * are required. E-mail and the rest are optional.'),
+    /* name, company, mobile / WeChat and e-mail are FORM_FIELDS (shared with the homepage band) */
     fields: {
-      Name: B('姓名 *', 'Name *'), email: B('邮箱 *', 'Email *'), 'Last-Name': B('公司', 'Company'),
-      phone: B('WhatsApp / 微信 / 电话', 'WhatsApp / WeChat / phone'), plan: B('感兴趣的方案', 'Plan you are looking at'),
+      plan: B('感兴趣的方案', 'Plan you are looking at'),
       focus: B('最想先改善哪件事', 'What to improve first'), message: B('补充说明', 'Anything else'),
     },
     planNone: B('还没决定', 'Not decided yet'),
     focusNone: B('请选择', 'Choose one'),
     focusOptions: [B('分析询盘并回复', 'Analyze inquiries and reply'), B('起草报价单 · PI', 'Draft quotes and PIs'), B('主动获客 · 开发信', 'Prospecting and outreach'), B('跟进客户', 'Follow up customers'), B('老板看板 · 周报', 'Owner Dashboard and weekly brief'), B('客户CRM 与资料整理', 'Customer CRM and company information'), B('企业ERP · 订单与单证', 'ERP, orders and documents'), B('其他', 'Something else')],
     messageHint: B('例如：现在用哪些软件？哪一步最费时间？', 'For example: which tools do you use today, and where does the work stall?'),
-    ways: { title: B('直接联系', 'Reach us directly'), email: B('邮件', 'Email'), address: B('地址', 'Location') },
+    ways: { title: B('直接联系', 'Reach us directly'), email: B('邮件', 'Email'), wechat: B('微信', 'WeChat'), phone: B('电话', 'Phone'), address: B('地址', 'Location') },
     steps: {
       title: B('演示怎么进行', 'How the demo works'),
       list: [
-        [B('我们联系你', 'We get in touch'), B('通过你留下的联系方式，约一个时间。', 'Using the contact details you leave, to agree a time.')],
-        [B('30 分钟看一遍', '30 minutes, end to end'), B('用一封示例询盘，看 OPEN WORK 读询盘、算价格、起草回复和 PI，发出前等你批准。', 'On a sample inquiry: OPEN WORK reads it, prices it and drafts the reply and the PI, which wait for your approval.')],
+        [B('12 小时内回复', 'A reply within 12 hours'), B('通过你留下的手机或微信，约一个时间。', 'We call or message you on the phone or WeChat you leave to agree a time.')],
+        [B('30 分钟看一遍', '30 minutes, end to end'), B('上门或远程都可以。用一封示例询盘，看 OPEN WORK 读询盘、算价格、起草回复和 PI，发出前等你批准。', 'On-site or online. On a sample inquiry: OPEN WORK reads it, prices it and drafts the reply and the PI, which wait for your approval.')],
         [B('聊你的流程', 'Your workflow'), B('围绕你的一条业务，讨论需要的资料、账号、岗位、审批和可验收的结果。', 'Around one of your workflows: the information, accounts, roles, approvals and the results you can check.')],
       ],
     },
@@ -2102,16 +2187,10 @@ export const SITE_OW = {
     },
   },
 
-  /* ---- privacy / terms / notices ------------------------------------------ */
+  /* ---- privacy / terms ------------------------------------------------------ */
   legal: {
     eyebrow: B('法律信息', 'Legal'),
     pagesLabel: B('法律信息', 'Legal pages'),
-    related: B('继续看', 'Keep reading'),
-    notices: [
-      { href: 'capabilities.html', shot: 'ow12-inquiry-card', title: B('产品', 'Product'), text: B('OPEN WORK 和 15 个应用：分析询盘、报价、主动获客、老板看板。', 'OPEN WORK and its 15 apps: inquiries, quotes, prospecting and the Owner Dashboard.') },
-      { href: 'enterprise.html', shot: 'ow22-approval-bar', title: B('安全与接入', 'Security & setup'), text: B('哪些动作必须由人批准，谁能看什么，每一步怎么留痕。', 'Which actions need a person’s approval, who can see what, and how each step is recorded.') },
-      { href: 'workforce.html', shot: 'ow25-staff-card', title: B('数字员工', 'AI Staff'), text: B('288 名数字员工，按任务派工，关键动作由人批准。', '288 AI staff, assigned by task, with key actions approved by people.') },
-    ],
   },
 
   /* ---- 404.html ------------------------------------------------------------ */
