@@ -18,9 +18,10 @@ import { makeSub, findByClass, extractElement } from './lib-html.mjs';
 import { editorialImages } from './editorial-images.mjs';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
-import { CAP_JUMPS, NAV, SECONDARY, MORE, LANG_SWITCH, CHROME, META, CONTACT_INFO, SITE_URL } from './copy.mjs';
-import { POSTS, BLOG_UI, postPath, coverSrc, faqEntities, wordCount } from './blog.mjs';
+import { CAP_JUMPS, NAV, NAV_CTA, SECONDARY, MORE, LANG_SWITCH, CHROME, META, CONTACT_INFO, SITE_URL } from './copy.mjs';
+import { POSTS, BLOG_UI, postPath, coverShareSrc, coverAlt, faqEntities, wordCount } from './blog.mjs';
 import { OG, OS_ART } from './replaceables.mjs';
+import { versionAssets } from './asset-version.mjs';
 
 /** Every page the build produces, as root-relative names. */
 export const SITE_PAGES = [...NAV, ...SECONDARY, ...MORE].map((n) => n.href).concat(POSTS.map(postPath));
@@ -29,9 +30,20 @@ export const WORDMARK = 'assets/brand/stargo-wordmark-600.png';
 const AVATAR = 'assets/stargo/avatar-core.png';
 /** Share cover. Token is rewritten to OG.file (og-cover.png, 1200×630). See tools/replaceables.mjs. */
 const OG_IMAGE = OG.token;
+/* What the share image shows, for og:image:alt / twitter:image:alt (screen readers and link previews).
+   Articles describe their own cover (tools/blog.mjs coverAlt). */
+const OG_ALT = {
+  zh: 'STARGO WORK：外贸工厂的 AI 工作台。窗口里是 OPEN WORK 分析询盘、起草英文回复的界面，演示数据。',
+  en: 'STARGO WORK, the AI workspace for export manufacturers: the OPEN WORK screen analyzing an inquiry and drafting a reply. Demo data, interface shown in Chinese.',
+};
+const attr = (v) => String(v).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 
-/** Product screens that replace the template's photo strips (overlay menu) and image rotator (contact band). */
-export const SCREENS = Object.values(OS_ART).map((n) => `assets/stargo/${n}.webp`);
+/** Product screens that replace the template's photo strips (overlay menu) and image rotator (contact band).
+    Not the retired desktop (os-desktop, 「系统地图」) or the creative-studio mock-up with a stock
+    portrait as its user (os-boot): phase C2, 2026-10-09 (tools/build-site.mjs STOCK). Since C2 pass 2
+    not the two the image catalogue rates weak for painted English slogans either (os-trade-execution:
+    「GLOBAL CONNECTIONS」 on containers and a crane; os-sales-desk: a slogan on the wall). */
+export const SCREENS = Object.entries(OS_ART).filter(([k]) => !['desktop', 'boot', 'tradeExecution', 'salesDesk'].includes(k)).map(([, n]) => `assets/stargo/${n}.webp`);
 
 /** Template pages that no longer exist and where each now lives. Real pages are never listed here. */
 const LEGACY = {
@@ -99,6 +111,7 @@ function links(lang, current) {
   const nav = NAV.map((n) => ({ href: n.href, label: t(n.label) }));
   const more = MORE.map((n) => ({ href: n.href, label: t(n.label) }));
   const secondary = SECONDARY.map((n) => ({ href: n.href, label: t(n.label) }));
+  const cta = { href: NAV_CTA.href, label: t(NAV_CTA.label) };
   const swap = { href: other, label: t(LANG_SWITCH), swap: true, lang: lang === 'zh' ? 'en' : 'zh-CN' };
   /* The four stages a buyer looks for, jumping straight to their block on the
      capability page. They take the pill's middle slot, where a wordmark that
@@ -109,16 +122,32 @@ function links(lang, current) {
     href: onCaps ? `#${c.anchor}` : `capabilities.html#${c.anchor}`,
     label: t(c.label),
   }));
-  return { nav, more, secondary, swap, capJumps };
+  /* any page by its address, whichever list it sits in */
+  const byHref = (h) => {
+    const hit = [...nav, ...more, ...secondary].find((n) => n.href === h);
+    if (!hit) throw new Error(`chrome: ${h} is in no navigation list`);
+    return hit;
+  };
+  return { nav, more, secondary, cta, swap, capJumps, byHref };
 }
 
 function topNav(html, L, current) {
   const m = html.match(/<nav role="navigation" class="nav-menu first w-nav-menu">[\s\S]*?<\/nav>/);
   if (!m) throw new Error('chrome: top nav not found');
   const tpl = firstLink(m[0]);
-  const items = [...L.nav.slice(1), ...L.more, L.swap];   // the wordmark is the home link; About and Blog sit after the product pages
-  const out = items.map((n) => renderLink(tpl, n, isCurrent(n.href, current))).join('');
-  return html.replace(m[0], `<nav role="navigation" class="nav-menu first w-nav-menu">${out}</nav>`);
+  /* buyer-plan S0: 产品 · 安全与接入 · 定价 · 关于, the language switch and one
+     【预约演示】 button. The wordmark is the home link. The MORE pages (数字员工,
+     提醒与记忆, 博客) are in the same list as `.stargo-nav-more`: hidden in the
+     desktop bar (css/stargo-fusion.css), shown in the phone menu, which is this
+     list collapsed (Webflow, below 992px) and the only menu a phone has. */
+  const main = L.nav.slice(1).map((n) => renderLink(tpl, n, isCurrent(n.href, current))).join('');
+  const more = L.more.filter((n) => n.href !== L.cta.href)
+    .map((n) => renderLink(tpl, n, isCurrent(n.href, current)).replace(/class="button-link /, 'class="button-link stargo-nav-more ')).join('');
+  const swap = renderLink(tpl, L.swap, false);
+  const cur = isCurrent(L.cta.href, current);
+  const cta = `<a href="${L.cta.href}" class="button-link stargo-nav-cta w-inline-block${cur ? ' w--current' : ''}"${cur ? ' aria-current="page"' : ''}><div class="navigation-text-main">${L.cta.label}</div></a>`;
+  if ((more.match(/stargo-nav-more/g) ?? []).length !== L.more.length - 1) throw new Error('chrome: top nav "more" links not marked');
+  return html.replace(m[0], `<nav role="navigation" class="nav-menu first w-nav-menu">${main}${more}${swap}${cta}</nav>`);
 }
 
 /** Overlay menu: the product pages, About and Blog, and the language switch. Legal pages sit in its bottom row and in the footer. */
@@ -161,7 +190,7 @@ function bottomPill(html, L, current) {
   const left = findByClass(text, 'div', 'menu-first-bottom', 0);
   const tpl = firstLink(left.text);
   const render = (list) => list.map((n) => renderLink(tpl, n, isCurrent(n.href, current))).join('');
-  const byHref = (h) => L.nav.find((n) => n.href === h);
+  const byHref = L.byHref;
   text = text.slice(0, left.start) + `<div class="menu-first-bottom">${render([byHref('capabilities.html'), byHref('workforce.html')])}</div>` + text.slice(left.end);
   const right = findByClass(text, 'div', 'menu-first-bottom', 1);
   text = text.slice(0, right.start) + `<div class="menu-first-bottom right">${render([byHref('pricing.html'), byHref('contact.html')])}</div>` + text.slice(right.end);
@@ -178,8 +207,8 @@ function footerPages(html, L, current) {
   const grid = findByClass(html, 'div', 'footer-small-grid');
   if (!grid) throw new Error('chrome: footer pages grid not found');
   const tpl = firstLink(grid.text);
-  const n = L.nav;
-  const cols = [[n[0], n[1], n[2], n[3]], [n[4], n[5], n[6], L.swap], [...L.more, ...L.secondary]];
+  /* the main pages, the MORE pages with the language switch, the legal pages */
+  const cols = [L.nav, [...L.more, L.swap], L.secondary];
   const inner = cols.map((c) => `<div class="flex-item">${c.map((x) => renderLink(tpl, x, isCurrent(x.href, current))).join('')}</div>`).join('');
   return replaceInner(html, grid, inner);
 }
@@ -213,11 +242,11 @@ function head(html, lang, current) {
   const zh = cleanUrl('zh', current);
   const en = cleanUrl('en', current);
   const inLanguage = lang === 'zh' ? 'zh-CN' : 'en';
-  const ogImage = post ? `${SITE_URL}/${coverSrc(post)}` : `${SITE_URL}/${OG_IMAGE}`;
+  const ogImage = post ? `${SITE_URL}/${coverShareSrc(post)}` : `${SITE_URL}/${OG_IMAGE}`;
   const pageType = current === 'about.html' ? 'AboutPage' : current === 'blog.html' ? 'CollectionPage' : current === 'contact.html' ? 'ContactPage' : 'WebPage';
   const blogUrl = cleanUrl(lang, 'blog.html');
   const graph = [
-    { '@type': 'Organization', '@id': ORG_ID, name: 'STARGO WORK', url: `${SITE_URL}/`, logo: `${SITE_URL}/${WORDMARK}`, email: CONTACT_INFO.email, telephone: CONTACT_INFO.whatsapp, address: { '@type': 'PostalAddress', addressLocality: 'Liuzhou', addressRegion: 'Guangxi', addressCountry: 'CN' }, sameAs: [CONTACT_INFO.siteHref] },
+    { '@type': 'Organization', '@id': ORG_ID, name: 'STARGO WORK', legalName: CONTACT_INFO.company, url: `${SITE_URL}/`, logo: `${SITE_URL}/${WORDMARK}`, email: CONTACT_INFO.email, telephone: CONTACT_INFO.phone, address: { '@type': 'PostalAddress', addressLocality: 'Liuzhou', addressRegion: 'Guangxi', addressCountry: 'CN' }, sameAs: [CONTACT_INFO.siteHref] },
     { '@type': 'WebSite', '@id': SITE_ID, url: `${SITE_URL}/`, name: 'STARGO WORK', inLanguage: ['zh-CN', 'en'], publisher: { '@id': ORG_ID } },
     { '@type': pageType, '@id': self, url: self, name: title, description, inLanguage, isPartOf: { '@id': SITE_ID }, ...(post ? { primaryImageOfPage: ogImage } : {}) },
   ];
@@ -227,7 +256,7 @@ function head(html, lang, current) {
   if (current === 'blog.html') {
     graph.push({
       '@type': 'Blog', '@id': `${blogUrl}#blog`, url: blogUrl, name: `STARGO WORK ${BLOG_UI.section[lang]}`, description, inLanguage, publisher: { '@id': ORG_ID },
-      blogPost: POSTS.map((p) => ({ '@type': 'BlogPosting', '@id': `${cleanUrl(lang, postPath(p))}#article`, headline: p.title[lang], url: cleanUrl(lang, postPath(p)), datePublished: p.date, dateModified: p.modified ?? p.date, image: `${SITE_URL}/${coverSrc(p)}` })),
+      blogPost: POSTS.map((p) => ({ '@type': 'BlogPosting', '@id': `${cleanUrl(lang, postPath(p))}#article`, headline: p.title[lang], url: cleanUrl(lang, postPath(p)), datePublished: p.date, dateModified: p.modified ?? p.date, image: `${SITE_URL}/${coverShareSrc(p)}` })),
     });
   }
   if (post) {
@@ -269,11 +298,13 @@ function head(html, lang, current) {
     '<meta property="og:site_name" content="STARGO WORK"/>',
     `<meta property="og:locale" content="${lang === 'zh' ? 'zh_CN' : 'en_US'}"/>`,
     `<meta property="og:image" content="${ogImage}"/>`,
-    post ? '<meta property="og:image:width" content="1200"/><meta property="og:image:height" content="800"/>' : '<meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/>',
+    `<meta property="og:image:alt" content="${attr(post ? coverAlt(post, lang) : OG_ALT[lang])}"/>`,
+    post ? '<meta property="og:image:width" content="1200"/><meta property="og:image:height" content="600"/>' : '<meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/>',
     ...(post ? [`<meta property="article:published_time" content="${post.date}"/>`, `<meta property="article:modified_time" content="${post.modified ?? post.date}"/>`, `<meta property="article:section" content="${(post.section ?? BLOG_UI.section)[lang]}"/>`, ...post.keywords[lang].map((k) => `<meta property="article:tag" content="${k}"/>`)] : []),
     '<meta name="twitter:card" content="summary_large_image"/>',
     `<meta name="twitter:image" content="${ogImage}"/>`,
-    '<meta name="theme-color" content="#0d0906"/>',
+    `<meta name="twitter:image:alt" content="${attr(post ? coverAlt(post, lang) : OG_ALT[lang])}"/>`,
+    '<meta name="theme-color" content="#f8faff"/>',
     `<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>`,   // no "</script>" can end the block early
   ].join('');
   let out = html
@@ -289,6 +320,7 @@ function head(html, lang, current) {
        photograph while the one written above named our cover. */
     .replace(/<meta content="[^"]*" (?:name|property)="og:image"\/>/g, '')
     .replace(/<meta content="[^"]*" (?:name|property)="twitter:image"\/>/g, '')
+    .replace(/<meta content="[^"]*" (?:name|property)="twitter:card"\/>/g, '')   // regenerated above: the template's own copy made it appear twice
     .replace(/<meta property="og:type" content="website"\/>/, '')                // regenerated above (article for posts)
     /* The tab icon. It pointed at the wordmark, which is a 139:22 lozenge: in a
        16px tab that is an unreadable smear, which is what the owner saw. The
@@ -475,16 +507,40 @@ function uniqueLayoutIds(html) {
   });
 }
 
+/* An input's `autocomplete` token by what it collects (WCAG 1.3.5). The demo
+   form's own fields (tools/ow-blocks/contact.mjs formFields) carry theirs; this
+   covers the template's newsletter e-mail and any plain input without one. */
+const autocompleteFor = (tag) => {
+  const name = (tag.match(/\sname="([^"]*)"/) || [])[1] || '';
+  if (/\stype="email"/.test(tag)) return 'email';
+  if (/^name$/i.test(name)) return 'name';
+  if (/^(?:company|organi[sz]ation|subject|last-name)$/i.test(name)) return 'organization';
+  if (/^(?:phone|tel|mobile)$/i.test(name)) return 'tel';
+  return null;
+};
+const FALLBACK_NAME = { email: { zh: '邮箱', en: 'Email' }, name: { zh: '姓名', en: 'Name' }, organization: { zh: '公司', en: 'Company' }, tel: { zh: '手机 / 微信', en: 'Mobile / WeChat' } };
+
 function formMarkup(html, lang) {
   return html.replace(/<form\b[^>]*>[\s\S]*?<\/form>/g, form => {
     const isNews = /id="Subscribe"/.test(form);
     form = form.replace(/<form\b/, `<form data-stargo-form="${isNews ? 'newsletter' : 'contact'}"`).replace(/method="get"/, 'method="post" action="/api/contact"');
     if (!form.includes('name="website"')) form = form.replace(/(<form[^>]*>)/, '$1<div class="stargo-hp" aria-hidden="true"><input aria-label="Website" name="website" type="text" tabindex="-1" autocomplete="off"/></div>');
+    /* Which form this is, for a post without the script (functions/api/contact.js
+       refuses a body without it); js/stargo-forms.js skips hidden inputs and
+       sends the same value in its JSON. */
+    if (!/\sname="form"/.test(form)) form = form.replace(/(<form[^>]*>)/, `$1<input type="hidden" name="form" value="${isNews ? 'newsletter' : 'contact'}"/>`);
+    /* An input with a visible <label for> is named by it: an aria-label on top
+       would replace the label (and drop its 「（选填）」), so only a bare input,
+       like the newsletter e-mail, gets one. */
+    const labelled = new Set([...form.matchAll(/<label\b[^>]*\bfor="([^"]+)"/g)].map(m => m[1]));
     form = form.replace(/<input\b[^>]*>/g, tag => {
-      if (/type="email"/.test(tag)) return tag.replace('<input ', `<input autocomplete="email" aria-label="${lang === 'zh' ? '邮箱' : 'Email'}" `);
-      if (/name="[Nn]ame"/.test(tag)) return tag.replace('<input ', `<input autocomplete="name" aria-label="${lang === 'zh' ? '姓名' : 'Name'}" `);
-      if (/name="(?:Subject|Last-Name)"/.test(tag)) return tag.replace('<input ', `<input autocomplete="organization" aria-label="${lang === 'zh' ? '公司' : 'Company'}" `);
-      return tag;
+      const kind = autocompleteFor(tag);
+      if (!kind) return tag;
+      const id = (tag.match(/\sid="([^"]*)"/) || [])[1];
+      const add = [];
+      if (!/\sautocomplete=/.test(tag)) add.push(`autocomplete="${kind}"`);
+      if (!/\saria-label=/.test(tag) && !(id && labelled.has(id))) add.push(`aria-label="${FALLBACK_NAME[kind][lang]}"`);
+      return add.length ? tag.replace('<input ', `<input ${add.join(' ')} `) : tag;
     });
     const consent = lang === 'zh' ? '提交前请阅读我们的 <a href="privacy.html">隐私政策</a>。我们仅用这些信息处理你的申请。' : 'Please read our <a href="privacy.html">Privacy Policy</a>. We use these details to respond to your request.';
     return form.replace('</form>', `<p class="stargo-form-consent">${consent}</p></form>`);
@@ -580,8 +636,8 @@ export function remapLinks(html) {
                 : /博客|文章|Blog|Article/i.test(text) ? 'blog.html'
                   : /关于|About/i.test(text) ? 'about.html'
                     : /演示|Demo|联系|Contact|诊断|talk/i.test(text) ? 'contact.html'
-                      : /声明|Notices|Licens/i.test(text) ? 'notices.html'
-                        : /首页|Home|Trade OS/i.test(text) ? 'index.html'
+                      : /声明|Notices|Licens|条款|Terms/i.test(text) ? 'terms.html'   // the notices page is gone (2026-10-10)
+                        : /首页|Home/i.test(text) ? 'index.html'
                           : null;
     return `<a${pre}href="${byText ?? LEGACY[href]}"${post}>${body}</a>`;
   });
@@ -606,10 +662,39 @@ export function relocateLinks(html, up) {
 
 /* --------------------------------------------------------------- main -- */
 
+/* The small orb beside the wordmark (navigation, overlay menu, footer) is
+   the template's looping film, 1.7 MB as MP4 plus 4.9 MB as WebM, to draw a
+   30px circle. On every page it is one frame of that film, as a still (the
+   film's own poster is its dark first frame, before the orb appears):
+     ffmpeg -ss 2 -i assets/699b6466d5f19893993a4bf2/699b6466d5f19893993a4f47_magical_orb_remix_mp4.mp4 \
+       -frames:v 1 -vf scale=132:132:flags=lanczos -c:v libwebp -quality 90 assets/brand/stargo-orb-still.webp
+   132px is the orb box's 66px (.logo-bg, 220% of the 30px circle) at 2x.
+   (Was done in tools/build-site.mjs for the OPEN WORK pages only until C2
+   pass 2; the blog pages still fetched the film.) */
+export const ORB_STILL = 'assets/brand/stargo-orb-still.webp';
+const ORB_FILM = /class="logo-bg[^"]*\bw-background-video\b[^"]*"><video id="([^"]+)-video"/g;
+function orbStills(html, current) {
+  let out = html;
+  for (const [, id] of [...html.matchAll(ORB_FILM)]) out = stillImage(out, id, ORB_STILL, '');
+  if (ORB_FILM.test(out) || /magical_orb_remix/.test(out)) throw new Error(`chrome: the orb film survives on ${current}`);
+  ORB_FILM.lastIndex = 0;
+  return out;
+}
+
+/**
+ * Skip link (tech audit #12): the first tab stop on every page, hidden until it has focus,
+ * jumps past the navigation to the page's <main id="main"> (css/stargo-fusion.css `.stargo-skip`).
+ */
+function skipLink(html, lang) {
+  if (!/\bid="main"/.test(html)) throw new Error('chrome: no <main id="main"> for the skip link');
+  const label = lang === 'zh' ? '跳到正文' : 'Skip to content';
+  return html.replace(/<body\b[^>]*>/, (open) => `${open}<a class="stargo-skip" href="#main">${label}</a>`);
+}
+
 export function applyChrome(html, { lang, current }) {
   const { opt } = makeSub('chrome');
   const L = links(lang, current);
-  let out = html;
+  let out = orbStills(html, current);
   out = head(out, lang, current);
   out = topNav(out, L, current);
   out = overlayMenu(out, L, current);
@@ -619,6 +704,7 @@ export function applyChrome(html, { lang, current }) {
   out = wordmark(out);
   out = chromeImagery(out);
   out = sideMenu(out, lang);
+  out = skipLink(out, lang);
   out = scripts(out);
   out = linkHygiene(out, lang);
   out = socialIcons(out);
@@ -639,9 +725,16 @@ export function applyChrome(html, { lang, current }) {
   // check in CI exists to catch. Folding first makes the token depend on the
   // file's content and nothing else, so the build is reproducible on any
   // checkout. The value is a cache key; what the browser loads is unchanged.
+  //
+  // A stylesheet ships with ?v= keys on the fonts and pictures it names
+  // (tools/make-dist.mjs, tools/asset-version.mjs), and its own key is taken
+  // over that text: a changed font or picture gives the stylesheet a new URL
+  // too, so no cached stylesheet keeps asking for the old file.
   out = out.replace(/((?:src|href)=")((?:css|js)\/[^"?]+\.(?:css|js))"/g, (_, attr, path) => {
     const raw = readFileSync(new URL(`../${path}`, import.meta.url));
-    const content = Buffer.from(raw.toString('latin1').replace(/\r\n/g, '\n'), 'latin1');
+    let text = raw.toString('latin1').replace(/\r\n/g, '\n');
+    if (path.endsWith('.css')) text = versionAssets(text);
+    const content = Buffer.from(text, 'latin1');
     const hash = createHash('sha256').update(content).digest('hex').slice(0, 12);
     return `${attr}${path}?v=${hash}"`;
   });

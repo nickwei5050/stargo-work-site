@@ -14,9 +14,14 @@
  * serve byte ranges, because a <video> element asks for them, and it maps the
  * extensions this site actually contains, because a font or a video served as
  * application/octet-stream is a failure the verifiers would report as ours.
+ * When the root has a Cloudflare Pages `_redirects` file (dist/, written by
+ * tools/make-dist.mjs), its plain `from to status` lines are answered the way
+ * Pages answers them, so tools/verify-release.mjs can check the redirects
+ * against a local dist/ too (review, round 3); splats and placeholders are
+ * not supported, and a line with one stops the server.
  */
 import { createServer } from 'node:http';
-import { createReadStream, statSync, existsSync } from 'node:fs';
+import { createReadStream, statSync, existsSync, readFileSync } from 'node:fs';
 import { extname, join, normalize, resolve as resolvePath, isAbsolute, sep } from 'node:path';
 import { SITE } from './paths.mjs';
 
@@ -33,6 +38,18 @@ const ROOT = (() => {
   const r = arg('root', process.env.ROOT || SITE);
   return resolvePath(isAbsolute(r) ? r : join(SITE, r));
 })();
+
+/** Exact-path redirects from ROOT/_redirects: path → [target, status]. */
+const REDIRECTS = new Map();
+if (existsSync(join(ROOT, '_redirects'))) {
+  for (const line of readFileSync(join(ROOT, '_redirects'), 'utf8').split('\n')) {
+    const t = line.trim();
+    if (!t || t.startsWith('#')) continue;
+    const [from, to, status = '302'] = t.split(/\s+/);
+    if (!to || /[*:]/.test(from) || !/^30[1278]$/.test(status)) throw new Error(`serve: unsupported _redirects line: ${t}`);
+    REDIRECTS.set(from, [to, Number(status)]);
+  }
+}
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -87,7 +104,13 @@ const server = createServer((reqst, res) => {
     res.writeHead(405, { allow: 'GET, HEAD', 'content-type': 'text/plain; charset=utf-8' });
     return res.end('method not allowed\n');
   }
-  const hit = resolve(new URL(reqst.url, `http://${HOST}:${PORT}`).pathname);
+  const { pathname, search } = new URL(reqst.url, `http://${HOST}:${PORT}`);
+  const redirect = REDIRECTS.get(pathname);
+  if (redirect) {
+    res.writeHead(redirect[1], { location: redirect[0] + search, 'cache-control': 'no-store' });
+    return res.end();
+  }
+  const hit = resolve(pathname);
   if (!hit) {
     res.writeHead(404, { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store' });
     return res.end('404 not found\n');

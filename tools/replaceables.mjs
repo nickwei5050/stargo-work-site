@@ -95,7 +95,7 @@ export const PRODUCT_IDS = {
 export const PRODUCT = Object.fromEntries(
   Object.entries(PRODUCT_IDS).map(([key, id]) => [key, productFile(id)]),
 );
-/* Names the homepage and notices builders already use. */
+/* Names the homepage builder already uses. */
 PRODUCT.workspaceHome = PRODUCT.workspace;
 PRODUCT.expertsLibrary = PRODUCT.experts;
 PRODUCT.inquiryReply = PRODUCT.inquiry;
@@ -170,9 +170,6 @@ export const STORY_ART = {
   knowledge: 'brand-ontology',
   improvement: 'brand-loop',
 };
-
-/** Notices “keep reading” cards, in card order. */
-export const NOTICES_CARDS = [PRODUCT.workspaceHome, PRODUCT.expertsLibrary, PRODUCT.documentPack];
 
 /** Workforce / About pictures that reuse a hero or product slot. */
 export const PLACED = {

@@ -25,10 +25,10 @@
    "verdict": "RELEASED (caption: 产品界面示意（演示数据）)",
    "blockers": [
     "\"DeepSeek-V4.1-Flash High\" — model picker at the right end of the composer toolbar (centre of the image, ~y=443): third-party model / vendor name",
-    "\"企业知识库 WeKnora\" — left navigation, 9th item (~y=395): open-source project name (Tencent WeKnora) used as the knowledge-base module",
+    "\"企业知识库 [knowledge engine]\" — left navigation, 9th item (~y=395): open-source project name (Tencent [knowledge engine]) used as the knowledge-base module",
     "\"demo-workspace\" — workspace chip above the composer (~x=410,y=352) and again as a folder in the left workspace list (~y=595): demo-only label"
    ],
-   "reason": "Exposes the underlying model vendor (\"DeepSeek-V4.1-Flash High\") and the open-source knowledge-base project name \"WeKnora\" — both need the owner's decision before publishing."
+   "reason": "Exposes the underlying model vendor (\"DeepSeek-V4.1-Flash High\") and the open-source knowledge-base project name \"[knowledge engine]\" — both need the owner's decision before publishing."
   },
   {
    "id": "SW004",
@@ -37,9 +37,9 @@
    "verdict": "RELEASED (caption: 产品界面示意（演示数据）)",
    "blockers": [
     "\"Blender Add-on Engineer\" with subtitle \"插件开发 · 3D 工具与扩展\" — expert card in the bottom row, middle column (~x=680,y=633): third-party open-source product name",
-    "\"企业知识库 WeKnora\" — left navigation, 9th item (~y=381): open-source project name"
+    "\"企业知识库 [knowledge engine]\" — left navigation, 9th item (~y=381): open-source project name"
    ],
-   "reason": "Light hold: the \"288 / 288\" count is consistent with the site, but one expert card names the third-party product \"Blender\" and the nav names \"WeKnora\" — fine to publish once the owner clears (or the bottom card row is cropped out)."
+   "reason": "Light hold: the \"288 / 288\" count is consistent with the site, but one expert card names the third-party product \"Blender\" and the nav names \"[knowledge engine]\" — fine to publish once the owner clears (or the bottom card row is cropped out)."
   },
   {
    "id": "SW005",
@@ -48,12 +48,12 @@
    "verdict": "HOLD",
    "blockers": [
     "\"参考 Manus、Devin、AFFiNE 等产品的发布案例。\" — body text of the \"AI 产品全球发布指南 / ai-launch-playbook\" card, top row middle (~x=730,y=318): three named third-party products / companies",
-    "\"企业知识库 WeKnora\" — left navigation, 9th item (~y=371): open-source project name",
+    "\"企业知识库 [knowledge engine]\" — left navigation, 9th item (~y=371): open-source project name",
     "\"DSH 原生技能\" badge — on every skill card (e.g. ~x=365,y=284): internal codename for the underlying runtime",
     "\"介绍 iOS、Android 的关键词研究\" — body of the \"应用商店优化指南 / aso-playbook\" card (~x=415,y=473): third-party platform/vendor names",
     "\"139 / 139 项\" — counter above the card grid (~x=990,y=167): a capability count that sits next to, and can be read against, the site's published \"288\" figure"
    ],
-   "reason": "A skill card names the competing products \"Manus、Devin、AFFiNE\", plus the internal \"DSH\" codename and \"WeKnora\" — third-party IP and infrastructure naming the owner must sign off on."
+   "reason": "A skill card names the competing products \"Manus、Devin、AFFiNE\", plus the internal \"DSH\" codename and \"[knowledge engine]\" — third-party IP and infrastructure naming the owner must sign off on."
   },
   {
    "id": "SW006",
@@ -61,14 +61,14 @@
    "language": "bilingual",
    "verdict": "RELEASED (caption: 产品界面示意（演示数据）)",
    "blockers": [
-    "\"在 Twenty 中进行只读身份识别与去重检查\" / \"Read-only identity and dedupe check in Twenty for the Chatwoot contacts\" — step card 04 \"crm-steward 客户档案管理员\" (~x=890,y=380-440): names the open-source projects Twenty and Chatwoot",
-    "\"Reads the Chatwoot queue and separates real buyer inquiries from spam, phishing and noise.\" — step card 01 \"triage 询盘接待员\" (~x=358,y=405-455): Chatwoot again",
-    "\"(WeKnora product cards)\" — step card 02 \"product-truth 产品与规格依据\" (~x=538,y=440): open-source project name; also \"企业知识库 WeKnora\" in the left navigation (~y=373)",
-    "\"客户背调核对：Twenty 里已存在，需要建档、推重\" — completed-task row T3 (~x=500,y=613): Twenty again",
+    "\"在 [CRM engine] 中进行只读身份识别与去重检查\" / \"Read-only identity and dedupe check in [CRM engine] for the [inbox engine] contacts\" — step card 04 \"crm-steward 客户档案管理员\" (~x=890,y=380-440): names the open-source projects [CRM engine] and [inbox engine]",
+    "\"Reads the [inbox engine] queue and separates real buyer inquiries from spam, phishing and noise.\" — step card 01 \"triage 询盘接待员\" (~x=358,y=405-455): [inbox engine] again",
+    "\"([knowledge engine] product cards)\" — step card 02 \"product-truth 产品与规格依据\" (~x=538,y=440): open-source project name; also \"企业知识库 [knowledge engine]\" in the left navigation (~y=373)",
+    "\"客户背调核对：[CRM engine] 里已存在，需要建档、推重\" — completed-task row T3 (~x=500,y=613): [CRM engine] again",
     "\"demo-workspace\" — chip next to the team name \"inquiry-sales-desk\" (~x=528,y=232) and the highlighted folder in the left workspace list (~y=451): demo-only label",
     "\"flags what is unconfirmed.\" — step card 02 English text (~x=538,y=462): unverified state wording"
    ],
-   "reason": "The step cards spell out the third-party stack (Twenty, Chatwoot, WeKnora) in both Chinese and English — vendor/infrastructure disclosure the owner must decide on."
+   "reason": "The step cards spell out the third-party stack ([CRM engine], [inbox engine], [knowledge engine]) in both Chinese and English — vendor/infrastructure disclosure the owner must decide on."
   },
   {
    "id": "SW007",
@@ -76,10 +76,10 @@
    "language": "bilingual",
    "verdict": "HOLD",
    "blockers": [
-    "\"企业知识库 WeKnora\" — left navigation, 9th item (~y=343): open-source project name",
+    "\"企业知识库 [knowledge engine]\" — left navigation, 9th item (~y=343): open-source project name",
     "\"demo-workspace\" — the value of the first KPI card \"工作区 Workspace\" (~x=367,y=161) and the selected folder in the left workspace list (~y=416): demo-only label"
    ],
-   "reason": "Light hold: no identifiers, money or failures, but the nav exposes \"WeKnora\" and the 0-total counters plainly contradict the five \"已完成\" rows underneath, which reads as broken to a visitor."
+   "reason": "Light hold: no identifiers, money or failures, but the nav exposes \"[knowledge engine]\" and the 0-total counters plainly contradict the five \"已完成\" rows underneath, which reads as broken to a visitor."
   },
   {
    "id": "SW008",
@@ -88,9 +88,9 @@
    "verdict": "RELEASED (caption: 产品界面示意（演示数据）)",
    "blockers": [
     "\"已定义 · 执行接入待验证\" — repeated on all eleven workflow cards (e.g. under \"客户开发闭环 / Customer Development Loop\" at ~x=360,y=242): an explicit \"pending verification / unverified\" state across the whole surface",
-    "\"企业知识库 WeKnora\" — left navigation, 8th item (~y=356): open-source project name"
+    "\"企业知识库 [knowledge engine]\" — left navigation, 8th item (~y=356): open-source project name"
    ],
-   "reason": "Every card is stamped \"执行接入待验证\" (execution integration not yet verified) — an unverified state the caption does not cover — plus \"WeKnora\" in the nav."
+   "reason": "Every card is stamped \"执行接入待验证\" (execution integration not yet verified) — an unverified state the caption does not cover — plus \"[knowledge engine]\" in the nav."
   },
   {
    "id": "SW010",
@@ -98,13 +98,13 @@
    "language": "bilingual",
    "verdict": "HOLD",
    "blockers": [
-    "\"WeKnora\" — the page's own H1, set before \"企业知识库\" (~x=325,y=60), in the breadcrumb \"STARGO WORK / WEKNORA\" (~y=25) and in the left navigation (~y=352): open-source project name used as a product title",
+    "\"[knowledge engine]\" — the page's own H1, set before \"企业知识库\" (~x=325,y=60), in the breadcrumb \"STARGO WORK / [knowledge engine]\" (~y=25) and in the left navigation (~y=352): open-source project name used as a product title",
     "\"One-way read-only projection of Notion content routed to …\" — the description on all eight knowledge-base cards (e.g. ~x=378,y=483 and ~x=875,y=520): names the third-party vendor Notion eight times",
     "\"STARGO Notion 文档 / Documents\" — card title, bottom row third column (~x=875,y=578): vendor name in a title",
     "\"STARGO Database unknown\" — card title, top row first column (~x=391,y=443), repeated in its body text \"routed to STARGO Database unknown. Full source…\": an unresolved/unknown data-source state",
     "\"Full source…\" (truncated \"Full source values and details\") — on every card: points at an underlying source system"
    ],
-   "reason": "The page is titled after the open-source project \"WeKnora\", every card advertises a \"projection of Notion content\", and one card reads \"STARGO Database unknown\" — vendor disclosure plus an unknown-state label."
+   "reason": "The page is titled after the open-source project \"[knowledge engine]\", every card advertises a \"projection of Notion content\", and one card reads \"STARGO Database unknown\" — vendor disclosure plus an unknown-state label."
   },
   {
    "id": "SW013",
@@ -129,11 +129,11 @@
     "\"admin@stargomoto.com\" under the name \"stargo\" with a green \"S\" avatar — account card at the bottom of the left sidebar (~x=85,y=594): an e-mail address / account identifier",
     "\"One-way read-only projection of Notion content routed to …\" — on all eight knowledge-base cards (e.g. ~x=318,y=383 and ~x=875,y=534): names the vendor Notion eight times",
     "\"STARGO Notion 文档 / Documents\" — card title, bottom row third column (~x=875,y=494)",
-    "\"WeKnora\" — green badge beside the \"知识库\" headline (~x=338,y=81) and as the open tab in the top bar (~x=207,y=21): open-source project name",
+    "\"[knowledge engine]\" — green badge beside the \"知识库\" headline (~x=338,y=81) and as the open tab in the top bar (~x=207,y=21): open-source project name",
     "\"STARGO Database unknown\" — card title, top row first column (~x=324,y=349) and inside its body text: unknown data-source state",
     "\"stargo rag smoke\", \"bindcheck\", \"stargo rag smoke\", \"smoke3\", \"smoke2\", \"stargo smoke\" — the 最近对话 list in the left sidebar (~y=324–461): internal smoke-test / bind-check session names"
    ],
-   "reason": "Contains a live-looking e-mail address (admin@stargomoto.com), internal smoke-test session names, the \"WeKnora\" project name and eight \"projection of Notion content\" strings."
+   "reason": "Contains a live-looking e-mail address (admin@stargomoto.com), internal smoke-test session names, the \"[knowledge engine]\" project name and eight \"projection of Notion content\" strings."
   },
   {
    "id": "SW017",
@@ -148,13 +148,13 @@
     "\"p0-brazil-sandbox-v1\" — environment identifier in the right panel header (~x=1120,y=45)",
     "\"版本 817741\" — build/version id, right panel header (~x=1208,y=45)",
     "\"GPT-4o\" — model chip at the bottom right of the chat composer (~x=1222,y=568): third-party model name",
-    "\"Puter app\" (~x=925,y=508), \"DSH runtime\" (~x=925,y=524), \"Activepieces\" (~x=925,y=540), \"Audit ledger + ontology\" (~x=925,y=556) in the \"System boundaries\" panel — named infrastructure products and internal runtime",
+    "\"[web desktop] app\" (~x=925,y=508), \"DSH runtime\" (~x=925,y=524), \"[automation engine]\" (~x=925,y=540), \"Audit ledger + ontology\" (~x=925,y=556) in the \"System boundaries\" panel — named infrastructure products and internal runtime",
     "\"Growth Kernel V3 — SANDBOX · SYNTHETIC — 0 external effects\" — sidebar status card (~x=80,y=560)",
     "\"NW\" — user avatar initials in the top bar (~x=858,y=17)",
     "\"DSH · 全工作台入口\" and \"NW\" logo mark — right panel title bar (~x=930,y=15): internal codename",
     "\"GJ-GOS-01 · P0 golden journey\" — journey identifier in the context strip (~x=245,y=289)"
    ],
-   "reason": "The densest of the batch: a money figure, five named importer companies, OVERDUE / INSUFFICIENT_DATA / incomplete states, sandbox and version identifiers, and the vendor names GPT-4o, Puter, Activepieces and DSH."
+   "reason": "The densest of the batch: a money figure, five named importer companies, OVERDUE / INSUFFICIENT_DATA / incomplete states, sandbox and version identifiers, and the vendor names GPT-4o, [web desktop], [automation engine] and DSH."
   },
   {
    "id": "SW019",
@@ -200,14 +200,14 @@
     "\"Superbike Brasil Importacao Ltda\" — named customer company, appears twice: 当前公司 row (centre) and the brief headline \"Dealer opportunity brief · Superbike Brasil Importacao Ltda\"",
     "\"Volt Mobility SP Ltda\", \"Urban E-Moto Comercio Ltda\", \"Roda Livre Distribuidora SA\", \"MotoSul Group Comercio de Veiculos Ltda\" — named companies in the \"Selection across the market\" list, right column, lower half",
     "\"importer / distributor in Sao Paulo, 34 dealers, 0 own stores.\" — COMPANY AND CHANNEL line of the brief, left column",
-    "\"Identity resolved: CNPJ matched to customs consignee and to the Twenty company record.\" — WHY THIS ACCOUNT FITS bullet, left column; \"Twenty\" is the underlying open-source CRM, and CNPJ is a national tax-ID system",
+    "\"Identity resolved: CNPJ matched to customs consignee and to the [CRM engine] company record.\" — WHY THIS ACCOUNT FITS bullet, left column; \"[CRM engine]\" is the underlying open-source CRM, and CNPJ is a national tax-ID system",
     "\"Category participation is observed at the commuter tier, but its claim is BLOCKED and is not treated as confirmed.\" — WHY THIS ACCOUNT FITS bullet, left column (blocked/unverified state)",
     "\"Approval Required\" ×3 — orange chips on the three Selected plays cards, middle column; plus \"Approval\" chips ×5 in the right-hand market list",
     "\"ship-sb-6\", \"web-sb-1\", \"trend-sb-1\", \"web-sb-2\" — evidence/source record ids in the OBSERVED PORTFOLIO table, bottom left",
     "\"Growth Kernel V3\" / \"SANDBOX · SYNTHETIC · 0 external effects\" — status card, bottom-left corner of the sidebar",
-    "\"走到 CRM / 触达客户之前会停下来等人在 DSH 里批准——不会自行写入 Twenty，也不会自行触达。\" — blue info box, top centre (vendor name \"Twenty\" again)"
+    "\"走到 CRM / 触达客户之前会停下来等人在 DSH 里批准——不会自行写入 [CRM engine]，也不会自行触达。\" — blue info box, top centre (vendor name \"[CRM engine]\" again)"
    ],
-   "reason": "Five named Brazilian customer companies, the open-source CRM name \"Twenty\", per-evidence source ids, a BLOCKED claim state and two account avatars — well beyond what the demo-data caption can cover."
+   "reason": "Five named Brazilian customer companies, the open-source CRM name \"[CRM engine]\", per-evidence source ids, a BLOCKED claim state and two account avatars — well beyond what the demo-data caption can cover."
   },
   {
    "id": "SW026",
@@ -222,13 +222,13 @@
     "\"first-party/stargo-ontology/lib/ontology.mjs\", \"first-party/stargo-audit-ledger/lib/ledger.mjs\", \"first-party/stargo-identity-spine/lib/spine.mjs\", \"first-party/stargo-growth-os/lib/registry.js\" — source-file paths in the Reused column, left panel",
     "\"docs/stargo-packages/growth-os-trade-signal-revenue-engine-v3/reference-kernel\" — repo path under \"V3 reference kernel\", bottom of the Reused column",
     "\"kernel/\", \"readmodels/\", \"ui/\" — code directory names in the Added column, centre panel",
-    "\"A second CRM — Twenty stays canonical\" — first row of the Refused column, right panel (open-source CRM vendor name)",
-    "\"A second workflow engine — Activepieces stays canonical\" — second row of the Refused column (open-source automation project name)",
+    "\"A second CRM — [CRM engine] stays canonical\" — first row of the Refused column, right panel (open-source CRM vendor name)",
+    "\"A second workflow engine — [automation engine] stays canonical\" — second row of the Refused column (open-source automation project name)",
     "\"mature open-source behind a thin adapter\" — Reuse order line, centre top",
     "\"Growth Kernel V3\" / \"SANDBOX · SYNTHETIC · 0 external effects\" — status card, bottom-left corner",
-    "\"不会自行写入 Twenty\" — blue info box, top centre"
+    "\"不会自行写入 [CRM engine]\" — blue info box, top centre"
    ],
-   "reason": "Repository file paths, an internal sandbox environment id and two open-source vendor names (Twenty, Activepieces) are printed across the whole layout."
+   "reason": "Repository file paths, an internal sandbox environment id and two open-source vendor names ([CRM engine], [automation engine]) are printed across the whole layout."
   },
   {
    "id": "SW028",
@@ -236,7 +236,7 @@
    "language": "bilingual",
    "verdict": "RELEASED (caption: 产品界面示意（演示数据）)",
    "blockers": [
-    "\"集成 Chatwoot 渠道　邮件来自真实全球各渠道，已通过AI自动识别并聚合；Chatwoot 能力支撑多语言沟通。…\" — yellow banner spanning the width just under the pipeline row (third-party open-source vendor, named twice)",
+    "\"集成 [inbox engine] 渠道　邮件来自真实全球各渠道，已通过AI自动识别并聚合；[inbox engine] 能力支撑多语言沟通。…\" — yellow banner spanning the width just under the pipeline row (third-party open-source vendor, named twice)",
     "\"inquiry@customer-a.com\" — sender e-mail address on the open message header, centre of the reading pane (placeholder-looking, but a live-format address)",
     "\"¥ 0\" under \"已确定成交额\" with \"本月成交并计入 ↑ +0%\" — fourth KPI card, top right (money amount, and a zero one)",
     "\"0\" under \"待跟进 / 超期: 0 条\" and \"0\" under \"待审批报价 / Human only\" — second and third KPI cards, top row (empty-state counts)",
@@ -244,7 +244,7 @@
     "\"HERO E2-Quotation.pdf 823 KB\", \"Proforma-Invoice.pdf 612 KB\", \"Product-Specification.pdf 2.4 MB\" — attachment chips above the reply buttons, bottom of the reading pane (document names/sizes)",
     "\"N / 本地销售经理 / 欢迎使用 STARGO\" — account chip, top right (a role rather than a personal name, but still an account identity)"
    ],
-   "reason": "A prominent Chatwoot integration banner, a sender e-mail address and a ¥0 revenue KPI all sit on the main surface."
+   "reason": "A prominent [inbox engine] integration banner, a sender e-mail address and a ¥0 revenue KPI all sit on the main surface."
   },
   {
    "id": "SW033",
@@ -252,7 +252,7 @@
    "language": "bilingual",
    "verdict": "RELEASED (caption: 产品界面示意（演示数据）)",
    "blockers": [
-    "\"基于 Chatwoot 渠道　邮件、网站表单及会员消息已接入 Chatwoot，AI 将自动识别并生成单据包，供销售同事快速处理。…\" — yellow banner across the content area, below the pipeline strip (vendor named twice)",
+    "\"基于 [inbox engine] 渠道　邮件、网站表单及会员消息已接入 [inbox engine]，AI 将自动识别并生成单据包，供销售同事快速处理。…\" — yellow banner across the content area, below the pipeline strip (vendor named twice)",
     "\"¥ 0\" under \"已签成交易额\" with \"较上周 –\" — fourth KPI card, top right (money amount)",
     "\"0\" under \"待跟进\" and \"0\" under \"待审批报价\" — second and third KPI cards, top row",
     "\"单据 #SD-20240917-001\" — document/record id at the top right of the 单据中心 panel",
@@ -260,7 +260,7 @@
     "\"负责人 / 未分配\" — customer summary card, centre (unassigned/empty state)",
     "\"尚未生成单据包，需先完成邮件与 AI 推理步骤。\" — 单据包 card, centre (not-yet-ready state)"
    ],
-   "reason": "Chatwoot is named twice in a full-width banner, and the header carries a ¥0 signed-revenue KPI plus an internal document id."
+   "reason": "[inbox engine] is named twice in a full-width banner, and the header carries a ¥0 signed-revenue KPI plus an internal document id."
   },
   {
    "id": "SW037",
@@ -274,13 +274,13 @@
     "\"49 含警告/隔离容器 chains with 2+ unresolved hop\" — red tile, second counts row",
     "\"6/11 至少有一条完整链路的闭环 loops with a complete chain hop\" — amber tile, second counts row (only 6 of 11 loops complete)",
     "\"22 六跳全链路完整 complete chains / 71\" — second counts row",
-    "\"WeKnora\" — third-party open-source project, three times in the bottom row: the \"5 · PROVIDER\" card title \"WeKnora\", the body \"Hybrid vector + keyword retrieval over a WeKnora knowledge base\", and \"区域智 Weknora 118 存在改造\" in the \"6 · DATA OWNER\" card",
+    "\"[knowledge engine]\" — third-party open-source project, three times in the bottom row: the \"5 · PROVIDER\" card title \"[knowledge engine]\", the body \"Hybrid vector + keyword retrieval over a [knowledge engine] knowledge base\", and \"区域智 [knowledge engine] 118 存在改造\" in the \"6 · DATA OWNER\" card",
     "\"自动检查 SELF-CHECK OK\" badge and timestamp \"2026-09-17 06:00:52\" — inner window header (build/health status)",
     "\"stargo-market-analyst\" and \"W001 · 客户开发闭环\" — internal agent id and loop id, bottom row cards 3 and 1",
     "\"A lookup that fails renders as a broken link naming the failed lookup.\" — 业务地图 body text, upper centre (failure wording)",
     "\"17 数据归属 54 行\" — counts panel (internal data-ownership matrix size)"
    ],
-   "reason": "Capability counts (247 / 221) contradict the published 288, and the panel also exposes registry file names, quarantined/unresolved chain warnings and the WeKnora project name."
+   "reason": "Capability counts (247 / 221) contradict the published 288, and the panel also exposes registry file names, quarantined/unresolved chain warnings and the [knowledge engine] project name."
   },
   {
    "id": "SW046",
@@ -312,7 +312,7 @@
     "\"growth-analytics.189-24-79-240.eslip.io\" under the 公网入口 (\"public entry\") column — 本组应用 table, centre; an IP-derived sslip-style host presented as a public endpoint",
     "\"RESOURCE_BLOCKED\" ×3 — as the REGISTRY TOKEN value and as a red 实时状态 chip in the 本组应用 table, and again as a red badge on \"STARGO 增长…\" in the left sidebar",
     "\"BOOKKEEPUSED\" — 来源 column of the 本组应用 table, centre (garbled internal status token)",
-    "\"growth-analytics · PostHog\" — app subtitle in the 本组应用 table, and \"posthog  0/1\" in the 增长与渠道 capability list, centre right (third-party analytics vendor)",
+    "\"growth-analytics · [analytics engine]\" — app subtitle in the 本组应用 table, and \"[analytics engine]  0/1\" in the 增长与渠道 capability list, centre right (third-party analytics vendor)",
     "\"stargo-audit-read  2/8\" and \"stargo-channel-journal-sdk  0/1\" — 增长与渠道 capability list, centre right (internal service ids with mostly-unavailable counts)",
     "\"CREDENTIAL_REQUIRED\" ×2 — amber badges on \"爆款视频策划\" and \"AI 投放工作室\" in the left sidebar",
     "\"2 条应用 · 8 条不可用\" — 增长与渠道 capability card, centre right",
@@ -321,7 +321,7 @@
     "\"apps.yaml\", \"routes.yaml\", \"capabilities.json\" and \"一律标记为 OFFLINE\" — panel description lines, upper and middle centre",
     "\"S / STARGO\" avatar — top bar, far right"
    ],
-   "reason": "A public-entry hostname built from a server IP, three RESOURCE_BLOCKED failure states, the PostHog vendor name and a DeepSeek model chip."
+   "reason": "A public-entry hostname built from a server IP, three RESOURCE_BLOCKED failure states, the [analytics engine] vendor name and a DeepSeek model chip."
   },
   {
    "id": "SW051",
@@ -330,13 +330,13 @@
    "verdict": "HOLD",
    "blockers": [
     "\"knowledge-center.189-24-79-240.sslip.io\" — under the 打开产品与知识 button in the 入口 Entry point card, left-centre; an sslip.io host embedding the server IP 189.24.79.240, with a copy-to-clipboard icon next to it",
-    "\"weknora.knowledge.search\", \"weknora.knowledge.list\", \"weknora.knowledge_bases.list\" in the CAPABILITY ID column and \"weknora\" ×3 in the PROVIDER column — 本路由声明的能力 table, centre right (third-party open-source knowledge project)",
+    "\"[knowledge engine].knowledge.search\", \"[knowledge engine].knowledge.list\", \"[knowledge engine].knowledge_bases.list\" in the CAPABILITY ID column and \"[knowledge engine]\" ×3 in the PROVIDER column — 本路由声明的能力 table, centre right (third-party open-source knowledge project)",
     "\"DeepSeek…  High\" — model picker chip at the bottom of the AI assistant panel, right edge (model/vendor name)",
     "\"注意事项 HEALTHY · 实时探测 HTTP 200 - 25 ms\" — 入口 Entry point card, left-centre (live infrastructure probe result)",
     "\"目前有哪些可用的 knowledge base?\" — suggested-question row, right panel (exposes the underlying vendor concept)",
     "\"每一条 capability id 都会配套对应的 capabilities.json 定解析，解析不了的会显示为暴露，而不是新增描述。\" — panel subline, centre (config file name)"
    ],
-   "reason": "An sslip.io endpoint containing the server IP is printed in the entry-point card, and the capability table names weknora as provider three times; a DeepSeek model chip sits in the assistant panel."
+   "reason": "An sslip.io endpoint containing the server IP is printed in the entry-point card, and the capability table names [knowledge engine] as provider three times; a DeepSeek model chip sits in the assistant panel."
   },
   {
    "id": "SW054",
@@ -344,7 +344,7 @@
    "language": "bilingual",
    "verdict": "HOLD",
    "blockers": [
-    "\"STARGO 客户管理 - Powered by Twenty\" — window title bar of the browser mock, top centre (the underlying open-source CRM named explicitly)",
+    "\"STARGO 客户管理 - Powered by [CRM engine]\" — window title bar of the browser mock, top centre (the underlying open-source CRM named explicitly)",
     "\"STARGO Admin\" repeated on every row of the 创建者 column (~28 occurrences) — centre of the table (account name)",
     "Masked-but-real person and company records throughout the 名称 and 公司 columns, e.g. \"U***s\", \"A***a\", \"S***l\", \"N***n\", \"M****H\", \"A**d\", and companies \"R****a / U**…\", \"A****s /…\", \"P****a / S***…\", \"P******l / N*…\", \"A*****d /…\", \"O***n / A**…\" — the masking is partial and the records are evidently real contacts",
     "\"全部 人员 · 138\" (table header) and \"全部人员 138 ↑ +12%\" (floating stat card, right) — plus \"覆盖国家/地区 22 ↑ +10%\" and \"跟进中 56 ↑ +24%\"; these counts sit beside the site's published \"288\" figure and contradict it",
@@ -352,7 +352,7 @@
     "\"Linkedin\" — column header near the right edge of the table (third-party brand)",
     "\"电子邮件\" column present on every row (empty envelope icons) — a contact-data column on a public marketing poster"
    ],
-   "reason": "\"Powered by Twenty\" in the title bar, a real (if partly masked) contact list with the STARGO Admin account, and 138/22/56 counts that contradict the published 288."
+   "reason": "\"Powered by [CRM engine]\" in the title bar, a real (if partly masked) contact list with the STARGO Admin account, and 138/22/56 counts that contradict the published 288."
   },
   {
    "id": "SW055",
@@ -360,7 +360,7 @@
    "language": "bilingual",
    "verdict": "HOLD",
    "blockers": [
-    "\"STARGO 客户管理 - Powered by Twenty\" — window title bar of the browser mock, top centre (underlying open-source CRM named explicitly)",
+    "\"STARGO 客户管理 - Powered by [CRM engine]\" — window title bar of the browser mock, top centre (underlying open-source CRM named explicitly)",
     "\"B**************** -RFL Kazi\" with the domain chip \"www.pranfoc…\" — 11th row of the 公司 table, centre; \"RFL\" and \"PRAN Foods\" are real Bangladeshi companies and the masking leaves them identifiable",
     "Further partly-unmasked real company names down the 名称 column: \"S**********a Ltda\", \"A************ Units\", \"P********** Test\", \"A**********quiry\", \"Z***********quest\", \"I************ Docs\", \"M**********nya\", \"J********** Issue\", \"I**********Go\", \"T*********GS\", \"R**********  Terms\"",
     "\"STARGO Admin\" on every row of the 创建者 column (~18 occurrences) — centre of the table (account name)",
@@ -370,7 +370,7 @@
     "\"app.stargo.com\" — browser address bar, top centre (own domain; low risk but an infrastructure address)",
     "\"Linkedin\" — column header of the table, right (third-party brand)"
    ],
-   "reason": "Real customer companies (RFL / pranfoods) leak through the asterisk masking, \"Powered by Twenty\" is in the title bar, and the 138 / 30+ counts conflict with the published 288."
+   "reason": "Real customer companies (RFL / pranfoods) leak through the asterisk masking, \"Powered by [CRM engine]\" is in the title bar, and the 138 / 30+ counts conflict with the published 288."
   },
   {
    "id": "SW056",
@@ -380,7 +380,7 @@
    "blockers": [
     "\"zouyuwei7***@gmail.com\" under \"STARGO Owner\" — account card pinned at the bottom-left corner of the sidebar; a real personal Gmail address with only three characters masked",
     "\"SO\" avatar initials — bottom-left account card and again in the top-right header",
-    "\"客户对话 Chatwoot\" — sidebar header, top-left corner (third-party open-source vendor named in the product chrome)",
+    "\"客户对话 [inbox engine]\" — sidebar header, top-left corner (third-party open-source vendor named in the product chrome)",
     "\"BRINC Unveils Starlink-Connected Guardian Emergency Response Drone\" — preview line of the first conversation (left list, top) and again in full in the 最近对话 row at the bottom; names two real companies (BRINC, Starlink)",
     "\"C******** One — Your Capital One Account…\" — second conversation in the list, left (Capital One is unmasked in the preview text)",
     "\"Hi Nick, We're looking to…\" — third conversation preview, left list (real first name of a recipient)",
@@ -392,7 +392,7 @@
     "\"活跃客户 96 ↑ +15%\" and \"对话总数 165\" / \"收到消息 1,248\" — KPI row, top; the 96 active customers conflicts with the site's published \"288\"",
     "\"机器人（Bot）\", \"CSAT 满意度\", \"SLA 服务水平\" — sidebar items exposing the underlying support-desk feature set"
    ],
-   "reason": "The owner's personal Gmail address is printed in the sidebar, and the conversation list carries real third-party companies (BRINC, Starlink, Capital One) plus a Chatwoot product header."
+   "reason": "The owner's personal Gmail address is printed in the sidebar, and the conversation list carries real third-party companies (BRINC, Starlink, Capital One) plus a [inbox engine] product header."
   },
   {
    "id": "SW065",
@@ -484,7 +484,7 @@
    "verdict": "HELD",
    "blockers": [
     "生命周期价值 $412,000, 预期成交金额 $80,000 and 毛利率 22% on a named company",
-    "验证状态 已验证 with 数据来源「CNPJ 与海关收货人数据匹配，并与 Twenty 公司记录一致」"
+    "验证状态 已验证 with 数据来源「CNPJ 与海关收货人数据匹配，并与 [CRM engine] 公司记录一致」"
    ],
    "reason": "Placed in the 企业研究 capability row and withdrawn the same day: money on a named company under a claim of verification against Brazil's company register and customs data."
   },
@@ -496,7 +496,7 @@
    "blockers": [
     "image2 审批与受治理执行 — evidence sourced 「来自海关提单数据」; 执行结果「验证通过」 printed on an action the same screen says awaits approval",
     "image3 会话→销售工作台 — 潜在年采购额 $80,000+ on a named company",
-    "image4 策略手册与经销商简报 — 「CNPJ 与海关收货人与 Twenty 公司记录匹配」 plus $412,000 / 22% on a named company",
+    "image4 策略手册与经销商简报 — 「CNPJ 与海关收货人与 [CRM engine] 公司记录匹配」 plus $412,000 / 22% on a named company",
     "image8 商机智能 — Gobierno de México (a real government) at $4.8M, 80% probability",
     "image13 GEO 与信任内容 — KPI says 16 evidence sources, the breakdown beneath sums to 25",
     "image14 收入归因与演进 — two unlabelled scopes on one screen ($5.3K/$24.0K against $6,720/$29,698)",
@@ -1192,7 +1192,7 @@
    "fit": "contain (tools/blocks/cn-service.css) — the donor's `cover` would have cropped a 16:9 interface to its middle third",
    "crop": "none",
    "status": "REVIEW_HOLD",
-   "reason": "Placed and then held on the same day. 客户 360 attaches 生命周期价值 $412,000, 预期成交金额 $80,000, 毛利率 22% and 预期管道 $41.2万 to a named company while stating 验证状态 ● 已验证 and 数据来源「CNPJ 与海关收货人数据匹配，并与 Twenty 公司记录一致」 — a claim of verification against Brazil's real company register and customs consignee data, which reads as a real customer rather than a demonstration. Same standard that held SW019 and SW021. The row keeps assets/stargo-editorial/brand-family-01.webp. Derivatives deleted and the id unregistered."
+   "reason": "Placed and then held on the same day. 客户 360 attaches 生命周期价值 $412,000, 预期成交金额 $80,000, 毛利率 22% and 预期管道 $41.2万 to a named company while stating 验证状态 ● 已验证 and 数据来源「CNPJ 与海关收货人数据匹配，并与 [CRM engine] 公司记录一致」 — a claim of verification against Brazil's real company register and customs consignee data, which reads as a real customer rather than a demonstration. Same standard that held SW019 and SW021. The row keeps assets/stargo-editorial/brand-family-01.webp. Derivatives deleted and the id unregistered."
   },
   {
    "page": "capabilities.html + en/capabilities.html",
