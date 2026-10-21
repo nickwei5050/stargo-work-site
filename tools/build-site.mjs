@@ -407,7 +407,7 @@ PAGES['index.html'] = (lang) => {
     if (/template-navigator|Get Template/.test(h)) throw new Error('index: template navigator survives');
   }
   // The template's client logos on the sticky cards and the flip cards → the STARGO mark; the image card's logo goes.
-  h = h.replace(/<img[^>]*class="logo-testi-1"[^>]*\/>/g, `<img src="${WORDMARK}" loading="lazy" alt="STARGO WORK" class="logo-testi-1 stargo-card-mark"/>`);
+  h = h.replace(/<img[^>]*class="logo-testi-1"[^>]*\/>/g, `<img src="${WORDMARK}" loading="lazy" alt="Stargo Work" class="logo-testi-1 stargo-card-mark"/>`);
   h = h.replace(/<img[^>]*class="logo-absolute"[^>]*\/>/g, '');
   // "Meet the AI workforce" goes to the workforce page, not to a pricing anchor.
   h = s(h, 'href="#Pricing"', 'href="workforce.html"', { count: 1 });
@@ -2057,7 +2057,7 @@ PAGES['contact.html'] = (lang) => {
      pages, so the rule is scoped to this one heading rather than to the class. */
   h = s(h, '<h1 class="inner-title">Let’s Connect</h1>', `<h1 class="inner-title stargo-contact-title">${t(K.h1)}</h1>`, { count: 1 });
   // The quote card keeps the template design (portrait film, gradient, mark); the mark is STARGO's and the rating slot names the card.
-  h = h.replace(/<img[^>]*class="logo-testi-1"[^>]*\/>/, `<img src="${WORDMARK}" loading="lazy" alt="STARGO WORK" class="logo-testi-1 stargo-card-mark"/>`);
+  h = h.replace(/<img[^>]*class="logo-testi-1"[^>]*\/>/, `<img src="${WORDMARK}" loading="lazy" alt="Stargo Work" class="logo-testi-1 stargo-card-mark"/>`);
   h = s(h, '>★★★★★<', `>${t(K.quoteLabel)}<`);
   h = s(h, '“Their ability to listen, challenge assumptions, and translate ideas into a clean digital system.”', t(K.quote));
   h = s(h, '>Joda Trump<br/>', `>${t(K.quoteWho)}<br/>`);

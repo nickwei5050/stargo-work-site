@@ -26,6 +26,11 @@ import { OG, OS_ART } from './replaceables.mjs';
 export const SITE_PAGES = [...NAV, ...SECONDARY, ...MORE].map((n) => n.href).concat(POSTS.map(postPath));
 export const ALL_PAGES = new Set([...SITE_PAGES, '404.html']);
 export const WORDMARK = 'assets/brand/stargo-wordmark-600.png';
+/** The owner's A-arrow app icon (2026-10-21), the square mark for tabs, home screens and structured data. */
+const ICON = (n) => `assets/brand/stargo-a-icon-${n}.png`;
+/** The name as the owner writes it on stargowork.com (2026-10-21): the full
+    Chinese product name on Chinese pages, the brand alone on English ones. */
+export const BRAND = { zh: 'Stargo Work星贸智能AI外贸操作系统', en: 'Stargo Work' };
 const AVATAR = 'assets/stargo/avatar-core.png';
 /** Share cover. Token is rewritten to OG.file (og-cover.png, 1200×630). See tools/replaceables.mjs. */
 const OG_IMAGE = OG.token;
@@ -186,7 +191,7 @@ function footerPages(html, L, current) {
 
 /** The metallic STARGO wordmark replaces the template's two-word text logo. */
 function wordmark(html) {
-  const img = (cls) => `<img src="${WORDMARK}" alt="STARGO WORK" class="stargo-wordmark ${cls}"/>`;
+  const img = (cls) => `<img src="${WORDMARK}" alt="Stargo Work" class="stargo-wordmark ${cls}"/>`;
   return html
     .replace(/<p class="top-text logo">(?:Mōno™|STARGO)<\/p><p class="top-text logo z-inxed">(?:Studio|WORK)<\/p>/g, img('in-nav'))
     .replace(/<p class="top-text logo inv">(?:Mōno™|STARGO)<\/p><p class="top-text logo z-inxed nrm">(?:Studio|WORK)<\/p>/g, img('in-footer'))
@@ -207,7 +212,7 @@ function head(html, lang, current) {
   const post = postOf(current);
   const meta = META[current] ?? (post && { title: post.title, description: post.description });
   if (!meta) throw new Error(`chrome: no metadata for ${current}`);
-  const title = current === 'index.html' ? meta.title[lang] : `${meta.title[lang]} — STARGO WORK`;
+  const title = current === 'index.html' ? meta.title[lang] : `${meta.title[lang]}${lang === 'zh' ? '｜' : ' — '}${BRAND[lang]}`;
   const description = meta.description[lang];
   const self = cleanUrl(lang, current);
   const zh = cleanUrl('zh', current);
@@ -217,16 +222,16 @@ function head(html, lang, current) {
   const pageType = current === 'about.html' ? 'AboutPage' : current === 'blog.html' ? 'CollectionPage' : current === 'contact.html' ? 'ContactPage' : 'WebPage';
   const blogUrl = cleanUrl(lang, 'blog.html');
   const graph = [
-    { '@type': 'Organization', '@id': ORG_ID, name: 'STARGO WORK', url: `${SITE_URL}/`, logo: `${SITE_URL}/${WORDMARK}`, email: CONTACT_INFO.email, telephone: CONTACT_INFO.whatsapp, address: { '@type': 'PostalAddress', addressLocality: 'Liuzhou', addressRegion: 'Guangxi', addressCountry: 'CN' }, sameAs: [CONTACT_INFO.siteHref] },
-    { '@type': 'WebSite', '@id': SITE_ID, url: `${SITE_URL}/`, name: 'STARGO WORK', inLanguage: ['zh-CN', 'en'], publisher: { '@id': ORG_ID } },
+    { '@type': 'Organization', '@id': ORG_ID, name: 'Stargo Work', alternateName: '星贸智能', url: `${SITE_URL}/`, logo: `${SITE_URL}/${ICON(512)}`, email: CONTACT_INFO.email, telephone: CONTACT_INFO.whatsapp, address: { '@type': 'PostalAddress', addressLocality: 'Liuzhou', addressRegion: 'Guangxi', addressCountry: 'CN' }, sameAs: [CONTACT_INFO.siteHref] },
+    { '@type': 'WebSite', '@id': SITE_ID, url: `${SITE_URL}/`, name: BRAND[lang], alternateName: lang === 'zh' ? 'Stargo Work' : BRAND.zh, inLanguage: ['zh-CN', 'en'], publisher: { '@id': ORG_ID } },
     { '@type': pageType, '@id': self, url: self, name: title, description, inLanguage, isPartOf: { '@id': SITE_ID }, ...(post ? { primaryImageOfPage: ogImage } : {}) },
   ];
   if (current === 'index.html') {
-    graph.push({ '@type': 'SoftwareApplication', name: 'STARGO WORK', applicationCategory: 'BusinessApplication', operatingSystem: 'Web', url: `${SITE_URL}/`, description, offers: { '@type': 'AggregateOffer', priceCurrency: 'CNY', lowPrice: '10000', highPrice: '40000', offerCount: 4 }, provider: { '@id': ORG_ID } });
+    graph.push({ '@type': 'SoftwareApplication', name: BRAND[lang], applicationCategory: 'BusinessApplication', operatingSystem: 'Web', url: `${SITE_URL}/`, description, offers: { '@type': 'AggregateOffer', priceCurrency: 'CNY', lowPrice: '10000', highPrice: '40000', offerCount: 4 }, provider: { '@id': ORG_ID } });
   }
   if (current === 'blog.html') {
     graph.push({
-      '@type': 'Blog', '@id': `${blogUrl}#blog`, url: blogUrl, name: `STARGO WORK ${BLOG_UI.section[lang]}`, description, inLanguage, publisher: { '@id': ORG_ID },
+      '@type': 'Blog', '@id': `${blogUrl}#blog`, url: blogUrl, name: `Stargo Work ${BLOG_UI.section[lang]}`, description, inLanguage, publisher: { '@id': ORG_ID },
       blogPost: POSTS.map((p) => ({ '@type': 'BlogPosting', '@id': `${cleanUrl(lang, postPath(p))}#article`, headline: p.title[lang], url: cleanUrl(lang, postPath(p)), datePublished: p.date, dateModified: p.modified ?? p.date, image: `${SITE_URL}/${coverSrc(p)}` })),
     });
   }
@@ -241,9 +246,9 @@ function head(html, lang, current) {
       datePublished: post.date, dateModified: post.modified ?? post.date, inLanguage, keywords: post.keywords[lang].join(', '),
       ...(post.section ? { articleSection: post.section[lang] } : {}),
       wordCount: wordCount(post, lang),
-      about: { '@type': 'SoftwareApplication', name: 'STARGO WORK', applicationCategory: 'BusinessApplication', operatingSystem: 'Web', url: `${SITE_URL}/` },
+      about: { '@type': 'SoftwareApplication', name: BRAND[lang], applicationCategory: 'BusinessApplication', operatingSystem: 'Web', url: `${SITE_URL}/` },
       ...(post.mentions?.length ? { mentions: post.mentions.map((name) => ({ '@type': 'Thing', name })) } : {}),
-      author: { '@type': 'Organization', '@id': ORG_ID, name: 'STARGO WORK' }, publisher: { '@id': ORG_ID }, isPartOf: { '@id': `${blogUrl}#blog` },
+      author: { '@type': 'Organization', '@id': ORG_ID, name: 'Stargo Work' }, publisher: { '@id': ORG_ID }, isPartOf: { '@id': `${blogUrl}#blog` },
     });
     /* The article's visible 「常见问题」 section (tools/blog.mjs renderFaq) as
        structured data: the same questions and answers, word for word. */
@@ -266,7 +271,7 @@ function head(html, lang, current) {
     `<link rel="alternate" hreflang="x-default" href="${zh}"/>`,
     `<meta property="og:url" content="${self}"/>`,
     `<meta property="og:type" content="${post ? 'article' : 'website'}"/>`,
-    '<meta property="og:site_name" content="STARGO WORK"/>',
+    `<meta property="og:site_name" content="${BRAND[lang]}"/>`,
     `<meta property="og:locale" content="${lang === 'zh' ? 'zh_CN' : 'en_US'}"/>`,
     `<meta property="og:image" content="${ogImage}"/>`,
     post ? '<meta property="og:image:width" content="1200"/><meta property="og:image:height" content="800"/>' : '<meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/>',
@@ -295,13 +300,16 @@ function head(html, lang, current) {
        brand's square mark is used instead, cut to the sizes browsers actually
        ask for — 16 and 32 for the tab, 48 for Windows' shortcut, 180 for iOS's
        home screen. `shortcut icon` stays for browsers that only read that.
-       relocateAssets() prefixes ../ for pages below the root. */
+       Since 2026-10-21 the mark is the owner's A-arrow app icon, under new file
+       names because /assets is cached for a year; the 180 is opaque, since iOS
+       fills a transparent corner with black. relocateAssets() prefixes ../ for
+       pages below the root. */
     .replace(/<link href="[^"]*" rel="shortcut icon" type="image\/x-icon"\/>/,
-      '<link href="assets/brand/stargo-icon-32.png" rel="shortcut icon" type="image/png"/>'
-      + '<link href="assets/brand/stargo-icon-16.png" rel="icon" type="image/png" sizes="16x16"/>'
-      + '<link href="assets/brand/stargo-icon-32.png" rel="icon" type="image/png" sizes="32x32"/>'
-      + '<link href="assets/brand/stargo-icon-48.png" rel="icon" type="image/png" sizes="48x48"/>')
-    .replace(/<link href="[^"]*" rel="apple-touch-icon"\/>/, '<link href="assets/brand/stargo-icon-180.png" rel="apple-touch-icon" sizes="180x180"/>');
+      `<link href="${ICON(32)}" rel="shortcut icon" type="image/png"/>`
+      + `<link href="${ICON(16)}" rel="icon" type="image/png" sizes="16x16"/>`
+      + `<link href="${ICON(32)}" rel="icon" type="image/png" sizes="32x32"/>`
+      + `<link href="${ICON(48)}" rel="icon" type="image/png" sizes="48x48"/>`)
+    .replace(/<link href="[^"]*" rel="apple-touch-icon"\/>/, `<link href="${ICON(180)}" rel="apple-touch-icon" sizes="180x180"/>`);
   const headText = out.slice(0, out.indexOf('<body')).replace(/<link[^>]*>/g, '');
   if (/Mōno|monostudio|Scalora|Lifelogx/i.test(headText)) throw new Error(`chrome: template metadata survives in <head> of ${current}`);
   return out;
