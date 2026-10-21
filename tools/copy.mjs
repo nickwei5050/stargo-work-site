@@ -159,10 +159,11 @@ export const CHROME = [
 ];
 
 export const META = {
-  /* Titles and descriptions: V5 part F. The build appends 「 — STARGO WORK」 to
-     every title but the homepage's (tools/chrome.mjs head()), so the page
+  /* Titles and descriptions: V5 part F. The build appends the brand (chrome.mjs
+     BRAND: 「｜Stargo Work星贸智能AI外贸操作系统」, 「 — Stargo Work」 in English)
+     to every title but the homepage's (tools/chrome.mjs head()), so the page
      titles below carry no brand of their own. */
-  'index.html': { title: B('STARGO WORK — 网页桌面级 AI 企业操作系统', 'STARGO WORK — Enterprise AI Desktop'), description: B('以 Growth OS 主动获客与 Sales Desk 外贸闭环为核心，连接 ERP、营销内容、企业知识与 288 个跨部门数字岗位。功能按企业配置与交付范围开放。', 'Growth OS and Sales Desk connect acquisition and trade sales with operations, creative work and 288 AI roles. Availability is configuration-dependent.') },
+  'index.html': { title: B('Stargo Work星贸智能AI外贸操作系统｜网页桌面级 AI 企业操作系统', 'Stargo Work — Enterprise AI Desktop'), description: B('以 Growth OS 主动获客与 Sales Desk 外贸闭环为核心，连接 ERP、营销内容、企业知识与 288 个跨部门数字岗位。功能按企业配置与交付范围开放。', 'Growth OS and Sales Desk connect acquisition and trade sales with operations, creative work and 288 AI roles. Availability is configuration-dependent.') },
   'intelligence.html': { title: B('企业智能', 'Enterprise Intelligence'), description: B('让 AI 带着企业知识、客户历史、业务关系和工作目标做事，了解主动提醒、长期任务、记忆与持续改进的分阶段能力。', 'Connect company knowledge, customer history and business context with goals, proactive reminders, ongoing tasks, memory and controlled improvement.') },
   'capabilities.html': { title: B('功能全景', 'Capabilities'), description: B('从获客、销售、报价与 PI，到 ERP、履约、AI 图片视频、数字员工、企业知识和管理控制，了解完整功能与开放条件。', 'Explore growth, sales, quotations, ERP, fulfillment, AI images and video, knowledge, teamwork and management—with clear availability conditions.') },
   'workforce.html': { title: B('288 个专业数字岗位', '288 Specialized AI Roles'), description: B('覆盖十类企业职能，按任务选择员工、组织团队、交流信息并接力交付；实际启用和协作范围依企业配置开放。', 'Explore ten role groups and task-based teams. Activation, communication and permitted work depend on enterprise configuration and delivery scope.') },

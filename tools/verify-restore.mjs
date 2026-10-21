@@ -409,7 +409,7 @@ for (const lang of ['', 'en/']) {
       assert.equal(h.description, post.description[L]);
       const g = h.ld[0]['@graph'];
       const bp = g.find((n) => n['@type'] === 'BlogPosting');
-      assert(bp && bp.headline === post.title[L] && bp.datePublished === post.date && bp.author.name === 'STARGO WORK' && bp.image.includes('assets/blog/'), 'BlogPosting');
+      assert(bp && bp.headline === post.title[L] && bp.datePublished === post.date && bp.author.name === 'Stargo Work' && bp.image.includes('assets/blog/'), 'BlogPosting');
       assert.equal(g.find((n) => n['@type'] === 'BreadcrumbList').itemListElement.length, 3, 'breadcrumbs');
       assert(h.h2h3.filter((x) => x.startsWith('H3')).length >= 3, 'article sections use h3');
       // postPage() lists up to five other articles (others(post, 5) in tools/build-site.mjs).
