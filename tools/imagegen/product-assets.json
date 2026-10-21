@@ -344,6 +344,501 @@
      "bytes": 45562
     }
    ]
+  },
+  {
+   "id": "live09-sales-desk-case-4x3",
+   "sw": "LIVE09",
+   "src": "assets/stargo-product/live09-sales-desk-case-4x3.webp",
+   "width": 1600,
+   "height": 1200,
+   "bytes": 83262,
+   "sourceFile": "site-images/screens-final/slot-crops/index-row294-09-sales-desk-customer-case.png",
+   "sourceSha256": "91827205bcb124c1205b7c0f7ffb5495a89288d66313fc184fc92a436daaa058",
+   "sourcePixels": [
+    2340,
+    1755
+   ],
+   "crop": "slot-crops file as delivered: clean/09-sales-desk-customer-case.png x0 y108 w2340 h1755 (4:3; inquiry list, conversation and reply draft, AI panel left out)",
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-product/live09-sales-desk-case-4x3-480.webp",
+     "width": 480,
+     "bytes": 14594
+    },
+    {
+     "src": "assets/stargo-product/live09-sales-desk-case-4x3-768.webp",
+     "width": 768,
+     "bytes": 29740
+    },
+    {
+     "src": "assets/stargo-product/live09-sales-desk-case-4x3-1024.webp",
+     "width": 1024,
+     "bytes": 46464
+    }
+   ]
+  },
+  {
+   "id": "live23-erp-items-16x9",
+   "sw": "LIVE23",
+   "src": "assets/stargo-product/live23-erp-items-16x9.webp",
+   "width": 1600,
+   "height": 899,
+   "bytes": 86702,
+   "sourceFile": "site-images/screens-final/slot-crops/index-row295-23-erp-items.png",
+   "sourceSha256": "ef5a9bb5f5bac674b3a754b22c0b2d970ea710dcfdec38e0fa83bd972fc8187f",
+   "sourcePixels": [
+    2096,
+    1178
+   ],
+   "crop": "slot-crops file as delivered: clean/23-erp-items.png x752 y120 w2096 h1178 (16:9 item list)",
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-product/live23-erp-items-16x9-480.webp",
+     "width": 480,
+     "bytes": 13752
+    },
+    {
+     "src": "assets/stargo-product/live23-erp-items-16x9-768.webp",
+     "width": 768,
+     "bytes": 30242
+    },
+    {
+     "src": "assets/stargo-product/live23-erp-items-16x9-1024.webp",
+     "width": 1024,
+     "bytes": 47558
+    }
+   ]
+  },
+  {
+   "id": "live05-growth-home-2x1",
+   "sw": "LIVE05",
+   "src": "assets/stargo-product/live05-growth-home-2x1.webp",
+   "width": 1600,
+   "height": 788,
+   "bytes": 50322,
+   "sourceFile": "site-images/screens-final/slot-crops/index-row26-05-growth-os-home.png",
+   "sourceSha256": "eb3347586b810d879b1434d8c1dec36e8659bbe3c0f7b7d95ae66e9be2d0db98",
+   "sourcePixels": [
+    2192,
+    1080
+   ],
+   "crop": "slot-crops file as delivered: clean/05-growth-os-home.png x704 y40 w2192 h1080 (about 2:1; top half of the Growth OS home, without the failed-run card)",
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-product/live05-growth-home-2x1-480.webp",
+     "width": 480,
+     "bytes": 7110
+    },
+    {
+     "src": "assets/stargo-product/live05-growth-home-2x1-768.webp",
+     "width": 768,
+     "bytes": 16010
+    },
+    {
+     "src": "assets/stargo-product/live05-growth-home-2x1-1024.webp",
+     "width": 1024,
+     "bytes": 26190
+    }
+   ]
+  },
+  {
+   "id": "live09-sales-desk-case-3x2",
+   "sw": "LIVE09",
+   "src": "assets/stargo-product/live09-sales-desk-case-3x2.webp",
+   "width": 1600,
+   "height": 1067,
+   "bytes": 75112,
+   "sourceFile": "site-images/screens-final/slot-crops/index-row27-09-sales-desk-customer-case.png",
+   "sourceSha256": "0fea9a589cb0d647419d43992b661569904eb7d71df41852dae5ddb3217828b4",
+   "sourcePixels": [
+    2340,
+    1560
+   ],
+   "crop": "slot-crops file as delivered: clean/09-sales-desk-customer-case.png x0 y108 w2340 h1560 (3:2)",
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-product/live09-sales-desk-case-3x2-480.webp",
+     "width": 480,
+     "bytes": 12918
+    },
+    {
+     "src": "assets/stargo-product/live09-sales-desk-case-3x2-768.webp",
+     "width": 768,
+     "bytes": 26658
+    },
+    {
+     "src": "assets/stargo-product/live09-sales-desk-case-3x2-1024.webp",
+     "width": 1024,
+     "bytes": 40548
+    }
+   ]
+  },
+  {
+   "id": "live23-erp-items-3x2",
+   "sw": "LIVE23",
+   "src": "assets/stargo-product/live23-erp-items-3x2.webp",
+   "width": 1600,
+   "height": 1066,
+   "bytes": 101064,
+   "sourceFile": "site-images/screens-final/slot-crops/index-row28-23-erp-items.png",
+   "sourceSha256": "aaa48506b7e00e4410ee9c4c85e701dacfb5a78d7a4e09b26f7860b480cd4ba3",
+   "sourcePixels": [
+    2096,
+    1397
+   ],
+   "crop": "slot-crops file as delivered: clean/23-erp-items.png x752 y120 w2096 h1397 (3:2 item list)",
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-product/live23-erp-items-3x2-480.webp",
+     "width": 480,
+     "bytes": 16148
+    },
+    {
+     "src": "assets/stargo-product/live23-erp-items-3x2-768.webp",
+     "width": 768,
+     "bytes": 34900
+    },
+    {
+     "src": "assets/stargo-product/live23-erp-items-3x2-1024.webp",
+     "width": 1024,
+     "bytes": 55600
+    }
+   ]
+  },
+  {
+   "id": "live52-mobile-case-needs",
+   "sw": "LIVE52",
+   "src": "assets/stargo-product/live52-mobile-case-needs.webp",
+   "width": 1170,
+   "height": 818,
+   "bytes": 42382,
+   "sourceFile": "site-images/screens-final/slot-crops/capabilities-row112-52-mobile-sales-desk-case.png",
+   "sourceSha256": "fc76fda4920dbc1eaf6dc889321c1f3c05b797d874b9e34584c15b758a6ef71b",
+   "sourcePixels": [
+    1170,
+    818
+   ],
+   "crop": "slot-crops file as delivered: clean/52-mobile-sales-desk-case.png x0 y140 w1170 h818 (about 1.43; extracted model and quantity chips above the buyer's sentence)",
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-product/live52-mobile-case-needs-480.webp",
+     "width": 480,
+     "bytes": 15840
+    },
+    {
+     "src": "assets/stargo-product/live52-mobile-case-needs-768.webp",
+     "width": 768,
+     "bytes": 27788
+    },
+    {
+     "src": "assets/stargo-product/live52-mobile-case-needs-1024.webp",
+     "width": 1024,
+     "bytes": 37210
+    }
+   ]
+  },
+  {
+   "id": "live01-desktop-home-16x9",
+   "sw": "LIVE01",
+   "src": "assets/stargo-product/live01-desktop-home-16x9.webp",
+   "width": 1600,
+   "height": 900,
+   "bytes": 89760,
+   "sourceFile": "site-images/screens-final/clean/01-desktop-home.png",
+   "sourceSha256": "d0029af25801d377fd82193b88c4422ff3e6d9a3d40e4e89e10b5e556720647d",
+   "sourcePixels": [
+    2336,
+    1314
+   ],
+   "crop": "x0 y24 w2336 h1314 of clean/01-desktop-home.png (16:9, the box of the 3D card; left part of the web desktop with six rows of app icons)",
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-product/live01-desktop-home-16x9-480.webp",
+     "width": 480,
+     "bytes": 8458
+    },
+    {
+     "src": "assets/stargo-product/live01-desktop-home-16x9-768.webp",
+     "width": 768,
+     "bytes": 23832
+    },
+    {
+     "src": "assets/stargo-product/live01-desktop-home-16x9-1024.webp",
+     "width": 1024,
+     "bytes": 40194
+    }
+   ]
+  },
+  {
+   "id": "live09-sales-desk-case-16x9",
+   "sw": "LIVE09",
+   "src": "assets/stargo-product/live09-sales-desk-case-16x9.webp",
+   "width": 1600,
+   "height": 900,
+   "bytes": 72648,
+   "sourceFile": "site-images/screens-final/clean/09-sales-desk-customer-case.png",
+   "sourceSha256": "4e7e142a3c7c15b1233d2b55e02b7eaea3ac0cf063a0ef842e485170514e46c9",
+   "sourcePixels": [
+    3200,
+    1800
+   ],
+   "crop": "x0 y136 w3200 h1800 of clean/09-sales-desk-customer-case.png (16:9, the box of the 3D card; whole Sales Desk case screen with the AI assistant panel, top bar left out)",
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-product/live09-sales-desk-case-16x9-480.webp",
+     "width": 480,
+     "bytes": 10596
+    },
+    {
+     "src": "assets/stargo-product/live09-sales-desk-case-16x9-768.webp",
+     "width": 768,
+     "bytes": 23328
+    },
+    {
+     "src": "assets/stargo-product/live09-sales-desk-case-16x9-1024.webp",
+     "width": 1024,
+     "bytes": 37374
+    }
+   ]
+  },
+  {
+   "id": "live43-app-connections-16x9",
+   "sw": "LIVE43",
+   "src": "assets/stargo-product/live43-app-connections-16x9.webp",
+   "width": 1600,
+   "height": 900,
+   "bytes": 25734,
+   "sourceFile": "site-images/screens-final/clean/43-app-connections.png",
+   "sourceSha256": "389b4e1732193e0bacdef8f0e9dcaed3774fe38400f6867851ba87835151be9a",
+   "sourcePixels": [
+    2704,
+    1521
+   ],
+   "crop": "x496 y112 w2704 h1521 of clean/43-app-connections.png (16:9, the box of the 3D card); the chart's top axis label is clipped to '2' by the product, so the missing '1' is drawn in the axis colour (#666, Inter 27.5px) before cropping",
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-product/live43-app-connections-16x9-480.webp",
+     "width": 480,
+     "bytes": 4600
+    },
+    {
+     "src": "assets/stargo-product/live43-app-connections-16x9-768.webp",
+     "width": 768,
+     "bytes": 8972
+    },
+    {
+     "src": "assets/stargo-product/live43-app-connections-16x9-1024.webp",
+     "width": 1024,
+     "bytes": 13756
+    }
+   ]
+  },
+  {
+   "id": "live52-mobile-case-16x9",
+   "sw": "LIVE52",
+   "src": "assets/stargo-product/live52-mobile-case-16x9.webp",
+   "width": 1170,
+   "height": 658,
+   "bytes": 34774,
+   "sourceFile": "site-images/screens-final/clean/52-mobile-sales-desk-case.png",
+   "sourceSha256": "8a48f3687baeee7ffbfc69886e7501a5d7cf79c02ddd1caf0be5bfa586c64a55",
+   "sourcePixels": [
+    1170,
+    658
+   ],
+   "crop": "x0 y140 w1170 h658 of clean/52-mobile-sales-desk-case.png (16:9, the box of the 3D card; case header, model and quantity chips, start of the buyer's message)",
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-product/live52-mobile-case-16x9-480.webp",
+     "width": 480,
+     "bytes": 12960
+    },
+    {
+     "src": "assets/stargo-product/live52-mobile-case-16x9-768.webp",
+     "width": 768,
+     "bytes": 22460
+    },
+    {
+     "src": "assets/stargo-product/live52-mobile-case-16x9-1024.webp",
+     "width": 1024,
+     "bytes": 30448
+    }
+   ]
+  },
+  {
+   "id": "live52-mobile-case-screen",
+   "sw": "LIVE52",
+   "src": "assets/stargo-product/live52-mobile-case-screen.webp",
+   "width": 1170,
+   "height": 2672,
+   "bytes": 102842,
+   "sourceFile": "site-images/screens-final/clean/52-mobile-sales-desk-case.png",
+   "sourceSha256": "6e7511d5730c6c217b366d4210b469af54aacc273f1d8e55ef393077210f0356",
+   "sourcePixels": [
+    1170,
+    2672
+   ],
+   "crop": "whole clean/52-mobile-sales-desk-case.png (1170x2532) with a 140px band of the app's own background (#f5f1ec) added on top as status-bar space under the phone frame's island",
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-product/live52-mobile-case-screen-480.webp",
+     "width": 480,
+     "bytes": 38364
+    },
+    {
+     "src": "assets/stargo-product/live52-mobile-case-screen-768.webp",
+     "width": 768,
+     "bytes": 64568
+    },
+    {
+     "src": "assets/stargo-product/live52-mobile-case-screen-1024.webp",
+     "width": 1024,
+     "bytes": 90352
+    }
+   ]
+  },
+  {
+   "id": "live51-mobile-board-screen",
+   "sw": "LIVE51",
+   "src": "assets/stargo-product/live51-mobile-board-screen.webp",
+   "width": 1170,
+   "height": 2672,
+   "bytes": 76452,
+   "sourceFile": "site-images/screens-final/clean/51-mobile-sales-desk-board.png",
+   "sourceSha256": "53f4af1759152c511a17d14b36254a8e94e230701866a433b8c2c62702e21b86",
+   "sourcePixels": [
+    1170,
+    2672
+   ],
+   "crop": "whole clean/51-mobile-sales-desk-board.png (1170x2532) with a 140px band of the app's own background (#f5f1ec) added on top as status-bar space under the phone frame's island",
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-product/live51-mobile-board-screen-480.webp",
+     "width": 480,
+     "bytes": 27870
+    },
+    {
+     "src": "assets/stargo-product/live51-mobile-board-screen-768.webp",
+     "width": 768,
+     "bytes": 49408
+    },
+    {
+     "src": "assets/stargo-product/live51-mobile-board-screen-1024.webp",
+     "width": 1024,
+     "bytes": 65650
+    }
+   ]
+  },
+  {
+   "id": "live18-quote-approval-16x9",
+   "sw": "LIVE18",
+   "src": "assets/stargo-product/live18-quote-approval-16x9.webp",
+   "width": 1600,
+   "height": 900,
+   "bytes": 60944,
+   "sourceFile": "site-images/screens-final/clean/18-sales-desk-quote-approval.png",
+   "sourceSha256": "40c05aa2ffd34c3482fdf40cf021bdbd68c416fcf3c822cf63273325e81ac2bc",
+   "sourcePixels": [
+    2288,
+    1287
+   ],
+   "crop": "x0 y0 w2288 h1287 of clean/18-sales-desk-quote-approval.png (16:9; window title, navigation with quote approval selected, pipeline counters and the approval header; the quote's line items and amounts are left out)",
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-product/live18-quote-approval-16x9-480.webp",
+     "width": 480,
+     "bytes": 8518
+    },
+    {
+     "src": "assets/stargo-product/live18-quote-approval-16x9-768.webp",
+     "width": 768,
+     "bytes": 18522
+    },
+    {
+     "src": "assets/stargo-product/live18-quote-approval-16x9-1024.webp",
+     "width": 1024,
+     "bytes": 30766
+    }
+   ]
+  },
+  {
+   "id": "live05-growth-home-start-3x2",
+   "sw": "LIVE05",
+   "src": "assets/stargo-product/live05-growth-home-start-3x2.webp",
+   "width": 1100,
+   "height": 733,
+   "bytes": 27268,
+   "sourceFile": "site-images/screens-final/clean/05-growth-os-home.png",
+   "sourceSha256": "070febb2815744888c0e69f1a67c4d6b3b52b1c187a72942ce2c3bcef87e875d",
+   "sourcePixels": [
+    1100,
+    733
+   ],
+   "crop": "x700 y200 w1100 h733 of clean/05-growth-os-home.png (3:2; onboarding progress and the 开始找客户 card)",
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-product/live05-growth-home-start-3x2-480.webp",
+     "width": 480,
+     "bytes": 8624
+    },
+    {
+     "src": "assets/stargo-product/live05-growth-home-start-3x2-768.webp",
+     "width": 768,
+     "bytes": 16064
+    },
+    {
+     "src": "assets/stargo-product/live05-growth-home-start-3x2-1024.webp",
+     "width": 1024,
+     "bytes": 23554
+    }
+   ]
+  },
+  {
+   "id": "live05-growth-home-start-5x4",
+   "sw": "LIVE05",
+   "src": "assets/stargo-product/live05-growth-home-start-5x4.webp",
+   "width": 1120,
+   "height": 896,
+   "bytes": 33668,
+   "sourceFile": "site-images/screens-final/clean/05-growth-os-home.png",
+   "sourceSha256": "8164eab19cef1e055d7ede534321a5add6690cb54a78d3b926d2eb2a9d785609",
+   "sourcePixels": [
+    1120,
+    896
+   ],
+   "crop": "x690 y40 w1120 h896 of clean/05-growth-os-home.png (5:4, for the 12x10rem / 16x12rem thumbnail; page heading, onboarding progress and the 开始找客户 card)",
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-product/live05-growth-home-start-5x4-480.webp",
+     "width": 480,
+     "bytes": 10166
+    },
+    {
+     "src": "assets/stargo-product/live05-growth-home-start-5x4-768.webp",
+     "width": 768,
+     "bytes": 20148
+    },
+    {
+     "src": "assets/stargo-product/live05-growth-home-start-5x4-1024.webp",
+     "width": 1024,
+     "bytes": 28646
+    }
+   ]
   }
  ]
 }

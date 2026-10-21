@@ -72,7 +72,9 @@ const ROW_ART = GROWTH_ROWS.map((row) => row.art);
 
 /* Since 2026-09-18 a row's hover thumbnail is the owner's own screen for that
    topic (tools/imagegen/product-assets.json). From 2026-09-22 the two older
-   stills are curated pack screens: trade intelligence → 增长分析 (gos01),
+   stills are curated pack screens (since 2026-10-21 trade intelligence shows a
+   clean capture of the Growth OS home, 开始找客户, cut to the thumbnail's 5:4;
+   the 增长分析 still before it showed an infrastructure panel): trade intelligence → 增长分析 (gos01),
    reorder judgement → 控制中心 (gos09), key decision roles → 采购委员会
    (gos05, unchanged). Company research has none: 客户 360 was held the same day
    because it puts $412,000 of lifetime value, an $80,000 deal and a 22% margin

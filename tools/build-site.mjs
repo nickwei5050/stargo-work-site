@@ -443,14 +443,16 @@ PAGES['index.html'] = (lang) => {
        product. The sentences stayed; on 2026-09-22 the three older 1268px
        stills were swapped for curated pack screens (filenames unchanged):
 
-         (001) 主动获客 — gos01 is now 增长分析 (product-growth.webp), the
-               growth-narrative screen that was still unused. It is not the
-               control tower: that picture is the Growth OS panel below, so
-               the two sections do not repeat.
-         (002) 外贸销售 — sw028, an inquiry with a grounded draft reply.
-         (003) 企业履约 — sw033 is now the second Sales Desk workbench
-               (product-sales.webp): the inquiry, a draft quote, and the
-               document centre in the same chrome as the other curated stills.
+         (001) 主动获客 — the Growth OS home (since 2026-10-21 a clean
+               capture with demo data; the still before it showed an
+               infrastructure panel). It is not the control tower: that
+               picture is the Growth OS panel below, so the two sections do
+               not repeat.
+         (002) 外贸销售 — the Sales Desk case: inquiry list, extracted facts
+               and the next step (clean capture, 2026-10-21; it replaced a
+               generated render).
+         (003) 企业履约 — the ERP item list (clean capture, 2026-10-21; the
+               Sales Desk still before it showed a live mailbox).
          (005) 复购与改进 — gos11 is now the workspace home (alt-home.webp).
                The pack has no separate reactivation still; this is the
                remaining home screen, fitted in the same card.
@@ -466,10 +468,10 @@ PAGES['index.html'] = (lang) => {
        slot title, and `stillImage` below with 'STARGO OS'. The one concept
        illustration keeps swapImg's empty alt, which is what it had.
 
-       The card is `.image-wrap.for-service`, `aspect-ratio: 3 / 2`; a 16:9
+       The card is `.image-wrap.for-service`, `aspect-ratio: 3 / 2`; a
        screenshot in it is fitted, not cropped, by H29 in css/stargo-fusion.css.
-       gos01 and gos11 are dark chrome, so their plates are their own edge
-       colour rather than the light plate the pale screens use. */
+       (002) and (003) are cut to 3:2 and fill it; the Growth OS home (about
+       2:1) and gos11 sit on plates of their own edge colour. */
     const CONTENT = { alt: 'STARGO WORK' };
     const scenes = [['Scene%20%239.webp', HOME_STAGES[0].file, CONTENT], ['Scene%20%235.webp', HOME_STAGES[1].file, CONTENT], ['Scene%20%2310%20(Light)', HOME_STAGES[2].file, CONTENT], ['Scene%20%238.webp', HOME_STAGES[3].file], ['Scene%2018.webp', HOME_STAGES[4].file, CONTENT]];
     scenes.forEach(([k, src, opts]) => { h = swapImg(h, k, src, opts); });
@@ -1021,15 +1023,21 @@ function lxPage(spec, lang, name) {
      screens are object-fit: cover in the same frame, so the crop and the
      cycling animation are unchanged, and they stay decorative (alt=""). */
   {
+    /* Since 2026-10-21 the first two screens are real phone captures of the
+       Sales Desk with demonstration data (site-images/screens-final 52 and 51,
+       with status-bar space above them): the earlier inquiry picture came from
+       a capture of a live mailbox. A product screen is described, not
+       decorative, so it goes in with a non-empty alt that
+       tools/editorial-images.mjs replaces with its registered sentence. */
     const SCREENS = [
-      ['iPhone%2013%20Pro%20Max%20-%203', MOBILE.inquiry],   // a chat → conversation becomes customer knowledge
-      ['iPhone%2013%20Pro%20Max%20-%204', MOBILE.approvals], // a message list → a decision held at an approval gate
+      ['iPhone%2013%20Pro%20Max%20-%203', 'assets/stargo-product/live52-mobile-case-screen.webp', true], // a chat → answering an inquiry on the phone
+      ['iPhone%2013%20Pro%20Max%20-%204', 'assets/stargo-product/live51-mobile-board-screen.webp', true], // a message list → the deal board with the approval waiting
       ['iPhone%2016%20Pro%20-%201', MOBILE.agents],          // a card wall → parallel tasks at a shared junction
       ['iPhone%2016%20Pro%20-%202', MOBILE.core],            // the first screen → shared enterprise context
     ];
-    for (const [key, src] of SCREENS) {
+    for (const [key, src, product] of SCREENS) {
       if ((b.match(new RegExp(`<img\\b[^>]*${key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'g')) ?? []).length !== 3) throw new Error(`${name}: expected the phone screen ${key} in three mockups`);
-      b = swapImg(b, key, src);
+      b = swapImg(b, key, src, product ? { alt: PRODUCT_CAPTION[lang] } : {});
     }
   }
   /* V7-LX: the hand-held phone of the "no writing" band (no-writing-sc) is a

@@ -3701,7 +3701,7 @@ html[lang^="en"] .lx-scope .stargo-post :is(.sgc-role-name, .sgc-role-task, .sgc
    band is this page's alone — .blog-photo-overlay exists nowhere else. */
 .blog-flex .blog-photo-overlay[src$="/sw003-ai-workspace-home.webp"] { object-fit: contain; background-color: #0e2b5a; }
 .blog-flex .blog-photo-overlay[src$="/sw004-experts-library.webp"] { object-fit: contain; background-color: #021d4d; }
-.blog-flex .blog-photo-overlay[src$="/sw033-sales-desk-document-pack.webp"] { object-fit: contain; background-color: #dae9fd; }
+.blog-flex .blog-photo-overlay[src$="/live18-quote-approval-16x9.webp"] { object-fit: contain; background-color: #f4f6f8; }
 /* V7-BLOG-END */
 
 
@@ -5083,12 +5083,12 @@ html[lang^="en"] .button-text.w-variant-83ed8c83-4d97-b61d-2146-78e915c17bb4 { t
 
 /* H29. The four business stages that show one of the owner's own product
         screenshots (tools/build-site.mjs, the `scenes` list): (001) 主动获客 /
-        "Discover" carries the curated growth-analytics still, (002) 外贸销售 /
-        "Trade sales" carries sw028, an inquiry with the grounded draft reply
-        beside it, (003) 企业履约 / "Fulfilment" carries sw033, the curated
-        Sales Desk workbench (inquiry, draft quote, document centre), and (005)
-        复购与改进 / "Retain & improve" carries the curated workspace home.
-        gos01 and gos11 are dark, so they name their own plate below; the pale
+        "Discover" carries the Growth OS home (a clean capture with demo data,
+        about 2:1), (002) 外贸销售 / "Trade sales" carries the Sales Desk case
+        and (003) 企业履约 / "Fulfilment" the ERP item list, both clean
+        captures cut to the card's 3:2, and (005) 复购与改进 / "Retain &
+        improve" carries the curated workspace home. The Growth OS home and
+        gos11 name their own plate below (the screenshot's own edge); the other
         screens keep #dfeafe.
 
         The card is Mono's `.image-wrap.for-service`, `aspect-ratio: 3 / 2`, and
@@ -5110,19 +5110,20 @@ html[lang^="en"] .button-text.w-variant-83ed8c83-4d97-b61d-2146-78e915c17bb4 { t
         translate to hide, 105% only held the picture 11px off centre inside a
         box that clips it.
 
-        The pale screens share #dfeafe, sampled from their own edges. gos01 and
-        gos11 override it with #091826 and #072c6d, the edge of those two dark
-        stills. The letterbox reads as more of the picture rather than as a bar,
+        The pale screens share #dfeafe, sampled from their own edges. The
+        Growth OS home overrides it with #f4f6fa and gos11 with #072c6d, the
+        edge of each of those stills. The letterbox reads as more of the picture rather than as a bar,
         and the card keeps Mono's 10px radius and its own `overflow: hidden`. */
 body:has(#loop) .image-wrap.for-service .paralax-image[src*="assets/stargo-product/"] {
   height: 100%;
   object-fit: contain;
   background-color: #dfeafe;
 }
-/* Dark curated chrome (growth analytics, workspace home). The letterbox has
-   to be the picture's own edge or a light plate reads as a bar. */
-body:has(#loop) .image-wrap.for-service .paralax-image[src*="gos01-market-thesis"] {
-  background-color: #091826;
+/* Screens whose edge is not #dfeafe (the Growth OS home's page ground, the
+   workspace home's dark chrome). The letterbox has to be the picture's own
+   edge or the plate reads as a bar. */
+body:has(#loop) .image-wrap.for-service .paralax-image[src*="live05-growth-home-2x1"] {
+  background-color: #f4f6fa;
 }
 body:has(#loop) .image-wrap.for-service .paralax-image[src*="gos11-dormant-reactivation"] {
   background-color: #072c6d;

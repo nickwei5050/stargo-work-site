@@ -55,6 +55,7 @@
  * the same way — "Understand" — and fit with the arrow where renok put it.
  */
 import { setText } from '../block-lib.mjs';
+import { PRODUCT_CAPTION } from '../editorial-images.mjs';
 
 export const donor = {
   id: 'rk-insight',
@@ -67,6 +68,11 @@ export const donor = {
      black at 20%; the white they sit on was renok's `body`, which a cut section
      leaves behind (`.rt-insight` only paints itself white under 991px). */
   ground: '#fff',
+  /* The second row's thumbnail (step 02, 筛选 / Qualify, and the rows cloned
+     from it) shows a clean capture of the product with demonstration data:
+     Growth OS's 开始找客户 card, cut to the 3:2 box. The template's picture
+     here had been replaced by a still that listed real importers' names. */
+  imageStems: { 'home-one-optimization': 'assets/stargo-product/live05-growth-home-start-3x2.webp' },
 };
 
 /** How many rows renok draws; the stage list is laid over them in rotation. */
@@ -193,6 +199,11 @@ export function render(frag, ctx) {
        renok's own alts are its file names. */
     const alts = row.match(/alt="Home-one-[^"]*"/g) ?? [];
     if (alts.length !== 2) throw new Error(`rk-insight: row ${i + 1} should carry two donor image alts, found ${alts.length}`);
+    /* Except a product screen: it takes a non-empty alt, which
+       tools/editorial-images.mjs replaces with the screen's registered sentence. */
+    row = row.replace(/<img\b[^>]*>/g, (tag) => (/src="assets\/stargo-product\//.test(tag)
+      ? tag.replace(/alt="Home-one-[^"]*"/, `alt="${PRODUCT_CAPTION[lang]}"`)
+      : tag));
     row = row.replace(/alt="Home-one-[^"]*"/g, 'alt=""');
 
     return row;

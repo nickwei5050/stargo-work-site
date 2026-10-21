@@ -48,10 +48,18 @@ for (const a of products) {
   /* Each id keeps the surface it came from and the source document's own
      number, so a screen can be found again in the document it was taken from. */
   const id = a.id.match(/^(?:sw|erp|gos)(\d{2,3})-/);
+  /* The clean captures of 2026-10-21 (site-images/screens-final) are named
+     live<NN>-, NN being the capture's own number in that folder, e.g.
+     live23-erp-items-16x9 comes from clean/23-erp-items.png. */
+  const live = a.id.match(/^live(\d{2})-/);
   const source = a.sourceFile?.match(/image(\d+)\.(?:png|webp)$/i);
-  if (!id) throw new Error(`Product image ids keep their source number: ${a.id}`);
-  if (source && Number(id[1]) !== Number(source[1])) {
+  if (!id && !live) throw new Error(`Product image ids keep their source number: ${a.id}`);
+  if (id && source && Number(id[1]) !== Number(source[1])) {
     throw new Error(`Product image id and source disagree: ${a.id} is ${a.sourceFile}`);
+  }
+  if (live) {
+    const capture = a.sourceFile?.match(/screens-final\/(?:clean|slot-crops)\/(?:[a-z]+-row\d+-)?(\d{2})-[\w-]+\.png$/);
+    if (!capture || capture[1] !== live[1]) throw new Error(`Product image id and source disagree: ${a.id} is ${a.sourceFile}`);
   }
   byId.set(a.id, a);
 }
@@ -81,6 +89,26 @@ const productText = {
   'os-sales-desk': ['销售工作台：询盘、跟进与回复草稿同屏推进', 'The sales desk: inquiries, follow-ups and draft replies on one surface'],
   'os-inquiries': ['客户对话：兴趣、历史与待办汇集成共享上下文', 'Customer inbox: interest, history and next actions as shared context'],
   'os-desktop': ['系统地图：连接不同业务工作空间的共享桌面', 'System map: one shared desktop connecting business workspaces'],
+  /* Clean captures of the product with demonstration data (2026-10-21,
+     site-images/screens-final). They replace the earlier stills that showed a
+     live mailbox, a real-looking customer and infrastructure details, and the
+     generated renders with invented interfaces. Each line says what that crop
+     shows and nothing more. */
+  'live09-sales-desk-case-4x3': ['Sales Desk 询盘处理：左边是按等待时间排列的询盘，右边是一封询盘的型号、数量、目的港和贸易术语，下方是审批后才发出的回复草稿', 'Sales Desk inquiry handling: inquiries ordered by waiting time on the left; on the right one inquiry\u2019s model, quantity, destination and trade term, and a reply draft that is sent only after approval'],
+  'live09-sales-desk-case-3x2': ['Sales Desk：询盘列表，一封询盘自动整理出的型号、数量、目的港和贸易术语，以及建议的下一步', 'Sales Desk: the inquiry list, the model, quantity, destination and trade term pulled out of one inquiry, and the suggested next step'],
+  'live09-sales-desk-case-16x9': ['Sales Desk 客户案例：询盘列表、询盘要点和回复草稿，右侧 AI 助手可以分析客户、起草回复、整理报价需求，发出前由你确认', 'A Sales Desk case: the inquiry list, the inquiry\u2019s key facts and a reply draft, with the AI assistant beside them to analyse the customer, draft replies and gather quote needs, all confirmed by you before anything is sent'],
+  'live23-erp-items-16x9': ['ERP 物料列表：177 个 STARGO 自有型号的名称、启用状态和物料组', 'The ERP item list: the name, status and item group of 177 STARGO products'],
+  'live23-erp-items-3x2': ['ERP 物料列表：177 个 STARGO 自有型号的名称、启用状态和物料组', 'The ERP item list: the name, status and item group of 177 STARGO products'],
+  'live05-growth-home-2x1': ['Growth OS 主动获客首页：上手进度，以及开始找客户和发送开发信两个入口，开始前都会请你确认', 'The Growth OS home: onboarding progress and the two starting points, finding customers and sending first emails, each confirmed with you before it runs'],
+  'live05-growth-home-start-3x2': ['Growth OS 开始找客户：按你填写的产品和目标客户找新的潜在客户，由 AI 判断是否合适并写下理由', 'Growth OS, finding customers: new prospects found from the products and target customers you enter, with AI judging whether each fits and writing down why'],
+  'live05-growth-home-start-5x4': ['Growth OS 开始找客户：按你填写的产品和目标客户找新的潜在客户，由 AI 判断是否合适并写下理由', 'Growth OS, finding customers: new prospects found from the products and target customers you enter, with AI judging whether each fits and writing down why'],
+  'live01-desktop-home-16x9': ['网页桌面：AI 工作台、成交工作台、企业管理、视频制作等业务应用都在同一个桌面里', 'The web desktop: the AI workspace, the Sales Desk, enterprise management, video tools and other business apps on one desktop'],
+  'live43-app-connections-16x9': ['应用连接：1568 个可连接服务、18345 个本地可执行操作，以及工具调用趋势和最近调用记录', 'App connections: 1,568 connectable services and 18,345 executable actions, with the trend and the record of recent tool calls'],
+  'live52-mobile-case-16x9': ['手机上的 Sales Desk：一封询盘的型号和数量已经整理出来，下面是买家的原话', 'The Sales Desk on a phone: the model and quantity of an inquiry already pulled out, above the buyer\u2019s own message'],
+  'live52-mobile-case-needs': ['买方需求提取：型号 DEMO C300、数量 4 直接列在买家原话上方', 'Buyer need extraction: model DEMO C300 and quantity 4 listed right above the buyer\u2019s own words'],
+  'live52-mobile-case-screen': ['在手机上回询盘：英文来信可一键翻译，AI 给出下一步建议并起草回复，提交审批后才会发给客户', 'Answering an inquiry on a phone: the incoming message can be translated in one tap, AI suggests the next step and drafts a reply, and nothing reaches the customer before approval'],
+  'live51-mobile-board-screen': ['手机上的成交看板：待回复、待审批和成交信号一目了然，等你批的报价单随时处理', 'The deal board on a phone: replies due, approvals waiting and buying signals at a glance, with the quote awaiting your approval one tap away'],
+  'live18-quote-approval-16x9': ['销售工作台的报价审批：从邮件接入到 PI 单据每一步的状态，待审批的报价单独列出，只能由人批准', 'Quote approval in the sales workbench: the status of every step from incoming email to PI, with the quote awaiting approval listed on its own and approvable only by a person'],
 };
 export const PRODUCT_CAPTION = { zh: '产品界面示意（演示数据）', en: 'Illustrative product interface · demo data' };
 export function editorialImages(html, lang) {
@@ -119,9 +147,22 @@ export function editorialImages(html, lang) {
       /* The capability rows' thumbnail: a fixed box, 12rem x 10rem from 992 and
          16rem x 12rem from 1440 (cinery.cn2.css), and not drawn below 992. */
       const thumb = /cn-service-thumbnail/.test(result);
+      /* The capability hero's six 3D cards (tools/blocks/rk-hero.mjs): each
+         <img> is a 16:9 box of 128px (phone), 240px (768), 320px (992–1919)
+         and 480px (1920 up), drawn up to ~1.4x larger by the card's
+         perspective. renok's own sizes said 100vw, which fetched the widest file
+         for every card. */
+      const before = page.slice(Math.max(0, offset - 160), offset);
+      const rkCard = /rk-rt-portfolio-v2-image-wrapper/.test(before);
+      /* renok's insight rows (tools/blocks/rk-insight.mjs): a thumbnail of
+         200px (992–1439) and 300px (1440 up), not drawn below 992. */
+      const rkThumb = /rk-rt-insights-item-image/.test(before);
+      /* The product screens in the intelligence page's phone mockups: at most
+         325px wide. The editorial screens beside them keep the general rule. */
+      const phone = /lx-integrations-image/.test(result) && /stargo-product/.test(result);
       /* Gallery tiles are ~18–20rem after the curated-asset pass; the core-system
          dashboard plate may grow to 1040px on desktop (css/stargo-fusion.css). */
-      attrs.push(`sizes="${tile ? '(max-width: 1439px) 288px, 320px' : dashboard ? '(max-width: 991px) 92vw, (max-width: 1439px) 70vw, 1040px' : thumb ? '(max-width: 1439px) 186px, 250px' : card ? '(max-width: 767px) 45vw, 360px' : small ? '(max-width: 767px) 50vw, 400px' : '(max-width: 767px) 100vw, (max-width: 991px) 75vw, 60vw'}"`);
+      attrs.push(`sizes="${rkCard ? '(max-width: 767px) 180px, (max-width: 991px) 340px, (max-width: 1919px) 440px, 660px' : rkThumb ? '(max-width: 1439px) 200px, 300px' : phone ? '(max-width: 767px) 280px, 330px' : tile ? '(max-width: 1439px) 288px, 320px' : dashboard ? '(max-width: 991px) 92vw, (max-width: 1439px) 70vw, 1040px' : thumb ? '(max-width: 1439px) 186px, 250px' : card ? '(max-width: 767px) 45vw, 360px' : small ? '(max-width: 767px) 50vw, 400px' : '(max-width: 767px) 100vw, (max-width: 991px) 75vw, 60vw'}"`);
     }
     return result.replace(/\s*\/?>(\s*)$/, ` ${attrs.join(' ')}/>$1`);
   });
