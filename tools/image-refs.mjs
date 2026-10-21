@@ -46,3 +46,20 @@ export function webpSheet(css) {
   if (!Object.keys(load()).length) return css;
   return css.replace(/url\((["']?)([^"')]+)/g, (_, q, u) => `url(${q}${swap(u)}`);
 }
+
+/** Let the browser pick a lazy image's srcset candidate from the width it is
+    actually laid out at (`sizes="auto"`, Chrome 126+), keeping the template's
+    own `sizes` as the fallback for browsers that do not read `auto`. Webflow
+    writes `sizes` for the widest the image can be — `(max-width: 1024px)
+    100vw, 1024px` on testimonial avatars drawn 48 px wide — so a phone at 3x
+    fetched the largest file for every one of them. Only lazy images qualify
+    (the HTML rule); what is drawn does not change, only which file fills it. */
+export function autoSizes(html) {
+  return html.replace(/<img\b[^>]*>/g, (tag) => {
+    if (!/\sloading="lazy"/.test(tag) || !/\ssrcset="/.test(tag)) return tag;
+    const m = tag.match(/\ssizes="([^"]*)"/);
+    if (!m) return tag.replace('<img', '<img sizes="auto"');
+    if (/^\s*auto\b/.test(m[1])) return tag;
+    return tag.replace(m[0], ` sizes="auto, ${m[1]}"`);
+  });
+}

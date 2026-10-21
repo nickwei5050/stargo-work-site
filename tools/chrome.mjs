@@ -17,7 +17,7 @@
 import { makeSub, findByClass, extractElement } from './lib-html.mjs';
 import { editorialImages } from './editorial-images.mjs';
 import { createHash } from 'node:crypto';
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import { CAP_JUMPS, NAV, SECONDARY, MORE, LANG_SWITCH, CHROME, META, CONTACT_INFO, SITE_URL } from './copy.mjs';
 import { POSTS, BLOG_UI, postPath, coverSrc, faqEntities, wordCount } from './blog.mjs';
 import { OG, OS_ART } from './replaceables.mjs';
@@ -362,6 +362,28 @@ function scripts(html) {
   if (!out.includes('js/stargo-tabs.js')) out = out.replace('</body>', '<script src="js/stargo-tabs.js"></script></body>');
   if (out.includes('id="stargo-side-menu"') && !out.includes('js/stargo-side-menu.js')) out = out.replace('</body>', '<script src="js/stargo-side-menu.js"></script></body>');
   if (out.includes('data-stargo-video') && !out.includes('js/stargo-media.js')) out = out.replace('</body>', '<script src="js/stargo-media.js"></script></body>');
+  /* Every template clip waits until the reader is near it, on every page.
+     The about and capability pages did this first for their donor bands
+     (tools/build-site.mjs explains the measurements); the Mōno background
+     videos on the other pages still loaded at once — the homepage alone
+     started ten `<video autoplay>` elements, eight of them the same orb clip,
+     before the opening animation had finished. Same mechanism here: the
+     `<source src>` waits in `data-src`, Webflow's runtime is kept from
+     re-adding it by renaming `data-video-urls`, and js/stargo-video-defer.js
+     restores both a quarter-screen before the clip scrolls into view. The
+     brand film keeps its own player (js/stargo-media.js). */
+  const menu = elementSpan(out, '<div class="menu-wrapper" id="stargo-side-menu"');
+  out = out.replace(/<video\b[^>]*>[\s\S]*?<\/video>/g, (v, at) => {
+    if (/^<video[^>]*\sdata-stargo-video\b/.test(v)) return v;
+    v = videoSources(v, menu && at > menu[0] && at < menu[1]);
+    if (!/<source[^>]*\ssrc=/.test(v) || /^<video[^>]*\sdata-defer\b/.test(v)) return v;
+    return v
+      .replace('<video', '<video data-defer')
+      .replace(/\spreload="[^"]*"/, ' preload="none"')
+      .replace(/(<source[^>]*?)\ssrc=/g, '$1 data-src=');
+  });
+  out = out.replace(/\sdata-video-urls=/g, ' data-defer-video-urls=');
+  if (out.includes('<video data-defer') && !out.includes('js/stargo-video-defer.js')) out = out.replace('</body>', '<script src="js/stargo-video-defer.js" defer></script></body>');
   out = out.replace(
     'const nav = document.querySelector(".menu-bottom");',
     'const nav = document.querySelector(".menu-bottom");\n  if (!nav) return; // no pill on this page',
@@ -431,6 +453,39 @@ function socialIcons(html) {
  * the header's menu button below 992px.
  */
 const SIDE_MENU_LABELS = { open: { zh: '菜单', en: 'Menu' }, close: { zh: '关闭菜单', en: 'Close menu' } };
+/* [start, end) of the element whose opening tag begins with `open`, or null. */
+function elementSpan(html, open) {
+  const start = html.indexOf(open);
+  if (start < 0) return null;
+  const tag = open.match(/^<([a-z]+)/)[1];
+  const re = new RegExp(`<${tag}\\b|</${tag}>`, 'g');
+  re.lastIndex = start + 1;
+  for (let depth = 1, m; (m = re.exec(html));) if ((depth += m[0][1] === '/' ? -1 : 1) === 0) return [start, re.lastIndex];
+  throw new Error(`chrome: ${open} is never closed`);
+}
+
+/* A clip's <source>s: the smaller H.264 copy from tools/encode-video.mjs where
+   one exists (tools/data/video-h264.json), the 360 px orb wherever the logo
+   orb is drawn at logo size (everywhere but the side-menu card), and an
+   explicit type, so a browser that cannot play H.264 skips the mp4 instead of
+   downloading it first to find out. */
+let videoManifest = null;
+function videoSources(video, inMenu) {
+  videoManifest ??= existsSync(new URL('./data/video-h264.json', import.meta.url))
+    ? JSON.parse(readFileSync(new URL('./data/video-h264.json', import.meta.url), 'utf8')) : { clips: {} };
+  const { clips, orb, orbSmall } = videoManifest;
+  return video.replace(/<source\b([^>]*?)\s(data-src|src)="([^"]+)"([^>]*)>/g, (m, pre, attr, url, post) => {
+    const [, up, path] = url.match(/^((?:\.\.\/)*)(.*)$/);
+    let plain;
+    try { plain = decodeURIComponent(path); } catch { return m; }
+    let to = clips[plain];
+    if (orbSmall && !inMenu) to = plain === orb ? orbSmall.mp4 : plain === orb.replace(/_mp4\.mp4$/, '_webm.webm') ? orbSmall.webm : to;
+    const src = to ? up + (path.includes('%') ? encodeURI(to) : to) : url;
+    const type = /\stype=/.test(pre + post) ? '' : /\.mp4$/i.test(plain) ? ' type="video/mp4"' : /\.webm$/i.test(plain) ? ' type="video/webm"' : '';
+    return `<source${pre} ${attr}="${src}"${type}${post}>`;
+  });
+}
+
 function sideMenu(html, lang) {
   if (!html.includes('<div class="menu-wrapper">')) return html;
   const one = (out, from, to, what) => {

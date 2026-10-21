@@ -16,13 +16,24 @@
  *
  * Without IntersectionObserver every video is restored immediately, which is
  * the behaviour the template itself has.
+ *
+ * Since 2026-10-21 every page's template clips go through this (tools/chrome.mjs
+ * writes the markup), with two refinements:
+ *   - A reader who asks for reduced motion gets the poster frames and no
+ *     download, the same stillness the Webflow runtime gives the clips it
+ *     starts itself. Should the preference change, the clips in view start.
+ *   - The orb in the side-menu contact card sits under the page while the
+ *     menu is closed, where an observer would count it as visible. It loads
+ *     when the menu is about to open: the pointer reaching the menu icon,
+ *     the icon taking focus, or the menu losing `inert`.
  */
 (function () {
   var vids = document.querySelectorAll('video[data-defer]');
   if (!vids.length) return;
+  var reduced = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
 
   function load(v) {
-    if (v.dataset.deferDone) return;
+    if (v.dataset.deferDone || reduced.matches) return;
     v.dataset.deferDone = '1';
     var sources = v.querySelectorAll('source[data-src]');
     for (var i = 0; i < sources.length; i++) {
@@ -34,8 +45,22 @@
     if (p && p.catch) p.catch(function () { /* autoplay may be blocked; the poster stands */ });
   }
 
+  var menu = document.getElementById('stargo-side-menu');
+  var inMenu = [], onPage = [];
+  for (var k = 0; k < vids.length; k++) (menu && menu.contains(vids[k]) ? inMenu : onPage).push(vids[k]);
+  if (inMenu.length) {
+    var openMenu = function () { for (var m = 0; m < inMenu.length; m++) load(inMenu[m]); };
+    var trigger = document.querySelector('[aria-controls="stargo-side-menu"]');
+    if (trigger) {
+      trigger.addEventListener('pointerenter', openMenu);
+      trigger.addEventListener('focus', openMenu);
+      trigger.addEventListener('click', openMenu);
+    }
+    if ('MutationObserver' in window) new MutationObserver(function () { if (!menu.hasAttribute('inert')) openMenu(); }).observe(menu, { attributes: true, attributeFilter: ['inert'] });
+  }
+
   if (!('IntersectionObserver' in window)) {
-    for (var i = 0; i < vids.length; i++) load(vids[i]);
+    for (var i = 0; i < onPage.length; i++) load(onPage[i]);
     return;
   }
 
@@ -62,9 +87,11 @@
     for (var i = 0; i < entries.length; i++) {
       if (!entries[i].isIntersecting) continue;
       load(entries[i].target);
-      io.unobserve(entries[i].target);
+      if (entries[i].target.dataset.deferDone) io.unobserve(entries[i].target);
     }
   }, { rootMargin: '25% 0px' });
 
-  for (var j = 0; j < vids.length; j++) io.observe(vids[j]);
+  function watch() { for (var j = 0; j < onPage.length; j++) if (!onPage[j].dataset.deferDone) { io.unobserve(onPage[j]); io.observe(onPage[j]); } }
+  watch();
+  if (reduced.addEventListener) reduced.addEventListener('change', function () { if (!reduced.matches) watch(); });
 })();
