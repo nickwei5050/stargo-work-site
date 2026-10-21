@@ -1438,7 +1438,7 @@ function postPage(post, lang) {
      the words tools/editorial-images.mjs uses for the same pictures elsewhere
      (tools/blog.mjs coverAlt). The editorial covers stay decorative. */
   b = swapImg(b, '6945522d9e13fa6b32ace3c9_Futuristic', coverSrc(post), { alt: coverAlt(post, lang) });
-  b = b.replace(/(<img[^>]*class="lx-blog-image lx-details")\/>/, (m, tag) => `${tag} srcset="${coverSrcset(post)}" sizes="(max-width: 991px) 100vw, 1180px"/>`);
+  b = b.replace(/(<img[^>]*class="lx-blog-image lx-details")\/>/, (m, tag) => `${tag.replace(' loading="lazy"', ' loading="eager" fetchpriority="high"')} srcset="${coverSrcset(post)}" sizes="(max-width: 991px) 100vw, 1180px"/>`);
   if (!b.includes(coverSrcset(post))) throw new Error('post: hero image');
   {
     // The rich-text block carries the interaction's initial state inline (opacity 0, data-w-id): keep its tag, replace its content.

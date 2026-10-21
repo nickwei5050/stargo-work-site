@@ -118,7 +118,7 @@ function topNav(html, L, current) {
   const tpl = firstLink(m[0]);
   const items = [...L.nav.slice(1), ...L.more, L.swap];   // the wordmark is the home link; About and Blog sit after the product pages
   const out = items.map((n) => renderLink(tpl, n, isCurrent(n.href, current))).join('');
-  return html.replace(m[0], `<nav role="navigation" class="nav-menu first w-nav-menu">${out}</nav>`);
+  return html.replace(m[0], `<nav role="navigation" class="nav-menu first w-nav-menu" data-lenis-prevent="">${out}</nav>`);
 }
 
 /** Overlay menu: the product pages, About and Blog, and the language switch. Legal pages sit in its bottom row and in the footer. */
@@ -494,7 +494,7 @@ function sideMenu(html, lang) {
     return out.replace(from, to);
   };
   let out = html;
-  out = one(out, '<div class="menu-wrapper">', '<div class="menu-wrapper" id="stargo-side-menu" inert="">', 'side menu');
+  out = one(out, '<div class="menu-wrapper">', '<div class="menu-wrapper" id="stargo-side-menu" inert="" data-lenis-prevent="">', 'side menu');
   out = one(out, 'class="circle-wrap">', `class="circle-wrap" role="button" tabindex="0" aria-label="${SIDE_MENU_LABELS.open[lang]}" aria-expanded="false" aria-controls="stargo-side-menu">`, 'side menu icon');
   out = one(out, 'class="fixed-close-button">', `class="fixed-close-button" role="button" tabindex="0" aria-label="${SIDE_MENU_LABELS.close[lang]}" inert="">`, 'side menu close button');
   return out;

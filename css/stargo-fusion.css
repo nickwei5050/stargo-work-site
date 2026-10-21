@@ -313,7 +313,19 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 @media (max-width: 991px) {
   .w-nav-overlay .nav-menu .button-link { min-height: 44px; padding-top: 8px; padding-bottom: 8px; align-items: center; }
   body:has(.w-nav-button.w--open) { overflow: hidden; }
+  /* With the page locked, a menu taller than a landscape phone (844x390:
+     links to y=478) could never show its last links; it scrolls itself. */
+  .w-nav-overlay .w-nav-menu[data-nav-menu-open] { max-height: calc(100vh - 68px); max-height: calc(100dvh - 68px); overflow-y: auto; overscroll-behavior: contain; }
 }
+/* The desktop side menu is 944-965px of content in a 100vh panel: on a laptop
+   screen its last links, icons and demo card fell below the fold. It scrolls
+   itself (tools/chrome.mjs marks it data-lenis-prevent), without a bar. */
+#stargo-side-menu .navigation-content { overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+#stargo-side-menu .navigation-content::-webkit-scrollbar { display: none; }
+/* The demo form is pinned to the bottom of a 90vh section the band above
+   overlaps by 100px; under ~640px of height its heading and first fields were
+   cut off. Short screens get a section tall enough for the card. */
+@media (max-height: 640px) { .section.ctc { min-height: 640px; } }
 
 /* Audit fixes: retain each template's motion, make content legible at rest. */
 body.stargo-dark-page { background: #1b1a19; }
@@ -418,6 +430,10 @@ button.toggle-header { width: 100%; border: 0; border-radius: 0; background: tra
 .lx-scope .lx-text-rich-text h3 { margin-top: 2.5rem; }
 .lx-scope .lx-text-rich-text a { color: var(--_semantics---primary, #e393bd); }
 .lx-scope .lx-blog-details-image-holder .lx-blog-image.lx-details { width: 100%; }
+/* The holder is a shrink-to-fit flex item: 0px wide until the hero decodes,
+   then it pushed the article down (CLS 0.15-0.36). Give it its final width up
+   front; 1180px is the width the hero's sizes attribute already names. */
+.lx-scope .lx-blog-details-image-holder { width: 100%; max-width: 1180px; }
 @media (max-width: 991px) {
   .lx-scope .lx-blog-details-grid { grid-template-columns: 1fr; }
   .lx-scope .lx-blog-list { grid-template-columns: 1fr 1fr; }
