@@ -2,6 +2,11 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { onRequestPost, onRequestGet } from '../functions/api/contact.js';
+import { CONTACT_INFO } from './copy.mjs';
+/* The Function cannot import tools/, so it repeats the owner's address as its
+   default recipient. That copy must be the address the site prints. */
+const OWNER = CONTACT_INFO.email;
+const RESEND_TEST_SENDER = 'Stargo Work <onboarding@resend.dev>';
 const valid = () => ({ form: 'contact', lang: 'en', page: 'https://stargo.pages.dev/contact', fields: [
   { key: 'name', label: 'Name', value: 'QA' }, { key: 'email', label: 'Email', value: 'qa@example.invalid' },
 ] });
@@ -18,7 +23,24 @@ test('contact handler regression', async t => {
   globalThis.fetch = transport;
   try {
     for (const [label, run] of [
-      ['valid contact relays only to configured server recipient', async () => { const r = await send(valid()); assert.equal(r.status, 200); assert.deepEqual(JSON.parse(calls.at(-1).body).to, ['sales@stargomoto.com']); }],
+      ['valid contact relays only to configured server recipient', async () => { const r = await send(valid()); assert.equal(r.status, 200); assert.deepEqual(JSON.parse(calls.at(-1).body).to, [OWNER]); }],
+      ['unset CONTACT_TO / CONTACT_FROM use the owner address and Resend test sender', async () => {
+        const r = await send(valid(), { env: { RESEND_API_KEY: 'fixture-not-a-key' } }); assert.equal(r.status, 200);
+        const mail = JSON.parse(calls.at(-1).body);
+        assert.equal(OWNER, 'wei505099021@live.cn');
+        assert.deepEqual(mail.to, [OWNER]); assert.equal(mail.from, RESEND_TEST_SENDER); assert.equal(mail.reply_to, 'qa@example.invalid');
+        assert.equal(calls.at(-1).url, 'https://api.resend.com/emails'); assert.equal(calls.at(-1).headers.authorization, 'Bearer fixture-not-a-key');
+      }],
+      ['CONTACT_TO / CONTACT_FROM from the environment override the defaults', async () => {
+        const r = await send(valid(), { env: { RESEND_API_KEY: 'fixture-not-a-key', CONTACT_TO: 'inbox@example.invalid', CONTACT_FROM: 'Stargo Work <hello@example.invalid>' } }); assert.equal(r.status, 200);
+        const mail = JSON.parse(calls.at(-1).body);
+        assert.deepEqual(mail.to, ['inbox@example.invalid']); assert.equal(mail.from, 'Stargo Work <hello@example.invalid>');
+      }],
+      ['empty CONTACT_TO / CONTACT_FROM fall back to the defaults', async () => {
+        await send(valid(), { env: { RESEND_API_KEY: 'fixture-not-a-key', CONTACT_TO: '', CONTACT_FROM: '' } });
+        const mail = JSON.parse(calls.at(-1).body);
+        assert.deepEqual(mail.to, [OWNER]); assert.equal(mail.from, RESEND_TEST_SENDER);
+      }],
       ['null JSON is a controlled bad request', async () => assert.equal((await send(null)).status, 400)],
       ['scalar JSON is rejected', async () => assert.equal((await send('hello')).status, 400)],
       ['malformed JSON is rejected', async () => assert.equal((await send(null, { body: '{' })).status, 400)],
@@ -36,8 +58,28 @@ test('contact handler regression', async t => {
       ['object field values are rejected', async () => { const d = valid(); d.fields.push({ label: 'Message', value: { arbitrary: 'object' } }); assert.equal((await send(d)).status, 422); }],
       ['legacy Chinese labels still work', async () => { const d = valid(); d.fields = [{ label: '姓名*', value: '测试' }, { label: '邮箱*', value: 'qa@example.invalid' }]; assert.equal((await send(d)).status, 200); }],
       ['newsletter needs email but not name', async () => { const d = valid(); d.form = 'newsletter'; d.fields.shift(); assert.equal((await send(d)).status, 200); }],
-      ['transport failure is controlled', async () => { globalThis.fetch = async () => { throw new TypeError('network failure'); }; try { assert.equal((await send(valid())).status, 502); } finally { globalThis.fetch = transport; } }],
-      ['provider rejection is not success', async () => { globalThis.fetch = async () => Response.json({ message: 'unavailable' }, { status: 500 }); try { assert.equal((await send(valid())).status, 502); } finally { globalThis.fetch = transport; } }],
+      ['transport failure is controlled', async () => { const err = console.error; console.error = () => {}; globalThis.fetch = async () => { throw new TypeError('network failure'); }; try { assert.equal((await send(valid())).status, 502); } finally { console.error = err; globalThis.fetch = transport; } }],
+      ['provider rejection is not success', async () => { const err = console.error; console.error = () => {}; globalThis.fetch = async () => Response.json({ message: 'unavailable' }, { status: 500 }); try { assert.equal((await send(valid())).status, 502); } finally { console.error = err; globalThis.fetch = transport; } }],
+      ['Resend refusal: clean JSON error, logged with status and message, never the key', async () => {
+        const logged = []; const err = console.error; console.error = (...a) => logged.push(a.map(String).join(' '));
+        globalThis.fetch = async () => Response.json({ statusCode: 403, name: 'validation_error', message: 'You can only send testing emails to your own email address (wei505099021@live.cn).' }, { status: 403 });
+        try {
+          const r = await send(valid(), { env: { RESEND_API_KEY: 're_secret_fixture_value' } });
+          assert.equal(r.status, 502); assert.equal(r.headers.get('content-type'), 'application/json; charset=utf-8');
+          assert.deepEqual(await r.json(), { ok: false, error: 'upstream' });
+          assert.equal(logged.length, 1); assert.match(logged[0], /\b403\b/); assert.match(logged[0], /validation_error: You can only send testing emails/);
+          assert(!logged.join('\n').includes('re_secret_fixture_value'), 'the API key is never logged');
+        } finally { console.error = err; globalThis.fetch = transport; }
+      }],
+      ['Resend refusal with a non-JSON body is still a clean JSON error', async () => {
+        const logged = []; const err = console.error; console.error = (...a) => logged.push(a.map(String).join(' '));
+        globalThis.fetch = async () => new Response('<html>Bad gateway</html>', { status: 502 });
+        try {
+          const r = await send(valid(), { env: { RESEND_API_KEY: 're_secret_fixture_value' } });
+          assert.equal(r.status, 502); assert.deepEqual(await r.json(), { ok: false, error: 'upstream' });
+          assert.match(logged[0], /\b502\b/); assert(!logged.join('\n').includes('re_secret_fixture_value'));
+        } finally { console.error = err; globalThis.fetch = transport; }
+      }],
       ['retries forward the same provider key and identical mail payload', async () => { await send(valid()); const first = calls.at(-1); await new Promise(r => setTimeout(r, 5)); await send(valid()); const last = calls.at(-1); assert.equal(first.headers['Idempotency-Key'], key); assert.equal(last.headers['Idempotency-Key'], key); assert.equal(last.body, first.body); }],
       ['GET cannot submit', async () => assert.equal(onRequestGet().status, 405)],
     ]) await t.test(label, run);

@@ -62,13 +62,54 @@ export const LANG_SWITCH = B('EN', '中文');
 /** Production origin — canonical URLs, hreflang, Open Graph and the sitemap. */
 export const SITE_URL = 'https://stargowork.com';
 
+/* The company's contact details, in ONE place. Everything the site prints or
+   links — the footer, the side menu's and the about card's channel buttons,
+   the contact page's 「直接联系」 list, the privacy and terms pages, the form's
+   fallback notice (handed to js/stargo-forms.js as data attributes by
+   tools/chrome.mjs formMarkup) and the Organization JSON-LD — reads them from
+   here. The owner set them on 2026-10-21 (his own e-mail for the form and the
+   site, his WeChat and phone, and himself as the contact person).
+   The one copy that cannot import this file is functions/api/contact.js (a
+   Cloudflare Pages Function); its default recipient repeats `email`.
+   Phone, WeChat and WhatsApp are the same number. WeChat has no web link, so
+   it is printed as text with a copy button (js/stargo-forms.js).
+   `labels` names each detail where it is listed. */
 export const CONTACT_INFO = {
-  email: 'sales@stargomoto.com',
+  person: 'Nick Wei',
+  email: 'wei505099021@live.cn',
+  phone: '+86 187 7512 7878',
+  phoneHref: 'tel:+8618775127878',
+  wechat: '18775127878',
   whatsapp: '+86 187 7512 7878',
   whatsappHref: 'https://wa.me/8618775127878',
   site: 'www.stargomoto.com',
   siteHref: 'https://www.stargomoto.com',
   address: B('柳州 · 广西 · 中国', 'Liuzhou, Guangxi, China'),
+  labels: {
+    person: B('联系人', 'Contact'),
+    phone: B('电话', 'Phone'),
+    /* The footer's 电话 row: its column leaves 157px for the label at 992px,
+       and "Phone +86 187 7512 7878" needs 170px; "Tel …" needs 152. */
+    phoneShort: B('电话', 'Tel'),
+    wechat: B('微信', 'WeChat'),
+    whatsapp: B('WhatsApp', 'WhatsApp'),
+    email: B('邮箱', 'Email'),
+  },
+};
+/* The words around those details: the contact page's list heading, and the
+   WeChat copy control (js/stargo-forms.js shows `copied` / `wechatCopied` for
+   two seconds after the ID reaches the clipboard, and announces it). */
+export const CONTACT_UI = {
+  heading: B('(直接联系)', '(Reach us directly)'),
+  copy: B('复制', 'Copy'),
+  copied: B('已复制', 'Copied'),
+  /* The footer's WeChat row prints 「微信 <ID>」; its name adds what it does,
+     and after a copy the ID gives way to `copiedInline` beside the 「微信」. */
+  copyHint: B('（复制）', ' (copy)'),
+  copiedInline: B('已复制', 'copied'),
+  copyWechat: B('复制微信号', 'Copy WeChat ID'),
+  wechatCopied: B('微信号已复制', 'WeChat ID copied'),
+  call: B('致电', 'Call'),
 };
 
 /** Strings shared by every Mono page (footer, contact band, tooltips). */
@@ -148,7 +189,11 @@ export const CHROME = [
   ['>Licensing<', B('>第三方声明<', '>Notices<')],
   ['>contact@monostudio.io<', B(`>${CONTACT_INFO.email}<`, `>${CONTACT_INFO.email}<`)],
   ['>info@monostudio.io<', B(`>${CONTACT_INFO.site}<`, `>${CONTACT_INFO.site}<`)],
-  ['>(+1) 930 046 720<', B(`><span class="stargo-wa">WhatsApp </span>${CONTACT_INFO.whatsapp}<`, `><span class="stargo-wa">WhatsApp </span>${CONTACT_INFO.whatsapp}<`)],
+  /* The number is its own span since the footer also lists 电话 with the same
+     number: where the footer column is too narrow for both words (768-1279px,
+     css/stargo-fusion.css) this row shows the word 「WhatsApp」 and the number
+     stays on the 电话 row, instead of the same digits twice, once unlabelled. */
+  ['>(+1) 930 046 720<', B(`><span class="stargo-wa">WhatsApp </span><span class="stargo-wa-num">${CONTACT_INFO.whatsapp}</span><`, `><span class="stargo-wa">WhatsApp </span><span class="stargo-wa-num">${CONTACT_INFO.whatsapp}</span><`)],
   ['href="mailto:contact@monostudio.io"', B(`href="mailto:${CONTACT_INFO.email}"`, `href="mailto:${CONTACT_INFO.email}"`)],
   ['href="mailto:info@monostudio.io"', B(`href="${CONTACT_INFO.siteHref}"`, `href="${CONTACT_INFO.siteHref}"`)],
   ['href="tel:(+1)930046720"', B(`href="${CONTACT_INFO.whatsappHref}"`, `href="${CONTACT_INFO.whatsappHref}"`)],
@@ -1498,7 +1543,7 @@ export const NOT_FOUND = {
 /** Privacy policy and terms of use: real pages, not placeholder anchors. */
 export const LEGAL = {
   privacy: {
-    date: B('2026-09-05 生效', 'Effective 2026-09-05'),
+    date: B('2026-10-21 生效', 'Effective 2026-10-21'),
     h1: B('隐私政策', 'Privacy policy'),
     body: B(`
 <p>本政策说明 STARGO WORK 官方网站（以下简称「本站」）收集哪些信息、为什么收集、保存多久，以及你拥有的权利。本站由 STARGO（柳州 · 广西 · 中国）运营。</p>
@@ -1509,12 +1554,12 @@ export const LEGAL = {
 <li><strong>Cookie 与本地存储。</strong>本站不使用分析或广告 Cookie，不加载任何第三方追踪脚本；所有字体、图片与脚本均从本站自身域名加载。</li>
 </ul>
 <h4>如何使用与共享</h4>
-<p>提交时，表单内容先发送至托管于 Cloudflare 的本站接口进行验证；邮件服务配置完成后，通过 Resend 投递到 sales@stargomoto.com，用于处理你的请求。我们不出售你的信息；除完成托管、投递所需的服务商和法律要求外，不向第三方共享。本接口不会将表单内容写入数据库。</p>
+<p>提交时，表单内容先发送至托管于 Cloudflare 的本站接口进行验证；邮件服务配置完成后，通过 Resend 投递到 ${CONTACT_INFO.email}，用于处理你的请求。我们不出售你的信息；除完成托管、投递所需的服务商和法律要求外，不向第三方共享。本接口不会将表单内容写入数据库。</p>
 <p>若邮件服务未配置或无法确认投递，页面会保留你填写的内容并提示重试，同时提供邮件链接。只有你主动点击该链接，才会打开自己的邮件客户端；这不代表在线提交已经成功。</p>
 <h4>保存期限</h4>
 <p>咨询信息在处理完毕后最多保存 24 个月；订阅邮箱在你退订前保留。你可以随时要求删除。</p>
 <h4>你的权利</h4>
-<p>你可以随时查询、更正或删除我们持有的关于你的信息，或撤回订阅：发送邮件到 sales@stargomoto.com，或通过 WhatsApp +86 187 7512 7878 联系我们。我们会在 15 个工作日内回复。</p>
+<p>你可以随时查询、更正或删除我们持有的关于你的信息，或撤回订阅：发送邮件到 ${CONTACT_INFO.email}，或通过 WhatsApp ${CONTACT_INFO.whatsapp} 联系我们。我们会在 15 个工作日内回复。</p>
 <h4>未成年人</h4>
 <p>本站面向企业用户，不面向未满 18 周岁的个人收集信息。</p>
 <h4>政策更新</h4>
@@ -1528,19 +1573,19 @@ export const LEGAL = {
 <li><strong>Cookies and local storage.</strong> The site sets no analytics or advertising cookies and loads no third-party tracking script; fonts, images and scripts are served from this site’s own domain.</li>
 </ul>
 <h4>How it is used and shared</h4>
-<p>When you submit a form, its contents first reach this site’s Cloudflare-hosted endpoint for validation. Once the mail service is configured, Resend delivers them to sales@stargomoto.com to handle your request. We do not sell your information; sharing is limited to service providers needed for hosting and delivery, or as required by law. This endpoint does not write form contents to a database.</p>
+<p>When you submit a form, its contents first reach this site’s Cloudflare-hosted endpoint for validation. Once the mail service is configured, Resend delivers them to ${CONTACT_INFO.email} to handle your request. We do not sell your information; sharing is limited to service providers needed for hosting and delivery, or as required by law. This endpoint does not write form contents to a database.</p>
 <p>If the mail service is not configured or delivery cannot be confirmed, the page retains your entries, offers a retry and provides an email link. Your own mail client opens only when you choose that link; this does not mean the online submission succeeded.</p>
 <h4>Retention</h4>
 <p>Inquiries are kept for at most 24 months after they are handled; a newsletter address is kept until you unsubscribe. You can ask for deletion at any time.</p>
 <h4>Your rights</h4>
-<p>You can access, correct or delete the information we hold about you, or withdraw a subscription, at any time: write to sales@stargomoto.com or reach us on WhatsApp +86 187 7512 7878. We answer within 15 working days.</p>
+<p>You can access, correct or delete the information we hold about you, or withdraw a subscription, at any time: write to ${CONTACT_INFO.email} or reach us on WhatsApp ${CONTACT_INFO.whatsapp}. We answer within 15 working days.</p>
 <h4>Minors</h4>
 <p>The site addresses business users and does not knowingly collect information from anyone under 18.</p>
 <h4>Changes</h4>
 <p>When this policy changes, the effective date at the top of this page changes with it. Material changes are announced prominently on the site.</p>`),
   },
   terms: {
-    date: B('2026-09-05 生效', 'Effective 2026-09-05'),
+    date: B('2026-10-21 生效', 'Effective 2026-10-21'),
     h1: B('使用条款', 'Terms of use'),
     body: B(`
 <p>访问或使用 STARGO WORK 官方网站（以下简称「本站」），即表示你接受以下条款。本站由 STARGO（柳州 · 广西 · 中国）运营。</p>
@@ -1557,7 +1602,7 @@ export const LEGAL = {
 <h4>适用法律</h4>
 <p>本条款适用中华人民共和国法律。因本条款产生的争议，由 STARGO 所在地有管辖权的人民法院管辖。</p>
 <h4>联系</h4>
-<p>关于本条款的问题：sales@stargomoto.com · WhatsApp +86 187 7512 7878。</p>`,
+<p>关于本条款的问题：${CONTACT_INFO.email} · WhatsApp ${CONTACT_INFO.whatsapp}。</p>`,
     `
 <p>By accessing or using the STARGO WORK website (“this site”) you accept the terms below. The site is operated by STARGO, Liuzhou, Guangxi, China.</p>
 <h4>Purpose of the content</h4>
@@ -1573,7 +1618,7 @@ export const LEGAL = {
 <h4>Governing law</h4>
 <p>These terms are governed by the laws of the People’s Republic of China. Disputes fall under the jurisdiction of the competent people’s court at STARGO’s seat.</p>
 <h4>Contact</h4>
-<p>Questions about these terms: sales@stargomoto.com · WhatsApp +86 187 7512 7878.</p>`),
+<p>Questions about these terms: ${CONTACT_INFO.email} · WhatsApp ${CONTACT_INFO.whatsapp}.</p>`),
   },
   back: B('返回首页', 'Back to home'),
 };

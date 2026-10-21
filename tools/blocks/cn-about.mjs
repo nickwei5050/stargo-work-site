@@ -177,9 +177,9 @@
  *   page leaves it: it is an attribute, not a word.
  *
  *   V7-LX r2 supersedes the rest of this at render time: contact.html is only
- *   the extraction-time placeholder. render() keeps the first three links with
- *   the company's three real channels (website, WhatsApp, email — the footer's
- *   list, from CONTACT_INFO) and neutral glyphs, and drops the last two, so no
+ *   the extraction-time placeholder. render() gives the links the company's
+ *   real channels (website, WhatsApp, email, and since 2026-10-21 phone and
+ *   WeChat — the footer's list, from CONTACT_INFO) and neutral glyphs, so no
  *   network logo is drawn and no icon promises an account.
  *
  * THE MOTION
@@ -206,6 +206,7 @@
  */
 import { setText, setTextAll, DONORS } from '../block-lib.mjs';
 import { zhKeep as zhKeepWords } from '../lib-html.mjs';
+import { GLYPH_PATHS, wechatCopy } from '../chrome.mjs';
 
 /** cinery's five placeholder social urls, in the order the row draws them. */
 const SOCIAL_URLS = [
@@ -367,11 +368,18 @@ export function render(frag, ctx) {
      says where it goes, in the footer's own words: the website (a globe),
      WhatsApp (a speech bubble) and email (an envelope). The first three
      donor links are kept — their `data-w-id`s carry the glyph roll (IX2
-     MOUSE_OVER/OUT) — and the last two are removed, so the row stays a
+     MOUSE_OVER/OUT) — and the last two were removed, so the row stayed a
      centred row of equal circles. Both stacked copies of each glyph are
-     replaced, as the roll swaps one for the other. */
+     replaced, as the roll swaps one for the other.
+     2026-10-21: the last two donor links come back as the phone (a handset,
+     a tel: link) and WeChat (two speech bubbles) — the same five channels and
+     glyphs as the footer and side menu rows (tools/chrome.mjs). WeChat has no
+     web link, so its link becomes a <button> that copies the ID
+     (chrome.mjs wechatCopy, js/stargo-forms.js); it keeps its `data-w-id`
+     and so the roll, and ships `hidden` until the script arms it. */
   const CI = C.CONTACT_INFO;
-  if (!CI?.siteHref || !CI?.whatsappHref || !CI?.email) throw new Error('cn-about: copy.mjs CONTACT_INFO needs siteHref, whatsappHref and email');
+  if (!CI?.siteHref || !CI?.whatsappHref || !CI?.email || !CI?.phoneHref || !CI?.wechat) throw new Error('cn-about: copy.mjs CONTACT_INFO needs siteHref, whatsappHref, email, phoneHref and wechat');
+  const closed = (paths) => paths.replace(/<(path|circle|rect)\b([^>]*?)\/>/g, '<$1$2></$1>');
   const svg = (inner) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${inner}</svg>`;
   const CHANNELS = [
     { href: CI.siteHref, external: true, label: { zh: 'STARGO 企业官网', en: 'STARGO corporate website' },
@@ -380,6 +388,10 @@ export function render(frag, ctx) {
       glyph: svg('<path d="M20.5 11.6a8.4 8.4 0 0 1-12.2 7.5L3.5 20.5l1.4-4.6A8.4 8.4 0 1 1 20.5 11.6z"></path>') },
     { href: `mailto:${CI.email}`, external: false, label: { zh: '发邮件给 STARGO WORK', en: 'Email STARGO WORK' },
       glyph: svg('<rect x="3" y="5" width="18" height="14" rx="2.5"></rect><path d="m4 7 8 6 8-6"></path>') },
+    { href: CI.phoneHref, external: false, label: { zh: `${C.CONTACT_UI.call.zh} STARGO WORK`, en: `${C.CONTACT_UI.call.en} STARGO WORK` },
+      glyph: svg(closed(GLYPH_PATHS.phone)) },
+    { copy: true, label: { zh: wechatCopy('zh').label, en: wechatCopy('en').label },
+      glyph: svg(closed(GLYPH_PATHS.wechat)) },
   ];
   {
     const OPEN = '<div class="cn-social-media-wrapper">';
@@ -392,6 +404,20 @@ export function render(frag, ctx) {
     DONOR_ARIA.forEach((aria, i) => { if (!rows[i].includes(`aria-label="${aria}"`)) throw new Error(`cn-about: social link ${i + 1} is not "${aria}"`); });
     const out = CHANNELS.map((ch, i) => {
       const name = escapeHtml(ch.label[lang]);
+      if (ch.copy) {
+        let b = rows[i]
+          .replace(/aria-label="[^"]*"/, `aria-label="${name}" title="${name}" ${wechatCopy(lang).attrs}`)
+          .replace(/^<a\b/, '<button type="button" hidden=""')
+          .replace(` href="${SOCIAL_HREF}"`, '')
+          .replace(/\s*target="_blank"/, '')
+          .replace(/<\/a>$/, '</button>')
+          .replace(/<(\/?)div\b/g, '<$1span');   // a <button> holds phrasing content; the classes keep their display
+        const glyphs = (b.match(/<svg\b[\s\S]*?<\/svg>/g) ?? []).length;
+        if (glyphs !== 2) throw new Error(`cn-about: social link ${i + 1} should stack two glyphs, found ${glyphs}`);
+        b = b.replace(/<svg\b[\s\S]*?<\/svg>/g, ch.glyph);
+        if (!b.startsWith('<button type="button" hidden=""') || /\bhref=/.test(b)) throw new Error('cn-about: the WeChat link did not become a copy button');
+        return b;
+      }
       let a = rows[i]
         .replace(/aria-label="[^"]*"/, `aria-label="${name}" title="${name}"`)
         .replace(`href="${SOCIAL_HREF}"`, `href="${escapeHtml(ch.href)}"${ch.external ? ' target="_blank" rel="noopener noreferrer"' : ''}`)
@@ -403,7 +429,7 @@ export function render(frag, ctx) {
       return a;
     }).join('');
     html = html.slice(0, at + OPEN.length) + out + html.slice(end + 4);
-    if ((html.match(/class="cn-social-link w-inline-block"/g) ?? []).length !== 3) throw new Error('cn-about: the social row should hold the three channels');
+    if ((html.match(/class="cn-social-link w-inline-block"/g) ?? []).length !== 5) throw new Error('cn-about: the social row should hold the five channels');
   }
 
   /* -------------------------------------------------------- the button --- */
