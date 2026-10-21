@@ -65,6 +65,11 @@ for (const f of files) {
     assert(alt ? /演示数据|demo data/.test(alt) : /ro-home-header-img/.test(tag[0]),
       `${f}: product image alt must say it is an illustrative interface with demo data — "${alt}"`);
   }
+  /* The side menu's 预约企业演示 card sits inside its link, so its photograph
+     must stay silent: an alt there would become part of the link's name. */
+  for (const tag of html.matchAll(/<img\b[^>]*stargo-menu-photo[^>]*>/g)) {
+    assert(/\balt=""/.test(tag[0]) && /\baria-hidden="true"/.test(tag[0]), `${f}: the side-menu card photo must be alt="" aria-hidden="true" — ${tag[0].slice(0, 120)}`);
+  }
   const conceptCaption = f.startsWith('en/') ? ' (AI concept illustration)' : '（AI 概念图）';
   for (const tag of html.matchAll(/<img\b[^>]*stargo-photo[^>]*>/g)) {
     const alt = tag[0].match(/\balt="([^"]*)"/)?.[1];

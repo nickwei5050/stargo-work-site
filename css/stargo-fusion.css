@@ -257,7 +257,8 @@ body.lx-page .navigation-top .lottie-white { filter: none; }
 
 /* 4. Template stock photography that is set in CSS → STARGO imagery (enterprise
       page hero backgrounds and the homepage vision band). The homepage contact
-      band keeps the template's group photograph behind its glass form. */
+      band's photograph behind its glass form is the owner's G01 (the batch 3
+      block further down). */
 .image-about, .image-about._01 { background-image: url("../assets/stargo-editorial/os-cockpit.webp"); }
 .image-about._02 { background-image: url("../assets/stargo-editorial/os-agent-center.webp"); }
 .image-about._03 { background-image: url("../assets/stargo-editorial/os-login.webp"); }
@@ -5358,9 +5359,11 @@ button.button-link .navigation-text-main { text-align: left; }
    the list under the card it is 768px tall: stuck at 108px it ends at 876px.
    In a window under 900px tall (1366x768, 1280x720, 1536x864 laptops) its
    last rows — 微信, WhatsApp, 邮箱 — would stay below the fold for as long as
-   it is stuck, i.e. until the form ends. There the column scrolls with the
-   page instead, so the whole list passes through view. */
-@media screen and (min-width: 992px) and (max-height: 899px) {
+   it is stuck, i.e. until the form ends. The fixed menu pill (.menu-bottom)
+   also sits over the bottom ~62px of the window, so up to about 960px tall it
+   would cover the 邮箱 row. There the column scrolls with the page instead,
+   so the whole list passes through view. */
+@media screen and (min-width: 992px) and (max-height: 959px) {
   .stargo-contact-page .contact-1-grid .max-w-left.add-cnt { position: static; }
 }
 /* V8-CONTACT-END */
