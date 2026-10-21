@@ -242,6 +242,40 @@ addIx3({ ix3Interactions: donorIx3, ix3Timelines: donorTl }, false);
    are the title reveals inside the three modules. They remain scoped to the
    homepage id, which is the page that carries those modules. */
 
+/* Mono's page-load curtain. Mono's homepage load timeline t-7c6ce201 (the
+   wf:load interaction i-04759f04) opens by dropping `.preloader` — a black
+   sheet with the wordmark — over the page, rising the wordmark's letters on
+   it, and lifting it again while the whole `.main-content` slides up from 10%
+   of its own height below. On this homepage that is 10% of 30,000–37,000px
+   (phone to desktop): 3,000–3,700px, so without the sheet over it the reader
+   would watch the page go blank, flash past and climb back (measured with
+   only the sheet hidden). Webflow's runtime starts at the window `load`,
+   which on anything but a fast connection comes long after the homepage has
+   been readable — measured here at 19–26s on Fast 4G and 43–46s on Slow 4G,
+   phone CPU — and the opening that used to hide it now plays once a session.
+   So these three actions go; build-site.mjs takes `.preloader` out of the homepage markup.
+   Each of the three targets exists on the homepage only (the page id is
+   shared, so this timeline runs on every page). Every other action of the
+   timeline — the menu, the hero's headline letters, its lines, its button and
+   its dots — stays exactly as Mono wrote it. */
+{
+  const ID = 't-7c6ce201';
+  const CURTAIN = {
+    'ta-0f0cfd05': '["wf:inst",["699b6466d5f19893993a4bf1","668513fa-96bc-a471-9254-1244961a6485"]',   // the wordmark on the sheet
+    'ta-e8c40fcc': '["wf:class",["preloader"]',                                                       // the sheet itself
+    'ta-62256e8b': '["wf:inst",["699b6466d5f19893993a4bf1","ce714b43-ca02-f75e-a30b-e50c0386be7f"]',   // .main-content, sliding up behind it
+  };
+  if (!timelines.has(ID)) throw new Error(`ix3: Mono's homepage load timeline ${ID} is missing`);
+  const tl = JSON.parse(timelines.get(ID));
+  for (const [id, target] of Object.entries(CURTAIN)) {
+    const a = tl.actions.find((x) => x.id === id);
+    if (!a || !JSON.stringify(a.targets).includes(target)) throw new Error(`ix3: ${ID} no longer carries ${id} on ${target}`);
+  }
+  const kept = tl.actions.filter((a) => !(a.id in CURTAIN));
+  if (kept.length !== tl.actions.length - 3) throw new Error(`ix3: ${ID} curtain actions not removed`);
+  timelines.set(ID, JSON.stringify({ ...tl, actions: kept }));
+}
+
 let out = monoSrc.slice(0, mono.ix2.argStart) + JSON.stringify(mergedPayload) + monoSrc.slice(mono.ix2.argEnd);
 const ix3 = readBundle(out).ix3;
 /* SplitText "words" splits on whitespace. Chinese has none, so a whole

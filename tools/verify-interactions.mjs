@@ -37,6 +37,59 @@ try {
   });
   await p.close();
  }
+ /* The homepage opening (tools/blocks/og-intro*.js): once per browser session, gone
+    at the first tap without following what was under it, and never there for reduced
+    motion or without JavaScript. Every context is a new session. `seen` is filled the
+    moment the overlay is parsed, just before its inline script runs, so it is exactly
+    what the first frame shows: shown>0 means the overlay covered the page. */
+ const seen=()=>{const s=window.__og={play:false,shown:0};const look=()=>{const h=document.documentElement;if(h.classList.contains('og-intro-play'))s.play=true;const o=document.querySelector('[data-og-intro]');if(o&&getComputedStyle(o).display!=='none')s.shown++;};new MutationObserver(look).observe(document,{attributes:true,attributeFilter:['class'],childList:true,subtree:true});const f=()=>{look();requestAnimationFrame(f);};requestAnimationFrame(f);};
+ const og=(p)=>p.evaluate(()=>({...window.__og,inDom:!!document.querySelector('[data-og-intro]'),stored:sessionStorage.getItem('stargo-intro')}));
+ for(const lang of ['', 'en/']){
+  const home=BASE+'/'+lang+'index.html';
+  await check(`${lang}home opening plays once per session`,async()=>{
+   const ctx=await browser.newContext({viewport:{width:1440,height:900}});await ctx.addInitScript(seen);const p=await ctx.newPage();
+   try{
+    await p.goto(home,{waitUntil:'domcontentloaded'});let s=await og(p);
+    assert(s.play&&s.shown>0,'first view plays: '+JSON.stringify(s));assert.equal(s.stored,'1');
+    await p.waitForFunction(()=>!document.querySelector('[data-og-intro]'),null,{timeout:9000});
+    assert.equal(await p.evaluate(()=>document.documentElement.classList.contains('og-intro-play')),false,'class removed when it ends');
+    await p.goto(BASE+'/'+lang+'about.html',{waitUntil:'load'});await p.locator('a.logo-first:visible').first().click();await p.waitForURL(/\/index\.html$/);
+    await p.waitForLoadState('domcontentloaded');s=await og(p);assert(!s.play&&s.shown===0&&!s.inDom,'logo back home: not covered for a frame '+JSON.stringify(s));
+    await p.goto(BASE+'/'+lang+'pricing.html',{waitUntil:'load'});await p.goBack({waitUntil:'domcontentloaded'});await p.waitForTimeout(300);
+    s=await og(p);assert(!s.play&&s.shown===0&&!s.inDom,'back button: not covered for a frame '+JSON.stringify(s));
+    await p.reload({waitUntil:'domcontentloaded'});s=await og(p);assert(!s.play&&s.shown===0&&!s.inDom,'reload: not covered '+JSON.stringify(s));
+   }finally{await ctx.close();}
+   const again=await browser.newContext({viewport:{width:390,height:844}});await again.addInitScript(seen);const q=await again.newPage();
+   try{await q.goto(home,{waitUntil:'domcontentloaded'});const s=await og(q);assert(s.play&&s.shown>0,'a new session plays it again '+JSON.stringify(s));}finally{await again.close();}
+  });
+  await check(`${lang}home opening ends at the first tap`,async()=>{
+   const ctx=await browser.newContext({viewport:{width:1440,height:900}});await ctx.addInitScript(seen);const p=await ctx.newPage();
+   /* Hold the page's images, so the window `load` — and Webflow's start-up task after it, seconds of
+      busy main thread on a slow machine — waits until the tap is done. The tap then lands while the
+      opening is certainly still playing, rather than queued behind that task until it has ended. */
+   await p.route(/\.(webp|jpe?g|png|avif|gif|svg)(\?|$)/,()=>{});
+   try{
+    await p.goto(home,{waitUntil:'domcontentloaded'});await p.waitForTimeout(1000);
+    assert.equal((await og(p)).inDom,true,'still playing at 1s');
+    /* Tap where the hero's own button lies under the overlay: the opening goes, the
+       button is not followed. */
+    const box=await p.evaluate(()=>{const a=[...document.querySelectorAll('a.contact-info.for-button')].find(a=>!a.closest('[data-og-intro]'));const r=a.getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2};});
+    const t0=Date.now();await p.mouse.click(box.x,box.y);
+    await p.waitForFunction(()=>!document.querySelector('[data-og-intro]'),null,{timeout:1000});assert(Date.now()-t0<1000);
+    await p.waitForTimeout(600);assert.match(p.url(),/\/index\.html$/,'the skipping tap did not follow the link');
+    assert.equal(await p.evaluate(()=>document.documentElement.classList.contains('og-intro-play')),false);
+   }finally{await p.unrouteAll({behavior:'ignoreErrors'});await ctx.close();}
+  });
+  await check(`${lang}home opening absent for reduced motion and without JavaScript`,async()=>{
+   const rm=await browser.newContext({viewport:{width:1440,height:900},reducedMotion:'reduce'});await rm.addInitScript(seen);const p=await rm.newPage();
+   try{await p.goto(home,{waitUntil:'domcontentloaded'});const s=await og(p);assert(!s.play&&s.shown===0&&!s.inDom,'reduced motion '+JSON.stringify(s));assert.equal(s.stored,null,'not played, so not marked');
+    /* Nor Mono's black page-load curtain, which used to drop over the page at Webflow's start-up
+       whatever the motion setting (tools/fuse-ix.mjs). */
+    assert.equal(await p.locator('.preloader').count(),0,'no .preloader on the homepage');}finally{await rm.close();}
+   const nojs=await browser.newContext({viewport:{width:1440,height:900},javaScriptEnabled:false});const q=await nojs.newPage();
+   try{await q.goto(home,{waitUntil:'load'});assert.equal(await q.locator('[data-og-intro]').count(),1);assert.equal(await q.locator('[data-og-intro]').isVisible(),false,'no JavaScript: never displayed');}finally{await nojs.close();}
+  });
+ }
  for(const lang of ['', 'en/']){
   const p=await browser.newPage({viewport:{width:390,height:844}});
   // Intelligence keeps the lifelogx homepage and its in-page anchors; workforce moved to

@@ -33,16 +33,28 @@ const FRAG = `${SITE}/tools/fragments`;
 const tpl = (f) => readFileSync(`${TPL}/${f}`, 'utf8');
 const frag = (f) => readFileSync(`${FRAG}/${f}`, 'utf8');
 
-/* The homepage's opening animation ships its behaviour as a file of its own.
-   tools/capability-donors.mjs concatenates a block's `<id>.js` into
-   js/capability-blocks.js, which only the capability page loads; this one plays
-   on the homepage, so it is written out here as its own script and attached by
-   tools/chrome.mjs wherever the overlay's marker appears. (It still rides along
-   in capability-blocks.js, where it finds no `[data-og-intro]` and returns.) */
-writeFileSync(`${SITE}/js/stargo-intro.js`,
-  `/* The homepage's opening animation. Written by tools/build-site.mjs from
-   tools/blocks/og-intro.js. Do not edit by hand. */
-${readFileSync(`${SITE}/tools/blocks/og-intro.js`, 'utf8')}`, 'utf8');
+/* The homepage's opening animation ships its behaviour as two inline scripts
+   (see homeIntro below): tools/blocks/og-intro-head.js in the <head>, which
+   decides before the first paint whether the overlay is shown at all, and
+   tools/blocks/og-intro.js straight after the overlay, which starts it on the
+   first frame. Inline because either one, as a request, would have to arrive
+   before the first paint or arrive too late to matter. Their comments are the
+   documentation and stay in tools/blocks; the pages get the code. (og-intro.js
+   also rides along in js/capability-blocks.js, written by
+   tools/capability-donors.mjs, where it finds no `[data-og-intro]` and
+   returns.) */
+function inlineScript(file) {
+  const src = readFileSync(`${SITE}/tools/blocks/${file}`, 'utf8');
+  /* Block comments only, by this site's own convention for these two files;
+     a `/*` inside a string would be cut here, so there must be none. */
+  const code = src.replace(/\/\*[\s\S]*?\*\//g, '')
+    .split('\n').map((l) => l.trim()).filter(Boolean).join('\n');
+  if (/\/\*|\*\/|<\/script/i.test(code)) throw new Error(`${file}: comment or </script> survives inlining`);
+  try { new Function(code); } catch (e) { throw new Error(`${file}: does not parse once inlined — ${e.message}`); }
+  return `<script>${code}</script>`;
+}
+const INTRO_HEAD = inlineScript('og-intro-head.js');
+const INTRO_START = inlineScript('og-intro.js');
 
 /**
  * Lifelogx closes every page with a full-bleed wordmark above its footer: a filled
@@ -650,6 +662,26 @@ PAGES['index.html'] = (lang) => {
      scalora's and before stargo-fusion.css, the same order the capability page
      puts the donor sheets in. */
   h = h.replace(monoLink, (m) => `${m}\n<link href="css/${DONORS.offgrid.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/${DONORS.rototo.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/scalora-modules.sc.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>`);
+  /* Mono's own page-load curtain goes. `.preloader` is a fixed black sheet
+     with the wordmark on it (Mono's css: z-index 9999, resting at
+     translateY(-120%)), dropped over the page and lifted again by the IX3
+     load timeline t-7c6ce201 (interaction i-04759f04) the moment Webflow's
+     runtime has started up, after the window `load`. On a fast first visit
+     that happens under the opening and nobody sees it. Everywhere else it
+     arrives after the homepage has been readable for a while — measured 19–26s
+     in on Fast 4G and 43–46s on Slow 4G — and blacks it out again; and since
+     the opening now plays once a session, every later homepage view would have
+     had it too. The markup goes
+     here and its two actions, with the whole-page slide that only ever moved
+     behind it, go from the timeline in tools/fuse-ix.mjs; the rest of that
+     timeline (the hero's headline, lines, button and dots, and the menu) is
+     untouched and still plays. */
+  {
+    const pre = findByClass(h, 'div', 'preloader');
+    if (!pre || !pre.text.includes('668513fa-96bc-a471-9254-1244961a6485')) throw new Error('index: Mono\'s preloader is not where it was');
+    h = h.slice(0, pre.start) + h.slice(pre.end);
+    if (/class="preloader"|668513fa-96bc-a471-9254-1244961a6485&quot;\]/.test(h.slice(h.indexOf('<body')))) throw new Error('index: Mono\'s preloader survives');
+  }
   h = homeIntro(h, lang);
   return h;
 };
@@ -657,8 +689,8 @@ PAGES['index.html'] = (lang) => {
 /**
  * 开场动画 — the opening the owner asked for, over the homepage.
  *
- * OFFGRID's bracket headline reading `[STARGO OS]`, then OFFGRID's thirty-six
- * tile mosaic revealing, then rototo's column wipe clearing to the page. It is
+ * OFFGRID's bracket headline reading `[STARGO WORK]`, then rototo's column wipe
+ * clearing to the page (the mosaic that once ran between them was cut). It is
  * one block, tools/blocks/og-intro.mjs, and everything about how it was cut and
  * why each animation had to be replayed rather than carried is in that file's
  * header.
@@ -672,9 +704,17 @@ PAGES['index.html'] = (lang) => {
  *
  * `aria-hidden` because it is decoration announcing nothing, and it holds
  * nothing focusable: og-intro.mjs takes the donor's anchors out for exactly
- * that reason. tools/chrome.mjs attaches js/stargo-intro.js when it sees
- * `data-og-intro`, and og-intro.css decides whether the overlay is ever shown
- * (never without JavaScript, never under prefers-reduced-motion).
+ * that reason.
+ *
+ * When it plays is decided in two inline scripts this function places. In the
+ * <head>, straight after Webflow's `w-mod-js` snippet, tools/blocks/og-intro-head.js
+ * adds `og-intro-play` to <html> only if the opening has not started yet in
+ * this browser session (og-intro.js marks the session when it starts), within
+ * 1.5s of navigation and without reduced motion; og-intro.css displays the overlay only under that class, so a later
+ * view of the homepage (logo, 首页, back, reload), a slow connection and a page
+ * without JavaScript are never covered, not for one frame. Straight after the
+ * overlay, tools/blocks/og-intro.js starts it on the first frame (or removes
+ * it), and ends it at the first tap, key or scroll.
  */
 /**
  * A donor block, one module each in tools/blocks.
@@ -705,13 +745,21 @@ function homeIntro(html, lang) {
      that removes itself, and the homepage already has its h1 (Mono's hero), so
      the tag becomes a div. Its look is carried by `.og-intro
      .og-heading-style-h1…` class rules, which outrank offgrid's `.og-intro h1`
-     element rules on every property those set; js/stargo-intro.js finds it by
+     element rules on every property those set; og-intro.js finds it by
      class. */
   const body = intro.slice(OPEN.length).replace(/<h1(?=[\s>])/g, '<div').replace(/<\/h1>/g, '</div>');
   if (/<\/?h1[\s>]/.test(body)) throw new Error('index: the opening animation still carries a level-one heading');
   const overlay = `<div class="og-intro" data-og-intro="" aria-hidden="true">${body}`;
   if (!html.includes('<body>')) throw new Error('index: no <body> to put the opening animation in front of');
-  return html.replace('<body>', `<body>${overlay}`);
+  /* Webflow's own head snippet, the one that writes `w-mod-js` on <html>
+     before anything renders. The decision goes right after it: the same
+     moment, the same element, and behind the page's stylesheets (all but
+     lenis.css come before it), whose arrival is what its clock measures. */
+  const W_MOD_JS = '<script type="text/javascript">!function(o,c){var n=c.documentElement,t=" w-mod-";n.className+=t+"js",("ontouchstart"in o||o.DocumentTouch&&c instanceof DocumentTouch)&&(n.className+=t+"touch")}(window,document);</script>';
+  if (html.split(W_MOD_JS).length !== 2) throw new Error('index: Webflow\'s w-mod-js snippet is not where the opening\'s decision goes');
+  if (html.indexOf(W_MOD_JS) > html.indexOf('</head>')) throw new Error('index: the w-mod-js snippet is not in the <head>');
+  /* Functions, not strings, as replacements: a `$` in the code must stay a `$`. */
+  return html.replace(W_MOD_JS, () => `${W_MOD_JS}${INTRO_HEAD}`).replace('<body>', () => `<body>${overlay}${INTRO_START}`);
 }
 
 /* ---- the enterprise ontology list inside the lifelogx sticky section -------

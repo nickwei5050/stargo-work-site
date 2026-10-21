@@ -1,204 +1,275 @@
-/* og-intro — the homepage's opening, played once and then taken away.
+/* og-intro — the homepage's opening: at most once per browser session, started
+   on the first frame or not at all, and gone at the first tap, key or scroll.
 
-   Three donor animations, in the order the owner asked for them. Every
-   duration, delay, easing, transform and stagger below is the donor's own; the
-   reasons none of the three can travel through tools/donor-lib.mjs, and where
-   each number was read from, are in the header of tools/blocks/og-intro.mjs.
-   Written to js/stargo-intro.js by tools/build-site.mjs — do not edit that copy.
+   tools/build-site.mjs writes this file, comments stripped, as an inline
+   <script> directly after the overlay's markup at the top of <body>, so it runs
+   the moment the overlay exists and before the first frame is painted. Whether
+   the overlay is shown at all was settled a moment earlier by the <head>
+   snippet in tools/blocks/og-intro-head.js, which adds `og-intro-play` to <html>
+   only when: the opening has not started yet in this browser session, the
+   reader has not asked for reduced motion, and the stylesheets arrived within
+   1.5s of navigation. Without that class og-intro.css never displays the overlay and
+   this script takes it out of the document straight away — which is what every
+   later homepage view in the session (logo, 首页, back, reload), every slow
+   connection, every reduced-motion reader and every browser without the Web
+   Animations API gets: the homepage, with nothing over it, from the first frame.
+
+   The motion: three donor animations, in the order the owner asked for them and
+   approved (2026-10-21 09:34). Every duration, delay, easing and stagger below
+   is the one the opening played with before this change; where each number was
+   read from is in the header of tools/blocks/og-intro.mjs.
 
      phase 1   offgrid IX2 a-24 "Hero Load In", the two items this cut keeps
-                 a-24-n-8  the h1        opacity 0 → 1, delay 0,    600ms, inOutQuart
-                 a-24-n-2  the span      width 0.5% → AUTO, delay 1000, 1200ms,
-                                         cubic-bezier(.544, -.011, 0, .983)
-     phase 2   offgrid's own gsap.fromTo on [data-works-grid] .grid__img
-                 autoAlpha 0→1, scale .8→1, rotateY 45→0, duration 1,
-                 stagger { amount: .8, from: 'center', grid: [4, 9] }
-     phase 3   rototo ix3 t-195e7dff / ta-ae57309f on .page-loader-column
-                 y 0% → -100%, duration .5 (the runtime's DEFAULTS.DURATION),
-                 ease 5 = power2.out, stagger { each: .015, from: 'random' },
-                 at position .5 of its timeline
+                 a-24-n-8  the headline  opacity 0 → 1, delay 0, 600ms,
+                           GSAP `power4.inOut` (see FADE below)
+                 a-24-n-2  the span      width 0.5% → its natural width,
+                           delay 1000, 1200ms, cubic-bezier(.544, -.011, 0, .983)
+     phase 2   offgrid's works mosaic — cut by the owner (2026-09-10), nothing
+               plays here; phase 3 starts where the bracket ends.
+     phase 3   rototo ix3 t-195e7dff / ta-ae57309f on the forty-eight columns:
+               down over the page, a .5s beat, then up and away. Each column
+               500ms (the runtime's DEFAULTS.DURATION), GSAP `power2.out`,
+               staggered .015s apart in random order — a fresh random order for
+               the arrival and for the lift, as GSAP's `from: 'random'` gave.
 
-   Sequencing. Phase 2 begins where phase 1's last motion ends (1000 + 1200ms);
-   phase 3 begins where phase 2's stagger ends. No pause is invented between
-   them. The one beat that is not a donor value in its donor's direction is
-   phase 3's arrival: rototo's loader is already covering its page when that
-   page loads, so it only ever plays the lift, and here it has to come down over
-   the settled mosaic first. That arrival is ta-ae57309f the other way round —
-   the same forty-eight columns, the same 0.5s, the same power2.out, the same
-   0.015s random stagger — and the beat it then holds before lifting is
-   ta-ae57309f's own `position: .5`.
+   The sequence, in ms from the first frame:
+     0     headline starts to fade in              (done at 600)
+     1000  the bracket opens                       (done at 2200)
+     2200  the columns start to come down          (all down at 3405)
+     3405  covered: the headline and its ground go, taps reach the page
+     3905  the columns start to lift               (all up at 5110)
+     5110  SEQUENCE — the overlay leaves the document
 
-   Reduced motion, and anything that goes wrong. A reader who has asked for less
-   motion never sees the overlay at all (tools/blocks/og-intro.css never
-   displays it) and this script takes it out of the document. So does a browser
-   with no GSAP on the page, and so does a connection too slow for the sequence
-   to finish under the ceiling — see the budget below. Above all of that,
-   og-intro.css stops the overlay covering the page fifteen seconds after the
-   first paint whatever has happened here, including this file never arriving;
-   the timeout at the foot of this file is the same promise again, for the case
-   where the sequence starts and then stalls.
+   Why it no longer waits for GSAP. Until 2026-10-21 this file was a `defer`
+   script built on js/gsap.min.js, which loads after the 1.05MB js/app.fused.js;
+   the overlay painted black on the first frame and nothing moved on it until
+   the document was interactive. Worse, on a fast connection the window `load`
+   arrives together with DOMContentLoaded, and Webflow's IX3 start-up — one
+   main-thread task of 3s or more (SplitText over the whole page) — then ran
+   straight after the opening had started, freezing it, black, for that long.
+   So the same numbers are now played by the browser's own animation engine
+   (Element.animate): the headline's opacity, the bracket's transforms, the
+   columns and the step that hides the headline and its ground all run on the
+   compositor, and keep running, on time, through any main-thread task. The
+   only main-thread work is building the animations on the first frame,
+   re-measuring the bracket if the web font swaps in later, letting taps through
+   at 3405 and removing the node at 5110 — and if the main thread is busy at
+   those two moments the overlay is already invisible and inert for the reader
+   underneath, because the page cannot take a tap during that task anyway.
 
-   The overlay is `aria-hidden`, holds nothing focusable, and this script never
-   moves focus; when the sequence ends the node is removed from the document, so
-   the homepage underneath is interactive again and no hit-testing layer is
-   left behind. */
+   How the bracket is drawn. offgrid grows the span's `width` and lets the
+   inline-flex headline re-centre around it: `[` and `]` move apart by half the
+   growth each, and the name, start-aligned in a box too small for it, is
+   uncovered from the left while it slides with the box's left edge. `width` is
+   layout and cannot run on the compositor, so the same geometry is drawn with
+   transforms on the final layout instead: the span takes its natural width at
+   once and, at a width `w` of the animation, `[` sits (W−w)/2 to the right of
+   where it rests, `]` the same distance to the left, the span (the clip, still
+   `overflow: hidden`) (W−w)/2 to the left, and the name inside it W−w to the
+   right, so the visible window is exactly the one the narrow box drew and the
+   name starts at its left edge. Every one of those offsets is linear in `w`,
+   so each is one transform tween on a-24-n-2's own curve. The headline's
+   ground box no longer narrows with the span — it is #0e0e10 on #0f0f0f.
+
+   Skipping. A pointer press, a touch, a scroll, a wheel or a key, anywhere,
+   while the overlay is there ends it at once: the animations are cancelled,
+   the node is removed, and if the press landed on the overlay itself the click
+   it would turn into is swallowed, so skipping never also follows a link that
+   happened to be underneath. A page hidden for the back/forward cache is
+   finished first, so going back to the homepage never brings it back.
+
+   Reduced motion and no JavaScript: no class, no overlay (og-intro.css). The
+   overlay is `aria-hidden`, holds nothing focusable, and nothing here moves
+   focus. */
 (function () {
-  var root = document.querySelector('[data-og-intro]');
+  var doc = document;
+  var html = doc.documentElement;
+  var root = doc.querySelector('[data-og-intro]');
   if (!root) return;
 
-  var failsafe = null;
+  var PLAY = 'og-intro-play';
+  /* The <head> already refused anything later than 1.5s; this is the same
+     promise for the overlay markup itself arriving late. */
+  var START_BY = 2000;
+
   var over = false;
+  var anims = [];
+  var marks = [];
+  var bracketAnims = [];
+  var EVENTS = ['pointerdown', 'mousedown', 'touchstart', 'touchmove', 'wheel', 'keydown'];
+  var watcher = null;
+
   function finish() {
     if (over) return;
     over = true;
-    if (failsafe) window.clearTimeout(failsafe);
+    var i;
+    for (i = 0; i < marks.length; i++) window.clearTimeout(marks[i]);
+    for (i = 0; i < EVENTS.length; i++) window.removeEventListener(EVENTS[i], onInput, true);
+    window.removeEventListener('pagehide', finish);
+    if (watcher) watcher.disconnect();
+    var all = anims.concat(bracketAnims);
+    for (i = 0; i < all.length; i++) { try { all[i].cancel(); } catch (e) { /* already gone */ } }
+    html.classList.remove(PLAY);
     if (root.parentNode) root.parentNode.removeChild(root);
   }
 
   try {
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) { finish(); return; }
-  } catch (e) { /* no matchMedia: keep the donor's motion */ }
+    if (!html.classList.contains(PLAY) || typeof root.animate !== 'function' || performance.now() > START_BY) { finish(); return; }
 
-  var gsap = window.gsap;
-  if (!gsap || typeof gsap.timeline !== 'function') { finish(); return; }
+    var stage = root.querySelector('.og-page-wrapper');
+    var h1 = root.querySelector('.og-is-hero');
+    var span = root.querySelector('.og-text-spam');
+    var name = root.querySelector('.og-intro-name');
+    var brackets = root.querySelectorAll('.og-intro-bracket');
+    var columns = root.querySelectorAll('.og-intro-column');
+    if (!stage || !h1 || !span || !name || brackets.length !== 2 || !columns.length) { finish(); return; }
 
-  /* Slow connections do not get a late intro; they get the homepage.
+    /* It starts now: mark the session, so no later homepage view of it plays
+       the opening again (the <head> snippet reads this). A private window may
+       refuse the write; then the next view plays it too, as it always did. */
+    try { window.sessionStorage.setItem('stargo-intro', '1'); } catch (e) { /* not stored */ }
 
-     This file is `defer`, so it runs when the document is interactive — after
-     every classic script on the page, of which js/app.fused.js alone is 1.05 MB.
-     Measured on this homepage: the document is interactive at 0.4s unthrottled,
-     4.7s on a 9 Mbps connection and 33.7s on 1.6 Mbps. A sequence started at
-     33.7s would be six and a half more seconds of nothing for a reader who has
-     already waited half a minute, and og-intro.css uncovers the page at fifteen
-     anyway — so the budget is that ceiling less the sequence's own 6.9s. Past
-     it, the overlay simply goes and the homepage is there. Same shape as the
-     reduced-motion path above: when the intro cannot be the right thing, the
-     page is. */
-  var CEILING = 15000;
-  var SEQUENCE = 6900;
-  if (performance && performance.now() > CEILING - SEQUENCE) { finish(); return; }
+    /* ------------------------------------------------------------ timing -- */
+    var FADE = 600;
+    var BRACKET_AT = 1000;
+    var BRACKET = 1200;
+    var WIPE = 500;
+    var EACH = 15;
+    var n = columns.length;
+    var WIPE_AT = BRACKET_AT + BRACKET;              /* '>': where the bracket ends */
+    var COVERED = WIPE_AT + WIPE + EACH * (n - 1);   /* the last column is down */
+    var LIFT_AT = COVERED + 500;                     /* ta-ae57309f's position: .5 */
+    var SEQUENCE = LIFT_AT + WIPE + EACH * (n - 1);  /* 5110 with 48 columns */
 
-  var stage = root.querySelector('.og-page-wrapper');
-  var h1 = root.querySelector('.og-is-hero');
-  var span = root.querySelector('.og-text-spam');
-  var columns = root.querySelectorAll('.og-intro-column');
-  /* The mosaic is no longer part of this opening, so it is no longer part of
-     the guard: requiring tiles that the markup does not contain would send
-     every visitor straight to finish() and there would be no opening at all. */
-  if (!h1 || !span || !columns.length) { finish(); return; }
+    /* GSAP's `power2.out` is 1 − (1 − t)³, which is exactly this Bézier. */
+    var OUT = 'cubic-bezier(0.333333, 1, 0.666667, 1)';
+    /* a-24-n-2's own curve; CSS solves cubic-bezier() the way Webflow does. */
+    var BRACKET_EASE = 'cubic-bezier(0.544, -0.011, 0, 0.983)';
 
-  /* Webflow builds an easing from four numbers with the same bezier solver
-     every browser uses for `cubic-bezier()`; a-24-n-2 carries
-     [0.544, -0.011, 0, 0.983]. GSAP's own eases are curves, not beziers, so the
-     curve is evaluated here rather than named. Newton-Raphson on x, then a
-     bisection fallback, which is the standard solve. */
-  function cubicBezier(x1, y1, x2, y2) {
-    var A = function (a, b) { return 1 - 3 * b + 3 * a; };
-    var B = function (a, b) { return 3 * b - 6 * a; };
-    var C = function (a) { return 3 * a; };
-    var calc = function (t, a, b) { return ((A(a, b) * t + B(a, b)) * t + C(a)) * t; };
-    var slope = function (t, a, b) { return 3 * A(a, b) * t * t + 2 * B(a, b) * t + C(a); };
-    return function (p) {
-      if (p <= 0) return 0;
-      if (p >= 1) return 1;
-      var t = p;
-      for (var i = 0; i < 8; i++) {
-        var d = slope(t, x1, x2);
-        if (d === 0) break;
-        var e = calc(t, x1, x2) - p;
-        if (Math.abs(e) < 1e-6) return calc(t, y1, y2);
-        t -= e / d;
+    /* The fade played with GSAP's `power4.inOut`, which is quintic
+       (t < .5 ? 16t⁵ : 1 − 16(1 − t)⁵). No cubic-bezier() is that curve, so it
+       is written out as keyframes, 48 straight segments of it: the largest gap
+       between them and the curve is under 0.3% opacity. */
+    var fade = [];
+    for (var k = 0; k <= 48; k++) {
+      var p = k / 48;
+      fade.push({ opacity: p < 0.5 ? Math.pow(2 * p, 5) / 2 : 1 - Math.pow(2 * (1 - p), 5) / 2, offset: p });
+    }
+
+    var base = h1.animate(fade, { duration: FADE, fill: 'both' });
+    anims.push(base);
+
+    /* The ground and the headline go together, in one step, once the columns
+       cover them: what the lift then uncovers is the homepage. The ground is
+       painted on this element rather than on the overlay (og-intro.css) so that
+       the step is an opacity change the compositor can make. */
+    var hideAt = COVERED / SEQUENCE;
+    anims.push(stage.animate([
+      { opacity: 1, offset: 0 }, { opacity: 1, offset: hideAt },
+      { opacity: 0, offset: hideAt }, { opacity: 0, offset: 1 },
+    ], { duration: SEQUENCE, fill: 'both' }));
+
+    /* The columns: each its own arrival and lift, from the stylesheet's resting
+       `translateY(-100%)` to 0 and back, one animation per column. */
+    function shuffled() {
+      var a = [];
+      for (var i = 0; i < n; i++) a.push(i);
+      for (var j = n - 1; j > 0; j--) { var r = Math.floor(Math.random() * (j + 1)); var t = a[j]; a[j] = a[r]; a[r] = t; }
+      return a;
+    }
+    var down = shuffled();
+    var up = shuffled();
+    var UP = 'translateY(-100%)';
+    var DOWN = 'translateY(0%)';
+    for (var c = 0; c < n; c++) {
+      var a0 = WIPE_AT + EACH * down[c];
+      var l0 = LIFT_AT + EACH * up[c];
+      var frames = [
+        { transform: UP, offset: 0 },
+        { transform: UP, offset: a0 / SEQUENCE, easing: OUT },
+        { transform: DOWN, offset: (a0 + WIPE) / SEQUENCE },
+        { transform: DOWN, offset: l0 / SEQUENCE, easing: OUT },
+        { transform: UP, offset: (l0 + WIPE) / SEQUENCE },
+      ];
+      if (l0 + WIPE < SEQUENCE) frames.push({ transform: UP, offset: 1 });
+      anims.push(columns[c].animate(frames, { duration: SEQUENCE, fill: 'both' }));
+    }
+
+    /* ----------------------------------------------------------- bracket -- */
+    var geometry = null;
+    function measure() {
+      /* `0.5%` is the donor's own starting width (a-24-n, written on the span
+         by the export); `auto` is a-24-n-2's `widthUnit: "AUTO"`. */
+      span.style.width = '0.5%';
+      var w0 = span.getBoundingClientRect().width;
+      span.style.width = 'auto';
+      var W = span.getBoundingClientRect().width;
+      return { w0: w0, W: W };
+    }
+    function bracket(startTime) {
+      var g = measure();
+      if (geometry && Math.abs(g.W - geometry.W) < 0.25 && Math.abs(g.w0 - geometry.w0) < 0.25) return;
+      geometry = g;
+      for (var i = 0; i < bracketAnims.length; i++) bracketAnims[i].cancel();
+      bracketAnims = [];
+      var d = (g.W - g.w0) / 2;
+      var opts = { delay: BRACKET_AT, duration: BRACKET, easing: BRACKET_EASE, fill: 'both' };
+      var moves = [[brackets[0], d], [brackets[1], -d], [span, -d], [name, 2 * d]];
+      for (var m = 0; m < moves.length; m++) {
+        var anim = moves[m][0].animate([
+          { transform: 'translateX(' + moves[m][1] + 'px)' }, { transform: 'translateX(0px)' },
+        ], opts);
+        if (startTime != null) anim.startTime = startTime;
+        bracketAnims.push(anim);
       }
-      var lo = 0, hi = 1;
-      t = p;
-      while (lo < hi) {
-        var v = calc(t, x1, x2);
-        if (Math.abs(v - p) < 1e-6) break;
-        if (v > p) hi = t; else lo = t;
-        t = (hi + lo) / 2;
-        if (hi - lo < 1e-7) break;
+    }
+    bracket(null);
+
+    /* --------------------------------------------- what needs the main thread */
+    function onInput(e) {
+      if (over) return;
+      var onOverlay = e.target && e.target.nodeType === 1 && root.contains(e.target);
+      finish();
+      if (onOverlay && e.type !== 'keydown' && e.type !== 'wheel') {
+        /* The press that skipped would otherwise become a click on whatever
+           is under it now that the overlay is gone. */
+        var eat = function (ev) { ev.preventDefault(); ev.stopPropagation(); done(); };
+        var done = function () { window.removeEventListener('click', eat, true); };
+        window.addEventListener('click', eat, true);
+        window.setTimeout(done, 800);
       }
-      return calc(t, y1, y2);
-    };
+    }
+    for (var ev = 0; ev < EVENTS.length; ev++) window.addEventListener(EVENTS[ev], onInput, { capture: true, passive: true });
+    window.addEventListener('pagehide', finish);
+
+    /* The bracket is measured in whatever font has arrived by the first frame,
+       at the window's size then. When either changes — the headline's own
+       face swapping in (`font-display: swap`), the window resizing or turning —
+       measure again and, if the name is a different width, rebuild the four
+       tweens on the same clock, so they carry on from where they are rather
+       than restart. A ResizeObserver reports the change after layout and before
+       paint, in the very frame that draws the new layout, so no frame pairs the
+       new width with the old offsets — not even while a long task then holds
+       the main thread and the compositor carries on alone. */
+    if (typeof ResizeObserver === 'function') {
+      watcher = new ResizeObserver(function () { if (!over) bracket(base.startTime); });
+      watcher.observe(name);
+      watcher.observe(stage);
+    }
+
+    /* Everything above starts on the same frame — the first one painted. From
+       that frame: line every animation up on it, then schedule the two
+       main-thread moments. */
+    base.ready.then(function () {
+      if (over) return;
+      var t0 = base.startTime;
+      var all = anims.concat(bracketAnims);
+      for (var i = 0; i < all.length; i++) if (all[i].startTime !== t0) all[i].startTime = t0;
+      var now = doc.timeline.currentTime;
+      marks.push(window.setTimeout(function () { root.style.pointerEvents = 'none'; }, Math.max(0, t0 + COVERED - now)));
+      marks.push(window.setTimeout(finish, Math.max(0, t0 + SEQUENCE - now)));
+    }, function () { /* cancelled before its first frame: finish() ran */ });
+  } catch (e) {
+    finish();
   }
-  var BRACKET = cubicBezier(0.544, -0.011, 0, 0.983);
-
-  /* `widthUnit: "AUTO"`. Webflow measures the element's natural width at run
-     time and animates to it; measured on the donor page at 1440 it tweened to
-     373px and then released to the 342px `auto` really is. Same thing here:
-     read the natural width when the tween starts (a full second in, so the
-     donor's Satoshi has arrived), then hand the element back to `auto` at the
-     end so the resting state is the browser's own measurement, not ours. */
-  function autoWidth() {
-    var was = span.style.width;
-    span.style.width = 'auto';
-    var w = span.getBoundingClientRect().width;
-    span.style.width = was;
-    return w;
-  }
-
-  var tl = gsap.timeline({ onComplete: finish });
-
-  /* -- phase 1: offgrid a-24 ------------------------------------------- */
-  tl.to(h1, { opacity: 1, duration: 0.6, ease: 'power4.inOut' }, 0);
-  tl.to(span, {
-    width: autoWidth,
-    duration: 1.2,
-    ease: BRACKET,
-    onComplete: function () { span.style.width = 'auto'; },
-  }, 1);
-
-  /* -- phase 2 is gone -------------------------------------------------- */
-  /* offgrid's thirty-six-tile works mosaic used to reveal here, between the
-     name and the wipe. The owner cut it (2026-09-10): 「这么多照片墙不要了」 —
-     the name, then rototo's effect, then the homepage. The tiles are no longer
-     in the markup either (tools/blocks/og-intro.mjs), so there is nothing left
-     to tween and 4.25 MB is no longer fetched on a first visit.
-
-     The wipe keeps its `'>'` position, which now reads off the end of the
-     bracket instead of the end of the mosaic's stagger: the opening is the same
-     motion it always was, ~2.2s shorter. Nothing about the wipe's own values
-     changes. */
-
-  /* -- phase 3: rototo t-195e7dff -------------------------------------- */
-  /* `y: 0` in both from-vars is not a donor value and does not move anything:
-     the columns rest at `transform: translateY(-100%)` in the stylesheet, and
-     GSAP reads a stylesheet transform back off the computed matrix as pixels.
-     Pinning y to 0 keeps it from adding those pixels to the percentage this
-     tween sets. */
-  /* `immediateRender: false` on the lift, and a stagger object of its own.
-     GSAP applies a fromTo's from-vars the moment the tween is built, wherever it
-     sits on the timeline — so the lift, built at t=0 and starting at ~5.7s,
-     would otherwise put all forty-eight columns down over the whole intro and
-     the reader would watch a black screen for six seconds. The arrival keeps
-     the default: its from-state is `translateY(-100%)`, which is where
-     og-intro.css already rests them. */
-  function wipe(to, immediate) {
-    return {
-      yPercent: to,
-      duration: 0.5,
-      ease: 'power2.out',
-      stagger: { each: 0.015, from: 'random' },
-      immediateRender: immediate,
-    };
-  }
-
-  tl.fromTo(columns, { yPercent: -100, y: 0 }, wipe(0, true), '>');
-  /* Fully covered now, so what is behind the columns can go without anyone
-     seeing it leave: the intro's ground and its two donor sections stop
-     covering the homepage, and the lift reveals the page rather than the
-     mosaic. */
-  tl.call(function () {
-    if (stage) stage.style.display = 'none';
-    root.style.backgroundColor = 'transparent';
-    /* The hero underneath is visible from here on; taps must reach it rather
-       than the overlay, which stays in the document until the lift ends. */
-    root.style.pointerEvents = 'none';
-  });
-  tl.fromTo(columns, { yPercent: 0, y: 0 }, wipe(-100, false), '+=0.5');
-
-  /* If the sequence starts and then stalls, the node still goes. og-intro.css
-     has already stopped the overlay covering anything by then; this is what
-     takes it out of the document. */
-  failsafe = window.setTimeout(finish, CEILING);
 })();

@@ -104,8 +104,9 @@ async function worker() {
     page.on('request', r => { if (/stargo-editorial/.test(r.url())) assets.push(r.url()); if (/assets\/stargo\//.test(r.url())) errors.push(`Old image requested: ${r.url()}`); });
     try {
       assert.equal((await page.goto(`${BASE}/${lang}${name}.html`, { waitUntil: 'load' })).status(), 200);
-      // Mono's retained introductory curtain lasts several seconds. Capture
-      // the finished hero, not a transient blank animation frame.
+      // Each page here is a new browser session, so the homepage plays its
+      // 5.1s opening (tools/blocks/og-intro.js) first. Capture the finished
+      // hero, not a frame of the opening.
       await page.waitForTimeout(name === 'index' ? 5500 : 1100);
       const switcher = page.locator('.nav-menu a[hreflang]').first();
       const up = name.includes('/') ? '../' : '';
