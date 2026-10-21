@@ -25,6 +25,8 @@ import { PRODUCT_CAPTION } from './editorial-images.mjs';
 import { HERO, HOME_MODULES, HOME_STAGES, NOTICES_CARDS } from './replaceables.mjs';
 import { SITE } from './paths.mjs';
 import { webpPage } from './image-refs.mjs';
+/* The owner's photographs on the blog and intelligence pages (group "blog", 2026-10-21). */
+import { BLOG_COVERS, INTEL_PHOTOS } from './replaceables.mjs';
 
 /** The capability page's donor blocks, one module each in tools/blocks. */
 const CAP_BLOCKS = await loadBlocks();
@@ -326,8 +328,15 @@ function blogCards(html, list, item, posts, lang, cls) {
     x = x.replace(/href="[^"]*"/, `href="${postPath(p)}"`);
     if (!imgRe.test(x)) throw new Error(`cards: image ${cls.image}`);
     // Keep the tag's own attributes (data-w-id and the interaction's initial inline state); swap only the image.
-    x = x.replace(imgRe, (tag) => tag.replace(/\s*srcset="[^"]*"/g, '').replace(/\s*sizes="[^"]*"/g, '').replace(/\s*width="[^"]*"|\s*height="[^"]*"/g, '')
-      .replace(/src="[^"]*"/, `src="${coverSrc(p)}" srcset="${coverSrcset(p)}" sizes="${cls.sizes}"`));   // no width/height: the template sizes these by CSS aspect-ratio
+    /* `cls.covers` (slug → owner photograph) puts a photograph in place of
+       the article cover; tools/editorial-images.mjs then writes its srcset,
+       size and alt over the marker alt. */
+    const photo = cls.covers?.[p.slug];
+    x = x.replace(imgRe, (tag) => {
+      const bare = tag.replace(/\s*srcset="[^"]*"/g, '').replace(/\s*sizes="[^"]*"/g, '').replace(/\s*width="[^"]*"|\s*height="[^"]*"/g, '');
+      if (photo) return bare.replace(/src="[^"]*"/, `src="${photo}"`).replace(/alt="[^"]*"/, 'alt="STARGO WORK"');
+      return bare.replace(/src="[^"]*"/, `src="${coverSrc(p)}" srcset="${coverSrcset(p)}" sizes="${cls.sizes}"`);   // no width/height: the template sizes these by CSS aspect-ratio
+    });
     const titleRe = new RegExp(`(<(h4|div)[^>]*class="${cls.title}">)[^<]*(</\\2>)`);
     if (!titleRe.test(x)) throw new Error(`cards: title ${cls.title}`);
     x = x.replace(titleRe, `$1${escapeHtml(t(p.title))}$3`);
@@ -1012,7 +1021,9 @@ function lxPage(spec, lang, name) {
   // translucent overlays of the gradient and "no writing" sections, the closing card's image and
   // the avatars in the scenario bubbles are all part of the composition the pink palette was
   // designed around. Only their template alt text goes. The painted phone screens are the
-  // exception (V7-LX, below): they carried readable template interfaces and brand names.
+  // exception (V7-LX, below): they carried readable template interfaces and brand names. Since
+  // 2026-10-21 the gradient section's picture, the closing card's and the hand-held phone are the
+  // owner's photographs (below); the phone frames and the avatars stay.
   if ((b.match(/lx-author-image-medium/g) ?? []).length !== 48) throw new Error(`${name}: avatar bubbles changed`);
   /* V7-LX, the one exception, on both pages: the four phone-screen pictures
      inside the three phone mockups (hero, team card, phone features) have the
@@ -1040,20 +1051,31 @@ function lxPage(spec, lang, name) {
       b = swapImg(b, key, src, product ? { alt: PRODUCT_CAPTION[lang] } : {});
     }
   }
-  /* V7-LX: the hand-held phone of the "no writing" band (no-writing-sc) is a
-     cut-out composite whose screen carries the template's English interface
-     and a video app's name, on both pages. The composite stays (hand, frame,
-     cut-out edge); a text-free screen (MOBILE.core, shared context: the band
-     says 「不再丢上下文」) is laid over its screen. The layer is a sibling of
-     the photograph with the photograph's own class, so the band's IX2
-     (lx-a-68, `.lx-no-writing-image`, children of the trigger) moves and
-     scales both together, and it copies the photograph's initial transform.
-     css/stargo-fusion.css (V7-LX) places the screen on the photograph's
-     object-fit box, rounds it and keeps the fingertips in front. */
+  /* The owner's photographs (group "blog", 2026-10-21; site-images/batch-8,
+     tools/replaceables.mjs INTEL_PHOTOS) take three of the template's
+     pictures, on both pages: I01 the full-bleed picture under the four lines
+     of #lx-more, I02 the closing card's picture, I03 the hand-held phone of
+     the "no writing" band. Each tag keeps its class, its IX2 id and its
+     initial inline state; the alt is a marker that
+     tools/editorial-images.mjs replaces with the photograph's own sentence,
+     and the crop points are in css/stargo-fusion.css (the "blog" block). */
+  b = swapImg(b, '6932b116b7502585152c15b6_image%2024.png', INTEL_PHOTOS.observe, { alt: 'STARGO WORK' });
+  b = swapImg(b, '6936e930338bd07695b687e0_image%2026.avif', INTEL_PHOTOS.closing, { alt: 'STARGO WORK' });
+  b = swapImg(b, '694d149575edcf4ee403b317_no-writing-sc.avif', INTEL_PHOTOS.phone, { alt: 'STARGO WORK' });
+  /* V7-LX: a text-free screen (MOBILE.core, shared context: the "no writing"
+     band says 「不再丢上下文」) is laid over the hand-held phone's screen. It
+     covered the template composite's English interface and a video app's
+     name; since 2026-10-21 it lights the dark screen of the owner's
+     photograph (I03) instead. The layer is a sibling of the photograph with
+     the photograph's own class, so the band's IX2 (lx-a-68,
+     `.lx-no-writing-image`, children of the trigger) moves and scales both
+     together, and it copies the photograph's initial transform.
+     css/stargo-fusion.css (the "blog" block) places the screen on the
+     photograph's object-fit box and rounds it to the glass. */
   {
-    const re = /(<img src="assets\/6929b6c693cb856e01ef7c05\/694d149575edcf4ee403b317_no-writing-sc\.avif"[^>]*?style="([^"]*)"[^>]*class="lx-no-writing-image"\/>)/g;
+    const re = new RegExp(`(<img src="${INTEL_PHOTOS.phone.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"[^>]*?style="([^"]*)"[^>]*class="lx-no-writing-image"\\/>)`, 'g');
     const hits = b.match(re) ?? [];
-    if (hits.length !== 1) throw new Error(`${name}: expected one hand-held phone photograph (no-writing-sc), found ${hits.length}`);
+    if (hits.length !== 1) throw new Error(`${name}: expected one hand-held phone photograph (${INTEL_PHOTOS.phone}), found ${hits.length}`);
     b = b.replace(re, (m, tag, style) => `${tag}<div class="lx-no-writing-image stargo-nw-screen" style="${style}" aria-hidden="true"><div class="stargo-nw-frame"><img src="${MOBILE.core}" loading="lazy" alt="" class="stargo-nw-art"/></div></div>`);
   }
   b = b.replace(/<div([^>]*)class="([^"]*\blx-gradient-section\b[^"]*)"/, '<div id="lx-more"$1class="$2"');
@@ -1385,6 +1407,10 @@ PAGES['about.html'] = (lang) => {
 
 /* ---- blog.html — lifelogx blog index ------------------------------------ */
 const LX_CARD = { image: 'lx-blog-image', title: 'lx-blog-title', description: 'lx-blog-description', sizes: '(max-width: 767px) 100vw, (max-width: 991px) 50vw, 33vw' };
+/* The blog index and the articles' 「更多文章」 lists show each article's
+   cover photograph (tools/replaceables.mjs BLOG_COVERS, 2026-10-21); the
+   workforce page's article strip keeps LX_CARD and the covers. */
+const LX_PHOTO_CARD = { ...LX_CARD, covers: BLOG_COVERS };
 PAGES['blog.html'] = (lang) => {
   const t = (p) => (typeof p === 'string' ? p : p[lang]);
   const { fn: s } = makeSub('blog');
@@ -1418,7 +1444,15 @@ PAGES['blog.html'] = (lang) => {
      drawn keep-all, and those are its break points inside long phrases. */
   const intro = escapeHtml(t(BLOG_UI.intro)).replace(/&lt;wbr&gt;/g, '<wbr>');
   b = s(b, '>Discover Our Featured Stories</h1></div>', `>${headingHtml}</h1><div class="lx-feature-description-holder stargo-blog-intro"><div class="lx-text-size-regular">${intro}</div></div></div>`, { count: 1 });
-  b = blogCards(b, 'lx-blog-list', 'lx-blog-item', POSTS, lang, LX_CARD);
+  b = blogCards(b, 'lx-blog-list', 'lx-blog-item', POSTS, lang, LX_PHOTO_CARD);
+  /* The first row of cards is in the first screen (three cards from 992 px,
+     two at 768-991, the first card on a phone): the first three pictures
+     load with the page, not lazily. */
+  {
+    let n = 0;
+    b = b.replace(/<img\b[^>]*class="lx-blog-image"[^>]*\/>/g, (tag) => (n++ < 3 ? tag.replace(' loading="lazy"', ' loading="eager"') : tag));
+    if ((b.match(/class="lx-blog-image"/g) ?? []).length !== POSTS.length || (b.match(/loading="eager"[^>]*class="lx-blog-image"/g) ?? []).length !== 3) throw new Error('blog: the first row of cards loads with the page');
+  }
   b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
   if (/Lifelogx|Companion|Moments in Motion|Conversational AI/.test(b)) throw new Error('blog: template copy survives');
   return inMonoShell(b + bigMark(), ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
@@ -1430,7 +1464,7 @@ function postPage(post, lang) {
   const { fn: s } = makeSub(`post:${post.slug}`);
   let b = frag('lx-post.html');
   // Lists first (they repeat the template's title), then the title itself.
-  b = blogCards(b, 'lx-blog-list', 'lx-blog-item', others(post, 3), lang, LX_CARD);
+  b = blogCards(b, 'lx-blog-list', 'lx-blog-item', others(post, 3), lang, LX_PHOTO_CARD);
   {
     const list = findByClass(b, 'div', 'lx-related-list');
     if (!list) throw new Error('post: related list');
@@ -1441,13 +1475,19 @@ function postPage(post, lang) {
   b = s(b, '>How AI Companions Can Transform Your Life<', `>${titleHtml(post, lang, escapeHtml)}<`, { count: 1 });
   b = s(b, '>Related Items<', `>${t(BLOG_UI.related)}<`, { count: 1 });
   b = s(b, '>More from blog<', `>${t(BLOG_UI.more)}<`, { count: 1 });
-  /* The hero cover. A cover made from one of the owner's product screenshots
-     says in its alt that it is a demonstration interface with demo data, in
-     the words tools/editorial-images.mjs uses for the same pictures elsewhere
-     (tools/blog.mjs coverAlt). The editorial covers stay decorative. */
-  b = swapImg(b, '6945522d9e13fa6b32ace3c9_Futuristic', coverSrc(post), { alt: coverAlt(post, lang) });
-  b = b.replace(/(<img[^>]*class="lx-blog-image lx-details")\/>/, (m, tag) => `${tag.replace(' loading="lazy"', ' loading="eager" fetchpriority="high"')} srcset="${coverSrcset(post)}" sizes="(max-width: 991px) 100vw, 1180px"/>`);
-  if (!b.includes(coverSrcset(post))) throw new Error('post: hero image');
+  /* The hero cover: the article's cover photograph since 2026-10-21
+     (tools/replaceables.mjs BLOG_COVERS). Its alt is a marker that
+     tools/editorial-images.mjs replaces with the photograph's own sentence,
+     and writes its srcset and sizes. An article without one keeps its cover
+     from assets/blog/: a cover made from one of the owner's product
+     screenshots says in its alt that it is a demonstration interface with
+     demo data, in the words tools/editorial-images.mjs uses for the same
+     pictures elsewhere (tools/blog.mjs coverAlt); the editorial covers stay
+     decorative. Either way it is the first screen's picture: it loads first. */
+  const photo = BLOG_COVERS[post.slug];
+  b = swapImg(b, '6945522d9e13fa6b32ace3c9_Futuristic', photo ?? coverSrc(post), { alt: photo ? 'STARGO WORK' : coverAlt(post, lang) });
+  b = b.replace(/(<img[^>]*class="lx-blog-image lx-details")\/>/, (m, tag) => `${tag.replace(' loading="lazy"', ' loading="eager" fetchpriority="high"')}${photo ? '' : ` srcset="${coverSrcset(post)}" sizes="(max-width: 991px) 100vw, 1180px"`}/>`);
+  if (!b.includes(photo ? `src="${photo}"` : coverSrcset(post)) || !/fetchpriority="high"[^>]*class="lx-blog-image lx-details"/.test(b)) throw new Error('post: hero image');
   {
     // The rich-text block carries the interaction's initial state inline (opacity 0, data-w-id): keep its tag, replace its content.
     // renderBody() prints the answer paragraph, the 「要点速览」 takeaways, the

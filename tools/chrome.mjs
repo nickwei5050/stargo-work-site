@@ -14,8 +14,8 @@
  * page is generated with root-relative names (contact.html, assets/…) and the
  * build relocates links and assets with relocateLinks / relocateAssets.
  */
-import { makeSub, findByClass, extractElement } from './lib-html.mjs';
-import { editorialImages } from './editorial-images.mjs';
+import { makeSub, findByClass, extractElement, escapeHtml } from './lib-html.mjs';
+import { editorialImages, photoAlt } from './editorial-images.mjs';
 import { createHash } from 'node:crypto';
 import { readFileSync, existsSync } from 'node:fs';
 import { CAP_JUMPS, NAV, SECONDARY, MORE, LANG_SWITCH, CHROME, META, CONTACT_INFO, SITE_URL } from './copy.mjs';
@@ -32,7 +32,8 @@ const ICON = (n) => `assets/brand/stargo-a-icon-${n}.png`;
     Chinese product name on Chinese pages, the brand alone on English ones. */
 export const BRAND = { zh: 'Stargo Work星贸智能AI外贸操作系统', en: 'Stargo Work' };
 const AVATAR = 'assets/stargo/avatar-core.png';
-/** Share cover. Token is rewritten to OG.file (og-cover.png, 1200×630). See tools/replaceables.mjs. */
+/** Share cover: the owner's photograph O01 as a 1200×630 JPEG since 2026-10-21
+    (tools/replaceables.mjs OG, tools/imagegen/prepare-share-card.mjs). */
 const OG_IMAGE = OG.token;
 
 /** Product screens that replace the template's photo strips (overlay menu) and image rotator (contact band). */
@@ -275,9 +276,14 @@ function head(html, lang, current) {
     `<meta property="og:locale" content="${lang === 'zh' ? 'zh_CN' : 'en_US'}"/>`,
     `<meta property="og:image" content="${ogImage}"/>`,
     post ? '<meta property="og:image:width" content="1200"/><meta property="og:image:height" content="800"/>' : '<meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/>',
+    /* The share card is the owner's photograph: it carries the owner's own
+       sentence for it, as the photographs on the pages do. An article's cover
+       has none here (its card and hero carry theirs). */
+    ...(post ? [] : [`<meta property="og:image:alt" content="${escapeHtml(photoAlt(OG.id, lang))}"/>`]),
     ...(post ? [`<meta property="article:published_time" content="${post.date}"/>`, `<meta property="article:modified_time" content="${post.modified ?? post.date}"/>`, `<meta property="article:section" content="${(post.section ?? BLOG_UI.section)[lang]}"/>`, ...post.keywords[lang].map((k) => `<meta property="article:tag" content="${k}"/>`)] : []),
     '<meta name="twitter:card" content="summary_large_image"/>',
     `<meta name="twitter:image" content="${ogImage}"/>`,
+    ...(post ? [] : [`<meta name="twitter:image:alt" content="${escapeHtml(photoAlt(OG.id, lang))}"/>`]),
     '<meta name="theme-color" content="#0d0906"/>',
     `<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>`,   // no "</script>" can end the block early
   ].join('');

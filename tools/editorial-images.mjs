@@ -206,6 +206,9 @@ const photoText = {
   'i01-observe-process': ['夜班昏暗的车间里，一位穿深色夹克的工程师背对镜头站在通道中，手拿记录板，望向右侧一盏琥珀色吊灯下正在低头装配的女工。', 'In a dim factory hall on the night shift, an engineer in a dark jacket stands with his back to the camera holding a clipboard, watching a woman assemble parts under a single amber pendant lamp on the right.'],
   'i02-keep-or-revert': ['质检台上并排放着两只金属浅盘，左盘是五个光亮的黄铜接头，右盘是三个发暗的旧铜接头，一只戴灰色针织手套的手正把一个亮铜接头放进左盘。', 'Two shallow metal trays side by side on an inspection bench. The left tray holds five bright brass fittings and the right tray three tarnished ones, while a hand in a grey knit glove places another bright fitting into the left tray.'],
   'i03-hand-phone-blank': ['车间背景虚化，一只穿藏青色工作服袖口的手竖着拿着一部黑色手机，屏幕熄灭朝向镜头，左上方有一个暖色灯斑。', 'A hand in a navy work-shirt cuff holds a black phone upright, its dark screen facing the camera, against a blurred factory floor with one warm lamp glow at upper left.'],
+  /* O01, the share card (tools/imagegen/prepare-share-card.mjs): not an <img>;
+     tools/chrome.mjs writes it as og:image:alt and twitter:image:alt. */
+  'o01-share-cover': ['蓝调时分平静的海面上，一艘满载集装箱的货船向左缓缓驶离，船尾驾驶楼亮着一排琥珀色灯光并在水面拖出倒影，右侧远处岸边有几台龙门吊剪影，左半边是大片空旷的深色天空和海面。', 'At blue hour, a fully loaded container ship moves slowly left across calm water, a row of amber lights on its stern bridge reflected in the sea, with small gantry crane silhouettes on the far right shore and a wide, empty dark sky and sea on the left.'],
 };
 /* What each photograph slot draws, so the browser fetches the width it needs.
    The pictures are 16:9 and fill their box with object-fit: cover, so a box
@@ -223,7 +226,45 @@ function photoSizes(tag, before) {
   if (/video-bg-animation/.test(before)) return '(max-width: 767px) 250vw, (max-width: 991px) 160vw, 105vw';
   if (/\bcn-video\b/.test(before)) return '(max-width: 767px) 330px, 560px';
   if (/stargo-menu-photo/.test(tag)) return '220px';
+  const blog = blogPhotoSizes(tag);
+  if (blog) return blog;
   throw new Error(`Photograph in a slot with no declared size: ${tag.slice(0, 120)}`);
+}
+/* The blog's and the intelligence page's photographs (group "blog",
+   2026-10-21; tools/replaceables.mjs BLOG_COVERS and INTEL_PHOTOS), measured
+   on the built page from 320 to 1920 wide. As above, each value is the width
+   of the cover-cropped picture, not of the box.
+   - The article hero (`lx-blog-image lx-details`) is a 3:2 box, the covers'
+     own ratio: 358px at 390, 704 at 768, 928 at 992 and 1180 from 1280 up.
+     Its sizes are the ones the old cover had.
+   - The cards of the blog index and of every article's 「更多文章」 list
+     (`lx-blog-image`) are 1:1, so a 3:2 cover is drawn 1.5 times as wide as
+     its box: one column below 768 (box 100vw - 32px), two to 991 (336-448px,
+     ~44vw), three from 992 (277-395px, ~28vw), 395px from 1440 up.
+   - I01 (`lx-gradient-section-image`) fills the viewport (a sticky 100vw x
+     100vh box): a 3:2 picture covers it at 150vh wide when the viewport is
+     narrower than 3:2, and at 100vw otherwise.
+   - I02 (`lx-cta-image`), a square picture: the closing card's picture box is
+     1:1 on phones (100vw - 32px), 296x595 at 768 and 389x429 at 991, and
+     about 512x387 from 1280 up.
+   - I03 (`img.lx-no-writing-image`), a 2:3 portrait: the phone box is 358x418
+     at 390 and 68vw wide at 480-767 (it keeps the template picture's
+     1262:1474 there), 819px tall (a 546px picture) at 768-1279, 531x720 at
+     1440 and 531x864 at 1920 (576px). */
+function blogPhotoSizes(tag) {
+  if (/\blx-blog-image lx-details\b/.test(tag)) return '(max-width: 991px) 100vw, 1180px';
+  if (/\blx-blog-image\b/.test(tag)) return '(max-width: 767px) calc(150vw - 48px), (max-width: 991px) 68vw, (max-width: 1439px) 44vw, 593px';
+  if (/\blx-gradient-section-image\b/.test(tag)) return '(max-aspect-ratio: 3/2) 150vh, 100vw';
+  if (/\blx-cta-image\b/.test(tag)) return '(max-width: 767px) calc(100vw - 32px), (max-width: 991px) 600px, 512px';
+  if (/\blx-no-writing-image\b/.test(tag)) return '(max-width: 479px) calc(100vw - 32px), (max-width: 767px) 68vw, 580px';
+  return null;
+}
+/** A photograph's alt text in the page's language, by registry id (or OG.id,
+ *  the share card's), for the places that are not an <img>. */
+export function photoAlt(id, lang) {
+  const text = photoText[id]?.[lang === 'zh' ? 0 : 1];
+  if (!text) throw new Error(`Photograph without alt text: ${id}`);
+  return text;
 }
 export function editorialImages(html, lang) {
   // Also covers inline backgrounds and absolute Open Graph URLs.
