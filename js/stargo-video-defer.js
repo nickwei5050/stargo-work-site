@@ -22,10 +22,14 @@
  *   - A reader who asks for reduced motion gets the poster frames and no
  *     download, the same stillness the Webflow runtime gives the clips it
  *     starts itself. Should the preference change, the clips in view start.
- *   - The orb in the side-menu contact card sits under the page while the
- *     menu is closed, where an observer would count it as visible. It loads
- *     when the menu is about to open: the pointer reaching the menu icon,
- *     the icon taking focus, or the menu losing `inert`.
+ *   - A clip in the side menu sits under the page while the menu is closed,
+ *     where an observer would count it as visible. It loads when the menu is
+ *     about to open: the pointer reaching the menu icon, the icon taking
+ *     focus, or the menu losing `inert`. That was the orb in the menu's
+ *     contact card; since 2026-10-21 the card shows a still photograph
+ *     (tools/chrome.mjs), so no page has a clip in its menu today and this
+ *     branch attaches nothing. It stays so a clip put back there still waits
+ *     for the menu instead of loading with the page.
  */
 (function () {
   var vids = document.querySelectorAll('video[data-defer]');

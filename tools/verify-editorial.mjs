@@ -11,6 +11,10 @@ const manifest = JSON.parse(readFileSync('tools/imagegen/assets-manifest.json', 
    size on disk, alt/width/height on the page. They are derivatives of the
    supplied originals, so the source hash is the PNG's, not a generator's. */
 const products = JSON.parse(readFileSync('tools/imagegen/product-assets.json', 'utf8')).assets;
+/* The owner's graded photographs (site-images/batch-3, 2026-10-21): the same
+   checks, and the opposite rule for the alt. They are photographs of places,
+   not product screens, so their alt must NOT carry the demo-data caption. */
+const photos = JSON.parse(readFileSync('tools/imagegen/photo-assets.json', 'utf8')).assets;
 const files = [...readdirSync('.').filter(f => f.endsWith('.html')), ...readdirSync('en').filter(f => f.endsWith('.html')).map(f => 'en/' + f), ...readdirSync('blog').map(f => 'blog/' + f), ...readdirSync('en/blog').map(f => 'en/blog/' + f)];
 const all = [...files, 'css/stargo-fusion.css'].map(f => readFileSync(f, 'utf8')).join('\n');
 assert.equal(manifest.assets.length, 43);
@@ -22,6 +26,12 @@ for (const a of products) {
   assert(!a.upscaled && a.width <= a.sourcePixels[0], `${a.id}: never wider than the supplied original`);
   for (const f of [a, ...a.variants]) assert(existsSync(f.src), `missing file: ${f.src}`);
 }
+assert.equal(new Set(photos.map(a => a.sourceSha256)).size, photos.length, 'each photograph comes from its own supplied original');
+for (const a of photos) {
+  assert(!a.upscaled && a.width <= a.sourcePixels[0], `${a.id}: never wider than the supplied original`);
+  /* /assets is cached immutable for a year: every file names its own width. */
+  for (const f of [a, ...a.variants]) assert(new RegExp(`^assets/stargo-photo/${a.id}-${f.width}\\.webp$`).test(f.src) && existsSync(f.src), `${a.id}: missing or misnamed file ${f.src}`);
+}
 assert(!all.includes('assets/stargo/'), 'legacy imagery must not be referenced');
 // Since the 2026-09-06 template restore the lifelogx pages and the homepage
 // scenario/blog/contact areas use the templates' own imagery again, so not
@@ -32,6 +42,8 @@ for (const a of manifest.assets) {
   for (const f of [a, ...a.variants]) assert(existsSync(f.src), `missing file: ${f.src}`);
 }
 const productsUnused = products.filter(a => !all.includes(a.src)).map(a => a.id);
+const photosUnused = photos.filter(a => !all.includes(a.src)).map(a => a.id);
+assert.deepEqual(photosUnused, [], 'every registered photograph is placed');
 console.log(`generated imagery: ${manifest.assets.length - unused.length} placed, ${unused.length} retained but unused (${unused.join(', ')})`);
 console.log(`product imagery: ${products.length - productsUnused.length} of ${products.length} placed${productsUnused.length ? ` (unused: ${productsUnused.join(', ')})` : ''}`);
 for (const f of files) {
@@ -48,6 +60,11 @@ for (const f of files) {
        product image must say it is a demonstration interface. */
     assert(alt ? /演示数据|demo data/.test(alt) : /ro-home-header-img/.test(tag[0]),
       `${f}: product image alt must say it is an illustrative interface with demo data — "${alt}"`);
+  }
+  for (const tag of html.matchAll(/<img\b[^>]*stargo-photo[^>]*>/g)) {
+    const alt = tag[0].match(/\balt="([^"]*)"/)?.[1] ?? '';
+    assert(alt && /\bwidth="/.test(tag[0]) && /\bheight="/.test(tag[0]) && /\bsrcset="/.test(tag[0]) && /\bsizes="/.test(tag[0]), `${f}: photograph metadata`);
+    assert(!/演示数据|demo data|AI 概念图|AI concept/i.test(alt), `${f}: a photograph's alt describes the place, without a product or concept caption — "${alt}"`);
   }
   assert(/og:image[^>]*(stargo-editorial\/og-cover\.png|assets\/blog\/[\w-]+\.webp)/.test(html), `${f}: share cover`);   // articles share their cover
   /* Runtime cache version: every local script and stylesheet the page loads
@@ -66,7 +83,8 @@ for (const f of files) {
     assert(/js\/stargo-tabs\.js\?v=[0-9a-f]{12}/.test(html), `${f}: has tab components but does not load js/stargo-tabs.js`);
   }
 }
-console.log(`PASS static: 43 unique generated originals, ${products.length} product images from their own originals; placed images carry alt/width/height; ${files.length} pages without legacy references`);
+console.log(`owner photographs: ${photos.length} of ${photos.length} placed`);
+console.log(`PASS static: 43 unique generated originals, ${products.length} product images and ${photos.length} photographs from their own originals; placed images carry alt/width/height; ${files.length} pages without legacy references`);
 const BASE = process.env.BASE_URL || 'http://127.0.0.1:4200';
 const OUT = '.wrangler/editorial-qa';
 mkdirSync(OUT, { recursive: true });

@@ -25,13 +25,13 @@ The opening overlay (`tools/blocks/og-intro.mjs`) has no image file. The picture
 | --- | --- | --- |
 | `HERO.film` | `assets/stargo-motion/orbit.mp4` | Centre cell. H.264, no audio. See `assets/stargo-motion/SOURCE.md`. |
 | `HERO.poster` | `assets/stargo-motion/orbit-poster.webp` | Poster for that film. Also the About page large still (`ABOUT.bigImage`). |
-| `HERO.theatre[0]` | `assets/stargo-editorial/os-boot.webp` | Grid still. Token `assets/stargo/os-boot.webp`. |
-| `HERO.theatre[1]` | `assets/stargo-editorial/os-loading.webp` | Grid still. |
-| `HERO.theatre[2]` | `assets/stargo-editorial/os-login.webp` | Grid still. |
+| `HERO.theatre[0]` | `assets/stargo-photo/w01-trade-office-2048.webp` | Grid still (W01, owner photograph). |
+| `HERO.theatre[1]` | `assets/stargo-photo/w02-workshop-2048.webp` | Grid still (W02). |
+| `HERO.theatre[2]` | `assets/stargo-photo/w03-warehouse-2048.webp` | Grid still (W03). |
 | `HERO.theatre[3]` | *(not shown)* | Replaced by `HERO.film` / `HERO.poster`. The unused token is `os-desktop`. |
-| `HERO.theatre[4]` | `assets/stargo-editorial/os-cockpit.webp` | Grid still. |
-| `HERO.theatre[5]` | `assets/stargo-editorial/os-agent-center.webp` | Grid still. |
-| `HERO.theatre[6]` | `assets/stargo-editorial/os-inquiries.webp` | Grid still. |
+| `HERO.theatre[4]` | `assets/stargo-photo/w04-qc-lab-2048.webp` | Grid still (W04). |
+| `HERO.theatre[5]` | `assets/stargo-photo/w05-owner-office-2048.webp` | Grid still (W05). |
+| `HERO.theatre[6]` | `assets/stargo-photo/w06-showroom-2048.webp` | Grid still (W06). |
 | `GALLERY_TILES` | six `assets/stargo-product/sw*.webp` | Rotating gallery in the hero footer. Stems: `sw003`, `sw004`, `sw006`, `sw008`, `sw028`, `sw033`. Each is shown four times. |
 
 ## Module cards
@@ -94,6 +94,17 @@ All released screens live in `assets/stargo-product/`. Ids:
 | `gos11-dormant-reactivation` | `assets/stargo-product/gos11-dormant-reactivation.webp` |
 
 `sw*` and `gos*` files above are the only product screens this site places. There is no motorcycle-category set.
+
+## Owner photographs
+
+Graded photographs from the owner's image thread (`site-images/batch-3`, 2026-10-21), in `assets/stargo-photo/`, registered in `tools/imagegen/photo-assets.json` (source file, SHA-256, pixels, every width) by `tools/imagegen/prepare-photos.mjs`. Alt text is in `tools/editorial-images.mjs`, crop points in `css/stargo-fusion.css`. Every file name carries its width and is never overwritten (`/assets` is cached immutable for a year): a new picture gets a new id.
+
+| Slot | File on disk |
+| --- | --- |
+| Homepage grid (`HERO.theatre`, above) | `w01-trade-office` … `w06-showroom`, 480/768/1024/1600/2048 |
+| Capability ring, outer video-15 card and inner video-11 repeat (`RING_STILLS`) | `w02-workshop` |
+| Side-menu 预约企业演示 card, every page with the menu (`MENU_CARD`) | `g02-menu-harbour-night-768.webp` (+ `-480`) |
+| Demo band background behind the form (`.photo-section`, CSS) | `g01-cta-loading-bay-dusk-2048.webp` |
 
 ## Open Graph
 

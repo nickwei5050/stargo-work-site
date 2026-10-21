@@ -14,6 +14,10 @@
  *   - A product path (`assets/stargo-product/…`) or the hero film
  *     (`assets/stargo-motion/…`) is written as the final URL. Overwrite that
  *     file, including its width variants, and leave the name alone.
+ *   - An owner photograph (`assets/stargo-photo/<id>-<width>.webp`, registered
+ *     in tools/imagegen/photo-assets.json) is written as the final URL too, but
+ *     never overwritten: /assets is cached immutable for a year, so a new
+ *     picture gets a new id and tools/imagegen/prepare-photos.mjs writes it.
  *
  * The Open Graph file stays `og-cover.png` at 1200×630. Renaming it means
  * updating OG.token, OG.file, and every built meta tag together.
@@ -27,6 +31,8 @@ export const editorialToken = (id, ext = 'webp') => `assets/stargo/${id}.${ext}`
 export const editorialFile = (id, ext = 'webp') => `assets/stargo-editorial/${id}.${ext}`;
 /** Owner product screenshot. Written as this path; width variants sit beside it. */
 export const productFile = (id) => `assets/stargo-product/${id}.webp`;
+/** Owner photograph: its widest file. The narrower ones carry their own width in the name. */
+export const photoFile = (id, width = 2048) => `assets/stargo-photo/${id}-${width}.webp`;
 
 /** Share cover. chrome.mjs writes `token`; pages publish `file`. */
 export const OG = {
@@ -38,24 +44,53 @@ export const OG = {
 
 /**
  * Homepage sticky video grid (the Fearless Vision centre film plus the
- * stills around it). `theatre[centreIndex]` is replaced by `film` / `poster`
- * and is not shown as a still. The opening overlay (tools/blocks/og-intro.mjs)
- * has no image file.
+ * stills around it, under 「同一个工作空间，连接日常经营。」). `theatre[centreIndex]`
+ * is replaced by `film` / `poster` and is not shown as a still. The opening
+ * overlay (tools/blocks/og-intro.mjs) has no image file.
+ *
+ * Since 2026-10-21 the six stills are the owner's photographs
+ * (site-images/batch-3, W01–W06): trade office, workshop, warehouse, QC
+ * room, owner's office, showroom. They replaced the os-* stills here only; the
+ * os-* files keep their other places (hero mosaic, photo strips, dashboard and
+ * slide images, other pages).
  */
 export const HERO = {
   film: 'assets/stargo-motion/orbit.mp4',
   poster: 'assets/stargo-motion/orbit-poster.webp',
   centreIndex: 3,
   theatre: [
-    editorialToken('os-boot'),
-    editorialToken('os-loading'),
-    editorialToken('os-login'),
+    photoFile('w01-trade-office'),
+    photoFile('w02-workshop'),
+    photoFile('w03-warehouse'),
     editorialToken('os-desktop'),
-    editorialToken('os-cockpit'),
-    editorialToken('os-agent-center'),
-    editorialToken('os-inquiries'),
+    photoFile('w04-qc-lab'),
+    photoFile('w05-owner-office'),
+    photoFile('w06-showroom'),
   ],
 };
+
+/**
+ * The side menu's 预约企业演示 contact card, on every page that has the menu
+ * (tools/chrome.mjs): a still photograph where the magical-orb clip played
+ * (G02, 2026-10-21). The orb clip stays everywhere else it is drawn — the
+ * navbar logo and the pricing cards.
+ */
+export const MENU_CARD = photoFile('g02-menu-harbour-night', 768);
+
+/**
+ * Capability page, 「每项 工作」 ring (tools/blocks/cn-produce.mjs): cards that
+ * show a still photograph instead of their clip, by the clip's video id.
+ * W02 (2026-10-21) takes the outer ring's video-15 card and the inner ring's
+ * card that repeats video-11.
+ */
+export const RING_STILLS = {
+  '883ab066-dd39-71d8-e308-0e0f4d18fa98': photoFile('w02-workshop'),
+  '883ab066-dd39-71d8-e308-0e0f4d18fab1': photoFile('w02-workshop'),
+};
+
+/* The demo band behind the glass form (index, capabilities, enterprise) is a
+   CSS background: css/stargo-fusion.css sets .photo-section to G01,
+   assets/stargo-photo/g01-cta-loading-bay-dusk-2048.webp. */
 
 /**
  * Editorial ids, no extension. Order is the chrome photo-strip cycle

@@ -1,0 +1,266 @@
+{
+ "note": "Owner-supplied graded photographs. Written by tools/imagegen/prepare-photos.mjs: WebP q82 (lanczos3) resizes of the supplied sRGB originals, never cropped, retouched or upscaled; every file name carries its width. Alt text lives in tools/editorial-images.mjs, crop points in css/stargo-fusion.css, slots in tools/replaceables.mjs.",
+ "authorization": "Owner image thread, site-images/batch-3 (2026-10-21): graded finals for the homepage workspace grid, the demo band background and the side-menu card; resize and convert only.",
+ "assets": [
+  {
+   "id": "g01-cta-loading-bay-dusk",
+   "ref": "G01",
+   "src": "assets/stargo-photo/g01-cta-loading-bay-dusk-2048.webp",
+   "width": 2048,
+   "height": 1153,
+   "bytes": 120870,
+   "sourceFile": "site-images/batch-3/site-cta-loading-bay-dusk.png",
+   "sourceSha256": "60064c20e0bec45a1faa932d30b824769c5a3c4b92b257d5dea744f476fed252",
+   "sourcePixels": [
+    2048,
+    1153
+   ],
+   "upscaled": false,
+   "variants": []
+  },
+  {
+   "id": "g02-menu-harbour-night",
+   "ref": "G02",
+   "src": "assets/stargo-photo/g02-menu-harbour-night-768.webp",
+   "width": 768,
+   "height": 432,
+   "bytes": 24072,
+   "sourceFile": "site-images/batch-3/site-menu-harbour-night.png",
+   "sourceSha256": "d24d409215633ed0deb9269585dddec79833df8cbd8f697f5e4e575333e0285f",
+   "sourcePixels": [
+    2048,
+    1153
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/g02-menu-harbour-night-480.webp",
+     "width": 480,
+     "bytes": 10464
+    }
+   ]
+  },
+  {
+   "id": "w01-trade-office",
+   "ref": "W01",
+   "src": "assets/stargo-photo/w01-trade-office-2048.webp",
+   "width": 2048,
+   "height": 1153,
+   "bytes": 107402,
+   "sourceFile": "site-images/batch-3/home-space-01-trade-office.png",
+   "sourceSha256": "2603e2abc7d12812b9cd65b371b5f19c643683dad8a737ee00950da10cc32173",
+   "sourcePixels": [
+    2048,
+    1153
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/w01-trade-office-480.webp",
+     "width": 480,
+     "bytes": 13702
+    },
+    {
+     "src": "assets/stargo-photo/w01-trade-office-768.webp",
+     "width": 768,
+     "bytes": 27400
+    },
+    {
+     "src": "assets/stargo-photo/w01-trade-office-1024.webp",
+     "width": 1024,
+     "bytes": 39910
+    },
+    {
+     "src": "assets/stargo-photo/w01-trade-office-1600.webp",
+     "width": 1600,
+     "bytes": 76060
+    }
+   ]
+  },
+  {
+   "id": "w02-workshop",
+   "ref": "W02",
+   "src": "assets/stargo-photo/w02-workshop-2048.webp",
+   "width": 2048,
+   "height": 1153,
+   "bytes": 169270,
+   "sourceFile": "site-images/batch-3/home-space-02-workshop.png",
+   "sourceSha256": "c001f54c64cc44c7b4c046bd38844628ae0d7760de6dfbcc4e57c29d418ac022",
+   "sourcePixels": [
+    2048,
+    1153
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/w02-workshop-480.webp",
+     "width": 480,
+     "bytes": 23376
+    },
+    {
+     "src": "assets/stargo-photo/w02-workshop-768.webp",
+     "width": 768,
+     "bytes": 45960
+    },
+    {
+     "src": "assets/stargo-photo/w02-workshop-1024.webp",
+     "width": 1024,
+     "bytes": 69200
+    },
+    {
+     "src": "assets/stargo-photo/w02-workshop-1600.webp",
+     "width": 1600,
+     "bytes": 123210
+    }
+   ]
+  },
+  {
+   "id": "w03-warehouse",
+   "ref": "W03",
+   "src": "assets/stargo-photo/w03-warehouse-2048.webp",
+   "width": 2048,
+   "height": 1153,
+   "bytes": 207664,
+   "sourceFile": "site-images/batch-3/home-space-03-warehouse.png",
+   "sourceSha256": "52f5617cbcb521d3c93d9c0f5717e79fe45b47a6cd3e371014b7f04a951b14ca",
+   "sourcePixels": [
+    2048,
+    1153
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/w03-warehouse-480.webp",
+     "width": 480,
+     "bytes": 21918
+    },
+    {
+     "src": "assets/stargo-photo/w03-warehouse-768.webp",
+     "width": 768,
+     "bytes": 49134
+    },
+    {
+     "src": "assets/stargo-photo/w03-warehouse-1024.webp",
+     "width": 1024,
+     "bytes": 78734
+    },
+    {
+     "src": "assets/stargo-photo/w03-warehouse-1600.webp",
+     "width": 1600,
+     "bytes": 152102
+    }
+   ]
+  },
+  {
+   "id": "w04-qc-lab",
+   "ref": "W04",
+   "src": "assets/stargo-photo/w04-qc-lab-2048.webp",
+   "width": 2048,
+   "height": 1153,
+   "bytes": 120230,
+   "sourceFile": "site-images/batch-3/home-space-04-qc-lab.png",
+   "sourceSha256": "5e43b79dfd0cfed3278fa7aa376db6b4d65316863fdbfd22e466830c32ed85f4",
+   "sourcePixels": [
+    2048,
+    1153
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/w04-qc-lab-480.webp",
+     "width": 480,
+     "bytes": 15416
+    },
+    {
+     "src": "assets/stargo-photo/w04-qc-lab-768.webp",
+     "width": 768,
+     "bytes": 30286
+    },
+    {
+     "src": "assets/stargo-photo/w04-qc-lab-1024.webp",
+     "width": 1024,
+     "bytes": 45338
+    },
+    {
+     "src": "assets/stargo-photo/w04-qc-lab-1600.webp",
+     "width": 1600,
+     "bytes": 85346
+    }
+   ]
+  },
+  {
+   "id": "w05-owner-office",
+   "ref": "W05",
+   "src": "assets/stargo-photo/w05-owner-office-2048.webp",
+   "width": 2048,
+   "height": 1153,
+   "bytes": 60102,
+   "sourceFile": "site-images/batch-3/home-space-05-owner-office.png",
+   "sourceSha256": "aba8d71a505dd92c9181757ea0859611959186ae4d8eb1f7994f1ba06d4050cd",
+   "sourcePixels": [
+    2048,
+    1153
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/w05-owner-office-480.webp",
+     "width": 480,
+     "bytes": 5754
+    },
+    {
+     "src": "assets/stargo-photo/w05-owner-office-768.webp",
+     "width": 768,
+     "bytes": 11784
+    },
+    {
+     "src": "assets/stargo-photo/w05-owner-office-1024.webp",
+     "width": 1024,
+     "bytes": 19074
+    },
+    {
+     "src": "assets/stargo-photo/w05-owner-office-1600.webp",
+     "width": 1600,
+     "bytes": 39592
+    }
+   ]
+  },
+  {
+   "id": "w06-showroom",
+   "ref": "W06",
+   "src": "assets/stargo-photo/w06-showroom-2048.webp",
+   "width": 2048,
+   "height": 1153,
+   "bytes": 172344,
+   "sourceFile": "site-images/batch-3/home-space-06-showroom.png",
+   "sourceSha256": "a04c7174674c544bc56a8bf2c65f0a8435fcc56aae6b393b7cc5228375d4b3b3",
+   "sourcePixels": [
+    2048,
+    1153
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/w06-showroom-480.webp",
+     "width": 480,
+     "bytes": 18038
+    },
+    {
+     "src": "assets/stargo-photo/w06-showroom-768.webp",
+     "width": 768,
+     "bytes": 39014
+    },
+    {
+     "src": "assets/stargo-photo/w06-showroom-1024.webp",
+     "width": 1024,
+     "bytes": 62542
+    },
+    {
+     "src": "assets/stargo-photo/w06-showroom-1600.webp",
+     "width": 1600,
+     "bytes": 122230
+    }
+   ]
+  }
+ ]
+}

@@ -11,7 +11,8 @@
  *
  * Nothing is cloned and nothing is re-cut: the words change in four places and
  * every card keeps the clip cinery shipped in it — poster, mp4 and webm — which
- * try-block mirrors into assets/cinery/. The three interactions this block
+ * try-block mirrors into assets/cinery/, except the cards an owner photograph
+ * takes since 2026-10-21 (render(), "the owner's stills"). The three interactions this block
  * binds (a scroll loop on the pill's blur, hover in/out on the button) hang on
  * the two data-w-ids, which are untouched.
  *
@@ -21,6 +22,8 @@
  */
 import { readFileSync } from 'node:fs';
 import { setText, DONORS } from '../block-lib.mjs';
+import { stillImage } from '../chrome.mjs';
+import { RING_STILLS } from '../replaceables.mjs';
 
 /* ------------------------------------------------ the clips' three shapes -- */
 
@@ -123,6 +126,16 @@ export function render(frag, ctx) {
 
   /* The button already points at contact.html, which this site has. */
   if (!html.includes('href="contact.html"')) throw new Error('cn-produce: the cta button no longer links to contact.html');
+
+  /* ------------------------------------------------- the owner's stills -- */
+
+  /* A few cards show one of the owner's photographs instead of their clip
+     (tools/replaceables.mjs RING_STILLS, by video id). The card, its tilt and
+     its `.cn-video` box stay; only the `<video>` becomes a still that fills
+     the box (`.w-background-video > img.stargo-still`, css/stargo-fusion.css),
+     as the homepage grid's stills do. The alt is a marker that
+     tools/editorial-images.mjs replaces with the photograph's own sentence. */
+  for (const [id, src] of Object.entries(RING_STILLS)) html = stillImage(html, id, src, 'STARGO WORK');
 
   if (/Cinery|Book a call|Start Project|Produce/.test(html)) throw new Error('cn-produce: donor copy survives in the rendered block');
   return html;

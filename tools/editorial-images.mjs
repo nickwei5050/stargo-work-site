@@ -111,10 +111,58 @@ const productText = {
   'live18-quote-approval-16x9': ['销售工作台的报价审批：从邮件接入到 PI 单据每一步的状态，待审批的报价单独列出，只能由人批准', 'Quote approval in the sales workbench: the status of every step from incoming email to PI, with the quote awaiting approval listed on its own and approvable only by a person'],
 };
 export const PRODUCT_CAPTION = { zh: '产品界面示意（演示数据）', en: 'Illustrative product interface · demo data' };
+/* The owner's graded photographs (tools/imagegen/photo-assets.json,
+   site-images/batch-3 of 2026-10-21). They are photographs of places, not
+   product screens and not concept art, so their alt is the owner's own
+   sentence from the batch manifest with no caption after it: neither
+   PRODUCT_CAPTION nor （AI 概念图）. G01 is a CSS background
+   (css/stargo-fusion.css) and so has no alt to carry. */
+const photos = JSON.parse(readFileSync(new URL('./imagegen/photo-assets.json', import.meta.url), 'utf8')).assets;
+const photoBySrc = new Map(photos.map(a => [a.src, a]));
+const photoText = {
+  'g02-menu-harbour-night': ['夜里隔着平静的水面望向集装箱码头，四台岸边龙门吊是深色剪影，岸线上一排暖黄的灯在水里拉出长长的倒影。', 'A container terminal at night seen across calm water: four quay cranes in silhouette and a row of warm shoreline lights casting long reflections.'],
+  'w01-trade-office': ['傍晚的外贸部开放办公区，中间走道一点透视延伸到落地窗前一盏亮着的黄铜台灯，两侧工位上几位年轻业务员低头对着电脑工作，窗外是暮色中的厂房和楼群。', 'An open-plan export sales office at dusk, with a central aisle in one-point perspective leading to a lit brass desk lamp by floor-to-ceiling windows; a few young staff work at desks on either side, and factory buildings sit in the twilight beyond.'],
+  'w02-workshop': ['傍晚的注塑车间主通道，两侧对称排列着浅灰色注塑机，操作工在机旁低头取件，远处一名穿暗橙色背心的工人推着装满白色塑料件的灰色周转车。', 'The main aisle of an injection-moulding workshop in the evening, with grey machines lined up on both sides and operators taking parts out beside them, while in the distance a worker in a faded orange vest pushes a grey cart of white plastic parts.'],
+  'w03-warehouse': ['傍晚无人的成品仓库中央通道，两侧深灰色高位货架上整齐码放着裹缠绕膜的牛皮纸箱，通道尽头卷帘门敞开，门外是灰蓝色的天空和停着的集装箱车。', 'An empty finished-goods warehouse aisle at dusk, lined on both sides with tall dark-grey racks of shrink-wrapped kraft cartons, leading to an open loading door with a blue-grey evening sky and a parked container truck outside.'],
+  'w04-qc-lab': ['傍晚的质检室里，一位穿米白工作服的女检验员站在深色花岗岩检验台尽头低头察看，台面中线上排着一列黄铜阀体，两侧是灰色量具柜和检测仪器。', 'In a dim quality-control room at dusk, a woman inspector in an off-white work jacket stands at the far end of a dark granite bench, looking down at a row of brass valve bodies, with grey gauge cabinets and measuring instruments on both sides.'],
+  'w05-owner-office': ['傍晚昏暗的办公室里，一位中年男子坐在深色木桌后低头斟茶，身旁一盏落地灯亮着暖光，身后的木格架上摆着几件金属零件样品。', 'In a dim office at dusk, a middle-aged man sits behind a dark wooden table pouring tea beside a warm floor lamp, with a few metal part samples on the shelves behind him.'],
+  'w06-showroom': ['傍晚无人的工厂展厅，两侧深灰钢架上整齐陈列着灯具、电热水壶和不锈钢五金件，中间一张近黑色长会议桌配黑色布面椅，桌上放着一个白瓷托盘和一件五金合页样品，上方三盏黄铜吊灯亮着暖光。', 'An empty factory showroom at dusk. Dark grey steel shelving on both sides holds lamps, electric kettles and stainless-steel hardware. A long near-black meeting table with black fabric chairs has a white tray and a hinge sample on it, and three brass pendant lamps glow above.'],
+};
+/* What each photograph slot draws, so the browser fetches the width it needs.
+   The pictures are 16:9 and fill their box with object-fit: cover, so a box
+   taller than 16:9 needs a file wider than the box: the sizes below are the
+   width of the cover-cropped picture, not of the box.
+   - The homepage grid tiles (theatre): the grid zooms out as the reader
+     scrolls, and an outer tile is on screen from ~130vw wide at 1440 (up to
+     ~2300 px while it is still off screen) down to ~55vw. Measured halfway
+     through, the cover crop is ~105vw wide at 992 and up, ~160vw at 768 and
+     ~250vw on a 390 phone, whose tiles are much taller than they are wide.
+   - The capability ring's card: 22rem x 20rem (12.5 x 11.9rem below 768),
+     i.e. a ~560px (~330px) cover crop.
+   - The side-menu card: at most 220px wide (.contact-info). */
+function photoSizes(tag, before) {
+  if (/video-bg-animation/.test(before)) return '(max-width: 767px) 250vw, (max-width: 991px) 160vw, 105vw';
+  if (/\bcn-video\b/.test(before)) return '(max-width: 767px) 330px, 560px';
+  if (/stargo-menu-photo/.test(tag)) return '220px';
+  throw new Error(`Photograph in a slot with no declared size: ${tag.slice(0, 120)}`);
+}
 export function editorialImages(html, lang) {
   // Also covers inline backgrounds and absolute Open Graph URLs.
   let out = html.replaceAll('assets/stargo/', 'assets/stargo-editorial/');
   out = out.replace(/<img\b[^>]*>/g, (tag, offset, page) => {
+    const photoSrc = tag.match(/\bsrc="(assets\/stargo-photo\/[^"]+\.webp)"/)?.[1];
+    if (photoSrc) {
+      const photo = photoBySrc.get(photoSrc);
+      if (!photo) throw new Error(`Unregistered photograph: ${photoSrc}`);
+      const text = photoText[photo.id]?.[lang === 'zh' ? 0 : 1];
+      if (!text) throw new Error(`Photograph without alt text: ${photo.id}`);
+      const alt = /\balt=""/.test(tag) ? '' : text;
+      const sizes = photoSizes(tag, page.slice(Math.max(0, offset - 160), offset));
+      const variants = [...photo.variants, photo];
+      const result = tag.replace(/\s(?:alt|srcset|sizes|width|height|decoding)="[^"]*"/g, '');
+      const attrs = [`alt="${alt}"`, `width="${photo.width}"`, `height="${photo.height}"`, 'decoding="async"', `srcset="${variants.map(v => `${v.src} ${v.width}w`).join(', ')}"`, `sizes="${sizes}"`];
+      return result.replace(/\s*\/?>(\s*)$/, ` ${attrs.join(' ')}/>$1`);
+    }
     const id = tag.match(/\bsrc="assets\/(?:stargo-editorial|stargo-product)\/([^"/]+)\.(?:webp|png)"/)?.[1];
     if (!id) return tag;
     const asset = byId.get(id);

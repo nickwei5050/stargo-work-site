@@ -5137,3 +5137,52 @@ body:has(#loop) .image-wrap.for-service .paralax-image[src*="gos11-dormant-react
 }
 
 /* V7-HOME-END */
+
+/* ======================================================================
+   The owner's photographs, batch 3 (2026-10-21; site-images/batch-3,
+   registered in tools/imagegen/photo-assets.json). Graded finals, only
+   resized: these rules place them and set the crop point the batch's
+   manifest gives for each one. Every box keeps its size; only the picture
+   in it changes.
+   ====================================================================== */
+
+/* G01. The demo band behind the glass form (index, capabilities and
+        enterprise): Mono's `.photo-section` drew its group photograph here.
+        A loading bay at dusk instead, its door kept whole with a jamb on each
+        side at 1.7:1 (1440) and 0.5:1 (390) alike. The section's 0.65 opacity,
+        cover and size are Mono's. */
+.photo-section {
+  background-image: url("../assets/stargo-photo/g01-cta-loading-bay-dusk-2048.webp");
+  background-position: 51% 50%;
+}
+
+/* G02. The side menu's 预约企业演示 card (tools/chrome.mjs): a harbour at
+        night where the magical-orb clip played. The clip's box was 220% of the
+        card, pushed up and left so the orb sat behind the text; the photograph
+        fills the card itself instead, at the clip's layer — under the card's
+        45% dark wash (`.bg-overflow`, later in the markup) and under the
+        avatar and the text (z-index 2). The card's own `overflow: hidden` and
+        100px radius clip it. */
+.contact-info.no-shadow > img.stargo-menu-photo {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+}
+
+/* W01–W06. The homepage grid's six stills (and W02 in the capability ring)
+        are `object-fit: cover` (rule 3 above); a box that is not 16:9 shows
+        part of the picture. The manifest's crop point for the three that are
+        not centred: W05 keeps the man and the lamp, W06 the shelving and the
+        lamps above the table, and W04 on a phone — where its tile is a tall
+        0.44:1 sliver — keeps the inspector's head and hands and the row of
+        valves. */
+img[src*="stargo-photo/w05-owner-office-"] { object-position: 52% 58%; }
+img[src*="stargo-photo/w06-showroom-"] { object-position: 32% 25%; }
+@media (max-width: 767px) {
+  img[src*="stargo-photo/w04-qc-lab-"] { object-position: 48.8% 50%; }
+}
