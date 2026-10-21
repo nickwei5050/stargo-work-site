@@ -1,0 +1,21 @@
+{
+  "note": "Written by tools/optimize-fonts.mjs: each .ttf/.otf a stylesheet loads, and the subset WOFF2 it is served as.",
+  "fonts": {
+    "assets/6929b6c693cb856e01ef7c05/692d67d446c2417b55fe26ca_42dotsans-medium.ttf": "assets/6929b6c693cb856e01ef7c05/692d67d446c2417b55fe26ca_42dotsans-medium.woff2",
+    "assets/6929b6c693cb856e01ef7c05/692d67d4a6bcca04680071de_42dotsans-regular.ttf": "assets/6929b6c693cb856e01ef7c05/692d67d4a6bcca04680071de_42dotsans-regular.woff2",
+    "assets/6929b6c693cb856e01ef7c05/692d67d4b0a2b150c3655266_42dotsans-bold.ttf": "assets/6929b6c693cb856e01ef7c05/692d67d4b0a2b150c3655266_42dotsans-bold.woff2",
+    "assets/6929b6c693cb856e01ef7c05/692d67d5352a9e573a217538_42dotsans-light.ttf": "assets/6929b6c693cb856e01ef7c05/692d67d5352a9e573a217538_42dotsans-light.woff2",
+    "assets/6929b6c693cb856e01ef7c05/692d67d5a7eafa7f5bc7942b_42dotsans-extrabold.ttf": "assets/6929b6c693cb856e01ef7c05/692d67d5a7eafa7f5bc7942b_42dotsans-extrabold.woff2",
+    "assets/69a01660589c516ba5f0f917/69a022fe1781fa5c0193ad3f_InterDisplay-Medium.ttf": "assets/69a01660589c516ba5f0f917/69a022fe1781fa5c0193ad3f_InterDisplay-Medium.woff2",
+    "assets/69a01660589c516ba5f0f917/69a022fe18c48956be155c1a_InterDisplay-Bold.ttf": "assets/69a01660589c516ba5f0f917/69a022fe18c48956be155c1a_InterDisplay-Bold.woff2",
+    "assets/69a01660589c516ba5f0f917/69a022ff8119fed8127f02a7_InterDisplay-Regular.ttf": "assets/69a01660589c516ba5f0f917/69a022ff8119fed8127f02a7_InterDisplay-Regular.woff2",
+    "assets/69a01660589c516ba5f0f917/69a022ffbb82bbae94bc63b4_InterDisplay-SemiBold.ttf": "assets/69a01660589c516ba5f0f917/69a022ffbb82bbae94bc63b4_InterDisplay-SemiBold.woff2",
+    "assets/69a01660589c516ba5f0f917/69a50f10178434223c1d5eb5_InstrumentSerif-Italic.ttf": "assets/69a01660589c516ba5f0f917/69a50f10178434223c1d5eb5_InstrumentSerif-Italic.woff2",
+    "assets/qubix/69a9292f6efd1f15aa5dbdc8_InterDisplay-Medium.ttf": "assets/69a01660589c516ba5f0f917/69a022fe1781fa5c0193ad3f_InterDisplay-Medium.woff2",
+    "assets/qubix/69a9292f80901c26b3ecd1d1_InterDisplay-SemiBold.ttf": "assets/69a01660589c516ba5f0f917/69a022ffbb82bbae94bc63b4_InterDisplay-SemiBold.woff2",
+    "assets/qubix/69a9292ff07ea7afd79211d8_InterDisplay-Bold.ttf": "assets/69a01660589c516ba5f0f917/69a022fe18c48956be155c1a_InterDisplay-Bold.woff2",
+    "assets/qubix/69a929301030c39cc10f429b_InterDisplay-Regular.ttf": "assets/69a01660589c516ba5f0f917/69a022ff8119fed8127f02a7_InterDisplay-Regular.woff2",
+    "assets/rototo/69fee06e376cbb08b9e828e7_PlayfairDisplay-Italic-VariableFont_wght.ttf": "assets/rototo/69fee06e376cbb08b9e828e7_PlayfairDisplay-Italic-VariableFont_wght.woff2",
+    "assets/rototo/69fee06e376cbb08b9e828e8_PlayfairDisplay-VariableFont_wght.ttf": "assets/rototo/69fee06e376cbb08b9e828e8_PlayfairDisplay-VariableFont_wght.woff2"
+  }
+}
