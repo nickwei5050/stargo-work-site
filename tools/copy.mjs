@@ -59,8 +59,8 @@ export const CAP_JUMPS = [
 ];
 
 export const LANG_SWITCH = B('EN', '中文');
-/** Production origin — canonical URLs, hreflang, Open Graph and the sitemap. Bind a custom domain and change it here. */
-export const SITE_URL = 'https://stargo.pages.dev';
+/** Production origin — canonical URLs, hreflang, Open Graph and the sitemap. */
+export const SITE_URL = 'https://stargowork.com';
 
 export const CONTACT_INFO = {
   email: 'sales@stargomoto.com',
