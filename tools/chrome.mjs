@@ -18,7 +18,7 @@ import { makeSub, findByClass, extractElement } from './lib-html.mjs';
 import { editorialImages } from './editorial-images.mjs';
 import { createHash } from 'node:crypto';
 import { readFileSync, existsSync } from 'node:fs';
-import { CAP_JUMPS, NAV, SECONDARY, MORE, LANG_SWITCH, CHROME, META, CONTACT_INFO, SITE_URL } from './copy.mjs';
+import { CAP_JUMPS, NAV, SECONDARY, MORE, LANG_SWITCH, CHROME, META, CONTACT_INFO, CONTACT_UI, SITE_URL } from './copy.mjs';
 import { POSTS, BLOG_UI, postPath, coverSrc, faqEntities, wordCount } from './blog.mjs';
 import { OG, OS_ART, MENU_CARD } from './replaceables.mjs';
 
@@ -222,7 +222,7 @@ function head(html, lang, current) {
   const pageType = current === 'about.html' ? 'AboutPage' : current === 'blog.html' ? 'CollectionPage' : current === 'contact.html' ? 'ContactPage' : 'WebPage';
   const blogUrl = cleanUrl(lang, 'blog.html');
   const graph = [
-    { '@type': 'Organization', '@id': ORG_ID, name: 'Stargo Work', alternateName: '星贸智能', url: `${SITE_URL}/`, logo: `${SITE_URL}/${ICON(512)}`, email: CONTACT_INFO.email, telephone: CONTACT_INFO.whatsapp, address: { '@type': 'PostalAddress', addressLocality: 'Liuzhou', addressRegion: 'Guangxi', addressCountry: 'CN' }, sameAs: [CONTACT_INFO.siteHref] },
+    { '@type': 'Organization', '@id': ORG_ID, name: 'Stargo Work', alternateName: '星贸智能', url: `${SITE_URL}/`, logo: `${SITE_URL}/${ICON(512)}`, email: CONTACT_INFO.email, telephone: CONTACT_INFO.phone, contactPoint: { '@type': 'ContactPoint', contactType: 'sales', telephone: CONTACT_INFO.phone, email: CONTACT_INFO.email, availableLanguage: ['zh-CN', 'en'] }, address: { '@type': 'PostalAddress', addressLocality: 'Liuzhou', addressRegion: 'Guangxi', addressCountry: 'CN' }, sameAs: [CONTACT_INFO.siteHref] },
     { '@type': 'WebSite', '@id': SITE_ID, url: `${SITE_URL}/`, name: BRAND[lang], alternateName: lang === 'zh' ? 'Stargo Work' : BRAND.zh, inLanguage: ['zh-CN', 'en'], publisher: { '@id': ORG_ID } },
     { '@type': pageType, '@id': self, url: self, name: title, description, inLanguage, isPartOf: { '@id': SITE_ID }, ...(post ? { primaryImageOfPage: ogImage } : {}) },
   ];
@@ -416,8 +416,20 @@ const SOCIAL_LABELS = {
   mail: { zh: '发邮件给 STARGO WORK', en: 'Email STARGO WORK' },
   whatsapp: { zh: '通过 WhatsApp 联系 STARGO WORK', en: 'WhatsApp STARGO WORK' },
   site: { zh: 'STARGO 企业官网', en: 'STARGO corporate website' },
+  phone: { zh: `${CONTACT_UI.call.zh} STARGO WORK`, en: `${CONTACT_UI.call.en} STARGO WORK` },
 };
-const socialKind = (href) => (href.startsWith('mailto:') ? 'mail' : href.includes('wa.me/') ? 'whatsapp' : 'site');
+const socialKind = (href) => (href.startsWith('mailto:') ? 'mail' : href.startsWith('tel:') ? 'phone' : href.includes('wa.me/') ? 'whatsapp' : 'site');
+
+/* WeChat has no web link, so wherever the site lists it the ID is copied
+   instead: a <button> carrying these attributes, which js/stargo-forms.js arms
+   (copies `data-stargo-copy`, shows and announces `data-stargo-copied`). A
+   control that is ONLY a copy action (an icon, a 「复制」 pill) ships `hidden`
+   and the script reveals it, so a page without the script never shows a
+   button that does nothing; where the ID is printed as text, the text stays. */
+export const wechatCopy = (lang) => ({
+  attrs: `data-stargo-copy="${CONTACT_INFO.wechat}" data-stargo-copied="${CONTACT_UI.wechatCopied[lang]}"`,
+  label: `${CONTACT_UI.copyWechat[lang]} ${CONTACT_INFO.wechat}`,
+});
 
 /* The icon on each of those buttons says where it goes. The template drew an
    Instagram camera, an X logo and a third-party star on them; STARGO has no
@@ -429,24 +441,78 @@ const socialKind = (href) => (href.startsWith('mailto:') ? 'mail' : href.include
    moves. The glyph is decoration; the button's name is its aria-label.
    The about page's intro card shows the same three channels (V7-LX,
    tools/blocks/cn-about.mjs CHANNELS): the paths below are that card's paths,
-   point for point, so the site draws one icon set. */
+   point for point, so the site draws one icon set.
+   Since 2026-10-21 the rows also carry the phone (a handset, a tel: link that
+   rings on a phone) and WeChat (two speech bubbles, a button that copies the
+   ID — see wechatCopy above), appended after the three; socialIcons() adds
+   them. After a copy, js/stargo-forms.js shows a check mark for two seconds. */
+/** The two glyphs added on 2026-10-21, shared with tools/blocks/cn-about.mjs. */
+export const GLYPH_PATHS = {
+  phone: '<path d="M5.5 3.5h3l1.5 4-2 1.3a11 11 0 0 0 7.2 7.2l1.3-2 4 1.5v3a2 2 0 0 1-2.2 2A17 17 0 0 1 3.5 5.7a2 2 0 0 1 2-2.2z"/>',
+  wechat: '<path d="M15.8 9.2C15.3 6 12.3 3.5 8.7 3.5 4.8 3.5 1.8 6.2 1.8 9.5c0 1.9 1 3.6 2.6 4.7l-.6 2.3 2.6-1.4c.8.2 1.5.3 2.3.3"/><path d="M22.2 14.6c0-2.8-2.8-5.1-6.2-5.1s-6.2 2.3-6.2 5.1 2.8 5.1 6.2 5.1c.7 0 1.4-.1 2-.3l2.4 1.3-.5-2.2c1.4-.9 2.3-2.3 2.3-3.9z"/><path d="M6.3 8.3h.01M11 8.3h.01M13.8 13.9h.01M18.2 13.9h.01"/>',
+};
 const SOCIAL_GLYPH = (paths) => `<svg class="social-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${paths}</svg>`;
 const SOCIAL_ICONS = {
   site: SOCIAL_GLYPH('<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9s1.3-6.4 3.8-9z"/>'),
   whatsapp: SOCIAL_GLYPH('<path d="M20.5 11.6a8.4 8.4 0 0 1-12.2 7.5L3.5 20.5l1.4-4.6A8.4 8.4 0 1 1 20.5 11.6z"/>'),
   mail: SOCIAL_GLYPH('<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/>'),
+  phone: SOCIAL_GLYPH(GLYPH_PATHS.phone),
+  wechat: SOCIAL_GLYPH(GLYPH_PATHS.wechat),
 };
 const TEMPLATE_SOCIAL_ART = /instagram%20|twitter%20|_contra\.png/;
 
-function socialIcons(html) {
-  const out = html.replace(/<a\b[^>]*\bclass="social-wrapper\b[^"]*"[^>]*>[\s\S]*?<\/a>/g, (a) => {
+function socialIcons(html, lang) {
+  let out = html.replace(/<a\b[^>]*\bclass="social-wrapper\b[^"]*"[^>]*>[\s\S]*?<\/a>/g, (a) => {
     const href = (a.match(/href="([^"]*)"/) || [])[1] || '';
     const img = /<img\b[^>]*\bclass="social-icon\b[^"]*"[^>]*\/>/;
     if (!img.test(a)) throw new Error('chrome: a social button has no icon to replace');
     return a.replace(/class="social-wrapper sq /, 'class="social-wrapper ').replace(img, SOCIAL_ICONS[socialKind(href)]);
   });
   if (TEMPLATE_SOCIAL_ART.test(out)) throw new Error('chrome: a template social-network icon survives');
+  /* Phone and WeChat after the three, in every row (the footer's and the side
+     menu card's). Each row is three adjacent links and nothing else, so it
+     closes on the first </div> after it opens. */
+  const phone = SOCIAL_LABELS.phone[lang];
+  const wechat = wechatCopy(lang);
+  out = out.replace(/(<div class="social-content\b[^"]*">)([\s\S]*?)(<\/div>)/g, (m, open, row, close) => {
+    const kinds = [...row.matchAll(/<a\b[^>]*href="([^"]*)"[^>]*class="social-wrapper\b/g)].map((x) => socialKind(x[1]));
+    if (kinds.join() !== 'site,whatsapp,mail') throw new Error(`chrome: a social row is not website, WhatsApp, e-mail (${kinds.join()})`);
+    return open + row
+      + `<a aria-label="${phone}" title="${phone}" href="${CONTACT_INFO.phoneHref}" class="social-wrapper w-inline-block">${SOCIAL_ICONS.phone}</a>`
+      + `<button type="button" aria-label="${wechat.label}" title="${wechat.label}" ${wechat.attrs} class="social-wrapper stargo-copy-icon" hidden="">${SOCIAL_ICONS.wechat}</button>`
+      + close;
+  });
   return out;
+}
+
+/**
+ * The footer's 「(商务合作)」 list: e-mail and WhatsApp come from the template
+ * (copy.mjs CHROME), and the phone and WeChat rows are that WhatsApp row again —
+ * same component, same arrow, same hover — one a tel: link, the other a
+ * <button> that copies the WeChat ID (wechatCopy). The WeChat row prints the
+ * ID, so it is not hidden without the script; the script only adds the copy.
+ * Their channel words sit in `.stargo-ch`, not `.stargo-wa`: the 768-1279px
+ * rule that drops WhatsApp's number (css/stargo-fusion.css) must not touch them.
+ */
+function footerContact(html, lang) {
+  const L = CONTACT_INFO.labels;
+  const mark = `<span class="stargo-wa">WhatsApp </span><span class="stargo-wa-num">${CONTACT_INFO.whatsapp}</span>`;
+  const n = html.split(mark).length - 1;
+  if (n !== 1) throw new Error(`chrome: expected one footer WhatsApp row, found ${n}`);
+  const at = html.lastIndexOf('<a ', html.indexOf(mark));
+  const row = extractElement(html, at, 'a');
+  if (!row.text.includes(`href="${CONTACT_INFO.whatsappHref}"`) || !/\bclass="button-link\b/.test(row.text)) throw new Error('chrome: the footer WhatsApp row is not a button-link to WhatsApp');
+  const phoneRow = row.text
+    .replace(`href="${CONTACT_INFO.whatsappHref}"`, `href="${CONTACT_INFO.phoneHref}"`)
+    .replace(mark, `<span class="stargo-ch">${L.phoneShort[lang]} </span>${CONTACT_INFO.phone}`);
+  const wechat = wechatCopy(lang);
+  const wechatRow = row.text
+    .replace(/^<a /, '<button type="button" ')
+    .replace(`href="${CONTACT_INFO.whatsappHref}"`, `aria-label="${L.wechat[lang]} ${CONTACT_INFO.wechat}${CONTACT_UI.copyHint[lang]}" ${wechat.attrs} data-stargo-copied-short="${CONTACT_UI.copiedInline[lang]}"`)
+    .replace(/<\/a>$/, '</button>')
+    .replace(/<(\/?)div\b/g, '<$1span')   // a <button> holds phrasing content only; the classes keep their display: flex
+    .replace(mark, `<span class="stargo-ch">${L.wechat[lang]} </span><span data-stargo-copy-label="">${CONTACT_INFO.wechat}</span>`);
+  return html.slice(0, row.end) + phoneRow + wechatRow + html.slice(row.end);
 }
 
 /**
@@ -545,7 +611,10 @@ function uniqueLayoutIds(html) {
 function formMarkup(html, lang) {
   return html.replace(/<form\b[^>]*>[\s\S]*?<\/form>/g, form => {
     const isNews = /id="Subscribe"/.test(form);
-    form = form.replace(/<form\b/, `<form data-stargo-form="${isNews ? 'newsletter' : 'contact'}"`).replace(/method="get"/, 'method="post" action="/api/contact"');
+    /* data-stargo-to / -wa: the e-mail and WhatsApp the script's fallback
+       notice names when a submission cannot be confirmed (copy.mjs
+       CONTACT_INFO), so the script itself carries no address. */
+    form = form.replace(/<form\b/, `<form data-stargo-form="${isNews ? 'newsletter' : 'contact'}" data-stargo-to="${CONTACT_INFO.email}" data-stargo-wa="${CONTACT_INFO.whatsapp}"`).replace(/method="get"/, 'method="post" action="/api/contact"');
     if (!form.includes('name="website"')) form = form.replace(/(<form[^>]*>)/, '$1<div class="stargo-hp" aria-hidden="true"><input aria-label="Website" name="website" type="text" tabindex="-1" autocomplete="off"/></div>');
     form = form.replace(/<input\b[^>]*>/g, tag => {
       if (/type="email"/.test(tag)) return tag.replace('<input ', `<input autocomplete="email" aria-label="${lang === 'zh' ? '邮箱' : 'Email'}" `);
@@ -700,12 +769,13 @@ export function applyChrome(html, { lang, current }) {
   out = bottomPill(out, L, current);
   out = footerPages(out, L, current);
   for (const [a, b] of CHROME) out = opt(out, a, b[lang]);
+  out = footerContact(out, lang);
   out = wordmark(out);
   out = chromeImagery(out);
   out = sideMenu(out, lang);
   out = scripts(out);
   out = linkHygiene(out, lang);
-  out = socialIcons(out);
+  out = socialIcons(out, lang);
   out = formMarkup(out, lang);
   if (lang === 'zh') out = zhRuntimeNames(zhFullStops(out));
   out = uniqueLayoutIds(out);

@@ -2128,6 +2128,33 @@ PAGES['contact.html'] = (lang) => {
     if (!h.includes(`css/${DONORS.cinery.sheet}`)) throw new Error('contact: the cinery sheet did not attach; the form card would be unstyled');
   }
 
+  /* 「(直接联系)」 (2026-10-21): the owner's own details under the quote card,
+     for the buyer who would rather call, add him on WeChat or write than fill
+     in the form — 联系人, 电话 (tel:, rings on a phone), 微信 (no web link: the
+     ID as text, and a 「复制」 button that js/stargo-forms.js reveals and arms),
+     WhatsApp and 邮箱, every value from copy.mjs CONTACT_INFO. It sits in the
+     card's column after the card, so nothing that was on the page moves: on a
+     desktop it rides in the column's sticky stack beside the form, on a phone
+     it follows the card. Mono's own type (`top-text`) and the card column's
+     width; the rest is the V8-CONTACT rule in css/stargo-fusion.css. */
+  {
+    const I = C.CONTACT_INFO;
+    const L = I.labels;
+    const U = C.CONTACT_UI;
+    const row = (label, value) => `<div class="stargo-direct-row"><dt class="top-text sml">${t(label)}</dt><dd class="top-text">${value}</dd></div>`;
+    const list = `<div class="stargo-direct"><p class="top-text">${t(U.heading)}</p><dl class="stargo-direct-list">${[
+      row(L.person, escapeHtml(I.person)),
+      row(L.phone, `<a href="${I.phoneHref}">${I.phone}</a>`),
+      row(L.wechat, `<span class="stargo-direct-id">${I.wechat}</span><button type="button" class="stargo-copy" data-stargo-copy="${I.wechat}" data-stargo-copied="${t(U.wechatCopied)}" data-stargo-copied-short="${t(U.copied)}" aria-label="${t(U.copyWechat)} ${I.wechat}" hidden="">${t(U.copy)}</button>`),
+      row(L.whatsapp, `<a href="${I.whatsappHref}" target="_blank" rel="noopener noreferrer">${I.whatsapp}</a>`),
+      row(L.email, `<a href="mailto:${I.email}">${I.email}</a>`),
+    ].join('')}</dl></div>`;
+    const card = findByClass(h, 'div', 'testimonials-card');
+    if (!card || findByClass(h, 'div', 'testimonials-card', 1)) throw new Error('contact: expected one quote card to set the direct details under');
+    if (!h.slice(card.end).startsWith('<div class="spacer-s"></div>')) throw new Error('contact: the quote card is no longer followed by its spacer');
+    h = h.slice(0, card.end) + list + h.slice(card.end);
+  }
+
   /* The quote card is the other column and is untouched — 「图6」 is why B2 was
      chosen over replacing the page. Assert it survived the splice. */
   if (!/<video id="[^"]+-video"/.test(h)) throw new Error('contact: the quote card lost its portrait film in the swap');
