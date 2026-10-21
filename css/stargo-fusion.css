@@ -2694,7 +2694,9 @@ html[lang^="zh"] .testi-grid._01 .top-text.for-sst { text-wrap: pretty; }
       os-desktop fit the subjects as well but are pale, and the first try with
       them left the panel text unreadable at 1440 (they are used as framed
       pictures further down instead). All are landscape 1586×992 like the
-      pictures they replace, so the cover crop is unchanged. */
+      pictures they replace, so the cover crop is unchanged.
+      Since 2026-10-21 the owner's photographs take all four panels: see the
+      batch 7 block at the end of this file, which overrides these. */
 .image-about._01 { background-image: url("../assets/stargo-editorial/brand-family-04.webp"); }
 .image-about._02 { background-image: url("../assets/stargo-editorial/os-loading.webp"); }
 .image-about._03 { background-image: url("../assets/stargo-editorial/brand-family-03.webp"); }
@@ -5185,4 +5187,59 @@ img[src*="stargo-photo/w05-owner-office-"] { object-position: 52% 58%; }
 img[src*="stargo-photo/w06-showroom-"] { object-position: 32% 25%; }
 @media (max-width: 767px) {
   img[src*="stargo-photo/w04-qc-lab-"] { object-position: 48.8% 50%; }
+}
+
+/* ======================================================================
+   The owner's photographs, batch 7: the enterprise page (2026-10-21;
+   site-images/batch-7, E01–E13, registered in
+   tools/imagegen/photo-assets.json; the <img> slots are in
+   tools/replaceables.mjs ENTERPRISE_PHOTOS). Graded finals, only resized:
+   these rules place the four panel backgrounds and set the crop point the
+   batch's manifest gives for each picture that is cover-cropped. Every box
+   keeps its size; only the picture in it changes.
+   ====================================================================== */
+
+/* E01–E04. The four sticky story panels (决定, 核对, 连接, 经营), on
+        enterprise.html and en/enterprise.html only. The panels print white
+        text straight on the picture, so each is a dark photograph; as a CSS
+        background it has no alt. Each replaces the panel's picture set in
+        "4. Template stock photography" and in the V6-F "4. The four hero
+        panels' pictures" above (same specificity, later in the file). The
+        picture box (`.image-about`) is 125% of the panel (1800x1125 at 1440,
+        488x897 on a 390 phone), cover, and slides sideways as the panels
+        pass, so these crop points are of that box. A background cannot pick
+        a file by width, so the 2048 file serves every width. E01 sits on its
+        bottom edge on wide screens (the desk and the pen hand) and is centred
+        on phones; E03 keeps the clerk and the shelving at 45%. On a 390
+        phone panels 2 and 3 slide in from the right and show only box x
+        ~140-488 of 488, so E02's centred crop shows the right-hand tap and a
+        glove, and the tag on the left-hand tap only as the panel leaves (about
+        38% would keep both taps and the tag in view); 50% is the image
+        thread's setting and is kept until it decides. */
+.image-about._01 { background-image: url("../assets/stargo-photo/e01-decide-2048.webp"); background-position: 50% 100%; }
+.image-about._02 { background-image: url("../assets/stargo-photo/e02-verify-2048.webp"); background-position: 50% 50%; }
+.image-about._03 { background-image: url("../assets/stargo-photo/e03-connect-2048.webp"); background-position: 45% 50%; }
+.image-about._04 { background-image: url("../assets/stargo-photo/e04-operate-2048.webp"); background-position: 50% 50%; }
+@media (max-width: 767px) {
+  .image-about._01 { background-position: 50% 50%; }
+}
+
+/* E05–E08. The cockpit column (`.work-image-cover`) and the 原则 picture
+        (`.paralax-image`) are `object-fit: cover` in boxes whose shape
+        follows the text beside them, so each shows part of its picture.
+        E06 is portrait and keeps the owner's head (50% 20%) where its box is
+        squarer than the picture; E08 keeps the glove and the button (50%
+        42%). On phones, where the column's boxes are about 1.2:1, E05 moves
+        to 55% (the tablet and the tea), E06 is centred and E07 keeps both
+        hands on the ledger (34%). The five module cards draw their pictures
+        whole (`width: 100%`, height from the picture), so E09–E13 have no
+        crop point to set: the manifest's positions for them (E09 54%, E10
+        72% and E12 45% 25% / 45% 50%; E11 and E13 only if cover-cropped)
+        would change nothing there. */
+img[src*="stargo-photo/e06-cockpit-blocker-"] { object-position: 50% 20%; }
+img[src*="stargo-photo/e08-emergency-stop-"] { object-position: 50% 42%; }
+@media (max-width: 767px) {
+  img[src*="stargo-photo/e05-cockpit-overview-"] { object-position: 55% 50%; }
+  img[src*="stargo-photo/e06-cockpit-blocker-"] { object-position: 50% 50%; }
+  img[src*="stargo-photo/e07-cockpit-budget-"] { object-position: 34% 50%; }
 }

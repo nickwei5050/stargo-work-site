@@ -105,6 +105,10 @@ Graded photographs from the owner's image thread (`site-images/batch-3`, 2026-10
 | Capability ring, outer video-15 card and inner video-11 repeat (`RING_STILLS`) | `w02-workshop` |
 | Side-menu 预约企业演示 card, every page with the menu (`MENU_CARD`) | `g02-menu-harbour-night-768.webp` (+ `-480`) |
 | Demo band background behind the form (`.photo-section`, CSS) | `g01-cta-loading-bay-dusk-2048.webp` |
+| Enterprise page, four sticky story panels 决定 / 核对 / 连接 / 经营 (`.image-about._01`…`_04`, CSS; batch 7) | `e01-decide-2048.webp`, `e02-verify-2048.webp`, `e03-connect-2048.webp`, `e04-operate-2048.webp` |
+| Enterprise page, (老板驾驶舱) column, three pictures (`ENTERPRISE_PHOTOS.cockpit`) | `e05-cockpit-overview`, `e06-cockpit-blocker`, `e07-cockpit-budget`, 480/768/1024 |
+| Enterprise page, (原则) picture (`ENTERPRISE_PHOTOS.principle`) | `e08-emergency-stop`, 480/768/1024 |
+| Enterprise page, 五个管理组件 cards (`ENTERPRISE_PHOTOS.modules`) | `e09-capabilities`, `e10-access`, `e11-approval`, `e12-records`, `e13-key-cabinet`, 480 |
 
 ## Open Graph
 

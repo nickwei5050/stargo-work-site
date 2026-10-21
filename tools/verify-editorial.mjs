@@ -101,7 +101,9 @@ async function worker() {
     const errors = [], assets = [];
     page.on('pageerror', e => errors.push(e.message));
     page.on('response', r => { if (r.status() >= 400) errors.push(`${r.status()} ${r.url()}`); });
-    page.on('request', r => { if (/stargo-editorial/.test(r.url())) assets.push(r.url()); if (/assets\/stargo\//.test(r.url())) errors.push(`Old image requested: ${r.url()}`); });
+    /* The site's own pictures: the generated art and, since 2026-10-21, the
+       owner's photographs, which are all the enterprise page's <img>s. */
+    page.on('request', r => { if (/stargo-(?:editorial|photo)\//.test(r.url())) assets.push(r.url()); if (/assets\/stargo\//.test(r.url())) errors.push(`Old image requested: ${r.url()}`); });
     try {
       assert.equal((await page.goto(`${BASE}/${lang}${name}.html`, { waitUntil: 'load' })).status(), 200);
       // Mono's retained introductory curtain lasts several seconds. Capture
@@ -131,9 +133,10 @@ async function worker() {
         assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), 'horizontal overflow');
       }
       await page.waitForTimeout(400);
-      const imageState = await page.evaluate(() => [...document.querySelectorAll('img[src*="stargo-editorial"]')].filter(i => i.getBoundingClientRect().width > 0 && i.complete).map(i => ({ src: i.currentSrc, natural: i.naturalWidth })));
+      const OWN = 'img[src*="stargo-editorial"], img[src*="stargo-photo"]';
+      const imageState = await page.evaluate((OWN) => [...document.querySelectorAll(OWN)].filter(i => i.getBoundingClientRect().width > 0 && i.complete).map(i => ({ src: i.currentSrc, natural: i.naturalWidth })), OWN);
       assert(imageState.every(i => i.natural > 0), 'decoded images');
-      const hasImageArea = await page.locator('img[src*="stargo-editorial"]').evaluateAll(imgs => imgs.some(i => i.getBoundingClientRect().width > 0 && i.getBoundingClientRect().height > 0));
+      const hasImageArea = await page.locator(OWN).evaluateAll(imgs => imgs.some(i => i.getBoundingClientRect().width > 0 && i.getBoundingClientRect().height > 0));
       // Contact/pricing deliberately hide decorative media on small screens.
       // Keep that composition and verify those images are not downloaded.
       // Pages that use the templates' own imagery (lifelogx pages, blog) request none of the generated set.
@@ -141,10 +144,10 @@ async function worker() {
       // photographs, like the pricing page's); only the shared menu carries generated art there.
       if (hasImageArea) assert(assets.length > 0, 'visible new images requested');
       else assert((width < 992 && ['contact', 'pricing'].includes(name)) || /intelligence|workforce|blog|pricing|about/.test(name), 'only approved template-imagery pages omit generated art');
-      const card = await page.evaluate(() => [...document.querySelectorAll('img[src*="stargo-editorial"]')].find(i => {
+      const card = await page.evaluate((OWN) => [...document.querySelectorAll(OWN)].find(i => {
         const r = i.getBoundingClientRect();
         return r.width > 180 && r.height > 150 && !i.closest('.menu-wrapper,nav,.navbar,.menu-bottom');
-      })?.getBoundingClientRect().top + scrollY);
+      })?.getBoundingClientRect().top + scrollY, OWN);
       if (Number.isFinite(card)) {
         await page.evaluate(y => { if (typeof lenis !== 'undefined') lenis.scrollTo(Math.max(0, y - 170), { immediate: true }); else scrollTo(0, Math.max(0, y - 170)); }, card);
         await page.waitForTimeout(1200);

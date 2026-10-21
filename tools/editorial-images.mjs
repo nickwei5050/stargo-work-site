@@ -218,11 +218,24 @@ const photoText = {
      ~250vw on a 390 phone, whose tiles are much taller than they are wide.
    - The capability ring's card: 22rem x 20rem (12.5 x 11.9rem below 768),
      i.e. a ~560px (~330px) cover crop.
-   - The side-menu card: at most 220px wide (.contact-info). */
+   - The side-menu card: at most 220px wide (.contact-info).
+   - Enterprise page (batch 7), measured zh and en at 390/768/1024/1440/1920:
+     the cockpit column (`.work-image-cover`, cover) is 118–142px wide on a
+     phone, 235 at 768, 482 at 1024 and 681–690 from 1440, but its height
+     follows the text beside it, so the cover crop is wider than the box: at
+     most ~35vw on a phone, ~41vw at 768 and up to ~960px from 992 (the
+     English ledger at 1024, a 482x641 box). The rounded parallax picture
+     (`.image-wrap.rnd`, square, cover) crops to 374px at 390 (96vw), 473 at
+     768, 564 at 1024, 683 at 1440 and 794 at 1920. The module cards
+     (`.team-image`) draw the picture whole, 182px (47vw) on a phone, ~23vw
+     from 768 and 338px at most. */
 function photoSizes(tag, before) {
   if (/video-bg-animation/.test(before)) return '(max-width: 767px) 250vw, (max-width: 991px) 160vw, 105vw';
   if (/\bcn-video\b/.test(before)) return '(max-width: 767px) 330px, 560px';
   if (/stargo-menu-photo/.test(tag)) return '220px';
+  if (/\bwork-image-cover\b/.test(tag)) return '(max-width: 767px) 36vw, (max-width: 991px) 41vw, 960px';
+  if (/class="image-wrap rnd"/.test(before)) return '(max-width: 767px) 96vw, (max-width: 1439px) 62vw, 800px';
+  if (/class="team-image"/.test(before)) return '(max-width: 767px) 47vw, (max-width: 1439px) 23vw, 338px';
   throw new Error(`Photograph in a slot with no declared size: ${tag.slice(0, 120)}`);
 }
 export function editorialImages(html, lang) {
