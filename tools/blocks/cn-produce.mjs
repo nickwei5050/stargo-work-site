@@ -10,9 +10,12 @@
  * "Book a call" marquee rolls two rows of three copies each.
  *
  * Nothing is cloned and nothing is re-cut: the words change in four places and
- * every card keeps the clip cinery shipped in it — poster, mp4 and webm — which
- * try-block mirrors into assets/cinery/, except the cards an owner photograph
- * takes since 2026-10-21 (render(), "the owner's stills"). The three interactions this block
+ * every card kept the clip cinery shipped in it — poster, mp4 and webm — which
+ * try-block mirrors into assets/cinery/. Since 2026-10-21 every card shows one
+ * of the owner's photographs instead (render(), "the owner's stills"; the
+ * ring's cards are listed in tools/replaceables.mjs RING_STILLS), so the band
+ * fetches no clip; the extraction still reads the clips to cut the block
+ * cleanly. The three interactions this block
  * binds (a scroll loop on the pill's blur, hover in/out on the button) hang on
  * the two data-w-ids, which are untouched.
  *
@@ -129,13 +132,14 @@ export function render(frag, ctx) {
 
   /* ------------------------------------------------- the owner's stills -- */
 
-  /* A few cards show one of the owner's photographs instead of their clip
+  /* Every card shows one of the owner's photographs instead of its clip
      (tools/replaceables.mjs RING_STILLS, by video id). The card, its tilt and
      its `.cn-video` box stay; only the `<video>` becomes a still that fills
      the box (`.w-background-video > img.stargo-still`, css/stargo-fusion.css),
      as the homepage grid's stills do. The alt is a marker that
      tools/editorial-images.mjs replaces with the photograph's own sentence. */
   for (const [id, src] of Object.entries(RING_STILLS)) html = stillImage(html, id, src, 'STARGO WORK');
+  if (/<video\b/.test(html)) throw new Error('cn-produce: a ring card still holds a clip; RING_STILLS names every card');
 
   if (/Cinery|Book a call|Start Project|Produce/.test(html)) throw new Error('cn-produce: donor copy survives in the rendered block');
   return html;

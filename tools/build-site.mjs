@@ -22,7 +22,7 @@ import * as C from './copy.mjs';
 import { POSTS, BLOG_UI, postPath, featured, others, coverSrc, coverSrcset, coverAlt, formatDate, renderBody, titleHtml } from './blog.mjs';
 import { loadBlocks, art, capTitle, DONORS } from './block-lib.mjs';
 import { PRODUCT_CAPTION } from './editorial-images.mjs';
-import { HERO, HOME_MODULES, HOME_STAGES, NOTICES_CARDS } from './replaceables.mjs';
+import { HERO, HOME_MODULES, HOME_STAGES, NOTICES_CARDS, CAP_PHOTOS } from './replaceables.mjs';
 import { SITE } from './paths.mjs';
 import { webpPage } from './image-refs.mjs';
 
@@ -2016,7 +2016,9 @@ function capabilityShowcase(C, lang) {
        first paint, before anyone has scrolled to them. Holding the url in
        `data-src` until js/stargo-video-defer.js restores it changes no element,
        class, interaction id or poster: the band is the template's band, it just
-       does not arrive before the page does. */
+       does not arrive before the page does. (Since 2026-10-21 the band's cards
+       are the owner's stills, tools/replaceables.mjs RING_STILLS; the page's
+       other clips, such as the navbar orb, still go through this.) */
     {
       const sources = (h.match(/<source /g) ?? []).length;
       h = h.replace(/<video\b[^>]*>[\s\S]*?<\/video>/g, (v) => (v.includes('<source ') ? v
@@ -2038,9 +2040,14 @@ function capabilityShowcase(C, lang) {
   // Assign by buyer meaning, not image sequence: growth, customer context,
   // commercial fulfillment, workforce/governance. Parallel-team art belongs
   // at the homepage Workforce door, not beneath the Commercial label.
-  const familyArt = [BRAND.family(1), OS.inquiries, BRAND.family(2), BRAND.family(4)];
+  /* Since 2026-10-21 the four cards show the owner's photographs for the four
+     areas (tools/replaceables.mjs CAP_PHOTOS.areas, C01-C04), where
+     brand-family-01, os-inquiries, brand-family-02 and brand-family-04 were.
+     The alt is a marker that tools/editorial-images.mjs replaces with the
+     photograph's own sentence. */
+  if (CAP_PHOTOS.areas.length !== 4) throw new Error('capabilities: one photograph per area card');
   ['699b6466d5f19893993a4d79_work-1.webp', '699b6466d5f19893993a4d1a_work-4.webp', '699b6466d5f19893993a4d34_work-5.webp', '699b6466d5f19893993a4d8f_work-8.webp']
-    .forEach((k, i) => { h = swapImg(h, k, familyArt[i]); });
+    .forEach((k, i) => { h = swapImg(h, k, CAP_PHOTOS.areas[i], { alt: 'STARGO WORK' }); });
   return h;
 };
 

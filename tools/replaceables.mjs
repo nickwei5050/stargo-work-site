@@ -82,10 +82,102 @@ export const MENU_CARD = photoFile('g02-menu-harbour-night', 768);
  * show a still photograph instead of their clip, by the clip's video id.
  * W02 (2026-10-21) takes the outer ring's video-15 card and the inner ring's
  * card that repeats video-11.
+ *
+ * Since the owner's batches 1, 2 and 6 (2026-10-21) every card is a still.
+ * The outer ring's thirteen clips take H01-H10, P03, C08 and W02 in DOM order;
+ * the inner ring repeats the outer ring's clips, so each of its cards takes the
+ * still of the clip it repeats (video-10 twice: H09 both times), except the
+ * second repeat of video-11, which takes C08 instead of a second P03 so every
+ * still is in the inner ring too. The ids are the manifests' own.
  */
 export const RING_STILLS = {
-  '883ab066-dd39-71d8-e308-0e0f4d18fa98': photoFile('w02-workshop'),
-  '883ab066-dd39-71d8-e308-0e0f4d18fab1': photoFile('w02-workshop'),
+  /* outer ring */
+  '883ab066-dd39-71d8-e308-0e0f4d18fa80': photoFile('h01-port-blue-hour', 1024),      // video-8
+  '883ab066-dd39-71d8-e308-0e0f4d18fa82': photoFile('h02-night-inquiry', 1024),       // video-2
+  '883ab066-dd39-71d8-e308-0e0f4d18fa84': photoFile('h03-sample-wall', 1024),         // video-1
+  '883ab066-dd39-71d8-e308-0e0f4d18fa86': photoFile('h04-caliper-qc', 1024),          // video-6
+  '883ab066-dd39-71d8-e308-0e0f4d18fa88': photoFile('h05-assembly-line', 1024),       // video-4
+  '883ab066-dd39-71d8-e308-0e0f4d18fa8a': photoFile('h06-packing', 1024),             // video-3
+  '883ab066-dd39-71d8-e308-0e0f4d18fa8c': photoFile('h07-owner-walk', 1024),          // video-7
+  '883ab066-dd39-71d8-e308-0e0f4d18fa8e': photoFile('h08-product-shoot', 1024),       // video-9
+  '883ab066-dd39-71d8-e308-0e0f4d18fa90': photoFile('h09-container-loading', 1024),   // video-10
+  '883ab066-dd39-71d8-e308-0e0f4d18fa92': photoFile('h10-video-showing', 1024),       // video014
+  '883ab066-dd39-71d8-e308-0e0f4d18fa94': photoFile('p03-fulfilment', 768),           // video-11
+  '883ab066-dd39-71d8-e308-0e0f4d18fa96': photoFile('c08-product-references', 1024),  // video-16
+  '883ab066-dd39-71d8-e308-0e0f4d18fa98': photoFile('w02-workshop'),                  // video-15
+  /* inner ring, in DOM order */
+  '883ab066-dd39-71d8-e308-0e0f4d18fa9c': photoFile('h01-port-blue-hour', 1024),      // video-8
+  '883ab066-dd39-71d8-e308-0e0f4d18fa9e': photoFile('h03-sample-wall', 1024),         // video-1
+  '883ab066-dd39-71d8-e308-0e0f4d18faa0': photoFile('h02-night-inquiry', 1024),       // video-2
+  '883ab066-dd39-71d8-e308-0e0f4d18faa2': photoFile('h05-assembly-line', 1024),       // video-4
+  '883ab066-dd39-71d8-e308-0e0f4d18faa4': photoFile('h04-caliper-qc', 1024),          // video-6
+  '883ab066-dd39-71d8-e308-0e0f4d18faa6': photoFile('h07-owner-walk', 1024),          // video-7
+  '883ab066-dd39-71d8-e308-0e0f4d18faa8': photoFile('h06-packing', 1024),             // video-3
+  '883ab066-dd39-71d8-e308-0e0f4d18faaa': photoFile('h09-container-loading', 1024),   // video-10
+  '883ab066-dd39-71d8-e308-0e0f4d18faab': photoFile('p03-fulfilment', 768),           // video-11
+  '883ab066-dd39-71d8-e308-0e0f4d18faad': photoFile('h09-container-loading', 1024),   // video-10 again
+  '883ab066-dd39-71d8-e308-0e0f4d18faae': photoFile('h08-product-shoot', 1024),       // video-9
+  '883ab066-dd39-71d8-e308-0e0f4d18faaf': photoFile('c08-product-references', 1024),  // video-11, 2nd repeat
+  '883ab066-dd39-71d8-e308-0e0f4d18fab1': photoFile('w02-workshop'),                  // video-11 repeat (W02)
+  '883ab066-dd39-71d8-e308-0e0f4d18fab3': photoFile('h10-video-showing', 1024),       // video014
+};
+
+/**
+ * The capability page's other photograph slots (the owner's batches 1, 2, 5
+ * and 6, 2026-10-21), each named by the batch manifest with the picture it
+ * showed until then. Every path is the photograph's widest file; the blocks
+ * write it as the src and tools/editorial-images.mjs adds the narrower widths,
+ * the size and the manifest's alt. Crop points are in css/stargo-fusion.css
+ * (the "capability page" block). The other places the replaced files appear
+ * (the homepage, enterprise, the side menu's slides, the Growth OS rows'
+ * hover thumbnails) keep them.
+ */
+export const CAP_PHOTOS = {
+  /* 四个板块，十四类能力 (tools/build-site.mjs): the four area cards, in card
+     order, where brand-family-01, os-inquiries, brand-family-02 and
+     brand-family-04 were. */
+  areas: [
+    photoFile('c01-command-growth'),       // 指挥与增长 · #g01
+    photoFile('c02-customer-knowledge'),   // 客户与知识 · #g04
+    photoFile('c03-commerce-fulfilment'),  // 商务、履约与创作 · #g07
+    photoFile('c04-team-management'),      // 员工与管理 · #g10
+  ],
+  /* 一条业务主线 (tools/blocks/qx-orbit.mjs): the eight thumbnails that orbit
+     STARGO WORK, by the qubix file each one replaces (its name without the
+     extension; qx-rotated-one … eight, steps 01 and 03-09; step 02 has no
+     thumbnail of its own). */
+  orbit: {
+    '69ad4171521df4f0bc234d0f_Rectangle_9': photoFile('p01-prospecting', 480),          // 01 发现
+    '69ad0fbadd6325cf79cf0dea_Rectangle_5': photoFile('h10-video-showing', 1024),       // 03 触达
+    '69ad4172e2f6cf6c085066c0_Rectangle_7': photoFile('c05-unified-inbox', 768),        // 04 理解
+    '69ad417163eb1d1417d4efe7_Rectangle_11': photoFile('h02-night-inquiry', 1024),      // 05 回复
+    '69ad41712a2f75c0ed1f8027_Rectangle_10': photoFile('c07-quote-approval', 768),      // 06 报价
+    '69ad4171baff849bf5f57a38_Rectangle_8': photoFile('h09-container-loading', 1024),   // 07 执行
+    '69ad41721ce44afffca4eaf8_Rectangle_12': photoFile('d02-follow-up', 1024),          // 08 跟进
+    '69ad417169d8a230caca089c_Rectangle_6': photoFile('p05-reorder', 480),              // 09 学习
+  },
+  /* Growth OS (tools/blocks/cn-service.mjs): the four full-bleed night
+     backgrounds under the rows' 65% black wash, in row order (company
+     research, trade intelligence, reorder judgement, key decision roles).
+     GROWTH_ROWS[].art still names the hover thumbnail of a row with no
+     product screen. */
+  growth: [
+    photoFile('c11-company-research'),
+    photoFile('c12-trade-intelligence'),
+    photoFile('c13-restock'),
+    photoFile('c14-decision-makers'),
+  ],
+  /* Sales Desk (tools/blocks/qx-news.mjs, through SALES_ROWS): 统一询盘入口 and
+     客户全景. The middle row keeps its product screen. */
+  inbox: photoFile('c05-unified-inbox', 768),
+  customer360: photoFile('c06-customer-360', 1600),
+  /* 报价 (tools/blocks/rk-stats.mjs, CAP_V6A.quote.image in tools/copy.mjs). */
+  quote: photoFile('c07-quote-approval', 768),
+  /* 图片 / 视频 (tools/blocks/cn-faq.mjs): the portrait beside the accordion. */
+  creative: photoFile('c08-product-references', 1024),
+  /* 让 AI 团队把活干完 (tools/blocks/qx-projects.mjs, CAP_V6A.team.cards in
+     tools/copy.mjs): the first two cards. The third keeps its product screen. */
+  team: [photoFile('c09-288-flatlay', 1024), photoFile('c10-progress-board', 1024)],
 };
 
 /* The demo band behind the glass form (index, capabilities, enterprise) is a
@@ -187,8 +279,10 @@ export const HOME_STAGES = [
 
 /**
  * Capability page, Growth OS rows (tools/blocks/cn-service.mjs).
- * `art` is the full-bleed editorial id. `shot` is the hover thumbnail stem,
- * or null when the row keeps the editorial art.
+ * `art` was the full-bleed editorial id; since 2026-10-21 the full-bleed
+ * backgrounds are the owner's photographs (CAP_PHOTOS.growth, C11-C14) and
+ * `art` is only the hover thumbnail of a row whose `shot` (the hover
+ * thumbnail's product stem) is null.
  */
 export const GROWTH_ROWS = [
   { art: 'brand-family-01', shot: null },
@@ -199,9 +293,11 @@ export const GROWTH_ROWS = [
 
 /**
  * Capability page, Sales Desk rows (tools/blocks/qx-news.mjs).
- * An editorial id, or a product path written as-is.
+ * An editorial id, or a product or photograph path written as-is. Rows 1 and
+ * 3 are the owner's photographs since 2026-10-21 (C05, C06; they had
+ * os-desktop and os-inquiries).
  */
-export const SALES_ROWS = [OS_ART.desktop, PRODUCT.needs, OS_ART.inquiries];
+export const SALES_ROWS = [CAP_PHOTOS.inbox, PRODUCT.needs, CAP_PHOTOS.customer360];
 
 /** Capability showcase story pictures. Editorial ids. */
 export const STORY_ART = {
@@ -213,7 +309,6 @@ export const STORY_ART = {
   team: OS_ART.agentCenter,
   desktop: OS_ART.desktop,
   login: OS_ART.login,
-  quoteBand: OS_ART.quoteStudio,
   knowledge: 'brand-ontology',
   improvement: 'brand-loop',
 };
@@ -226,8 +321,10 @@ export const PLACED = {
   workforceTile: PRODUCT.teams,
   aboutBigImage: HERO.poster,
   teamCard: PRODUCT.teams,
-  creativePicture: OS_ART.boot,
 };
+/* The quote band's picture and the 图片 / 视频 portrait (STORY_ART.quoteBand
+   and PLACED.creativePicture until 2026-10-21) are CAP_PHOTOS.quote and
+   CAP_PHOTOS.creative. */
 
 if (HERO.theatre.length !== 7) throw new Error('replaceables: hero theatre is seven cells');
 if (HERO.centreIndex !== 3) throw new Error('replaceables: the film replaces theatre cell 3');

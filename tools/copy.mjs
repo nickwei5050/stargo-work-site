@@ -8,7 +8,7 @@
  * [templateString, pair, options] applied in sequence (long strings first,
  * so a short word never matches inside a sentence that is about to change).
  */
-import { STORY_ART, PLACED } from './replaceables.mjs';
+import { STORY_ART, PLACED, CAP_PHOTOS } from './replaceables.mjs';
 
 export const B = (zh, en) => ({ zh, en });
 
@@ -2078,11 +2078,14 @@ export const CAP_V6A = {
      same day: renok's picture box is portrait at 768 (260×424), so a 16:9
      interface sat in two thirds of blank white, and where the box is
      height:auto the shorter file moved the band below it. The slot is held for
-     a picture that suits it. A value starting with `assets/` is a path as
-     written; anything else is an editorial id (tools/blocks/rk-stats.mjs). */
+     a picture that suits it. Since 2026-10-21 that is the owner's photograph
+     of a quote being approved (C07, tools/replaceables.mjs CAP_PHOTOS.quote),
+     3:2 like the art it replaces, so the height:auto box keeps its size. A
+     value starting with `assets/` is a path as written; anything else is an
+     editorial id (tools/blocks/rk-stats.mjs). */
   quote: {
     steps: [B('按规则起草', 'Drafted by rules'), B('有权人批准', 'Human approval'), B('保留正式版本', 'Version kept')],
-    image: STORY_ART.quoteBand,
+    image: CAP_PHOTOS.quote,
     button: { label: B('报价能力详情', 'Quotation details'), href: '#g07' },
     /* The paragraph's closing pointer to where product facts live. */
     facts: { lead: B('价格与产品事实的依据，见', 'For the product facts behind a price, see'), label: B('产品与企业知识', 'Products & enterprise knowledge'), href: '#g06' },
@@ -2121,17 +2124,19 @@ export const CAP_V6A = {
      illustration and that the employees message each other and work in
      parallel (available, owner 2026-09-17). Links go to the
      workforce page, where M10/M11 are told in full, and to the catalogue
-     group for the role and task entries. Pictures are this site's editorial
-     art for specialised roles and parallel work. */
+     group for the role and task entries. The first two pictures are the
+     owner's photographs since 2026-10-21 (C09, C10; tools/replaceables.mjs
+     CAP_PHOTOS.team), where this site's editorial art for specialised roles
+     and parallel work was. */
   team: {
     arrowHref: 'workforce.html',
     cards: [
       { title: B(`288 个${ZW}跨部门${ZW}专业岗位`, '288 cross-functional specialist roles'),
         text: B('岗位目录，按任务选用、组队协作；不替代真人。', 'A role directory, chosen per task and working as teams — not a replacement for people.'),
-        href: 'workforce.html#lx-role-groups', pill: B('认识数字员工', 'Meet the AI Workforce'), image: 'phone-agents' },
+        href: 'workforce.html#lx-role-groups', pill: B('认识数字员工', 'Meet the AI Workforce'), image: CAP_PHOTOS.team[0] },
       { title: B(`员工任务、${ZW}进度与成果`, 'Tasks, progress and results'),
         text: B('谁在做什么、哪里在等待、交付了什么，关键动作由人批准。', 'Who is doing what, what is waiting and what was delivered, with key actions approved by people.'),
-        href: '#g10', pill: B('员工能力组', 'AI workforce group'), image: 'mobile-agents' },
+        href: '#g10', pill: B('员工能力组', 'AI workforce group'), image: CAP_PHOTOS.team[1] },
       { title: B(`团队分工、${ZW}交流、${ZW}并行与接力`, 'Roles, exchange, parallel work and handoffs'),
         text: B('协作示意：市场研究员工找到目标企业，产品员工核对规格，销售员工规划开发，创意员工准备素材；员工之间直接交流、并行推进，统筹角色复核汇总后交负责人确认。图为示意，不是实时运行画面。', 'Illustrative: research finds target accounts, a product specialist checks specifications, sales plans outreach and creative prepares assets; the employees message each other and work in parallel, and a coordinator reviews and consolidates the package for the responsible person to confirm. The picture is an illustration, not a live view.'),
         /* The picture (owner instruction, 2026-09-18) is the owner's own Expert

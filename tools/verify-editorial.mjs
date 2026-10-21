@@ -131,7 +131,10 @@ async function worker() {
         assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), 'horizontal overflow');
       }
       await page.waitForTimeout(400);
-      const imageState = await page.evaluate(() => [...document.querySelectorAll('img[src*="stargo-editorial"]')].filter(i => i.getBoundingClientRect().width > 0 && i.complete).map(i => ({ src: i.currentSrc, natural: i.naturalWidth })));
+      /* The owner's photographs (assets/stargo-photo) have taken most of the
+         generated art's places on some pages (the capability page from
+         2026-10-21), so they are decoded here too. */
+      const imageState = await page.evaluate(() => [...document.querySelectorAll('img[src*="stargo-editorial"], img[src*="stargo-photo"]')].filter(i => i.getBoundingClientRect().width > 0 && i.complete).map(i => ({ src: i.currentSrc, natural: i.naturalWidth })));
       assert(imageState.every(i => i.natural > 0), 'decoded images');
       const hasImageArea = await page.locator('img[src*="stargo-editorial"]').evaluateAll(imgs => imgs.some(i => i.getBoundingClientRect().width > 0 && i.getBoundingClientRect().height > 0));
       // Contact/pricing deliberately hide decorative media on small screens.

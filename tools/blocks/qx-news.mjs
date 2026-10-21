@@ -56,6 +56,10 @@ const PICKS = ['Unified Inbox', 'Buyer Requirement Extraction', 'Account Overvie
  * reply under it. An entry may therefore be an editorial id or a path written
  * out; `pic` below resolves both, and tools/editorial-images.mjs gives either
  * kind its alt, its size and its variants.
+ *
+ * Rows 01 and 03 are the owner's photographs since 2026-10-21 (C05, a stack of
+ * printed inquiries settled into one letter tray; C06, one customer's file laid
+ * out on a table), where the editorial art was; row 02 keeps its screen.
  */
 const ROW_ART = SALES_ROWS;
 /** An editorial id (assets/stargo-editorial) or a path exactly as written. */

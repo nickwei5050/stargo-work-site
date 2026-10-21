@@ -17,6 +17,10 @@
  * Without IntersectionObserver every video is restored immediately, which is
  * the behaviour the template itself has.
  *
+ * Since 2026-10-21 that band's 27 cards show the owner's still photographs
+ * (tools/replaceables.mjs RING_STILLS), so it fetches no clip at all; the
+ * other donor clips on the site still come through here.
+ *
  * Since 2026-10-21 every page's template clips go through this (tools/chrome.mjs
  * writes the markup), with two refinements:
  *   - A reader who asks for reduced motion gets the poster frames and no

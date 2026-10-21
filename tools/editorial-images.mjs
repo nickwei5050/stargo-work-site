@@ -216,13 +216,64 @@ const photoText = {
      ~2300 px while it is still off screen) down to ~55vw. Measured halfway
      through, the cover crop is ~105vw wide at 992 and up, ~160vw at 768 and
      ~250vw on a 390 phone, whose tiles are much taller than they are wide.
-   - The capability ring's card: 22rem x 20rem (12.5 x 11.9rem below 768),
-     i.e. a ~560px (~330px) cover crop.
-   - The side-menu card: at most 220px wide (.contact-info). */
-function photoSizes(tag, before) {
+   - The capability ring's card: a 344 x 312 box (192 x 182 below 768),
+     i.e. a ~560px (~330px) cover crop for a 16:9 picture.
+   - The side-menu card: at most 220px wide (.contact-info).
+   The capability page's other slots (the owner's batches 1, 2, 5 and 6) are
+   measured in the browser at 320-1920 and listed after the menu card. Where a
+   slot's box is fixed in px, coverSizes() works the cover-cropped width out
+   of the box and the picture's own shape, so a square, a 3:2 and a 16:9
+   picture in the same box each name the width they are really drawn at. */
+const coverWidth = (photo, w, h) => Math.ceil(Math.max(w, (h * photo.width) / photo.height) / 10) * 10;
+/** [[media, boxWidth, boxHeight] …], the last with no media: a sizes list. */
+const coverSizes = (photo, boxes) => boxes.map(([media, w, h]) => `${media ? `${media} ` : ''}${coverWidth(photo, w, h)}px`).join(', ');
+/* Below 480 the Sales Desk cards are as wide as the column and as tall as the
+   picture's own shape would make them (qubix: height auto), so
+   css/stargo-fusion.css keeps the shape the art before them gave each card:
+   16:9 for the inbox (C05), square for the customer file (C06). */
+const SALES_PHONE_RATIO = { 'c05-unified-inbox': 16 / 9, 'c06-customer-360': 1 };
+function photoSizes(tag, before, photo) {
   if (/video-bg-animation/.test(before)) return '(max-width: 767px) 250vw, (max-width: 991px) 160vw, 105vw';
-  if (/\bcn-video\b/.test(before)) return '(max-width: 767px) 330px, 560px';
+  if (/\bcn-video\b/.test(before)) return coverSizes(photo, [['(max-width: 767px)', 192, 182], [null, 344, 312]]);
   if (/stargo-menu-photo/.test(tag)) return '220px';
+  /* Capability page, 四个板块: the four area cards, 96vw wide (1400px at most)
+     and 255 / 420 / 532 / 756px tall from the phone up. */
+  if (/paralax-image/.test(tag) && /href="#g\d\d" class="work-main-wrapper/.test(before)) {
+    return coverSizes(photo, [['(max-width: 479px)', 460, 255], ['(max-width: 767px)', 736, 420], ['(max-width: 991px)', 951, 532], ['(max-width: 1439px)', 1382, 756], [null, 1400, 756]]);
+  }
+  /* Capability page, 一条业务主线: the orbit thumbnails, 148 x 168 from 1280,
+     130 x 150 below, 100 x 130 below 768 and 60 x 80 below 480. */
+  if (/qx-rotated-images/.test(before)) {
+    return coverSizes(photo, [['(max-width: 479px)', 60, 80], ['(max-width: 767px)', 100, 130], ['(max-width: 1279px)', 130, 150], [null, 148, 168]]);
+  }
+  /* Capability page, Growth OS: the full-bleed backgrounds, as wide as the
+     page and 1157px tall at 1440 (1051-1320 below 992, where only the first
+     one is drawn), so wider than the page wherever the section is taller than
+     the picture's shape. */
+  if (/cn-service-bg-image/.test(tag)) {
+    return `${coverSizes(photo, [['(max-width: 767px)', 767, 1320], ['(max-width: 991px)', 991, 1051], ['(max-width: 1739px)', 1440, 1157]])}, 100vw`;
+  }
+  /* Capability page, Sales Desk cards: 349 x 244 (223-261 wide at 992-1279),
+     200 tall at 480-767, and below 480 the column's width at the card's
+     phone shape (SALES_PHONE_RATIO). */
+  if (/qx-blog-item-image/.test(before)) {
+    const ratio = SALES_PHONE_RATIO[photo.id];
+    if (!ratio) throw new Error(`Sales Desk card without a phone shape: ${photo.id}`);
+    const phone = Math.ceil(92 * Math.max(1, photo.width / photo.height / ratio));
+    return `(max-width: 479px) ${phone}vw, ${coverSizes(photo, [['(max-width: 767px)', 290, 200], [null, 349, 244]])}`;
+  }
+  /* Capability page, 报价: the quote picture, 3:2 below 480 (92vw), 252-330 x
+     348 below 768, 260-380 x 424 below 1280, then 3:2 again at about a third
+     of the page (439 x 292 at 1440, 630 x 420 at 1920). */
+  if (/rk-rt-image-apperance/.test(tag)) {
+    return `(max-width: 479px) 92vw, ${coverSizes(photo, [['(max-width: 767px)', 330, 348], ['(max-width: 1279px)', 380, 424]])}, 33vw`;
+  }
+  /* Capability page, 图片 / 视频: the portrait card, about 92vw and a little
+     taller than wide below 992, 440-640 x 857-955 below 1440, 760 x 857 at 1920. */
+  if (/cn-faq-image/.test(tag)) return `(max-width: 991px) 92vw, ${coverSizes(photo, [['(max-width: 1439px)', 640, 955], [null, 760, 857]])}`;
+  /* Capability page, 让 AI 团队把活干完: the two upper cards, 288-492 x 350
+     below 768, 703 x 500 below 992 and 464-632 x 724 above. */
+  if (/qx-project-img/.test(tag)) return `(max-width: 767px) 92vw, ${coverSizes(photo, [['(max-width: 991px)', 703, 500], [null, 632, 724]])}`;
   throw new Error(`Photograph in a slot with no declared size: ${tag.slice(0, 120)}`);
 }
 export function editorialImages(html, lang) {
@@ -236,7 +287,7 @@ export function editorialImages(html, lang) {
       const text = photoText[photo.id]?.[lang === 'zh' ? 0 : 1];
       if (!text) throw new Error(`Photograph without alt text: ${photo.id}`);
       const alt = /\balt=""/.test(tag) ? '' : text;
-      const sizes = photoSizes(tag, page.slice(Math.max(0, offset - 160), offset));
+      const sizes = photoSizes(tag, page.slice(Math.max(0, offset - 160), offset), photo);
       const variants = [...photo.variants, photo];
       const result = tag.replace(/\s(?:alt|srcset|sizes|width|height|decoding)="[^"]*"/g, '');
       const attrs = [`alt="${alt}"`, `width="${photo.width}"`, `height="${photo.height}"`, 'decoding="async"', `srcset="${variants.map(v => `${v.src} ${v.width}w`).join(', ')}"`, `sizes="${sizes}"`];

@@ -62,14 +62,14 @@ Capability-page story pictures (`STORY_ART`, editorial ids):
 | AI team | `assets/stargo-editorial/os-agent-center.webp` |
 | Connections | `assets/stargo-editorial/os-desktop.webp` |
 | Approvals | `assets/stargo-editorial/os-login.webp` |
-| Quote band | `assets/stargo-editorial/os-quote-studio.webp` |
 | Knowledge | `assets/stargo-editorial/brand-ontology.webp` |
 | Improvement | `assets/stargo-editorial/brand-loop.webp` |
-| Creative section still (`PLACED.creativePicture`) | `assets/stargo-editorial/os-boot.webp` |
 
-Growth OS row hover shots (`GROWTH_ROWS`): row 1 keeps `brand-family-01`; rows 2–4 use `gos01-market-thesis`, `gos09-reorder-radar`, `gos05-buying-committee`.
+The quote band's picture and the creative section still (`STORY_ART.quoteBand` and `PLACED.creativePicture` until 2026-10-21) are owner photographs now: `CAP_PHOTOS.quote` and `CAP_PHOTOS.creative`, below.
 
-Sales Desk rows (`SALES_ROWS`): `os-desktop`, `sw028-sales-desk-inquiry-reply`, `os-inquiries`.
+Growth OS row hover shots (`GROWTH_ROWS`): row 1 keeps `brand-family-01`; rows 2–4 use `gos01-market-thesis`, `gos09-reorder-radar`, `gos05-buying-committee`. The rows' full-bleed backgrounds are owner photographs since 2026-10-21 (`CAP_PHOTOS.growth`, below).
+
+Sales Desk rows (`SALES_ROWS`): `c05-unified-inbox` (owner photograph), `live52-mobile-case-needs`, `c06-customer-360` (owner photograph).
 
 Notices “keep reading” cards (`NOTICES_CARDS`): `sw003-ai-workspace-home`, `sw004-experts-library`, `sw033-sales-desk-document-pack`.
 
@@ -97,12 +97,19 @@ All released screens live in `assets/stargo-product/`. Ids:
 
 ## Owner photographs
 
-Graded photographs from the owner's image thread (`site-images/batch-3`, 2026-10-21), in `assets/stargo-photo/`, registered in `tools/imagegen/photo-assets.json` (source file, SHA-256, pixels, every width) by `tools/imagegen/prepare-photos.mjs`. Alt text is in `tools/editorial-images.mjs`, crop points in `css/stargo-fusion.css`. Every file name carries its width and is never overwritten (`/assets` is cached immutable for a year): a new picture gets a new id.
+Graded photographs from the owner's image thread (`site-images/batch-1` to `batch-8`, 2026-10-21), in `assets/stargo-photo/`, registered in `tools/imagegen/photo-assets.json` (source file, SHA-256, pixels, every width) by `tools/imagegen/prepare-photos.mjs`. Alt text is in `tools/editorial-images.mjs`, crop points in `css/stargo-fusion.css`. Every file name carries its width and is never overwritten (`/assets` is cached immutable for a year): a new picture gets a new id.
 
 | Slot | File on disk |
 | --- | --- |
 | Homepage grid (`HERO.theatre`, above) | `w01-trade-office` … `w06-showroom`, 480/768/1024/1600/2048 |
-| Capability ring, outer video-15 card and inner video-11 repeat (`RING_STILLS`) | `w02-workshop` |
+| Capability ring, all 27 cards (`RING_STILLS`, by video id): the outer ring's 13 clips in DOM order, the inner ring repeating them | `h01`-`h10`, `p03-fulfilment`, `c08-product-references`, `w02-workshop` |
+| Capability page, 四个板块 area cards (`CAP_PHOTOS.areas`) | `c01-command-growth` … `c04-team-management`, 480-2048 |
+| Capability page, 一条业务主线 orbit thumbnails (`CAP_PHOTOS.orbit`, by the qubix file replaced) | `p01`, `h10`, `c05`, `h02`, `c07`, `h09`, `d02`, `p05` (steps 01, 03-09) |
+| Capability page, Growth OS full-bleed backgrounds (`CAP_PHOTOS.growth`) | `c11-company-research` … `c14-decision-makers`, 480-2048 |
+| Capability page, Sales Desk cards 1 and 3 (`CAP_PHOTOS.inbox`, `.customer360`, via `SALES_ROWS`) | `c05-unified-inbox`, `c06-customer-360` |
+| Capability page, quote band (`CAP_PHOTOS.quote`, via `CAP_V6A.quote.image`) | `c07-quote-approval` |
+| Capability page, 图片 / 视频 portrait (`CAP_PHOTOS.creative`) | `c08-product-references` |
+| Capability page, AI team cards 1 and 2 (`CAP_PHOTOS.team`, via `CAP_V6A.team.cards`) | `c09-288-flatlay`, `c10-progress-board` |
 | Side-menu 预约企业演示 card, every page with the menu (`MENU_CARD`) | `g02-menu-harbour-night-768.webp` (+ `-480`) |
 | Demo band background behind the form (`.photo-section`, CSS) | `g01-cta-loading-bay-dusk-2048.webp` |
 
