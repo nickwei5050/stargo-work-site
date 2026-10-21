@@ -52,14 +52,22 @@ for (const a of products) {
      live<NN>-, NN being the capture's own number in that folder, e.g.
      live23-erp-items-16x9 comes from clean/23-erp-items.png. */
   const live = a.id.match(/^live(\d{2})-/);
+  /* The phone captures of the same day (site-images/mobile) are named
+     m<NN>-, NN being the file's own number in that folder, e.g.
+     m01-mobile-quotes-screen comes from mobile/m01-quotes-list.png. */
+  const mobile = a.id.match(/^m(\d{2})-/);
   const source = a.sourceFile?.match(/image(\d+)\.(?:png|webp)$/i);
-  if (!id && !live) throw new Error(`Product image ids keep their source number: ${a.id}`);
+  if (!id && !live && !mobile) throw new Error(`Product image ids keep their source number: ${a.id}`);
   if (id && source && Number(id[1]) !== Number(source[1])) {
     throw new Error(`Product image id and source disagree: ${a.id} is ${a.sourceFile}`);
   }
   if (live) {
     const capture = a.sourceFile?.match(/screens-final\/(?:clean|slot-crops)\/(?:[a-z]+-row\d+-)?(\d{2})-[\w-]+\.png$/);
     if (!capture || capture[1] !== live[1]) throw new Error(`Product image id and source disagree: ${a.id} is ${a.sourceFile}`);
+  }
+  if (mobile) {
+    const capture = a.sourceFile?.match(/^site-images\/mobile\/m(\d{2})-[\w-]+\.png$/);
+    if (!capture || capture[1] !== mobile[1]) throw new Error(`Product image id and source disagree: ${a.id} is ${a.sourceFile}`);
   }
   byId.set(a.id, a);
 }
@@ -108,6 +116,10 @@ const productText = {
   'live52-mobile-case-needs': ['买方需求提取：型号 DEMO C300、数量 4 直接列在买家原话上方', 'Buyer need extraction: model DEMO C300 and quantity 4 listed right above the buyer\u2019s own words'],
   'live52-mobile-case-screen': ['在手机上回询盘：英文来信可一键翻译，AI 给出下一步建议并起草回复，提交审批后才会发给客户', 'Answering an inquiry on a phone: the incoming message can be translated in one tap, AI suggests the next step and drafts a reply, and nothing reaches the customer before approval'],
   'live51-mobile-board-screen': ['手机上的成交看板：待回复、待审批和成交信号一目了然，等你批的报价单随时处理', 'The deal board on a phone: replies due, approvals waiting and buying signals at a glance, with the quote awaiting your approval one tap away'],
+  /* The owner's own alts from site-images/mobile/manifest.json, word for word:
+     they already end with their demo-data note, so none is added below. */
+  'm01-mobile-quotes-screen': ['手机上的报价列表：一份报价等你审批，金额和有效期一目了然，另外两条还缺信息不能报价。产品界面示意（演示数据）', 'Quotes on mobile: one quote waiting for your approval with its amount and expiry, two more still missing details. Product UI (demo data)'],
+  'm04-mobile-followups-screen': ['手机上的跟进提醒：每条都写明到期时间、过了几天和下一步该做什么。产品界面示意（演示数据）', 'Follow-ups on mobile: each item shows when it was due, how overdue it is and the next step. Product UI (demo data)'],
   'live18-quote-approval-16x9': ['销售工作台的报价审批：从邮件接入到 PI 单据每一步的状态，待审批的报价单独列出，只能由人批准', 'Quote approval in the sales workbench: the status of every step from incoming email to PI, with the quote awaiting approval listed on its own and approvable only by a person'],
 };
 export const PRODUCT_CAPTION = { zh: '产品界面示意（演示数据）', en: 'Illustrative product interface · demo data' };
@@ -184,7 +196,9 @@ export function editorialImages(html, lang) {
     const product = productText[id];
     const decorative = /\balt=""/.test(tag) || id.startsWith('avatar-');
     const text = (product ?? descriptions[id])?.[lang === 'zh' ? 0 : 1];
-    const suffix = product
+    const suffix = product && /演示数据|demo data/.test(text)
+      ? ''
+      : product
       ? (lang === 'zh' ? `。${PRODUCT_CAPTION.zh}` : ` — ${PRODUCT_CAPTION.en}`)
       : CONCEPT_CAPTION[lang === 'zh' ? 'zh' : 'en'];
     const alt = decorative || !text ? '' : `${text}${suffix}`;

@@ -1041,6 +1041,22 @@ function lxPage(spec, lang, name) {
       if ((b.match(new RegExp(`<img\\b[^>]*${key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'g')) ?? []).length !== 3) throw new Error(`${name}: expected the phone screen ${key} in three mockups`);
       b = swapImg(b, key, src, product ? { alt: PRODUCT_CAPTION[lang] } : {});
     }
+    /* The hero's phone (.lx-integrations-image-hero) also shows real phone
+       captures on its third and fourth screens (site-images/mobile m01 and
+       m04, demonstration data, with the same status-bar band as 51 and 52):
+       the quotes list with one quote waiting for approval, and the
+       follow-ups with their due times and next steps. Only the hero's two
+       slots change; the other two mockups and the hand-held phone keep
+       mobile-agents and mobile-core. */
+    const HERO_SCREENS = [
+      ['lx-_3', 'assets/stargo-product/m01-mobile-quotes-screen.webp'],   // was mobile-agents → the quotes list
+      ['lx-_4', 'assets/stargo-product/m04-mobile-followups-screen.webp'], // was mobile-core → the follow-ups
+    ];
+    for (const [slot, src] of HERO_SCREENS) {
+      const key = `class="lx-integrations-image-hero ${slot}"`;
+      if ((b.match(/<img\b[^>]*>/g) ?? []).filter((tag) => tag.includes(key)).length !== 1) throw new Error(`${name}: expected one hero phone screen ${slot}`);
+      b = swapImg(b, key, src, { alt: PRODUCT_CAPTION[lang] });
+    }
   }
   /* V7-LX: the hand-held phone of the "no writing" band (no-writing-sc) is a
      cut-out composite whose screen carries the template's English interface
