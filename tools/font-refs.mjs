@@ -16,15 +16,17 @@
  */
 import { readFileSync, existsSync } from 'node:fs';
 import { SITE } from './paths.mjs';
+import { webpSheet } from './image-refs.mjs';
 
 const MANIFEST = `${SITE}/tools/data/font-woff2.json`;
 let map = null;
 const load = () => (map ??= existsSync(MANIFEST) ? JSON.parse(readFileSync(MANIFEST, 'utf8')).fonts : {});
 
-/** `url("../assets/x.ttf") format("truetype")` → `url("../assets/x.woff2") format("woff2")`, for every font in the manifest. */
+/** `url("../assets/x.ttf") format("truetype")` → `url("../assets/x.woff2") format("woff2")`, for every font in the manifest;
+    and, through tools/image-refs.mjs, every heavy JPEG/PNG to its WebP copy. */
 export function woff2Refs(css) {
   const fonts = load();
-  return css.replace(/url\((["']?)((?:\.\.\/)?)(assets\/[^"')]+?\.(?:ttf|otf))\1\)(\s*)format\((["'])(?:truetype|opentype)\5\)/gi, (m, q, up, path, sp, fq) => {
+  return webpSheet(css).replace(/url\((["']?)((?:\.\.\/)?)(assets\/[^"')]+?\.(?:ttf|otf))\1\)(\s*)format\((["'])(?:truetype|opentype)\5\)/gi, (m, q, up, path, sp, fq) => {
     const to = fonts[decodeURI(path)];
     if (!to) return m;
     return `url(${q}${up}${encodeURI(to)}${q})${sp}format(${fq}woff2${fq})`;

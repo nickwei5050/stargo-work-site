@@ -24,6 +24,7 @@ import { loadBlocks, art, capTitle, DONORS } from './block-lib.mjs';
 import { PRODUCT_CAPTION } from './editorial-images.mjs';
 import { HERO, HOME_MODULES, HOME_STAGES, NOTICES_CARDS } from './replaceables.mjs';
 import { SITE } from './paths.mjs';
+import { webpPage } from './image-refs.mjs';
 
 /** The capability page's donor blocks, one module each in tools/blocks. */
 const CAP_BLOCKS = await loadBlocks();
@@ -2239,6 +2240,7 @@ for (const lang of C.LANGS) {
     let html = build(lang);
     html = applyChrome(html, { lang, current: name });
     html = remapLinks(html);
+    html = webpPage(html);
     assertInternalLinks(html, `${lang}/${name}`);
     const body = html.slice(html.indexOf('<body'));
     {

@@ -263,10 +263,10 @@ body.lx-page .navigation-top .lottie-white { filter: none; }
 .image-about._03 { background-image: url("../assets/stargo-editorial/os-login.webp"); }
 .image-about._04 { background-image: url("../assets/stargo-editorial/os-trade-execution.webp"); }
 .absolute-photo { background-image: url("../assets/stargo-editorial/os-cockpit.webp"); }
-.team-small-card { background-image: url("../assets/stargo-editorial/avatar-01.png"); }
-.team-small-card._02 { background-image: url("../assets/stargo-editorial/avatar-04.png"); }
-.team-small-card._03 { background-image: url("../assets/stargo-editorial/avatar-06.png"); }
-.team-small-card._04 { background-image: url("../assets/stargo-editorial/avatar-09.png"); }
+.team-small-card { background-image: url("../assets/stargo-editorial/avatar-01.png.webp"); }
+.team-small-card._02 { background-image: url("../assets/stargo-editorial/avatar-04.png.webp"); }
+.team-small-card._03 { background-image: url("../assets/stargo-editorial/avatar-06.png.webp"); }
+.team-small-card._04 { background-image: url("../assets/stargo-editorial/avatar-09.png.webp"); }
 
 /* 5. lifelogx pages (Intelligence, AI Workforce, About, Blog, articles) keep the
       template's own palette, gradients and imagery (owner decision, 2026-09-06).
