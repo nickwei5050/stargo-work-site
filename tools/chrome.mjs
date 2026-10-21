@@ -82,15 +82,16 @@ function replaceInner(html, el, inner) {
   return html.slice(0, el.start + openEnd) + inner + html.slice(el.end - closeLen);
 }
 
-/** A `w-background-video` block becomes a still image (same box, same interactions, no video). */
-export function stillImage(html, videoId, src, alt = '') {
+/** A `w-background-video` block becomes a still image (same box, same interactions, no video).
+ *  `cls` names the still; a slot that needs its own size or crop adds a class after `stargo-still`. */
+export function stillImage(html, videoId, src, alt = '', cls = 'stargo-still') {
   const i = html.indexOf(`id="${videoId}-video"`);
   if (i === -1) throw new Error(`still: video ${videoId} not found`);
   const vStart = html.lastIndexOf('<video', i);
   const vEnd = html.indexOf('</video>', i) + '</video>'.length;
   const wrapStart = html.lastIndexOf('<div', vStart);
   let wrap = html.slice(wrapStart, vStart).replace(/\s*data-(video-urls|poster-url|autoplay|loop)="[^"]*"/g, '');
-  return html.slice(0, wrapStart) + wrap + `<img src="${src}" alt="${alt}" loading="lazy" class="stargo-still"/>` + html.slice(vEnd);
+  return html.slice(0, wrapStart) + wrap + `<img src="${src}" alt="${alt}" loading="lazy" class="${cls}"/>` + html.slice(vEnd);
 }
 
 /* -------------------------------------------------------------- parts -- */

@@ -221,6 +221,64 @@ export const STORY_ART = {
 /** Notices “keep reading” cards, in card order. */
 export const NOTICES_CARDS = [PRODUCT.workspaceHome, PRODUCT.expertsLibrary, PRODUCT.quoteApproval];
 
+/**
+ * The owner's photographs on about, contact, pricing and workforce
+ * (2026-10-21; site-images/batch-4, batch-5 and batch-8), slot by slot. Each
+ * value is the photograph's widest file; tools/editorial-images.mjs writes the
+ * narrower ones into the srcset, the alt and the size, and
+ * css/stargo-fusion.css (the "pages" block at its end) the crop point. Only
+ * these slots change: every file they replace keeps its other places.
+ *
+ * The about page's introduction band behind 「从真实业务出发…」 (A01, the
+ * empty workshop at dawn) is a CSS background: css/stargo-fusion.css.
+ */
+/** The four scenario slides of the testimonial slider on about.html
+ *  (tools/blocks/cn-about-reviews.mjs) and pricing.html (cn-reviews.mjs),
+ *  keyed by the cinery portrait each one showed (R1–R4, the slides' own
+ *  order: sales rep, trade manager, sales director, general manager). Only
+ *  the slides' cover picture changes; the 56px avatars in the pricing card's
+ *  rating block keep the template portraits. */
+export const ROLE_SLIDES = {
+  '695ffb11547e68b53adbfd91_client-04': photoFile('r1-sales-rep', 1639),
+  '695ffb11eb1deaba179419b4_client-02': photoFile('r2-trade-manager', 1024),
+  '695ffb115a835fdec642a548_client-03': photoFile('r3-sales-director', 1024),
+  '695ffb11be2d7e781e33b929_client-01': photoFile('r4-general-manager', 1024),
+};
+/** about.html's four AI-employee tiles (tools/blocks/cn-about-projects.mjs),
+ *  by the clip's video id: a still in place of each cinery case-study film,
+ *  matched by the tile's role (D01 市场信号, D07 报价, D02 跟进, D05 统筹). */
+export const ABOUT_CASE_STILLS = {
+  'fb6f08c0-bccf-aeab-a33d-45198963fe74': photoFile('d01-market-research', 1024),
+  'fb6f08c0-bccf-aeab-a33d-45198963fe90': photoFile('d07-quotation', 1024),
+  'fb6f08c0-bccf-aeab-a33d-45198963feae': photoFile('d02-follow-up', 1024),
+  'fb6f08c0-bccf-aeab-a33d-45198963feca': photoFile('d05-coordination', 1024),
+};
+/** contact.html's quote card (`.testimonials-card._03.rl`, beside the
+ *  form): K01, the meeting table, as a still where the template's
+ *  Professional Portrait film played. */
+export const CONTACT_CARD = photoFile('k01-meeting-table', 768);
+/** workforce.html's five marquee role cards (`.lx-feature-hero-card.lx-_1`
+ *  … `lx-_5`, each drawn twice for the loop) and the collage card in the
+ *  desktop item (报告 AI 员工), keyed by the lifelogx asset id of the
+ *  picture each showed (D01–D06). */
+export const WORKFORCE_ROLES = {
+  '6941e78a09a85d0bd053b266': photoFile('d01-market-research', 1024),   // Item → Variant 1
+  '694ab25174cbe821ec5d8930': photoFile('d02-follow-up', 1024),         // ChatGPT Image Dec 23, 2025, 04_16_19 PM
+  '6942777374324a552a47ab30': photoFile('d03-product-spec', 480),       // Link - image 64 → bELwQd7…
+  '694277a49143d5ea0557c371': photoFile('d04-finance', 480),            // Link - image 64 → ujtmvGk…
+  '694aada59524a64f6280d410': photoFile('d05-coordination', 1024),      // ChatGPT Image Dec 23, 2025, 03_56_21 PM
+  '694277bf9dc048830e6fca2e': photoFile('d06-reporting', 480),          // Link - image 64 → V9yoYRx… (the collage card)
+};
+/** workforce.html's three article cards under 文章 / 我们写下来的 (B01–B03),
+ *  by article slug. They showed the articles' covers, which are fitted
+ *  product screenshots (tools/blog-covers.mjs: sw004, sw008, sw028); the
+ *  blog index, the articles and the share images keep those covers. */
+export const WORKFORCE_BLOG_COVERS = {
+  'stargo-work-visual-guide': photoFile('b01-visual-guide', 1600),
+  'start-with-one-workflow': photoFile('b02-one-workflow', 1600),
+  'from-inquiry-to-quote': photoFile('b03-inquiry-to-quote', 1600),
+};
+
 /** Workforce / About pictures that reuse a hero or product slot. */
 export const PLACED = {
   workforceTile: PRODUCT.teams,

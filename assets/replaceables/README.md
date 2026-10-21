@@ -106,6 +106,17 @@ Graded photographs from the owner's image thread (`site-images/batch-3`, 2026-10
 | Side-menu 预约企业演示 card, every page with the menu (`MENU_CARD`) | `g02-menu-harbour-night-768.webp` (+ `-480`) |
 | Demo band background behind the form (`.photo-section`, CSS) | `g01-cta-loading-bay-dusk-2048.webp` |
 
+About, contact, pricing and workforce photographs (group "pages", batches 4, 5 and 8; `about`, `contact`, `pricing` and `workforce`, zh and en, only; slots in `tools/replaceables.mjs`):
+
+| Slot | File on disk |
+| --- | --- |
+| About introduction band behind 「从真实业务出发…」, `.cn-about .cn-intro-background` (CSS background, so no alt) | `a01-empty-workshop-2048.webp` |
+| About 数字员工 tiles 1–4, a still in each case-study clip's box (`ABOUT_CASE_STILLS`, by the clip's video id: 市场信号, 报价, 跟进, 统筹) | `d01-market-research`, `d07-quotation`, `d02-follow-up`, `d05-coordination`, 480/768/1024 |
+| Scenario slides 1–4 on about and pricing, `.cn-cover-image` (`ROLE_SLIDES`, by the cinery portrait; the pricing card's 56px avatars keep the portraits) | `r1-sales-rep-1639` (+ 480/768/1024), `r2-trade-manager-1024`, `r3-sales-director-1024`, `r4-general-manager-1024` |
+| Contact quote card, in place of the Professional Portrait film (`CONTACT_CARD`) | `k01-meeting-table-768.webp` (+ `-480`) |
+| Workforce role cards: the five marquee cards, each twice, and the collage card (`WORKFORCE_ROLES`, by the lifelogx asset id) | `d01-market-research-1024`, `d02-follow-up-1024`, `d03-product-spec-480`, `d04-finance-480`, `d05-coordination-1024`, `d06-reporting-480` |
+| Workforce article cards under 文章 (`WORKFORCE_BLOG_COVERS`, by article slug; the blog index and the articles keep `assets/blog/`) | `b01-visual-guide`, `b02-one-workflow`, `b03-inquiry-to-quote`, all `-1600` |
+
 ## Open Graph
 
 | | |

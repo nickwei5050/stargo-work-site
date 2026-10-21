@@ -364,25 +364,28 @@ for (const lang of ['', 'en/']) {
       const label = c.label[lang === 'en/' ? 'en' : 'zh'];
       assert(roles.includes(label), `About names the role ${label}`);
     }
-    /* The tiles play cinery's own four clips. They were briefly replaced by four
-       still images on 2026-09-15 and the owner reverted that the same day —
-       「11.3 MB 无引用的 cinery 案例片，帮我恢复原模版」 — so these three assertions
-       are the inverted form of the ones that swap put here, kept rather than
-       deleted so the band stays guarded either way. Each tile is one `<video>`
-       with an mp4 and a webm; the band's only `<img>`s are the two copies of the
-       STARGO wordmark each tile stacks for its hover roll (8 in all). What must
-       NOT come back with the clips is a client name, a year or a logoipsum
-       mark — the role names asserted above are what the tile line says. */
-    assert.equal(await page.locator('.cn-about-projects video').count(), 4, 'four donor clips');
-    assert.equal(await page.locator('.cn-about-projects source').count(), 8, 'an mp4 and a webm per clip');
-    assert.equal(await page.locator('.cn-about-projects img.stargo-still').count(), 0,
-      'the still-image version of this band was reverted; the tiles play the template clips');
-    /* And every one of them is served from this origin. `data-src` as well as
-       `src`, so wiring js/stargo-video-defer.js into the About page later does
-       not turn this into a false failure. */
-    const clipSrcs = await page.locator('.cn-about-projects source')
-      .evaluateAll((ss) => ss.map((s) => s.getAttribute('src') || s.getAttribute('data-src')));
-    for (const src of clipSrcs) assert.match(src ?? '', /(?:^|\/)assets\/cinery\//, `clip served locally: ${src}`);
+    /* The tiles' pictures. cinery's four case-study clips played here from
+       2026-09-15 (the owner reverted a still-image version the same day —
+       「11.3 MB 无引用的 cinery 案例片，帮我恢复原模版」); since 2026-10-21 each
+       tile shows the owner's own photograph of its role instead
+       (site-images/batch-5 D01, D07, D02, D05; tools/replaceables.mjs
+       ABOUT_CASE_STILLS), as a still in the clip's box. So the band holds no
+       clip, and exactly four stills, each an owner photograph with its own
+       alt, filling its box. The band's other `<img>`s are the two copies of
+       the STARGO wordmark each tile stacks for its hover roll. What must NOT
+       come back is a client name, a year or a logoipsum mark — the role names
+       asserted above are what the tile line says. */
+    assert.equal(await page.locator('.cn-about-projects video, .cn-about-projects source').count(), 0, 'the tiles show stills, not clips');
+    const stills = await page.locator('.cn-about-projects .cn-case-video > img.stargo-still').evaluateAll((imgs) => imgs.map((i) => {
+      const r = i.getBoundingClientRect(); const b = i.parentElement.getBoundingClientRect();
+      return { src: i.getAttribute('src'), alt: i.getAttribute('alt') ?? '', fills: Math.abs(r.width - b.width) < 2 && Math.abs(r.height - b.height) < 2 };
+    }));
+    assert.equal(stills.length, 4, 'one still per tile');
+    stills.forEach((s, i) => {
+      assert.match(s.src ?? '', /(?:^|\/)assets\/stargo-photo\/(?:d01-market-research|d07-quotation|d02-follow-up|d05-coordination)-\d+\.webp$/, `tile ${i + 1} shows the owner's photograph: ${s.src}`);
+      assert(s.alt.length > 20, `tile ${i + 1}'s still carries its own alt: "${s.alt}"`);
+      assert(s.fills, `tile ${i + 1}'s still fills its box`);
+    });
     assert(await page.locator('.cn-about a[href$="contact.html"]').count() >= 1, 'About reaches the contact page');
     const intro = await page.locator('.cn-about').innerText();
     assert(intro.replace(/\s+/g, '').length > 40, 'the introduction band carries its paragraph');
