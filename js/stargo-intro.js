@@ -193,6 +193,9 @@
   tl.call(function () {
     if (stage) stage.style.display = 'none';
     root.style.backgroundColor = 'transparent';
+    /* The hero underneath is visible from here on; taps must reach it rather
+       than the overlay, which stays in the document until the lift ends. */
+    root.style.pointerEvents = 'none';
   });
   tl.fromTo(columns, { yPercent: 0, y: 0 }, wipe(-100, false), '+=0.5');
 

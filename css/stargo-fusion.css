@@ -315,13 +315,20 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   body:has(.w-nav-button.w--open) { overflow: hidden; }
   /* With the page locked, a menu taller than a landscape phone (844x390:
      links to y=478) could never show its last links; it scrolls itself. */
-  .w-nav-overlay .w-nav-menu[data-nav-menu-open] { max-height: calc(100vh - 68px); max-height: calc(100dvh - 68px); overflow-y: auto; overscroll-behavior: contain; }
+  .w-nav-overlay .w-nav-menu[data-nav-menu-open] { max-height: calc(100vh - 62px); max-height: calc(100dvh - 62px); overflow-y: auto; overscroll-behavior: contain; }
 }
 /* The desktop side menu is 944-965px of content in a 100vh panel: on a laptop
    screen its last links, icons and demo card fell below the fold. It scrolls
    itself (tools/chrome.mjs marks it data-lenis-prevent), without a bar. */
 #stargo-side-menu .navigation-content { overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
 #stargo-side-menu .navigation-content::-webkit-scrollbar { display: none; }
+/* With the menu scrolling inside itself the open page no longer overflows, so
+   the document's scroll height drops to 0. Webflow's body ResizeObserver then
+   refreshes every ScrollTrigger, and ScrollTrigger re-refreshes each earlier
+   trigger whose end is 0: trigger k costs 2^k calls, which froze the homepage
+   for minutes (and already froze it on 1920x1080 screens before). One pixel of
+   document scroll while the menu is open keeps every end above 0. */
+body:has(#stargo-side-menu:not([inert])) { min-height: calc(100vh + 1px); }
 /* The demo form is pinned to the bottom of a 90vh section the band above
    overlaps by 100px; under ~640px of height its heading and first fields were
    cut off. Short screens get a section tall enough for the card. */

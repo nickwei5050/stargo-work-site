@@ -1,13 +1,10 @@
 {
   "note": "Written by tools/encode-video.mjs: each template clip the pages play, and the smaller H.264 copy it is served as; orbSmall is the 360 px logo orb.",
   "clips": {
-    "assets/699b6466d5f19893993a4bf2/699b6466d5f19893993a4f78_Contemplative Man in Stylish Attire_mp4.mp4": "assets/699b6466d5f19893993a4bf2/699b6466d5f19893993a4f78_Contemplative Man in Stylish Attire_mp4.c26.mp4",
     "assets/699b6466d5f19893993a4bf2/699b6466d5f19893993a4f83_copy_of_mono_logo (2)_mp4.mp4": "assets/699b6466d5f19893993a4bf2/699b6466d5f19893993a4f83_copy_of_mono_logo (2)_mp4.c24.mp4",
     "assets/699b6466d5f19893993a4bf2/699b6466d5f19893993a4fb1_Professional Portrait_mp4.mp4": "assets/699b6466d5f19893993a4bf2/699b6466d5f19893993a4fb1_Professional Portrait_mp4.c22.mp4",
     "assets/cinery/6773dce23469ef07fffcf87e_6776f8447c59f1e277e1ee94_case-video-03-transcode.mp4": "assets/cinery/6773dce23469ef07fffcf87e_6776f8447c59f1e277e1ee94_case-video-03-transcode.c26.mp4",
-    "assets/cinery/6773dce23469ef07fffcf87e_6776f90cc1fa6522b3738b2d_case-video-01-transcode.mp4": "assets/cinery/6773dce23469ef07fffcf87e_6776f90cc1fa6522b3738b2d_case-video-01-transcode.c26.mp4",
     "assets/cinery/6773dce23469ef07fffcf87e_6776fa0ce62367e64242f0fd_case-video-2-transcode.mp4": "assets/cinery/6773dce23469ef07fffcf87e_6776fa0ce62367e64242f0fd_case-video-2-transcode.c24.mp4",
-    "assets/cinery/683f6a1d3749cee9a45775ce_6840ae36c2dab521d144e25c_case-study-1-transcode.mp4": "assets/cinery/683f6a1d3749cee9a45775ce_6840ae36c2dab521d144e25c_case-study-1-transcode.c26.mp4",
     "assets/cinery/695c47e4e7da0bba805165af_695da2ca58f13dc09bb7a423_video-2_mp4.mp4": "assets/cinery/695c47e4e7da0bba805165af_695da2ca58f13dc09bb7a423_video-2_mp4.c24.mp4",
     "assets/cinery/695c47e4e7da0bba805165af_695da2e8d36b8b1bb9df81c4_video-3_mp4.mp4": "assets/cinery/695c47e4e7da0bba805165af_695da2e8d36b8b1bb9df81c4_video-3_mp4.c24.mp4",
     "assets/cinery/695c47e4e7da0bba805165af_695da4985f75dd5d3d4d3db7_video-4_mp4.mp4": "assets/cinery/695c47e4e7da0bba805165af_695da4985f75dd5d3d4d3db7_video-4_mp4.c26.mp4",

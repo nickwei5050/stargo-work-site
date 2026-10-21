@@ -27,6 +27,17 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import { SITE } from './paths.mjs';
 
 const LADDER = [26, 24, 22, 20];
+/* Served as shipped. The webm masters are VP8 in BT.601 while these donor mp4s
+   are BT.709 (one full range), so their copies came out with visibly more
+   contrast (the portrait clip) or darker reds and greens (the two case
+   studies) once Chrome decoded them, although the SSIM gate against the webm
+   passed. Re-encoding them needs the mp4 as the source and a gate on
+   Chrome-decoded frames; until then they keep today's file. */
+const KEEP = new Set([
+  'assets/699b6466d5f19893993a4bf2/699b6466d5f19893993a4f78_Contemplative Man in Stylish Attire_mp4.mp4',
+  'assets/cinery/6773dce23469ef07fffcf87e_6776f90cc1fa6522b3738b2d_case-video-01-transcode.mp4',
+  'assets/cinery/683f6a1d3749cee9a45775ce_6840ae36c2dab521d144e25c_case-study-1-transcode.mp4',
+]);
 export const ORB = 'assets/699b6466d5f19893993a4bf2/699b6466d5f19893993a4f47_magical_orb_remix_mp4.mp4';
 const ORB_SMALL = { mp4: 'assets/stargo-motion/orb-360.mp4', webm: 'assets/stargo-motion/orb-360.webm' };
 
@@ -61,6 +72,7 @@ for (const rel of [...clips].sort()) {
   const mp4 = `${SITE}/${rel}`;
   const webm = [mp4.replace(/_mp4\.mp4$/, '_webm.webm'), mp4.replace(/\.mp4$/, '.webm')].find((w) => w !== mp4 && existsSync(w));
   if (!webm || !existsSync(mp4)) { console.log(`skip ${rel} (no webm master)`); continue; }
+  if (KEEP.has(rel)) { console.log(`keep ${rel} (served as shipped)`); continue; }
   const size = statSync(mp4).size;
   const today = ssim(webm, mp4);
   let pick = null;
