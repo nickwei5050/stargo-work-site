@@ -474,9 +474,11 @@ function elementSpan(html, open) {
 
 /* A clip's <source>s: the smaller H.264 copy from tools/encode-video.mjs where
    one exists (tools/data/video-h264.json), the 360 px orb wherever the logo
-   orb is drawn at logo size (everywhere but the side-menu card), and an
-   explicit type, so a browser that cannot play H.264 skips the mp4 instead of
-   downloading it first to find out. */
+   orb is drawn at logo size (the navbar logo and the pricing cards; the
+   side-menu card, the one place it was drawn large, has shown the G02 still
+   instead since 2026-10-21, so only a clip put back inside the menu would keep
+   the full-size orb), and an explicit type, so a browser that cannot play
+   H.264 skips the mp4 instead of downloading it first to find out. */
 let videoManifest = null;
 function videoSources(video, inMenu) {
   videoManifest ??= existsSync(new URL('./data/video-h264.json', import.meta.url))
@@ -630,13 +632,15 @@ function chromeImagery(html) {
       out = out.slice(0, el.start) + inner + out.slice(el.end);
     }
   }
-  /* The side menu's 预约企业演示 card: the owner's harbour photograph (G02,
+  /* The side menu's 预约企业演示 card: the owner's harbour picture (G02,
      tools/replaceables.mjs MENU_CARD) where the magical-orb clip played. The
      clip's whole background-video block goes and one still fills the card
      under its dark wash and its text (css/stargo-fusion.css). The orb is
      `logo-bg ab` only here; the navbar and pricing orbs (`logo-bg`) stay
-     clips. The alt is a marker that tools/editorial-images.mjs replaces with
-     the photograph's own sentence. */
+     clips. The still is a backdrop inside the card's link, so it is
+     decorative (alt="" and aria-hidden): the link keeps the name its own text
+     gives it, the same as when the card held the clip.
+     tools/editorial-images.mjs keeps an empty alt empty. */
   const orb = 'class="logo-bg ab w-background-video w-background-video-atom"';
   const at = out.indexOf(orb);
   if (at === -1) {
@@ -645,7 +649,7 @@ function chromeImagery(html) {
     if (out.indexOf(orb, at + 1) !== -1) throw new Error('chrome: expected one side-menu card orb');
     const el = extractElement(out, out.lastIndexOf('<div', at), 'div');
     if (!/^<div\b[^>]*>\s*<video\b[\s\S]*<\/video>\s*<\/div>$/.test(el.text)) throw new Error('chrome: the side-menu card orb is not a background video');
-    out = out.slice(0, el.start) + `<img src="${MENU_CARD}" alt="STARGO WORK" loading="lazy" class="stargo-menu-photo"/>` + out.slice(el.end);
+    out = out.slice(0, el.start) + `<img src="${MENU_CARD}" alt="" aria-hidden="true" loading="lazy" class="stargo-menu-photo"/>` + out.slice(el.end);
   }
   return out;
 }

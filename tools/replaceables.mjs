@@ -15,9 +15,11 @@
  *     (`assets/stargo-motion/…`) is written as the final URL. Overwrite that
  *     file, including its width variants, and leave the name alone.
  *   - An owner photograph (`assets/stargo-photo/<id>-<width>.webp`, registered
- *     in tools/imagegen/photo-assets.json) is written as the final URL too, but
- *     never overwritten: /assets is cached immutable for a year, so a new
- *     picture gets a new id and tools/imagegen/prepare-photos.mjs writes it.
+ *     in tools/imagegen/photo-assets.json; AI-generated, captioned as such by
+ *     tools/editorial-images.mjs) is written as the final URL too, but never
+ *     overwritten: /assets is cached immutable for a year, so a new picture
+ *     gets a new id and tools/imagegen/prepare-photos.mjs writes it (it
+ *     refuses to replace a file with different bytes).
  *
  * The Open Graph file stays `og-cover.png` at 1200×630. Renaming it means
  * updating OG.token, OG.file, and every built meta tag together.

@@ -5140,17 +5140,22 @@ body:has(#loop) .image-wrap.for-service .paralax-image[src*="gos11-dormant-react
 
 /* ======================================================================
    The owner's photographs, batch 3 (2026-10-21; site-images/batch-3,
-   registered in tools/imagegen/photo-assets.json). Graded finals, only
-   resized: these rules place them and set the crop point the batch's
-   manifest gives for each one. Every box keeps its size; only the picture
-   in it changes.
+   registered in tools/imagegen/photo-assets.json). AI-generated images the
+   owner graded, not documentary photographs (their alt carries the site's
+   （AI 概念图） caption, tools/editorial-images.mjs); only resized here:
+   these rules place them and set the crop point the batch's manifest gives
+   for each one. Every box keeps its size; only the picture in it changes.
    ====================================================================== */
 
 /* G01. The demo band behind the glass form (index, capabilities and
         enterprise): Mono's `.photo-section` drew its group photograph here.
-        A loading bay at dusk instead, its door kept whole with a jamb on each
-        side at 1.7:1 (1440) and 0.5:1 (390) alike. The section's 0.65 opacity,
-        cover and size are Mono's. */
+        A loading bay at dusk instead. At 1440 the band is ~1.78:1, close to
+        the picture's 16:9, so the whole door shows with a jamb on each side.
+        On a 390 phone the band is ~0.51:1 and cover keeps only a centre strip
+        of the picture: the door opening fills the width and neither jamb
+        shows. No crop point can keep both jambs in a band that narrow; 51%
+        keeps the opening centred. The section's 0.65 opacity, cover and size
+        are Mono's. */
 .photo-section {
   background-image: url("../assets/stargo-photo/g01-cta-loading-bay-dusk-2048.webp");
   background-position: 51% 50%;
@@ -5186,3 +5191,13 @@ img[src*="stargo-photo/w06-showroom-"] { object-position: 32% 25%; }
 @media (max-width: 767px) {
   img[src*="stargo-photo/w04-qc-lab-"] { object-position: 48.8% 50%; }
 }
+
+/* W02 in the capability ring's inner circle. Cinery mirrors that whole circle
+        (`.cn-cta-circle-wrapper.cn-_02 { transform: scaleX(-1) }`,
+        css/cinery.cn2.css) so it turns the other way round from the outer
+        one; its clips do not mind, but a still in it would read back to front.
+        Flipping the still once more, about its own centre, cancels the
+        circle's mirror for the picture alone: the card's box, tilt and the
+        ring's motion are untouched, and so are the clips beside it. A still
+        that sits in a mirrored ring anywhere else needs the same. */
+.cn-produce .cn-cta-circle-wrapper.cn-_02 .w-background-video > img.stargo-still { transform: scaleX(-1); }

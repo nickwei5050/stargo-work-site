@@ -11,9 +11,13 @@ const manifest = JSON.parse(readFileSync('tools/imagegen/assets-manifest.json', 
    size on disk, alt/width/height on the page. They are derivatives of the
    supplied originals, so the source hash is the PNG's, not a generator's. */
 const products = JSON.parse(readFileSync('tools/imagegen/product-assets.json', 'utf8')).assets;
-/* The owner's graded photographs (site-images/batch-3, 2026-10-21): the same
-   checks, and the opposite rule for the alt. They are photographs of places,
-   not product screens, so their alt must NOT carry the demo-data caption. */
+/* The owner's photographs (tools/imagegen/photo-assets.json; batch 3 of
+   2026-10-21 and every batch after it): the same checks. They are
+   AI-generated images, not documentary photographs and not product screens,
+   so their alt must end with the caption the site's other generated imagery
+   carries — （AI 概念图） on a Chinese page, " (AI concept illustration)" on
+   an English one — and must not carry the demo-data caption. The one silent
+   exception is a decorative backdrop: alt="" together with aria-hidden. */
 const photos = JSON.parse(readFileSync('tools/imagegen/photo-assets.json', 'utf8')).assets;
 const files = [...readdirSync('.').filter(f => f.endsWith('.html')), ...readdirSync('en').filter(f => f.endsWith('.html')).map(f => 'en/' + f), ...readdirSync('blog').map(f => 'blog/' + f), ...readdirSync('en/blog').map(f => 'en/blog/' + f)];
 const all = [...files, 'css/stargo-fusion.css'].map(f => readFileSync(f, 'utf8')).join('\n');
@@ -61,10 +65,16 @@ for (const f of files) {
     assert(alt ? /演示数据|demo data/.test(alt) : /ro-home-header-img/.test(tag[0]),
       `${f}: product image alt must say it is an illustrative interface with demo data — "${alt}"`);
   }
+  const conceptCaption = f.startsWith('en/') ? ' (AI concept illustration)' : '（AI 概念图）';
   for (const tag of html.matchAll(/<img\b[^>]*stargo-photo[^>]*>/g)) {
-    const alt = tag[0].match(/\balt="([^"]*)"/)?.[1] ?? '';
-    assert(alt && /\bwidth="/.test(tag[0]) && /\bheight="/.test(tag[0]) && /\bsrcset="/.test(tag[0]) && /\bsizes="/.test(tag[0]), `${f}: photograph metadata`);
-    assert(!/演示数据|demo data|AI 概念图|AI concept/i.test(alt), `${f}: a photograph's alt describes the place, without a product or concept caption — "${alt}"`);
+    const alt = tag[0].match(/\balt="([^"]*)"/)?.[1];
+    assert(alt !== undefined && /\bwidth="/.test(tag[0]) && /\bheight="/.test(tag[0]) && /\bsrcset="/.test(tag[0]) && /\bsizes="/.test(tag[0]), `${f}: photograph metadata`);
+    if (alt === '') {
+      assert(/\baria-hidden="true"/.test(tag[0]), `${f}: a photograph with an empty alt must be a decorative backdrop (aria-hidden="true") — ${tag[0].slice(0, 120)}`);
+      continue;
+    }
+    assert(alt.endsWith(conceptCaption) && alt.indexOf(conceptCaption) === alt.length - conceptCaption.length && alt.length > conceptCaption.length + 8, `${f}: an owner photograph is AI-generated; its alt must describe the picture and end with "${conceptCaption}" once — "${alt}"`);
+    assert(!/演示数据|demo data/i.test(alt), `${f}: a photograph is not a product interface; no demo-data caption — "${alt}"`);
   }
   assert(/og:image[^>]*(stargo-editorial\/og-cover\.png|assets\/blog\/[\w-]+\.webp)/.test(html), `${f}: share cover`);   // articles share their cover
   /* Runtime cache version: every local script and stylesheet the page loads
@@ -133,6 +143,21 @@ async function worker() {
       await page.waitForTimeout(400);
       const imageState = await page.evaluate(() => [...document.querySelectorAll('img[src*="stargo-editorial"]')].filter(i => i.getBoundingClientRect().width > 0 && i.complete).map(i => ({ src: i.currentSrc, natural: i.naturalWidth })));
       assert(imageState.every(i => i.natural > 0), 'decoded images');
+      /* No owner photograph is drawn mirrored. Templates flip whole layers
+         (cinery's inner ring is scaleX(-1)); a clip there does not mind, a
+         picture of a place reads back to front. The sign of the 2D
+         determinant of every transform (and scale) from the picture up to the
+         root says whether it ends up mirrored. */
+      const mirrored = await page.evaluate(() => [...document.querySelectorAll('img[src*="stargo-photo"]')].filter((img) => {
+        let det = 1;
+        for (let el = img; el; el = el.parentElement) {
+          const cs = getComputedStyle(el);
+          if (cs.transform && cs.transform !== 'none') { const m = new DOMMatrix(cs.transform); det *= m.a * m.d - m.b * m.c; }
+          if (cs.scale && cs.scale !== 'none') { const [x, y = x] = cs.scale.split(' ').map(Number); det *= x * y; }
+        }
+        return det < 0;
+      }).map((img) => img.getAttribute('src')));
+      assert.deepEqual(mirrored, [], 'an owner photograph is drawn mirrored');
       const hasImageArea = await page.locator('img[src*="stargo-editorial"]').evaluateAll(imgs => imgs.some(i => i.getBoundingClientRect().width > 0 && i.getBoundingClientRect().height > 0));
       // Contact/pricing deliberately hide decorative media on small screens.
       // Keep that composition and verify those images are not downloaded.

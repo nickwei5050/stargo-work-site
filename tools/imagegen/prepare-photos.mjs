@@ -4,16 +4,25 @@
  * Batch 3 of the owner's site photographs (site-images/batch-3, 2026-10-21):
  * eight graded finals, 2048 px on the long side, sRGB, each with the slots it
  * replaces, its crop point and its bilingual alt text in the batch's
- * manifest.json. They are finished pictures, so this only resizes (lanczos3)
- * and writes WebP at quality 82: no crop, no sharpening, no colour or tone
- * change, never wider than the supplied file. What each picture shows and
- * where it is cropped live in tools/editorial-images.mjs and
- * css/stargo-fusion.css; where it goes, in tools/replaceables.mjs.
+ * manifest.json. "Photograph" is the registry's name for them: they are
+ * AI-generated images (made with an image model from a prompt brief, then
+ * graded), not documentary photographs, and tools/editorial-images.mjs gives
+ * every one the site's （AI 概念图） caption. They are finished pictures, so
+ * this only resizes (lanczos3) and writes WebP at quality 82: no crop, no
+ * sharpening, no colour or tone change, never wider than the supplied file.
+ * What each picture shows and where it is cropped live in
+ * tools/editorial-images.mjs and css/stargo-fusion.css; where it goes, in
+ * tools/replaceables.mjs.
  *
  * File names carry the width (`<id>-<width>.webp`) and are never overwritten:
  * /assets is served immutable for a year, so a changed picture needs a new
- * name. Each id is the manifest's own id (W01, G02 …) plus a slug of the
- * supplied file name.
+ * name. This script enforces it. A file that is already there is left alone
+ * when the new encode has the same bytes, so a rerun changes nothing; when the
+ * bytes differ the script stops with an error, and so it does for an id
+ * already in photo-assets.json whose original now has another SHA-256. Every
+ * file and id is checked before anything is written, so a refused run leaves
+ * the folder and the registry as they were. Each id is the manifest's own id
+ * (W01, G02 …) plus a slug of the supplied file name.
  *
  * Widths follow the slot. The six homepage grid tiles are drawn up to ~2300 px
  * wide at 1440 while the grid zooms, so they keep the full 2048 above the
@@ -29,7 +38,7 @@
  * originals stay in the owner's shared folder; the registry keeps each one's
  * path, SHA-256 and pixels so a file can be traced back to its source.
  */
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { SITE, req } from '../paths.mjs';
 /* STARGO_TOOL_PACKAGE borrows another install's sharp; see tools/paths.mjs. */
@@ -52,12 +61,24 @@ const PHOTOS = [
   { id: 'w06-showroom', ref: 'W06', file: `${BATCH3}/home-space-06-showroom.png`, widths: TILE },
 ];
 
+const REGISTRY = `${SITE}/tools/imagegen/photo-assets.json`;
+/* What is already published, by id: an id names one picture for good. */
+const registered = new Map(existsSync(REGISTRY)
+  ? JSON.parse(readFileSync(REGISTRY, 'utf8')).assets.map((a) => [a.id, a]) : []);
+const NEW_ID = 'give the new picture a new id (and slots) instead: /assets is cached immutable for a year, so a published file name never changes its bytes';
+
 mkdirSync(`${SITE}/${TARGET}`, { recursive: true });
 const assets = [];
 const hashes = new Set();
+/* New files only, written once every picture has passed. */
+const writes = [];
 for (const job of PHOTOS) {
   const input = readFileSync(`${SOURCE}/${job.file}`);
   const sourceSha256 = createHash('sha256').update(input).digest('hex');
+  const before = registered.get(job.id);
+  if (before && before.sourceSha256 !== sourceSha256) {
+    throw new Error(`${job.id}: ${job.file} is not the original this id was published from (SHA-256 ${sourceSha256}, registered ${before.sourceSha256}); ${NEW_ID}`);
+  }
   if (hashes.has(sourceSha256)) throw new Error(`${job.id}: the same original as another photograph`);
   hashes.add(sourceSha256);
   const meta = await sharp(input).metadata();
@@ -71,7 +92,11 @@ for (const job of PHOTOS) {
       .toBuffer();
     const out = await sharp(buffer).metadata();
     const src = `${TARGET}/${job.id}-${w}.webp`;
-    writeFileSync(`${SITE}/${src}`, buffer);
+    const path = `${SITE}/${src}`;
+    if (!existsSync(path)) writes.push([path, buffer]);
+    else if (!readFileSync(path).equals(buffer)) {
+      throw new Error(`${src} already exists with different bytes; nothing was written. Either the original or the encoder changed: ${NEW_ID}`);
+    }
     files.push({ src, width: out.width, height: out.height, bytes: buffer.length });
   }
   const main = files.pop();
@@ -82,9 +107,11 @@ for (const job of PHOTOS) {
     variants: files.map(({ src, width, bytes }) => ({ src, width, bytes })),
   });
 }
-writeFileSync(`${SITE}/tools/imagegen/photo-assets.json`, JSON.stringify({
-  note: 'Owner-supplied graded photographs. Written by tools/imagegen/prepare-photos.mjs: WebP q82 (lanczos3) resizes of the supplied sRGB originals, never cropped, retouched or upscaled; every file name carries its width. Alt text lives in tools/editorial-images.mjs, crop points in css/stargo-fusion.css, slots in tools/replaceables.mjs.',
+for (const [path, buffer] of writes) writeFileSync(path, buffer);
+writeFileSync(REGISTRY, JSON.stringify({
+  note: 'Owner-supplied graded photographs: AI-generated images (made with an image model from a prompt brief, then graded), not documentary photographs; their alt carries the site\'s AI concept caption (tools/editorial-images.mjs). Written by tools/imagegen/prepare-photos.mjs: WebP q82 (lanczos3) resizes of the supplied sRGB originals, never cropped, retouched or upscaled; every file name carries its width. Alt text lives in tools/editorial-images.mjs, crop points in css/stargo-fusion.css, slots in tools/replaceables.mjs.',
   authorization: 'Owner image thread, site-images/batch-3 (2026-10-21): graded finals for the homepage workspace grid, the demo band background and the side-menu card; resize and convert only.',
   assets,
 }, null, 1) + '\n');
 for (const a of assets) console.log(`${a.id}: ${[...a.variants, a].map((v) => `${v.width}w ${Math.round(v.bytes / 1024)}k`).join(', ')}`);
+console.log(`${writes.length} new file(s) written; every other file was already there with the same bytes`);

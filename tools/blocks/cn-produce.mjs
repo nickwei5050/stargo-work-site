@@ -134,7 +134,9 @@ export function render(frag, ctx) {
      its `.cn-video` box stay; only the `<video>` becomes a still that fills
      the box (`.w-background-video > img.stargo-still`, css/stargo-fusion.css),
      as the homepage grid's stills do. The alt is a marker that
-     tools/editorial-images.mjs replaces with the photograph's own sentence. */
+     tools/editorial-images.mjs replaces with the picture's sentence and its
+     （AI 概念图） caption. The inner ring is mirrored by cinery's CSS; the
+     still in it is flipped back in css/stargo-fusion.css. */
   for (const [id, src] of Object.entries(RING_STILLS)) html = stillImage(html, id, src, 'STARGO WORK');
 
   if (/Cinery|Book a call|Start Project|Produce/.test(html)) throw new Error('cn-produce: donor copy survives in the rendered block');

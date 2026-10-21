@@ -97,7 +97,7 @@ All released screens live in `assets/stargo-product/`. Ids:
 
 ## Owner photographs
 
-Graded photographs from the owner's image thread (`site-images/batch-3`, 2026-10-21), in `assets/stargo-photo/`, registered in `tools/imagegen/photo-assets.json` (source file, SHA-256, pixels, every width) by `tools/imagegen/prepare-photos.mjs`. Alt text is in `tools/editorial-images.mjs`, crop points in `css/stargo-fusion.css`. Every file name carries its width and is never overwritten (`/assets` is cached immutable for a year): a new picture gets a new id.
+Graded pictures from the owner's image thread (`site-images/batch-3`, 2026-10-21), in `assets/stargo-photo/`, registered in `tools/imagegen/photo-assets.json` (source file, SHA-256, pixels, every width) by `tools/imagegen/prepare-photos.mjs`. "Photograph" is the registry's name: they are AI-generated images (an image model working from a prompt brief, then graded), not documentary photographs, so their alt ends with the site's （AI 概念图） / " (AI concept illustration)" caption, which `tools/editorial-images.mjs` adds to every registered photograph and `verify-editorial` requires. The sentence before it is in `tools/editorial-images.mjs`, crop points in `css/stargo-fusion.css`. Every file name carries its width and is never overwritten (`/assets` is cached immutable for a year): a new picture gets a new id, and `prepare-photos.mjs` refuses to replace a file with different bytes or to re-register an id from a different original.
 
 | Slot | File on disk |
 | --- | --- |

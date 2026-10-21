@@ -494,8 +494,10 @@ PAGES['index.html'] = (lang) => {
     const play = elementContaining(h, 'class="play-video w-inline-block w-lightbox"', 'a');
     h = h.slice(0, play.start) + h.slice(play.end);
     if (/youtube|embedly|w-lightbox/.test(h)) throw new Error('index: lightbox survives');
-    // The sticky card's portrait film and the contact band's group photograph stay as the
-    // template designed them (licensed template assets; the copy marks the cards as scenarios).
+    // The sticky card's portrait film stays as the template designed it (a licensed template
+    // asset; the copy marks the cards as scenarios). The contact band behind the form no
+    // longer shows the template's group photograph: since 2026-10-21 it is the owner's G01
+    // loading bay at dusk, set as .photo-section's background in css/stargo-fusion.css.
     const stickyVideo = [...h.matchAll(/<video id="([^"]+)-video"/g)].map((m) => m[1]).find((id) => h.slice(h.indexOf('<section class="testimonials-section"'), h.indexOf('<section class="section drk"')).includes(`id="${id}-video"`));
     if (!stickyVideo) throw new Error('index: sticky card video');
     h = swapImg(h, '699b6466d5f19893993a4f1a_Sunset-Serenity', BRAND.square);

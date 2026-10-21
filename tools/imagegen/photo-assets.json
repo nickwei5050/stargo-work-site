@@ -1,5 +1,5 @@
 {
- "note": "Owner-supplied graded photographs. Written by tools/imagegen/prepare-photos.mjs: WebP q82 (lanczos3) resizes of the supplied sRGB originals, never cropped, retouched or upscaled; every file name carries its width. Alt text lives in tools/editorial-images.mjs, crop points in css/stargo-fusion.css, slots in tools/replaceables.mjs.",
+ "note": "Owner-supplied graded photographs: AI-generated images (made with an image model from a prompt brief, then graded), not documentary photographs; their alt carries the site's AI concept caption (tools/editorial-images.mjs). Written by tools/imagegen/prepare-photos.mjs: WebP q82 (lanczos3) resizes of the supplied sRGB originals, never cropped, retouched or upscaled; every file name carries its width. Alt text lives in tools/editorial-images.mjs, crop points in css/stargo-fusion.css, slots in tools/replaceables.mjs.",
  "authorization": "Owner image thread, site-images/batch-3 (2026-10-21): graded finals for the homepage workspace grid, the demo band background and the side-menu card; resize and convert only.",
  "assets": [
   {

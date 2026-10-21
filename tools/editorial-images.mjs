@@ -111,11 +111,24 @@ const productText = {
   'live18-quote-approval-16x9': ['销售工作台的报价审批：从邮件接入到 PI 单据每一步的状态，待审批的报价单独列出，只能由人批准', 'Quote approval in the sales workbench: the status of every step from incoming email to PI, with the quote awaiting approval listed on its own and approvable only by a person'],
 };
 export const PRODUCT_CAPTION = { zh: '产品界面示意（演示数据）', en: 'Illustrative product interface · demo data' };
-/* The owner's graded photographs (tools/imagegen/photo-assets.json,
-   site-images/batch-3 of 2026-10-21). They are photographs of places, not
-   product screens and not concept art, so their alt is the owner's own
-   sentence from the batch manifest with no caption after it: neither
-   PRODUCT_CAPTION nor （AI 概念图）. G01 is a CSS background
+/* The caption every AI-generated picture on this site ends its alt with: the
+   generated editorial set below and the owner's photographs. The notices page
+   (tools/copy.mjs) says the business scenes are AI-generated; this is how a
+   reader who hears the alt learns it too. */
+export const CONCEPT_CAPTION = { zh: '（AI 概念图）', en: ' (AI concept illustration)' };
+/* The owner's photographs (tools/imagegen/photo-assets.json; batch 3,
+   site-images/batch-3 of 2026-10-21, and every batch registered after it).
+   "Photograph" is the registry's name for them, not a claim about how they
+   were made: they are AI-generated images (made with an image model from a
+   prompt brief, then graded), not documentary photographs of real places. So
+   their alt is the sentence from the batch manifest followed by the same
+   CONCEPT_CAPTION as the generated set, added here, in the one pass every
+   registered photograph goes through, so a photograph registered later gets
+   it without anyone writing it: photoText holds the sentence alone. Never
+   PRODUCT_CAPTION: they are not product screens. A photograph whose tag
+   already says alt="" (the side-menu card's backdrop, tools/chrome.mjs) is
+   decorative and stays silent; its sentence is kept below for reference and
+   for any slot that shows it as content. G01 is a CSS background
    (css/stargo-fusion.css) and so has no alt to carry. */
 const photos = JSON.parse(readFileSync(new URL('./imagegen/photo-assets.json', import.meta.url), 'utf8')).assets;
 const photoBySrc = new Map(photos.map(a => [a.src, a]));
@@ -156,7 +169,8 @@ export function editorialImages(html, lang) {
       if (!photo) throw new Error(`Unregistered photograph: ${photoSrc}`);
       const text = photoText[photo.id]?.[lang === 'zh' ? 0 : 1];
       if (!text) throw new Error(`Photograph without alt text: ${photo.id}`);
-      const alt = /\balt=""/.test(tag) ? '' : text;
+      if (/AI 概念图|AI concept|演示数据|demo data/i.test(text)) throw new Error(`Photograph alt text carries a caption; the caption is added here: ${photo.id}`);
+      const alt = /\balt=""/.test(tag) ? '' : `${text}${CONCEPT_CAPTION[lang === 'zh' ? 'zh' : 'en']}`;
       const sizes = photoSizes(tag, page.slice(Math.max(0, offset - 160), offset));
       const variants = [...photo.variants, photo];
       const result = tag.replace(/\s(?:alt|srcset|sizes|width|height|decoding)="[^"]*"/g, '');
@@ -172,7 +186,7 @@ export function editorialImages(html, lang) {
     const text = (product ?? descriptions[id])?.[lang === 'zh' ? 0 : 1];
     const suffix = product
       ? (lang === 'zh' ? `。${PRODUCT_CAPTION.zh}` : ` — ${PRODUCT_CAPTION.en}`)
-      : (lang === 'zh' ? '（AI 概念图）' : ' (AI concept illustration)');
+      : CONCEPT_CAPTION[lang === 'zh' ? 'zh' : 'en'];
     const alt = decorative || !text ? '' : `${text}${suffix}`;
     let result = tag.replace(/\s(?:alt|srcset|sizes|width|height|decoding)="[^"]*"/g, '');
     const attrs = [`alt="${alt}"`, `width="${asset.width}"`, `height="${asset.height}"`, 'decoding="async"'];
