@@ -44,11 +44,11 @@ Homepage core systems (`HOME_MODULES`) and the five business stages (`HOME_STAGE
 | Sales Desk | `assets/stargo-product/sw028-sales-desk-inquiry-reply.webp` |
 | ERP | `assets/stargo-editorial/brand-family-02.webp` |
 | AI 创作 / AI Creative | `assets/stargo-editorial/os-boot.webp` |
-| 001 主动获客 | `assets/stargo-product/gos01-market-thesis.webp` |
-| 002 外贸销售 | `assets/stargo-product/sw028-sales-desk-inquiry-reply.webp` |
-| 003 企业履约 | `assets/stargo-product/sw033-sales-desk-document-pack.webp` |
-| 004 回款与服务 | `assets/stargo-editorial/brand-family-01.webp` |
-| 005 复购与改进 | `assets/stargo-product/gos11-dormant-reactivation.webp` |
+| 001 主动获客 | `assets/stargo-photo/p01-prospecting-480.webp` (owner photograph P01) |
+| 002 外贸销售 | `assets/stargo-photo/p02-sales-480.webp` (P02) |
+| 003 企业履约 | `assets/stargo-photo/p03-fulfilment-768.webp` (+ `-480`, P03) |
+| 004 回款与服务 | `assets/stargo-photo/p04-payment-docs-480.webp` (P04) |
+| 005 复购与改进 | `assets/stargo-photo/p05-reorder-480.webp` (P05) |
 
 Capability-page story pictures (`STORY_ART`, editorial ids):
 
@@ -105,6 +105,18 @@ Graded photographs from the owner's image thread (`site-images/batch-3`, 2026-10
 | Capability ring, outer video-15 card and inner video-11 repeat (`RING_STILLS`) | `w02-workshop` |
 | Side-menu 预约企业演示 card, every page with the menu (`MENU_CARD`) | `g02-menu-harbour-night-768.webp` (+ `-480`) |
 | Demo band background behind the form (`.photo-section`, CSS) | `g01-cta-loading-bay-dusk-2048.webp` |
+
+Homepage photographs (group "home", batches 1, 2, 4 and 8; `index.html` and `en/index.html` only; slots in `tools/replaceables.mjs`):
+
+| Slot | File on disk |
+| --- | --- |
+| Opening mosaic the white hero card shrinks to reveal, `.photo-block` / `.photo-block-reverse` (`HOME_MOSAIC`, keyed by the os-* still each tile used to show; the cursor tooltip's picture rotator keeps the os-* stills) | `h01-port-blue-hour` … `h10-video-showing`, 480/768/1024 |
+| 「工具很多，靠人连接」 cards 01–04 (`HOME_SILOS`) | `s01-inquiry-rework-1600`, `s02-scattered-chats-1600`, `s03-spreadsheet-memory-1600`, `s04-chasing-order-2048` |
+| Five business stages 001–005 (`HOME_STAGES`, above) | `p01-prospecting` … `p05-reorder` |
+| 「从哪里开始？」 band halves `.photo-half._01` / `._02` (CSS background, so no alt; hidden below 992px as before) | `r1-sales-rep-1639.webp` |
+| Example-scenario card 03 (四个示例场景), in place of the Contemplative film (`HOME_ROLE_CARD`) | `r2-trade-manager-1024.webp` |
+| 企业版 / Enterprise plan picture in the pricing section (`HOME_PRICING_CARD`) | `t01-enterprise-campus-1024.webp` |
+| The four homepage blog cards (`HOME_BLOG_COVERS`, by article slug; the blog index and the articles keep `assets/blog/`) | `b01-visual-guide`, `b02-one-workflow`, `b03-inquiry-to-quote`, `b04-approval-handover`, all `-1600` |
 
 ## Open Graph
 

@@ -5186,3 +5186,72 @@ img[src*="stargo-photo/w06-showroom-"] { object-position: 32% 25%; }
 @media (max-width: 767px) {
   img[src*="stargo-photo/w04-qc-lab-"] { object-position: 48.8% 50%; }
 }
+
+/* ======================================================================
+   The owner's photographs on the homepage (group "home", 2026-10-21;
+   site-images/batch-1, -2, -4 and -8: H01–H10, P01–P05, S01–S04, R1, R2,
+   T01 and B01–B04, on index.html and en/index.html only; the slots are in
+   tools/replaceables.mjs, HOME_MOSAIC to HOME_BLOG_COVERS). Graded finals,
+   only resized. Every box keeps its size; these rules set the crop point
+   each batch's manifest gives, scoped to the homepage slot, so the same
+   photograph elsewhere keeps whatever its own page sets.
+   ====================================================================== */
+
+/* H01–H10, the opening mosaic around the white hero card. The left column
+   (`.stargo-mosaic`) draws every picture whole at its own ratio, so H02 and
+   H05, which only appear there, need no crop point. The right column
+   (`.photo-hero`) is Mono's cover box: 1.71:1 at 1440, 0.75:1 at 390 and as
+   tall as 0.5:1 at 480–767. H01, H04, H06 and H08 are centred on desktop.
+   The left column's pictures were as wide as their column only because the
+   stills before them were 1600px wide (`max-width: 100%` did the rest);
+   these files stop at 1024, so `width: 100%` keeps the column full beyond
+   ~2130px too. */
+.photo-block img.stargo-mosaic { width: 100%; }
+.photo-hero[src*="stargo-photo/h03-"] { object-position: 50% 35%; }
+.photo-hero[src*="stargo-photo/h07-"] { object-position: 80% 73%; }
+.photo-hero[src*="stargo-photo/h09-"] { object-position: 50% 37%; }
+.photo-hero[src*="stargo-photo/h10-"] { object-position: 52% 50%; }
+@media (max-width: 767px) {
+  .photo-hero[src*="stargo-photo/h04-"] { object-position: 72% 50%; }
+  .photo-hero[src*="stargo-photo/h08-"] { object-position: 58% 50%; }
+  .photo-hero[src*="stargo-photo/h09-"] { object-position: 50% 50%; }
+}
+
+/* P01–P05, the five stage cards. Mono's `.paralax-image` covers the 3:2
+   card at 105% of its height (334x234 at 1440), as the illustration in
+   (004) always did; H29 above fits only product screens. P05 is centred. */
+body:has(#loop) .image-wrap.for-service .paralax-image[src*="stargo-photo/p01-"] { object-position: 40% 50%; }
+body:has(#loop) .image-wrap.for-service .paralax-image[src*="stargo-photo/p02-"] { object-position: 35% 40%; }
+body:has(#loop) .image-wrap.for-service .paralax-image[src*="stargo-photo/p03-"] { object-position: 45% 0%; }
+body:has(#loop) .image-wrap.for-service .paralax-image[src*="stargo-photo/p04-"] { object-position: 0% 100%; }
+
+/* S01–S04, the four pain-point cards (1.36:1 at 1440, 1.47:1 at 390). S01
+   and S02 are centred; S03 keeps the left edge, S04 (the dusk version) its
+   walking man and the lit doorway. */
+.work-main-wrapper .paralax-image[src*="stargo-photo/s03-"] { object-position: 0% 50%; }
+.work-main-wrapper .paralax-image[src*="stargo-photo/s04-"] { object-position: 57% 50%; }
+
+/* R1, the photograph split across the two halves behind the scenario cards
+   (desktop only; Mono hides them at 991 and below). Mono's 200% size, fixed
+   attachment and left/right anchors stay; only the picture and its height
+   change, 44% keeping the rep's head and her papers in the 1440x900 band.
+   A CSS background carries no alt. */
+.photo-half._01, .photo-half._02 { background-image: url("../assets/stargo-photo/r1-sales-rep-1639.webp"); }
+.photo-half._01 { background-position: 0% 44%; }
+.photo-half._02 { background-position: 100% 44%; }
+
+/* R2, the scenario film card (`.testimonials-card._03`): a portrait still
+   in the film's box, 400x450 (0.89:1) from 480 up and ~1.07:1 on a phone,
+   the manifest's crop for those card slots. */
+.testimonials-card._03 img.stargo-role-photo { object-position: 50% 40%; }
+
+/* T01, the pricing band's image card beside 企业版. */
+.testi-grid .image-wrap.rnd .paralax-image[src*="stargo-photo/t01-"] { object-position: 50% 58%; }
+
+/* B01–B04, the four newest-article cards. Mono sizes `.testimonials-photo`
+   by its 3 / 2.3 aspect-ratio and min-width alone; the width and height a
+   photograph carries for layout stability would otherwise become its CSS
+   size, so they are set back to auto here and the box stays Mono's. B04
+   moves right; the others are centred. */
+.blog-grid .testimonials-photo[src*="stargo-photo/"] { width: auto; height: auto; }
+.blog-grid .testimonials-photo[src*="stargo-photo/b04-"] { object-position: 55% 50%; }
