@@ -32,6 +32,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { readBundle } from './ix-lib.mjs';
 
 import { SITE } from './paths.mjs';
+import { woff2Refs } from './font-refs.mjs';
 const SRC = process.env.LIFELOGX_SRC ?? `${SITE}/tools/templates/lifelogx`;
 const NS = 'lx-';
 const SCOPE = 'lx-scope';
@@ -210,7 +211,7 @@ function rewriteSelectorList(list) {
 let css = namespaceCss(localise(author)).split('url("assets/').join('url("../assets/').split("url('assets/").join("url('../assets/").split('url(assets/').join('url(../assets/');
 css = `/* lifelogx author layer, namespaced "${NS}" and scoped to .${SCOPE} by tools/lifelogx-prepare.mjs. Do not edit by hand. */\n` + css;
 mkdirSync(`${SITE}/css`, { recursive: true });
-writeFileSync(`${SITE}/css/lifelogx.lx.css`, css, 'utf8');
+writeFileSync(`${SITE}/css/lifelogx.lx.css`, woff2Refs(css), 'utf8');
 
 /* ------------------------------------------------------ 3. HTML fragments -- */
 

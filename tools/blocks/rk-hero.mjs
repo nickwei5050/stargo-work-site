@@ -23,6 +23,7 @@
  * glyphs (tools/copy.mjs says why beside heroAccent).
  */
 import { setText, setTextAll } from '../block-lib.mjs';
+import { PRODUCT_CAPTION } from '../editorial-images.mjs';
 
 export const donor = {
   id: 'rk-hero',
@@ -35,12 +36,25 @@ export const donor = {
   /* The wrapper closes right after the hairline block, just before renok's
      awards section begins. */
   end: '<div class="rt-bg-line-animation-line rt-two"></div><div class="rt-bg-line-animation-line rt-two rt-second"></div></div></div></div>',
-  /* No images/imageStems: every photograph and the backdrop are the template's
-     own and stay, mirrored into assets/renok by try-block. */
+  /* The backdrop and the sixth card (renok's image-five) are the template's
+     own and stay, mirrored into
+     assets/renok. Five cards show clean captures of the product with
+     demonstration data (2026-10-21, site-images/screens-final), each cut to
+     the card's own 16:9 box: the files that stood here showed an
+     infrastructure panel, an admin login and a live mailbox. A stem replaces
+     the card's src and its whole srcset; tools/editorial-images.mjs then writes
+     the product image's own srcset, sizes and alt. */
+  imageStems: {
+    'hero-banner-3d-rotation-image-one': 'assets/stargo-product/live01-desktop-home-16x9.webp',
+    'hero-banner-3d-rotation-image-two': 'assets/stargo-product/live23-erp-items-16x9.webp',
+    'hero-banner-3d-rotation-image-three': 'assets/stargo-product/live09-sales-desk-case-16x9.webp',
+    'hero-banner-3d-rotation-image-four': 'assets/stargo-product/live43-app-connections-16x9.webp',
+    'hero-banner-3d-rotation-image-six': 'assets/stargo-product/live52-mobile-case-16x9.webp',
+  },
 };
 
 export function render(frag, ctx) {
-  const { C, t, escapeHtml } = ctx;
+  const { C, t, lang, escapeHtml } = ctx;
   const S = C.CAPABILITY_SHOWCASE;
   for (const k of ['heroLead', 'heroAccent', 'heroTail', 'heroBody', 'heroButton']) {
     if (!S[k]) throw new Error(`rk-hero: CAPABILITY_SHOWCASE.${k} is missing`);
@@ -95,6 +109,13 @@ export function render(frag, ctx) {
      description, so they are marked decorative. ---- */
   const alts = html.match(/alt="hero-banner-3d-rotation-image-[a-z]+"/g) ?? [];
   if (alts.length !== 6) throw new Error(`rk-hero: expected six card alts, found ${alts.length}`);
+  /* A card that now shows a product screen is described, not decorative: it
+     takes a non-empty alt, which tools/editorial-images.mjs replaces with the
+     screen's registered sentence. */
+  html = html.replace(/<img\b[^>]*>/g, (tag) => (/src="assets\/stargo-product\//.test(tag)
+    ? tag.replace(/alt="hero-banner-3d-rotation-image-[a-z]+"/, `alt="${PRODUCT_CAPTION[lang]}"`)
+    : tag));
+  if ((html.match(/src="assets\/stargo-product\//g) ?? []).length !== 5) throw new Error('rk-hero: expected five cards to show product screens');
   html = html.replace(/alt="hero-banner-3d-rotation-image-[a-z]+"/g, 'alt=""');
 
   /* ---- nothing of renok's own copy may survive ---- */

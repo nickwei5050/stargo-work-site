@@ -18,6 +18,7 @@
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { extractBlock } from './donor-lib.mjs';
+import { woff2Refs } from './font-refs.mjs';
 import { DONORS, loadBlocks } from './block-lib.mjs';
 
 import { SITE } from './paths.mjs';
@@ -157,7 +158,7 @@ for (const [donor, parts] of sheets) {
     + `   Written by tools/capability-donors.mjs out of ${d.dir.split('/').pop()}: only the\n`
     + `   rules the transplanted blocks use, class names prefixed with \`${d.ns}\`, every\n`
     + `   selector scoped under the block's own root class. Do not edit by hand. */\n`;
-  writeFileSync(`${SITE}/css/${d.sheet}`, head + parts.join(''), 'utf8');
+  writeFileSync(`${SITE}/css/${d.sheet}`, woff2Refs(head + parts.join('')), 'utf8');
 }
 
 for (const [donor, p] of payloads) {

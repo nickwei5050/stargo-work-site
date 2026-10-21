@@ -35,7 +35,7 @@ const walk = (dir, rel, out) => {
 };
 for (const f of readdirSync(SITE)) if (f.endsWith('.html')) wanted.add(f);
 for (const d of ['en', 'blog', 'assets', 'css', 'js']) if (existsSync(`${SITE}/${d}`)) walk(`${SITE}/${d}`, d, wanted);
-const GENERATED = ['_headers', 'robots.txt', 'sitemap.xml', 'llms.txt'];
+const GENERATED = ['_headers', '_redirects', 'robots.txt', 'sitemap.xml', 'llms.txt'];
 for (const g of GENERATED) wanted.add(g);
 
 for (const rel of wanted) {
@@ -60,18 +60,32 @@ writeFileSync(`${DIST}/_headers`, [
   '/assets/*',
   '  ! Cache-Control',
   '  Cache-Control: public, max-age=31536000, immutable',
+  // Every page links its stylesheets and scripts with a content hash (?v=…), so
+  // a changed file is a new URL and the old one can be kept for good.
   '/css/*',
   '  ! Cache-Control',
-  '  Cache-Control: public, max-age=86400',
+  '  Cache-Control: public, max-age=31536000, immutable',
   '/js/*',
   '  ! Cache-Control',
-  '  Cache-Control: public, max-age=86400',
+  '  Cache-Control: public, max-age=31536000, immutable',
   '/api/*',
   '  ! Cache-Control',
   '  Cache-Control: no-store',
   // llms.txt carries Chinese as well as English: say it is UTF-8 text.
   '/llms.txt',
   '  Content-Type: text/plain; charset=utf-8',
+  '',
+].join('\n'));
+
+// The pages stargowork.com served before this site, sent to the page that now
+// covers the same ground, so old links and search results do not end in a 404.
+writeFileSync(`${DIST}/_redirects`, [
+  '/features /capabilities 301',
+  '/features.html /capabilities 301',
+  '/security /enterprise 301',
+  '/security.html /enterprise 301',
+  '/en/features /en/capabilities 301',
+  '/en/security /en/enterprise 301',
   '',
 ].join('\n'));
 

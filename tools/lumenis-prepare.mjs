@@ -29,6 +29,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { readBundle } from './ix-lib.mjs';
 
 import { SITE } from './paths.mjs';
+import { webpSheet } from './image-refs.mjs';
 const SRC = `${SITE}/tools/templates/lumenis`;
 const NS = 'lm-';
 
@@ -155,7 +156,7 @@ for (const id of listIds) actionLists[NS + id] = deep(P.actionLists[id]);
 
 mkdirSync(`${SITE}/tools/fragments`, { recursive: true });
 writeFileSync(`${SITE}/tools/fragments/lm-card.html`, cardNs, 'utf8');
-writeFileSync(`${SITE}/css/lumenis.lm.css`, out, 'utf8');
+writeFileSync(`${SITE}/css/lumenis.lm.css`, webpSheet(out), 'utf8');
 writeFileSync(`${SITE}/tools/fragments/lm-ix.json`, JSON.stringify({ events, actionLists }, null, 1), 'utf8');
 
 console.log(JSON.stringify({

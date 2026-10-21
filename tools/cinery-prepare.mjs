@@ -30,6 +30,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { readBundle } from './ix-lib.mjs';
 
 import { SITE } from './paths.mjs';
+import { webpSheet } from './image-refs.mjs';
 const SRC = `${SITE}/tools/templates/cinery`;
 const MONO_PAGE = '699b6466d5f19893993a4bf1';
 const NS = 'cn-';
@@ -205,7 +206,7 @@ const eventsFinal = JSON.parse(JSON.stringify(events).split(rowWid).join(ROW_WID
 mkdirSync(`${SITE}/tools/fragments`, { recursive: true });
 writeFileSync(`${SITE}/tools/fragments/cn-capmap.html`,
   `<!-- heading -->\n${headingNs}\n<!-- row -->\n${rowFinal}\n`, 'utf8');
-writeFileSync(`${SITE}/css/cinery.cn.css`, out, 'utf8');
+writeFileSync(`${SITE}/css/cinery.cn.css`, webpSheet(out), 'utf8');
 writeFileSync(`${SITE}/tools/fragments/cn-ix.json`,
   JSON.stringify({ events: eventsFinal, actionLists }, null, 1), 'utf8');
 

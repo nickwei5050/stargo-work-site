@@ -24,6 +24,7 @@ import { loadBlocks, art, capTitle, DONORS } from './block-lib.mjs';
 import { PRODUCT_CAPTION } from './editorial-images.mjs';
 import { HERO, HOME_MODULES, HOME_STAGES, NOTICES_CARDS } from './replaceables.mjs';
 import { SITE } from './paths.mjs';
+import { webpPage } from './image-refs.mjs';
 
 /** The capability page's donor blocks, one module each in tools/blocks. */
 const CAP_BLOCKS = await loadBlocks();
@@ -442,14 +443,16 @@ PAGES['index.html'] = (lang) => {
        product. The sentences stayed; on 2026-09-22 the three older 1268px
        stills were swapped for curated pack screens (filenames unchanged):
 
-         (001) 主动获客 — gos01 is now 增长分析 (product-growth.webp), the
-               growth-narrative screen that was still unused. It is not the
-               control tower: that picture is the Growth OS panel below, so
-               the two sections do not repeat.
-         (002) 外贸销售 — sw028, an inquiry with a grounded draft reply.
-         (003) 企业履约 — sw033 is now the second Sales Desk workbench
-               (product-sales.webp): the inquiry, a draft quote, and the
-               document centre in the same chrome as the other curated stills.
+         (001) 主动获客 — the Growth OS home (since 2026-10-21 a clean
+               capture with demo data; the still before it showed an
+               infrastructure panel). It is not the control tower: that
+               picture is the Growth OS panel below, so the two sections do
+               not repeat.
+         (002) 外贸销售 — the Sales Desk case: inquiry list, extracted facts
+               and the next step (clean capture, 2026-10-21; it replaced a
+               generated render).
+         (003) 企业履约 — the ERP item list (clean capture, 2026-10-21; the
+               Sales Desk still before it showed a live mailbox).
          (005) 复购与改进 — gos11 is now the workspace home (alt-home.webp).
                The pack has no separate reactivation still; this is the
                remaining home screen, fitted in the same card.
@@ -465,10 +468,10 @@ PAGES['index.html'] = (lang) => {
        slot title, and `stillImage` below with 'STARGO OS'. The one concept
        illustration keeps swapImg's empty alt, which is what it had.
 
-       The card is `.image-wrap.for-service`, `aspect-ratio: 3 / 2`; a 16:9
+       The card is `.image-wrap.for-service`, `aspect-ratio: 3 / 2`; a
        screenshot in it is fitted, not cropped, by H29 in css/stargo-fusion.css.
-       gos01 and gos11 are dark chrome, so their plates are their own edge
-       colour rather than the light plate the pale screens use. */
+       (002) and (003) are cut to 3:2 and fill it; the Growth OS home (about
+       2:1) and gos11 sit on plates of their own edge colour. */
     const CONTENT = { alt: 'STARGO WORK' };
     const scenes = [['Scene%20%239.webp', HOME_STAGES[0].file, CONTENT], ['Scene%20%235.webp', HOME_STAGES[1].file, CONTENT], ['Scene%20%2310%20(Light)', HOME_STAGES[2].file, CONTENT], ['Scene%20%238.webp', HOME_STAGES[3].file], ['Scene%2018.webp', HOME_STAGES[4].file, CONTENT]];
     scenes.forEach(([k, src, opts]) => { h = swapImg(h, k, src, opts); });
@@ -641,32 +644,37 @@ PAGES['index.html'] = (lang) => {
     h = h.slice(0, at + dots.length) + renderBlock('ro-gallery', lang) + h.slice(at + dots.length);
   }
   const monoLink = /<link href="css\/monof-template\.app\.shared\.[a-f0-9]+\.css" rel="stylesheet" type="text\/css"\/>/;
-  /* offgrid's sheet still ships with the homepage because the retired opening
-     block's rules live in it. The overlay itself is not in the document —
-     see homeIntro(). The sheet goes before scalora's and before
-     stargo-fusion.css, the same order the capability page puts donor sheets in. */
+  /* offgrid's sheet carries the opening animation's block (see homeIntro below)
+     and has to be in the <head>: the overlay must be opaque on the first paint,
+     or the page it introduces flashes past underneath it. It goes before
+     scalora's and before stargo-fusion.css, the same order the capability page
+     puts the donor sheets in. */
   h = h.replace(monoLink, (m) => `${m}\n<link href="css/${DONORS.offgrid.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/${DONORS.rototo.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/scalora-modules.sc.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>`);
   h = homeIntro(h, lang);
   return h;
 };
 
 /**
- * The opening overlay is not part of the page.
+ * 开场动画 — the opening the owner asked for, over the homepage.
  *
- * It used to be the first child of <body>: offgrid's bracketed `[STARGO WORK]`
- * on `.og-hero-section`, then rototo's `.og-intro-wipe` columns. Hiding that
- * node in css/offgrid.og.css (`display: none`) still left the markup in the
- * document, so the first paint was the white wordmark whenever the sheet had
- * not applied yet, failed to load, or a later rule showed the node. The
- * homepage builder does not emit the overlay, the hero section, or the wipe.
- * tools/blocks/og-intro.mjs still knows how the donor cut was made; nothing
- * in this build inserts its HTML.
+ * OFFGRID's bracket headline reading `[STARGO OS]`, then OFFGRID's thirty-six
+ * tile mosaic revealing, then rototo's column wipe clearing to the page. It is
+ * one block, tools/blocks/og-intro.mjs, and everything about how it was cut and
+ * why each animation had to be replayed rather than carried is in that file's
+ * header.
  *
- * An inline rule in the head hides those selectors anyway. It does not depend
- * on css/offgrid.og.css or on js/stargo-intro.js, so a stale fragment cannot
- * cover the orbit poster or the cockpit stills. The rule is on the two
- * homepages only — this function is called from the homepage builder and from
- * nowhere else.
+ * It is an overlay, not a section: the first child of <body>, `position: fixed`,
+ * so not one box of the homepage moves because of it, and it removes itself
+ * from the document when the sequence ends. It runs on index.html and
+ * en/index.html only — this function is called from the homepage builder and
+ * from nowhere else, so the other thirty-six pages never carry the markup, the
+ * script or offgrid's stylesheet.
+ *
+ * `aria-hidden` because it is decoration announcing nothing, and it holds
+ * nothing focusable: og-intro.mjs takes the donor's anchors out for exactly
+ * that reason. tools/chrome.mjs attaches js/stargo-intro.js when it sees
+ * `data-og-intro`, and og-intro.css decides whether the overlay is ever shown
+ * (never without JavaScript, never under prefers-reduced-motion).
  */
 /**
  * A donor block, one module each in tools/blocks.
@@ -689,39 +697,21 @@ function renderBlock(id, lang, extra) {
   return `<div class="${mod.donor.scope.replace(/^\./, '')}">${html}</div>`;
 }
 
-/* Markers of the retired splash. Checked on the document before the kill
-   rule is inserted, because that rule names the same classes. */
-const INTRO_MARKERS = [
-  'data-og-intro',
-  'class="og-intro"',
-  'og-hero-section',
-  'og-intro-wipe',
-  'og-intro-column',
-  'og-text-spam',
-  'og-is-hero',
-];
-
 function homeIntro(html, lang) {
-  for (const token of INTRO_MARKERS) {
-    if (html.includes(token)) throw new Error(`index (${lang}): opening splash is still in the page (${token})`);
-  }
-  if (html.includes('>[') && html.includes('>STARGO WORK</span>]')) {
-    throw new Error(`index (${lang}): the bracketed STARGO WORK splash is still in the page`);
-  }
-  if (!html.includes('</head>')) throw new Error('index: no </head> for the intro kill rule');
-  if (html.includes('id="og-intro-kill"')) throw new Error('index: intro kill rule already present');
-  /* Inline, and last in <head>, so it applies on the first paint even when
-     css/offgrid.og.css is slow, cached stale, or missing. !important beats a
-     later `display: block` that does not itself use !important. */
-  const kill = '<style id="og-intro-kill">.og-intro,.og-intro *,.og-hero-section,.og-intro-wipe,.og-intro-column,.og-text-spam{display:none!important;visibility:hidden!important;pointer-events:none!important;height:0!important;overflow:hidden!important}</style>';
-  return html.replace('</head>', `${kill}</head>`);
-}
-
-function assertNoOpeningSplash(html, where) {
-  if (html.includes('data-og-intro') || /class="[^"]*\bog-intro\b/.test(html) || html.includes('>STARGO WORK</span>]')) {
-    throw new Error(`${where}: the opening splash is in the generated page`);
-  }
-  if (!html.includes('id="og-intro-kill"')) throw new Error(`${where}: the intro kill rule is missing`);
+  const intro = renderBlock('og-intro', lang);
+  const OPEN = '<div class="og-intro">';
+  if (!intro.startsWith(OPEN)) throw new Error('index: the intro block did not come back wrapped in its scope');
+  /* offgrid tags its bracketed headline <h1>. Here it is an aria-hidden overlay
+     that removes itself, and the homepage already has its h1 (Mono's hero), so
+     the tag becomes a div. Its look is carried by `.og-intro
+     .og-heading-style-h1…` class rules, which outrank offgrid's `.og-intro h1`
+     element rules on every property those set; js/stargo-intro.js finds it by
+     class. */
+  const body = intro.slice(OPEN.length).replace(/<h1(?=[\s>])/g, '<div').replace(/<\/h1>/g, '</div>');
+  if (/<\/?h1[\s>]/.test(body)) throw new Error('index: the opening animation still carries a level-one heading');
+  const overlay = `<div class="og-intro" data-og-intro="" aria-hidden="true">${body}`;
+  if (!html.includes('<body>')) throw new Error('index: no <body> to put the opening animation in front of');
+  return html.replace('<body>', `<body>${overlay}`);
 }
 
 /* ---- the enterprise ontology list inside the lifelogx sticky section -------
@@ -1033,15 +1023,21 @@ function lxPage(spec, lang, name) {
      screens are object-fit: cover in the same frame, so the crop and the
      cycling animation are unchanged, and they stay decorative (alt=""). */
   {
+    /* Since 2026-10-21 the first two screens are real phone captures of the
+       Sales Desk with demonstration data (site-images/screens-final 52 and 51,
+       with status-bar space above them): the earlier inquiry picture came from
+       a capture of a live mailbox. A product screen is described, not
+       decorative, so it goes in with a non-empty alt that
+       tools/editorial-images.mjs replaces with its registered sentence. */
     const SCREENS = [
-      ['iPhone%2013%20Pro%20Max%20-%203', MOBILE.inquiry],   // a chat → conversation becomes customer knowledge
-      ['iPhone%2013%20Pro%20Max%20-%204', MOBILE.approvals], // a message list → a decision held at an approval gate
+      ['iPhone%2013%20Pro%20Max%20-%203', 'assets/stargo-product/live52-mobile-case-screen.webp', true], // a chat → answering an inquiry on the phone
+      ['iPhone%2013%20Pro%20Max%20-%204', 'assets/stargo-product/live51-mobile-board-screen.webp', true], // a message list → the deal board with the approval waiting
       ['iPhone%2016%20Pro%20-%201', MOBILE.agents],          // a card wall → parallel tasks at a shared junction
       ['iPhone%2016%20Pro%20-%202', MOBILE.core],            // the first screen → shared enterprise context
     ];
-    for (const [key, src] of SCREENS) {
+    for (const [key, src, product] of SCREENS) {
       if ((b.match(new RegExp(`<img\\b[^>]*${key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'g')) ?? []).length !== 3) throw new Error(`${name}: expected the phone screen ${key} in three mockups`);
-      b = swapImg(b, key, src);
+      b = swapImg(b, key, src, product ? { alt: PRODUCT_CAPTION[lang] } : {});
     }
   }
   /* V7-LX: the hand-held phone of the "no writing" band (no-writing-sc) is a
@@ -1450,7 +1446,7 @@ function postPage(post, lang) {
      the words tools/editorial-images.mjs uses for the same pictures elsewhere
      (tools/blog.mjs coverAlt). The editorial covers stay decorative. */
   b = swapImg(b, '6945522d9e13fa6b32ace3c9_Futuristic', coverSrc(post), { alt: coverAlt(post, lang) });
-  b = b.replace(/(<img[^>]*class="lx-blog-image lx-details")\/>/, (m, tag) => `${tag} srcset="${coverSrcset(post)}" sizes="(max-width: 991px) 100vw, 1180px"/>`);
+  b = b.replace(/(<img[^>]*class="lx-blog-image lx-details")\/>/, (m, tag) => `${tag.replace(' loading="lazy"', ' loading="eager" fetchpriority="high"')} srcset="${coverSrcset(post)}" sizes="(max-width: 991px) 100vw, 1180px"/>`);
   if (!b.includes(coverSrcset(post))) throw new Error('post: hero image');
   {
     // The rich-text block carries the interaction's initial state inline (opacity 0, data-w-id): keep its tag, replace its content.
@@ -2252,6 +2248,7 @@ for (const lang of C.LANGS) {
     let html = build(lang);
     html = applyChrome(html, { lang, current: name });
     html = remapLinks(html);
+    html = webpPage(html);
     assertInternalLinks(html, `${lang}/${name}`);
     const body = html.slice(html.indexOf('<body'));
     {
@@ -2274,7 +2271,6 @@ for (const lang of C.LANGS) {
       }
     }
     // Pages in a folder (blog/) link and load one level up; English pages one more.
-    if (name === 'index.html') assertNoOpeningSplash(html, `${lang}/${name}`);
     const depth = name.split('/').length - 1;
     html = relocateLinks(html, '../'.repeat(depth));
     const assetUp = '../'.repeat(depth + (lang === 'en' ? 1 : 0));

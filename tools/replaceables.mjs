@@ -90,6 +90,18 @@ export const PRODUCT_IDS = {
   reorder: 'gos09-reorder-radar',
   committee: 'gos05-buying-committee',
   reactivation: 'gos11-dormant-reactivation',
+  /* Clean captures of the product with demonstration data (2026-10-21,
+     site-images/screens-final), cut to the slot that shows them. They replace
+     sw033 and gos01 (a live mailbox and an infrastructure panel) and the
+     generated renders behind sw028 and brand-family-02. */
+  caseDesk: 'live09-sales-desk-case-4x3',
+  caseStage: 'live09-sales-desk-case-3x2',
+  erpItems: 'live23-erp-items-16x9',
+  erpStage: 'live23-erp-items-3x2',
+  growthHome: 'live05-growth-home-2x1',
+  growthStartThumb: 'live05-growth-home-start-5x4',
+  needs: 'live52-mobile-case-needs',
+  quoteApproval: 'live18-quote-approval-16x9',
 };
 
 export const PRODUCT = Object.fromEntries(
@@ -111,7 +123,7 @@ export const GALLERY_TILES = [
   PRODUCT_IDS.teams,
   PRODUCT_IDS.workflows,
   PRODUCT_IDS.inquiry,
-  PRODUCT_IDS.documents,
+  PRODUCT_IDS.quoteApproval,
 ];
 
 /**
@@ -120,8 +132,8 @@ export const GALLERY_TILES = [
  */
 export const HOME_MODULES = {
   'Growth OS': PRODUCT.growth,
-  'Sales Desk': PRODUCT.inquiryReply,
-  ERP: editorialToken('brand-family-02'),
+  'Sales Desk': PRODUCT.caseDesk,
+  ERP: PRODUCT.erpItems,
   'AI 创作': editorialToken('os-boot'),
   'AI Creative': editorialToken('os-boot'),
 };
@@ -131,9 +143,9 @@ export const HOME_MODULES = {
  * path (a product path, or an editorial token).
  */
 export const HOME_STAGES = [
-  { id: 'acquisition', label: '001 主动获客', file: PRODUCT.market },
-  { id: 'sales', label: '002 外贸销售', file: PRODUCT.inquiryReply },
-  { id: 'fulfillment', label: '003 企业履约', file: PRODUCT.documentPack },
+  { id: 'acquisition', label: '001 主动获客', file: PRODUCT.growthHome },
+  { id: 'sales', label: '002 外贸销售', file: PRODUCT.caseStage },
+  { id: 'fulfillment', label: '003 企业履约', file: PRODUCT.erpStage },
   { id: 'collection', label: '004 回款与服务', file: editorialToken('brand-family-01') },
   { id: 'reorder', label: '005 复购与改进', file: PRODUCT.reactivation },
 ];
@@ -145,7 +157,7 @@ export const HOME_STAGES = [
  */
 export const GROWTH_ROWS = [
   { art: 'brand-family-01', shot: null },
-  { art: OS_ART.salesDesk, shot: PRODUCT_IDS.market },
+  { art: OS_ART.salesDesk, shot: PRODUCT_IDS.growthStartThumb },
   { art: OS_ART.loading, shot: PRODUCT_IDS.reorder },
   { art: 'mobile-approvals', shot: PRODUCT_IDS.committee },
 ];
@@ -154,7 +166,7 @@ export const GROWTH_ROWS = [
  * Capability page, Sales Desk rows (tools/blocks/qx-news.mjs).
  * An editorial id, or a product path written as-is.
  */
-export const SALES_ROWS = [OS_ART.desktop, PRODUCT.inquiry, OS_ART.inquiries];
+export const SALES_ROWS = [OS_ART.desktop, PRODUCT.needs, OS_ART.inquiries];
 
 /** Capability showcase story pictures. Editorial ids. */
 export const STORY_ART = {
@@ -172,7 +184,7 @@ export const STORY_ART = {
 };
 
 /** Notices “keep reading” cards, in card order. */
-export const NOTICES_CARDS = [PRODUCT.workspaceHome, PRODUCT.expertsLibrary, PRODUCT.documentPack];
+export const NOTICES_CARDS = [PRODUCT.workspaceHome, PRODUCT.expertsLibrary, PRODUCT.quoteApproval];
 
 /** Workforce / About pictures that reuse a hero or product slot. */
 export const PLACED = {
