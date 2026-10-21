@@ -1543,7 +1543,7 @@ export const NOT_FOUND = {
 /** Privacy policy and terms of use: real pages, not placeholder anchors. */
 export const LEGAL = {
   privacy: {
-    date: B('2026-09-05 生效', 'Effective 2026-09-05'),
+    date: B('2026-10-21 生效', 'Effective 2026-10-21'),
     h1: B('隐私政策', 'Privacy policy'),
     body: B(`
 <p>本政策说明 STARGO WORK 官方网站（以下简称「本站」）收集哪些信息、为什么收集、保存多久，以及你拥有的权利。本站由 STARGO（柳州 · 广西 · 中国）运营。</p>
@@ -1585,7 +1585,7 @@ export const LEGAL = {
 <p>When this policy changes, the effective date at the top of this page changes with it. Material changes are announced prominently on the site.</p>`),
   },
   terms: {
-    date: B('2026-09-05 生效', 'Effective 2026-09-05'),
+    date: B('2026-10-21 生效', 'Effective 2026-10-21'),
     h1: B('使用条款', 'Terms of use'),
     body: B(`
 <p>访问或使用 STARGO WORK 官方网站（以下简称「本站」），即表示你接受以下条款。本站由 STARGO（柳州 · 广西 · 中国）运营。</p>

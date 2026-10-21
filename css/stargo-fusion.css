@@ -1594,7 +1594,7 @@ html[lang^="zh"] .lx-scope .lx-heading-style-h4:has(br) {
    from the next.
 
    Measured after, at 430, the block reads top to bottom as 「(商务合作)」 /
-   sales@stargomoto.com / WhatsApp +86 187 7512 7878 / 「(一般咨询)」 /
+   the e-mail address / WhatsApp +86 187 7512 7878 / 「(一般咨询)」 /
    www.stargomoto.com / 「(地址)」 / 柳州 · 广西 · 中国 / 「(社交)」 / the three
    round buttons. Heading top to the first line of the group it names: 41px
    every time (49px for the buttons, which are a 32px row rather than a line of
@@ -5234,7 +5234,16 @@ button.cn-social-link {
   text-align: left;
   cursor: pointer;
 }
-button.button-link { padding: 0; line-height: inherit; }
+/* No padding here for `button.button-link`: the template's own `.button-link`
+   rules already clear the UA padding, and below 992px they give every row
+   `padding: 4px 0`. A reset here (0,1,1) outranked that (0,1,0), so the footer's
+   微信 row was a 16.5px target while the <a> rows above it were 25px, and sat 4px
+   out of their rhythm. On touch screens the <a> rows get 8px (the
+   `(pointer: coarse)` rule above names `a.button-link`); the button takes the
+   same. */
+@media (pointer: coarse) {
+  button.button-link { padding-top: 8px; padding-bottom: 8px; }
+}
 button.social-wrapper,
 button.cn-social-link { padding: 0; }
 button.button-link .social-circle-small,
@@ -5255,8 +5264,8 @@ button.button-link .navigation-text-main { text-align: left; }
    Mono's `p.top-text`, like 「(告诉我们你的公司)」 beside it; each row is a
    label in `top-text sml` (Mono's small grey) and a value in `top-text`,
    between the same 10%-black hairlines Mono draws its lists with. Five rows
-   of one line each, 40px of air above, so the whole column (card + list)
-   still fits the 900px-tall window it is sticky in from 992px. */
+   of one line each, 40px of air above: from 992px the whole column (card +
+   list) is 768px tall, sticky at 108px, so its bottom is at 876px. */
 .stargo-direct { margin-top: 40px; }
 .stargo-direct-list { margin: 16px 0 0; padding: 0; border-bottom: 1px solid rgba(0, 0, 0, .1); }
 .stargo-direct-row {
@@ -5269,6 +5278,10 @@ button.button-link .navigation-text-main { text-align: left; }
   border-top: 1px solid rgba(0, 0, 0, .1);
 }
 .stargo-direct-row > dt { margin: 0; }
+/* `sml` is Mono's .5 opacity: #808080 on white, 3.94:1 at 14.4px, under the
+   4.5:1 AA asks for. At .6 the label is #666 (5.7:1) and still reads as the
+   grey half of the row. */
+.stargo-direct-row > dt.top-text { opacity: .6; }
 .stargo-direct-row > dd {
   margin: 0;
   display: flex;
@@ -5279,18 +5292,27 @@ button.button-link .navigation-text-main { text-align: left; }
   overflow-wrap: anywhere;
   letter-spacing: -.3px;
 }
-.stargo-direct-row a { color: inherit; text-decoration: none; background-image: linear-gradient(currentColor, currentColor); background-size: 0 1px; background-repeat: no-repeat; background-position: 0 100%; transition: background-size .35s; }
+/* Each link is the row's height to a finger: 12px above and below its one
+   line (18px + 24 = 42px, inside the 44px row), taken back by the same
+   negative margin so nothing moves. The underline is placed in the content
+   box, so it stays under the text, not at the foot of the padding. */
+.stargo-direct-row a { display: block; padding: 12px 0; margin: -12px 0; color: inherit; text-decoration: none; background-image: linear-gradient(currentColor, currentColor); background-origin: content-box; background-size: 0 1px; background-repeat: no-repeat; background-position: 0 100%; transition: background-size .35s; }
 .stargo-direct-row a:hover,
 .stargo-direct-row a:focus-visible { background-size: 100% 1px; }
-/* 「复制」: a small outlined pill in the label's size, wide enough for 「已复制」
-   / "Copied" so the swap does not move anything. */
+/* 「复制」: a small outlined pill in the label's size (25px), wide enough for
+   「已复制」 / "Copied" so the swap does not move anything. The button itself is
+   40px tall, the site's tap-target bar; the pill is drawn by ::before in its
+   middle, and the -7.5px margins keep the row as it was. */
 .stargo-copy {
   -webkit-appearance: none;
   appearance: none;
+  position: relative;
+  isolation: isolate;
   min-width: 4.2em;
-  margin: 0;
-  padding: 3px 10px;
-  border: 1px solid rgba(0, 0, 0, .2);
+  min-height: 40px;
+  margin: -7.5px 0;
+  padding: 0 10px;
+  border: 0;
   border-radius: 999px;
   background: transparent;
   color: inherit;
@@ -5300,8 +5322,31 @@ button.button-link .navigation-text-main { text-align: left; }
   line-height: 1.2;
   text-align: center;
   cursor: pointer;
-  transition: background-color .2s, border-color .2s, color .2s;
+  transition: color .2s;
 }
-.stargo-copy:hover { border-color: rgba(0, 0, 0, .55); }
-.stargo-copy[data-stargo-copied-on] { background-color: #000; border-color: #000; color: #fff; }
+.stargo-copy::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: calc(50% - .6em - 4px) 0;
+  border: 1px solid rgba(0, 0, 0, .2);
+  border-radius: 999px;
+  transition: background-color .2s, border-color .2s;
+}
+.stargo-copy:hover::before { border-color: rgba(0, 0, 0, .55); }
+/* The site's focus ring (#e8823a, 3px out), around the pill one sees. */
+.stargo-copy:focus-visible { outline: 0; }
+.stargo-copy:focus-visible::before { outline: 2px solid #e8823a; outline-offset: 3px; }
+.stargo-copy[data-stargo-copied-on] { color: #fff; }
+.stargo-copy[data-stargo-copied-on]::before { background-color: #000; border-color: #000; }
+
+/* The column is sticky from 992px (the contact-page rule further up), and with
+   the list under the card it is 768px tall: stuck at 108px it ends at 876px.
+   In a window under 900px tall (1366x768, 1280x720, 1536x864 laptops) its
+   last rows — 微信, WhatsApp, 邮箱 — would stay below the fold for as long as
+   it is stuck, i.e. until the form ends. There the column scrolls with the
+   page instead, so the whole list passes through view. */
+@media screen and (min-width: 992px) and (max-height: 899px) {
+  .stargo-contact-page .contact-1-grid .max-w-left.add-cnt { position: static; }
+}
 /* V8-CONTACT-END */
