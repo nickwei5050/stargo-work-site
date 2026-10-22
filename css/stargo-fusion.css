@@ -5781,3 +5781,69 @@ img[src*="stargo-photo/e08-emergency-stop-"] { object-position: 50% 42%; }
   object-fit: cover;
   border-radius: 13.453% / 6.289%;
 }
+
+/* ===========================================================================
+   Lane: phone (review items Z05 and Z10)
+   =========================================================================== */
+
+/* Z05. Phone and tablet header (below 992px).
+   tools/chrome.mjs adds a compact demo pill to the header's right-hand group
+   (`.stargo-phone-demo`, the site's own 预约演示 / Book a Demo CTA) and the same
+   CTA as the last item of the menu Webflow folds the top bar into
+   (`.stargo-nav-demo`). From 992px both are hidden: the desktop bar and its
+   pill are unchanged. js/stargo-phone-nav.js brings the header back when the
+   reader scrolls up: `stargo-nav-stick` on <html> makes it sticky at the top
+   of `.main-content` (its first child), keeping its place in the flow with a
+   negative margin of its own height so nothing below moves; `stargo-nav-show`
+   slides it on screen, on a white ground so it reads over any section. */
+.stargo-phone-demo { display: none; }
+@media (min-width: 992px) {
+  .nav-menu .button-link.stargo-nav-demo { display: none; }
+}
+@media (max-width: 991px) {
+  .navigation-top .last-part .stargo-phone-demo,
+  .absolute-element .last-part .stargo-phone-demo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 16px;
+    border-radius: 999px;
+    background: #111;
+    color: #fff;
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 500;
+    white-space: nowrap;
+    text-decoration: none;
+    margin-right: 6px;
+  }
+  .navigation-top .last-part .stargo-phone-demo:focus-visible,
+  .absolute-element .last-part .stargo-phone-demo:focus-visible { outline: 2px solid #111; outline-offset: 3px; }
+  html.stargo-nav-stick .navigation-top {
+    position: sticky;
+    top: 0;
+    margin-bottom: calc(-1 * var(--stargo-nav-h, 68px));
+    transform: translateY(-100%);
+    transition: transform .28s ease, background-color .2s ease;
+    background-color: #fff;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, .08);
+  }
+  html.stargo-nav-stick.stargo-nav-show .navigation-top { transform: none; }
+  /* Dark-hero pages draw the bar's text white; on the white ground it is dark.
+     Over those dark heroes the pill turns white until the bar is stuck. */
+  html.stargo-nav-stick .navigation-top .navigation-text-main { color: #111; }
+  html:not(.stargo-nav-stick) body:is(.lx-page, .stargo-dark-page, .stargo-dark-nav) .navigation-top .last-part .stargo-phone-demo { background: #fff; color: #111; }
+  html:not(.stargo-nav-stick) body:is(.lx-page, .stargo-dark-page, .stargo-dark-nav) .navigation-top .last-part .stargo-phone-demo:focus-visible { outline-color: #fff; }
+}
+@media (max-width: 991px) and (prefers-reduced-motion: reduce) {
+  html.stargo-nav-stick .navigation-top { transition: none; }
+}
+@media (max-width: 379px) {
+  /* 320–379px: the wordmark, the pill and the menu button share one row. */
+  .navigation-top .last-part .stargo-phone-demo,
+  .absolute-element .last-part .stargo-phone-demo { padding: 0 12px; font-size: 13px; margin-right: 2px; }
+  .navigation-top .stargo-wordmark.in-nav,
+  .absolute-element .stargo-wordmark.in-nav { height: 16px; width: auto; }
+}
+
