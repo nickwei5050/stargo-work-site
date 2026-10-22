@@ -6089,4 +6089,113 @@ img[src*="stargo-photo/e08-emergency-stop-"] { object-position: 50% 42%; }
     z-index: 2;
   }
   .rk-price-compare .rk-rt-pricing-v1-content-2.stargo-scroll-more::after { opacity: 1; }
+
+/* ==========================================================================
+   a11y lane (review items Z15 and Z20)
+   ========================================================================== */
+
+/* Z15 landmarks. tools/a11y.mjs wraps the page content between the top
+   navigation and the footer in <main id="main">. The wrapper adds no box:
+   every section keeps #Top as its layout parent, so stacking, sticky scenes
+   and the pinned sections behave exactly as before. */
+.stargo-main { display: contents; }
+.stargo-main-start { position: absolute; width: 1px; height: 1px; overflow: hidden; }
+.stargo-main-start:focus { outline: none; }
+
+/* Z15 skip link: the first stop for Tab, out of sight until it has focus. */
+.stargo-skip {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 2147483647;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 20px;
+  border-radius: 999px;
+  background: #0d0906;
+  color: #fff;
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1.2;
+  text-decoration: none;
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.stargo-skip:focus,
+.stargo-skip:focus-visible {
+  clip-path: none;
+  width: auto;
+  height: auto;
+  min-height: 44px;
+  overflow: visible;
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+/* Z20 contrast. Mono greys its secondary text with opacity, not colour: at
+   .34–.5 over #fff / #f5f5f5 that is 2.3–3.9:1, under the 4.5:1 that body
+   and meta text needs (WCAG 1.4.3 AA). Each is raised to .6 — 4.9:1 or more
+   on both light grounds, and still well above 4.5:1 for white text on the
+   dark sections — so the hierarchy reads as before, one step firmer.
+   `.add-max-w.full-color` (opacity 100) and `.top-text.sml._80-opc` (.8)
+   are more specific and keep their own values. */
+.add-max-w,
+.lighter-text,
+.top-text.sml,
+.top-text.gry,
+.small-ftd { opacity: .6; }
+/* The consent line and the other small greys sit on photographs behind
+   frosted glass, where .65 measured 2.4–2.8:1. */
+.top-text.gray-small { opacity: .85; }
+/* The homepage hero's “© 2026 STARGO WORK”: #999 on white is 2.8:1. The
+   same class in the dark footer keeps #999 (7:1 there). */
+.hero-agency .top-text.big.gray.sm { color: #6b6b6b; }
+/* Article dates on the black blog cards: #717171 is 4.3:1 on #000. */
+.lx-scope .lx-post-date { color: #808080; }
+
+/* Z20 small text: lifelogx's tiny size (.7rem = 11.2px; the role chips on
+   /workforce) is the one size under 12px left on the site. */
+.lx-text-size-tiny { font-size: .75rem; }
+
+/* Z20 tap targets on touch screens: at least 44 x 44 CSS px (WCAG 2.5.5).
+   Nothing moves: the hit area grows into a transparent border or padding
+   that a negative margin of the same size gives back, so every box keeps its
+   place and every visible edge stays where it was (background-clip keeps a
+   filled shape at its drawn size). */
+@media (pointer: coarse) {
+  /* Blocks and flex items with no fixed size: the extra is padding-free
+     transparent border, so the text and its underline stay put. */
+  a.button-with-line { border-top: 12px solid transparent; border-bottom: 12px solid transparent; margin-top: -12px; margin-bottom: -12px; }
+  a.qx-blog-title,
+  a.qx-project-card-title { border-top: 9px solid transparent; border-bottom: 9px solid transparent; margin-top: -9px; margin-bottom: -9px; }
+  a.rk-rt-button { border-top: 4px solid transparent; border-bottom: 4px solid transparent; margin-top: -4px; margin-bottom: -4px; }
+  /* Already padded to 33–35px by the touch-target block above; 6px more. */
+  a.button-link,
+  button.button-link { border-top: 6px solid transparent; border-bottom: 6px solid transparent; margin-top: -6px; margin-bottom: -6px; background-clip: padding-box; }
+  .legal-link { border-top: 5px solid transparent; border-bottom: 5px solid transparent; margin-top: -5px; margin-bottom: -5px; }
+  /* Inline links in a card's footer line (“ERP 与履约详情”, “对应能力组 09”):
+     vertical padding on an inline box widens what a finger hits and nothing
+     in the line's layout. */
+  a.rk-testimonials-link,
+  a.cn-question-link { padding-top: 14px; padding-bottom: 14px; }
+  /* The footer's 40px round channel icons on phones: 44px boxes whose 2px
+     transparent rim is not painted. (The side menu's and the tablet footer's
+     34px circles have no room for more and stay as they are.) */
+}
+@media (pointer: coarse) and (max-width: 767px) {
+  .footer .social-content.for-footer .social-wrapper {
+    width: 44px;
+    height: 44px;
+    margin: -2px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+}
+@media (pointer: coarse) {
+  /* /contact's direct lines: from the 40px bar to 44px. */
+  .stargo-direct-row a { padding: 14px 0; margin: -14px 0; }
+  .stargo-copy { min-height: 44px; margin: -9.5px 0; }
 }

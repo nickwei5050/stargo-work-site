@@ -26,6 +26,7 @@ import { PRODUCT_CAPTION } from './editorial-images.mjs';
 import { HERO, HOME_MODULES, HOME_STAGES, HOME_SILOS, HOME_ROLE_CARD, HOME_PRICING_CARD, HOME_BLOG_COVERS, NOTICES_CARDS, CAP_PHOTOS, ENTERPRISE_PHOTOS, ROLE_SLIDES, CONTACT_CARD, WORKFORCE_ROLES, WORKFORCE_BLOG_COVERS } from './replaceables.mjs';
 import { SITE } from './paths.mjs';
 import { webpPage } from './image-refs.mjs';
+import { a11yPage } from './a11y.mjs';
 /* The owner's photographs on the blog and intelligence pages (group "blog", 2026-10-21). */
 import { BLOG_COVERS, INTEL_PHOTOS } from './replaceables.mjs';
 
@@ -2495,6 +2496,7 @@ for (const lang of C.LANGS) {
   for (const [name, build] of Object.entries(PAGES)) {
     let html = build(lang);
     html = applyChrome(html, { lang, current: name });
+    html = a11yPage(html, { lang, name });   // Z15: landmarks, skip link, heading semantics, names
     html = remapLinks(html);
     html = webpPage(html);
     assertInternalLinks(html, `${lang}/${name}`);

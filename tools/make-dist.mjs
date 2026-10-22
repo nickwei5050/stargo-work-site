@@ -35,6 +35,9 @@ const walk = (dir, rel, out) => {
   }
 };
 for (const f of readdirSync(SITE)) if (f.endsWith('.html')) wanted.add(f);
+// /favicon.ico: what browsers and crawlers ask for before reading any <link rel="icon">;
+// without it the 404 page (28 KB of HTML) answered. 16/32/48 PNGs of the brand mark.
+wanted.add('favicon.ico');
 for (const d of ['en', 'blog', 'assets', 'css', 'js']) if (existsSync(`${SITE}/${d}`)) walk(`${SITE}/${d}`, d, wanted);
 const GENERATED = ['_headers', '_redirects', '_routes.json', 'robots.txt', 'sitemap.xml', 'llms.txt'];
 for (const g of GENERATED) wanted.add(g);

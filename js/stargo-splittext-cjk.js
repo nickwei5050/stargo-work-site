@@ -47,3 +47,65 @@
   Patched.create = function (targets, vars) { return new Patched(targets, vars); };
   window.SplitText = Patched;
 })();
+
+/* Accessible names for split text (review item Z15, a11y lane).
+   The wrapper above passes aria: 'none', so SplitText leaves the original
+   tree exposed: a screen reader then meets every line, word and character
+   box as its own node, and links, buttons and headings were named letter by
+   letter ("R e q u e s t a D e m o", heading "S T A R G O"). After every
+   split — SplitText's own re-splits included, and whichever code path made
+   the instance, hence the prototype — each split element gets one visually
+   hidden copy of its text, and its split boxes are hidden from assistive
+   technology. An element that holds a link, a button, a form control or a
+   heading of its own is left exactly as before: hiding its boxes would hide
+   those too. revert() restores the original markup, copy included. */
+(function () {
+  var ST = window.SplitText;
+  var proto = ST && ST.prototype;
+  if (!proto || typeof proto.split !== 'function' || proto.split.stargoA11y) return;
+  var KEEP = 'a,button,input,select,textarea,[tabindex],h1,h2,h3,h4,h5,h6,[role="heading"],[role="button"],[role="link"]';
+  var SR = 'position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap';
+  function label(self) {
+    var els = (self && self.elements) || [];
+    for (var i = 0; i < els.length; i++) {
+      var el = els[i];
+      if (!el || el.nodeType !== 1 || el.closest('[aria-hidden="true"]') || el.querySelector(KEEP)) continue;
+      if (el.querySelector(':scope > [data-stargo-sr]')) continue;
+      var text = (el.textContent || '').replace(/[\u200b\u2060\u00ad]/g, '').replace(/\s+/g, ' ').trim();
+      if (!text) continue;
+      for (var c = el.firstElementChild; c; c = c.nextElementSibling) c.setAttribute('aria-hidden', 'true');
+      var sr = document.createElement('span');
+      sr.setAttribute('data-stargo-sr', '');
+      sr.style.cssText = SR;
+      sr.textContent = text;
+      el.insertBefore(sr, el.firstChild);
+    }
+  }
+  var split = proto.split;
+  proto.split = function () {
+    var out = split.apply(this, arguments);
+    try { label(this); } catch (e) { /* names are an enhancement; never break the reveal */ }
+    return out;
+  };
+  proto.split.stargoA11y = true;
+  /* Webflow's interactions engine also splits text whose instances do not
+     pass through the method above (its boxes carry gsap_split_* classes); a
+     mutation observer labels those roots once their split has been
+     inserted. Observer callbacks run after the split's synchronous work. */
+  if (!window.MutationObserver) return;
+  var SPLIT = /(?:^|\s)gsap_split_/;
+  new MutationObserver(function (records) {
+    var roots = [];
+    for (var r = 0; r < records.length; r++) {
+      var added = records[r].addedNodes;
+      for (var a = 0; a < added.length; a++) {
+        var n = added[a];
+        if (n.nodeType !== 1 || !SPLIT.test(n.className || '')) continue;
+        var root = n.parentElement;
+        while (root && SPLIT.test(root.className || '')) root = root.parentElement;
+        if (root && roots.indexOf(root) === -1) roots.push(root);
+      }
+    }
+    if (roots.length) { try { label({ elements: roots }); } catch (e) { /* as above */ } }
+  }).observe(document.documentElement, { childList: true, subtree: true });
+})();
