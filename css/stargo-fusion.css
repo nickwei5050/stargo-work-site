@@ -5376,6 +5376,7 @@ body:has(#loop) .image-wrap.for-service .paralax-image[src*="stargo-photo/p04-"]
    and S02 are centred; S03 keeps the left edge, S04 (the dusk version) its
    walking man and the lit doorway. */
 .work-main-wrapper .paralax-image[src*="stargo-photo/s03-"] { object-position: 0% 50%; }
+.work-main-wrapper .paralax-image[src*="stargo-photo/s03v2-"] { object-position: 0% 50%; }
 .work-main-wrapper .paralax-image[src*="stargo-photo/s04-"] { object-position: 57% 50%; }
 
 /* R1, the photograph split across the two halves behind the scenario cards
@@ -5400,9 +5401,24 @@ body:has(#loop) .image-wrap.for-service .paralax-image[src*="stargo-photo/p04-"]
    which paints over it, and its picture is 2px narrower than 200% of the
    wider box, so both halves still draw it at the same size and it stays
    continuous across the join. */
-.photo-half._01, .photo-half._02 { background-image: url("../assets/stargo-photo/r1-sales-rep-1639.webp"); }
-.photo-half._01 { width: calc(50% + 1px); background-size: calc(200% - 2px) auto; background-position: 0% max(calc(24.5% - 18.5vh), 100%); }
-.photo-half._02 { background-position: 100% max(calc(24.5% - 18.5vh), 100%); }
+/* Since the second round the halves show R1v2, the 16:9 wide version
+   (2880px, the image thread's crop 55% 35%) in place of the portrait R1,
+   which stays on the about and pricing slides. A 16:9 picture drawn as wide
+   as the window is shorter than most windows, so it is drawn at
+   `--r1w`, the window's width or 16/9 of its height, whichever is larger,
+   and placed in window coordinates: the left half at the crop offset, the
+   right half the same offset less its own 50vw, so the two halves still
+   draw one continuous picture (the site hides the scrollbar, so 100vw is
+   the halves' parent). The ancestor's transform turns the fixed attachment
+   into a scrolling one, so the boxes, not the viewport, are the
+   positioning areas, as before. */
+.photo-half._01, .photo-half._02 {
+  --r1w: max(100vw, 177.78vh);
+  background-image: url("../assets/stargo-photo/r1v2-sales-rep-wide-2880.webp");
+  background-size: var(--r1w) auto;
+}
+.photo-half._01 { width: calc(50% + 1px); background-position: calc((100vw - var(--r1w)) * 0.55) 35%; }
+.photo-half._02 { background-position: calc((100vw - var(--r1w)) * 0.55 - 50vw) 35%; }
 
 /* R2, the scenario film card (`.testimonials-card._03`): a portrait still
    in the film's box, 400x450 (0.89:1) from 480 up and ~1.07:1 on a phone,
@@ -5425,6 +5441,8 @@ body:has(#loop) .image-wrap.for-service .paralax-image[src*="stargo-photo/p04-"]
    moves right; the others are centred. */
 .blog-grid .testimonials-photo[src*="stargo-photo/"] { width: auto; height: auto; }
 .blog-grid .testimonials-photo[src*="stargo-photo/b04-"] { object-position: 55% 50%; }
+.blog-grid .testimonials-photo[src*="stargo-photo/b04v2-"] { object-position: 55% 50%; }
+.blog-grid .testimonials-photo[src*="stargo-photo/b07v2-"] { object-position: 50% 40%; }
 
 /* ======================================================================
    The owner's photographs on the capability page (group "cap", 2026-10-21;
@@ -5478,6 +5496,11 @@ body:has(#loop) .image-wrap.for-service .paralax-image[src*="stargo-photo/p04-"]
 img[src*="stargo-photo/c05-unified-inbox-"] { object-position: 52% 50%; }
 img[src*="stargo-photo/c08-product-references-"] { object-position: 50% 60%; }
 img[src*="stargo-photo/c10-progress-board-"] { object-position: 70% 50%; }
+/* The second versions of C01, C02 and C04 (the four area cards) carry the
+   image thread's own crop points. */
+img[src*="stargo-photo/c01v2-"] { object-position: 50% 40%; }
+img[src*="stargo-photo/c02v2-"] { object-position: 75% 50%; }
+img[src*="stargo-photo/c04v2-"] { object-position: 30% 60%; }
 
 /* Sales Desk cards (.qx-news) below 480: qubix sets the card `height: auto`,
    so a card is as tall as its picture's own shape. The art before these
@@ -5653,6 +5676,8 @@ img[src*="stargo-photo/e08-emergency-stop-"] { object-position: 50% 42%; }
    contain rules above key on the assets/blog/ files and do not reach these. */
 .lx-scope .lx-blog-image[src*="stargo-photo/b0"] { height: auto; }
 .lx-scope .lx-blog-image[src*="stargo-photo/b04-"] { object-position: 55% 50%; }
+.lx-scope .lx-blog-image[src*="stargo-photo/b04v2-"] { object-position: 55% 50%; }
+.lx-scope .lx-blog-image[src*="stargo-photo/b07v2-"] { object-position: 50% 40%; }
 @media (max-width: 767px) {
   .lx-scope .lx-blog-image[src*="stargo-photo/b05-"] { object-position: 56% 50%; }
 }

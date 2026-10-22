@@ -100,7 +100,7 @@ try {
     // place of the generated art (brand-family-01, os-inquiries,
     // brand-family-02, brand-family-04). Compared by photograph id, without
     // the width in the file name.
-    const expected = ['c01-command-growth', 'c02-customer-knowledge', 'c03-commerce-fulfilment', 'c04-team-management'];
+    const expected = ['c01v2-command-growth', 'c02v2-customer-knowledge', 'c03-commerce-fulfilment', 'c04v2-team-management'];
     // The four area cards only: the V6 showcases link to groups too.
     const actual = await page.locator('.wrok-wrapper a[href="#g01"] img,.wrok-wrapper a[href="#g04"] img,.wrok-wrapper a[href="#g07"] img,.wrok-wrapper a[href="#g10"] img')
       .evaluateAll(imgs => imgs.map(i => { const src = i.getAttribute('src'); return src.split('/').pop().replace(/stargo-photo\//.test(src) ? /-\d+\.webp$/ : /\.webp$/, ''); }));

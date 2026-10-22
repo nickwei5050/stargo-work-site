@@ -58,6 +58,10 @@ import { SITE, req } from '../paths.mjs';
 const sharp = req('sharp');
 
 const SOURCE = process.argv[2] ?? process.env.STARGO_PHOTO_SOURCE;
+/* STARGO_PHOTO_ONLY=<id>,<id> encodes those ids alone and carries every other
+   registered photograph over from photo-assets.json unchanged, so a new
+   version can be added without the other originals at hand. */
+const ONLY = process.env.STARGO_PHOTO_ONLY ? new Set(process.env.STARGO_PHOTO_ONLY.split(',')) : null;
 if (!SOURCE) throw new Error('usage: node tools/imagegen/prepare-photos.mjs <folder holding site-images/>');
 const TARGET = 'assets/stargo-photo';
 const STEPS = [480, 768, 1024, 1600, 2048];
@@ -239,6 +243,22 @@ const PHOTOS = [
   { id: 'i02-keep-or-revert', ref: 'I02', file: `${BATCH(8)}/intel-keep-or-revert.png`, widths: upTo(768) },
   // 1365 wide, portrait; phone photo 531x720: 712 at 1920; phone 358x418: 716
   { id: 'i03-hand-phone-blank', ref: 'I03', file: `${BATCH(8)}/intel-hand-phone-blank.png`, widths: upTo(768) },
+
+  /* Second versions from the image thread's polish round (2026-10-21), each
+     under a new id because /assets is immutable: same slots as the id they
+     replace, which stays registered for the pages that keep it. */
+  { id: 's03v2-spreadsheet-memory', ref: 'S03v2', file: `${BATCH(2)}/home-silo-03-spreadsheet-memory-v2.png`, widths: upTo(1600) },
+  // 2880x1620; the homepage photo-half band only, a CSS background drawn
+  // cover at the window's size: 1440 wide at 1440, up to ~2880 on 2x screens
+  { id: 'r1v2-sales-rep-wide', ref: 'R1v2', file: `${BATCH(4)}/role-01-sales-rep-wide.png`, widths: [...upTo(2048), 2880] },
+  { id: 'c01v2-command-growth', ref: 'C01v2', file: `${BATCH(6)}/cap-pillar-01-command-growth-v2.png`, widths: upTo(2048) },
+  { id: 'c02v2-customer-knowledge', ref: 'C02v2', file: `${BATCH(6)}/cap-pillar-02-customer-knowledge-v2.png`, widths: upTo(2048) },
+  { id: 'c04v2-team-management', ref: 'C04v2', file: `${BATCH(6)}/cap-pillar-04-team-management-v2.png`, widths: upTo(2048) },
+  // 2880x1920; full-bleed night background, 2326 at 1920
+  { id: 'c11v2-company-research', ref: 'C11v2', file: `${BATCH(6)}/cap-bg-01-company-research-2880.png`, widths: [...upTo(2048), 2880] },
+  { id: 'b01v2-visual-guide', ref: 'B01v2', file: `${BATCH(8)}/blog-cover-visual-guide-v2.png`, widths: upTo(1600) },
+  { id: 'b04v2-approval-handover', ref: 'B04v2', file: `${BATCH(8)}/blog-cover-approval-handover-v2.png`, widths: upTo(1600) },
+  { id: 'b07v2-knowledge-library', ref: 'B07v2', file: `${BATCH(8)}/blog-cover-knowledge-library-v2.png`, widths: upTo(1600) },
 ];
 
 const REGISTRY = `${SITE}/tools/imagegen/photo-assets.json`;
@@ -256,6 +276,13 @@ const ids = new Set();
 for (const job of PHOTOS) {
   if (ids.has(job.id)) throw new Error(`${job.id}: listed twice`);
   ids.add(job.id);
+  if (ONLY && !ONLY.has(job.id)) {
+    const kept = registered.get(job.id);
+    if (!kept) throw new Error(`${job.id}: not registered yet, so it cannot be left out of STARGO_PHOTO_ONLY`);
+    hashes.add(kept.sourceSha256);
+    assets.push(kept);
+    continue;
+  }
   const input = readFileSync(`${SOURCE}/${job.file}`);
   const sourceSha256 = createHash('sha256').update(input).digest('hex');
   const before = registered.get(job.id);

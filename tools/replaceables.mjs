@@ -149,10 +149,10 @@ export const CAP_PHOTOS = {
      order, where brand-family-01, os-inquiries, brand-family-02 and
      brand-family-04 were. */
   areas: [
-    photoFile('c01-command-growth'),       // 指挥与增长 · #g01
-    photoFile('c02-customer-knowledge'),   // 客户与知识 · #g04
+    photoFile('c01v2-command-growth'),       // 指挥与增长 · #g01
+    photoFile('c02v2-customer-knowledge'),   // 客户与知识 · #g04
     photoFile('c03-commerce-fulfilment'),  // 商务、履约与创作 · #g07
-    photoFile('c04-team-management'),      // 员工与管理 · #g10
+    photoFile('c04v2-team-management'),      // 员工与管理 · #g10
   ],
   /* 一条业务主线 (tools/blocks/qx-orbit.mjs): the eight thumbnails that orbit
      STARGO WORK, by the qubix file each one replaces (its name without the
@@ -174,7 +174,7 @@ export const CAP_PHOTOS = {
      GROWTH_ROWS[].art still names the hover thumbnail of a row with no
      product screen. */
   growth: [
-    photoFile('c11-company-research'),
+    photoFile('c11v2-company-research', 2880),
     photoFile('c12-trade-intelligence'),
     photoFile('c13-restock'),
     photoFile('c14-decision-makers'),
@@ -211,13 +211,13 @@ export const CAP_PHOTOS = {
  * crop point.
  */
 export const BLOG_COVERS = {
-  'stargo-work-visual-guide': photoFile('b01-visual-guide', 1600),
+  'stargo-work-visual-guide': photoFile('b01v2-visual-guide', 1600),
   'start-with-one-workflow': photoFile('b02-one-workflow', 1600),
   'from-inquiry-to-quote': photoFile('b03-inquiry-to-quote', 1600),
-  'approval-gates-for-ai-in-trade': photoFile('b04-approval-handover', 1600),
+  'approval-gates-for-ai-in-trade': photoFile('b04v2-approval-handover', 1600),
   '288-ai-employees-not-288-chatbots': photoFile('b05-288-relay', 1600),
   'ai-operating-system-for-global-trade': photoFile('b06-browser-os', 1600),
-  'enterprise-ontology-explained': photoFile('b07-knowledge-library', 1600),
+  'enterprise-ontology-explained': photoFile('b07v2-knowledge-library', 1600),
 };
 
 /**
@@ -367,7 +367,7 @@ export const HOME_MOSAIC = {
 export const HOME_SILOS = [
   photoFile('s01-inquiry-rework', 1600),
   photoFile('s02-scattered-chats', 1600),
-  photoFile('s03-spreadsheet-memory', 1600),
+  photoFile('s03v2-spreadsheet-memory', 1600),
   photoFile('s04-chasing-order', 2048),
 ];
 /** The four scenario cards' film card (`.testimonials-card._03`): R2, the
@@ -383,10 +383,10 @@ export const HOME_PRICING_CARD = photoFile('t01-enterprise-campus', 1024);
  *  and the articles show the same photographs (BLOG_COVERS); only the
  *  articles' share images keep the assets/blog/ covers. */
 export const HOME_BLOG_COVERS = {
-  'stargo-work-visual-guide': photoFile('b01-visual-guide', 1600),
+  'stargo-work-visual-guide': photoFile('b01v2-visual-guide', 1600),
   'start-with-one-workflow': photoFile('b02-one-workflow', 1600),
   'from-inquiry-to-quote': photoFile('b03-inquiry-to-quote', 1600),
-  'approval-gates-for-ai-in-trade': photoFile('b04-approval-handover', 1600),
+  'approval-gates-for-ai-in-trade': photoFile('b04v2-approval-handover', 1600),
 };
 
 /**
@@ -482,7 +482,7 @@ export const WORKFORCE_ROLES = {
  *  blog index and the articles show the same photographs (BLOG_COVERS), and
  *  only the articles' share images keep those covers. */
 export const WORKFORCE_BLOG_COVERS = {
-  'stargo-work-visual-guide': photoFile('b01-visual-guide', 1600),
+  'stargo-work-visual-guide': photoFile('b01v2-visual-guide', 1600),
   'start-with-one-workflow': photoFile('b02-one-workflow', 1600),
   'from-inquiry-to-quote': photoFile('b03-inquiry-to-quote', 1600),
 };
