@@ -22,7 +22,7 @@ import * as C from './copy.mjs';
 import { POSTS, BLOG_UI, postPath, featured, others, coverSrc, coverSrcset, coverAlt, formatDate, renderBody, titleHtml } from './blog.mjs';
 import { loadBlocks, art, capTitle, DONORS } from './block-lib.mjs';
 import { PRODUCT_CAPTION } from './editorial-images.mjs';
-import { HERO, HOME_MODULES, HOME_STAGES, HOME_SILOS, HOME_ROLE_CARD, HOME_PRICING_CARD, HOME_BLOG_COVERS, NOTICES_CARDS, CAP_PHOTOS } from './replaceables.mjs';
+import { HERO, HOME_MODULES, HOME_STAGES, HOME_SILOS, HOME_ROLE_CARD, HOME_PRICING_CARD, HOME_BLOG_COVERS, NOTICES_CARDS, CAP_PHOTOS, ENTERPRISE_PHOTOS } from './replaceables.mjs';
 import { SITE } from './paths.mjs';
 import { webpPage } from './image-refs.mjs';
 
@@ -208,14 +208,16 @@ function awardsTable({ id, caption, title, total, button, headers, rows }) {
   return html;
 }
 
-function teamCard(html, oldName, oldRole, { name, role, image }) {
+function teamCard(html, oldName, oldRole, { name, role, image, alt = null }) {
   const { fn: s } = makeSub(`team:${oldName}`);
   let out = s(html, `>${oldName}<`, `>${name}<`, { count: 1 });
   out = s(out, `>${oldRole}<`, `>${role}<`, { count: 1 });
   if (image) {
     const card = elementContaining(out, `>${name}<`, 'div', { up: 2 });
     if (!card.text.includes('team-wrapper')) throw new Error(`team: card wrapper not found for ${name}`);
-    out = out.slice(0, card.start) + card.text.replace(/src="[^"]*"/, `src="${image}"`) + out.slice(card.end);
+    let text = card.text.replace(/src="[^"]*"/, `src="${image}"`);
+    if (alt != null) text = text.replace(/alt="[^"]*"/, `alt="${alt}"`);
+    out = out.slice(0, card.start) + text + out.slice(card.end);
   }
   return out;
 }
@@ -292,16 +294,21 @@ function fromStudio(spec, lang) {
   h = h.replace(/<img[^>]*class="logo-absolute"[^>]*\/>/, '');
   if (h.includes('logo-absolute')) throw new Error(`${spec.name}: template client logo survives`);
   h = s(h, 'Creative Minds <span class="small-ftd finr">(5)</span>', `${t(spec.cardsTitle)} <span class="small-ftd finr">(5)</span>`);
-  TEAM_TPL.forEach(([n, r], i) => { h = teamCard(h, n, r, { name: t(spec.cards[i].name), role: t(spec.cards[i].role), image: spec.images.cards[i] }); });
+  /* A concept illustration stands beside text that already says what it
+     shows, so it keeps the template's empty alt — which is also how
+     editorialImages() is told a picture is decoration. An owner photograph
+     (assets/stargo-photo/, the enterprise page's pictures since 2026-10-21)
+     gets the marker alt 'STARGO WORK' instead, which editorialImages()
+     replaces with the photograph's own sentence from the owner's manifest. */
+  const altFor = (src) => (src.startsWith('assets/stargo-photo/') ? 'STARGO WORK' : '');
+  TEAM_TPL.forEach(([n, r], i) => { h = teamCard(h, n, r, { name: t(spec.cards[i].name), role: t(spec.cards[i].role), image: spec.images.cards[i], alt: altFor(spec.images.cards[i]) }); });
   // Stock photos (keyboard hands, portraits, a crowd, a face) → STARGO imagery; the four hero
   // backgrounds are CSS and are overridden in stargo-fusion.css (.image-about._01…_04).
-  /* Every picture here is a concept illustration standing beside text that
-     already says what it shows, so they keep swapImg's empty alt — which is
-     also how editorialImages() is told a picture is decoration. (A product
-     screenshot was tried in the third one on 2026-09-18 and reverted the same
-     day; it would have needed a non-empty alt to carry its caption.) */
+  /* (A product screenshot was tried in the third column picture on 2026-09-18
+     and reverted the same day; it would have needed a non-empty alt to carry
+     its caption.) */
   [['699b6466d5f19893993a4faf_Coding-Workspace-Close-Up', spec.images.work[0]], ['699b6466d5f19893993a4fa9_Portrait-of-a-Man', spec.images.work[1]], ['699b6466d5f19893993a4f9c_Diverse-Group-Portrait', spec.images.work[2]], ['699b6466d5f19893993a4fa0_about-6', spec.images.quote]]
-    .forEach(([k, src]) => { h = swapImg(h, k, src); });
+    .forEach(([k, src]) => { h = swapImg(h, k, src, { alt: altFor(src) }); });
   h = s(h, '(Leadership)', t(spec.noteLabel));
   h = setInner(h, '<p class="top-text big for-inr">', t(spec.note));
   h = setLink(h, 'Join us', { href: spec.noteButton.href, text: t(spec.noteButton.label) });
@@ -1732,34 +1739,33 @@ PAGES['pricing.html'] = (lang) => {
 };
 
 /* ---- enterprise.html — Mono studio ------------------------------------ */
-/* Pictures by what sits beside them (V6 §8.2, §10). All are the site's own
-   concept illustrations; editorialImages() gives each its alt and marks it as
-   one. The three pictures in the column beside the text sit, in order, next
-   to the owner cockpit (work lanes converging on one command centre), the six
-   delivery steps (a track climbing level by level — the second slot is the
-   tallest, about square at 1440, so a portrait picture loses less to the
-   cover crop than a landscape one) and the numbers — roles, controls and the
-   deployment options (one track joining separate workspaces). The five
-   cards, in order: capabilities and apps (instruments laid out on one board),
-   account and role permissions (specialized roles on a shared foundation),
-   approvals (a controlled, reversible approval path), work and result
-   records (business records linked together) and account connection and
-   protection (a gated passage through explicit boundaries). No picture is
-   used twice on the page, the four hero panels included (their pictures are
-   CSS, in the V6-F block of stargo-fusion.css). The legacy UI mock-ups with
-   invented figures are not used here. */
+/* Pictures by what sits beside them (V6 §8.2, §10). Since 2026-10-21 they are
+   the owner's photographs (site-images/batch-7, tools/replaceables.mjs
+   ENTERPRISE_PHOTOS), in place of the site's concept illustrations;
+   editorialImages() gives each the owner's own alt sentence. The three
+   pictures in the column beside the text sit, in order, next to the owner
+   cockpit (E05, the office at dawn before anyone is in), the six delivery
+   steps (E06, the owner on the phone beside a machine under repair; portrait,
+   as the second slot is the tallest, about square at 1440) and the numbers
+   (E07, the ledger). The five cards, in order: capabilities and apps (E09, tools
+   hung back in their outlines), account and role permissions (E10, a badge
+   at the reader), approvals (E11, the stamp), work and result records (E12,
+   the clipboard on the machine) and account connection and protection (E13,
+   the padlocked cabinet). No picture is used twice on the page, the four hero
+   panels included (their pictures are CSS, E01–E04, in the batch 7 block of
+   stargo-fusion.css). The legacy UI mock-ups with invented figures are not
+   used here. */
 PAGES['enterprise.html'] = (lang) => fromStudio({
   name: 'enterprise', ...C.ENTERPRISE, cards: C.ENTERPRISE.cards,
   /* V7-LX: card 2 (账号与岗位权限 / Account & role permissions) takes a landscape
-     picture again, layered permission boundaries (brand-family-04), so the first
-     row reads landscape, landscape, tall as in the template; it had the
-     portrait phone-agents, which made the row short, tall, tall.
+     picture, so the first row is three landscape pictures; with the portrait
+     picture it had before V7 the row read short, tall, tall.
 
-     The column keeps its editorial artwork. A product screenshot was tried in
-     the third slot on 2026-09-18 and reverted the same day: the box is
-     118x90 at 390, 235x208 at 768 and 681x620 on the English page, all far from
-     16:9, so a fitted interface left most of the box empty. */
-  images: { work: [OS.cockpit, BRAND.tall, OS.desktop], quote: BRAND.square, cards: [OS.agents, BRAND.family(4), MOBILE.phoneApprovals, BRAND.ontology, OS.login] },
+     A product screenshot was tried in the column's third slot on 2026-09-18
+     and reverted the same day: the box is 118x90 at 390, 235x208 at 768 and
+     681x620 on the English page, all far from 16:9, so a fitted interface
+     left most of the box empty. */
+  images: { work: ENTERPRISE_PHOTOS.cockpit, quote: ENTERPRISE_PHOTOS.principle, cards: ENTERPRISE_PHOTOS.modules },
 }, lang);
 
 /* ---- capabilities.html — Mono work-1 + table -------------------------- */

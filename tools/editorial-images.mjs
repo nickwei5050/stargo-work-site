@@ -244,6 +244,16 @@ const photoText = {
    - The capability ring's card: a 344 x 312 box (192 x 182 below 768),
      i.e. a ~560px (~330px) cover crop for a 16:9 picture.
    - The side-menu card: at most 220px wide (.contact-info).
+   - Enterprise page (batch 7), measured zh and en at 390/768/1024/1440/1920:
+     the cockpit column (`.work-image-cover`, cover) is 118–142px wide on a
+     phone, 235 at 768, 482 at 1024 and 681–690 from 1440, but its height
+     follows the text beside it, so the cover crop is wider than the box: at
+     most ~35vw on a phone, ~41vw at 768 and up to ~960px from 992 (the
+     English ledger at 1024, a 482x641 box). The rounded parallax picture
+     (`.image-wrap.rnd`, square, cover) crops to 374px at 390 (96vw), 473 at
+     768, 564 at 1024, 683 at 1440 and 794 at 1920. The module cards
+     (`.team-image`) draw the picture whole, 182px (47vw) on a phone, ~23vw
+     from 768 and 338px at most.
    The homepage's other photographs (2026-10-21, tools/replaceables.mjs
    HOME_MOSAIC … HOME_BLOG_COVERS), measured on the built page from 320 to
    2560 wide:
@@ -340,6 +350,9 @@ function photoSizes(tag, before, photo, lang) {
   /* Capability page, 让 AI 团队把活干完: the two upper cards, 288-492 x 350
      below 768, 703 x 500 below 992 and 464-632 x 724 above. */
   if (/qx-project-img/.test(tag)) return `(max-width: 767px) 92vw, ${coverSizes(photo, [['(max-width: 991px)', 703, 500], [null, 632, 724]])}`;
+  if (/\bwork-image-cover\b/.test(tag)) return '(max-width: 767px) 36vw, (max-width: 991px) 41vw, 960px';
+  if (/class="image-wrap rnd"/.test(before)) return '(max-width: 767px) 96vw, (max-width: 1439px) 62vw, 800px';
+  if (/class="team-image"/.test(before)) return '(max-width: 767px) 47vw, (max-width: 1439px) 23vw, 338px';
   throw new Error(`Photograph in a slot with no declared size: ${tag.slice(0, 120)}`);
 }
 export function editorialImages(html, lang) {

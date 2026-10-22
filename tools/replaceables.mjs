@@ -389,6 +389,31 @@ export const PLACED = {
    and PLACED.creativePicture until 2026-10-21) are CAP_PHOTOS.quote and
    CAP_PHOTOS.creative. */
 
+/**
+ * Enterprise page (enterprise.html and en/enterprise.html, the Mono studio
+ * layout: tools/build-site.mjs PAGES['enterprise.html'] and fromStudio). Since
+ * 2026-10-21 every picture on it is one of the owner's photographs
+ * (site-images/batch-7, E01–E13), in place of the site's concept art; the
+ * editorial files they replaced keep their places on the other pages and in
+ * the hidden nav-menu rotator.
+ * - `cockpit`: the three scroll-revealed pictures in the column beside
+ *   「(老板驾驶舱)」, in page order: E05 the dawn office, E06 the owner on the
+ *   phone at a stopped machine (portrait), E07 the ledger.
+ * - `principle`: the rounded parallax picture beside 「(原则)」, E08 the
+ *   emergency stop.
+ * - `modules`: the five cards under 「五个管理组件 (5)」, in card order: E09
+ *   pegboard, E10 badge reader, E11 stamp, E12 clipboard, E13 key cabinet
+ *   (its own file, not os-login). A card draws its picture whole, so the
+ *   picture's shape sets the card's height.
+ * The four sticky story panels (决定, 核对, 连接, 经营; E01–E04) are CSS
+ * backgrounds, set in css/stargo-fusion.css (the batch 7 block).
+ */
+export const ENTERPRISE_PHOTOS = {
+  cockpit: [photoFile('e05-cockpit-overview', 1024), photoFile('e06-cockpit-blocker', 1024), photoFile('e07-cockpit-budget', 1024)],
+  principle: photoFile('e08-emergency-stop', 1024),
+  modules: ['e09-capabilities', 'e10-access', 'e11-approval', 'e12-records', 'e13-key-cabinet'].map((id) => photoFile(id, 480)),
+};
+
 if (HERO.theatre.length !== 7) throw new Error('replaceables: hero theatre is seven cells');
 if (HERO.centreIndex !== 3) throw new Error('replaceables: the film replaces theatre cell 3');
 if (OG.width !== 1200 || OG.height !== 630) throw new Error('replaceables: og-cover stays 1200×630');
