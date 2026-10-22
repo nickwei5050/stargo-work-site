@@ -225,11 +225,12 @@ function head(html, lang, current) {
   const blogUrl = cleanUrl(lang, 'blog.html');
   const graph = [
     { '@type': 'Organization', '@id': ORG_ID, name: 'Stargo Work', alternateName: '星贸智能', url: `${SITE_URL}/`, logo: `${SITE_URL}/${ICON(512)}`, email: CONTACT_INFO.email, telephone: CONTACT_INFO.phone, contactPoint: { '@type': 'ContactPoint', contactType: 'sales', telephone: CONTACT_INFO.phone, email: CONTACT_INFO.email, availableLanguage: ['zh-CN', 'en'] }, address: { '@type': 'PostalAddress', addressLocality: 'Liuzhou', addressRegion: 'Guangxi', addressCountry: 'CN' }, sameAs: [CONTACT_INFO.siteHref] },
-    { '@type': 'WebSite', '@id': SITE_ID, url: `${SITE_URL}/`, name: BRAND[lang], alternateName: lang === 'zh' ? 'Stargo Work' : BRAND.zh, inLanguage: ['zh-CN', 'en'], publisher: { '@id': ORG_ID } },
+    /* One #site node, one name, on every page in both languages (Z15). */
+    { '@type': 'WebSite', '@id': SITE_ID, url: `${SITE_URL}/`, name: BRAND.en, alternateName: BRAND.zh, inLanguage: ['zh-CN', 'en'], publisher: { '@id': ORG_ID } },
     { '@type': pageType, '@id': self, url: self, name: title, description, inLanguage, isPartOf: { '@id': SITE_ID }, ...(post ? { primaryImageOfPage: ogImage } : {}) },
   ];
   if (current === 'index.html') {
-    graph.push({ '@type': 'SoftwareApplication', name: BRAND[lang], applicationCategory: 'BusinessApplication', operatingSystem: 'Web', url: `${SITE_URL}/`, description, offers: { '@type': 'AggregateOffer', priceCurrency: 'CNY', lowPrice: '10000', highPrice: '40000', offerCount: 4 }, provider: { '@id': ORG_ID } });
+    graph.push({ '@type': 'SoftwareApplication', name: BRAND[lang], applicationCategory: 'BusinessApplication', operatingSystem: 'Web', url: cleanUrl(lang, 'index.html'), description, offers: { '@type': 'AggregateOffer', priceCurrency: 'CNY', lowPrice: '10000', highPrice: '40000', offerCount: 4 }, provider: { '@id': ORG_ID } });
   }
   if (current === 'blog.html') {
     graph.push({

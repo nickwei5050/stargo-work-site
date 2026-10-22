@@ -5781,3 +5781,50 @@ img[src*="stargo-photo/e08-emergency-stop-"] { object-position: 50% 42%; }
   object-fit: cover;
   border-radius: 13.453% / 6.289%;
 }
+
+
+/* ==========================================================================
+   a11y lane (review items Z15 and Z20)
+   ========================================================================== */
+
+/* Z15 landmarks. tools/a11y.mjs wraps the page content between the top
+   navigation and the footer in <main id="main">. The wrapper adds no box:
+   every section keeps #Top as its layout parent, so stacking, sticky scenes
+   and the pinned sections behave exactly as before. */
+.stargo-main { display: contents; }
+.stargo-main-start { position: absolute; width: 1px; height: 1px; overflow: hidden; }
+.stargo-main-start:focus { outline: none; }
+
+/* Z15 skip link: the first stop for Tab, out of sight until it has focus. */
+.stargo-skip {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 2147483647;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 20px;
+  border-radius: 999px;
+  background: #0d0906;
+  color: #fff;
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1.2;
+  text-decoration: none;
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.stargo-skip:focus,
+.stargo-skip:focus-visible {
+  clip-path: none;
+  width: auto;
+  height: auto;
+  min-height: 44px;
+  overflow: visible;
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+

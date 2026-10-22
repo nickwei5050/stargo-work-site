@@ -3158,3 +3158,15 @@ export const LX_INTELLIGENCE_CONTEXT = {
 
 
 
+
+
+/* ===== a11y lane (Z15): names a sighted reader never sees =====
+   The skip link is visible only while it has keyboard focus; the landmark
+   labels are read by screen readers alone. */
+// A11Y-START
+export const A11Y = {
+  skip: B('跳到正文', 'Skip to content'),
+  mainNav: B('主导航', 'Main navigation'),
+  pillNav: B('快捷导航', 'Quick links'),
+};
+// A11Y-END
