@@ -287,10 +287,12 @@ for (const width of WIDTHS.filter((w) => [390, 768, 1280, 1440].includes(w))) fo
     assert.equal(caption, '', `partner wall must carry no caption while its logos are the template's: "${caption}"`);
     await scrollTo(page, (await secTop(page, '.partner-grid')).top - 200); await page.waitForTimeout(1600);
     await page.screenshot({ path: `${OUT}/${id}-partners.png` });
-    // scenario cards (sticky testimonials): portrait film present, four cards, illustrative labels, mark, through the scroll
+    // scenario cards (sticky testimonials): the portrait picture on card 3, four cards, illustrative labels, mark, through the scroll
+    // (since 2026-10-21 the owner's photograph R2 as a still where the template's portrait film played)
     assert.equal(await page.locator('.testimonials-card').count(), 4);
-    const film = await page.evaluate(() => { const v = document.querySelector('.testimonials-card._03 video'); return v ? (v.currentSrc || '') + ' ' + [...v.querySelectorAll('source')].map((s) => s.getAttribute('src')).join(' ') : ''; });
-    assert(/Contemplative/.test(film), `portrait film on card 3: ${film.slice(0, 120)}`);
+    const film = await page.evaluate(() => { const v = document.querySelector('.testimonials-card._03 .w-background-video > img.stargo-still'); return v ? { src: v.getAttribute('src'), alt: v.getAttribute('alt') } : { src: '', alt: '' }; });
+    assert(/stargo-photo\/r2-trade-manager-/.test(film.src), `portrait still on card 3: ${film.src}`);
+    assert(film.alt.length > 20, `portrait still on card 3 carries its own alt: "${film.alt}"`);
     assert.equal(await page.locator('.testimonials-card .stargo-card-mark').count(), 4, 'STARGO mark on the four cards');
     const labels = await page.locator('.testimonials-card .card-author .top-text:not(.sml)').allInnerTexts();
     assert(labels.every((l) => /示例|illustrative/i.test(l)), `scenario cards labelled: ${labels.join(' | ')}`);
@@ -302,10 +304,11 @@ for (const width of WIDTHS.filter((w) => [390, 768, 1280, 1440].includes(w))) fo
     }
     const cardText = await page.evaluate(() => [...document.querySelectorAll('.testimonials-card .card-testi .for-tst')].map((t) => { const c = t.closest('.testimonials-card').getBoundingClientRect(); const r = t.getBoundingClientRect(); return r.top >= c.top - 1 && r.bottom <= c.bottom + 1; }));
     assert(cardText.every(Boolean), 'scenario quote fits its card');
-    // blog cards: four newest articles with template covers, dates and titles, linking into blog/
+    // blog cards: four newest articles with dates and titles, linking into blog/; since 2026-10-21 the
+    // owner's photographs B01–B04 (tools/replaceables.mjs HOME_BLOG_COVERS), an article cover otherwise
     const cards = await page.locator('.blog-grid .w-dyn-item a').evaluateAll((as) => as.map((a) => ({ href: a.getAttribute('href'), img: a.querySelector('img').getAttribute('src'), ratio: a.querySelector('img').getBoundingClientRect().width / a.querySelector('img').getBoundingClientRect().height, title: a.querySelector('.blog-txt').textContent, date: a.querySelector('time')?.getAttribute('datetime') })));
     assert.equal(cards.length, 4);
-    for (const c of cards) { assert(/^blog\//.test(c.href), c.href); assert(/assets\/blog\//.test(c.img), c.img); assert(c.title.length > 8); assert(/^\d{4}-\d{2}-\d{2}$/.test(c.date || ''), 'dated'); assert(c.ratio > 1.15 && c.ratio < 1.5, `card image ratio ${c.ratio}`); }
+    for (const c of cards) { assert(/^blog\//.test(c.href), c.href); assert(/assets\/(?:blog|stargo-photo)\//.test(c.img), c.img); assert(c.title.length > 8); assert(/^\d{4}-\d{2}-\d{2}$/.test(c.date || ''), 'dated'); assert(c.ratio > 1.15 && c.ratio < 1.5, `card image ratio ${c.ratio}`); }
     await scrollTo(page, (await secTop(page, '.blog-grid')).top - 160); await page.waitForTimeout(900);
     await page.screenshot({ path: `${OUT}/${id}-blog-cards.png` });
     // contact band: a photograph behind a glass card (since 2026-10-21 the

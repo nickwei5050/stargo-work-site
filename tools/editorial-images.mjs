@@ -243,8 +243,36 @@ const photoText = {
      ~250vw on a 390 phone, whose tiles are much taller than they are wide.
    - The capability ring's card: 22rem x 20rem (12.5 x 11.9rem below 768),
      i.e. a ~560px (~330px) cover crop.
-   - The side-menu card: at most 220px wide (.contact-info). */
-function photoSizes(tag, before) {
+   - The side-menu card: at most 220px wide (.contact-info).
+   The homepage's other photographs (2026-10-21, tools/replaceables.mjs
+   HOME_MOSAIC … HOME_BLOG_COVERS), measured on the built page from 320 to
+   2560 wide:
+   - The opening mosaic's two columns are ~48vw wide. The left column
+     (`stargo-mosaic`) draws each picture whole. The right column
+     (`photo-hero`) crops it to a box 250px tall below 480 and 400px tall
+     from 480 up, so the cover crop is that height times the picture's own
+     ratio until 48vw is wider.
+   - The scenario film card (`stargo-role-photo`): ~96vw of a phone below
+     480, 400px wide from there up; the portrait picture fills its width.
+   - The five stage cards: 172–338px boxes from 768 up, not drawn below.
+   - The four pain-point cards cover a box ~84% of the viewport tall from 992
+     up (~80vw of a 16:10 screen), ~63% tall at 768–991 (~125vw), 420px tall
+     at 480–767 (up to 130vw) and 255px below 480 (~100vw).
+   - The pricing band's card: a square picture over a box of ~96vw on phones,
+     473px tall at 768–991 and ~660–800px from 992 up.
+   - The blog cards: the template's own sizes (one, two and four columns). */
+function photoSizes(tag, before, photo) {
+  if (/\bstargo-role-photo\b/.test(tag)) return '(max-width: 479px) 96vw, 400px';
+  if (/\bstargo-mosaic\b/.test(tag)) return '48vw';
+  if (/\bphoto-hero\b/.test(tag)) {
+    const ratio = photo.width / photo.height;
+    const desk = Math.round(400 * ratio);
+    return `(max-width: 479px) ${Math.round(250 * ratio)}px, (max-width: ${Math.round(desk / 0.48)}px) ${desk}px, 48vw`;
+  }
+  if (/service-media-sticky"><div class="image-wrap for-service">$/.test(before)) return '(max-width: 767px) 45vw, 360px';
+  if (/href="#loop" class="work-main-wrapper[^"]*"><div [^>]*class="image-wrap full-width">$/.test(before)) return '(max-width: 479px) 100vw, (max-width: 767px) 130vw, (max-width: 991px) 125vw, 80vw';
+  if (/class="testi-grid"><div [^>]*class="image-wrap rnd">$/.test(before)) return '(max-width: 767px) 96vw, (max-width: 991px) 480px, 800px';
+  if (/\btestimonials-photo\b/.test(tag) && /class="blog-wrapper[^"]*">$/.test(before)) return '(max-width: 767px) 100vw, (max-width: 991px) 50vw, 25vw';
   if (/video-bg-animation/.test(before)) return '(max-width: 767px) 250vw, (max-width: 991px) 160vw, 105vw';
   if (/\bcn-video\b/.test(before)) return '(max-width: 767px) 330px, 560px';
   if (/stargo-menu-photo/.test(tag)) return '220px';
@@ -262,7 +290,7 @@ export function editorialImages(html, lang) {
       if (!text) throw new Error(`Photograph without alt text: ${photo.id}`);
       if (/AI 概念图|AI concept|演示数据|demo data/i.test(text)) throw new Error(`Photograph alt text carries a caption; the caption is added here: ${photo.id}`);
       const alt = /\balt=""/.test(tag) ? '' : `${text}${CONCEPT_CAPTION[lang === 'zh' ? 'zh' : 'en']}`;
-      const sizes = photoSizes(tag, page.slice(Math.max(0, offset - 160), offset));
+      const sizes = photoSizes(tag, page.slice(Math.max(0, offset - 160), offset), photo);
       const variants = [...photo.variants, photo];
       const result = tag.replace(/\s(?:alt|srcset|sizes|width|height|decoding)="[^"]*"/g, '');
       const attrs = [`alt="${alt}"`, `width="${photo.width}"`, `height="${photo.height}"`, 'decoding="async"', `srcset="${variants.map(v => `${v.src} ${v.width}w`).join(', ')}"`, `sizes="${sizes}"`];

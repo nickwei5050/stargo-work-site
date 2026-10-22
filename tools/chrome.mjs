@@ -20,7 +20,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync, existsSync } from 'node:fs';
 import { CAP_JUMPS, NAV, SECONDARY, MORE, LANG_SWITCH, CHROME, META, CONTACT_INFO, CONTACT_UI, SITE_URL } from './copy.mjs';
 import { POSTS, BLOG_UI, postPath, coverSrc, faqEntities, wordCount } from './blog.mjs';
-import { OG, OS_ART, MENU_CARD } from './replaceables.mjs';
+import { OG, OS_ART, MENU_CARD, HOME_MOSAIC } from './replaceables.mjs';
 
 /** Every page the build produces, as root-relative names. */
 export const SITE_PAGES = [...NAV, ...SECONDARY, ...MORE].map((n) => n.href).concat(POSTS.map(postPath));
@@ -82,15 +82,16 @@ function replaceInner(html, el, inner) {
   return html.slice(0, el.start + openEnd) + inner + html.slice(el.end - closeLen);
 }
 
-/** A `w-background-video` block becomes a still image (same box, same interactions, no video). */
-export function stillImage(html, videoId, src, alt = '') {
+/** A `w-background-video` block becomes a still image (same box, same interactions, no video).
+ *  `cls` names the still; a slot that needs its own size or crop adds a class after `stargo-still`. */
+export function stillImage(html, videoId, src, alt = '', cls = 'stargo-still') {
   const i = html.indexOf(`id="${videoId}-video"`);
   if (i === -1) throw new Error(`still: video ${videoId} not found`);
   const vStart = html.lastIndexOf('<video', i);
   const vEnd = html.indexOf('</video>', i) + '</video>'.length;
   const wrapStart = html.lastIndexOf('<div', vStart);
   let wrap = html.slice(wrapStart, vStart).replace(/\s*data-(video-urls|poster-url|autoplay|loop)="[^"]*"/g, '');
-  return html.slice(0, wrapStart) + wrap + `<img src="${src}" alt="${alt}" loading="lazy" class="stargo-still"/>` + html.slice(vEnd);
+  return html.slice(0, wrapStart) + wrap + `<img src="${src}" alt="${alt}" loading="lazy" class="${cls}"/>` + html.slice(vEnd);
 }
 
 /* -------------------------------------------------------------- parts -- */
@@ -689,6 +690,20 @@ function chromeImagery(html) {
       const inner = el.text.replace(/<img[^>]*\/>/g, (img) => {
         const cl = (img.match(/class="([^"]*)"/) || [])[1];
         const src = SCREENS[i++ % SCREENS.length];
+        /* The photo strips are the homepage's opening mosaic (index only),
+           whose stills are the owner's photographs since 2026-10-21: each
+           os-* still the cycle would put here becomes the photograph
+           tools/replaceables.mjs HOME_MOSAIC names for it, so the cycle and
+           the rotator after it are unchanged. The strips' unclassed pictures
+           get `stargo-mosaic` so tools/editorial-images.mjs can size them;
+           `photo-hero` (the cover-cropped column) stays as it is. The alt is
+           a marker that tools/editorial-images.mjs replaces with the
+           photograph's own sentence. */
+        if (cls !== 'image-text-rotator') {
+          const photo = HOME_MOSAIC[src.match(/\/(os-[\w-]+)\.webp$/)?.[1]];
+          if (!photo) throw new Error(`chrome: no mosaic photograph for ${src}`);
+          return `<img src="${photo}" loading="lazy" alt="STARGO WORK" class="${cl || 'stargo-mosaic'}"/>`;
+        }
         return `<img src="${src}" loading="lazy" alt=""${cl ? ` class="${cl}"` : ''}/>`;
       });
       out = out.slice(0, el.start) + inner + out.slice(el.end);

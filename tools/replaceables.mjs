@@ -177,15 +177,76 @@ export const HOME_MODULES = {
 
 /**
  * Homepage five business-stage cards, in page order. `file` is the generator
- * path (a product path, or an editorial token).
+ * path (a product path, an editorial token or an owner photograph).
+ *
+ * Since 2026-10-21 all five are the owner's photographs (site-images/batch-2,
+ * P01–P05). They replaced, in order, the Growth OS home, the Sales Desk case
+ * and the ERP item list (the clean captures placed the same morning), the
+ * brand-family-01 illustration and the gos11 workspace home. Those product
+ * files keep their other places; the old values are kept here so the owner
+ * can put a screen back by swapping one line.
+ *   001 PRODUCT.growthHome · 002 PRODUCT.caseStage · 003 PRODUCT.erpStage
+ *   004 editorialToken('brand-family-01') · 005 PRODUCT.reactivation
  */
 export const HOME_STAGES = [
-  { id: 'acquisition', label: '001 主动获客', file: PRODUCT.growthHome },
-  { id: 'sales', label: '002 外贸销售', file: PRODUCT.caseStage },
-  { id: 'fulfillment', label: '003 企业履约', file: PRODUCT.erpStage },
-  { id: 'collection', label: '004 回款与服务', file: editorialToken('brand-family-01') },
-  { id: 'reorder', label: '005 复购与改进', file: PRODUCT.reactivation },
+  { id: 'acquisition', label: '001 主动获客', file: photoFile('p01-prospecting', 480) },
+  { id: 'sales', label: '002 外贸销售', file: photoFile('p02-sales', 480) },
+  { id: 'fulfillment', label: '003 企业履约', file: photoFile('p03-fulfilment', 768) },
+  { id: 'collection', label: '004 回款与服务', file: photoFile('p04-payment-docs', 480) },
+  { id: 'reorder', label: '005 复购与改进', file: photoFile('p05-reorder', 480) },
 ];
+
+/**
+ * The homepage's other owner photographs (2026-10-21; site-images/batch-1,
+ * batch-2, batch-4 and batch-8), slot by slot. Each value is the photograph's
+ * widest file; tools/editorial-images.mjs writes the narrower ones into the
+ * srcset, the alt and the size, and css/stargo-fusion.css (the "home" block
+ * at its end) the crop point. Only these homepage slots change: every file
+ * they replace keeps its other places.
+ */
+/** The opening mosaic the white hero card shrinks to reveal
+ *  (`.hero-photo-wrapper` up and down; tools/chrome.mjs). The mosaic cycles
+ *  the os-* stills in a fixed order; each os-* still becomes, wherever it
+ *  falls in the mosaic, the photograph the batch-1 manifest names for it
+ *  (H01–H10). The cursor tooltip's picture rotator (`.image-text-rotator`)
+ *  after it keeps the os-* stills. */
+export const HOME_MOSAIC = {
+  'os-cockpit': photoFile('h05-assembly-line', 1024),
+  'os-sales-desk': photoFile('h02-night-inquiry', 1024),
+  'os-inquiries': photoFile('h03-sample-wall', 1024),
+  'os-agent-center': photoFile('h06-packing', 1024),
+  'os-quote-studio': photoFile('h04-caliper-qc', 1024),
+  'os-trade-execution': photoFile('h01-port-blue-hour', 1024),
+  'os-desktop': photoFile('h10-video-showing', 1024),
+  'os-login': photoFile('h07-owner-walk', 1024),
+  'os-boot': photoFile('h08-product-shoot', 1024),
+  'os-loading': photoFile('h09-container-loading', 1024),
+};
+/** The four pain-point cards under the loop band, in page order (S01–S04).
+ *  They replaced silo-email, silo-whatsapp, silo-excel and silo-erp. */
+export const HOME_SILOS = [
+  photoFile('s01-inquiry-rework', 1600),
+  photoFile('s02-scattered-chats', 1600),
+  photoFile('s03-spreadsheet-memory', 1600),
+  photoFile('s04-chasing-order', 2048),
+];
+/** The four scenario cards' film card (`.testimonials-card._03`): R2, the
+ *  trade manager at the whiteboard, as a still where the template's
+ *  portrait film played. The split photograph behind the cards
+ *  (`.photo-half`, R1) is a CSS background: css/stargo-fusion.css. */
+export const HOME_ROLE_CARD = photoFile('r2-trade-manager', 1024);
+/** The pricing band's image card beside 企业版 (T01), in place of
+ *  brand-glow-square. */
+export const HOME_PRICING_CARD = photoFile('t01-enterprise-campus', 1024);
+/** The homepage's four newest-article cards (B01–B04), by article slug. A
+ *  slug not listed keeps its article cover from assets/blog/. The blog
+ *  index, the articles and the share images keep those covers. */
+export const HOME_BLOG_COVERS = {
+  'stargo-work-visual-guide': photoFile('b01-visual-guide', 1600),
+  'start-with-one-workflow': photoFile('b02-one-workflow', 1600),
+  'from-inquiry-to-quote': photoFile('b03-inquiry-to-quote', 1600),
+  'approval-gates-for-ai-in-trade': photoFile('b04-approval-handover', 1600),
+};
 
 /**
  * Capability page, Growth OS rows (tools/blocks/cn-service.mjs).

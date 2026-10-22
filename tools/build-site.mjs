@@ -22,7 +22,7 @@ import * as C from './copy.mjs';
 import { POSTS, BLOG_UI, postPath, featured, others, coverSrc, coverSrcset, coverAlt, formatDate, renderBody, titleHtml } from './blog.mjs';
 import { loadBlocks, art, capTitle, DONORS } from './block-lib.mjs';
 import { PRODUCT_CAPTION } from './editorial-images.mjs';
-import { HERO, HOME_MODULES, HOME_STAGES, NOTICES_CARDS } from './replaceables.mjs';
+import { HERO, HOME_MODULES, HOME_STAGES, HOME_SILOS, HOME_ROLE_CARD, HOME_PRICING_CARD, HOME_BLOG_COVERS, NOTICES_CARDS } from './replaceables.mjs';
 import { SITE } from './paths.mjs';
 import { webpPage } from './image-refs.mjs';
 
@@ -96,7 +96,6 @@ const IMG = (n) => `assets/stargo/${n}`;
 const OS = { cockpit: IMG('os-cockpit.webp'), desk: IMG('os-sales-desk.webp'), inquiries: IMG('os-inquiries.webp'), agents: IMG('os-agent-center.webp'), quote: IMG('os-quote-studio.webp'), trade: IMG('os-trade-execution.webp'), desktop: IMG('os-desktop.webp'), login: IMG('os-login.webp'), boot: IMG('os-boot.webp'), loading: IMG('os-loading.webp') };
 const BRAND = { wide: IMG('brand-glow-wide.webp'), square: IMG('brand-glow-square.webp'), tall: IMG('brand-glow-tall.webp'), ontology: IMG('brand-ontology.webp'), loop: IMG('brand-loop.webp'), family: (n) => IMG(`brand-family-0${n}.webp`) };
 const MOBILE = { approvals: IMG('mobile-approvals.webp'), agents: IMG('mobile-agents.webp'), inquiry: IMG('mobile-inquiry.webp'), core: IMG('mobile-core.webp'), phoneApprovals: IMG('phone-approvals.webp'), phoneAgents: IMG('phone-agents.webp') };
-const SILO = ['email', 'whatsapp', 'excel', 'erp'].map((n) => IMG(`silo-${n}.webp`));
 /* The owner's own product screenshots (handoff of 2026-09-18, registered in
    tools/imagegen/product-assets.json and described in
    tools/editorial-images.mjs). They ship from their own folder rather than
@@ -338,8 +337,15 @@ function blogCards(html, list, item, posts, lang, cls) {
     x = x.replace(/href="[^"]*"/, `href="${postPath(p)}"`);
     if (!imgRe.test(x)) throw new Error(`cards: image ${cls.image}`);
     // Keep the tag's own attributes (data-w-id and the interaction's initial inline state); swap only the image.
-    x = x.replace(imgRe, (tag) => tag.replace(/\s*srcset="[^"]*"/g, '').replace(/\s*sizes="[^"]*"/g, '').replace(/\s*width="[^"]*"|\s*height="[^"]*"/g, '')
-      .replace(/src="[^"]*"/, `src="${coverSrc(p)}" srcset="${coverSrcset(p)}" sizes="${cls.sizes}"`));   // no width/height: the template sizes these by CSS aspect-ratio
+    /* `cls.covers` (slug → owner photograph) puts a photograph in place of
+       the article cover; tools/editorial-images.mjs then writes its srcset,
+       size and alt over the marker alt. */
+    const photo = cls.covers?.[p.slug];
+    x = x.replace(imgRe, (tag) => {
+      const bare = tag.replace(/\s*srcset="[^"]*"/g, '').replace(/\s*sizes="[^"]*"/g, '').replace(/\s*width="[^"]*"|\s*height="[^"]*"/g, '');
+      if (photo) return bare.replace(/src="[^"]*"/, `src="${photo}"`).replace(/alt="[^"]*"/, 'alt="STARGO WORK"');
+      return bare.replace(/src="[^"]*"/, `src="${coverSrc(p)}" srcset="${coverSrcset(p)}" sizes="${cls.sizes}"`);   // no width/height: the template sizes these by CSS aspect-ratio
+    });
     const titleRe = new RegExp(`(<(h4|div)[^>]*class="${cls.title}">)[^<]*(</\\2>)`);
     if (!titleRe.test(x)) throw new Error(`cards: title ${cls.title}`);
     x = x.replace(titleRe, `$1${escapeHtml(t(p.title))}$3`);
@@ -449,8 +455,12 @@ PAGES['index.html'] = (lang) => {
 
   // ---- imagery: the problem cards, the five stages, the OS "theatre", the sticky card, the ladder card, the four doors
   {
+    /* The four pain-point cards: the owner's photographs S01–S04 since
+       2026-10-21 (tools/replaceables.mjs HOME_SILOS; before them the
+       silo-email/-whatsapp/-excel/-erp illustrations). The alt is a marker,
+       as for the stages below. */
     const cards = ['699b6466d5f19893993a4d79_work-1.webp', '699b6466d5f19893993a4d34_work-5.webp', '699b6466d5f19893993a4d1a_work-4.webp', '699b6466d5f19893993a4d8f_work-8.webp'];
-    cards.forEach((k, i) => { h = swapImg(h, k, SILO[i]); });
+    cards.forEach((k, i) => { h = swapImg(h, k, HOME_SILOS[i], { alt: 'STARGO WORK' }); });
     /* The five stages, in order (V6 §4.6). Four of them carry the owner's own
        product. The sentences stayed; on 2026-09-22 the three older 1268px
        stills were swapped for curated pack screens (filenames unchanged):
@@ -473,19 +483,23 @@ PAGES['index.html'] = (lang) => {
        carried to a customer's destination — because no released screen is about
        collection, reconciliation or support.
 
-       The four go in with a non-empty alt, which is a marker and not copy:
+       Since 2026-10-21 all five cards show the owner's photographs instead
+       (site-images/batch-2, P01–P05; tools/replaceables.mjs HOME_STAGES keeps
+       the screens above for the owner's decision), and Mono's `cover` fills
+       the card with them again (H29 is keyed on the product folder).
+
+       All five go in with a non-empty alt, which is a marker and not copy:
        any non-empty value stops tools/editorial-images.mjs treating the image
        as decoration, and it then writes the registered sentence over it in the
        page's language. Same route the four core-system panels take with their
-       slot title, and `stillImage` below with 'STARGO OS'. The one concept
-       illustration keeps swapImg's empty alt, which is what it had.
+       slot title, and `stillImage` below with 'STARGO OS'.
 
        The card is `.image-wrap.for-service`, `aspect-ratio: 3 / 2`; a
        screenshot in it is fitted, not cropped, by H29 in css/stargo-fusion.css.
        (002) and (003) are cut to 3:2 and fill it; the Growth OS home (about
        2:1) and gos11 sit on plates of their own edge colour. */
     const CONTENT = { alt: 'STARGO WORK' };
-    const scenes = [['Scene%20%239.webp', HOME_STAGES[0].file, CONTENT], ['Scene%20%235.webp', HOME_STAGES[1].file, CONTENT], ['Scene%20%2310%20(Light)', HOME_STAGES[2].file, CONTENT], ['Scene%20%238.webp', HOME_STAGES[3].file], ['Scene%2018.webp', HOME_STAGES[4].file, CONTENT]];
+    const scenes = [['Scene%20%239.webp', HOME_STAGES[0].file, CONTENT], ['Scene%20%235.webp', HOME_STAGES[1].file, CONTENT], ['Scene%20%2310%20(Light)', HOME_STAGES[2].file, CONTENT], ['Scene%20%238.webp', HOME_STAGES[3].file, CONTENT], ['Scene%2018.webp', HOME_STAGES[4].file, CONTENT]];
     scenes.forEach(([k, src, opts]) => { h = swapImg(h, k, src, opts); });
     // Retain the original grid/zoom animation. The centre is a real video,
     // sourced from the owner's fourth template; surrounding imagery is separate.
@@ -506,16 +520,21 @@ PAGES['index.html'] = (lang) => {
     const play = elementContaining(h, 'class="play-video w-inline-block w-lightbox"', 'a');
     h = h.slice(0, play.start) + h.slice(play.end);
     if (/youtube|embedly|w-lightbox/.test(h)) throw new Error('index: lightbox survives');
-    // The sticky card's portrait film stays as the template designed it (a licensed template
-    // asset; the copy marks the cards as scenarios). The contact band behind the form no
-    // longer shows the template's group photograph: since 2026-10-21 it is the owner's G01
-    // loading bay at dusk, set as .photo-section's background in css/stargo-fusion.css.
+    // The sticky card's portrait film is the owner's photograph R2 since 2026-10-21 (the
+    // trade manager at the whiteboard, tools/replaceables.mjs HOME_ROLE_CARD): a still in the
+    // film's box, under the card's own washes and text. `stargo-role-photo` sizes and crops it.
+    // The contact band behind the form no longer shows the template's group photograph:
+    // since 2026-10-21 it is the owner's G01 loading bay at dusk, set as .photo-section's
+    // background in css/stargo-fusion.css.
     const stickyVideo = [...h.matchAll(/<video id="([^"]+)-video"/g)].map((m) => m[1]).find((id) => h.slice(h.indexOf('<section class="testimonials-section"'), h.indexOf('<section class="section drk"')).includes(`id="${id}-video"`));
     if (!stickyVideo) throw new Error('index: sticky card video');
-    h = swapImg(h, '699b6466d5f19893993a4f1a_Sunset-Serenity', BRAND.square);
+    h = stillImage(h, stickyVideo, HOME_ROLE_CARD, 'STARGO WORK', 'stargo-still stargo-role-photo');
+    // The pricing band's image card: the owner's enterprise campus (T01) in place of brand-glow-square.
+    h = swapImg(h, '699b6466d5f19893993a4f1a_Sunset-Serenity', HOME_PRICING_CARD, { alt: 'STARGO WORK' });
     h = swapImg(h, '699b6466d5f19893993a4efc_Smiling%20Bearded', IMG('avatar-core.png'));   // the chat card's bearded-man avatar → the core orb
     // The blog grid: the template's four cards, filled with the four newest articles.
-    h = blogCards(h, 'blog-grid', 'w-dyn-item', featured(4), lang, { image: 'testimonials-photo', date: 'data-text ab', title: 'blog-txt', sizes: '(max-width: 767px) 100vw, (max-width: 991px) 50vw, 25vw' });
+    // Since 2026-10-21 the four cards show the owner's photographs B01–B04 (HOME_BLOG_COVERS) instead of their article covers.
+    h = blogCards(h, 'blog-grid', 'w-dyn-item', featured(4), lang, { image: 'testimonials-photo', date: 'data-text ab', title: 'blog-txt', sizes: '(max-width: 767px) 100vw, (max-width: 991px) 50vw, 25vw', covers: HOME_BLOG_COVERS });
   }
   const D = C.HOME_DUP_DESC;
   h = s(h, D.original, t(D.first), { nth: 0 });
@@ -2334,8 +2353,9 @@ const FORBIDDEN = [
   /Mōno™ Studio/, /monostudio/i, /Awwwards/, /Lorem/i, /cal\.com/, /Tomato Store/, /Market Play/,
   /Forma Digital/, /Nero Vision/, /One Step/, /Bold Moves/, /Auralis/, /Light[\s\u00a0]Studio/, /Joda Trump/, /Elena Rossi/, /Adrian Keller/, /Camila Verga/,
   /\$\s?\d/, /logoipsum/i, /Get Template/, /template-navigator/, /youtube\.com/, /embedly/,
-  // stock photography that shipped with the templates
-  /Young%20Man%20Smiling/, /Sunset-Serenity/, /Joyful-Group/, /Red-Hat-Portrait/, /work-\d+\.webp/, /work7\.webp/, /Matcha-Latte/, /Party-Scene/, /Scene%20/, /Portrait-of-a-Man/, /Diverse-Group/, /Coding-Workspace/, /Sleek%20Container/, /Futuristic/, /blog-\d\.webp/, /about-6/,
+  // stock photography that shipped with the templates (`_work-1.webp` … — not a word that ends
+  // in "work", like the owner's s01-inquiry-rework-1600.webp)
+  /Young%20Man%20Smiling/, /Sunset-Serenity/, /Joyful-Group/, /Red-Hat-Portrait/, /(?<![a-z])work-\d+\.webp/, /work7\.webp/, /Matcha-Latte/, /Party-Scene/, /Scene%20/, /Portrait-of-a-Man/, /Diverse-Group/, /Coding-Workspace/, /Sleek%20Container/, /Futuristic/, /blog-\d\.webp/, /about-6/,
   // lifelogx template people, its CMS article images and its brand
   /Vibrant%20Orange/, /Stylish%20Portrait/, /Metallic%20Jacket/, /Rectangle%2043/, /69417cf6925a82af26179b70/, /Lifelogx/i, /Lina Elsen/, /Amira Brik/, /Mila Eron/, /Oren Solis/,
 ];
