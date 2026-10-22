@@ -1425,7 +1425,8 @@ PAGES['workforce.html'] = (lang) => {
   b = s(b, '>we write and share<', `>${t(W.storiesSub)}<`);
   /* Since 2026-10-21 the three cards show the owner's photographs B01–B03
      (tools/replaceables.mjs WORKFORCE_BLOG_COVERS) instead of their article
-     covers; the blog index and the articles keep those covers. */
+     covers; the blog index and the articles show the same photographs
+     (BLOG_COVERS), and only the articles' share images keep those covers. */
   {
     const strip = POSTS.slice(0, 3).map((p) => p.slug);
     const lost = Object.keys(WORKFORCE_BLOG_COVERS).filter((slug) => !strip.includes(slug));

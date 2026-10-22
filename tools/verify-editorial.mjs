@@ -101,7 +101,8 @@ for (const f of files) {
     assert(!/演示数据|demo data/i.test(alt), `${f}: a photograph is not a product interface; no demo-data caption — "${alt}"`);
   }
   /* Share cover: an article shares its own cover, every other page the share
-     card, with the owner's sentence for it as og:image:alt. The file is on disk. */
+     card, with the owner's sentence for it and the AI caption as
+     og:image:alt. The file is on disk. */
   {
     const og = html.match(/<meta property="og:image" content="([^"]*)"\/>/)?.[1] ?? '';
     const article = /^(?:en\/)?blog\//.test(f);
@@ -110,7 +111,9 @@ for (const f of files) {
     assert.equal(html.match(/<meta name="twitter:image" content="([^"]*)"\/>/)?.[1], og, `${f}: twitter:image is the share cover`);
     if (!article) {
       const alt = html.match(/<meta property="og:image:alt" content="([^"]*)"\/>/)?.[1] ?? '';
-      assert(alt && html.includes(`<meta name="twitter:image:alt" content="${alt}"/>`) && !/演示数据|demo data|AI 概念图|AI concept/i.test(alt), `${f}: the share card's alt — "${alt}"`);
+      /* The share card is one of the owner's AI-generated pictures, so its
+         alt ends with the same caption as theirs, once, and is not demo data. */
+      assert(alt && html.includes(`<meta name="twitter:image:alt" content="${alt}"/>`) && alt.endsWith(conceptCaption) && alt.indexOf(conceptCaption) === alt.length - conceptCaption.length && alt.length > conceptCaption.length + 8 && !/演示数据|demo data/i.test(alt), `${f}: the share card's alt must describe it and end with "${conceptCaption}" once — "${alt}"`);
     }
   }
   /* Runtime cache version: every local script and stylesheet the page loads

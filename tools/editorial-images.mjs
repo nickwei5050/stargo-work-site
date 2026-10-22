@@ -415,11 +415,15 @@ function blogPhotoSizes(tag) {
   return null;
 }
 /** A photograph's alt text in the page's language, by registry id (or OG.id,
- *  the share card's), for the places that are not an <img>. */
+ *  the share card's), for the places that are not an <img>: the manifest
+ *  sentence plus the same CONCEPT_CAPTION every owner photograph's <img> alt
+ *  ends with, since the share card (O01) is one of the owner's AI-generated
+ *  pictures too. */
 export function photoAlt(id, lang) {
   const text = photoText[id]?.[lang === 'zh' ? 0 : 1];
   if (!text) throw new Error(`Photograph without alt text: ${id}`);
-  return text;
+  if (/AI 概念图|AI concept|演示数据|demo data/i.test(text)) throw new Error(`Photograph alt text carries a caption; the caption is added here: ${id}`);
+  return `${text}${CONCEPT_CAPTION[lang === 'zh' ? 'zh' : 'en']}`;
 }
 export function editorialImages(html, lang) {
   // Also covers inline backgrounds and absolute Open Graph URLs.

@@ -203,8 +203,9 @@ export const CAP_PHOTOS = {
  * (blog.html) and in every article's 「更多文章」 list (tools/build-site.mjs).
  * A slug not listed keeps its cover from assets/blog/ there. The covers in
  * assets/blog/ (tools/blog-covers.mjs) stay what the articles share
- * (og:image, twitter:image, the BlogPosting image) and what the homepage and
- * workforce cards show until their own groups place them. Values are each
+ * (og:image, twitter:image, the BlogPosting image); the homepage's and
+ * workforce's article cards take the same photographs through their own
+ * lists, HOME_BLOG_COVERS and WORKFORCE_BLOG_COVERS. Values are each
  * photograph's widest file; tools/editorial-images.mjs writes the srcset, the
  * size and the alt, css/stargo-fusion.css (the "blog" block at its end) the
  * crop point.
@@ -378,8 +379,9 @@ export const HOME_ROLE_CARD = photoFile('r2-trade-manager', 1024);
  *  brand-glow-square. */
 export const HOME_PRICING_CARD = photoFile('t01-enterprise-campus', 1024);
 /** The homepage's four newest-article cards (B01–B04), by article slug. A
- *  slug not listed keeps its article cover from assets/blog/. The blog
- *  index, the articles and the share images keep those covers. */
+ *  slug not listed keeps its article cover from assets/blog/. The blog index
+ *  and the articles show the same photographs (BLOG_COVERS); only the
+ *  articles' share images keep the assets/blog/ covers. */
 export const HOME_BLOG_COVERS = {
   'stargo-work-visual-guide': photoFile('b01-visual-guide', 1600),
   'start-with-one-workflow': photoFile('b02-one-workflow', 1600),
@@ -477,7 +479,8 @@ export const WORKFORCE_ROLES = {
 /** workforce.html's three article cards under 文章 / 我们写下来的 (B01–B03),
  *  by article slug. They showed the articles' covers, which are fitted
  *  product screenshots (tools/blog-covers.mjs: sw004, sw008, sw028); the
- *  blog index, the articles and the share images keep those covers. */
+ *  blog index and the articles show the same photographs (BLOG_COVERS), and
+ *  only the articles' share images keep those covers. */
 export const WORKFORCE_BLOG_COVERS = {
   'stargo-work-visual-guide': photoFile('b01-visual-guide', 1600),
   'start-with-one-workflow': photoFile('b02-one-workflow', 1600),

@@ -278,8 +278,9 @@ function head(html, lang, current) {
     `<meta property="og:image" content="${ogImage}"/>`,
     post ? '<meta property="og:image:width" content="1200"/><meta property="og:image:height" content="800"/>' : '<meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/>',
     /* The share card is the owner's photograph: it carries the owner's own
-       sentence for it, as the photographs on the pages do. An article's cover
-       has none here (its card and hero carry theirs). */
+       sentence for it and the AI caption (photoAlt), as the photographs on the
+       pages do. An article's cover has none here (its card and hero carry
+       theirs). */
     ...(post ? [] : [`<meta property="og:image:alt" content="${escapeHtml(photoAlt(OG.id, lang))}"/>`]),
     ...(post ? [`<meta property="article:published_time" content="${post.date}"/>`, `<meta property="article:modified_time" content="${post.modified ?? post.date}"/>`, `<meta property="article:section" content="${(post.section ?? BLOG_UI.section)[lang]}"/>`, ...post.keywords[lang].map((k) => `<meta property="article:tag" content="${k}"/>`)] : []),
     '<meta name="twitter:card" content="summary_large_image"/>',

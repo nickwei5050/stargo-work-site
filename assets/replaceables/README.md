@@ -127,7 +127,7 @@ Homepage photographs (group "home", batches 1, 2, 4 and 8; `index.html` and `en/
 | 「从哪里开始？」 band halves `.photo-half._01` / `._02` (CSS background, so no alt; hidden below 992px as before) | `r1-sales-rep-1639.webp` |
 | Example-scenario card 03 (四个示例场景), in place of the Contemplative film (`HOME_ROLE_CARD`) | `r2-trade-manager-1024.webp` |
 | 企业版 / Enterprise plan picture in the pricing section (`HOME_PRICING_CARD`) | `t01-enterprise-campus-1024.webp` |
-| The four homepage blog cards (`HOME_BLOG_COVERS`, by article slug; the blog index and the articles keep `assets/blog/`) | `b01-visual-guide`, `b02-one-workflow`, `b03-inquiry-to-quote`, `b04-approval-handover`, all `-1600` |
+| The four homepage blog cards (`HOME_BLOG_COVERS`, by article slug; the articles' share images keep `assets/blog/`) | `b01-visual-guide`, `b02-one-workflow`, `b03-inquiry-to-quote`, `b04-approval-handover`, all `-1600` |
 
 About, contact, pricing and workforce photographs (group "pages", batches 4, 5 and 8; `about`, `contact`, `pricing` and `workforce`, zh and en, only; slots in `tools/replaceables.mjs`):
 
@@ -138,7 +138,7 @@ About, contact, pricing and workforce photographs (group "pages", batches 4, 5 a
 | Scenario slides 1–4 on about and pricing, `.cn-cover-image` (`ROLE_SLIDES`, by the cinery portrait; the pricing card's 56px avatars keep the portraits) | `r1-sales-rep-1639` (+ 480/768/1024), `r2-trade-manager-1024`, `r3-sales-director-1024`, `r4-general-manager-1024` |
 | Contact quote card, in place of the Professional Portrait film (`CONTACT_CARD`) | `k01-meeting-table-768.webp` (+ `-480`) |
 | Workforce role cards: the five marquee cards, each twice, and the collage card (`WORKFORCE_ROLES`, by the lifelogx asset id) | `d01-market-research-1024`, `d02-follow-up-1024`, `d03-product-spec-480`, `d04-finance-480`, `d05-coordination-1024`, `d06-reporting-480` |
-| Workforce article cards under 文章 (`WORKFORCE_BLOG_COVERS`, by article slug; the blog index and the articles keep `assets/blog/`) | `b01-visual-guide`, `b02-one-workflow`, `b03-inquiry-to-quote`, all `-1600` |
+| Workforce article cards under 文章 (`WORKFORCE_BLOG_COVERS`, by article slug; the articles' share images keep `assets/blog/`) | `b01-visual-guide`, `b02-one-workflow`, `b03-inquiry-to-quote`, all `-1600` |
 
 ### Blog and intelligence page (batch 8, 2026-10-21)
 
