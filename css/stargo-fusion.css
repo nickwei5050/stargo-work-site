@@ -6024,4 +6024,69 @@ img[src*="stargo-photo/e08-emergency-stop-"] { object-position: 50% 42%; }
     opacity: 1 !important;
     transform: none !important;
   }
+/* ==========================================================================
+   FORM LANE (next round, Z12 + the phone-table mechanics of Z11)
+   ========================================================================== */
+
+/* Z12. The contact card's ten fields computed to 14px (cinery's `.w-input` /
+   `.w-select`), and iOS Safari zooms the page into any field under 16px when it
+   is focused. 16px on touch screens and phone widths only, so the desktop card
+   is drawn exactly as before. */
+@media (max-width: 991px), (hover: none) and (pointer: coarse) {
+  .cn-contact .cn-form-input,
+  .cn-contact .w-input,
+  .cn-contact .w-select,
+  .cn-contact textarea {
+    font-size: 16px;
+  }
+}
+
+/* Z12. A field js/stargo-forms.js marks invalid: its border, and the sentence
+   printed directly under it (p.stargo-field-error, tied to the field with
+   aria-describedby). #ff9e9e on the card's #232324 measures about 8:1. A
+   visible keyboard focus ring, which the card's fields did not have. */
+.cn-contact .cn-form-input[aria-invalid="true"] { border-color: #ff9e9e; }
+.cn-contact p.stargo-field-error {
+  margin: .375rem 0 0;
+  color: #ff9e9e;
+  opacity: 1;   /* the page's own paragraph rule fades p to .7 */
+  font-size: 14px;
+  line-height: 1.5;
+}
+.cn-contact p.stargo-field-error[hidden] { display: none; }
+.cn-contact .cn-form-input:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+/* The status line js/stargo-forms.js focuses after a send that did not go
+   through: focusable by script only, so no ring of its own. */
+.stargo-form-note[tabindex="-1"]:focus { outline: none; }
+
+/* Z11. The comparison chart on a phone is a sideways scrollport
+   (tools/blocks/rk-price-compare.css) holding 5 plans of which about 2 show.
+   It is a named, focusable region now (rk-price-compare.mjs), so it gets a
+   focus ring; and while more columns lie to the right, a fade over the right
+   edge says so. js/stargo-pricing.js sets .stargo-scroll-more on the chart's
+   parent only while the chart can still scroll right, so the fade goes when
+   the last column is reached, and never shows without the script. */
+.rk-price-compare .rk-rt-pricing-chart:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 4px;
+}
+@media screen and (max-width: 767px) {
+  .rk-price-compare .rk-rt-pricing-v1-content-2 { position: relative; }
+  .rk-price-compare .rk-rt-pricing-v1-content-2::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 3rem;
+    pointer-events: none;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0), var(--black, #000));
+    opacity: 0;
+    transition: opacity .25s;
+    z-index: 2;
+  }
+  .rk-price-compare .rk-rt-pricing-v1-content-2.stargo-scroll-more::after { opacity: 1; }
 }

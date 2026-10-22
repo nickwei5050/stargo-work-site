@@ -957,7 +957,17 @@ export function render(frag, ctx) {
     return left + cells.join('') + cut.tail;
   });
 
-  const html = head
+  /* Z11 (form lane): on a phone the chart is a sideways scrollport
+     (rk-price-compare.css), so it is made a named, focusable region a keyboard
+     can scroll (axe scrollable-region-focusable). The name is an accessible
+     name only, never drawn; compareTitle is not used because this chart shows
+     every level, not a selection (see the head of this file). */
+  const CHART_OPEN = 'class="rk-rt-pricing-chart">';
+  if (head.split(CHART_OPEN).length !== 2) throw new Error('rk-price-compare: expected the chart\'s own open tag once in the cut');
+  const regionName = lang === 'zh' ? '方案对比表' : 'Plan comparison table';
+  const chartHead = head.replace(CHART_OPEN, `class="rk-rt-pricing-chart" role="region" tabindex="0" aria-label="${regionName}">`);
+
+  const html = chartHead
     + tagCut.head + tags.join('') + tagCut.tail
     + priceHead + prices.join('') + priceCut.tail
     + drawn.join('')
