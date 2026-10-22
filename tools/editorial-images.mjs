@@ -254,6 +254,26 @@ const photoText = {
      768, 564 at 1024, 683 at 1440 and 794 at 1920. The module cards
      (`.team-image`) draw the picture whole, 182px (47vw) on a phone, ~23vw
      from 768 and 338px at most.
+   The about, contact, pricing and workforce photographs (2026-10-21,
+   tools/replaceables.mjs ROLE_SLIDES … WORKFORCE_BLOG_COVERS), measured on
+   the built page from 320 to 2560 wide. Every one is a cover crop, so each
+   value is the width of the cropped picture, not of its box:
+   - The scenario slides (`cn-cover-image`, about and pricing): a box of
+     ~92vw up to 767; from 768 a column 318–526px wide and 619px tall, which
+     a 4:5 portrait covers at ~495px; ~45vw from 1280 and at most 766px.
+   - The about tiles (`stargo-case-photo`): ~91vw up to 991, then ~45vw and
+     at most 752px; the square and 4:5 pictures cover them by their width.
+   - The contact quote card (`stargo-contact-photo`): ~96vw up to 767, then
+     307–376px wide and 450px tall, which the 0.82:1 picture covers at
+     ~370px.
+   - The workforce role cards (`lx-feature-hero-image`, 1 : 1.28): the
+     square pictures cover them by their height, at most 140px tall below
+     480, 160px to 767, 205px to 991 and 265px above.
+   - The workforce article cards (`lx-blog-image`, 1:1): the 3:2 pictures
+     cover them at 1.5 times the card's width (537px at 390, 504px at 768,
+     592px at 1440), so 150vw less the gutters up to 767, ~68vw to 991, ~44vw
+     and at most 593px above; the blog index's cards (group "blog") use the
+     same value.
    The homepage's other photographs (2026-10-21, tools/replaceables.mjs
    HOME_MOSAIC … HOME_BLOG_COVERS), measured on the built page from 320 to
    2560 wide:
@@ -285,6 +305,11 @@ const coverSizes = (photo, boxes) => boxes.map(([media, w, h]) => `${media ? `${
    16:9 for the inbox (C05), square for the customer file (C06). */
 const SALES_PHONE_RATIO = { 'c05-unified-inbox': 16 / 9, 'c06-customer-360': 1 };
 function photoSizes(tag, before, photo, lang) {
+  if (/\bcn-cover-image\b/.test(tag)) return '(max-width: 767px) 92vw, (max-width: 1279px) 530px, (max-width: 1699px) 45vw, 766px';
+  if (/\bstargo-case-photo\b/.test(tag)) return '(max-width: 991px) 91vw, (max-width: 1699px) 45vw, 760px';
+  if (/\bstargo-contact-photo\b/.test(tag)) return '(max-width: 767px) 96vw, 380px';
+  if (/\blx-feature-hero-image\b/.test(tag)) return '(max-width: 479px) 140px, (max-width: 767px) 160px, (max-width: 991px) 205px, 265px';
+  if (/\blx-blog-image\b/.test(tag) && !/\blx-details\b/.test(tag)) return '(max-width: 767px) calc(150vw - 48px), (max-width: 991px) 68vw, (max-width: 1439px) 44vw, 593px';
   if (/\bstargo-role-photo\b/.test(tag)) return '(max-width: 479px) 96vw, 400px';
   if (/\bstargo-mosaic\b/.test(tag)) return '48vw';
   if (/\bphoto-hero\b/.test(tag)) {

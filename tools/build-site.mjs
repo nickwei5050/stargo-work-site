@@ -22,7 +22,7 @@ import * as C from './copy.mjs';
 import { POSTS, BLOG_UI, postPath, featured, others, coverSrc, coverSrcset, coverAlt, formatDate, renderBody, titleHtml } from './blog.mjs';
 import { loadBlocks, art, capTitle, DONORS } from './block-lib.mjs';
 import { PRODUCT_CAPTION } from './editorial-images.mjs';
-import { HERO, HOME_MODULES, HOME_STAGES, HOME_SILOS, HOME_ROLE_CARD, HOME_PRICING_CARD, HOME_BLOG_COVERS, NOTICES_CARDS, CAP_PHOTOS, ENTERPRISE_PHOTOS } from './replaceables.mjs';
+import { HERO, HOME_MODULES, HOME_STAGES, HOME_SILOS, HOME_ROLE_CARD, HOME_PRICING_CARD, HOME_BLOG_COVERS, NOTICES_CARDS, CAP_PHOTOS, ENTERPRISE_PHOTOS, ROLE_SLIDES, CONTACT_CARD, WORKFORCE_ROLES, WORKFORCE_BLOG_COVERS } from './replaceables.mjs';
 import { SITE } from './paths.mjs';
 import { webpPage } from './image-refs.mjs';
 
@@ -120,6 +120,30 @@ function swapImg(html, key, src, { nth = null, alt = '' } = {}) {
     return tag.replace(/\s*srcset="[^"]*"/g, '').replace(/\s*sizes="[^"]*"/g, '').replace(/src="[^"]*"/, `src="${src}"`).replace(/alt="[^"]*"/, `alt="${alt}"`);
   });
   if (!hit) throw new Error(`swapImg: no <img> with ${key}${nth != null ? ` #${nth}` : ''}`);
+  return out;
+}
+/**
+ * The scenario slider's four slides on about.html (cn-about-reviews) and
+ * pricing.html (cn-reviews): since 2026-10-21 each slide's cover picture is
+ * the owner's photograph of its role (tools/replaceables.mjs ROLE_SLIDES,
+ * R1–R4, keyed by the cinery portrait it replaces). Only `.cn-cover-image`
+ * changes, inside the block it is given — the pricing card's 56px avatars are
+ * another block and keep the template portraits. The alt is a marker that
+ * tools/editorial-images.mjs replaces with the photograph's own sentence;
+ * cinery's srcset and sizes go, and that pass writes the photograph's.
+ */
+function roleSlides(html, where) {
+  const seen = [];
+  const out = html.replace(/<img\b[^>]*\bclass="cn-cover-image"[^>]*>/g, (tag) => {
+    const key = Object.keys(ROLE_SLIDES).find((k) => tag.includes(`/${k}.`));
+    if (!key) throw new Error(`${where}: a scenario slide shows a picture ROLE_SLIDES does not name: ${tag.slice(0, 160)}`);
+    seen.push(key);
+    return tag.replace(/\s*srcset="[^"]*"/g, '').replace(/\s*sizes="[^"]*"/g, '')
+      .replace(/src="[^"]*"/, `src="${ROLE_SLIDES[key]}"`).replace(/alt="[^"]*"/, 'alt="STARGO WORK"');
+  });
+  if (seen.join() !== Object.keys(ROLE_SLIDES).join()) {
+    throw new Error(`${where}: expected the four scenario slides in ROLE_SLIDES order (R1–R4), found ${seen.join(', ') || 'none'}`);
+  }
   return out;
 }
 /* V7-LX: the last clause of a Chinese paragraph as one unit.
@@ -1225,6 +1249,31 @@ PAGES['workforce.html'] = (lang) => {
   });
   b = s(b, '<div class="lx-text-size-tiny lx-text-color-grey">Views</div>',
     `<div class="lx-text-size-tiny lx-text-color-grey">${t(W.roles[0].dept)}</div>`, { count: 11 });
+  /* The role cards' pictures: the owner's photographs D01–D06 since
+     2026-10-21 (tools/replaceables.mjs WORKFORCE_ROLES, by the lifelogx
+     picture each card showed): the five marquee cards, their five copies in
+     the loop's second holder (or the old picture comes back as the loop
+     turns) and the collage card. The card, its 1 : 1.28 box and the
+     picture's `object-fit: cover` are the template's; the crop point is in
+     the "pages" block of css/stargo-fusion.css. The alt is a marker that
+     tools/editorial-images.mjs replaces with the photograph's own sentence.
+     The marquee is this page's first screen, so its pictures load with the
+     page; the collage card further down keeps lazy loading. */
+  {
+    const COLLAGE = '694277bf9dc048830e6fca2e';
+    for (const [key, src] of Object.entries(WORKFORCE_ROLES)) {
+      let n = 0;
+      b = b.replace(/<img\b[^>]*>/g, (tag) => {
+        if (!tag.includes(`/${key}_`)) return tag;
+        if (!/\bclass="lx-feature-hero-image"/.test(tag)) throw new Error(`workforce: the ${key} picture is no longer a role card's .lx-feature-hero-image`);
+        n++;
+        const photo = tag.replace(/src="[^"]*"/, `src="${src}"`).replace(/alt="[^"]*"/, 'alt="STARGO WORK"');
+        return key === COLLAGE ? photo : photo.replace(/\s*loading="lazy"/, '');
+      });
+      const want = key === COLLAGE ? 1 : 2;
+      if (n !== want) throw new Error(`workforce: expected ${want} role card(s) showing ${key}, found ${n}`);
+    }
+  }
   // the template's cards link to the studio's own social accounts
   b = b.replace(/href="https:\/\/(?:www\.)?(?:linkedin|instagram|facebook|x|twitter|tiktok|youtube)\.com[^"]*"/g, 'href="contact.html"');
   // the fifth card and the panel button are placeholders in the template
@@ -1359,7 +1408,15 @@ PAGES['workforce.html'] = (lang) => {
   /* the article strip: our own posts */
   b = s(b, '>Stories<', `>${t(W.storiesTitle)}<`);
   b = s(b, '>we write and share<', `>${t(W.storiesSub)}<`);
-  b = blogCards(b, 'lx-blog-list', 'lx-blog-item', POSTS.slice(0, 3), lang, LX_CARD);
+  /* Since 2026-10-21 the three cards show the owner's photographs B01–B03
+     (tools/replaceables.mjs WORKFORCE_BLOG_COVERS) instead of their article
+     covers; the blog index and the articles keep those covers. */
+  {
+    const strip = POSTS.slice(0, 3).map((p) => p.slug);
+    const lost = Object.keys(WORKFORCE_BLOG_COVERS).filter((slug) => !strip.includes(slug));
+    if (lost.length) throw new Error(`workforce: the article strip no longer shows ${lost.join(', ')}, which WORKFORCE_BLOG_COVERS gives a photograph`);
+  }
+  b = blogCards(b, 'lx-blog-list', 'lx-blog-item', POSTS.slice(0, 3), lang, { ...LX_CARD, covers: WORKFORCE_BLOG_COVERS });
 
   // The template's big square tile has "2.4M" painted into the artwork: a follower
   // count we have no basis for. STARGO's own brand image replaces it.
@@ -1421,7 +1478,7 @@ PAGES['about.html'] = (lang) => {
   const aboutBody = [
     renderBlock('cn-about', lang),
     renderBlock('cn-about-projects', lang),
-    renderBlock('cn-about-reviews', lang),
+    roleSlides(renderBlock('cn-about-reviews', lang), 'about'),
   ].join('\n');
 
   const aboutSheets = [...new Set(Object.values(DONORS).map((d) => d.sheet))]
@@ -1444,7 +1501,12 @@ PAGES['about.html'] = (lang) => {
      template's clips, drawn exactly as the template draws them; the url simply
      waits in `data-src` until js/stargo-video-defer.js restores it as the band
      comes near. One line to delete if the owner would rather they load at
-     once. */
+     once.
+
+     Since 2026-10-21 the four tiles show the owner's photographs instead
+     (tools/blocks/cn-about-projects.mjs, ABOUT_CASE_STILLS), so the band
+     carries no clip and both rewrites below find nothing in it; they stay so
+     a clip put back is deferred again. */
   {
     const sources = (out.match(/<source /g) ?? []).length;
     out = out.replace(/<video\b[^>]*>[\s\S]*?<\/video>/g, (v) => (v.includes('<source ') ? v
@@ -1722,7 +1784,7 @@ PAGES['pricing.html'] = (lang) => {
     renderBlock('rk-price-tiers', lang),
     renderBlock('rk-price-compare', lang),
     renderBlock('cn-price-card', lang),
-    renderBlock('cn-reviews', lang),
+    roleSlides(renderBlock('cn-reviews', lang), 'pricing'),
     scPart,
   ].join('\n');
 
@@ -2161,7 +2223,8 @@ PAGES['contact.html'] = (lang) => {
      line of its own at 320, 390 and 1024. `h1.inner-title` is shared by other
      pages, so the rule is scoped to this one heading rather than to the class. */
   h = s(h, '<h1 class="inner-title">Let’s Connect</h1>', `<h1 class="inner-title stargo-contact-title">${t(K.h1)}</h1>`, { count: 1 });
-  // The quote card keeps the template design (portrait film, gradient, mark); the mark is STARGO's and the rating slot names the card.
+  // The quote card keeps the template design (gradient, mark); the mark is STARGO's and the rating slot names the card.
+  // Its picture is the owner's photograph K01 since 2026-10-21 (below), where the template's portrait film played.
   h = h.replace(/<img[^>]*class="logo-testi-1"[^>]*\/>/, `<img src="${WORDMARK}" loading="lazy" alt="Stargo Work" class="logo-testi-1 stargo-card-mark"/>`);
   h = s(h, '>★★★★★<', `>${t(K.quoteLabel)}<`);
   h = s(h, '“Their ability to listen, challenge assumptions, and translate ideas into a clean digital system.”', t(K.quote));
@@ -2186,8 +2249,22 @@ PAGES['contact.html'] = (lang) => {
   const blockStart = h.lastIndexOf('<div>', msgAt);
   h = h.slice(0, blockStart) + extra + h.slice(blockStart);
   h = h.replace(/value="Contact Us"/, `value="${t(K.submit)}"`);
-  // A honeypot field for the form endpoint. (The quote card's portrait film stays.)
-  if (!/<video id="[^"]+-video"/.test(h)) throw new Error('contact: quote card video');
+  /* The quote card's picture: the owner's meeting table (K01,
+     tools/replaceables.mjs CONTACT_CARD) as a still where the template's
+     Professional Portrait film played — same box, under the card's own dots,
+     washes, mark and quote. `stargo-contact-photo` gives it its size
+     (tools/editorial-images.mjs) and its crop point (the "pages" block of
+     css/stargo-fusion.css). The card sits beside the form at the top of the
+     page from 768 up, so the still loads with the page. The alt is a marker
+     that tools/editorial-images.mjs replaces with the photograph's sentence. */
+  {
+    const FILM = '6b9abecd-3545-3c29-02b3-795e2774129e';
+    const card = findByClass(h, 'div', 'testimonials-card');
+    if (!card || !card.text.includes(`id="${FILM}-video"`)) throw new Error('contact: the quote card no longer holds the Professional Portrait film');
+    h = stillImage(h, FILM, CONTACT_CARD, 'STARGO WORK', 'stargo-still stargo-contact-photo')
+      .replace(' loading="lazy" class="stargo-still stargo-contact-photo"', ' class="stargo-still stargo-contact-photo"');
+  }
+  // A honeypot field for the form endpoint.
   h = h.replace(/(<form id="email-form"[^>]*>)/, '$1<div class="stargo-hp" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"/></div>');
   if (!h.includes('stargo-hp')) throw new Error('contact: form not found');
 
@@ -2262,7 +2339,7 @@ PAGES['contact.html'] = (lang) => {
 
   /* The quote card is the other column and is untouched — 「图6」 is why B2 was
      chosen over replacing the page. Assert it survived the splice. */
-  if (!/<video id="[^"]+-video"/.test(h)) throw new Error('contact: the quote card lost its portrait film in the swap');
+  if (!findByClass(h, 'div', 'testimonials-card')?.text.includes('class="stargo-still stargo-contact-photo"')) throw new Error('contact: the quote card lost its picture in the swap');
   /* Not the number of forms on the page — the Mono shell carries a second one
      in its footer — but the number that reach this site's endpoint. Exactly
      one form may post to /api/contact, and it must be the one that came out of
