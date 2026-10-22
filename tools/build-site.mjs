@@ -562,6 +562,9 @@ PAGES['index.html'] = (lang) => {
     const stickyVideo = [...h.matchAll(/<video id="([^"]+)-video"/g)].map((m) => m[1]).find((id) => h.slice(h.indexOf('<section class="testimonials-section"'), h.indexOf('<section class="section drk"')).includes(`id="${id}-video"`));
     if (!stickyVideo) throw new Error('index: sticky card video');
     h = stillImage(h, stickyVideo, HOME_ROLE_CARD, 'STARGO WORK', 'stargo-still stargo-role-photo');
+    // Mono's toss ends with the card turned over (rotateX(180deg), back face visible), which
+    // drew R2 upside down; js/stargo-card-upright.js turns the picture back over while it is.
+    h = s(h, '</body>', '<script src="js/stargo-card-upright.js" defer></script></body>', { count: 1 });
     // The pricing band's image card: the owner's enterprise campus (T01) in place of brand-glow-square.
     h = swapImg(h, '699b6466d5f19893993a4f1a_Sunset-Serenity', HOME_PRICING_CARD, { alt: 'STARGO WORK' });
     h = swapImg(h, '699b6466d5f19893993a4efc_Smiling%20Bearded', IMG('avatar-core.png'));   // the chat card's bearded-man avatar → the core orb

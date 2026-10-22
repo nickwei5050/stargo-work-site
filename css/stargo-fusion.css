@@ -5408,6 +5408,12 @@ body:has(#loop) .image-wrap.for-service .paralax-image[src*="stargo-photo/p04-"]
    in the film's box, 400x450 (0.89:1) from 480 up and ~1.07:1 on a phone,
    the manifest's crop for those card slots. */
 .testimonials-card._03 img.stargo-role-photo { object-position: 50% 40%; }
+/* Mono tosses the four cards away turned over (rotateX(180deg), back face
+   visible), which drew R2 upside down at the top of the window. While its
+   card is turned over, js/stargo-card-upright.js sets .sgp-upright and the
+   picture is turned back over inside its own box, which fills the card; the
+   card's flight and its text are untouched. */
+.testimonials-card._03 img.stargo-role-photo.sgp-upright { transform: scaleY(-1); }
 
 /* T01, the pricing band's image card beside 企业版. */
 .testi-grid .image-wrap.rnd .paralax-image[src*="stargo-photo/t01-"] { object-position: 50% 58%; }
