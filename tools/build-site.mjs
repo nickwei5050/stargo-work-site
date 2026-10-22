@@ -17,7 +17,8 @@
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 'node:fs';
 import { makeSub, findByClass, removeByClass, elementContaining, extractElement, setInner, setEachInner, setLink, escapeHtml, zhWbr, zhKeep as zhKeepWords } from './lib-html.mjs';
-import { applyChrome, remapLinks, relocateAssets, relocateLinks, assertInternalLinks, stillImage, WORDMARK } from './chrome.mjs';
+import { versionPage } from './asset-version.mjs';
+import { applyChrome, remapLinks, relocateAssets, relocateLinks, cleanLinks, assertInternalLinks, stillImage, WORDMARK } from './chrome.mjs';
 import * as C from './copy.mjs';
 import { POSTS, BLOG_UI, postPath, featured, others, coverSrc, coverSrcset, coverAlt, formatDate, renderBody, titleHtml } from './blog.mjs';
 import { loadBlocks, art, capTitle, DONORS } from './block-lib.mjs';
@@ -2517,11 +2518,19 @@ for (const lang of C.LANGS) {
         if (f.startsWith('assets/') && !existsSync(`${SITE}/${decodeURIComponent(f)}`) && !existsSync(`${SITE}/${f}`)) throw new Error(`[${lang}/${name}] missing srcset asset: ${f}`);
       }
     }
+    // Every local file the page loads carries its content hash (Z18).
+    html = versionPage(html);
     // Pages in a folder (blog/) link and load one level up; English pages one more.
     const depth = name.split('/').length - 1;
     html = relocateLinks(html, '../'.repeat(depth));
     const assetUp = '../'.repeat(depth + (lang === 'en' ? 1 : 0));
     if (assetUp) html = relocateAssets(html, assetUp);
+    // Internal links straight to the clean URLs the site is served at (Z17).
+    html = cleanLinks(html, lang === 'zh' ? name : `en/${name}`);
+    {
+      const hop = html.match(/\shref="(?![a-z][a-z0-9+.-]*:|\/\/)[^"]*\.html(?:[#?][^"]*)?"/i);
+      if (hop) throw new Error(`[${lang}/${name}] internal link still names a .html file: ${hop[0].trim()}`);
+    }
     const out = lang === 'zh' ? `${SITE}/${name}` : `${SITE}/en/${name}`;
     mkdirSync(out.slice(0, out.lastIndexOf('/')), { recursive: true });
     writeFileSync(out, html.replace(/[\t ]+$/gm, ''), 'utf8');

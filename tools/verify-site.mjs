@@ -40,7 +40,7 @@ for (const page of PAGES) {
   const external = new Set();
   p.on('pageerror', (e) => errors.push(String(e).split('\n')[0]));
   p.on('console', (m) => { if (m.type() === 'error') errors.push('console: ' + m.text().slice(0, 160)); });
-  p.on('requestfailed', (r) => { if (!/\.(mp4|webm)$/.test(r.url())) failed.push(r.url()); });
+  p.on('requestfailed', (r) => { if (!/\.(mp4|webm)(?:\?|$)/.test(r.url())) failed.push(r.url()); });
   p.on('request', (r) => { const u = new URL(r.url()); if (u.origin !== new URL(BASE).origin) external.add(u.host); });
 
   let status = 0;
@@ -75,10 +75,16 @@ for (const page of PAGES) {
   });
   const residue = page.startsWith('en/') ? [] : latin.filter((t) => !t.split(/[\s·（）()「」【】、，。：:；;/·—–-]+/).filter(Boolean).every((w) => !/[A-Za-z]{3,}/.test(w) || ALLOWED.test(w)));
 
-  // Internal links must resolve to a file in the site root.
+  // Internal links must resolve to a file in the site root: a relative `.html`
+  // link from the page's folder, or a clean root-relative URL (/pricing, /en/,
+  // /blog/<slug>) the way the server maps it (tools/chrome.mjs cleanLinks).
   const hrefs = await p.evaluate(() => [...document.querySelectorAll('a[href]')].map((a) => a.getAttribute('href')));
   const dir = `${SITE}/${page.split('/').slice(0, -1).join('/')}`.replace(/\/$/, '');
-  const broken = [...new Set(hrefs.filter((h) => /\.html(#.*)?$/.test(h) && !/^https?:/.test(h)).map((h) => h.split('#')[0]).filter((h) => !existsSync(`${dir}/${h}`)))];
+  const cleanFile = (h) => { const p = h.split(/[?#]/)[0]; return `${SITE}${p.endsWith('/') ? `${p}index.html` : /\.[a-z0-9]+$/i.test(p) ? p : `${p}.html`}`; };
+  const broken = [...new Set([
+    ...hrefs.filter((h) => /\.html(#.*)?$/.test(h) && !/^(https?:|\/)/.test(h)).map((h) => h.split('#')[0]).filter((h) => !existsSync(`${dir}/${h}`)),
+    ...hrefs.filter((h) => /^\/(?!\/|api\/)/.test(h)).filter((h) => !existsSync(cleanFile(h))),
+  ])];
   const dangling = [...new Set(hrefs.filter((h) => h === '#' || h === ''))].length;
 
   const ok = status === 200 && errors.length === 0 && failed.length === 0 && external.size === 0 && broken.length === 0;

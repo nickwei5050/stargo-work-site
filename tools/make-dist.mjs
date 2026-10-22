@@ -17,7 +17,8 @@
  * just-copied file. Files are overwritten, and anything in dist/ that no
  * longer exists in the source tree is removed one by one.
  */
-import { mkdirSync, copyFileSync, readdirSync, writeFileSync, unlinkSync, rmdirSync, chmodSync, existsSync } from 'node:fs';
+import { mkdirSync, copyFileSync, readdirSync, readFileSync, writeFileSync, unlinkSync, rmdirSync, chmodSync, existsSync } from 'node:fs';
+import { versionCss } from './asset-version.mjs';
 import { SITE_URL, META, NAV, MORE, SECONDARY, WORKFORCE_ROLE_GROUPS } from './copy.mjs';
 import { SITE_PAGES, cleanUrl } from './chrome.mjs';
 import { POSTS, postPath } from './blog.mjs';
@@ -35,7 +36,7 @@ const walk = (dir, rel, out) => {
 };
 for (const f of readdirSync(SITE)) if (f.endsWith('.html')) wanted.add(f);
 for (const d of ['en', 'blog', 'assets', 'css', 'js']) if (existsSync(`${SITE}/${d}`)) walk(`${SITE}/${d}`, d, wanted);
-const GENERATED = ['_headers', '_redirects', 'robots.txt', 'sitemap.xml', 'llms.txt'];
+const GENERATED = ['_headers', '_redirects', '_routes.json', 'robots.txt', 'sitemap.xml', 'llms.txt'];
 for (const g of GENERATED) wanted.add(g);
 
 for (const rel of wanted) {
@@ -45,7 +46,11 @@ for (const rel of wanted) {
   // copyFileSync after an explicit unlink: cpSync's own overwrite intermittently
   // fails on this volume with a spurious "operation completed successfully".
   if (existsSync(to)) { try { chmodSync(to, 0o666); unlinkSync(to); } catch (e) { console.warn(`could not replace ${rel}: ${e.message}`); } }
-  copyFileSync(`${SITE}/${rel}`, to);
+  /* Stylesheets ship with their fonts and backgrounds versioned
+     (tools/asset-version.mjs, Z18): the token each page puts on a stylesheet's
+     URL is taken over this text, so it must be the text that is served. */
+  if (/^css\/.*\.css$/.test(rel)) writeFileSync(to, versionCss(readFileSync(`${SITE}/${rel}`, 'latin1')), 'latin1');
+  else copyFileSync(`${SITE}/${rel}`, to);
 }
 
 // Long cache for the hashed template assets, short for pages; the specific
@@ -86,8 +91,24 @@ writeFileSync(`${DIST}/_redirects`, [
   '/security.html /enterprise 301',
   '/en/features /en/capabilities 301',
   '/en/security /en/enterprise 301',
+  /* Z17: every page's old `.html` address, in both languages, goes straight
+     to its clean URL with a permanent 301 (Pages' own answer is a 308). The
+     pages link to the clean URLs themselves (tools/chrome.mjs cleanLinks). */
+  ...['', 'en/'].flatMap((lang) => SITE_PAGES.map((p) =>
+    `/${lang}${p} /${lang}${p === 'index.html' ? '' : p.replace(/\.html$/, '')} 301`)),
   '',
 ].join('\n'));
+
+/* Only pages and the API run the root Functions (functions/_middleware.js,
+   which sends the retired stargo.pages.dev host to stargowork.com, and
+   functions/api/). Stylesheets, scripts and assets are served straight from
+   the static store, as they were before the middleware existed, so the
+   middleware does not count every image against the Functions quota. */
+writeFileSync(`${DIST}/_routes.json`, `${JSON.stringify({
+  version: 1,
+  include: ['/*'],
+  exclude: ['/assets/*', '/css/*', '/js/*'],
+}, null, 2)}\n`);
 
 // robots + sitemap (clean URLs, both languages, hreflang alternates).
 const pages = SITE_PAGES;

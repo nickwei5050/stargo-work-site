@@ -32,7 +32,7 @@ try {
    assert.equal(await menu.getAttribute('aria-expanded'),'true');
    assert.equal(await menu.evaluate(e=>getComputedStyle(e).backgroundColor),'rgb(244, 244, 244)');
    await p.screenshot({path:`${OUT}/${lang?'en':'zh'}-pricing-mobile-menu.png`});
-   await p.locator('.nav-menu a[hreflang]').first().click();await p.waitForURL(lang?'**/pricing.html':'**/en/pricing.html');
+   await p.locator('.nav-menu a[hreflang]').first().click();await p.waitForURL(lang?'**/pricing':'**/en/pricing');
    assert.equal(await p.locator('html').getAttribute('lang'),lang?'zh-CN':'en');
   });
   await p.close();
@@ -72,9 +72,9 @@ try {
     for(const type of ['mousePressed','mouseReleased'])sent.push(cdp.send('Input.dispatchMouseEvent',{type,x:box.x,y:box.y,button:'left',clickCount:1}));
    }
    await Promise.all(sent);for(const r of held.splice(0))r.abort().catch(()=>{});await p.unroute(/\.(webp|jpe?g|png|avif|gif|svg)(\?|$)/);
-   const followed=await p.waitForURL(/\/contact\.html$/,{timeout:2500,waitUntil:'commit'}).then(()=>true,()=>false);
+   const followed=await p.waitForURL(/\/contact(?:\.html)?$/,{timeout:2500,waitUntil:'commit'}).then(()=>true,()=>false);
    const res={followed,downs:downs.map(([stamp,handled,inDom])=>({stamp:Math.round(stamp-o.start),handled:Math.round(handled-o.start),inDom}))};
-   if(again&&!followed){await p.waitForTimeout(1000);await p.mouse.click(box.x,box.y);res.again=await p.waitForURL(/\/contact\.html$/,{timeout:2500,waitUntil:'commit'}).then(()=>true,()=>false);}
+   if(again&&!followed){await p.waitForTimeout(1000);await p.mouse.click(box.x,box.y);res.again=await p.waitForURL(/\/contact(?:\.html)?$/,{timeout:2500,waitUntil:'commit'}).then(()=>true,()=>false);}
    return res;
   }finally{await p.unrouteAll({behavior:'ignoreErrors'});await ctx.close();}
  };
@@ -87,7 +87,7 @@ try {
     assert(s.play&&s.shown>0,'first view plays: '+JSON.stringify(s));assert.equal(s.stored,'1');
     await p.waitForFunction(()=>!document.querySelector('[data-og-intro]'),null,{timeout:9000});
     assert.equal(await p.evaluate(()=>document.documentElement.classList.contains('og-intro-play')),false,'class removed when it ends');
-    await p.goto(BASE+'/'+lang+'about.html',{waitUntil:'load'});await p.locator('a.logo-first:visible').first().click();await p.waitForURL(/\/index\.html$/);
+    await p.goto(BASE+'/'+lang+'about.html',{waitUntil:'load'});await p.locator('a.logo-first:visible').first().click();await p.waitForURL(/\/(?:en\/)?(?:index\.html)?$/);
     await p.waitForLoadState('domcontentloaded');s=await og(p);assert(!s.play&&s.shown===0&&!s.inDom,'logo back home: not covered for a frame '+JSON.stringify(s));
     await p.goto(BASE+'/'+lang+'pricing.html',{waitUntil:'load'});await p.goBack({waitUntil:'domcontentloaded'});await p.waitForTimeout(300);
     s=await og(p);assert(!s.play&&s.shown===0&&!s.inDom,'back button: not covered for a frame '+JSON.stringify(s));

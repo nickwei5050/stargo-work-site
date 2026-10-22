@@ -150,7 +150,7 @@ try {
         } else {
           assert(m.fields.every((r) => r.width >= 200), JSON.stringify(m.fields));
         }
-        assert.equal(await p.locator('form[data-stargo-form="contact"] a[href="privacy.html"]').count(), 1);
+        assert.equal(await p.locator('form[data-stargo-form="contact"] a[href$="/privacy"]').count(), 1);
       });
       await p.locator('form[data-stargo-form="contact"]').scrollIntoViewIfNeeded(); await p.waitForTimeout(300);
       await p.screenshot({ path: `${OUT}/${lang ? 'en' : 'zh'}-contact-${width}.png` });

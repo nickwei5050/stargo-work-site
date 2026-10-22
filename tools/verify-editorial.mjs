@@ -115,8 +115,9 @@ for (const f of files) {
   {
     const og = html.match(/<meta property="og:image" content="([^"]*)"\/>/)?.[1] ?? '';
     const article = /^(?:en\/)?blog\//.test(f);
-    assert(article ? /^https:\/\/[^/]+\/assets\/blog\/[\w-]+\.webp$/.test(og) : og.endsWith(`/${share.src}`), `${f}: share cover ${og}`);
-    assert(existsSync(og.replace(/^https:\/\/[^/]+\//, '')), `${f}: share cover not on disk: ${og}`);
+    assert(/\?v=[0-9a-f]{12}$/.test(og), `${f}: share cover carries its content hash ${og}`);
+    assert(article ? /^https:\/\/[^/]+\/assets\/blog\/[\w-]+\.webp\?/.test(og) : og.split('?')[0].endsWith(`/${share.src}`), `${f}: share cover ${og}`);
+    assert(existsSync(og.split('?')[0].replace(/^https:\/\/[^/]+\//, '')), `${f}: share cover not on disk: ${og}`);
     assert.equal(html.match(/<meta name="twitter:image" content="([^"]*)"\/>/)?.[1], og, `${f}: twitter:image is the share cover`);
     if (!article) {
       const alt = html.match(/<meta property="og:image:alt" content="([^"]*)"\/>/)?.[1] ?? '';
@@ -169,11 +170,12 @@ async function worker() {
       // hero, not a frame of the opening.
       await page.waitForTimeout(name === 'index' ? 5500 : 1100);
       const switcher = page.locator('.nav-menu a[hreflang]').first();
-      const up = name.includes('/') ? '../' : '';
-      assert.equal(await switcher.getAttribute('href'), lang ? `${up}../${name}.html` : `${up}en/${name}.html`);
+      // Internal links are clean root-relative URLs (tools/chrome.mjs cleanLinks).
+      const clean = name === 'index' ? '' : name;
+      assert.equal(await switcher.getAttribute('href'), lang ? `/${clean}` : `/en/${clean}`);
       assert.equal(await switcher.getAttribute('aria-current'), null, 'language is not current page');
       const logo = page.locator('a.logo-first').first();
-      assert.equal(await logo.getAttribute('href'), `${up}index.html`);
+      assert.equal(await logo.getAttribute('href'), `/${lang}`);
       await page.screenshot({ path: `${OUT}/${id}-hero.png` });
       if (width < 992) {
         const menu = page.locator('.menu-button');

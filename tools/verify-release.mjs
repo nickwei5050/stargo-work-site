@@ -14,7 +14,7 @@ const assets = JSON.parse(readFileSync('tools/imagegen/assets-manifest.json', 'u
 const pages = [...readdirSync('.').filter(f => f.endsWith('.html')), ...readdirSync('en').filter(f => f.endsWith('.html')).map(f => 'en/' + f), ...readdirSync('blog').map(f => 'blog/' + f), ...readdirSync('en/blog').map(f => 'en/blog/' + f)];
 const html = pages.map(f => readFileSync(f, 'utf8')).join('\n');
 // Every image a page references: the generated set that is still placed, the blog covers and the restored template assets.
-const referenced = new Set([...html.matchAll(/(?:src|srcset|data-poster-url|data-video-urls)="([^"]*)"/g)].flatMap(m => m[1].split(',').map(s => s.trim().split(/\s+/)[0]).filter(s => /^(\.\.\/)*assets\//.test(s)).map(s => decodeURIComponent(s.replace(/^(\.\.\/)+/, '')))));
+const referenced = new Set([...html.matchAll(/(?:src|srcset|data-poster-url|data-video-urls)="([^"]*)"/g)].flatMap(m => m[1].split(',').map(s => s.trim().split(/\s+/)[0]).filter(s => /^(\.\.\/)*assets\//.test(s)).map(s => decodeURIComponent(s.split('?')[0].replace(/^(\.\.\/)+/, '')))));
 const imageFiles = [...referenced].filter(f => /\.(webp|png|jpg|jpeg|avif|svg|gif)$/i.test(f) && existsSync(f));
 for (const a of assets) if (html.includes(a.src)) for (const v of a.variants) if (!referenced.has(v.src)) imageFiles.push(v.src);
 const runtimes = ['css', 'js'].flatMap(dir => readdirSync(dir).filter(f => /\.(css|js|json)$/.test(f)).map(f => `${dir}/${f}`));
@@ -103,7 +103,7 @@ try {
     const expected = ['c01v2-command-growth', 'c02v2-customer-knowledge', 'c03-commerce-fulfilment', 'c04v2-team-management'];
     // The four area cards only: the V6 showcases link to groups too.
     const actual = await page.locator('.wrok-wrapper a[href="#g01"] img,.wrok-wrapper a[href="#g04"] img,.wrok-wrapper a[href="#g07"] img,.wrok-wrapper a[href="#g10"] img')
-      .evaluateAll(imgs => imgs.map(i => { const src = i.getAttribute('src'); return src.split('/').pop().replace(/stargo-photo\//.test(src) ? /-\d+\.webp$/ : /\.webp$/, ''); }));
+      .evaluateAll(imgs => imgs.map(i => { const src = i.getAttribute('src').split('?')[0]; return src.split('/').pop().replace(/stargo-photo\//.test(src) ? /-\d+\.webp$/ : /\.webp$/, ''); }));
     assert.deepEqual(actual, expected, 'capability image/meaning mapping');
     await page.locator('.wrok-wrapper a[href="#g04"]').scrollIntoViewIfNeeded();
     await page.waitForTimeout(900);
