@@ -5169,6 +5169,23 @@ img[src*="stargo-photo/w06-showroom-"] { object-position: 32% 25%; }
 @media (max-width: 767px) {
   .lx-scope .lx-cta-image[src*="stargo-photo/i02-"] { object-position: 50% 50%; }
 }
+/* From 768 up the picture's box (42% of the card, absolutely placed) and
+   the 66% text column overlap by design: the template's picture was a
+   cut-out, clear where the heading's end runs over it (en 768-1172, zh
+   992-1088). I02 is opaque, so the text column is drawn above it (no box
+   moves), and the photograph's left edge fades into the card instead of
+   meeting the pink in a hard seam. The fade eases out so it is clear of
+   the left tray (from 10% of the frame) by the time it reaches it. */
+.lx-scope .lx-cta-card:has(img.lx-cta-image[src*="stargo-photo/i02-"]) .lx-cta-content-holder {
+  position: relative;
+  z-index: 1;
+}
+@media (min-width: 768px) {
+  .lx-scope img.lx-cta-image[src*="stargo-photo/i02-"] {
+    -webkit-mask-image: linear-gradient(90deg, transparent, rgba(0, 0, 0, .44) 5%, rgba(0, 0, 0, .75) 10%, rgba(0, 0, 0, .94) 15%, #000 20%);
+    mask-image: linear-gradient(90deg, transparent, rgba(0, 0, 0, .44) 5%, rgba(0, 0, 0, .75) 10%, rgba(0, 0, 0, .94) 15%, #000 20%);
+  }
+}
 
 /* I03, the hand-held phone of the "no writing" band, a 2:3 portrait at
    50% 15% in Lifelogx's cover box (531x720 at 1440; at 768-991 the template
@@ -5179,6 +5196,26 @@ img[src*="stargo-photo/w06-showroom-"] { object-position: 32% 25%; }
 .lx-scope img.lx-no-writing-image[src*="stargo-photo/i03-"] { object-position: 50% 15%; }
 @media (max-width: 767px) {
   .lx-scope img.lx-no-writing-image[src*="stargo-photo/i03-"] { height: auto; aspect-ratio: 1262 / 1474; }
+}
+/* From 768 up the big words stand right beside the picture's box. The
+   template's picture was a cut-out floating on the gradient; I03 is an
+   opaque photograph, so its sides (18% each) and top (12%) fade into the
+   gradient on an eased curve rather than meet the words in a hard-edged
+   rectangle (the bottom is the band's own edge). The hand and phone sit
+   at 18-75% of the frame, inside the fades. The screen layer over the
+   glass has the same box and takes the same mask: where the box shows
+   the whole frame width the screen (34-67%) is clear of the fades, and
+   where the template narrows the box to a strip (zh, about 768-880 px)
+   the screen's sides fade with the photograph's instead of standing out
+   as a hard-edged slab. */
+@media (min-width: 768px) {
+  .lx-scope img.lx-no-writing-image[src*="stargo-photo/i03-"],
+  .lx-scope .lx-no-writing-image-holder:has(> img[src*="stargo-photo/i03-"]) > .stargo-nw-screen {
+    -webkit-mask-image: linear-gradient(90deg, transparent, rgba(0, 0, 0, .1) 3.6%, rgba(0, 0, 0, .35) 7.2%, rgba(0, 0, 0, .65) 10.8%, rgba(0, 0, 0, .9) 14.4%, #000 18%, #000 82%, rgba(0, 0, 0, .9) 85.6%, rgba(0, 0, 0, .65) 89.2%, rgba(0, 0, 0, .35) 92.8%, rgba(0, 0, 0, .1) 96.4%, transparent), linear-gradient(transparent, rgba(0, 0, 0, .1) 2.4%, rgba(0, 0, 0, .35) 4.8%, rgba(0, 0, 0, .65) 7.2%, rgba(0, 0, 0, .9) 9.6%, #000 12%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(90deg, transparent, rgba(0, 0, 0, .1) 3.6%, rgba(0, 0, 0, .35) 7.2%, rgba(0, 0, 0, .65) 10.8%, rgba(0, 0, 0, .9) 14.4%, #000 18%, #000 82%, rgba(0, 0, 0, .9) 85.6%, rgba(0, 0, 0, .65) 89.2%, rgba(0, 0, 0, .35) 92.8%, rgba(0, 0, 0, .1) 96.4%, transparent), linear-gradient(transparent, rgba(0, 0, 0, .1) 2.4%, rgba(0, 0, 0, .35) 4.8%, rgba(0, 0, 0, .65) 7.2%, rgba(0, 0, 0, .9) 9.6%, #000 12%);
+    mask-composite: intersect;
+  }
 }
 
 /* The text-free screen laid over I03's dark glass (tools/build-site.mjs,
