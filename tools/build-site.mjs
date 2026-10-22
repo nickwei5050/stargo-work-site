@@ -673,15 +673,22 @@ PAGES['index.html'] = (lang) => {
      the opening now plays once a session, every later homepage view would have
      had it too. The markup goes
      here and its two actions, with the whole-page slide that only ever moved
-     behind it, go from the timeline in tools/fuse-ix.mjs; the rest of that
-     timeline (the hero's headline, lines, button and dots, and the menu) is
-     untouched and still plays. */
+     behind it, go from the timeline in tools/fuse-ix.mjs, which also takes
+     this page out of the hero's load-in (below); the menu's part of that
+     timeline still plays. */
   {
     const pre = findByClass(h, 'div', 'preloader');
     if (!pre || !pre.text.includes('668513fa-96bc-a471-9254-1244961a6485')) throw new Error('index: Mono\'s preloader is not where it was');
     h = h.slice(0, pre.start) + h.slice(pre.end);
     if (/class="preloader"|668513fa-96bc-a471-9254-1244961a6485&quot;\]/.test(h.slice(h.indexOf('<body')))) throw new Error('index: Mono\'s preloader survives');
   }
+  /* The same load timeline then hides the hero and animates it in again,
+     after the window `load` — long after the reader (and, on a first visit,
+     the opening's lift) has already shown it. tools/fuse-ix.mjs takes the
+     homepage out of those actions by this mark; every page shares Mono's page
+     id, so the page itself has to say it is the homepage. */
+  if ((h.match(/<html(?=[\s>])/g) ?? []).length !== 1) throw new Error('index: no single <html> to mark as the homepage');
+  h = h.replace(/<html(?=[\s>])/, '<html data-stargo-home=""');
   h = homeIntro(h, lang);
   return h;
 };

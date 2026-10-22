@@ -442,10 +442,18 @@
      9999 (2147483647 belongs to the Webflow badge, which is display:none). */
   z-index: 99999;
   overflow: hidden;
-  /* The overlay itself takes the pointer until the columns cover the page; a
-     press on it skips the opening (tools/blocks/og-intro.js) and the click it
-     would have become is swallowed, so nothing underneath is ever clicked
-     blind. Nothing inside it takes the pointer (.og-page-wrapper below). */
+  /* It never takes the pointer, from the first frame to the last: every press
+     goes to the page underneath with its own target, and tools/blocks/og-intro.js,
+     listening on the window, judges it by the moment it was made. A press on
+     a point that was still covered skips the opening and its click is
+     swallowed, so nothing underneath is ever clicked blind; a press on a
+     point already uncovered, or after the last column has gone, is the
+     click it was aimed as — even when a busy main thread only gets to it
+     after the overlay's own timer was due. Were the overlay hit-testable,
+     whether a press reached the page would depend on when the main thread
+     got round to it, not on what the reader saw. Nothing inside it takes the
+     pointer either (.og-page-wrapper, .og-intro-wipe below). */
+  pointer-events: none;
 }
 
 /* offgrid's ground — the `body` background quoted in section 1 — is painted on
@@ -461,18 +469,17 @@
 .og-intro .og-page-wrapper { background-color: #0f0f0f; }
 
 /* A ceiling, in CSS so that it holds however the JavaScript goes: seven seconds
-   after the overlay is first drawn it stops covering the page and stops taking
-   the pointer, whatever else has happened. The opening is 5.11s from that same
-   first frame, so this never touches an opening that plays; it is there for
-   one that could not (a script that failed half-way). Two animations, because
-   only `opacity` can run on the compositor — so it takes effect at seven
-   seconds even if the main thread is blocked then — while `visibility` and
-   `pointer-events` follow on the main thread. `opacity`, not just
-   `visibility`: measured with the script blocked, a keyframe of `to {
-   visibility: hidden }` released the pointer but left the overlay on screen,
-   because `visibility` only takes its end value at a progress of exactly 1. */
+   after the overlay is first drawn it stops covering the page, whatever else
+   has happened. The opening is 5.11s from that same first frame, so this never
+   touches an opening that plays; it is there for one that could not (a script
+   that failed half-way). Two animations, because only `opacity` can run on the
+   compositor — so it takes effect at seven seconds even if the main thread is
+   blocked then — while `visibility` follows on the main thread. `opacity`, not
+   just `visibility`: measured with the script blocked, a keyframe of `to {
+   visibility: hidden }` left the overlay on screen, because `visibility` only
+   takes its end value at a progress of exactly 1. */
 @keyframes og-intro-ceiling-fade { to { opacity: 0; } }
-@keyframes og-intro-ceiling { to { visibility: hidden; pointer-events: none; } }
+@keyframes og-intro-ceiling { to { visibility: hidden; } }
 .og-intro { animation: og-intro-ceiling-fade .001s linear 7s forwards, og-intro-ceiling .001s linear 7s forwards; }
 
 /* The stage. In offgrid the hero is one full-height block of a long page; here

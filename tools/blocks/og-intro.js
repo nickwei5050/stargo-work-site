@@ -36,7 +36,7 @@
      0     headline starts to fade in              (done at 600)
      1000  the bracket opens                       (done at 2200)
      2200  the columns start to come down          (all down at 3405)
-     3405  covered: the headline and its ground go, taps reach the page
+     3405  covered: the headline and its ground go
      3905  the columns start to lift               (all up at 5110)
      5110  SEQUENCE — the overlay leaves the document
 
@@ -52,10 +52,10 @@
    columns and the step that hides the headline and its ground all run on the
    compositor, and keep running, on time, through any main-thread task. The
    only main-thread work is building the animations on the first frame,
-   re-measuring the bracket if the web font swaps in later, letting taps through
-   at 3405 and removing the node at 5110 — and if the main thread is busy at
-   those two moments the overlay is already invisible and inert for the reader
-   underneath, because the page cannot take a tap during that task anyway.
+   re-measuring the bracket if the web font swaps in later, removing the node
+   at 5110 and answering a tap — and none of it depends on when the main thread
+   gets there: at 5110 a busy main thread only leaves an invisible node in
+   place a little longer, and a tap is judged by when it happened (below).
 
    How the bracket is drawn. offgrid grows the span's `width` and lets the
    inline-flex headline re-centre around it: `[` and `]` move apart by half the
@@ -71,12 +71,29 @@
    so each is one transform tween on a-24-n-2's own curve. The headline's
    ground box no longer narrows with the span — it is #0e0e10 on #0f0f0f.
 
-   Skipping. A pointer press, a touch, a scroll, a wheel or a key, anywhere,
-   while the overlay is there ends it at once: the animations are cancelled,
-   the node is removed, and if the press landed on the overlay itself the click
-   it would turn into is swallowed, so skipping never also follows a link that
-   happened to be underneath. A page hidden for the back/forward cache is
-   finished first, so going back to the homepage never brings it back.
+   Skipping. A press (mouse, pen or touch), a wheel or a key, anywhere, while
+   the overlay is there ends it at once: the animations are cancelled and the
+   node is removed. The overlay never takes the pointer itself (og-intro.css),
+   so every press reaches the page with its own target, and these listeners on
+   the window decide what it was by WHEN it happened — the event's own
+   timeStamp, the moment of the press, not the moment a main thread busy with
+   Webflow's start-up gets round to it:
+     - pressed while the point under it was still covered — anywhere before
+       the lift (3905), or during the lift on a column that had not finished
+       lifting — it skips, and the click it turns into is swallowed, so the
+       link the reader could not see is never followed;
+     - pressed on a point already uncovered, the opening ends and the click
+       goes where it was aimed;
+     - pressed after the last column has gone (5110), it is an ordinary click
+       on a page that has visibly finished, even if the node is still in the
+       document waiting for its timer;
+     - pressed after an earlier skip had been drawn, it is a click on the
+       homepage; before that frame, the compositor was still playing the
+       opening, and the press is judged as above.
+   Only that press's own click is swallowed: the first click after it, within
+   EAT of it, and only if no other press or key came first. A page hidden for
+   the back/forward cache is finished first, so going back to the homepage
+   never brings it back.
 
    Reduced motion and no JavaScript: no class, no overlay (og-intro.css). The
    overlay is `aria-hidden`, holds nothing focusable, and nothing here moves
@@ -91,30 +108,95 @@
   /* The <head> already refused anything later than 1.5s; this is the same
      promise for the overlay markup itself arriving late. */
   var START_BY = 2000;
+  /* A press turns into its click when it is released: a tap or a click takes
+     well under a second. A press held longer than this is not a tap, and the
+     reader has been looking at the uncovered page under it all that time. */
+  var EAT = 1000;
 
   var over = false;
   var anims = [];
-  var marks = [];
   var bracketAnims = [];
-  var EVENTS = ['pointerdown', 'mousedown', 'touchstart', 'touchmove', 'wheel', 'keydown'];
+  var base = null;
+  var timer = 0;
   var watcher = null;
+  /* The opening's first frame on the document timeline (the clock of both
+     the animations and an event's timeStamp), and the first frame drawn
+     after finish() took the overlay away. A press is judged against these. */
+  var start = null;
+  var goneAt = Infinity;
+  /* The timeStamp of the last press that landed on a covered point, until the
+     click it turns into has been swallowed. */
+  var pressAt = null;
+  var covered = function () { return true; };
+  var listening = false;
+  /* One event per press, whatever presses: mouse, pen or finger. A browser
+     without pointer events (none that has Element.animate is still in use)
+     does not play the opening. */
+  var PRESS = 'pointerdown';
+
+  /* The moment an input happened, on the clock performance.now() reads. An
+     engine that stamps its events some other way gets the moment it is
+     handled instead. */
+  function stamp(e) {
+    var now = performance.now();
+    var t = e.timeStamp;
+    return t > 0 && t <= now + 1 ? t : now;
+  }
+
+  function onInput(e) {
+    if (e.type === PRESS) {
+      pressAt = null;
+      var t = stamp(e);
+      if (t <= goneAt && covered(t, e.clientX)) pressAt = t;
+    } else if (e.type === 'keydown') {
+      pressAt = null;
+    }
+    finish();
+  }
+
+  function onClick(e) {
+    if (pressAt == null || !e.isTrusted) return;
+    var late = stamp(e) - pressAt;
+    pressAt = null;
+    if (late > EAT) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+  }
+
+  /* Once the overlay has gone, presses made before it went (and queued behind
+     a busy main thread) still have to be judged and their clicks swallowed, so
+     those listeners stay until no such press can be left. */
+  function release() {
+    pressAt = null;
+    window.removeEventListener(PRESS, onInput, true);
+    window.removeEventListener('keydown', onInput, true);
+    window.removeEventListener('click', onClick, true);
+    window.removeEventListener('auxclick', onClick, true);
+  }
 
   function finish() {
     if (over) return;
     over = true;
-    var i;
-    for (i = 0; i < marks.length; i++) window.clearTimeout(marks[i]);
-    for (i = 0; i < EVENTS.length; i++) window.removeEventListener(EVENTS[i], onInput, true);
+    if (start == null && base) start = base.startTime;
+    window.clearTimeout(timer);
+    window.removeEventListener('wheel', onInput, true);
     window.removeEventListener('pagehide', finish);
+    if (listening) {
+      /* The overlay is gone from the screen when the next frame is drawn, not
+         now: if a long task starts first, the compositor goes on playing the
+         opening until then, and a press in between is still a press on it. */
+      window.requestAnimationFrame(function () { goneAt = performance.now(); });
+      window.setTimeout(release, EAT);
+    }
     if (watcher) watcher.disconnect();
     var all = anims.concat(bracketAnims);
-    for (i = 0; i < all.length; i++) { try { all[i].cancel(); } catch (e) { /* already gone */ } }
+    for (var i = 0; i < all.length; i++) { try { all[i].cancel(); } catch (e) { /* already gone */ } }
     html.classList.remove(PLAY);
     if (root.parentNode) root.parentNode.removeChild(root);
   }
 
   try {
-    if (!html.classList.contains(PLAY) || typeof root.animate !== 'function' || performance.now() > START_BY) { finish(); return; }
+    if (!html.classList.contains(PLAY) || typeof root.animate !== 'function' || !window.PointerEvent || performance.now() > START_BY) { finish(); return; }
 
     var stage = root.querySelector('.og-page-wrapper');
     var h1 = root.querySelector('.og-is-hero');
@@ -156,7 +238,7 @@
       fade.push({ opacity: p < 0.5 ? Math.pow(2 * p, 5) / 2 : 1 - Math.pow(2 * (1 - p), 5) / 2, offset: p });
     }
 
-    var base = h1.animate(fade, { duration: FADE, fill: 'both' });
+    base = h1.animate(fade, { duration: FADE, fill: 'both' });
     anims.push(base);
 
     /* The ground and the headline go together, in one step, once the columns
@@ -226,21 +308,35 @@
     bracket(null);
 
     /* --------------------------------------------- what needs the main thread */
-    function onInput(e) {
-      if (over) return;
-      var onOverlay = e.target && e.target.nodeType === 1 && root.contains(e.target);
-      finish();
-      if (onOverlay && e.type !== 'keydown' && e.type !== 'wheel') {
-        /* The press that skipped would otherwise become a click on whatever
-           is under it now that the overlay is gone. */
-        var eat = function (ev) { ev.preventDefault(); ev.stopPropagation(); done(); };
-        var done = function () { window.removeEventListener('click', eat, true); };
-        window.addEventListener('click', eat, true);
-        window.setTimeout(done, 800);
-      }
-    }
-    for (var ev = 0; ev < EVENTS.length; ev++) window.addEventListener(EVENTS[ev], onInput, { capture: true, passive: true });
+
+    /* Was the point at x covered at time t? Everything is, until the lift:
+       the ground until 3405 and the columns from then on. During the lift a
+       point stays covered until the column over it has finished lifting —
+       the press was aimed at a screen that was moving, not at the page coming
+       out from under it. After 5110 nothing is. The columns share the width
+       of the layout viewport (og-intro.css: fixed, inset 0, 48 equal tracks),
+       which is still there to measure after the overlay has been removed. */
+    covered = function (t, x) {
+      var t0 = start != null ? start : base.startTime;
+      if (t0 == null) return true;
+      var s = t - t0;
+      if (s < LIFT_AT) return true;
+      if (s >= SEQUENCE) return false;
+      var c = Math.floor(x / (html.clientWidth || window.innerWidth) * n);
+      c = c > 0 ? (c < n ? c : n - 1) : 0;
+      return s < LIFT_AT + EACH * up[c] + WIPE;
+    };
+
+    /* The first window listeners for these events (this runs at the top of
+       <body>, before any other script of the page), so a swallowed click
+       reaches no other listener. */
+    window.addEventListener(PRESS, onInput, { capture: true, passive: true });
+    window.addEventListener('keydown', onInput, { capture: true, passive: true });
+    window.addEventListener('wheel', onInput, { capture: true, passive: true });
+    window.addEventListener('click', onClick, true);
+    window.addEventListener('auxclick', onClick, true);
     window.addEventListener('pagehide', finish);
+    listening = true;
 
     /* The bracket is measured in whatever font has arrived by the first frame,
        at the window's size then. When either changes — the headline's own
@@ -258,16 +354,14 @@
     }
 
     /* Everything above starts on the same frame — the first one painted. From
-       that frame: line every animation up on it, then schedule the two
-       main-thread moments. */
+       that frame: line every animation up on it, and take the node out when
+       the last column has gone. */
     base.ready.then(function () {
       if (over) return;
-      var t0 = base.startTime;
+      var t0 = start = base.startTime;
       var all = anims.concat(bracketAnims);
       for (var i = 0; i < all.length; i++) if (all[i].startTime !== t0) all[i].startTime = t0;
-      var now = doc.timeline.currentTime;
-      marks.push(window.setTimeout(function () { root.style.pointerEvents = 'none'; }, Math.max(0, t0 + COVERED - now)));
-      marks.push(window.setTimeout(finish, Math.max(0, t0 + SEQUENCE - now)));
+      timer = window.setTimeout(finish, Math.max(0, t0 + SEQUENCE - doc.timeline.currentTime));
     }, function () { /* cancelled before its first frame: finish() ran */ });
   } catch (e) {
     finish();
