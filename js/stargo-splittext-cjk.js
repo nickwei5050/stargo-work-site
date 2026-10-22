@@ -82,6 +82,7 @@
     return null;
   }
   function patch(req) {
+    lateLoads(req);
     var AC = find(req, 4054, 'AnimationCoordinator', 'globalSplitRegistry');
     if (!AC || !AC.prototype || typeof AC.prototype.doSplitText !== 'function' || AC.prototype.doSplitText.__sgLazy) return;
     var orig = AC.prototype.doSplitText;
@@ -129,6 +130,32 @@
     AC.prototype.doSplitText = lazy;
     // A jump past the margin (an anchor link, a restored scroll position) is
     // caught by the observer on the next frame; pagehide needs nothing.
+  }
+  /* Late page-load timelines (speed lane, Z13). The head script
+     (tools/speed.mjs) sets `sg-ix-late` on <html> one second after the first
+     paint. A page-load timeline that only starts after that would hide a hero
+     the reader is already reading and play it in again, so it is put at its
+     end state instead (the engine's own "skip-to-end"). On time, it plays. */
+  function lateLoads(req) {
+    var LT = find(req, 3636, 'LoadTriggerStrategy', 'LoadTriggerStrategy');
+    if (!LT || !LT.prototype || typeof LT.prototype.bind !== 'function' || LT.prototype.bind.__sgLate) return;
+    var bind = LT.prototype.bind;
+    var late = function (e, t, n) {
+      var self = this;
+      if (window.__wf_ix3 || !n || n.conditionalContext !== null || !t || !self.loadInteractions || typeof self.skipToEndState !== 'function') return bind.apply(this, arguments);
+      var queued = self.loadInteractions.length;
+      bind.apply(this, arguments);
+      var run = self.loadInteractions[queued];
+      if (typeof run !== 'function') return;
+      self.loadInteractions[queued] = function () {
+        if (/\bsg-ix-late\b/.test(document.documentElement.className)) {
+          try { self.skipToEndState(t, null); return; } catch (err) { /* play it instead */ }
+        }
+        return run.apply(this, arguments);
+      };
+    };
+    late.__sgLate = true;
+    LT.prototype.bind = late;
   }
   try { q.push([['stargo-lazy-split'], {}, patch]); } catch (e) { /* engine untouched */ }
 })();

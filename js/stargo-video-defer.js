@@ -103,3 +103,30 @@
   watch();
   if (reduced.addEventListener) reduced.addEventListener('change', function () { if (!reduced.matches) watch(); });
 })();
+
+/* The brand film's poster (speed lane, Z14). A <video preload="none"> still
+   fetches its poster with the page, 145 KB ahead of the first screen's own
+   pictures for a film far down the homepage. tools/speed.mjs ships it as
+   data-poster; it goes back two screens before the film comes into view, or at
+   once without IntersectionObserver. */
+(function () {
+  var vids = document.querySelectorAll('video[data-poster]');
+  if (!vids.length) return;
+  function show(v) {
+    if (!v.getAttribute('data-poster')) return;
+    v.setAttribute('poster', v.getAttribute('data-poster'));
+    v.removeAttribute('data-poster');
+  }
+  if (!('IntersectionObserver' in window)) { for (var i = 0; i < vids.length; i++) show(vids[i]); return; }
+  // The film's section is watched, not the clip: the clip sits in a sticky,
+  // clipped box that an observer would not count until it is on screen.
+  var io = new IntersectionObserver(function (entries) {
+    for (var i = 0; i < entries.length; i++) {
+      if (!entries[i].isIntersecting) continue;
+      var t = entries[i].target;
+      io.unobserve(t);
+      for (var k = 0; k < vids.length; k++) if (t === vids[k] || t.contains(vids[k])) show(vids[k]);
+    }
+  }, { rootMargin: '200% 0px' });
+  for (var j = 0; j < vids.length; j++) io.observe(vids[j].closest('section') || vids[j]);
+})();
