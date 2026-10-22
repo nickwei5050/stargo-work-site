@@ -5847,3 +5847,181 @@ img[src*="stargo-photo/e08-emergency-stop-"] { object-position: 50% 42%; }
   .absolute-element .stargo-wordmark.in-nav { height: 16px; width: auto; }
 }
 
+/* Z10. Pinned scroll scenes become plain stacked content on phones (owner's
+   decision, 2026-10-22: 改成普通排列). Below 768px every scene that held the
+   screen while the reader scrolled — a tall track with a sticky child whose
+   contents a scroll-scrubbed animation reveals — is laid out in the normal
+   flow instead: the track takes its content's height, the sticky child is a
+   plain block, and everything the scrub would reveal is drawn in its final,
+   readable state. The template's scroll animations keep running and writing
+   their inline styles; `!important` here outranks them, so nothing depends on
+   their timing. The scroll hints 「(继续滚动)」 and the 01/04 counter that only
+   meant something while the scene was pinned are not drawn. From 768px up
+   nothing here applies and the scenes scrub as before. */
+@media (max-width: 767px) {
+  /* Shared: split-text letters, words and lines inside these scenes. */
+  :is(.animation-section, .video-section, .sutdio-animation) :is(.gsap_split_letter, .gsap_split_word, .gsap_split_line) {
+    opacity: 1 !important;
+    transform: none !important;
+    translate: none !important;
+  }
+
+  /* Home — the hero: one screen, no 300vh track behind it. */
+  .hero-track { height: auto !important; }
+  .hero-track > .hero-agency { position: relative; }
+  .hero-track .hero { transform: none !important; }
+
+  /* Home and capabilities — the problem-card stack held for 158px. */
+  .work-main > .wrok-wrapper { position: relative; }
+
+  /* Home — 「(一条业务主线)」: the five phrases one under the other, then the orb. */
+  .animation-section { height: auto !important; }
+  .animation-section > .animation-sticky {
+    position: relative;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 120px 16px 0;
+  }
+  .animation-sticky > .absolute-top:not(.btm) { position: static; order: -1; margin-bottom: 24px; }
+  .animation-sticky > .absolute-top.btm { display: none; }
+  .animation-sticky > .spacer-xxl { display: none; }
+  .animation-sticky > .container { height: auto; }
+  .animation-sticky .flex-fst-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    height: auto;
+  }
+  .animation-sticky .flex-fst-cta > .cta-sm-title {
+    position: static;
+    opacity: 1 !important;
+    transform: none !important;
+    text-align: center;
+  }
+  .animation-sticky > .absolute-photo {
+    position: relative;
+    inset: auto;
+    width: calc(100% + 32px) !important;
+    height: 100vw !important;
+    margin: 40px -16px 0;
+    transform: none !important;
+  }
+
+  /* Home — 「一个工作台，管好每天的生意。」: one screen, the product screens
+     drawn at their own size behind the line instead of zooming out of it. */
+  .video-section { height: auto !important; }
+  .video-section > .sticky-video-section { position: relative; height: 100svh; min-height: 560px; overflow: hidden; }
+  .sticky-video-section > .video-grid { transform: none !important; opacity: .35 !important; }
+  .sticky-video-section .cta-sm-title._06 { opacity: 1 !important; transform: none !important; }
+
+  /* Home — the four sample scenes: four cards, one under the other. */
+  .testimonials-section { height: auto !important; }
+  .testimonials-section > .testimonials-sticky { position: relative; height: auto; padding: 80px 0 64px; }
+  .testimonials-sticky .testimonials-card-wrapper {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .testimonials-sticky .testimonials-card {
+    position: relative;
+    inset: auto;
+    transform: none !important;
+    translate: none !important;
+    rotate: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  .testimonials-sticky .number-rotator,
+  .testimonials-sticky > .absolute-top.btm { display: none; }
+
+  /* Enterprise — the four story panels: four full-width cards. */
+  /* Mono lays the four panels side by side (400vw) and slides the row
+     sideways as the reader scrolls down; here they stack. */
+  .sutdio-animation {
+    width: 100%;
+    height: auto !important;
+    flex-direction: column;
+    transform: none !important;
+    translate: none !important;
+  }
+  /* The next section's white curve rises 100px into the last panel. */
+  .sutdio-animation > .studio-sticky._04 { padding-bottom: 148px; }
+  .sutdio-animation > .studio-sticky {
+    position: relative;
+    top: auto;
+    height: auto;
+    min-height: 560px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-top: 120px;
+    padding-bottom: 48px;
+    overflow: hidden;
+  }
+  .sutdio-animation > .studio-sticky + .studio-sticky { margin-top: 0; }
+  .studio-sticky > [class*="image-about"] {
+    transform: none !important;
+    translate: none !important;
+    opacity: 1 !important;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .studio-sticky :is(.h2.for-abt, .top-text.for-abt) { opacity: 1 !important; transform: none !important; }
+
+  /* Workforce — the three collaboration cards, then 「一个目标，一个团队。」. */
+  .lx-answers-card-section-holder { height: auto !important; padding-top: 96px; padding-bottom: 96px; }
+  .lx-answers-card-section-holder > .lx-answers-card-sticky { position: relative; top: auto; height: auto; transform: none; }
+  .lx-answers-card-sticky .lx-answers-section-holder { height: auto; }
+  .lx-answers-card-sticky .lx-answers-card-section {
+    position: relative;
+    top: auto;
+    height: auto;
+    height: auto !important;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .lx-answers-card-sticky .lx-answers-card {
+    position: relative !important;
+    inset: auto;
+    top: auto;
+    z-index: auto;
+    transform: none !important;
+    margin: 0;
+  }
+  .lx-answers-card-sticky .lx-big-text-wrapper { position: relative; inset: auto; margin-top: 48px; }
+  .lx-answers-card-sticky .lx-big-text-on-gradient { opacity: 1 !important; transform: none !important; }
+
+  /* Intelligence — 「观察真实流程 … 用实际结果改进」 as one list over the photo. */
+  .lx-gradient-section { height: auto !important; }
+  .lx-gradient-section > .lx-gradient-section-image-bg {
+    position: relative;
+    top: auto;
+    height: auto;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .lx-gradient-section-image-bg > .lx-gradient-section-text { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .lx-gradient-section-text > .lx-gradient-section-text-holder {
+    position: static !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Intelligence — 「不再 等提醒 / 等回复 / 丢背景」: the three endings listed. */
+  .lx-no-writing { height: auto !important; }
+  .lx-no-writing > .lx-sticky-no-writing { position: relative; top: auto; height: auto; }
+  .lx-sticky-no-writing .lx-gradient-grid-item.lx-hide-on-desktop { display: flex; flex-direction: column; }
+  .lx-sticky-no-writing .lx-big-gradient-text {
+    position: static !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
