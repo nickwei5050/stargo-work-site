@@ -64,6 +64,7 @@
   var proto = ST && ST.prototype;
   if (!proto || typeof proto.split !== 'function' || proto.split.stargoA11y) return;
   var KEEP = 'a,button,input,select,textarea,[tabindex],h1,h2,h3,h4,h5,h6,[role="heading"],[role="button"],[role="link"]';
+  var NAMED = 'a,button,h1,h2,h3,h4,h5,h6,[role="heading"],[role="button"],[role="link"]';
   var SR = 'position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap';
   function label(self) {
     var els = (self && self.elements) || [];
@@ -73,6 +74,16 @@
       if (el.querySelector(':scope > [data-stargo-sr]')) continue;
       var text = (el.textContent || '').replace(/[\u200b\u2060\u00ad]/g, '').replace(/\s+/g, ' ').trim();
       if (!text) continue;
+      /* Inside (or as) a link, button or heading the name goes on that
+         element as aria-label, so the page's text is not doubled for
+         crawlers or for code that reads textContent; elsewhere a generic
+         element cannot carry a name and the hidden copy is used. */
+      var named = el.matches(NAMED) ? el : el.closest(NAMED);
+      if (named) {
+        if (!named.hasAttribute('aria-label')) named.setAttribute('aria-label', (named.textContent || '').replace(/[\u200b\u2060\u00ad]/g, '').replace(/\s+/g, ' ').trim());
+        for (var c0 = el.firstElementChild; c0; c0 = c0.nextElementSibling) c0.setAttribute('aria-hidden', 'true');
+        continue;
+      }
       for (var c = el.firstElementChild; c; c = c.nextElementSibling) c.setAttribute('aria-hidden', 'true');
       var sr = document.createElement('span');
       sr.setAttribute('data-stargo-sr', '');

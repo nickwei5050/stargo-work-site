@@ -68,6 +68,8 @@ const TEXT_AUDIT = `(() => {
     if (t.length < 2) continue;
     const el = n.parentElement;
     if (!el || ['SCRIPT', 'STYLE', 'NOSCRIPT', 'OPTION'].includes(el.tagName)) continue;
+    // Screen-reader-only text (the split-text copies in js/stargo-splittext-cjk.js, the skip link) is clipped to 1px on purpose.
+    if (el.closest('[data-stargo-sr], .stargo-skip')) continue;
     const cs = getComputedStyle(el);
     if (cs.visibility === 'hidden' || cs.display === 'none') continue;
     let op = 1; for (let a = el; a && a !== document.body; a = a.parentElement) op *= parseFloat(getComputedStyle(a).opacity);
@@ -96,7 +98,7 @@ const TEXT_AUDIT = `(() => {
     // 3. covered: the centre of the first line hits another element that is not inside the text's own block
     const r0 = rects[0];
     const cx = Math.min(Math.max(r0.left + r0.width / 2, 1), vw - 1), cy = Math.min(Math.max(r0.top + r0.height / 2, 1), vh - 1);
-    if (r0.top >= 0 && r0.bottom <= vh && el.closest('.lx-gradient-section, .lx-no-writing, .lx-cta-author-list, .lx-community-loop, .cta-sm-title, .marquee, .products-cards-mobile') === null) {
+    if (r0.top >= 0 && r0.bottom <= vh && el.closest('.lx-gradient-section, .lx-no-writing, .lx-cta-author-list, .lx-community-loop, .cta-sm-title, .marquee, .products-cards-mobile, .stargo-skip') === null) {
       const hit = document.elementFromPoint(cx, cy);
       if (hit && hit !== el && !el.contains(hit) && !hit.contains(el)) {
         const hcs = getComputedStyle(hit);
@@ -171,7 +173,23 @@ for (const width of WIDTHS.filter((w) => [390, 768, 1024, 1280, 1440, 1920].incl
       // gradient section: the four headings appear in turn and are never hidden behind the overlay image
       const grad = await secTop(page, '.lx-gradient-section');
       let seen = 0;
-      for (const f of [0.05, 0.15, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 0.85, 0.3]) {
+      /* Below 768px the section is no longer pinned (review item Z10, the
+         phone lane in css/stargo-fusion.css): its headings are plain stacked
+         text, so each one is brought into view in turn instead. */
+      if (width < 768) {
+        /* Each heading must be readable at some point while the section
+           scrolls past (scroll-linked transforms still move them). */
+        const n = await page.locator('.lx-gradient-section-text h3').count();
+        const read = new Set();
+        const vh = heightFor(width);
+        for (let y = grad.top - vh; y <= grad.top + grad.height + vh; y += vh / 4) {
+          await scrollTo(page, y); await page.waitForTimeout(250);
+          const states = await page.evaluate(() => [...document.querySelectorAll('.lx-gradient-section-text h3')].map((h) => { const r = h.getBoundingClientRect(); let op = parseFloat(getComputedStyle(h).opacity); for (let a = h.parentElement; a && !a.classList.contains('lx-gradient-section'); a = a.parentElement) op *= parseFloat(getComputedStyle(a).opacity); return { op, top: r.top, bottom: r.bottom, left: r.left, right: r.right }; }));
+          states.forEach((st, i) => { if (st.op > 0.6 && st.top >= 0 && st.bottom <= vh && st.left >= -1 && st.right <= width + 1) read.add(i); });
+        }
+        assert.equal(read.size, n, `every gradient heading readable on a phone at some point (${[...read].join(',')} of ${n})`);
+        seen = n;
+      } else for (const f of [0.05, 0.15, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 0.85, 0.3]) {
         await scrollTo(page, grad.top + grad.height * f); await page.waitForTimeout(650);
         const states = await page.evaluate(() => [...document.querySelectorAll('.lx-gradient-section-text h3')].map((h) => { const r = h.getBoundingClientRect(); const cs = getComputedStyle(h); let op = parseFloat(cs.opacity); for (let a = h.parentElement; a && !a.classList.contains('lx-gradient-section'); a = a.parentElement) op *= parseFloat(getComputedStyle(a).opacity); return { op, top: r.top, bottom: r.bottom, left: r.left, right: r.right, z: cs.zIndex }; }));
         const visible = states.filter((s) => s.op > 0.6 && s.bottom > 0 && s.top < heightFor(width));
@@ -308,7 +326,7 @@ for (const width of WIDTHS.filter((w) => [390, 768, 1280, 1440].includes(w))) fo
     // owner's photographs B01–B04 (tools/replaceables.mjs HOME_BLOG_COVERS), an article cover otherwise
     const cards = await page.locator('.blog-grid .w-dyn-item a').evaluateAll((as) => as.map((a) => ({ href: a.getAttribute('href'), img: a.querySelector('img').getAttribute('src'), ratio: a.querySelector('img').getBoundingClientRect().width / a.querySelector('img').getBoundingClientRect().height, title: a.querySelector('.blog-txt').textContent, date: a.querySelector('time')?.getAttribute('datetime') })));
     assert.equal(cards.length, 4);
-    for (const c of cards) { assert(/^blog\//.test(c.href), c.href); assert(/assets\/(?:blog|stargo-photo)\//.test(c.img), c.img); assert(c.title.length > 8); assert(/^\d{4}-\d{2}-\d{2}$/.test(c.date || ''), 'dated'); assert(c.ratio > 1.15 && c.ratio < 1.5, `card image ratio ${c.ratio}`); }
+    for (const c of cards) { assert(/^(?:\/(?:en\/)?)?blog\//.test(c.href), c.href); assert(/assets\/(?:blog|stargo-photo)\//.test(c.img), c.img); assert(c.title.length > 8); assert(/^\d{4}-\d{2}-\d{2}$/.test(c.date || ''), 'dated'); assert(c.ratio > 1.15 && c.ratio < 1.5, `card image ratio ${c.ratio}`); }
     await scrollTo(page, (await secTop(page, '.blog-grid')).top - 160); await page.waitForTimeout(900);
     await page.screenshot({ path: `${OUT}/${id}-blog-cards.png` });
     // contact band: a photograph behind a glass card (since 2026-10-21 the
