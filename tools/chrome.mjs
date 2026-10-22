@@ -415,7 +415,7 @@ function scripts(html) {
    screen reader should not switch to English for three links. */
 const SOCIAL_LABELS = {
   mail: { zh: '发邮件给 STARGO WORK', en: 'Email STARGO WORK' },
-  whatsapp: { zh: '通过 WhatsApp 联系 STARGO WORK', en: 'WhatsApp STARGO WORK' },
+  whatsapp: { zh: '通过 WhatsApp 联系 STARGO WORK', en: 'Message STARGO WORK on WhatsApp' },
   site: { zh: 'STARGO 企业官网', en: 'STARGO corporate website' },
   phone: { zh: `${CONTACT_UI.call.zh} STARGO WORK`, en: `${CONTACT_UI.call.en} STARGO WORK` },
 };
@@ -625,7 +625,7 @@ function formMarkup(html, lang) {
       if (/name="(?:Subject|Last-Name)"/.test(tag)) return tag.replace('<input ', `<input autocomplete="organization" aria-label="${lang === 'zh' ? '公司' : 'Company'}" `);
       return tag;
     });
-    const consent = lang === 'zh' ? '提交前请阅读我们的 <a href="privacy.html">隐私政策</a>。我们仅用这些信息处理你的申请。' : 'Please read our <a href="privacy.html">Privacy Policy</a>. We use these details to respond to your request.';
+    const consent = lang === 'zh' ? '提交前请阅读<a href="privacy.html">隐私政策</a>。这些信息只用于处理你的申请。' : 'Please read our <a href="privacy.html">Privacy Policy</a> before submitting. We use these details only to respond to your request.';
     return form.replace('</form>', `<p class="stargo-form-consent">${consent}</p></form>`);
   }).replace(/(<div class="stargo-hp" aria-hidden="true"><input )aria-label="Website"( name="website")/g, `$1aria-label="${HONEYPOT_LABEL[lang]}"$2`);
 }

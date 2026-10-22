@@ -13,18 +13,18 @@
 (function () {
   var zh = (document.documentElement.getAttribute('lang') || '').indexOf('zh') === 0;
   var T = zh ? {
-    sent: '已收到你的演示需求，我们会根据提交的联系方式与你沟通。',   // V5 P07: no response time is promised
+    sent: '演示申请已收到，我们会按你留下的方式和你联系。',   // V5 P07: no response time is promised
     sentNews: '订阅申请已收到。',
-    fallback: function (to, wa) { return '暂时无法确认提交结果。请重试，或点击下方邮件链接联系 ' + to + '；WhatsApp ' + wa + '。'; },
+    fallback: function (to, wa) { return '暂时无法确认提交结果。请重试，或点击下方链接发邮件到 ' + to + '，也可以用 WhatsApp ' + wa + ' 联系我们。'; },
     emailLink: '通过邮件发送',
     invalid: '请填写姓名和有效的邮箱地址。',
-    busy: '发送中…',
+    busy: '发送中……',
   } : {
-    sent: 'Your demo request has been received. We will follow up using the contact details provided.',
+    sent: 'We have received your demo request and will follow up using the contact details you provided.',
     sentNews: 'Your subscription request has been received.',
-    fallback: function (to, wa) { return 'Submission confirmation is unavailable right now. Retry, or use the email link below to contact ' + to + '; WhatsApp ' + wa + '.'; },
+    fallback: function (to, wa) { return 'We couldn’t confirm your submission. Please try again, or use the email link below to write to ' + to + '. You can also reach us on WhatsApp at ' + wa + '.'; },
     emailLink: 'Send by email',
-    invalid: 'Please enter your name and a valid e-mail address.',
+    invalid: 'Please enter your name and a valid email address.',
     busy: 'Sending…',
   };
   var endpoint = '/api/contact';

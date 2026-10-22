@@ -384,7 +384,7 @@ export function render(frag, ctx) {
   const CHANNELS = [
     { href: CI.siteHref, external: true, label: { zh: 'STARGO 企业官网', en: 'STARGO corporate website' },
       glyph: svg('<circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9s1.3-6.4 3.8-9z"></path>') },
-    { href: CI.whatsappHref, external: true, label: { zh: '通过 WhatsApp 联系 STARGO WORK', en: 'WhatsApp STARGO WORK' },
+    { href: CI.whatsappHref, external: true, label: { zh: '通过 WhatsApp 联系 STARGO WORK', en: 'Message STARGO WORK on WhatsApp' },
       glyph: svg('<path d="M20.5 11.6a8.4 8.4 0 0 1-12.2 7.5L3.5 20.5l1.4-4.6A8.4 8.4 0 1 1 20.5 11.6z"></path>') },
     { href: `mailto:${CI.email}`, external: false, label: { zh: '发邮件给 STARGO WORK', en: 'Email STARGO WORK' },
       glyph: svg('<rect x="3" y="5" width="18" height="14" rx="2.5"></rect><path d="m4 7 8 6 8-6"></path>') },

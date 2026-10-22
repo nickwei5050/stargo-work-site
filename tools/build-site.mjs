@@ -545,7 +545,7 @@ PAGES['index.html'] = (lang) => {
       if (i === HERO.centreIndex) {
         const marker = `<img src="${theatre[i]}" alt="STARGO OS" loading="lazy" class="stargo-still"/>`;
         if (!h.includes(marker)) throw new Error('index: centre media marker missing');
-        h = h.replace(marker, `<video id="stargo-brand-film" data-stargo-video loop muted playsinline preload="none" poster="${HERO.poster}" aria-label="${lang === 'zh' ? '银色轨道协同运转的品牌概念动画' : 'Brand film: silver orbital forms moving together'}"><source src="${HERO.film}" type="video/mp4"/></video>`);
+        h = h.replace(marker, `<video id="stargo-brand-film" data-stargo-video loop muted playsinline preload="none" poster="${HERO.poster}" aria-label="${lang === 'zh' ? '品牌概念动画：银色轨道同步运转' : 'Brand film: silver orbital forms moving together'}"><source src="${HERO.film}" type="video/mp4"/></video>`);
       }
     });
     const mediaLabel = lang === 'zh' ? '播放视频' : 'Play video';

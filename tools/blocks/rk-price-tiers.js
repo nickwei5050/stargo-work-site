@@ -49,7 +49,7 @@
   }
 
   list.setAttribute('role', 'tablist');
-  list.setAttribute('aria-label', zh ? '价格周期' : 'Price period');
+  list.setAttribute('aria-label', zh ? '首年与续费' : 'First year or renewal');
   /* The switch stays a pointer control; the two tabs are its accessible form. */
   toggle.setAttribute('aria-hidden', 'true');
   for (var i = 0; i < 2; i++) {
