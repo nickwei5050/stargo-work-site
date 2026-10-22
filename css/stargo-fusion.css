@@ -5219,12 +5219,13 @@ img[src*="stargo-photo/w06-showroom-"] { object-position: 32% 25%; }
 }
 
 /* 一条业务主线 orbit (.qx-orbit): eight 148 x 168 thumbnails (0.88:1; 100 x
-   130 and 60 x 80 on phones). */
+   130 and 60 x 80 on phones). Every one is a portrait crop, so H02 takes the
+   manifest's portrait value (42%, look room on the left) at every width. */
 .qx-orbit img.qx-all-image-cover[src*="stargo-photo/p01-prospecting-"] { object-position: 40% 50%; }
+.qx-orbit img.qx-all-image-cover[src*="stargo-photo/h02-night-inquiry-"] { object-position: 42% 50%; }
 .qx-orbit img.qx-all-image-cover[src*="stargo-photo/h10-video-showing-"] { object-position: 52% 50%; }
 .qx-orbit img.qx-all-image-cover[src*="stargo-photo/h09-container-loading-"] { object-position: 50% 37%; }
 @media (max-width: 767px) {
-  .qx-orbit img.qx-all-image-cover[src*="stargo-photo/h02-night-inquiry-"] { object-position: 42% 50%; }
   .qx-orbit img.qx-all-image-cover[src*="stargo-photo/h09-container-loading-"] { object-position: 50% 50%; }
 }
 
