@@ -5216,6 +5216,21 @@ img[src*="stargo-photo/w06-showroom-"] { object-position: 32% 25%; }
   .photo-hero[src*="stargo-photo/h08-"] { object-position: 58% 50%; }
   .photo-hero[src*="stargo-photo/h09-"] { object-position: 50% 50%; }
 }
+/* From 1460 up the right column stays 400px high but keeps widening (about
+   half the window: 694 at 1460, 917 at 1920, 1222 at 2560), so a fixed
+   percentage crops ever tighter from above: from about 1465 the manifest's
+   80% 73% cut off H07's head and 50% 37% the top of H09's container. There
+   each crop pins one row of the square to the box instead: `calc(P% - Lpx)`
+   puts the picture's row P% at P% of 400 less L, whatever the width. H07's
+   row 32% is the top of the man's head, H09's 17.5% the top of the
+   container's open doors; both land 15px below the top edge, the headroom
+   the manifest's crops give them at 1440, and the picture loses only from
+   the bottom as the box widens (H07 head to thighs at 1920, to the hands
+   at 2560; H09 container top to the driver at 2560). */
+@media (min-width: 1460px) {
+  .photo-hero[src*="stargo-photo/h07-"] { object-position: 80% calc(32% - 113px); }
+  .photo-hero[src*="stargo-photo/h09-"] { object-position: 50% calc(17.5% - 55px); }
+}
 
 /* P01–P05, the five stage cards. Mono's `.paralax-image` covers the 3:2
    card at 105% of its height (334x234 at 1440), as the illustration in
@@ -5233,12 +5248,29 @@ body:has(#loop) .image-wrap.for-service .paralax-image[src*="stargo-photo/p04-"]
 
 /* R1, the photograph split across the two halves behind the scenario cards
    (desktop only; Mono hides them at 991 and below). Mono's 200% size, fixed
-   attachment and left/right anchors stay; only the picture and its height
-   change, 44% keeping the rep's head and her papers in the 1440x900 band.
-   A CSS background carries no alt. */
+   attachment and left/right anchors stay. A CSS background carries no alt.
+   Each half is half the window wide and the whole window high, and the
+   picture is drawn as wide as the window, so how much of its height shows
+   depends on the window's shape, not its width: the manifest's 44% keeps
+   the rep's head and her papers in a 1440x900 window (hair 49px below the
+   top edge) but left 9 to 17px in 16:9 ones (1366x768, 1920x1080,
+   2560x1440) and 1px at 2560x1080. The height is therefore pinned to her
+   hair line, row 24.5% of the picture: `calc(24.5% - 18.5vh)` puts that row
+   6% of the window's height below the top in any window (hair measured at
+   50 to 94px, 6.5% of the height, from 1366x768 to 2560x1440; 58px at
+   1440x900, within a point of the manifest's 44% there), and
+   `max(…, 100%)` keeps the bottom edge covered in a window taller than it
+   is wide.
+   The file is 1639px wide, an odd number, so the halves meet in the middle
+   of one of its pixels, and Chromium left the left half's last column partly
+   unpainted: a 1px light line down the middle of the picture (none with an
+   even-width file). The left half now reaches 1px under the right one,
+   which paints over it, and its picture is 2px narrower than 200% of the
+   wider box, so both halves still draw it at the same size and it stays
+   continuous across the join. */
 .photo-half._01, .photo-half._02 { background-image: url("../assets/stargo-photo/r1-sales-rep-1639.webp"); }
-.photo-half._01 { background-position: 0% 44%; }
-.photo-half._02 { background-position: 100% 44%; }
+.photo-half._01 { width: calc(50% + 1px); background-size: calc(200% - 2px) auto; background-position: 0% max(calc(24.5% - 18.5vh), 100%); }
+.photo-half._02 { background-position: 100% max(calc(24.5% - 18.5vh), 100%); }
 
 /* R2, the scenario film card (`.testimonials-card._03`): a portrait still
    in the film's box, 400x450 (0.89:1) from 480 up and ~1.07:1 on a phone,
