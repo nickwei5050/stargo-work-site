@@ -27,6 +27,7 @@ import { HERO, HOME_MODULES, HOME_STAGES, HOME_SILOS, HOME_ROLE_CARD, HOME_PRICI
 import { SITE } from './paths.mjs';
 import { webpPage } from './image-refs.mjs';
 import { a11yPage } from './a11y.mjs';
+import { speedPage } from './speed.mjs';
 /* The owner's photographs on the blog and intelligence pages (group "blog", 2026-10-21). */
 import { BLOG_COVERS, INTEL_PHOTOS } from './replaceables.mjs';
 
@@ -2499,6 +2500,7 @@ for (const lang of C.LANGS) {
     html = a11yPage(html, { lang, name });   // Z15: landmarks, skip link, heading semantics, names
     html = remapLinks(html);
     html = webpPage(html);
+    html = speedPage(html, `${lang}/${name}`);   // tools/speed.mjs: first screen before the scripts
     assertInternalLinks(html, `${lang}/${name}`);
     const body = html.slice(html.indexOf('<body'));
     {

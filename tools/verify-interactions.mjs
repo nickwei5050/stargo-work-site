@@ -153,14 +153,18 @@ try {
      the dots are never split or moved, the button never fades; on another page the same timeline
      still plays as Mono wrote it. */
   await check(`${lang}home hero stays put after the opening`,async()=>{
-   const watch=()=>{const s=window.__hero={split:0,minCta:1,dots:'none',started:false};const f=()=>{const cta=[...document.querySelectorAll('a.contact-info.for-button')].find(a=>!a.closest('[data-og-intro]'));
+   const watch=()=>{const s=window.__hero={split:0,minCta:1,dots:'none',started:false,lateAtReady:null};window.addEventListener('__wf_ix3_ready',()=>{s.lateAtReady=document.documentElement.classList.contains('sg-ix-late');});const f=()=>{const cta=[...document.querySelectorAll('a.contact-info.for-button')].find(a=>!a.closest('[data-og-intro]'));
     if(cta&&document.documentElement.classList.contains('w-mod-ix3')){s.started=true;s.minCta=Math.min(s.minCta,+getComputedStyle(cta).opacity);s.split=Math.max(s.split,document.querySelectorAll('.hero h1 div, .hero h2 div, .hero .top-text.big div').length);const d=document.querySelector('.hero .circle-divider');if(d&&getComputedStyle(d).transform!=='none')s.dots=getComputedStyle(d).transform;}setTimeout(f,25);};f();};
    const ctx=await browser.newContext({viewport:{width:1440,height:900}});await ctx.addInitScript(watch);const p=await ctx.newPage();
    try{
     await p.goto(home,{waitUntil:'load'});await p.waitForTimeout(3500);const s=await p.evaluate(()=>window.__hero);
     assert(s.started&&s.minCta===1&&s.split===0&&s.dots==='none','homepage hero untouched '+JSON.stringify(s));
     await p.goto(BASE+'/'+lang+'about.html',{waitUntil:'load'});await p.waitForTimeout(3500);const t=await p.evaluate(()=>window.__hero);
-    assert(t.started&&t.minCta===0,'about: the button still fades in at load '+JSON.stringify(t));
+    /* Unless Webflow started more than a second after the first paint: then the hero has been
+       readable for a second and its load timeline is put at its end, not hidden and replayed
+       (tools/speed.mjs, js/stargo-splittext-cjk.js). */
+    if(t.lateAtReady)assert(t.started&&t.minCta===1,'about: a late start does not hide the shown button '+JSON.stringify(t));
+    else assert(t.started&&t.minCta===0,'about: the button still fades in at load '+JSON.stringify(t));
    }finally{await ctx.close();}
   });
   await check(`${lang}home opening absent for reduced motion and without JavaScript`,async()=>{

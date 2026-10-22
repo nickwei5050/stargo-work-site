@@ -109,3 +109,115 @@
     if (roots.length) { try { label({ elements: roots }); } catch (e) { /* as above */ } }
   }).observe(document.documentElement, { childList: true, subtree: true });
 })();
+
+/* Lazy splitting (speed lane, review item Z01). Webflow IX3 builds every
+   timeline at window load and splits every SplitText target on the page in
+   that one task: 70-150 targets on the homepage, about 80% of them far below
+   the fold, which froze the page for 3-4s on a desktop and far longer on a
+   phone. Here the engine's AnimationCoordinator.doSplitText is wrapped so that
+   a target more than about one screen away from the viewport is split only
+   when it comes within one screen (IntersectionObserver). Its timeline is first
+   built on the whole element, and the engine's own re-split path
+   (scheduleRebuildForElement, the one it uses after a font or width change)
+   rebuilds it on the pieces when the split happens, so the animation the
+   reader sees is the same. Anything unexpected (another bundle, no observer)
+   leaves the engine exactly as it was. */
+(function () {
+  var q = self.webpackChunk;
+  if (!q || typeof q.push !== 'function' || !window.IntersectionObserver) return;
+  /* The engine's classes by export name. The module ids are those of the
+     vendored bundle (js/app.schunk.25099a4fefa544e6.js); should it change, the
+     modules are searched by the name instead. */
+  function find(req, id, name, needle) {
+    try {
+      var m = req(id);
+      if (m && m[name]) return m[name];
+    } catch (e) { /* fall through */ }
+    var defs = req.m || {};
+    for (var k in defs) {
+      try {
+        if (String(defs[k]).indexOf(needle) < 0) continue;
+        var x = req(k);
+        if (x && x[name]) return x[name];
+      } catch (e) { /* keep looking */ }
+    }
+    return null;
+  }
+  function patch(req) {
+    lateLoads(req);
+    var AC = find(req, 4054, 'AnimationCoordinator', 'globalSplitRegistry');
+    if (!AC || !AC.prototype || typeof AC.prototype.doSplitText !== 'function' || AC.prototype.doSplitText.__sgLazy) return;
+    var orig = AC.prototype.doSplitText;
+    var pending = new Map();
+    var refreshTimer = 0;
+    function refresh() {
+      clearTimeout(refreshTimer);
+      refreshTimer = setTimeout(function () {
+        try { if (window.ScrollTrigger) window.ScrollTrigger.refresh(); } catch (e) { /* ignore */ }
+      }, 120);
+    }
+    function flush(el) {
+      var calls = pending.get(el);
+      if (!calls) return;
+      pending.delete(el);
+      io.unobserve(el);
+      var h = el.offsetHeight;
+      for (var i = 0; i < calls.length; i++) orig.call(calls[i][0], calls[i][1], [el], calls[i][2], calls[i][3]);
+      if (el.offsetHeight !== h) refresh();
+    }
+    var io = new IntersectionObserver(function (entries) {
+      for (var i = 0; i < entries.length; i++) if (entries[i].isIntersecting) flush(entries[i].target);
+    }, { rootMargin: '100% 0px 100% 0px' });
+    function far(el) {
+      var r = el.getBoundingClientRect();
+      if (!r.width && !r.height) return false; // hidden (menu, closed tab): split now, as before
+      var h = window.innerHeight || 800;
+      return r.top > 2 * h || r.bottom < -h;
+    }
+    var lazy = function (cfg, targets, ctx, Cls) {
+      var now = [];
+      for (var i = 0; i < targets.length; i++) {
+        var el = targets[i];
+        var calls = pending.get(el);
+        if (calls) { calls.push([this, cfg, ctx, Cls]); continue; }
+        if (!el || !el.getBoundingClientRect || !far(el)) { now.push(el); continue; }
+        pending.set(el, [[this, cfg, ctx, Cls]]);
+        // The load trigger waits for web fonts when a timeline splits lines; keep that.
+        try { if (String(cfg && cfg.type).indexOf('lines') > -1) ctx.timeline.data.splitLines = true; } catch (e) { /* ignore */ }
+        io.observe(el);
+      }
+      if (now.length) return orig.call(this, cfg, now, ctx, Cls);
+    };
+    lazy.__sgLazy = true;
+    AC.prototype.doSplitText = lazy;
+    // A jump past the margin (an anchor link, a restored scroll position) is
+    // caught by the observer on the next frame; pagehide needs nothing.
+  }
+  /* Late page-load timelines (speed lane, Z13). The head script
+     (tools/speed.mjs) sets `sg-ix-late` on <html> one second after the first
+     paint. A page-load timeline that only starts after that would hide a hero
+     the reader is already reading and play it in again, so it is put at its
+     end state instead (the engine's own "skip-to-end"). On time, it plays. */
+  function lateLoads(req) {
+    var LT = find(req, 3636, 'LoadTriggerStrategy', 'LoadTriggerStrategy');
+    if (!LT || !LT.prototype || typeof LT.prototype.bind !== 'function' || LT.prototype.bind.__sgLate) return;
+    var bind = LT.prototype.bind;
+    var late = function (e, t, n) {
+      var self = this;
+      if (window.__wf_ix3 || !n || n.conditionalContext !== null || !t || !self.loadInteractions || typeof self.skipToEndState !== 'function') return bind.apply(this, arguments);
+      var queued = self.loadInteractions.length;
+      bind.apply(this, arguments);
+      var run = self.loadInteractions[queued];
+      if (typeof run !== 'function') return;
+      self.loadInteractions[queued] = function () {
+        if (/\bsg-ix-late\b/.test(document.documentElement.className)) {
+          try { self.skipToEndState(t, null); return; } catch (err) { /* play it instead */ }
+        }
+        return run.apply(this, arguments);
+      };
+    };
+    late.__sgLate = true;
+    LT.prototype.bind = late;
+  }
+  try { q.push([['stargo-lazy-split'], {}, patch]); } catch (e) { /* engine untouched */ }
+})();

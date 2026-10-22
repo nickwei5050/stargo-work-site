@@ -6199,3 +6199,16 @@ img[src*="stargo-photo/e08-emergency-stop-"] { object-position: 50% 42%; }
   .stargo-direct-row a { padding: 14px 0; margin: -14px 0; }
   .stargo-copy { min-height: 44px; margin: -9.5px 0; }
 }
+/* ===================================================== speed lane (Z13) ==
+   First-screen text the HTML no longer hides (tools/speed.mjs). A marked
+   element waits for the Webflow runtime only while scripts are on, the
+   runtime has not touched it and the one-second cap after the first paint
+   (`sg-ix-late`, set by the inline head script) has not passed. Without
+   scripts it is simply there. An element on screen at the cap that the
+   runtime had not started is pinned as it would end, so a late runtime does
+   not blank it and fade it in again.
+   The wait is a CSS animation, not a rule a script must lift, so it ends on
+   time even while the main thread is busy parsing the bundle. */
+html.w-mod-js:not(.sg-ix-late) [data-sg-first]:not([style]) { animation: sg-first-wait 1.2s; }
+@keyframes sg-first-wait { from, to { opacity: 0; } }
+[data-sg-settled] { opacity: 1 !important; transform: none !important; filter: none !important; }
