@@ -40,6 +40,15 @@ const share = JSON.parse(readFileSync('tools/imagegen/share-card.json', 'utf8'))
 }
 const files = [...readdirSync('.').filter(f => f.endsWith('.html')), ...readdirSync('en').filter(f => f.endsWith('.html')).map(f => 'en/' + f), ...readdirSync('blog').map(f => 'blog/' + f), ...readdirSync('en/blog').map(f => 'en/blog/' + f)];
 const all = [...files, 'css/stargo-fusion.css'].map(f => readFileSync(f, 'utf8')).join('\n');
+/* A stylesheet whose braces do not balance swallows every rule after the
+   stray "{" (a merge once left one @media open and silently dropped about 46
+   phone and tablet crop rules); no page-level check sees that, so count them. */
+for (const f of readdirSync('css').filter(n => n.endsWith('.css')).map(n => `css/${n}`)) {
+  const bare = readFileSync(f, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*'/g, '""');
+  let depth = 0;
+  for (const ch of bare) { if (ch === '{') depth++; else if (ch === '}') depth--; assert(depth >= 0, `${f}: a "}" closes a block that was never opened`); }
+  assert(depth === 0, `${f}: ${depth} block(s) left open at the end of the file`);
+}
 assert.equal(manifest.assets.length, 43);
 assert.equal(new Set(manifest.assets.map(a => a.originalSha256)).size, 43);
 assert(products.length > 0, 'product imagery manifest is empty');

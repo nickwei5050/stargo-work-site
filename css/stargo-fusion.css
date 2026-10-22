@@ -5498,6 +5498,7 @@ img[src*="stargo-photo/c10-progress-board-"] { object-position: 70% 50%; }
    sizing and the picture fills the card the column sets, as before. */
 @media (min-width: 992px) {
   .cn-faq .cn-faq-image[src*="stargo-photo/c08-product-references-"] { height: 0; min-height: 100%; }
+}
 
 /* ======================================================================
    The owner's photographs, batch 7: the enterprise page (2026-10-21;
