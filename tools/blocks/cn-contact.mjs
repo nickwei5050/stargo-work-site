@@ -344,6 +344,7 @@
  *   cn-service, cn-faq and cn-produce. `mirror` stays at its default.
  */
 import { setText, splitRepeat, DONORS } from '../block-lib.mjs';
+import { planKey } from './rk-price-tiers.mjs';
 
 export const donor = {
   id: 'cn-contact',
@@ -430,10 +431,10 @@ const BEFORE_OPEN = '<p class="stargo-form-before">';
  *   unit      which donor unit the field is cloned from.
  */
 const FIELDS = [
-  { name: 'name', copy: 'name', dataName: 'Name', unit: 'text' },
+  { name: 'name', copy: 'name', dataName: 'Name', unit: 'text', required: true },
   { name: 'Email', copy: 'email', dataName: 'Email', unit: 'email' },
   { name: 'Subject', copy: 'company', dataName: 'Subject', unit: 'text' },
-  { name: 'whatsapp', copy: 'whatsapp', dataName: 'whatsapp', unit: 'text' },
+  { name: 'whatsapp', copy: 'whatsapp', dataName: 'whatsapp', unit: 'text', tel: true },
   { name: 'industry', copy: 'industry', dataName: 'industry', unit: 'text' },
   { name: 'markets', copy: 'markets', dataName: 'markets', unit: 'text' },
   { name: 'team', copy: 'team', dataName: 'team', unit: 'text' },
@@ -660,6 +661,17 @@ export function render(frag, ctx) {
          optional field would block the submit with no message of its own. */
       if (!/\stype="text"/.test(control)) throw new Error(`cn-contact: ${where} was cloned from a unit that is not type="text": ${control.slice(0, 90)}`);
       if (/\srequired=/.test(control)) throw new Error(`cn-contact: ${where} was cloned from a required unit; only Email is required here`);
+      /* Z12 (form lane). The phone number: a telephone keypad on phones and
+         the browser's own saved number. The Function keys it on `name`, so
+         the type changes nothing about what is sent. */
+      if (f.tel) {
+        control = put(control, 'type', 'tel', where);
+        control = control.replace(/\s*\/>$/, ' inputmode="tel" autocomplete="tel"/>');
+      }
+      /* Z12. 姓名* carries a star, so it says it is required: js/stargo-forms.js
+         checks it by hand BEFORE form.checkValidity(), so `required` adds the
+         native semantics (and aria-required) without a second, unworded block. */
+      if (f.required) control = control.replace(/\s*\/>$/, ' required=""/>');
     } else if (f.unit === 'email') {
       /* Kept exactly as cinery drew it. `type="email"` is what
          js/stargo-forms.js finds the address by and what makes the client send
@@ -718,7 +730,18 @@ export function render(frag, ctx) {
   tag = drop(tag, 'data-wf-page-id', 'the donor form');
   tag = drop(tag, 'data-wf-element-id', 'the donor form');
 
-  html = head.slice(0, openAt) + tag + HONEYPOT + built.join(SPACER_SMALL) + tail;
+  /* Z11 (form lane): the plan a pricing button sent the visitor from
+     (?plan=<key>, keys from rk-price-tiers.mjs's planKey). Empty and hidden;
+     js/stargo-forms.js fills it from the URL only when the key is one listed in
+     data-stargo-plans, and sends it with the submission under this label. Not
+     drawn on the page — the label reaches only the inbox and the e-mail
+     fallback's body. */
+  const plans = C.PRICING.panes.flat().filter((p) => p.unit !== 'demo');
+  const planMap = Object.fromEntries(plans.map((p) => [planKey(p), t(p.name)]));
+  if (Object.keys(planMap).length !== plans.length) throw new Error('cn-contact: two plans share a ?plan= key');
+  const PLAN = `<input type="hidden" name="plan" id="stargo-plan" value="" data-stargo-label="${lang === 'zh' ? '咨询方案' : 'Plan'}" data-stargo-plans="${escapeHtml(JSON.stringify(planMap))}"/>`;
+
+  html = head.slice(0, openAt) + tag + HONEYPOT + PLAN + built.join(SPACER_SMALL) + tail;
 
   /* ------------------------------------------- the submit, and the note -- */
 
@@ -808,7 +831,9 @@ export function render(frag, ctx) {
 
   /* the controls */
   const inputs = (html.match(/<input\b/g) ?? []).length;
-  if (inputs !== 10) throw new Error(`cn-contact: expected ten <input> (eight fields, the honeypot and the submit), found ${inputs}`);
+  if (inputs !== 11) throw new Error(`cn-contact: expected eleven <input> (eight fields, the honeypot, the hidden plan and the submit), found ${inputs}`);
+  onceAttr('type', 'tel', 'the WhatsApp field opens a phone keypad (Z12)');
+  onceAttr('name', 'plan', 'js/stargo-forms.js fills the plan a pricing button passed (Z11)');
   for (const [open, close] of [['<select', '</select>'], ['<textarea', '</textarea>']]) {
     const a = (html.match(new RegExp(open, 'g')) ?? []).length;
     const b = html.split(close).length - 1;
