@@ -6024,6 +6024,7 @@ img[src*="stargo-photo/e08-emergency-stop-"] { object-position: 50% 42%; }
     opacity: 1 !important;
     transform: none !important;
   }
+}
 /* ==========================================================================
    FORM LANE (next round, Z12 + the phone-table mechanics of Z11)
    ========================================================================== */
@@ -6089,6 +6090,7 @@ img[src*="stargo-photo/e08-emergency-stop-"] { object-position: 50% 42%; }
     z-index: 2;
   }
   .rk-price-compare .rk-rt-pricing-v1-content-2.stargo-scroll-more::after { opacity: 1; }
+}
 
 /* ==========================================================================
    a11y lane (review items Z15 and Z20)
