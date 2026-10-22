@@ -24,7 +24,9 @@
  *   - the hover pill says "View This Work". Each card's pill names where that
  *     card goes: the workforce page, or the workforce group in the catalogue.
  *   - the three photographs were qubix's own (Pro-5, Pro-4, Pro-2) and said
- *     nothing about AI roles; this site's editorial art replaces them.
+ *     nothing about AI roles; this site's pictures replace them (since
+ *     2026-10-21 the owner's photographs C09 and C10 in the first two cards
+ *     and the owner's Expert Teams screen in the third; CAP_V6A.team.cards).
  *   - the two arrow images announce themselves as "Image"; the anchor already
  *     leads somewhere the one-liner beside it explains, so the alt goes empty.
  *   - the category line has no colour of its own in the donor: it inherited

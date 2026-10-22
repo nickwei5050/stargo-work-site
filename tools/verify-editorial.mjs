@@ -147,7 +147,10 @@ async function worker() {
         assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), 'horizontal overflow');
       }
       await page.waitForTimeout(400);
-      const imageState = await page.evaluate(() => [...document.querySelectorAll('img[src*="stargo-editorial"]')].filter(i => i.getBoundingClientRect().width > 0 && i.complete).map(i => ({ src: i.currentSrc, natural: i.naturalWidth })));
+      /* The owner's photographs (assets/stargo-photo) have taken most of the
+         generated art's places on some pages (the capability page from
+         2026-10-21), so they are decoded here too. */
+      const imageState = await page.evaluate(() => [...document.querySelectorAll('img[src*="stargo-editorial"], img[src*="stargo-photo"]')].filter(i => i.getBoundingClientRect().width > 0 && i.complete).map(i => ({ src: i.currentSrc, natural: i.naturalWidth })));
       assert(imageState.every(i => i.natural > 0), 'decoded images');
       /* No owner photograph is drawn mirrored. Templates flip whole layers
          (cinery's inner ring is scaleX(-1)); a clip there does not mind, a
