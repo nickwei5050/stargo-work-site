@@ -74,7 +74,12 @@ for (const a of manifest.assets) {
   for (const f of [a, ...a.variants]) assert(existsSync(f.src), `missing file: ${f.src}`);
 }
 const productsUnused = products.filter(a => !all.includes(a.src)).map(a => a.id);
-const photosUnused = photos.filter(a => !all.includes(a.src)).map(a => a.id);
+/* A photograph replaced by its second version (tools/imagegen/prepare-photos.mjs,
+   `<id>v2-…`) stays registered, and its files stay published, but is placed
+   only where the second version does not take over (R1 keeps the about and
+   pricing slides). */
+const SUPERSEDED = new Set(photos.filter(a => photos.some(b => b.ref === `${a.ref}v2`)).map(a => a.id));
+const photosUnused = photos.filter(a => !all.includes(a.src) && !SUPERSEDED.has(a.id)).map(a => a.id);
 assert.deepEqual(photosUnused, [], 'every registered photograph is placed');
 console.log(`generated imagery: ${manifest.assets.length - unused.length} placed, ${unused.length} retained but unused (${unused.join(', ')})`);
 console.log(`product imagery: ${products.length - productsUnused.length} of ${products.length} placed${productsUnused.length ? ` (unused: ${productsUnused.join(', ')})` : ''}`);
