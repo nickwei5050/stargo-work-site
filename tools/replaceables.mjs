@@ -13,7 +13,12 @@
  *     slot: the rewrite would run twice.
  *   - A product path (`assets/stargo-product/…`) or the hero film
  *     (`assets/stargo-motion/…`) is written as the final URL. Overwrite that
- *     file, including its width variants, and leave the name alone.
+ *     file, including its width variants, and leave the name alone: every
+ *     page loads it as `…?v=<content hash>` (tools/asset-version.mjs, Z18),
+ *     so the new bytes are a new URL and the year-long immutable cache cannot
+ *     keep the old picture. For anything that must disappear from browsers
+ *     that already hold it (a screenshot blurred for privacy), prefer a new
+ *     file name as well, so the old URL no longer exists on the site.
  *   - An owner photograph (`assets/stargo-photo/<id>-<width>.webp`, registered
  *     in tools/imagegen/photo-assets.json; AI-generated, captioned as such by
  *     tools/editorial-images.mjs) is written as the final URL too, but never

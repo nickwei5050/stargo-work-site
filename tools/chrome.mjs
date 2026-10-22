@@ -16,7 +16,6 @@
  */
 import { makeSub, findByClass, extractElement, escapeHtml } from './lib-html.mjs';
 import { editorialImages, photoAlt } from './editorial-images.mjs';
-import { createHash } from 'node:crypto';
 import { readFileSync, existsSync } from 'node:fs';
 import { CAP_JUMPS, NAV, SECONDARY, MORE, LANG_SWITCH, CHROME, META, CONTACT_INFO, CONTACT_UI, SITE_URL } from './copy.mjs';
 import { POSTS, BLOG_UI, postPath, coverSrc, faqEntities, wordCount } from './blog.mjs';
@@ -802,6 +801,27 @@ export function relocateLinks(html, up) {
   return html.replace(/href="((?!(?:https?:)?\/\/|mailto:|tel:|\/|#)[^"]*?\.html(?:[#?][^"]*)?)"/g, (_, h) => `href="${up}${h}"`);
 }
 
+/**
+ * Internal page links as the clean, root-relative URLs the site is served at
+ * (Z17): `/contact`, `/en/pricing#plans`, `/blog/<slug>`, `/` and `/en/`.
+ * Cloudflare Pages answers `….html` with a redirect to the clean URL, so a
+ * link written as `contact.html` cost every first click a round trip. The
+ * build keeps writing `.html` links (assertInternalLinks checks them against
+ * the pages it produces); this runs last, resolving each relative link from
+ * the page's own path (`en/blog/x.html`). Absolute, anchor-only, mailto: and
+ * tel: links, and anything that is not one of the site's pages, stay as they
+ * are.
+ */
+export function cleanLinks(html, pagePath) {
+  const base = new URL(pagePath, 'https://site.invalid/');
+  return html.replace(/(\shref=")((?![a-z][a-z0-9+.-]*:|\/|#)[^"#?]*?\.html)((?:[?#][^"]*)?)"/gi, (whole, attr, path, rest) => {
+    const rel = new URL(path, base).pathname.slice(1);
+    const page = rel.replace(/^en\//, '');
+    if (!ALL_PAGES.has(page)) return whole;
+    return `${attr}/${rel.replace(/(^|\/)index\.html$/, '$1').replace(/\.html$/, '')}${rest}"`;
+  });
+}
+
 /* --------------------------------------------------------------- main -- */
 
 export function applyChrome(html, { lang, current }) {
@@ -826,25 +846,9 @@ export function applyChrome(html, { lang, current }) {
   if (lang === 'zh') out = zhRuntimeNames(zhFullStops(out));
   out = uniqueLayoutIds(out);
   out = editorialImages(out, lang);
-  // Unhashed local runtimes used to stay stale for a day after deployments.
-  // Version the URL while retaining the original file and script ordering.
-  //
-  // The hash is taken over the file with CRLF folded to LF, not over the bytes
-  // as they happen to sit in this working tree. Git checks these stylesheets
-  // and scripts out with the platform's line endings (CRLF under Windows'
-  // core.autocrlf, LF everywhere else), so hashing the raw bytes made twelve of
-  // them — every hand-written script, and the donor sheets — hash differently
-  // on Windows and on Linux. The pages then differed by their ?v= tokens alone,
-  // from identical sources, which is precisely the thing a rebuild-and-diff
-  // check in CI exists to catch. Folding first makes the token depend on the
-  // file's content and nothing else, so the build is reproducible on any
-  // checkout. The value is a cache key; what the browser loads is unchanged.
-  out = out.replace(/((?:src|href)=")((?:css|js)\/[^"?]+\.(?:css|js))"/g, (_, attr, path) => {
-    const raw = readFileSync(new URL(`../${path}`, import.meta.url));
-    const content = Buffer.from(raw.toString('latin1').replace(/\r\n/g, '\n'), 'latin1');
-    const hash = createHash('sha256').update(content).digest('hex').slice(0, 12);
-    return `${attr}${path}?v=${hash}"`;
-  });
+  /* Stylesheets and scripts get their content-hash ?v= in
+     tools/asset-version.mjs versionPage, with every other local asset the
+     page loads (Z18); tools/build-site.mjs runs it once the page is final. */
   if (/monostudio|Mōno™ Studio/i.test(out)) throw new Error(`chrome: template brand survives in ${current}`);
   return out;
 }

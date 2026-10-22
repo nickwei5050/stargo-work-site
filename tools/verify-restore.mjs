@@ -49,7 +49,7 @@ function watch(page) {
   page.on('pageerror', (e) => log.errors.push(String(e).split('\n')[0]));
   page.on('console', (m) => { if (m.type() === 'error' && !NOISE.test(m.text())) log.errors.push('console: ' + m.text().slice(0, 160)); });
   page.on('response', (r) => { if (r.status() >= 400) log.failed.push(`${r.status()} ${r.url().slice(0, 140)}`); });
-  page.on('requestfailed', (r) => { if (!/\.(mp4|webm)$/.test(r.url()) && !NOISE.test(r.failure()?.errorText || '')) log.failed.push('failed ' + r.url().slice(0, 140)); });
+  page.on('requestfailed', (r) => { if (!/\.(mp4|webm)(?:\?|$)/.test(r.url()) && !NOISE.test(r.failure()?.errorText || '')) log.failed.push('failed ' + r.url().slice(0, 140)); });
   page.on('request', (r) => { const u = new URL(r.url()); if (u.origin !== origin && !u.protocol.startsWith('data') && !u.protocol.startsWith('blob')) log.external.add(u.host); });
   return log;
 }
@@ -385,11 +385,11 @@ for (const lang of ['', 'en/']) {
     }));
     assert.equal(stills.length, 4, 'one still per tile');
     stills.forEach((s, i) => {
-      assert.match(s.src ?? '', /(?:^|\/)assets\/stargo-photo\/(?:d01-market-research|d07-quotation|d02-follow-up|d05-coordination)-\d+\.webp$/, `tile ${i + 1} shows the owner's photograph: ${s.src}`);
+      assert.match(s.src ?? '', /(?:^|\/)assets\/stargo-photo\/(?:d01-market-research|d07-quotation|d02-follow-up|d05-coordination)-\d+\.webp(?:\?v=[0-9a-f]{12})?$/, `tile ${i + 1} shows the owner's photograph: ${s.src}`);
       assert(s.alt.length > 20, `tile ${i + 1}'s still carries its own alt: "${s.alt}"`);
       assert(s.fills, `tile ${i + 1}'s still fills its box`);
     });
-    assert(await page.locator('.cn-about a[href$="contact.html"]').count() >= 1, 'About reaches the contact page');
+    assert(await page.locator('.cn-about a[href$="/contact"]').count() >= 1, 'About reaches the contact page');
     const intro = await page.locator('.cn-about').innerText();
     assert(intro.replace(/\s+/g, '').length > 40, 'the introduction band carries its paragraph');
     for (const f of [0.35, 0.6, 0.85]) { const H = await page.evaluate(() => document.documentElement.scrollHeight); await scrollTo(page, H * f); await page.waitForTimeout(700); }
@@ -403,7 +403,7 @@ for (const lang of ['', 'en/']) {
     assert.equal(blogNode.blogPost.length, POSTS.length, 'Blog JSON-LD lists every article');
     assert.equal(await page.locator('.lx-blog-item a').count(), POSTS.length);
     const hrefs = await page.locator('.lx-blog-item a').evaluateAll((as) => as.map((a) => a.getAttribute('href')));
-    assert.deepEqual(hrefs, POSTS.map(postPath));
+    assert.deepEqual(hrefs, POSTS.map((p) => `/${lang}${postPath(p).replace(/\.html$/, '')}`));
     assert.equal(await page.locator('.lx-blog-item time').count(), POSTS.length, 'dated cards');
     await page.screenshot({ path: `${OUT}/${L}-blog.png` });
     // Every article
@@ -423,7 +423,7 @@ for (const lang of ['', 'en/']) {
       assert.equal(await page.locator('a.lx-related-item').count(), Math.min(5, POSTS.length - 1), 'related links');
       assert.equal(await page.locator('.lx-blog-item a').count(), 3, 'more from the blog');
       const rel = await page.locator('a.lx-related-item, .lx-blog-item a').evaluateAll((as) => as.map((a) => a.getAttribute('href')));
-      assert(rel.every((r) => /^\.\.\/blog\//.test(r)) && !rel.includes(`../blog/${post.slug}.html`), `related links leave the article: ${rel.join(' ')}`);
+      assert(rel.every((r) => r.startsWith(`/${lang}blog/`)) && !rel.includes(`/${lang}blog/${post.slug}`), `related links leave the article: ${rel.join(' ')}`);
       // body becomes visible when scrolled into view (IX2 fade), stays inside the grid
       const H = await page.evaluate(() => document.documentElement.scrollHeight);
       await scrollTo(page, 500); await page.waitForTimeout(900);
@@ -461,8 +461,8 @@ for (const lang of ['', 'en/']) {
     assert.equal((await page.locator('h1').innerText()).replace(/\s+/g, ' ').trim(), POSTS[1].title[lang ? 'zh' : 'en'].replace(/\s+/g, ' '));
     // footer pages grid contains About and Blog; the overlay marks Blog current on an article
     const footer = await page.locator('.footer-small-grid a').evaluateAll((as) => as.map((a) => a.getAttribute('href')));
-    assert(footer.some((h) => /about\.html$/.test(h)) && footer.some((h) => /blog\.html$/.test(h)), 'About/Blog in the footer');
-    assert.equal(await page.locator('.nav-top-flex a[aria-current="page"]').getAttribute('href').then((h) => h.replace(/^(\.\.\/)+/, '')), 'blog.html', 'Blog marked current on an article');
+    assert(footer.some((h) => /\/about$/.test(h)) && footer.some((h) => /\/blog$/.test(h)), 'About/Blog in the footer');
+    assert.equal(await page.locator('.nav-top-flex a[aria-current="page"]').getAttribute('href'), lang ? '/blog' : '/en/blog', 'Blog marked current on an article (the page is in the other language now)');
     assert.deepEqual(log.errors, []);
   });
   await page.close();
@@ -536,10 +536,10 @@ for (const width of WIDTHS) {
         await auditText(page, `${id}@end`, [/Scroll for more|继续滚动/]);
         await scrollTo(page, 0); await page.waitForTimeout(300);
         // language switch, wordmark, current page, no template brand
-        const up = name.includes('/') ? '../' : '';
         const swap = await page.locator('.nav-menu a[hreflang]').first().getAttribute('href');
-        assert.equal(swap, lang ? `${up}../${name}` : `${up}en/${name}`, 'language switch');
-        assert.equal(await page.locator('a.logo-first').first().getAttribute('href'), `${up}index.html`, 'wordmark home link');
+        const clean = name.replace(/(^|\/)index\.html$/, '$1').replace(/\.html$/, '');
+        assert.equal(swap, lang ? `/${clean}` : `/en/${clean}`, 'language switch');
+        assert.equal(await page.locator('a.logo-first').first().getAttribute('href'), `/${lang}`, 'wordmark home link');
         const text = await page.evaluate(() => document.body.innerText);
         assert(!/Mōno|Lifelogx|Scalora|Tomato Store|Lorem/i.test(text), 'template brand in page text');
         assert.deepEqual(log.errors, [], 'JS/console errors');

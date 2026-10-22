@@ -17,7 +17,8 @@ try {
       for(const a of doc.querySelectorAll('a[href]')) {
         const raw = a.getAttribute('href'); const url = new URL(raw,'http://site.test/'+file);
         if(url.origin !== 'http://site.test') continue;
-        const targetFile = url.pathname.slice(1) || 'index.html'; const target = docs[targetFile];
+        const path = url.pathname.slice(1); /* clean URLs (/pricing, /en/) map to their files, as the server does */
+        const targetFile = path === '' || path.endsWith('/') ? path+'index.html' : /\.html$/.test(path) ? path : path+'.html'; const target = docs[targetFile];
         if(!target) { errors.push('missing page: '+raw); continue; }
         if(raw.endsWith('#')) errors.push('placeholder: '+raw);
         if(url.hash && !target.getElementById(decodeURIComponent(url.hash.slice(1)))) errors.push('missing anchor: '+raw);
