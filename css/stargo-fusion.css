@@ -5781,3 +5781,247 @@ img[src*="stargo-photo/e08-emergency-stop-"] { object-position: 50% 42%; }
   object-fit: cover;
   border-radius: 13.453% / 6.289%;
 }
+
+/* ===========================================================================
+   Lane: phone (review items Z05 and Z10)
+   =========================================================================== */
+
+/* Z05. Phone and tablet header (below 992px).
+   tools/chrome.mjs adds a compact demo pill to the header's right-hand group
+   (`.stargo-phone-demo`, the site's own 预约演示 / Book a Demo CTA) and the same
+   CTA as the last item of the menu Webflow folds the top bar into
+   (`.stargo-nav-demo`). From 992px both are hidden: the desktop bar and its
+   pill are unchanged. js/stargo-phone-nav.js brings the header back when the
+   reader scrolls up: `stargo-nav-stick` on <html> makes it sticky at the top
+   of `.main-content` (its first child), keeping its place in the flow with a
+   negative margin of its own height so nothing below moves; `stargo-nav-show`
+   slides it on screen, on a white ground so it reads over any section. */
+.stargo-phone-demo { display: none; }
+@media (min-width: 992px) {
+  .nav-menu .button-link.stargo-nav-demo { display: none; }
+}
+@media (max-width: 991px) {
+  .navigation-top .last-part .stargo-phone-demo,
+  .absolute-element .last-part .stargo-phone-demo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 16px;
+    border-radius: 999px;
+    background: #111;
+    color: #fff;
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 500;
+    white-space: nowrap;
+    text-decoration: none;
+    margin-right: 6px;
+  }
+  .navigation-top .last-part .stargo-phone-demo:focus-visible,
+  .absolute-element .last-part .stargo-phone-demo:focus-visible { outline: 2px solid #111; outline-offset: 3px; }
+  html.stargo-nav-stick .navigation-top {
+    position: sticky;
+    top: 0;
+    margin-bottom: calc(-1 * var(--stargo-nav-h, 68px));
+    transform: translateY(-100%);
+    transition: transform .28s ease, background-color .2s ease;
+    background-color: #fff;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, .08);
+  }
+  html.stargo-nav-stick.stargo-nav-show .navigation-top { transform: none; }
+  /* Dark-hero pages draw the bar's text white; on the white ground it is dark.
+     Over those dark heroes the pill turns white until the bar is stuck. */
+  html.stargo-nav-stick .navigation-top .navigation-text-main { color: #111; }
+  html:not(.stargo-nav-stick) body:is(.lx-page, .stargo-dark-page, .stargo-dark-nav) .navigation-top .last-part .stargo-phone-demo { background: #fff; color: #111; }
+  html:not(.stargo-nav-stick) body:is(.lx-page, .stargo-dark-page, .stargo-dark-nav) .navigation-top .last-part .stargo-phone-demo:focus-visible { outline-color: #fff; }
+}
+@media (max-width: 991px) and (prefers-reduced-motion: reduce) {
+  html.stargo-nav-stick .navigation-top { transition: none; }
+}
+@media (max-width: 379px) {
+  /* 320–379px: the wordmark, the pill and the menu button share one row. */
+  .navigation-top .last-part .stargo-phone-demo,
+  .absolute-element .last-part .stargo-phone-demo { padding: 0 12px; font-size: 13px; margin-right: 2px; }
+  .navigation-top .stargo-wordmark.in-nav,
+  .absolute-element .stargo-wordmark.in-nav { height: 16px; width: auto; }
+}
+
+/* Z10. Pinned scroll scenes become plain stacked content on phones (owner's
+   decision, 2026-10-22: 改成普通排列). Below 768px every scene that held the
+   screen while the reader scrolled — a tall track with a sticky child whose
+   contents a scroll-scrubbed animation reveals — is laid out in the normal
+   flow instead: the track takes its content's height, the sticky child is a
+   plain block, and everything the scrub would reveal is drawn in its final,
+   readable state. The template's scroll animations keep running and writing
+   their inline styles; `!important` here outranks them, so nothing depends on
+   their timing. The scroll hints 「(继续滚动)」 and the 01/04 counter that only
+   meant something while the scene was pinned are not drawn. From 768px up
+   nothing here applies and the scenes scrub as before. */
+@media (max-width: 767px) {
+  /* Shared: split-text letters, words and lines inside these scenes. */
+  :is(.animation-section, .video-section, .sutdio-animation) :is(.gsap_split_letter, .gsap_split_word, .gsap_split_line) {
+    opacity: 1 !important;
+    transform: none !important;
+    translate: none !important;
+  }
+
+  /* Home — the hero: one screen, no 300vh track behind it. */
+  .hero-track { height: auto !important; }
+  .hero-track > .hero-agency { position: relative; }
+  .hero-track .hero { transform: none !important; }
+
+  /* Home and capabilities — the problem-card stack held for 158px. */
+  .work-main > .wrok-wrapper { position: relative; }
+
+  /* Home — 「(一条业务主线)」: the five phrases one under the other, then the orb. */
+  .animation-section { height: auto !important; }
+  .animation-section > .animation-sticky {
+    position: relative;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 120px 16px 0;
+  }
+  .animation-sticky > .absolute-top:not(.btm) { position: static; order: -1; margin-bottom: 24px; }
+  .animation-sticky > .absolute-top.btm { display: none; }
+  .animation-sticky > .spacer-xxl { display: none; }
+  .animation-sticky > .container { height: auto; }
+  .animation-sticky .flex-fst-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    height: auto;
+  }
+  .animation-sticky .flex-fst-cta > .cta-sm-title {
+    position: static;
+    opacity: 1 !important;
+    transform: none !important;
+    text-align: center;
+  }
+  .animation-sticky > .absolute-photo {
+    position: relative;
+    inset: auto;
+    width: calc(100% + 32px) !important;
+    height: 100vw !important;
+    margin: 40px -16px 0;
+    transform: none !important;
+  }
+
+  /* Home — 「一个工作台，管好每天的生意。」: one screen, the product screens
+     drawn at their own size behind the line instead of zooming out of it. */
+  .video-section { height: auto !important; }
+  .video-section > .sticky-video-section { position: relative; height: 100svh; min-height: 560px; overflow: hidden; }
+  .sticky-video-section > .video-grid { transform: none !important; opacity: .35 !important; }
+  .sticky-video-section .cta-sm-title._06 { opacity: 1 !important; transform: none !important; }
+
+  /* Home — the four sample scenes: four cards, one under the other. */
+  .testimonials-section { height: auto !important; }
+  .testimonials-section > .testimonials-sticky { position: relative; height: auto; padding: 80px 0 64px; }
+  .testimonials-sticky .testimonials-card-wrapper {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .testimonials-sticky .testimonials-card {
+    position: relative;
+    inset: auto;
+    transform: none !important;
+    translate: none !important;
+    rotate: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  .testimonials-sticky .number-rotator,
+  .testimonials-sticky > .absolute-top.btm { display: none; }
+
+  /* Enterprise — the four story panels: four full-width cards. */
+  /* Mono lays the four panels side by side (400vw) and slides the row
+     sideways as the reader scrolls down; here they stack. */
+  .sutdio-animation {
+    width: 100%;
+    height: auto !important;
+    flex-direction: column;
+    transform: none !important;
+    translate: none !important;
+  }
+  /* The next section's white curve rises 100px into the last panel. */
+  .sutdio-animation > .studio-sticky._04 { padding-bottom: 148px; }
+  .sutdio-animation > .studio-sticky {
+    position: relative;
+    top: auto;
+    height: auto;
+    min-height: 560px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-top: 120px;
+    padding-bottom: 48px;
+    overflow: hidden;
+  }
+  .sutdio-animation > .studio-sticky + .studio-sticky { margin-top: 0; }
+  .studio-sticky > [class*="image-about"] {
+    transform: none !important;
+    translate: none !important;
+    opacity: 1 !important;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .studio-sticky :is(.h2.for-abt, .top-text.for-abt) { opacity: 1 !important; transform: none !important; }
+
+  /* Workforce — the three collaboration cards, then 「一个目标，一个团队。」. */
+  .lx-answers-card-section-holder { height: auto !important; padding-top: 96px; padding-bottom: 96px; }
+  .lx-answers-card-section-holder > .lx-answers-card-sticky { position: relative; top: auto; height: auto; transform: none; }
+  .lx-answers-card-sticky .lx-answers-section-holder { height: auto; }
+  .lx-answers-card-sticky .lx-answers-card-section {
+    position: relative;
+    top: auto;
+    height: auto;
+    height: auto !important;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .lx-answers-card-sticky .lx-answers-card {
+    position: relative !important;
+    inset: auto;
+    top: auto;
+    z-index: auto;
+    transform: none !important;
+    margin: 0;
+  }
+  .lx-answers-card-sticky .lx-big-text-wrapper { position: relative; inset: auto; margin-top: 48px; }
+  .lx-answers-card-sticky .lx-big-text-on-gradient { opacity: 1 !important; transform: none !important; }
+
+  /* Intelligence — 「观察真实流程 … 用实际结果改进」 as one list over the photo. */
+  .lx-gradient-section { height: auto !important; }
+  .lx-gradient-section > .lx-gradient-section-image-bg {
+    position: relative;
+    top: auto;
+    height: auto;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .lx-gradient-section-image-bg > .lx-gradient-section-text { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .lx-gradient-section-text > .lx-gradient-section-text-holder {
+    position: static !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Intelligence — 「不再 等提醒 / 等回复 / 丢背景」: the three endings listed. */
+  .lx-no-writing { height: auto !important; }
+  .lx-no-writing > .lx-sticky-no-writing { position: relative; top: auto; height: auto; }
+  .lx-sticky-no-writing .lx-gradient-grid-item.lx-hide-on-desktop { display: flex; flex-direction: column; }
+  .lx-sticky-no-writing .lx-big-gradient-text {
+    position: static !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

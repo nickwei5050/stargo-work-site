@@ -116,7 +116,11 @@ function links(lang, current) {
     href: onCaps ? `#${c.anchor}` : `capabilities.html#${c.anchor}`,
     label: t(c.label),
   }));
-  return { nav, more, secondary, swap, capJumps };
+  /* The site's demo CTA (footer button 「预约演示」/“Book a Demo”), reused as is. */
+  const demoCta = CHROME.find(([k]) => k === 'Let’s Collaborate');
+  if (!demoCta) throw new Error('chrome: demo CTA label not found');
+  const demo = { href: 'contact.html', label: t(demoCta[1]) };
+  return { nav, more, secondary, swap, capJumps, demo };
 }
 
 function topNav(html, L, current) {
@@ -124,8 +128,30 @@ function topNav(html, L, current) {
   if (!m) throw new Error('chrome: top nav not found');
   const tpl = firstLink(m[0]);
   const items = [...L.nav.slice(1), ...L.more, L.swap];   // the wordmark is the home link; About and Blog sit after the product pages
-  const out = items.map((n) => renderLink(tpl, n, isCurrent(n.href, current))).join('');
+  /* Lane phone (Z05): the demo request closes the list Webflow folds into the
+     phone menu below 992px. From 992px the bar shows the same list in a row,
+     where css/stargo-fusion.css ("Lane: phone") hides it, so the desktop bar
+     is unchanged. Never marked current: 联系 already is on the contact page. */
+  const demo = renderLink(tpl, L.demo, false).replace(/class="([^"]*)"/, 'class="$1 stargo-nav-demo"');
+  const out = items.map((n) => renderLink(tpl, n, isCurrent(n.href, current))).join('') + demo;
   return html.replace(m[0], `<nav role="navigation" class="nav-menu first w-nav-menu" data-lenis-prevent="">${out}</nav>`);
+}
+
+/**
+ * Lane phone (Z05): a compact demo pill in the header, beside the menu button,
+ * below 992px — the header comes back on scroll-up (js/stargo-phone-nav.js),
+ * so the demo request and the menu are one swipe away anywhere on the page.
+ * The label and the link are the site's existing demo CTA (CHROME, 'Let’s
+ * Collaborate'). Hidden from 992px up (css/stargo-fusion.css, "Lane: phone").
+ */
+function phoneHeader(html, L) {
+  const at = html.indexOf('class="last-part">');
+  if (at === -1 || html.indexOf('class="last-part">', at + 1) !== -1) throw new Error('chrome: expected one header .last-part');
+  const open = at + 'class="last-part">'.length;
+  const pill = `<a href="${L.demo.href}" class="stargo-phone-demo">${L.demo.label}</a>`;
+  let out = html.slice(0, open) + pill + html.slice(open);
+  if (out.includes('class="navigation-top') && !out.includes('js/stargo-phone-nav.js')) out = out.replace('</body>', '<script src="js/stargo-phone-nav.js" defer></script></body>');
+  return out;
 }
 
 /** Overlay menu: the product pages, About and Blog, and the language switch. Legal pages sit in its bottom row and in the footer. */
@@ -784,6 +810,7 @@ export function applyChrome(html, { lang, current }) {
   let out = html;
   out = head(out, lang, current);
   out = topNav(out, L, current);
+  out = phoneHeader(out, L);
   out = overlayMenu(out, L, current);
   out = bottomPill(out, L, current);
   out = footerPages(out, L, current);
