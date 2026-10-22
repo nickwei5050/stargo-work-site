@@ -41,7 +41,7 @@
  * needs so the four photographs still sit above it.
  */
 import { setText, setTextAll, capability } from '../block-lib.mjs';
-import { GROWTH_ROWS } from '../replaceables.mjs';
+import { GROWTH_ROWS, CAP_PHOTOS } from '../replaceables.mjs';
 
 export const donor = {
   id: 'cn-service',
@@ -67,8 +67,17 @@ export const donor = {
  * judgement → context assembling layer by layer; key decision roles → a key
  * decision held at an approval point. tools/editorial-images.mjs writes the
  * variants, sizes and descriptions for them.
+ *
+ * Since 2026-10-21 the four backgrounds are the owner's night photographs
+ * instead (ROW_BG, tools/replaceables.mjs CAP_PHOTOS.growth: an industrial
+ * park from above, a container yard from above, a finished-goods rack wall, a
+ * meeting seen through fluted glass). ROW_ART is left to the hover thumbnail
+ * of a row with no product screen (company research), which the manifest does
+ * not name and which keeps its editorial art.
  */
 const ROW_ART = GROWTH_ROWS.map((row) => row.art);
+const ROW_BG = CAP_PHOTOS.growth;
+if (ROW_BG.length !== GROWTH_ROWS.length) throw new Error('cn-service: one background photograph per row');
 
 /* Since 2026-09-18 a row's hover thumbnail is the owner's own screen for that
    topic (tools/imagegen/product-assets.json). From 2026-09-22 the two older
@@ -80,9 +89,10 @@ const ROW_ART = GROWTH_ROWS.map((row) => row.art);
    because it puts $412,000 of lifetime value, an $80,000 deal and a 22% margin
    on a named company and calls the record verified against Brazil's company
    register and customs data. A row with no screen (null) keeps the editorial
-   art its background uses, which is what all four had before.
+   art its background used (ROW_ART), which is what all four had before.
 
-   The crossfade backgrounds keep the editorial art in every row: they are
+   The crossfade backgrounds keep a picture in every row (the editorial art,
+   and since 2026-10-21 the owner's photographs): they are
    full-bleed, object-fit: cover, under a 65% black overlay, and a 16:9
    interface cropped to that shape would show its middle third as a dark
    texture. The thumbnails carry the screens instead, where the whole interface
@@ -295,11 +305,14 @@ export function render(frag, ctx) {
   /* -------------------------------------------- the crossfade backgrounds -- */
 
   /* Four `.service-bg-image._0N`, one per row and in row order; each shows the
-     editorial art for that row (ROW_ART), the thumbnail its product screen. */
+     owner's photograph for that row (ROW_BG), the thumbnail its product
+     screen. The row's name stands as the alt until tools/editorial-images.mjs
+     writes the photograph's own sentence. */
   let n = 0;
   const back = tail.replace(/<img\b[^>]*alt="Image - Cinery Template"[^>]*>/g, (tag) => {
     const i = n++;
-    return toArt(tag, art(ROW_ART[i] ?? ROW_ART[0])).replace(DONOR_ALT, `alt="${escapeHtml(plain[i] ?? '')}"`);
+    if (!ROW_BG[i]) throw new Error(`cn-service: no background photograph for row ${i + 1}`);
+    return toArt(tag, ROW_BG[i]).replace(DONOR_ALT, `alt="${escapeHtml(plain[i] ?? '')}"`);
   });
   if (n !== 4) throw new Error(`cn-service: expected four background images behind the rows, found ${n}`);
   if (/assets\/cinery\//.test(back)) throw new Error('cn-service: a cinery photograph survived behind the rows');

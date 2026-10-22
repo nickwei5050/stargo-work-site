@@ -95,10 +95,15 @@ try {
     const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
     await page.goto(`${BASE}/${lang}capabilities`, { waitUntil: 'load', timeout: NAV });
     await page.waitForTimeout(1500);
-    const expected = ['brand-family-01', 'os-inquiries', 'brand-family-02', 'brand-family-04'];   // capabilities page keeps its generated art
+    // Since 2026-10-21 the four area cards show the owner's photographs for
+    // the four areas (C01-C04, tools/replaceables.mjs CAP_PHOTOS.areas), in
+    // place of the generated art (brand-family-01, os-inquiries,
+    // brand-family-02, brand-family-04). Compared by photograph id, without
+    // the width in the file name.
+    const expected = ['c01-command-growth', 'c02-customer-knowledge', 'c03-commerce-fulfilment', 'c04-team-management'];
     // The four area cards only: the V6 showcases link to groups too.
     const actual = await page.locator('.wrok-wrapper a[href="#g01"] img,.wrok-wrapper a[href="#g04"] img,.wrok-wrapper a[href="#g07"] img,.wrok-wrapper a[href="#g10"] img')
-      .evaluateAll(imgs => imgs.map(i => i.getAttribute('src').split('/').pop().replace(/\.webp$/, '')));
+      .evaluateAll(imgs => imgs.map(i => { const src = i.getAttribute('src'); return src.split('/').pop().replace(/stargo-photo\//.test(src) ? /-\d+\.webp$/ : /\.webp$/, ''); }));
     assert.deepEqual(actual, expected, 'capability image/meaning mapping');
     await page.locator('.wrok-wrapper a[href="#g04"]').scrollIntoViewIfNeeded();
     await page.waitForTimeout(900);

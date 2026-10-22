@@ -22,9 +22,11 @@ import * as C from './copy.mjs';
 import { POSTS, BLOG_UI, postPath, featured, others, coverSrc, coverSrcset, coverAlt, formatDate, renderBody, titleHtml } from './blog.mjs';
 import { loadBlocks, art, capTitle, DONORS } from './block-lib.mjs';
 import { PRODUCT_CAPTION } from './editorial-images.mjs';
-import { HERO, HOME_MODULES, HOME_STAGES, NOTICES_CARDS } from './replaceables.mjs';
+import { HERO, HOME_MODULES, HOME_STAGES, HOME_SILOS, HOME_ROLE_CARD, HOME_PRICING_CARD, HOME_BLOG_COVERS, NOTICES_CARDS, CAP_PHOTOS, ENTERPRISE_PHOTOS, ROLE_SLIDES, CONTACT_CARD, WORKFORCE_ROLES, WORKFORCE_BLOG_COVERS } from './replaceables.mjs';
 import { SITE } from './paths.mjs';
 import { webpPage } from './image-refs.mjs';
+/* The owner's photographs on the blog and intelligence pages (group "blog", 2026-10-21). */
+import { BLOG_COVERS, INTEL_PHOTOS } from './replaceables.mjs';
 
 /** The capability page's donor blocks, one module each in tools/blocks. */
 const CAP_BLOCKS = await loadBlocks();
@@ -33,16 +35,28 @@ const FRAG = `${SITE}/tools/fragments`;
 const tpl = (f) => readFileSync(`${TPL}/${f}`, 'utf8');
 const frag = (f) => readFileSync(`${FRAG}/${f}`, 'utf8');
 
-/* The homepage's opening animation ships its behaviour as a file of its own.
-   tools/capability-donors.mjs concatenates a block's `<id>.js` into
-   js/capability-blocks.js, which only the capability page loads; this one plays
-   on the homepage, so it is written out here as its own script and attached by
-   tools/chrome.mjs wherever the overlay's marker appears. (It still rides along
-   in capability-blocks.js, where it finds no `[data-og-intro]` and returns.) */
-writeFileSync(`${SITE}/js/stargo-intro.js`,
-  `/* The homepage's opening animation. Written by tools/build-site.mjs from
-   tools/blocks/og-intro.js. Do not edit by hand. */
-${readFileSync(`${SITE}/tools/blocks/og-intro.js`, 'utf8')}`, 'utf8');
+/* The homepage's opening animation ships its behaviour as two inline scripts
+   (see homeIntro below): tools/blocks/og-intro-head.js in the <head>, which
+   decides before the first paint whether the overlay is shown at all, and
+   tools/blocks/og-intro.js straight after the overlay, which starts it on the
+   first frame. Inline because either one, as a request, would have to arrive
+   before the first paint or arrive too late to matter. Their comments are the
+   documentation and stay in tools/blocks; the pages get the code. (og-intro.js
+   also rides along in js/capability-blocks.js, written by
+   tools/capability-donors.mjs, where it finds no `[data-og-intro]` and
+   returns.) */
+function inlineScript(file) {
+  const src = readFileSync(`${SITE}/tools/blocks/${file}`, 'utf8');
+  /* Block comments only, by this site's own convention for these two files;
+     a `/*` inside a string would be cut here, so there must be none. */
+  const code = src.replace(/\/\*[\s\S]*?\*\//g, '')
+    .split('\n').map((l) => l.trim()).filter(Boolean).join('\n');
+  if (/\/\*|\*\/|<\/script/i.test(code)) throw new Error(`${file}: comment or </script> survives inlining`);
+  try { new Function(code); } catch (e) { throw new Error(`${file}: does not parse once inlined — ${e.message}`); }
+  return `<script>${code}</script>`;
+}
+const INTRO_HEAD = inlineScript('og-intro-head.js');
+const INTRO_START = inlineScript('og-intro.js');
 
 /**
  * Lifelogx closes every page with a full-bleed wordmark above its footer: a filled
@@ -84,7 +98,6 @@ const IMG = (n) => `assets/stargo/${n}`;
 const OS = { cockpit: IMG('os-cockpit.webp'), desk: IMG('os-sales-desk.webp'), inquiries: IMG('os-inquiries.webp'), agents: IMG('os-agent-center.webp'), quote: IMG('os-quote-studio.webp'), trade: IMG('os-trade-execution.webp'), desktop: IMG('os-desktop.webp'), login: IMG('os-login.webp'), boot: IMG('os-boot.webp'), loading: IMG('os-loading.webp') };
 const BRAND = { wide: IMG('brand-glow-wide.webp'), square: IMG('brand-glow-square.webp'), tall: IMG('brand-glow-tall.webp'), ontology: IMG('brand-ontology.webp'), loop: IMG('brand-loop.webp'), family: (n) => IMG(`brand-family-0${n}.webp`) };
 const MOBILE = { approvals: IMG('mobile-approvals.webp'), agents: IMG('mobile-agents.webp'), inquiry: IMG('mobile-inquiry.webp'), core: IMG('mobile-core.webp'), phoneApprovals: IMG('phone-approvals.webp'), phoneAgents: IMG('phone-agents.webp') };
-const SILO = ['email', 'whatsapp', 'excel', 'erp'].map((n) => IMG(`silo-${n}.webp`));
 /* The owner's own product screenshots (handoff of 2026-09-18, registered in
    tools/imagegen/product-assets.json and described in
    tools/editorial-images.mjs). They ship from their own folder rather than
@@ -109,6 +122,30 @@ function swapImg(html, key, src, { nth = null, alt = '' } = {}) {
     return tag.replace(/\s*srcset="[^"]*"/g, '').replace(/\s*sizes="[^"]*"/g, '').replace(/src="[^"]*"/, `src="${src}"`).replace(/alt="[^"]*"/, `alt="${alt}"`);
   });
   if (!hit) throw new Error(`swapImg: no <img> with ${key}${nth != null ? ` #${nth}` : ''}`);
+  return out;
+}
+/**
+ * The scenario slider's four slides on about.html (cn-about-reviews) and
+ * pricing.html (cn-reviews): since 2026-10-21 each slide's cover picture is
+ * the owner's photograph of its role (tools/replaceables.mjs ROLE_SLIDES,
+ * R1–R4, keyed by the cinery portrait it replaces). Only `.cn-cover-image`
+ * changes, inside the block it is given — the pricing card's 56px avatars are
+ * another block and keep the template portraits. The alt is a marker that
+ * tools/editorial-images.mjs replaces with the photograph's own sentence;
+ * cinery's srcset and sizes go, and that pass writes the photograph's.
+ */
+function roleSlides(html, where) {
+  const seen = [];
+  const out = html.replace(/<img\b[^>]*\bclass="cn-cover-image"[^>]*>/g, (tag) => {
+    const key = Object.keys(ROLE_SLIDES).find((k) => tag.includes(`/${k}.`));
+    if (!key) throw new Error(`${where}: a scenario slide shows a picture ROLE_SLIDES does not name: ${tag.slice(0, 160)}`);
+    seen.push(key);
+    return tag.replace(/\s*srcset="[^"]*"/g, '').replace(/\s*sizes="[^"]*"/g, '')
+      .replace(/src="[^"]*"/, `src="${ROLE_SLIDES[key]}"`).replace(/alt="[^"]*"/, 'alt="STARGO WORK"');
+  });
+  if (seen.join() !== Object.keys(ROLE_SLIDES).join()) {
+    throw new Error(`${where}: expected the four scenario slides in ROLE_SLIDES order (R1–R4), found ${seen.join(', ') || 'none'}`);
+  }
   return out;
 }
 /* V7-LX: the last clause of a Chinese paragraph as one unit.
@@ -197,14 +234,16 @@ function awardsTable({ id, caption, title, total, button, headers, rows }) {
   return html;
 }
 
-function teamCard(html, oldName, oldRole, { name, role, image }) {
+function teamCard(html, oldName, oldRole, { name, role, image, alt = null }) {
   const { fn: s } = makeSub(`team:${oldName}`);
   let out = s(html, `>${oldName}<`, `>${name}<`, { count: 1 });
   out = s(out, `>${oldRole}<`, `>${role}<`, { count: 1 });
   if (image) {
     const card = elementContaining(out, `>${name}<`, 'div', { up: 2 });
     if (!card.text.includes('team-wrapper')) throw new Error(`team: card wrapper not found for ${name}`);
-    out = out.slice(0, card.start) + card.text.replace(/src="[^"]*"/, `src="${image}"`) + out.slice(card.end);
+    let text = card.text.replace(/src="[^"]*"/, `src="${image}"`);
+    if (alt != null) text = text.replace(/alt="[^"]*"/, `alt="${alt}"`);
+    out = out.slice(0, card.start) + text + out.slice(card.end);
   }
   return out;
 }
@@ -281,16 +320,21 @@ function fromStudio(spec, lang) {
   h = h.replace(/<img[^>]*class="logo-absolute"[^>]*\/>/, '');
   if (h.includes('logo-absolute')) throw new Error(`${spec.name}: template client logo survives`);
   h = s(h, 'Creative Minds <span class="small-ftd finr">(5)</span>', `${t(spec.cardsTitle)} <span class="small-ftd finr">(5)</span>`);
-  TEAM_TPL.forEach(([n, r], i) => { h = teamCard(h, n, r, { name: t(spec.cards[i].name), role: t(spec.cards[i].role), image: spec.images.cards[i] }); });
+  /* A concept illustration stands beside text that already says what it
+     shows, so it keeps the template's empty alt — which is also how
+     editorialImages() is told a picture is decoration. An owner photograph
+     (assets/stargo-photo/, the enterprise page's pictures since 2026-10-21)
+     gets the marker alt 'STARGO WORK' instead, which editorialImages()
+     replaces with the photograph's own sentence from the owner's manifest. */
+  const altFor = (src) => (src.startsWith('assets/stargo-photo/') ? 'STARGO WORK' : '');
+  TEAM_TPL.forEach(([n, r], i) => { h = teamCard(h, n, r, { name: t(spec.cards[i].name), role: t(spec.cards[i].role), image: spec.images.cards[i], alt: altFor(spec.images.cards[i]) }); });
   // Stock photos (keyboard hands, portraits, a crowd, a face) → STARGO imagery; the four hero
   // backgrounds are CSS and are overridden in stargo-fusion.css (.image-about._01…_04).
-  /* Every picture here is a concept illustration standing beside text that
-     already says what it shows, so they keep swapImg's empty alt — which is
-     also how editorialImages() is told a picture is decoration. (A product
-     screenshot was tried in the third one on 2026-09-18 and reverted the same
-     day; it would have needed a non-empty alt to carry its caption.) */
+  /* (A product screenshot was tried in the third column picture on 2026-09-18
+     and reverted the same day; it would have needed a non-empty alt to carry
+     its caption.) */
   [['699b6466d5f19893993a4faf_Coding-Workspace-Close-Up', spec.images.work[0]], ['699b6466d5f19893993a4fa9_Portrait-of-a-Man', spec.images.work[1]], ['699b6466d5f19893993a4f9c_Diverse-Group-Portrait', spec.images.work[2]], ['699b6466d5f19893993a4fa0_about-6', spec.images.quote]]
-    .forEach(([k, src]) => { h = swapImg(h, k, src); });
+    .forEach(([k, src]) => { h = swapImg(h, k, src, { alt: altFor(src) }); });
   h = s(h, '(Leadership)', t(spec.noteLabel));
   h = setInner(h, '<p class="top-text big for-inr">', t(spec.note));
   h = setLink(h, 'Join us', { href: spec.noteButton.href, text: t(spec.noteButton.label) });
@@ -326,8 +370,15 @@ function blogCards(html, list, item, posts, lang, cls) {
     x = x.replace(/href="[^"]*"/, `href="${postPath(p)}"`);
     if (!imgRe.test(x)) throw new Error(`cards: image ${cls.image}`);
     // Keep the tag's own attributes (data-w-id and the interaction's initial inline state); swap only the image.
-    x = x.replace(imgRe, (tag) => tag.replace(/\s*srcset="[^"]*"/g, '').replace(/\s*sizes="[^"]*"/g, '').replace(/\s*width="[^"]*"|\s*height="[^"]*"/g, '')
-      .replace(/src="[^"]*"/, `src="${coverSrc(p)}" srcset="${coverSrcset(p)}" sizes="${cls.sizes}"`));   // no width/height: the template sizes these by CSS aspect-ratio
+    /* `cls.covers` (slug → owner photograph) puts a photograph in place of
+       the article cover; tools/editorial-images.mjs then writes its srcset,
+       size and alt over the marker alt. */
+    const photo = cls.covers?.[p.slug];
+    x = x.replace(imgRe, (tag) => {
+      const bare = tag.replace(/\s*srcset="[^"]*"/g, '').replace(/\s*sizes="[^"]*"/g, '').replace(/\s*width="[^"]*"|\s*height="[^"]*"/g, '');
+      if (photo) return bare.replace(/src="[^"]*"/, `src="${photo}"`).replace(/alt="[^"]*"/, 'alt="STARGO WORK"');
+      return bare.replace(/src="[^"]*"/, `src="${coverSrc(p)}" srcset="${coverSrcset(p)}" sizes="${cls.sizes}"`);   // no width/height: the template sizes these by CSS aspect-ratio
+    });
     const titleRe = new RegExp(`(<(h4|div)[^>]*class="${cls.title}">)[^<]*(</\\2>)`);
     if (!titleRe.test(x)) throw new Error(`cards: title ${cls.title}`);
     x = x.replace(titleRe, `$1${escapeHtml(t(p.title))}$3`);
@@ -437,8 +488,12 @@ PAGES['index.html'] = (lang) => {
 
   // ---- imagery: the problem cards, the five stages, the OS "theatre", the sticky card, the ladder card, the four doors
   {
+    /* The four pain-point cards: the owner's photographs S01–S04 since
+       2026-10-21 (tools/replaceables.mjs HOME_SILOS; before them the
+       silo-email/-whatsapp/-excel/-erp illustrations). The alt is a marker,
+       as for the stages below. */
     const cards = ['699b6466d5f19893993a4d79_work-1.webp', '699b6466d5f19893993a4d34_work-5.webp', '699b6466d5f19893993a4d1a_work-4.webp', '699b6466d5f19893993a4d8f_work-8.webp'];
-    cards.forEach((k, i) => { h = swapImg(h, k, SILO[i]); });
+    cards.forEach((k, i) => { h = swapImg(h, k, HOME_SILOS[i], { alt: 'STARGO WORK' }); });
     /* The five stages, in order (V6 §4.6). Four of them carry the owner's own
        product. The sentences stayed; on 2026-09-22 the three older 1268px
        stills were swapped for curated pack screens (filenames unchanged):
@@ -461,19 +516,23 @@ PAGES['index.html'] = (lang) => {
        carried to a customer's destination — because no released screen is about
        collection, reconciliation or support.
 
-       The four go in with a non-empty alt, which is a marker and not copy:
+       Since 2026-10-21 all five cards show the owner's photographs instead
+       (site-images/batch-2, P01–P05; tools/replaceables.mjs HOME_STAGES keeps
+       the screens above for the owner's decision), and Mono's `cover` fills
+       the card with them again (H29 is keyed on the product folder).
+
+       All five go in with a non-empty alt, which is a marker and not copy:
        any non-empty value stops tools/editorial-images.mjs treating the image
        as decoration, and it then writes the registered sentence over it in the
        page's language. Same route the four core-system panels take with their
-       slot title, and `stillImage` below with 'STARGO OS'. The one concept
-       illustration keeps swapImg's empty alt, which is what it had.
+       slot title, and `stillImage` below with 'STARGO OS'.
 
        The card is `.image-wrap.for-service`, `aspect-ratio: 3 / 2`; a
        screenshot in it is fitted, not cropped, by H29 in css/stargo-fusion.css.
        (002) and (003) are cut to 3:2 and fill it; the Growth OS home (about
        2:1) and gos11 sit on plates of their own edge colour. */
     const CONTENT = { alt: 'STARGO WORK' };
-    const scenes = [['Scene%20%239.webp', HOME_STAGES[0].file, CONTENT], ['Scene%20%235.webp', HOME_STAGES[1].file, CONTENT], ['Scene%20%2310%20(Light)', HOME_STAGES[2].file, CONTENT], ['Scene%20%238.webp', HOME_STAGES[3].file], ['Scene%2018.webp', HOME_STAGES[4].file, CONTENT]];
+    const scenes = [['Scene%20%239.webp', HOME_STAGES[0].file, CONTENT], ['Scene%20%235.webp', HOME_STAGES[1].file, CONTENT], ['Scene%20%2310%20(Light)', HOME_STAGES[2].file, CONTENT], ['Scene%20%238.webp', HOME_STAGES[3].file, CONTENT], ['Scene%2018.webp', HOME_STAGES[4].file, CONTENT]];
     scenes.forEach(([k, src, opts]) => { h = swapImg(h, k, src, opts); });
     // Retain the original grid/zoom animation. The centre is a real video,
     // sourced from the owner's fourth template; surrounding imagery is separate.
@@ -494,14 +553,24 @@ PAGES['index.html'] = (lang) => {
     const play = elementContaining(h, 'class="play-video w-inline-block w-lightbox"', 'a');
     h = h.slice(0, play.start) + h.slice(play.end);
     if (/youtube|embedly|w-lightbox/.test(h)) throw new Error('index: lightbox survives');
-    // The sticky card's portrait film and the contact band's group photograph stay as the
-    // template designed them (licensed template assets; the copy marks the cards as scenarios).
+    // The sticky card's portrait film is the owner's photograph R2 since 2026-10-21 (the
+    // trade manager at the whiteboard, tools/replaceables.mjs HOME_ROLE_CARD): a still in the
+    // film's box, under the card's own washes and text. `stargo-role-photo` sizes and crops it.
+    // The contact band behind the form no longer shows the template's group photograph:
+    // since 2026-10-21 it is the owner's G01 loading bay at dusk, set as .photo-section's
+    // background in css/stargo-fusion.css.
     const stickyVideo = [...h.matchAll(/<video id="([^"]+)-video"/g)].map((m) => m[1]).find((id) => h.slice(h.indexOf('<section class="testimonials-section"'), h.indexOf('<section class="section drk"')).includes(`id="${id}-video"`));
     if (!stickyVideo) throw new Error('index: sticky card video');
-    h = swapImg(h, '699b6466d5f19893993a4f1a_Sunset-Serenity', BRAND.square);
+    h = stillImage(h, stickyVideo, HOME_ROLE_CARD, 'STARGO WORK', 'stargo-still stargo-role-photo');
+    // Mono's toss ends with the card turned over (rotateX(180deg), back face visible), which
+    // drew R2 upside down; js/stargo-card-upright.js turns the picture back over while it is.
+    h = s(h, '</body>', '<script src="js/stargo-card-upright.js" defer></script></body>', { count: 1 });
+    // The pricing band's image card: the owner's enterprise campus (T01) in place of brand-glow-square.
+    h = swapImg(h, '699b6466d5f19893993a4f1a_Sunset-Serenity', HOME_PRICING_CARD, { alt: 'STARGO WORK' });
     h = swapImg(h, '699b6466d5f19893993a4efc_Smiling%20Bearded', IMG('avatar-core.png'));   // the chat card's bearded-man avatar → the core orb
     // The blog grid: the template's four cards, filled with the four newest articles.
-    h = blogCards(h, 'blog-grid', 'w-dyn-item', featured(4), lang, { image: 'testimonials-photo', date: 'data-text ab', title: 'blog-txt', sizes: '(max-width: 767px) 100vw, (max-width: 991px) 50vw, 25vw' });
+    // Since 2026-10-21 the four cards show the owner's photographs B01–B04 (HOME_BLOG_COVERS) instead of their article covers.
+    h = blogCards(h, 'blog-grid', 'w-dyn-item', featured(4), lang, { image: 'testimonials-photo', date: 'data-text ab', title: 'blog-txt', sizes: '(max-width: 767px) 100vw, (max-width: 991px) 50vw, 25vw', covers: HOME_BLOG_COVERS });
   }
   const D = C.HOME_DUP_DESC;
   h = s(h, D.original, t(D.first), { nth: 0 });
@@ -650,6 +719,33 @@ PAGES['index.html'] = (lang) => {
      scalora's and before stargo-fusion.css, the same order the capability page
      puts the donor sheets in. */
   h = h.replace(monoLink, (m) => `${m}\n<link href="css/${DONORS.offgrid.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/${DONORS.rototo.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/scalora-modules.sc.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>`);
+  /* Mono's own page-load curtain goes. `.preloader` is a fixed black sheet
+     with the wordmark on it (Mono's css: z-index 9999, resting at
+     translateY(-120%)), dropped over the page and lifted again by the IX3
+     load timeline t-7c6ce201 (interaction i-04759f04) the moment Webflow's
+     runtime has started up, after the window `load`. On a fast first visit
+     that happens under the opening and nobody sees it. Everywhere else it
+     arrives after the homepage has been readable for a while — measured 19–26s
+     in on Fast 4G and 43–46s on Slow 4G — and blacks it out again; and since
+     the opening now plays once a session, every later homepage view would have
+     had it too. The markup goes
+     here and its two actions, with the whole-page slide that only ever moved
+     behind it, go from the timeline in tools/fuse-ix.mjs, which also takes
+     this page out of the hero's load-in (below); the menu's part of that
+     timeline still plays. */
+  {
+    const pre = findByClass(h, 'div', 'preloader');
+    if (!pre || !pre.text.includes('668513fa-96bc-a471-9254-1244961a6485')) throw new Error('index: Mono\'s preloader is not where it was');
+    h = h.slice(0, pre.start) + h.slice(pre.end);
+    if (/class="preloader"|668513fa-96bc-a471-9254-1244961a6485&quot;\]/.test(h.slice(h.indexOf('<body')))) throw new Error('index: Mono\'s preloader survives');
+  }
+  /* The same load timeline then hides the hero and animates it in again,
+     after the window `load` — long after the reader (and, on a first visit,
+     the opening's lift) has already shown it. tools/fuse-ix.mjs takes the
+     homepage out of those actions by this mark; every page shares Mono's page
+     id, so the page itself has to say it is the homepage. */
+  if ((h.match(/<html(?=[\s>])/g) ?? []).length !== 1) throw new Error('index: no single <html> to mark as the homepage');
+  h = h.replace(/<html(?=[\s>])/, '<html data-stargo-home=""');
   h = homeIntro(h, lang);
   return h;
 };
@@ -657,8 +753,8 @@ PAGES['index.html'] = (lang) => {
 /**
  * 开场动画 — the opening the owner asked for, over the homepage.
  *
- * OFFGRID's bracket headline reading `[STARGO OS]`, then OFFGRID's thirty-six
- * tile mosaic revealing, then rototo's column wipe clearing to the page. It is
+ * OFFGRID's bracket headline reading `[STARGO WORK]`, then rototo's column wipe
+ * clearing to the page (the mosaic that once ran between them was cut). It is
  * one block, tools/blocks/og-intro.mjs, and everything about how it was cut and
  * why each animation had to be replayed rather than carried is in that file's
  * header.
@@ -672,9 +768,17 @@ PAGES['index.html'] = (lang) => {
  *
  * `aria-hidden` because it is decoration announcing nothing, and it holds
  * nothing focusable: og-intro.mjs takes the donor's anchors out for exactly
- * that reason. tools/chrome.mjs attaches js/stargo-intro.js when it sees
- * `data-og-intro`, and og-intro.css decides whether the overlay is ever shown
- * (never without JavaScript, never under prefers-reduced-motion).
+ * that reason.
+ *
+ * When it plays is decided in two inline scripts this function places. In the
+ * <head>, straight after Webflow's `w-mod-js` snippet, tools/blocks/og-intro-head.js
+ * adds `og-intro-play` to <html> only if the opening has not started yet in
+ * this browser session (og-intro.js marks the session when it starts), within
+ * 1.5s of navigation and without reduced motion; og-intro.css displays the overlay only under that class, so a later
+ * view of the homepage (logo, 首页, back, reload), a slow connection and a page
+ * without JavaScript are never covered, not for one frame. Straight after the
+ * overlay, tools/blocks/og-intro.js starts it on the first frame (or removes
+ * it), and ends it at the first tap, key or scroll.
  */
 /**
  * A donor block, one module each in tools/blocks.
@@ -705,13 +809,21 @@ function homeIntro(html, lang) {
      that removes itself, and the homepage already has its h1 (Mono's hero), so
      the tag becomes a div. Its look is carried by `.og-intro
      .og-heading-style-h1…` class rules, which outrank offgrid's `.og-intro h1`
-     element rules on every property those set; js/stargo-intro.js finds it by
+     element rules on every property those set; og-intro.js finds it by
      class. */
   const body = intro.slice(OPEN.length).replace(/<h1(?=[\s>])/g, '<div').replace(/<\/h1>/g, '</div>');
   if (/<\/?h1[\s>]/.test(body)) throw new Error('index: the opening animation still carries a level-one heading');
   const overlay = `<div class="og-intro" data-og-intro="" aria-hidden="true">${body}`;
   if (!html.includes('<body>')) throw new Error('index: no <body> to put the opening animation in front of');
-  return html.replace('<body>', `<body>${overlay}`);
+  /* Webflow's own head snippet, the one that writes `w-mod-js` on <html>
+     before anything renders. The decision goes right after it: the same
+     moment, the same element, and behind the page's stylesheets (all but
+     lenis.css come before it), whose arrival is what its clock measures. */
+  const W_MOD_JS = '<script type="text/javascript">!function(o,c){var n=c.documentElement,t=" w-mod-";n.className+=t+"js",("ontouchstart"in o||o.DocumentTouch&&c instanceof DocumentTouch)&&(n.className+=t+"touch")}(window,document);</script>';
+  if (html.split(W_MOD_JS).length !== 2) throw new Error('index: Webflow\'s w-mod-js snippet is not where the opening\'s decision goes');
+  if (html.indexOf(W_MOD_JS) > html.indexOf('</head>')) throw new Error('index: the w-mod-js snippet is not in the <head>');
+  /* Functions, not strings, as replacements: a `$` in the code must stay a `$`. */
+  return html.replace(W_MOD_JS, () => `${W_MOD_JS}${INTRO_HEAD}`).replace('<body>', () => `<body>${overlay}${INTRO_START}`);
 }
 
 /* ---- the enterprise ontology list inside the lifelogx sticky section -------
@@ -1012,7 +1124,9 @@ function lxPage(spec, lang, name) {
   // translucent overlays of the gradient and "no writing" sections, the closing card's image and
   // the avatars in the scenario bubbles are all part of the composition the pink palette was
   // designed around. Only their template alt text goes. The painted phone screens are the
-  // exception (V7-LX, below): they carried readable template interfaces and brand names.
+  // exception (V7-LX, below): they carried readable template interfaces and brand names. Since
+  // 2026-10-21 the gradient section's picture, the closing card's and the hand-held phone are the
+  // owner's photographs (below); the phone frames and the avatars stay.
   if ((b.match(/lx-author-image-medium/g) ?? []).length !== 48) throw new Error(`${name}: avatar bubbles changed`);
   /* V7-LX, the one exception, on both pages: the four phone-screen pictures
      inside the three phone mockups (hero, team card, phone features) have the
@@ -1039,21 +1153,48 @@ function lxPage(spec, lang, name) {
       if ((b.match(new RegExp(`<img\\b[^>]*${key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'g')) ?? []).length !== 3) throw new Error(`${name}: expected the phone screen ${key} in three mockups`);
       b = swapImg(b, key, src, product ? { alt: PRODUCT_CAPTION[lang] } : {});
     }
+    /* The hero's phone (.lx-integrations-image-hero) also shows real phone
+       captures on its third and fourth screens (site-images/mobile m01 and
+       m04, demonstration data, with the same status-bar band as 51 and 52):
+       the quotes list with one quote waiting for approval, and the
+       follow-ups with their due times and next steps. Only the hero's two
+       slots change; the other two mockups and the hand-held phone keep
+       mobile-agents and mobile-core. */
+    const HERO_SCREENS = [
+      ['lx-_3', 'assets/stargo-product/m01-mobile-quotes-screen.webp'],   // was mobile-agents → the quotes list
+      ['lx-_4', 'assets/stargo-product/m04-mobile-followups-screen.webp'], // was mobile-core → the follow-ups
+    ];
+    for (const [slot, src] of HERO_SCREENS) {
+      const key = `class="lx-integrations-image-hero ${slot}"`;
+      if ((b.match(/<img\b[^>]*>/g) ?? []).filter((tag) => tag.includes(key)).length !== 1) throw new Error(`${name}: expected one hero phone screen ${slot}`);
+      b = swapImg(b, key, src, { alt: PRODUCT_CAPTION[lang] });
+    }
   }
-  /* V7-LX: the hand-held phone of the "no writing" band (no-writing-sc) is a
-     cut-out composite whose screen carries the template's English interface
-     and a video app's name, on both pages. The composite stays (hand, frame,
-     cut-out edge); a text-free screen (MOBILE.core, shared context: the band
-     says 「不再丢上下文」) is laid over its screen. The layer is a sibling of
-     the photograph with the photograph's own class, so the band's IX2
-     (lx-a-68, `.lx-no-writing-image`, children of the trigger) moves and
-     scales both together, and it copies the photograph's initial transform.
-     css/stargo-fusion.css (V7-LX) places the screen on the photograph's
-     object-fit box, rounds it and keeps the fingertips in front. */
+  /* The owner's photographs (group "blog", 2026-10-21; site-images/batch-8,
+     tools/replaceables.mjs INTEL_PHOTOS) take three of the template's
+     pictures, on both pages: I01 the full-bleed picture under the four lines
+     of #lx-more, I02 the closing card's picture, I03 the hand-held phone of
+     the "no writing" band. Each tag keeps its class, its IX2 id and its
+     initial inline state; the alt is a marker that
+     tools/editorial-images.mjs replaces with the photograph's own sentence,
+     and the crop points are in css/stargo-fusion.css (the "blog" block). */
+  b = swapImg(b, '6932b116b7502585152c15b6_image%2024.png', INTEL_PHOTOS.observe, { alt: 'STARGO WORK' });
+  b = swapImg(b, '6936e930338bd07695b687e0_image%2026.avif', INTEL_PHOTOS.closing, { alt: 'STARGO WORK' });
+  b = swapImg(b, '694d149575edcf4ee403b317_no-writing-sc.avif', INTEL_PHOTOS.phone, { alt: 'STARGO WORK' });
+  /* V7-LX: a text-free screen (MOBILE.core, shared context: the "no writing"
+     band says 「不再丢上下文」) is laid over the hand-held phone's screen. It
+     covered the template composite's English interface and a video app's
+     name; since 2026-10-21 it lights the dark screen of the owner's
+     photograph (I03) instead. The layer is a sibling of the photograph with
+     the photograph's own class, so the band's IX2 (lx-a-68,
+     `.lx-no-writing-image`, children of the trigger) moves and scales both
+     together, and it copies the photograph's initial transform.
+     css/stargo-fusion.css (the "blog" block) places the screen on the
+     photograph's object-fit box and rounds it to the glass. */
   {
-    const re = /(<img src="assets\/6929b6c693cb856e01ef7c05\/694d149575edcf4ee403b317_no-writing-sc\.avif"[^>]*?style="([^"]*)"[^>]*class="lx-no-writing-image"\/>)/g;
+    const re = new RegExp(`(<img src="${INTEL_PHOTOS.phone.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"[^>]*?style="([^"]*)"[^>]*class="lx-no-writing-image"\\/>)`, 'g');
     const hits = b.match(re) ?? [];
-    if (hits.length !== 1) throw new Error(`${name}: expected one hand-held phone photograph (no-writing-sc), found ${hits.length}`);
+    if (hits.length !== 1) throw new Error(`${name}: expected one hand-held phone photograph (${INTEL_PHOTOS.phone}), found ${hits.length}`);
     b = b.replace(re, (m, tag, style) => `${tag}<div class="lx-no-writing-image stargo-nw-screen" style="${style}" aria-hidden="true"><div class="stargo-nw-frame"><img src="${MOBILE.core}" loading="lazy" alt="" class="stargo-nw-art"/></div></div>`);
   }
   b = b.replace(/<div([^>]*)class="([^"]*\blx-gradient-section\b[^"]*)"/, '<div id="lx-more"$1class="$2"');
@@ -1126,6 +1267,31 @@ PAGES['workforce.html'] = (lang) => {
   });
   b = s(b, '<div class="lx-text-size-tiny lx-text-color-grey">Views</div>',
     `<div class="lx-text-size-tiny lx-text-color-grey">${t(W.roles[0].dept)}</div>`, { count: 11 });
+  /* The role cards' pictures: the owner's photographs D01–D06 since
+     2026-10-21 (tools/replaceables.mjs WORKFORCE_ROLES, by the lifelogx
+     picture each card showed): the five marquee cards, their five copies in
+     the loop's second holder (or the old picture comes back as the loop
+     turns) and the collage card. The card, its 1 : 1.28 box and the
+     picture's `object-fit: cover` are the template's; the crop point is in
+     the "pages" block of css/stargo-fusion.css. The alt is a marker that
+     tools/editorial-images.mjs replaces with the photograph's own sentence.
+     The marquee is this page's first screen, so its pictures load with the
+     page; the collage card further down keeps lazy loading. */
+  {
+    const COLLAGE = '694277bf9dc048830e6fca2e';
+    for (const [key, src] of Object.entries(WORKFORCE_ROLES)) {
+      let n = 0;
+      b = b.replace(/<img\b[^>]*>/g, (tag) => {
+        if (!tag.includes(`/${key}_`)) return tag;
+        if (!/\bclass="lx-feature-hero-image"/.test(tag)) throw new Error(`workforce: the ${key} picture is no longer a role card's .lx-feature-hero-image`);
+        n++;
+        const photo = tag.replace(/src="[^"]*"/, `src="${src}"`).replace(/alt="[^"]*"/, 'alt="STARGO WORK"');
+        return key === COLLAGE ? photo : photo.replace(/\s*loading="lazy"/, '');
+      });
+      const want = key === COLLAGE ? 1 : 2;
+      if (n !== want) throw new Error(`workforce: expected ${want} role card(s) showing ${key}, found ${n}`);
+    }
+  }
   // the template's cards link to the studio's own social accounts
   b = b.replace(/href="https:\/\/(?:www\.)?(?:linkedin|instagram|facebook|x|twitter|tiktok|youtube)\.com[^"]*"/g, 'href="contact.html"');
   // the fifth card and the panel button are placeholders in the template
@@ -1260,7 +1426,16 @@ PAGES['workforce.html'] = (lang) => {
   /* the article strip: our own posts */
   b = s(b, '>Stories<', `>${t(W.storiesTitle)}<`);
   b = s(b, '>we write and share<', `>${t(W.storiesSub)}<`);
-  b = blogCards(b, 'lx-blog-list', 'lx-blog-item', POSTS.slice(0, 3), lang, LX_CARD);
+  /* Since 2026-10-21 the three cards show the owner's photographs B01–B03
+     (tools/replaceables.mjs WORKFORCE_BLOG_COVERS) instead of their article
+     covers; the blog index and the articles show the same photographs
+     (BLOG_COVERS), and only the articles' share images keep those covers. */
+  {
+    const strip = POSTS.slice(0, 3).map((p) => p.slug);
+    const lost = Object.keys(WORKFORCE_BLOG_COVERS).filter((slug) => !strip.includes(slug));
+    if (lost.length) throw new Error(`workforce: the article strip no longer shows ${lost.join(', ')}, which WORKFORCE_BLOG_COVERS gives a photograph`);
+  }
+  b = blogCards(b, 'lx-blog-list', 'lx-blog-item', POSTS.slice(0, 3), lang, { ...LX_CARD, covers: WORKFORCE_BLOG_COVERS });
 
   // The template's big square tile has "2.4M" painted into the artwork: a follower
   // count we have no basis for. STARGO's own brand image replaces it.
@@ -1322,7 +1497,7 @@ PAGES['about.html'] = (lang) => {
   const aboutBody = [
     renderBlock('cn-about', lang),
     renderBlock('cn-about-projects', lang),
-    renderBlock('cn-about-reviews', lang),
+    roleSlides(renderBlock('cn-about-reviews', lang), 'about'),
   ].join('\n');
 
   const aboutSheets = [...new Set(Object.values(DONORS).map((d) => d.sheet))]
@@ -1345,7 +1520,12 @@ PAGES['about.html'] = (lang) => {
      template's clips, drawn exactly as the template draws them; the url simply
      waits in `data-src` until js/stargo-video-defer.js restores it as the band
      comes near. One line to delete if the owner would rather they load at
-     once. */
+     once.
+
+     Since 2026-10-21 the four tiles show the owner's photographs instead
+     (tools/blocks/cn-about-projects.mjs, ABOUT_CASE_STILLS), so the band
+     carries no clip and both rewrites below find nothing in it; they stay so
+     a clip put back is deferred again. */
   {
     const sources = (out.match(/<source /g) ?? []).length;
     out = out.replace(/<video\b[^>]*>[\s\S]*?<\/video>/g, (v) => (v.includes('<source ') ? v
@@ -1385,6 +1565,10 @@ PAGES['about.html'] = (lang) => {
 
 /* ---- blog.html — lifelogx blog index ------------------------------------ */
 const LX_CARD = { image: 'lx-blog-image', title: 'lx-blog-title', description: 'lx-blog-description', sizes: '(max-width: 767px) 100vw, (max-width: 991px) 50vw, 33vw' };
+/* The blog index and the articles' 「更多文章」 lists show each article's
+   cover photograph (tools/replaceables.mjs BLOG_COVERS, 2026-10-21); the
+   workforce page's article strip keeps LX_CARD and the covers. */
+const LX_PHOTO_CARD = { ...LX_CARD, covers: BLOG_COVERS };
 PAGES['blog.html'] = (lang) => {
   const t = (p) => (typeof p === 'string' ? p : p[lang]);
   const { fn: s } = makeSub('blog');
@@ -1418,7 +1602,15 @@ PAGES['blog.html'] = (lang) => {
      drawn keep-all, and those are its break points inside long phrases. */
   const intro = escapeHtml(t(BLOG_UI.intro)).replace(/&lt;wbr&gt;/g, '<wbr>');
   b = s(b, '>Discover Our Featured Stories</h1></div>', `>${headingHtml}</h1><div class="lx-feature-description-holder stargo-blog-intro"><div class="lx-text-size-regular">${intro}</div></div></div>`, { count: 1 });
-  b = blogCards(b, 'lx-blog-list', 'lx-blog-item', POSTS, lang, LX_CARD);
+  b = blogCards(b, 'lx-blog-list', 'lx-blog-item', POSTS, lang, LX_PHOTO_CARD);
+  /* The first row of cards is in the first screen (three cards from 992 px,
+     two at 768-991, the first card on a phone): the first three pictures
+     load with the page, not lazily. */
+  {
+    let n = 0;
+    b = b.replace(/<img\b[^>]*class="lx-blog-image"[^>]*\/>/g, (tag) => (n++ < 3 ? tag.replace(' loading="lazy"', ' loading="eager"') : tag));
+    if ((b.match(/class="lx-blog-image"/g) ?? []).length !== POSTS.length || (b.match(/loading="eager"[^>]*class="lx-blog-image"/g) ?? []).length !== 3) throw new Error('blog: the first row of cards loads with the page');
+  }
   b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
   if (/Lifelogx|Companion|Moments in Motion|Conversational AI/.test(b)) throw new Error('blog: template copy survives');
   return inMonoShell(b + bigMark(), ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
@@ -1430,7 +1622,7 @@ function postPage(post, lang) {
   const { fn: s } = makeSub(`post:${post.slug}`);
   let b = frag('lx-post.html');
   // Lists first (they repeat the template's title), then the title itself.
-  b = blogCards(b, 'lx-blog-list', 'lx-blog-item', others(post, 3), lang, LX_CARD);
+  b = blogCards(b, 'lx-blog-list', 'lx-blog-item', others(post, 3), lang, LX_PHOTO_CARD);
   {
     const list = findByClass(b, 'div', 'lx-related-list');
     if (!list) throw new Error('post: related list');
@@ -1441,13 +1633,19 @@ function postPage(post, lang) {
   b = s(b, '>How AI Companions Can Transform Your Life<', `>${titleHtml(post, lang, escapeHtml)}<`, { count: 1 });
   b = s(b, '>Related Items<', `>${t(BLOG_UI.related)}<`, { count: 1 });
   b = s(b, '>More from blog<', `>${t(BLOG_UI.more)}<`, { count: 1 });
-  /* The hero cover. A cover made from one of the owner's product screenshots
-     says in its alt that it is a demonstration interface with demo data, in
-     the words tools/editorial-images.mjs uses for the same pictures elsewhere
-     (tools/blog.mjs coverAlt). The editorial covers stay decorative. */
-  b = swapImg(b, '6945522d9e13fa6b32ace3c9_Futuristic', coverSrc(post), { alt: coverAlt(post, lang) });
-  b = b.replace(/(<img[^>]*class="lx-blog-image lx-details")\/>/, (m, tag) => `${tag.replace(' loading="lazy"', ' loading="eager" fetchpriority="high"')} srcset="${coverSrcset(post)}" sizes="(max-width: 991px) 100vw, 1180px"/>`);
-  if (!b.includes(coverSrcset(post))) throw new Error('post: hero image');
+  /* The hero cover: the article's cover photograph since 2026-10-21
+     (tools/replaceables.mjs BLOG_COVERS). Its alt is a marker that
+     tools/editorial-images.mjs replaces with the photograph's own sentence,
+     and writes its srcset and sizes. An article without one keeps its cover
+     from assets/blog/: a cover made from one of the owner's product
+     screenshots says in its alt that it is a demonstration interface with
+     demo data, in the words tools/editorial-images.mjs uses for the same
+     pictures elsewhere (tools/blog.mjs coverAlt); the editorial covers stay
+     decorative. Either way it is the first screen's picture: it loads first. */
+  const photo = BLOG_COVERS[post.slug];
+  b = swapImg(b, '6945522d9e13fa6b32ace3c9_Futuristic', photo ?? coverSrc(post), { alt: photo ? 'STARGO WORK' : coverAlt(post, lang) });
+  b = b.replace(/(<img[^>]*class="lx-blog-image lx-details")\/>/, (m, tag) => `${tag.replace(' loading="lazy"', ' loading="eager" fetchpriority="high"')}${photo ? '' : ` srcset="${coverSrcset(post)}" sizes="(max-width: 991px) 100vw, 1180px"`}/>`);
+  if (!b.includes(photo ? `src="${photo}"` : coverSrcset(post)) || !/fetchpriority="high"[^>]*class="lx-blog-image lx-details"/.test(b)) throw new Error('post: hero image');
   {
     // The rich-text block carries the interaction's initial state inline (opacity 0, data-w-id): keep its tag, replace its content.
     // renderBody() prints the answer paragraph, the 「要点速览」 takeaways, the
@@ -1623,7 +1821,7 @@ PAGES['pricing.html'] = (lang) => {
     renderBlock('rk-price-tiers', lang),
     renderBlock('rk-price-compare', lang),
     renderBlock('cn-price-card', lang),
-    renderBlock('cn-reviews', lang),
+    roleSlides(renderBlock('cn-reviews', lang), 'pricing'),
     scPart,
   ].join('\n');
 
@@ -1640,34 +1838,33 @@ PAGES['pricing.html'] = (lang) => {
 };
 
 /* ---- enterprise.html — Mono studio ------------------------------------ */
-/* Pictures by what sits beside them (V6 §8.2, §10). All are the site's own
-   concept illustrations; editorialImages() gives each its alt and marks it as
-   one. The three pictures in the column beside the text sit, in order, next
-   to the owner cockpit (work lanes converging on one command centre), the six
-   delivery steps (a track climbing level by level — the second slot is the
-   tallest, about square at 1440, so a portrait picture loses less to the
-   cover crop than a landscape one) and the numbers — roles, controls and the
-   deployment options (one track joining separate workspaces). The five
-   cards, in order: capabilities and apps (instruments laid out on one board),
-   account and role permissions (specialized roles on a shared foundation),
-   approvals (a controlled, reversible approval path), work and result
-   records (business records linked together) and account connection and
-   protection (a gated passage through explicit boundaries). No picture is
-   used twice on the page, the four hero panels included (their pictures are
-   CSS, in the V6-F block of stargo-fusion.css). The legacy UI mock-ups with
-   invented figures are not used here. */
+/* Pictures by what sits beside them (V6 §8.2, §10). Since 2026-10-21 they are
+   the owner's photographs (site-images/batch-7, tools/replaceables.mjs
+   ENTERPRISE_PHOTOS), in place of the site's concept illustrations;
+   editorialImages() gives each the owner's own alt sentence. The three
+   pictures in the column beside the text sit, in order, next to the owner
+   cockpit (E05, the office at dawn before anyone is in), the six delivery
+   steps (E06, the owner on the phone beside a machine under repair; portrait,
+   as the second slot is the tallest, about square at 1440) and the numbers
+   (E07, the ledger). The five cards, in order: capabilities and apps (E09, tools
+   hung back in their outlines), account and role permissions (E10, a badge
+   at the reader), approvals (E11, the stamp), work and result records (E12,
+   the clipboard on the machine) and account connection and protection (E13,
+   the padlocked cabinet). No picture is used twice on the page, the four hero
+   panels included (their pictures are CSS, E01–E04, in the batch 7 block of
+   stargo-fusion.css). The legacy UI mock-ups with invented figures are not
+   used here. */
 PAGES['enterprise.html'] = (lang) => fromStudio({
   name: 'enterprise', ...C.ENTERPRISE, cards: C.ENTERPRISE.cards,
   /* V7-LX: card 2 (账号与岗位权限 / Account & role permissions) takes a landscape
-     picture again, layered permission boundaries (brand-family-04), so the first
-     row reads landscape, landscape, tall as in the template; it had the
-     portrait phone-agents, which made the row short, tall, tall.
+     picture, so the first row is three landscape pictures; with the portrait
+     picture it had before V7 the row read short, tall, tall.
 
-     The column keeps its editorial artwork. A product screenshot was tried in
-     the third slot on 2026-09-18 and reverted the same day: the box is
-     118x90 at 390, 235x208 at 768 and 681x620 on the English page, all far from
-     16:9, so a fitted interface left most of the box empty. */
-  images: { work: [OS.cockpit, BRAND.tall, OS.desktop], quote: BRAND.square, cards: [OS.agents, BRAND.family(4), MOBILE.phoneApprovals, BRAND.ontology, OS.login] },
+     A product screenshot was tried in the column's third slot on 2026-09-18
+     and reverted the same day: the box is 118x90 at 390, 235x208 at 768 and
+     681x620 on the English page, all far from 16:9, so a fitted interface
+     left most of the box empty. */
+  images: { work: ENTERPRISE_PHOTOS.cockpit, quote: ENTERPRISE_PHOTOS.principle, cards: ENTERPRISE_PHOTOS.modules },
 }, lang);
 
 /* ---- capabilities.html — Mono work-1 + table -------------------------- */
@@ -2016,7 +2213,9 @@ function capabilityShowcase(C, lang) {
        first paint, before anyone has scrolled to them. Holding the url in
        `data-src` until js/stargo-video-defer.js restores it changes no element,
        class, interaction id or poster: the band is the template's band, it just
-       does not arrive before the page does. */
+       does not arrive before the page does. (Since 2026-10-21 the band's cards
+       are the owner's stills, tools/replaceables.mjs RING_STILLS; the page's
+       other clips, such as the navbar orb, still go through this.) */
     {
       const sources = (h.match(/<source /g) ?? []).length;
       h = h.replace(/<video\b[^>]*>[\s\S]*?<\/video>/g, (v) => (v.includes('<source ') ? v
@@ -2038,9 +2237,14 @@ function capabilityShowcase(C, lang) {
   // Assign by buyer meaning, not image sequence: growth, customer context,
   // commercial fulfillment, workforce/governance. Parallel-team art belongs
   // at the homepage Workforce door, not beneath the Commercial label.
-  const familyArt = [BRAND.family(1), OS.inquiries, BRAND.family(2), BRAND.family(4)];
+  /* Since 2026-10-21 the four cards show the owner's photographs for the four
+     areas (tools/replaceables.mjs CAP_PHOTOS.areas, C01-C04), where
+     brand-family-01, os-inquiries, brand-family-02 and brand-family-04 were.
+     The alt is a marker that tools/editorial-images.mjs replaces with the
+     photograph's own sentence. */
+  if (CAP_PHOTOS.areas.length !== 4) throw new Error('capabilities: one photograph per area card');
   ['699b6466d5f19893993a4d79_work-1.webp', '699b6466d5f19893993a4d1a_work-4.webp', '699b6466d5f19893993a4d34_work-5.webp', '699b6466d5f19893993a4d8f_work-8.webp']
-    .forEach((k, i) => { h = swapImg(h, k, familyArt[i]); });
+    .forEach((k, i) => { h = swapImg(h, k, CAP_PHOTOS.areas[i], { alt: 'STARGO WORK' }); });
   return h;
 };
 
@@ -2056,7 +2260,8 @@ PAGES['contact.html'] = (lang) => {
      line of its own at 320, 390 and 1024. `h1.inner-title` is shared by other
      pages, so the rule is scoped to this one heading rather than to the class. */
   h = s(h, '<h1 class="inner-title">Let’s Connect</h1>', `<h1 class="inner-title stargo-contact-title">${t(K.h1)}</h1>`, { count: 1 });
-  // The quote card keeps the template design (portrait film, gradient, mark); the mark is STARGO's and the rating slot names the card.
+  // The quote card keeps the template design (gradient, mark); the mark is STARGO's and the rating slot names the card.
+  // Its picture is the owner's photograph K01 since 2026-10-21 (below), where the template's portrait film played.
   h = h.replace(/<img[^>]*class="logo-testi-1"[^>]*\/>/, `<img src="${WORDMARK}" loading="lazy" alt="Stargo Work" class="logo-testi-1 stargo-card-mark"/>`);
   h = s(h, '>★★★★★<', `>${t(K.quoteLabel)}<`);
   h = s(h, '“Their ability to listen, challenge assumptions, and translate ideas into a clean digital system.”', t(K.quote));
@@ -2081,8 +2286,22 @@ PAGES['contact.html'] = (lang) => {
   const blockStart = h.lastIndexOf('<div>', msgAt);
   h = h.slice(0, blockStart) + extra + h.slice(blockStart);
   h = h.replace(/value="Contact Us"/, `value="${t(K.submit)}"`);
-  // A honeypot field for the form endpoint. (The quote card's portrait film stays.)
-  if (!/<video id="[^"]+-video"/.test(h)) throw new Error('contact: quote card video');
+  /* The quote card's picture: the owner's meeting table (K01,
+     tools/replaceables.mjs CONTACT_CARD) as a still where the template's
+     Professional Portrait film played — same box, under the card's own dots,
+     washes, mark and quote. `stargo-contact-photo` gives it its size
+     (tools/editorial-images.mjs) and its crop point (the "pages" block of
+     css/stargo-fusion.css). The card sits beside the form at the top of the
+     page from 768 up, so the still loads with the page. The alt is a marker
+     that tools/editorial-images.mjs replaces with the photograph's sentence. */
+  {
+    const FILM = '6b9abecd-3545-3c29-02b3-795e2774129e';
+    const card = findByClass(h, 'div', 'testimonials-card');
+    if (!card || !card.text.includes(`id="${FILM}-video"`)) throw new Error('contact: the quote card no longer holds the Professional Portrait film');
+    h = stillImage(h, FILM, CONTACT_CARD, 'STARGO WORK', 'stargo-still stargo-contact-photo')
+      .replace(' loading="lazy" class="stargo-still stargo-contact-photo"', ' class="stargo-still stargo-contact-photo"');
+  }
+  // A honeypot field for the form endpoint.
   h = h.replace(/(<form id="email-form"[^>]*>)/, '$1<div class="stargo-hp" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"/></div>');
   if (!h.includes('stargo-hp')) throw new Error('contact: form not found');
 
@@ -2128,9 +2347,36 @@ PAGES['contact.html'] = (lang) => {
     if (!h.includes(`css/${DONORS.cinery.sheet}`)) throw new Error('contact: the cinery sheet did not attach; the form card would be unstyled');
   }
 
+  /* 「(直接联系)」 (2026-10-21): the owner's own details under the quote card,
+     for the buyer who would rather call, add him on WeChat or write than fill
+     in the form — 联系人, 电话 (tel:, rings on a phone), 微信 (no web link: the
+     ID as text, and a 「复制」 button that js/stargo-forms.js reveals and arms),
+     WhatsApp and 邮箱, every value from copy.mjs CONTACT_INFO. It sits in the
+     card's column after the card, so nothing that was on the page moves: on a
+     desktop it rides in the column's sticky stack beside the form, on a phone
+     it follows the card. Mono's own type (`top-text`) and the card column's
+     width; the rest is the V8-CONTACT rule in css/stargo-fusion.css. */
+  {
+    const I = C.CONTACT_INFO;
+    const L = I.labels;
+    const U = C.CONTACT_UI;
+    const row = (label, value) => `<div class="stargo-direct-row"><dt class="top-text sml">${t(label)}</dt><dd class="top-text">${value}</dd></div>`;
+    const list = `<div class="stargo-direct"><p class="top-text">${t(U.heading)}</p><dl class="stargo-direct-list">${[
+      row(L.person, escapeHtml(I.person)),
+      row(L.phone, `<a href="${I.phoneHref}">${I.phone}</a>`),
+      row(L.wechat, `<span class="stargo-direct-id">${I.wechat}</span><button type="button" class="stargo-copy" data-stargo-copy="${I.wechat}" data-stargo-copied="${t(U.wechatCopied)}" data-stargo-copied-short="${t(U.copied)}" aria-label="${t(U.copyWechat)} ${I.wechat}" hidden="">${t(U.copy)}</button>`),
+      row(L.whatsapp, `<a href="${I.whatsappHref}" target="_blank" rel="noopener noreferrer">${I.whatsapp}</a>`),
+      row(L.email, `<a href="mailto:${I.email}">${I.email}</a>`),
+    ].join('')}</dl></div>`;
+    const card = findByClass(h, 'div', 'testimonials-card');
+    if (!card || findByClass(h, 'div', 'testimonials-card', 1)) throw new Error('contact: expected one quote card to set the direct details under');
+    if (!h.slice(card.end).startsWith('<div class="spacer-s"></div>')) throw new Error('contact: the quote card is no longer followed by its spacer');
+    h = h.slice(0, card.end) + list + h.slice(card.end);
+  }
+
   /* The quote card is the other column and is untouched — 「图6」 is why B2 was
      chosen over replacing the page. Assert it survived the splice. */
-  if (!/<video id="[^"]+-video"/.test(h)) throw new Error('contact: the quote card lost its portrait film in the swap');
+  if (!findByClass(h, 'div', 'testimonials-card')?.text.includes('class="stargo-still stargo-contact-photo"')) throw new Error('contact: the quote card lost its picture in the swap');
   /* Not the number of forms on the page — the Mono shell carries a second one
      in its footer — but the number that reach this site's endpoint. Exactly
      one form may post to /api/contact, and it must be the one that came out of
@@ -2234,8 +2480,9 @@ const FORBIDDEN = [
   /Mōno™ Studio/, /monostudio/i, /Awwwards/, /Lorem/i, /cal\.com/, /Tomato Store/, /Market Play/,
   /Forma Digital/, /Nero Vision/, /One Step/, /Bold Moves/, /Auralis/, /Light[\s\u00a0]Studio/, /Joda Trump/, /Elena Rossi/, /Adrian Keller/, /Camila Verga/,
   /\$\s?\d/, /logoipsum/i, /Get Template/, /template-navigator/, /youtube\.com/, /embedly/,
-  // stock photography that shipped with the templates
-  /Young%20Man%20Smiling/, /Sunset-Serenity/, /Joyful-Group/, /Red-Hat-Portrait/, /work-\d+\.webp/, /work7\.webp/, /Matcha-Latte/, /Party-Scene/, /Scene%20/, /Portrait-of-a-Man/, /Diverse-Group/, /Coding-Workspace/, /Sleek%20Container/, /Futuristic/, /blog-\d\.webp/, /about-6/,
+  // stock photography that shipped with the templates (`_work-1.webp` … — not a word that ends
+  // in "work", like the owner's s01-inquiry-rework-1600.webp)
+  /Young%20Man%20Smiling/, /Sunset-Serenity/, /Joyful-Group/, /Red-Hat-Portrait/, /(?<![a-z])work-\d+\.webp/, /work7\.webp/, /Matcha-Latte/, /Party-Scene/, /Scene%20/, /Portrait-of-a-Man/, /Diverse-Group/, /Coding-Workspace/, /Sleek%20Container/, /Futuristic/, /blog-\d\.webp/, /about-6/,
   // lifelogx template people, its CMS article images and its brand
   /Vibrant%20Orange/, /Stylish%20Portrait/, /Metallic%20Jacket/, /Rectangle%2043/, /69417cf6925a82af26179b70/, /Lifelogx/i, /Lina Elsen/, /Amira Brik/, /Mila Eron/, /Oren Solis/,
 ];

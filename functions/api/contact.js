@@ -1,8 +1,28 @@
 /** POST /api/contact — mail relay, not a CRM or newsletter audience manager.
- * Requires RESEND_API_KEY and a verified CONTACT_FROM sender in Cloudflare.
- * CONTACT_TO defaults to sales@stargomoto.com. No credentials go to the browser.
+ *
+ * WHAT MUST BE CONFIGURED: one secret, RESEND_API_KEY, on the Cloudflare Pages
+ * project (Settings → Variables and Secrets, type Secret), holding an API key
+ * of the Resend account the owner signs up for with wei505099021@live.cn.
+ * Nothing else. Until it exists the endpoint answers 503 `not-configured` and
+ * the page offers its e-mail link instead (js/stargo-forms.js).
+ *
+ * Defaults, each overridable by a variable of the same name:
+ *   CONTACT_TO    wei505099021@live.cn — the owner's address, the same one
+ *                 tools/copy.mjs CONTACT_INFO.email prints on the site (a
+ *                 Function cannot import tools/, so it is repeated here).
+ *   CONTACT_FROM  Stargo Work <onboarding@resend.dev> — Resend's shared test
+ *                 sender, which needs no domain but delivers ONLY to the
+ *                 address that owns the Resend account; hence the account must
+ *                 be opened with CONTACT_TO's address. Once a domain is
+ *                 verified in Resend, set CONTACT_FROM to a sender on it (and
+ *                 CONTACT_TO may then be any address).
+ * The buyer's own address goes in reply_to, so answering the mail answers them.
+ * No credentials go to the browser, and none are logged: a Resend refusal is
+ * logged with its HTTP status and Resend's message only.
  * Provider idempotency handles retry deduplication across Worker instances.
  */
+const DEFAULT_TO = 'wei505099021@live.cn';
+const DEFAULT_FROM = 'Stargo Work <onboarding@resend.dev>';
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } });
 const clean = v => v.replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, '').trim();
 const EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
@@ -70,12 +90,20 @@ export async function onRequestPost({ request, env = {} }) {
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST', signal: ctrl.signal,
       headers: { authorization: 'Bearer ' + env.RESEND_API_KEY, 'content-type': 'application/json', 'Idempotency-Key': id },
-      body: JSON.stringify({ from: env.CONTACT_FROM || 'STARGO WORK <noreply@stargomoto.com>', to: [env.CONTACT_TO || 'sales@stargomoto.com'], reply_to: email,
+      body: JSON.stringify({ from: env.CONTACT_FROM || DEFAULT_FROM, to: [env.CONTACT_TO || DEFAULT_TO], reply_to: email,
         subject: isNews ? '[STARGO WORK] Newsletter request · ' + email : '[STARGO WORK] Inquiry · ' + name.replace(/[\r\n]/g, ' '), text: lines.join('\n') }),
     });
-    if (!res.ok) return json({ ok: false, error: 'upstream' }, 502);
+    if (!res.ok) {
+      // Resend answers errors as JSON { statusCode, name, message }. Log what it said, never the request.
+      let detail = '';
+      try { const raw = await res.text(); try { const j = JSON.parse(raw); detail = [j.name, j.message].filter(Boolean).join(': ') || raw; } catch { detail = raw; } } catch { detail = '(no body)'; }
+      console.error('contact: Resend refused the message', res.status, String(detail).replace(/\s+/g, ' ').slice(0, 500));
+      return json({ ok: false, error: 'upstream' }, 502);
+    }
     return json({ ok: true });
-  } catch { return json({ ok: false, error: ctrl.signal.aborted ? 'timeout' : 'upstream' }, ctrl.signal.aborted ? 504 : 502); }
-  finally { clearTimeout(timer); }
+  } catch (e) {
+    console.error('contact: Resend unreachable', ctrl.signal.aborted ? 'timeout after 8s' : String(e?.message || e).slice(0, 200));
+    return json({ ok: false, error: ctrl.signal.aborted ? 'timeout' : 'upstream' }, ctrl.signal.aborted ? 504 : 502);
+  } finally { clearTimeout(timer); }
 }
 export const onRequestGet = () => json({ ok: false, error: 'method' }, 405);

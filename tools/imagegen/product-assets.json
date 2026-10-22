@@ -742,6 +742,72 @@
    ]
   },
   {
+   "id": "m01-mobile-quotes-screen",
+   "sw": "M01",
+   "src": "assets/stargo-product/m01-mobile-quotes-screen.webp",
+   "width": 1170,
+   "height": 2672,
+   "bytes": 79094,
+   "sourceFile": "site-images/mobile/m01-quotes-list.png",
+   "sourceSha256": "adffc143ea0e4d2c0b7c0e2fc969a916b882938587131b7a978828c79264f860",
+   "sourcePixels": [
+    1170,
+    2672
+   ],
+   "crop": "top 1170x2532 of mobile/m01-quotes-list.png (1170x2672; the last 140 rows, the icons and labels of the app's bottom tab bar, are left out; the phone frame hides that much anyway) with a 140px band of the app's own background (#f5f1ec) added on top as status-bar space under the phone frame's island, as for live51/live52",
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-product/m01-mobile-quotes-screen-480.webp",
+     "width": 480,
+     "bytes": 25186
+    },
+    {
+     "src": "assets/stargo-product/m01-mobile-quotes-screen-768.webp",
+     "width": 768,
+     "bytes": 47060
+    },
+    {
+     "src": "assets/stargo-product/m01-mobile-quotes-screen-1024.webp",
+     "width": 1024,
+     "bytes": 67160
+    }
+   ]
+  },
+  {
+   "id": "m04-mobile-followups-screen",
+   "sw": "M04",
+   "src": "assets/stargo-product/m04-mobile-followups-screen.webp",
+   "width": 1170,
+   "height": 2672,
+   "bytes": 76882,
+   "sourceFile": "site-images/mobile/m04-followups.png",
+   "sourceSha256": "dc69562a10c5753e0a5ad4772e24b78cd776d9e6d42d3ae670cc2221fec0db0e",
+   "sourcePixels": [
+    1170,
+    2672
+   ],
+   "crop": "top 1170x2532 of mobile/m04-followups.png (1170x2672; the last 140 rows, the icons and labels of the app's bottom tab bar, are left out; the phone frame hides that much anyway) with a 140px band of the app's own background (#f5f1ec) added on top as status-bar space under the phone frame's island, as for live51/live52",
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-product/m04-mobile-followups-screen-480.webp",
+     "width": 480,
+     "bytes": 28546
+    },
+    {
+     "src": "assets/stargo-product/m04-mobile-followups-screen-768.webp",
+     "width": 768,
+     "bytes": 48990
+    },
+    {
+     "src": "assets/stargo-product/m04-mobile-followups-screen-1024.webp",
+     "width": 1024,
+     "bytes": 67772
+    }
+   ]
+  },
+  {
    "id": "live18-quote-approval-16x9",
    "sw": "LIVE18",
    "src": "assets/stargo-product/live18-quote-approval-16x9.webp",

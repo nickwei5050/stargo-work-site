@@ -1,11 +1,14 @@
 /**
  * 开场动画 — the homepage's opening, over the homepage.
  *
- * Three donor animations in the order the owner asked for them, played once on
- * index.html and en/index.html over an overlay that then removes itself:
+ * Donor animations in the order the owner asked for them, over an overlay on
+ * index.html and en/index.html that then removes itself — once per browser
+ * session, on a homepage view where it can start on the first frame, and
+ * gone at the first tap, key or scroll (tools/blocks/og-intro-head.js and
+ * tools/blocks/og-intro.js say how):
  *
- *   1. OFFGRID's bracket headline, carrying `[STARGO OS]`.
- *   2. OFFGRID's works mosaic — all 36 tiles, the owner's 全上 — revealing.
+ *   1. OFFGRID's bracket headline, carrying `[STARGO WORK]`.
+ *   2. OFFGRID's works mosaic — cut by the owner on 2026-09-10 (see render()).
  *   3. rototo's vertical column wipe, which clears to the homepage.
  *
  * The owner's instruction for both templates, twice and emphatically:
@@ -53,8 +56,10 @@
  * ------------------------------------------------------------- the motion --
  *
  * None of the three animations can travel through tools/donor-lib.mjs, and the
- * reasons are three different ones. All three are replayed in
- * tools/blocks/og-intro.js with the donor's own numbers; the CSS staging is in
+ * reasons are three different ones. The two that remain are replayed in
+ * tools/blocks/og-intro.js with the donor's own numbers — since 2026-10-21 by
+ * the browser's own animation engine rather than GSAP, so that they run on the
+ * compositor (that file says why); the CSS staging is in
  * tools/blocks/og-intro.css.
  *
  *   1. The headline is IX2 `a-24` "Hero Load In", fired by `e-56`, a PAGE_START
@@ -70,9 +75,14 @@
  *      (`a-24-n` and `a-24-n-9`, the initial state, are the `style="width:0.5%"`
  *      and `style="opacity:0"` the export already carries on those two nodes.)
  *      Webflow's `inOutQuart` is `t<.5 ? 8t⁴ : 1-8(1-t)⁴` — read out of the
- *      donor's own runtime, app.schunk.fe7205e557cb28d1.js — which is GSAP's
- *      `power4.inOut` exactly. `width: AUTO` is what the donor measures at run
- *      time, so og-intro.js measures it the same way.
+ *      donor's own runtime, app.schunk.fe7205e557cb28d1.js. This file used to
+ *      call that GSAP's `power4.inOut`; it is not — GSAP's power4 is quintic
+ *      (`16t⁵`), its quartic is power3 — and the opening has always played the
+ *      quintic curve, a slightly later and steeper 600ms fade. og-intro.js
+ *      keeps the quintic one, because that is the motion the owner watched and
+ *      approved. `width: AUTO` is what the donor measures at run time, so
+ *      og-intro.js measures the span's natural width too — on the first frame,
+ *      and again whenever the name changes width (the web font swapping in).
  *
  *   2. The mosaic is not a Webflow interaction at all: it is a hand-written
  *      GSAP call in the last `<script>` of offgrid/index.html.
@@ -140,8 +150,10 @@ export const donor = {
      and the cut needs it. */
   wrap: ['page-wrapper'],
   /* Every photograph is OFFGRID's own — no substitution, `mirror` default. */
-  /* offgrid painted this on <body>; see the note in og-intro.css. */
-  ground: '#0f0f0f',
+  /* offgrid painted #0f0f0f on <body>. It is not given as this block's
+     `ground` (which tools/capability-donors.mjs would paint on the overlay
+     itself): og-intro.css paints it on the headline's stage, so that clearing
+     it for the lift is a compositor step (see og-intro.css, section 3). */
 };
 
 /** `STARGO OS`, resolved against copy.mjs rather than typed here. */
@@ -181,6 +193,18 @@ export function render(frag, ctx) {
   const name = productName(C);
   if (!html.includes('>OFF</span>]</h1>')) throw new Error('og-intro: the bracketed span is not where offgrid put it');
   html = setText(html, 'og-text-spam', escapeHtml(name));
+
+  /* The bracket's moving parts get elements of their own. offgrid opens the
+     bracket by growing the span's width; og-intro.js draws the same opening
+     with transforms so that it runs on the compositor, and a bare text node —
+     offgrid's `[` and `]`, and the name inside the span — cannot be
+     transformed. As flex items of the headline, `<span>[</span>` lays out
+     exactly as the anonymous `[` item did, and og-intro.css makes the name a
+     block that fills the span, where the span's own text sat. The characters,
+     their order and every class and attribute offgrid wrote are unchanged. */
+  const HEADLINE = /(class="[^"]*og-is-hero"[^>]*>)\[(<span[^>]*class="og-text-spam"[^>]*>)([^<]*)<\/span>\]<\/h1>/;
+  if (!HEADLINE.test(html)) throw new Error('og-intro: the bracketed headline is not where offgrid put it');
+  html = html.replace(HEADLINE, (m, open, span, text) => `${open}<span class="og-intro-bracket">[</span>${span}<span class="og-intro-name">${text}</span></span><span class="og-intro-bracket">]</span></h1>`);
 
   /* The second half of the headline. See the header: the owner put the whole
      name inside the brackets, so the word that slides in from the left has
