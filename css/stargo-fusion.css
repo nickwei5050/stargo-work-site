@@ -4347,60 +4347,9 @@ html[lang^="en"] .team-grid .team-content .h2 { text-wrap: balance; }
 }
 
 /* intelligence.html (both languages), the "no writing" band — the text-free
-   screen laid over the hand-held phone (tools/build-site.mjs, V7-LX). The
-   layer has the photograph's box (it is its sibling, absolutely placed), so
-   the IX2 move/scale that both share lands them on the same pixels.
-   `.stargo-nw-frame` is the photograph's picture inside that box: the
-   template shows it object-fit: cover, anchored top left, from 768px (a box
-   720px tall, so the picture is height-driven and cropped at the right on
-   tablets), and at its natural ratio, full width, below 768px. The screen
-   sits on the phone's own screen in the 1262x1474 picture (x 153-699,
-   y 22-1204, 2px into the black bezel so no template pixel shows at the
-   edge); its outline is the screen's rounded rectangle with the three
-   fingertips that overlap the left edge cut out, so the fingers stay in
-   front. The black pill is the camera cut-out the screen covers. */
-.lx-scope .lx-no-writing-image-holder:has(> .stargo-nw-screen) { position: relative; }
-.lx-scope .lx-no-writing-image.stargo-nw-screen {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  pointer-events: none;
-  container-type: size;
-}
-.lx-scope .stargo-nw-frame {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: max(100cqw, 100cqh * 1262 / 1474);
-  height: max(100cqh, 100cqw * 1474 / 1262);
-}
-@media screen and (max-width: 767px) {
-  .lx-scope .stargo-nw-frame { width: 100%; height: auto; aspect-ratio: 1262 / 1474; }
-}
-.lx-scope .stargo-nw-frame .stargo-nw-art {
-  position: absolute;
-  left: 12.124%;
-  top: 1.493%;
-  width: 43.265%;
-  height: 80.19%;
-  max-width: none;
-  object-fit: cover;
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 546 1182' preserveAspectRatio='none'%3E%3Cpath d='M85 0H461A85 85 0 0 1 546 85V1097A85 85 0 0 1 461 1182H85A85 85 0 0 1 0 1097L0 1090L1.5 1087L4.5 1084L9.5 1081L13.5 1078L16.5 1075L19.5 1072L21.5 1069L22.5 1066L23.5 1063L24.5 1060L24.5 1057L24.5 1054L24.5 1051L24.5 1048L23.5 1045L22.5 1042L21.5 1039L21.5 1036L19.5 1033L17.5 1030L15.5 1027L12.5 1024L9.5 1021L6.5 1018L3.5 1015L1.5 1012L2.5 1009L2.5 1006L2.5 1003L0 1000L0 946L1.5 943L2.5 940L6.5 937L10.5 934L12.5 931L15.5 928L16.5 925L18.5 922L19.5 919L20.5 916L20.5 913L20.5 910L20.5 907L20.5 904L20.5 901L20.5 898L20.5 895L20.5 892L20.5 889L19.5 886L18.5 883L17.5 880L16.5 877L14.5 874L12.5 871L10.5 868L6.5 865L3.5 862L0 859L0 811L1.5 808L2.5 805L3.5 802L4.5 799L4.5 796L5.5 793L6.5 790L6.5 787L6.5 784L7.5 781L7.5 778L7.5 775L7.5 772L7.5 769L7.5 766L7.5 763L6.5 760L5.5 757L5.5 754L4.5 751L3.5 748L2.5 745L1.5 742L0 739V85A85 85 0 0 1 85 0Z'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 546 1182' preserveAspectRatio='none'%3E%3Cpath d='M85 0H461A85 85 0 0 1 546 85V1097A85 85 0 0 1 461 1182H85A85 85 0 0 1 0 1097L0 1090L1.5 1087L4.5 1084L9.5 1081L13.5 1078L16.5 1075L19.5 1072L21.5 1069L22.5 1066L23.5 1063L24.5 1060L24.5 1057L24.5 1054L24.5 1051L24.5 1048L23.5 1045L22.5 1042L21.5 1039L21.5 1036L19.5 1033L17.5 1030L15.5 1027L12.5 1024L9.5 1021L6.5 1018L3.5 1015L1.5 1012L2.5 1009L2.5 1006L2.5 1003L0 1000L0 946L1.5 943L2.5 940L6.5 937L10.5 934L12.5 931L15.5 928L16.5 925L18.5 922L19.5 919L20.5 916L20.5 913L20.5 910L20.5 907L20.5 904L20.5 901L20.5 898L20.5 895L20.5 892L20.5 889L19.5 886L18.5 883L17.5 880L16.5 877L14.5 874L12.5 871L10.5 868L6.5 865L3.5 862L0 859L0 811L1.5 808L2.5 805L3.5 802L4.5 799L4.5 796L5.5 793L6.5 790L6.5 787L6.5 784L7.5 781L7.5 778L7.5 775L7.5 772L7.5 769L7.5 766L7.5 763L6.5 760L5.5 757L5.5 754L4.5 751L3.5 748L2.5 745L1.5 742L0 739V85A85 85 0 0 1 85 0Z'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
-}
-.lx-scope .stargo-nw-frame::after {
-  content: "";
-  position: absolute;
-  left: 26.783%;
-  top: 2.782%;
-  width: 13.629%;
-  height: 3.528%;
-  border-radius: 999px;
-  background: #000;
-}
+   screen laid over the hand-held phone (tools/build-site.mjs, V7-LX): since
+   2026-10-21 the phone is the owner's photograph I03, and the rules that lay
+   the screen on its glass are in the "blog" block at the end of this file. */
 
 /* intelligence.html (both languages), the pink closing card (#lx-evolution):
    the STARGO WORK paragraph ran under the portrait. From 768px the text
@@ -5678,3 +5627,125 @@ img[src*="stargo-photo/e08-emergency-stop-"] { object-position: 50% 42%; }
         `aspect-ratio: 1` and `width: 100%`; the photograph's width and height
         attributes would set a height of their own, so it goes back to auto. */
 .lx-blog-image:not(.lx-details)[src*="stargo-photo/"] { height: auto; }
+
+/* ======================================================================
+   The owner's photographs on the blog and the intelligence page (group
+   "blog", 2026-10-21; site-images/batch-8: B01–B07 on blog.html and the
+   seven articles, I01–I03 on intelligence.html, zh and en; the slots are
+   in tools/replaceables.mjs, BLOG_COVERS and INTEL_PHOTOS). Graded finals,
+   only resized. Every box keeps its size; these rules set the crop point
+   each manifest gives, scoped to these slots.
+   ====================================================================== */
+
+/* B01–B07, the article covers. They are 3:2, the article hero's own ratio,
+   so the hero shows each one whole; the 1:1 cards of the blog index and of
+   every article's 「更多文章」 list crop them. Lifelogx's aspect-ratio sizes
+   those boxes, so the photographs' width and height attributes give way to
+   it. B04 keeps the padlock and its blank tag (55%); on a phone B05 keeps
+   both cuffs (56%); the others are centred. The V7-BLOG r3 plate and
+   contain rules above key on the assets/blog/ files and do not reach these. */
+.lx-scope .lx-blog-image[src*="stargo-photo/b0"] { height: auto; }
+.lx-scope .lx-blog-image[src*="stargo-photo/b04-"] { object-position: 55% 50%; }
+@media (max-width: 767px) {
+  .lx-scope .lx-blog-image[src*="stargo-photo/b05-"] { object-position: 56% 50%; }
+}
+
+/* I01, the full-bleed picture under the four lines of #lx-more, is centred
+   (Lifelogx's own cover), so it needs no rule. I02, the closing card's
+   picture, a square photograph: 50% 42% where the box is wider than tall
+   (1.32:1 at 1440; the template anchored its portrait at 0% 10% from 768
+   up). At 768-991 the box is tall (296x595), so only the horizontal 50%
+   counts there: the glove and the fitting it places stay in. The 1:1
+   phone card shows the whole frame. */
+.lx-scope .lx-cta-image[src*="stargo-photo/i02-"] { object-position: 50% 42%; }
+@media (max-width: 767px) {
+  .lx-scope .lx-cta-image[src*="stargo-photo/i02-"] { object-position: 50% 50%; }
+}
+/* From 768 up the picture's box (42% of the card, absolutely placed) and
+   the 66% text column overlap by design: the template's picture was a
+   cut-out, clear where the heading's end runs over it (en 768-1172, zh
+   992-1088). I02 is opaque, so the text column is drawn above it (no box
+   moves), and the photograph's left edge fades into the card instead of
+   meeting the pink in a hard seam. The fade eases out so it is clear of
+   the left tray (from 10% of the frame) by the time it reaches it. */
+.lx-scope .lx-cta-card:has(img.lx-cta-image[src*="stargo-photo/i02-"]) .lx-cta-content-holder {
+  position: relative;
+  z-index: 1;
+}
+@media (min-width: 768px) {
+  .lx-scope img.lx-cta-image[src*="stargo-photo/i02-"] {
+    -webkit-mask-image: linear-gradient(90deg, transparent, rgba(0, 0, 0, .44) 5%, rgba(0, 0, 0, .75) 10%, rgba(0, 0, 0, .94) 15%, #000 20%);
+    mask-image: linear-gradient(90deg, transparent, rgba(0, 0, 0, .44) 5%, rgba(0, 0, 0, .75) 10%, rgba(0, 0, 0, .94) 15%, #000 20%);
+  }
+}
+
+/* I03, the hand-held phone of the "no writing" band, a 2:3 portrait at
+   50% 15% in Lifelogx's cover box (531x720 at 1440; at 768-991 the template
+   narrows that box to a 128px strip, which shows the middle of the screen,
+   as it showed a strip of the template's phone). Below 768 the template
+   draws its picture at the picture's own ratio; the box keeps the template
+   picture's 1262:1474 there (358x418 at 390), so the band does not grow. */
+.lx-scope img.lx-no-writing-image[src*="stargo-photo/i03-"] { object-position: 50% 15%; }
+@media (max-width: 767px) {
+  .lx-scope img.lx-no-writing-image[src*="stargo-photo/i03-"] { height: auto; aspect-ratio: 1262 / 1474; }
+}
+/* From 768 up the big words stand right beside the picture's box. The
+   template's picture was a cut-out floating on the gradient; I03 is an
+   opaque photograph, so its sides (18% each) and top (12%) fade into the
+   gradient on an eased curve rather than meet the words in a hard-edged
+   rectangle (the bottom is the band's own edge). The hand and phone sit
+   at 18-75% of the frame, inside the fades. The screen layer over the
+   glass has the same box and takes the same mask: where the box shows
+   the whole frame width the screen (34-67%) is clear of the fades, and
+   where the template narrows the box to a strip (zh, about 768-880 px)
+   the screen's sides fade with the photograph's instead of standing out
+   as a hard-edged slab. */
+@media (min-width: 768px) {
+  .lx-scope img.lx-no-writing-image[src*="stargo-photo/i03-"],
+  .lx-scope .lx-no-writing-image-holder:has(> img[src*="stargo-photo/i03-"]) > .stargo-nw-screen {
+    -webkit-mask-image: linear-gradient(90deg, transparent, rgba(0, 0, 0, .1) 3.6%, rgba(0, 0, 0, .35) 7.2%, rgba(0, 0, 0, .65) 10.8%, rgba(0, 0, 0, .9) 14.4%, #000 18%, #000 82%, rgba(0, 0, 0, .9) 85.6%, rgba(0, 0, 0, .65) 89.2%, rgba(0, 0, 0, .35) 92.8%, rgba(0, 0, 0, .1) 96.4%, transparent), linear-gradient(transparent, rgba(0, 0, 0, .1) 2.4%, rgba(0, 0, 0, .35) 4.8%, rgba(0, 0, 0, .65) 7.2%, rgba(0, 0, 0, .9) 9.6%, #000 12%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(90deg, transparent, rgba(0, 0, 0, .1) 3.6%, rgba(0, 0, 0, .35) 7.2%, rgba(0, 0, 0, .65) 10.8%, rgba(0, 0, 0, .9) 14.4%, #000 18%, #000 82%, rgba(0, 0, 0, .9) 85.6%, rgba(0, 0, 0, .65) 89.2%, rgba(0, 0, 0, .35) 92.8%, rgba(0, 0, 0, .1) 96.4%, transparent), linear-gradient(transparent, rgba(0, 0, 0, .1) 2.4%, rgba(0, 0, 0, .35) 4.8%, rgba(0, 0, 0, .65) 7.2%, rgba(0, 0, 0, .9) 9.6%, #000 12%);
+    mask-composite: intersect;
+  }
+}
+
+/* The text-free screen laid over I03's dark glass (tools/build-site.mjs,
+   V7-LX). The layer has the photograph's box (it is its sibling, absolutely
+   placed), so the IX2 move/scale both share lands them on the same pixels.
+   `.stargo-nw-frame` is the photograph's picture inside that box, drawn as
+   the rule above draws it: object-fit cover at 50% 15%. The glass, measured
+   on the 1365x2048 original, is the black inside the metal rim: x 467-912,
+   y 387-1340, corners of 60px. No finger crosses it and the screen shows no
+   camera cut-out, so the screen is a plain rounded rectangle: the template
+   composite's fingertip mask and camera pill have no counterpart here. */
+.lx-scope .lx-no-writing-image-holder:has(> .stargo-nw-screen) { position: relative; }
+.lx-scope .lx-no-writing-image.stargo-nw-screen {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  container-type: size;
+}
+.lx-scope .stargo-nw-frame {
+  --nw-w: max(100cqw, 100cqh * 1365 / 2048);
+  --nw-h: max(100cqh, 100cqw * 2048 / 1365);
+  position: absolute;
+  left: calc((100cqw - var(--nw-w)) * .5);
+  top: calc((100cqh - var(--nw-h)) * .15);
+  width: var(--nw-w);
+  height: var(--nw-h);
+}
+.lx-scope .stargo-nw-frame .stargo-nw-art {
+  position: absolute;
+  left: 34.212%;
+  top: 18.896%;
+  width: 32.674%;
+  height: 46.582%;
+  max-width: none;
+  object-fit: cover;
+  border-radius: 13.453% / 6.289%;
+}

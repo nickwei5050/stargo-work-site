@@ -21,8 +21,9 @@
  *     gets a new id and tools/imagegen/prepare-photos.mjs writes it (it
  *     refuses to replace a file with different bytes).
  *
- * The Open Graph file stays `og-cover.png` at 1200×630. Renaming it means
- * updating OG.token, OG.file, and every built meta tag together.
+ * The share card (OG) is the owner's photograph O01 since 2026-10-21, a
+ * 1200×630 JPEG written by tools/imagegen/prepare-share-card.mjs. Like every
+ * owner photograph it is never overwritten: a new card gets a new name here.
  *
  * Nothing here is new artwork. Every id is a file that already ships.
  */
@@ -36,10 +37,19 @@ export const productFile = (id) => `assets/stargo-product/${id}.webp`;
 /** Owner photograph: its widest file. The narrower ones carry their own width in the name. */
 export const photoFile = (id, width = 2048) => `assets/stargo-photo/${id}-${width}.webp`;
 
-/** Share cover. chrome.mjs writes `token`; pages publish `file`. */
+/**
+ * Share cover: og:image and twitter:image of every page that has no picture of
+ * its own (an article shares its own cover, tools/chrome.mjs). chrome.mjs
+ * writes `token`; pages publish `file`. Since 2026-10-21 it is the owner's
+ * photograph O01 (site-images/batch-8, a container ship at blue hour), cut to
+ * 1200×630 and written as a JPEG, because link previews do not all read WebP.
+ * It replaced the generated og-cover.png (editorialFile('og-cover', 'png')),
+ * which stays on disk. `id` keys its alt text in tools/editorial-images.mjs.
+ */
 export const OG = {
-  token: editorialToken('og-cover', 'png'),
-  file: editorialFile('og-cover', 'png'),
+  id: 'o01-share-cover',
+  token: 'assets/stargo-photo/o01-share-cover-1200x630.jpg',
+  file: 'assets/stargo-photo/o01-share-cover-1200x630.jpg',
   width: 1200,
   height: 630,
 };
@@ -185,6 +195,43 @@ export const CAP_PHOTOS = {
 /* The demo band behind the glass form (index, capabilities, enterprise) is a
    CSS background: css/stargo-fusion.css sets .photo-section to G01,
    assets/stargo-photo/g01-cta-loading-bay-dusk-2048.webp. */
+
+/**
+ * The blog (group "blog", 2026-10-21; site-images/batch-8, B01–B07): each
+ * article's cover photograph, by article slug (tools/blog.mjs POSTS).
+ * It is the picture of the article's hero and of its card in the blog index
+ * (blog.html) and in every article's 「更多文章」 list (tools/build-site.mjs).
+ * A slug not listed keeps its cover from assets/blog/ there. The covers in
+ * assets/blog/ (tools/blog-covers.mjs) stay what the articles share
+ * (og:image, twitter:image, the BlogPosting image) and what the homepage and
+ * workforce cards show until their own groups place them. Values are each
+ * photograph's widest file; tools/editorial-images.mjs writes the srcset, the
+ * size and the alt, css/stargo-fusion.css (the "blog" block at its end) the
+ * crop point.
+ */
+export const BLOG_COVERS = {
+  'stargo-work-visual-guide': photoFile('b01-visual-guide', 1600),
+  'start-with-one-workflow': photoFile('b02-one-workflow', 1600),
+  'from-inquiry-to-quote': photoFile('b03-inquiry-to-quote', 1600),
+  'approval-gates-for-ai-in-trade': photoFile('b04-approval-handover', 1600),
+  '288-ai-employees-not-288-chatbots': photoFile('b05-288-relay', 1600),
+  'ai-operating-system-for-global-trade': photoFile('b06-browser-os', 1600),
+  'enterprise-ontology-explained': photoFile('b07-knowledge-library', 1600),
+};
+
+/**
+ * intelligence.html, both languages (group "blog", 2026-10-21;
+ * site-images/batch-8, I01–I03), in place of the Lifelogx template's
+ * photographs: `observe` the full-bleed picture under the four lines
+ * 观察真实流程 … 用实际结果改进 (#lx-more), `closing` the picture of the pink
+ * closing card (#lx-evolution), `phone` the hand-held phone of the "no
+ * writing" band, whose text-free screen (mobile-core) stays laid over it.
+ */
+export const INTEL_PHOTOS = {
+  observe: photoFile('i01-observe-process', 2048),
+  closing: photoFile('i02-keep-or-revert', 768),
+  phone: photoFile('i03-hand-phone-blank', 768),
+};
 
 /**
  * Editorial ids, no extension. Order is the chrome photo-strip cycle
@@ -474,7 +521,9 @@ export const ENTERPRISE_PHOTOS = {
 
 if (HERO.theatre.length !== 7) throw new Error('replaceables: hero theatre is seven cells');
 if (HERO.centreIndex !== 3) throw new Error('replaceables: the film replaces theatre cell 3');
-if (OG.width !== 1200 || OG.height !== 630) throw new Error('replaceables: og-cover stays 1200×630');
-if (!OG.file.endsWith('/og-cover.png') || !OG.token.endsWith('/og-cover.png')) {
-  throw new Error('replaceables: og-cover.png keeps its name');
+if (OG.width !== 1200 || OG.height !== 630) throw new Error('replaceables: the share card stays 1200×630');
+/* A JPEG or PNG (link previews do not all read WebP), named with its size,
+   written as the final URL (no editorial token to rewrite). */
+if (OG.token !== OG.file || !/^assets\/[\w/-]+-1200x630\.(?:jpg|png)$/.test(OG.file)) {
+  throw new Error(`replaceables: the share card is a 1200x630 JPEG or PNG named with its size, not ${OG.file}`);
 }

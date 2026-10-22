@@ -13,7 +13,8 @@
  * What each picture shows and where it is cropped live in
  * tools/editorial-images.mjs and css/stargo-fusion.css; where it goes, in
  * tools/replaceables.mjs. Batch 8's og-share-cover.png (O01) is the Open
- * Graph share card; it is written separately as a 1200x630 JPEG, not here.
+ * Graph share card; it is written separately as a 1200x630 JPEG by
+ * tools/imagegen/prepare-share-card.mjs, not here.
  *
  * File names carry the width (`<id>-<width>.webp`) and are never overwritten:
  * /assets is served immutable for a year, so a changed picture needs a new

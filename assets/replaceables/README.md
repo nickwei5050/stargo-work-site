@@ -10,12 +10,12 @@ This site is the WORK marketing site. It is not `www.stargomoto.com`.
 
 1. Prefer **overwriting the file named below**, same filename, same pixel size.
 2. Product screenshots also have width variants (`-480`, `-768`, `-1024`) next to the full file. Editorial stills have `-400`, `-800`, `-1200`. Replace every variant of that id, or a smaller `srcset` candidate will still show the old picture.
-3. Leave `og-cover.png` named `og-cover.png` at **1200×630**. The meta tags already point at `assets/stargo-editorial/og-cover.png`.
+3. The share card is the owner's photograph O01, a **1200×630** JPEG (see Open Graph below). A new card gets a new file name; never overwrite it.
 4. Rebuild with `npm run build`. Do not deploy from this branch until the new pixels are reviewed.
 
 A slot whose value in `tools/replaceables.mjs` starts with `assets/stargo/` and is **not** `stargo-editorial`, `stargo-product`, or `stargo-motion` is a generator token. `tools/editorial-images.mjs` rewrites `assets/stargo/` to `assets/stargo-editorial/` when the page is written. Edit the token in `tools/replaceables.mjs` if you must point the slot at a different **already registered** id. A new product id also needs an entry in `tools/imagegen/product-assets.json` and alt text in `tools/editorial-images.mjs`.
 
-Blog covers in `assets/blog/` are generated from the sources in `tools/blog-covers.mjs` (those sources read this list). After a screenshot overwrite, rerun `node tools/blog-covers.mjs` so the covers pick up the new bytes.
+Blog covers in `assets/blog/` are generated from the sources in `tools/blog-covers.mjs` (those sources read this list). After a screenshot overwrite, rerun `node tools/blog-covers.mjs` so the covers pick up the new bytes. Since 2026-10-21 the blog index and the articles show the owner's cover photographs instead (`BLOG_COVERS`, below); the `assets/blog/` covers remain what the articles share (`og:image`) and what the homepage and workforce cards show until those slots are placed.
 
 ## Hero
 
@@ -140,13 +140,22 @@ About, contact, pricing and workforce photographs (group "pages", batches 4, 5 a
 | Workforce role cards: the five marquee cards, each twice, and the collage card (`WORKFORCE_ROLES`, by the lifelogx asset id) | `d01-market-research-1024`, `d02-follow-up-1024`, `d03-product-spec-480`, `d04-finance-480`, `d05-coordination-1024`, `d06-reporting-480` |
 | Workforce article cards under 文章 (`WORKFORCE_BLOG_COVERS`, by article slug; the blog index and the articles keep `assets/blog/`) | `b01-visual-guide`, `b02-one-workflow`, `b03-inquiry-to-quote`, all `-1600` |
 
+### Blog and intelligence page (batch 8, 2026-10-21)
+
+| Slot | File on disk |
+| --- | --- |
+| Article hero, blog index card and 「更多文章」 card of each article (`BLOG_COVERS`, by slug), zh and en | `b01-visual-guide` … `b07-knowledge-library`, 480/768/1024/1600 |
+| intelligence.html, full-bleed picture under the four lines of `#lx-more` (`INTEL_PHOTOS.observe`) | `i01-observe-process`, 480 … 2048 |
+| intelligence.html, closing card picture, `#lx-evolution` (`INTEL_PHOTOS.closing`) | `i02-keep-or-revert`, 480/768 |
+| intelligence.html, hand-held phone of the "no writing" band (`INTEL_PHOTOS.phone`); the text-free screen stays laid over its glass | `i03-hand-phone-blank`, 480/768 |
+
 ## Open Graph
 
 | | |
 | --- | --- |
-| File | `assets/stargo-editorial/og-cover.png` |
-| Generator token | `assets/stargo/og-cover.png` (`OG.token`) |
-| Size | 1200×630 |
-| Meta | `og:image`, `og:image:width`, `og:image:height`, `twitter:image` on every non-article page |
+| File | `assets/stargo-photo/o01-share-cover-1200x630.jpg` (`OG.file`, written as is: no token) |
+| Source | the owner's `site-images/batch-8/og-share-cover.png` (O01), resized and cut to its centre by `tools/imagegen/prepare-share-card.mjs`; record in `tools/imagegen/share-card.json` |
+| Size | 1200×630, JPEG (link previews do not all read WebP) |
+| Meta | `og:image`, `og:image:width`, `og:image:height`, `og:image:alt`, `twitter:image`, `twitter:image:alt` on every non-article page |
 
-Article pages use that article’s cover in `assets/blog/` instead. Do not point those at `og-cover.png`.
+Article pages use that article’s cover in `assets/blog/` instead. Do not point those at the share card. The earlier generated card, `assets/stargo-editorial/og-cover.png`, stays on disk unused.

@@ -1,6 +1,7 @@
 /** Static asset coverage + real-browser responsive/image/navigation regression. */
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { SITE, req } from './paths.mjs';
 const { chromium } = req('@playwright/test');
 /* Repo-relative paths below; run from anywhere. */
@@ -19,6 +20,24 @@ const products = JSON.parse(readFileSync('tools/imagegen/product-assets.json', '
    an English one — and must not carry the demo-data caption. The one silent
    exception is a decorative backdrop: alt="" together with aria-hidden. */
 const photos = JSON.parse(readFileSync('tools/imagegen/photo-assets.json', 'utf8')).assets;
+/* The share card (batch-8 O01, 2026-10-21; tools/imagegen/prepare-share-card.mjs):
+   a 1200x630 JPEG, because link previews do not all read WebP. The bytes on
+   disk are the ones its record names, and the JPEG's own frame header says
+   1200x630. */
+const share = JSON.parse(readFileSync('tools/imagegen/share-card.json', 'utf8'));
+{
+  assert(/^assets\/stargo-photo\/[\w-]+-1200x630\.jpg$/.test(share.src) && existsSync(share.src), `share card: missing or misnamed file ${share.src}`);
+  const jpeg = readFileSync(share.src);
+  assert.equal(createHash('sha256').update(jpeg).digest('hex'), share.sha256, 'share card: the file is the one its record names');
+  assert(!share.upscaled && share.width <= share.sourcePixels[0] && share.height <= share.sourcePixels[1], 'share card: never larger than the supplied original');
+  let size = null;
+  for (let i = 2; i < jpeg.length - 8 && jpeg[i] === 0xff;) {
+    const marker = jpeg[i + 1];
+    if (marker >= 0xc0 && marker <= 0xcf && ![0xc4, 0xc8, 0xcc].includes(marker)) { size = [jpeg.readUInt16BE(i + 7), jpeg.readUInt16BE(i + 5)]; break; }
+    i += 2 + jpeg.readUInt16BE(i + 2);
+  }
+  assert(jpeg[0] === 0xff && jpeg[1] === 0xd8 && size?.[0] === 1200 && size?.[1] === 630, `share card: a 1200x630 JPEG, not ${size}`);
+}
 const files = [...readdirSync('.').filter(f => f.endsWith('.html')), ...readdirSync('en').filter(f => f.endsWith('.html')).map(f => 'en/' + f), ...readdirSync('blog').map(f => 'blog/' + f), ...readdirSync('en/blog').map(f => 'en/blog/' + f)];
 const all = [...files, 'css/stargo-fusion.css'].map(f => readFileSync(f, 'utf8')).join('\n');
 assert.equal(manifest.assets.length, 43);
@@ -81,7 +100,19 @@ for (const f of files) {
     assert(alt.endsWith(conceptCaption) && alt.indexOf(conceptCaption) === alt.length - conceptCaption.length && alt.length > conceptCaption.length + 8, `${f}: an owner photograph is AI-generated; its alt must describe the picture and end with "${conceptCaption}" once — "${alt}"`);
     assert(!/演示数据|demo data/i.test(alt), `${f}: a photograph is not a product interface; no demo-data caption — "${alt}"`);
   }
-  assert(/og:image[^>]*(stargo-editorial\/og-cover\.png|assets\/blog\/[\w-]+\.webp)/.test(html), `${f}: share cover`);   // articles share their cover
+  /* Share cover: an article shares its own cover, every other page the share
+     card, with the owner's sentence for it as og:image:alt. The file is on disk. */
+  {
+    const og = html.match(/<meta property="og:image" content="([^"]*)"\/>/)?.[1] ?? '';
+    const article = /^(?:en\/)?blog\//.test(f);
+    assert(article ? /^https:\/\/[^/]+\/assets\/blog\/[\w-]+\.webp$/.test(og) : og.endsWith(`/${share.src}`), `${f}: share cover ${og}`);
+    assert(existsSync(og.replace(/^https:\/\/[^/]+\//, '')), `${f}: share cover not on disk: ${og}`);
+    assert.equal(html.match(/<meta name="twitter:image" content="([^"]*)"\/>/)?.[1], og, `${f}: twitter:image is the share cover`);
+    if (!article) {
+      const alt = html.match(/<meta property="og:image:alt" content="([^"]*)"\/>/)?.[1] ?? '';
+      assert(alt && html.includes(`<meta name="twitter:image:alt" content="${alt}"/>`) && !/演示数据|demo data|AI 概念图|AI concept/i.test(alt), `${f}: the share card's alt — "${alt}"`);
+    }
+  }
   /* Runtime cache version: every local script and stylesheet the page loads
      carries its content hash (tools/chrome.mjs), so a deployment never serves a
      stale runtime. This used to be asserted through js/stargo-tabs.js alone, as
