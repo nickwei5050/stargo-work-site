@@ -26,7 +26,7 @@ import { PRODUCT_CAPTION } from './editorial-images.mjs';
 import { HERO, HOME_MODULES, HOME_STAGES, HOME_SILOS, HOME_ROLE_CARD, HOME_PRICING_CARD, HOME_BLOG_COVERS, NOTICES_CARDS, CAP_PHOTOS, ENTERPRISE_PHOTOS, CONTACT_CARD, WORKFORCE_ROLES, WORKFORCE_BLOG_COVERS } from './replaceables.mjs';
 import { SITE } from './paths.mjs';
 import { productTour } from './product-tour.mjs';
-import { motionHost, MOTION_CSS, MOTION_SCRIPTS } from './motion-scenes.mjs';
+import { motionHost, motionAssets, MOTION_CSS, MOTION_SCRIPTS } from './motion-scenes.mjs';
 import { webpPage } from './image-refs.mjs';
 import { a11yPage } from './a11y.mjs';
 import { speedPage } from './speed.mjs';
@@ -1444,8 +1444,18 @@ PAGES['workforce.html'] = (lang) => {
   b = blogCards(b, 'lx-blog-list', 'lx-blog-item', POSTS.slice(0, 3), lang, { ...LX_CARD, covers: WORKFORCE_BLOG_COVERS });
 
   // The template's big square tile has "2.4M" painted into the artwork: a follower
-  // count we have no basis for. STARGO's own brand image replaces it.
-  b = swapImg(b, '6942c157beb8f897be077c01_Group', W.tile.src, { alt: t(W.tile.alt) });
+  // count we have no basis for. Since 2026-10-23 a code-drawn scene takes the
+  // picture's place in its frame (W.tile.motion, tools/motion-scenes.mjs), and
+  // the page loads that scene's files below.
+  {
+    let n = 0;
+    b = b.replace(/<img\b[^>]*6942c157beb8f897be077c01_Group[^>]*>/g, (tag) => {
+      if (!/class="lx-feature-grid-image"/.test(tag)) throw new Error('workforce: the 2.4M tile picture lost its lx-feature-grid-image class');
+      n++;
+      return motionHost(W.tile.motion, lang, `sg-mo-${W.tile.motion}-tile`);
+    });
+    if (n !== 1) throw new Error(`workforce: expected one 2.4M tile picture, found ${n}`);
+  }
 
   b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
   b = b.replace(/<div([^>]*)class="([^"]*\blx-section\b[^"]*)"/, '<div id="lx-roles"$1class="$2"');
@@ -1455,7 +1465,13 @@ PAGES['workforce.html'] = (lang) => {
       .filter((re) => re.test(b)).map((re) => String(re));
     if (leftovers.length) throw new Error(`workforce: template copy survives: ${leftovers.join(', ')}`);
   }
-  return inMonoShell(b + bigMark(), ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
+  const motion = motionAssets([W.tile.motion]);
+  const page = inMonoShell(b + bigMark(), ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
+  /* inMonoShell links css/ files by name; the scene's sheets go after the
+     page's own, and its scripts (the scene, then the engine) before </body>. */
+  const fusion = '<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>';
+  if (page.split(fusion).length !== 2 || page.split('</body>').length !== 2) throw new Error('workforce: cannot place the motion scene\'s files');
+  return page.replace(fusion, `${fusion}\n${motion.css}`).replace('</body>', `${motion.js}</body>`);
 };
 
 /* ---- about.html — lifelogx about page ---------------------------------- */
@@ -2216,7 +2232,10 @@ function capabilityShowcase(C, lang) {
       .join('\n');
     /* chrome.mjs attaches css/stargo-fusion.css after the last stylesheet on the
        page, so the donor sheets added here still load before the overrides. */
-    h = h.replace(monoLink, (m) => `${m}\n${sheets}\n<link href="css/donor-fonts.css" rel="stylesheet" type="text/css"/>`);
+    /* The teamwork card of #story-6 is a code-drawn scene (CAP_V6A.team, tools/blocks/qx-projects.mjs);
+       its sheets follow the donors', its scripts the page's own below. */
+    const motion = motionAssets(C.CAP_V6A.team.cards.map((c) => c.motion).filter(Boolean));
+    h = h.replace(monoLink, (m) => `${m}\n${sheets}\n<link href="css/donor-fonts.css" rel="stylesheet" type="text/css"/>\n${motion.css}`);
     /* A donor block's video is fetched only once the reader is near it. cinery's
        break band is 27 `<video autoplay preload="metadata">` cards — 32 MB on
        first paint, before anyone has scrolled to them. Holding the url in
@@ -2241,7 +2260,7 @@ function capabilityShowcase(C, lang) {
        renames it to app.fused.js later, and the tags added here follow it. */
     const bundleTag = /(<script src="js\/app\.[0-9a-f]{8}\.[0-9a-f]{16}\.js"[^>]*><\/script>)/;
     if (!bundleTag.test(h)) throw new Error('capabilities: page bundle script tag not found');
-    h = h.replace(bundleTag, '$1<script src="js/stargo-video-defer.js" defer></script><script src="js/capability-blocks.js" defer></script>');
+    h = h.replace(bundleTag, (m) => `${m}<script src="js/stargo-video-defer.js" defer></script><script src="js/capability-blocks.js" defer></script>${motion.js}`);
   }
   // Assign by buyer meaning, not image sequence: growth, customer context,
   // commercial fulfillment, workforce/governance. Parallel-team art belongs

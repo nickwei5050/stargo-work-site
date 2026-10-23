@@ -9,6 +9,10 @@
  *            os-cockpit.webp as a CSS background on .absolute-photo).
  *   radar  — the Growth OS panel of the core-systems switcher (gos10).
  *   studio — the AI 创作 panel of the same switcher (os-boot).
+ *   team   — 「团队分工、交流、并行与接力」 (capabilities #story-6, third card)
+ *            and the 「不再各聊各的」 tile of the workforce page, both of which
+ *            showed the Expert Teams composite (sw006-expert-teams.webp).
+ *            js/stargo-motion-team.js + css/stargo-motion-team.css.
  *
  * The hosts are role="img" with a sentence for screen readers; the scenes
  * themselves are aria-hidden drawing. Every scene says on itself that it is
@@ -28,6 +32,10 @@ export const MOTION_LABEL = {
   studio: {
     zh: '动态示意：AI 创作根据一句要求生成产品主图、场景图和短视频，并生成多语言卖点文案，全部人工审核后发布。',
     en: 'Illustrative motion: AI Creative turns one instruction into product images, scenes and short video plus copy in several languages, all reviewed before publishing.',
+  },
+  team: {
+    zh: '动态示意：目标「开发德国储能经销商」分给市场研究员、产品工程师、销售和创意四位 AI 员工并行推进、互相接力；目标国家先等你确认，统筹汇总成果后停在人工审批，等你拍板，不会自动发送。',
+    en: 'Illustrative motion: one goal, finding storage distributors in Germany, is split between four AI employees (market researcher, product engineer, sales and creative) who work in parallel and hand off to each other; a question about the target country waits for you, and a coordinator gathers the results and stops at a human approval, so nothing is sent automatically.',
   },
 };
 
@@ -58,6 +66,6 @@ export function motionAssets(scenes) {
   };
 }
 /* scene name → the file that defines it (several scenes may share one file) */
-export const SCENE_FILE = {};
+export const SCENE_FILE = { team: 'team' };
 /* scene files that ship their own stylesheet */
-export const SCENE_CSS = new Set();
+export const SCENE_CSS = new Set(['team']);
