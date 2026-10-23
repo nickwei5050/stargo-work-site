@@ -10,6 +10,14 @@
  *   radar  — the Growth OS panel of the core-systems switcher (gos10).
  *   studio — the AI 创作 panel of the same switcher (os-boot).
  *
+ * And on intelligence.html, phone screens drawn in the light chrome of the
+ * phone app (js/stargo-motion-phone.js):
+ *
+ *   feed   — the hand-held phone of 「不再 等提醒 / 等回复 / 丢背景」 (it was
+ *            mobile-core.webp laid over the template's phone).
+ *   squad  — the phone of the 「按任务组队」 card, beside 「工作暂停，背景不必
+ *            从头解释」 (it was mobile-core.webp over mobile-agents.webp).
+ *
  * The hosts are role="img" with a sentence for screen readers; the scenes
  * themselves are aria-hidden drawing. Every scene says on itself that it is
  * illustrative motion with demo data.
@@ -28,6 +36,14 @@ export const MOTION_LABEL = {
   studio: {
     zh: '动态示意：AI 创作根据一句要求生成产品主图、场景图和短视频，并生成多语言卖点文案，全部人工审核后发布。',
     en: 'Illustrative motion: AI Creative turns one instruction into product images, scenes and short video plus copy in several languages, all reviewed before publishing.',
+  },
+  feed: {
+    zh: '动态示意（演示数据）：手机上的待办自己列出来——Müller Energie 三天没回复，跟进信已起草、等你确认；报价 Q-1042 低于底价，等你审批；PT Surya 到了补货周期，建议联系。你点了批准，发送前仍由你确认。',
+    en: 'Illustrative motion (demo data): the phone’s to-do list fills itself — Müller Energie has not replied in three days and a follow-up is drafted for your OK; quote Q-1042 is below the floor price and needs your approval; PT Surya is due to restock. Once you approve, you still confirm before anything is sent.',
+  },
+  squad: {
+    zh: '动态示意（演示数据）：一项任务在手机上组队，统筹、研究、销售、产品、创意分头推进、互相提问；你暂停后，任务卡留着已完成什么、在等什么、由谁拍板，继续后从中断的那一步接着做，最后汇总交你确认。',
+    en: 'Illustrative motion (demo data): a task forms its team on the phone — lead, research, sales, product and creative split the work and ask each other; when you pause it, the task keeps what is done, what is waiting and who decides, then picks up at the step where it stopped and hands you the summary to confirm.',
   },
 };
 
@@ -58,6 +74,6 @@ export function motionAssets(scenes) {
   };
 }
 /* scene name → the file that defines it (several scenes may share one file) */
-export const SCENE_FILE = {};
+export const SCENE_FILE = { feed: 'phone', squad: 'phone' };
 /* scene files that ship their own stylesheet */
-export const SCENE_CSS = new Set();
+export const SCENE_CSS = new Set(['phone']);
