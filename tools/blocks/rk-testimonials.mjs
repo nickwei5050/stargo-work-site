@@ -177,7 +177,10 @@ export function render(frag, ctx) {
     const AVATAR = /(<img src=")assets\/renok\/[^"]+(" loading="lazy" alt=")[^"]*(" class="rk-rt-radius-10"\/>)/;
     if (!AVATAR.test(out)) throw new Error(`rk-testimonials: card ${i + 1} has no mirrored portrait`);
     /* ctx.art() names the webp artwork; the avatars are this site's png set. */
-    out = out.replace(AVATAR, (s, a, b, c) => `${a}assets/stargo-editorial/${O.icons[k]}.png${b}${c}`);
+    /* An icon given as a path (the owner's S + star mark since 2026-10-23)
+       is used as it is. */
+    const icon = O.icons[k].startsWith('assets/') ? O.icons[k] : `assets/stargo-editorial/${O.icons[k]}.png`;
+    out = out.replace(AVATAR, (s, a, b, c) => `${a}${icon}${b}${c}`);
     return out;
   }
 }

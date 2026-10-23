@@ -2162,7 +2162,9 @@ export const CAP_V6A = {
     /* The six portraits were the donor's testimonial sitters: beside an
        operating theme a face reads as a customer quote this company does not
        have. This site's own abstract avatars stand in (decorative). */
-    icons: ['avatar-07', 'avatar-08', 'avatar-09', 'avatar-10', 'avatar-11', 'avatar-12'],
+    /* 2026-10-23: the owner asked for the metallic avatars to become the
+       company's own S + star mark everywhere. */
+    icons: Array(6).fill('assets/brand/stargo-s-mark-256.webp'),
   },
   /* #story-6 — AI roles as a team (tools/blocks/qx-projects.mjs): V6 §5.7's
      three cards. The large card is the teamwork example and says it is an
