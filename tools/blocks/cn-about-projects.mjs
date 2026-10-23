@@ -329,7 +329,13 @@
  *
  * WHAT THE PICTURES ARE (owner decision, 2026-09-15 — and the reversal, same day)
  *
- *   SINCE 2026-10-21 the four tiles show the owner's own photographs, one per
+ *   SINCE 2026-10-23 each tile draws its AI employee at work in code instead
+ *   of a photograph (owner: 「图片改成代码」; tools/code-art-people.mjs
+ *   ABOUT_CASE_SCENES → js/stargo-motion-crew.js): 市场信号, 报价, 跟进 and
+ *   统筹, each in a small STARGO app window that ends on the person's call.
+ *   The photographs below stay on disk and in ABOUT_CASE_STILLS as the record.
+ *
+ *   FROM 2026-10-21 the four tiles show the owner's own photographs, one per
  *   role (site-images/batch-5, whose manifest names these four clips as the
  *   slots they replace): D01 the market-research still life in tile 1, D07
  *   the quotation samples in tile 2, D02 the follow-up hourglass in tile 3
@@ -483,8 +489,8 @@
  */
 import { readFileSync } from 'node:fs';
 import { setText, setTextAll, splitRepeat, DONORS } from '../block-lib.mjs';
-import { stillImage } from '../chrome.mjs';
 import { ABOUT_CASE_STILLS } from '../replaceables.mjs';
+import { ABOUT_CASE_SCENES, caseScene } from '../code-art-people.mjs';
 
 /* ------------------------------------------------------------- the cut -- */
 
@@ -953,15 +959,26 @@ export function render(frag, ctx) {
      its size (tools/editorial-images.mjs) and its crop point (the "pages"
      block of css/stargo-fusion.css). The alt is a marker that
      tools/editorial-images.mjs replaces with the photograph's own sentence.
-     See WHAT THE PICTURES ARE in the header. */
-  if (Object.keys(ABOUT_CASE_STILLS).length !== CLIPS) {
-    throw new Error(`cn-about-projects: ABOUT_CASE_STILLS names ${Object.keys(ABOUT_CASE_STILLS).length} tiles, the band draws ${CLIPS}`);
+     See WHAT THE PICTURES ARE in the header.
+
+     SINCE 2026-10-23 (owner: 「图片改成代码」) each tile draws its AI employee
+     at work in code instead: a motion scene in the clip's box
+     (tools/code-art-people.mjs ABOUT_CASE_SCENES and caseScene;
+     js/stargo-motion-crew.js, css/stargo-motion-crew.css). The box, its glass,
+     the wordmark roll (laid over the scene's app bar), the arrow and the
+     tile's interaction stay. ABOUT_CASE_STILLS keeps the photographs' names
+     so one line puts them back. */
+  if (Object.keys(ABOUT_CASE_SCENES).length !== CLIPS || Object.keys(ABOUT_CASE_STILLS).length !== CLIPS) {
+    throw new Error(`cn-about-projects: ABOUT_CASE_SCENES names ${Object.keys(ABOUT_CASE_SCENES).length} tiles, the band draws ${CLIPS}`);
   }
-  for (const [id, src] of Object.entries(ABOUT_CASE_STILLS)) {
-    html = stillImage(html, id, src, 'STARGO WORK', 'stargo-still stargo-case-photo');
+  for (const [id, scene] of Object.entries(ABOUT_CASE_SCENES)) {
+    html = caseScene(html, id, scene, lang);
   }
   if (/<video\b|<source\b|data-video-urls=/.test(html)) {
-    throw new Error('cn-about-projects: a tile still carries its clip after the photographs went in');
+    throw new Error('cn-about-projects: a tile still carries its clip after the scenes went in');
+  }
+  if ((html.match(/data-sg-scene="crew/g) ?? []).length !== CLIPS) {
+    throw new Error('cn-about-projects: expected one code-drawn scene per tile');
   }
 
   return html;
