@@ -28,7 +28,7 @@ export const TOUR = {
     zh: '下面每一张都是 STARGO WORK 的真实截图。跟着一单生意走一遍：找客户、接询盘、报价审批、产品资料，再到手机上处理。',
     en: 'Every picture below is a screenshot of STARGO WORK itself. Follow one deal through it: finding buyers, answering the inquiry, approving the quote, the product catalogue, and handling it on the phone.',
   },
-  note: { zh: '截图中的客户名称和数字为演示数据。点截图可放大看。', en: 'Customer names and figures in the screenshots are demo data. Click a screenshot to enlarge it.' },
+  note: { zh: '截图中的客户名称和数字为演示数据。点截图可放大看。', en: 'The screens show the Chinese interface; customer names and figures are demo data. Click a screenshot to enlarge it.' },
   cta: { zh: '预约真机演示', en: 'Book a live demo' },
   more: { zh: '看全部能力', en: 'See all capabilities' },
   tabsLabel: { zh: '真实界面导览', en: 'Product tour' },
@@ -55,7 +55,7 @@ export const TOUR = {
         { x: 44, y: 16, zh: '这单走到哪一步（新询盘到已成交共七步）；型号、数量、目的港、贸易术语自动整理好。', en: 'Which of the seven stages the deal is in; model, quantity, destination and Incoterm already pulled out.' },
         { x: 62, y: 71, zh: '系统给出下一步，点「让 AI 做这一步」，回复就起草好。', en: 'It proposes the next step. Click “let AI do it” and the reply is drafted.' },
         { x: 93, y: 39, zh: 'AI 助手读完这个客户的全部往来，帮你分析、整理报价需求。', en: 'The AI assistant has read every message with this customer and helps you analyse and prepare the quote.' },
-        { x: 68, y: 96, zh: '「提交审批」：AI 不会直接发给客户，人批了才发。', en: '“Submit for approval”: the AI never sends to a customer on its own.' },
+        { x: 68, y: 94, zh: '「提交审批」：AI 不会直接发给客户，人批了才发。', en: '“Submit for approval”: the AI never sends to a customer on its own.' },
       ],
     },
     {
@@ -108,7 +108,8 @@ function shotHtml(step, shot, si, lang) {
   const pins = step.points
     .map((p, i) => ({ p, i }))
     .filter(({ p }) => (p.shot ?? 0) === si)
-    .map(({ p, i }) => `<span class="sg-tour-pin" data-pin="${i}" style="left:${p.x}%;top:${p.y}%" aria-hidden="true">${i + 1}</span>`)
+    // a ring around the spot (the UI under it stays readable) with its number in a badge on the ring's edge
+    .map(({ p, i }) => `<span class="sg-tour-pin" data-pin="${i}" style="left:${p.x}%;top:${p.y}%" aria-hidden="true"><b>${i + 1}</b></span>`)
     .join('');
   const img = `<img src="${P}${shot.base}.webp" srcset="${srcset(shot.base)}" sizes="${sizes}" width="${shot.w}" height="${shot.h}" loading="lazy" decoding="async" alt="${escapeHtml(t(shot.alt, lang))}" class="sg-tour-img"/>`;
   if (step.phone) return `<div class="sg-tour-phone"><div class="sg-tour-pic">${img}${pins}</div></div>`;

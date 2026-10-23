@@ -65,7 +65,11 @@
       back = pic;
       zimg.src = img.getAttribute('src');
       zimg.alt = img.alt;
+      // a wide capture on a small screen opens larger than the screen and pans, centred to start
+      var pan = window.innerWidth < 992 && +img.getAttribute('width') > +img.getAttribute('height');
+      box.classList.toggle('is-pan', pan);
       box.hidden = false;
+      if (pan) { box.scrollTop = 0; box.scrollLeft = (box.scrollWidth - box.clientWidth) / 2; zimg.onload = function () { box.scrollLeft = (box.scrollWidth - box.clientWidth) / 2; }; }
       document.documentElement.classList.add('sg-tour-locked');
       box.querySelector('button').focus();
     }

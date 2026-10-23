@@ -413,7 +413,7 @@
     function tick(t) {
       var kNow = Math.floor(t / P);
       // particles: the events still travelling
-      var slot = 0, hit = -1, gateWait = null, gateDone = -1, gq = null;
+      var slot = 0, hit = -1, gateWait = null, gateDone = -1, gq = null, gc = null;
       for (var k = kNow - 3; k <= kNow; k++) {
         var e = ev(k), tau = t - e.t0;
         if (tau < 0) continue;
@@ -422,6 +422,7 @@
         if (e.gate && tau >= OUT0 + 0.5 && tau < OUT0 + 0.5 + HOLD) gateWait = seg(tau, OUT0 + 0.5, OUT0 + 0.5 + HOLD);
         if (e.gate && tau >= OUT0 + 0.5 + HOLD && tau < OUT0 + 0.5 + HOLD + 0.9) gateDone = tau - (OUT0 + 0.5 + HOLD);
         if (e.gate && tau >= OUT0 && tau < outEnd(e)) gq = e;
+        if (e.gate && tau >= OUT0 && tau < outEnd(e) + 0.6) gc = e;
         if (!w || slot >= R.parts.length) continue;
         drawPart(R.parts[slot++], w);
       }
@@ -504,7 +505,8 @@
       var cur = ev(kNow), ct = t - cur.t0;
       var se = ct >= IN1 - 0.1 ? cur : ev(kNow - 1);
       // the gate says 等你拍板 itself, except on phones where its label is hidden
-      textSwap(R.status, gw && gq ? (R.phone ? T('等你拍板 · ', 'Your call · ') + gq.msg[0] : gq.msg[0] + ' → ' + ST[gq.st].name) : se.msg[0] + ' → ' + ST[se.st].name);
+      // and the caption stays on a quote at the gate until it has landed in its stage card
+      textSwap(R.status, gw && gq && R.phone ? T('等你拍板 · ', 'Your call · ') + gq.msg[0] : gc ? gc.msg[0] + ' → ' + ST[gc.st].name : se.msg[0] + ' → ' + ST[se.st].name);
       // ticker
       if (R.tick) {
         var arrivedCount = kNow + (t - cur.t0 >= IN1 ? 1 : 0);
@@ -615,7 +617,8 @@
       }
       // the factory label and the newest pin paint above every arc
       if (mode !== 'mini') {
-        var hl = sv('text', { x: h[0], y: h[1] + 30 * R.inv, 'text-anchor': 'middle', class: 'sg-map-label is-home', style: 'font-size:' + (13 * R.inv).toFixed(1) + 'px;stroke-width:' + (4 * R.inv).toFixed(1) + 'px' }, g);
+        // up and to the right of the dot: routes leave it westwards, south to Jakarta and east-south-east to Sydney
+        var hl = sv('text', { x: h[0] + 9 * R.inv, y: h[1] - 11 * R.inv, 'text-anchor': 'start', class: 'sg-map-label is-home', style: 'font-size:' + (13 * R.inv).toFixed(1) + 'px;stroke-width:' + (4 * R.inv).toFixed(1) + 'px' }, g);
         hl.textContent = T('柳州工厂', 'Liuzhou factory');
       }
       g.appendChild(R.pins[0].g);
@@ -656,7 +659,7 @@
         el('b', '', nt, T('发开发信前', 'Before any outreach'));
         el('span', '', nt, T('数量和花费会先请你确认', 'you confirm quantity and cost'));
       }
-      var tg = el('div', 'sg-tag', mode === 'compact' ? null : stage, T('动态示意 · 演示数据', 'Illustrative motion · demo data'));
+      var tg = el('div', 'sg-tag', mode === 'compact' ? null : stage, mode === 'mini' ? T('演示数据', 'Demo data') : T('动态示意 · 演示数据', 'Illustrative motion · demo data'));
       if (mode === 'compact') bar.insertBefore(tg, live);
     }
 
@@ -780,10 +783,10 @@
      ===================================================================== */
   function StudioScene() {
     var V = [
-      { key: 'studio', label: T('主图 · 白底', 'Main image · white'), prompt: T('白底主图，柔光，45° 俯拍，突出铭牌', 'White background, soft light, 45° view, show the label') },
-      { key: 'ware', label: T('场景图 · 仓库 16:9', 'Scene · warehouse 16:9'), prompt: T('仓库货架前，暖色顶灯，真实质感', 'Warehouse racks, warm overhead light, realistic') },
-      { key: 'solar', label: T('场景图 · 户外储能', 'Scene · outdoor storage'), prompt: T('户外光伏板前，日落逆光', 'In front of solar panels at sunset') },
-      { key: 'city', label: T('短视频 · 15 秒', 'Short video · 15 s'), prompt: T('城市夜景，暖色灯光，镜头缓慢推近', 'City at night, warm lights, slow push-in') }
+      { key: 'studio', label: T('主图 · 白底', 'Main image · white'), prompt: T('白底主图，柔光，突出铭牌', 'White background, soft light') },
+      { key: 'ware', label: T('场景图 · 仓库 16:9', 'Scene · warehouse 16:9'), prompt: T('仓库货架前，暖色顶灯', 'Warehouse racks, warm light') },
+      { key: 'solar', label: T('场景图 · 户外储能', 'Scene · outdoor storage'), prompt: T('户外光伏板前，日落逆光', 'Solar panels at sunset') },
+      { key: 'city', label: T('短视频 · 15 秒', 'Short video · 15 s'), prompt: T('城市夜景，镜头缓慢推近', 'City at night, slow push-in') }
     ];
     var LANG = [
       ['中文', '长寿命磷酸铁锂电池，3000 次以上循环。'],
@@ -962,7 +965,7 @@
         el('b', '', nt, T('发布前', 'Before publishing'));
         el('span', '', nt, T('每张图、每段视频都要你点通过', 'nothing goes live without your OK'));
       }
-      var tg = el('div', 'sg-tag', mode === 'compact' ? null : stage, T('动态示意 · 演示数据', 'Illustrative motion · demo data'));
+      var tg = el('div', 'sg-tag', mode === 'compact' ? null : stage, mode === 'mini' ? T('演示数据', 'Demo data') : T('动态示意 · 演示数据', 'Illustrative motion · demo data'));
       if (mode === 'compact') bar.insertBefore(tg, live);
     }
 
@@ -977,7 +980,8 @@
       R.cells.forEach(function (c) {
         var o = !showCells ? 0 : !swapped ? c01(cover * 1.8 - c.l * 0.8) : 1 - c01((gp - c.o * 0.82) / 0.18);
         put(c.e, 'opacity', o.toFixed(2));
-        if (showCells) put(c.e, 'fill', c.l > 0.88 ? pal[pal.length - 1] : pal[Math.min(pal.length - 2, Math.floor(c.y * (pal.length - 1)))]);
+        // a low-resolution preview of the new scene: its colours by height, rows blending into each other
+        if (showCells) put(c.e, 'fill', pal[Math.max(0, Math.min(pal.length - 2, Math.floor(c.y * (pal.length - 1) + (c.l - 0.5) * 0.7)))]);
       });
       put(R.scan, 'y', (gp * CH).toFixed(1));
       put(R.scan, 'opacity', swapped && showCells ? (0.75 * Math.sin(Math.PI * gp)).toFixed(2) : '0');

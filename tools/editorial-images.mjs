@@ -460,8 +460,13 @@ export function editorialImages(html, lang) {
     const product = productText[id];
     const decorative = /\balt=""/.test(tag) || id.startsWith('avatar-');
     const text = (product ?? descriptions[id])?.[lang === 'zh' ? 0 : 1];
+    /* The homepage product tour (tools/product-tour.mjs) shows captures of the
+       running system and says so; only their data is demo data. */
+    const tour = /sg-tour-img/.test(tag);
     const suffix = product && /演示数据|demo data/.test(text)
       ? ''
+      : tour
+      ? (lang === 'zh' ? '。真实界面截图（演示数据）' : ' — product screenshot · demo data')
       : product
       ? (lang === 'zh' ? `。${PRODUCT_CAPTION.zh}` : ` — ${PRODUCT_CAPTION.en}`)
       : CONCEPT_CAPTION[lang === 'zh' ? 'zh' : 'en'];
@@ -500,9 +505,12 @@ export function editorialImages(html, lang) {
       /* The product screens in the intelligence page's phone mockups: at most
          325px wide. The editorial screens beside them keep the general rule. */
       const phone = /lx-integrations-image/.test(result) && /stargo-product/.test(result);
+      /* The product tour: a wide capture fills its column (the page width below
+         992, beside a 340px text column above), a phone capture is 260px at most. */
+      const tourPhone = tour && /sg-tour-phone/.test(before);
       /* Gallery tiles are ~18–20rem after the curated-asset pass; the core-system
          dashboard plate may grow to 1040px on desktop (css/stargo-fusion.css). */
-      attrs.push(`sizes="${rkCard ? '(max-width: 767px) 180px, (max-width: 991px) 340px, (max-width: 1919px) 440px, 660px' : rkThumb ? '(max-width: 1439px) 200px, 300px' : phone ? '(max-width: 767px) 280px, 330px' : tile ? '(max-width: 1439px) 288px, 320px' : dashboard ? '(max-width: 991px) 92vw, (max-width: 1439px) 70vw, 1040px' : thumb ? '(max-width: 1439px) 186px, 250px' : card ? '(max-width: 767px) 45vw, 360px' : small ? '(max-width: 767px) 50vw, 400px' : '(max-width: 767px) 100vw, (max-width: 991px) 75vw, 60vw'}"`);
+      attrs.push(`sizes="${tourPhone ? '(max-width: 767px) 45vw, 260px' : tour ? '(max-width: 991px) calc(100vw - 32px), min(1180px, calc(100vw - 420px))' : rkCard ? '(max-width: 767px) 180px, (max-width: 991px) 340px, (max-width: 1919px) 440px, 660px' : rkThumb ? '(max-width: 1439px) 200px, 300px' : phone ? '(max-width: 767px) 280px, 330px' : tile ? '(max-width: 1439px) 288px, 320px' : dashboard ? '(max-width: 991px) 92vw, (max-width: 1439px) 70vw, 1040px' : thumb ? '(max-width: 1439px) 186px, 250px' : card ? '(max-width: 767px) 45vw, 360px' : small ? '(max-width: 767px) 50vw, 400px' : '(max-width: 767px) 100vw, (max-width: 991px) 75vw, 60vw'}"`);
     }
     return result.replace(/\s*\/?>(\s*)$/, ` ${attrs.join(' ')}/>$1`);
   });
