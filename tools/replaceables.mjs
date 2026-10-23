@@ -512,8 +512,12 @@ export const PLACED = {
  * editorial files they replaced keep their places on the other pages and in
  * the hidden nav-menu rotator.
  * - `cockpit`: the three scroll-revealed pictures in the column beside
- *   「(老板驾驶舱)」, in page order: E05 the dawn office, E06 the owner on the
- *   phone at a stopped machine (portrait), E07 the ledger.
+ *   「(老板驾驶舱)」. They were E05 the dawn office, E06 the owner on the phone
+ *   at a stopped machine and E07 the ledger; on 2026-10-23 the owner chose to
+ *   replace these three with code-drawn motion (tools/motion-scenes.mjs), so
+ *   each entry names a scene, in page order: the cockpit overview, a blocker
+ *   a person takes over, and usage against the budget limit. E05–E07 stay
+ *   registered and published, unplaced (tools/verify-editorial.mjs RETIRED).
  * - `principle`: the rounded parallax picture beside 「(原则)」, E08 the
  *   emergency stop.
  * - `modules`: the five cards under 「五个管理组件 (5)」, in card order: E09
@@ -524,7 +528,7 @@ export const PLACED = {
  * backgrounds, set in css/stargo-fusion.css (the batch 7 block).
  */
 export const ENTERPRISE_PHOTOS = {
-  cockpit: [photoFile('e05-cockpit-overview', 1024), photoFile('e06-cockpit-blocker', 1024), photoFile('e07-cockpit-budget', 1024)],
+  cockpit: [{ motion: 'cockpit-overview' }, { motion: 'cockpit-blocker' }, { motion: 'cockpit-budget' }],
   principle: photoFile('e08-emergency-stop', 1024),
   modules: ['e09-capabilities', 'e10-access', 'e11-approval', 'e12-records', 'e13-key-cabinet'].map((id) => photoFile(id, 480)),
 };

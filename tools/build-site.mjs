@@ -27,7 +27,7 @@ import { HERO, HOME_MODULES, HOME_STAGES, HOME_ROLE_CARD, HOME_PRICING_CARD, HOM
 import { SITE } from './paths.mjs';
 import { productTour } from './product-tour.mjs';
 import { appSuite } from './app-suite.mjs';
-import { motionHost, motionAssets, MOTION_CSS, MOTION_SCRIPTS, PAIN_SCENES } from './motion-scenes.mjs';
+import { motionHost, motionAssets, SCENE_FILE, MOTION_CSS, MOTION_SCRIPTS, PAIN_SCENES } from './motion-scenes.mjs';
 import { webpPage } from './image-refs.mjs';
 import { a11yPage } from './a11y.mjs';
 import { speedPage } from './speed.mjs';
@@ -318,8 +318,26 @@ function fromStudio(spec, lang) {
   /* (A product screenshot was tried in the third column picture on 2026-09-18
      and reverted the same day; it would have needed a non-empty alt to carry
      its caption.) */
+  /* A column picture given as { motion } is a code-drawn scene (tools/motion-scenes.mjs; the enterprise
+     cockpit column since 2026-10-23). Its host takes the <img>'s place inside .work-content-wrapper, which
+     keeps the frame, the height and the mask, and it keeps the img's class and inline start state (blur,
+     scale 1.2): the template's scroll reveal (IX "Mask Work Grid") animates `.work-image-cover` inside the
+     wrapper, so it plays on the scene as it did on the photograph. The page loads the scene's files
+     (PAGES['enterprise.html']). */
+  const motionImg = (html, key, scene) => {
+    let n = 0;
+    const out = html.replace(/<img\b[^>]*>/g, (tag) => {
+      if (!tag.includes(key)) return tag;
+      n++;
+      if (!/\bclass="work-image-cover"/.test(tag)) throw new Error(`${spec.name}: ${key} is no longer a .work-image-cover, which the scroll reveal animates`);
+      const style = /\sstyle="([^"]*)"/.exec(tag)?.[1];
+      return motionHost(scene, lang, `work-image-cover sg-mo-${SCENE_FILE[scene] || scene}`).replace(/^<div /, `<div${style ? ` style="${style}"` : ''} `);
+    });
+    if (n !== 1) throw new Error(`${spec.name}: expected one <img> with ${key}, found ${n}`);
+    return out;
+  };
   [['699b6466d5f19893993a4faf_Coding-Workspace-Close-Up', spec.images.work[0]], ['699b6466d5f19893993a4fa9_Portrait-of-a-Man', spec.images.work[1]], ['699b6466d5f19893993a4f9c_Diverse-Group-Portrait', spec.images.work[2]], ['699b6466d5f19893993a4fa0_about-6', spec.images.quote]]
-    .forEach(([k, src]) => { h = swapImg(h, k, src, { alt: altFor(src) }); });
+    .forEach(([k, src]) => { h = src.motion ? motionImg(h, k, src.motion) : swapImg(h, k, src, { alt: altFor(src) }); });
   h = s(h, '(Leadership)', t(spec.noteLabel));
   h = setInner(h, '<p class="top-text big for-inr">', t(spec.note));
   h = setLink(h, 'Join us', { href: spec.noteButton.href, text: t(spec.noteButton.label) });
@@ -1918,11 +1936,13 @@ PAGES['pricing.html'] = (lang) => {
    the owner's photographs (site-images/batch-7, tools/replaceables.mjs
    ENTERPRISE_PHOTOS), in place of the site's concept illustrations;
    editorialImages() gives each the owner's own alt sentence. The three
-   pictures in the column beside the text sit, in order, next to the owner
-   cockpit (E05, the office at dawn before anyone is in), the six delivery
-   steps (E06, the owner on the phone beside a machine under repair; portrait,
-   as the second slot is the tallest, about square at 1440) and the numbers
-   (E07, the ledger). The five cards, in order: capabilities and apps (E09, tools
+   pictures in the column beside the text, next to the owner cockpit, the six
+   delivery steps and the numbers, were E05–E07 (the office at dawn, the owner
+   on the phone at a machine, the ledger); on 2026-10-23 the owner chose to
+   replace exactly these three with code-drawn motion, so they are now the
+   cockpit's overview, a blocker a person takes over, and usage against the
+   budget limit (js/stargo-motion-cockpit.js, demo data, tagged as such). The
+   five cards, in order: capabilities and apps (E09, tools
    hung back in their outlines), account and role permissions (E10, a badge
    at the reader), approvals (E11, the stamp), work and result records (E12,
    the clipboard on the machine) and account connection and protection (E13,
@@ -1930,18 +1950,29 @@ PAGES['pricing.html'] = (lang) => {
    panels included (their pictures are CSS, E01–E04, in the batch 7 block of
    stargo-fusion.css). The legacy UI mock-ups with invented figures are not
    used here. */
-PAGES['enterprise.html'] = (lang) => fromStudio({
-  name: 'enterprise', ...C.ENTERPRISE, cards: C.ENTERPRISE.cards,
-  /* V7-LX: card 2 (账号与岗位权限 / Account & role permissions) takes a landscape
-     picture, so the first row is three landscape pictures; with the portrait
-     picture it had before V7 the row read short, tall, tall.
+PAGES['enterprise.html'] = (lang) => {
+  const h = fromStudio({
+    name: 'enterprise', ...C.ENTERPRISE, cards: C.ENTERPRISE.cards,
+    /* V7-LX: card 2 (账号与岗位权限 / Account & role permissions) takes a landscape
+       picture, so the first row is three landscape pictures; with the portrait
+       picture it had before V7 the row read short, tall, tall.
 
-     A product screenshot was tried in the column's third slot on 2026-09-18
-     and reverted the same day: the box is 118x90 at 390, 235x208 at 768 and
-     681x620 on the English page, all far from 16:9, so a fitted interface
-     left most of the box empty. */
-  images: { work: ENTERPRISE_PHOTOS.cockpit, quote: ENTERPRISE_PHOTOS.principle, cards: ENTERPRISE_PHOTOS.modules },
-}, lang);
+       A product screenshot was tried in the column's third slot on 2026-09-18
+       and reverted the same day: the box is 118x90 at 390, 235x208 at 768 and
+       681x620 on the English page, all far from 16:9, so a fitted interface
+       left most of the box empty. The code-drawn cockpit scenes that hold the
+       column since 2026-10-23 lay themselves out for each box instead. */
+    images: { work: ENTERPRISE_PHOTOS.cockpit, quote: ENTERPRISE_PHOTOS.principle, cards: ENTERPRISE_PHOTOS.modules },
+  }, lang);
+  /* The scenes' files: the sheets after Mono's (chrome.mjs then puts stargo-fusion.css after the last
+     sheet), the scripts — each scene file, then the engine — before </body>. Only this page loads them. */
+  const scenes = ENTERPRISE_PHOTOS.cockpit.map((x) => x.motion).filter(Boolean);
+  if (!scenes.length) return h;
+  const motion = motionAssets(scenes);
+  const monoLink = /<link href="css\/monof-template\.app\.shared\.[a-f0-9]+\.css" rel="stylesheet" type="text\/css"\/>/;
+  if (!monoLink.test(h) || h.split('</body>').length !== 2) throw new Error('enterprise: cannot place the motion scenes\' files');
+  return h.replace(monoLink, (m) => `${m}\n${motion.css}`).replace('</body>', `${motion.js}</body>`);
+};
 
 /* ---- capabilities.html — Mono work-1 + table -------------------------- */
 PAGES['capabilities.html'] = (lang) => {

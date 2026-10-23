@@ -25,6 +25,10 @@
  *            of 「工具很多，靠人连接」 (S01–S04, the owner's photographs until
  *            2026-10-23, when he chose 「换这两处,其余照片保留」);
  *            js/stargo-motion-pain.js.
+ *   cockpit-overview, cockpit-blocker, cockpit-budget — the three pictures
+ *            beside 「(老板驾驶舱)」 on the enterprise page (E05–E07, owner's
+ *            choice 2026-10-23). js/stargo-motion-cockpit.js +
+ *            css/stargo-motion-cockpit.css.
  *
  * The hosts are role="img" with a sentence for screen readers; the scenes
  * themselves are aria-hidden drawing. Every scene says on itself that it is
@@ -73,6 +77,18 @@ export const MOTION_LABEL = {
     zh: '动态示意：销售在内部群里三次追问「这单到哪了？」都没人回复，销售视图里看不到生产进度；最后已排产、质检、已装柜直接显示在销售视图里。',
     en: 'Illustrative motion: sales asks the team chat three times where an order is and nobody answers, because production status is not in the sales view; at the end scheduled, QC and loaded appear in the sales view itself.',
   },
+  'cockpit-overview': {
+    zh: '动态示意（演示数据）：老板驾驶舱总览。商机进展的询盘和报价数随新数据增加，交付状态显示准时与延迟的订单，待审批事项升到 3 项，你批准一项后回到 2 项；数据来源里邮箱、阿里国际站、CRM 和网盘已接入，ERP 未接入，缺的数据已标出。',
+    en: 'Illustrative motion with demo data: the owner’s cockpit overview. Inquiry and quote counts rise as new data arrives, delivery shows on-time against late orders, and pending approvals rise to three and fall back to two when you approve one. Email, Alibaba.com, CRM and the shared drive are connected; the ERP is not, and its missing data is flagged.',
+  },
+  'cockpit-blocker': {
+    zh: '动态示意（演示数据）：任务与卡点。报价 Q-1042 的负责人是销售 AI，卡在缺底价，等你处理；你接手、填上底价后交回销售 AI，报价更新后仍要等你审批才发出，不会自动发送。',
+    en: 'Illustrative motion with demo data: tasks and blockers. Quote Q-1042, owned by the sales AI, is blocked on a missing floor price and waits for you; you take it, enter the price and hand it back, and the updated quote still waits for your approval before it is sent. Nothing is sent automatically.',
+  },
+  'cockpit-budget': {
+    zh: '动态示意（演示数据）：用量与预算。本月 AI 用量逐日上升，到 80% 时提醒你；下一批任务会超出上限时，新任务先暂停，等你批准。',
+    en: 'Illustrative motion with demo data: usage and budget. This month’s AI usage rises day by day and alerts you at 80%; when the next batch would cross the limit, new work pauses until you approve it.',
+  },
 };
 
 export function motionHost(scene, lang, extraClass = '', { fit } = {}) {
@@ -106,11 +122,15 @@ export const SCENE_FILE = {
   team: 'team',
   feed: 'phone',
   squad: 'phone',
+  'cockpit-overview': 'cockpit',
+  'cockpit-blocker': 'cockpit',
+  'cockpit-budget': 'cockpit',
 };
 /* scene files that ship their own stylesheet */
 export const SCENE_CSS = new Set([
   'team',
   'phone',
+  'cockpit',
 ]);
 
 /* pain — the homepage's four problem cards, in page order (S01–S04): one file and one stylesheet */
