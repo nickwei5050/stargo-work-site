@@ -154,11 +154,68 @@
     }
     return null;
   }
+  /* Phones: text that is shown, not split (speed lane). Measured on the
+     homepage at 390px and 4x CPU, one scroll to the bottom spent 9.5s (zh) and
+     6.3s (en) inside SplitText, three quarters of it in seven line splits: a
+     line split measures the laid-out position of every word (every character
+     on the zh pages), and each split forces a layout of a 20,000px page. Below
+     768px two kinds of split are not made:
+       - any split of an element inside a scene that the phone stylesheet
+         (css/stargo-fusion.css, Z10) draws in its final state, where every
+         letter, word and line box is held at opacity 1 and no transform anyway:
+         the five phrases (.animation-section), 「一个工作台…」 (.video-section)
+         and the enterprise story panels (.sutdio-animation);
+       - any split that asks for lines. Those are the paragraph reveals (the
+         hero lead, 「一套系统…」's description, the footer band's lines, the
+         inner-page leads), each line rising out of its mask; on a phone the
+         paragraph is simply there. Letter and word splits of headings and
+         buttons outside those scenes are made exactly as before.
+     The timeline is still built, so its timing and everything else it moves
+     stay as they were; the tweens that would have moved the pieces of a text
+     that is not split are given a detached element instead of the text, which
+     therefore stays as laid out. Once held, an element stays held for the
+     page's life (a phone turned to landscape keeps the text shown). From 768px
+     up, and in any browser without matchMedia or WeakSet, nothing changes. */
+  function phoneStill(AC) {
+    var proto = AC.prototype;
+    if (!window.matchMedia || typeof WeakSet !== 'function' || typeof proto.getSplitElements !== 'function' || proto.getSplitElements.__sgStill) return null;
+    var phone = window.matchMedia('(max-width: 767px)');
+    var SCENES = '.animation-section, .video-section, .sutdio-animation';
+    var held = new WeakSet();
+    var any = false;
+    var pieces = proto.getSplitElements;
+    var stand = function () {
+      var out = pieces.apply(this, arguments);
+      if (!any || !out || !out.length) return out;
+      var copy = null;
+      for (var i = 0; i < out.length; i++) {
+        if (held.has(out[i])) {
+          if (!copy) copy = Array.prototype.slice.call(out, 0, i);
+          copy.push(document.createElement('span'));
+        } else if (copy) copy.push(out[i]);
+      }
+      return copy || out;
+    };
+    stand.__sgStill = true;
+    proto.getSplitElements = stand;
+    return function (coord, cfg, el) {
+      if (!el || el.nodeType !== 1) return false;
+      if (held.has(el)) return true;
+      if (!phone.matches) return false;
+      // Already split by an earlier timeline: leave it to the engine, as before.
+      try { if (coord.globalSplitRegistry && coord.globalSplitRegistry.get(el)) return false; } catch (e) { return false; }
+      if (String(cfg && cfg.type).indexOf('lines') < 0 && !(el.closest && el.closest(SCENES))) return false;
+      held.add(el);
+      any = true;
+      return true;
+    };
+  }
   function patch(req) {
     lateLoads(req);
     var AC = find(req, 4054, 'AnimationCoordinator', 'globalSplitRegistry');
     if (!AC || !AC.prototype || typeof AC.prototype.doSplitText !== 'function' || AC.prototype.doSplitText.__sgLazy) return;
     var orig = AC.prototype.doSplitText;
+    var still = phoneStill(AC);
     var pending = new Map();
     var refreshTimer = 0;
     function refresh() {
@@ -189,6 +246,10 @@
       var now = [];
       for (var i = 0; i < targets.length; i++) {
         var el = targets[i];
+        if (still && still(this, cfg, el)) {
+          if (pending.has(el)) { pending.delete(el); io.unobserve(el); }
+          continue;
+        }
         var calls = pending.get(el);
         if (calls) { calls.push([this, cfg, ctx, Cls]); continue; }
         if (!el || !el.getBoundingClientRect || !far(el)) { now.push(el); continue; }
