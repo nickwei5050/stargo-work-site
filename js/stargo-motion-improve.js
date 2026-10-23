@@ -31,21 +31,23 @@
     // run log: [run, task, result, tone, appears at, short task, short result]; the first two are
     // already there. The short forms are for the narrow layouts
     var LOG = [
-      ['#229', T('开发信', 'Outreach email'), T('回复率 4.1% · 达标', 'Reply rate 4.1% · on target'), 'ok', -2, T('开发信', 'Email'), T('回复率 4.1%', 'Reply rate 4.1%')],
+      ['#229', T('开发信', 'Outreach email'), T('回复率 4.1% · 达标', 'Reply rate 4.1% · on target'), 'ok', -2, T('开发信', 'Email'), T('回复率 4.1%', 'Replies 4.1%')],
       ['#230', T('报价单', 'Quote'), T('准时发出 · 达标', 'Sent on time · on target'), 'ok', -1, T('报价单', 'Quote'), T('准时发出', 'Sent on time')],
-      ['#231', T('开发信', 'Outreach email'), T('回复率 · 人工修正 1 处', 'Reply rate · 1 human fix'), 'fix', 0.6, T('开发信', 'Email'), T('人工修正 1 处', '1 human fix')],
-      ['#232', T('开发信 v2', 'Outreach email v2'), T('回复率 6.5% · 达标', 'Reply rate 6.5% · on target'), 'ok', 15.4, T('开发信 v2', 'Email v2'), T('回复率 6.5%', 'Reply rate 6.5%')]
+      ['#231', T('开发信', 'Outreach email'), T('回复率 3.2% · 人工修正 1 处', 'Reply rate 3.2% · 1 human fix'), 'fix', 0.6, T('开发信', 'Email'), T('人工修正 1 处', '1 human fix')],
+      ['#232', T('开发信 v2', 'Outreach email v2'), T('回复率 6.5% · 达标', 'Reply rate 6.5% · on target'), 'ok', 15.4, T('开发信 v2', 'Email v2'), T('回复率 6.5%', 'Replies 6.5%')]
     ];
     var A_IN = 1.6, BAR1 = 2.2, BAR2 = 2.8, ASK = 4.2, TAP = 6.0, R0 = 6.6, STEPS = [6.9, 7.9, 8.9], DONE = 9.8;
     var B_IN = 10.6, B_BAD = 12.0, B_REV = 13.4, B_KEEP = 14.0, OUT0 = P - 1.4, OUT1 = P - 0.6;
-    // square: the 1:1 phone card (358 px at 390); small: the same below 350 px, so no type drops under 12 px
-    var layouts = { wide: { w: 540, h: 408, vis: 2 }, tall: { w: 300, h: 584, vis: 3 }, square: { w: 360, h: 360, vis: 1 }, small: { w: 330, h: 330, vis: 1 } };
+    // every layout is drawn at about its box's own size, so no type renders under 12px: wide the card's
+    // 512 x 429 box from 1440 up, wide2 its 1.32:1 box below that (one run in the log, no log heading),
+    // tall the 768-991 strip, square the 1:1 phone card (358px at 390), small the same below 350px
+    var layouts = { wide: { w: 512, h: 430, vis: 2 }, wide2: { w: 512, h: 388, vis: 1 }, tall: { w: 288, h: 536, vis: 3 }, square: { w: 352, h: 352, vis: 1 }, small: { w: 324, h: 324, vis: 1 } };
     var R, L;
 
     function build(stage, Ld, name) {
       L = Ld; R = { rows: [] };
-      var sq = name === 'square' || name === 'small', narrow = name !== 'wide';
-      stage.className = 'sg-mo-stage sgi is-' + (name === 'small' ? 'square is-small' : name);
+      var sq = name === 'square' || name === 'small', narrow = name !== 'wide' && name !== 'wide2';
+      stage.className = 'sg-mo-stage sgi is-' + (name === 'small' ? 'square is-small' : name === 'wide2' ? 'wide is-wide2' : name);
       var bar = el('div', 'sgi-bar', stage);
       var mk = el('span', 'sgi-mark', bar); ico('loop', mk, 13);
       el('b', '', bar, T('改进记录', 'Improvements'));
@@ -56,7 +58,7 @@
       var log = el('div', 'sgi-log', body);
       var lh = el('div', 'sgi-h', log);
       el('span', '', lh, T('执行记录', 'Run log'));
-      el('span', 'sgi-h-r', lh, T('每次执行都留记录', 'every run is logged'));
+      el('span', 'sgi-h-r', lh, T('每次执行都留记录', 'Every run is logged'));
       var win = el('div', 'sgi-log-win', log);
       LOG.forEach(function (r) {
         var row = el('div', 'sgi-run is-' + r[3], win);
@@ -98,15 +100,15 @@
       var bh = el('div', 'sgi-ch', b);
       var bt = el('div', 'sgi-ct', bh);
       el('span', 'sgi-cn', bt, T('改进 #13', 'Change #13'));
-      el('b', '', bt, T('跟进间隔 3 天 → 1 天', sq ? '1-day follow-up' : narrow ? 'Follow-up: 3 days → 1' : 'Follow up after 1 day, not 3'));
+      el('b', '', bt, T('跟进间隔 3 天 → 1 天', sq ? '1-day follow-up' : narrow ? 'Follow-ups: 3 → 1 day' : 'Follow up after 1 day, not 3'));
       R.bPill = el('span', 'sgi-pill', bh);
       var m = el('div', 'sgi-metric', b);
-      el('span', '', m, T('试用 10% · 退订率', 'Trial at 10% · unsubscribes'));
+      el('span', '', m, T('试用 10% · 退订率', narrow ? 'Trial 10% · unsubscribes' : 'Trial at 10% · unsubscribes'));
       R.bVal = el('b', '', m);
       R.keep = el('div', 'sgi-keep', b);
       ico('undo', R.keep, 13);
-      el('span', '', R.keep, T('已撤回 · 失败记录已保留，留作修复依据', 'Reverted · the failure record is kept for the fix'));
-      R.rowH = name === 'wide' ? 27 : 30;
+      el('span', '', R.keep, T('失败记录已保留，留作修复依据', narrow ? 'Failure record kept for the fix' : 'Failure record kept as the basis for a fix'));
+      R.rowH = name === 'small' ? 27 : narrow ? 30 : 27;
       win.style.height = (R.rowH * L.vis) + 'px';
     }
 
@@ -171,7 +173,7 @@
 
     return {
       layouts: layouts,
-      pick: function (w, h) { var r = w / h; return r > 1.12 ? 'wide' : r < 0.78 ? 'tall' : w < 350 ? 'small' : 'square'; },
+      pick: function (w, h) { var r = w / h; return r > 1.26 ? 'wide2' : r > 1.12 ? 'wide' : r < 0.78 ? 'tall' : w < 350 ? 'small' : 'square'; },
       build: build, tick: tick, still: 16.5, cue: function (t) { return Math.ceil(t / P) * P; }
     };
   }

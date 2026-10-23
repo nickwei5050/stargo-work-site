@@ -2,56 +2,106 @@
    tools/blocks/cn-service.mjs, styled by css/stargo-motion-growth.css). The
    four night photographs behind the rows are drawn instead, in row order:
    dossier (企业研究: a company file assembling, each fact sourced and dated,
-   one 待核实), lanes (贸易情报: shipment lanes to buyers' ports, one buyer's
-   records at a time), rhythm (补货判断: PT Surya's ~60-day order rhythm up to
+   one 待核实), lanes (贸易情报, in js/stargo-motion-lanes.js, which draws with
+   this file's kit), rhythm (补货判断: PT Surya's ~60-day order rhythm up to
    the restock window), committee (关键角色: who weighs in, who decides, and the
    hand-off that waits for your OK). Cinery's hover crossfade sets each host's
    opacity and the runner ticks only a visible host, so only the hovered row's
-   scene moves (on phones only the first background shows). Each stage takes
-   its host's shape, so nothing is letterboxed. */
+   scene moves (on phones only the first background shows).
+
+   Composition: the rows' type covers the field, so a scene writes only in the
+   strips between the rows — 64px each side of every hairline from 992 up, 48
+   below — and only in the two strips that frame its own row, so what it says
+   is on screen whenever its row is. Those strips are read from the page once
+   per build (the stage is drawn at the host's own size, 1:1); the hovered
+   row's thumbnail cuts into the strips beside it, so nothing is placed there.
+   The rest of the field is quiet texture: dots, a map, an orbit. */
 (window.STARGO_SCENES = window.STARGO_SCENES || []).push(function (K) {
   'use strict';
   var T = K.T, el = K.el, sv = K.sv, put = K.put, css = K.css, cl = K.cl, seg = K.seg, ease = K.ease, mod = K.mod, textSwap = K.textSwap;
 
-  // a stage the shape of its host
+  function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+  // the stage is the host's own size, so a stage px is a page px
   function shaped() {
     var layouts = {};
     return {
       layouts: layouts,
       pick: function (w, h) {
-        // from 992 up the stage is drawn at about the host's own width (1200-1920, so 1:1 on most
-        // screens); a 1440 design scaled up on a 1920 screen grew past the rows' type
-        var dw = w >= 992 ? Math.min(1920, Math.max(1200, Math.round(w / 16) * 16)) : Math.max(320, Math.round(w));
-        var dh = Math.max(360, Math.round(h * dw / w / 8) * 8);
-        var k = dw + 'x' + dh;
-        if (!layouts[k]) layouts[k] = { w: dw, h: dh };
+        var k = Math.round(w) + 'x' + Math.round(h);
+        if (!layouts[k]) layouts[k] = { w: Math.round(w), h: Math.round(h) };
         return k;
       }
     };
   }
-  function base(stage, L, name) {
-    stage.className = 'sg-mo-stage sgg sgg-' + name + (L.w >= 900 ? ' is-wide' : ' is-narrow');
-    var svg = sv('svg', { class: 'sgg-svg', width: L.w, height: L.h, viewBox: '0 0 ' + L.w + ' ' + L.h }, stage);
-    var tg = el('span', 'sg-tag sgg-tag', stage, T('动态示意 · 演示数据', 'Illustrative motion · demo data'));
-    tg.style.left = (L.w - (L.w >= 900 ? 40 : 20)) + 'px';
-    tg.style.top = (L.w >= 900 ? 136 : 104) + 'px';
-    return svg;
+  /* The section, measured: its five hairlines, the four rows (top, bottom) and
+     each row's hover thumbnail. Read once per build; layout is not read again. */
+  function geo(stage, L) {
+    var host = stage.parentNode, sec = host && host.closest ? host.closest('.cn-service') : null;
+    var G = { w: L.w, h: L.h, wide: L.w >= 992, lines: [], rows: [], cl: 40, cr: L.w - 40 };
+    var it = sec ? sec.querySelectorAll('.cn-service-content-item') : [], hl = sec ? sec.querySelectorAll('.cn-dividing-line') : [];
+    if (it.length === 4 && hl.length === 5) {
+      var hr = host.getBoundingClientRect(), k = L.w / (hr.width || L.w);
+      for (var i = 0; i < 5; i++) {
+        var r = hl[i].getBoundingClientRect();
+        G.lines.push((r.top - hr.top) * k);
+        if (!i) { G.cl = (r.left - hr.left) * k; G.cr = (r.right - hr.left) * k; }
+      }
+      for (var j = 0; j < 4; j++) {
+        var b = it[j].getBoundingClientRect(), im = it[j].querySelector('.cn-service-image-item'), x = (b.left - hr.left) * k, y = (b.top - hr.top) * k;
+        var row = { t: y, b: (b.bottom - hr.top) * k, th: null };
+        if (im && im.offsetWidth > 8) row.th = { l: x + im.offsetLeft, r: x + im.offsetLeft + im.offsetWidth, t: y + im.offsetTop, b: y + im.offsetTop + im.offsetHeight };
+        G.rows.push(row);
+      }
+    } else {
+      // not inside the section (never on the page): five even bands
+      var bh = (L.h - 128) / 4;
+      for (var n = 0; n < 5; n++) G.lines.push(64 + n * bh);
+      for (var m = 0; m < 4; m++) G.rows.push({ t: G.lines[m] + 64, b: G.lines[m + 1] - 64, th: null });
+    }
+    return G;
   }
-  // a card placed by its centre; appear(p) slides it up into place
-  function card(stage, cls, x, y, w) {
+  /* the free strip on one side of hairline j: 'u' between row j-1 and the line, 'd' between the line and row j */
+  function strip(G, j, side) {
+    var y = G.lines[j], pad = G.wide ? 8 : 10, gap = G.wide ? 12 : 9, t, b;
+    if (side === 'u') { t = j > 0 ? G.rows[j - 1].b + pad : y - 44; b = y - gap; } else { t = y + gap; b = j < 4 ? G.rows[j].t - pad : y + 44; }
+    return { t: t, b: b, y: (t + b) / 2 };
+  }
+  function base(stage, L, name) {
+    var G = geo(stage, L);
+    stage.className = 'sg-mo-stage sgg sgg-' + name + (G.wide ? ' is-wide' : ' is-narrow');
+    G.svg = sv('svg', { class: 'sgg-svg', width: L.w, height: L.h, viewBox: '0 0 ' + L.w + ' ' + L.h }, stage);
+    return G;
+  }
+  // the honesty tag, beside what it labels; a: 'l' its left edge at x, 'r' its right edge
+  function tag(stage, x, y, a, short) {
+    var t = el('span', 'sg-tag sgg-tag', stage, short ? T('演示数据', 'Demo data') : T('动态示意 · 演示数据', 'Illustrative motion · demo data'));
+    t.style.left = Math.round(x) + 'px'; t.style.top = Math.round(y) + 'px';
+    t.style.transform = a === 'r' ? 'translate(-100%, -50%)' : 'translateY(-50%)';
+    return t;
+  }
+  // a box in a strip, centred on y; x is its left edge ('l'), right edge ('r') or centre ('c')
+  function box(stage, cls, x, y, w, a) {
     var c = el('div', 'sgg-card ' + (cls || ''), stage);
-    c.style.left = Math.round(x - w / 2) + 'px'; c.style.top = Math.round(y) + 'px'; c.style.width = w + 'px';
+    c.style.left = Math.round(a === 'r' ? x - w : a === 'c' ? x - w / 2 : x) + 'px'; c.style.top = Math.round(y) + 'px'; c.style.width = Math.round(w) + 'px';
+    c.l = Math.round(a === 'r' ? x - w : a === 'c' ? x - w / 2 : x); c.r = c.l + Math.round(w);
     css(c, 'opacity', '0');
     return c;
   }
   function appear(c, p, o) {
     css(c, 'opacity', (p * (o == null ? 1 : o)).toFixed(3));
-    css(c, 'transform', p >= 1 ? 'translateY(-50%)' : 'translateY(calc(-50% + ' + (12 * (1 - p)).toFixed(1) + 'px)) scale(' + (0.97 + 0.03 * p).toFixed(4) + ')');
+    css(c, 'transform', p >= 1 ? 'translateY(-50%)' : 'translateY(calc(-50% + ' + (6 * (1 - p)).toFixed(1) + 'px))');
   }
-  function line(svg, a, b, bend, cls) {
+  // two lines: a key and a value, then a quieter line
+  function two(c, k, v, s) {
+    var a = el('div', 'sgg-l1', c);
+    if (k) el('span', 'sgg-k', a, k);
+    el('b', 'sgg-v', a, v);
+    return el('div', 'sgg-l2', c, s);
+  }
+  function path(svg, d, cls) { return sv('path', { d: d, class: cls || 'sgg-link', pathLength: 100, 'stroke-dasharray': '100 100', 'stroke-dashoffset': 100, opacity: 0 }, svg); }
+  function link(svg, a, b, bend, cls) {
     var mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2, dx = b[0] - a[0], dy = b[1] - a[1];
-    var p = sv('path', { d: 'M' + a[0].toFixed(1) + ' ' + a[1].toFixed(1) + 'Q' + (mx - dy * bend).toFixed(1) + ' ' + (my + dx * bend).toFixed(1) + ' ' + b[0].toFixed(1) + ' ' + b[1].toFixed(1), class: cls || 'sgg-link', pathLength: 100, 'stroke-dasharray': '100 100', 'stroke-dashoffset': 100 }, svg);
-    return p;
+    return path(svg, 'M' + a[0].toFixed(1) + ' ' + a[1].toFixed(1) + 'Q' + (mx - dy * bend).toFixed(1) + ' ' + (my + dx * bend).toFixed(1) + ' ' + b[0].toFixed(1) + ' ' + b[1].toFixed(1), cls);
   }
   function draw(p, d, o) {
     put(p, 'stroke-dashoffset', (100 - 100 * d).toFixed(1));
@@ -59,369 +109,252 @@
   }
   function node(svg, x, y, cls) {
     var g = sv('g', { transform: 'translate(' + x.toFixed(1) + ',' + y.toFixed(1) + ')' }, svg);
-    return { g: g, rip: sv('circle', { r: 6, class: 'sgg-rip', opacity: 0 }, g), dot: sv('circle', { r: 4, class: cls || 'sgg-dot' }, g) };
+    return { g: g, rip: sv('circle', { r: 6, class: 'sgg-rip', opacity: 0 }, g), dot: sv('circle', { r: 3.5, class: cls || 'sgg-dot' }, g) };
   }
-  function ripple(n, p, keep) {
+  function ripple(n, p) {
     put(n.rip, 'opacity', p > 0 && p < 1 ? (0.8 * (1 - p)).toFixed(2) : '0');
     if (p > 0 && p < 1) put(n.rip, 'transform', 'scale(' + (1 + 3 * ease.out(p)).toFixed(3) + ')');
-    if (!keep) put(n.dot, 'opacity', p > 0 ? '1' : '0');
   }
   function pill(parent, text, cls) { return el('span', 'sgg-pill' + (cls ? ' ' + cls : ''), parent, text); }
+  function avatar(c, s) { el('span', 'sgg-av', c, s); }
   // the end of every loop: what was assembled fades, the frame stays
   function outOf(u, P) { return 1 - seg(u, P - 1.5, P - 0.7); }
 
   /* =====================================================================
-     DOSSIER — 企业研究
+     DOSSIER — 企业研究: the company under the hovered row's thumbnail, its
+     facts landing around it three at a time, each with its source and date
      ===================================================================== */
   function Dossier() {
-    var P = 16;
+    var P = 18, D = 1.8, R, S = shaped();
     var F = [
-      [T('官网', 'Website'), T('产品页 12 个 · 德英双语', '12 product pages · DE / EN'), T('来源：官网 · 10-21 更新', 'Source: website · updated 10-21')],
-      [T('主营产品', 'Products'), T('储能系统集成 · 48V 机架式', 'Storage systems · 48V rack'), T('来源：产品目录 · 10-18 更新', 'Source: catalogue · updated 10-18')],
-      [T('认证', 'Certifications'), 'CE · UN38.3 · IEC 62619', T('来源：官网下载区 · 10-21 更新', 'Source: downloads · updated 10-21')],
-      [T('市场与渠道', 'Markets & channels'), T('德国 · 奥地利 · 经销与集成商', 'DE · AT · dealers, integrators'), T('来源：新闻稿 · 10-19 更新', 'Source: press release · updated 10-19')],
+      [T('官网', 'Website'), T('产品页 12 个 · 德英双语', '12 product pages · DE / EN'), T('来源：官网 · 10-21 更新', 'Source: website · 10-21')],
+      [T('主营产品', 'Products'), T('储能系统集成 · 48V 机架式', '48V rack storage'), T('来源：产品目录 · 10-18 更新', 'Source: catalogue · 10-18')],
+      [T('认证', 'Certified'), 'CE · UN38.3 · IEC 62619', T('来源：官网下载区 · 10-21 更新', 'Source: downloads · 10-21')],
+      [T('市场与渠道', 'Markets'), T('德国 · 奥地利 · 经销与集成', 'DE · AT · dealers'), T('来源：新闻稿 · 10-19 更新', 'Source: press release · 10-19')],
       [T('规模', 'Size'), T('员工约 120 人', 'About 120 staff'), T('仅一个来源 · 待核实', 'One source only · to verify'), true],
-      [T('新闻', 'News'), T('近 90 天 3 条储能招标', '3 storage tenders in 90 days'), T('来源：公开招标 · 10-20 更新', 'Source: public tenders · updated 10-20')]
+      [T('新闻', 'News'), T('近 90 天 3 条储能招标', '3 storage tenders in 90 days'), T('来源：公开招标 · 10-20 更新', 'Source: public tenders · 10-20')]
     ];
-    var R;
-    var S = shaped();
+    var SHORT = [T('官网', 'Website'), T('主营产品', 'Products'), T('认证', 'Certified'), T('市场渠道', 'Markets'), T('规模', 'Size'), T('新闻', 'News')];
     function build(stage, L) {
-      var svg = base(stage, L, 'dossier'), wide = L.w >= 900;
-      R = { sat: [] };
-      // the rows' type covers most of the field, so the file sits in the empty bands between rows
-      // (~29%, ~50%, ~71% of the field), clear of hovered row 1 and its thumbnail. Below 992 it is the
-      // whole section's background: the company between rows 2 and 3, its facts as chips either side.
-      var cx = L.w / 2, cy = L.h * (wide ? 0.5 : 0.495);
-      var SPOT = [[0.2, 0.295], [0.8, 0.295], [0.18, 0.5], [0.82, 0.5], [0.3, 0.71], [0.7, 0.71]];
-      R.orbit = [wide ? 170 : 120, wide ? 280 : 170].map(function (r, i) {
-        var g = sv('g', {}, svg);
-        sv('circle', { cx: cx, cy: cy, r: r, class: 'sgg-orbit' + (i ? ' is-b' : '') }, g);
-        return { g: g, sfx: ' ' + cx.toFixed(1) + ' ' + cy.toFixed(1) + ')', dir: i ? -1 : 1 };
-      });
-      var cw = wide ? 330 : Math.min(310, L.w - 40);
-      var c = R.center = card(stage, 'sgg-core', cx, cy, cw);
-      var top = el('div', 'sgg-core-top', c);
-      el('span', 'sgg-av', top, 'NE');
-      var nm = el('div', 'sgg-core-name', top);
+      var G = base(stage, L, 'dossier'), svg = G.svg, wide = G.wide, th = G.rows[0].th;
+      var nb = strip(G, 1, 'u'), fb = strip(G, 1, 'd'), slots = [], pw, px, c;
+      R = { f: [], dots: [] };
+      if (wide && th) {
+        // the company sits under row 1's thumbnail, across the hairline from it; facts flank both
+        var tc = (th.l + th.r) / 2, fw = 280;
+        pw = 340; px = clamp(tc - pw / 2, G.cl, G.cr - pw);
+        if (th.l - 24 - G.cl >= 240) slots.push({ x: th.l - 24, y: nb.y, a: 'r', w: Math.min(fw, th.l - 24 - G.cl), to: [px + 30, fb.t] });
+        slots.push({ x: th.r + 24, y: nb.y, a: 'l', w: Math.min(fw, G.cr - th.r - 24), to: [px + pw - 30, fb.t] });
+        if (G.cr - px - pw - 20 >= 240) slots.push({ x: px + pw + 20, y: fb.y, a: 'l', w: Math.min(fw, G.cr - px - pw - 20), to: [px + pw, fb.y] });
+        if (px - 20 - G.cl >= 240) slots.push({ x: px - 20, y: fb.y, a: 'r', w: Math.min(fw, px - 20 - G.cl), to: [px, fb.y] });
+        tag(stage, G.cr, strip(G, 0, 'd').y, 'r');
+        c = R.core = box(stage, 'sgg-core is-2', px, fb.y, pw, 'l');
+      } else {
+        // phones and tablets: the whole section's background; the facts as chips above the hairline under
+        // row 1, the company and the tag below it
+        var n = 3, cw = Math.min(118, (G.cr - G.cl - 16) / 3), step = (G.cr - G.cl - cw) / (n - 1);
+        pw = Math.min(G.w >= 600 ? 440 : 236, G.cr - G.cl - 84); px = G.cl;
+        for (var s = 0; s < n; s++) slots.push({ x: G.cl + s * step, y: nb.y, a: 'l', w: cw, to: [px + 16 + s * (pw - 32) / 2, fb.t] });
+        tag(stage, G.cr, fb.y, 'r', true);
+        c = R.core = box(stage, 'sgg-core is-1', px, fb.y, pw, 'l');
+      }
+      avatar(c, 'NE');
+      var nm = el('div', 'sgg-nm', c);
       el('b', '', nm, 'Nordwerk Energie GmbH');
-      el('span', '', nm, T('德国 · 汉堡 · 企业档案', 'Hamburg, Germany · company file'));
-      R.status = el('div', 'sgg-core-status', c);
+      R.status = wide || G.w >= 600 ? el('span', 'sgg-st', nm) : null;
+      if (wide) { var dl = el('span', 'sgg-dots', c); F.forEach(function (f) { R.dots.push(el('i', f[3] ? 'is-ask' : '', dl)); }); }
       appear(c, 1);
       F.forEach(function (f, i) {
-        var x, y, w, o = { at: 0.9 + i * 0.95 };
+        var sl = slots[i % slots.length], o = { at: 0.6 + i * D, keep: i >= 3 };
+        // a link leaves a fact from its edge nearest the company
+        var from = !wide ? [sl.x + sl.w / 2, nb.b] : sl.y === nb.y ? [sl.a === 'r' ? sl.x - 26 : sl.x + 26, nb.b] : [sl.x, fb.y];
+        o.line = link(svg, from, sl.to, wide ? 0.12 : 0.08);
         if (wide) {
-          x = L.w * SPOT[i][0]; y = L.h * SPOT[i][1]; w = 270;
+          o.card = box(stage, 'is-2' + (f[3] ? ' is-ask' : ''), sl.x, sl.y, sl.w, sl.a);
+          two(o.card, f[0], f[1], f[2]);
         } else {
-          x = L.w * [0.2, 0.5, 0.8][i % 3]; y = L.h * (i < 3 ? 0.275 : 0.712); w = Math.min(118, L.w * 0.3);
+          o.card = box(stage, 'sgg-chip is-1' + (f[3] ? ' is-ask' : ''), sl.x, sl.y, sl.w, sl.a);
+          el('b', '', o.card, SHORT[i]);
+          el('span', '', o.card, f[3] ? T('待核实', 'verify') : '✓');
         }
-        o.line = line(svg, [cx, cy], [x, y], wide ? 0.08 : 0.05);
-        o.node = node(svg, x, y, f[3] ? 'sgg-dot is-ask' : 'sgg-dot');
-        if (wide) {
-          o.card = card(stage, f[3] ? 'is-ask' : '', x, y, w);
-          el('span', 'sgg-k', o.card, f[0]);
-          el('b', 'sgg-v', o.card, f[1]);
-          el('span', 'sgg-src', o.card, f[2]);
-        } else {
-          // a phone has the row text over it: each fact is a chip — its name and whether it is checked
-          o.card = card(stage, 'sgg-chip' + (f[3] ? ' is-ask' : ''), x, y, w);
-          el('b', '', o.card, f[0]);
-          el('span', '', o.card, f[3] ? T('待核实', 'to verify') : '✓');
-        }
-        R.sat.push(o);
+        R.f.push(o);
       });
-      // the centre paints above the links
+      // orbits around the company: their own small layers, turned by a transform
+      var ox = px + pw / 2, oy = fb.y;
+      R.orbit = (wide ? [150, 250] : [90, 150]).map(function (r, i) {
+        var s = sv('svg', { class: 'sgg-orbit-l', width: 2 * r + 4, height: 2 * r + 4, viewBox: '0 0 ' + (2 * r + 4) + ' ' + (2 * r + 4) }, null);
+        stage.insertBefore(s, G.svg.nextSibling);
+        s.style.left = (ox - r - 2).toFixed(1) + 'px'; s.style.top = (oy - r - 2).toFixed(1) + 'px';
+        sv('circle', { cx: r + 2, cy: r + 2, r: r, class: 'sgg-orbit' + (i ? ' is-b' : '') }, s);
+        return { s: s, dir: i ? -1 : 1 };
+      });
       stage.appendChild(c);
     }
     function tick(t) {
       var u = mod(t, P), out = outOf(u, P), n = 0;
-      R.orbit.forEach(function (o) { put(o.g, 'transform', 'rotate(' + (mod(t * 5 * o.dir, 360)).toFixed(2) + o.sfx); });
-      R.sat.forEach(function (o) {
-        var d = ease.io(seg(u, o.at, o.at + 0.7));
-        draw(o.line, d, out);
-        ripple(o.node, seg(u, o.at + 0.6, o.at + 1.7));
-        put(o.node.g, 'opacity', out.toFixed(2));
-        var p = ease.out(seg(u, o.at + 0.5, o.at + 1.1));
-        appear(o.card, p, out);
-        if (p >= 1 && out > 0.5) n++;
+      R.orbit.forEach(function (o) { css(o.s, 'transform', 'rotate(' + mod(t * 4 * o.dir, 360).toFixed(2) + 'deg)'); });
+      R.f.forEach(function (o, i) {
+        var gone = o.keep ? out : 1 - seg(u, o.at + 5.2, o.at + 5.6);
+        draw(o.line, ease.io(seg(u, o.at, o.at + 0.6)) * (o.keep ? 1 : 1 - seg(u, o.at + 3.2, o.at + 3.8)), 0.9 * (o.keep ? out : 1));
+        var p = ease.out(seg(u, o.at + 0.4, o.at + 1));
+        appear(o.card, p, gone);
+        var land = u >= o.at + 0.9 && out > 0.5;
+        if (land) n++;
+        if (R.dots[i]) cl(R.dots[i], 'is-on', land);
       });
-      textSwap(R.status, n < 6 ? T('正在汇总来源 ' + n + '/6', 'Gathering sources ' + n + '/6') : T('5 项已核对 · 1 项待核实', '5 checked · 1 to verify'));
-      cl(R.status, 'is-done', n === 6);
+      if (R.status) {
+        textSwap(R.status, n < 6 ? T('正在汇总来源 ' + n + '/6', 'Gathering sources ' + n + '/6') : T('5 项已核对 · 1 项待核实', '5 checked · 1 to verify'));
+        cl(R.status, 'is-done', n === 6);
+      }
     }
-    return { layouts: S.layouts, pick: S.pick, build: build, tick: tick, still: 11, cue: function (t) { return Math.ceil(t / P) * P; } };
+    return { layouts: S.layouts, pick: S.pick, build: build, tick: tick, still: 11.8, cue: function (t) { return Math.ceil(t / P) * P; } };
   }
 
   /* =====================================================================
-     LANES — 贸易情报
-     ===================================================================== */
-  // land on a 3° grid, centred on the Pacific (tools/motion-map-coarse.mjs)
-  var MASK = { w0: -30, top: 78, step: 3, cols: 120, rows: 45, bits: '4AEAAAAMAAAAAABgLz//8AAADFf/+NAAAADe/gH/4AAwAN////4ADwAfb+D///8F+MAAAAAB////////OAO////////4D////rhwAB/////////4P///4vBwAIM//////4EABgf/4PwAAIZ//////wMACAP/+PwAAd///////8cAAAP///4AAD///////8AAAAD///EAAH///////8AAAAD///2AAfLh3////mAAAAB//+AAAeP/7///+MAAAAD//8AAAYxf7///6IAAAAB//4AAAf4n////74AAAAB//wAAAf//////4AAAAAAf/gAAA///3///4AAAAAAHwgAAB///////wAAAAAAPwQAAD//9/H//AAAAAAADwQAAD////D78IAAAAAAB+eAAD//+8DhcIAAAAAAAeAAAD///wBg+MAAAAAAAHAAAD///8BgcEAAAAAAABHgAA///4AgQMAAAAAAAAPwAAd//wAA4wAAAAAAAAP+AAAf/gAAbyAAAAAAAAf/AAAf/AAAb44AAAAAAAf/wAAP+AAAEIegAAAAAA//8AAP/AAAGAOIAAAAAAf/+AAP/AAAAEFAAAAAAAP/8AAP/IAAAB0AAAAAAAH/4AAP/4AAAP+AAAAAAAH/4AAP8QAAAP+AAAAAAAD/4AAH8wAAA//hAAAAAAD/4AAH4AAAA//gAAAAAAB/AAAH4AAAA//wAAAAAAD/AAAHwAAAA//gAAAAAAD+AAACAAAAAwPAAAAAAAD2AAAAAAAAAAPAMAAAAAH4AAAAAAAAAAAAIAAAAADgAAAAAAAAAADBwAAAAAHgAAAAAAAAAAAAAAAAAAHAAAAAAAIAAAAAAAAAAAHAAAAAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAAAAABAA' };
-  var PORT = {
-    nb: [121.6, 29.9, T('宁波', 'Ningbo')], sz: [114.1, 22.4, T('深圳', 'Shenzhen')], qz: [108.6, 21.6, T('钦州', 'Qinzhou')], hp: [106.7, 20.8, T('海防', 'Haiphong')],
-    ham: [10, 53.5, T('汉堡', 'Hamburg')], jkt: [106.9, -6.1, T('雅加达', 'Jakarta')], dxb: [55, 25, T('杰贝阿里', 'Jebel Ali')], hou: [-95.3, 29.6, T('休斯敦', 'Houston')], los: [3.4, 6.4, T('拉各斯', 'Lagos')]
-  };
-  var SG = [[105.5, 3.5], [103.8, 1.2], [97, 5.5], [88, 5], [80, 5.5]];
-  var SUEZ = [[66, 11], [52, 12.5], [43.4, 12.6], [39, 19], [34, 27.5], [32.5, 30.5], [28, 33.4], [18, 35.5], [10, 37.5], [0, 36.5], [-5.6, 36], [-10.5, 38], [-10, 43.5], [-5.5, 48.3], [0, 50], [4, 51.8], [8, 54]];
-  // each lane: from, waypoints, to, buyer, what the records say, the change; two lanes may share a buyer
-  var LANE = [
-    ['nb', [[122.5, 26], [119, 22], [114, 17], [109, 10]].concat(SG, SUEZ), 'ham', 0],
-    ['hp', [[108, 17], [109.5, 12], [106.5, 6]].concat(SG, SUEZ), 'ham', 0, true],
-    ['sz', [[121, 21], [140, 24], [175, 25], [215, 18], [245, 11], [275, 6.5], [280.5, 8.8], [281, 11.5], [276, 17], [274.5, 21.5], [270, 25.5]], 'hou', 1],
-    ['qz', [[109.5, 17], [110, 10], [108, 3], [106.9, -2]], 'jkt', 2],
-    ['nb', [[122.5, 26], [119, 22], [114, 17], [109, 10]].concat(SG, [[72, 12], [62, 20], [58.5, 23.5], [56.6, 26.3]]), 'dxb', 3],
-    ['sz', [[114, 17], [109, 10]].concat(SG.slice(0, 2), [[96, -2], [80, -15], [60, -28], [35, -36], [20, -36.5], [10, -28], [5, -10], [3, 0]]), 'los', 4]
-  ];
-  var BUYER = [
-    ['Nordwerk Energie GmbH', T('近 12 个月 9 票 · HS 8507.60', '9 shipments in 12 months · HS 8507.60'), T('供应商 2 → 3 · 新增 1 家越南工厂', 'Suppliers 2 → 3 · a new one in Vietnam')],
-    ['Gulf Coast Lift Supply', T('叉车电池 · 近 6 个月 4 票', 'Forklift batteries · 4 in 6 months'), T('铅酸换锂电 · 采购量 +35%', 'Lead-acid to lithium · volume +35%')],
-    ['PT Surya Energi', T('约每 60 天一票', 'About one shipment every 60 days'), T('上一票到港已 60 天', 'Last arrival 60 days ago')],
-    ['Gulf Solar Trading', T('储能柜 · 近 3 个月 3 票', 'Storage cabinets · 3 in 3 months'), T('供应商未变', 'Same supplier')],
-    ['Lagos Power Ltd', T('离网储能 · 首次进口', 'Off-grid storage · first import'), T('新进口商', 'New importer')]
-  ];
-  function Lanes() {
-    var P = 20, SLOT = P / BUYER.length, R;
-    var S = shaped();
-    function build(stage, L) {
-      var svg = base(stage, L, 'lanes'), wide = L.w >= 900;
-      var mw = wide ? L.w * 1.1 : L.w * 2.6, c0 = wide ? 150 : 75;
-      var cell = mw / MASK.cols, mh = cell * MASK.rows, y0 = (L.h - mh) / 2 - (wide ? 0 : L.h * 0.04);
-      function px(lon, lat) {
-        if (lon < MASK.w0) lon += 360;
-        return [L.w / 2 + (lon - c0) / 360 * mw, y0 + (MASK.top - lat) / (MASK.rows * MASK.step) * mh];
-      }
-      var bits = atob(MASK.bits), d = '';
-      for (var r = 2; r < MASK.rows; r++) for (var c = 0; c < MASK.cols; c++) {
-        var n = r * MASK.cols + c;
-        if (!(bits.charCodeAt(n >> 3) & (128 >> (n & 7)))) continue;
-        var x = L.w / 2 + (MASK.w0 + (c + 0.5) * MASK.step - c0) / 360 * mw, y = y0 + (r + 0.5) * cell;
-        if (x > -10 && x < L.w + 10) d += 'M' + x.toFixed(1) + ' ' + y.toFixed(1) + 'h0';
-      }
-      sv('path', { d: d, class: 'sgg-land', 'stroke-width': (cell * 0.34).toFixed(2) }, svg);
-      R = { lanes: [], ports: {}, buyers: [] };
-      LANE.forEach(function (ln) {
-        var pts = [PORT[ln[0]]].concat(ln[1], [PORT[ln[2]]]).map(function (p) { return px(p[0], p[1]); });
-        // Catmull-Rom through the waypoints, then resampled to 120 even steps for the ship
-        var raw = [];
-        for (var i = 0; i < pts.length - 1; i++) {
-          var p0 = pts[Math.max(i - 1, 0)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(i + 2, pts.length - 1)];
-          for (var s = 0; s < 8; s++) {
-            var u = s / 8, u2 = u * u, u3 = u2 * u;
-            raw.push([0.5 * (2 * p1[0] + (-p0[0] + p2[0]) * u + (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * u2 + (-p0[0] + 3 * p1[0] - 3 * p2[0] + p3[0]) * u3),
-              0.5 * (2 * p1[1] + (-p0[1] + p2[1]) * u + (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * u2 + (-p0[1] + 3 * p1[1] - 3 * p2[1] + p3[1]) * u3)]);
-          }
-        }
-        raw.push(pts[pts.length - 1]);
-        var acc = [0];
-        for (var k = 1; k < raw.length; k++) acc.push(acc[k - 1] + Math.hypot(raw[k][0] - raw[k - 1][0], raw[k][1] - raw[k - 1][1]));
-        var total = acc[acc.length - 1], even = [], j = 0;
-        for (var q = 0; q <= 120; q++) {
-          var want = total * q / 120;
-          while (j < acc.length - 2 && acc[j + 1] < want) j++;
-          var f = (want - acc[j]) / ((acc[j + 1] - acc[j]) || 1);
-          even.push([raw[j][0] + (raw[j + 1][0] - raw[j][0]) * f, raw[j][1] + (raw[j + 1][1] - raw[j][1]) * f]);
-        }
-        var dd = 'M' + raw.map(function (p) { return p[0].toFixed(1) + ' ' + p[1].toFixed(1); }).join('L');
-        var o = { buyer: ln[3], pts: even, isNew: !!ln[4] };
-        o.base = sv('path', { d: dd, class: 'sgg-lane' + (o.isNew ? ' is-new' : '') }, svg);
-        o.hi = sv('path', { d: dd, class: 'sgg-lane-hi', opacity: 0, pathLength: 100, 'stroke-dasharray': '100 100', 'stroke-dashoffset': 100 }, svg);
-        o.ship = sv('circle', { r: wide ? 3.6 : 3, class: 'sgg-ship' }, svg);
-        o.phase = hashOf(ln[0] + ln[2]);
-        R.lanes.push(o);
-      });
-      Object.keys(PORT).forEach(function (k) {
-        var p = px(PORT[k][0], PORT[k][1]);
-        if (p[0] < 0 || p[0] > L.w) return;
-        var g = sv('g', { class: 'sgg-port' + (/^(nb|sz|qz|hp)$/.test(k) ? ' is-origin' : '') }, svg);
-        var nd = node(g, p[0], p[1], 'sgg-dot');
-        put(nd.dot, 'opacity', '1');
-        // the four origin ports sit close together: two labels open right, two left, staggered up and down
-        var right = /^(hou|jkt|nb|sz)$/.test(k), dy = { nb: -6, sz: 15, qz: 15, hp: -6 }[k];
-        var lab = sv('text', { x: (p[0] + (right ? 9 : -9)).toFixed(1), y: (p[1] + (dy == null ? 4 : dy)).toFixed(1), 'text-anchor': right ? 'start' : 'end', class: 'sgg-port-t' }, g);
-        lab.textContent = PORT[k][2];
-        R.ports[k] = { p: p, n: nd };
-      });
-      BUYER.forEach(function (b, i) {
-        var to = R.ports[LANE.filter(function (l) { return l[3] === i; })[0][2]];
-        if (!to) { R.buyers.push(null); return; }
-        var w = wide ? 300 : Math.min(250, L.w - 40), x = to.p[0], y = to.p[1], cx, cy;
-        // wide: every buyer's records open in one place, the empty middle of row 3 (row 2 is the one
-        // hovered), and name their lane; narrow: above or below the port, kept inside the frame
-        if (wide) { cx = L.w / 2; cy = L.h * 0.61; } else {
-          cx = Math.max(w / 2 + 20, Math.min(L.w - w / 2 - 20, x + (x < L.w * 0.3 ? w * 0.35 : x > L.w * 0.7 ? -w * 0.35 : 0)));
-          cy = y + (y > L.h * 0.55 ? 92 : -92);
-        }
-        var c = card(stage, 'sgg-callout' + (i === 0 || i === 4 ? ' is-change' : ''), cx, cy, w);
-        var from = [];
-        LANE.forEach(function (l) { if (l[3] === i && from.indexOf(PORT[l[0]][2]) < 0) from.push(PORT[l[0]][2]); });
-        el('span', 'sgg-k', c, from.join(' / ') + ' → ' + PORT[LANE.filter(function (l) { return l[3] === i; })[0][2]][2]);
-        el('b', 'sgg-v', c, b[0]);
-        el('span', 'sgg-src', c, b[1]);
-        el('span', 'sgg-chg', c, b[2]);
-        R.buyers.push({ c: c, to: to });
-      });
-    }
-    function hashOf(s) { var h = 0; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 997; return h / 997; }
-    function tick(t) {
-      var u = mod(t, P), act = Math.floor(u / SLOT), v = u - act * SLOT;
-      R.lanes.forEach(function (o) {
-        var on = o.buyer === act, d = on ? ease.io(seg(v, 0.1, 1.4)) * (1 - seg(v, SLOT - 0.5, SLOT)) : 0;
-        put(o.hi, 'stroke-dashoffset', (100 - 100 * (on ? ease.io(seg(v, 0.1, 1.4)) : 0)).toFixed(1));
-        put(o.hi, 'opacity', d.toFixed(2));
-        // ships keep sailing on every lane, slowly; the active lane's ship rides its highlight
-        var s = on && v < 1.4 ? ease.io(seg(v, 0.1, 1.4)) : mod(t / 26 + o.phase, 1);
-        var pt = o.pts[Math.min(120, Math.floor(s * 120))];
-        put(o.ship, 'cx', pt[0].toFixed(1)); put(o.ship, 'cy', pt[1].toFixed(1));
-        put(o.ship, 'opacity', (on ? 1 : 0.55 * Math.min(1, s * 8, (1 - s) * 8)).toFixed(2));
-        cl(o.base, 'is-on', on);
-      });
-      R.buyers.forEach(function (b, i) {
-        if (!b) return;
-        var on = i === act, p = on ? ease.out(seg(v, 1.0, 1.6)) : 0, o = on ? 1 - seg(v, SLOT - 0.6, SLOT - 0.1) : 0;
-        appear(b.c, p, o);
-        if (on) ripple(b.to.n, seg(v, 1.2, 2.4), true);
-      });
-    }
-    return { layouts: S.layouts, pick: S.pick, build: build, tick: tick, still: 2.6, cue: function (t) { return Math.ceil(t / P) * P; } };
-  }
-
-  /* =====================================================================
-     RHYTHM — 补货判断
+     RHYTHM — 补货判断: the hairline above row 3 is the time axis; PT Surya's
+     orders stand on it ~60 days apart, the days since the last one count up
+     to the restock window above the thumbnail, the judgement waits below
      ===================================================================== */
   function Rhythm() {
-    var P = 16, R;
-    var S = shaped();
-    // day of the year: four orders about 60 days apart, today 60 days after the last
-    var ORD = [[34, 120, '2/3'], [94, 150, '4/4'], [153, 140, '6/2'], [213, 160, '8/1']], TODAY = 273, DAYS = 304;
-    var MON = T('1月 2月 3月 4月 5月 6月 7月 8月 9月 10月', 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct').split(' ');
+    var P = 16, R, S = shaped();
+    // day of the year 2026: four orders 59-60 days apart; "today" is 21 Oct, 60 days after the last
+    var ORD = [[55, 120, T('2月24日', 'Feb 24')], [115, 150, T('4月25日', 'Apr 25')], [174, 140, T('6月23日', 'Jun 23')], [234, 160, T('8月22日', 'Aug 22')]], TODAY = 294;
     function build(stage, L) {
-      var svg = base(stage, L, 'rhythm'), wide = L.w >= 900;
-      // shown while row 3 (~61% of the field) is hovered: the rhythm stands above it, the conclusion below;
-      // the bars stay low enough that the interval labels clear row 1's heading
-      var x0 = L.w * (wide ? 0.08 : 0.07), x1 = L.w * (wide ? 0.92 : 0.93), ay = L.h * (wide ? 0.47 : 0.6), bh = wide ? Math.max(120, Math.min(200, L.h * 0.47 - 350)) : 150, bw = wide ? 30 : 16;
-      function X(d) { return x0 + d / DAYS * (x1 - x0); }
-      R = { X: X, ay: ay, bars: [], spans: [] };
-      sv('path', { d: 'M' + x0 + ' ' + ay + 'H' + x1, class: 'sgg-axis' }, svg);
-      MON.forEach(function (m, i) {
-        var x = X(i * 30.4);
-        sv('path', { d: 'M' + x.toFixed(1) + ' ' + ay + 'v6', class: 'sgg-axis' }, svg);
-        if (wide || i % 2 === 0) { var tx = sv('text', { x: (x + 4).toFixed(1), y: ay + 26, class: 'sgg-axis-t' }, svg); tx.textContent = m; }
-      });
-      // the restock window and the order that should come
-      var wx = X(TODAY - 6), ww = X(TODAY + 6) - wx;
-      R.band = sv('rect', { x: wx.toFixed(1), y: ay - bh - 40, width: ww.toFixed(1), height: bh + 40, class: 'sgg-band', opacity: 0 }, svg);
-      R.ghost = sv('rect', { x: (X(TODAY) - bw / 2).toFixed(1), y: ay - bh * 0.62, width: bw, height: bh * 0.62, rx: 4, class: 'sgg-ghost', opacity: 0 }, svg);
+      var G = base(stage, L, 'rhythm'), svg = G.svg, th = G.rows[2].th;
+      var ay = G.lines[2], tc = th ? (th.l + th.r) / 2 : G.cl + (G.cr - G.cl) * 0.6, x0 = G.cl + 64;
+      var kx = (tc - x0) / (TODAY - ORD[0][0]), roomy = 60 * kx >= 150, bh = 26, by = ay - 37;
+      function X(d) { return tc - (TODAY - d) * kx; }
+      R = { X: X, bars: [], spans: [] };
       ORD.forEach(function (o, i) {
         var x = X(o[0]), h = bh * o[1] / 160;
-        var g = sv('g', { class: 'sgg-bar' }, svg);
-        var r = sv('rect', { x: (x - bw / 2).toFixed(1), y: ay - h, width: bw, height: h, rx: 4 }, g);
-        r.style.transformOrigin = x.toFixed(1) + 'px ' + ay + 'px';
-        var q = sv('text', { x: x.toFixed(1), y: ay - h - 12, 'text-anchor': 'middle', class: 'sgg-bar-q' }, g); q.textContent = '×' + o[1];
-        var dt = sv('text', { x: x.toFixed(1), y: ay + 50, 'text-anchor': 'middle', class: 'sgg-bar-d' }, g); dt.textContent = o[2];
+        var g = sv('g', { class: 'sgg-bar', opacity: 0 }, svg);
+        var r = sv('rect', { x: (x - 8).toFixed(1), y: (ay - 3 - h).toFixed(1), width: 16, height: h.toFixed(1), rx: 3 }, g);
+        r.style.transformOrigin = x.toFixed(1) + 'px ' + (ay - 3) + 'px';
+        var dt = sv('text', { x: x.toFixed(1), y: ay + 18, 'text-anchor': 'middle', class: 'sgg-bar-d' }, g);
+        dt.textContent = o[2] + (roomy ? ' · ' + o[1] + T(' 套', ' packs') : '');
         R.bars.push({ g: g, r: r });
-        if (i) {
-          var a = X(ORD[i - 1][0]), top = ay - bh - (wide ? 44 : 40);
-          var sp = sv('g', { class: 'sgg-span', opacity: 0 }, svg);
-          sv('path', { d: 'M' + (a + 4).toFixed(1) + ' ' + (top + 10) + 'V' + top + 'H' + (x - 4).toFixed(1) + 'V' + (top + 10), class: 'sgg-span-l' }, sp);
-          var st = sv('text', { x: ((a + x) / 2).toFixed(1), y: top - 10, 'text-anchor': 'middle', class: 'sgg-span-t' }, sp);
-          st.textContent = T((o[0] - ORD[i - 1][0]) + ' 天', (o[0] - ORD[i - 1][0]) + ' days');
-          R.spans.push(sp);
-        }
+        if (i) R.spans.push(span(svg, X(ORD[i - 1][0]), x, by, T((o[0] - ORD[i - 1][0]) + ' 天', (o[0] - ORD[i - 1][0]) + ' days')));
       });
-      R.cur = sv('g', { class: 'sgg-cursor' }, svg);
-      sv('path', { d: 'M0 ' + ay + 'V' + (ay - bh - 40), class: 'sgg-cursor-l' }, R.cur);
-      sv('circle', { cx: 0, cy: ay, r: 5, class: 'sgg-cursor-d' }, R.cur);
+      // the restock window and the order that should come
+      var hw = Math.max(9, 6 * kx);
+      R.band = sv('rect', { x: (tc - hw).toFixed(1), y: by - 4, width: (2 * hw).toFixed(1), height: ay - by + 3, class: 'sgg-band', opacity: 0 }, svg);
+      R.ghost = sv('rect', { x: (tc - 8).toFixed(1), y: (ay - 3 - bh * 150 / 160).toFixed(1), width: 16, height: (bh * 150 / 160).toFixed(1), rx: 3, class: 'sgg-ghost', opacity: 0 }, svg);
+      // the interval still open: its bracket grows with the cursor
+      var lx = X(ORD[3][0]) + 5;
+      R.live = sv('path', { d: 'M' + lx.toFixed(1) + ' ' + (by + 6) + 'V' + by + 'H' + (tc - 5).toFixed(1), class: 'sgg-span-l is-live', pathLength: 100, 'stroke-dasharray': '100 100', 'stroke-dashoffset': 100 }, svg);
+      R.liveT = sv('text', { x: X(264).toFixed(1), y: by - 7, 'text-anchor': 'middle', class: 'sgg-span-t is-live', opacity: 0 }, svg);
+      R.liveT.textContent = T('60 天', '60 days');
+      R.cur = sv('g', { class: 'sgg-cursor', opacity: 0 }, svg);
+      sv('path', { d: 'M0 ' + (ay - 1) + 'V' + by + 'M0 ' + by + 'h-5v6', class: 'sgg-cursor-l' }, R.cur);
+      sv('circle', { cx: 0, cy: ay, r: 4, class: 'sgg-cursor-d' }, R.cur);
       R.count = el('div', 'sgg-count', stage);
-      R.countN = el('b', '', R.count); R.countT = el('span', '', R.count, T('天未下单', 'days since the last order'));
-      // wide: the count rides just right of the cursor, under the band's top, clear of row 1's text
-      R.countDx = wide ? 14 : 0;
-      R.count.style.top = (ay - bh - (wide ? 34 : 66)) + 'px';
-      if (wide) R.count.style.alignItems = 'flex-start';
-      var cw = wide ? 360 : Math.min(300, L.w - 40);
-      var c = R.card = card(stage, 'sgg-restock', wide ? X(TODAY) - cw / 2 + 30 : L.w / 2, wide ? L.h * 0.705 : L.h * 0.2, cw);
-      var hd = el('div', 'sgg-row', c); el('b', 'sgg-v', hd, 'PT Surya Energi'); R.pill = pill(hd, T('补货周期到了', 'Restock due'), 'is-amber');
-      el('span', 'sgg-src', c, T('依据：近 3 次下单间隔 59–60 天 · 64V 104Ah', 'Why: the last 3 orders were 59–60 days apart'));
-      el('span', 'sgg-chg', c, T('建议联系 · 跟进草稿等你确认', 'Worth a call · the draft waits for your OK'));
+      R.count.style.top = (ay - 17) + 'px';
+      R.countN = el('b', '', R.count); el('span', '', R.count, T('天未下单', 'days since the last order'));
+      R.cdx = hw + 10;
+      // the judgement, under the thumbnail across the hairline below row 3, and the draft beside it
+      var fb = strip(G, 3, 'd'), cw = Math.min(440, G.cr - G.cl), gw = Math.min(T(196, 250), G.cr - G.cl);
+      var cx = clamp(tc - cw / 2, G.cl, G.cr - cw - gw - 16);
+      var c = R.card = box(stage, 'is-2 sgg-restock', cx, fb.y, cw, 'l');
+      var l2 = two(c, null, 'PT Surya Energi', T('近 4 次下单，间隔 59–60 天 · 64V 104Ah', 'Last 4 orders 59–60 days apart · 64V 104Ah'));
+      el('span', 'sgg-route', l2.previousSibling, T('印尼', 'Indonesia'));
+      R.pill = pill(l2.previousSibling, T('补货周期到了', 'Restock due'), 'is-amber');
+      var gd = R.draft = box(stage, 'is-1 sgg-draft', c.r + 16, fb.y, gw, 'l');
+      el('span', '', gd, T('跟进草稿', 'Follow-up draft'));
+      pill(gd, T('等你确认', 'Waits for your OK'), 'is-amber');
+      R.arrow = link(svg, [c.r + 2, fb.y], [c.r + 14, fb.y], 0);
+      tag(stage, G.cr, strip(G, 2, 'd').y, 'r');
+    }
+    function span(svg, a, b, y, label) {
+      var g = sv('g', { class: 'sgg-span', opacity: 0 }, svg);
+      sv('path', { d: 'M' + (a + 5).toFixed(1) + ' ' + (y + 6) + 'V' + y + 'H' + (b - 5).toFixed(1) + 'V' + (y + 6), class: 'sgg-span-l' }, g);
+      var tx = sv('text', { x: ((a + b) / 2).toFixed(1), y: y - 7, 'text-anchor': 'middle', class: 'sgg-span-t' }, g);
+      tx.textContent = label;
+      return g;
     }
     function tick(t) {
       var u = mod(t, P), out = outOf(u, P), X = R.X;
       R.bars.forEach(function (b, i) {
         var p = ease.out(seg(u, 0.3 + i * 0.35, 0.9 + i * 0.35));
         css(b.r, 'transform', 'scaleY(' + p.toFixed(3) + ')');
-        put(b.g, 'opacity', (p > 0 ? Math.max(out, 0.35) : 0).toFixed(2));
+        put(b.g, 'opacity', (p > 0 ? out : 0).toFixed(2));
       });
-      R.spans.forEach(function (s, i) { put(s, 'opacity', (ease.out(seg(u, 1.2 + i * 0.35, 1.7 + i * 0.35)) * Math.max(out, 0.35)).toFixed(2)); });
-      var sweep = ease.io(seg(u, 2.6, 8.6)), day = ORD[3][0] + Math.round(60 * sweep), x = X(ORD[3][0] + 60 * sweep);
+      R.spans.forEach(function (s, i) { put(s, 'opacity', (ease.out(seg(u, 1.2 + i * 0.35, 1.7 + i * 0.35)) * out).toFixed(2)); });
+      var sweep = ease.io(seg(u, 2.6, 8.6)), day = Math.round(60 * sweep), x = X(ORD[3][0] + 60 * sweep);
       put(R.cur, 'transform', 'translate(' + x.toFixed(1) + ' 0)');
       put(R.cur, 'opacity', (seg(u, 2.2, 2.6) * out).toFixed(2));
-      put(R.countN, 'text', String(day - ORD[3][0]));
-      css(R.count, 'transform', R.countDx ? 'translate(' + (x + R.countDx).toFixed(1) + 'px,0)' : 'translate(' + x.toFixed(1) + 'px,0) translateX(-50%)');
+      put(R.live, 'stroke-dashoffset', (100 - 100 * sweep).toFixed(1));
+      put(R.live, 'opacity', (seg(u, 2.2, 2.6) * out).toFixed(2));
+      put(R.countN, 'text', String(day));
+      css(R.count, 'transform', 'translate(' + (x + 12 + (R.cdx - 12) * ease.io(seg(u, 7.6, 8.6))).toFixed(1) + 'px, -50%)');
       css(R.count, 'opacity', (seg(u, 2.2, 2.6) * out).toFixed(3));
-      cl(R.count, 'is-due', day - ORD[3][0] >= 55);
-      put(R.band, 'opacity', (ease.out(seg(u, 7.2, 8.4)) * out).toFixed(2));
-      put(R.ghost, 'opacity', (ease.out(seg(u, 8.2, 9.2)) * out).toFixed(2));
-      appear(R.card, ease.out(seg(u, 8.8, 9.6)), out);
+      cl(R.count, 'is-due', day >= 55);
+      put(R.liveT, 'opacity', (ease.out(seg(u, 8.6, 9.1)) * out).toFixed(2));
+      put(R.band, 'opacity', (ease.out(seg(u, 7.6, 8.6)) * out).toFixed(2));
+      put(R.ghost, 'opacity', (ease.out(seg(u, 8.4, 9.2)) * out).toFixed(2));
+      appear(R.card, ease.out(seg(u, 8.9, 9.6)), out);
+      draw(R.arrow, ease.io(seg(u, 9.7, 10)), out);
+      appear(R.draft, ease.out(seg(u, 9.9, 10.5)), out);
     }
     return { layouts: S.layouts, pick: S.pick, build: build, tick: tick, still: 12, cue: function (t) { return Math.ceil(t / P) * P; } };
   }
 
   /* =====================================================================
-     COMMITTEE — 关键角色
+     COMMITTEE — 关键角色: Nordwerk's buying committee in the strips that frame
+     row 4 — three who weigh in above the hairline, the one who decides below
+     it beside the thumbnail, the hand-off under the row waiting for your OK
      ===================================================================== */
   function Committee() {
-    var P = 16, R;
-    var S = shaped();
+    var P = 16, R, S = shaped();
     var ROLE = [
-      ['JW', T('采购经理', 'Purchasing manager'), 'J. Weber', T('发起需求', 'Raises the need'), T('依据：官网团队页 · 招聘启事', 'Source: team page · job post')],
-      ['LF', T('技术负责人', 'Head of engineering'), 'L. Fischer', T('评估规格', 'Checks the spec'), T('依据：展会演讲 · 职业资料', 'Source: trade-fair talk · profile')],
-      ['MB', T('财务总监', 'Finance director'), 'M. Braun', T('批预算', 'Holds the budget'), T('依据：年报签字页', 'Source: annual report')],
-      ['TK', T('总经理', 'Managing director'), 'T. Krüger', T('拍板', 'Decides'), T('依据：公司注册信息', 'Source: company register')]
+      ['JW', T('采购经理', 'Purchasing manager'), 'J. Weber', T('发起需求', 'Raises the need'), T('依据：官网团队页', 'via team page')],
+      ['LF', T('技术负责人', 'Head of engineering'), 'L. Fischer', T('评估规格', 'Checks the spec'), T('依据：展会演讲', 'via trade-fair talk')],
+      ['MB', T('财务总监', 'Finance director'), 'M. Braun', T('批预算', 'Holds the budget'), T('依据：年报签字页', 'via annual report')],
+      ['TK', T('总经理', 'Managing director'), 'T. Krüger', T('拍板', 'Decides'), T('依据：公司注册信息', 'via company register')]
     ];
     function build(stage, L) {
-      var svg = base(stage, L, 'committee'), wide = L.w >= 900;
+      var G = base(stage, L, 'committee'), svg = G.svg, th = G.rows[3].th;
+      var fa = strip(G, 3, 'u'), na = strip(G, 3, 'd'), nb = strip(G, 4, 'u');
+      var rw = Math.min(310, Math.floor((G.cr - G.cl - 32) / 3)), segR = th ? th.r + 16 : (G.cl + G.cr) / 2, dw = Math.min(320, G.cr - segR);
       R = { roles: [] };
-      var cx = wide ? L.w * 0.57 : L.w / 2, cw = wide ? 300 : Math.min(300, L.w - 40);
-      // shown while row 4 (~81% of the field) is hovered: the committee stands in one line in the gap
-      // between rows 2 and 3, the three who weigh in on the left, the one who decides at its end, and
-      // the hand-off under him in the gap above row 4
-      var y0 = wide ? L.h * 0.49 : 0, gy = L.h * (wide ? 0.70 : 0.86), dx = wide ? L.w * 0.83 : cx;
-      var pos = wide
-        ? [[L.w * 0.14, y0], [L.w * 0.36, y0], [L.w * 0.58, y0], [dx, y0]]
-        : [[cx, L.h * 0.4], [cx, L.h * 0.55], [cx, L.h * 0.7], [cx, L.h * 0.2]];
-      var dec = pos[3];
-      // four across with a gap between them on the narrowest desktop stage (1200)
-      if (wide) cw = Math.min(300, Math.round(L.w * 0.22 - 18));
       ROLE.forEach(function (r, i) {
-        var o = { at: 0.8 + i * 0.9 };
-        if (i < 3) {
-          o.line = wide
-            ? line(svg, [pos[i][0], y0 - 48], [dec[0] - 70 + i * 40, y0 - 48], 0.14, 'sgg-link is-flow')
-            : line(svg, [pos[i][0] - cw / 2 + 18, pos[i][1]], [dec[0] - cw / 2 + 18, dec[1]], 0.25, 'sgg-link is-flow');
+        var dec = i === 3, o = { at: dec ? 3.4 : 0.6 + i * 0.8 };
+        var c = o.card = dec ? box(stage, 'is-2 is-p sgg-role is-dec', G.cr, na.y, dw, 'r') : box(stage, 'is-2 is-p sgg-role', G.cl + i * (rw + 16), fa.y, rw, 'l');
+        avatar(c, r[0]);
+        var tx = el('div', 'sgg-p', c);
+        var l1 = el('div', 'sgg-l1', tx); el('b', 'sgg-v', l1, r[1]); el('span', 'sgg-nm2', l1, r[2]);
+        var l2 = el('div', 'sgg-l2', tx); el('span', dec ? 'sgg-verb is-amber' : 'sgg-verb', l2, r[3]); el('span', '', l2, ' · ' + r[4]);
+        if (!dec) {
+          // each who weighs in, to the one who decides: down to the hairline, along it, into his card
+          var sx = c.l + rw / 2, ex = G.cr - dw + 30, ly = G.lines[3] + 4 + i * 3, c2 = sx < ex - 90 ? ex - 90 : ex;
+          o.line = path(svg, 'M' + sx.toFixed(1) + ' ' + fa.b.toFixed(1) + 'C' + sx.toFixed(1) + ' ' + ly.toFixed(1) + ' ' + c2.toFixed(1) + ' ' + ly.toFixed(1) + ' ' + ex.toFixed(1) + ' ' + na.t.toFixed(1), 'sgg-link is-flow');
         }
-        var c = o.card = card(stage, i === 3 ? 'sgg-role is-dec' : 'sgg-role', pos[i][0], pos[i][1], cw);
-        var top = el('div', 'sgg-core-top', c);
-        el('span', 'sgg-av', top, r[0]);
-        var nm = el('div', 'sgg-core-name', top);
-        el('b', '', nm, r[1]); el('span', '', nm, r[2]);
-        o.pill = pill(top, r[3], i === 3 ? 'is-amber' : '');
-        el('span', 'sgg-src', c, r[4]);
         R.roles.push(o);
       });
-      var gw = wide ? 420 : cw, gx = wide ? Math.min(dx, L.w - gw / 2 - 24) : cx;
-      if (wide) R.gateLine = line(svg, [dx, y0 + 50], [dx, gy - 24], 0, 'sgg-link');
-      var g = R.gate = card(stage, 'sgg-gate', gx, gy, gw);
-      var gr = el('div', 'sgg-row', g);
-      el('b', 'sgg-v', gr, T('关键人 4 位 · 确认后交给 Sales Desk', '4 key people · next: Sales Desk'));
-      R.gatePill = pill(gr, T('等你确认', 'Waits for your OK'), 'is-amber');
       R.dec = R.roles[3];
+      // under the row: whose committee it is with the tag, and the hand-off that waits
+      var cap = R.cap = el('div', 'sgg-cap', stage);
+      cap.style.left = Math.round(G.cl) + 'px'; cap.style.top = Math.round(nb.y) + 'px';
+      var ct = el('div', '', cap); el('b', '', ct, 'Nordwerk Energie GmbH'); el('span', '', ct, T(' · 采购决策链', ' · buying committee'));
+      var tg = tag(cap, 0, 0, 'l'); tg.removeAttribute('style');
+      var g = R.gate = box(stage, 'is-1 sgg-gate', G.cr, nb.y, Math.min(T(330, 380), G.cr - segR), 'r');
+      el('span', '', g, T('关键人 4 位 · 确认后交给 Sales Desk', '4 key people · then Sales Desk'));
+      pill(g, T('等你确认', 'Waits for your OK'), 'is-amber');
+      css(cap, 'opacity', '0');
     }
     function tick(t) {
       var u = mod(t, P), out = outOf(u, P);
-      R.roles.forEach(function (o, i) { appear(o.card, ease.out(seg(u, o.at, o.at + 0.6)), out); if (o.line) draw(o.line, ease.io(seg(u, 4.6 + i * 0.25, 5.6 + i * 0.25)), out); });
+      R.roles.forEach(function (o, i) {
+        appear(o.card, ease.out(seg(u, o.at, o.at + 0.6)), out);
+        if (o.line) draw(o.line, ease.io(seg(u, 2.8 + i * 0.25, 3.8 + i * 0.25)), 0.85 * out);
+      });
       cl(R.dec.card, 'is-on', u > 4.4 && out > 0.5);
-      if (R.gateLine) draw(R.gateLine, ease.io(seg(u, 6.2, 6.7)), out);
-      appear(R.gate, ease.out(seg(u, 6.6, 7.2)), out);
+      css(R.cap, 'opacity', (seg(u, 0.2, 0.7) * out).toFixed(3));
+      appear(R.gate, ease.out(seg(u, 5.4, 6)), out);
     }
     return { layouts: S.layouts, pick: S.pick, build: build, tick: tick, still: 10, cue: function (t) { return Math.ceil(t / P) * P; } };
   }
 
-  return { dossier: Dossier, lanes: Lanes, rhythm: Rhythm, committee: Committee };
+  // the kit the lanes scene (js/stargo-motion-lanes.js, loaded after this file) draws with
+  K.growth = { clamp: clamp, shaped: shaped, strip: strip, base: base, tag: tag, box: box, appear: appear, two: two, path: path, draw: draw, node: node, ripple: ripple };
+  return { dossier: Dossier, rhythm: Rhythm, committee: Committee };
 });
