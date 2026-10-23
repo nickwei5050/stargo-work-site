@@ -38,3 +38,26 @@ export function motionHost(scene, lang, extraClass = '', { fit } = {}) {
 
 export const MOTION_CSS = 'css/stargo-motion.css';
 export const MOTION_SCRIPTS = '<script src="js/stargo-motion-map.js" defer></script><script src="js/stargo-motion.js" defer></script>';
+
+/* Script and style tags for a page that hosts the given scenes. A scene outside the engine lives in
+   js/stargo-motion-<name>.js (plus css/stargo-motion-<name>.css when it has its own styles) and must load
+   before js/stargo-motion.js, which picks it up from window.STARGO_SCENES. The world map is only loaded
+   for the radar. */
+const BUILT_IN = new Set(['loop', 'radar', 'studio']);
+export function motionAssets(scenes) {
+  const extra = [...new Set(scenes.map((n) => SCENE_FILE[n] || n))].filter((n) => !BUILT_IN.has(n));
+  const css = [MOTION_CSS, ...extra.filter((n) => SCENE_CSS.has(n)).map((n) => `css/stargo-motion-${n}.css`)];
+  const js = [
+    ...(scenes.includes('radar') ? ['js/stargo-motion-map.js'] : []),
+    ...extra.map((n) => `js/stargo-motion-${n}.js`),
+    'js/stargo-motion.js',
+  ];
+  return {
+    css: css.map((href) => `<link href="${href}" rel="stylesheet" type="text/css"/>`).join('\n'),
+    js: js.map((src) => `<script src="${src}" defer></script>`).join(''),
+  };
+}
+/* scene name → the file that defines it (several scenes may share one file) */
+export const SCENE_FILE = {};
+/* scene files that ship their own stylesheet */
+export const SCENE_CSS = new Set();

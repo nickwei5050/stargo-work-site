@@ -1038,6 +1038,12 @@
   }
 
   var SCENES = { loop: LoopScene, radar: RadarScene, studio: StudioScene };
+  // Scenes kept in their own files (js/stargo-motion-<name>.js, loaded before this one) queue a factory on
+  // window.STARGO_SCENES. Each factory gets this kit and returns { sceneName: SceneConstructor }.
+  var KIT = { T: T, el: el, sv: sv, put: put, css: css, cl: cl, c01: c01, seg: seg, ease: ease, mod: mod, hash: hash, bez: bez, bezD: bezD, curve: curve, fmt: fmt, typed: typed, flash: flash, textSwap: textSwap, icon: icon, ICON: ICON, STAR: STAR, ZH: ZH };
+  (window.STARGO_SCENES || []).forEach(function (f) {
+    try { var add = f(KIT); for (var k in add) if (!SCENES[k]) SCENES[k] = add[k]; } catch (err) { if (window.console) console.warn('[stargo-motion]', err); }
+  });
   Array.prototype.forEach.call(hosts, function (host) {
     var make = SCENES[host.getAttribute('data-sg-scene')];
     if (!make) return;
