@@ -26,6 +26,7 @@ import { PRODUCT_CAPTION } from './editorial-images.mjs';
 import { HERO, HOME_MODULES, HOME_STAGES, HOME_SILOS, HOME_ROLE_CARD, HOME_PRICING_CARD, HOME_BLOG_COVERS, NOTICES_CARDS, CAP_PHOTOS, ENTERPRISE_PHOTOS, CONTACT_CARD, WORKFORCE_ROLES, WORKFORCE_BLOG_COVERS } from './replaceables.mjs';
 import { SITE } from './paths.mjs';
 import { productTour } from './product-tour.mjs';
+import { motionHost, MOTION_CSS, MOTION_SCRIPTS } from './motion-scenes.mjs';
 import { webpPage } from './image-refs.mjs';
 import { a11yPage } from './a11y.mjs';
 import { speedPage } from './speed.mjs';
@@ -677,6 +678,18 @@ PAGES['index.html'] = (lang) => {
     if (slots !== 8 || used.size !== 4) throw new Error(`index: expected 8 product panels (4 desktop + 4 phone) showing 4 pictures, found ${slots} showing ${used.size}`);
     if (/prodect-dashboard-0\d\.svg/.test(products)) throw new Error('index: Scalora dashboard drawing survives');
   }
+  /* 代码动画: the Growth OS and AI 创作 panels show motion drawn in code
+     instead of their generated stills (tools/motion-scenes.mjs). The host keeps
+     the still's 1672 × 941 box, so the switcher does not move. */
+  {
+    const swaps = [['Growth OS', 'radar'], ['AI 创作', 'studio'], ['AI Creative', 'studio']];
+    let n = 0;
+    for (const [key, scene] of swaps) {
+      const src = HOME_MODULES[key].replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      products = products.replace(new RegExp(`<img src="${src}"[^>]*class="prodect-dashboard-image"/>`, 'g'), () => { n++; return motionHost(scene, lang, 'sg-mo-panel'); });
+    }
+    if (n !== 4) throw new Error(`index: expected 4 motion panels (Growth OS and AI 创作, desktop and phone), found ${n}`);
+  }
   const integration = addRootClass(sub('sc-integration', frag('integration.html'), C.HOME_SC_INTEGRATION), 'sc-scope');
   const insertBefore = (html, anchor, fragment, label) => { const i = html.indexOf(anchor); if (i === -1) throw new Error(`insertion anchor not found for ${label}`); return html.slice(0, i) + fragment + '\n' + html.slice(i); };
   h = insertBefore(h, '<section class="section with-minus"', hero, 'four-layer stack');
@@ -686,6 +699,10 @@ PAGES['index.html'] = (lang) => {
      the system itself (tools/product-tour.mjs). */
   h = insertBefore(h, '<section class="section gr"', productTour(lang), 'product tour');
   h = s(h, '</body>', '<script src="js/stargo-tour.js" defer></script></body>', { count: 1 });
+  /* 代码动画: 「一条业务主线」 zooms out of a motion scene instead of the
+     os-cockpit still (css/stargo-motion.css drops the background). */
+  h = s(h, '<div class="absolute-photo"></div>', `<div class="absolute-photo sg-mo-host">${motionHost('loop', lang, '', { fit: 'viewport' })}</div>`, { count: 1 });
+  h = s(h, '</body>', `${MOTION_SCRIPTS}</body>`, { count: 1 });
   /* 旋转图片展示 — rototo's rotating gallery, in the empty band of the hero's own
      footer: after the four dots and above 「© 2026 STARGO WORK」, which is the box
      the owner drew in red. It goes in as a third child of `.hero`; that element's
@@ -707,7 +724,7 @@ PAGES['index.html'] = (lang) => {
      or the page it introduces flashes past underneath it. It goes before
      scalora's and before stargo-fusion.css, the same order the capability page
      puts the donor sheets in. */
-  h = h.replace(monoLink, (m) => `${m}\n<link href="css/${DONORS.offgrid.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/${DONORS.rototo.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/scalora-modules.sc.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-tour.css" rel="stylesheet" type="text/css"/>`);
+  h = h.replace(monoLink, (m) => `${m}\n<link href="css/${DONORS.offgrid.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/${DONORS.rototo.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/scalora-modules.sc.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-tour.css" rel="stylesheet" type="text/css"/>\n<link href="${MOTION_CSS}" rel="stylesheet" type="text/css"/>`);
   /* Mono's own page-load curtain goes. `.preloader` is a fixed black sheet
      with the wordmark on it (Mono's css: z-index 9999, resting at
      translateY(-120%)), dropped over the page and lifted again by the IX3
