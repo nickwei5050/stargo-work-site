@@ -59,11 +59,12 @@
 .sg-tour-pic { cursor: zoom-in; }
 .sg-tour-pic:focus-visible { outline: 2px solid #1f5eff; outline-offset: 2px; }
 .sg-tour-zoom { position: fixed; inset: 0; z-index: 2147483000; background: rgba(10,10,10,.88); display: flex; align-items: center; justify-content: center; padding: 48px 16px; cursor: zoom-out; }
-.sg-tour-zoom[hidden] { display: none; }
+.sg-tour-zoom[hidden], .sg-tour-zoom.is-pan[hidden] { display: none; }
 .sg-tour-zoom img { max-width: 100%; max-height: 100%; border-radius: 10px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
 /* below 992 a wide capture opens larger than the screen and pans, so the small print can be read */
 .sg-tour-zoom.is-pan { display: block; overflow: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding: 64px 16px 32px; }
 .sg-tour-zoom.is-pan img { max-width: none; max-height: none; width: min(1600px, 220vw); margin: 0 auto; display: block; }
+.sg-tour-zoom.is-pan .sg-tour-zoom-x { position: fixed; z-index: 1; }
 .sg-tour-zoom-x { position: absolute; top: 12px; right: 16px; width: 40px; height: 40px; border-radius: 50%; border: 0; background: #fff; color: #0d0d0d; font-size: 24px; line-height: 40px; cursor: pointer; }
 html.sg-tour-locked, html.sg-tour-locked body { overflow: hidden; }
 

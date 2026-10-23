@@ -171,9 +171,9 @@
       { icon: 'form', name: T('官网表单', 'Website form'), p: T('官网表单', 'Web form') }
     ];
     var MSG = [
-      ['Müller Energie GmbH', T('德国', 'Germany'), 'Please quote 200 pcs 48V 100Ah, DAP Hamburg.'],
+      ['Müller Energie GmbH', T('德国', 'Germany'), '200 pcs 48V 100Ah, DAP Hamburg?'],
       ['Ahmed Al-Rashid', T('阿联酋', 'UAE'), 'Price for the 72V lithium pack? 50 units.'],
-      ['Silva Mobilidade', T('巴西', 'Brazil'), 'Can you do OEM label? What is the MOQ?'],
+      ['Silva Mobilidade', T('巴西', 'Brazil'), 'Can you do OEM label? MOQ?'],
       ['Nordic Mobility AB', T('瑞典', 'Sweden'), 'E-bike pack supplier wanted, 2,000/yr.'],
       ['PT Surya Energi', T('印尼', 'Indonesia'), 'Lead time for 64V 104Ah packs?'],
       ['Kowalski Sp. z o.o.', T('波兰', 'Poland'), 'Please send the catalogue and CE files.'],
@@ -618,8 +618,8 @@
       // the factory label and the newest pin paint above every arc
       if (mode !== 'mini') {
         // up and to the right of the dot: routes leave it westwards, south to Jakarta and east-south-east to Sydney
-        var hl = sv('text', { x: h[0] + 9 * R.inv, y: h[1] - 11 * R.inv, 'text-anchor': 'start', class: 'sg-map-label is-home', style: 'font-size:' + (13 * R.inv).toFixed(1) + 'px;stroke-width:' + (4 * R.inv).toFixed(1) + 'px' }, g);
-        hl.textContent = T('柳州工厂', 'Liuzhou factory');
+        var hl = R.homeLab = sv('text', { x: h[0] + 9 * R.inv, y: h[1] - 11 * R.inv, 'text-anchor': 'start', class: 'sg-map-label is-home', style: 'font-size:' + (13 * R.inv).toFixed(1) + 'px;stroke-width:' + (4 * R.inv).toFixed(1) + 'px' }, g);
+        hl.textContent = T('柳州工厂', 'Liuzhou plant');
       }
       g.appendChild(R.pins[0].g);
       // KPIs
@@ -661,6 +661,15 @@
       }
       var tg = el('div', 'sg-tag', mode === 'compact' ? null : stage, mode === 'mini' ? T('演示数据', 'Demo data') : T('动态示意 · 演示数据', 'Illustrative motion · demo data'));
       if (mode === 'compact') bar.insertBefore(tg, live);
+    }
+
+    // does a right-opening pin label at map point p (lw px wide) overlap the factory label?
+    function homeHit(p, lw) {
+      var hb = R.homeBox;
+      if (hb === undefined) { hb = R.homeBox = null; try { var bb = R.homeLab && R.homeLab.getBBox(); if (bb && bb.width) hb = R.homeBox = { x: bb.x, y: bb.y, w: bb.width, h: bb.height }; else R.homeBox = undefined; } catch (e) { R.homeBox = undefined; } }
+      if (!hb) return false;
+      var pad = 6 * R.inv, x0 = p[0] + 10 * R.inv, x1 = p[0] + (10 + lw) * R.inv, y0 = p[1] - 30 * R.inv, y1 = p[1] - 6 * R.inv;
+      return x1 > hb.x - pad && x0 < hb.x + hb.w + pad && y1 > hb.y - pad && y0 < hb.y + hb.h + pad;
     }
 
     function arcPath(a, b) {
@@ -706,9 +715,11 @@
         if (pin.lab) {
           var lab = b[4] + ' · ' + b[5];
           if (!pin.labT.__sg || pin.labT.__sg.text !== lab) { put(pin.labT, 'text', lab); put(pin.labBg, 'width', String(Math.ceil(22 + pin.labT.getComputedTextLength()))); }
-          // east of the factory the label opens to the left, and below the pin when the pin is south of it
+          // east of the factory the label opens to the left, and below the pin when the pin is south of it;
+          // a pin just west of the factory (Dubai, Riyadh) also opens left so it never covers the factory's name
           var lw = +pin.labBg.getAttribute('width'), east = to[0] > MAP.w * 0.75, below = east && to[1] > R.home[1] + 12;
-          put(pin.labBg, 'x', east ? String(-10 - lw) : '10'); put(pin.labT, 'x', east ? String(1 - lw) : '21');
+          var left = east || homeHit(to, lw);
+          put(pin.labBg, 'x', left ? String(-10 - lw) : '10'); put(pin.labT, 'x', left ? String(1 - lw) : '21');
           put(pin.labBg, 'y', below ? '8' : '-30'); put(pin.labT, 'y', below ? '24.5' : '-13.5');
           put(pin.lab, 'opacity', (s === 0 ? seg(tau, 1.05, 1.4) : 1 - seg(tau, P, P + 0.3)).toFixed(2));
         }

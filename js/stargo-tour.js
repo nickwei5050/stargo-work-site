@@ -52,10 +52,28 @@
   box.setAttribute('aria-modal', 'true');
   box.innerHTML = '<button type="button" class="sg-tour-zoom-x" aria-label="' + closeLabel + '">×</button><img alt=""/>';
   document.body.appendChild(box);
-  var zimg = box.querySelector('img'), back = null;
-  function close() { box.hidden = true; document.documentElement.classList.remove('sg-tour-locked'); if (back) back.focus(); }
-  box.addEventListener('click', close);
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !box.hidden) close(); });
+  box.setAttribute('data-lenis-prevent', '');
+  var zimg = box.querySelector('img'), zx = box.querySelector('button'), back = null, pushed = false;
+  // the page's smooth scroller keeps scrolling under the overlay unless it is paused
+  function scroller(on) { try { if (typeof lenis !== 'undefined' && lenis) lenis[on ? 'start' : 'stop'](); } catch (e) {} }
+  function close(fromHistory) {
+    if (box.hidden) return;
+    box.hidden = true;
+    box.classList.remove('is-pan');
+    document.documentElement.classList.remove('sg-tour-locked');
+    scroller(true);
+    // the zoom took a history entry so the phone's back button closes it; closing it any other way gives that entry back
+    if (pushed) { pushed = false; if (!fromHistory) history.back(); }
+    if (back) back.focus({ preventScroll: true });
+  }
+  box.addEventListener('click', function () { close(); });
+  window.addEventListener('popstate', function () { if (pushed) { pushed = false; close(true); } });
+  document.addEventListener('keydown', function (e) {
+    if (box.hidden) return;
+    if (e.key === 'Escape') close();
+    // the close button is the dialog's only control, so Tab stays on it
+    else if (e.key === 'Tab') { e.preventDefault(); zx.focus(); }
+  });
   root.querySelectorAll('.sg-tour-pic').forEach(function (pic) {
     var img = pic.querySelector('img');
     pic.tabIndex = 0;
@@ -65,13 +83,16 @@
       back = pic;
       zimg.src = img.getAttribute('src');
       zimg.alt = img.alt;
+      box.setAttribute('aria-label', img.alt);
       // a wide capture on a small screen opens larger than the screen and pans, centred to start
       var pan = window.innerWidth < 992 && +img.getAttribute('width') > +img.getAttribute('height');
       box.classList.toggle('is-pan', pan);
       box.hidden = false;
       if (pan) { box.scrollTop = 0; box.scrollLeft = (box.scrollWidth - box.clientWidth) / 2; zimg.onload = function () { box.scrollLeft = (box.scrollWidth - box.clientWidth) / 2; }; }
       document.documentElement.classList.add('sg-tour-locked');
-      box.querySelector('button').focus();
+      scroller(false);
+      if (!pushed) { try { history.pushState({ sgTourZoom: 1 }, ''); pushed = true; } catch (e) {} }
+      zx.focus({ preventScroll: true });
     }
     pic.addEventListener('click', open);
     pic.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });

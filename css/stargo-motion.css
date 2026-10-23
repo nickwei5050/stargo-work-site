@@ -15,6 +15,12 @@
 /* max-height: where the switcher squeezes the picture's box (short laptop screens, longer copy above it),
    the panel shrinks with it and the scene scales down inside instead of being cut off */
 .sg-mo-panel { width: 100%; max-height: 100%; aspect-ratio: 1672 / 941; background: #15110e; border-radius: 8px; }
+/* when the height cap leaves the panel wider than the scene, the scene's backdrop and its app-bar rule run to the
+   panel's edges, so the scene reads as a wider window with centred content, not a picture with bars beside it */
+.sg-mo-panel > .sg-radar, .sg-mo-panel > .sg-studio { background: none; }
+.sg-mo-panel[data-sg-scene="radar"], .sg-mo-panel[data-sg-scene="studio"] { background: radial-gradient(90% 80% at 30% 20%, #1f1813 0%, #15110e 60%, #120f0c 100%); }
+.sg-mo-panel .sg-app-bar { border-bottom-color: transparent; }
+.sg-mo-panel .sg-app-bar::after { content: ""; position: absolute; left: -2000px; right: -2000px; bottom: -1px; height: 1px; background: rgba(255, 236, 220, .07); pointer-events: none; }
 @media (min-width: 992px) {
   .sc-scope.products .sg-mo-panel { width: min(100%, calc((100vh - 262px) * 1.7768)); }
 }
@@ -151,6 +157,7 @@
 .is-compact .sg-app-bar .sg-tag { position: static; transform: none; margin-left: auto; font-size: 13px; }
 .is-compact .sg-app-bar .sg-tag + .sg-app-live { margin-left: 14px; }
 .sg-radar.is-mini .sg-tag, .sg-studio.is-mini .sg-tag { left: 373px; top: 210px; font-size: 12.5px; letter-spacing: .02em; }
+.sg-studio.is-mini .sg-tag { top: 212px; line-height: 1.1; }
 .sg-radar.is-mini .sg-tag { top: 50px; padding: 1px 6px; border-radius: 5px; background: rgba(21, 17, 14, .82); font-size: 12.5px; }
 .is-mini .sg-app-bar { height: 30px; padding: 0 8px; gap: 7px; font-size: 14px; }
 .is-mini .sg-app-mark { width: 18px; height: 18px; border-radius: 5px; }
@@ -242,6 +249,8 @@
 .sg-prompt-text { flex: 1; min-width: 0; font-size: 17px; color: #f4eee8; white-space: nowrap; overflow: hidden; display: flex; align-items: center; }
 .sg-prompt-text > span { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sg-prompt .sg-btn { height: 40px; min-width: 84px; }
+/* wide enough for "Generate", so the progress percentage replaces the label without the button changing size */
+.sg-studio:lang(en) .sg-prompt .sg-btn { min-width: 104px; }
 .sg-langs { position: absolute; display: flex; align-items: center; gap: 8px; height: 44px; }
 .sg-lang { font-size: 12px; font-weight: 600; letter-spacing: .04em; color: rgba(244, 238, 232, .5); border: 1px solid rgba(255, 236, 220, .12); padding: 4px 9px; border-radius: 7px; transition: color .3s, background .3s, border-color .3s; }
 .sg-lang.is-on { color: #fff; background: #ec6f10; border-color: #ec6f10; }
@@ -276,6 +285,7 @@
 .sg-studio.is-compact .sg-prompt { height: 48px; padding: 0 8px 0 14px; gap: 10px; border-radius: 12px; }
 .sg-studio.is-compact .sg-prompt-text { font-size: 15px; }
 .sg-studio.is-compact .sg-prompt .sg-btn { height: 34px; min-width: 70px; padding: 0 12px; font-size: 13px; border-radius: 9px; }
+.sg-studio.is-compact:lang(en) .sg-prompt .sg-btn { min-width: 86px; }
 .sg-studio.is-compact .sg-langs { height: 34px; gap: 6px; }
 .sg-studio.is-compact .sg-lang { font-size: 12.5px; padding: 3px 7px; }
 .sg-studio.is-compact .sg-lang-text { font-size: 14px; margin-left: 6px; }
@@ -296,6 +306,7 @@
 .sg-studio.is-mini .sg-prompt { left: 7px; right: 7px; top: 7px; height: 38px; padding: 0 5px 0 10px; gap: 8px; border-radius: 10px; background: rgba(16, 12, 10, .74); border-color: rgba(255, 255, 255, .14); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
 .sg-studio.is-mini .sg-prompt-text { font-size: 14px; }
 .sg-studio.is-mini .sg-prompt .sg-btn { height: 28px; min-width: 56px; padding: 0 10px; font-size: 13px; border-radius: 7px; }
+.sg-studio.is-mini:lang(en) .sg-prompt .sg-btn { min-width: 82px; }
 .sg-studio.is-mini .sg-canvas-tag { top: auto; bottom: 7px; left: 7px; font-size: 13px; padding: 3px 9px; }
 
 @keyframes sg-spin { to { transform: rotate(360deg); } }
