@@ -1,0 +1,85 @@
+/* Phone parity: what each rule does and why is in tools/chrome.mjs (phoneFx). Compositor-only. */
+:root{--sg-e:cubic-bezier(.2,.7,.2,1);--sg-o:cubic-bezier(.5,1,.89,1)}
+@media (max-width:479px){
+.service-grid>.service-list{grid-column:1/-1!important}
+.service-list .service-title-wrap{display:grid;grid-template-columns:auto minmax(0,1fr);row-gap:2px}
+.service-title-wrap>.sg-stage-line{display:block;grid-column:2;margin:0 0 4px;font-size:14px;line-height:1.45;font-weight:400;letter-spacing:0;opacity:.62}
+}
+@media (hover:none){
+.sg-flip-hint{display:flex;align-items:center;gap:8px;width:fit-content;max-width:calc(100% - 32px);margin:0 auto 24px;padding:9px 16px;border:1px solid #ffecdc24;border-radius:99px;color:#f4eee8c7;font-size:13px;line-height:1.35}
+.sg-flip-icon{flex:none;color:#ff8a3d}
+}
+/* accordion */
+.products-cards-mobile{counter-reset:sg}
+.products-cards-inner-block-mobile{counter-increment:sg}
+.sg-acc .products-card-name-block{position:relative}
+.sg-acc .products-card-name-inner-block{display:flex;align-items:center;gap:12px;position:relative}
+.sg-acc .heading-style-h5{min-width:0}
+.sg-acc .products-card-name-inner-block::after{content:counter(sg) "/4";position:absolute;top:6px;right:20px;font-size:11px;letter-spacing:.06em;opacity:.5}
+.sg-acc .products-card-name-inner-block::before{content:"";order:2;flex:none;width:7px;height:7px;margin:-4px 4px 0 auto;border:solid;border-width:0 1.5px 1.5px 0;rotate:45deg;opacity:.7;transition:.35s var(--sg-e)}
+.sg-acc .sg-open .products-card-name-inner-block::before{rotate:225deg;translate:0 4px}
+.sg-acc .products-card-name-block::after{content:"";position:absolute;inset:6px;border-radius:8px;background:#ec6f1029;opacity:0;pointer-events:none}
+.sg-acc .sg-nudge::after{animation:sg-wash 1.8s both}
+.sg-acc .sg-nudge .products-card-name-inner-block::before{animation:sg-chev .9s 2}
+@keyframes sg-wash{25%,70%{opacity:1}}
+@keyframes sg-chev{50%{translate:0 4px}}
+/* press */
+@media (hover:none) and (prefers-reduced-motion:no-preference){
+:is(.contact-info.for-button,.stargo-phone-demo,.sg-tour-tab,.cn-button,.rk-rt-button,.qx-button,.lx-button,.lx-big-button,.sc-button,a.w-button):active{scale:.96!important}
+:is(.work-main-wrapper,.qx-project-img-wrap,.lx-blog-card,.qx-blog-card):active{scale:.985!important}
+.sg-acc .products-card-name-block:active .products-card-name-inner-block{scale:.98}
+.contact-info.for-button:active .bg-change{translate:0 -100%!important;transition:translate .22s}
+}
+@media (max-width:767px){
+.lx-answers-card-sticky .lx-big-text-wrapper{transform:none}
+/* lit lists */
+.sg-fx-stages .service-title-wrap{opacity:.2!important;transition:opacity .45s}
+.sg-fx-stages .is-lit .service-title-wrap{opacity:1!important}
+.rk-insight .rk-rt-tab-display-off{display:block;transition:.5s var(--sg-e)}
+.rk-insight .rk-rt-insights-item-line{height:2px;transform-origin:0;scale:0 1}
+.rk-insight .rk-rt-insights-item-image{inset:50% 54px auto auto;width:96px;max-width:none;height:64px;margin-top:-32px;border-radius:6px;overflow:hidden;pointer-events:none;opacity:0!important;scale:.6}
+.rk-insight .rk-rt-insights-item-image img{height:100%;object-fit:cover}
+.rk-insight .is-focus .rk-rt-tab-display-off{opacity:1!important;scale:1}
+.sg-focusing h3{opacity:.32;scale:.92;transition:.5s var(--sg-e)}
+.sg-focusing .is-focus h3{opacity:1;scale:1}
+}
+@media (max-width:479px){
+.rk-insight .rk-rt-insights-item-image{inset:auto 54px 9px auto;margin-top:0;width:84px;height:56px}
+}
+@media (max-width:767px) and (prefers-reduced-motion:reduce){
+.sg-fx-stages .service-title-wrap,.rk-insight .rk-rt-tab-display-off,.sg-focusing h3{transition:none}
+.sg-focusing h3{scale:none}
+}
+@media (max-width:767px) and (prefers-reduced-motion:no-preference){
+/* loop phrases, ladder peek, tour swipe */
+.animation-section:has([data-stage]) .cta-sm-title{position:relative;opacity:.28!important;transition:opacity .6s var(--sg-e)}
+.animation-section:has([data-stage]) .cta-sm-title::after{content:"";position:absolute;left:50%;bottom:2px;width:28px;height:2px;margin-left:-14px;border-radius:2px;background:#ec6f10;scale:var(--sg-lit,0) 1;transition:scale .6s var(--sg-e)}
+.animation-section:has([data-stage="1"]) ._01,.animation-section:has([data-stage="2"]) ._02,.animation-section:has([data-stage="3"]) ._03,.animation-section:has([data-stage="4"]) ._04,.animation-section:has([data-stage="5"]) ._05{opacity:1!important;--sg-lit:1}
+.sg-peek>.cart-wrapper{animation:sg-peek 1s cubic-bezier(.45,0,.2,1)}
+@keyframes sg-peek{42%{rotate:y 26deg}}
+.is-in[data-sg-swipe] .sg-tour-stage{animation:sg-swipe .42s var(--sg-e)}
+[data-sg-swipe=prev]{--sg-dx:-40px}
+@keyframes sg-swipe{from{opacity:0;translate:var(--sg-dx,40px) 0}}
+}
+@supports (animation-timeline:view()){@media (max-width:767px) and (prefers-reduced-motion:no-preference){
+/* hero */
+.hero-track{view-timeline:--sg-hero}
+.hero-track .hero{transform-origin:50% 100%;animation:sg-out cubic-bezier(.4,0,.6,1) both;animation-timeline:--sg-hero;animation-range:exit 0% exit 65%}
+.hero-track .hero-photo-wrapper:is(.up,.down){animation:sg-up linear both;animation-timeline:--sg-hero;animation-range:exit}
+.hero-track .hero-photo-wrapper.down{--sg-dy:120px}
+@keyframes sg-out{from{scale:1}to{scale:.74}}
+@keyframes sg-up{from{translate:0 0}to{translate:0 var(--sg-dy,-120px)}}
+/* video band */
+.video-section{view-timeline:--sg-video}
+.sticky-video-section>.video-grid{animation:sg-zoom cubic-bezier(.3,.3,.45,1) both;animation-timeline:--sg-video;animation-range:entry 0% cover 50%}
+@keyframes sg-zoom{from{scale:var(--sg-z,1.35)}to{scale:1}}
+/* problem and area cards */
+.work-main .work-card{view-timeline:--sg-card;animation:sg-rise var(--sg-o) both;animation-timeline:--sg-card;animation-range:entry 0% cover 45%}
+.work-main .work-card .paralax-image{animation:sg-zoom linear both;animation-timeline:--sg-card;animation-range:entry 0% cover 60%;--sg-z:1.16}
+@keyframes sg-rise{from{translate:0 56px}to{translate:0 0}}
+/* workforce cards */
+.lx-answers-card-sticky .lx-answers-card{transform-origin:50% 100%;animation:sg-tilt var(--sg-o) both;animation-timeline:view();animation-range:entry 0% cover 42%}
+.lx-answers-card-sticky .lx-answers-card:nth-child(2){animation-range:entry 10% cover 46%}
+.lx-answers-card-sticky .lx-answers-card:nth-child(3){animation-range:entry 20% cover 50%}
+@keyframes sg-tilt{from{rotate:-5deg;translate:0 64px}to{rotate:0deg;translate:0 0}}
+}}

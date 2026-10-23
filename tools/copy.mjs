@@ -266,6 +266,30 @@ export const HOME_MOBILE = {
   products: B('两大引擎，经营与创作', 'Two engines, plus operations and creative work'),
   ladder: B('AI 能力一级级往上加：先打基础，再跑运营，再建增长引擎，最后主动获客。', 'Add AI capacity level by level: foundation, operations, growth engine, then customer acquisition.'),
 };
+/**
+ * Lane parity (2026-10-23): words the phone-only interactions add
+ * (css/stargo-phone.css, js/stargo-phone-fx.js). Shown only where those
+ * rules show them, so the desktop page carries them hidden.
+ *
+ * stageLines: one line under each of the five stage titles, below 480px only.
+ * There the template hides the picture box that holds each stage's sentence
+ * (LOOP_DESC), so a phone reader got five titles and no explanation. Each
+ * line is a shortened LOOP_DESC — it says nothing the full sentence does not —
+ * and is cut to fit one line at 360px.
+ *
+ * flipHint: above the pricing ladder on touch screens. A tap turns a card over
+ * to its first-year terms and scope (the template's flip), and nothing said so.
+ */
+export const PHONE_FX = {
+  stageLines: [
+    B('找客户、做背调，排出先开发谁', 'Find, research and rank accounts'),
+    B('询盘、报价、审批和 PI 一处办', 'Inquiries to quotes and PI, in one place'),
+    B('采购到发货，对得上销售承诺', 'Delivery that matches what was sold'),
+    B('付款、单证和售后，一起跟进', 'Payments, documents and support'),
+    B('留意复购，复盘哪些做法有效', 'Reorders, and a review of what worked'),
+  ],
+  flipHint: B('轻点卡片翻面，看首年价格和服务范围', 'Tap a card for first-year terms and scope'),
+};
 /* The line at the centre of the workspace film (V6 §4.9). The film is a brand
    animation, not a product recording, so the line says what the workspace is
    for and claims no demonstration. */
