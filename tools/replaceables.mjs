@@ -231,7 +231,8 @@ export const BLOG_COVERS = {
  * photographs: `observe` the full-bleed picture under the four lines
  * 观察真实流程 … 用实际结果改进 (#lx-more), `closing` the picture of the pink
  * closing card (#lx-evolution), `phone` the hand-held phone of the "no
- * writing" band, whose text-free screen (mobile-core) stays laid over it.
+ * writing" band, whose screen layer (since 2026-10-23 the code-drawn 'feed'
+ * scene, js/stargo-motion-phone.js) stays laid over it.
  */
 export const INTEL_PHOTOS = {
   observe: photoFile('i01-observe-process', 2048),

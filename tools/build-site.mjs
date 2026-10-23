@@ -102,7 +102,6 @@ const ABSTRACT = [
 const IMG = (n) => `assets/stargo/${n}`;
 const OS = { cockpit: IMG('os-cockpit.webp'), desk: IMG('os-sales-desk.webp'), inquiries: IMG('os-inquiries.webp'), agents: IMG('os-agent-center.webp'), quote: IMG('os-quote-studio.webp'), trade: IMG('os-trade-execution.webp'), desktop: IMG('os-desktop.webp'), login: IMG('os-login.webp'), boot: IMG('os-boot.webp'), loading: IMG('os-loading.webp') };
 const BRAND = { wide: IMG('brand-glow-wide.webp'), square: IMG('brand-glow-square.webp'), tall: IMG('brand-glow-tall.webp'), ontology: IMG('brand-ontology.webp'), loop: IMG('brand-loop.webp'), family: (n) => IMG(`brand-family-0${n}.webp`) };
-const MOBILE = { approvals: IMG('mobile-approvals.webp'), agents: IMG('mobile-agents.webp'), inquiry: IMG('mobile-inquiry.webp'), core: IMG('mobile-core.webp'), phoneApprovals: IMG('phone-approvals.webp'), phoneAgents: IMG('phone-agents.webp') };
 /* The owner's own product screenshots (handoff of 2026-09-18, registered in
    tools/imagegen/product-assets.json and described in
    tools/editorial-images.mjs). They ship from their own folder rather than
@@ -1152,12 +1151,12 @@ function lxPage(spec, lang, name) {
     const SCREENS = [
       ['iPhone%2013%20Pro%20Max%20-%203', 'assets/stargo-product/live52-mobile-case-screen.webp', true], // a chat → answering an inquiry on the phone
       ['iPhone%2013%20Pro%20Max%20-%204', 'assets/stargo-product/live51-mobile-board-screen.webp', true], // a message list → the deal board with the approval waiting
-      ['iPhone%2016%20Pro%20-%201', MOBILE.agents],          // a card wall → parallel tasks at a shared junction
-      ['iPhone%2016%20Pro%20-%202', MOBILE.core],            // the first screen → shared enterprise context
+      ['iPhone%2016%20Pro%20-%201'],   // a card wall: the hero's capture below, the code-drawn squad in the other two
+      ['iPhone%2016%20Pro%20-%202'],   // the first screen: likewise
     ];
     for (const [key, src, product] of SCREENS) {
       if ((b.match(new RegExp(`<img\\b[^>]*${key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'g')) ?? []).length !== 3) throw new Error(`${name}: expected the phone screen ${key} in three mockups`);
-      b = swapImg(b, key, src, product ? { alt: PRODUCT_CAPTION[lang] } : {});
+      if (src) b = swapImg(b, key, src, product ? { alt: PRODUCT_CAPTION[lang] } : {});
     }
     /* The hero's phone (.lx-integrations-image-hero) also shows real phone
        captures on its third and fourth screens (site-images/mobile m01 and
@@ -1175,6 +1174,25 @@ function lxPage(spec, lang, name) {
       if ((b.match(/<img\b[^>]*>/g) ?? []).filter((tag) => tag.includes(key)).length !== 1) throw new Error(`${name}: expected one hero phone screen ${slot}`);
       b = swapImg(b, key, src, { alt: PRODUCT_CAPTION[lang] });
     }
+    /* 2026-10-23 (owner: 不要全部放那种假假的AI图片): the other two mockups —
+       the 「按任务组队」 card's phone, beside 「工作暂停，背景不必从头解释」, and
+       the phone-features copy the template keeps hidden (.lx-hide) — showed
+       generated renders in their third and fourth screens. Only the hero
+       cycles its screens (IX2 lx-a-39 / lx-a-64); in these two the fourth
+       screen lies on top of the other three and is the only one ever seen.
+       It becomes the code-drawn 'squad' scene (js/stargo-motion-phone.js):
+       the task forms its team, is paused with its context kept, and picks
+       up where it stopped. The third screen, under it, goes. The host takes
+       the picture's class, so it fills the same rounded window. */
+    {
+      let third = 0, fourth = 0;
+      b = b.replace(/<img\b[^>]*class="lx-integrations-image lx-_([34])"[^>]*>/g, (tag, k) => {
+        if (k === '3') { third++; return ''; }
+        fourth++;
+        return motionHost('squad', lang, 'lx-integrations-image lx-_4');
+      });
+      if (third !== 2 || fourth !== 2) throw new Error(`${name}: expected the third and fourth screens of two non-hero mockups, found ${third} and ${fourth}`);
+    }
   }
   /* The owner's photographs (group "blog", 2026-10-21; site-images/batch-8,
      tools/replaceables.mjs INTEL_PHOTOS) take three of the template's
@@ -1187,21 +1205,23 @@ function lxPage(spec, lang, name) {
      tools/editorial-images.mjs replaces with the photograph's own sentence,
      and the crop points are in css/stargo-fusion.css (the "blog" block). */
   b = swapImg(b, '6936e930338bd07695b687e0_image%2026.avif', INTEL_PHOTOS.closing, { alt: 'STARGO WORK' });
-  /* V7-LX: a text-free screen (MOBILE.core, shared context: the "no writing"
-     band says 「不再丢上下文」) is laid over the hand-held phone's screen. It
-     covered the template composite's English interface and a video app's
-     name; since 2026-10-21 it lights the dark screen of the owner's
-     photograph (I03) instead. The layer is a sibling of the photograph with
-     the photograph's own class, so the band's IX2 (lx-a-68,
-     `.lx-no-writing-image`, children of the trigger) moves and scales both
-     together, and it copies the photograph's initial transform.
-     css/stargo-fusion.css (the "blog" block) places the screen on the
-     photograph's object-fit box and rounds it to the glass. */
+  /* V7-LX: a screen layer is laid over the hand-held phone's screen of the
+     "no writing" band. It covers the template composite's English interface
+     and a video app's name. The layer is a sibling of the picture with the
+     picture's own class, so the band's IX2 (lx-a-68, `.lx-no-writing-image`,
+     children of the trigger) moves and scales both together, and it copies
+     the picture's initial transform. css/stargo-fusion.css places the screen
+     on the composite's glass and cuts the fingertips out of it. Since
+     2026-10-23 the screen is the code-drawn 'feed' scene in the phone app's
+     own chrome (js/stargo-motion-phone.js) rather than a generated render:
+     what needs the owner arrives by itself (不再等提醒), and an approved
+     follow-up still waits for the owner to send it. The host carries its own
+     sentence for screen readers, so the layer is no longer aria-hidden. */
   {
     const re = /(<img src="assets\/6929b6c693cb856e01ef7c05\/694d149575edcf4ee403b317_no-writing-sc\.avif"[^>]*?style="([^"]*)"[^>]*class="lx-no-writing-image"\/>)/g;
     const hits = b.match(re) ?? [];
     if (hits.length !== 1) throw new Error(`${name}: expected one hand-held phone photograph (no-writing-sc), found ${hits.length}`);
-    b = b.replace(re, (m, tag, style) => `${tag}<div class="lx-no-writing-image stargo-nw-screen" style="${style}" aria-hidden="true"><div class="stargo-nw-frame"><img src="${MOBILE.core}" loading="lazy" alt="" class="stargo-nw-art"/></div></div>`);
+    b = b.replace(re, (m, tag, style) => `${tag}<div class="lx-no-writing-image stargo-nw-screen" style="${style}"><div class="stargo-nw-frame">${motionHost('feed', lang, 'stargo-nw-art')}</div></div>`);
   }
   b = b.replace(/<div([^>]*)class="([^"]*\blx-gradient-section\b[^"]*)"/, '<div id="lx-more"$1class="$2"');
   b = b.replace(/<div class="lx-cta-wrapper">/, '<div id="lx-evolution" class="lx-cta-wrapper">');
@@ -1214,7 +1234,12 @@ function lxPage(spec, lang, name) {
     const jargon = b.match(/企业本体|前置部署|调度中枢|自我进化|提示词|模型权重|Ontology|Embedded FDE|Orchestrator|Evolution|model weights|\bprompts?\b/);
     if (jargon) throw new Error(`${name}: architecture wording "${jargon[0]}" is back on the page`);
   }
-  return inMonoShell(b + bigMark() + '<script src="js/stargo-anchor-glide.js" defer></script>', ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
+  // the phone scenes: their styles after the page's own, their scripts at the end of the page
+  const mo = motionAssets(['feed', 'squad']);
+  const FUSION = '<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>';
+  const html = inMonoShell(b + bigMark() + '<script src="js/stargo-anchor-glide.js" defer></script>' + mo.js, ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
+  if (html.split(FUSION).length !== 2) throw new Error(`${name}: expected one stargo-fusion.css link`);
+  return html.replace(FUSION, `${FUSION}\n${mo.css}`);
 }
 PAGES['intelligence.html'] = (lang) => lxPage(C.LX_INTELLIGENCE, lang, 'intelligence');
 /* ---- workforce.html — lifelogx feature page ----------------------------
