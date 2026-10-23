@@ -509,7 +509,7 @@ button.toggle-header { width: 100%; border: 0; border-radius: 0; background: tra
 /* Footer grids. The template's "Pages" grid has four equal columns for five
    one-word links; STARGO's has three columns of longer labels, so it gets three.
    The contact grid keeps the template's own two-column spans (e-mail + WhatsApp,
-   website), but a footer link hides its icon by sliding 16px left inside an
+   the registered operator), but a footer link hides its icon by sliding 16px left inside an
    overflow-hidden box, so a label must be 17px narrower than its column: below
    1280px the footer links are set at 15px and the WhatsApp label drops its
    prefix. */
@@ -517,6 +517,17 @@ button.toggle-header { width: 100%; border: 0; border-radius: 0; background: tra
 /* .navigation-text-main is a flex container, so the prefix span is a flex item
    and the space after "WhatsApp" is trimmed: put that gap back as a margin. */
 .footer .stargo-wa { margin-right: .3em; }
+/* The operator's registered name sits in the footer contact column, which is a
+   nowrap flex label. Let that one label wrap inside its column so the 14
+   characters are not clipped at tablet widths. */
+.footer .navigation-text-main:has(.stargo-legal-entity) {
+  white-space: normal;
+  min-width: 0;
+}
+.footer .stargo-legal-entity {
+  white-space: normal;
+  min-width: 0;
+}
 @media (max-width: 1279px) {
   .footer .navigation-text-main { font-size: 15px; }
 }
@@ -1523,9 +1534,9 @@ html[lang^="zh"] .lx-scope .lx-heading-style-h4:has(br) {
    Three pieces of information were dropped on a phone:
      - the 「WhatsApp」 label before +86 187 7512 7878, leaving a bare number
        with no channel on it  (fixed in the `.stargo-wa` rule above);
-     - the 「(一般咨询)」 column heading over www.stargomoto.com, so the URL was
-       orphaned under 「(商务合作)」 and read as a third business contact;
-     - the whole 「(社交)」 heading and its three round social buttons.
+     - the 「(运营主体)」 column heading over the registered company name, so the
+       name was orphaned under 「(商务合作)」 and read as a third business contact;
+     - the whole 「(社交)」 heading and its round social buttons.
 
    ONE CAUSE UNDERNEATH ALL OF IT. `.footer-bottom-grid` is a grid with
    `place-items: start stretch` — in a grid that is "top-align the two columns,
@@ -1589,8 +1600,8 @@ html[lang^="zh"] .lx-scope .lx-heading-style-h4:has(br) {
    from the next.
 
    Measured after, at 430, the block reads top to bottom as 「(商务合作)」 /
-   sales@stargomoto.com / WhatsApp +86 187 7512 7878 / 「(一般咨询)」 /
-   www.stargomoto.com / 「(地址)」 / 柳州 · 广西 · 中国 / 「(社交)」 / the three
+   sales@stargomoto.com / WhatsApp +86 187 7512 7878 / 「(运营主体)」 /
+   the registered company name / 「(地址)」 / 柳州 · 广西 · 中国 / 「(社交)」 / the
    round buttons. Heading top to the first line of the group it names: 41px
    every time (49px for the buttons, which are a 32px row rather than a line of
    type). Group to the NEXT heading: 55px and 46px inside a pair, against 74px
@@ -1623,8 +1634,8 @@ html[lang^="zh"] .lx-scope .lx-heading-style-h4:has(br) {
   .footer .footer-btm-part-1 > .margin-50 .footer-small-grid.sec > .flex-item:last-child { order: 4; }
 
   /* The template's blanket `.hide-mobile, .social-content { display: none }`.
-     The footer's copy of it is the only way to reach the site's e-mail,
-     WhatsApp and corporate site as buttons, so it comes back as the flex row
+     The footer's copy of it is the only way to reach the site's e-mail
+     and WhatsApp as buttons, so it comes back as the flex row
      `.social-content` is everywhere else. */
   .footer .footer-btm-part-1 .social-content.for-footer { display: flex; }
 }
