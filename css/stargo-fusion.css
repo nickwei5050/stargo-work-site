@@ -6219,8 +6219,3 @@ img[src*="stargo-photo/e08-emergency-stop-"] { object-position: 50% 42%; }
 html.w-mod-js:not(.sg-ix-late) [data-sg-first]:not([style]) { animation: sg-first-wait 1.2s; }
 @keyframes sg-first-wait { from, to { opacity: 0; } }
 [data-sg-settled] { opacity: 1 !important; transform: none !important; filter: none !important; }
-
-/* The owner's S + star mark in every `.video-logo` circle (tools/chrome.mjs
-   logoMark, 2026-10-23), where Mono's orb clip played: it fills the circle
-   the clip's 220% box was clipped to. */
-.video-logo > .stargo-logo-mark { display: block; width: 100%; height: 100%; max-width: none; object-fit: cover; }

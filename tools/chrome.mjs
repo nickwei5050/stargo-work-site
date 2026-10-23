@@ -764,27 +764,6 @@ function chromeImagery(html) {
   return out;
 }
 
-/* The logo orb (Mono's magical-orb clip in every `.video-logo` circle: the
-   navbar logo, the pricing cards, the homepage ladder heading and the chat
-   avatars) is the owner's S + star mark since 2026-10-23 (「网站里面很多这种LOGO
-   换成我们自己的」). The background-video block goes and one still fills the
-   circle; css/stargo-fusion.css sizes it. Decorative: the logo link keeps
-   the name its own text gives it. */
-const LOGO_MARK = 'assets/brand/stargo-s-mark-256.webp';
-function logoMark(html) {
-  const cls = 'class="logo-bg w-background-video w-background-video-atom"';
-  let out = html;
-  for (let at = out.indexOf(cls); at !== -1; at = out.indexOf(cls, at)) {
-    const el = extractElement(out, out.lastIndexOf('<div', at), 'div');
-    if (!/^<div\b[^>]*>\s*<video\b[\s\S]*<\/video>\s*<\/div>$/.test(el.text) || !el.text.includes('magical_orb')) { at += cls.length; continue; }
-    const img = `<img src="${LOGO_MARK}" alt="" aria-hidden="true" loading="lazy" class="stargo-logo-mark"/>`;
-    out = out.slice(0, el.start) + img + out.slice(el.end);
-    at = el.start + img.length;
-  }
-  if (out.includes('magical_orb')) throw new Error('chrome: a logo orb clip survives');
-  return out;
-}
-
 /** Legacy hrefs, resolved by what the link says rather than where it pointed. */
 export function remapLinks(html) {
   return html.replace(/<a\b([^>]*)href="([^"]+)"([^>]*)>([\s\S]*?)<\/a>/g, (whole, pre, href, post, body) => {
@@ -861,7 +840,6 @@ export function applyChrome(html, { lang, current }) {
   out = wordmark(out);
   out = chromeImagery(out);
   out = sideMenu(out, lang);
-  out = logoMark(out);
   out = scripts(out);
   out = linkHygiene(out, lang);
   out = socialIcons(out, lang);
