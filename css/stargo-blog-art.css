@@ -1,0 +1,211 @@
+/* The blog's code-drawn covers (tools/blog-art.mjs, lane "blog", 2026-10-23).
+   A cover takes the place of the article photograph in its box: the article
+   hero (.lx-blog-image.lx-details, 3:2), the 1:1 cards (.lx-blog-image) of the
+   blog index, the 「更多文章」 list and workforce, and the homepage's
+   .testimonials-photo (3 / 2.3). The box's own class keeps its size, ratio,
+   radius and reveal; this sheet paints what is inside it. Palette and marks
+   are the article charts' (V7-BLOG in css/stargo-fusion.css): near-black panel,
+   plum glow, hairlines, lifelogx pink. Static: the one transition is the art
+   layer's hover, transform only. */
+div.sgcv {
+  --sgcv-pink: #e393bd;
+  --sgcv-hot: #f938a1;
+  --sgcv-bg: #0b0a0c;
+  position: relative;
+  display: block;
+  overflow: hidden;
+  isolation: isolate;
+  container-type: inline-size;
+  box-sizing: border-box;
+  background: radial-gradient(90% 75% at var(--sgcv-gx, 0%) var(--sgcv-gy, 0%), rgba(108, 18, 76, .55), rgba(80, 11, 56, .18) 45%, transparent 72%), var(--sgcv-bg);
+  color: #f6f1f4;
+  object-fit: initial;
+  -webkit-user-select: none;
+  user-select: none;
+}
+/* A grid of fine dots, scaled with the box like the art. */
+div.sgcv::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, .085) 0 1px, transparent 1.4px);
+  background-size: calc(100cqw / 32) calc(100cqw / 32);
+  background-position: 50% 50%;
+  -webkit-mask-image: radial-gradient(120% 100% at var(--sgcv-gx, 0%) var(--sgcv-gy, 0%), #000 0%, rgba(0, 0, 0, .35) 70%, transparent 100%);
+  mask-image: radial-gradient(120% 100% at var(--sgcv-gx, 0%) var(--sgcv-gy, 0%), #000 0%, rgba(0, 0, 0, .35) 70%, transparent 100%);
+  pointer-events: none;
+}
+/* The homepage card. The photograph took the card's full width from its own
+   intrinsic size (Mono sets only min-width/min-height, and phones drop the
+   min-width to 80px); a cover has none, so it takes the width outright. Mono
+   also paints a decorative SVG behind .testimonials-photo: the cover's own
+   background replaces it. */
+.blog-grid div.sgcv.testimonials-photo { width: 100%; background-repeat: no-repeat; background-size: auto; }
+.sgcv-guide { --sgcv-gx: 100%; --sgcv-gy: 0%; }
+.sgcv-start { --sgcv-gx: 12%; --sgcv-gy: 62%; }
+.sgcv-quote { --sgcv-gx: 50%; --sgcv-gy: 30%; }
+.sgcv-trio  { --sgcv-gx: 92%; --sgcv-gy: 50%; }
+.sgcv-loop  { --sgcv-gx: 72%; --sgcv-gy: 55%; }
+.sgcv-roles { --sgcv-gx: 30%; --sgcv-gy: 22%; }
+.sgcv-map   { --sgcv-gx: 66%; --sgcv-gy: 50%; }
+
+.sgcv-art {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
+  transform-origin: 50% 55%;
+  transition: transform .9s cubic-bezier(.2, .7, .2, 1);
+}
+:is(.lx-blog-link, .blog-wrapper):hover .sgcv-art { transform: scale(1.035); }
+@media (prefers-reduced-motion: reduce) { .sgcv-art { transition: none; } :is(.lx-blog-link, .blog-wrapper):hover .sgcv-art { transform: none; } }
+
+/* Strokes and fills. */
+.sgcv-art path, .sgcv-art circle, .sgcv-art rect { fill: none; stroke: none; vector-effect: non-scaling-stroke; }
+.sgcv-art .k-ln { stroke: rgba(255, 255, 255, .26); stroke-width: 1.5px; }
+.sgcv-art .k-ln2 { stroke: rgba(255, 255, 255, .12); stroke-width: 1px; }
+.sgcv-art .k-dash { stroke: rgba(255, 255, 255, .16); stroke-width: 1px; stroke-dasharray: 2 7; }
+.sgcv-art .k-pk { stroke: var(--sgcv-pink); stroke-width: 1.5px; stroke-linecap: round; stroke-linejoin: round; }
+.sgcv-art .k-w2 { stroke-width: 2px; }
+.sgcv-art .k-w3 { stroke-width: 2.5px; stroke-linecap: round; stroke-linejoin: round; }
+.sgcv-art .k-ink { fill: var(--sgcv-bg); }
+.sgcv-art path.k-ink { fill: none; stroke: #1a0611; }
+.sgcv-art .k-dot { fill: rgba(255, 255, 255, .5); }
+.sgcv-art .k-dot2 { fill: rgba(255, 255, 255, .22); }
+.sgcv-art .k-hot { fill: var(--sgcv-hot); }
+.sgcv-art .k-fillp { fill: var(--sgcv-pink); }
+.sgcv-art .k-fillh { fill: var(--sgcv-pink); }
+.sgcv-art .k-fill2 { fill: rgba(255, 255, 255, .24); }
+.sgcv-art .k-node { fill: var(--sgcv-bg); stroke: var(--sgcv-pink); stroke-width: 2px; }
+.sgcv-art .k-node2 { fill: var(--sgcv-bg); stroke: rgba(255, 255, 255, .4); stroke-width: 1.5px; stroke-dasharray: 3 4; }
+.sgcv-art .k-tile { fill: rgba(18, 17, 19, .92); stroke: #2b292c; stroke-width: 1px; }
+.sgcv-art .k-tile-on { stroke: rgba(227, 147, 189, .55); }
+.sgcv-art .k-win { fill: rgba(16, 14, 17, .94); stroke: #343136; stroke-width: 1px; }
+.sgcv-art .k-pill { fill: rgba(255, 255, 255, .05); stroke: rgba(255, 255, 255, .1); stroke-width: 1px; }
+.sgcv-art .k-core { fill: #131114; stroke: rgba(227, 147, 189, .7); stroke-width: 1.5px; }
+.sgcv-art .k-core-on { fill: var(--sgcv-pink); stroke: none; }
+.sgcv-art .k-team { stroke: var(--sgcv-hot); stroke-width: 1.5px; stroke-linejoin: round; opacity: .8; }
+.sgcv-art .k-halo { fill: var(--sgcv-bg); }
+/* The ten role groups, largest first: the big one pink, the rest alternating
+   so each group's run reads as its own. */
+.sgcv-art .k-g0 { fill: rgba(227, 147, 189, .78); }
+.sgcv-art .k-g1 { fill: rgba(255, 255, 255, .5); }
+.sgcv-art .k-g2 { fill: rgba(227, 147, 189, .42); }
+.sgcv-art .k-g3 { fill: rgba(255, 255, 255, .3); }
+.sgcv-art .k-g4 { fill: rgba(227, 147, 189, .3); }
+.sgcv-art .k-g5 { fill: rgba(255, 255, 255, .2); }
+.sgcv-art .k-g6 { fill: rgba(227, 147, 189, .22); }
+.sgcv-art .k-g7 { fill: rgba(255, 255, 255, .15); }
+.sgcv-art .k-g8 { fill: rgba(227, 147, 189, .18); }
+.sgcv-art .k-g9 { fill: rgba(255, 255, 255, .12); }
+
+/* Type. geometricPrecision keeps Chrome from laying the text out at the
+   on-screen scale: the reveal scales the cover from .9, and text laid out
+   mid-reveal was left painted 10% small and off its marks (seen at 390px). */
+.sgcv-art text { stroke: none; letter-spacing: -.01em; text-rendering: geometricPrecision; }
+.sgcv-art .k-txt { fill: #f6f1f4; }
+.sgcv-art .k-acc { fill: var(--sgcv-pink); }
+.sgcv-art .k-mut { fill: #8f8b92; }
+.sgcv-art .k-soft { fill: #bdb9c0; }
+.sgcv-art text.k-ink, .sgcv-art tspan.k-ink { fill: #1a0611; }
+.sgcv-art .k-dim { fill: rgba(246, 241, 244, .24); }
+.sgcv-art tspan.k-txt { fill: #f6f1f4; }
+.sgcv-art tspan.k-acc { fill: var(--sgcv-pink); }
+.sgcv-art .w4 { font-weight: 400; }
+.sgcv-art .w5 { font-weight: 500; }
+.sgcv-art .w6 { font-weight: 600; letter-spacing: -.035em; }
+.sgcv-art .k-num { font-variant-numeric: tabular-nums; }
+.sgcv-art .k-track { letter-spacing: .14em; }
+.sgcv-art.sgcv-zh .w6 { letter-spacing: -.01em; }
+
+/* Legibility (tools/blog-art.mjs LEGIBLE_STEP): a line that would be drawn
+   below ~9.5px in this box is left out; `.vN` shows from N px of box width. */
+@container (max-width: 199.98px) { .sgcv-art .v200 { display: none; } }
+@container (max-width: 219.98px) { .sgcv-art .v220 { display: none; } }
+@container (max-width: 239.98px) { .sgcv-art .v240 { display: none; } }
+@container (max-width: 259.98px) { .sgcv-art .v260 { display: none; } }
+@container (max-width: 279.98px) { .sgcv-art .v280 { display: none; } }
+@container (max-width: 299.98px) { .sgcv-art .v300 { display: none; } }
+@container (max-width: 319.98px) { .sgcv-art .v320 { display: none; } }
+@container (max-width: 339.98px) { .sgcv-art .v340 { display: none; } }
+@container (max-width: 359.98px) { .sgcv-art .v360 { display: none; } }
+@container (max-width: 379.98px) { .sgcv-art .v380 { display: none; } }
+@container (max-width: 399.98px) { .sgcv-art .v400 { display: none; } }
+@container (max-width: 419.98px) { .sgcv-art .v420 { display: none; } }
+@container (max-width: 439.98px) { .sgcv-art .v440 { display: none; } }
+@container (max-width: 459.98px) { .sgcv-art .v460 { display: none; } }
+@container (max-width: 479.98px) { .sgcv-art .v480 { display: none; } }
+@container (max-width: 499.98px) { .sgcv-art .v500 { display: none; } }
+@container (max-width: 519.98px) { .sgcv-art .v520 { display: none; } }
+@container (max-width: 539.98px) { .sgcv-art .v540 { display: none; } }
+@container (max-width: 559.98px) { .sgcv-art .v560 { display: none; } }
+@container (max-width: 579.98px) { .sgcv-art .v580 { display: none; } }
+@container (max-width: 599.98px) { .sgcv-art .v600 { display: none; } }
+@container (max-width: 619.98px) { .sgcv-art .v620 { display: none; } }
+@container (max-width: 639.98px) { .sgcv-art .v640 { display: none; } }
+@container (max-width: 659.98px) { .sgcv-art .v660 { display: none; } }
+@container (max-width: 679.98px) { .sgcv-art .v680 { display: none; } }
+@container (max-width: 699.98px) { .sgcv-art .v700 { display: none; } }
+@container (max-width: 719.98px) { .sgcv-art .v720 { display: none; } }
+@container (max-width: 739.98px) { .sgcv-art .v740 { display: none; } }
+@container (max-width: 759.98px) { .sgcv-art .v760 { display: none; } }
+@container (max-width: 779.98px) { .sgcv-art .v780 { display: none; } }
+@container (max-width: 799.98px) { .sgcv-art .v800 { display: none; } }
+@container (max-width: 819.98px) { .sgcv-art .v820 { display: none; } }
+@container (max-width: 839.98px) { .sgcv-art .v840 { display: none; } }
+@container (max-width: 859.98px) { .sgcv-art .v860 { display: none; } }
+@container (max-width: 879.98px) { .sgcv-art .v880 { display: none; } }
+@container (max-width: 899.98px) { .sgcv-art .v900 { display: none; } }
+@container (max-width: 919.98px) { .sgcv-art .v920 { display: none; } }
+@container (max-width: 939.98px) { .sgcv-art .v940 { display: none; } }
+@container (max-width: 959.98px) { .sgcv-art .v960 { display: none; } }
+@container (max-width: 979.98px) { .sgcv-art .v980 { display: none; } }
+@container (max-width: 999.98px) { .sgcv-art .v1000 { display: none; } }
+@container (max-width: 1019.98px) { .sgcv-art .v1020 { display: none; } }
+@container (max-width: 1039.98px) { .sgcv-art .v1040 { display: none; } }
+@container (max-width: 1059.98px) { .sgcv-art .v1060 { display: none; } }
+@container (max-width: 1079.98px) { .sgcv-art .v1080 { display: none; } }
+@container (max-width: 1099.98px) { .sgcv-art .v1100 { display: none; } }
+@container (max-width: 1119.98px) { .sgcv-art .v1120 { display: none; } }
+@container (max-width: 1139.98px) { .sgcv-art .v1140 { display: none; } }
+@container (max-width: 1159.98px) { .sgcv-art .v1160 { display: none; } }
+@container (max-width: 1179.98px) { .sgcv-art .v1180 { display: none; } }
+@container (max-width: 1199.98px) { .sgcv-art .v1200 { display: none; } }
+
+/* The labels: the article's number and section, and the honesty pill. */
+.sgcv-meta {
+  position: absolute;
+  z-index: 2;
+  left: 5.2cqw;
+  top: 5cqw;
+  right: 5.2cqw;
+  display: flex;
+  align-items: center;
+  gap: .7em;
+  font: 500 clamp(10px, 1.55cqw, 14px)/1.2 Inter, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+  letter-spacing: .06em;
+  color: #c9c7cb;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.sgcv-meta b { color: var(--sgcv-pink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.sgcv-sec { overflow: hidden; text-overflow: ellipsis; }
+.sgcv-tag {
+  flex: none;
+  padding: .28em .7em .3em;
+  border: 1px solid rgba(227, 147, 189, .45);
+  border-radius: 999px;
+  color: var(--sgcv-pink);
+  font-size: .86em;
+  letter-spacing: .08em;
+}
+/* Small boxes keep the number and the pill. */
+@container (max-width: 300px) { .sgcv-sec { display: none; } }
+@container (max-width: 200px) { .sgcv-meta { left: 8px; top: 8px; font-size: 9px; } .sgcv-meta b { display: none; } }
+/* The homepage card: Mono's arrow badge covers the top right. */
+.blog-grid .sgcv-meta { right: 64px; }
