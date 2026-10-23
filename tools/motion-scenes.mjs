@@ -86,9 +86,17 @@ export const SCENE_FILE = {
   team: 'team',
   feed: 'phone',
   squad: 'phone',
+  'stage-find': 'stages',   // homemore: the five homepage stage cards
+  'stage-sell': 'stages',
+  'stage-make': 'stages',
+  'stage-pay': 'stages',
+  'stage-again': 'stages',
+  org: 'org',               // homemore: the pricing band's enterprise card
 };
 /* scene files that ship their own stylesheet */
 export const SCENE_CSS = new Set([
   'team',
   'phone',
+  'stages',
+  'org',
 ]);

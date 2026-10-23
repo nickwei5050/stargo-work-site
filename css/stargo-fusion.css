@@ -6219,3 +6219,13 @@ img[src*="stargo-photo/e08-emergency-stop-"] { object-position: 50% 42%; }
 html.w-mod-js:not(.sg-ix-late) [data-sg-first]:not([style]) { animation: sg-first-wait 1.2s; }
 @keyframes sg-first-wait { from, to { opacity: 0; } }
 [data-sg-settled] { opacity: 1 !important; transform: none !important; filter: none !important; }
+
+/* ---- homemore (2026-10-23): pictures that became code or real captures ----
+   notices.html 「继续看」: the 能力 card is the real web desktop (16:9 in a
+   1.4:1 card), held at its left edge so the app column stays whole and only
+   the wave background loses width; the 数字员工 card is the code-drawn 'team'
+   scene, filling the card the picture filled. The homepage's stage cards and
+   enterprise card style their hosts in css/stargo-motion-stages.css and
+   css/stargo-motion-org.css. */
+.blog-flex .blog-photo-overlay[src*="/live01-desktop-home-16x9"] { object-position: 0% 50%; }
+.blog-photo-wrapper > .sg-mo-notice { position: absolute; inset: 0; }

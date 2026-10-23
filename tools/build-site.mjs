@@ -28,6 +28,7 @@ import { SITE } from './paths.mjs';
 import { productTour } from './product-tour.mjs';
 import { appSuite } from './app-suite.mjs';
 import { motionHost, motionAssets, MOTION_CSS, MOTION_SCRIPTS } from './motion-scenes.mjs';
+import { homeStageScenes, homePricingScene, homeMoreAssets, swapToMotion } from './code-art-homemore.mjs'; // homemore lane: stage cards + enterprise card as code
 import { webpPage } from './image-refs.mjs';
 import { a11yPage } from './a11y.mjs';
 import { speedPage } from './speed.mjs';
@@ -516,9 +517,11 @@ PAGES['index.html'] = (lang) => {
        screenshot in it is fitted, not cropped, by H29 in css/stargo-fusion.css.
        (002) and (003) are cut to 3:2 and fill it; the Growth OS home (about
        2:1) and gos11 sit on plates of their own edge colour. */
-    const CONTENT = { alt: 'STARGO WORK' };
-    const scenes = [['Scene%20%239.webp', HOME_STAGES[0].file, CONTENT], ['Scene%20%235.webp', HOME_STAGES[1].file, CONTENT], ['Scene%20%2310%20(Light)', HOME_STAGES[2].file, CONTENT], ['Scene%20%238.webp', HOME_STAGES[3].file, CONTENT], ['Scene%2018.webp', HOME_STAGES[4].file, CONTENT]];
-    scenes.forEach(([k, src, opts]) => { h = swapImg(h, k, src, opts); });
+    /* homemore (2026-10-23): the five cards are code-drawn scenes now, one
+       host per stage so Mono's switching is untouched
+       (tools/code-art-homemore.mjs, js/stargo-motion-stages.js). HOME_STAGES
+       keeps P01–P05 and the screens before them for the owner's decision. */
+    h = homeStageScenes(h, lang);
     // Retain the original grid/zoom animation. The centre is a real video,
     // sourced from the owner's fourth template; surrounding imagery is separate.
     const theatre = HERO.theatre;
@@ -551,7 +554,8 @@ PAGES['index.html'] = (lang) => {
     // drew R2 upside down; js/stargo-card-upright.js turns the picture back over while it is.
     h = s(h, '</body>', '<script src="js/stargo-card-upright.js" defer></script></body>', { count: 1 });
     // The pricing band's image card: the owner's enterprise campus (T01) in place of brand-glow-square.
-    h = swapImg(h, '699b6466d5f19893993a4f1a_Sunset-Serenity', HOME_PRICING_CARD, { alt: 'STARGO WORK' });
+    // homemore (2026-10-23): T01 (HOME_PRICING_CARD) → the code-drawn 'org' scene, what the 企业版 copy beside it lists.
+    h = homePricingScene(h, lang);
     h = swapImg(h, '699b6466d5f19893993a4efc_Smiling%20Bearded', 'assets/brand/stargo-s-mark-256.webp');   // the chat card's bearded-man avatar → the owner's S + star mark
     // The blog grid: the template's four cards, filled with the four newest articles.
     // Since 2026-10-21 the four cards show the owner's photographs B01–B04 (HOME_BLOG_COVERS) instead of their article covers.
@@ -742,6 +746,7 @@ PAGES['index.html'] = (lang) => {
      scalora's and before stargo-fusion.css, the same order the capability page
      puts the donor sheets in. */
   h = h.replace(monoLink, (m) => `${m}\n<link href="css/${DONORS.offgrid.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/${DONORS.rototo.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/scalora-modules.sc.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-tour.css" rel="stylesheet" type="text/css"/>\n<link href="${MOTION_CSS}" rel="stylesheet" type="text/css"/>`);
+  h = homeMoreAssets(h);   // homemore: the stage and enterprise scenes' sheet and script, beside the engine's
   /* Mono's own page-load curtain goes. `.preloader` is a fixed black sheet
      with the wordmark on it (Mono's css: z-index 9999, resting at
      translateY(-120%)), dropped over the page and lifted again by the IX3
@@ -2516,8 +2521,11 @@ PAGES['notices.html'] = (lang) => {
      marker — any non-empty alt stops tools/editorial-images.mjs treating a
      picture as decoration — and that pass then writes the registered sentence
      for each screen, in the page's language, over it. */
+  /* homemore (2026-10-23): 能力 shows the real web desktop and 数字员工 the
+     code-drawn 'team' scene in place of the two generated composites
+     (tools/replaceables.mjs NOTICES_CARDS; tools/code-art-homemore.mjs). */
   [['699b6466d5f19893993a4dca_Sleek', NOTICES_CARDS[0]], ['699b6466d5f19893993a4d64_blog-2', NOTICES_CARDS[1]], ['699b6466d5f19893993a4e03_Futuristic', NOTICES_CARDS[2]]]
-    .forEach(([k, src]) => { h = swapImg(h, k, src, { alt: PRODUCT_CAPTION[lang] }); });
+    .forEach(([k, src]) => { h = typeof src === 'string' ? swapImg(h, k, src, { alt: PRODUCT_CAPTION[lang] }) : swapToMotion(h, k, src.motion, lang, 'sg-mo-notice'); });
   /* The post template tags its "Related Stories" band <h1>, a second h1 after
      the notice's own title. It becomes h2; `.inner-title._02` carries its
      size, weight and spacing, and Mono's h1/h2 element rules differ only in

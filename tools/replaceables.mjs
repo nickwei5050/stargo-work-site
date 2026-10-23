@@ -282,9 +282,13 @@ export const PRODUCT_IDS = {
   erpItems: 'live23-erp-items-16x9',
   erpStage: 'live23-erp-items-3x2',
   growthHome: 'live05-growth-home-2x1',
+  growthTile: 'live05-growth-home-16x9',   // the same capture on a 16:9 plate (homemore, 2026-10-23)
   growthStartThumb: 'live05-growth-home-start-5x4',
   needs: 'live52-mobile-case-needs',
   quoteApproval: 'live18-quote-approval-16x9',
+  desktopHome: 'live01-desktop-home-16x9',
+  caseWide: 'live09-sales-desk-case-16x9',
+  mobileCase: 'live52-mobile-case-16x9',
 };
 
 export const PRODUCT = Object.fromEntries(
@@ -299,13 +303,20 @@ PRODUCT.documentPack = PRODUCT.documents;
 /**
  * Hero rotating gallery (tools/blocks/ro-gallery.mjs). Six screens, each
  * shown four times. Stems only; the block adds assets/stargo-product/ and .webp.
+ *
+ * Since 2026-10-23 (homemore lane) all six are real captures of the product
+ * with demo data, every one 16:9 like the tile: the web desktop, the Growth
+ * OS home, the ERP item list, the Sales Desk case on a phone, the Sales Desk
+ * case and quote approval. They replaced, in the same slots, the generated
+ * marketing composites sw003 (workspace), sw004 (experts), sw006 (teams),
+ * sw008 (workflows) and sw028 (inquiry reply).
  */
 export const GALLERY_TILES = [
-  PRODUCT_IDS.workspace,
-  PRODUCT_IDS.experts,
-  PRODUCT_IDS.teams,
-  PRODUCT_IDS.workflows,
-  PRODUCT_IDS.inquiry,
+  PRODUCT_IDS.desktopHome,
+  PRODUCT_IDS.growthTile,
+  PRODUCT_IDS.erpItems,
+  PRODUCT_IDS.mobileCase,
+  PRODUCT_IDS.caseWide,
   PRODUCT_IDS.quoteApproval,
 ];
 
@@ -333,6 +344,10 @@ export const HOME_MODULES = {
  * can put a screen back by swapping one line.
  *   001 PRODUCT.growthHome · 002 PRODUCT.caseStage · 003 PRODUCT.erpStage
  *   004 editorialToken('brand-family-01') · 005 PRODUCT.reactivation
+ *
+ * Since 2026-10-23 (homemore) none of these is placed: the five cards are
+ * code-drawn scenes (tools/code-art-homemore.mjs, js/stargo-motion-stages.js).
+ * The list stays as the record of what can go back, one line per card.
  */
 export const HOME_STAGES = [
   { id: 'acquisition', label: '001 主动获客', file: photoFile('p01-prospecting', 480) },
@@ -382,7 +397,9 @@ export const HOME_SILOS = [
  *  (`.photo-half`, R1) is a CSS background: css/stargo-fusion.css. */
 export const HOME_ROLE_CARD = photoFile('r2-trade-manager', 1024);
 /** The pricing band's image card beside 企业版 (T01), in place of
- *  brand-glow-square. */
+ *  brand-glow-square. Not placed since 2026-10-23 (homemore): the card is the
+ *  code-drawn 'org' scene (js/stargo-motion-org.js); kept so the photograph
+ *  can go back with one line. */
 export const HOME_PRICING_CARD = photoFile('t01-enterprise-campus', 1024);
 /** The homepage's four newest-article cards (B01–B04), by article slug. A
  *  slug not listed keeps its article cover from assets/blog/. The blog index
@@ -431,8 +448,11 @@ export const STORY_ART = {
   improvement: 'brand-loop',
 };
 
-/** Notices “keep reading” cards, in card order. */
-export const NOTICES_CARDS = [PRODUCT.workspaceHome, PRODUCT.expertsLibrary, PRODUCT.quoteApproval];
+/** Notices “keep reading” cards, in card order. Since 2026-10-23 (homemore)
+ *  the first is the real web-desktop capture (it was the sw003 composite) and
+ *  the second, 数字员工, is the code-drawn 'team' scene (`motion`, placed by
+ *  tools/build-site.mjs; it was the sw004 composite). */
+export const NOTICES_CARDS = [PRODUCT.desktopHome, { motion: 'team' }, PRODUCT.quoteApproval];
 
 /**
  * The owner's photographs on about, contact, pricing and workforce

@@ -108,6 +108,8 @@ const productText = {
   'live23-erp-items-16x9': ['ERP 物料列表：177 个 STARGO 自有型号的名称、启用状态和物料组', 'The ERP item list: the name, status and item group of 177 STARGO products'],
   'live23-erp-items-3x2': ['ERP 物料列表：177 个 STARGO 自有型号的名称、启用状态和物料组', 'The ERP item list: the name, status and item group of 177 STARGO products'],
   'live05-growth-home-2x1': ['Growth OS 主动获客首页：上手进度，还有“开始找客户”和“发送开发信”两个入口，启动前都会先请你确认', 'The Growth OS home: onboarding progress and the two starting points, finding customers and sending outreach emails, each confirmed with you before it runs'],
+  /* homemore (2026-10-23): the same capture on a 16:9 plate of its own page ground, for the hero gallery. */
+  'live05-growth-home-16x9': ['Growth OS 主动获客首页：上手进度，还有“开始找客户”和“发送开发信”两个入口，启动前都会先请你确认', 'The Growth OS home: onboarding progress and the two starting points, finding customers and sending outreach emails, each confirmed with you before it runs'],
   'live05-growth-home-start-3x2': ['Growth OS 开始找客户：按你填写的产品和目标客户找新的潜在客户，由 AI 判断是否合适并写下理由', 'Growth OS, finding customers: new prospects found from the products and target customers you enter, with AI judging whether each fits and writing down why'],
   'live05-growth-home-start-5x4': ['Growth OS 开始找客户：按你填写的产品和目标客户找新的潜在客户，由 AI 判断是否合适并写下理由', 'Growth OS, finding customers: new prospects found from the products and target customers you enter, with AI judging whether each fits and writing down why'],
   'live01-desktop-home-16x9': ['网页桌面：AI 工作台、成交工作台、企业管理、视频制作等业务应用都在同一个桌面里', 'The web desktop: the AI workspace, the Sales Desk, enterprise management, video tools and other business apps on one desktop'],

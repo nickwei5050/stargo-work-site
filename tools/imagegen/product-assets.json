@@ -445,6 +445,39 @@
    ]
   },
   {
+   "id": "live05-growth-home-16x9",
+   "sw": "LIVE05",
+   "src": "assets/stargo-product/live05-growth-home-16x9.webp",
+   "width": 1600,
+   "height": 900,
+   "bytes": 48162,
+   "sourceFile": "site-images/screens-final/slot-crops/index-row26-05-growth-os-home.png",
+   "sourceSha256": "d94b2b7e408e882c4d82d42a6b19a81bac9f5530f64b629b521358f27fbfafb2",
+   "sourcePixels": [
+    2192,
+    1080
+   ],
+   "crop": "live05-growth-home-2x1 (1600x788) whole, on a 1600x900 plate of its own page ground #f4f6fa (40px above, 72px below), so the hero gallery's 16:9 tile shows all of it; sourceSha256 is that plate's PNG (homemore, 2026-10-23)",
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-product/live05-growth-home-16x9-480.webp",
+     "width": 480,
+     "bytes": 7200
+    },
+    {
+     "src": "assets/stargo-product/live05-growth-home-16x9-768.webp",
+     "width": 768,
+     "bytes": 15594
+    },
+    {
+     "src": "assets/stargo-product/live05-growth-home-16x9-1024.webp",
+     "width": 1024,
+     "bytes": 24310
+    }
+   ]
+  },
+  {
    "id": "live09-sales-desk-case-3x2",
    "sw": "LIVE09",
    "src": "assets/stargo-product/live09-sales-desk-case-3x2.webp",
