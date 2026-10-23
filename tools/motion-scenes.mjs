@@ -55,6 +55,35 @@ export const MOTION_LABEL = {
   },
 };
 
+/* capareas (capabilities.html): the four area cards (js/stargo-motion-areas.js) and the first two cards
+   of 「让 AI 团队把活干完」 (js/stargo-motion-crew.js), where the owner's photographs C01–C04, C09 and C10 were. */
+Object.assign(MOTION_LABEL, {
+  areaGrowth: {
+    zh: '动态示意（演示数据）：指挥与增长——智搜找到 Nordwerk Energie（匹配 94），拓客核实采购经理、联系前等你授权；补货雷达提示 PT Surya 到了补货周期；指挥中心把它们排进「开发德国储能经销商」，开发计划等你确认。',
+    en: 'Illustrative motion (demo data): workspace and growth — search finds Nordwerk Energie (fit 94), outreach verifies the buyer and waits for your OK before any contact, the reorder radar flags PT Surya as due, and the command center turns them into an outreach plan that waits for you.',
+  },
+  areaContext: {
+    zh: '动态示意（演示数据）：客户与知识——Müller Energie 的邮件询盘进入客户会话，客户全景理清 48V 100Ah、200 pcs、DAP Hamburg；知识库找到规格书和交期表的出处；回复草稿引用这两处资料，发送前由你确认。',
+    en: 'Illustrative motion (demo data): customers and knowledge — an email inquiry from Müller Energie lands in one inbox, the account view sorts out 48V 100Ah, 200 pcs, DAP Hamburg, the knowledge base finds the spec sheet and lead times, and a reply draft cites both and waits for you to confirm before it is sent.',
+  },
+  areaDeal: {
+    zh: '动态示意（演示数据）：商务、履约与创作——Q-1041 已批准、生成 PI 进入订单，72V 锂电池组经排产、生产、质检到出货；Q-1042 低于底价，等你审批；视频制作生成主图、场景图和短视频，人工审核后才发布；订金已到账，尾款催款信等你确认。',
+    en: 'Illustrative motion (demo data): commercial, delivery and creative — approved quote Q-1041 becomes a PI and an order that is built, checked and shipped; Q-1042 is below the floor price and waits for your approval; images and a short video wait for review; the deposit is in and the balance reminder waits for you.',
+  },
+  areaTeam: {
+    zh: '动态示意（演示数据）：员工与管理——为「开发德国储能经销商」从 288 个岗位里挑出 4 位 AI 员工，业务关系把客户、报价和负责人对上；权限允许读记录、起草开发信，发送要你批准；改进后的开发信 v2 经测试后，未经批准不会发布。',
+    en: 'Illustrative motion (demo data): workforce and management — four AI employees are chosen from 288 roles for one goal, the relationship map links customer, quote and owner, permissions allow reading and drafting but sending needs your approval, and an improved email is tested and not released without approval.',
+  },
+  crewRoles: {
+    zh: '动态示意（演示数据）：288 个岗位按十个职能排开；输入任务「开发德国储能经销商」后，只留下这次需要的五个岗位——市场研究员、产品工程师、销售、创意和统筹——组成一支团队。',
+    en: 'Illustrative motion (demo data): 288 roles laid out in ten functions; for the task of finding storage distributors in Germany only the five it needs stay lit — market researcher, product engineer, sales, creative and a coordinator — and form one team.',
+  },
+  crewBoard: {
+    zh: '动态示意（演示数据）：员工任务看板——任务从待开始、进行中，到待你确认、已完成，交付的名单、规格核对和素材挂在任务上；开发信草稿由你批准后才算完成，报价 Q-1042 低于底价，一直等你审批。',
+    en: 'Illustrative motion (demo data): a task board for AI employees — tasks move from to do and in progress to waiting for you and done, with their results attached; the email draft is done only once you approve it, and quote Q-1042, below the floor price, keeps waiting for your approval.',
+  },
+});
+
 export function motionHost(scene, lang, extraClass = '', { fit } = {}) {
   const label = MOTION_LABEL[scene][lang];
   return `<div class="sg-mo${extraClass ? ` ${extraClass}` : ''}" data-sg-scene="${scene}"${fit ? ` data-sg-fit="${fit}"` : ''} role="img" aria-label="${escapeHtml(label)}"></div>`;
@@ -86,9 +115,17 @@ export const SCENE_FILE = {
   team: 'team',
   feed: 'phone',
   squad: 'phone',
+  areaGrowth: 'areas',
+  areaContext: 'areas',
+  areaDeal: 'areas',
+  areaTeam: 'areas',
+  crewRoles: 'crew',
+  crewBoard: 'crew',
 };
 /* scene files that ship their own stylesheet */
 export const SCENE_CSS = new Set([
   'team',
   'phone',
+  'areas',
+  'crew',
 ]);

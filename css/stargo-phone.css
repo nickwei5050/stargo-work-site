@@ -75,7 +75,7 @@
 @keyframes sg-zoom{from{scale:var(--sg-z,1.35)}to{scale:1}}
 /* problem and area cards */
 .work-main .work-card{view-timeline:--sg-card;animation:sg-rise var(--sg-o) both;animation-timeline:--sg-card;animation-range:entry 0% cover 45%}
-.work-main .work-card .paralax-image{animation:sg-zoom linear both;animation-timeline:--sg-card;animation-range:entry 0% cover 60%;--sg-z:1.16}
+.work-main .work-card :is(.paralax-image,.sg-mo-area){animation:sg-zoom linear both;animation-timeline:--sg-card;animation-range:entry 0% cover 60%;--sg-z:1.16}
 @keyframes sg-rise{from{translate:0 56px}to{translate:0 0}}
 /* workforce cards */
 .lx-answers-card-sticky .lx-answers-card{transform-origin:50% 100%;animation:sg-tilt var(--sg-o) both;animation-timeline:view();animation-range:entry 0% cover 42%}

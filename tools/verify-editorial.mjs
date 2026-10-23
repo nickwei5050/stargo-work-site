@@ -82,7 +82,12 @@ const SUPERSEDED = new Set(photos.filter(a => photos.some(b => b.ref === `${a.re
 /* Put back to the template's models at the owner's request (2026-10-23): the
    demo band's group photograph and the scenario slider's portraits. */
 const RETIRED = new Set(['g01-cta-loading-bay-dusk', 'r1-sales-rep', 'r3-sales-director', 'r4-general-manager', 'i01-observe-process', 'i03-hand-phone-blank']);
-const photosUnused = photos.filter(a => !all.includes(a.src) && !SUPERSEDED.has(a.id) && !RETIRED.has(a.id)).map(a => a.id);
+/* Drawn in code where they were placed (capareas, 2026-10-23,
+   tools/code-art-capareas.mjs): the four capability area cards (C01v2, C02v2,
+   C03, C04v2) and the first two cards of 「让 AI 团队把活干完」 (C09, C10) are
+   motion scenes now. Their files stay registered and published. */
+const CODE_DRAWN = new Set(['c01v2-command-growth', 'c02v2-customer-knowledge', 'c03-commerce-fulfilment', 'c04v2-team-management', 'c09-288-flatlay', 'c10-progress-board']);
+const photosUnused = photos.filter(a => !all.includes(a.src) && !SUPERSEDED.has(a.id) && !RETIRED.has(a.id) && !CODE_DRAWN.has(a.id)).map(a => a.id);
 assert.deepEqual(photosUnused, [], 'every registered photograph is placed');
 console.log(`generated imagery: ${manifest.assets.length - unused.length} placed, ${unused.length} retained but unused (${unused.join(', ')})`);
 console.log(`product imagery: ${products.length - productsUnused.length} of ${products.length} placed${productsUnused.length ? ` (unused: ${productsUnused.join(', ')})` : ''}`);

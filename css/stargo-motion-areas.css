@@ -1,0 +1,117 @@
+/* AREAS motion scenes (js/stargo-motion-areas.js): the four area cards of capabilities.html.
+   Loaded after css/stargo-motion.css, whose chrome (.sg-btn, .sg-tag, .sg-gate-*) they share,
+   in the team scene's palette. Prefix sga-. Only transform and opacity move. */
+
+/* ---------- hosts: the card's whole picture box, under the glass caption ---------- */
+/* a desk: the warm ground under a faint dot grid (static) */
+.wrok-wrapper .image-wrap > .sg-mo-area { position: absolute; inset: 0; width: 100%; height: 100%; background: radial-gradient(circle at 11px 11px, rgba(255, 228, 190, .075) 1px, transparent 1.6px) 0 0 / 22px 22px, radial-gradient(95% 85% at 28% 18%, #211912 0%, #15110e 58%, #110e0b 100%); }
+.wrok-wrapper .image-wrap:has(> .sg-mo-area) { background: #15110e; }
+
+/* ---------- stage ---------- */
+.sga { color: #f4eee8; }
+.sga .sg-tag { font-size: 12.5px; color: rgba(244, 238, 232, .5); }
+.sga-fx { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+
+/* a window of the area's app */
+.sga-win { position: absolute; border-radius: 16px; background: linear-gradient(180deg, rgba(255, 246, 232, .05), rgba(255, 246, 232, .018)); border: 1px solid rgba(255, 228, 190, .09); transition: border-color .6s cubic-bezier(.22, 1, .36, 1); }
+.sga-win::after { content: ""; position: absolute; inset: -1px; border-radius: inherit; background: radial-gradient(110% 120% at 0% 0%, rgba(246, 196, 120, .11), rgba(246, 196, 120, .02) 60%, transparent); opacity: 0; transition: opacity .7s cubic-bezier(.22, 1, .36, 1); pointer-events: none; }
+.sga-win.is-on { border-color: rgba(246, 196, 120, .34); }
+.sga-win.is-on::after { opacity: 1; }
+.sga-bar { position: absolute; left: 0; right: 0; top: 0; height: 40px; display: flex; align-items: center; gap: 9px; padding: 0 12px 0 12px; font-size: 14.5px; white-space: nowrap; border-bottom: 1px solid rgba(255, 236, 220, .06); }
+.sga-bar > b { font-weight: 600; color: #f8f1e7; }
+.sga-app { flex: none; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 7px; color: rgba(243, 211, 160, .7); background: rgba(255, 220, 170, .07); border: 1px solid rgba(255, 220, 170, .1); transition: color .5s, background-color .5s, border-color .5s; }
+.sga-win.is-on .sga-app { color: #1b130b; background: linear-gradient(140deg, #ffe7bf, #eeb062); border-color: transparent; }
+.sga-grp { min-width: 0; overflow: hidden; text-overflow: ellipsis; font-size: 12.5px; color: rgba(244, 238, 232, .42); }
+.sga-grp::before { content: "/"; margin-right: 8px; color: rgba(244, 238, 232, .2); }
+.sga-st { margin-left: auto; flex: none; display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: 99px; font-size: 12.5px; color: rgba(244, 238, 232, .5); border: 1px solid rgba(255, 236, 220, .1); transition: color .4s, background-color .4s, border-color .4s; }
+.sga-st i { width: 6px; height: 6px; border-radius: 50%; background: rgba(244, 238, 232, .35); transition: background-color .4s; }
+.sga-st[data-tone="w"] { color: #f3d3a0; border-color: rgba(243, 194, 122, .3); background: rgba(243, 194, 122, .07); }
+.sga-st[data-tone="w"] i { background: #f3c27a; }
+.sga-st[data-tone="ok"] { color: #b9ecc6; border-color: rgba(120, 200, 140, .3); background: rgba(120, 200, 140, .07); }
+.sga-st[data-tone="ok"] i { background: #9fe0b0; }
+.sga-st[data-tone="h"] { color: #ffb37a; border-color: rgba(255, 138, 61, .5); background: rgba(236, 111, 16, .12); }
+.sga-st[data-tone="h"] i { background: #ff8a3d; box-shadow: 0 0 0 3px rgba(255, 138, 61, .22); }
+
+/* rows: each arrives once in the loop */
+.sga-row { position: absolute; display: flex; align-items: center; gap: 11px; padding: 0 12px 0 10px; border-radius: 11px; background: rgba(255, 246, 232, .028); border: 1px solid rgba(255, 236, 220, .05); opacity: 0; transform: translateY(6px); transition: opacity .45s cubic-bezier(.22, 1, .36, 1), transform .6s cubic-bezier(.22, 1, .36, 1), border-color .5s, background-color .5s; }
+.sga-row.is-on { opacity: 1; transform: none; }
+.sga-cc { flex: none; width: 34px; height: 24px; border-radius: 6px; display: grid; place-items: center; font-size: 12px; font-weight: 700; letter-spacing: .04em; color: #ffd2b0; background: rgba(236, 111, 16, .12); border: 1px solid rgba(236, 111, 16, .25); }
+.sga-gi { flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; color: #f3d3a0; background: rgba(255, 220, 170, .06); }
+.sga-tx { flex: 1; min-width: 0; }
+.sga-tx > b { display: block; font-size: 14px; font-weight: 600; line-height: 1.3; color: #f8f1e7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sga-tx > span { display: block; font-size: 12.5px; line-height: 1.3; margin-top: 2px; color: rgba(244, 238, 232, .52); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sga-v { flex: none; font-style: normal; font-size: 21px; font-weight: 600; letter-spacing: -.01em; color: #ffb37a; font-variant-numeric: tabular-nums; min-width: 1.6em; text-align: right; }
+.sga-meter { position: relative; flex: none; width: 112px; height: 4px; border-radius: 2px; background: rgba(255, 236, 220, .08); }
+.sga-meter > i:first-child { display: block; height: 100%; border-radius: 2px; background: linear-gradient(90deg, #ec6f10, #ffb37a); transform-origin: 0 50%; transform: scaleX(0); }
+.sga-floor { position: absolute; top: -5px; width: 2px; height: 14px; margin-left: -1px; border-radius: 1px; background: #ff8a3d; }
+.sga-row:has(.sga-floor) .sga-meter > i:first-child { background: linear-gradient(90deg, #d9954a, #ffe2b0); }
+.sga-pill { flex: none; display: inline-flex; align-items: center; height: 24px; padding: 0 9px; border-radius: 7px; font-size: 12.5px; font-weight: 600; white-space: nowrap; color: rgba(244, 238, 232, .7); background: rgba(255, 236, 220, .06); border: 1px solid rgba(255, 236, 220, .1); transition: color .35s, background-color .35s, border-color .35s; }
+.sga-pill[data-tone="w"] { color: #f3d3a0; background: rgba(243, 194, 122, .08); border-color: rgba(243, 194, 122, .26); }
+.sga-pill[data-tone="ok"] { color: #b9ecc6; background: rgba(120, 200, 140, .08); border-color: rgba(120, 200, 140, .3); }
+.sga-pill[data-tone="h"] { color: #fff; background: #ec6f10; border-color: #ec6f10; }
+
+/* a query or a draft being typed */
+.sga-row.is-q { gap: 9px; background: rgba(0, 0, 0, .18); border-color: rgba(255, 236, 220, .09); }
+.sga-q-ico { flex: none; color: rgba(244, 238, 232, .45); }
+.sga-q { flex: 1; min-width: 0; display: flex; align-items: center; font-size: 14px; color: #f8f1e7; white-space: nowrap; overflow: hidden; }
+.sga-q > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.sga-row.is-typing .sga-q::after { content: ""; flex: none; width: 2px; height: 1.05em; margin-left: 2px; background: #ff8a3d; animation: sg-blink 1s steps(1) infinite; }
+
+/* steps that light in turn */
+/* a step that does not fit wraps onto a line that is cut away: never half a word */
+.sga-steps { display: flex; flex-wrap: wrap; gap: 12px 14px; height: 18px; margin-top: 5px; white-space: nowrap; overflow: hidden; }
+.sga-step { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: rgba(244, 238, 232, .34); transition: color .4s; }
+.sga-step em { font-style: normal; }
+.sga-step i { width: 8px; height: 8px; border-radius: 50%; border: 1px solid rgba(255, 228, 190, .3); transition: background-color .35s, border-color .35s, transform .45s cubic-bezier(.34, 1.56, .64, 1); transform: scale(.8); }
+.sga-step.is-on { color: #f3dcb6; }
+.sga-step.is-on i { background: #f3c27a; border-color: #f3c27a; transform: none; }
+
+/* images being made */
+.sga-thumbs { flex: none; display: flex; gap: 7px; }
+.sga-tile { display: grid; place-items: center; width: 58px; height: 38px; border-radius: 7px; border: 1px dashed rgba(255, 228, 190, .22); color: rgba(27, 19, 11, .75); transition: background-color .5s, border-color .5s; }
+.sga-tile svg { opacity: 0; transition: opacity .4s; }
+.sga-tile.is-on { border-style: solid; border-color: transparent; }
+.sga-tile.is-t0.is-on { background: linear-gradient(135deg, #ffe7c4, #eeb062 55%, #b8722c); }
+.sga-tile.is-t1.is-on { background: linear-gradient(160deg, #5b4330, #c98a4a 60%, #f6d29a); }
+.sga-tile.is-t2.is-on { background: linear-gradient(135deg, #f6d29a, #ec6f10); }
+.sga-tile.is-on svg { opacity: 1; }
+
+/* the person's step: waits, never sends by itself */
+.sga-row.is-gt { gap: 12px; }
+.sga-row.is-gt.is-wait { border-color: rgba(255, 138, 61, .55); background: rgba(255, 138, 61, .07); }
+.sga-row.is-gt .sga-tx > b { color: #ffb37a; }
+.sga-gate { flex: none; display: block; }
+.sga-btns { flex: none; display: flex; gap: 7px; }
+.sga-btns .sg-btn { height: 30px; padding: 0 13px; font-size: 13px; border-radius: 9px; }
+
+/* work passing between windows */
+.sga-guide { fill: none; stroke: rgba(255, 228, 190, .16); stroke-width: 1.4; stroke-dasharray: 2 5; stroke-linecap: round; transition: stroke .35s; }
+.sga-guide.is-lit { stroke: #f3c27a; }
+.sga-rail { fill: none; stroke: rgba(255, 228, 190, .1); stroke-width: 1.4; stroke-linecap: round; }
+.sga-rail.is-lit { stroke: #e7b267; stroke-dasharray: 100 100; }
+.sga-dot { fill: #fff3df; }
+.sga-node { fill: rgba(243, 194, 122, .55); }
+.sga-chip { position: absolute; left: 0; top: 0; z-index: 5; opacity: 0; pointer-events: none; }
+.sga-chip > span { display: inline-flex; align-items: center; gap: 7px; height: 32px; padding: 0 13px; border-radius: 10px; font-size: 13px; white-space: nowrap; color: #fff3df; background: #2b1e13; border: 1px solid rgba(243, 194, 122, .55); box-shadow: 0 16px 36px -14px rgba(0, 0, 0, .9); transform: translate(-50%, -50%); }
+.sga-chip b { font-weight: 600; }
+.sga-chip svg { color: #f3c27a; }
+
+/* the loop clears before it starts again */
+.sga.is-clear :is(.sga-row, .sga-chip, .sga-fx) { opacity: 0; transition-delay: 0s; }
+.sga.is-clear .sga-win { border-color: rgba(255, 228, 190, .09); }
+
+/* ---------- desk below 1100: smaller margins, the same type ---------- */
+.sga.is-desk .sga-win { overflow: hidden; }
+
+/* ---------- phone: the edges around the caption ---------- */
+.sga-pchip { position: absolute; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 0 6px; border-radius: 9px; font-size: 12px; font-weight: 600; white-space: nowrap; color: rgba(244, 238, 232, .5); background: rgba(255, 246, 232, .03); border: 1px solid rgba(255, 228, 190, .1); transition: color .4s, background-color .4s, border-color .4s; }
+.sga-pchip > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.sga-pchip svg { flex: none; color: rgba(243, 211, 160, .55); transition: color .4s; }
+.sga-pchip.is-on { color: #fff3df; background: rgba(243, 194, 122, .12); border-color: rgba(243, 194, 122, .5); }
+.sga-pchip.is-on svg { color: #f3c27a; }
+.sga-pline { position: absolute; display: flex; align-items: center; gap: 8px; font-size: 12.5px; white-space: nowrap; }
+.sga-pline > i { flex: none; width: 7px; height: 7px; border-radius: 50%; background: #ff8a3d; }
+.sga-ptext { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; color: rgba(248, 241, 231, .82); }
+.sga-pline .sg-tag { position: static; transform: none; flex: none; font-size: 12px; }
+.sga.is-narrow .sga-pchip { padding: 0 4px; }
+.sga.is-narrow .sga-pchip svg { display: none; }
