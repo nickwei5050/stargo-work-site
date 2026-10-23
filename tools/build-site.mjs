@@ -23,7 +23,7 @@ import * as C from './copy.mjs';
 import { POSTS, BLOG_UI, postPath, featured, others, coverSrc, coverSrcset, coverAlt, formatDate, renderBody, titleHtml } from './blog.mjs';
 import { loadBlocks, art, capTitle, DONORS } from './block-lib.mjs';
 import { PRODUCT_CAPTION } from './editorial-images.mjs';
-import { HERO, HOME_MODULES, HOME_STAGES, HOME_SILOS, HOME_ROLE_CARD, HOME_PRICING_CARD, HOME_BLOG_COVERS, NOTICES_CARDS, CAP_PHOTOS, ENTERPRISE_PHOTOS, ROLE_SLIDES, CONTACT_CARD, WORKFORCE_ROLES, WORKFORCE_BLOG_COVERS } from './replaceables.mjs';
+import { HERO, HOME_MODULES, HOME_STAGES, HOME_SILOS, HOME_ROLE_CARD, HOME_PRICING_CARD, HOME_BLOG_COVERS, NOTICES_CARDS, CAP_PHOTOS, ENTERPRISE_PHOTOS, CONTACT_CARD, WORKFORCE_ROLES, WORKFORCE_BLOG_COVERS } from './replaceables.mjs';
 import { SITE } from './paths.mjs';
 import { webpPage } from './image-refs.mjs';
 import { a11yPage } from './a11y.mjs';
@@ -127,30 +127,10 @@ function swapImg(html, key, src, { nth = null, alt = '' } = {}) {
   if (!hit) throw new Error(`swapImg: no <img> with ${key}${nth != null ? ` #${nth}` : ''}`);
   return out;
 }
-/**
- * The scenario slider's four slides on about.html (cn-about-reviews) and
- * pricing.html (cn-reviews): since 2026-10-21 each slide's cover picture is
- * the owner's photograph of its role (tools/replaceables.mjs ROLE_SLIDES,
- * R1–R4, keyed by the cinery portrait it replaces). Only `.cn-cover-image`
- * changes, inside the block it is given — the pricing card's 56px avatars are
- * another block and keep the template portraits. The alt is a marker that
- * tools/editorial-images.mjs replaces with the photograph's own sentence;
- * cinery's srcset and sizes go, and that pass writes the photograph's.
- */
-function roleSlides(html, where) {
-  const seen = [];
-  const out = html.replace(/<img\b[^>]*\bclass="cn-cover-image"[^>]*>/g, (tag) => {
-    const key = Object.keys(ROLE_SLIDES).find((k) => tag.includes(`/${k}.`));
-    if (!key) throw new Error(`${where}: a scenario slide shows a picture ROLE_SLIDES does not name: ${tag.slice(0, 160)}`);
-    seen.push(key);
-    return tag.replace(/\s*srcset="[^"]*"/g, '').replace(/\s*sizes="[^"]*"/g, '')
-      .replace(/src="[^"]*"/, `src="${ROLE_SLIDES[key]}"`).replace(/alt="[^"]*"/, 'alt="STARGO WORK"');
-  });
-  if (seen.join() !== Object.keys(ROLE_SLIDES).join()) {
-    throw new Error(`${where}: expected the four scenario slides in ROLE_SLIDES order (R1–R4), found ${seen.join(', ') || 'none'}`);
-  }
-  return out;
-}
+/* The scenario slider's four slides on about.html (cn-about-reviews) and
+   pricing.html (cn-reviews) keep the template's portraits: the owner asked
+   for the models back on 2026-10-23, so tools/replaceables.mjs ROLE_SLIDES is
+   no longer applied. */
 /* V7-LX: the last clause of a Chinese paragraph as one unit.
    Several paragraphs end with an availability clause (「高级改进仍在完善。」,
    「更深入的团队交流仍在完善。」). Chinese may break between any two
@@ -570,7 +550,7 @@ PAGES['index.html'] = (lang) => {
     h = s(h, '</body>', '<script src="js/stargo-card-upright.js" defer></script></body>', { count: 1 });
     // The pricing band's image card: the owner's enterprise campus (T01) in place of brand-glow-square.
     h = swapImg(h, '699b6466d5f19893993a4f1a_Sunset-Serenity', HOME_PRICING_CARD, { alt: 'STARGO WORK' });
-    h = swapImg(h, '699b6466d5f19893993a4efc_Smiling%20Bearded', IMG('avatar-core.png'));   // the chat card's bearded-man avatar → the core orb
+    h = swapImg(h, '699b6466d5f19893993a4efc_Smiling%20Bearded', 'assets/brand/stargo-s-mark-256.webp');   // the chat card's bearded-man avatar → the owner's S + star mark
     // The blog grid: the template's four cards, filled with the four newest articles.
     // Since 2026-10-21 the four cards show the owner's photographs B01–B04 (HOME_BLOG_COVERS) instead of their article covers.
     h = blogCards(h, 'blog-grid', 'w-dyn-item', featured(4), lang, { image: 'testimonials-photo', date: 'data-text ab', title: 'blog-txt', sizes: '(max-width: 767px) 100vw, (max-width: 991px) 50vw, 25vw', covers: HOME_BLOG_COVERS });
@@ -1177,13 +1157,13 @@ function lxPage(spec, lang, name) {
      tools/replaceables.mjs INTEL_PHOTOS) take three of the template's
      pictures, on both pages: I01 the full-bleed picture under the four lines
      of #lx-more, I02 the closing card's picture, I03 the hand-held phone of
-     the "no writing" band. Each tag keeps its class, its IX2 id and its
+     the "no writing" band. Since 2026-10-23 (the owner's request) only I02
+     is placed: #lx-more and the "no writing" band show the template's own
+     pictures again. Each tag keeps its class, its IX2 id and its
      initial inline state; the alt is a marker that
      tools/editorial-images.mjs replaces with the photograph's own sentence,
      and the crop points are in css/stargo-fusion.css (the "blog" block). */
-  b = swapImg(b, '6932b116b7502585152c15b6_image%2024.png', INTEL_PHOTOS.observe, { alt: 'STARGO WORK' });
   b = swapImg(b, '6936e930338bd07695b687e0_image%2026.avif', INTEL_PHOTOS.closing, { alt: 'STARGO WORK' });
-  b = swapImg(b, '694d149575edcf4ee403b317_no-writing-sc.avif', INTEL_PHOTOS.phone, { alt: 'STARGO WORK' });
   /* V7-LX: a text-free screen (MOBILE.core, shared context: the "no writing"
      band says 「不再丢上下文」) is laid over the hand-held phone's screen. It
      covered the template composite's English interface and a video app's
@@ -1195,9 +1175,9 @@ function lxPage(spec, lang, name) {
      css/stargo-fusion.css (the "blog" block) places the screen on the
      photograph's object-fit box and rounds it to the glass. */
   {
-    const re = new RegExp(`(<img src="${INTEL_PHOTOS.phone.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"[^>]*?style="([^"]*)"[^>]*class="lx-no-writing-image"\\/>)`, 'g');
+    const re = /(<img src="assets\/6929b6c693cb856e01ef7c05\/694d149575edcf4ee403b317_no-writing-sc\.avif"[^>]*?style="([^"]*)"[^>]*class="lx-no-writing-image"\/>)/g;
     const hits = b.match(re) ?? [];
-    if (hits.length !== 1) throw new Error(`${name}: expected one hand-held phone photograph (${INTEL_PHOTOS.phone}), found ${hits.length}`);
+    if (hits.length !== 1) throw new Error(`${name}: expected one hand-held phone photograph (no-writing-sc), found ${hits.length}`);
     b = b.replace(re, (m, tag, style) => `${tag}<div class="lx-no-writing-image stargo-nw-screen" style="${style}" aria-hidden="true"><div class="stargo-nw-frame"><img src="${MOBILE.core}" loading="lazy" alt="" class="stargo-nw-art"/></div></div>`);
   }
   b = b.replace(/<div([^>]*)class="([^"]*\blx-gradient-section\b[^"]*)"/, '<div id="lx-more"$1class="$2"');
@@ -1500,7 +1480,7 @@ PAGES['about.html'] = (lang) => {
   const aboutBody = [
     renderBlock('cn-about', lang),
     renderBlock('cn-about-projects', lang),
-    roleSlides(renderBlock('cn-about-reviews', lang), 'about'),
+    renderBlock('cn-about-reviews', lang),
   ].join('\n');
 
   const aboutSheets = [...new Set(Object.values(DONORS).map((d) => d.sheet))]
@@ -1812,7 +1792,10 @@ PAGES['pricing.html'] = (lang) => {
      (图一), renok's toggle and five tier cards (图三), renok's comparison table
      (图四), cinery's all-features card (图二), then the reviews (图五). */
   const scPart = (() => {
-    let sc = [cta, faq].join('\n');
+    /* 2026-10-23: the owner asked for the 「别买 AI 工具。建 AI 产能。」 band
+       to go (「不要这个板块了」). `cta` is still built above, so its
+       assertions keep running, but only the FAQ is placed. */
+    let sc = faq;
     sc = localise(scClasses(sc));
     sc = sc.replace(/alt="(Pricing Card Icon|Check Icon|Close Icon|Arrow Dowen)"/g, 'alt=""');
     if (/Scalora|\$\d/.test(sc)) throw new Error('pricing: template copy or dollar price survives');
@@ -1824,7 +1807,7 @@ PAGES['pricing.html'] = (lang) => {
     renderBlock('rk-price-tiers', lang),
     renderBlock('rk-price-compare', lang),
     renderBlock('cn-price-card', lang),
-    roleSlides(renderBlock('cn-reviews', lang), 'pricing'),
+    renderBlock('cn-reviews', lang),
     scPart,
   ].join('\n');
 
@@ -2393,7 +2376,11 @@ PAGES['contact.html'] = (lang) => {
 };
 
 /* ---- privacy.html / terms.html — Mono post layout ---------------------- */
-function legalPage(spec, lang) {
+/* The banner over privacy, terms and notices: one of Mono's own model
+   portraits each (the owner's request of 2026-10-23), not the brand glow. */
+const MONO = (f) => `assets/699b6466d5f19893993a4bf2/699b6466d5f19893993a${f}.webp`;
+const LEGAL_BANNERS = { privacy: MONO('4f05_work-1'), terms: MONO('4f71_work-11'), notices: MONO('4f1c_work-13') };
+function legalPage(spec, lang, banner) {
   const t = (p) => (typeof p === 'string' ? p : p[lang]);
   const { fn: s } = makeSub('legal');
   let h = tpl('post_designing-digital-systems-that-scale-with-your-business.html');
@@ -2401,15 +2388,15 @@ function legalPage(spec, lang) {
   h = s(h, '>Designing digital systems that scale your business<', `>${t(spec.h1)}<`);
   h = setInner(h, '<div class="w-richtext">', t(spec.body).trim());
   h = setLink(h, 'Back to blog', { href: 'index.html', text: t(C.LEGAL.back) });
-  h = h.replace(/url\(&quot;assets\/[^&]*blog-1\.webp&quot;\)/, `url(&quot;${BRAND.wide}&quot;)`);   // the post banner photo
+  h = h.replace(/url\(&quot;assets\/[^&]*blog-1\.webp&quot;\)/, `url(&quot;${banner}&quot;)`);   // the post banner photo
   // No "related stories" on a legal page.
   const related = elementContaining(h, '>Related Stories<', 'section');
   h = h.slice(0, related.start) + h.slice(related.end);
   if (/Related Stories|blog-flex/.test(h)) throw new Error('legal: related block survives');
   return h;
 }
-PAGES['privacy.html'] = (lang) => legalPage(C.LEGAL.privacy, lang);
-PAGES['terms.html'] = (lang) => legalPage(C.LEGAL.terms, lang);
+PAGES['privacy.html'] = (lang) => legalPage(C.LEGAL.privacy, lang, LEGAL_BANNERS.privacy);
+PAGES['terms.html'] = (lang) => legalPage(C.LEGAL.terms, lang, LEGAL_BANNERS.terms);
 
 /* ---- notices.html ----------------------------------------------------- */
 PAGES['notices.html'] = (lang) => {
@@ -2421,7 +2408,7 @@ PAGES['notices.html'] = (lang) => {
   h = s(h, '>Designing digital systems that scale your business<', `>${t(N.h1)}<`);
   h = setInner(h, '<div class="w-richtext">', t(N.body).trim());
   h = setLink(h, 'Back to blog', { href: 'index.html', text: t(N.back) });
-  h = h.replace(/url\(&quot;assets\/[^&]*blog-1\.webp&quot;\)/, `url(&quot;${BRAND.wide}&quot;)`);   // the post banner photo
+  h = h.replace(/url\(&quot;assets\/[^&]*blog-1\.webp&quot;\)/, `url(&quot;${LEGAL_BANNERS.notices}&quot;)`);   // the post banner photo
   /* The three "keep reading" cards carry the surface each one is about, from
      the owner's own product screenshots (the handoff of 2026-09-18):
        能力 / Capabilities     — "from the workspace to controlled improvement":
@@ -2485,7 +2472,7 @@ const FORBIDDEN = [
   /\$\s?\d/, /logoipsum/i, /Get Template/, /template-navigator/, /youtube\.com/, /embedly/,
   // stock photography that shipped with the templates (`_work-1.webp` … — not a word that ends
   // in "work", like the owner's s01-inquiry-rework-1600.webp)
-  /Young%20Man%20Smiling/, /Sunset-Serenity/, /Joyful-Group/, /Red-Hat-Portrait/, /(?<![a-z])work-\d+\.webp/, /work7\.webp/, /Matcha-Latte/, /Party-Scene/, /Scene%20/, /Portrait-of-a-Man/, /Diverse-Group/, /Coding-Workspace/, /Sleek%20Container/, /Futuristic/, /blog-\d\.webp/, /about-6/,
+  /Young%20Man%20Smiling/, /Sunset-Serenity/, /Joyful-Group/, /Red-Hat-Portrait/, /(?<![a-z])work-(?!(?:1|11|13)\.webp)\d+\.webp/, /work7\.webp/, /Matcha-Latte/, /Party-Scene/, /Scene%20/, /Portrait-of-a-Man/, /Diverse-Group/, /Coding-Workspace/, /Sleek%20Container/, /Futuristic/, /blog-\d\.webp/, /about-6/,
   // lifelogx template people, its CMS article images and its brand
   /Vibrant%20Orange/, /Stylish%20Portrait/, /Metallic%20Jacket/, /Rectangle%2043/, /69417cf6925a82af26179b70/, /Lifelogx/i, /Lina Elsen/, /Amira Brik/, /Mila Eron/, /Oren Solis/,
 ];

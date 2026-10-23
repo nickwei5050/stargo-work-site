@@ -30,7 +30,7 @@ const ICON = (n) => `assets/brand/stargo-a-icon-${n}.png`;
 /** The name as the owner writes it on stargowork.com (2026-10-21): the full
     Chinese product name on Chinese pages, the brand alone on English ones. */
 export const BRAND = { zh: 'Stargo Work星贸智能AI外贸操作系统', en: 'Stargo Work' };
-const AVATAR = 'assets/stargo/avatar-core.png';
+const AVATAR = 'assets/brand/stargo-s-mark-256.webp';   // the owner's S + star mark (2026-10-23), in place of the silver knot
 /** Share cover: the owner's photograph O01 as a 1200×630 JPEG since 2026-10-21
     (tools/replaceables.mjs OG, tools/imagegen/prepare-share-card.mjs). */
 const OG_IMAGE = OG.token;

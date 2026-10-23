@@ -332,7 +332,7 @@ for (const width of WIDTHS.filter((w) => [390, 768, 1280, 1440].includes(w))) fo
     // contact band: a photograph behind a glass card (since 2026-10-21 the
     // owner's loading bay at dusk, G01, in place of the template's group photo)
     const ctc = await page.evaluate(() => { const ps = getComputedStyle(document.querySelector('.photo-section')); const card = getComputedStyle(document.querySelector('.section.ctc .contact-card')); return { bg: ps.backgroundImage, blur: card.backdropFilter || card.webkitBackdropFilter, cardBg: card.backgroundColor }; });
-    assert(/stargo-photo\/g01-cta-loading-bay-dusk-/.test(ctc.bg), `contact photograph: ${ctc.bg.slice(0, 80)}`);
+    assert(/Joyful-Group-Outdoors/.test(ctc.bg), `contact photograph: ${ctc.bg.slice(0, 80)}`);
     assert(/blur/.test(ctc.blur), `glass card: ${ctc.blur}`);
     assert(/0\.1[0-9]|0\.2/.test(ctc.cardBg) || ctc.cardBg.includes('0.15'), `translucent card: ${ctc.cardBg}`);
     await scrollTo(page, (await secTop(page, '.section.ctc')).top + 80); await page.waitForTimeout(1200);
