@@ -40,6 +40,7 @@
  * own (the only `data-w-id` in a counter is on the box).
  */
 import { setText, setTextAll, capability } from '../block-lib.mjs';
+import { hostFromImg } from '../motion-capsales.mjs';
 
 export const donor = {
   id: 'rk-stats',
@@ -240,11 +241,20 @@ export function render(frag, ctx) {
      2026-09-18 — a path written out, for one of their own product screenshots.
      Either kind goes through tools/editorial-images.mjs for its alt, its size
      and its variants; only the folder differs. */
-  const src = Q.image.startsWith('assets/') ? Q.image : art(Q.image);
-  html = html.replace(IMG, img[0]
-    .replace(/src="[^"]*"/, `src="${src}"`)
-    .replace(/\s(?:srcset|sizes)="[^"]*"/g, '')
-    .replace('alt="Home-one-branding-identity"', `alt="${escapeHtml(t(story.label))}"`));
+  /* Since 2026-10-23 the picture is the code-drawn 'quote' scene (tools/motion-capsales.mjs,
+     js/stargo-motion-sales.js) in place of C07: Q-1042 drafted by rules, stopped by the margin guard,
+     approved by a person and kept as v3. The host keeps the <img>'s class and inline blur and scale,
+     so renok's reveal (rk-a-170, which targets .rk-rt-image-apperance) plays on it unchanged.
+     `CAP_V6A.quote.motion` names the scene; without it the band shows `image` as before. */
+  if (Q.motion) {
+    html = html.replace(IMG, hostFromImg(img[0], Q.motion, lang, `sg-mo-${Q.motion}`));
+  } else {
+    const src = Q.image.startsWith('assets/') ? Q.image : art(Q.image);
+    html = html.replace(IMG, img[0]
+      .replace(/src="[^"]*"/, `src="${src}"`)
+      .replace(/\s(?:srcset|sizes)="[^"]*"/g, '')
+      .replace('alt="Home-one-branding-identity"', `alt="${escapeHtml(t(story.label))}"`));
+  }
   if (html.includes('home-one-branding-identity')) throw new Error('rk-stats: a variant of renok\'s photograph survived the swap');
 
   /* ---- the word that lives in an attribute ---- */

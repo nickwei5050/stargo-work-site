@@ -49,6 +49,7 @@
  */
 import { setText, setTextAll, capability } from '../block-lib.mjs';
 import { CAP_PHOTOS } from '../replaceables.mjs';
+import { hostFromImg } from '../motion-capsales.mjs';
 
 /** The story this block carries: CAPABILITY_SHOWCASE.stories[4]. */
 const STORY = 4;
@@ -60,6 +61,10 @@ const TOPICS = 7;
     srcset). Since 2026-10-21 it is the owner's photograph of a lamp sample
     with its printed product shots (C08), where the os-boot art was. */
 const PICTURE = CAP_PHOTOS.creative;
+/** Since 2026-10-23 the portrait is the code-drawn 'creative' scene (tools/motion-capsales.mjs,
+    js/stargo-motion-creative.js) in place of C08: reference photos of one pack become a main image,
+    a scene and a video storyboard, each waiting for a person's review. Set to null to show PICTURE. */
+const MOTION = 'creative';
 
 export const donor = {
   id: 'cn-faq',
@@ -279,8 +284,13 @@ export function render(frag, ctx) {
   if (alts !== 1) throw new Error(`cn-faq: expected one ${DONOR_ALT} on the portrait, found ${alts}`);
   const IMG = /<img src="assets\/cinery\/[^"]*portrait[^"]*"[^>]*class="cn-faq-image"\/>/;
   if (!IMG.test(end)) throw new Error('cn-faq: the portrait is no longer the one cinery <img> of class cn-faq-image');
-  const src = PICTURE.startsWith('assets/') ? PICTURE : art(PICTURE);
-  end = end.replace(IMG, `<img src="${src}" loading="lazy" alt="${escapeHtml(t(T.label))}" class="cn-faq-image"/>`);
+  if (MOTION) {
+    /* the host keeps the class cinery's card sizes and rounds (cn-faq-image) */
+    end = end.replace(IMG, (tag) => hostFromImg(tag, MOTION, lang, `sg-mo-${MOTION}`));
+  } else {
+    const src = PICTURE.startsWith('assets/') ? PICTURE : art(PICTURE);
+    end = end.replace(IMG, `<img src="${src}" loading="lazy" alt="${escapeHtml(t(T.label))}" class="cn-faq-image"/>`);
+  }
 
   const html = open + filled.join('') + end;
   /* "(05)" is not on this list: the counter is the story's own index, and it

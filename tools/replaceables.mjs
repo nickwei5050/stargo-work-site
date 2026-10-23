@@ -185,7 +185,10 @@ export const CAP_PHOTOS = {
     photoFile('c14-decision-makers'),
   ],
   /* Sales Desk (tools/blocks/qx-news.mjs, through SALES_ROWS): 统一询盘入口 and
-     客户全景. The middle row keeps its product screen. */
+     客户全景. The middle row keeps its product screen. Since 2026-10-23 these four
+     slots (inbox, customer360, quote, creative) are drawn in code on the page
+     (scenes inbox, account, quote, creative: tools/motion-capsales.mjs); the
+     photographs stay here as the slot's source tag and the way back. */
   inbox: photoFile('c05-unified-inbox', 768),
   customer360: photoFile('c06-customer-360', 1600),
   /* 报价 (tools/blocks/rk-stats.mjs, CAP_V6A.quote.image in tools/copy.mjs). */

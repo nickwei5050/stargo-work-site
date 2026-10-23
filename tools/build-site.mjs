@@ -28,6 +28,7 @@ import { SITE } from './paths.mjs';
 import { productTour } from './product-tour.mjs';
 import { appSuite } from './app-suite.mjs';
 import { motionHost, motionAssets, MOTION_CSS, MOTION_SCRIPTS } from './motion-scenes.mjs';
+import { CAPSALES_SCENES } from './motion-capsales.mjs';
 import { webpPage } from './image-refs.mjs';
 import { a11yPage } from './a11y.mjs';
 import { speedPage } from './speed.mjs';
@@ -2279,7 +2280,8 @@ function capabilityShowcase(C, lang) {
        page, so the donor sheets added here still load before the overrides. */
     /* The teamwork card of #story-6 is a code-drawn scene (CAP_V6A.team, tools/blocks/qx-projects.mjs);
        its sheets follow the donors', its scripts the page's own below. */
-    const motion = motionAssets(C.CAP_V6A.team.cards.map((c) => c.motion).filter(Boolean));
+    /* lane capsales: the Sales Desk rows, the quote band and the 图片 / 视频 portrait (tools/motion-capsales.mjs) */
+    const motion = motionAssets([...C.CAP_V6A.team.cards.map((c) => c.motion).filter(Boolean), ...CAPSALES_SCENES]);
     h = h.replace(monoLink, (m) => `${m}\n${sheets}\n<link href="css/donor-fonts.css" rel="stylesheet" type="text/css"/>\n${motion.css}`);
     // the app band (#apps, tools/app-suite.mjs) brings its own sheet
     h = h.replace('<link href="css/donor-fonts.css" rel="stylesheet" type="text/css"/>', (m) => `${m}\n<link href="css/stargo-apps.css" rel="stylesheet" type="text/css"/>`);

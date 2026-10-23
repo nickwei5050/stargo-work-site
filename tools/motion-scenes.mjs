@@ -53,6 +53,23 @@ export const MOTION_LABEL = {
     zh: '动态示意（演示数据）：一项任务在手机上组队，统筹、研究、销售、产品、创意分头推进、互相提问；你暂停后，任务卡留着已完成什么、在等什么、由谁拍板，继续后从中断的那一步接着做，最后汇总交你确认。',
     en: 'Illustrative motion (demo data): a task forms its team on the phone — lead, research, sales, product and creative split the work and ask each other; when you pause it, the task keeps what is done, what is waiting and who decides, then picks up at the step where it stopped and hands you the summary to confirm.',
   },
+  /* capabilities.html, lane capsales (tools/motion-capsales.mjs) */
+  inbox: {
+    zh: '动态示意（演示数据）：邮件、WhatsApp、阿里国际站和官网表单的消息落进同一个收件箱，每条先读出语言、意图和产品，再分成新询盘、历史消息或垃圾信息：Müller Energie 和 Ahmed Al-Rashid 的询价分给欧洲组和中东组，PT Surya 的回复并入客户记录，钓鱼邮件被拦截。',
+    en: 'Illustrative motion (demo data): messages from email, WhatsApp, Alibaba.com and the website form land in one inbox; each is read for language, intent and product and sorted as a new inquiry, history or spam. The requests from Müller Energie and Ahmed Al-Rashid go to the EU and Middle East teams, PT Surya’s reply is filed to its account, and a phishing email is blocked.',
+  },
+  account: {
+    zh: '动态示意（演示数据）：Müller Energie GmbH 的客户全景一块块拼起来：联系人和各自角色、商机阶段（报价中）、订单与样品、报价 Q-1042 与 Q-1031、已发和待发的文件、最近的沟通；最后是下一步：三天未回复，跟进信已起草，等你确认。',
+    en: 'Illustrative motion (demo data): the account view of Müller Energie GmbH assembles piece by piece: contacts and their roles, the stage (quote), orders and samples, quotes Q-1042 and Q-1031, documents sent and to send, the latest conversations, and the next step: no reply in three days, a follow-up is drafted and waits for your OK.',
+  },
+  quote: {
+    zh: '动态示意（演示数据）：给 Müller Energie 的报价 Q-1042 按价格表、包装规则和货代报价起草，毛利 15.2% 低于 18% 的底线，停下来等审批；销售总监点了批准（仅限本单），v3 存为正式版，v1、v2 也都留底可对比。',
+    en: 'Illustrative motion (demo data): quote Q-1042 for Müller Energie is drafted from the price list, the packing rule and the forwarder’s rate; at a 15.2% margin it is under the 18% floor and stops for approval. The sales director approves it for this order only, and v3 is kept as the formal version, with v1 and v2 kept for comparison.',
+  },
+  creative: {
+    zh: '动态示意（演示数据）：三张 48V 100Ah 电池包的参考图进 AI 创作，依次做出白底主图、仓库场景图和 15 秒短视频的四个分镜，每一项都先进审核队列；你点了通过，发布与否仍由你决定，不会自动发布。',
+    en: 'Illustrative motion (demo data): three reference photos of a 48V 100Ah pack go into AI Creative, which makes a white-background main image, a warehouse scene and the four-shot storyboard of a 15-second video; each waits in a review queue, you pass them, and publishing is still your call, nothing goes out automatically.',
+  },
 };
 
 export function motionHost(scene, lang, extraClass = '', { fit } = {}) {
@@ -70,7 +87,8 @@ export const MOTION_SCRIPTS = '<script src="js/stargo-motion-map.js" defer></scr
 const BUILT_IN = new Set(['loop', 'radar', 'studio']);
 export function motionAssets(scenes) {
   const extra = [...new Set(scenes.map((n) => SCENE_FILE[n] || n))].filter((n) => !BUILT_IN.has(n));
-  const css = [MOTION_CSS, ...extra.filter((n) => SCENE_CSS.has(n)).map((n) => `css/stargo-motion-${n}.css`)];
+  // each file's stylesheet, then any single scene's own (the quote's comes after the sales file's chrome)
+  const css = [MOTION_CSS, ...[...new Set([...extra, ...scenes])].filter((n) => SCENE_CSS.has(n)).map((n) => `css/stargo-motion-${n}.css`)];
   const js = [
     ...(scenes.includes('radar') ? ['js/stargo-motion-map.js'] : []),
     ...extra.map((n) => `js/stargo-motion-${n}.js`),
@@ -86,9 +104,16 @@ export const SCENE_FILE = {
   team: 'team',
   feed: 'phone',
   squad: 'phone',
+  inbox: 'sales',
+  account: 'sales',
+  quote: 'sales',
+  creative: 'creative',
 };
-/* scene files that ship their own stylesheet */
+/* scene files, or single scenes, that ship their own stylesheet */
 export const SCENE_CSS = new Set([
   'team',
   'phone',
+  'sales',
+  'quote',
+  'creative',
 ]);
