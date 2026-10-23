@@ -95,7 +95,11 @@
     var layout = null, W = 0, H = 0, t = scene.start || 0, last = 0, visible = false, raf = 0, built = false;
     var viewportFit = host.getAttribute('data-sg-fit') === 'viewport';
     var lastFit = '';
+    // A scene is built the first time its host comes within a screen of the viewport, so a page with many
+    // scenes does not build them all at load.
+    var near = !('IntersectionObserver' in window);
     function fit() {
+      if (!near) return false;
       var w = host.clientWidth, h = host.clientHeight;
       if (w < 8 || h < 8) return false;
       // A host that the page zooms past the screen (the sticky band scales its
@@ -151,11 +155,18 @@
     if ('ResizeObserver' in window) new ResizeObserver(function () { fit(); }).observe(host);
     window.addEventListener('resize', fit);
     fit();
+    if (!near) {
+      var nio = new IntersectionObserver(function (es) {
+        if (!es[es.length - 1].isIntersecting) return;
+        near = true; nio.disconnect(); fit();
+      }, { rootMargin: '100% 0px' });
+      nio.observe(host);
+    }
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(function (es) { visible = es[es.length - 1].isIntersecting; if (visible) fit(); wake(); }, { rootMargin: '120px 0px' }).observe(host);
     } else { visible = true; wake(); }
     document.addEventListener('visibilitychange', wake);
-    if (reduced.addEventListener) reduced.addEventListener('change', function () { t = scene.still; scene.tick(t); wake(); });
+    if (reduced.addEventListener) reduced.addEventListener('change', function () { t = scene.still; if (built) scene.tick(t); wake(); });
   }
 
   /* =====================================================================
