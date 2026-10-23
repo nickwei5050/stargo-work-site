@@ -63,7 +63,9 @@ const TOPICS = 7;
 const PICTURE = CAP_PHOTOS.creative;
 /** Since 2026-10-23 the portrait is the code-drawn 'creative' scene (tools/motion-capsales.mjs,
     js/stargo-motion-creative.js) in place of C08: reference photos of one pack become a main image,
-    a scene and a video storyboard, each waiting for a person's review. Set to null to show PICTURE. */
+    a scene and a video storyboard, each waiting for a person's review. Set to null to show PICTURE.
+    The C08 height rule in css/stargo-fusion.css then applies again; while MOTION is set it matches
+    nothing, and the scene host carries the same rule in css/stargo-motion-creative.css. */
 const MOTION = 'creative';
 
 export const donor = {

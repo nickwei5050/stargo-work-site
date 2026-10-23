@@ -65,7 +65,10 @@ const PICKS = ['Unified Inbox', 'Buyer Requirement Extraction', 'Account Overvie
 const ROW_ART = SALES_ROWS;
 /* Since 2026-10-23 rows 01 and 03 are code-drawn scenes in place of C05 and C06 (tools/motion-capsales.mjs,
    js/stargo-motion-sales.js): the inbox sorting messages from four channels, and Müller Energie's account
-   view filling in. Row 02 keeps the owner's real Sales Desk screen. */
+   view filling in. Row 02 keeps the owner's real Sales Desk screen. The phone aspect rules for the C05/C06
+   photographs in css/stargo-fusion.css match nothing while a row is drawn in code (the scene hosts carry the
+   same shapes in css/stargo-motion-sales.css); they are left in place so that setting a row back to null
+   restores its photograph exactly, and so that this lane does not re-hash stargo-fusion.css on every page. */
 const ROW_MOTION = ['inbox', null, 'account'];
 /** An editorial id (assets/stargo-editorial) or a path exactly as written. */
 const pic = (v, art) => (v.startsWith('assets/') ? v : art(v));
