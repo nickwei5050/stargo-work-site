@@ -9,6 +9,10 @@
  *            os-cockpit.webp as a CSS background on .absolute-photo).
  *   radar  — the Growth OS panel of the core-systems switcher (gos10).
  *   studio — the AI 创作 panel of the same switcher (os-boot).
+ *   cockpit-overview, cockpit-blocker, cockpit-budget — the three pictures
+ *            beside 「(老板驾驶舱)」 on the enterprise page (E05–E07, owner's
+ *            choice 2026-10-23). js/stargo-motion-cockpit.js +
+ *            css/stargo-motion-cockpit.css.
  *
  * The hosts are role="img" with a sentence for screen readers; the scenes
  * themselves are aria-hidden drawing. Every scene says on itself that it is
@@ -28,6 +32,18 @@ export const MOTION_LABEL = {
   studio: {
     zh: '动态示意：AI 创作根据一句要求生成产品主图、场景图和短视频，并生成多语言卖点文案，全部人工审核后发布。',
     en: 'Illustrative motion: AI Creative turns one instruction into product images, scenes and short video plus copy in several languages, all reviewed before publishing.',
+  },
+  'cockpit-overview': {
+    zh: '动态示意（演示数据）：老板驾驶舱总览。商机进展的询盘和报价数随新数据增加，交付状态显示准时与延迟的订单，待审批事项升到 3 项，你批准一项后回到 2 项；数据来源里邮箱、阿里国际站、CRM 和网盘已接入，ERP 未接入，缺的数据已标出。',
+    en: 'Illustrative motion with demo data: the owner’s cockpit overview. Inquiry and quote counts rise as new data arrives, delivery shows on-time against late orders, and pending approvals rise to three and fall back to two when you approve one. Email, Alibaba.com, CRM and the shared drive are connected; the ERP is not, and its missing data is flagged.',
+  },
+  'cockpit-blocker': {
+    zh: '动态示意（演示数据）：任务与卡点。报价 Q-1042 的负责人是销售 AI，卡在缺底价，等你处理；你接手、填上底价后交回销售 AI，报价更新后仍要等你审批才发出，不会自动发送。',
+    en: 'Illustrative motion with demo data: tasks and blockers. Quote Q-1042, owned by the sales AI, is blocked on a missing floor price and waits for you; you take it, enter the price and hand it back, and the updated quote still waits for your approval before it is sent. Nothing is sent automatically.',
+  },
+  'cockpit-budget': {
+    zh: '动态示意（演示数据）：用量与预算。本月 AI 用量逐日上升，到 80% 时提醒你；下一批任务会超出上限时，新任务先暂停，等你批准。',
+    en: 'Illustrative motion with demo data: usage and budget. This month’s AI usage rises day by day and alerts you at 80%; when the next batch would cross the limit, new work pauses until you approve it.',
   },
 };
 
@@ -58,6 +74,6 @@ export function motionAssets(scenes) {
   };
 }
 /* scene name → the file that defines it (several scenes may share one file) */
-export const SCENE_FILE = {};
+export const SCENE_FILE = { 'cockpit-overview': 'cockpit', 'cockpit-blocker': 'cockpit', 'cockpit-budget': 'cockpit' };
 /* scene files that ship their own stylesheet */
-export const SCENE_CSS = new Set();
+export const SCENE_CSS = new Set(['cockpit']);

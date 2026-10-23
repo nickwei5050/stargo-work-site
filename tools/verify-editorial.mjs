@@ -80,8 +80,10 @@ const productsUnused = products.filter(a => !all.includes(a.src)).map(a => a.id)
    pricing slides). */
 const SUPERSEDED = new Set(photos.filter(a => photos.some(b => b.ref === `${a.ref}v2`)).map(a => a.id));
 /* Put back to the template's models at the owner's request (2026-10-23): the
-   demo band's group photograph and the scenario slider's portraits. */
-const RETIRED = new Set(['g01-cta-loading-bay-dusk', 'r1-sales-rep', 'r3-sales-director', 'r4-general-manager', 'i01-observe-process', 'i03-hand-phone-blank']);
+   demo band's group photograph and the scenario slider's portraits. The
+   enterprise cockpit column's E05–E07 gave way to code-drawn motion at the
+   owner's choice (2026-10-23, tools/replaceables.mjs ENTERPRISE_PHOTOS). */
+const RETIRED = new Set(['g01-cta-loading-bay-dusk', 'r1-sales-rep', 'r3-sales-director', 'r4-general-manager', 'i01-observe-process', 'i03-hand-phone-blank', 'e05-cockpit-overview', 'e06-cockpit-blocker', 'e07-cockpit-budget']);
 const photosUnused = photos.filter(a => !all.includes(a.src) && !SUPERSEDED.has(a.id) && !RETIRED.has(a.id)).map(a => a.id);
 assert.deepEqual(photosUnused, [], 'every registered photograph is placed');
 console.log(`generated imagery: ${manifest.assets.length - unused.length} placed, ${unused.length} retained but unused (${unused.join(', ')})`);
