@@ -82,6 +82,13 @@ export function motionAssets(scenes) {
   };
 }
 /* scene name → the file that defines it (several scenes may share one file) */
-export const SCENE_FILE = { team: 'team', feed: 'phone', squad: 'phone' };
+export const SCENE_FILE = {
+  team: 'team',
+  feed: 'phone',
+  squad: 'phone',
+};
 /* scene files that ship their own stylesheet */
-export const SCENE_CSS = new Set(['team', 'phone']);
+export const SCENE_CSS = new Set([
+  'team',
+  'phone',
+]);
