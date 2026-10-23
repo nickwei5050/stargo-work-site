@@ -2057,7 +2057,7 @@ export const CAPABILITY_SHOWCASE = {
   ],
 
   catalogueLabel: B('完整目录', 'The complete catalog'),
-  catalogueNote: B('登记在册的全部能力，按组排列。上面的成果引用的就是这些条目。', 'Every capability in the register, by group. The outcomes above draw from these same entries.'),
+  catalogueNote: B('登记在册的全部能力，按组排列。前面六章讲的成果，引用的就是这些条目。', 'Every capability in the register, by group. The outcomes in the six chapters earlier on this page draw from these same entries.'),
 };
 
 /* ===== V6 A: capability showcases (#story-1…#story-4, #story-6, foundations) =====
