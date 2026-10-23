@@ -28,6 +28,7 @@ import { SITE } from './paths.mjs';
 import { productTour } from './product-tour.mjs';
 import { appSuite } from './app-suite.mjs';
 import { motionHost, motionAssets, MOTION_CSS, MOTION_SCRIPTS } from './motion-scenes.mjs';
+import { theatreTiles } from './code-art-theatre.mjs';
 import { webpPage } from './image-refs.mjs';
 import { a11yPage } from './a11y.mjs';
 import { speedPage } from './speed.mjs';
@@ -533,6 +534,7 @@ PAGES['index.html'] = (lang) => {
         h = h.replace(marker, `<video id="stargo-brand-film" data-stargo-video loop muted playsinline preload="none" poster="${HERO.poster}" aria-label="${lang === 'zh' ? '品牌概念动画：银色轨道同步运转' : 'Brand film: silver orbital forms moving together'}"><source src="${HERO.film}" type="video/mp4"/></video>`);
       }
     });
+    h = theatreTiles(h, lang);   // 代码动画: the six stills around the film → code-drawn desktop windows (tools/code-art-theatre.mjs)
     const mediaLabel = lang === 'zh' ? '播放视频' : 'Play video';
     h = h.replace('<div class="sticky-video-section">', `<div class="sticky-video-section"><button class="stargo-media-toggle" type="button" aria-controls="stargo-brand-film" aria-pressed="false" data-play-label="${mediaLabel}" data-pause-label="${lang === 'zh' ? '暂停视频' : 'Pause video'}">${mediaLabel}</button>`);
     const play = elementContaining(h, 'class="play-video w-inline-block w-lightbox"', 'a');
