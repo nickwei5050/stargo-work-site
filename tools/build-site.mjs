@@ -23,11 +23,11 @@ import * as C from './copy.mjs';
 import { POSTS, BLOG_UI, postPath, featured, others, coverSrc, coverSrcset, coverAlt, formatDate, renderBody, titleHtml } from './blog.mjs';
 import { loadBlocks, art, capTitle, DONORS } from './block-lib.mjs';
 import { PRODUCT_CAPTION } from './editorial-images.mjs';
-import { HERO, HOME_MODULES, HOME_STAGES, HOME_SILOS, HOME_ROLE_CARD, HOME_PRICING_CARD, HOME_BLOG_COVERS, NOTICES_CARDS, CAP_PHOTOS, ENTERPRISE_PHOTOS, CONTACT_CARD, WORKFORCE_ROLES, WORKFORCE_BLOG_COVERS } from './replaceables.mjs';
+import { HERO, HOME_MODULES, HOME_STAGES, HOME_ROLE_CARD, HOME_PRICING_CARD, HOME_BLOG_COVERS, NOTICES_CARDS, CAP_PHOTOS, ENTERPRISE_PHOTOS, CONTACT_CARD, WORKFORCE_ROLES, WORKFORCE_BLOG_COVERS } from './replaceables.mjs';
 import { SITE } from './paths.mjs';
 import { productTour } from './product-tour.mjs';
 import { appSuite } from './app-suite.mjs';
-import { motionHost, motionAssets, MOTION_CSS, MOTION_SCRIPTS } from './motion-scenes.mjs';
+import { motionHost, motionAssets, MOTION_CSS, MOTION_SCRIPTS, PAIN_SCENES } from './motion-scenes.mjs';
 import { webpPage } from './image-refs.mjs';
 import { a11yPage } from './a11y.mjs';
 import { speedPage } from './speed.mjs';
@@ -401,6 +401,8 @@ function inMonoShell(body, extraCss) {
 const PAGES = {};
 
 /* ---- index.html — Mono homepage + three Scalora modules --------------- */
+/* The homepage's motion scenes (tools/motion-scenes.mjs): the scene files load before the engine. */
+const HOME_MOTION = motionAssets(['loop', 'radar', 'studio', ...PAIN_SCENES]);
 PAGES['index.html'] = (lang) => {
   const t = (p) => (typeof p === 'string' ? p : p[lang]);
   const { fn: s } = makeSub('home');
@@ -473,12 +475,18 @@ PAGES['index.html'] = (lang) => {
 
   // ---- imagery: the problem cards, the five stages, the OS "theatre", the sticky card, the ladder card, the four doors
   {
-    /* The four pain-point cards: the owner's photographs S01–S04 since
-       2026-10-21 (tools/replaceables.mjs HOME_SILOS; before them the
-       silo-email/-whatsapp/-excel/-erp illustrations). The alt is a marker,
-       as for the stages below. */
+    /* The four pain-point cards draw their story in code (js/stargo-motion-pain.js):
+       the owner chose on 2026-10-23 to replace his photographs S01–S04 here
+       (「换这两处,其余照片保留」; tools/replaceables.mjs HOME_SILOS keeps the
+       record). The host takes the template <img>'s place inside
+       `.image-wrap.full-width` and keeps its `paralax-image` class, so the card,
+       its sticky stacking and the glass title over it are as they were. */
     const cards = ['699b6466d5f19893993a4d79_work-1.webp', '699b6466d5f19893993a4d34_work-5.webp', '699b6466d5f19893993a4d1a_work-4.webp', '699b6466d5f19893993a4d8f_work-8.webp'];
-    cards.forEach((k, i) => { h = swapImg(h, k, HOME_SILOS[i], { alt: 'STARGO WORK' }); });
+    cards.forEach((k, i) => {
+      let hit = 0;
+      h = h.replace(/<img\b[^>]*>/g, (tag) => (tag.includes(k) && /class="paralax-image"/.test(tag) ? (hit++, motionHost(PAIN_SCENES[i], lang, 'paralax-image sg-pain-host')) : tag));
+      if (hit !== 1) throw new Error(`index: expected one problem-card picture ${k}, found ${hit}`);
+    });
     /* The five stages, in order (V6 §4.6). Four of them carry the owner's own
        product. The sentences stayed; on 2026-09-22 the three older 1268px
        stills were swapped for curated pack screens (filenames unchanged):
@@ -719,7 +727,7 @@ PAGES['index.html'] = (lang) => {
   /* 代码动画: 「一条业务主线」 zooms out of a motion scene instead of the
      os-cockpit still (css/stargo-motion.css drops the background). */
   h = s(h, '<div class="absolute-photo"></div>', `<div class="absolute-photo sg-mo-host">${motionHost('loop', lang, '', { fit: 'viewport' })}</div>`, { count: 1 });
-  h = s(h, '</body>', `${MOTION_SCRIPTS}</body>`, { count: 1 });
+  h = s(h, '</body>', `${HOME_MOTION.js}</body>`, { count: 1 });
   /* 旋转图片展示 — rototo's rotating gallery, in the empty band of the hero's own
      footer: after the four dots and above 「© 2026 STARGO WORK」, which is the box
      the owner drew in red. It goes in as a third child of `.hero`; that element's
@@ -741,7 +749,7 @@ PAGES['index.html'] = (lang) => {
      or the page it introduces flashes past underneath it. It goes before
      scalora's and before stargo-fusion.css, the same order the capability page
      puts the donor sheets in. */
-  h = h.replace(monoLink, (m) => `${m}\n<link href="css/${DONORS.offgrid.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/${DONORS.rototo.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/scalora-modules.sc.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-tour.css" rel="stylesheet" type="text/css"/>\n<link href="${MOTION_CSS}" rel="stylesheet" type="text/css"/>`);
+  h = h.replace(monoLink, (m) => `${m}\n<link href="css/${DONORS.offgrid.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/${DONORS.rototo.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/scalora-modules.sc.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-tour.css" rel="stylesheet" type="text/css"/>\n${HOME_MOTION.css}`);
   /* Mono's own page-load curtain goes. `.preloader` is a fixed black sheet
      with the wordmark on it (Mono's css: z-index 9999, resting at
      translateY(-120%)), dropped over the page and lifted again by the IX3
