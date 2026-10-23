@@ -26,6 +26,7 @@ import { PRODUCT_CAPTION } from './editorial-images.mjs';
 import { HERO, HOME_MODULES, HOME_STAGES, HOME_SILOS, HOME_ROLE_CARD, HOME_PRICING_CARD, HOME_BLOG_COVERS, NOTICES_CARDS, CAP_PHOTOS, ENTERPRISE_PHOTOS, CONTACT_CARD, WORKFORCE_ROLES, WORKFORCE_BLOG_COVERS } from './replaceables.mjs';
 import { SITE } from './paths.mjs';
 import { productTour } from './product-tour.mjs';
+import { appSuite } from './app-suite.mjs';
 import { motionHost, MOTION_CSS, MOTION_SCRIPTS } from './motion-scenes.mjs';
 import { webpPage } from './image-refs.mjs';
 import { a11yPage } from './a11y.mjs';
@@ -2171,7 +2172,9 @@ function capabilityShowcase(C, lang) {
      than in the page's script list; `defer` runs it after the parse like the
      page's other deferred scripts, and chrome.mjs versions and relocates its
      src like any other. */
-  return `<span id="story-1"></span>` + chapters +
+  /* #apps — the desktop's 22 app icons (tools/app-suite.mjs) — sits between
+     the foundations and the catalogue its tiles link into. */
+  return `<span id="story-1"></span>` + chapters + appSuite(C, lang) +
     `<section id="atlas" class="cn-capmap"><div class="cn-capmap-inner">` +
     band(t(S.catalogueLabel), t(S.catalogueNote)) +
     `<div class="cn-faq-container">${catalogue.join('')}</div>` +
@@ -2217,6 +2220,8 @@ function capabilityShowcase(C, lang) {
     /* chrome.mjs attaches css/stargo-fusion.css after the last stylesheet on the
        page, so the donor sheets added here still load before the overrides. */
     h = h.replace(monoLink, (m) => `${m}\n${sheets}\n<link href="css/donor-fonts.css" rel="stylesheet" type="text/css"/>`);
+    // the app band (#apps, tools/app-suite.mjs) brings its own sheet
+    h = h.replace('<link href="css/donor-fonts.css" rel="stylesheet" type="text/css"/>', (m) => `${m}\n<link href="css/stargo-apps.css" rel="stylesheet" type="text/css"/>`);
     /* A donor block's video is fetched only once the reader is near it. cinery's
        break band is 27 `<video autoplay preload="metadata">` cards — 32 MB on
        first paint, before anyone has scrolled to them. Holding the url in
