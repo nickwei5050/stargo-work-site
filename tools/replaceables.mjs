@@ -492,11 +492,12 @@ export const WORKFORCE_BLOG_COVERS = {
   'from-inquiry-to-quote': photoFile('b03-inquiry-to-quote', 1600),
 };
 
-/** Workforce / About pictures that reuse a hero or product slot. */
+/** Workforce / About pictures that reuse a hero or product slot. The
+ *  workforce tile and the capability page's teamwork card (workforceTile and
+ *  teamCard, both PRODUCT.teams until 2026-10-23) are the code-drawn 'team'
+ *  scene now (tools/motion-scenes.mjs). */
 export const PLACED = {
-  workforceTile: PRODUCT.teams,
   aboutBigImage: HERO.poster,
-  teamCard: PRODUCT.teams,
 };
 /* The quote band's picture and the 图片 / 视频 portrait (STORY_ART.quoteBand
    and PLACED.creativePicture until 2026-10-21) are CAP_PHOTOS.quote and

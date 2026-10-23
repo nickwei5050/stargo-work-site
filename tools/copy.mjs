@@ -1778,20 +1778,18 @@ export const LX_FEATURE_WORKFORCE = {
      to 1920 broke 「不是各聊各的，而」/「是一起把事做完。」. */
   teamTitle: B('不再各聊各的，一起把事做完。', 'No more separate chats. One team finishes the job.'),
   /* The template's square tile has a follower count painted into the artwork.
-     It carried STARGO's brand still (assets/stargo-motion/orbit-poster.webp);
-     since the owner's handoff of 2026-09-18 it carries the owner's own Expert
-     Teams screen instead. The paragraph beside it is `answersBody` above — a
-     complex task divided between several AI employees, where what matters is
-     「信息能否传递、责任是否明确、结果能否交接」 and a coordinator hands the
-     result to the responsible person — and that screen is exactly that: five
-     named roles on one inquiry, each with what it does, and the finished tasks
-     listed with their owner and time.
-     `alt` is not the picture's description: tools/editorial-images.mjs writes
-     the registered bilingual sentence over it for every image in
-     assets/stargo-product. It has to be non-empty all the same, because an
-     empty alt is how that pass is told a picture is decorative — so it holds
-     the caption that pass appends, which is true of this picture either way. */
-  tile: { src: PLACED.workforceTile, alt: B('产品界面示意（演示数据）', 'Illustrative product interface · demo data') },
+     It carried STARGO's brand still (assets/stargo-motion/orbit-poster.webp),
+     then from 2026-09-18 the Expert Teams composite; since 2026-10-23 (owner:
+     no more AI composites) it is the code-drawn 'team' scene of
+     tools/motion-scenes.mjs. The paragraph beside it is `answersBody` above —
+     a complex task divided between several AI employees, where what matters
+     is that information passes, ownership is clear and results hand off, and
+     a coordinator hands the result to the responsible person — and the scene
+     plays exactly that with demo data, ending at a human approval. The host
+     takes the picture's 1672 × 941 box inside the magenta frame
+     (css/stargo-motion-team.css); its screen-reader sentence is the scene's
+     MOTION_LABEL. */
+  tile: { motion: 'team' },
   /* The display line behind the stacked cards; split per character on the
      Chinese page. Two five-character halves: one line of this size holds 5.8
      to 6.4 characters from 320 to 1440. */
@@ -2186,15 +2184,17 @@ export const CAP_V6A = {
         href: '#g10', pill: B('员工能力组', 'AI workforce group'), image: CAP_PHOTOS.team[1] },
       { title: B(`团队分工、${ZW}交流、${ZW}并行与接力`, 'Roles, messaging, parallel work and handoffs'),
         text: B('协作示意：市场研究员工找到目标客户，产品员工核对规格，销售员工制定开发计划，创意员工准备素材；员工之间直接交流、并行推进，统筹角色复核汇总后交负责人确认。图为示意，不是实时运行画面。', 'Illustrative: research finds target accounts, a product specialist checks specifications, sales plans outreach and creative prepares assets; the employees message each other and work in parallel, and a coordinator reviews and consolidates the package for the responsible person to confirm. The picture is an illustration, not a live view.'),
-        /* The picture (owner instruction, 2026-09-18) is the owner's own Expert
-           Teams screen, in place of the editorial artwork for parallel work
-           ('brand-family-03'): five named roles dividing one real inquiry
-           between them, with the completed-task record and its owners
-           underneath — which is the card's own sentence, down to the
-           coordinator who consolidates before a person confirms. A value
-           starting with `assets/` is a path as written; anything else is an
-           editorial id (tools/blocks/qx-projects.mjs). */
-        href: 'workforce.html#lx-team', pill: B('看团队协作', 'See teamwork'), image: PLACED.teamCard },
+        /* The picture is the code-drawn 'team' scene (owner, 2026-10-23: no
+           more AI composites; it replaces the Expert Teams composite,
+           sw006-expert-teams.webp). It plays this card's own sentence with
+           demo data: one goal split between the market researcher, the
+           product engineer, sales and creative, who work in parallel and hand
+           off to each other; one question waits for a person, and the
+           coordinator gathers the results and stops at a human approval.
+           「图为示意」 stays true of it, and the scene says so on itself.
+           `motion` names a scene in tools/motion-scenes.mjs; `image` would be
+           an editorial id or an `assets/` path (tools/blocks/qx-projects.mjs). */
+        href: 'workforce.html#lx-team', pill: B('看团队协作', 'See teamwork'), motion: 'team' },
     ],
   },
 };
