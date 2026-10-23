@@ -74,6 +74,10 @@ for (const a of manifest.assets) {
   for (const f of [a, ...a.variants]) assert(existsSync(f.src), `missing file: ${f.src}`);
 }
 const productsUnused = products.filter(a => !all.includes(a.src)).map(a => a.id);
+/* Drawn in code on the enterprise page since 2026-10-23 (tools/code-art-enterprise.mjs):
+   the four story panels, the 原则 run and the five module cards. Their photographs stay
+   registered and published, but nothing places them any more. */
+const CODE_DRAWN = new Set(['e01-decide', 'e02-verify', 'e03-connect', 'e04-operate', 'e08-emergency-stop', 'e09-capabilities', 'e10-access', 'e11-approval', 'e12-records', 'e13-key-cabinet']);
 /* A photograph replaced by its second version (tools/imagegen/prepare-photos.mjs,
    `<id>v2-…`) stays registered, and its files stay published, but is placed
    only where the second version does not take over (R1 keeps the about and
@@ -83,7 +87,7 @@ const SUPERSEDED = new Set(photos.filter(a => photos.some(b => b.ref === `${a.re
    demo band's group photograph and the scenario slider's portraits. */
 const RETIRED = new Set(['g01-cta-loading-bay-dusk', 'r1-sales-rep', 'r3-sales-director', 'r4-general-manager', 'i01-observe-process', 'i03-hand-phone-blank']);
 const photosUnused = photos.filter(a => !all.includes(a.src) && !SUPERSEDED.has(a.id) && !RETIRED.has(a.id)).map(a => a.id);
-assert.deepEqual(photosUnused, [], 'every registered photograph is placed');
+assert.deepEqual(photosUnused.filter((id) => !CODE_DRAWN.has(id)), [], 'every registered photograph is placed');
 console.log(`generated imagery: ${manifest.assets.length - unused.length} placed, ${unused.length} retained but unused (${unused.join(', ')})`);
 console.log(`product imagery: ${products.length - productsUnused.length} of ${products.length} placed${productsUnused.length ? ` (unused: ${productsUnused.join(', ')})` : ''}`);
 for (const f of files) {
