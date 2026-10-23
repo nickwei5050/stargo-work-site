@@ -5388,6 +5388,23 @@ blockquote {
   background-image: url("../assets/699b6466d5f19893993a4bf2/699b6466d5f19893993a4fa0_about-6.webp");
 }
 
+/* Speed lane (STARGO): on a phone these avatars draw at 40px, and two of them
+   fetched 2400px portraits for it (341 KB and 66 KB). Below 768px they take a
+   160px copy (Lanczos, WebP q82: 4.7 KB and 2.2 KB), enough for a 40px circle
+   at 4x. From 768px up the template's files stay, so desktops draw exactly
+   the pixels they did. A later rule that gives these classes another picture
+   still wins, as it did before. */
+@media screen and (max-width: 767px) {
+  .author-circle._01 {
+    background-image: url("../assets/699b6466d5f19893993a4bf2/699b6466d5f19893993a4ecb_Relaxed-Portrait-160.webp");
+  }
+
+  .author-circle._02,
+  .author-circle._03 {
+    background-image: url("../assets/699b6466d5f19893993a4bf2/699b6466d5f19893993a4ee1_Blurred-Portrait-Outdoors-160.webp");
+  }
+}
+
 .testimonials-section {
   z-index: 10;
   background-color: var(--colors--second-color);

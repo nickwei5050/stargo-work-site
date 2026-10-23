@@ -166,6 +166,41 @@ if (mergedPayload.events['sc-e-133']?.action?.config?.actionListId !== 'sc-a-48'
 }
 delete mergedPayload.events['sc-e-133'];
 
+/* Page-level mouse-move interactions (speed lane). IX2 runs one
+   requestAnimationFrame loop for as long as a page is open, and every frame
+   its store walks every instance it has started; a continuous (pointer-driven)
+   instance is started for every target of every bound event, whatever the
+   breakpoint (an event's mediaQueries only gate its handler and its writes).
+   Every page carries the homepage's id (see foldPages above), so every page
+   started all the homepage-id copies: 15 identical events running a-226
+   "Circle Main Movement" (the cursor's "view work" bubble and cross-hair, 10
+   instances each) and 5 identical events running lx-a-37 (the Lifelogx footer
+   gradient that follows the pointer): 160 of the 228 instances on a phone, the
+   bulk of an idle loop measured at 1.1-2.0s of main thread per 5s at 4x CPU.
+   1. The copies go. Each wrote the same values to the same elements on the
+      same input, so one of each draws exactly what fifteen (or five) did, at
+      every width; only the duplicate work goes.
+   2. Below 768px (IX2's small and tiny) the one a-226 event stops listening:
+      everything it moves sits in .text-tool-tip and .plus-line-wrapper, which
+      Mono's stylesheet sets to display:none up to 991px (measured at 390, 600
+      and 767px: no box). lx-a-37 keeps every breakpoint: the footer gradient
+      shows on a phone and moves there today. */
+{
+  const seen = new Set();
+  let dropped = 0;
+  for (const [id, ev] of Object.entries(mergedPayload.events)) {
+    if (ev.eventTypeId !== 'MOUSE_MOVE' || ev.target?.appliesTo !== 'PAGE') continue;
+    const key = JSON.stringify([ev.target, ev.targets, ev.action, ev.config, ev.mediaQueries]);
+    if (!seen.has(key)) { seen.add(key); continue; }
+    delete mergedPayload.events[id];
+    dropped++;
+  }
+  if (dropped !== 18) throw new Error(`page mouse-move copies: expected 14 of a-226 and 4 of lx-a-37, dropped ${dropped}`);
+  const cursor = Object.values(mergedPayload.events).filter((ev) => ev.eventTypeId === 'MOUSE_MOVE' && ev.target?.appliesTo === 'PAGE' && ev.action?.config?.actionListId === 'a-226');
+  if (cursor.length !== 1) throw new Error(`page mouse-move: expected one a-226 event, found ${cursor.length}`);
+  cursor[0].mediaQueries = cursor[0].mediaQueries.filter((q) => q !== 'small' && q !== 'tiny');
+}
+
 /* Mono's overlay menu was built for a four-item nav and its open interaction
    a-190 names them one at a time: `.menu-item._01`, `._02`, `._03`, `._05`
    (`._04` was skipped in the template itself). Group 0 of that list is not

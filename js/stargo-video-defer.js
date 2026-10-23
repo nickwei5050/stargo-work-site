@@ -39,13 +39,22 @@
   var vids = document.querySelectorAll('video[data-defer]');
   if (!vids.length) return;
   var reduced = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
+  /* A clip whose sources carry data-mobile-src has a phone-sized copy
+     (tools/speed.mjs item 6: the homepage's approval demo). Below 768px that
+     copy is loaded instead; from 768px up the source is the same as ever.
+     Under Save-Data such a clip is not fetched at all and its poster stands,
+     as it does for reduced motion. */
+  var phone = window.matchMedia ? window.matchMedia('(max-width: 767px)').matches : false;
+  var saveData = !!(navigator.connection && navigator.connection.saveData);
 
   function load(v) {
     if (v.dataset.deferDone || reduced.matches) return;
+    var small = v.querySelector('source[data-mobile-src]');
+    if (small && saveData) { v.dataset.deferDone = 'save-data'; return; }
     v.dataset.deferDone = '1';
     var sources = v.querySelectorAll('source[data-src]');
     for (var i = 0; i < sources.length; i++) {
-      sources[i].setAttribute('src', sources[i].getAttribute('data-src'));
+      sources[i].setAttribute('src', (phone && sources[i].getAttribute('data-mobile-src')) || sources[i].getAttribute('data-src'));
       sources[i].removeAttribute('data-src');
     }
     v.load();
