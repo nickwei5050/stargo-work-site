@@ -349,6 +349,100 @@ function head(html, lang, current) {
   return out;
 }
 
+/**
+ * Lane parity (2026-10-23): the phone interactions — css/stargo-phone.css and
+ * js/stargo-phone-fx.js — on every page, at no cost to the first view.
+ *
+ * Both files wait in an inert <template> (nothing inside one is fetched) and
+ * a few lines of inline script move them into <head> on the reader's first
+ * touch, scroll, wheel, key or press, and only on a phone-sized or touch
+ * screen. A page that is opened and never touched downloads neither, so the
+ * first paint, the LCP and the first 8 s are exactly what they were; on a
+ * desktop with a mouse nothing is ever fetched. Touch comes before the finger
+ * moves, so the sheet is normally in place by the time the page scrolls, and
+ * what it draws at the top of the page starts slowly (the hero's reveal eases
+ * in), so a sheet that lands mid-gesture does not jump.
+ *
+ * The URLs sit in ordinary src/href attributes inside the template, so
+ * relocateAssets() and the ?v= cache keys (tools/asset-version.mjs) treat them
+ * like any other script or stylesheet on the page.
+ *
+ * The two files are kept small (the lane's budget: about 6 KB of script and
+ * 4 KB of styles), so their notes live here rather than in them.
+ *
+ * What they do. Desktop scrubs pinned scenes; a phone gets the same sense of
+ * motion in its own stacked layout (Z10, owner decision 2026-10-22: 改成普通
+ * 排列) — nothing is pinned, nothing takes over the scroll, nothing is laid
+ * out differently, and every effect ends on exactly the layout Z10 draws. That
+ * layout is also the fallback: before the first touch, without scroll-driven
+ * animations (they sit behind @supports (animation-timeline: view())), and
+ * with reduced motion (motion sits behind prefers-reduced-motion:
+ * no-preference). Only opacity and the separate scale, translate and rotate
+ * properties move: Z10 pins `transform` (and on some boxes opacity) with
+ * !important, and the template's runtimes write inline `transform` and
+ * `scale`; the separate properties compose with both, and a pressed button's
+ * scale carries !important to beat the inline one.
+ *
+ *   Scroll-driven (css only). A timeline is named on a box outside any
+ *   overflow:hidden ancestor, which would otherwise become the scroller an
+ *   anonymous view() follows, and never move.
+ *   - Homepage hero: as the white card scrolls away it draws back (scale) and
+ *     the photo wall behind it opens, its columns drifting apart — desktop's
+ *     zoom-out in one screen of ordinary scrolling. Named on .hero-track
+ *     because .hero-agency clips; it eases in, so a sheet that arrives
+ *     mid-gesture does not jump.
+ *   - Homepage 「一个工作台…」: the product screens settle from close up as the
+ *     band comes up (desktop zooms them out while the band is pinned).
+ *   - Homepage problem cards and the capability page's four area cards
+ *     settle in, each photo easing back from close up (desktop stacks them).
+ *   - Workforce: the three collaboration cards settle from a tilt, one after
+ *     another (desktop fans them out while the section pins).
+ *
+ *   Lit lists (js: one IntersectionObserver whose root is a band ~2% of the
+ *   screen tall across the middle; the item nearest the middle carries the
+ *   class, and the last one keeps it so a list never goes dark mid-read).
+ *   - Homepage five business stages, over Mono's inline title opacity. Below
+ *     480px Mono hides the box that holds each stage's sentence, so a one-line
+ *     version (PHONE_FX.stageLines, tools/copy.mjs) sits under each title; the
+ *     list takes the grid's empty fourth column for it.
+ *   - Capability page insight rows: renok's hover underline draws and its
+ *     picture comes up beside the title, both of which renok hides below
+ *     992px; they are absolutely placed, so showing them moves nothing.
+ *   - Intelligence 「观察真实流程…」: the line at the middle at full strength,
+ *     the others stepped back — on the h3, because Z10 pins each box's opacity.
+ *   - Homepage 「一条业务主线」: the phrase that the loop scene's caption names
+ *     lights, with a short bar (the scene writes data-stage on its host when
+ *     the stage changes, js/stargo-motion.js).
+ *
+ *   One-shot cues (js, unobserved once played; never with reduced motion).
+ *   - Homepage pricing ladder: the first card turns a little when it reaches
+ *     the middle, the gesture a tap completes; a hint on touch screens says a
+ *     tap turns a card over (PHONE_FX.flipHint).
+ *   - Core-systems accordion (below 992px): each name shows n/4 and a chevron
+ *     that turns with the template's own open state (`sg-open`, from a
+ *     ResizeObserver); the next closed name gets a warm wash and a nudge,
+ *     once. Nothing ever opens on its own.
+ *
+ *   Touch. Buttons, pills and cards whose only response was a hover answer the
+ *   finger (:active; iOS needs a touchstart listener for it). A sideways swipe
+ *   on the product tour's screenshot (|dx| > 40px and > |dy|) changes tab, and
+ *   the new screen comes in from that side.
+ *
+ *   One layout fix, phones: workforce 「一个目标，一个团队。」 kept lifelogx's
+ *   centring shift (translate(0, -50%)) when Z10 put it back in the flow, so
+ *   its top half sat behind the third card.
+ */
+const PHONE_FX_LOADER = `<template id="sg-phone-fx"><link href="css/stargo-phone.css" rel="stylesheet" type="text/css"/><script src="js/stargo-phone-fx.js"></script></template>`
+  + `<script>(function(){var t=document.getElementById('sg-phone-fx'),m=window.matchMedia,E=['touchstart','pointerdown','scroll','wheel','keydown'],o={capture:true,passive:true};`
+  + `if(!t||!t.content||!m||!m('(max-width: 767px), (hover: none)').matches)return;`
+  + `function go(){E.forEach(function(e){removeEventListener(e,go,o)});[].forEach.call(t.content.children,function(n){var e=document.createElement(n.localName);[].forEach.call(n.attributes,function(a){e.setAttribute(a.name,a.value)});document.head.appendChild(e)})}`
+  + `E.forEach(function(e){addEventListener(e,go,o)})})();</script>`;
+function phoneFx(html) {
+  if (html.includes('id="sg-phone-fx"')) return html;
+  if (!html.includes('</body>')) throw new Error('chrome: no </body> for the phone interactions');
+  return html.replace('</body>', `${PHONE_FX_LOADER}</body>`);
+}
+
 function scripts(html) {
   let out = html
     .replace(/js\/app\.[0-9a-f]{8}\.[0-9a-f]{16}\.js/g, 'js/app.fused.js')
@@ -419,6 +513,7 @@ function scripts(html) {
   });
   out = out.replace(/\sdata-video-urls=/g, ' data-defer-video-urls=');
   if (out.includes('<video data-defer') && !out.includes('js/stargo-video-defer.js')) out = out.replace('</body>', '<script src="js/stargo-video-defer.js" defer></script></body>');
+  out = phoneFx(out);
   out = out.replace(
     'const nav = document.querySelector(".menu-bottom");',
     'const nav = document.querySelector(".menu-bottom");\n  if (!nav) return; // no pill on this page',

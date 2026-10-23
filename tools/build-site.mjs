@@ -608,6 +608,23 @@ PAGES['index.html'] = (lang) => {
      straight back to the runtime the moment it lights one. The interaction data
      is untouched. */
   h = s(h, '</body>', '<script src="js/stargo-stage-hold.js" defer></script></body>', { count: 1 });
+  /* Lane parity (2026-10-23): two pieces of copy that only phones and touch
+     screens show (css/stargo-phone.css). Both ship `hidden`, so the desktop
+     page and a phone that has not loaded that sheet draw exactly what they
+     drew before.
+       - A one-line summary under each of the five stage titles. Below 480px
+         Mono hides the picture box that holds each stage's sentence, so the
+         phone list was five titles with nothing under them. It sits inside
+         the title box, whose opacity the stage lighting drives, so a line
+         lights and dims with its title.
+       - A hint above the pricing ladder that a tap turns a card over. */
+  {
+    let n = 0;
+    h = h.replace(/(<h2 [^>]*class="service-title">[^<]*<\/h2>)(<\/div>)/g, (m, title, close) => `${title}<p class="sg-stage-line" hidden>${t(C.PHONE_FX.stageLines[n++])}</p>${close}`);
+    if (n !== 5) throw new Error(`index: expected 5 stage titles for their phone lines, found ${n}`);
+    const flip = '<svg class="sg-flip-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M13.2 8.6A5.3 5.3 0 1 1 11.6 4.1M13.2 1.9v3.3H9.9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    h = s(h, '<div class="stats-sticky-grid">', `<p class="sg-flip-hint" hidden>${flip}<span>${t(C.PHONE_FX.flipHint)}</span></p><div class="stats-sticky-grid">`, { count: 1 });
+  }
   h = h.replace(/<h3 class="work-title">\d\d<\/h3><h3 class="work-title">©<\/h3>/g, (m, i) => m).replace(/<h3 class="work-title">(26|24|25)<\/h3><h3 class="work-title">©<\/h3>/g, (m) => m);
   {
     let n = 0;

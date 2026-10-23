@@ -248,6 +248,7 @@
       var phone = name === 'phone';
       L = geometry(name);
       R = { inp: [], out: [], parts: [], inPath: [], outPath: [], phone: phone };
+      R.host = stage.parentNode;   // tells the page which stage the caption names (data-stage, read by css/stargo-phone.css)
       stage.className = 'sg-mo-stage sg-loop' + (compact ? ' is-compact' : '') + (phone ? ' is-phone' : '') + (name === 'mid' ? ' is-mid' : '');
       var svg = sv('svg', { class: 'sg-loop-svg', width: L.w, height: L.h, viewBox: '0 0 ' + L.w + ' ' + L.h }, stage);
       var defs = sv('defs', {}, svg);
@@ -507,6 +508,7 @@
       // the gate says 等你拍板 itself, except on phones where its label is hidden
       // and the caption stays on a quote at the gate until it has landed in its stage card
       textSwap(R.status, gw && gq && R.phone ? T('等你拍板 · ', 'Your call · ') + gq.msg[0] : gc ? gc.msg[0] + ' → ' + ST[gc.st].name : se.msg[0] + ' → ' + ST[se.st].name);
+      var cs = gc ? gc.st : se.st; if (R.st !== cs && R.host) R.host.setAttribute('data-stage', String((R.st = cs) + 1));   // only when it changes
       // ticker
       if (R.tick) {
         var arrivedCount = kNow + (t - cur.t0 >= IN1 ? 1 : 0);
