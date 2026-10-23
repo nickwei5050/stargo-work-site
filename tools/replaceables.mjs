@@ -173,17 +173,9 @@ export const CAP_PHOTOS = {
     '69ad41721ce44afffca4eaf8_Rectangle_12': photoFile('d02-follow-up', 1024),          // 08 跟进
     '69ad417169d8a230caca089c_Rectangle_6': photoFile('p05-reorder', 480),              // 09 学习
   },
-  /* Growth OS (tools/blocks/cn-service.mjs): the four full-bleed night
-     backgrounds under the rows' 65% black wash, in row order (company
-     research, trade intelligence, reorder judgement, key decision roles).
-     GROWTH_ROWS[].art still names the hover thumbnail of a row with no
-     product screen. */
-  growth: [
-    photoFile('c11v2-company-research', 2880),
-    photoFile('c12-trade-intelligence'),
-    photoFile('c13-restock'),
-    photoFile('c14-decision-makers'),
-  ],
+  /* Growth OS (tools/blocks/cn-service.mjs): since 2026-10-23 the rows'
+     four full-bleed backgrounds are code-drawn (GROWTH_ROWS[].scene); the
+     night photographs C11v2-C14 are no longer placed. */
   /* Sales Desk (tools/blocks/qx-news.mjs, through SALES_ROWS): 统一询盘入口 and
      客户全景. The middle row keeps its product screen. */
   inbox: photoFile('c05-unified-inbox', 768),
@@ -236,7 +228,8 @@ export const BLOG_COVERS = {
  */
 export const INTEL_PHOTOS = {
   observe: photoFile('i01-observe-process', 2048),
-  closing: photoFile('i02-keep-or-revert', 768),
+  /* the closing card's picture (I02) is code-drawn since 2026-10-23: the
+     'improve' scene (js/stargo-motion-improve.js, tools/build-site.mjs lxPage) */
   phone: photoFile('i03-hand-phone-blank', 768),
 };
 
@@ -397,16 +390,19 @@ export const HOME_BLOG_COVERS = {
 
 /**
  * Capability page, Growth OS rows (tools/blocks/cn-service.mjs).
- * `art` was the full-bleed editorial id; since 2026-10-21 the full-bleed
- * backgrounds are the owner's photographs (CAP_PHOTOS.growth, C11-C14) and
- * `art` is only the hover thumbnail of a row whose `shot` (the hover
- * thumbnail's product stem) is null.
+ * `art` was the full-bleed editorial id; from 2026-10-21 the full-bleed
+ * backgrounds were the owner's photographs (C11v2-C14), and since 2026-10-23
+ * they are code-drawn scenes: `scene` names each row's background
+ * (js/stargo-motion-growth.js — 企业研究 a company file assembling, 贸易情报
+ * shipping lanes, 补货判断 PT Surya's order rhythm, 关键角色 the buying
+ * committee). `art` is only the hover thumbnail of a row whose `shot` (the
+ * hover thumbnail's product stem) is null.
  */
 export const GROWTH_ROWS = [
-  { art: 'brand-family-01', shot: null },
-  { art: OS_ART.salesDesk, shot: PRODUCT_IDS.growthStartThumb },
-  { art: OS_ART.loading, shot: PRODUCT_IDS.reorder },
-  { art: 'mobile-approvals', shot: PRODUCT_IDS.committee },
+  { art: 'brand-family-01', shot: null, scene: 'dossier' },
+  { art: OS_ART.salesDesk, shot: PRODUCT_IDS.growthStartThumb, scene: 'lanes' },
+  { art: OS_ART.loading, shot: PRODUCT_IDS.reorder, scene: 'rhythm' },
+  { art: 'mobile-approvals', shot: PRODUCT_IDS.committee, scene: 'committee' },
 ];
 
 /**

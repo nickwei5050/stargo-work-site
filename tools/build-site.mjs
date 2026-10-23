@@ -33,6 +33,7 @@ import { a11yPage } from './a11y.mjs';
 import { speedPage } from './speed.mjs';
 /* The owner's photographs on the blog and intelligence pages (group "blog", 2026-10-21). */
 import { BLOG_COVERS, INTEL_PHOTOS } from './replaceables.mjs';
+import { GROWTH_ROWS } from './replaceables.mjs'; // capgrowth: the Growth OS rows' background scenes
 
 /** The capability page's donor blocks, one module each in tools/blocks. */
 const CAP_BLOCKS = await loadBlocks();
@@ -1222,7 +1223,21 @@ function lxPage(spec, lang, name) {
      initial inline state; the alt is a marker that
      tools/editorial-images.mjs replaces with the photograph's own sentence,
      and the crop points are in css/stargo-fusion.css (the "blog" block). */
-  b = swapImg(b, '6936e930338bd07695b687e0_image%2026.avif', INTEL_PHOTOS.closing, { alt: 'STARGO WORK' });
+  /* 2026-10-23 (owner: 图片改成代码): the closing card's picture is the
+     code-drawn 'improve' scene (js/stargo-motion-improve.js) — runs are
+     logged with their corrections, a new outreach email is tested beside the
+     current one on a small sample, waits for approval and rolls out 10% →
+     50% → 100%, and a change that does worse is reverted with its failure
+     record kept, as the card's own sentence says. The host takes the
+     picture's class and IX2 id, so it fills the same box (the crop rules in
+     css/stargo-fusion.css key on the scene now). */
+  {
+    const re = /<img\b[^>]*6936e930338bd07695b687e0_image%2026\.avif[^>]*>/g;
+    const hits = b.match(re) ?? [];
+    if (hits.length !== 1 || !/class="lx-cta-image"/.test(hits[0])) throw new Error(`${name}: expected one closing-card picture (.lx-cta-image), found ${hits.length}`);
+    const id = /data-w-id="([^"]+)"/.exec(hits[0])?.[1];
+    b = b.replace(re, () => motionHost('improve', lang, 'lx-cta-image').replace('<div ', id ? `<div data-w-id="${id}" ` : '<div '));
+  }
   /* V7-LX: a screen layer is laid over the hand-held phone's screen of the
      "no writing" band. It covers the template composite's English interface
      and a video app's name. The layer is a sibling of the picture with the
@@ -1253,7 +1268,7 @@ function lxPage(spec, lang, name) {
     if (jargon) throw new Error(`${name}: architecture wording "${jargon[0]}" is back on the page`);
   }
   // the phone scenes: their styles after the page's own, their scripts at the end of the page
-  const mo = motionAssets(['feed', 'squad']);
+  const mo = motionAssets(['feed', 'squad', 'improve']);
   const FUSION = '<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>';
   const html = inMonoShell(b + bigMark() + '<script src="js/stargo-anchor-glide.js" defer></script>' + mo.js, ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
   if (html.split(FUSION).length !== 2) throw new Error(`${name}: expected one stargo-fusion.css link`);
@@ -2279,7 +2294,11 @@ function capabilityShowcase(C, lang) {
        page, so the donor sheets added here still load before the overrides. */
     /* The teamwork card of #story-6 is a code-drawn scene (CAP_V6A.team, tools/blocks/qx-projects.mjs);
        its sheets follow the donors', its scripts the page's own below. */
-    const motion = motionAssets(C.CAP_V6A.team.cards.map((c) => c.motion).filter(Boolean));
+    const motion = motionAssets([
+      ...C.CAP_V6A.team.cards.map((c) => c.motion).filter(Boolean),
+      /* capgrowth: the four backgrounds behind the Growth OS rows (tools/blocks/cn-service.mjs) */
+      ...GROWTH_ROWS.map((row) => row.scene),
+    ]);
     h = h.replace(monoLink, (m) => `${m}\n${sheets}\n<link href="css/donor-fonts.css" rel="stylesheet" type="text/css"/>\n${motion.css}`);
     // the app band (#apps, tools/app-suite.mjs) brings its own sheet
     h = h.replace('<link href="css/donor-fonts.css" rel="stylesheet" type="text/css"/>', (m) => `${m}\n<link href="css/stargo-apps.css" rel="stylesheet" type="text/css"/>`);

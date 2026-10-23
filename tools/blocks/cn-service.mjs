@@ -41,7 +41,8 @@
  * needs so the four photographs still sit above it.
  */
 import { setText, setTextAll, capability } from '../block-lib.mjs';
-import { GROWTH_ROWS, CAP_PHOTOS } from '../replaceables.mjs';
+import { GROWTH_ROWS } from '../replaceables.mjs';
+import { motionHost } from '../motion-scenes.mjs';
 
 export const donor = {
   id: 'cn-service',
@@ -68,16 +69,22 @@ export const donor = {
  * decision held at an approval point. tools/editorial-images.mjs writes the
  * variants, sizes and descriptions for them.
  *
- * Since 2026-10-21 the four backgrounds are the owner's night photographs
- * instead (ROW_BG, tools/replaceables.mjs CAP_PHOTOS.growth: an industrial
- * park from above, a container yard from above, a finished-goods rack wall, a
- * meeting seen through fluted glass). ROW_ART is left to the hover thumbnail
+ * From 2026-10-21 the four backgrounds were the owner's night photographs
+ * (C11v2-C14: an industrial park from above, a container yard from above, a
+ * finished-goods rack wall, a meeting seen through fluted glass), and since
+ * 2026-10-23 they are code-drawn scenes (ROW_SCENES below). ROW_ART is left to the hover thumbnail
  * of a row with no product screen (company research), which the manifest does
  * not name and which keeps its editorial art.
  */
 const ROW_ART = GROWTH_ROWS.map((row) => row.art);
-const ROW_BG = CAP_PHOTOS.growth;
-if (ROW_BG.length !== GROWTH_ROWS.length) throw new Error('cn-service: one background photograph per row');
+/* Since 2026-10-23 (owner: 图片改成代码) the four backgrounds are code-drawn
+   scenes instead of the night photographs (GROWTH_ROWS[].scene,
+   js/stargo-motion-growth.js): 企业研究 a company file assembling with its
+   sources, 贸易情报 shipping lanes and a buyer's records, 补货判断 PT Surya's
+   order rhythm reaching the 60-day window, 关键角色 the buying committee and
+   who decides. Exported for the page's script and style tags. */
+export const ROW_SCENES = GROWTH_ROWS.map((row) => row.scene);
+if (ROW_SCENES.some((n) => !n)) throw new Error('cn-service: one background scene per row');
 
 /* Since 2026-09-18 a row's hover thumbnail is the owner's own screen for that
    topic (tools/imagegen/product-assets.json). From 2026-09-22 the two older
@@ -304,15 +311,24 @@ export function render(frag, ctx) {
 
   /* -------------------------------------------- the crossfade backgrounds -- */
 
-  /* Four `.service-bg-image._0N`, one per row and in row order; each shows the
-     owner's photograph for that row (ROW_BG), the thumbnail its product
-     screen. The row's name stands as the alt until tools/editorial-images.mjs
-     writes the photograph's own sentence. */
+  /* Four `.service-bg-image._0N`, one per row and in row order. Each becomes
+     the row's code-drawn scene (ROW_SCENES): an empty host the motion engine
+     fills, carrying the picture's two classes, because the row hover (IX2,
+     by selector `.cn-service-bg-image.cn-_0N`) fades exactly that element in
+     and out, and cinery's rules place it full-bleed and hide _02-_04 below
+     992. The runner only ticks a host that is visible, so only the hovered
+     row's scene moves. The pictures' data-w-id is left off: no interaction
+     addresses them by it, and js/stargo-ix-arrival.js, which reveals any
+     `[data-w-id]` above the fold still holding an inline opacity, set all four
+     to 1 whenever the reader arrived below the section (an anchor, a reload),
+     so every background showed at once — and every scene would tick. */
   let n = 0;
   const back = tail.replace(/<img\b[^>]*alt="Image - Cinery Template"[^>]*>/g, (tag) => {
     const i = n++;
-    if (!ROW_BG[i]) throw new Error(`cn-service: no background photograph for row ${i + 1}`);
-    return toArt(tag, ROW_BG[i]).replace(DONOR_ALT, `alt="${escapeHtml(plain[i] ?? '')}"`);
+    if (!ROW_SCENES[i]) throw new Error(`cn-service: no background scene for row ${i + 1}`);
+    const cls = /class="([^"]+)"/.exec(tag)?.[1];
+    if (!/^cn-service-bg-image cn-_0\d$/.test(cls ?? '')) throw new Error(`cn-service: background ${i + 1} is not the donor's .service-bg-image`);
+    return motionHost(ROW_SCENES[i], lang, cls);
   });
   if (n !== 4) throw new Error(`cn-service: expected four background images behind the rows, found ${n}`);
   if (/assets\/cinery\//.test(back)) throw new Error('cn-service: a cinery photograph survived behind the rows');

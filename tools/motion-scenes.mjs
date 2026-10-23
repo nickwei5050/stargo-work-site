@@ -53,6 +53,29 @@ export const MOTION_LABEL = {
     zh: '动态示意（演示数据）：一项任务在手机上组队，统筹、研究、销售、产品、创意分头推进、互相提问；你暂停后，任务卡留着已完成什么、在等什么、由谁拍板，继续后从中断的那一步接着做，最后汇总交你确认。',
     en: 'Illustrative motion (demo data): a task forms its team on the phone — lead, research, sales, product and creative split the work and ask each other; when you pause it, the task keeps what is done, what is waiting and who decides, then picks up at the step where it stopped and hands you the summary to confirm.',
   },
+  /* capgrowth (2026-10-23): the four full-bleed backgrounds of the capabilities page's Growth OS rows
+     (tools/blocks/cn-service.mjs; js/stargo-motion-growth.js), in row order, and the closing card of
+     intelligence.html (tools/build-site.mjs lxPage; js/stargo-motion-improve.js). */
+  dossier: {
+    zh: '动态示意（演示数据）：Growth OS 为一家德国储能集成商建企业档案——官网、主营产品、认证、市场与渠道、新闻逐项汇总，每项注明来源和更新时间；只有一个来源的员工规模标为待核实。',
+    en: 'Illustrative motion (demo data): Growth OS builds a file on a German storage integrator — website, products, certifications, markets and channels, news — each fact with its source and date; the company size, found in one source only, is marked to verify.',
+  },
+  lanes: {
+    zh: '动态示意（演示数据）：点阵世界地图上，从宁波、深圳、钦州、海防出发的海运航线通往汉堡、休斯敦、雅加达、杰贝阿里和拉各斯；每条航线依次显示买家的采购记录和供应商变化。',
+    en: 'Illustrative motion (demo data): on a dotted world map, shipping lanes run from Ningbo, Shenzhen, Qinzhou and Haiphong to Hamburg, Houston, Jakarta, Jebel Ali and Lagos; each in turn shows the buyer’s purchase records and supplier changes.',
+  },
+  rhythm: {
+    zh: '动态示意（演示数据）：PT Surya Energi 过去四次下单约每 60 天一次；距上次下单的天数逐日增加，到 60 天进入补货窗口，建议联系，跟进草稿等你确认。',
+    en: 'Illustrative motion (demo data): PT Surya Energi has ordered about every 60 days; the days since its last order count up to 60 and reach the restock window, so a check-in is suggested and the draft waits for your OK.',
+  },
+  committee: {
+    zh: '动态示意（演示数据）：一家德国买家的采购决策链——采购经理发起需求，技术负责人评估规格，财务总监批预算，总经理拍板，每人注明身份依据；你确认后才交给 Sales Desk。',
+    en: 'Illustrative motion (demo data): a German buyer’s buying committee — the purchasing manager raises the need, the head of engineering checks the spec, the finance director holds the budget and the managing director decides, each with the source that identifies them; it goes to Sales Desk only after you confirm.',
+  },
+  improve: {
+    zh: '动态示意（演示数据）：每次执行都记下结果和人工修正；新版开发信先在小样本上和现行版本对比，停在等你批准，批准后按 10%、50%、100% 逐步采用；另一项改动效果不好，被撤回，失败记录留作修复依据。',
+    en: 'Illustrative motion (demo data): every run logs its result and any human correction; a new outreach email is tested against the current one on a small sample and stops for your approval, then rolls out to 10%, 50% and 100%; another change does worse, is reverted, and its failure record is kept for the fix.',
+  },
 };
 
 export function motionHost(scene, lang, extraClass = '', { fit } = {}) {
@@ -86,9 +109,16 @@ export const SCENE_FILE = {
   team: 'team',
   feed: 'phone',
   squad: 'phone',
+  dossier: 'growth',
+  lanes: 'growth',
+  rhythm: 'growth',
+  committee: 'growth',
+  improve: 'improve',
 };
 /* scene files that ship their own stylesheet */
 export const SCENE_CSS = new Set([
   'team',
   'phone',
+  'growth',
+  'improve',
 ]);
