@@ -35,7 +35,7 @@
     var c = e.__sg || (e.__sg = {});
     if (c[k] === v) return;
     c[k] = v;
-    if (k === 'text') e.textContent = v;
+    if (k === 'text') { var f = e.firstChild; if (f && f.nodeType === 3 && !f.nextSibling) f.data = v; else e.textContent = v; }
     else if (k === 'cls') e.setAttribute('class', v);
     else if (k.charAt(0) === '-') e.style.setProperty(k.slice(1), v);
     else e.setAttribute(k, v);
@@ -103,11 +103,12 @@
       // measured in the host's own pixels, so nothing ends up off screen.
       var fw = w, fh = h;
       if (viewportFit) {
-        var k = host.getBoundingClientRect().width / w || 1;
-        fw = Math.min(w, window.innerWidth / k);
-        fh = Math.min(h, window.innerHeight / k);
+        var k = host.getBoundingClientRect().width / w || 1, vw = window.innerWidth / k, vh = window.innerHeight / k;
+        // from tablet up, lay out for the whole screen (so the layout does not change while the band
+        // zooms), keeping clear of the band's own captions at the top and bottom of the screen
+        if (window.innerWidth >= 768) { fw = vw; fh = vh - 170 / k; } else { fw = Math.min(w, vw); fh = Math.min(h, vh); }
       }
-      var name = scene.pick(fw, fh);
+      var name = scene.pick(fw, fh, viewportFit ? window.innerWidth : fw);
       if (name !== layout) {
         layout = name;
         stage.textContent = '';
@@ -124,17 +125,26 @@
       if (tr !== lastFit) { stage.style.transform = tr; lastFit = tr; }
       return true;
     }
+    var shown = true, visT = 0;
     function frame(now) {
       raf = 0;
-      if (!visible || document.hidden || reduced.matches) { last = 0; return; }
+      if (!visible || document.hidden) { last = 0; return; }
+      if (viewportFit) fit();
+      if (reduced.matches) { last = 0; if (viewportFit) raf = requestAnimationFrame(frame); return; }
+      if (now - visT > 250) {
+        visT = now;
+        var sh = host.checkVisibility ? host.checkVisibility({ opacityProperty: true, visibilityProperty: true }) : true;
+        if (sh && !shown && scene.cue) t = scene.cue(t);
+        shown = sh;
+      }
+      if (!shown) { last = 0; raf = requestAnimationFrame(frame); return; }
       var dt = last ? Math.min((now - last) / 1000, 0.1) : 0;
       last = now; t += dt;
-      if (viewportFit) fit();
       if (built) scene.tick(t);
       raf = requestAnimationFrame(frame);
     }
     function wake() {
-      if (reduced.matches) { if (built) scene.tick(scene.still); return; }
+      if (reduced.matches) { if (built) scene.tick(scene.still); if (!viewportFit) return; }
       if (!raf && visible && !document.hidden) raf = requestAnimationFrame(frame);
     }
     host.classList.add('sg-mo-on');
@@ -157,34 +167,35 @@
     var CH = [
       { icon: 'mail', name: T('邮件', 'Email') },
       { icon: 'chat', name: 'WhatsApp' },
-      { icon: 'store', name: T('阿里国际站', 'Alibaba.com') },
-      { icon: 'form', name: T('官网表单', 'Website form') }
+      { icon: 'store', name: T('阿里国际站', 'Alibaba.com'), p: T('阿里国际站', 'Alibaba') },
+      { icon: 'form', name: T('官网表单', 'Website form'), p: T('官网表单', 'Web form') }
     ];
     var MSG = [
       ['Müller Energie GmbH', T('德国', 'Germany'), 'Please quote 200 pcs 48V 100Ah, DAP Hamburg.'],
-      ['Ahmed Al-Rashid', T('迪拜', 'Dubai'), 'Price for the 72V lithium pack? 50 units.'],
+      ['Ahmed Al-Rashid', T('阿联酋', 'UAE'), 'Price for the 72V lithium pack? 50 units.'],
       ['Silva Mobilidade', T('巴西', 'Brazil'), 'Can you do OEM label? What is the MOQ?'],
-      ['Nordic Mobility AB', T('瑞典', 'Sweden'), 'E-bike battery supplier wanted, 2,000/yr.'],
+      ['Nordic Mobility AB', T('瑞典', 'Sweden'), 'E-bike pack supplier wanted, 2,000/yr.'],
       ['PT Surya Energi', T('印尼', 'Indonesia'), 'Lead time for 64V 104Ah packs?'],
       ['Kowalski Sp. z o.o.', T('波兰', 'Poland'), 'Please send the catalogue and CE files.'],
       ['Lagos Power Ltd', T('尼日利亚', 'Nigeria'), 'Off-grid storage, 30 sets, CIF Lagos.'],
       ['Hanoi E-Moto JSC', T('越南', 'Vietnam'), 'Sample order first? 2 pcs 60V 30Ah.']
     ];
     var ST = [
-      { n: '01', name: T('找到客户', 'Find buyers') },
-      { n: '02', name: T('理解需求', 'Understand the need') },
-      { n: '03', name: T('推进订单', 'Move the order') },
-      { n: '04', name: T('制作内容', 'Make the content') },
-      { n: '05', name: T('管好经营', 'Run the business') }
+      { n: '01', name: T('找到客户', 'Find prospects'), p: T('找到客户', 'Prospects') },
+      { n: '02', name: T('理解需求', 'Understand needs'), p: T('理解需求', 'Needs') },
+      { n: '03', name: T('推进订单', 'Advance orders'), p: T('推进订单', 'Orders') },
+      { n: '04', name: T('制作内容', 'Create content'), p: T('制作内容', 'Content') },
+      { n: '05', name: T('管好经营', 'Coordinate work'), p: T('管好经营', 'Operations') }
     ];
-    var NEED = [['48V 100Ah', T('200 组', '200 pcs'), T('DAP 汉堡', 'DAP Hamburg')], ['72V 60Ah', T('50 组', '50 pcs'), T('FOB 广州', 'FOB Guangzhou')], ['OEM', 'MOQ 100', T('CIF 桑托斯', 'CIF Santos')], ['48V 30Ah', T('2,000 组/年', '2,000 / yr'), T('DAP 斯德哥尔摩', 'DAP Stockholm')],
-      ['64V 104Ah', T('问交期', 'Lead time'), 'FOB'], [T('产品目录', 'Catalogue'), T('CE 文件', 'CE files'), T('波兰', 'Poland')], [T('离网储能', 'Off-grid'), T('30 套', '30 sets'), T('CIF 拉各斯', 'CIF Lagos')], ['60V 30Ah', T('样品 2 组', '2 samples'), T('越南', 'Vietnam')]];  // what 理解需求 reads out of MSG[i]
-    var P = 1.45;          // a new inquiry every P seconds
+    var NEED = [['48V 100Ah', T('200 组', '200 pcs'), T('DAP 汉堡', 'DAP Hamburg')], ['72V', T('50 组', '50 pcs'), T('贸易术语 待确认', 'Incoterm?')], [T('OEM 贴牌', 'OEM label'), T('问 MOQ', 'MOQ?'), T('巴西', 'Brazil')], [T('电动自行车', 'E-bike'), T('2,000 组/年', '2,000 / yr'), T('瑞典', 'Sweden')],
+      ['64V 104Ah', T('问交期', 'Lead time?'), T('印尼', 'Indonesia')], [T('产品目录', 'Catalogue'), T('CE 文件', 'CE files'), T('波兰', 'Poland')], [T('离网储能', 'Off-grid'), T('30 套', '30 sets'), T('CIF 拉各斯', 'CIF Lagos')], ['60V 30Ah', T('样品 2 组', '2 samples'), T('越南', 'Vietnam')]];  // what 理解需求 reads out of MSG[i]
+    var P = 2.2;           // a new inquiry every P seconds
     var GATE = 2;          // the stage that passes the approval gate
 
     var L, R = {}, compact;
     var layouts = {
       wide: { w: 1600, h: 800 },
+      mid: { w: 1240, h: 700 },
       square: { w: 640, h: 680 },
       phone: { w: 400, h: 296 }   // the part of the phone band left visible above the next section's curve
     };
@@ -198,6 +209,14 @@
         g.outA = function (r) { return { p: [r.x, r.y + r.h / 2], d: [-1, 0] }; };
         g.ticker = { x: 800, y: 700 };
         g.tag = { x: 1516, y: 84 };
+      } else if (name === 'mid') {
+        g.core = { x: 620, y: 330, s: 0.8 };
+        g.inp = [0, 1, 2, 3].map(function (i) { return { x: 24, y: 120 + i * 110, w: 392, h: 92 }; });
+        g.out = [0, 1, 2, 3, 4].map(function (i) { return { x: 852, y: 86 + i * 102, w: 364, h: 86 }; });
+        g.inA = function (r) { return { p: [r.x + r.w, r.y + r.h / 2], d: [1, 0] }; };
+        g.outA = function (r) { return { p: [r.x, r.y + r.h / 2], d: [-1, 0] }; };
+        g.ticker = { x: 620, y: 620 };
+        g.tag = { x: 1216, y: 60 };
       } else if (name === 'phone') {
         g.core = { x: 200, y: 136, s: 0.36 };
         g.inp = [0, 1, 2, 3].map(function (i) { return { x: 10, y: 36 + i * 52, w: 114, h: 44 }; });
@@ -211,9 +230,10 @@
         g.core = { x: 320, y: 330, s: 0.62 };
         g.inp = [0, 1, 2, 3].map(function (i) { return { x: 16 + (i % 2) * 312, y: 34 + Math.floor(i / 2) * 74, w: 296, h: 62 }; });
         g.out = [0, 1, 2, 3, 4].map(function (i) { return { x: 16 + i * 122, y: 506, w: 112, h: 104 }; });
-        g.inA = function (r) { return { p: [r.x + r.w / 2, r.y + r.h], d: [0, 1] }; };
+        g.inA = function (r, i) { return i < 2 ? { p: [i === 0 ? r.x + r.w + 4 : r.x - 4, r.y + r.h / 2], d: [0, 1] } : { p: [r.x + r.w / 2, r.y + r.h], d: [0, 1] }; };
         g.outA = function (r) { return { p: [r.x + r.w / 2, r.y], d: [0, -1] }; };
         g.ticker = null;
+        g.status = { x: 320, y: 428 };
         g.tag = { x: 624, y: 664 };
       }
       return g;
@@ -224,11 +244,11 @@
     }
 
     function build(stage, _, name) {
-      compact = name !== 'wide';
+      compact = name !== 'wide' && name !== 'mid';
       var phone = name === 'phone';
       L = geometry(name);
-      R = { inp: [], out: [], parts: [], inPath: [], outPath: [] };
-      stage.className = 'sg-mo-stage sg-loop' + (compact ? ' is-compact' : '') + (phone ? ' is-phone' : '');
+      R = { inp: [], out: [], parts: [], inPath: [], outPath: [], phone: phone };
+      stage.className = 'sg-mo-stage sg-loop' + (compact ? ' is-compact' : '') + (phone ? ' is-phone' : '') + (name === 'mid' ? ' is-mid' : '');
       var svg = sv('svg', { class: 'sg-loop-svg', width: L.w, height: L.h, viewBox: '0 0 ' + L.w + ' ' + L.h }, stage);
       var defs = sv('defs', {}, svg);
       var g1 = sv('radialGradient', { id: 'sgl-halo' }, defs);
@@ -256,7 +276,7 @@
       // threads
       var threads = sv('g', { class: 'sg-loop-threads' }, svg);
       L.inp.forEach(function (r, i) {
-        var a = L.inA(r), c = corePoint([a.p[0], a.p[1]], 78 * L.core.s);
+        var a = L.inA(r, i), c = corePoint([a.p[0], a.p[1]], 78 * L.core.s);
         var p = curve(a.p, a.d, c.p, c.d, 0.5);
         R.inPath[i] = p;
         sv('path', { d: bezD(p), class: 'sg-thread' }, threads);
@@ -269,8 +289,8 @@
       });
 
       // approval gate on the order stage's thread
-      var gp = bez(R.outPath[GATE], 0.52);
-      R.gateU = 0.52;
+      R.gateU = name === 'square' ? 0.8 : 0.52;
+      var gp = bez(R.outPath[GATE], R.gateU);
       R.gate = sv('g', { class: 'sg-gate', transform: 'translate(' + gp[0] + ',' + gp[1] + ')' }, svg);
       R.gateRing = sv('circle', { r: 17, class: 'sg-gate-ring' }, R.gate);
       R.gateCore = sv('rect', { x: -7, y: -7, width: 14, height: 14, rx: 3, transform: 'rotate(45)', class: 'sg-gate-core' }, R.gate);
@@ -295,6 +315,7 @@
       R.starGlow = sv('path', { d: STAR, fill: '#f6c67f', filter: 'url(#sgl-blur)', opacity: '.75' }, R.orb);
       sv('path', { d: STAR, fill: 'url(#sgl-gold)' }, R.orb);
       R.wave = sv('circle', { r: 74, class: 'sg-wave' }, core);
+      svg.appendChild(R.gate); // the gate paints above the rings, under the particles
 
       // particles (pool)
       var pg = sv('g', {}, svg);
@@ -321,7 +342,7 @@
         var ic = el('div', 'sg-in-ico', c); icon(CH[i].icon, ic, phone ? 14 : 22);
         var body = el('div', 'sg-in-body', c);
         var top = el('div', 'sg-in-top', body);
-        el('span', 'sg-in-name', top, CH[i].name);
+        el('span', 'sg-in-name', top, phone && CH[i].p ? CH[i].p : CH[i].name);
         var badge = el('span', 'sg-in-new', top, T('新询盘', 'New'));
         var msg = el('div', 'sg-in-msg', body);
         var who = compact ? null : el('div', 'sg-in-who', body);
@@ -333,7 +354,7 @@
         var c = el('div', 'sg-card sg-out sg-out-' + i, stage);
         c.style.cssText = 'left:' + r.x + 'px;top:' + r.y + 'px;width:' + r.w + 'px;height:' + r.h + 'px';
         el('span', 'sg-out-n', c, ST[i].n);
-        el('div', 'sg-out-name', c, ST[i].name);
+        el('div', 'sg-out-name', c, phone ? ST[i].p : ST[i].name);
         var o = { c: c };
         if (!compact) {
           o.detail = el('div', 'sg-out-detail', c);
@@ -368,15 +389,11 @@
     }
 
     // the event that started at k*P
-    function ev(k) {
-      var ch = Math.floor(hash(k) * 4);
-      if (k > 0 && ch === Math.floor(hash(k - 1) * 4)) ch = (ch + 1) % 4;
-      var st = ((k % 5) + 5) % 5;
-      // each buyer writes on one channel (MSG[c] and MSG[c + 4] belong to channel c), so two cards never show the same message
-      return { k: k, t0: k * P, ch: ch, st: st, msg: MSG[ch + 4 * mod(Math.floor(k / 3), 2)], gate: st === GATE };
-    }
+    // an authored 8-beat script: [MSG index, stage]; MSG[c] and MSG[c + 4] write on channel c
+    var SEQ = [[0, 2], [1, 1], [2, 3], [3, 0], [4, 4], [5, 3], [6, 2], [7, 1]];
+    function ev(k) { var s = SEQ[mod(k, 8)]; return { k: k, t0: k * P, ch: s[0] % 4, st: s[1], msg: MSG[s[0]], gate: s[1] === GATE }; }
     // phases, relative to the event start
-    var IN0 = 0.18, IN1 = 1.0, OUT0 = 1.08, HOLD = 0.75;
+    var IN0 = 0.18, IN1 = 1.0, OUT0 = 1.08, HOLD = 1.4;
     function outEnd(e) { return e.gate ? OUT0 + 0.95 + HOLD : OUT0 + 0.85; }
     function where(e, tau) {
       if (tau < IN0) return null;
@@ -396,7 +413,7 @@
     function tick(t) {
       var kNow = Math.floor(t / P);
       // particles: the events still travelling
-      var slot = 0, hit = -1, gateWait = null, gateDone = -1;
+      var slot = 0, hit = -1, gateWait = null, gateDone = -1, gq = null;
       for (var k = kNow - 3; k <= kNow; k++) {
         var e = ev(k), tau = t - e.t0;
         if (tau < 0) continue;
@@ -404,6 +421,7 @@
         var w = where(e, tau);
         if (e.gate && tau >= OUT0 + 0.5 && tau < OUT0 + 0.5 + HOLD) gateWait = seg(tau, OUT0 + 0.5, OUT0 + 0.5 + HOLD);
         if (e.gate && tau >= OUT0 + 0.5 + HOLD && tau < OUT0 + 0.5 + HOLD + 0.9) gateDone = tau - (OUT0 + 0.5 + HOLD);
+        if (e.gate && tau >= OUT0 && tau < outEnd(e)) gq = e;
         if (!w || slot >= R.parts.length) continue;
         drawPart(R.parts[slot++], w);
       }
@@ -425,7 +443,11 @@
       cl(R.gate, 'is-wait', gw);
       cl(R.gate, 'is-ok', gd && !gw);
       put(R.gateRing, 'transform', gw ? 'scale(' + (1 + 0.12 * Math.sin(t * 9)).toFixed(3) + ')' : 'scale(1)');
-      put(R.gateLabel, 'text', gw ? T('等你拍板', 'Your call') : gd ? T('已批准', 'Approved') : T('人工审批', 'Approval'));
+      put(R.gateLabel, 'text', gw ? T('等你拍板', 'Your call') : gd ? T('你已批准', 'You approved') : T('人工审批', 'Approval'));
+      var okNow = gd && !gw;
+      if (okNow && !R.wasOk && R.gateCore.animate) R.gateCore.animate([{ transform: 'rotate(45deg) scale(1)' }, { transform: 'rotate(45deg) scale(1.45)' }, { transform: 'rotate(45deg) scale(1)' }], { duration: 240, easing: 'ease-out' });
+      R.wasOk = okNow;
+      cl(R.out[GATE].c, 'is-wait', gw);
 
       // channel cards: lit while their inquiry is fresh; message = the latest one
       var latestIn = [null, null, null, null];
@@ -436,8 +458,15 @@
         cl(o.c, 'is-on', age < 1.1);
         cl(o.badge, 'is-on', age < 1.6);
         var m = e3 ? e3.msg : MSG[i];
-        textSwap(o.msg, m[2]);
-        if (o.who) put(o.who, 'text', m[0] + ' · ' + m[1]);
+        // message and sender change together, as one new record
+        var kk = e3 ? e3.k : -1;
+        if (o.k !== kk) {
+          var fl = o.k !== undefined;
+          o.k = kk;
+          put(o.msg, 'text', m[2]);
+          if (o.who) put(o.who, 'text', m[0] + ' · ' + m[1]);
+          if (fl) { flash(o.msg); if (o.who) flash(o.who); }
+        }
       });
 
       // stage cards
@@ -450,12 +479,13 @@
         if (i === 0) textSwap(o.detail, T('新增候选 ', '+') + (8 + mod(n, 7)) + T(' 家 · 最高匹配 ', ' prospects · best fit ') + (88 + mod(n, 9)) + '%');
         if (i === 1) {
           var need = NEED[e5 ? MSG.indexOf(e5.msg) : 0];
-          o.chips.forEach(function (c, j) { put(c, 'text', need[j]); cl(c, 'is-in', age > 0.12 * j); });
+          o.chips.forEach(function (c, j) { put(c, 'text', need[j]); cl(c, 'is-ask', /待确认|\?|^问/.test(need[j])); cl(c, 'is-in', age > 0.15 + 0.1 * j); });
         }
         if (i === 2) {
           // quote steps: drafted · approved · sent
-          o.steps.forEach(function (st, j) { cl(st, 'is-on', j === 0 || !gw); });
-          textSwap(o.detail, T('报价 v', 'Quote v') + (2 + mod(Math.floor(n / 5), 3)) + ' · ' + (gw ? T('等你审批', 'awaiting your approval') : age < 2.4 ? T('已批准，已发给客户', 'approved and sent') : T('已发送 · 等客户回复', 'sent · awaiting the buyer')));
+          var q = gq || e5, ph = gq ? (t - gq.t0 < OUT0 + 0.5 + HOLD ? 0 : 1) : age < 2.4 ? 2 : 3;
+          o.steps.forEach(function (st, j) { cl(st, 'is-on', j === 0 || (j === 1 && ph > 0) || (j === 2 && ph > 1)); });
+          textSwap(o.detail, T('报价 v', 'Quote v') + (q ? 2 + mod(q.k, 3) : 2) + ' · ' + [T('等你审批', 'needs your OK'), T('已批准 · 发送中', 'approved · sending'), T('已批准，已发给客户', 'approved, sent'), T('已发送 · 等客户回复', 'awaiting buyer')][ph]);
         }
         if (i === 3) {
           var pr = age < 99 ? ease.out(c01(age / 1.4)) : 1;
@@ -466,14 +496,15 @@
           var dr = age < 99 ? ease.out(c01(age / 1.2)) : 1;
           put(o.spark, 'stroke-dashoffset', (100 - 100 * dr).toFixed(1));
           put(o.sparkDot, 'opacity', dr > 0.95 ? '1' : '0');
-          textSwap(o.detail, T('本周询盘 +', 'Inquiries this week +') + (12 + mod(n, 9)) + T('% · 回复更快', '% · faster replies'));
+          textSwap(o.detail, T('本周询盘 +', 'Inquiries +') + (12 + mod(n, 9)) + T('% · 回复更快', '% this week'));
         }
       });
 
       // status line under the core
       var cur = ev(kNow), ct = t - cur.t0;
-      var who = cur.msg[0];
-      put(R.status, 'text', ct < IN1 ? T('收到 · ', 'Received · ') + who : T('交给 · ', 'Routed to · ') + ST[cur.st].name);
+      var se = ct >= IN1 - 0.1 ? cur : ev(kNow - 1);
+      // the gate says 等你拍板 itself, except on phones where its label is hidden
+      textSwap(R.status, gw && gq ? (R.phone ? T('等你拍板 · ', 'Your call · ') + gq.msg[0] : gq.msg[0] + ' → ' + ST[gq.st].name) : se.msg[0] + ' → ' + ST[se.st].name);
       // ticker
       if (R.tick) {
         var arrivedCount = kNow + (t - cur.t0 >= IN1 ? 1 : 0);
@@ -513,9 +544,9 @@
 
     return {
       layouts: layouts,
-      pick: function (w, h) { return w / h > 1.2 && w > 560 ? 'wide' : w / h > 1.1 ? 'phone' : 'square'; },
+      pick: function (w, h, sw) { return w / h > 1.2 && w > 560 ? (sw < 1400 ? 'mid' : 'wide') : w / h > 1.1 ? 'phone' : 'square'; },
       // start a few events in, so the cards and counters are already alive
-      build: build, tick: tick, still: 5 * P + 1.2, start: 4 * P + 0.3
+      build: build, tick: tick, still: 6 * P + 2.28, start: 4 * P + 0.3
     };
   }
 
@@ -528,19 +559,19 @@
     var HOME = [109.4, 24.3];
     var B = [
       ['DE', [10.0, 53.55], 'Nordwerk Energie GmbH', T('储能系统集成', 'Storage integrator'), T('汉堡', 'Hamburg'), 94, T('近 90 天发布 3 条储能招标，产品线与 48V 100Ah 高度匹配，建议优先联系采购经理。', 'Three storage tenders in 90 days and a product line that fits 48V 100Ah. Contact the purchasing manager first.')],
-      ['US', [-95.37, 29.76], 'Gulf Coast Lift Supply', T('叉车与仓储', 'Forklifts & warehousing'), T('休斯敦', 'Houston'), 91, T('车队正在换锂电，近期招聘采购专员，可先发 24V/48V 叉车电池资料。', 'Fleet moving to lithium and hiring a buyer. Send the 24V/48V forklift range.')],
-      ['BR', [-46.63, -23.55], 'Silva Mobilidade Ltda', T('电动两轮', 'E-two-wheelers'), T('圣保罗', 'São Paulo'), 89, T('新开 12 家门店，正在找 60V/72V 电池的第二供应商。', '12 new stores and looking for a second 60V/72V supplier.')],
+      ['US', [-95.37, 29.76], 'Gulf Coast Lift Supply', T('叉车与仓储', 'Forklift fleets'), T('休斯敦', 'Houston'), 91, T('车队正在换锂电，近期招聘采购专员，可先发 24V/48V 叉车电池资料。', 'Fleet moving to lithium and hiring a buyer. Send the 24V/48V forklift range.')],
+      ['BR', [-46.63, -23.55], 'Silva Mobilidade Ltda', T('电动两轮', 'E-scooters'), T('圣保罗', 'São Paulo'), 89, T('新开 12 家门店，正在找 60V/72V 电池的第二供应商。', '12 new stores and looking for a second 60V/72V supplier.')],
       ['AE', [55.27, 25.2], 'Gulf Solar Trading', T('光伏储能', 'Solar storage'), T('迪拜', 'Dubai'), 88, T('中标两个离网项目，需求与储能系列一致，交期是关键。', 'Won two off-grid projects; matches the storage series, lead time decides.')],
       ['SE', [18.07, 59.33], 'Nordic Mobility AB', T('电动自行车', 'E-bikes'), T('斯德哥尔摩', 'Stockholm'), 93, T('年采购约 2,000 组，官网列出 CE 与 UN38.3 要求，我们资料齐全。', 'About 2,000 packs a year; asks for CE and UN38.3, which we have.')],
-      ['ID', [106.85, -6.2], 'PT Surya Energi', T('电动三轮', 'E-tricycles'), T('雅加达', 'Jakarta'), 90, T('三轮车出口量增长 40%，64V 104Ah 与其车型匹配。', 'Tricycle exports up 40%; 64V 104Ah fits their models.')],
-      ['PL', [21.01, 52.23], 'Wolt-Bike Sp. z o.o.', T('电动自行车', 'E-bikes'), T('华沙', 'Warsaw'), 86, T('正在扩产，LinkedIn 上新任采购总监，适合首封开发信。', 'Expanding, with a new purchasing director: a good first email.')],
+      ['ID', [106.85, -6.2], 'PT Surya Energi', T('电动三轮', 'E-tricycles'), T('雅加达', 'Jakarta'), 90, T('电动三轮销量增长 40%，64V 104Ah 与其车型匹配。', 'Tricycle sales up 40%; 64V 104Ah fits their models.')],
+      ['PL', [21.01, 52.23], 'Wisła E-Bike Sp. z o.o.', T('电动自行车', 'E-bikes'), T('华沙', 'Warsaw'), 86, T('正在扩产，LinkedIn 显示新任采购总监到岗，适合首封开发信。', 'Expanding, with a new purchasing director: a good first email.')],
       ['AU', [151.2, -33.87], 'Harbour Off-Grid Pty', T('房车储能', 'RV storage'), T('悉尼', 'Sydney'), 92, T('房车改装业务需要 12V 100Ah，询价历史显示偏好 LiFePO4。', 'RV conversions need 12V 100Ah; past requests prefer LiFePO4.')],
-      ['MX', [-99.13, 19.43], 'Movilidad Verde SA', T('物流车队', 'Delivery fleets'), T('墨西哥城', 'Mexico City'), 87, T('城配车队电动化，预算已批，Q3 采购窗口。', 'Electrifying city delivery; budget approved, buying in Q3.')],
+      ['MX', [-99.13, 19.43], 'Movilidad Verde SA', T('物流车队', 'Delivery fleets'), T('墨西哥城', 'Mexico City'), 87, T('城配车队电动化，预算已批，下季度采购。', 'Electrifying city delivery; budget approved, buying next quarter.')],
       ['NG', [3.38, 6.52], 'Lagos Power Ltd', T('离网储能', 'Off-grid storage'), T('拉各斯', 'Lagos'), 85, T('离网储能需求旺，曾询价 30 套，适合 CIF 报价。', 'Strong off-grid demand; asked for 30 sets before, quote CIF.')],
       ['SA', [46.7, 24.7], 'Najd Energy Co.', T('通信备电', 'Telecom backup'), T('利雅得', 'Riyadh'), 84, T('通信基站备电改造项目启动，48V 机架式产品匹配。', 'Telecom backup retrofit started; 48V rack packs fit.')],
-      ['VN', [105.85, 21.03], 'Hanoi E-Moto JSC', T('电摩', 'E-motorbikes'), T('河内', 'Hanoi'), 88, T('先要 2 个样品测试，适合样品单起步。', 'Wants 2 samples first: start with a sample order.')]
+      ['ZA', [18.42, -33.92], 'Table Bay Power (Pty) Ltd', T('家用备电', 'Home backup'), T('开普敦', 'Cape Town'), 88, T('限电推高备电需求，48V 机架式储能匹配，可先寄样品。', 'Load-shedding drives backup demand; 48V rack packs fit. Offer samples first.')]
     ];
-    var P = 2.6;
+    var P = 5.6;
     var L, R, mode;
     var layouts = { wide: { w: 1600, h: 900 }, compact: { w: 800, h: 450 }, mini: { w: 380, h: 214 } };
 
@@ -573,10 +604,6 @@
       sv('circle', { cx: h[0], cy: h[1], r: 26, fill: 'url(#sgr-glow-' + mode + ')' }, g);
       R.homeRing = sv('circle', { cx: h[0], cy: h[1], r: 10, class: 'sg-home-ring' }, g);
       sv('circle', { cx: h[0], cy: h[1], r: 4.5, class: 'sg-home' }, g);
-      if (mode !== 'mini') {
-        var hl = sv('text', { x: h[0], y: h[1] + 30 * R.inv, 'text-anchor': 'middle', class: 'sg-map-label is-home', style: 'font-size:' + (13 * R.inv).toFixed(1) + 'px' }, g);
-        hl.textContent = T('柳州工厂', 'Liuzhou factory');
-      }
       R.arcs = []; R.pins = [];
       for (var a = 0; a < 6; a++) {
         R.arcs.push({ p: sv('path', { class: 'sg-arc-line', pathLength: 100, 'stroke-width': (1.5 * R.inv).toFixed(2) }, g), dot: sv('circle', { r: (2.6 * R.inv).toFixed(2), class: 'sg-arc-dot' }, g) });
@@ -586,6 +613,12 @@
         if (mode !== 'mini') { o.lab = sv('g', { class: 'sg-pin-lab' }, inner); o.labBg = sv('rect', { x: 10, y: -30, height: 24, rx: 12 }, o.lab); o.labT = sv('text', { x: 21, y: -13.5 }, o.lab); }
         R.pins.push(o);
       }
+      // the factory label and the newest pin paint above every arc
+      if (mode !== 'mini') {
+        var hl = sv('text', { x: h[0], y: h[1] + 30 * R.inv, 'text-anchor': 'middle', class: 'sg-map-label is-home', style: 'font-size:' + (13 * R.inv).toFixed(1) + 'px;stroke-width:' + (4 * R.inv).toFixed(1) + 'px' }, g);
+        hl.textContent = T('柳州工厂', 'Liuzhou factory');
+      }
+      g.appendChild(R.pins[0].g);
       // KPIs
       if (mode !== 'mini') {
         var k = el('div', 'sg-kpis', stage);
@@ -597,21 +630,21 @@
         // one floating card: the newest prospect
         R.card = el('div', 'sg-float', stage);
         R.cardCc = el('span', 'sg-cc', R.card);
-        var m = el('div', 'sg-row-main', R.card);
+        var m = R.cardMain = el('div', 'sg-row-main', R.card);
         R.cardName = el('b', '', m); R.cardSub = el('span', '', m);
-        var sc = el('div', 'sg-float-score', R.card);
+        var sc = R.cardScoreBox = el('div', 'sg-float-score', R.card);
         el('span', '', sc, T('匹配', 'Fit'));
         R.cardScore = el('b', '', sc);
       } else {
         var list = el('div', 'sg-list', stage);
         var head = el('div', 'sg-list-head', list);
         el('b', '', head, T('候选客户', 'Prospects'));
-        el('span', '', head, T('按匹配度 · 实时', 'By fit · live'));
+        el('span', '', head, T('最新发现 · 按匹配度', 'Newest · by fit'));
         R.listBody = el('div', 'sg-list-body', list);
         R.rowH = mode === 'wide' ? 92 : 70; R.rowGap = mode === 'wide' ? 10 : 8; R.rowsMax = mode === 'wide' ? 5 : 3;
         var ai = el('div', 'sg-ai', stage);
         var ah = el('div', 'sg-ai-head', ai); icon('spark', ah, mode === 'wide' ? 18 : 15); R.aiWho = el('span', '', ah);
-        R.aiText = el('div', 'sg-ai-text', ai);
+        R.aiText = el('div', 'sg-ai-text', ai); R.aiTyped = el('span', '', R.aiText); R.aiRest = el('span', 'sg-ai-rest', R.aiText);
         if (mode === 'wide') {
           var btns = el('div', 'sg-ai-btns', ai);
           R.btn = el('span', 'sg-btn is-primary', btns);
@@ -623,7 +656,8 @@
         el('b', '', nt, T('发开发信前', 'Before any outreach'));
         el('span', '', nt, T('数量和花费会先请你确认', 'you confirm quantity and cost'));
       }
-      el('div', 'sg-tag', stage, T('动态示意 · 演示数据', 'Illustrative motion · demo data'));
+      var tg = el('div', 'sg-tag', mode === 'compact' ? null : stage, T('动态示意 · 演示数据', 'Illustrative motion · demo data'));
+      if (mode === 'compact') bar.insertBefore(tg, live);
     }
 
     function arcPath(a, b) {
@@ -655,20 +689,25 @@
         var draw = ease.io(seg(tau, 0, 1.0));
         put(A.p, 'stroke-dashoffset', (100 - 100 * draw).toFixed(1));
         var fade = Math.max(0, 1 - s * 0.17);
-        put(A.p, 'opacity', (s === 0 ? 1 : fade * 0.5).toFixed(2));
+        var out = s === 0 ? 0 : ease.out(seg(tau, P, P + 0.6));
+        put(A.p, 'opacity', (1 - out * (1 - fade * 0.5)).toFixed(2));
         var dp = q(ap, draw);
         put(A.dot, 'cx', dp[0].toFixed(1)); put(A.dot, 'cy', dp[1].toFixed(1));
         put(A.dot, 'opacity', draw > 0 && draw < 1 ? '1' : '0');
         put(pin.g, 'transform', 'translate(' + to[0].toFixed(1) + ',' + to[1].toFixed(1) + ')');
         var landed = tau >= 1.0;
-        put(pin.g, 'opacity', landed ? fade.toFixed(2) : '0');
+        put(pin.g, 'opacity', landed ? (1 - out * (1 - fade)).toFixed(2) : '0');
         var rp = seg(tau, 1.0, 2.2);
         put(pin.rip, 'transform', 'scale(' + (1 + 3.2 * ease.out(rp)).toFixed(3) + ')');
         put(pin.rip, 'opacity', s === 0 && landed ? (0.9 * (1 - rp)).toFixed(2) : '0');
         if (pin.lab) {
           var lab = b[4] + ' · ' + b[5];
           if (!pin.labT.__sg || pin.labT.__sg.text !== lab) { put(pin.labT, 'text', lab); put(pin.labBg, 'width', String(Math.ceil(22 + pin.labT.getComputedTextLength()))); }
-          put(pin.lab, 'opacity', s === 0 ? seg(tau, 1.05, 1.4).toFixed(2) : '0');
+          // east of the factory the label opens to the left, and below the pin when the pin is south of it
+          var lw = +pin.labBg.getAttribute('width'), east = to[0] > MAP.w * 0.75, below = east && to[1] > R.home[1] + 12;
+          put(pin.labBg, 'x', east ? String(-10 - lw) : '10'); put(pin.labT, 'x', east ? String(1 - lw) : '21');
+          put(pin.labBg, 'y', below ? '8' : '-30'); put(pin.labT, 'y', below ? '24.5' : '-13.5');
+          put(pin.lab, 'opacity', (s === 0 ? seg(tau, 1.05, 1.4) : 1 - seg(tau, P, P + 0.3)).toFixed(2));
         }
       }
       var ph = (t * 0.8) % 1;
@@ -676,10 +715,15 @@
       put(R.homeRing, 'opacity', (0.8 * (1 - ph)).toFixed(2));
 
       var top = t - kNow * P >= 1.05 ? kNow : kNow - 1;
-      var cur = buyer(top), tauTop = t - top * P;
+      var cur = buyer(top), tauTop = t - top * P, td = Array.from(cur[6]).length / (ZH ? 20 : 45);
       if (R.card) {
-        var bb = buyer(Math.max(top, 0));
-        put(R.cardCc, 'text', bb[0]); textSwap(R.cardName, bb[2]); put(R.cardSub, 'text', bb[3] + ' · ' + bb[4]); put(R.cardScore, 'text', String(bb[5]));
+        var bi = Math.max(top, 0), bb = buyer(bi);
+        if (R.card.__k !== bi) {
+          var f2 = R.card.__k !== undefined;
+          R.card.__k = bi;
+          put(R.cardCc, 'text', bb[0]); put(R.cardName, 'text', bb[2]); put(R.cardSub, 'text', bb[3] + ' · ' + bb[4]); put(R.cardScore, 'text', String(bb[5]));
+          if (f2) [R.cardCc, R.cardMain, R.cardScoreBox].forEach(flash);
+        }
         cl(R.card, 'is-new', tauTop < 2.0);
       }
       if (R.listBody) {
@@ -695,27 +739,29 @@
           var idx = want[kk2], r = R.rows[kk2];
           if (!r) {
             r = R.rows[kk2] = rowEl(+kk2);
-            r.style.transform = 'translateY(' + (Math.max(idx, 0) * (R.rowH + R.rowGap) - 18) + 'px) scale(.97)';
+            r.style.transform = 'translateY(' + (Math.max(idx, 0) * (R.rowH + R.rowGap) + 14) + 'px) scale(.97)';
             r.style.opacity = '0';
             R.listBody.appendChild(r);
             r.getBoundingClientRect();
           }
           if (idx >= 0) css(r, 'transform', 'translateY(' + idx * (R.rowH + R.rowGap) + 'px)');
           css(r, 'opacity', idx < 0 ? '0' : '1');
-          cl(r, 'is-new', +kk2 === top && tauTop < 2.2);
+          cl(r, 'is-out', idx < 0);
+          cl(r, 'is-new', +kk2 === top);
         }
         put(R.aiWho, 'text', T('AI 判断 · ', 'AI reasoning · ') + cur[2]);
-        put(R.aiText, 'text', typed(cur[6], seg(tauTop, 1.1, 2.2)));
-        cl(R.aiText, 'is-typing', tauTop < 2.3);
+        var shownAi = typed(cur[6], seg(tauTop, 1.2, 1.2 + td));
+        put(R.aiTyped, 'text', shownAi); put(R.aiRest, 'text', cur[6].slice(shownAi.length));
+        cl(R.aiTyped, 'is-typing', tauTop < 1.3 + td);
       }
       if (R.btn) {
-        var pressed = tauTop >= 2.25;
+        var pressed = tauTop >= 1.7 + td;
         put(R.btn, 'text', pressed ? T('已加入开发名单 ✓', 'Added to the list ✓') : T('加入开发名单', 'Add to outreach list'));
-        cl(R.btn, 'is-press', tauTop >= 2.15 && tauTop < 2.35);
+        cl(R.btn, 'is-press', tauTop >= 1.6 + td && tauTop < 1.8 + td);
         cl(R.btn, 'is-done', pressed);
       }
       if (R.kpi) {
-        put(R.kpi[0], 'text', fmt(12480 + t * 47));
+        put(R.kpi[0], 'text', fmt(12480 + Math.floor(t * 4) * 12));
         textSwap(R.kpi[1], fmt(118 + top));
         textSwap(R.kpi[2], fmt(31 + Math.floor(top * 0.6)));
       }
@@ -724,7 +770,7 @@
     return {
       layouts: layouts,
       pick: function (w) { return w >= 1100 ? 'wide' : w >= 560 ? 'compact' : 'mini'; },
-      build: build, tick: tick, still: 4 * P + 2.5, start: 3 * P + 0.4
+      build: build, tick: tick, still: 4 * P + 4.4, start: 3 * P + 0.4, cue: function (t) { return Math.ceil(t / P) * P; }
     };
   }
 
@@ -734,19 +780,20 @@
      ===================================================================== */
   function StudioScene() {
     var V = [
-      { key: 'studio', label: T('主图 · 白底 1:1', 'Main image · white 1:1'), prompt: T('白底主图，柔光，45° 俯拍，突出铭牌', 'White background, soft light, 45° view, show the label') },
-      { key: 'ware', label: T('场景图 · 仓库 16:9', 'Scene · warehouse 16:9'), prompt: T('仓库场景，暖色灯光，叉车旁，真实质感', 'Warehouse, warm light, next to a forklift, realistic') },
-      { key: 'solar', label: T('场景图 · 户外储能', 'Scene · outdoor storage'), prompt: T('户外光伏储能，日落，电池放在支架上', 'Outdoor solar storage at sunset, pack on a stand') },
-      { key: 'city', label: T('短视频 · 15 秒', 'Short video · 15 s'), prompt: T('城市夜景，电动车充电，镜头缓慢推近', 'City at night, e-bike charging, slow push-in') }
+      { key: 'studio', label: T('主图 · 白底', 'Main image · white'), prompt: T('白底主图，柔光，45° 俯拍，突出铭牌', 'White background, soft light, 45° view, show the label') },
+      { key: 'ware', label: T('场景图 · 仓库 16:9', 'Scene · warehouse 16:9'), prompt: T('仓库货架前，暖色顶灯，真实质感', 'Warehouse racks, warm overhead light, realistic') },
+      { key: 'solar', label: T('场景图 · 户外储能', 'Scene · outdoor storage'), prompt: T('户外光伏板前，日落逆光', 'In front of solar panels at sunset') },
+      { key: 'city', label: T('短视频 · 15 秒', 'Short video · 15 s'), prompt: T('城市夜景，暖色灯光，镜头缓慢推近', 'City at night, warm lights, slow push-in') }
     ];
     var LANG = [
       ['中文', '长寿命磷酸铁锂电池，3000 次以上循环。'],
       ['EN', 'Long-life LiFePO4 pack, 3,000+ cycles.'],
-      ['ES', 'Batería LiFePO4 de larga vida, más de 3.000 ciclos.'],
-      ['AR', 'بطارية LiFePO4 طويلة العمر، أكثر من 3000 دورة.'],
-      ['RU', 'Долговечная батарея LiFePO4, более 3000 циклов.']
+      ['ES', 'Batería LiFePO4: más de 3.000 ciclos.'],
+      ['AR', 'بطارية LiFePO4 تدوم أكثر من 3000 دورة.'],
+      ['RU', 'Батарея LiFePO4: более 3000 циклов.']
     ];
-    var P = 4.4, LP = 2.6;
+    var P = 6.2, LP = P / 2;
+    var PAL = { studio: ['#f6f4f1', '#ebe7e1', '#d9d3cb'], ware: ['#2a2019', '#1c1612', '#3a2c20', '#ffc27a'], solar: ['#3f2f5c', '#e9826a', '#f7b36b', '#ffe2a6'], city: ['#0a0f24', '#18213f', '#0e1430', '#ffcf7a'] };
     var L, R, mode;
     var layouts = { wide: { w: 1600, h: 900 }, compact: { w: 800, h: 450 }, mini: { w: 380, h: 214 } };
     var CW = 788, CH = 560; // canvas drawing size
@@ -823,7 +870,7 @@
       sv('rect', { x: 34, y: 70, width: 212, height: 90, rx: 8, fill: '#101012', stroke: '#2c2c31' }, g);
       sv('rect', { x: 34, y: 70, width: 8, height: 90, rx: 3, fill: '#ec6f10' }, g);
       var t1 = sv('text', { x: 60, y: 106, class: 'sg-bat-brand' }, g); t1.textContent = 'STARGO';
-      var t2 = sv('text', { x: 60, y: 134, class: 'sg-bat-spec' }, g); t2.textContent = 'LiFePO4 · 48V 100Ah';
+      var t2 = sv('text', { x: 60, y: 134, class: 'sg-bat-spec' }, g); t2.textContent = 'LiFePO4 · 12.8V 100Ah';
       // glint
       var clip = sv('clipPath', { id: id + 'c' }, defs);
       sv('rect', { x: 0, y: 30, width: 280, height: 170 }, clip);
@@ -839,7 +886,7 @@
       var mk = el('span', 'sg-app-mark', bar); icon('spark', mk, 14);
       el('b', '', bar, T('AI 创作', 'AI Creative'));
       if (mode !== 'mini') el('span', 'sg-app-crumb', bar, T('产品图与视频', 'Product images & video'));
-      var live = el('span', 'sg-app-live', bar); el('i', '', live); el('span', '', live, T('生成中', 'Generating'));
+      var live = R.live = el('span', 'sg-app-live', bar); el('i', '', live); R.liveText = el('span', '', live, T('生成中', 'Generating'));
 
       var cv = { wide: { x: 300, y: 72, w: 800, h: 610 }, compact: { x: 14, y: 54, w: 506, h: 284 }, mini: { x: 6, y: 36, w: 368, h: 160 } }[mode];
       var canvas = el('div', 'sg-canvas', stage);
@@ -847,24 +894,29 @@
       var svg = sv('svg', { viewBox: '0 0 ' + CW + ' ' + CH, preserveAspectRatio: 'xMidYMid slice', width: cv.w, height: cv.h }, canvas);
       R.bgs = V.map(function (v) { return bg(svg, v.key); });
       R.cam = sv('g', {}, svg);
-      R.bat = battery(R.cam, 250, 250, 1, true);
+      var bt = mode === 'mini' ? [261, 223, 0.78] : [250, 250, 1];
+      R.bat = battery(R.cam, bt[0], bt[1], bt[2], true);
       R.cells = [];
       var cols = 16, rows = 11;
       var mg = sv('g', {}, svg);
       for (var y = 0; y < rows; y++) for (var x = 0; x < cols; x++) {
         var c = sv('rect', { x: ((x * CW) / cols).toFixed(1), y: ((y * CH) / rows).toFixed(1), width: (CW / cols + 0.6).toFixed(1), height: (CH / rows + 0.6).toFixed(1), opacity: 0 }, mg);
-        R.cells.push({ e: c, o: (y / rows) * 0.62 + hash(x * 31 + y * 7) * 0.38, l: hash(x * 13 + y * 17) });
+        R.cells.push({ e: c, o: (y / rows) * 0.62 + hash(x * 31 + y * 7) * 0.38, l: hash(x * 13 + y * 17), y: y / rows });
       }
       R.scan = sv('rect', { x: 0, width: CW, height: 3, fill: '#ffb36b', opacity: 0 }, svg);
+      // only the world around the product regenerates: the pack is masked out of the mosaic and the scan line
+      var mk = sv('mask', { id: 'sgs-keep-' + mode, maskUnits: 'userSpaceOnUse', x: 0, y: 0, width: CW, height: CH }, sv('defs', {}, svg));
+      sv('rect', { width: CW, height: CH, fill: '#fff' }, mk);
+      sv('path', { d: 'M-4 34L58-14H344V162L282 204H-4Z', fill: '#000', transform: 'translate(' + bt[0] + ',' + bt[1] + ') scale(' + bt[2] + ')' }, mk);
+      mg.setAttribute('mask', 'url(#sgs-keep-' + mode + ')'); R.scan.setAttribute('mask', 'url(#sgs-keep-' + mode + ')');
       R.canvasTag = el('span', 'sg-canvas-tag', canvas);
-      if (mode !== 'mini') el('span', 'sg-canvas-mark', canvas, 'STARGO Image');
 
       // the prompt: under the canvas, or over its foot on the smallest layout
       var pr = el('div', 'sg-prompt', mode === 'mini' ? canvas : stage);
       if (mode === 'wide') pr.style.cssText = 'left:300px;top:698px;width:800px';
       if (mode === 'compact') pr.style.cssText = 'left:14px;top:348px;width:506px';
       icon('spark', pr, mode === 'wide' ? 18 : 15);
-      R.prompt = el('span', 'sg-prompt-text', pr);
+      R.promptBox = el('span', 'sg-prompt-text', pr); R.prompt = el('span', '', R.promptBox);
       R.gen = el('span', 'sg-btn is-primary', pr, T('生成', 'Generate'));
 
       if (mode !== 'mini') {
@@ -892,7 +944,7 @@
         var qb = el('div', 'sg-queue', stage);
         var qh = el('div', 'sg-queue-h', qb);
         el('b', '', qh, T('生成队列', 'Queue'));
-        el('span', '', qh, T('人工审核后发布', 'Reviewed first'));
+        el('span', '', qh, T('人工审核后发布', 'Published after review'));
         R.q = V.map(function (v) {
           var it = el('div', 'sg-q', qb);
           var th = el('div', 'sg-q-thumb', it);
@@ -908,43 +960,48 @@
         icon('shield', note, mode === 'wide' ? 18 : 15);
         var nt = el('div', '', note);
         el('b', '', nt, T('发布前', 'Before publishing'));
-        el('span', '', nt, T('每张图、每段视频都要你点通过', 'you approve every image and video'));
+        el('span', '', nt, T('每张图、每段视频都要你点通过', 'nothing goes live without your OK'));
       }
-      el('div', 'sg-tag', stage, T('动态示意 · 演示数据', 'Illustrative motion · demo data'));
+      var tg = el('div', 'sg-tag', mode === 'compact' ? null : stage, T('动态示意 · 演示数据', 'Illustrative motion · demo data'));
+      if (mode === 'compact') bar.insertBefore(tg, live);
     }
 
     function tick(t) {
       var k = Math.floor(t / P), tau = t - k * P, v = mod(k, V.length), prev = mod(k - 1, V.length);
-      var genA = 1.45, genB = 2.75;
-      R.bgs.forEach(function (g, i) { put(g, 'opacity', i === (tau >= genA ? v : prev) || (i === prev && tau < genB) ? '1' : '0'); });
-      var gp = seg(tau, genA, genB);
-      var showCells = tau >= genA && tau < genB + 0.05;
+      var td = Math.min(2.0, Array.from(V[v].prompt).length / (ZH ? 12 : 26));
+      var genA = 0.2 + td + 0.5, genB = genA + 1.4, swapAt = genA + 0.3;
+      var swapped = tau >= swapAt, cover = seg(tau, genA, swapAt), gp = seg(tau, swapAt, genB), pr = seg(tau, genA, genB);
+      var busy = tau >= genA && tau < genB, showCells = tau >= genA && tau < genB + 0.05, pal = PAL[V[v].key];
+      // cover the old picture, swap under full cover, then let the new one resolve top-down
+      R.bgs.forEach(function (g, i) { put(g, 'opacity', i === (swapped ? v : prev) ? '1' : '0'); });
       R.cells.forEach(function (c) {
-        var o = showCells ? 1 - c01((gp - c.o * 0.82) / 0.18) : 0;
+        var o = !showCells ? 0 : !swapped ? c01(cover * 1.8 - c.l * 0.8) : 1 - c01((gp - c.o * 0.82) / 0.18);
         put(c.e, 'opacity', o.toFixed(2));
-        if (showCells) put(c.e, 'fill', 'hsl(' + (24 + c.l * 18).toFixed(0) + ',' + (10 + c.l * 20).toFixed(0) + '%,' + (18 + c.l * 34).toFixed(0) + '%)');
+        if (showCells) put(c.e, 'fill', c.l > 0.88 ? pal[pal.length - 1] : pal[Math.min(pal.length - 2, Math.floor(c.y * (pal.length - 1)))]);
       });
       put(R.scan, 'y', (gp * CH).toFixed(1));
-      put(R.scan, 'opacity', showCells ? (0.75 * Math.sin(Math.PI * gp)).toFixed(2) : '0');
-      var hold = seg(tau, genB, P);
-      var z = 1 + 0.035 * ease.sine(hold);
+      put(R.scan, 'opacity', swapped && showCells ? (0.75 * Math.sin(Math.PI * gp)).toFixed(2) : '0');
+      var z = tau < genA ? 1 + 0.035 * (1 - ease.io(seg(tau, 0, 0.8))) : 1 + 0.035 * ease.sine(seg(tau, genB, P));
       put(R.cam, 'transform', 'translate(' + (CW / 2) + ',' + (CH / 2) + ') scale(' + z.toFixed(4) + ') translate(' + (-CW / 2) + ',' + (-CH / 2) + ')');
       put(R.bat.glint, 'x', (-120 + 520 * ease.io(seg(tau, genB + 0.1, genB + 1.1))).toFixed(1));
-      put(R.canvasTag, 'text', V[tau >= genA ? v : prev].label);
-      put(R.prompt, 'text', typed(V[v].prompt, seg(tau, 0.1, 1.25)));
-      cl(R.prompt, 'is-typing', tau < 1.35);
-      cl(R.gen, 'is-press', tau >= 1.3 && tau < 1.5);
-      cl(R.gen, 'is-busy', tau >= genA && tau < genB);
-      put(R.gen, 'text', tau >= genA && tau < genB ? Math.round(gp * 100) + '%' : T('生成', 'Generate'));
+      put(R.canvasTag, 'text', V[swapped ? v : prev].label);
+      put(R.prompt, 'text', typed(V[v].prompt, seg(tau, 0.2, 0.2 + td)));
+      cl(R.promptBox, 'is-typing', tau < 0.3 + td);
+      cl(R.gen, 'is-press', tau >= 0.55 + td && tau < 0.75 + td);
+      cl(R.gen, 'is-busy', busy);
+      put(R.gen, 'text', busy ? Math.round(pr * 100) + '%' : T('生成', 'Generate'));
+      put(R.liveText, 'text', busy ? T('生成中', 'Generating') : T('就绪', 'Ready'));
+      cl(R.live, 'is-idle', !busy);
       if (R.q) R.q.forEach(function (o, i) {
         var age = mod(v - i, V.length); // 0 = the one rendering now
-        var fill, state, cls;
-        if (age === 0) { fill = tau < genA ? 0 : gp; state = tau < genA ? T('排队中', 'Queued') : tau < genB ? T('生成中 ', 'Rendering ') + Math.round(gp * 100) + '%' : T('待你审核', 'Awaiting review'); cls = tau >= genB ? 'review' : ''; }
-        else if (age === 1) { fill = 1; state = T('待你审核', 'Awaiting review'); cls = 'review'; }
+        var fill, state, cls, okNow = age === 1 && tau >= P - 0.7;
+        if (age === 0) { fill = tau < genA ? 0 : pr; state = tau < genA ? T('排队中', 'Queued') : tau < genB ? T('生成中 ', 'Rendering ') + Math.round(pr * 100) + '%' : T('待你审核', 'Awaiting review'); cls = tau >= genB ? 'review' : ''; }
+        else if (age === 1) { fill = 1; state = okNow ? T('你已通过 ✓', 'You approved ✓') : T('待你审核', 'Awaiting review'); cls = okNow ? 'ok' : 'review'; }
         else { fill = 1; state = T('已通过', 'Approved'); cls = 'ok'; }
         put(o.st, 'text', state);
         put(o.f, '-transform', 'scaleX(' + fill.toFixed(3) + ')');
         cl(o.it, 'is-on', age === 0);
+        cl(o.it, 'is-approving', okNow);
         cl(o.st, 'is-review', cls === 'review');
         cl(o.st, 'is-ok', cls === 'ok');
       });
@@ -953,6 +1010,7 @@
         R.langChips.forEach(function (c, i) { cl(c, 'is-on', i === li); });
         put(R.langText, 'text', typed(LANG[li][1], seg(t - lk * LP, 0.1, 1.3)));
         put(R.langText, 'dir', LANG[li][0] === 'AR' ? 'rtl' : 'ltr');
+        put(R.langText, 'lang', ['zh-CN', 'en', 'es', 'ar', 'ru'][li]);
       }
       if (R.assets) R.assets.forEach(function (a, i) { cl(a, 'is-on', i === (v === 0 ? 0 : v === 3 ? 3 : 3)); });
     }
@@ -960,7 +1018,7 @@
     return {
       layouts: layouts,
       pick: function (w) { return w >= 1100 ? 'wide' : w >= 560 ? 'compact' : 'mini'; },
-      build: build, tick: tick, still: 2 * P + 3.6
+      build: build, tick: tick, still: 2 * P + 4.6, cue: function (t) { return Math.ceil(t / P) * P; }
     };
   }
 
