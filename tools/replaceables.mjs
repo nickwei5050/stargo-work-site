@@ -70,11 +70,21 @@ export const OG = {
  * room, owner's office, showroom. They replaced the os-* stills here only; the
  * os-* files keep their other places (hero mosaic, photo strips, dashboard and
  * slide images, other pages).
+ *
+ * Since 2026-10-23 (owner: 能用代码的图片都改成代码) the six cells around the
+ * film are code-drawn windows of the STARGO WORK desktop instead of those
+ * photographs: `code[i]` names the motion scene that takes cell i
+ * (js/stargo-motion-desk.js, placed by tools/code-art-theatre.mjs). They tell
+ * one demo deal clockwise from the top left: Growth OS, Sales Desk, 报价审批,
+ * ERP, AI 创作, 经营驾驶舱. `theatre` keeps the photographs for the record;
+ * none of W01, W03–W06 is drawn on the site any more (W02 still is, in the
+ * capability ring). `poster` is the film's own first frame since the same day.
  */
 export const HERO = {
   film: 'assets/stargo-motion/orbit.mp4',
   poster: 'assets/stargo-motion/orbit-poster.webp',
   centreIndex: 3,
+  code: ['desk-sales', 'desk-growth', 'desk-cockpit', null, 'desk-quote', 'desk-erp', 'desk-creative'],
   theatre: [
     photoFile('w01-trade-office'),
     photoFile('w02-workshop'),
@@ -478,6 +488,8 @@ export const WORKFORCE_BLOG_COVERS = {
  *  teamCard, both PRODUCT.teams until 2026-10-23) are the code-drawn 'team'
  *  scene now (tools/motion-scenes.mjs). */
 export const PLACED = {
+  // Feeds only the lifelogx about build that tools/build-site.mjs discards (its result is `void`ed):
+  // about.html / en/about.html never show the poster, so this slot has nothing on a page to replace.
   aboutBigImage: HERO.poster,
 };
 /* The quote band's picture and the 图片 / 视频 portrait (STORY_ART.quoteBand
@@ -515,6 +527,7 @@ export const ENTERPRISE_PHOTOS = {
 
 if (HERO.theatre.length !== 7) throw new Error('replaceables: hero theatre is seven cells');
 if (HERO.centreIndex !== 3) throw new Error('replaceables: the film replaces theatre cell 3');
+if (HERO.code.length !== 7 || HERO.code[HERO.centreIndex] !== null) throw new Error('replaceables: the theatre\'s code-drawn windows take the six cells around the film');
 if (OG.width !== 1200 || OG.height !== 630) throw new Error('replaceables: the share card stays 1200×630');
 /* A JPEG or PNG (link previews do not all read WebP), named with its size,
    written as the final URL (no editorial token to rewrite). */

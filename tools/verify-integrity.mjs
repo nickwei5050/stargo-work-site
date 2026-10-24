@@ -28,6 +28,17 @@ try {
     });
   }, files.map(f=>[f,readFileSync(f,'utf8')]));
   for(const c of checks) { results.push({ name:c.file,pass:c.errors.length===0,errors:c.errors }); console.log(c.errors.length?'FAIL':'PASS',c.file,[...new Set(c.errors)].join('; ')); }
+  /* The homepage theatre: the brand film in the centre and six code-drawn desktop windows round it
+     (tools/code-art-theatre.mjs), not the photographs W01–W06 they replaced — a merge that brings a still back fails here. */
+  for(const file of ['index.html','en/index.html']) {
+    const doc = await p.evaluate(h => { const d = new DOMParser().parseFromString(h,'text/html'); const g = d.querySelector('.video-grid'); return { hosts: g ? [...g.querySelectorAll('[data-sg-scene^="desk-"]')].map(e => e.dataset.sgScene) : [], film: !!(g && g.querySelector('video[data-stargo-video]')), stills: g ? g.querySelectorAll('img').length : -1 }; }, readFileSync(file,'utf8'));
+    const errors = [];
+    if (doc.hosts.length !== 6 || new Set(doc.hosts).size !== 6) errors.push('theatre windows: '+doc.hosts.join(','));
+    if (!doc.film) errors.push('theatre film missing');
+    if (doc.stills !== 0) errors.push('theatre stills: '+doc.stills);
+    if (/stargo-photo\/w0[1-6]-/.test(readFileSync(file,'utf8'))) errors.push('a W01–W06 photograph is referenced');
+    results.push({ name:file+' theatre',pass:errors.length===0,errors }); console.log(errors.length?'FAIL':'PASS',file+' theatre',errors.join('; '));
+  }
   for(const lang of ['', 'en/']) {
     await p.goto(BASE+'/'+lang+'pricing.html',{waitUntil:'load'}); await p.waitForTimeout(1800);
     await p.addScriptTag({path:req.resolve('axe-core/axe.min.js')});

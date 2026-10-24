@@ -5133,18 +5133,10 @@ body:has(#loop) .image-wrap.for-service .paralax-image[src*="gos11-dormant-react
   object-position: 50% 50%;
 }
 
-/* W01–W06. The homepage grid's six stills (and W02 in the capability ring)
-        are `object-fit: cover` (rule 3 above); a box that is not 16:9 shows
-        part of the picture. The manifest's crop point for the three that are
-        not centred: W05 keeps the man and the lamp, W06 the shelving and the
-        lamps above the table, and W04 on a phone — where its tile is a tall
-        0.44:1 sliver — keeps the inspector's head and hands and the row of
-        valves. */
-img[src*="stargo-photo/w05-owner-office-"] { object-position: 52% 58%; }
-img[src*="stargo-photo/w06-showroom-"] { object-position: 32% 25%; }
-@media (max-width: 767px) {
-  img[src*="stargo-photo/w04-qc-lab-"] { object-position: 48.8% 50%; }
-}
+/* W01–W06. The homepage grid's six stills left on 2026-10-23 for code-drawn
+        desktop windows (tools/code-art-theatre.mjs), and their crop points for
+        W04, W05 and W06 with them. W02, still in the capability ring, is
+        centred and needs none. */
 
 /* W02 in the capability ring's inner circle. Cinery mirrors that whole circle
         (`.cn-cta-circle-wrapper.cn-_02 { transform: scaleX(-1) }`,

@@ -129,6 +129,32 @@ export const MOTION_LABEL = {
     zh: '动态示意（演示数据）：三张 48V 100Ah 电池包的参考图进 AI 创作，依次做出白底主图、仓库场景图和 15 秒短视频的四个分镜，每一项都先进审核队列；你点了通过，发布与否仍由你决定，不会自动发布。',
     en: 'Illustrative motion (demo data): three reference photos of a 48V 100Ah pack go into AI Creative, which makes a white-background main image, a warehouse scene and the four-shot storyboard of a 15-second video; each waits in a review queue, you approve them, and publishing is still your call: nothing goes out automatically.',
   },
+  /* The homepage theatre's six windows around the brand film (tools/code-art-theatre.mjs,
+     js/stargo-motion-desk.js), in the order the deal passes through them. */
+  'desk-growth': {
+    zh: '动态示意（演示数据）：Growth OS 的候选客户名单，Nordwerk Energie 以匹配度 94 排到第一，AI 写出理由。',
+    en: 'Illustrative motion (demo data): the Growth OS shortlist, where Nordwerk Energie rises to the top with a fit of 94 and the AI writes down why.',
+  },
+  'desk-sales': {
+    zh: '动态示意（演示数据）：Sales Desk 收到 Müller Energie 的询盘，AI 读出 48V 100Ah、200 组、DAP 汉堡，报价 Q-1042 送去审批。',
+    en: 'Illustrative motion (demo data): Sales Desk receives Müller Energie’s inquiry, the AI reads out 48V 100Ah, 200 pcs and DAP Hamburg, and quote Q-1042 goes for approval.',
+  },
+  'desk-quote': {
+    zh: '动态示意（演示数据）：报价 Q-1042 低于底价，停下等你审批；你点了批准，报价仍未发送，发送前由你确认。',
+    en: 'Illustrative motion (demo data): quote Q-1042 is below the floor price and waits for your approval; you approve it, and it is still not sent until you confirm.',
+  },
+  'desk-erp': {
+    zh: '动态示意（演示数据）：ERP 里的订单 SO-2041 依次完成备货、质检和装柜。',
+    en: 'Illustrative motion (demo data): order SO-2041 in the ERP goes through stocking, quality check and container loading.',
+  },
+  'desk-creative': {
+    zh: '动态示意（演示数据）：AI 创作生成三张产品图——白底主图、储能柜场景图和德语详情页，都停在待你审核。',
+    en: 'Illustrative motion (demo data): AI Creative renders three product images — a white-background main image, a rack scene and a German detail page — and each waits for your review.',
+  },
+  'desk-cockpit': {
+    zh: '动态示意（演示数据）：经营驾驶舱跟着其他窗口更新今日询盘、等你审批、在制订单和待审素材，并显示最新动态。',
+    en: 'Illustrative motion (demo data): the business cockpit follows the other windows — inquiries today, items awaiting you, open orders and images to review — and shows the latest event.',
+  },
 };
 
 /* capareas (capabilities.html): the four area cards (js/stargo-motion-areas.js) and the first two cards
@@ -212,6 +238,12 @@ export const SCENE_FILE = {
   areaTeam: AREA_FILES,
   crewRoles: CREW_FILES,
   crewBoard: CREW_FILES,
+  'desk-growth': 'desk',
+  'desk-sales': 'desk',
+  'desk-quote': 'desk',
+  'desk-erp': 'desk',
+  'desk-creative': 'desk',
+  'desk-cockpit': 'desk',
 };
 /* scene files that ship their own stylesheet */
 export const SCENE_CSS = new Set([
@@ -226,6 +258,7 @@ export const SCENE_CSS = new Set([
   'areas',
   'areas-centre',
   'crew',
+  'desk',
 ]);
 
 /* pain — the homepage's four problem cards, in page order (S01–S04): one file and one stylesheet */
