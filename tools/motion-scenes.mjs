@@ -177,6 +177,28 @@ export const MOTION_LABEL = {
     zh: '动态示意（演示数据）：经营驾驶舱跟着其他窗口更新今日询盘、等你审批、在制订单和待审素材，并显示最新动态。',
     en: 'Illustrative motion (demo data): the business cockpit follows the other windows — inquiries today, items awaiting you, open orders and images to review — and shows the latest event.',
   },
+  /* lane people (2026-10-23): about.html's four AI-employee tiles (js/stargo-motion-staff.js)
+     and the workforce desktop collage card (js/stargo-motion-rolecard.js) */
+  crewSignal: {
+    zh: '动态示意（演示数据）：市场信号 AI 员工在 Growth OS 里扫描招聘、招标等信号，候选客户随之重新排序；Nordwerk Energie 升到第一，推荐理由写好后，联系与否由你决定。',
+    en: 'Illustrative motion (demo data): the Market Signal AI scans hiring and tender signals in Growth OS and the buyer list re-ranks; Nordwerk Energie moves to the top with a written reason, and whether to contact them is your call.',
+  },
+  crewQuote: {
+    zh: '动态示意（演示数据）：报价 AI 员工为 Ahmed Al-Rashid 的 72V 锂电池组询盘逐行生成报价 Q-1046，底价校验发现单价低于底价，报价提交审批，等你批准，批准前不会发给客户。',
+    en: 'Illustrative motion (demo data): the Quotation AI builds quote Q-1046 line by line for Ahmed Al-Rashid’s 72V lithium pack inquiry; the floor-price check finds the unit price below the floor, so the quote waits for your approval and nothing goes to the buyer first.',
+  },
+  crewFollow: {
+    zh: '动态示意（演示数据）：报价发出后，Müller Energie 三天没有回复；跟进 AI 员工起草了一封跟进信，停在待你确认，你确认后才会发出。',
+    en: 'Illustrative motion (demo data): three days after the quote, Müller Energie has not replied; the Follow-up AI drafts a follow-up email and stops for your OK — it goes out only after you confirm.',
+  },
+  crewCoord: {
+    zh: '动态示意（演示数据）：统筹 AI 员工把目标「开拓巴西电动两轮市场」拆成五步，交给研究、产品、销售和创意四位 AI 员工分头推进，最后汇总，等你确认，确认前不对外发送。',
+    en: 'Illustrative motion (demo data): the Coordination AI splits the goal of opening the Brazil e-scooter market into five steps for four AI employees (research, product, sales and creative), then sums up and waits for your confirmation before anything goes out.',
+  },
+  deskReport: {
+    zh: '动态示意（演示数据）：网页桌面里的报告应用，报告 AI 员工汇总本周询盘、报价和订单，起草第 43 周周报，停在待你确认。',
+    en: 'Illustrative motion (demo data): in the browser desktop’s report app, the Reporting AI totals this week’s inquiries, quotes and orders and drafts the week 43 report, then waits for your OK.',
+  },
 };
 
 /* capareas (capabilities.html): the four area cards (js/stargo-motion-areas.js) and the first two cards
@@ -277,6 +299,11 @@ export const SCENE_FILE = {
   'stage-pay': 'stages',
   'stage-again': 'stages',
   org: 'org',               // homemore: the pricing band's enterprise card
+  crewSignal: 'staff',
+  crewQuote: 'staff',
+  crewFollow: 'staff',
+  crewCoord: 'staff',
+  deskReport: 'rolecard',
 };
 /* scene files that ship their own stylesheet */
 export const SCENE_CSS = new Set([
@@ -295,6 +322,8 @@ export const SCENE_CSS = new Set([
   'desk',
   'stages',
   'org',
+  'staff',
+  'rolecard',
 ]);
 
 /* pain — the homepage's four problem cards, in page order (S01–S04): one file and one stylesheet */

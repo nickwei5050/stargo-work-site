@@ -112,7 +112,9 @@ CODE_DRAWN_CAP.forEach((id) => CODE_DRAWN.add(id));
    placed only there (P01, P03 and P05 stay on capabilities.html); T01 only
    in the pricing band. Still listed in tools/replaceables.mjs HOME_STAGES /
    HOME_PRICING_CARD, so each can go back in one line. */
-['p02-sales', 'p04-payment-docs', 't01-enterprise-campus'].forEach((id) => CODE_DRAWN.add(id));
+['p01-prospecting', 'p02-sales', 'p04-payment-docs', 'p05-reorder', 't01-enterprise-campus',
+  // lane people: the about AI-employee tiles and the workforce role cards
+  'd01-market-research', 'd02-follow-up', 'd03-product-spec', 'd04-finance', 'd05-coordination', 'd06-reporting', 'd07-quotation'].forEach((id) => CODE_DRAWN.add(id));
 const photosUnused = photos.filter(a => !all.includes(a.src) && !SUPERSEDED.has(a.id) && !RETIRED.has(a.id) && !CODE_DRAWN.has(a.id)).map(a => a.id);
 assert.deepEqual(photosUnused, [], 'every registered photograph is placed');
 console.log(`generated imagery: ${manifest.assets.length - unused.length} placed, ${unused.length} retained but unused (${unused.join(', ')})`);

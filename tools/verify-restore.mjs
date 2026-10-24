@@ -391,22 +391,27 @@ for (const lang of ['', 'en/']) {
        「11.3 MB 无引用的 cinery 案例片，帮我恢复原模版」); since 2026-10-21 each
        tile shows the owner's own photograph of its role instead
        (site-images/batch-5 D01, D07, D02, D05; tools/replaceables.mjs
-       ABOUT_CASE_STILLS), as a still in the clip's box. So the band holds no
-       clip, and exactly four stills, each an owner photograph with its own
-       alt, filling its box. The band's other `<img>`s are the two copies of
-       the STARGO wordmark each tile stacks for its hover roll. What must NOT
-       come back is a client name, a year or a logoipsum mark — the role names
-       asserted above are what the tile line says. */
-    assert.equal(await page.locator('.cn-about-projects video, .cn-about-projects source').count(), 0, 'the tiles show stills, not clips');
-    const stills = await page.locator('.cn-about-projects .cn-case-video > img.stargo-still').evaluateAll((imgs) => imgs.map((i) => {
-      const r = i.getBoundingClientRect(); const b = i.parentElement.getBoundingClientRect();
-      return { src: i.getAttribute('src'), alt: i.getAttribute('alt') ?? '', fills: Math.abs(r.width - b.width) < 2 && Math.abs(r.height - b.height) < 2 };
+       ABOUT_CASE_STILLS), as a still in the clip's box; since 2026-10-23 each
+       tile draws its AI employee at work in code instead (lane people:
+       tools/code-art-people.mjs ABOUT_CASE_SCENES, js/stargo-motion-staff.js).
+       So the band holds no clip and no photograph, and exactly four motion
+       hosts, each a labelled picture (role=img, its own aria-label) filling
+       the clip's box. The band's `<img>`s are the two copies of the STARGO
+       wordmark each tile stacks for its hover roll. What must NOT come back
+       is a client name, a year or a logoipsum mark — the role names asserted
+       above are what the tile line says. */
+    assert.equal(await page.locator('.cn-about-projects video, .cn-about-projects source').count(), 0, 'the tiles show code-drawn scenes, not clips');
+    assert.equal(await page.locator('.cn-about-projects .cn-case-video > img').count(), 0, 'no photograph left in a tile');
+    const scenes = await page.locator('.cn-about-projects .cn-case-video > .sg-mo-case[data-sg-scene]').evaluateAll((hs) => hs.map((h) => {
+      const r = h.getBoundingClientRect(); const b = h.parentElement.getBoundingClientRect();
+      return { scene: h.dataset.sgScene, role: h.getAttribute('role'), label: h.getAttribute('aria-label') ?? '', fills: Math.abs(r.width - b.width) < 2 && Math.abs(r.height - b.height) < 2 };
     }));
-    assert.equal(stills.length, 4, 'one still per tile');
-    stills.forEach((s, i) => {
-      assert.match(s.src ?? '', /(?:^|\/)assets\/stargo-photo\/(?:d01-market-research|d07-quotation|d02-follow-up|d05-coordination)-\d+\.webp(?:\?v=[0-9a-f]{12})?$/, `tile ${i + 1} shows the owner's photograph: ${s.src}`);
-      assert(s.alt.length > 20, `tile ${i + 1}'s still carries its own alt: "${s.alt}"`);
-      assert(s.fills, `tile ${i + 1}'s still fills its box`);
+    assert.equal(scenes.length, 4, 'one code-drawn scene per tile');
+    scenes.forEach((s, i) => {
+      assert.match(s.scene, /^crew(?:Signal|Quote|Follow|Coord)$/, `tile ${i + 1} hosts its crew scene: ${s.scene}`);
+      assert.equal(s.role, 'img', `tile ${i + 1}'s scene is a labelled picture`);
+      assert(s.label.length > 20, `tile ${i + 1}'s scene carries its own label: "${s.label}"`);
+      assert(s.fills, `tile ${i + 1}'s scene fills its box`);
     });
     assert(await page.locator('.cn-about a[href$="/contact"]').count() >= 1, 'About reaches the contact page');
     const intro = await page.locator('.cn-about').innerText();

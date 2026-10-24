@@ -33,6 +33,7 @@ import { CAPSALES_SCENES } from './motion-capsales.mjs';
 import { AREA_SCENES, placeAreaScenes } from './code-art-capareas.mjs'; // capareas: capability area cards
 import { theatreTiles } from './code-art-theatre.mjs';
 import { homeStageScenes, homePricingScene, homeMoreAssets, swapToMotion } from './code-art-homemore.mjs'; // homemore lane: stage cards + enterprise card as code
+import { roleCard, roleChip, ROLE_CARDS, withSceneAssets } from './code-art-people.mjs'; // lane people
 import { webpPage } from './image-refs.mjs';
 import { enterpriseArt } from './code-art-enterprise.mjs';   // enterprise lane: code-drawn pictures
 import { a11yPage } from './a11y.mjs';
@@ -1368,20 +1369,42 @@ PAGES['workforce.html'] = (lang) => {
      tools/editorial-images.mjs replaces with the photograph's own sentence.
      The marquee is this page's first screen, so its pictures load with the
      page; the collage card further down keeps lazy loading. */
+  /* lane people (2026-10-23, owner: 「图片改成代码」): the photographs above no
+     longer ship. Each marquee card draws its role at work as a STATIC code card
+     (tools/code-art-people.mjs roleCard; it keeps the picture's
+     .lx-feature-hero-image box, so the card, its hover panel and the marquee
+     are unchanged), and the collage card is the 'deskReport' scene: a mini web
+     desktop where the 报告 AI 员工 drafts the weekly report and stops at
+     待你确认. WORKFORCE_ROLES keeps the photographs' names so a line puts
+     them back. */
   {
     const COLLAGE = '694277bf9dc048830e6fca2e';
-    for (const [key, src] of Object.entries(WORKFORCE_ROLES)) {
-      let n = 0;
-      b = b.replace(/<img\b[^>]*>/g, (tag) => {
-        if (!tag.includes(`/${key}_`)) return tag;
-        if (!/\bclass="lx-feature-hero-image"/.test(tag)) throw new Error(`workforce: the ${key} picture is no longer a role card's .lx-feature-hero-image`);
-        n++;
-        const photo = tag.replace(/src="[^"]*"/, `src="${src}"`).replace(/alt="[^"]*"/, 'alt="STARGO WORK"');
-        return key === COLLAGE ? photo : photo.replace(/\s*loading="lazy"/, '');
-      });
-      const want = key === COLLAGE ? 1 : 2;
-      if (n !== want) throw new Error(`workforce: expected ${want} role card(s) showing ${key}, found ${n}`);
-    }
+    if (Object.keys(WORKFORCE_ROLES).length !== 6 || W.roles.length !== ROLE_CARDS) throw new Error('workforce: five role cards and the collage card');
+    let n = 0;
+    b = b.replace(/<a\b[^>]*class="lx-feature-hero-card lx-_(\d) w-inline-block"[^>]*>[\s\S]*?<\/a>/g, (card, k) => {
+      const i = Number(k) - 1;
+      if (!card.includes(roleName(W.roles[i].name))) throw new Error(`workforce: role card ${k} no longer names ${t(W.roles[i].name)}`);
+      let m = 0;
+      let out = card.replace(/<img\b[^>]*class="lx-feature-hero-image"[^>]*>/g, () => { m++; return roleCard(i, lang, t(W.roles[i].name)); });
+      if (m !== 1) throw new Error(`workforce: role card ${k} should hold one picture, found ${m}`);
+      // the hover chip names the app the role works in, not a social network (roleChip)
+      m = 0;
+      out = out.replace(/<img\b[^>]*class="lx-social-media-logo[^"]*"[^>]*>/g, () => { m++; return roleChip(i, lang); });
+      if (m !== 1) throw new Error(`workforce: role card ${k} should hold one hover logo, found ${m}`);
+      n++;
+      return out;
+    });
+    if (n !== 10) throw new Error(`workforce: expected the five role cards twice (10), found ${n}`);
+    let c = 0;
+    b = b.replace(/<img\b[^>]*>/g, (tag) => {
+      if (!tag.includes(`/${COLLAGE}_`)) return tag;
+      if (!/\bclass="lx-feature-hero-image"/.test(tag)) throw new Error('workforce: the collage picture is no longer a .lx-feature-hero-image');
+      c++;
+      return motionHost('deskReport', lang, 'lx-feature-hero-image sg-mo-desk');
+    });
+    if (c !== 1) throw new Error(`workforce: expected one collage picture, found ${c}`);
+    b = b.replace(/(data-sg-scene="deskReport"(?:(?!<\/a>)[\s\S])*?)<img\b[^>]*class="lx-social-media-logo[^"]*"[^>]*>/, (_, pre) => pre + roleChip('desk', lang));
+    if (b.includes('lx-social-media-logo"') || /class="lx-social-media-logo /.test(b)) throw new Error('workforce: a social-network logo survives on a card');
   }
   // the template's cards link to the studio's own social accounts
   b = b.replace(/href="https:\/\/(?:www\.)?(?:linkedin|instagram|facebook|x|twitter|tiktok|youtube)\.com[^"]*"/g, 'href="contact.html"');
@@ -1545,7 +1568,7 @@ PAGES['workforce.html'] = (lang) => {
       .filter((re) => re.test(b)).map((re) => String(re));
     if (leftovers.length) throw new Error(`workforce: template copy survives: ${leftovers.join(', ')}`);
   }
-  const motion = motionAssets([W.tile.motion]);
+  const motion = motionAssets([W.tile.motion, 'deskReport']); // deskReport: lane people
   const page = inMonoShell(b + bigMark(), ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
   /* inMonoShell links css/ files by name; the scene's sheets go after the
      page's own, and its scripts (the scene, then the engine) before </body>. */
@@ -1662,6 +1685,9 @@ PAGES['about.html'] = (lang) => {
       throw new Error('about: a data-video-urls survived, Webflow will fetch the clip eagerly');
     }
   }
+  /* lane people (2026-10-23): the four AI-employee tiles are code-drawn scenes
+     (tools/code-art-people.mjs); load the files of every scene on the page, once. */
+  out = withSceneAssets(out);
   return out;
 };
 

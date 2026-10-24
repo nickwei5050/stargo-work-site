@@ -479,7 +479,9 @@ export const ROLE_SLIDES = {
 };
 /** about.html's four AI-employee tiles (tools/blocks/cn-about-projects.mjs),
  *  by the clip's video id: a still in place of each cinery case-study film,
- *  matched by the tile's role (D01 市场信号, D07 报价, D02 跟进, D05 统筹). */
+ *  matched by the tile's role (D01 市场信号, D07 报价, D02 跟进, D05 统筹).
+ *  Since 2026-10-23 the tiles draw these roles in code (tools/code-art-people.mjs
+ *  ABOUT_CASE_SCENES); kept as the record of which photograph each replaced. */
 export const ABOUT_CASE_STILLS = {
   'fb6f08c0-bccf-aeab-a33d-45198963fe74': photoFile('d01-market-research', 1024),
   'fb6f08c0-bccf-aeab-a33d-45198963fe90': photoFile('d07-quotation', 1024),
@@ -493,7 +495,10 @@ export const CONTACT_CARD = photoFile('k01-meeting-table', 768);
 /** workforce.html's five marquee role cards (`.lx-feature-hero-card.lx-_1`
  *  … `lx-_5`, each drawn twice for the loop) and the collage card in the
  *  desktop item (报告 AI 员工), keyed by the lifelogx asset id of the
- *  picture each showed (D01–D06). */
+ *  picture each showed (D01–D06). Since 2026-10-23 the cards are static code
+ *  cards and the collage card the 'deskReport' scene (tools/code-art-people.mjs
+ *  roleCard, tools/build-site.mjs); kept as the record, the build only checks
+ *  that the six slots are still there. */
 export const WORKFORCE_ROLES = {
   '6941e78a09a85d0bd053b266': photoFile('d01-market-research', 1024),   // Item → Variant 1
   '694ab25174cbe821ec5d8930': photoFile('d02-follow-up', 1024),         // ChatGPT Image Dec 23, 2025, 04_16_19 PM
