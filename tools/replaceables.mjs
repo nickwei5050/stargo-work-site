@@ -116,6 +116,11 @@ export const MENU_CARD = photoFile('g02-menu-harbour-night', 768);
  * still of the clip it repeats (video-10 twice: H09 both times), except the
  * second repeat of video-11, which takes C08 instead of a second P03 so every
  * still is in the inner ring too. The ids are the manifests' own.
+ *
+ * Since 2026-10-24 (lane "vignettes") every card draws the code vignette of
+ * the photograph named here instead (tools/code-art-vignettes.mjs, placed by
+ * its page pass after tools/blocks/cn-produce.mjs has written the stills), so
+ * none of these files is fetched by the page; the map stays the record.
  */
 export const RING_STILLS = {
   /* outer ring */
@@ -348,7 +353,11 @@ export const HOME_STAGES = [
  *  the os-* stills in a fixed order; each os-* still becomes, wherever it
  *  falls in the mosaic, the photograph the batch-1 manifest names for it
  *  (H01–H10). The cursor tooltip's picture rotator (`.image-text-rotator`)
- *  after it keeps the os-* stills. */
+ *  after it keeps the os-* stills.
+ *  Since 2026-10-24 (lane "vignettes"; owner: 能用代码的图片都改成代码) no
+ *  photograph is placed here: tools/code-art-vignettes.mjs draws, in each
+ *  tile, the vignette of the photograph this map names (VIGNETTE_OF), in the
+ *  same cycle order and box. The map stays the record and the way back. */
 export const HOME_MOSAIC = {
   'os-cockpit': photoFile('h05-assembly-line', 1024),
   'os-sales-desk': photoFile('h02-night-inquiry', 1024),
