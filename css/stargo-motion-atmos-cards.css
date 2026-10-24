@@ -52,3 +52,30 @@
 .sgk-steps.is-tight .sgk-step { gap: 4px; }
 .sgk-steps.is-ends .sgk-step:first-child .sgk-step-t { align-self: flex-start; text-align: left; }
 .sgk-steps.is-ends .sgk-step:last-child .sgk-step-t { align-self: flex-end; text-align: right; }
+
+/* =================== 首页蓝: the homepage's board card in the homepage palette ===================
+   (owner 2026-10-24; tokens in css/stargo-blue.css). The card is the approval card's sibling:
+   the aurora behind, glass boxes with the light sheen, the ice-blue accent on the step the AI is on,
+   done in --sgb-ok, and the step that waits for a person (等你确认) a white bubble with dark words.
+   Colours only, homepage only: the contact page's request card keeps its look. */
+html[data-stargo-home] .sgk-host { background: var(--sgb-aurora); }
+html[data-stargo-home] .sgk-board { color: var(--sgb-text); }
+html[data-stargo-home] .sgk-board .sgk-glow { background: radial-gradient(50% 50% at 50% 50%, color-mix(in srgb, var(--sgb-ink) 55%, transparent), transparent 75%); }
+html[data-stargo-home] .sgk-board .sgk-head b { color: var(--sgb-text); }
+html[data-stargo-home] .sgk-board .sgk-mark { color: var(--sgb-ink); background: var(--sgb-accent-grad); }
+html[data-stargo-home] .sgk-board .sgk-live { color: var(--sgb-ice); }   /* on the aurora's bright crown: ice, the dot keeps the accent */
+html[data-stargo-home] .sgk-board .sgk-live i { background: var(--sgb-accent); }
+/* the honesty tag: a small glass pill drawn round its words, so the head row keeps its room */
+html[data-stargo-home] .sgk-board .sgk-tag { position: relative; z-index: 0; color: var(--sgb-text); }
+html[data-stargo-home] .sgk-board .sgk-tag::before { content: ""; position: absolute; inset: -3px -8px; z-index: -1; border-radius: 99px; background: color-mix(in srgb, var(--sgb-ink) 55%, transparent); box-shadow: inset 0 0 0 1px var(--sgb-glass-edge); }
+html[data-stargo-home] .sgk-board .sgk-box { background: var(--sgb-glass), var(--sgb-glass-dark); border-color: var(--sgb-glass-edge); }
+html[data-stargo-home] .sgk-board .sgk-box b { color: var(--sgb-text); }
+html[data-stargo-home] .sgk-board .sgk-box span { color: var(--sgb-muted); }
+html[data-stargo-home] .sgk-board .sgk-box.is-on { border-color: var(--sgb-accent); background: var(--sgb-glass), color-mix(in srgb, var(--sgb-accent) 16%, var(--sgb-deep)); }
+html[data-stargo-home] .sgk-board .sgk-box.is-on span { color: var(--sgb-accent); }
+html[data-stargo-home] .sgk-board .sgk-box.is-done { border-color: color-mix(in srgb, var(--sgb-ok) 50%, transparent); }
+html[data-stargo-home] .sgk-board .sgk-box.is-done span { color: var(--sgb-ok); }
+html[data-stargo-home] .sgk-board .sgk-box.is-gate.is-on { background: var(--sgb-bubble); border-color: var(--sgb-bubble); }
+html[data-stargo-home] .sgk-board .sgk-box.is-gate.is-on b, html[data-stargo-home] .sgk-board .sgk-box.is-gate.is-on span { color: var(--sgb-bubble-text); }
+html[data-stargo-home] .sgk-board .sgk-arrow { border-color: color-mix(in srgb, var(--sgb-ice) 50%, transparent); }
+html[data-stargo-home] .sgk-board .sgk-magnet { background: radial-gradient(circle at 35% 30%, var(--sgb-ice), var(--sgb-cyan) 45%, var(--sgb-blue) 100%); box-shadow: 0 2px 4px color-mix(in srgb, var(--sgb-ink) 70%, transparent); }

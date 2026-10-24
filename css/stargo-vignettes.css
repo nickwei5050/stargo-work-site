@@ -104,3 +104,12 @@
 /* The inner circle is mirrored by cinery (`.cn-cta-circle-wrapper.cn-_02`);
    flip the drawing back so its words read the right way round. */
 .cn-produce .cn-cta-circle-wrapper.cn-_02 .w-background-video > .sgv-card { transform: scaleX(-1); }
+
+/* 首页蓝 (owner 2026-10-24): the homepage's opening mosaic in the palette of the approval card.
+   The sprite is re-painted from the tokens at build time (tools/code-art-vignettes-blue.mjs); its
+   ground is the calm aurora here, and the honesty tag a small glass pill. The capability ring keeps
+   its own look (no data-stargo-home there). */
+html[data-stargo-home] .sgv { background: var(--sgb-aurora-calm); }
+/* the hairline gaps between the mosaic's tiles show the hero's own ground: ink, not #111, so the wall reads as one */
+html[data-stargo-home] .hero-agency { background-color: var(--sgb-ink); }
+html[data-stargo-home] .sgv-tag { color: var(--sgb-text); background: color-mix(in srgb, var(--sgb-ink) 62%, transparent); border-color: var(--sgb-glass-edge); }
