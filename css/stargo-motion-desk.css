@@ -22,7 +22,6 @@
 .sg-rc-st.is-wait { color: #ffc79c; background: rgba(236, 111, 16, .17); border-color: rgba(255, 138, 61, .58); }
 .sg-rc-st.is-done { color: #a9e5b9; background: rgba(120, 200, 140, .1); border-color: rgba(120, 200, 140, .32); }
 .sg-rc-st.is-done > i { background: #9fe0b0; }
-.sg-rc-s { display: none; }
 @keyframes sg-rc-pulse { 50% { opacity: .25; } }
 
 /* research: three buyers ranked by fit */
@@ -56,47 +55,79 @@
 .sg-rc-steps i.is-done { color: #0f2416; background: #9fe0b0; border-color: #9fe0b0; }
 .sg-rc-steps i.is-run { color: #ffb37a; border-color: #ff8a3d; background: rgba(236, 111, 16, .14); }
 
-/* On hover the card's own name panel and tag slide in over the picture; the
-   code card's top and bottom step back so the two never print over each other. */
-.sg-rc-head, .sg-rc-viz, .sg-rc-st { transition: opacity .35s ease; }
-.lx-feature-hero-card:hover .sg-rc-head, .lx-feature-hero-card:hover .sg-rc-viz, .lx-feature-hero-card:hover .sg-rc-st,
-.lx-feature-hero-card:focus-visible .sg-rc-head, .lx-feature-hero-card:focus-visible .sg-rc-viz, .lx-feature-hero-card:focus-visible .sg-rc-st { opacity: 0; }
+/* The cards come in four sizes, set by the template's breakpoints: 208 × 266
+   (from 992 px), 160 × 205 (768–991), 128 × 164 (480–767) and 96 × 123 (phones).
+   A smaller card swaps to the short task (ts) and status words (s, then xs). */
+.sg-rc-s, .sg-rc-xs { display: none; }
 @media screen and (max-width: 991px) {
   .lx-scope .sg-rc { gap: 6px; padding: 11px 11px 12px; }
   .sg-rc-ico { width: 24px; height: 24px; border-radius: 7px; }
   .sg-rc-ico svg { width: 13px; height: 13px; }
   .sg-rc-name { margin-top: 2px; font-size: 13.5px; }
   .sg-rc-task { font-size: 12px; -webkit-line-clamp: 1; }
+  .sg-rc-l { display: none; }
+  .sg-rc-s { display: inline; }
   .sg-rc-rk:nth-child(3), .sg-rc-checks div:nth-child(3) { display: none; }
   .sg-rc-steps { gap: 4px; }
   .sg-rc-steps i { width: 22px; height: 22px; }
   .sg-rc-recon b { font-size: 18px; }
   .sg-rc-st { height: 22px; padding: 0 8px; }
 }
-@media screen and (max-width: 479px) {
-  .lx-scope .sg-rc { gap: 5px; padding: 8px 7px 8px 8px; border-radius: 10px; }
-  .sg-rc-ico { width: 20px; height: 20px; border-radius: 6px; }
-  .sg-rc-ico svg { width: 12px; height: 12px; }
-  .sg-rc-tag { padding: 0 4px; border-radius: 4px; }
-  .sg-rc-name { margin-top: 1px; font-size: 12px; }
-  .sg-rc-task, .sg-rc-app, .sg-rc-rk span, .sg-rc-rk b, .sg-rc-tl span, .sg-rc-checks span, .sg-rc-recon > div, .sg-rc-recon em { display: none; }
+@media screen and (max-width: 767px) {
+  .lx-scope .sg-rc { gap: 5px; padding: 9px 8px 9px 9px; border-radius: 10px; }
+  .sg-rc-ico { width: 22px; height: 22px; border-radius: 6px; }
+  .sg-rc-tag { padding: 0 5px; border-radius: 4px; }
+  .sg-rc-name { margin-top: 1px; font-size: 12.5px; }
+  .sg-rc-app, .sg-rc-tl span, .sg-rc-recon em { display: none; }
   .sg-rc-rank { gap: 5px; }
+  .sg-rc-recon b { font-size: 16px; }
+  .sg-rc-recon > i { margin: 5px 0 0; }
+  .sg-rc-st { height: 20px; gap: 5px; padding: 0 7px; }
+  .sg-rc-st > i { width: 6px; height: 6px; }
+  .sg-rc-st .sg-rc-s, .sg-rc-vl { display: none; }
+  .sg-rc-xs { display: inline; }
+  /* the cards ride behind the hero's headline here: their words step back, the drawings stay */
+  .sg-rc-name, .sg-rc-task { color: rgba(244, 238, 232, .5); }
+  .sg-rc-st, .sg-rc-st.is-wait, .sg-rc-st.is-done { background: none; border-color: rgba(255, 179, 122, .26); color: rgba(255, 199, 156, .62); }
+  .sg-rc-st.is-done { border-color: rgba(159, 224, 176, .26); color: rgba(169, 229, 185, .62); }
+}
+@media screen and (max-width: 479px) {
+  .lx-scope .sg-rc { padding: 8px 7px 8px 8px; }
+  .sg-rc-ico { width: 20px; height: 20px; }
+  .sg-rc-ico svg { width: 12px; height: 12px; }
+  .sg-rc-tag { padding: 0 4px; }
+  .sg-rc:lang(en) .sg-rc-ico { display: none; } /* 'Illustration' takes the head row of a 96 px card */
+  .sg-rc-name { font-size: 12px; }
+  .sg-rc-task, .sg-rc-rk span, .sg-rc-rk b, .sg-rc-recon > div { display: none; }
   .sg-rc-checks { flex-direction: row; gap: 4px; }
   .sg-rc-checks div:nth-child(3) { display: flex; }
+  .sg-rc-checks span { display: none; }
   .sg-rc-checks svg { width: 14px; height: 14px; }
   .sg-rc-recon > i { margin: 0; }
   .sg-rc-tl i { width: 8px; height: 8px; }
   .sg-rc-tl::before { top: 3px; }
   .sg-rc-steps { gap: 3px; }
   .sg-rc-steps i { width: 12px; height: 12px; font-size: 0; }
-  .sg-rc-st { height: 20px; gap: 4px; padding: 0 6px; }
-  .sg-rc-st > i { width: 6px; height: 6px; }
-  .sg-rc-l { display: none; }
-  .sg-rc-s { display: inline; }
+  .sg-rc-st { gap: 4px; padding: 0 6px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .sg-rc-st.is-run > i { animation: none; }
 }
+/* the marquee off screen: the dots rest (js/stargo-motion-desk.js sets the class) */
+.sg-rc-rest .sg-rc-st.is-run > i { animation-play-state: paused; }
+
+/* Hover: the card's own name panel slides up and the app chip (roleChip) slides
+   in under the head row; the code card's words and drawing step back, its head
+   (glyph and 示意 tag) stays. */
+.sg-rc > * { transition: opacity .35s ease; }
+.lx-feature-hero-card:hover .sg-rc > :not(.sg-rc-head), .lx-feature-hero-card:focus-visible .sg-rc > :not(.sg-rc-head) { opacity: 0; }
+.sg-rc-chip { display: inline-flex; align-items: center; gap: 6px; height: 24px; max-width: 100%; margin-top: 38px; padding: 0 10px 0 9px; border-radius: 99px; background: rgba(255, 236, 220, .08); border: 1px solid rgba(255, 236, 220, .16); color: #f4eee8; font: 600 12px/1 Inter, "PingFang SC", "Microsoft YaHei", sans-serif; white-space: nowrap; overflow: hidden; }
+.sg-rc-chip i { flex: none; width: 6px; height: 6px; border-radius: 2px; background: #ffb37a; }
+.sg-rc-chip.is-desk { margin-top: 24px; }
+@media screen and (max-width: 991px) { .sg-rc-chip { margin-top: 26px; } .sg-rc-chip.is-desk { margin-top: 18px; } }
+/* a small card's chip may wrap a long app name onto two lines rather than cut it */
+@media screen and (max-width: 767px) { .sg-rc-chip, .sg-rc-chip.is-desk { height: auto; min-height: 22px; margin-top: 28px; padding: 3px 7px 3px 6px; gap: 5px; border-radius: 8px; line-height: 1.2; white-space: normal; } }
+@media screen and (max-width: 479px) { .sg-rc-chip, .sg-rc-chip.is-desk { min-height: 20px; margin-top: 24px; padding: 2px 6px; } .sg-rc-chip i { display: none; } }
 
 /* ---------------- the collage card: a mini web desktop ---------------- */
 .lx-scope .lx-feature-hero-image.sg-mo { position: absolute; inset: 0; width: 100%; height: 100%; }
@@ -140,8 +171,9 @@
 .sg-desk.is-tiny .sg-desk-body { padding: 5px 6px 6px; gap: 5px; }
 .sg-desk.is-tiny .sg-desk-title { font-size: 12px; }
 .sg-desk.is-tiny .sg-desk-chart { flex: 1; height: auto; min-height: 12px; }
-.sg-desk.is-tiny .sg-desk-chip { padding: 0 5px; gap: 4px; }
+.sg-desk.is-tiny .sg-desk-chip { align-self: flex-end; padding: 0 5px; gap: 4px; } /* clear of the collage's round avatar card at its lower left */
 .sg-desk.is-tiny:lang(en) .sg-desk-dots { display: none; }
+.lx-v6-collage-card:hover .sg-desk-body, .lx-v6-collage-card:hover .sg-desk-dock { opacity: 0; transition: opacity .35s ease; }
 @media (prefers-reduced-motion: reduce) {
   .sg-desk, .sg-desk * { transition: none !important; }
 }

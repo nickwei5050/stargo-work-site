@@ -28,7 +28,7 @@ import { SITE } from './paths.mjs';
 import { productTour } from './product-tour.mjs';
 import { appSuite } from './app-suite.mjs';
 import { motionHost, motionAssets, MOTION_CSS, MOTION_SCRIPTS } from './motion-scenes.mjs';
-import { roleCard, ROLE_CARDS, withSceneAssets } from './code-art-people.mjs'; // lane people
+import { roleCard, roleChip, ROLE_CARDS, withSceneAssets } from './code-art-people.mjs'; // lane people
 import { webpPage } from './image-refs.mjs';
 import { a11yPage } from './a11y.mjs';
 import { speedPage } from './speed.mjs';
@@ -1343,8 +1343,12 @@ PAGES['workforce.html'] = (lang) => {
       const i = Number(k) - 1;
       if (!card.includes(roleName(W.roles[i].name))) throw new Error(`workforce: role card ${k} no longer names ${t(W.roles[i].name)}`);
       let m = 0;
-      const out = card.replace(/<img\b[^>]*class="lx-feature-hero-image"[^>]*>/g, () => { m++; return roleCard(i, lang, t(W.roles[i].name)); });
+      let out = card.replace(/<img\b[^>]*class="lx-feature-hero-image"[^>]*>/g, () => { m++; return roleCard(i, lang, t(W.roles[i].name)); });
       if (m !== 1) throw new Error(`workforce: role card ${k} should hold one picture, found ${m}`);
+      // the hover chip names the app the role works in, not a social network (roleChip)
+      m = 0;
+      out = out.replace(/<img\b[^>]*class="lx-social-media-logo[^"]*"[^>]*>/g, () => { m++; return roleChip(i, lang); });
+      if (m !== 1) throw new Error(`workforce: role card ${k} should hold one hover logo, found ${m}`);
       n++;
       return out;
     });
@@ -1357,6 +1361,8 @@ PAGES['workforce.html'] = (lang) => {
       return motionHost('deskReport', lang, 'lx-feature-hero-image sg-mo-desk');
     });
     if (c !== 1) throw new Error(`workforce: expected one collage picture, found ${c}`);
+    b = b.replace(/(data-sg-scene="deskReport"(?:(?!<\/a>)[\s\S])*?)<img\b[^>]*class="lx-social-media-logo[^"]*"[^>]*>/, (_, pre) => pre + roleChip('desk', lang));
+    if (b.includes('lx-social-media-logo"') || /class="lx-social-media-logo /.test(b)) throw new Error('workforce: a social-network logo survives on a card');
   }
   // the template's cards link to the studio's own social accounts
   b = b.replace(/href="https:\/\/(?:www\.)?(?:linkedin|instagram|facebook|x|twitter|tiktok|youtube)\.com[^"]*"/g, 'href="contact.html"');

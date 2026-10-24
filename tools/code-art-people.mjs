@@ -68,31 +68,34 @@ const CHECK = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" aria-
 
 /* The five marquee roles, in WORKFORCE copy order (tools/copy.mjs
    LX_FEATURE_WORKFORCE.roles): what each is doing right now, as one still
-   frame, and the site app it works in. `st` is the status chip: run (orange dot that pulses), wait (needs
-   you), done. `s` is the chip's short form for a phone's 96px card. */
+   frame, and the site app it works in. `task` is the line on a desktop card,
+   `ts` its short form on the smaller cards (it fits 110 px). `st` is the status
+   chip: run (orange dot that pulses), wait (needs you), done; `stl` is its
+   desktop words, `s` a tablet's and `xs` (else `s`) a phone's. `chip` is the
+   app named on the chip that slides in on hover. */
 const ROLES = [
   {
-    ico: I.research, name: B('市场研究', 'Research'), task: B('筛选德国储能经销商', 'Shortlisting German dealers'), app: B('Growth OS', 'Growth OS'),
-    st: 'run', stl: B('进行中 · 8/12', 'Running · 8 of 12'), s: B('进行中', 'Running'),
-    viz: (t) => `<div class="sg-rc-rank">${[['Nordwerk', 94], ['Nordic Mobility', 93], ['Gulf Coast', 91]].map(([n, v]) => `<div class="sg-rc-rk"><span>${n}</span><b>${v}</b><i style="--v:${(v - 70) / 30}"></i></div>`).join('')}</div>`,
+    ico: I.research, name: B('市场研究', 'Research'), task: B('按匹配度排序候选客户', 'Ranking buyers by fit'), ts: B('排序候选客户', 'Ranking buyers'), app: B('Growth OS', 'Growth OS'), chip: B('Growth OS', 'Growth OS'),
+    st: 'run', stl: B('进行中 · 2 条新信号', 'Running · 2 new signals'), s: B('进行中', 'Running'),
+    viz: (t) => `<div class="sg-rc-rank">${[['Nordwerk', 94], ['Nordic Mobility', 93, 'Nordic'], ['Gulf Coast', 91]].map(([n, v, sn]) => `<div class="sg-rc-rk"><span>${sn ? `<span class="sg-rc-vl">${n}</span><span class="sg-rc-xs">${sn}</span>` : n}</span><b>${v}</b><i style="--v:${((v - 70) / 30).toFixed(3)}"></i></div>`).join('')}</div>`,
   },
   {
-    ico: I.follow, name: B('销售跟进', 'Follow-up'), task: B('Müller Energie 3 天未回复', 'Müller Energie, no reply in 3 days'), app: B('客户会话', 'Customer Chat'),
-    st: 'wait', stl: B('跟进信待你确认', 'Draft needs your OK'), s: B('待你确认', 'Your OK'),
+    ico: I.follow, name: B('销售跟进', 'Follow-up'), task: B('Müller Energie 3 天未回复', 'Müller Energie, no reply in 3 days'), ts: B('Müller 3 天未回复', 'Müller: no reply'), app: B('客户会话', 'Customer Chat'), chip: B('客户会话', 'Customer Chat'),
+    st: 'wait', stl: B('跟进信待你确认', 'Draft needs your OK'), s: B('待你确认', 'Needs your OK'), xs: B('待你确认', 'Your OK'),
     viz: (t) => `<div class="sg-rc-tl"><i class="is-sent"></i><i></i><i></i><i class="is-now"></i><span>${t(B('10/20 已发报价', 'Oct 20 quote sent'))}</span></div>`,
   },
   {
-    ico: I.spec, name: B('产品规格', 'Specs'), task: B('核对 48V 100Ah 规格', 'Checking 48V 100Ah specs'), app: B('ERP · 产品资料', 'ERP · Products'),
+    ico: I.spec, name: B('产品规格', 'Specs'), task: B('核对 48V 100Ah 规格', 'Checking 48V 100Ah specs'), ts: B('核对 48V 100Ah', '48V 100Ah specs'), app: B('ERP · 产品资料', 'ERP · Products'), chip: B('ERP', 'ERP'),
     st: 'done', stl: B('规格已核对', 'Specs checked'), s: B('已核对', 'Checked'),
     viz: (t) => `<div class="sg-rc-checks">${[B('电压 48V', 'Voltage 48V'), B('容量 100Ah', 'Capacity 100Ah'), B('UN38.3 文件', 'UN38.3 file')].map((x) => `<div>${CHECK}<span>${t(x)}</span></div>`).join('')}</div>`,
   },
   {
-    ico: I.finance, name: B('财务对账', 'Finance'), task: B('核对 10 月到账', 'Matching October payments'), app: B('ERP · 收款', 'ERP · Receipts'),
+    ico: I.finance, name: B('财务对账', 'Finance'), task: B('核对 10 月到账', 'Matching October payments'), ts: B('核对 10 月到账', 'October payments'), app: B('ERP · 收款', 'ERP · Receipts'), chip: B('ERP', 'ERP'),
     st: 'run', stl: B('进行中 · 17/18', 'Running · 17 of 18'), s: B('进行中', 'Running'),
-    viz: (t) => `<div class="sg-rc-recon"><div><b>17</b><span>/18 ${t(B('笔已匹配', 'matched'))}</span></div><i><i style="--v:${17 / 18}"></i></i><em>${t(B('1 笔差异待查', '1 to check'))}</em></div>`,
+    viz: (t) => `<div class="sg-rc-recon"><div><b>17</b><span>/18 ${t(B('笔已匹配', 'matched'))}</span></div><i><i style="--v:${(17 / 18).toFixed(3)}"></i></i><em>${t(B('1 笔差异待查', '1 to check'))}</em></div>`,
   },
   {
-    ico: I.coord, name: B('统筹协调', 'Coordinator'), task: B('开拓巴西电动两轮市场', 'Brazil e-scooter market'), app: B('数字员工', 'AI Staff'),
+    ico: I.coord, name: B('统筹协调', 'Coordinator'), task: B('开拓巴西电动两轮市场', 'Brazil e-scooter market'), ts: B('巴西电动两轮市场', 'Brazil e-scooters'), app: B('数字员工', 'AI Staff'), chip: B('数字员工', 'AI Staff'),
     st: 'run', stl: B('4 位协作中 · 3/5', '4 at work · 3 of 5'), s: B('协作中', 'At work'),
     viz: (t) => `<div class="sg-rc-steps">${[B('研', 'R'), B('产', 'P'), B('销', 'S'), B('创', 'C'), B('统', 'L')].map((x, i) => `<i class="${i < 3 ? 'is-done' : i === 3 ? 'is-run' : ''}">${t(x)}</i>`).join('')}</div>`,
   },
@@ -115,13 +118,27 @@ export function roleCard(i, lang, roleName) {
   return `<div class="lx-feature-hero-image sg-rc sg-rc-${i + 1}" role="img" aria-label="${escapeHtml(label)}">`
     + `<div class="sg-rc-head"><span class="sg-rc-ico">${svg(r.ico, 16)}</span><span class="sg-rc-tag">${t(TAG)}</span></div>`
     + `<div class="sg-rc-name">${escapeHtml(t(r.name))}</div>`
-    + `<div class="sg-rc-task">${escapeHtml(t(r.task))}</div>`
+    + `<div class="sg-rc-task"><span class="sg-rc-l">${escapeHtml(t(r.task))}</span><span class="sg-rc-s">${escapeHtml(t(r.ts))}</span></div>`
     + `<div class="sg-rc-app">${escapeHtml(t(r.app))}</div>`
     + `<div class="sg-rc-viz">${r.viz(t)}</div>`
-    + `<div class="sg-rc-st is-${r.st}"><i></i><span class="sg-rc-l">${escapeHtml(t(r.stl))}</span><span class="sg-rc-s">${escapeHtml(t(r.s))}</span></div>`
+    + `<div class="sg-rc-st is-${r.st}"><i></i><span class="sg-rc-l">${escapeHtml(t(r.stl))}</span><span class="sg-rc-s">${escapeHtml(t(r.s))}</span><span class="sg-rc-xs">${escapeHtml(t(r.xs ?? r.s))}</span></div>`
     + '</div>';
 }
 export const ROLE_CARDS = ROLES.length;
+
+/**
+ * The chip that slides in on a card's hover, in place of the template's
+ * social-network logo pictures (Instagram, TikTok, LinkedIn, YouTube, X: third
+ * parties' marks, on cards that link to the contact page): the site app the
+ * role works in, drawn in code. `i` is the role's index; 'desk' is the
+ * collage card's web desktop. It lands under the card's head row, so the
+ * card's 示意 tag stays in sight.
+ */
+export function roleChip(i, lang) {
+  const name = i === 'desk' ? B('网页桌面', 'Web desktop') : ROLES[i]?.chip;
+  if (!name) throw new Error(`people: no role chip ${i}`);
+  return `<span class="sg-rc-chip${i === 'desk' ? ' is-desk' : ''}"><i></i>${escapeHtml(name[lang])}</span>`;
+}
 
 /* ---------------------------------------------------------- assets -- */
 
@@ -138,8 +155,13 @@ export function withSceneAssets(page) {
   const { css, js } = motionAssets(scenes);
   const fusion = '<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>';
   if (page.split(fusion).length !== 2 || page.split('</body>').length !== 2) throw new Error('people: cannot place the motion scenes\' files');
-  const links = css.split('\n').filter((l) => !page.includes(l));
-  let out = links.length ? page.replace(fusion, `${fusion}\n${links.join('\n')}`) : page;
+  /* The scenes sit far below the first screen and are built only when they
+     come near it, so their stylesheets load without blocking the first paint
+     (media="print" until loaded); without JS nothing is drawn, so the noscript
+     copy only gives the empty boxes their colour. */
+  const links = css.split('\n').filter((l) => !page.includes(l.match(/href="([^"]+)"/)[1]));
+  const lazy = links.map((l) => l.replace('/>', ` media="print" onload="this.media='all'"/>`));
+  let out = links.length ? page.replace(fusion, `${fusion}\n${lazy.join('\n')}<noscript>${links.join('')}</noscript>`) : page;
   const tags = js.match(/<script [^>]*><\/script>/g) ?? [];
   const engine = tags.find((s) => s.includes('js/stargo-motion.js'));
   const missing = tags.filter((s) => !out.includes(s.match(/src="([^"]+)"/)[1]));

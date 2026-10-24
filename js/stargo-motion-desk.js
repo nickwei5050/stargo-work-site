@@ -11,6 +11,17 @@
   'use strict';
   var T = K.T, el = K.el, put = K.put, cl = K.cl, seg = K.seg, ease = K.ease, mod = K.mod;
 
+  // per-frame scales come from a table, so a tick builds no strings
+  var SY = [], SX = [];
+  for (var q = 0; q <= 100; q++) { SY.push('scaleY(' + q / 100 + ')'); SX.push('scaleX(' + q / 100 + ')'); }
+
+  /* The hero's marquee role cards (static, tools/code-art-people.mjs) own one
+     CSS pulse on their running dots; it rests while the marquee is off screen. */
+  var hero = document.getElementById('lx-roles');
+  if (hero && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) { hero.classList.toggle('sg-rc-rest', !es[es.length - 1].isIntersecting); }).observe(hero);
+  }
+
   function DeskScene() {
     var P = 10, DRAFT0 = 2.9, DRAFT1 = 6.1, ASK = 6.5;
     var KPI = [
@@ -78,10 +89,10 @@
         if (R.kpi[i].n !== n) { R.kpi[i].n = n; put(R.kpi[i].v, 'text', String(n)); }
       }
       for (i = 0; i < R.bars.length; i++) {
-        put(R.bars[i].e, '-transform', 'scaleY(' + (R.bars[i].v * ease.out(seg(tau, 1.2 + i * 0.25, 2.2 + i * 0.25))).toFixed(3) + ')');
+        put(R.bars[i].e, '-transform', SY[Math.round(100 * R.bars[i].v * ease.out(seg(tau, 1.2 + i * 0.25, 2.2 + i * 0.25)))]);
       }
       for (i = 0; i < R.lines.length; i++) {
-        put(R.lines[i], '-transform', 'scaleX(' + ease.io(seg(tau, DRAFT0 + i * 1.05, DRAFT0 + 1.05 + i * 1.05)).toFixed(3) + ')');
+        put(R.lines[i], '-transform', SX[Math.round(100 * ease.io(seg(tau, DRAFT0 + i * 1.05, DRAFT0 + 1.05 + i * 1.05)))]);
       }
       var ask = tau >= ASK, pct = Math.round(100 * seg(tau, 0.4, DRAFT1));
       var key = ask ? -1 : R.lines.length ? pct : 0;
