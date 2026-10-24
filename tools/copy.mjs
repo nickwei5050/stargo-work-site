@@ -62,6 +62,12 @@ export const LANG_SWITCH = B('EN', '中文');
 /** Production origin — canonical URLs, hreflang, Open Graph and the sitemap. */
 export const SITE_URL = 'https://stargowork.com';
 
+/* The registered operator of this product site (2026-10-24).
+   www.stargomoto.com is a different company's factory site and is not a
+   profile, official site, or sameAs of this organization, so it is not a
+   contact channel here. */
+export const LEGAL_ENTITY = '广西博韦尔传媒科技有限公司';
+
 /* The company's contact details, in ONE place. Everything the site prints or
    links — the footer, the side menu's and the about card's channel buttons,
    the contact page's 「直接联系」 list, the privacy and terms pages, the form's
@@ -82,9 +88,8 @@ export const CONTACT_INFO = {
   wechat: '18775127878',
   whatsapp: '+86 187 7512 7878',
   whatsappHref: 'https://wa.me/8618775127878',
-  site: 'www.stargomoto.com',
-  siteHref: 'https://www.stargomoto.com',
   address: B('中国 · 广西 · 柳州', 'Liuzhou, Guangxi, China'),
+  legalName: LEGAL_ENTITY,
   labels: {
     person: B('联系人', 'Contact'),
     phone: B('电话', 'Phone'),
@@ -156,12 +161,14 @@ export const CHROME = [
      homepage's line reads 「© 2026 STARGO WORK - 」 and neither donor key
      matches it any more. That entry catches it, and every other page passes
      through it unchanged. */
-  ['© 2026 Mōno™ Studio -', B('© 2026 STARGO WORK', '© 2026 STARGO WORK')],
-  ['© 2026 Mōno™ Studio', B('© 2026 STARGO WORK', '© 2026 STARGO WORK')],
-  ['© 2026 STARGO WORK -', B('© 2026 STARGO WORK', '© 2026 STARGO WORK')],
+  ['© 2026 Mōno™ Studio -', B(`© 2026 STARGO WORK<br/>${LEGAL_ENTITY}`, `© 2026 STARGO WORK<br/>${LEGAL_ENTITY}`)],
+  ['© 2026 Mōno™ Studio', B(`© 2026 STARGO WORK<br/>${LEGAL_ENTITY}`, `© 2026 STARGO WORK<br/>${LEGAL_ENTITY}`)],
+  ['© 2026 STARGO WORK -', B(`© 2026 STARGO WORK<br/>${LEGAL_ENTITY}`, `© 2026 STARGO WORK<br/>${LEGAL_ENTITY}`)],
+  /* Homepage hero copyright has no trailing hyphen, so the three keys above miss it. */
+  ['<p class="top-text big gray sm">© 2026 STARGO WORK</p>', B(`<p class="top-text big gray sm">© 2026 STARGO WORK<br/>${LEGAL_ENTITY}</p>`, `<p class="top-text big gray sm">© 2026 STARGO WORK<br/>${LEGAL_ENTITY}</p>`)],
   ['(Pages)', B('(页面)', '(Pages)')],
   ['(New Projects / Business)', B('(商务合作)', '(Business)')],
-  ['(General Inquiries)', B('(一般咨询)', '(General)')],
+  ['(General Inquiries)', B('(运营主体)', '(Legal entity)')],
   ['(Location)', B('(地址)', '(Location)')],
   ['(Social)', B('(社交)', '(Social)')],
   ['Roc Boronat 112, Floor 3 - Door 2 (08018) Barcelona, Spain', CONTACT_INFO.address],
@@ -188,16 +195,15 @@ export const CHROME = [
   ['>Privacy policy<', B('>隐私政策<', '>Privacy policy<')],
   ['>Licensing<', B('>第三方声明<', '>Notices<')],
   ['>contact@monostudio.io<', B(`>${CONTACT_INFO.email}<`, `>${CONTACT_INFO.email}<`)],
-  ['>info@monostudio.io<', B(`>${CONTACT_INFO.site}<`, `>${CONTACT_INFO.site}<`)],
+  ['>info@monostudio.io<', B(`><span class="stargo-legal-entity">${LEGAL_ENTITY}</span><`, `><span class="stargo-legal-entity">${LEGAL_ENTITY}</span><`)],
   /* The number is its own span since the footer also lists 电话 with the same
      number: where the footer column is too narrow for both words (768-1279px,
      css/stargo-fusion.css) this row shows the word 「WhatsApp」 and the number
      stays on the 电话 row, instead of the same digits twice, once unlabelled. */
   ['>(+1) 930 046 720<', B(`><span class="stargo-wa">WhatsApp </span><span class="stargo-wa-num">${CONTACT_INFO.whatsapp}</span><`, `><span class="stargo-wa">WhatsApp </span><span class="stargo-wa-num">${CONTACT_INFO.whatsapp}</span><`)],
   ['href="mailto:contact@monostudio.io"', B(`href="mailto:${CONTACT_INFO.email}"`, `href="mailto:${CONTACT_INFO.email}"`)],
-  ['href="mailto:info@monostudio.io"', B(`href="${CONTACT_INFO.siteHref}"`, `href="${CONTACT_INFO.siteHref}"`)],
+  ['href="mailto:info@monostudio.io"', B('href="privacy.html"', 'href="privacy.html"')],
   ['href="tel:(+1)930046720"', B(`href="${CONTACT_INFO.whatsappHref}"`, `href="${CONTACT_INFO.whatsappHref}"`)],
-  ['href="https://www.linkedin.com/"', B(`href="${CONTACT_INFO.siteHref}"`, `href="${CONTACT_INFO.siteHref}"`)],
   ['href="https://www.twitter.com/"', B(`href="${CONTACT_INFO.whatsappHref}"`, `href="${CONTACT_INFO.whatsappHref}"`)],
   ['href="https://www.dribbble.com/"', B(`href="mailto:${CONTACT_INFO.email}"`, `href="mailto:${CONTACT_INFO.email}"`)],
   ['href="https://cal.com/"', B('href="contact.html"', 'href="contact.html"')],
@@ -1522,7 +1528,7 @@ export const NOTICES = {
 <h4>上游软件</h4>
 <p>站内提到的 Activepieces、Chatwoot、Twenty CRM、WeKnora、Windmill、Playwright、Yente / OpenSanctions、Univer、Puter、Medusa、ERPNext、PostHog、Microsoft SkillOpt、Notion、Google、Reddit、LinkedIn、Facebook、YouTube、Alibaba、WhatsApp 等名称，均为各自所有者的商标或项目名。列出这些名称是为了注明上游来源，不代表相关项目为 STARGO 背书。</p>
 <h4>联系</h4>
-<p>STARGO WORK · 中国 · 广西 · 柳州 · ${CONTACT_INFO.email} · WhatsApp ${CONTACT_INFO.whatsapp} · ${CONTACT_INFO.site}</p>`,
+<p>${LEGAL_ENTITY} · STARGO WORK · 中国 · 广西 · 柳州 · ${CONTACT_INFO.email} · WhatsApp ${CONTACT_INFO.whatsapp}</p>`,
   `
 <h4>Runtime libraries</h4>
 <ul>
@@ -1538,7 +1544,7 @@ export const NOTICES = {
 <h4>Upstream software</h4>
 <p>Activepieces, Chatwoot, Twenty CRM, WeKnora, Windmill, Playwright, Yente / OpenSanctions, Univer, Puter, Medusa, ERPNext, PostHog, Microsoft SkillOpt, Notion, Google, Reddit, LinkedIn, Facebook, YouTube, Alibaba, WhatsApp and other names mentioned on this site are trademarks or project names of their respective owners. They are named so that each upstream source can be identified; naming them does not imply that any of them endorses STARGO.</p>
 <h4>Contact</h4>
-<p>STARGO WORK · Liuzhou, Guangxi, China · ${CONTACT_INFO.email} · WhatsApp ${CONTACT_INFO.whatsapp} · ${CONTACT_INFO.site}</p>`),
+<p>${LEGAL_ENTITY} · STARGO WORK · Liuzhou, Guangxi, China · ${CONTACT_INFO.email} · WhatsApp ${CONTACT_INFO.whatsapp}</p>`),
   back: B('返回首页', 'Back to home'),
   /* The three "keep reading" cards under the notices (V6 names). Only these
      move; the disclosures above — runtime libraries, fonts, imagery and the
@@ -1567,10 +1573,10 @@ export const NOT_FOUND = {
 /** Privacy policy and terms of use: real pages, not placeholder anchors. */
 export const LEGAL = {
   privacy: {
-    date: B('2026 年 10 月 21 日生效', 'Effective 2026-10-21'),
+    date: B('2026 年 10 月 23 日生效', 'Effective 2026-10-23'),
     h1: B('隐私政策', 'Privacy policy'),
     body: B(`
-<p>本政策说明 STARGO WORK 官方网站（以下简称“本站”）收集哪些信息、为什么收集、保存多久，以及你拥有的权利。本站由 STARGO（中国广西柳州）运营。</p>
+<p>本政策说明 STARGO WORK 官方网站（以下简称“本站”）收集哪些信息、为什么收集、保存多久，以及你拥有的权利。本站由${LEGAL_ENTITY}（中国广西柳州）运营。</p>
 <h4>我们收集什么</h4>
 <ul>
 <li><strong>你主动提交的信息。</strong>通过联系表单或订阅表单提交的姓名、邮箱、公司、WhatsApp、行业、目标市场、团队规模、现有系统与留言内容。这些信息仅用于回复你的咨询、安排演示和发送你订阅的产品更新。</li>
@@ -1589,7 +1595,7 @@ export const LEGAL = {
 <h4>政策更新</h4>
 <p>政策更新时，本页顶部的生效日期会随之变化。重大变更会在本站显著位置提示。</p>`,
     `
-<p>This policy explains what the STARGO WORK website (“this site”) collects, why, for how long, and the rights you have. The site is operated by STARGO, Liuzhou, Guangxi, China.</p>
+<p>This policy explains what the STARGO WORK website (“this site”) collects, why, for how long, and the rights you have. The site is operated by ${LEGAL_ENTITY}, Liuzhou, Guangxi, China.</p>
 <h4>What we collect</h4>
 <ul>
 <li><strong>What you submit.</strong> Name, email, company, WhatsApp, industry, target markets, team size, current systems and your message, sent through the contact or newsletter forms. They are used only to answer your inquiry, arrange a demo and send the product updates you subscribed to.</li>
@@ -1609,38 +1615,38 @@ export const LEGAL = {
 <p>When this policy changes, the effective date at the top of this page changes with it. Material changes are announced prominently on the site.</p>`),
   },
   terms: {
-    date: B('2026 年 10 月 21 日生效', 'Effective 2026-10-21'),
+    date: B('2026 年 10 月 23 日生效', 'Effective 2026-10-23'),
     h1: B('使用条款', 'Terms of use'),
     body: B(`
-<p>访问或使用 STARGO WORK 官方网站（以下简称“本站”），即表示你接受以下条款。本站由 STARGO（中国广西柳州）运营。</p>
+<p>访问或使用 STARGO WORK 官方网站（以下简称“本站”），即表示你接受以下条款。本站由${LEGAL_ENTITY}（中国广西柳州）运营。</p>
 <h4>内容用途</h4>
 <p>本站内容用于介绍 STARGO WORK 产品与服务。页面中的界面图、公司名、人名与数字均为演示数据，用于说明产品工作方式，不构成对任何真实客户或结果的陈述。</p>
 <h4>价格与方案</h4>
 <p>本站列出的方案与价格为公开参考价，以人民币计。实际服务范围、续费价格、模型与第三方服务用量，以双方签署的合同或订单为准。我们可能在不另行通知的情况下调整本站的方案与价格。</p>
 <h4>知识产权</h4>
-<p>STARGO 标识、字标、产品名称（含 STARGO WORK、STARGO OS、Growth OS 等）以及本站的文字、界面图与品牌视觉，均归 STARGO 所有。未经书面许可，不得复制、改编或用于商业用途。本站使用的第三方模板、库与字体，其许可见“第三方声明”。</p>
+<p>STARGO 标识、字标、产品名称（含 STARGO WORK、STARGO OS、Growth OS 等）以及本站的文字、界面图与品牌视觉，均归${LEGAL_ENTITY}所有。未经书面许可，不得复制、改编或用于商业用途。本站使用的第三方模板、库与字体，其许可见“第三方声明”。</p>
 <h4>第三方名称</h4>
 <p>站内提到的其他公司、产品与项目名称属于各自所有者，出现在本站是为了说明兼容性或来源，不表示相关方对 STARGO 的背书。</p>
 <h4>责任限制</h4>
-<p>本站按“现状”提供。在法律允许的范围内，STARGO 不对因使用本站或依赖本站内容而产生的任何间接损失承担责任。本站可能不定期变更或中断，恕不另行通知。</p>
+<p>本站按“现状”提供。在法律允许的范围内，${LEGAL_ENTITY}不对因使用本站或依赖本站内容而产生的任何间接损失承担责任。本站可能不定期变更或中断，恕不另行通知。</p>
 <h4>适用法律</h4>
-<p>本条款适用中华人民共和国法律。因本条款产生的争议，由 STARGO 所在地有管辖权的人民法院管辖。</p>
+<p>本条款适用中华人民共和国法律。因本条款产生的争议，由${LEGAL_ENTITY}所在地有管辖权的人民法院管辖。</p>
 <h4>联系</h4>
 <p>关于本条款的问题：${CONTACT_INFO.email} · WhatsApp ${CONTACT_INFO.whatsapp}。</p>`,
     `
-<p>By accessing or using the STARGO WORK website (“this site”), you accept the terms below. The site is operated by STARGO, Liuzhou, Guangxi, China.</p>
+<p>By accessing or using the STARGO WORK website (“this site”), you accept the terms below. The site is operated by ${LEGAL_ENTITY}, Liuzhou, Guangxi, China.</p>
 <h4>Purpose of the content</h4>
 <p>The site presents the STARGO WORK product and services. Interface images, company names, personal names and figures on these pages are demonstration data that illustrate how the product works; they make no statement about any real customer or result.</p>
 <h4>Plans and prices</h4>
 <p>Plans and prices listed here are public reference prices in Chinese yuan. The actual scope of service, renewal price and allowance for model and third-party usage are set by the contract or order signed by both parties. Plans and prices on this site may change without notice.</p>
 <h4>Intellectual property</h4>
-<p>The STARGO mark, wordmark and product names (including STARGO WORK, STARGO OS and Growth OS), together with the text, interface images and brand visuals on this site, belong to STARGO. They may not be copied, adapted or used commercially without written permission. Third-party templates, libraries and fonts used by the site are licensed as described on the Notices page.</p>
+<p>The STARGO mark, wordmark and product names (including STARGO WORK, STARGO OS and Growth OS), together with the text, interface images and brand visuals on this site, belong to ${LEGAL_ENTITY}. They may not be copied, adapted or used commercially without written permission. Third-party templates, libraries and fonts used by the site are licensed as described on the Notices page.</p>
 <h4>Third-party names</h4>
 <p>Other company, product and project names mentioned on this site belong to their respective owners. They appear to explain compatibility or origin and imply no endorsement of STARGO.</p>
 <h4>Limitation of liability</h4>
-<p>The site is provided “as is.” To the extent the law allows, STARGO is not liable for indirect loss arising from use of the site or reliance on its content. The site may change or be interrupted at any time without notice.</p>
+<p>The site is provided “as is.” To the extent the law allows, ${LEGAL_ENTITY} is not liable for indirect loss arising from use of the site or reliance on its content. The site may change or be interrupted at any time without notice.</p>
 <h4>Governing law</h4>
-<p>These terms are governed by the laws of the People’s Republic of China. Disputes fall under the jurisdiction of the competent people’s court at STARGO’s seat.</p>
+<p>These terms are governed by the laws of the People’s Republic of China. Disputes fall under the jurisdiction of the competent people’s court at the seat of ${LEGAL_ENTITY}.</p>
 <h4>Contact</h4>
 <p>Questions about these terms: ${CONTACT_INFO.email} · WhatsApp ${CONTACT_INFO.whatsapp}.</p>`),
   },
