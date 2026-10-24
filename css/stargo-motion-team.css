@@ -166,7 +166,7 @@
 .sg-team.is-wide .sg-team-tx { position: absolute; left: 72px; top: 25px; width: 194px; }
 .sg-team.is-wide .sg-team-name { font-size: 16px; line-height: 20px; }
 .sg-team.is-wide .sg-team-status { font-size: 13.5px; line-height: 18px; margin-top: 4px; }
-.sg-team.is-wide .sg-team-out { left: 620px; top: 17px; width: 152px; height: 62px; padding: 9px 12px 0; }
+.sg-team.is-wide .sg-team-out { right: 16px; top: 17px; width: 152px; height: 62px; padding: 9px 12px 0; }
 .sg-team.is-wide .sg-team-out-v { margin-top: 4px; }
 .sg-team.is-wide .sg-team-out-v b { font-size: 18px; letter-spacing: -.01em; }
 /* the three images sit level with the label, so the value keeps the whole width */
@@ -235,6 +235,11 @@
 .sg-team.is-tile .sg-team-tx { flex: 1; display: flex; align-items: baseline; gap: 10px; }
 .sg-team.is-tile .sg-team-name { flex: none; width: 112px; font-size: 13.5px; }
 .sg-team.is-tile:lang(en) .sg-team-name { width: 128px; }
+/* tiles under 520 wide (1180-1270px screens) name the roles short (研究员 / Researcher) */
+.sg-team.is-tile.is-tight .sg-team-name { width: 84px; }
+.sg-team.is-tile.is-tight .sg-team-goal-text { font-size: 13.5px; }
+.sg-team.is-tile.is-tight .sg-team-assign { min-width: 8.6em; }
+.sg-team.is-tile .sg-app-bar > * { white-space: nowrap; }
 .sg-team.is-tile .sg-team-status { flex: 1; font-size: 12.5px; }
 .sg-team.is-phone .sg-team-out, .sg-team.is-tile .sg-team-out { position: static; flex: none; display: flex; align-items: center; height: 24px; padding: 0 8px; border-radius: 7px; }
 .sg-team.is-tile .sg-team-out { height: 22px; min-width: 112px; justify-content: center; }
@@ -283,6 +288,11 @@
 .sg-team.is-mini .sg-team-choices { gap: 4px; }
 /* the line is the stage's last, so the name tag goes above the pointer */
 .sg-team.is-mini .sg-team-you { top: -21px; left: 12px; padding: 3px 6px; border-radius: 8px 8px 8px 3px; }
+/* the choice it taps sits on the bottom row of the tile and of the card's tablet and phone layouts, so
+   there the label rides above the pointer, as on the mini, and never runs past the bottom edge */
+.sg-team.is-tile .sg-team-you, .sg-team.is-mid .sg-team-you, .sg-team.is-phone .sg-team-you { top: -31px; left: 10px; border-radius: 8px 8px 8px 3px; }
+/* on the phone card the question sits right above the choices: the label stays beside the pointer instead */
+.sg-team.is-phone .sg-team-you { top: -12px; left: 15px; border-radius: 3px 8px 8px 8px; }
 
 @media (prefers-reduced-motion: reduce) {
   .sg-team *, .sg-team { transition: none !important; animation: none !important; }

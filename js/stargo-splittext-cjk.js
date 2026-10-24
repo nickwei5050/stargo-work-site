@@ -205,6 +205,10 @@
       // Already split by an earlier timeline: leave it to the engine, as before.
       try { if (coord.globalSplitRegistry && coord.globalSplitRegistry.get(el)) return false; } catch (e) { return false; }
       if (String(cfg && cfg.type).indexOf('lines') < 0 && !(el.closest && el.closest(SCENES))) return false;
+      // An article's title (h1[hero=title], only on the 7 blog articles) keeps its line split: the split
+      // lines shrink the h1 inside its centring holder, so without them the title wraps differently and
+      // the page is shorter than before. One short heading costs little to split.
+      if (el.closest && el.closest('[hero="title"]')) return false;
       held.add(el);
       any = true;
       return true;
