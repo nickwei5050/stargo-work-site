@@ -1,11 +1,23 @@
 /* Phone scenes (js/stargo-motion-phone.js): the light chrome of the STARGO WORK phone app, as the
    real captures show it (assets/stargo-product/m01, m04, live51, live52). Prefix sgp-. Every text
-   in the phone-width layouts (feed mini, squad mid) is 12px or more before the stage is scaled up. */
+   is 12px or more, and each layout is picked so its stage is scaled by 1 or more (feed mid and crop,
+   squad mid-W: js/stargo-motion-phone.js). */
 
 /* ---------- hosts ---------- */
 /* the hand-held phone of the 「不再 等提醒 / 等回复 / 丢背景」 band: the host takes the screen layer's
    place, size and mask (css/stargo-fusion.css .stargo-nw-art), so the fingertips stay in front */
 .lx-scope .stargo-nw-frame .sg-mo.stargo-nw-art { background: #f5f2ec; }
+/* From 768 to about 900 px the band's box is narrower than the phone, so the right part of the screen is
+   cut off (.stargo-nw-screen clips it). The host is narrowed to the part that shows (the frame starts at
+   the box's left edge and the screen at 12.124% of the frame), so the scene is laid out for it; its mask
+   keeps the whole screen's size, so the screen's corners and the fingertips stay where they were. */
+@media (min-width: 768px) {
+  .lx-scope .stargo-nw-frame .sg-mo.stargo-nw-art {
+    width: min(43.265%, calc(100cqw - 12.124%));
+    -webkit-mask-size: calc(max(100cqw, 100cqh * 1262 / 1474) * .43265) 100%;
+    mask-size: calc(max(100cqw, 100cqh * 1262 / 1474) * .43265) 100%;
+  }
+}
 /* the phone of the 「按任务组队」 card: the top screen of the mockup, inside its rounded window */
 .lx-integrations_06-image-wrap > .sg-mo { position: absolute; inset: 0; width: 100%; height: 100%; background: #f5f2ec; }
 
@@ -55,7 +67,7 @@
 .sgp-empty { position: absolute; left: 14px; top: 44px; font-size: 12.5px; color: #7a746f; white-space: nowrap; }
 .sgp-list { position: absolute; left: 0; right: 0; top: 46px; }
 .sgp-feed .sgp-item { position: absolute; left: 0; right: 0; top: 0; overflow: hidden; padding: 12px 14px 13px; transition: background .8s; }
-.sgp-feed.is-tall .sgp-item + .sgp-item::before { content: ""; position: absolute; left: 14px; right: 14px; top: 0; height: 1px; background: #e4deda; }
+.sgp-feed.is-tall .sgp-item + .sgp-item::before, .sgp-feed.is-mid .sgp-item + .sgp-item::before { content: ""; position: absolute; left: 14px; right: 14px; top: 0; height: 1px; background: #e4deda; }
 .sgp-feed .sgp-item.is-new { background: #fffdf9; }
 .sgp-r1 { display: flex; align-items: center; gap: 9px; height: 30px; white-space: nowrap; }
 .sgp-r1 b { flex: 1; min-width: 0; font-size: 14.5px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; }
@@ -71,12 +83,47 @@
 .sgp-done-s { margin: 3px 0 0 30px; font-size: 12.5px; color: #3b3c44; }
 .sgp-feed .sgp-item.is-done { background: #eef6f1; }
 .sgp-tabs { position: absolute; left: 0; right: 0; bottom: 0; height: 64px; display: grid; grid-template-columns: repeat(3, 1fr); padding-top: 8px; border-top: 1px solid #e4deda; background: #f5f2ec; }
-.sgp-tab { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 11.5px; color: #4a4b52; white-space: nowrap; }
+.sgp-tab { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 12px; color: #4a4b52; white-space: nowrap; }
 .sgp-tab.is-on { color: #10191a; font-weight: 600; }
 .sgp-tab-i { position: relative; }
-.sgp-badge { position: absolute; left: 15px; top: -5px; min-width: 18px; height: 16px; padding: 0 4px; border-radius: 8px; display: grid; place-items: center; font-style: normal; font-size: 11.5px; font-weight: 600; color: #600a15; background: #fba7a6; opacity: 0; transform: scale(.6); transition: opacity .3s, transform .4s cubic-bezier(.34, 1.56, .64, 1); }
+.sgp-badge { position: absolute; left: 15px; top: -5px; min-width: 18px; height: 16px; padding: 0 4px; border-radius: 8px; display: grid; place-items: center; font-style: normal; font-size: 12px; font-weight: 600; color: #600a15; background: #fba7a6; opacity: 0; transform: scale(.6); transition: opacity .3s, transform .4s cubic-bezier(.34, 1.56, .64, 1); }
 .sgp-badge.is-on { opacity: 1; transform: none; }
 .sgp-home { position: absolute; left: 50%; bottom: 7px; width: 100px; height: 4px; margin-left: -50px; border-radius: 2px; background: #10191a; }
+
+/* feed mid: 224 × 485, laptops (host 224–279 px wide) */
+.sgp-feed.is-mid .sgp-status { height: 32px; padding: 0 14px 0 22px; }
+.sgp-feed.is-mid .sgp-status b { font-size: 12.5px; }
+.sgp-feed.is-mid .sgp-bar { height: 36px; padding: 0 10px 0 12px; gap: 5px; }
+.sgp-feed.is-mid .sgp-bar-t { font-size: 14.5px; }
+.sgp-feed.is-mid .sgp-bar-menu, .sgp-feed.is-mid .sgp-gear { width: 18px; height: 18px; }
+.sgp-feed.is-mid .sgp-dot { width: 9px; height: 9px; }
+.sgp-feed.is-mid .sgp-plus { width: 26px; height: 26px; border-radius: 7px; }
+.sgp-feed.is-mid .sgp-tagline { height: 18px; padding: 0 12px; }
+.sgp-feed.is-mid .sg-tag { letter-spacing: 0; }
+.sgp-feed.is-mid .sgp-card { margin: 2px 8px 0; border-radius: 14px; }
+.sgp-feed.is-mid .sgp-card-h { height: 38px; gap: 6px; padding: 0 12px; font-size: 14px; }
+.sgp-feed.is-mid .sgp-count { font-size: 14px; }
+.sgp-feed.is-mid .sgp-empty { left: 12px; top: 36px; font-size: 12px; }
+.sgp-feed.is-mid .sgp-list { top: 38px; }
+.sgp-feed.is-mid .sgp-item { padding: 8px 12px; }
+.sgp-feed.is-mid .sgp-item + .sgp-item::before { left: 12px; right: 12px; }
+.sgp-feed.is-mid .sgp-r1 { gap: 7px; height: 24px; }
+.sgp-feed.is-mid .sgp-av { width: 24px; height: 24px; }
+.sgp-feed.is-mid .sgp-r1 b { font-size: 14px; }
+.sgp-feed.is-mid .sgp-r2 { margin-top: 5px; }
+.sgp-feed.is-mid .sgp-pill { height: 20px; padding: 0 7px; border-radius: 6px; font-size: 12px; }
+.sgp-feed.is-mid .sgp-body { margin-top: 5px; font-size: 12.5px; }
+.sgp-feed.is-mid .sgp-acts { gap: 6px; margin-top: 7px; }
+.sgp-feed.is-mid .sgp-btn { height: 26px; padding: 0 10px; border-radius: 8px; font-size: 12.5px; }
+.sgp-feed.is-mid .sgp-done { padding: 8px 12px; }
+.sgp-feed.is-mid .sgp-done-h { gap: 6px; }
+.sgp-feed.is-mid .sgp-ck { width: 20px; height: 20px; }
+.sgp-feed.is-mid .sgp-done-h b { font-size: 13px; }
+.sgp-feed.is-mid .sgp-done-s { margin: 2px 0 0 26px; font-size: 12px; }
+.sgp-feed.is-mid .sgp-tabs { height: 50px; padding-top: 6px; }
+.sgp-feed.is-mid .sgp-tab { gap: 2px; }
+.sgp-feed.is-mid .sgp-badge { left: 12px; }
+.sgp-feed.is-mid .sgp-home { bottom: 5px; width: 84px; margin-left: -42px; }
 
 /* feed mini: 140 × 303 */
 .sgp-feed.is-mini .sgp-status { height: 22px; padding: 0 8px 0 11px; }
@@ -97,7 +144,7 @@
 .sgp-feed.is-mini .sgp-pill { height: 19px; padding: 0 6px; border-radius: 5px; font-size: 12px; }
 .sgp-feed.is-mini .sgp-r3 { margin-top: 4px; display: flex; align-items: center; justify-content: space-between; gap: 4px; min-height: 19px; }
 .sgp-feed.is-mini .sgp-r3 .sgp-body { margin: 0; font-size: 12px; }
-.sgp-feed.is-mini .sgp-btn { height: 22px; padding: 0 9px; border-radius: 6px; font-size: 12px; }
+.sgp-feed.is-mini .sgp-btn { height: 22px; padding: 0 8px; border-radius: 6px; font-size: 12px; }
 .sgp-feed.is-mini .sgp-tap-dot { left: -12px; top: -12px; width: 24px; height: 24px; }
 .sgp-feed.is-mini .sgp-tap-ring { left: -14px; top: -14px; width: 28px; height: 28px; }
 .sgp-feed.is-mini .sgp-done { padding: 6px 7px 7px; }
@@ -105,6 +152,22 @@
 .sgp-feed.is-mini .sgp-ck { width: 15px; height: 15px; }
 .sgp-feed.is-mini .sgp-done-h b { font-size: 12.5px; }
 .sgp-feed.is-mini .sgp-done-s { margin: 2px 0 0; font-size: 12px; }
+/* feed crop (with is-mini): the visible left part of the phone at 768 to ~900 px, W 140–235 × ~560.
+   The status bar keeps its clock (the rest is behind the cut), the tab bar its first two tabs. */
+.sgp-feed.is-crop .sgp-status { height: 32px; padding: 4px 10px 0 18px; }
+.sgp-feed.is-crop .sgp-status-r { display: none; }
+.sgp-feed.is-crop .sgp-bar { height: 34px; padding: 0 10px 0 12px; }
+.sgp-feed.is-crop .sgp-bar-t { font-size: 15px; }
+.sgp-feed.is-crop .sgp-tagline { justify-content: flex-start; height: 16px; padding: 0 12px; }
+.sgp-feed.is-crop .sgp-tagline .sg-tag { letter-spacing: 0; }
+.sgp-feed.is-crop .sgp-card { bottom: 56px; }
+.sgp-feed.is-crop .sgp-list { left: 8px; right: 8px; }
+.sgp-feed.is-crop .sgp-item { padding: 8px 10px 9px; border-radius: 12px; }
+.sgp-feed.is-crop .sgp-r1 { height: 19px; }
+.sgp-feed.is-crop .sgp-r1 b { font-size: 13.5px; }
+.sgp-feed.is-crop .sgp-r2, .sgp-feed.is-crop .sgp-r3 { margin-top: 6px; }
+.sgp-feed.is-crop .sgp-done { padding: 8px 10px 9px; }
+.sgp-feed.is-crop .sgp-tabs { grid-template-columns: repeat(2, 1fr); height: 54px; padding-top: 7px; }
 
 /* =================== SQUAD: 按任务组队 → 工作暂停 → 接着做 =================== */
 .sgp-squad .sgp-status { height: 46px; padding: 3px 22px 0 30px; }
