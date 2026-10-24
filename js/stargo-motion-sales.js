@@ -56,12 +56,15 @@
 
   /* =====================================================================
      INBOX — 统一询盘入口. A message arrives every P seconds at the top of one
-     list. Its preview is read (the orange line), then rolls up into its
-     tags; it is sorted (pill, tab count) and handed to a team.
-     Message i always lives in row i: the rows only move.
+     list. Its preview is read (the orange line), then gives way to its tags
+     (the preview rises out, the tags rise in, in the same line); it is sorted
+     (pill, tab count) and handed to a team. Message i always lives in row i:
+     the rows only move. No row is ever cut by the list's edges: a row shows
+     only once it is whole, and the part-row of room under the last whole row
+     holds a skeleton row (bars, not words) under a veil, for 'more below'.
      ===================================================================== */
   function InboxScene() {
-    var P = 3, LINE = 18;
+    var P = 3;
     var CLS = { 'new': T('新询盘', 'New inquiry'), hist: T('历史消息', 'History'), spam: T('垃圾信息', 'Spam') }, CLS_S = { 'new': T('新询盘', 'New'), hist: T('历史', 'History'), spam: T('垃圾', 'Spam') };
     var MSG = [
       { ch: 'mail', who: 'Müller Energie GmbH', text: '200 pcs 48V 100Ah, DAP Hamburg?', tags: [T('英语', 'EN'), T('询价', 'RFQ'), '48V 100Ah'], c: 'new', to: T('欧洲组', 'EU team') },
@@ -74,7 +77,7 @@
     var N = MSG.length;
     var READ = 0.3, ROLL = 1.45, CHIP = [1.65, 1.8, 1.95], SORT = 2.1, HAND = 2.35;
     var BASE = { all: 36, 'new': 7, hist: 26, spam: 3 }, cnt = { all: 0, 'new': 0, hist: 0, spam: 0 };
-    var layouts = {}, R, ROW, FADE;
+    var layouts = {}, R, ROW, FADE, RISE = 6;
 
     function pick(w, h) {
       var s = fitWH(w, h, 200, 460, 168, 340);
@@ -96,7 +99,9 @@
       var list = el('div', 'sgs-list', stage);
       // a row is as tall as its two lines and their padding (css .sgs-msg), plus its hairline
       ROW = short ? 54 : 59;
-      FADE = (L.h - (short ? 56 : 62)) / ROW - 1;   // the list is under the bar and the tabs (30 + 26, 32 + 30)
+      // the list is under the bar and the tabs (30 + 26, 32 + 30); FADE is the last slot a row is whole in
+      var listH = L.h - (short ? 56 : 62), whole = Math.max(1, Math.floor(listH / ROW)), rest = listH - whole * ROW;
+      FADE = whole - 1;
       MSG.forEach(function (m) {
         var r = el('div', 'sgs-msg is-' + m.c, list);
         r.style.height = ROW + 'px';
@@ -105,19 +110,25 @@
         var l1 = el('div', 'sgs-msg-1', body);
         el('b', '', l1, m.who);
         var pill = el('span', 'sgs-pill is-' + m.c, l1, (L.w < 320 ? CLS_S : CLS)[m.c]);
-        // line two is a window on two lines: the preview, then (rolled up) the tags and the hand-off
-        var roll = el('div', 'sgs-roll', el('div', 'sgs-msg-2', body));
-        el('div', 'sgs-prev', roll, m.text);
-        var l3 = el('div', 'sgs-msg-3', roll);
+        // line two holds two lines in one place: the preview, then (crossfaded) the tags and the hand-off
+        var l2 = el('div', 'sgs-msg-2', body);
+        var prev = el('div', 'sgs-prev', l2, m.text);
+        var l3 = el('div', 'sgs-msg-3', l2);
         var chips = m.tags.map(function (tg) { return el('span', 'sgs-chip', l3, tg); });
         var to = null;
         if (!slim) { to = el('span', 'sgs-to', l3); glyph(m.c === 'spam' ? 'shield' : 'arrow', to, 12); el('span', '', to, m.to); }
         var scan = el('i', 'sgs-scan', body);
-        R.rows.push({ r: r, pill: pill, roll: roll, chips: chips, to: to, scan: scan });
+        R.rows.push({ r: r, pill: pill, prev: prev, l3: l3, chips: chips, to: to, scan: scan });
       });
-      // a row cut by the list's bottom edge fades out under a still veil, so it reads as 'more below'
-      var listH = L.h - (short ? 56 : 62), rest = listH - Math.floor(listH / ROW) * ROW;
-      if (rest > 12) el('i', 'sgs-list-fade', list).style.height = (rest + 6) + 'px';
+      // the part-row under the last whole row: a skeleton row (texture, no words) fading under a still veil
+      if (rest > 12) {
+        var sk = el('div', 'sgs-msg sgs-skel', list);
+        sk.style.height = ROW + 'px'; sk.style.transform = 'translate3d(0,' + (whole * ROW) + 'px,0)';
+        el('i', 'sgs-ch', sk);
+        var sb = el('div', 'sgs-msg-b', sk);
+        el('i', 'sgs-skel-1', sb); el('i', 'sgs-skel-2', sb);
+        el('i', 'sgs-list-fade', list).style.height = (rest + 6) + 'px';
+      }
     }
     // how many times message i has been sorted by time t (its first pass at i * P, then every N * P)
     function passes(i, t, off) { var x = t - off - i * P; return x < 0 ? 0 : Math.floor(x / (N * P)) + 1; }
@@ -128,12 +139,18 @@
         var o = R.rows[i], m = MSG[i];
         var j = k - mod(k - i, N), tau = t - j * P, p = (k - j) - 1 + e;
         css(o.r, 'transform', 'translate3d(0,' + (p * ROW).toFixed(1) + 'px,0)');
-        var op = p < 0 ? 1 + p : 1 - c01((p - FADE) / 0.7);
+        // a row shows only while it is (nearly) whole inside the list: the new one fades in over the last
+        // fifth of its way down from under the tabs, the one leaving the last whole slot fades over its first fifth
+        var op = p < 0 ? c01((p + 0.2) / 0.2) : 1 - c01((p - FADE) / 0.2);
         css(o.r, 'opacity', op.toFixed(3));
         cl(o.r, 'is-fresh', tau < SORT + 0.7);
         cl(o.r, 'is-done', tau >= HAND + 0.2 && m.c === 'spam');
-        var rp = ease.io(seg(tau, ROLL, ROLL + 0.4));
-        css(o.roll, 'transform', rp > 0 ? 'translate3d(0,' + (-LINE * rp).toFixed(2) + 'px,0)' : 'none');
+        // the preview rises out over the first 60%, the tags rise in over the last 60% (they cross faintly)
+        var rp = ease.io(seg(tau, ROLL, ROLL + 0.4)), po = 1 - c01(rp / 0.6), lo = c01((rp - 0.4) / 0.6);
+        css(o.prev, 'opacity', po.toFixed(3));
+        css(o.prev, 'transform', rp > 0 ? 'translate3d(0,' + (-RISE * rp).toFixed(2) + 'px,0)' : 'none');
+        css(o.l3, 'opacity', lo.toFixed(3));
+        css(o.l3, 'transform', rp < 1 ? 'translate3d(0,' + (RISE * (1 - rp)).toFixed(2) + 'px,0)' : 'none');
         for (var c = 0; c < o.chips.length; c++) cl(o.chips[c], 'is-in', tau >= CHIP[c]);
         cl(o.pill, 'is-in', tau >= SORT);
         if (o.to) cl(o.to, 'is-in', tau >= HAND);
@@ -237,7 +254,9 @@
       glyph('clock', nx, 13);
       R.nextT = el('span', 'sgs-next-t', nx, '');
       R.nextW = NEXT[kind];
-      el('span', 'sgs-pill is-wait', nx, kind === 'list' ? T('待确认', 'Your OK') : T('等你确认', 'Needs your OK'));
+      var pill = el('span', 'sgs-pill is-wait', nx, kind === 'list' ? T('待确认', 'Your OK') : T('等你确认', 'Needs your OK'));
+      // a dot that breathes while the draft waits for a person (opacity only)
+      R.wd = el('i', 'sgs-wd'); pill.insertBefore(R.wd, pill.firstChild);
     }
     function tick(t) {
       var tau = mod(t, P), i;
@@ -267,6 +286,7 @@
       arrive(R.next, ease.out(seg(tau, AT.next, AT.next + 0.5)), 6);
       cl(R.next, 'is-on', (tau >= AT.next + 0.4 && tau < AT.next + 1.6) || tau >= AT.follow);
       textSwap(R.nextT, R.nextW[tau >= AT.follow ? 1 : 0]);
+      css(R.wd, 'opacity', tau >= AT.next && tau < OUT0 ? (0.6 + 0.4 * Math.sin((tau - AT.next) * 4.2)).toFixed(2) : '1');
     }
     return { layouts: layouts, pick: pick, build: build, tick: tick, still: 9 };
   }

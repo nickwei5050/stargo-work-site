@@ -12,7 +12,8 @@
    tablets up, nearly square on phones) and drawn at scale ~1, so the interface's own text is never
    under 12 CSS px. The battery's print follows the same rule: type only where it prints large enough
    (the model on a phone is set as 48V over 100Ah), bars where it would not (thumbnails, small shots);
-   a desktop canvas, cut closer than the board (FRAME.main), prints the fine print at 12 px or more.
+   once a picture is fitted, a print whose smallest type would land under 12 CSS px steps down
+   (fitPrint: full → title → bars, stack → bars; the end card's marks → outlines).
    Styles: css/stargo-motion-creative.css (prefix sgc-; the crew scenes on the same page use sgw-). */
 (window.STARGO_SCENES = window.STARGO_SCENES || []).push(function (K) {
   'use strict';
@@ -118,12 +119,27 @@
     bar(st, 104, 74, 30, 4.5, '.55'); bar(st, 104, 82, 22, 4.5, '.55');
   }
   var PRINT = { full: ['pt', 'ps'], title: ['pt', 'psb'], stack: ['pst'], bars: ['ptb', 'psb'] };
+  // each print's smallest type (pack units) and the print it steps down to
+  var PRINT_MIN = { full: 7.5, title: 13, stack: 17, bars: 0 }, PRINT_DOWN = { full: 'title', title: 'bars', stack: 'bars' };
+  var MIN_PX = 12.2;
   function use(parent, id) { return sv('use', { href: '#' + id }, parent); }
+  var packs = [];   // the current shot()'s packs: [print group, scale, print, id]
+  function printInto(g, id, print) { g.textContent = ''; PRINT[print].forEach(function (n) { use(g, id + n); }); }
   function pack(parent, id, x, y, s, light, print) {
     var g = sv('g', { transform: 'translate(' + x + ',' + y + ') scale(' + s + ')' }, parent);
     sv('ellipse', { cx: 92, cy: 128, rx: 132, ry: 18, fill: 'url(#' + id + (light ? 'sl' : 'sd') + ')' }, g);
     use(g, id + 'pk');
-    PRINT[print].forEach(function (n) { use(g, id + n); });
+    var pg = sv('g', {}, g);
+    printInto(pg, id, print);
+    packs.push([pg, s, print, id]);
+  }
+  // k: screen px per board unit
+  function fitPrint(list, k) {
+    list.forEach(function (p) {
+      var pr = p[2];
+      while (PRINT_MIN[pr] && PRINT_MIN[pr] * p[1] * k < MIN_PX) pr = PRINT_DOWN[pr];
+      if (pr !== p[2]) printInto(p[0], p[3], pr);
+    });
   }
   // one picture on the 400 × 300 board: the white main image, the warehouse scene, the plate close-up, the end card
   function shot(parent, kind, id, print, narrow) {
@@ -150,7 +166,10 @@
         txt(parent, 200, 140, 40, '48V 100Ah', mid);
         txt(parent, 200, 176, 22, T('长寿命磷酸铁锂', 'Long-life LiFePO4'), { 'text-anchor': 'middle', opacity: '.8' });
         txt(parent, 200, 204, 22, T('3000 次以上循环', '3,000+ cycles'), { 'text-anchor': 'middle', opacity: '.8' });
-        txt(parent, 200, 238, 19.5, 'CE · UN38.3 · MSDS', { 'text-anchor': 'middle', opacity: '.45', 'letter-spacing': '1' });
+        var fine = txt(parent, 200, 238, 19.5, 'CE · UN38.3 · MSDS', { 'text-anchor': 'middle', opacity: '.45', 'letter-spacing': '1' });
+        var fb = sv('g', { display: 'none' }, parent);
+        [140, 182, 224].forEach(function (x) { sv('rect', { x: x, y: 225, width: 36, height: 16, rx: 3, fill: 'none', stroke: '#f4eee8', 'stroke-opacity': '.3' }, fb); });
+        packs.push([fine, fb, 'end']);
       }
     }
   }
@@ -191,8 +210,9 @@
     var FRAME = { board: [400, 300], main: [320, 240], cell: [270, 200], tight: [0, 0] };
     function art(parent, k, print, frame, safe, narrow) {
       var s = sv('svg', { preserveAspectRatio: 'xMidYMid slice', width: '100%', height: '100%', class: 'sgc-art' }, parent);
+      packs = [];
       shot(s, k, sid, print, narrow);
-      arts.push([s, parent, SAFE[safe || k], FRAME[frame], parent.className === 'sgc-shot' ? (kind === 'big' ? 30 : 22) : 0]);
+      arts.push([s, parent, SAFE[safe || k], FRAME[frame], parent.className === 'sgc-shot' ? (kind === 'big' ? 30 : 22) : 0, packs]);
       return s;
     }
 
@@ -274,9 +294,10 @@
         el('b', '', it, o.name);
         el('em', '', it, o.n);
         var st = el('span', 'sgc-st', it, '');
+        var wd = el('i', 'sgc-wd', st);   // breathes while it waits for review
         var ck = el('span', 'sgc-ck', st); mini(CHECK, ck, 11);
         var stT = el('span', '', st, '');
-        return { it: it, st: st, t: stT };
+        return { it: it, st: st, t: stT, wd: wd };
       });
       R.note = el('div', 'sgc-note', R.pane, '');
       // a canvas much wider than tall lays the four shots in one row; then every box is measured first and
@@ -288,6 +309,10 @@
         var w = box[i][0], h = box[i][1] - a[4], b = fitBox(a[2], w, h, a[3][0], a[3][1]);
         if (a[4] && w > 8 && h > 8) b[3] += a[4] * b[2] / w;
         a[0].setAttribute('viewBox', b.map(function (v) { return v.toFixed(1); }).join(' '));
+        // the prints at the scale the picture now has (slice: the larger ratio)
+        var k = w > 8 && h > 8 ? Math.max(w / b[2], box[i][1] / b[3]) : 0;
+        fitPrint(a[5].filter(function (p) { return p[2] !== 'end'; }), k);
+        a[5].forEach(function (p) { if (p[2] === 'end' && 19.5 * k < MIN_PX) { p[0].setAttribute('display', 'none'); p[1].removeAttribute('display'); } });
       });
     }
 
@@ -325,6 +350,7 @@
         var made = tau >= i * G + LIFT1, ok = passed && tau >= TAP + 0.1 + i * 0.14;
         put(o.t, 'text', ok ? T('已通过', 'Approved') : made ? T('待审核', 'To review') : T('生成中', 'Generating'));
         cl(o.st, 'is-wait', made && !ok);
+        if (made && !ok) css(o.wd, 'opacity', (0.6 + 0.4 * Math.sin(tau * 4.2 - i)).toFixed(2));
         cl(o.st, 'is-ok', ok);
         cl(o.it, 'is-on', (gen && k === i && x < LIFT1 + 0.6) || (ok && tau < TAP + 0.9 + i * 0.14));
       }

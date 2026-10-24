@@ -117,7 +117,7 @@
         { app: T('视频制作', 'Video Studio'), g: 'play', grp: T('AI 图片、视频与营销', 'AI images, video & marketing'), on: [1, 6],
           st: [[1.1, T('生成中', 'Generating'), WAIT], [4.8, T('待审核', 'For review'), HOLD]],
           rows: [
-            { k: 'th', s: 0, at: 0, a: T('主图 · 场景图 · 15 秒短视频', 'Product · scene · 15 s video'), as: T('主图 · 短视频', 'Images · video'), s2: [1.6, 2.8, 4] },
+            { k: 'th', s: 0, at: 0, a: T('主图 · 场景图 · 15 秒短视频', 'Product · scene · 15 s video'), as: T('主图 · 短视频', 'Images · video'), ax: T('素材', 'Media'), s2: [1.6, 2.8, 4] },
             { k: 'it', s: 1, at: 0, o: 1, g: 'doc', a: T('产品资料 · 48V 100Ah', 'Product facts · 48V 100Ah'), as: T('产品资料', 'Product facts'), b: T('已审核 · 作为生成依据', 'Approved · the source material'), bs: T('已审核', 'Approved') },
             { k: 'it', s: 1, at: 4.6, g: 'pen', a: T('卖点文案 · 英 / 德 / 西', 'Copy · EN / DE / ES'), as: T('卖点文案', 'Sales copy'), b: T('人工审核后才发布', 'Published only after review'), bs: T('审核后发布', 'Published after review'), p: [[4.6, T('待审核', 'For review'), HOLD]] }
           ] },
@@ -140,7 +140,7 @@
         { app: T('数字员工', 'AI Staff'), g: 'users', grp: T('数字员工与团队协作', 'AI workforce & teamwork'), on: [0.3, 4.4], body: 'crew',
           st: [[0.4, T('挑选中', 'Choosing'), WAIT], [3.4, T('已分派 4 + 1', '4 + 1 assigned'), OK]],
           goal: [0.4, 1.6, T('交给团队一个目标…', 'Give the team a goal…'), T('开发德国储能经销商', 'Find storage distributors in Germany'), T('开发德国储能经销商', 'German storage dealers'), T('开发德国储能经销商', 'Storage dealers · DE')],
-          crew: [['layers', T('统筹', 'Coordinator'), 1.9], ['search', T('市场研究员', 'Researcher'), 2.3], ['box', T('产品工程师', 'Engineer'), 2.6], ['sales', T('销售', 'Sales'), 2.9], ['image', T('创意', 'Creative'), 3.2]],
+          crew: [['layers', T('统筹', 'Coordinator'), 1.9], ['search', T('市场研究员', 'Researcher'), 2.3, T('研究员', 'Research')], ['box', T('产品工程师', 'Engineer'), 2.6], ['sales', T('销售', 'Sales'), 2.9], ['image', T('创意', 'Creative'), 3.2]],
           note: T('288 个岗位里，挑出 4 位 + 统筹', '4 roles + a coordinator, from 288') },
         { app: T('业务关系', 'Relationships'), g: 'nodes', grp: T('企业业务关系与上下文', 'Business context'), on: [1.2, 5.4],
           st: [[1.3, T('关联中', 'Linking'), WAIT], [4.4, T('已对齐', 'Linked'), OK]],
