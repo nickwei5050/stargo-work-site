@@ -1,0 +1,100 @@
+/* The closing card of intelligence.html (js/stargo-motion-improve.js). Loaded
+   after css/stargo-motion.css, whose .sg-mo, .sg-mo-stage and .sg-tag it
+   shares. Prefix sgi. The host's box, its fade into the pink card and the
+   text column drawn above it are set in css/stargo-fusion.css. */
+
+/* the dark product palette the photograph brought to the right of the card */
+.lx-scope .lx-cta-image.sg-mo { background: radial-gradient(90% 80% at 72% 28%, #221a14 0%, #16110e 58%, #110d0b 100%); }
+
+.sgi { color: #f4eee8; font-size: 13px; }
+.sgi-ico { display: block; flex: none; }
+/* the card rounds the box's right-hand corners (80px from 992 up, 70px below): the bar's tag and the last card keep
+   40px from the right edge and the cards 40px from the bottom, inside the curve; the tag and the cards share that edge */
+.sgi-bar { position: absolute; left: 0; top: 0; right: 0; height: 44px; display: flex; align-items: center; gap: 9px; padding: 0 40px 0 84px; font-size: 14px; border-bottom: 1px solid rgba(255, 236, 220, .07); }
+.sgi-bar b { font-weight: 600; white-space: nowrap; }
+.sgi-mark { flex: none; width: 22px; height: 22px; border-radius: 7px; display: grid; place-items: center; color: #fff; background: linear-gradient(140deg, #ff9a4d, #ec6f10); }
+.sgi .sgi-tag { position: static; transform: none; margin-left: auto; font-size: 12.5px; color: rgba(244, 238, 232, .6); }
+.sgi-body { position: absolute; left: 84px; right: 40px; top: 52px; bottom: 40px; display: flex; flex-direction: column; gap: 6px; }
+.sgi.is-wide2 .sgi-h { display: none; }
+
+/* run log */
+.sgi-h { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 12.5px; letter-spacing: .03em; color: rgba(244, 238, 232, .5); margin-bottom: 4px; white-space: nowrap; }
+.sgi-log-win { position: relative; overflow: hidden; }
+.sgi-run { position: absolute; left: 0; right: 0; top: 0; height: 24px; display: flex; align-items: center; gap: 9px; padding: 0 10px; border-radius: 7px; background: rgba(255, 246, 232, .035); border: 1px solid rgba(255, 236, 220, .06); white-space: nowrap; opacity: 0; }
+.sgi-run.is-new { border-color: rgba(255, 138, 61, .4); }
+.sgi-run-n { flex: none; font-weight: 600; color: rgba(244, 238, 232, .5); font-variant-numeric: tabular-nums; }
+.sgi-run-task { flex: none; color: #f4eee8; }
+.sgi-run-res { margin-left: auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; color: rgba(159, 224, 176, .9); }
+.sgi-run.is-fix .sgi-run-res { color: #ffb37a; }
+
+/* a change */
+.sgi-card { position: relative; border-radius: 14px; padding: 8px 14px; background: linear-gradient(180deg, rgba(255, 246, 232, .055), rgba(255, 246, 232, .02)); border: 1px solid rgba(255, 228, 190, .11); opacity: 0; }
+.sgi-ch { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.sgi-ct { min-width: 0; display: flex; align-items: baseline; gap: 8px; white-space: nowrap; }
+.sgi-cn { flex: none; font-size: 12.5px; color: rgba(244, 238, 232, .5); font-variant-numeric: tabular-nums; }
+.sgi-ct b { min-width: 0; overflow: hidden; text-overflow: ellipsis; font-size: 15px; font-weight: 600; color: #f8f1e7; }
+.sgi-pill { flex: none; font-size: 12.5px; line-height: 1.2; padding: 4px 10px; border-radius: 99px; border: 1px solid rgba(255, 236, 220, .16); color: rgba(244, 238, 232, .75); white-space: nowrap; }
+.sgi-pill.is-ask { color: #ffb37a; background: rgba(236, 111, 16, .16); border-color: rgba(255, 138, 61, .6); }
+.sgi-pill.is-run { color: #ffb37a; border-color: rgba(255, 138, 61, .35); }
+.sgi-pill.is-ok { color: #b9ecc6; background: rgba(120, 200, 140, .12); border-color: rgba(120, 200, 140, .36); }
+.sgi-pill.is-bad { color: #ffab9c; background: rgba(240, 96, 72, .12); border-color: rgba(240, 96, 72, .45); }
+.sgi-pill.is-rev { color: #f4eee8; background: rgba(255, 236, 220, .08); }
+.sgi-sub { margin-top: 6px; font-size: 12.5px; color: rgba(244, 238, 232, .6); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.sgi-ab { display: grid; grid-template-columns: 66px 1fr 42px; align-items: center; gap: 10px; margin-top: 6px; font-size: 12.5px; }
+.sgi-ab-k { color: rgba(244, 238, 232, .6); white-space: nowrap; }
+.sgi-ab-tr { display: block; height: 8px; border-radius: 4px; background: rgba(255, 236, 220, .07); overflow: hidden; }
+.sgi-ab-tr i { display: block; height: 100%; border-radius: 4px; background: rgba(244, 238, 232, .42); transform-origin: 0 50%; transform: scaleX(0); }
+.sgi-ab.is-new .sgi-ab-tr i { background: linear-gradient(90deg, #ec6f10, #ffb37a); }
+.sgi-ab-v { text-align: right; font-weight: 600; color: #f4eee8; font-variant-numeric: tabular-nums; }
+.sgi-ab.is-new .sgi-ab-v { color: #ffb37a; }
+
+.sgi-foot { position: relative; height: 30px; margin-top: 8px; }
+.sgi-sample { position: absolute; left: 0; top: 50%; transform: translateY(-50%); font-size: 12.5px; color: rgba(244, 238, 232, .5); white-space: nowrap; }
+.sgi-btn { position: absolute; right: 0; top: 0; height: 30px; padding: 0 16px; display: inline-flex; align-items: center; border-radius: 9px; background: #ec6f10; color: #fff; font-size: 13px; font-weight: 600; opacity: 0; transition: transform .18s; white-space: nowrap; }
+.sgi-tap { position: absolute; left: 50%; top: 50%; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; background: rgba(255, 255, 255, .55); opacity: 0; pointer-events: none; }
+.sgi-ro { position: absolute; inset: 0; opacity: 0; }
+.sgi-ro-tr { position: absolute; left: 8px; right: 16px; top: 7px; height: 6px; border-radius: 3px; background: rgba(255, 236, 220, .08); }
+.sgi-ro-tr > i { position: absolute; inset: 0; border-radius: 3px; background: linear-gradient(90deg, #ec6f10, #ffb37a); transform-origin: 0 50%; transform: scaleX(0); }
+.sgi-ro-m { position: absolute; top: -4px; display: flex; flex-direction: column; align-items: center; transform: translateX(-50%); }
+.sgi-ro-m i { width: 14px; height: 14px; border-radius: 50%; background: #1d1712; border: 2px solid rgba(255, 236, 220, .22); }
+.sgi-ro-m b { margin-top: 3px; font-size: 12.5px; font-weight: 600; color: rgba(244, 238, 232, .5); font-variant-numeric: tabular-nums; }
+.sgi-ro-m.is-on i { border-color: #ff8a3d; background: #ff8a3d; }
+.sgi-ro-m.is-on b { color: #ffb37a; }
+
+.sgi-metric { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-top: 6px; font-size: 12.5px; color: rgba(244, 238, 232, .6); white-space: nowrap; }
+.sgi-metric b { font-size: 14px; font-weight: 600; color: #f4eee8; font-variant-numeric: tabular-nums; }
+.sgi-metric b.is-bad { color: #ffab9c; }
+.sgi-keep { display: flex; align-items: center; gap: 7px; margin-top: 6px; font-size: 12.5px; color: rgba(244, 238, 232, .8); opacity: 0; }
+.sgi-keep .sgi-ico { color: #ffb37a; }
+.sgi-keep span { text-wrap: balance; }
+
+/* square (phones, 1:1) and tall (768-991, the card's right strip) */
+.sgi.is-square .sgi-bar, .sgi.is-tall .sgi-bar { height: 40px; padding: 0 14px; font-size: 14px; }
+.sgi.is-square .sgi-body { left: 14px; right: 14px; top: 50px; bottom: 12px; gap: 8px; }
+.sgi.is-square .sgi-sub, .sgi.is-square .sgi-h { display: none; }
+.sgi.is-square .sgi-card { padding: 10px 12px 11px; }
+.sgi.is-square .sgi-ab { margin-top: 7px; }
+.sgi.is-square .sgi-foot { margin-top: 9px; }
+/* tall: the strip is too narrow for the title and the honesty tag on one line, so the tag takes a second */
+.sgi.is-tall .sgi-bar { height: 58px; flex-wrap: wrap; align-content: center; row-gap: 2px; padding-left: 46px; padding-right: 30px; }
+.sgi.is-tall .sgi-tag { flex-basis: 100%; margin-left: 31px; }
+.sgi.is-tall .sgi-body { left: 46px; right: 24px; top: 68px; bottom: 22px; gap: 6px; justify-content: center; }
+.sgi.is-tall .sgi-h-r { display: none; }
+.sgi.is-tall .sgi-sub { white-space: normal; }
+/* tall: a card's number and its status share the first line, the title gets the whole second */
+.sgi.is-tall .sgi-ch { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "cn pill" "t t"; align-items: center; gap: 6px 10px; }
+.sgi.is-tall .sgi-ct { display: contents; }
+.sgi.is-tall .sgi-cn { grid-area: cn; }
+.sgi.is-tall .sgi-ct b { grid-area: t; }
+.sgi.is-tall .sgi-pill { grid-area: pill; }
+.sgi.is-tall .sgi-ab { grid-template-columns: 68px 1fr 38px; gap: 8px; }
+.sgi.is-tall .sgi-keep { align-items: flex-start; }
+.sgi.is-tall .sgi-keep .sgi-ico { margin-top: 2px; }
+.sgi.is-small .sgi-body { top: 46px; bottom: 10px; gap: 5px; }
+.sgi.is-small .sgi-bar { height: 38px; }
+.sgi.is-small .sgi-card { padding: 7px 12px; }
+.sgi.is-small .sgi-ab, .sgi.is-small .sgi-metric, .sgi.is-small .sgi-keep { margin-top: 4px; }
+.sgi.is-small .sgi-foot { margin-top: 6px; }
+.sgi.is-small .sgi-ct b { font-size: 14px; }
+.sgi.is-small .sgi-cn { display: none; }

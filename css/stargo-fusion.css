@@ -5680,29 +5680,22 @@ img[src*="stargo-photo/e08-emergency-stop-"] { object-position: 50% 42%; }
 }
 
 /* I01, the full-bleed picture under the four lines of #lx-more, is centred
-   (Lifelogx's own cover), so it needs no rule. I02, the closing card's
-   picture, a square photograph: 50% 42% where the box is wider than tall
-   (1.32:1 at 1440; the template anchored its portrait at 0% 10% from 768
-   up). At 768-991 the box is tall (296x595), so only the horizontal 50%
-   counts there: the glove and the fitting it places stay in. The 1:1
-   phone card shows the whole frame. */
-.lx-scope .lx-cta-image[src*="stargo-photo/i02-"] { object-position: 50% 42%; }
-@media (max-width: 767px) {
-  .lx-scope .lx-cta-image[src*="stargo-photo/i02-"] { object-position: 50% 50%; }
-}
+   (Lifelogx's own cover), so it needs no rule. The closing card's picture
+   (I02 until 2026-10-23) is the code-drawn 'improve' scene
+   (css/stargo-motion-improve.css), which lays itself out for the box's
+   shape: 1.32:1 at 1440, a tall strip at 768-991, 1:1 on phones. */
 /* From 768 up the picture's box (42% of the card, absolutely placed) and
    the 66% text column overlap by design: the template's picture was a
    cut-out, clear where the heading's end runs over it (en 768-1172, zh
-   992-1088). I02 is opaque, so the text column is drawn above it (no box
-   moves), and the photograph's left edge fades into the card instead of
-   meeting the pink in a hard seam. The fade eases out so it is clear of
-   the left tray (from 10% of the frame) by the time it reaches it. */
-.lx-scope .lx-cta-card:has(img.lx-cta-image[src*="stargo-photo/i02-"]) .lx-cta-content-holder {
+   992-1088). The scene is opaque, so the text column is drawn above it (no
+   box moves), and its left edge fades into the card instead of meeting the
+   pink in a hard seam. */
+.lx-scope .lx-cta-card:has(.lx-cta-image[data-sg-scene="improve"]) .lx-cta-content-holder {
   position: relative;
   z-index: 1;
 }
 @media (min-width: 768px) {
-  .lx-scope img.lx-cta-image[src*="stargo-photo/i02-"] {
+  .lx-scope .lx-cta-image[data-sg-scene="improve"] {
     -webkit-mask-image: linear-gradient(90deg, transparent, rgba(0, 0, 0, .44) 5%, rgba(0, 0, 0, .75) 10%, rgba(0, 0, 0, .94) 15%, #000 20%);
     mask-image: linear-gradient(90deg, transparent, rgba(0, 0, 0, .44) 5%, rgba(0, 0, 0, .75) 10%, rgba(0, 0, 0, .94) 15%, #000 20%);
   }

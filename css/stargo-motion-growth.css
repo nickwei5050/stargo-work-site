@@ -1,0 +1,112 @@
+/* Growth OS row backgrounds (js/stargo-motion-growth.js) on capabilities.html.
+   Loaded after css/stargo-motion.css, whose .sg-mo, .sg-mo-stage and .sg-tag it
+   shares. Prefix sgg. Everything here sits under cinery's 65% black wash
+   (.cn-service-overlay-image), so the values are set brighter than they read.
+   The scenes write only in the 64px strips between the rows (48px below 992):
+   a box there is one line (34px; 28px on phones) or two (44px). */
+
+/* ---------- hosts: the photographs' own full-bleed boxes ---------- */
+/* .cn-service .cn-service-bg-image (cinery) keeps them absolute at inset 0; the hover crossfade sets their opacity */
+.cn-service .cn-service-bg-image.sg-mo { background: radial-gradient(70% 60% at 58% 48%, #2a1f16 0%, #150f0c 55%, #0b0908 100%); }
+/* a fine dot grid under the drawings that have no map of their own */
+.cn-service .cn-service-bg-image.sg-mo:not([data-sg-scene="lanes"]) { background: radial-gradient(rgba(255, 226, 200, .09) 1px, transparent 1.6px) 0 0 / 28px 28px, radial-gradient(70% 60% at 58% 48%, #2a1f16 0%, #150f0c 55%, #0b0908 100%); }
+/* from 992 up the backgrounds rest hidden until a row is hovered (cinery's hover-out state, which IX2 writes
+   inline once it starts; before that all four showed, and every scene would tick) */
+@media (min-width: 992px) {
+  .cn-service .cn-service-bg-image.sg-mo { opacity: 0; }
+}
+
+/* ---------- stage ---------- */
+.sgg { color: #f4eee8; font-size: 14px; }
+.sgg-svg { position: absolute; left: 0; top: 0; }
+.sgg .sgg-tag { font-size: 13px; color: rgba(244, 238, 232, .92); letter-spacing: .04em; }
+
+.sgg-card { position: absolute; left: 0; top: 0; box-sizing: border-box; border-radius: 12px; padding: 0 14px; background: linear-gradient(180deg, rgba(46, 35, 27, .94), rgba(30, 23, 18, .94)); border: 1px solid rgba(255, 228, 190, .2); white-space: nowrap; }
+.sgg-card.is-2 { height: 44px; display: flex; flex-direction: column; justify-content: center; gap: 1px; }
+.sgg-card.is-1 { height: 34px; display: flex; align-items: center; gap: 10px; }
+.sgg-l1 { display: flex; align-items: baseline; gap: 8px; min-width: 0; line-height: 18px; }
+.sgg-l2 { font-size: 12.5px; line-height: 16px; color: rgba(244, 238, 232, .62); overflow: hidden; text-overflow: ellipsis; }
+.sgg-k { flex: none; font-size: 12.5px; font-weight: 600; letter-spacing: .04em; color: #ffb37a; }
+.sgg-v { min-width: 0; font-size: 14px; font-weight: 600; color: #f8f1e7; overflow: hidden; text-overflow: ellipsis; }
+.sgg-card.is-ask { border-color: rgba(255, 138, 61, .62); }
+.sgg-card.is-ask .sgg-l2 { color: #ffb37a; }
+.sgg-pill { flex: none; font-size: 12.5px; line-height: 1.2; padding: 3px 9px; border-radius: 99px; border: 1px solid rgba(255, 236, 220, .18); color: rgba(244, 238, 232, .8); white-space: nowrap; }
+.sgg-pill.is-amber { color: #ffb37a; background: rgba(236, 111, 16, .15); border-color: rgba(255, 138, 61, .55); }
+.sgg-route { flex: none; font-size: 12.5px; color: #ffb37a; letter-spacing: .02em; }
+.sgg-chg { color: #ffb37a; }
+
+/* a company or a person: avatar, then the lines */
+.sgg-av { flex: none; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 9px; font-size: 12.5px; font-weight: 700; letter-spacing: .03em; color: #1b130b; background: linear-gradient(140deg, #ffc58f, #ec6f10); }
+.sgg-card.is-p, .sgg-core.is-2 { flex-direction: row; align-items: center; justify-content: flex-start; gap: 10px; padding-left: 8px; }
+.sgg-p { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 1px; }
+.sgg-nm { min-width: 0; flex: 1; display: flex; flex-direction: column; line-height: 18px; }
+.sgg-nm b { font-size: 14.5px; font-weight: 600; color: #f8f1e7; overflow: hidden; text-overflow: ellipsis; }
+.sgg-st { font-size: 12.5px; line-height: 16px; color: rgba(244, 238, 232, .66); font-variant-numeric: tabular-nums; }
+.sgg-st.is-done { color: #ffb37a; }
+.sgg-core { border-color: rgba(255, 170, 110, .42); }
+.sgg-dots { flex: none; display: flex; gap: 4px; }
+.sgg-dots i { width: 6px; height: 6px; border-radius: 50%; background: rgba(255, 236, 220, .16); transition: background-color .4s; }
+.sgg-dots i.is-on { background: #9fe0b0; }
+.sgg-dots i.is-ask.is-on { background: #ff8a3d; }
+.sgg-nm2 { flex: none; font-size: 12.5px; color: rgba(244, 238, 232, .6); }
+.sgg-verb { color: rgba(244, 238, 232, .85); }
+.sgg-verb.is-amber { color: #ffb37a; font-weight: 600; }
+
+/* lines, nodes, orbits */
+.sgg-link { fill: none; stroke: rgba(255, 170, 110, .5); stroke-width: 1.3; stroke-linecap: round; }
+.sgg-dot { fill: #ff8a3d; }
+.sgg-dot.is-origin { fill: #f4eee8; }
+/* svg parts the scene fades write an opacity attribute, which a css opacity would override: they start at 0 in the script */
+.sgg-rip { fill: none; stroke: #ff8a3d; stroke-width: 1.2; transform-box: fill-box; transform-origin: center; }
+.sgg-orbit-l { position: absolute; will-change: transform; }
+.sgg-orbit { fill: none; stroke: rgba(255, 190, 130, .2); stroke-width: 1; stroke-dasharray: 2 10; }
+.sgg-orbit.is-b { stroke: rgba(255, 190, 130, .12); stroke-dasharray: 1 16; }
+
+/* lanes */
+.sgg-land { fill: none; stroke: rgba(255, 232, 210, .36); stroke-linecap: round; }
+.sgg-lane { fill: none; stroke: rgba(255, 170, 110, .24); stroke-width: 1.3; stroke-linecap: round; }
+.sgg-lane.is-new { stroke-dasharray: 4 6; }
+.sgg-lane.is-on { stroke: rgba(255, 170, 110, .42); }
+.sgg-lane-hi { fill: none; stroke: #ff8a3d; stroke-width: 2.2; stroke-linecap: round; }
+.sgg-ship { fill: #ffd2a8; }
+.sgg-rec .sgg-l1 { gap: 10px; }
+
+/* the order rhythm: the hairline is its axis */
+.sgg-bar rect { fill: rgba(246, 205, 165, .62); }
+.sgg-bar-d { font-size: 12.5px; fill: rgba(244, 238, 232, .66); }
+.sgg-span-l { fill: none; stroke: rgba(255, 236, 220, .38); }
+.sgg-span-l.is-live { stroke: #ff8a3d; }
+.sgg-span-t { font-size: 12.5px; fill: rgba(244, 238, 232, .82); }
+.sgg-span-t.is-live { fill: #ffb37a; font-weight: 600; }
+.sgg-band { fill: rgba(255, 138, 61, .14); stroke: rgba(255, 138, 61, .5); stroke-dasharray: 3 5; }
+.sgg-ghost { fill: none; stroke: #ff8a3d; stroke-width: 1.4; stroke-dasharray: 4 4; }
+.sgg-cursor-l { fill: none; stroke: #ff8a3d; stroke-width: 1.4; }
+.sgg-cursor-d { fill: #ff8a3d; }
+.sgg-count { position: absolute; left: 0; display: flex; align-items: baseline; gap: 6px; white-space: nowrap; opacity: 0; }
+.sgg-count b { font-size: 20px; line-height: 1; font-weight: 600; color: #f8f1e7; font-variant-numeric: tabular-nums; }
+.sgg-count span { font-size: 12.5px; color: rgba(244, 238, 232, .66); }
+.sgg-count.is-due b, .sgg-count.is-due span { color: #ffb37a; }
+.sgg-restock .sgg-l1 { gap: 10px; }
+.sgg-restock .sgg-pill, .sgg-rec .sgg-chg { margin-left: auto; }
+.sgg-restock .sgg-pill { align-self: center; }
+.sgg-draft { font-size: 13px; color: rgba(244, 238, 232, .85); border-color: rgba(255, 138, 61, .38); }
+
+/* the buying committee */
+.sgg-role.is-dec::after { content: ""; position: absolute; inset: -1px; border-radius: inherit; border: 1.5px solid #ff8a3d; opacity: 0; transition: opacity .6s; pointer-events: none; }
+.sgg-role.is-dec.is-on::after { opacity: 1; }
+.sgg-cap { position: absolute; transform: translateY(-50%); font-size: 13px; line-height: 18px; color: rgba(244, 238, 232, .7); white-space: nowrap; }
+.sgg-cap b { font-weight: 600; color: #f8f1e7; }
+.sgg-cap .sg-tag { position: static; display: block; transform: none; }
+.sgg-gate { font-size: 13.5px; color: #f8f1e7; border-color: rgba(255, 138, 61, .4); justify-content: space-between; }
+
+/* phones and tablets: only the first background shows, under the whole section */
+.is-narrow .sgg-card.is-1 { height: 26px; padding: 0 10px; gap: 8px; border-radius: 99px; font-size: 12.5px; }
+.is-narrow .sgg-core { gap: 8px; padding-left: 4px; }
+.is-narrow .sgg-av { width: 22px; height: 22px; border-radius: 99px; font-size: 12.5px; letter-spacing: 0; }
+.is-narrow .sgg-nm { flex-direction: row; align-items: baseline; gap: 8px; }
+.is-narrow .sgg-nm b { font-size: 13.5px; }
+.sgg-chip { justify-content: center; }
+.sgg-chip b { font-weight: 600; color: #f8f1e7; }
+.sgg-chip span { color: #9fe0b0; }
+.sgg-chip.is-ask span { color: #ffb37a; }
+.is-narrow .sgg-tag { font-size: 12.5px; }
