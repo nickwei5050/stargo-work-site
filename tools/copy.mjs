@@ -2153,6 +2153,8 @@ export const CAP_V6A = {
   quote: {
     steps: [B('按规则起草', 'Drafted by rules'), B('审批人批准', 'Human approval'), B('保留正式版本', 'Version kept')],
     image: CAP_PHOTOS.quote,
+    /* since 2026-10-23 the band draws the 'quote' scene (tools/motion-capsales.mjs) instead of `image` */
+    motion: 'quote',
     button: { label: B('报价能力详情', 'Quote details'), href: '#g07' },
     /* The paragraph's closing pointer to where product facts live. */
     facts: { lead: B('报价背后的产品资料，见', 'For the product facts behind a price, see'), label: B('产品与企业知识', 'Products & enterprise knowledge'), href: '#g06' },

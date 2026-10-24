@@ -112,6 +112,23 @@ export const MOTION_LABEL = {
     zh: '动态示意（演示数据）：每次执行都记下结果和人工修正；新版开发信先在小样本上和现行版本对比，停在等你批准，批准后按 10%、50%、100% 逐步采用；另一项改动效果不好，被撤回，失败记录留作修复依据。',
     en: 'Illustrative motion (demo data): every run logs its result and any human correction; a new outreach email is tested against the current one on a small sample and stops for your approval, then rolls out to 10%, 50% and 100%; another change does worse, is reverted, and its failure record is kept for the fix.',
   },
+  /* capabilities.html, lane capsales (tools/motion-capsales.mjs) */
+  inbox: {
+    zh: '动态示意（演示数据）：邮件、WhatsApp、阿里国际站和官网表单的消息落进同一个收件箱，每条先读出语言、意图和产品，再分成新询盘、历史消息或垃圾信息：Müller Energie 和 Ahmed Al-Rashid 的询价分给欧洲组和中东组，PT Surya 的回复并入客户记录，一条从官网表单发来的钓鱼信息被拦截。',
+    en: 'Illustrative motion (demo data): messages from email, WhatsApp, Alibaba.com and the website form land in one inbox; each is read for language, intent and product and sorted as a new inquiry, history or spam. The requests from Müller Energie and Ahmed Al-Rashid go to the EU and Middle East teams, PT Surya’s reply is filed to its account, and a phishing message sent through the website form is blocked.',
+  },
+  account: {
+    zh: '动态示意（演示数据）：Müller Energie GmbH 的客户全景一块块拼起来：联系人和各自角色、商机阶段（报价）、需求与样品、报价 Q-1042 与 Q-1031、文件、最近的沟通；随后 Q-1042 获批、MSDS 附上，带着 v3 报价和 MSDS 的跟进信已起草，等你确认后才发送。',
+    en: 'Illustrative motion (demo data): the account view of Müller Energie GmbH assembles piece by piece: contacts and their roles, the stage (quote), needs and samples, quotes Q-1042 and Q-1031, documents and the latest conversations. Then Q-1042 is approved, the MSDS is attached, and the follow-up carrying both waits for your OK before anything is sent.',
+  },
+  quote: {
+    zh: '动态示意（演示数据）：给 Müller Energie 的报价 Q-1042 逐行起草，每个价格都标出依据（历史成交价、包装规则、货代报价）；毛利 15.2% 低于 18% 的底线，停下来等审批。销售总监点了批准（仅限本单），v3 存为正式版，按价格表的 v1 和客户目标价的 v2 也都留底可对比；转成 PI 发送前仍由你确认。',
+    en: 'Illustrative motion (demo data): quote Q-1042 for Müller Energie is drafted line by line, each price labelled with its source (past deal prices, the packing rule, the forwarder’s rate). At a 15.2% margin it is under the 18% floor and stops for approval. The sales director approves it for this order only; v3 is kept as the formal version, with v1 (price list) and v2 (buyer target) kept for comparison, and the PI goes out only after your OK.',
+  },
+  creative: {
+    zh: '动态示意（演示数据）：三张 48V 100Ah 电池包的参考图进 AI 创作，依次做出白底主图、仓库场景图和 15 秒短视频的四个分镜，每一项都先进审核队列；你点了通过，发布与否仍由你决定，不会自动发布。',
+    en: 'Illustrative motion (demo data): three reference photos of a 48V 100Ah pack go into AI Creative, which makes a white-background main image, a warehouse scene and the four-shot storyboard of a 15-second video; each waits in a review queue, you approve them, and publishing is still your call: nothing goes out automatically.',
+  },
 };
 
 export function motionHost(scene, lang, extraClass = '', { fit } = {}) {
@@ -153,6 +170,10 @@ export const SCENE_FILE = {
   rhythm: 'growth',
   committee: 'growth',
   improve: 'improve',
+  inbox: 'sales',
+  account: 'sales',
+  quote: 'quote',
+  creative: 'creative',
 };
 /* scene files that ship their own stylesheet */
 export const SCENE_CSS = new Set([
@@ -161,6 +182,9 @@ export const SCENE_CSS = new Set([
   'cockpit',
   'growth',
   'improve',
+  'sales',
+  'quote',
+  'creative',
 ]);
 
 /* pain — the homepage's four problem cards, in page order (S01–S04): one file and one stylesheet */

@@ -28,6 +28,7 @@ import { SITE } from './paths.mjs';
 import { productTour } from './product-tour.mjs';
 import { appSuite } from './app-suite.mjs';
 import { motionHost, motionAssets, SCENE_FILE, MOTION_CSS, MOTION_SCRIPTS, PAIN_SCENES } from './motion-scenes.mjs';
+import { CAPSALES_SCENES } from './motion-capsales.mjs';
 import { webpPage } from './image-refs.mjs';
 import { a11yPage } from './a11y.mjs';
 import { speedPage } from './speed.mjs';
@@ -2337,6 +2338,8 @@ function capabilityShowcase(C, lang) {
       ...C.CAP_V6A.team.cards.map((c) => c.motion).filter(Boolean),
       /* capgrowth: the four backgrounds behind the Growth OS rows (tools/blocks/cn-service.mjs) */
       ...GROWTH_ROWS.map((row) => row.scene),
+      /* lane capsales: the Sales Desk rows, the quote band and the 图片 / 视频 portrait (tools/motion-capsales.mjs) */
+      ...CAPSALES_SCENES,
     ]);
     h = h.replace(monoLink, (m) => `${m}\n${sheets}\n<link href="css/donor-fonts.css" rel="stylesheet" type="text/css"/>\n${motion.css}`);
     // the app band (#apps, tools/app-suite.mjs) brings its own sheet
