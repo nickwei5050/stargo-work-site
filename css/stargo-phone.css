@@ -1,21 +1,13 @@
 /* Phone parity: what each rule does and why is in tools/chrome.mjs (phoneFx). Compositor-only. */
 :root{--sg-e:cubic-bezier(.2,.7,.2,1);--sg-o:cubic-bezier(.5,1,.89,1)}
-@media (max-width:479px){
-.service-grid>.service-list{grid-column:1/-1!important}
-.service-list .service-title-wrap{display:grid;grid-template-columns:auto minmax(0,1fr);row-gap:2px}
-.service-title-wrap>.sg-stage-line{display:block;grid-column:2;margin:0 0 4px;font-size:14px;line-height:1.45;font-weight:400;letter-spacing:0;opacity:.62}
-}
-@media (hover:none){
-.sg-flip-hint{display:flex;align-items:center;gap:8px;width:fit-content;max-width:calc(100% - 32px);margin:0 auto 24px;padding:9px 16px;border:1px solid #ffecdc24;border-radius:99px;color:#f4eee8c7;font-size:13px;line-height:1.35}
-.sg-flip-icon{flex:none;color:#ff8a3d}
-}
+/* the stage lines and the flip hint lay out from the first paint: css/stargo-motion-stages.css */
 /* accordion */
 .products-cards-mobile{counter-reset:sg}
 .products-cards-inner-block-mobile{counter-increment:sg}
 .sg-acc .products-card-name-block{position:relative}
 .sg-acc .products-card-name-inner-block{display:flex;align-items:center;gap:12px;position:relative}
 .sg-acc .heading-style-h5{min-width:0}
-.sg-acc .products-card-name-inner-block::after{content:counter(sg) "/4";position:absolute;top:6px;right:20px;font-size:11px;letter-spacing:.06em;opacity:.5}
+.sg-acc .products-card-name-inner-block::after{content:counter(sg) "/4";position:absolute;top:6px;right:20px;font-size:12px;line-height:1;letter-spacing:.04em;font-variant-numeric:tabular-nums;opacity:.78}
 .sg-acc .products-card-name-inner-block::before{content:"";order:2;flex:none;width:7px;height:7px;margin:-4px 4px 0 auto;border:solid;border-width:0 1.5px 1.5px 0;rotate:45deg;opacity:.7;transition:.35s var(--sg-e)}
 .sg-acc .sg-open .products-card-name-inner-block::before{rotate:225deg;translate:0 4px}
 .sg-acc .products-card-name-block::after{content:"";position:absolute;inset:6px;border-radius:8px;background:#ec6f1029;opacity:0;pointer-events:none}
@@ -75,8 +67,8 @@
 @keyframes sg-zoom{from{scale:var(--sg-z,1.35)}to{scale:1}}
 /* problem and area cards */
 .work-main .work-card{view-timeline:--sg-card;animation:sg-rise var(--sg-o) both;animation-timeline:--sg-card;animation-range:entry 0% cover 45%}
-/* a code-drawn area card zooms its ground (::before), never its UI */
-.work-main .work-card .paralax-image,.work-main .work-card .sg-mo-area::before{animation:sg-zoom linear both;animation-timeline:--sg-card;animation-range:entry 0% cover 60%;--sg-z:1.16}
+/* a code-drawn card (area or pain scene) zooms its ground (::before), never its UI or its 演示数据 tag */
+.work-main .work-card .paralax-image:not(.sg-mo),.work-main .work-card .sg-mo-area::before,.work-main .work-card .sg-pain-host::before{animation:sg-zoom linear both;animation-timeline:--sg-card;animation-range:entry 0% cover 60%;--sg-z:1.16}
 @keyframes sg-rise{from{translate:0 56px}to{translate:0 0}}
 /* workforce cards */
 .lx-answers-card-sticky .lx-answers-card{transform-origin:50% 100%;animation:sg-tilt var(--sg-o) both;animation-timeline:view();animation-range:entry 0% cover 42%}

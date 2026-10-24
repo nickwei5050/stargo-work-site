@@ -512,13 +512,38 @@ export function vignetteSprite(lang, keys) {
   return `<svg class="sgv-sprite" aria-hidden="true" focusable="false" width="0" height="0"><defs>${DEFS}</defs>${groups}</svg>`;
 }
 
-/** One tile: the host, its two windows onto the drawing, its tag. */
+/**
+ * The mosaic's second column (`.photo-hero`, the "down" wrapper) keeps the
+ * template's cycle order, so it repeats the first column's pictures, and as
+ * the two columns drift past each other the same drawing can sit beside
+ * itself. That column therefore always looks through a different window from
+ * its neighbour: where the boxes are wide it shows the near window (the first
+ * column shows the whole canvas), and where they are small (phones, the
+ * tablet) a third, portrait window onto another detail of the same moment.
+ * Each detail keeps whole words; picked against the drawings on 2026-10-24.
+ */
+const ALT = {
+  samples: '20 40 300 380',   // the 48V and 60V packs on the left of the wall
+  packing: '120 70 290 368',  // the carton and its Müller Energie shipping mark
+  qc: '115 0 290 340',        // the caliper's jaws on the pack (the tolerance row stays out, under the tag)
+  port: '84 70 318 404',      // the crane lifting the container
+  video: '128 40 286 362',    // 视频制作, the play card and the first two storyboard shots
+  owner: '296 140 230 292',   // the phone's lower half: shipments, open orders, Q-1042
+  shoot: '222 52 232 296',    // the picked white-background shot and the one under it
+  load: '430 120 300 380',    // the far end of the 40HQ, pallets still to load
+};
+
+/** One tile: the host, its windows onto the drawing, its tag. */
 export function vignetteHost(key, lang, cls = '') {
   if (!LABEL[key]) throw new Error(`vignettes: no label for ${key}`);
   const label = PREFIX[lang] + LABEL[key][lang === 'zh' ? 0 : 1];
   const win = (c, vb) => `<svg class="${c}" viewBox="${vb}" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><use href="#sgv-${key}"/></svg>`;
-  return `<div class="sgv sgv-${key}${cls ? ` ${cls}` : ''}" role="img" aria-label="${esc(label)}">${win('sgv-far', '0 0 800 500')}${win('sgv-near', '190 60 420 380')}<span class="sgv-tag" aria-hidden="true">${TAG[lang]}</span></div>`;
+  const alt = /\bphoto-hero\b/.test(cls);
+  if (alt && !ALT[key]) throw new Error(`vignettes: no second-column window for ${key}`);
+  return `<div class="sgv sgv-${key}${cls ? ` ${cls}` : ''}" role="img" aria-label="${esc(label)}">${win('sgv-far', '0 0 800 500')}${win('sgv-near', '190 60 420 380')}${alt ? win('sgv-alt', ALT[key]) : ''}<span class="sgv-tag" aria-hidden="true">${TAG[lang]}</span></div>`;
 }
+/** For a preview page. */
+export const VIGNETTE_ALT = ALT;
 
 /* ---------------------------------------------------- placing them -- */
 

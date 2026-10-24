@@ -95,3 +95,10 @@ html.sg-tour-locked, html.sg-tour-locked body { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .sg-tour-panel.is-in .sg-tour-stage, .sg-tour-pic .sg-tour-pin::after { animation: none; }
 }
+
+/* Phones: the tour stage's sideways swipe changes tab (js/stargo-phone-fx.js), so a
+   horizontal pan there belongs to the page, not to the browser's back-swipe. Here, not in
+   the lazily loaded phone sheet, so even the first swipe is covered; pinch-zoom stays. */
+@media (max-width: 767px) {
+  .sg-tour-stage { touch-action: pan-y pinch-zoom; }
+}

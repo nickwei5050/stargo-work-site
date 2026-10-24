@@ -29,6 +29,18 @@
   .sgv-far { display: none !important; }
   .sgv-near { display: block !important; }
 }
+/* The mosaic's second column (.photo-hero) repeats the first column's
+   pictures in the template's cycle order, and the columns drift past each
+   other, so it never looks through the same window as its neighbour: the
+   near window where the boxes are wide, and below 440px its own portrait
+   detail of the moment (tools/code-art-vignettes.mjs ALT). */
+.sgv-alt { display: none !important; }
+.sgv.photo-hero > .sgv-far { display: none !important; }
+.sgv.photo-hero > .sgv-near { display: block !important; }
+@container (max-width: 440px) {
+  .sgv.photo-hero > .sgv-near { display: none !important; }
+  .sgv.photo-hero > .sgv-alt { display: block !important; }
+}
 
 /* The honest tag, in the corner the white hero card never covers first. */
 .sgv-tag {
@@ -41,7 +53,7 @@
   line-height: 1;
   letter-spacing: .04em;
   color: rgba(244, 238, 232, .78);
-  background: rgba(21, 17, 14, .74);
+  background: rgba(21, 17, 14, .9);
   border: 1px solid rgba(255, 236, 220, .14);
   pointer-events: none;
   white-space: nowrap;
