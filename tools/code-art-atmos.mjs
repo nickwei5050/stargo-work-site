@@ -67,6 +67,12 @@ export const boardHost = (lang) => motionHost('board', lang, 'sgk-host stargo-ro
 export const requestHost = (lang) => motionHost('request', lang, 'sgk-host stargo-contact-art');
 export const plantHost = (lang) => motionHost('plant', lang, 'sga-host');
 
+/* The side menu card's 示意 / Illustration tag. The card (avatar + two lines of text in a 71px pill) has no
+   free end to carry it, so tools/chrome.mjs places it right after the card's link, and css/stargo-fusion.css
+   hangs it under the card's right end without moving anything in the menu. Like the drawing, it is
+   decoration for the eye: aria-hidden. */
+export const menuTag = (lang) => `<span class="stargo-menu-tag" aria-hidden="true">${lang === 'en' ? 'Illustration' : '示意'}</span>`;
+
 /* The side menu card: a harbour at night in line art — the quay, two cranes, container stacks and one ship
    whose bridge is lit, its lights drawn long on the water. Decorative inside the card's link, so it is
    aria-hidden and says nothing; the card's own text names the link. One id, and the menu is on a page once. */

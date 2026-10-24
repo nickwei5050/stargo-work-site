@@ -209,93 +209,161 @@
      PLANT — the Liuzhou plant at dawn, a floor plan whose line wakes up.
      ===================================================================== */
   function PlantScene() {
-    var layouts = { wide: { w: 1440, h: 914 }, square: { w: 960, h: 960 }, tall: { w: 400, h: 760 } };
+    /* The stage is drawn at the host's own size (scale 1, so every word is at its CSS size) and composed
+       around the introduction card, which covers the middle of the band. The card's place comes from the
+       band's template rules (css/cinery.cn2.css + css/stargo-fusion.css, by window width): its ring sits
+       S px below the band's top and above its bottom, and it is 892px wide from 992px up.
+         wide (window ≥ 1280) — the U line runs down the free columns either side of the card, its stations
+                beside it, the title above the west column and the tag in the strip under the card;
+         band (narrower) — the card fills the width, so the stations, the title and the tag sit in rows in
+                the strip under the card; from 768px the line comes down the side gutters to reach them, on
+                a phone (20px gutters) it simply crosses the strip.
+       Nothing that moves ever crosses a word: names sit above their machines, off the belt. */
+    var layouts = {};
     var ST = [T('电芯分选', 'Cell sorting'), T('模组装配', 'Module assembly'), T('BMS 测试', 'BMS test'), T('老化测试', 'Ageing test'), T('质检', 'Quality check'), T('包装', 'Packing'), T('装柜', 'Loading')];
-    var SPEED = 80, GAP = 4.2, WAKE = 170;
-    var R, U;
+    var SPEED, GAP, PRE, R, U;
+    function lay(kind, w, h, s) { var k = kind + '-' + w + 'x' + h + '-' + s; if (!layouts[k]) layouts[k] = { w: w, h: h, kind: kind, s: s }; return k; }
+    function pick(w, h) {
+      var vw = window.innerWidth || w;
+      // the card's distance from the band's top and bottom edges: padding of the band + the section + the card's ring
+      var s = vw < 480 ? 104 : vw < 768 ? 120 : vw < 992 ? 168 : 128;
+      w = Math.round(w); h = Math.round(h);
+      return vw >= 1280 ? lay('wide', Math.min(1440, w - (w % 2)), h, s) : lay('band', w, h, s);
+    }
 
     function lerpPath(s) {
-      // a point s px along the U line
+      // a point s px along the line
       var i = 0;
       while (i < U.len.length - 1 && s > U.len[i + 1]) i++;
       var a = U.pts[i], b = U.pts[i + 1], k = (s - U.len[i]) / ((U.len[i + 1] - U.len[i]) || 1);
       return [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k];
     }
-    function build(stage, L, name) {
-      var W = L.w, H = L.h, tall = name === 'tall';
-      stage.className = 'sg-mo-stage sga sga-plant is-' + name;
+    function along(x, y) {
+      // the distance along the line to a point that lies on it
+      for (var i = 0; i < U.pts.length - 1; i++) {
+        var a = U.pts[i], b = U.pts[i + 1];
+        if ((a[0] === b[0] && x === a[0] && (y - a[1]) * (y - b[1]) <= 0) || (a[1] === b[1] && y === a[1] && (x - a[0]) * (x - b[0]) <= 0)) return U.len[i] + Math.abs(x - a[0]) + Math.abs(y - a[1]);
+      }
+      return 0;
+    }
+    function machine(svg, cx, cy, w, h) {
+      var gS = sv('g', { class: 'sga-st' }, svg);
+      gS.setAttribute('transform', 'translate(' + f1(cx) + ' ' + f1(cy) + ')');
+      sv('rect', { x: f1(-w / 2), y: f1(-h / 2), width: f1(w), height: f1(h), rx: h < 30 ? 5 : 7, class: 'sga-mach' }, gS);
+      var r = h < 30 ? 3 : 4, ly = -h / 2 + (h < 30 ? 7 : 12);
+      sv('path', { d: 'M' + f1(-w / 2 + 8) + ' ' + f1(ly) + 'h' + f1(w * 0.36) + (h < 30 ? '' : 'M' + f1(-w / 2 + 8) + ' ' + f1(ly + 8) + 'h' + f1(w * 0.22)), class: 'sga-mach-ln' }, gS);
+      sv('circle', { cx: f1(w / 2 - 6 - r * 2), cy: f1(ly), r: r, class: 'sga-mach-ln' }, gS);
+      var lit = sv('g', { class: 'sga-st-lit' }, gS);
+      sv('rect', { x: f1(-w / 2), y: f1(-h / 2), width: f1(w), height: f1(h), rx: h < 30 ? 5 : 7, class: 'sga-mach is-lit' }, lit);
+      sv('circle', { cx: f1(w / 2 - 6 - r * 2), cy: f1(ly), r: r * 0.6, class: 'sga-lamp' }, lit);
+      return lit;
+    }
+    function name(stage, k, x, y, cls) {
+      var lb = el('div', 'sga-st-name ' + cls, stage, ST[k]);
+      lb.style.left = f1(x) + 'px'; lb.style.top = f1(y) + 'px';
+      return lb;
+    }
+    function build(stage, L, kind) {
+      var W = L.w, H = L.h, S = L.s, wide = L.kind === 'wide';
+      stage.className = 'sg-mo-stage sga sga-plant is-' + L.kind;
       var svg = sv('svg', { class: 'sga-svg', width: W, height: H, viewBox: '0 0 ' + W + ' ' + H }, stage);
-      var m = tall ? [6, 66, 6, 10] : [30, 96, 30, 40];       // wall inset: left, top, right, bottom
+      // the free column either side of the card (its ring included), and the strip under it
+      var Z = wide || W >= 992 ? (W - 892) / 2 : W < 768 ? 20 : 40;
+      var C = H - S;
+      var m = wide ? [30, 96, 30, 40] : [3, 64, 3, 6];       // wall inset: left, top, right, bottom
       var x0 = m[0], y0 = m[1], x1 = W - m[2], y1 = H - m[3];
       // the column grid as one path of dots, the walls, the east windows and their dawn light
-      var g = tall ? 64 : 96, d = '';
+      var g = wide ? 96 : 64, d = '';
       for (var gx = x0 + g / 2; gx < x1; gx += g) for (var gyy = y0 + g / 2; gyy < y1; gyy += g) d += 'M' + f1(gx) + ' ' + f1(gyy) + 'h0';
       sv('path', { d: d, class: 'sga-grid' }, svg);
       sv('rect', { x: x0, y: y0, width: x1 - x0, height: y1 - y0, rx: 4, class: 'sga-wall' }, svg);
-      sv('rect', { x: x0 + 7, y: y0 + 7, width: x1 - x0 - 14, height: y1 - y0 - 14, rx: 2, class: 'sga-wall is-in' }, svg);
+      if (wide) sv('rect', { x: x0 + 7, y: y0 + 7, width: x1 - x0 - 14, height: y1 - y0 - 14, rx: 2, class: 'sga-wall is-in' }, svg);
       var wd = '';
-      for (var wy = y0 + 40; wy < y1 - 60; wy += tall ? 70 : 92) wd += 'M' + x1 + ' ' + wy + 'v' + (tall ? 34 : 46);
+      for (var wy = y0 + 40; wy < y1 - 60; wy += wide ? 92 : 70) wd += 'M' + x1 + ' ' + wy + 'v' + (wide ? 46 : 34);
       sv('path', { d: wd, class: 'sga-east' }, svg);
       R = { st: [], packs: [], dawn: el('div', 'sga-dawn', stage) };
-      // the U line: down the west side, along the south, up the east side to the loading door
-      var inset = tall ? [26, 120, 26, 70] : [150, 150, 150, 84];
-      var ux0 = inset[0], ux1 = W - inset[2], uy0 = inset[1], uy1 = H - inset[3];
-      U = { pts: [[ux0, uy0 - 40], [ux0, uy1], [ux1, uy1], [ux1, uy0 - 40]], len: [0] };
-      for (var i = 1; i < U.pts.length; i++) U.len.push(U.len[i - 1] + Math.hypot(U.pts[i][0] - U.pts[i - 1][0], U.pts[i][1] - U.pts[i - 1][1]));
+
+      // rows of the strip under the card (band): names, the line with its machines, then title + tag, spaced
+      // evenly in the S − FADE px the band's bottom fade (css/stargo-motion-atmos.css) leaves untouched
+      var FADE = S < 125 ? 40 : 64, LH = 17, MH = wide ? 60 : 20;
+      var u = Math.max(4, (S - FADE - (LH * 2 + MH)) / 4);
+      // the line: down the west column (or gutter), along the south, up the east side to the loading door
+      var flat = !wide && W < 768;
+      var ux0 = wide ? 58 : flat ? -20 : Math.round(Math.min(58, Math.max(10, Z / 2))), ux1 = W - ux0;
+      var uy1 = wide ? H - 84 : C + u + LH + u + MH / 2;
+      var top = wide ? y0 + 76 : y0 + 14;     // on the wide plan the line starts under the title block
+      U = { pts: flat ? [[ux0, uy1], [ux1, uy1]] : [[ux0, top], [ux0, uy1], [ux1, uy1], [ux1, top]], len: [0] };
+      for (var i = 1; i < U.pts.length; i++) U.len.push(U.len[i - 1] + Math.abs(U.pts[i][0] - U.pts[i - 1][0]) + Math.abs(U.pts[i][1] - U.pts[i - 1][1]));
       U.total = U.len[U.len.length - 1];
-      sv('path', { d: 'M' + U.pts.map(function (p) { return p[0] + ' ' + p[1]; }).join('L'), class: 'sga-belt' }, svg);
-      sv('path', { d: 'M' + U.pts.map(function (p) { return p[0] + ' ' + p[1]; }).join('L'), class: 'sga-belt is-dash' }, svg);
-      // stations, spaced along the line; on a phone they gather where the band shows: the south side
-      // [x, y, station]; on a phone the card covers the sides, so only the south row is drawn
-      var pos = tall ? [[80, uy1, 2], [200, uy1, 3], [320, uy1, 4]]
-        : [[ux0, 270, 0], [ux0, 440, 1], [ux0, 610, 2], [W / 2, uy1, 3], [ux1, 610, 4], [ux1, 440, 5], [ux1, 270, 6]];
-      var bw = tall ? 70 : 132, bh = tall ? 40 : 66;
-      pos.forEach(function (p, k) {
-        var j = p[0] === ux0 && p[1] < uy1 ? 0 : p[1] === uy1 ? 1 : 2;
-        var s = U.len[j] + Math.hypot(p[0] - U.pts[j][0], p[1] - U.pts[j][1]), vertical = j !== 1;
-        var gS = sv('g', { class: 'sga-st' }, svg);
-        gS.setAttribute('transform', 'translate(' + f1(p[0]) + ' ' + f1(p[1]) + ')');
-        var w = vertical ? bw : (tall ? 52 : bw), h = vertical ? bh : (tall ? 44 : bh);
-        sv('rect', { x: f1(-w / 2), y: f1(-h / 2), width: f1(w), height: f1(h), rx: 7, class: 'sga-mach' }, gS);
-        sv('path', { d: 'M' + f1(-w / 2 + 10) + ' ' + f1(-h / 2 + 12) + 'h' + f1(w * 0.36) + 'M' + f1(-w / 2 + 10) + ' ' + f1(-h / 2 + 20) + 'h' + f1(w * 0.22), class: 'sga-mach-ln' }, gS);
-        sv('circle', { cx: f1(w / 2 - 14), cy: f1(-h / 2 + 14), r: 4, class: 'sga-mach-ln' }, gS);
-        var lit = sv('g', { class: 'sga-st-lit' }, gS);
-        sv('rect', { x: f1(-w / 2), y: f1(-h / 2), width: f1(w), height: f1(h), rx: 7, class: 'sga-mach is-lit' }, lit);
-        sv('circle', { cx: f1(w / 2 - 14), cy: f1(-h / 2 + 14), r: 2.4, class: 'sga-lamp' }, lit);
-        // names above the side stations, beside a south one (below it on a phone, where they sit in a row)
-        var lb = el('div', 'sga-st-name' + (vertical ? ' is-n' : tall ? ' is-b' : ' is-w'), stage, ST[p[2]]);
-        lb.style.left = f1(vertical ? p[0] - w / 2 : tall ? p[0] : p[0] + w / 2 + 12) + 'px';
-        lb.style.top = f1(vertical ? p[1] - h / 2 - 7 : tall ? p[1] + h / 2 + 6 : p[1]) + 'px';
-        R.st.push({ s: s, lit: lit, lb: lb });
-      });
-      for (var n = 0; n < Math.ceil(U.total / SPEED / GAP) + 1; n++) R.packs.push(sv('rect', { x: -7, y: -4.5, width: 14, height: 9, rx: 2, class: 'sga-pack' }, svg));
-      if (!tall) {
+      var pd = 'M' + U.pts.map(function (p) { return p[0] + ' ' + p[1]; }).join('L');
+      sv('path', { d: pd, class: 'sga-belt' }, svg);
+      sv('path', { d: pd, class: 'sga-belt is-dash' }, svg);
+
+      var first = U.total, feed = '';
+      if (wide) {
+        // three stations down each column, beside the line on the card's side, joined to it by a short feeder;
+        // the seventh, the ageing tunnel, sits across the south run
+        var bw = Math.min(132, Z - 70 - 22), bh = MH, ya = 270, yc = Math.max(ya + 200, C - 170), ys = [ya, (ya + yc) / 2, yc];
+        [[0, 1, 2], [6, 5, 4]].forEach(function (ks, side) {
+          ks.forEach(function (k, j) {
+            var y = ys[j], mx = side ? ux1 - 12 - bw / 2 : ux0 + 12 + bw / 2, s = along(side ? ux1 : ux0, y);
+            feed += side ? 'M' + (ux1 - 3) + ' ' + y + 'H' + (ux1 - 12) : 'M' + (ux0 + 3) + ' ' + y + 'H' + (ux0 + 12);
+            R.st.push({ s: s, lit: machine(svg, mx, y, bw, bh), lb: name(stage, k, mx - bw / 2, y - bh / 2 - 7, 'is-n') });
+            first = Math.min(first, s);
+          });
+        });
+        R.st.push({ s: along(W / 2, uy1), lit: machine(svg, W / 2, uy1, 132, bh), lb: name(stage, 3, W / 2 + 66 + 12, uy1 - 6, 'is-n') });
         var tl = el('div', 'sga-plan-title', stage);
         el('b', '', tl, T('柳州工厂', 'Liuzhou plant')); el('span', '', tl, T('车间平面示意', 'Floor plan'));
-        tl.style.left = (x0 + 22) + 'px'; tl.style.top = (y0 + 30) + 'px';
+        tl.style.left = (ux0 + 14) + 'px'; tl.style.top = (y0 + 30) + 'px';
+        // .sg-tag is placed by its bottom-right corner: here just above the south run, inside the east column
+        var tag = el('div', 'sg-tag sga-tag', stage, TAG);
+        tag.style.left = (ux1 - 16) + 'px'; tag.style.top = (uy1 - 12) + 'px';
+      } else {
+        // the stations that fit the strip, in order, evenly along the south run
+        var ks2 = W < 480 ? [2, 3, 4] : W < 768 ? [2, 3, 4, 5] : W < 992 ? [1, 2, 3, 4, 5] : [0, 1, 2, 3, 4, 5, 6];
+        var a = Math.max(0, ux0) + 14, span = W - 2 * a, bw2 = Math.min(56, span / ks2.length - 34);
+        ks2.forEach(function (k, j) {
+          var x = Math.round(a + span * (j + 0.5) / ks2.length), s = along(x, uy1);
+          R.st.push({ s: s, lit: machine(svg, x, uy1, bw2, MH), lb: name(stage, k, x, C + u, 'is-b') });
+          first = Math.min(first, s);
+        });
+        var fy = uy1 + MH / 2 + u, mx2 = Math.max(16, ux0 + 10);
+        if (W >= 340) {
+          var tl2 = el('div', 'sga-plan-title is-row', stage);
+          el('b', '', tl2, T('柳州工厂', 'Liuzhou plant')); if (W >= 560) el('span', '', tl2, T('车间平面示意', 'Floor plan'));
+          tl2.style.left = mx2 + 'px'; tl2.style.top = fy + 'px';
+        }
+        var tag2 = el('div', 'sg-tag sga-tag', stage, TAG);
+        tag2.style.left = (W - mx2) + 'px'; tag2.style.top = (fy + LH) + 'px';
       }
-      var tag = el('div', 'sg-tag sga-tag', stage, TAG);
-      tag.style.left = (x1 - (tall ? 14 : 22)) + 'px'; tag.style.top = (tall ? uy1 - 30 : uy1 - 34) + 'px';
+      if (feed) sv('path', { d: feed, class: 'sga-feed' }, svg);
+      // the band shows its south strip first: the line is already running down to it, and its first pack is
+      // about a second short of the first station when the scene starts
+      SPEED = wide ? 80 : 60; GAP = wide ? 4.2 : 2.4;
+      PRE = Math.max(0, first / SPEED - 1.2);
+      for (var n = 0; n < Math.ceil(U.total / SPEED / GAP) + 1; n++) R.packs.push(sv('rect', { x: -7, y: -4.5, width: 14, height: 9, rx: 2, class: 'sga-pack' }, svg));
     }
     function tick(t) {
       op(R.dawn, 0.35 + 0.65 * ease.sine(seg(t, 0, 5)));
-      // pack n enters the line at n·GAP seconds; a station wakes when the first pack reaches it
-      R.packs.forEach(function (p, n) {
-        var age = t - n * GAP;
-        var s = age < 0 ? -1 : mod(age, R.packs.length * GAP) * SPEED;
-        if (s < 0 || s > U.total) { op(p, 0); return; }
+      // pack n is n·GAP behind the first; a station lights as the first pack reaches it and stays lit
+      var tt = t + PRE, N = R.packs.length;
+      for (var n = 0; n < N; n++) {
+        var p = R.packs[n], age = tt - n * GAP;
+        var s = age < 0 ? -1 : mod(age, N * GAP) * SPEED;
+        if (s < 0 || s > U.total) { op(p, 0); continue; }
         var q = lerpPath(s); css(p, 'transform', 'translate(' + f1(q[0]) + 'px,' + f1(q[1]) + 'px)');
         op(p, seg(s, 0, 40) * (1 - seg(s, U.total - 40, U.total)));
-      });
-      var head = (t - 0.6) * WAKE;
-      R.st.forEach(function (o) {
-        var v = seg(head, o.s - 10, o.s + 220);
+      }
+      var head = tt * SPEED;
+      for (var i = 0; i < R.st.length; i++) {
+        var o = R.st[i], v = seg(head, o.s - 8, o.s + 70);
         op(o.lit, v); cl(o.lb, 'is-on', v > 0.5);
-      });
+      }
     }
     return {
       layouts: layouts,
-      pick: function (w, h) { var r = w / h; return r >= 1.25 ? 'wide' : r >= 0.72 ? 'square' : 'tall'; },
+      pick: pick,
       build: build, tick: tick, still: 60, start: 0
     };
   }

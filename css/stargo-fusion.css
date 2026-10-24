@@ -5159,6 +5159,20 @@ body:is([data-sg-page~="loop"] *, #sg-page-loop) .image-wrap.for-service .parala
   object-fit: cover;
   object-position: 50% 50%;
 }
+/* 2026-10-24 (rest): the drawing's 示意 / Illustration tag (tools/code-art-atmos.mjs menuTag). The pill has no
+   free end, so the tag hangs under its right end, in the 30px between the card and the social icons. The
+   column's 10px row gap still applies around it; its margins (6 − 10 above, 16 + 10 − 22 + 10 + 20 = 30 below)
+   leave the icons exactly where they were. */
+.social-menu-wrapper > .stargo-menu-tag {
+  align-self: flex-end;
+  margin: -4px 18px -22px 0;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: .04em;
+  white-space: nowrap;
+  color: rgba(244, 238, 232, .45);
+  pointer-events: none;
+}
 
 /* W01–W06. The homepage grid's six stills left on 2026-10-23 for code-drawn
         desktop windows (tools/code-art-theatre.mjs), and their crop points for

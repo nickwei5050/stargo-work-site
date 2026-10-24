@@ -20,8 +20,13 @@
                          screens) up, W 1180–1280 following the card: four
                          lanes on a shared timeline, hand-off arrows, and
                          the coordinator's card
-     mid     700 × 500   the same card on tablets and small laptops
-     phone   W × 350     the same card on phones (W follows the host, 320–500)
+     mid     700 × 500   the same card on tablets and small laptops; in the
+             W × H       notices page's 「继续看」 card (596–682 × 480) it
+                         follows the host (W 560–700, H 440–500) so it is
+                         drawn at scale 1, not shrunk to 0.85–0.96
+     phone   W × 350     the same card on phones (W follows the host, 320–500;
+                         a host under 350px tall, the notices card on tablets,
+                         gets H = its height, down to 300)
      tile    W × W/1.78  workforce tile on desktop and tablet (W 470–552, so
                          at 1180–1366px screens it is drawn at its size, not
                          scaled under it)
@@ -210,8 +215,10 @@
         var mw = Math.max(280, Math.min(340, Math.floor(w / 10) * 10));
         return lay('mini', mw, Math.floor(mw * 941 / 1672));
       }
-      if (w >= 560) return lay('mid', 700, 500);
-      return lay('phone', Math.max(320, Math.min(500, Math.floor(w * 350 / h / 2) * 2)), 350);
+      // a host this short is a card, not the capabilities band: draw at its own size where it is under 700 × 500
+      if (w >= 560) return lay('mid', Math.min(700, Math.floor(w / 2) * 2), Math.max(440, Math.min(500, Math.floor(h))));
+      var ph = Math.max(300, Math.min(350, Math.floor(h)));
+      return lay('phone', Math.max(320, Math.min(500, Math.floor(w * ph / h / 2) * 2)), ph);
     }
 
     var kind, W, H, R, LIT;
@@ -285,7 +292,7 @@
       var ta = el('div', 'sg-team-dtx', ga), cp;
       if (mode === 'card') { el('span', 'sg-team-who', ta, D.askWho); el('b', '', ta, D.askQ); cp = el('span', 'sg-team-choices', ta); }
       else if (mode === 'phone') { el('b', '', ta, D.askShort); cp = el('span', 'sg-team-choices', ta); }
-      else { el('b', '', ta, mode === 'mini' ? D.askMini : kind === 'tile' ? D.askShort : D.askLine); cp = el('span', 'sg-team-choices', ga); }
+      else { el('b', '', ta, mode === 'mini' ? D.askMini : kind === 'tile' || (kind === 'mid' && W < 660) ? D.askShort : D.askLine); cp = el('span', 'sg-team-choices', ga); }
       R.pick = el('span', 'sg-team-choice', cp, D.pick);
       R.other = el('span', 'sg-team-choice', cp, D.other);
       var go = grp('ok'); ico(go, 'check', 'is-ok'); texts(go, D.ok, mode === 'mini' ? null : D.okSub);
@@ -357,10 +364,14 @@
 
     /* ---------------- wide and mid: lanes on a timeline ---------------- */
     function buildLanes(stage) {
-      var wide = kind === 'wide', d = wide ? 1280 - W : 0;
+      var wide = kind === 'wide', d = wide ? 1280 - W : 700 - W;
+      // mid is designed at 700 × 500; a narrower stage gives up timeline (the outputs stay right-aligned), a
+      // shorter one shrinks everything under the 46px app bar by f
+      var f = wide ? 1 : (H - 46) / 454;
+      function v(y) { return Math.round(46 + (y - 46) * f); }
       var g = R.g = wide
         ? { gx: 24, gy: 72, gw: 820 - d, gh: 64, sx: 40, lx: 56, lw: 788 - d, ly: 152, lh: 96, lg: 12, t0: 280, t1: 600 - d }
-        : { gx: 20, gy: 60, gw: 660, gh: 52, sx: 32, lx: 46, lw: 634, ly: 126, lh: 62, lg: 8, t0: 232, t1: 460 };
+        : { gx: 20, gy: v(60), gw: 660 - d, gh: Math.round(52 * f), sx: 32, lx: 46, lw: 634 - d, ly: v(126), lh: Math.round(62 * f), lg: Math.round(8 * f), t0: 232, t1: 460 - d };
       function top(i) { return g.ly + i * (g.lh + g.lg); }
       function cy(i) { return top(i) + g.lh / 2; }
       appBar(stage, { mark: 14, crumb: true, pill: true, tag: wide ? null : T('动态示意 · 演示数据', 'Illustrative motion · demo data') });
@@ -394,11 +405,14 @@
         return { g: gr, line: line, head: head, dot: dot, x: x, y1: y1, y2: y2, h: h };
       });
       R.hand.forEach(function (o) {
-        var lab = o.lab = box('sg-team-hand-lab', stage, o.x + 10, top(o.h.a) + g.lh + g.lg / 2);
         var parts = o.h.text.split(' → ');
+        // on a narrow mid card a label that would run past the lanes' right edge opens to the arrow's left
+        // (its width estimated from its text: 12.5px type, padding, the arrow glyph)
+        var est = parts.join('').length * (K.ZH ? 12.6 : 6.9) + 48, flip = !wide && o.x + 10 + est > g.lx + g.lw - 6;
+        var lab = o.lab = box('sg-team-hand-lab' + (flip ? ' is-l' : ''), stage, flip ? o.x - 10 : o.x + 10, top(o.h.a) + g.lh + g.lg / 2);
         el('span', '', lab, parts[0]); glyph('arrow', lab, 13); el('span', '', lab, parts[1]);
       });
-      if (wide) buildCoord(stage, svg, cy); else dock(stage, 20, 412, 660, 68, 'bar');
+      if (wide) buildCoord(stage, svg, cy); else dock(stage, 20, v(412), 660 - d, Math.round(68 * f), 'bar');
       cursor(stage, wide ? [120, 40] : [-120, -50], wide ? [26, 18] : [24, -10]);
     }
 
@@ -437,10 +451,12 @@
 
     /* ---------------- phone and tile: lanes as rows ---------------- */
     function buildRows(stage) {
-      var ph = kind === 'phone', k = c01((H - 264) / 47);
+      var ph = kind === 'phone', k = c01((H - 264) / 47), kp = c01((H - 300) / 50);
       function lerp(a, b) { return Math.round(a + (b - a) * k); }
+      function lp(a, b) { return Math.round(a + (b - a) * kp); }
+      // the phone card is 350 tall; a shorter host (300–350) tightens it towards the 300 column
       var g = R.g = ph
-        ? { pad: 12, gy: 44, gh: 48, ry: 100, rh: 42, rg: 5, dy: 290, dh: 52 }
+        ? { pad: 12, gy: lp(38, 44), gh: lp(46, 48), ry: lp(89, 100), rh: lp(37, 42), rg: lp(4, 5), dy: lp(250, 290), dh: lp(44, 52) }
         : { pad: lerp(12, 14), gy: lerp(44, 48), gh: lerp(32, 36), ry: lerp(82, 92), rh: lerp(28, 32), rg: lerp(4, 6), dy: lerp(212, 246), dh: lerp(45, 51) };
       appBar(stage, { mark: ph ? 12 : 13, crumb: !ph && W >= 520, pill: true, tag: ph ? T('演示数据', 'Demo data') : T('动态示意 · 演示数据', 'Illustrative motion · demo data') });
       goalCard(stage, g.pad, g.gy, W - 2 * g.pad, g.gh, ph ? ASSIGN_S : ASSIGN_T);
@@ -467,7 +483,7 @@
 
     function build(stage, L) {
       kind = L.kind; W = L.w; H = L.h;
-      GOAL = GOALS[kind === 'tile' && W < 552 ? 1 : 0];
+      GOAL = GOALS[(kind === 'tile' && W < 552) || (kind === 'mid' && W < 660) ? 1 : 0];
       R = { stage: stage };
       stage.className = 'sg-mo-stage sg-team is-' + kind + (kind === 'phone' && W < 350 ? ' is-narrow' : '') + (kind === 'tile' && W < 520 ? ' is-tight' : '');
       if (kind === 'wide' || kind === 'mid') buildLanes(stage);
