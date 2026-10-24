@@ -126,7 +126,7 @@
         why: T('语气太硬，先问清需求', 'Too pushy — ask their needs first'), w: T('语气太硬，先问需求', 'Too pushy — ask first') },
       { ic: 'page', t: T('产品页 · 48V 储能柜', 'Product page · 48V rack storage'), s: T('3 张主图 · 中英两版', '3 images · 2 languages'), p: T('产品页', 'Product page'), rule: 2, by: T('市场主管', 'Marketing lead'), ok: true,
         why: T('参数与规格书一致，可以发布', 'Specs match the datasheet'), w: T('与规格书一致', 'Matches the datasheet') },
-      { ic: 'mail', t: T('开发信 · 已修改', 'Outreach · revised'), s: T('先问需求 · 销售 AI 重写', 'Asks first · rewritten'), p: T('改后开发信', 'Revised outreach'), rule: 1, by: T('你', 'You'), ok: true,
+      { ic: 'mail', t: T('开发信 · 已修改', 'Outreach · revised'), s: T('先问需求 · 销售 AI 重写', 'Asks first · rewritten'), p: T('改后开发信', 'Revised outreach'), rp: T('改后开发信', 'Outreach v2'), rule: 1, by: T('你', 'You'), ok: true,
         why: T('先问需求，语气合适，可以发', 'Asks first, right tone — send'), w: T('先问需求，可以发', 'Asks first — send') },
       { ic: 'doc', t: T('报价 Q-1042', 'Quote Q-1042'), s: T('低于底价 · 销售 AI 提交', 'Below the floor price'), p: 'Q-1042', rule: 0, by: T('你', 'You'), wait: true }
     ];
@@ -216,7 +216,7 @@
       var ds = dec === 'wait' ? T('等你拍板', 'Your call') : dec === 'ok' ? T('已批准', 'Approved') : T('已驳回', 'Rejected');
       say(R.badge, ds, true);
       pill(R, ds, dec);
-      if (I.wait) { say(R.why, T('写下原因，再批准或驳回', 'Write a reason, then decide'), true); R.why.__tk = null; }
+      if (I.wait) { say(R.why, T('写下原因，再批准或驳回', R.band ? 'Add a reason, then decide' : 'Write a reason, then decide'), true); R.why.__tk = null; }
       else { R.why.__s = null; typedC(R.why, R.col ? I.why : I.w, live ? seg(v, TYPE0, TYPE1) : 1); }
       cl(R.why, 'is-ph', !!I.wait);
       cl(R.why, 'is-typing', live && !I.wait && v > TYPE0 && v < PRESS);
@@ -238,7 +238,8 @@
           o2.d = d;
           var it2 = IT[d];
           state(o2.e, it2.ok ? 'ok' : 'no');
-          put(o2.a, 'text', (it2.ok ? T('批准 · ', 'Approved · ') : T('驳回 · ', 'Rejected · ')) + it2.p + (R.col ? ' · ' + it2.by : ''));
+          // the band's record column is 228px: it names the rewrite by its short name (rp)
+          put(o2.a, 'text', (it2.ok ? T('批准 · ', 'Approved · ') : T('驳回 · ', 'Rejected · ')) + (R.band && it2.rp ? it2.rp : it2.p) + (R.col ? ' · ' + it2.by : ''));
           put(o2.b, 'text', R.col ? T('原因：', 'Reason: ') + it2.why : it2.w);
           if (o2.tm) put(o2.tm, 'text', '14:' + (32 + d * 4));
         }
@@ -344,7 +345,8 @@
     var G, R;
     function geo(name) {
       if (name === 'col') return { kind: 'col', hub: [56, 106], hr: 26, x0: 92, y0: 160, nw: 348, nh: 64, step: 72, tag: [444, 630] };
-      if (name === 'band') return { kind: 'band', hub: [450, 132], hr: 30, nw: 240, nh: 58, at: [[136, 79], [136, 143], [136, 207], [764, 79], [764, 143], [764, 207]] };
+      // band: 256px nodes, so 「Product info」 keeps its whole name beside 「Not connected」 (17px from each side)
+      if (name === 'band') return { kind: 'band', hub: [450, 132], hr: 30, nw: 256, nh: 58, at: [[145, 79], [145, 143], [145, 207], [755, 79], [755, 143], [755, 207]] };
       return { kind: 'list', hub: [52, 110], hr: 30, nw: 240, nh: 31, at: [0, 1, 2, 3, 4, 5].map(function (i) { return [230, 22 + i * 35]; }), tag: [350, 226] };
     }
     function build(stage, L, name) {
@@ -598,6 +600,8 @@
         var pr = at(stage, 'sg-en-props', G.pr[0], G.pr[1]);
         PROPS.forEach(function (p) { R.pr.push(chip(pr, '', p[0], 'check')); });
       }
+      // content size: the box's padding and border come on top (content-box, css/stargo-motion-enterprise.css), so
+      // the rows end inside it and its right edge lines up with the header's
       var lg = G.log, log = at(stage, 'sg-en-slog', lg[0], lg[1], lg[2], (G.nolh ? 0 : 34) + lg[3] * lg[4]);
       if (!G.nolh) { var lh = el('div', 'sg-en-rec-h', log); el('b', '', lh, T('运行记录', 'Run log')); el('span', '', lh, T('每一步都有记录', 'Every step on record')); }
       var body = el('div', 'sg-en-rec-body', log); body.style.height = (lg[3] * lg[4]) + 'px';

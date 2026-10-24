@@ -44,6 +44,8 @@
     // 512 x 429 box from 1440 up, wide2 its 1.32:1 box below that (one run in the log, no log heading),
     // tall the 768-991 strip, square the 1:1 phone card (358px at 390), small the same below 350px
     var layouts = { wide: { w: 512, h: 430, vis: 2 }, wide2: { w: 512, h: 388, vis: 1 }, tall: { w: 288, h: 536, vis: 3 }, square: { w: 352, h: 352, vis: 1 }, small: { w: 324, h: 324, vis: 1 } };
+    var A_PILL = [T('小样本测试', 'Testing'), T('等你批准', 'Awaiting approval'), T('逐步采用', 'Rolling out'), T('已采用', 'Adopted')];
+    var B_PILL = [T('试用 10%', 'Trial 10%'), T('效果变差', 'Doing worse'), T('已撤回', 'Reverted')];
     var R, L;
 
     function build(stage, Ld, name) {
@@ -74,7 +76,8 @@
       var a = R.a = el('div', 'sgi-card', body);
       var ah = el('div', 'sgi-ch', a);
       var at = el('div', 'sgi-ct', ah);
-      el('span', 'sgi-cn', at, T('改进 #12', 'Change #12'));
+      // the square phone card names a change by its number alone in English, so the titles keep their words
+      el('span', 'sgi-cn', at, T('改进 #12', sq ? '#12' : 'Change #12'));
       el('b', '', at, T('开发信 v2', sq ? 'Email v2' : 'Outreach email v2'));
       R.aPill = el('span', 'sgi-pill', ah);
       el('div', 'sgi-sub', a, T('从 #231 的人工修正复盘：开头先提对方的储能项目', 'From the fix on #231: open with the buyer’s storage project'));
@@ -102,8 +105,8 @@
       var b = R.b = el('div', 'sgi-card is-b', body);
       var bh = el('div', 'sgi-ch', b);
       var bt = el('div', 'sgi-ct', bh);
-      el('span', 'sgi-cn', bt, T('改进 #13', 'Change #13'));
-      el('b', '', bt, T('跟进间隔 3 天 → 1 天', sq ? '1-day follow-up' : narrow ? 'Follow-ups: 3 → 1 day' : 'Follow up after 1 day, not 3'));
+      el('span', 'sgi-cn', bt, T('改进 #13', sq ? '#13' : 'Change #13'));
+      el('b', '', bt, T('跟进间隔 3 天 → 1 天', sq ? '1-day follow-up' : 'Follow-ups: 3 → 1 day'));
       R.bPill = el('span', 'sgi-pill', bh);
       var m = el('div', 'sgi-metric', b);
       el('span', '', m, T('试用 10% · 退订率', narrow ? 'Trial 10% · unsubscribes' : 'Trial at 10% · unsubscribes'));
@@ -113,6 +116,15 @@
       el('span', '', R.keep, T('失败记录已保留，留作修复依据', narrow ? 'Failure record kept for the fix' : 'Failure record kept as the basis for a fix'));
       R.rowH = name === 'small' ? 27 : narrow ? 30 : 27;
       win.style.height = (R.rowH * L.vis) + 'px';
+      // each pill keeps the width of its widest state, so a title is laid out once for it and is never cut
+      // when the pill changes (「Trial 10%」 → 「Doing worse」)
+      reserve(R.aPill, A_PILL); reserve(R.bPill, B_PILL);
+    }
+    function reserve(p, states) {
+      var w = 0;
+      for (var i = 0; i < states.length; i++) { p.textContent = states[i]; w = Math.max(w, p.offsetWidth); }
+      p.textContent = '';
+      p.style.minWidth = w + 'px';
     }
 
     function tick(t) {
@@ -141,7 +153,7 @@
         put(b.v, 'text', p > 0 ? (b.max * p).toFixed(1) + '%' : '–');
       });
       var aState = u < ASK ? 0 : u < TAP + 0.25 ? 1 : u < DONE ? 2 : 3;
-      textSwap(R.aPill, [T('小样本测试', 'Testing'), T('等你批准', 'Awaiting approval'), T('逐步采用', 'Rolling out'), T('已采用', 'Adopted')][aState]);
+      textSwap(R.aPill, A_PILL[aState]);
       put(R.aPill, 'cls', 'sgi-pill' + ['', ' is-ask', ' is-run', ' is-ok'][aState]);
       var bIn = seg(u, ASK, ASK + 0.4) * (1 - seg(u, R0 - 0.1, R0 + 0.2));
       css(R.btn, 'opacity', bIn.toFixed(3));
@@ -168,7 +180,7 @@
       put(R.bVal, 'text', (0.8 + 1.3 * bad).toFixed(1) + '%');
       cl(R.bVal, 'is-bad', bad > 0.5);
       var bState = u < B_BAD + 0.6 ? 0 : u < B_REV ? 1 : 2;
-      textSwap(R.bPill, [T('试用 10%', 'Trial 10%'), T('效果变差', 'Doing worse'), T('已撤回', 'Reverted')][bState]);
+      textSwap(R.bPill, B_PILL[bState]);
       put(R.bPill, 'cls', 'sgi-pill' + ['', ' is-bad', ' is-rev'][bState]);
       var pk2 = ease.out(seg(u, B_KEEP, B_KEEP + 0.5));
       css(R.keep, 'opacity', pk2.toFixed(3));

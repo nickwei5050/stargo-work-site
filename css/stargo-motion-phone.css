@@ -12,10 +12,15 @@
    the box's left edge and the screen at 12.124% of the frame), so the scene is laid out for it; its mask
    keeps the whole screen's size, so the screen's corners and the fingertips stay where they were. */
 @media (min-width: 768px) {
+  /* The same holds for the height: where the band's box is wider than the phone's proportions (1280 × 720),
+     the frame runs past the box's bottom and .stargo-nw-screen cuts the screen there. The host ends at that
+     line (100cqh is the screen layer's height, 1.493% the host's top in the frame), so the feed is fitted
+     to the part that shows and its tab bar is never sliced; the mask keeps the whole screen's height. */
   .lx-scope .stargo-nw-frame .sg-mo.stargo-nw-art {
     width: min(43.265%, calc(100cqw - 12.124%));
-    -webkit-mask-size: calc(max(100cqw, 100cqh * 1262 / 1474) * .43265) 100%;
-    mask-size: calc(max(100cqw, 100cqh * 1262 / 1474) * .43265) 100%;
+    height: min(80.19%, calc(100cqh - 1.493%));
+    -webkit-mask-size: calc(max(100cqw, 100cqh * 1262 / 1474) * .43265) calc(max(100cqh, 100cqw * 1474 / 1262) * .8019);
+    mask-size: calc(max(100cqw, 100cqh * 1262 / 1474) * .43265) calc(max(100cqh, 100cqw * 1474 / 1262) * .8019);
   }
 }
 /* the phone of the 「按任务组队」 card: the top screen of the mockup, inside its rounded window */
@@ -89,6 +94,8 @@
 .sgp-badge { position: absolute; left: 15px; top: -5px; min-width: 18px; height: 16px; padding: 0 4px; border-radius: 8px; display: grid; place-items: center; font-style: normal; font-size: 12px; font-weight: 600; color: #600a15; background: #fba7a6; opacity: 0; transform: scale(.6); transition: opacity .3s, transform .4s cubic-bezier(.34, 1.56, .64, 1); }
 .sgp-badge.is-on { opacity: 1; transform: none; }
 .sgp-home { position: absolute; left: 50%; bottom: 7px; width: 100px; height: 4px; margin-left: -50px; border-radius: 2px; background: #10191a; }
+/* tall and mid: the tabs keep clear of the screen's rounded corners (「AI · Buyers」 is the widest label) */
+.sgp-feed.is-tall .sgp-tabs { padding: 8px 12px 0; }
 
 /* feed mid: 224 × 485, laptops (host 224–279 px wide) */
 .sgp-feed.is-mid .sgp-status { height: 32px; padding: 0 14px 0 22px; }
@@ -120,10 +127,11 @@
 .sgp-feed.is-mid .sgp-ck { width: 20px; height: 20px; }
 .sgp-feed.is-mid .sgp-done-h b { font-size: 13px; }
 .sgp-feed.is-mid .sgp-done-s { margin: 2px 0 0 26px; font-size: 12px; }
-.sgp-feed.is-mid .sgp-tabs { height: 50px; padding-top: 6px; }
+/* the labels end 14px above the screen's foot, so the home indicator (4–8px) runs under them, not through them */
+.sgp-feed.is-mid .sgp-tabs { height: 56px; padding: 4px 10px 0; }
 .sgp-feed.is-mid .sgp-tab { gap: 2px; }
 .sgp-feed.is-mid .sgp-badge { left: 12px; }
-.sgp-feed.is-mid .sgp-home { bottom: 5px; width: 84px; margin-left: -42px; }
+.sgp-feed.is-mid .sgp-home { bottom: 4px; width: 84px; margin-left: -42px; }
 
 /* feed mini: 140 × 303 */
 .sgp-feed.is-mini .sgp-status { height: 22px; padding: 0 8px 0 11px; }
@@ -274,6 +282,10 @@
 .sgp-squad.is-mid .sgp-bub .sgp-av { width: 19px; height: 19px; }
 .sgp-squad.is-mid .sgp-bub-m { padding: 3px 8px 4px; font-size: 12.5px; line-height: 1.25; border-radius: 10px 10px 10px 3px; }
 .sgp-squad.is-mid .sgp-bub.is-r .sgp-bub-m { border-radius: 10px 10px 3px 10px; }
+/* mid drawn 236–249 px wide (1024–1180): the two lines of the thread keep their words whole */
+.sgp-squad.is-narrow .sgp-talk { padding-left: 5px; padding-right: 5px; }
+.sgp-squad.is-narrow .sgp-bub { gap: 4px; }
+.sgp-squad.is-narrow .sgp-bub-m { padding: 3px 6px 4px; }
 .sgp-squad.is-mid .sgp-at { margin-right: 3px; }
 .sgp-squad.is-mid .sgp-sheet { padding: 7px 12px 10px; border-radius: 16px 16px 0 0; }
 .sgp-squad.is-mid .sgp-grab { margin-bottom: 9px; }
