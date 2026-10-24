@@ -32,12 +32,12 @@ export const MOTION_LABEL = {
   /* enterprise.html (tools/code-art-enterprise.mjs, js/stargo-motion-enterprise.js): the four story
      panels behind 决定 / 核对 / 连接 / 经营 and the 「(原则)」 picture. */
   'ent-decide': {
-    zh: '动态示意（演示数据）：需要审批的事项排队到关口——报价、开发信、产品页发布，审批人按你们定的规则；你批准或驳回，原因都记进审批记录。付款、正式申报和专业审阅始终由人把关。',
-    en: 'Illustrative motion with demo data: items that need approval queue at the gate — a quote, an outreach email, a product page — each going to the approver your rules name; you approve or reject, and the reason goes into the approval record. Payments, official filings and professional reviews always stay with people.',
+    zh: '动态示意（演示数据）：需要审批的事项排队到关口，审批人按你们定的规则——开发信语气太硬被驳回，产品页由市场主管批准，改过的开发信由你批准，原因都记进审批记录；低于底价的报价 Q-1042 停在关口等你拍板。付款、正式申报和专业审阅始终由人把关。',
+    en: 'Illustrative motion with demo data: items that need approval queue at the gate, each going to the approver your rules name — a pushy outreach email is rejected, a product page is approved by the marketing lead, the rewritten email is approved by you, and every reason goes into the approval record; quote Q-1042, below the floor price, waits at the gate for your call. Payments, official filings and professional reviews always stay with people.',
   },
   'ent-verify': {
-    zh: '动态示意（演示数据）：AI 起草的报价逐项对照来源文件核对——型号、数量和贸易术语与询盘一致，交期与生产排期不符，被标出并退回修正，复核通过后才算完成。',
-    en: 'Illustrative motion with demo data: an AI-drafted quote is checked line by line against its sources — model, quantity and trade term match the inquiry, the lead time does not match the production schedule, so it is flagged and sent back, and it counts as done only once the re-check passes.',
+    zh: '动态示意（演示数据）：AI 起草的报价逐项对照来源文件核对——型号、数量和贸易术语与询盘一致，交期与生产排期不符，被标出并退回修正，复核通过后才算完成，然后交给你审批。',
+    en: 'Illustrative motion with demo data: an AI-drafted quote is checked line by line against its sources — model, quantity and trade term match the inquiry, the lead time does not match the production schedule, so it is flagged and sent back, and it counts as done only once the re-check passes; then it goes to you for approval.',
   },
   'ent-connect': {
     zh: '动态示意（演示数据）：邮箱、客户记录、产品知识、ERP 和网盘的产品资料，先说清可读、可改、需审批，经你授权后逐项接入同一套业务流程；网盘的财务目录没有授权，就不接入。',

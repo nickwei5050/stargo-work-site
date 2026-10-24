@@ -52,64 +52,69 @@ const P = {
 const ico = (name, cls = 'sg-em-ico') => `<svg class="${cls}" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="${P[name]}" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
 /* What each card draws, in the page's two languages. `label` is the sentence
-   screen readers hear (the drawing itself is aria-hidden). */
+   screen readers hear (the drawing itself is aria-hidden). `two(full, short)`
+   writes both wordings; the narrow cards (phones, 768–991 tablets) show the
+   short one (css/stargo-ent-cards.css), so nothing there is cut off. */
+const two = (t, full, short) => `<span class="sg-em-f">${t(full)}</span><span class="sg-em-s">${t(short)}</span>`;
 const CARDS = [
   {
     ratio: '480 / 320',
-    label: B('示意：应用开通管理——六个应用里四个已开通，视频制作还需配置，流程编排未开通；本月用量 62%，到 80% 提醒，不超过预算上限。',
-      'Illustration: application access — four of six apps are enabled, Video Studio still needs setup and Workflows is off; usage is at 62% of the month’s budget, with an alert at 80% and the limit above it.'),
+    label: B('示意：应用开通管理——六个应用里四个已开通，视频制作还需配置，流程编排未开通；本月用量是预算上限的 62%。',
+      'Illustration: application access — four of six apps are enabled, Video Studio still needs setup and Workflows is off; usage this month is 62% of the budget limit.'),
     draw: (t) => {
+      /* the tiles carry launcher-style short English names (the full ones are in the label): a card is at most
+         338px wide, and 「Knowledge Base」 does not fit a third of it at 12px */
       const apps = [['brain', B('智脑', 'AI Brain'), 'on'], ['book', B('知识库', 'Knowledge'), 'on'], ['chat', B('客户会话', 'Chat'), 'on'],
         ['target', B('拓客', 'Outreach'), 'on'], ['film', B('视频制作', 'Video'), 'set'], ['flow', B('流程编排', 'Workflows'), 'off']];
       const tiles = apps.map(([i, n, s]) => `<span class="sg-em-app is-${s}"><span class="sg-em-tile">${ico(i)}<i class="sg-em-sw"></i></span><span class="sg-em-an">${t(n)}</span></span>`).join('');
       return `<div class="sg-em-apps">${tiles}</div>
-<div class="sg-em-use"><div class="sg-em-use-k"><span>${t(B('本月用量', 'Usage this month'))}</span><b>62%</b></div><div class="sg-em-meter"><i></i><em></em></div><div class="sg-em-use-s"><span>${t(B('80% 提醒', 'Alert at 80%'))}</span><span>${t(B('上限', 'Limit'))}</span></div></div>`;
+<div class="sg-em-use"><div class="sg-em-use-k"><span>${two(t, B('本月用量', 'Usage this month'), B('用量', 'Usage'))} <b>62%</b></span><span>${t(B('预算上限', 'Budget limit'))}</span></div><div class="sg-em-meter"><i></i></div></div>`;
     },
   },
   {
     ratio: '480 / 270',
     label: B('示意：账号与岗位权限——销售经理可以查看和修改客户资料，销售 AI 可以查看、修改要审批，跟单只能查看。',
-      'Illustration: account and role permissions — the sales manager may read and change customer records, the sales AI may read and needs approval to change, and order follow-up may only read.'),
+      'Illustration: account and role permissions — the sales manager may read and change customer records, the sales AI may read and needs approval to change, and the orders desk may only read.'),
     draw: (t) => {
       const Y = `<span class="sg-em-c is-y">${ico('check')}</span>`;
-      const A = `<span class="sg-em-c is-a">${t(B('需审批', 'Approval'))}</span>`;
+      const A = `<span class="sg-em-c is-a">${two(t, B('需审批', 'Approval'), B('审批', 'Approve'))}</span>`;
       const N = `<span class="sg-em-c is-n">${ico('lock')}</span>`;
-      const rows = [[ico('person'), B('销售经理', 'Sales manager'), Y, Y], [ico('bot'), B('销售 AI', 'Sales AI'), Y, A], [ico('person'), B('跟单', 'Order follow-up'), Y, N]];
-      return `<div class="sg-em-mx"><div class="sg-em-mx-h"><span>${t(B('客户资料', 'Customer records'))}</span><span>${t(B('查看', 'Read'))}</span><span>${t(B('修改', 'Change'))}</span></div>${rows.map(([i, n, a, b]) => `<div class="sg-em-mx-r"><span class="sg-em-who">${i}<b>${t(n)}</b></span>${a}${b}</div>`).join('')}</div>`;
+      const rows = [[ico('person'), B('销售经理', 'Sales manager'), B('经理', 'Manager'), Y, Y], [ico('bot'), B('销售 AI', 'Sales AI'), B('销售 AI', 'Sales AI'), Y, A], [ico('person'), B('跟单', 'Orders desk'), B('跟单', 'Orders'), Y, N]];
+      return `<div class="sg-em-mx"><div class="sg-em-mx-h"><span>${t(B('客户资料', 'Customer records'))}</span><span>${two(t, B('查看', 'Read'), B('看', 'Read'))}</span><span>${two(t, B('修改', 'Change'), B('改', 'Edit'))}</span></div>${rows.map(([i, n, ns, a, b]) => `<div class="sg-em-mx-r"><span class="sg-em-who">${i}<b>${two(t, n, ns)}</b></span>${a}${b}</div>`).join('')}</div>`;
     },
   },
   {
     ratio: '480 / 320',
-    label: B('示意：关键操作审批——报价 Q-1042 低于底价，销售 AI 提交、销售经理已批，最后由你批准后才发出。',
-      'Illustration: approval of key actions — quote Q-1042 is below the floor price; the sales AI submitted it, the sales manager signed off, and it goes out only after you approve.'),
-    draw: (t) => `<div class="sg-em-ap-item"><b>${t(B('报价 Q-1042', 'Quote Q-1042'))}</b><span>${t(B('低于底价', 'Below floor'))}</span></div>
-<div class="sg-em-chain"><span class="sg-em-step is-ok">${ico('bot')}<em>${t(B('销售 AI 提交', 'Sales AI'))}</em></span><i></i><span class="sg-em-step is-ok">${ico('person')}<em>${t(B('经理已批', 'Manager'))}</em></span><i></i><span class="sg-em-step is-wait">${ico('person')}<em>${t(B('等你批准', 'You'))}</em></span></div>
+    label: B('示意：关键操作审批——报价 Q-1042 低于底价，销售 AI 提交、销售经理已批，还在等你批准，批准前不会发出。',
+      'Illustration: approval of key actions — quote Q-1042 is below the floor price; the sales AI submitted it, the sales manager signed off, and it waits for you: nothing goes out before you approve.'),
+    draw: (t) => `<div class="sg-em-ap-item"><b>${two(t, B('报价 Q-1042', 'Quote Q-1042'), B('Q-1042', 'Q-1042'))}</b><span>${t(B('低于底价', 'Below floor'))}</span></div>
+<div class="sg-em-chain"><span class="sg-em-step is-ok">${ico('bot')}<em>${two(t, B('销售 AI 提交', 'Sales AI'), B('AI', 'AI'))}</em></span><i></i><span class="sg-em-step is-ok">${ico('person')}<em>${two(t, B('经理已批', 'Manager'), B('经理', 'Manager'))}</em></span><i></i><span class="sg-em-step is-wait">${ico('person')}<em>${two(t, B('等你批准', 'You'), B('你', 'You'))}</em></span></div>
 <div class="sg-em-ap-btns"><span class="sg-em-btn">${t(B('驳回', 'Reject'))}</span><span class="sg-em-btn is-primary"><span class="sg-em-btn-a">${t(B('批准', 'Approve'))}</span><span class="sg-em-btn-b">${ico('check')}${t(B('已批准', 'Approved'))}</span></span></div>`,
   },
   {
     ratio: '480 / 480',
-    label: B('示意：工作与结果记录——每一步记下时间、谁做的和结果；交期核对不符时出错即停，转给跟单处理，修正后核对通过。',
-      'Illustration: work and result records — every step is logged with the time, who did it and the result; when the lead time fails its check the work stops and passes to a person, and passes once it is fixed.'),
+    label: B('示意：工作与结果记录——Müller Energie 的报价，每一步记下时间、谁做的和结果：交期核对不符时出错即停，转给跟单，修正后复核通过，再由你批准。',
+      'Illustration: work and result records — the Müller Energie quote, each step logged with the time, who did it and the result: the lead-time check fails, so the work stops and passes to the orders desk; once fixed it passes the re-check, and then you approve.'),
     draw: (t) => {
       const rows = [
-        ['09:12', 'bot', B('销售 AI · 起草报价', 'Sales AI · drafts quote'), 'ok'],
-        ['09:20', 'person', B('你 · 批准', 'You · approve'), 'ok'],
-        ['09:31', 'stop', B('核对交期 · 不符，已停', 'Lead-time check · stopped'), 'stop'],
-        ['09:32', 'person', B('转人工 · 跟单接手', 'Passed to a person'), 'hand'],
-        ['09:40', 'check', B('复核 · 符合要求', 'Re-check · meets spec'), 'ok'],
+        ['09:12', 'bot', B('销售 AI · 起草报价', 'Sales AI · drafts the quote'), B('AI 起草', 'AI drafts'), 'ok'],
+        ['09:14', 'stop', B('核对交期 · 不符，已停', 'Lead-time check · stopped'), B('交期不符 · 停', 'Lead time · stop'), 'stop'],
+        ['09:15', 'person', B('转人工 · 跟单接手', 'Passed to the orders desk'), B('转给跟单', 'To orders desk'), 'hand'],
+        ['09:40', 'check', B('复核 · 符合要求', 'Re-check · meets spec'), B('复核通过', 'Re-check passed'), 'ok'],
+        ['09:42', 'person', B('你 · 批准', 'You · approve'), B('你批准', 'You approve'), 'ok'],
       ];
-      return `<div class="sg-em-log-h"><b>${t(B('工作记录', 'Work record'))}</b><span>${t(B('报价 Q-1042', 'Quote Q-1042'))}</span></div><ol class="sg-em-log">${rows.map(([tm, i, s, k]) => `<li class="is-${k}"><time>${tm}</time><span class="sg-em-li">${ico(i)}</span><span class="sg-em-lt">${t(s)}</span><span class="sg-em-lr">${ico(k === 'stop' ? 'pause' : k === 'hand' ? 'person' : 'check')}</span></li>`).join('')}</ol>`;
+      return `<div class="sg-em-log-h"><b>${t(B('工作记录', 'Work record'))}</b><span>${t(B('报价 · Müller Energie', 'Quote · Müller Energie'))}</span></div><ol class="sg-em-log">${rows.map(([tm, i, s, ss, k]) => `<li class="is-${k}"><time>${tm}</time><span class="sg-em-li">${ico(i)}</span><span class="sg-em-lt">${two(t, s, ss)}</span><span class="sg-em-lr">${ico(k === 'stop' ? 'pause' : k === 'hand' ? 'person' : 'check')}</span></li>`).join('')}</ol>`;
     },
   },
   {
     ratio: '480 / 480',
-    label: B('示意：账号连接与保护——企业邮箱、ERP 和网盘经授权接入，凭据加密保管、不显示；每个账号只开给用得到的岗位，其他岗位没有访问权限。',
-      'Illustration: linked accounts and protection — company email, the ERP and the shared drive are connected with authorization and their credentials are stored encrypted, never shown; each account is open only to the roles that need it, and other roles have no access.'),
+    label: B('示意：账号连接与保护——企业邮箱、ERP 和网盘经授权接入，登录凭据集中保管、不显示，AI 员工看不到；每个账号只开给用得到的岗位，其他岗位没有访问权限。',
+      'Illustration: linked accounts and protection — company email, the ERP and the shared drive are connected with authorization; their logins are held centrally and never shown, so AI employees never see them; each account is open only to the roles that need it, and other roles have no access.'),
     draw: (t) => {
-      const rows = [['mail', B('企业邮箱', 'Company email'), B('销售', 'Sales')], ['box', 'ERP', B('跟单', 'Orders')], ['folder', B('网盘', 'Shared drive'), B('产品', 'Product')]];
-      return `<div class="sg-em-vault-h"><span class="sg-em-shield">${ico('shield')}<i class="sg-em-lockbody">${ico('lock')}</i></span><span><b>${t(B('已授权的账号', 'Authorized accounts'))}</b><em>${t(B('凭据加密保管', 'Credentials encrypted'))}</em></span></div>
-<ul class="sg-em-acc">${rows.map(([i, n, r]) => `<li><span class="sg-em-acc-i">${ico(i)}</span><span class="sg-em-acc-n"><b>${t(typeof n === 'string' ? B(n, n) : n)}</b><span class="sg-em-dots">••••••••</span></span><span class="sg-em-role">${t(r)}</span></li>`).join('')}</ul>
-<div class="sg-em-deny">${ico('lock')}<span>${t(B('其他岗位：无访问权限', 'Other roles: no access'))}</span></div>`;
+      const rows = [['mail', B('企业邮箱', 'Company email'), B('销售', 'Sales')], ['box', B('ERP', 'ERP'), B('跟单', 'Orders')], ['folder', B('网盘', 'Shared drive'), B('产品', 'Product')]];
+      return `<div class="sg-em-vault-h"><span class="sg-em-shield">${ico('shield')}<i class="sg-em-lockbody">${ico('lock')}</i></span><span><b>${two(t, B('已授权的账号', 'Authorized accounts'), B('授权账号', 'Accounts'))}</b><em>${t(B('凭据集中保管 · AI 员工看不到', 'Logins never shown to AI'))}</em></span></div>
+<ul class="sg-em-acc">${rows.map(([i, n, r]) => `<li><span class="sg-em-acc-i">${ico(i)}</span><span class="sg-em-acc-n"><b>${t(n)}</b><span class="sg-em-dots">••••••••</span></span><span class="sg-em-role">${t(r)}</span></li>`).join('')}</ul>
+<div class="sg-em-deny">${ico('lock')}<span>${two(t, B('其他岗位：无访问权限', 'Other roles: no access'), B('其他岗位无权限', 'Others: no access'))}</span></div>`;
     },
   },
 ];

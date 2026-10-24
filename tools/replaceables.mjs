@@ -522,6 +522,9 @@ export const PLACED = {
  *   picture's shape sets the card's height.
  * The four sticky story panels (决定, 核对, 连接, 经营; E01–E04) are CSS
  * backgrounds, set in css/stargo-fusion.css (the batch 7 block).
+ * Since 2026-10-23 `principle`, `modules` and E01–E04 are drawn in code on the
+ * built pages (tools/code-art-enterprise.mjs replaces them after the page is
+ * built); the entries stay so the pipeline and the files stay as they were.
  */
 export const ENTERPRISE_PHOTOS = {
   cockpit: [photoFile('e05-cockpit-overview', 1024), photoFile('e06-cockpit-blocker', 1024), photoFile('e07-cockpit-budget', 1024)],

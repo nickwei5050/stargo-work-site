@@ -163,7 +163,10 @@
       nio.observe(host);
     }
     if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (es) { visible = es[es.length - 1].isIntersecting; if (visible) fit(); wake(); }, { rootMargin: '120px 0px' }).observe(host);
+      // A host that only touches the viewport's edge (a sliding panel parked just beside the screen) reports
+      // isIntersecting with a zero-area rectangle; it is not on screen, so it does not tick. The second
+      // threshold makes the observer report the moment such a host actually comes into view.
+      new IntersectionObserver(function (es) { var e = es[es.length - 1], r = e.intersectionRect; visible = e.isIntersecting && r.width > 0 && r.height > 0; if (visible) fit(); wake(); }, { rootMargin: '120px 0px', threshold: [0, 0.001] }).observe(host);
     } else { visible = true; wake(); }
     document.addEventListener('visibilitychange', wake);
     if (reduced.addEventListener) reduced.addEventListener('change', function () { t = scene.still; if (built) scene.tick(t); wake(); });
