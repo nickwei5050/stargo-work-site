@@ -1,0 +1,88 @@
+/* Atmosphere scenes (js/stargo-motion-atmos.js): the homepage's night picture before the scenario cards and
+   about.html's introduction band. Quiet line art behind text: hairlines, a few warm lights, nothing bright. */
+
+/* ---------- hosts ---------- */
+/* R1 → night. Mono opens the picture like two doors (each half slides out), so each half holds a whole-screen
+   host clipped to itself: the left one from the left edge, the right one from the right edge. The left half is
+   1px wider than 50% (css/stargo-fusion.css), so its host is twice its width less 2px. */
+.photo-half._01, .photo-half._02 { overflow: hidden; background: #0d0b09; }
+.photo-half > .sga-host { position: absolute; top: 0; bottom: 0; width: 200%; pointer-events: none; background: radial-gradient(70% 60% at 62% 70%, #24190f 0%, #120e0b 55%, #0b0908 100%); }
+.photo-half._01 > .sga-host { left: 0; width: calc(200% - 2px); }
+.photo-half._02 > .sga-host { right: 0; }
+/* A01 → plant, under the introduction card; the band's two fades stay above it, as they were above the photograph */
+.cn-about .cn-intro-background { position: relative; background-image: none; background-color: #0b0908; }
+.cn-about .cn-intro-background > .sga-host { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(80% 70% at 88% 30%, #20170f 0%, #110d0a 55%, #0a0807 100%); }
+.cn-about .cn-intro-background > .cn-padding-global { position: relative; }
+.cn-about .cn-intro-opacity { z-index: 1; }
+
+/* ---------- shared ---------- */
+.sga-svg { position: absolute; left: 0; top: 0; }
+.sga-label { position: absolute; white-space: nowrap; line-height: 1.3; transition: color .6s; }
+.sga-label b { display: block; font-size: 15px; font-weight: 600; letter-spacing: .01em; color: rgba(246, 239, 230, .62); transition: color .6s; }
+.sga-label span { display: block; margin-top: 3px; font-size: 13px; color: rgba(246, 239, 230, .4); transition: color .6s; }
+.sga-label.is-hot b { color: #f6efe6; }
+.sga-label.is-hot span { color: #ffb37a; }
+.sga-tag { color: rgba(244, 238, 232, .42); font-size: 12.5px; }
+.sga-lamp { fill: #ffc690; }
+
+/* =================== NIGHT =================== */
+.sga-stars { stroke: rgba(255, 236, 220, .32); stroke-width: 1.6; stroke-linecap: round; fill: none; }
+.sga-star { fill: #ffe9d2; }
+.sga-hills { fill: rgba(255, 236, 220, .012); stroke: rgba(255, 236, 220, .06); stroke-width: 1; }
+.sga-line.sga-bld { fill: #110d0a; }
+.sga-moon { fill: rgba(255, 232, 205, .1); stroke: rgba(255, 232, 205, .22); stroke-width: 1; }
+.sga-halo { fill: rgba(255, 210, 160, .025); }
+.sga-ground { stroke: rgba(255, 236, 220, .16); stroke-width: 1; fill: none; }
+.sga-water { stroke: rgba(255, 220, 180, .07); stroke-width: 1; stroke-linecap: round; fill: none; }
+.sga-arc { fill: none; stroke: rgba(255, 205, 150, .12); stroke-width: 1; stroke-dasharray: 2 5; }
+.sga-arc.is-hot { stroke: rgba(255, 138, 61, .7); stroke-width: 1.4; stroke-dasharray: none; opacity: 0; }
+.sga-node-ring { fill: rgba(13, 11, 9, .9); stroke: rgba(255, 220, 180, .3); stroke-width: 1; }
+.sga-node-core { fill: rgba(255, 220, 180, .55); transition: fill .5s; }
+.sga-node-rip { fill: none; stroke: #ff8a3d; stroke-width: 1.2; transform-box: fill-box; transform-origin: center; opacity: 0; }
+.sga-node.is-hot .sga-node-ring { stroke: #ff8a3d; }
+.sga-node.is-hot .sga-node-core { fill: #ff8a3d; }
+.sga-buyer.is-left { transform: translateX(-100%); text-align: right; }
+.sga-line { fill: none; stroke: rgba(255, 236, 220, .26); stroke-width: 1.2; stroke-linejoin: round; }
+.sga-glass { stroke: rgba(255, 236, 220, .1); stroke-width: 1; }
+.sga-win-dim { fill: rgba(255, 236, 220, .035); stroke: rgba(255, 236, 220, .1); stroke-width: 1; }
+.sga-win { fill: #ffb773; opacity: 0; }
+.sga-door { fill: rgba(255, 170, 100, .4); opacity: 0; }
+.sga-road { stroke: rgba(255, 236, 220, .18); stroke-width: 1; stroke-dasharray: 6 7; }
+.sga-quay { stroke: rgba(255, 236, 220, .32); stroke-width: 2; }
+.sga-box { fill: rgba(255, 236, 220, .04); stroke: rgba(255, 236, 220, .16); stroke-width: 1; }
+.sga-box.is-warm { fill: rgba(236, 111, 16, .14); stroke: rgba(255, 150, 80, .3); }
+.sga-beacon { fill: #ff5a3c; opacity: .7; }
+.sga-trolley { fill: rgba(255, 236, 220, .35); }
+.sga-cable { fill: rgba(255, 236, 220, .4); transform-box: fill-box; transform-origin: 50% 0; opacity: 0; }
+.sga-hull { fill: rgba(255, 236, 220, .05); stroke: rgba(255, 236, 220, .3); stroke-width: 1.2; stroke-linejoin: round; }
+.sga-shiplit { opacity: 0; }
+.sga-reflect { fill: rgba(255, 180, 110, .16); }
+.sga-moving { fill: #ec6f10; stroke: #ffb37a; stroke-width: 1; opacity: 0; }
+.sga-pulse { opacity: 0; }
+.sga-glow { fill: rgba(255, 138, 61, .22); }
+.sga-head { fill: #fff1e4; }
+.sga-night .sga-place { font-size: 14px; }
+
+/* =================== PLANT =================== */
+.sga-grid { stroke: rgba(255, 236, 220, .16); stroke-width: 2.2; stroke-linecap: round; fill: none; }
+.sga-wall { fill: none; stroke: rgba(255, 236, 220, .14); stroke-width: 1.2; }
+.sga-wall.is-in { stroke: rgba(255, 236, 220, .06); }
+.sga-east { stroke: rgba(255, 190, 120, .32); stroke-width: 3; stroke-linecap: round; }
+.sga-dawn { position: absolute; top: 0; right: -200px; width: 900px; height: 100%; background: radial-gradient(60% 55% at 100% 35%, rgba(255, 160, 80, .2), rgba(255, 140, 60, .06) 55%, transparent 75%); opacity: 0; pointer-events: none; }
+.sga-belt { fill: none; stroke: rgba(255, 236, 220, .07); stroke-width: 6; stroke-linejoin: round; }
+.sga-belt.is-dash { stroke: rgba(255, 236, 220, .14); stroke-width: 1; stroke-dasharray: 3 9; }
+.sga-mach { fill: #0f0c0a; stroke: rgba(255, 236, 220, .2); stroke-width: 1.2; }
+.sga-mach.is-lit { fill: rgba(236, 111, 16, .1); stroke: rgba(255, 150, 80, .75); }
+.sga-mach-ln { fill: none; stroke: rgba(255, 236, 220, .18); stroke-width: 1.2; stroke-linecap: round; }
+.sga-st-lit { opacity: 0; }
+.sga-pack { fill: #ffb37a; opacity: 0; }
+.sga-st-name { position: absolute; font-size: 13px; color: rgba(246, 239, 230, .34); white-space: nowrap; transition: color .8s; }
+.sga-st-name.is-w { transform: translateY(-50%); }
+.sga-st-name.is-n { transform: translateY(-100%); }
+.sga-st-name.is-b { transform: translateX(-50%); }
+.sga-st-name.is-on { color: rgba(255, 190, 130, .8); }
+.sga-plan-title { position: absolute; line-height: 1.35; }
+.sga-plan-title b { display: block; font-size: 14px; font-weight: 600; color: rgba(246, 239, 230, .5); letter-spacing: .02em; }
+.sga-plan-title span { display: block; font-size: 12.5px; color: rgba(246, 239, 230, .32); }
+.sga-plant.is-tall .sga-st-name { font-size: 12px; }
+.sga-plant.is-tall .sga-tag { font-size: 12px; }

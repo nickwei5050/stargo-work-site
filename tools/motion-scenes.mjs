@@ -271,6 +271,10 @@ export const SCENE_FILE = {
   'desk-erp': 'desk',
   'desk-creative': 'desk',
   'desk-cockpit': 'desk',
+  night: 'atmos',          // lane atmos (tools/code-art-atmos.mjs): homepage R1 and about A01 …
+  plant: 'atmos',
+  board: 'atmos-cards',    // … and the homepage R2 card and the contact K01 card
+  request: 'atmos-cards',
 };
 /* scene files that ship their own stylesheet */
 export const SCENE_CSS = new Set([
@@ -287,6 +291,8 @@ export const SCENE_CSS = new Set([
   'areas-centre',
   'crew',
   'desk',
+  'atmos',
+  'atmos-cards',
 ]);
 
 /* pain — the homepage's four problem cards, in page order (S01–S04): one file and one stylesheet */

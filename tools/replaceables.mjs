@@ -101,6 +101,8 @@ export const HERO = {
  * (tools/chrome.mjs): a still photograph where the magical-orb clip played
  * (G02, 2026-10-21). The orb clip stays everywhere else it is drawn — the
  * navbar logo and the pricing cards.
+ * Since 2026-10-24 (「现场氛围也全部换成代码」) the card draws a harbour in code
+ * (tools/code-art-atmos.mjs MENU_ART); MENU_CARD is no longer placed.
  */
 export const MENU_CARD = photoFile('g02-menu-harbour-night', 768);
 
@@ -372,7 +374,9 @@ export const HOME_SILOS = [
 /** The four scenario cards' film card (`.testimonials-card._03`): R2, the
  *  trade manager at the whiteboard, as a still where the template's
  *  portrait film played. The split photograph behind the cards
- *  (`.photo-half`, R1) is a CSS background: css/stargo-fusion.css. */
+ *  (`.photo-half`, R1) is a CSS background: css/stargo-fusion.css.
+ *  Since 2026-10-24 both are code-drawn (tools/code-art-atmos.mjs 'board' and
+ *  'night'); HOME_ROLE_CARD is no longer placed. */
 export const HOME_ROLE_CARD = photoFile('r2-trade-manager', 1024);
 /** The pricing band's image card beside 企业版 (T01), in place of
  *  brand-glow-square. */
@@ -465,7 +469,8 @@ export const ABOUT_CASE_STILLS = {
 };
 /** contact.html's quote card (`.testimonials-card._03.rl`, beside the
  *  form): K01, the meeting table, as a still where the template's
- *  Professional Portrait film played. */
+ *  Professional Portrait film played. Since 2026-10-24 code-drawn instead
+ *  (tools/code-art-atmos.mjs 'request'); CONTACT_CARD is no longer placed. */
 export const CONTACT_CARD = photoFile('k01-meeting-table', 768);
 /** workforce.html's five marquee role cards (`.lx-feature-hero-card.lx-_1`
  *  … `lx-_5`, each drawn twice for the loop) and the collage card in the
