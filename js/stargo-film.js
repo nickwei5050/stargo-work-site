@@ -50,6 +50,9 @@
     var webm = webmAfterError || (!v.canPlayType('video/mp4; codecs="avc1.640028, mp4a.40.2"') && v.canPlayType('video/webm; codecs="vp9, opus"'));
     v.preload = 'auto';
     v.src = v.getAttribute('data-src-' + (hd ? 'hd' : 'sd') + (webm ? '-webm' : ''));
+    // Without a file, a browser names the video 'Unable to play media' whatever its label
+    // says; it joins the accessibility tree once it has one.
+    v.removeAttribute('aria-hidden');
   }
 
   function set(btn, text) {
@@ -140,7 +143,34 @@
     bar.style.transition = r < last ? 'none' : '';
     bar.style.transform = 'scaleX(' + r.toFixed(4) + ')';
     last = r;
+    caption();
   });
+
+  // Upright screens: the words drawn into the picture come out below 12px there, so the pair
+  // being sung is also written under the picture, page language first (tools/about-film.mjs).
+  var cap = root.querySelector('.sg-film__cap');
+  var capA = cap && cap.querySelector('.sg-film__cap-a');
+  var capB = cap && cap.querySelector('.sg-film__cap-b');
+  var cues = [].map.call(root.querySelectorAll('.sg-film__words li[data-cue]'), function (li) {
+    var span = li.getAttribute('data-cue').split(' ');
+    return { from: +span[0], to: +span[1], a: li.getAttribute('data-a'), b: li.getAttribute('data-b') };
+  });
+  var shown = -1;
+  function caption() {
+    if (!cap || !mq('(max-aspect-ratio: 6/5)')) return;
+    var t = v.currentTime;
+    var i = -1;
+    for (var k = 0; k < cues.length; k++) if (t >= cues[k].from && t < cues[k].to) { i = k; break; }
+    if (i === shown) return;
+    shown = i;
+    if (i < 0) { cap.classList.remove('is-on'); return; }
+    capA.textContent = cues[i].a;
+    capB.textContent = cues[i].b;
+    // restart the entrance: off for a frame, then on
+    cap.classList.remove('is-on');
+    void cap.offsetWidth;
+    cap.classList.add('is-on');
+  }
 
   function startFilm() {
     userPaused = false;
@@ -206,15 +236,21 @@
   document.addEventListener('webkitfullscreenchange', onFs);
 
   // The site draws a crosshair that follows the mouse (Mono's .plus-line-wrapper); over
-  // the film it would cut through the lyrics, so the film shows the ordinary pointer.
-  root.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') document.documentElement.classList.add('sg-film-pointer'); });
-  root.addEventListener('pointerleave', function () { document.documentElement.classList.remove('sg-film-pointer'); });
+  // the film it would cut through the lyrics, so the film shows the ordinary pointer, also
+  // over the site bar that sits on it and before the mouse has moved at all.
+  var html = document.documentElement;
+  var onFilm = function (y) { return !root.classList.contains('is-away') && y < root.getBoundingClientRect().bottom; };
+  html.classList.toggle('sg-film-pointer', root.getBoundingClientRect().top < 1);
+  document.addEventListener('pointermove', function (e) {
+    if (e.pointerType === 'mouse') html.classList.toggle('sg-film-pointer', onFilm(e.clientY));
+  }, { passive: true });
 
   if (hasIO) {
     new IntersectionObserver(function (entries) {
       var e = entries[entries.length - 1];
       visible = e.isIntersecting && e.intersectionRatio >= 0.25;
       root.classList.toggle('is-away', !visible);
+      if (!visible) html.classList.remove('sg-film-pointer');
       if (fsEl()) return;
       if (!visible && !v.paused) { autoPaused = true; v.pause(); }
       else if (visible && autoPaused && !userPaused && !still()) { autoPaused = false; play(false); }

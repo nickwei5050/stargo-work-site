@@ -98,6 +98,20 @@ const LYRICS = [
   ['从中国，到世界', 'From China to the World'],
 ];
 
+/* When each pair is on screen, in seconds: [start, end], one per LYRICS line, read off the
+   film (the lyric band of the 720p file sampled ten times a second; a line starts when its
+   Chinese words appear and ends when they go). The film's last card, the company name, is
+   not a lyric. js/stargo-film.js shows the current pair as text under the picture on upright
+   screens, where the words drawn into the picture come out below 12px. */
+const TIMES = [
+  [1.2, 5.1], [5.5, 9.1], [9.4, 13.2], [13.6, 16.6], [17.0, 21.0], [21.4, 25.7],
+  [27.7, 31.7], [32.2, 34.9], [35.3, 39.2], [39.6, 42.7], [43.1, 47.7], [48.1, 52.0],
+  [53.6, 57.8], [58.2, 61.8], [62.2, 66.0], [66.7, 69.3], [69.7, 73.9], [74.3, 78.9],
+  [82.4, 86.2], [86.8, 89.2], [89.5, 93.7], [94.0, 97.1], [97.5, 101.7], [102.1, 106.0],
+  [107.1, 109.3], [110.5, 114.3],
+];
+if (TIMES.length !== LYRICS.length || TIMES.some(([a, b], i) => !(a < b) || (i && a <= TIMES[i - 1][1]))) throw new Error('about-film: one time span per lyric line, in order');
+
 const ICON = {
   muted: '<svg class="sg-film__i sg-film__i--muted" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M11 5 6.5 9H3.5v6h3l4.5 4z"/><path d="m16 9.5 5 5m0-5-5 5"/></svg>',
   pause: '<svg class="sg-film__i sg-film__i--pause" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8.5 6v12M15.5 6v12"/></svg>',
@@ -112,26 +126,34 @@ export function filmSection(lang, next = 'intro') {
   const t = COPY[lang];
   const e = (s) => escapeHtml(s);
   // The page's own language first in each pair.
-  const words = LYRICS.map(([zh, en]) => `<li>${e(lang === 'zh' ? `${zh} / ${en}` : `${en} / ${zh}`)}</li>`).join('');
+  const words = LYRICS.map(([zh, en], i) => {
+    const [a, b] = lang === 'zh' ? [zh, en] : [en, zh];
+    return `<li data-cue="${TIMES[i].join(' ')}" data-a="${e(a)}" data-b="${e(b)}">${e(`${a} / ${b}`)}</li>`;
+  }).join('');
   return `<section class="sg-film" id="film" aria-label="${e(t.region)}" data-sg-film data-t-sound-on="${e(t.soundOn)}" data-t-mute="${e(t.mute)}" data-t-play="${e(t.play)}" data-t-pause="${e(t.pause)}" data-t-full="${e(t.full)}" data-t-exit-full="${e(t.exitFull)}">`
     + '<div class="sg-film__frame">'
     + `<img class="sg-film__poster" src="${DIR}/poster-1920.webp" srcset="${DIR}/poster-960.webp 960w, ${DIR}/poster-1920.webp 1920w" sizes="100vw" width="1920" height="1080" alt="" fetchpriority="high" decoding="async"/>`
     // webkit-playsinline / x5-playsinline: inline play in WeChat's older iOS and X5 browsers. No x5-video-player-type:
     // that hands the film to X5's own player, which ignores the bar under the picture and can cover the lyrics.
-    + `<video class="sg-film__video" muted playsinline webkit-playsinline x5-playsinline preload="none" disablepictureinpicture data-src-hd="${DIR}/stargo-film-1080.mp4" data-src-sd="${DIR}/stargo-film-720.mp4" data-src-hd-webm="${DIR}/stargo-film-1080.webm" data-src-sd-webm="${DIR}/stargo-film-720.webm" aria-label="${e(t.video)}" aria-describedby="film-words"></video>`
+    + `<video class="sg-film__video" muted playsinline webkit-playsinline x5-playsinline preload="none" disablepictureinpicture aria-hidden="true" data-src-hd="${DIR}/stargo-film-1080.mp4" data-src-sd="${DIR}/stargo-film-720.mp4" data-src-hd-webm="${DIR}/stargo-film-1080.webm" data-src-sd-webm="${DIR}/stargo-film-720.webm" aria-label="${e(t.video)}" aria-describedby="film-words"></video>`
+    + '<div class="sg-film__edges" aria-hidden="true"></div>'
     + '<div class="sg-film__progress" aria-hidden="true"><i></i></div>'
-    + `<button type="button" class="sg-film__start">${ICON.play}<span>${e(t.start)}<small>${e(t.length)}</small></span></button>`
     + '</div>'
+    // upright screens: the pair being sung, as text under the picture (js/stargo-film.js)
+    + '<p class="sg-film__cap" aria-hidden="true"><span class="sg-film__cap-a"></span><span class="sg-film__cap-b"></span></p>'
     + '<div class="sg-film__shade" aria-hidden="true"></div>'
     + '<div class="sg-film__bar">'
     + '<div class="sg-film__ui">'
     + `<p class="sg-film__label"><span class="sg-film__dot" aria-hidden="true"></span>${e(t.label)}<span class="sg-film__len">${e(t.length)}</span></p>`
     + '<div class="sg-film__controls">'
     // An action button: its words say what a press does (开启声音 / 静音), so it carries no aria-pressed.
-    + `<button type="button" class="sg-film__btn sg-film__sound">${ICON.muted}<span class="sg-film__eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="sg-film__btn-text">${e(t.soundOn)}</span></button>`
+    // the label sits in one cell with its longer state, so the button keeps its width when it changes
+    + `<button type="button" class="sg-film__btn sg-film__sound">${ICON.muted}<span class="sg-film__eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="sg-film__btn-label"><span class="sg-film__btn-text">${e(t.soundOn)}</span><span class="sg-film__btn-ghost" aria-hidden="true">${e(t.soundOn.length >= t.mute.length ? t.soundOn : t.mute)}</span></span></button>`
     + `<button type="button" class="sg-film__btn sg-film__icon sg-film__toggle" aria-label="${e(t.pause)}" title="${e(t.pause)}">${ICON.pause}${ICON.play}</button>`
     + `<button type="button" class="sg-film__btn sg-film__icon sg-film__full" aria-label="${e(t.full)}" title="${e(t.full)}">${ICON.full}${ICON.exit}</button>`
     + '</div>'
+    // while the film waits for a tap, its play button takes the controls' place
+    + `<button type="button" class="sg-film__start">${ICON.play}<span>${e(t.start)}</span></button>`
     + '</div>'
     + `<a class="sg-film__next" href="#${next}"><span>${e(t.next)}</span>${ICON.down}</a>`
     + '</div>'
