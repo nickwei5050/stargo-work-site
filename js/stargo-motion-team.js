@@ -104,9 +104,9 @@
         [TAP + 0.05, T('你已确认：仅德国', 'You: Germany only'), 'ok'], [ASK1, T('核实采购联系人', 'Verifying buyer contacts'), 'w'], [9.4, DELIVERED, 'done']],
       [[0, IDLE, 'idle'], [3.1, T('核对 48V 100Ah 规格', 'Checking 48V 100Ah specs'), 'w'], [4.5, T('电压、容量已核对', 'Voltage, capacity OK'), 'w'],
         [5.4, T('核对认证文件', 'Checking certificates'), 'w'], [6.5, DELIVERED, 'done']],
-      [[0, IDLE, 'idle'], [3, T('等规格和客户名单', 'Waiting on specs, list'), 'd'], [6.7, T('起草开发信', 'Drafting the email'), 'w'],
+      [[0, IDLE, 'idle'], [3, T('等规格和客户名单', 'Needs specs, accounts'), 'd'], [6.7, T('起草开发信', 'Drafting the email'), 'w'],
         [9.8, T('排开发顺序', 'Ranking accounts'), 'w'], [12.2, DELIVERED, 'done']],
-      [[0, IDLE, 'idle'], [3.2, T('整理产品照片和卖点', 'Sorting photos and points'), 'w'], [4.8, T('等开发信要点', 'Waiting for the brief'), 'd'],
+      [[0, IDLE, 'idle'], [3.2, T('整理产品照片和卖点', 'Photos and selling points'), 'w'], [4.8, T('等开发信要点', 'Waiting for the brief'), 'd'],
         [8.2, T('做开发信配图', 'Making email images'), 'w'], [12.8, DELIVERED, 'done']]
     ];
     var SHORT = [                       // the mini layout's second line
