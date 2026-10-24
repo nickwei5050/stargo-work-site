@@ -543,7 +543,7 @@
       [2.5, '14:31:58', T('第 2 步 匹配产品与库存 ✓', 'Step 2 · product matched ✓'), T('第 2 步 ✓', 'Step 2 ✓'), 'ok'],
       [3.6, '14:32:08', T('你 暂停 · 停在第 3 步，进度已保存', 'You paused · held at step 3, progress kept'), T('暂停在第 3 步 · 已保存', 'Paused at step 3 · saved'), 'stop'],
       [7.1, '14:35:40', T('你 继续 · 从第 3 步接着做', 'You resumed · from step 3'), T('从第 3 步继续', 'Resumed from step 3'), 'go'],
-      [9.5, '14:35:57', T('第 4 步 核对底价 ✓', 'Step 4 · floor price checked ✓'), T('第 4 步 底价 ✓', 'Step 4 · floor price ✓'), 'ok'],
+      [9.5, '14:35:57', T('第 4 步 低于底价 · 转你审批', 'Step 4 · below the floor price · to you'), T('第 4 步 低于底价', 'Step 4 · below floor'), 'wait'],   // Q-1042, €735 against €750
       [10.7, '14:36:03', T('第 6 步 等你审批 · 不会自动发送', 'Step 6 · waits for you · never sends itself'), T('等你审批 · 不自动发', 'Waits for you · no auto-send'), 'wait']
     ];
     var PROPS = [[T('可管理', 'Manage'), 0.2], [T('可停止', 'Stop'), PAUSE + 0.1], [T('可追踪', 'Trace'), PAUSE + 0.3], [T('可验证', 'Verify'), 9.5]];
