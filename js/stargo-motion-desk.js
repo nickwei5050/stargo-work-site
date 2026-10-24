@@ -444,45 +444,46 @@
   };
 
   /* =================== AI 创作: the review queue (bottom left) =================== */
+  // the three drafts' paint is in css/stargo-motion-desk.css (.sgd-th-svg .t-*), so the homepage palette themes them
   function thumb(parent, k) {
     var id = 'sgd' + (++serial);
     var s = sv('svg', { viewBox: '0 0 160 104', preserveAspectRatio: 'xMidYMid slice', class: 'sgd-th-svg', 'aria-hidden': 'true' }, parent);
     var defs = sv('defs', {}, s);
-    function lin(n, a, b) { var g = sv('linearGradient', { id: id + n, x1: 0, y1: 0, x2: 0, y2: 1 }, defs); sv('stop', { offset: 0, 'stop-color': a }, g); sv('stop', { offset: 1, 'stop-color': b }, g); return 'url(#' + id + n + ')'; }
-    function pack(x, y, w, h) {   // a lithium pack: top, side, front, the orange band and the nameplate
-      sv('path', { d: 'M' + x + ' ' + y + 'l8-7h' + w + 'l-8 7z', fill: '#4a4a50' }, s);
-      sv('path', { d: 'M' + (x + w) + ' ' + y + 'l8-7v' + h + 'l-8 7z', fill: '#1c1c20' }, s);
-      sv('rect', { x: x, y: y, width: w, height: h, rx: 1.5, fill: '#2d2d32' }, s);
-      sv('rect', { x: x, y: y + h * 0.3, width: w, height: 2.6, fill: '#ec6f10' }, s);
-      sv('rect', { x: x + 6, y: y + h * 0.52, width: w * 0.42, height: 3, rx: 1.5, fill: 'rgba(255,255,255,.55)' }, s);
-      sv('rect', { x: x + 6, y: y + h * 0.68, width: w * 0.28, height: 2.4, rx: 1.2, fill: 'rgba(255,255,255,.28)' }, s);
+    function lin(n, a, b) { var g = sv('linearGradient', { id: id + n, x1: 0, y1: 0, x2: 0, y2: 1 }, defs); sv('stop', { offset: 0, class: a }, g); sv('stop', { offset: 1, class: b }, g); return 'url(#' + id + n + ')'; }
+    function pack(x, y, w, h) {   // a lithium pack: top, side, front, the accent band and the nameplate
+      sv('path', { d: 'M' + x + ' ' + y + 'l8-7h' + w + 'l-8 7z', class: 't-ptop' }, s);
+      sv('path', { d: 'M' + (x + w) + ' ' + y + 'l8-7v' + h + 'l-8 7z', class: 't-pside' }, s);
+      sv('rect', { x: x, y: y, width: w, height: h, rx: 1.5, class: 't-pfront' }, s);
+      sv('rect', { x: x, y: y + h * 0.3, width: w, height: 2.6, class: 't-band' }, s);
+      sv('rect', { x: x + 6, y: y + h * 0.52, width: w * 0.42, height: 3, rx: 1.5, class: 't-plate' }, s);
+      sv('rect', { x: x + 6, y: y + h * 0.68, width: w * 0.28, height: 2.4, rx: 1.2, class: 't-plate2' }, s);
     }
     if (k === 0) {        // main image, white background
-      sv('rect', { width: 160, height: 104, fill: lin('a', '#f4f1ec', '#ddd6cc') }, s);
-      sv('ellipse', { cx: 82, cy: 84, rx: 46, ry: 6, fill: 'rgba(0,0,0,.16)' }, s);
+      sv('rect', { width: 160, height: 104, fill: lin('a', 't-s-paper0', 't-s-paper1') }, s);
+      sv('ellipse', { cx: 82, cy: 84, rx: 46, ry: 6, class: 't-shadow' }, s);
       pack(50, 40, 56, 40);
     } else if (k === 1) { // scene: a 48V rack in a dim room
-      sv('rect', { width: 160, height: 104, fill: lin('b', '#2c2119', '#120d0a') }, s);
+      sv('rect', { width: 160, height: 104, fill: lin('b', 't-s-room0', 't-s-room1') }, s);
       var rg = sv('radialGradient', { id: id + 'r', cx: 0.5, cy: 0, r: 0.75 }, defs);
-      sv('stop', { offset: 0, 'stop-color': '#ffbe78', 'stop-opacity': 0.16 }, rg); sv('stop', { offset: 1, 'stop-color': '#ffbe78', 'stop-opacity': 0 }, rg);
+      sv('stop', { offset: 0, class: 't-s-lamp0' }, rg); sv('stop', { offset: 1, class: 't-s-lamp1' }, rg);
       sv('rect', { width: 160, height: 86, fill: 'url(#' + id + 'r)' }, s);
-      sv('rect', { y: 86, width: 160, height: 18, fill: '#0e0a08' }, s);
-      sv('rect', { x: 58, y: 16, width: 44, height: 72, rx: 3, fill: '#1e1a17', stroke: '#3d3229' }, s);
+      sv('rect', { y: 86, width: 160, height: 18, class: 't-floor' }, s);
+      sv('rect', { x: 58, y: 16, width: 44, height: 72, rx: 3, class: 't-rack' }, s);
       for (var i = 0; i < 4; i++) {
-        sv('rect', { x: 62, y: 21 + i * 16.5, width: 36, height: 12, rx: 1.5, fill: '#2d2621' }, s);
-        sv('circle', { cx: 92, cy: 27 + i * 16.5, r: 1.6, fill: i === 1 ? '#ff8a3d' : '#9fe0b0' }, s);
-        sv('rect', { x: 66, y: 25.5 + i * 16.5, width: 14, height: 2.4, rx: 1.2, fill: 'rgba(255,255,255,.25)' }, s);
+        sv('rect', { x: 62, y: 21 + i * 16.5, width: 36, height: 12, rx: 1.5, class: 't-slot' }, s);
+        sv('circle', { cx: 92, cy: 27 + i * 16.5, r: 1.6, class: i === 1 ? 't-led-on' : 't-led' }, s);
+        sv('rect', { x: 66, y: 25.5 + i * 16.5, width: 14, height: 2.4, rx: 1.2, class: 't-plate2' }, s);
       }
     } else {              // detail page, German
-      sv('rect', { width: 160, height: 104, fill: '#1b1512' }, s);
-      sv('rect', { x: 24, y: 9, width: 112, height: 95, rx: 4, fill: '#f4f0ea' }, s);
-      sv('rect', { x: 24, y: 9, width: 112, height: 11, rx: 4, fill: '#24201d' }, s);
-      sv('circle', { cx: 31, cy: 14.5, r: 2, fill: '#ec6f10' }, s);
-      sv('rect', { x: 30, y: 28, width: 46, height: 34, rx: 2, fill: '#e6e0d7' }, s);
+      sv('rect', { width: 160, height: 104, class: 't-desk' }, s);
+      sv('rect', { x: 24, y: 9, width: 112, height: 95, rx: 4, class: 't-page' }, s);
+      sv('rect', { x: 24, y: 9, width: 112, height: 11, rx: 4, class: 't-head' }, s);
+      sv('circle', { cx: 31, cy: 14.5, r: 2, class: 't-cta' }, s);
+      sv('rect', { x: 30, y: 28, width: 46, height: 34, rx: 2, class: 't-img' }, s);
       pack(37, 41, 28, 16);
-      [[82, 30, 46], [82, 37, 38], [82, 44, 42], [30, 70, 98], [30, 77, 86], [30, 84, 92]].forEach(function (l) { sv('rect', { x: l[0], y: l[1], width: l[2], height: 3, rx: 1.5, fill: '#cfc7bb' }, s); });
-      sv('rect', { x: 82, y: 52, width: 24, height: 10, rx: 5, fill: '#ec6f10' }, s);
-      sv('rect', { x: 87, y: 55.8, width: 14, height: 2.4, rx: 1.2, fill: '#fff' }, s);
+      [[82, 30, 46], [82, 37, 38], [82, 44, 42], [30, 70, 98], [30, 77, 86], [30, 84, 92]].forEach(function (l) { sv('rect', { x: l[0], y: l[1], width: l[2], height: 3, rx: 1.5, class: 't-line' }, s); });
+      sv('rect', { x: 82, y: 52, width: 24, height: 10, rx: 5, class: 't-cta' }, s);
+      sv('rect', { x: 87, y: 55.8, width: 14, height: 2.4, rx: 1.2, class: 't-ctatx' }, s);
     }
   }
   var CREATIVE = {

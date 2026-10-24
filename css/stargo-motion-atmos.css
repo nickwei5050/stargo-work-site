@@ -103,3 +103,53 @@
    bury the strip under the card, where the stations, the title and the tag sit. It stays, shorter. */
 .cn-about .cn-intro-opacity.cn-is-bottom { height: 4rem; }
 @media screen and (max-width: 767px) { .cn-about .cn-intro-opacity.cn-is-bottom { height: 2.5rem; } }
+
+/* =================== 首页蓝: the homepage's night in the homepage palette ===================
+   (owner 2026-10-24: every code picture on the homepage in the blue of the approval card;
+   tokens in css/stargo-blue.css). The night sky is the calm aurora, the plant and the port are
+   ink silhouettes drawn in ice hairlines, the lights that wake are the ice-blue accent and the
+   crane beacons the one warm-pink token. Colours only: the scene, its layout and its timing are
+   the ones above, and about.html's plant keeps its own warm look (no data-stargo-home there). */
+html[data-stargo-home] .photo-half._01, html[data-stargo-home] .photo-half._02 { background: var(--sgb-ink); }
+html[data-stargo-home] .photo-half > .sga-host { background: var(--sgb-aurora-calm); }
+html[data-stargo-home] .sga-night { --ice: var(--sgb-ice); }
+html[data-stargo-home] .sga-night .sga-label { text-shadow: 0 0 6px var(--sgb-ink), 0 0 2px var(--sgb-ink); }
+html[data-stargo-home] .sga-night .sga-label b { color: color-mix(in srgb, var(--sgb-text) 84%, transparent); }
+html[data-stargo-home] .sga-night .sga-label span { color: var(--sgb-muted); }
+html[data-stargo-home] .sga-night .sga-label.is-hot b { color: var(--sgb-text); }
+html[data-stargo-home] .sga-night .sga-label.is-hot span { color: var(--sgb-accent); }
+/* the honesty tag: a small glass pill (the tag's corner stays where the scene puts it) */
+html[data-stargo-home] .sga-night .sga-tag { padding: 4px 10px 5px; border-radius: 99px; line-height: 1.1; color: var(--sgb-text); background: color-mix(in srgb, var(--sgb-ink) 62%, transparent); box-shadow: inset 0 0 0 1px var(--sgb-glass-edge); }
+html[data-stargo-home] .sga-night .sga-stars { stroke: color-mix(in srgb, var(--ice) 44%, transparent); }
+html[data-stargo-home] .sga-night .sga-star { fill: var(--sgb-ice); }
+html[data-stargo-home] .sga-night .sga-hills { fill: color-mix(in srgb, var(--sgb-ink) 38%, transparent); stroke: color-mix(in srgb, var(--ice) 10%, transparent); }
+html[data-stargo-home] .sga-night .sga-line.sga-bld { fill: var(--sgb-ink); }
+html[data-stargo-home] .sga-night .sga-moon { fill: color-mix(in srgb, var(--ice) 14%, transparent); stroke: color-mix(in srgb, var(--ice) 34%, transparent); }
+html[data-stargo-home] .sga-night .sga-halo { fill: color-mix(in srgb, var(--ice) 5%, transparent); }
+html[data-stargo-home] .sga-night .sga-ground { stroke: color-mix(in srgb, var(--ice) 24%, transparent); }
+html[data-stargo-home] .sga-night .sga-water { stroke: color-mix(in srgb, var(--ice) 12%, transparent); }
+html[data-stargo-home] .sga-night .sga-arc { stroke: color-mix(in srgb, var(--ice) 24%, transparent); }
+html[data-stargo-home] .sga-night .sga-arc.is-hot { stroke: var(--sgb-accent); }
+html[data-stargo-home] .sga-night .sga-node-ring { fill: color-mix(in srgb, var(--sgb-ink) 90%, transparent); stroke: color-mix(in srgb, var(--ice) 40%, transparent); }
+html[data-stargo-home] .sga-night .sga-node-core { fill: color-mix(in srgb, var(--ice) 66%, transparent); }
+html[data-stargo-home] .sga-night .sga-node-rip { stroke: var(--sgb-accent); }
+html[data-stargo-home] .sga-night .sga-node.is-hot .sga-node-ring { stroke: var(--sgb-accent); }
+html[data-stargo-home] .sga-night .sga-node.is-hot .sga-node-core { fill: var(--sgb-accent); }
+html[data-stargo-home] .sga-night .sga-line { stroke: color-mix(in srgb, var(--ice) 36%, transparent); }
+html[data-stargo-home] .sga-night .sga-glass { stroke: color-mix(in srgb, var(--ice) 14%, transparent); }
+html[data-stargo-home] .sga-night .sga-win-dim { fill: color-mix(in srgb, var(--ice) 5%, transparent); stroke: color-mix(in srgb, var(--ice) 16%, transparent); }
+html[data-stargo-home] .sga-night .sga-win { fill: var(--sgb-accent); }
+html[data-stargo-home] .sga-night .sga-door { fill: color-mix(in srgb, var(--sgb-accent) 45%, transparent); }
+html[data-stargo-home] .sga-night .sga-road { stroke: color-mix(in srgb, var(--ice) 24%, transparent); }
+html[data-stargo-home] .sga-night .sga-quay { stroke: color-mix(in srgb, var(--ice) 40%, transparent); }
+html[data-stargo-home] .sga-night .sga-box { fill: color-mix(in srgb, var(--ice) 6%, transparent); stroke: color-mix(in srgb, var(--ice) 24%, transparent); }
+html[data-stargo-home] .sga-night .sga-box.is-warm { fill: color-mix(in srgb, var(--sgb-violet) 34%, transparent); stroke: color-mix(in srgb, var(--sgb-lilac) 52%, transparent); }
+html[data-stargo-home] .sga-night .sga-beacon { fill: var(--sgb-warn); }
+html[data-stargo-home] .sga-night .sga-trolley { fill: color-mix(in srgb, var(--ice) 44%, transparent); }
+html[data-stargo-home] .sga-night .sga-cable { fill: color-mix(in srgb, var(--ice) 50%, transparent); }
+html[data-stargo-home] .sga-night .sga-hull { fill: color-mix(in srgb, var(--sgb-ink) 55%, transparent); stroke: color-mix(in srgb, var(--ice) 38%, transparent); }
+html[data-stargo-home] .sga-night .sga-reflect { fill: color-mix(in srgb, var(--sgb-accent) 22%, transparent); }
+html[data-stargo-home] .sga-night .sga-lamp { fill: var(--sgb-accent); }
+html[data-stargo-home] .sga-night .sga-moving { fill: var(--sgb-accent); stroke: var(--sgb-ice); }
+html[data-stargo-home] .sga-night .sga-glow { fill: color-mix(in srgb, var(--sgb-accent) 28%, transparent); }
+html[data-stargo-home] .sga-night .sga-head { fill: var(--sgb-ice); }

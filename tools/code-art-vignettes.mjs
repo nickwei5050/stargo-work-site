@@ -54,6 +54,7 @@
  */
 
 import { RING_STILLS } from './replaceables.mjs';
+import { homeBlueSprite } from './code-art-vignettes-blue.mjs';   // 首页蓝: the homepage mosaic in the homepage palette
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
@@ -1144,7 +1145,7 @@ export function vignettePage(html, lang, name) {
   }
   const body = out.match(/<body\b[^>]*>/);
   if (!body) throw new Error(`vignettes: ${name}: no <body>`);
-  out = out.replace(body[0], `${body[0]}${name === 'index.html' ? vignetteSprite(lang, keys) : ringSprite(lang, keys)}`);
+  out = out.replace(body[0], `${body[0]}${name === 'index.html' ? homeBlueSprite(vignetteSprite(lang, keys)) : ringSprite(lang, keys)}`);   // 首页蓝: homepage tokens (tools/code-art-vignettes-blue.mjs)
   const fusion = '<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>';
   if (out.split(fusion).length !== 2) throw new Error(`vignettes: ${name}: no single stargo-fusion.css link`);
   return out.replace(fusion, `${fusion}\n<link href="css/stargo-vignettes.css" rel="stylesheet" type="text/css"/>`);
