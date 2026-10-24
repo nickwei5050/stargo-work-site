@@ -352,12 +352,14 @@
     // tall: the card's phone from 1280 up; mid: on phones (256–279 px wide); mini: at tablet width.
     // The card shows the top 73–77% of the screen: `fold` is where the story must end.
     var layouts = { tall: { w: 300, h: 649, fold: 492 }, mid: { w: 250, h: 541, fold: 408 }, mini: { w: 160, h: 346, fold: 250 } };
-    // the card's phone is 236–249 px wide at 1024 px: there mid is drawn that wide rather than scaled under 1
+    // the card's phone is 236–249 px wide at 1024 px: there mid is drawn that wide rather than scaled under 1.
+    // Phones under 336 px (320–335) show it 225–235 px wide: there `xs` packs the rows tighter (step 4, which
+    // picks the task up again, stays above the fold) and takes a few shorter strings, so nothing drops under 12px.
     function midAt(w) {
-      var W = Math.max(236, Math.min(250, Math.floor(w)));
+      var W = Math.max(220, Math.min(250, Math.floor(w)));
       if (W === 250) return 'mid';
       var k = 'mid-' + W;
-      if (!layouts[k]) layouts[k] = { w: W, h: Math.round(W * 541 / 250), fold: Math.round(W * 408 / 250), kind: 'mid' };
+      if (!layouts[k]) layouts[k] = { w: W, h: Math.round(W * 541 / 250), fold: Math.round(W * 408 / 250), kind: 'mid', xs: W < 236 };
       return k;
     }
     var LV = { tall: 0, mid: 1, mini: 2 };
@@ -369,14 +371,14 @@
     for (q = 0; q <= ROUNDS.length; q++) { ROUND_N.push(q + T('/12 轮', '/12')); BUDGET_N.push('¥' + BUDGET[q] + '/200'); }
     // the 236–249 px phone (1024 px) keeps the whole task title beside its state: 待确认 there, not 等你确认
     var STATE_T = [T('进行中', 'Running'), T('已暂停', 'Paused'), T('等你确认', 'Your OK')], STATE_TN = [STATE_T[0], STATE_T[1], T('待确认', 'Your OK')], STATE_C = ['sgp-pill sgp-state is-run', 'sgp-pill sgp-state is-amber', 'sgp-pill sgp-state is-amber'];
-    var R, mode, lv, stateT = STATE_T;
+    var R, mode, lv, stateT = STATE_T, ro = null;
 
     function build(stage, L, name) {
       stateT = L.kind ? STATE_TN : STATE_T;
       name = L.kind || name;
       mode = name; lv = LV[name]; R = { chips: [], rows: [] };
-      var mini = name === 'mini';
-      stage.className = 'sg-mo-stage sgp sgp-squad is-' + name + (L.kind ? ' is-narrow' : '');
+      var mini = name === 'mini', xs = !!L.xs;
+      stage.className = 'sg-mo-stage sgp sgp-squad is-' + name + (L.kind ? ' is-narrow' : '') + (xs ? ' is-xs' : '');
       statusBar(stage);
       var bar = appBar(stage, mini ? '' : T('工作台', 'Workspace'), T('任务', 'Tasks'));
       if (mini) tag(bar, true); else { barTools(bar); tag(el('div', 'sgp-tagline', stage), false); }
@@ -384,7 +386,7 @@
       // the task: what, its state, its limits, and the owner's pause
       var tk = el('div', 'sgp-task', main);
       var th = el('div', 'sgp-task-h', tk);
-      el('b', '', th, [T('开拓巴西电动两轮市场', 'Brazil e-scooter market'), T('开拓巴西电动两轮市场', 'Brazil e-scooters'), T('巴西两轮市场', 'Brazil e-scooters')][lv]);
+      el('b', '', th, xs ? T('开拓巴西两轮市场', 'Brazil e-scooters') : [T('开拓巴西电动两轮市场', 'Brazil e-scooter market'), T('开拓巴西电动两轮市场', 'Brazil e-scooters'), T('巴西两轮市场', 'Brazil e-scooters')][lv]);
       if (!mini) R.state = el('span', STATE_C[0], th, STATE_T[0]);
       if (lv === 0) el('div', 'sgp-task-s', tk, T('负责人：你 · 截止 11/14 · 轮数和预算有上限', 'Owner: you · capped rounds & budget'));
       var ctl = el('div', 'sgp-ctl', tk);
@@ -408,7 +410,7 @@
       }
       // the steps, run in parallel
       var steps = el('div', 'sgp-steps', main);
-      if (!mini) { var sl = el('div', 'sgp-label', steps); el('span', '', sl, T('统筹拆成 5 步，分头做', 'Lead split it into 5 steps')); R.done = el('em', '', sl, ''); }
+      if (!mini) { var sl = el('div', 'sgp-label', steps); el('span', '', sl, xs ? T('拆成 5 步，分头做', 'Split into 5 steps') : T('统筹拆成 5 步，分头做', 'Lead split it into 5 steps')); R.done = el('em', '', sl, ''); }
       for (var j = 0; j < STEPS.length; j++) {
         var st = STEPS[j];
         var row = el('div', 'sgp-step', steps);
@@ -425,18 +427,9 @@
       // the roles asking each other: a short thread takes the place of the two steps still queued
       if (!mini) {
         var talk = R.talk = el('div', 'sgp-talk', steps);
-        R.b1 = bubble(talk, 2, 3, T('起订量？能贴牌吗？', 'MOQ? Own label?'), '');
+        R.b1 = bubble(talk, 2, 3, xs ? T('起订量？能贴牌？', 'MOQ? Own label?') : T('起订量？能贴牌吗？', 'MOQ? Own label?'), '');
         R.b2 = bubble(talk, 3, 2, T('200 组起，可以贴牌。', 'MOQ 200, label OK.'), 'is-r');
-        // it covers the steps still queued (4 and 5) and its bubbles end above the fold: where the card's window
-        // ends higher (the phones and the 236–250 px phone at 1024–1180), the thread rises over step 3 rather
-        // than run past it. Its top always sits on a row's top line, so it covers whole rows and never slices one.
-        var sTop = steps.offsetParent === stage ? steps.offsetTop : steps.offsetTop + main.offsetTop;
-        var end = Math.min(steps.offsetHeight, L.fold - sTop - 4), need = R.b1.offsetHeight + R.b2.offsetHeight + 6;
-        var top = R.rows[3].row.offsetTop, room = end - need - 12;
-        for (var rk = 3; rk > 0 && top > room; rk--) top = R.rows[rk - 1].row.offsetTop;
-        css(talk, 'top', top + 'px');
         css(talk, 'justify-content', 'flex-start');
-        css(talk, 'padding-top', Math.max(0, Math.round((end - top - need) / 2)) + 'px');
       }
       // the dim and the saved context, anchored above the fold
       R.dim = el('div', 'sgp-dim', stage);
@@ -464,15 +457,62 @@
       var sb = el('div', 'sgp-sheet-b', sh);
       R.resume = btn(sb, T('继续', 'Resume'), 'is-primary', 'play', mini ? 11 : 14);
       if (!mini) btn(sb, T('转给同事', 'Hand over'), '');
-      css(sh, 'top', (L.fold - sh.offsetHeight) + 'px');
+      R.L = L; R.stage = stage; R.steps = steps; R.xs = xs;
+      fitRows();
+      if (!ro && mode === 'mid' && window.ResizeObserver) {
+        ro = new ResizeObserver(fitRows);
+        ro.observe(document.body);
+        var sec = stage.parentNode.closest('.lx-section');
+        if (sec) ro.observe(sec);
+      }
       // where it picks up
       R.toast = el('div', 'sgp-toast', stage);
       ico('play', R.toast, mini ? 10 : 12, 'sgp-ico');
-      el('span', '', R.toast, mini ? T('从第 4 步接着做', 'Picks up at step 4') : T('从第 4 步接着做，不用从头交代', 'Picks up at step 4, no re-briefing'));
+      el('span', '', R.toast, mini ? T('从第 4 步接着做', 'Picks up at step 4') : xs ? T('从第 4 步接着做，不用从头交代', 'Back at step 4, no re-briefing') : T('从第 4 步接着做，不用从头交代', 'Picks up at step 4, no re-briefing'));
       // like the phone's own banners: over the app bar (what it covers steps aside), clear of the step
       // that starts again; mini keeps its demo tag in the bar, so there it takes the row of roles
       R.under = mini ? team : bar;
       css(R.toast, 'top', (R.under.offsetTop + (R.under.offsetHeight - R.toast.offsetHeight) / 2).toFixed(1) + 'px');
+    }
+    // Where the card crops the phone (about three quarters down, a little higher or lower with the copy beside
+    // it: shownH, in stage px), no row of steps straddles the line. On phones (mid) all five rows fit above it
+    // when they can, packed closer if need be (is-tight, then rows down to 23px: 320 px); else the rows that fit
+    // stay above it and the next starts at it, whole and out of sight. The thread covers the steps
+    // still queued (4 and 5) and its bubbles end above the fold and the line: where they end higher, it rises over
+    // step 3 rather than run past them, its top always on a row's top line, so it covers whole rows and never
+    // slices one. The saved context ends there too. Measured when built and when the page's layout settles
+    // differently (a ResizeObserver), never per frame.
+    function fitRows() {
+      if (!R || !R.steps) return;
+      var L = R.L, stage = R.stage, host = stage.parentNode, steps = R.steps, rows = R.rows, n = rows.length, j;
+      var sTop = function () { return steps.offsetParent === stage ? steps.offsetTop : steps.offsetTop + R.main.offsetTop; };
+      var line = L.fold;
+      if (mode === 'mid' && host && host.clientWidth) {
+        var s = Math.min(host.clientWidth / L.w, host.clientHeight / L.h);
+        line = Math.round(Math.min(L.h, (shownH(host) - (host.clientHeight - L.h * s) / 2) / s));
+        if (line === R.line) return;   // the page settled the same way (the observer reports every resize while it loads)
+        R.line = line;
+        stage.classList.toggle('is-tight', R.xs);
+        for (j = 0; j < n; j++) css(rows[j].row, 'height', '');
+        var r0 = sTop() + rows[0].row.offsetTop, h = rows[0].row.offsetHeight;
+        if (!R.xs && r0 + n * h > line) { stage.classList.add('is-tight'); r0 = sTop() + rows[0].row.offsetTop; h = rows[0].row.offsetHeight; }
+        if (r0 + n * h > line) {
+          var k = n;
+          while (k > 1 && r0 + k * 23 > line) k--;
+          h = Math.floor((line - r0) / k * 2) / 2;
+          for (j = 0; j < n; j++) css(rows[j].row, 'height', h + 'px');
+        }
+      }
+      var end = Math.min(L.fold, line);
+      if (R.talk) {
+        var top0 = sTop(), stop = Math.min(steps.offsetHeight, end - top0 - 4), need = R.b1.offsetHeight + R.b2.offsetHeight + 6;
+        var top = rows[3].row.offsetTop, room = stop - need - 12;
+        for (var rk = 3; rk > 0 && top > room; rk--) top = rows[rk - 1].row.offsetTop;
+        css(R.talk, 'top', top + 'px');
+        css(R.talk, 'padding-top', Math.max(0, Math.round((stop - top - need) / 2)) + 'px');
+      }
+      css(R.sheet, 'top', '');
+      css(R.sheet, 'top', (end - R.sheet.offsetHeight) + 'px');
     }
     // one message: who says it (avatar), to whom (@mention), what
     function bubble(parent, role, to, text, cls) {
