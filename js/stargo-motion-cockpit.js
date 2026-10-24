@@ -250,7 +250,8 @@
           if (R.dk !== key) {
             var fl = R.dk !== undefined;
             R.dk = key;
-            put(R.dnote, 'text', 'PO-' + (2203 + k + (dp === 2 ? 1 : 0)) + (R.narrow ? NOTE_S : NOTE)[dp]);
+            // customer orders run from PO-3301 up, clear of the proformas PI-2207 / PI-2208 named beside them
+            put(R.dnote, 'text', 'PO-' + (3301 + k + (dp === 2 ? 1 : 0)) + (R.narrow ? NOTE_S : NOTE)[dp]);
             cl(R.dnote, 'is-ok', dp === 1);
             if (fl) flash(R.dnote);
           }
