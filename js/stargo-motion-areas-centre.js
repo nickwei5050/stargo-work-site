@@ -82,9 +82,10 @@
       var gw = tall ? inner : inner - cw - 24, gy = 50, cx = tall ? x0 + (inner - cw) / 2 : x0 + gw + 24, cy = tall ? gy + 36 + 12 : gy + 3;
       var q = box('sga-row is-q is-on sga-goal', c, x0, gy, gw, 36);
       glyph('search', q, 15, 'sga-q-ico');
-      var qt = el('span', 'sga-q', q), qs = el('span', '', qt), car = el('i', 'sga-car', qt), chars = Array.from(d.goal[3]), qn = -1;
+      var qt = el('span', 'sga-q', q), qs = el('span', '', qt), car = el('i', 'sga-car', qt), chars = Array.from(d.goal[3]), qn = -1, ph = d.goal[2];
       // a goal too long for its field is typed in its short form (measured once the card is built)
-      if (o.fit) o.fit.add(qs, K.capAlts(d.goal[3], d.goal[4], d.goal[5]), function (v) { chars = Array.from(v); });
+      // and its placeholder, in the same field, its short form when it does not fit
+      if (o.fit) o.fit.add(qs, K.capAlts(d.goal[3], d.goal[4], d.goal[5]), function (v) { chars = Array.from(v); put(qs, 'text', ph); if (d.goal[6] && K.capOver(qs)) ph = d.goal[6]; });
       var svg = sv('svg', { class: 'sga-wires', width: o.w, height: o.h, 'aria-hidden': 'true' }, c);
       if (tall) sv('path', { d: 'M' + (x0 + inner / 2) + ' ' + (gy + 36) + 'V' + cy, class: 'sga-wire' }, svg);
       // the four in one row under the coordinator, centred on it where they fit
@@ -111,7 +112,7 @@
       var note = ry + H1 + 26 <= o.h - 6 ? box('sga-note', c, x0, ry + H1 + 8, inner, 18, d.note) : null;
       return { full: function (on) { put(qs, 'text', on ? chars.join('') : ''); qn = -1; }, tick: function (tau) {
         var n = tau >= CLEAR ? 0 : Math.round(chars.length * seg(tau, d.goal[0], d.goal[1]));
-        if (n !== qn) { qn = n; put(qs, 'text', n ? chars.slice(0, n).join('') : d.goal[2]); cl(q, 'is-ph', !n); }
+        if (n !== qn) { qn = n; put(qs, 'text', n ? chars.slice(0, n).join('') : ph); cl(q, 'is-ph', !n); }
         put(car, '-opacity', tau >= d.goal[0] && tau < d.goal[1] + 0.6 && (tau < d.goal[1] || (tau * 2.4 | 0) % 2 === 0) ? '1' : '0');
         cl(cE, 'is-on', tau >= co[2] && tau < CLEAR);
         for (var i = 0; i < nodes.length; i++) { var on = tau >= nodes[i].t && tau < CLEAR; cl(nodes[i].e, 'is-on', on); put(nodes[i].w, 'opacity', on ? '1' : '0'); }

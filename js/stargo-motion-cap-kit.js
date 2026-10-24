@@ -45,11 +45,21 @@
     for (var i = 0; i < arguments.length; i++) { var v = arguments[i]; if (v != null && o.indexOf(v) < 0) o.push(v); }
     return o;
   };
+  // a text overflows when what its box has to draw — from the box's left edge (its padding, a ::before
+  // in front of the text, as .sga-grp's '/') to the text's own end, plus its right padding — is wider than
+  // the box. Read from the text's range, not scrollWidth (which rounds a fraction of a pixel away while
+  // the ellipsis still shows). A box that sizes to its words (a flex item) is exactly as wide as that
+  // when they fit, and narrower when they do not, so there is no spare to ask of it: 0.05px of noise.
+  var rng = document.createRange();
+  var over = K.capOver = function (e) {
+    rng.selectNodeContents(e);
+    var t = rng.getBoundingClientRect(), b = e.getBoundingClientRect();
+    if (!t.width || !b.width) return false;
+    if (e.sgPR == null) { var cs = getComputedStyle(e); e.sgPR = (parseFloat(cs.paddingRight) || 0) + (parseFloat(cs.borderRightWidth) || 0); }
+    return t.right - b.left + e.sgPR * (e.offsetWidth ? b.width / e.offsetWidth : 1) > b.width + 0.05;
+  };
   K.capFit = function () {
-    // a text overflows when its own width runs past its box, by any fraction of a pixel (which
-    // scrollWidth rounds away, while the ellipsis still shows); half a pixel to spare
-    var L = [], rng = document.createRange();
-    function over(e) { rng.selectNodeContents(e); return rng.getBoundingClientRect().width > e.getBoundingClientRect().width - 0.5; }
+    var L = [];
     return {
       add: function (e, list, done) { K.put(e, 'text', list[0]); if (list.length > 1 || done) L.push({ e: e, l: list, k: 0, done: done }); return e; },
       run: function () {

@@ -139,6 +139,12 @@
   }
   function pill(parent, text, cls) { return el('span', 'sgg-pill' + (cls ? ' ' + cls : ''), parent, text); }
   function avatar(c, s) { el('span', 'sgg-av', c, s); }
+  // a scene whose boxes are sized to their words, built while the webfonts were still loading:
+  // built again (and drawn at its time) once they are in, unless it was rebuilt meanwhile
+  function late(stage, L, mine, cur, build, redraw) {
+    if (!document.fonts || document.fonts.status === 'loaded') return;
+    document.fonts.ready.then(function () { if (cur() === mine) { stage.textContent = ''; build(stage, L); redraw(); } });
+  }
   // the end of every loop: what was assembled fades, the frame stays
   function outOf(u, P) { return 1 - seg(u, P - 1.5, P - 0.7); }
 
@@ -343,18 +349,14 @@
       // role and name), the one who decides on the other side, with his reason; under the type whose
       // committee it is with the tag, and the hand-off that waits
       var onL = C.L >= C.R, room = onL ? C.L : C.R, dw = Math.min(330, onL ? C.R : C.L);
-      var chips = [], x = onL ? G.cl : C.rx;
+      var chips = [], x = onL ? G.cl : C.rx, k = L.w / (stage.getBoundingClientRect().width || L.w);
       R = { roles: [] };
       ROLE.forEach(function (r, i) {
         var dec = i === 3, o = { at: dec ? 3.4 : 0.6 + i * 0.8 }, c;
-        if (dec) {
-          c = o.card = box(stage, 'is-2 is-p sgg-role is-dec', onL ? G.cr : C.lx, C.a.y, dw, 'r');
-        } else {
-          var w = 62 + Math.max(r[1].length * T(14, 8), r[2].length * 7);
-          if (x + w > (onL ? C.lx : G.cr) + 0.5) return;
-          c = o.card = box(stage, 'is-2 is-p sgg-role', x, C.a.y, w, 'l');
-          x += w + 12; chips.push(o);
-        }
+        // the decider's card has its width; a chip is as wide as its words (nowrap), measured once here,
+        // and one that does not fit beside the others is left out
+        c = o.card = dec ? box(stage, 'is-2 is-p sgg-role is-dec', onL ? G.cr : C.lx, C.a.y, dw, 'r') : box(stage, 'is-2 is-p sgg-role', x, C.a.y, 0, 'l');
+        if (!dec) c.style.width = '';
         avatar(c, r[0]);
         var tx = el('div', 'sgg-p', c);
         if (dec) {
@@ -363,6 +365,10 @@
         } else {
           el('b', 'sgg-v', el('div', 'sgg-l1', tx), r[1]);
           el('div', 'sgg-l2', tx, r[2]);
+          var w = Math.ceil(c.getBoundingClientRect().width * k) + 2;
+          if (x + w > (onL ? C.lx : G.cr) + 0.5) { stage.removeChild(c); return; }
+          c.style.width = w + 'px'; c.r = c.l + w;
+          x += w + 12; chips.push(o);
         }
         R.roles.push(o);
       });
@@ -381,8 +387,11 @@
       el('span', '', g, T('关键人 4 位 · 确认后交给 Sales Desk', '4 key people · then Sales Desk'));
       pill(g, T('等你确认', 'Waits for your OK'), 'is-amber');
       css(cap, 'opacity', '0');
+      late(stage, L, R, function () { return R; }, build, function () { tick(lt); });
     }
+    var lt = 0;
     function tick(t) {
+      lt = t;
       var u = mod(t, P), out = outOf(u, P);
       R.roles.forEach(function (o, i) {
         appear(o.card, ease.out(seg(u, o.at, o.at + 0.6)), out);
@@ -396,6 +405,6 @@
   }
 
   // the kit the lanes scene (js/stargo-motion-lanes.js, loaded after this file) draws with
-  K.growth = { clamp: clamp, shaped: shaped, strip: strip, corners: corners, base: base, tag: tag, box: box, appear: appear, two: two, path: path, draw: draw, node: node, ripple: ripple };
+  K.growth = { clamp: clamp, late: late, shaped: shaped, strip: strip, corners: corners, base: base, tag: tag, box: box, appear: appear, two: two, path: path, draw: draw, node: node, ripple: ripple };
   return { dossier: Dossier, rhythm: Rhythm, committee: Committee };
 });

@@ -28,7 +28,7 @@
           st: [[0.4, T('搜索中', 'Searching'), WAIT], [3.7, T('已排序', 'Ranked'), OK]],
           pins: [[1.9, 0.64, 'DE · 94'], [2.9, 0.8, 'US · 91']],
           rows: [
-            { k: 'q', s: 0, at: 0, t0: 0.4, t1: 1.6, ph: T('产品、市场、客户类型…', 'Product, market, buyer type…'), a: T('48V 储能与叉车电池 · 海外买家', 'Buyers: 48V storage & forklift packs'), as: T('48V 储能 · 海外买家', 'Storage & forklift buyers') },
+            { k: 'q', s: 0, at: 0, t0: 0.4, t1: 1.6, ph: T('产品、市场、客户类型…', 'Product, market, buyer type…'), phs: T('产品、市场…', 'Product, market…'), a: T('48V 储能与叉车电池 · 海外买家', 'Buyers: 48V storage & forklift packs'), as: T('48V 储能 · 海外买家', 'Storage & forklift buyers') },
             { k: 'it', id: 'nw', s: 1, at: 1.9, cc: 'DE', a: 'Nordwerk Energie GmbH', as: 'Nordwerk', b: T('汉堡 · 储能系统集成', 'Hamburg · storage integrator'), bs: T('汉堡', 'Hamburg'), v: [94, 1.9, 2.9], bar: [1.9, 2.9, 0.94] },
             { k: 'it', s: 2, c: null, at: 2.9, cc: 'US', a: 'Gulf Coast Lift Supply', as: 'Gulf Coast', b: T('休斯敦 · 叉车与仓储', 'Houston · forklift fleets'), bs: T('休斯敦', 'Houston'), v: [91, 2.9, 3.7], bar: [2.9, 3.7, 0.91] }
           ] },
@@ -78,7 +78,7 @@
         { app: T('知识库', 'Knowledge Base'), g: 'book', grp: T('产品与企业知识', 'Products & knowledge'), on: [3.6, 7],
           st: [[3.7, T('检索中', 'Searching'), WAIT], [5.6, T('找到 2 处', '2 found'), OK]],
           rows: [
-            { k: 'q', s: 0, at: 0, t0: 3.7, t1: 4.7, ph: T('搜索已审核的企业资料…', 'Search approved company material…'), phs: T('搜索已审核资料…', 'Search approved material…'), a: T('48V 100Ah 交期 · DAP 条款', '48V 100Ah lead time · DAP terms') },
+            { k: 'q', s: 0, at: 0, t0: 3.7, t1: 4.7, ph: T('搜索已审核的企业资料…', 'Search approved company material…'), phs: T('搜索已审核资料…', 'Search approved material…'), a: T('48V 100Ah 交期 · DAP 条款', '48V 100Ah lead time · DAP terms'), as: T('48V 100Ah 交期', '48V 100Ah lead time') },
             { k: 'it', s: 1, at: 0, o: 1, g: 'book', a: T('已审核资料 · 126 份', '126 approved documents'), b: T('规格书、价格政策、交期、认证', 'Specs, pricing policy, lead times, certificates'), bs: T('规格书、交期、认证', 'Specs, lead times, certificates') },
             { k: 'it', id: 'spec', s: 1, at: 5, g: 'doc', a: T('产品规格书 v3 · 第 2 页', 'Spec sheet v3 · page 2'), as: T('产品规格书 v3', 'Spec sheet v3'), b: T('已审核的企业资料', 'Approved company material'), bs: T('已审核', 'Approved'), p: [[5, T('引用', 'Cited'), OK]] },
             { k: 'it', id: 'lt', s: 2, c: null, at: 5.5, g: 'doc', a: T('交期表 · 2026 Q4', 'Lead times · Q4 2026'), b: T('标注出处', 'Source noted'), p: [[5.5, T('引用', 'Cited'), OK]] }
@@ -107,7 +107,7 @@
           rail: [[T('报价', 'Quote'), T('Q-1041 · 已批准', 'Q-1041 · approved'), 0], ['PI', T('PI-1041 · 订金 30%', 'PI-1041 · 30% deposit'), 1.2],
             [T('生产', 'Production'), T('叉车电池', 'Forklift battery'), 2.4, 24], [T('质检', 'QC'), T('质检报告 · 通过', 'QC report · passed'), 4.8],
             [T('出货', 'Shipment'), T('CI · 箱单 · 提单', 'CI · packing list · B/L'), 6.2], [T('回款', 'Collection'), T('尾款 70% · 待催收', 'Balance 70% · due'), 7.6, 0, T('尾款 70% · 等你确认', 'Balance 70% · your call')]] },
-        { app: T('报价中心', 'Quotation Center'), g: 'doc', grp: T('报价、PI 与商业文件', 'Quotes, PI & records'), on: [0.6, 4],
+        { app: T('报价中心', 'Quotation Center'), g: 'doc', grp: T('报价、PI 与商业文件', 'Quotes, PI & records'), grs: T('报价与 PI', 'Quotes & PI'), on: [0.6, 4],
           st: [[0.7, T('核价中', 'Pricing'), WAIT], [3.4, T('1 份待审批', '1 to approve'), HOLD]],
           rows: [
             { k: 'it', s: 0, at: 0, g: 'check', a: T('Q-1041 · 已批准', 'Q-1041 · approved'), b: T('已转 PI-1041', 'Now PI-1041'), p: [[0, T('已批准', 'Approved'), OK]] },
@@ -119,12 +119,12 @@
           rows: [
             { k: 'th', s: 0, at: 0, a: T('主图 · 场景图 · 15 秒短视频', 'Product · scene · 15 s video'), as: T('主图 · 短视频', 'Images · video'), ax: T('素材', 'Media'), s2: [1.6, 2.8, 4] },
             { k: 'it', s: 1, at: 0, o: 1, g: 'doc', a: T('产品资料 · 48V 100Ah', 'Product facts · 48V 100Ah'), as: T('产品资料', 'Product facts'), b: T('已审核 · 作为生成依据', 'Approved · the source material'), bs: T('已审核', 'Approved') },
-            { k: 'it', s: 1, at: 4.6, g: 'pen', a: T('卖点文案 · 英 / 德 / 西', 'Copy · EN / DE / ES'), as: T('卖点文案', 'Sales copy'), b: T('人工审核后才发布', 'Published only after review'), bs: T('审核后发布', 'Published after review'), p: [[4.6, T('待审核', 'For review'), HOLD]] }
+            { k: 'it', s: 1, at: 4.6, g: 'pen', a: T('卖点文案 · 英 / 德 / 西', 'Copy · EN / DE / ES'), as: T('卖点文案', 'Sales copy'), b: T('人工审核后才发布', 'Published only after review'), bs: T('审核后发布', 'Published after review'), bx: T('审核后发布', 'After review'), p: [[4.6, T('待审核', 'For review'), HOLD]] }
           ] },
         { app: T('付款节点', 'Payments'), g: 'coin', grp: T('ERP、订单与履约', 'Collections'), on: [7.6, 13.2],
           st: [[7.7, T('跟进中', 'Tracking'), WAIT], [9.4, T('等你确认', 'Your call'), HOLD]],
           rows: [
-            { k: 'it', s: 0, at: 0, g: 'coin', a: T('订金 30% · PI-1041', 'Deposit 30% · PI-1041'), b: T('出货前收取', 'Due before shipment'), p: [[0, T('待到账', 'Pending'), IDLE], [1.8, T('已到账', 'Received'), OK]] },
+            { k: 'it', s: 0, at: 0, g: 'coin', a: T('订金 30% · PI-1041', 'Deposit 30% · PI-1041'), as: T('订金 30%', 'Deposit 30%'), b: T('出货前收取', 'Due before shipment'), p: [[0, T('待到账', 'Pending'), IDLE], [1.8, T('已到账', 'Received'), OK]] },
             { k: 'gt', s: 1, at: 9.2, a: T('尾款 70% · 催款信待你确认', 'Balance 70% · reminder for your OK'), as: T('尾款 70% · 待你确认', 'Balance 70% · your OK'), b: T('出货后 · 不会自动发出', 'After shipment · not sent by itself'), bs: T('不会自动发出', 'Not sent by itself') }
           ] }
       ],
@@ -139,7 +139,7 @@
       win: [
         { app: T('数字员工', 'AI Staff'), g: 'users', grp: T('数字员工与团队协作', 'AI workforce & teamwork'), on: [0.3, 4.4], body: 'crew',
           st: [[0.4, T('挑选中', 'Choosing'), WAIT], [3.4, T('已分派 4 + 1', '4 + 1 assigned'), OK]],
-          goal: [0.4, 1.6, T('交给团队一个目标…', 'Give the team a goal…'), T('开发德国储能经销商', 'Find storage distributors in Germany'), T('开发德国储能经销商', 'German storage dealers'), T('开发德国储能经销商', 'Storage dealers · DE')],
+          goal: [0.4, 1.6, T('交给团队一个目标…', 'Give the team a goal…'), T('开发德国储能经销商', 'Find storage distributors in Germany'), T('开发德国储能经销商', 'German storage dealers'), T('开发德国储能经销商', 'Storage dealers · DE'), T('交给团队目标…', 'A team goal…')],
           crew: [['layers', T('统筹', 'Coordinator'), 1.9], ['search', T('市场研究员', 'Researcher'), 2.3, T('研究员', 'Research')], ['box', T('产品工程师', 'Engineer'), 2.6], ['sales', T('销售', 'Sales'), 2.9], ['image', T('创意', 'Creative'), 3.2]],
           note: T('288 个岗位里，挑出 4 位 + 统筹', '4 roles + a coordinator, from 288') },
         { app: T('业务关系', 'Relationships'), g: 'nodes', grp: T('企业业务关系与上下文', 'Business context'), on: [1.2, 5.4],
