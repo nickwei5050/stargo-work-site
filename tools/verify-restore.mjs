@@ -100,7 +100,10 @@ const TEXT_AUDIT = `(() => {
     const cx = Math.min(Math.max(r0.left + r0.width / 2, 1), vw - 1), cy = Math.min(Math.max(r0.top + r0.height / 2, 1), vh - 1);
     if (r0.top >= 0 && r0.bottom <= vh && el.closest('.lx-gradient-section, .lx-no-writing, .lx-cta-author-list, .lx-community-loop, .cta-sm-title, .marquee, .products-cards-mobile, .stargo-skip') === null) {
       const hit = document.elementFromPoint(cx, cy);
-      if (hit && hit !== el && !el.contains(hit) && !hit.contains(el)) {
+      // The notices 「继续看」 cards stack (sticky): a later card slides over the one before it by design,
+      // and since 2026-10-24 one of them is a code-drawn scene with words, not only pictures.
+      const stacked = hit && hit.closest('.blog-photo-wrapper') && el.closest('.blog-photo-wrapper') && hit.closest('.blog-photo-wrapper') !== el.closest('.blog-photo-wrapper');
+      if (hit && hit !== el && !el.contains(hit) && !hit.contains(el) && !stacked) {
         const hcs = getComputedStyle(hit);
         const opaque = hcs.pointerEvents !== 'none' && (parseFloat(hcs.opacity) > 0.15) && !(hit.tagName === 'DIV' && hcs.backgroundColor === 'rgba(0, 0, 0, 0)' && !hcs.backgroundImage.includes('url') && !hit.querySelector(':scope > img, :scope > video'));
         if (opaque && !/stargo-media-toggle|circle-wrap|menu-bottom|crosshair|cursor/.test(hit.className)) issues.push({ kind: 'covered', text: t.slice(0, 40), by: (hit.tagName + '.' + hit.className).slice(0, 70) });

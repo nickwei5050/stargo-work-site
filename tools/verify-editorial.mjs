@@ -272,8 +272,10 @@ async function worker() {
       // photographs, like the pricing page's); only the shared menu carries generated art there.
       // Enterprise joined them on 2026-10-23, when every one of its pictures became code-drawn motion.
       // Contact joined them on 2026-10-24 (atmos): its one picture, the quote card's K01, is code-drawn motion now.
+      // The homepage and capabilities joined them on 2026-10-24 (vignettes, atmos): the opening mosaic, the
+      // scenario doors and the 每项工作 ring were their last generated photographs; all are code-drawn now.
       if (hasImageArea) assert(assets.length > 0, 'visible new images requested');
-      else assert((width < 992 && ['contact', 'pricing'].includes(name)) || /intelligence|workforce|blog|pricing|about|enterprise|contact/.test(name), 'only approved template-imagery pages omit generated art');
+      else assert((width < 992 && ['contact', 'pricing'].includes(name)) || /intelligence|workforce|blog|pricing|about|enterprise|contact|index|capabilities/.test(name), 'only approved template-imagery pages omit generated art');
       const card = await page.evaluate((OWN) => [...document.querySelectorAll(OWN)].find(i => {
         const r = i.getBoundingClientRect();
         return r.width > 180 && r.height > 150 && !i.closest('.menu-wrapper,nav,.navbar,.menu-bottom');
