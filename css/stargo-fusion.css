@@ -5539,13 +5539,9 @@ img[src*="stargo-photo/c04v2-"] { object-position: 30% 60%; }
         glove, and the tag on the left-hand tap only as the panel leaves (about
         38% would keep both taps and the tag in view); 50% is the image
         thread's setting and is kept until it decides. */
-.image-about._01 { background-image: url("../assets/stargo-photo/e01-decide-2048.webp"); background-position: 50% 100%; }
-.image-about._02 { background-image: url("../assets/stargo-photo/e02-verify-2048.webp"); background-position: 50% 50%; }
-.image-about._03 { background-image: url("../assets/stargo-photo/e03-connect-2048.webp"); background-position: 45% 50%; }
-.image-about._04 { background-image: url("../assets/stargo-photo/e04-operate-2048.webp"); background-position: 50% 50%; }
-@media (max-width: 767px) {
-  .image-about._01 { background-position: 50% 50%; }
-}
+/* Since 2026-10-23 (enterprise lane) the four panels are drawn in code: each box holds a motion
+   host, and css/stargo-motion-enterprise.css paints the box's ground over every picture rule above,
+   so no photograph is fetched for them. E01–E04 stay registered and published, unplaced. */
 
 /* E05–E08. The cockpit column (`.work-image-cover`) and the 原则 picture
         (`.paralax-image`) are `object-fit: cover` in boxes whose shape
@@ -5560,7 +5556,7 @@ img[src*="stargo-photo/c04v2-"] { object-position: 30% 60%; }
         72% and E12 45% 25% / 45% 50%; E11 and E13 only if cover-cropped)
         would change nothing there. */
 img[src*="stargo-photo/e06-cockpit-blocker-"] { object-position: 50% 20%; }
-img[src*="stargo-photo/e08-emergency-stop-"] { object-position: 50% 42%; }
+/* (E08 and the module cards' E09–E13 are code drawings since 2026-10-23: tools/code-art-enterprise.mjs.) */
 @media (max-width: 767px) {
   img[src*="stargo-photo/e05-cockpit-overview-"] { object-position: 55% 50%; }
   img[src*="stargo-photo/e06-cockpit-blocker-"] { object-position: 50% 50%; }

@@ -32,6 +32,7 @@ import { CAPSALES_SCENES } from './motion-capsales.mjs';
 import { AREA_SCENES, placeAreaScenes } from './code-art-capareas.mjs'; // capareas: capability area cards
 import { theatreTiles } from './code-art-theatre.mjs';
 import { webpPage } from './image-refs.mjs';
+import { enterpriseArt } from './code-art-enterprise.mjs';   // enterprise lane: code-drawn pictures
 import { a11yPage } from './a11y.mjs';
 import { speedPage } from './speed.mjs';
 /* The owner's photographs on the blog and intelligence pages (group "blog", 2026-10-21). */
@@ -2616,6 +2617,13 @@ PAGES['404.html'] = (lang) => {
   h = setLink(h, 'Back Home', { href: 'index.html', text: t(C.NOT_FOUND.back) });
   return h;
 };
+
+/* Enterprise lane (2026-10-23): the enterprise page's story panels, 「(原则)」 picture and five module
+   cards are drawn in code (tools/code-art-enterprise.mjs), applied to the page as built above. */
+{
+  const build = PAGES['enterprise.html'];
+  PAGES['enterprise.html'] = (lang) => enterpriseArt(build(lang), lang);
+}
 
 /* ================================================================== main */
 
