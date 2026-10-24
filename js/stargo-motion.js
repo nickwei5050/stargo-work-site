@@ -247,6 +247,9 @@
     var layouts = {
       wide: { w: 1600, h: 800 },
       mid: { w: 1240, h: 700 },
+      // short laptop screens (1280 × 720, 1366 × 768, 1024 × 768): the band leaves ~550-600 px between its captions,
+      // so this layout is wider than tall and keeps the stage at a scale of ~0.93-1.07, every word at 12 px or more
+      short: { w: 1100, h: 560 },
       square: { w: 640, h: 680 },
       // the part of the phone band left visible above the next section's curve; sized to the band itself
       // (360 × 260 at 360 px, 390 × 290 at 390) so the scale is 1 or more and no text drops under 12 px
@@ -270,6 +273,14 @@
         g.outA = function (r) { return { p: [r.x, r.y + r.h / 2], d: [-1, 0] }; };
         g.ticker = { x: 620, y: 620 };
         g.tag = { x: 1216, y: 60 };
+      } else if (name === 'short') {
+        g.core = { x: 550, y: 250, s: 0.62 };
+        g.inp = [0, 1, 2, 3].map(function (i) { return { x: 16, y: 56 + i * 104, w: 360, h: 90 }; });
+        g.out = [0, 1, 2, 3, 4].map(function (i) { return { x: 724, y: 34 + i * 92, w: 360, h: 80 }; });
+        g.inA = function (r) { return { p: [r.x + r.w, r.y + r.h / 2], d: [1, 0] }; };
+        g.outA = function (r) { return { p: [r.x, r.y + r.h / 2], d: [-1, 0] }; };
+        g.ticker = { x: 550, y: 498 };
+        g.tag = { x: 1084, y: 26 };
       } else if (name === 'phone') {
         g.core = { x: 180, y: 119, s: 0.3 };
         g.inp = [0, 1, 2, 3].map(function (i) { return { x: 6, y: 30 + i * 46, w: 111, h: 40 }; });
@@ -281,13 +292,15 @@
         g.tag = { x: 354, y: 19 };
       } else {
         g.core = { x: 320, y: 330, s: 0.62 };
-        g.inp = [0, 1, 2, 3].map(function (i) { return { x: 16 + (i % 2) * 312, y: 34 + Math.floor(i / 2) * 74, w: 296, h: 62 }; });
-        g.out = [0, 1, 2, 3, 4].map(function (i) { return { x: 16 + i * 122, y: 506, w: 112, h: 104 }; });
+        // inset 48 px a side: the band opens its window over this picture from the middle out, so the cards stay
+        // whole inside the window for most of that zoom, not only once it covers the screen
+        g.inp = [0, 1, 2, 3].map(function (i) { return { x: 48 + (i % 2) * 280, y: 34 + Math.floor(i / 2) * 74, w: 264, h: 62 }; });
+        g.out = [0, 1, 2, 3, 4].map(function (i) { return { x: 48 + i * 110, y: 506, w: 104, h: 104 }; });
         g.inA = function (r, i) { return i < 2 ? { p: [i === 0 ? r.x + r.w + 4 : r.x - 4, r.y + r.h / 2], d: [0, 1] } : { p: [r.x + r.w / 2, r.y + r.h], d: [0, 1] }; };
         g.outA = function (r) { return { p: [r.x + r.w / 2, r.y], d: [0, -1] }; };
         g.ticker = null;
         g.status = { x: 320, y: 428 };
-        g.tag = { x: 624, y: 664 };
+        g.tag = { x: 592, y: 664 };
       }
       return g;
     }
@@ -297,12 +310,12 @@
     }
 
     function build(stage, _, name) {
-      compact = name !== 'wide' && name !== 'mid';
+      compact = name !== 'wide' && name !== 'mid' && name !== 'short';
       var phone = name === 'phone';
       L = geometry(name);
       R = { inp: [], out: [], parts: [], inPath: [], outPath: [], phone: phone };
       R.host = stage.parentNode;   // tells the page which stage the caption names (data-stage, read by css/stargo-phone.css)
-      stage.className = 'sg-mo-stage sg-loop' + (compact ? ' is-compact' : '') + (phone ? ' is-phone' : '') + (name === 'mid' ? ' is-mid' : '');
+      stage.className = 'sg-mo-stage sg-loop' + (compact ? ' is-compact' : '') + (phone ? ' is-phone' : '') + (name === 'mid' || name === 'short' ? ' is-mid' : '') + (name === 'short' ? ' is-short' : '');
       var svg = sv('svg', { class: 'sg-loop-svg', width: L.w, height: L.h, viewBox: '0 0 ' + L.w + ' ' + L.h }, stage);
       var defs = sv('defs', {}, svg);
       var g1 = sv('radialGradient', { id: 'sgl-halo' }, defs);
@@ -601,9 +614,34 @@
 
     return {
       layouts: layouts,
-      pick: function (w, h, sw) { return w / h > 1.2 && w > 560 ? (sw < 1400 ? 'mid' : 'wide') : w / h > 1.1 ? 'phone' : 'square'; },
+      // From tablet up the band fits the stage to the screen less ~170 px for its captions (sw × sh below, the
+      // same all through the band's zoom). The first layout that the screen shows at a scale of 0.935 or more
+      // wins, so the smallest type (13 px on the stage) stays at 12 px or more; failing that, the one that
+      // scales least far down.
+      pick: function (w, h, sw) {
+        if (!(w / h > 1.2 && w > 560)) return w / h > 1.1 ? 'phone' : 'square';
+        var sh = h * sw / w, best = 'short', bs = 0, order = ['wide', 'mid', 'short'];
+        for (var i = 0; i < order.length; i++) {
+          var Lx = layouts[order[i]], s = Math.min(sw / Lx.w, sh / Lx.h);
+          if (s >= 0.935) return order[i];
+          if (s > bs) { bs = s; best = order[i]; }
+        }
+        return best;
+      },
       // start a few events in, so the cards and counters are already alive
       build: build, tick: tick, still: 6 * P + 2.28, start: 4 * P + 0.3
+    };
+  }
+
+  /* The core-systems switcher's panels (radar, studio) pick the largest layout the panel shows at a scale that
+     keeps their smallest type (13 px on compact and mid, 12 px on wide) at 12 px or more: compact (800 × 450)
+     on wide laptop screens, mid (640 × 360) where the switcher squeezes the panel (1280 × 720, 1366 × 768,
+     tablets), mini (272 × 153) on phones and the narrow two-column screens. */
+  var PANEL = ['wide', 1, 'compact', 0.92, 'mid', 0.92];
+  function panelPick(layouts) {
+    return function (w, h) {
+      for (var i = 0; i < PANEL.length; i += 2) { var Lx = layouts[PANEL[i]]; if (Math.min(w / Lx.w, h / Lx.h) >= PANEL[i + 1]) return PANEL[i]; }
+      return 'mini';
     };
   }
 
@@ -631,7 +669,7 @@
     var P = 5.6;
     var L, R, mode;
     // mini is the phone accordion panel's own size at 360 px (302 × 170 at 390), so its type never scales under 12 px
-    var layouts = { wide: { w: 1600, h: 900 }, compact: { w: 800, h: 450 }, mini: { w: 272, h: 153 } };
+    var layouts = { wide: { w: 1600, h: 900 }, compact: { w: 800, h: 450 }, mid: { w: 640, h: 360 }, mini: { w: 272, h: 153 } };
 
     function proj(ll) { return [(ll[0] + 180) / 360 * MAP.w, (MAP.top - ll[1]) / (MAP.top - MAP.bottom) * MAP.h]; }
     function buyer(k) { return B[mod(k, B.length)]; }
@@ -646,7 +684,8 @@
       if (mode !== 'mini') el('span', 'sg-app-crumb', bar, T('主动获客', 'Prospecting'));
       var live = el('span', 'sg-app-live', bar); el('i', '', live); el('span', '', live, T('AI 扫描中', 'AI scanning'));
       // map
-      var mapBox = { wide: { x: 28, y: 150, w: 1024 }, compact: { x: 14, y: 60, w: 470 }, mini: { x: 4, y: 28, w: 264 } }[mode];
+      // mid: 292 wide, so the factory's label (right of its dot) ends clear of the shortlist beside the map
+      var mapBox = { wide: { x: 28, y: 150, w: 1024 }, compact: { x: 14, y: 60, w: 470 }, mid: { x: 12, y: 56, w: 292 }, mini: { x: 4, y: 28, w: 264 } }[mode];
       var ms = mapBox.w / MAP.w;
       var svg = sv('svg', { class: 'sg-radar-map', width: L.w, height: L.h, viewBox: '0 0 ' + L.w + ' ' + L.h }, stage);
       var defs = sv('defs', {}, svg);
@@ -700,9 +739,11 @@
         el('b', '', head, T('候选客户', 'Prospects'));
         el('span', '', head, T('最新发现 · 按匹配度', 'Newest · by fit'));
         R.listBody = el('div', 'sg-list-body', list);
-        R.rowH = mode === 'wide' ? 92 : 70; R.rowGap = mode === 'wide' ? 10 : 8; R.rowsMax = mode === 'wide' ? 5 : 3;
+        R.rowH = mode === 'wide' ? 92 : mode === 'mid' ? 56 : 70; R.rowGap = mode === 'wide' ? 10 : mode === 'mid' ? 6 : 8; R.rowsMax = mode === 'wide' ? 5 : 3;
         var ai = el('div', 'sg-ai', stage);
-        var ah = el('div', 'sg-ai-head', ai); icon('spark', ah, mode === 'wide' ? 18 : 15); R.aiWho = el('span', '', ah);
+        var ah = el('div', 'sg-ai-head', ai); icon('spark', ah, mode === 'wide' ? 18 : mode === 'mid' ? 14 : 15); R.aiWho = el('span', '', ah);
+        // mid: a shorter English lead-in, so the longest buyer name still shows whole
+        R.aiLead = T('AI 判断 · ', mode === 'mid' ? 'AI view · ' : 'AI reasoning · ');
         R.aiText = el('div', 'sg-ai-text', ai); R.aiTyped = el('span', '', R.aiText); R.aiRest = el('span', 'sg-ai-rest', R.aiText);
         if (mode === 'wide') {
           var btns = el('div', 'sg-ai-btns', ai);
@@ -710,13 +751,14 @@
           el('span', 'sg-btn', btns, T('查看依据', 'See why'));
         }
         var note = el('div', 'sg-note', stage);
-        icon('shield', note, mode === 'wide' ? 18 : 15);
+        icon('shield', note, mode === 'wide' ? 18 : mode === 'mid' ? 14 : 15);
         var nt = el('div', '', note);
         el('b', '', nt, T('发开发信前', 'Before any outreach'));
         el('span', '', nt, T('数量和花费会先请你确认', 'you confirm quantity and cost'));
       }
-      var tg = el('div', 'sg-tag', mode === 'compact' ? null : stage, mode === 'mini' ? T('演示数据', 'Demo data') : T('动态示意 · 演示数据', 'Illustrative motion · demo data'));
-      if (mode === 'compact') bar.insertBefore(tg, live);
+      var inBar = mode === 'compact' || mode === 'mid';
+      var tg = el('div', 'sg-tag', inBar ? null : stage, mode === 'mini' ? T('演示数据', 'Demo data') : T('动态示意 · 演示数据', 'Illustrative motion · demo data'));
+      if (inBar) bar.insertBefore(tg, live);
     }
 
     // does a right-opening pin label at map point p (lw px wide) overlap the factory label?
@@ -819,7 +861,7 @@
           cl(r, 'is-out', idx < 0);
           cl(r, 'is-new', +kk2 === top);
         }
-        put(R.aiWho, 'text', T('AI 判断 · ', 'AI reasoning · ') + cur[2]);
+        put(R.aiWho, 'text', R.aiLead + cur[2]);
         var shownAi = typed(cur[6], seg(tauTop, 1.2, 1.2 + td));
         put(R.aiTyped, 'text', shownAi); put(R.aiRest, 'text', cur[6].slice(shownAi.length));
         cl(R.aiTyped, 'is-typing', tauTop < 1.3 + td);
@@ -839,7 +881,7 @@
 
     return {
       layouts: layouts,
-      pick: function (w) { return w >= 1100 ? 'wide' : w >= 560 ? 'compact' : 'mini'; },
+      pick: panelPick(layouts),
       build: build, tick: tick, still: 4 * P + 4.4, start: 3 * P + 0.4, cue: function (t) { return Math.ceil(t / P) * P; }
     };
   }
@@ -850,10 +892,11 @@
      ===================================================================== */
   function StudioScene() {
     var V = [
-      { key: 'studio', label: T('主图 · 白底', 'Main image · white'), prompt: T('白底主图，柔光，突出铭牌', 'White background, soft light') },
-      { key: 'ware', label: T('场景图 · 仓库 16:9', 'Scene · warehouse 16:9'), prompt: T('仓库货架前，暖色顶灯', 'Warehouse racks, warm light') },
-      { key: 'solar', label: T('场景图 · 户外储能', 'Scene · outdoor storage'), prompt: T('户外光伏板前，日落逆光', 'Solar panels at sunset') },
-      { key: 'city', label: T('短视频 · 15 秒', 'Short video · 15 s'), prompt: T('城市夜景，镜头缓慢推近', 'City at night, slow push-in') }
+      // short: the queue's own name for the job on the mid layout, where its column is narrow
+      { key: 'studio', label: T('主图 · 白底', 'Main image · white'), short: T('白底主图', 'Main image'), prompt: T('白底主图，柔光，突出铭牌', 'White background, soft light') },
+      { key: 'ware', label: T('场景图 · 仓库 16:9', 'Scene · warehouse 16:9'), short: T('仓库场景 16:9', 'Warehouse 16:9'), prompt: T('仓库货架前，暖色顶灯', 'Warehouse racks, warm light') },
+      { key: 'solar', label: T('场景图 · 户外储能', 'Scene · outdoor storage'), short: T('户外储能', 'Outdoor storage'), prompt: T('户外光伏板前，日落逆光', 'Solar panels at sunset') },
+      { key: 'city', label: T('短视频 · 15 秒', 'Short video · 15 s'), short: T('短视频 15 秒', 'Video · 15 s'), prompt: T('城市夜景，镜头缓慢推近', 'City at night, slow push-in') }
     ];
     var LANG = [
       ['中文', '长寿命磷酸铁锂电池，3000 次以上循环。'],
@@ -865,7 +908,10 @@
     var P = 6.2, LP = P / 2;
     var PAL = { studio: ['#f6f4f1', '#ebe7e1', '#d9d3cb'], ware: ['#2a2019', '#1c1612', '#3a2c20', '#ffc27a'], solar: ['#3f2f5c', '#e9826a', '#f7b36b', '#ffe2a6'], city: ['#0a0f24', '#18213f', '#0e1430', '#ffcf7a'] };
     var L, R, mode;
-    var layouts = { wide: { w: 1600, h: 900 }, compact: { w: 800, h: 450 }, mini: { w: 272, h: 153 } };   // mini: as RadarScene
+    // as RadarScene, plus midw: mid for the wider, shorter box the switcher leaves AI 创作 where its copy runs long
+    // (640 × 312 at 1280 × 720 in English): the same parts with a shorter canvas and queue, and no note under it
+    var layouts = { wide: { w: 1600, h: 900 }, compact: { w: 800, h: 450 }, mid: { w: 640, h: 360 }, midw: { w: 640, h: 316 }, mini: { w: 272, h: 153 } };
+    var basePick = panelPick(layouts);
     var CW = 788, CH = 560; // canvas drawing size
 
     function bg(parent, key) {
@@ -915,7 +961,9 @@
       }
       return g;
     }
-    function battery(parent, x, y, s, light, small) {
+    // bars: 0 the nameplate's brand and spec line are text; 1 the spec line (too small to read on a scaled-down
+    // canvas) is a plain bar; 2 both are bars (queue thumbnails, the phone panel): texture, never sub-12 px words
+    function battery(parent, x, y, s, light, bars) {
       var g = sv('g', { transform: 'translate(' + x + ',' + y + ') scale(' + s + ')' }, parent);
       var id = 'sgb' + Math.floor(Math.random() * 1e6);
       var defs = sv('defs', {}, g);
@@ -939,9 +987,9 @@
       // label plate
       sv('rect', { x: 34, y: 70, width: 212, height: 90, rx: 8, fill: '#101012', stroke: '#2c2c31' }, g);
       sv('rect', { x: 34, y: 70, width: 8, height: 90, rx: 3, fill: '#ec6f10' }, g);
-      var t1 = sv('text', { x: 60, y: 106, class: 'sg-bat-brand' }, g); t1.textContent = 'STARGO';
-      // drawn too small to read on the phone panel, the spec line is a plain bar there, not sub-12 px text
-      if (small) sv('rect', { x: 60, y: 124, width: 120, height: 9, rx: 4.5, fill: '#fff', opacity: '.22' }, g);
+      if (bars > 1) sv('rect', { x: 60, y: 86, width: 132, height: 20, rx: 4, fill: '#fff', opacity: '.88' }, g);
+      else { var t1 = sv('text', { x: 60, y: 106, class: 'sg-bat-brand' }, g); t1.textContent = 'STARGO'; }
+      if (bars) sv('rect', { x: 60, y: 124, width: 120, height: 9, rx: 4.5, fill: '#fff', opacity: '.22' }, g);
       else { var t2 = sv('text', { x: 60, y: 134, class: 'sg-bat-spec' }, g); t2.textContent = 'LiFePO4 · 12.8V 100Ah'; }
       // glint
       var clip = sv('clipPath', { id: id + 'c' }, defs);
@@ -951,24 +999,25 @@
     }
 
     function build(stage, Ld, name) {
-      mode = name;
+      var midw = name === 'midw';
+      mode = midw ? 'mid' : name;
       L = Ld; R = {};
-      stage.className = 'sg-mo-stage sg-studio is-' + mode;
+      stage.className = 'sg-mo-stage sg-studio is-' + mode + (midw ? ' is-midw' : '');
       var bar = el('div', 'sg-app-bar', stage);
       var mk = el('span', 'sg-app-mark', bar); icon('spark', mk, 14);
       el('b', '', bar, T('AI 创作', 'AI Creative'));
-      if (mode !== 'mini') el('span', 'sg-app-crumb', bar, T('产品图与视频', 'Product images & video'));
+      if (mode !== 'mini') el('span', 'sg-app-crumb', bar, mode === 'mid' ? T('产品图与视频', 'Images & video') : T('产品图与视频', 'Product images & video'));
       var live = R.live = el('span', 'sg-app-live', bar); el('i', '', live); R.liveText = el('span', '', live, T('生成中', 'Generating'));
 
-      var cv = { wide: { x: 300, y: 72, w: 800, h: 610 }, compact: { x: 14, y: 54, w: 506, h: 284 }, mini: { x: 5, y: 31, w: 262, h: 104 } }[mode];
+      var cv = { wide: { x: 300, y: 72, w: 800, h: 610 }, compact: { x: 14, y: 54, w: 506, h: 284 }, mid: { x: 12, y: 46, w: 404, h: midw ? 152 : 196 }, mini: { x: 5, y: 31, w: 262, h: 104 } }[mode];
       var canvas = el('div', 'sg-canvas', stage);
       canvas.style.cssText = 'left:' + cv.x + 'px;top:' + cv.y + 'px;width:' + cv.w + 'px;height:' + cv.h + 'px';
       var svg = sv('svg', { viewBox: '0 0 ' + CW + ' ' + CH, preserveAspectRatio: 'xMidYMid slice', width: cv.w, height: cv.h }, canvas);
       R.bgs = V.map(function (v) { return bg(svg, v.key); });
       R.cam = sv('g', {}, svg);
       // mini: smaller and right of centre, clear of the prompt over the top and the label at the bottom left
-      var bt = mode === 'mini' ? [392, 242, 0.62] : [250, 250, 1];
-      R.bat = battery(R.cam, bt[0], bt[1], bt[2], true, mode === 'mini');
+      var bt = mode === 'mini' ? [392, 242, 0.62] : midw ? [250, 190, 1] : [250, 250, 1];   // midw: up into the shorter crop
+      R.bat = battery(R.cam, bt[0], bt[1], bt[2], true, mode === 'mini' ? 2 : mode === 'wide' ? 0 : 1);
       R.cells = [];
       var cols = 16, rows = 11;
       var mg = sv('g', {}, svg);
@@ -988,13 +1037,14 @@
       var pr = el('div', 'sg-prompt', mode === 'mini' ? canvas : stage);
       if (mode === 'wide') pr.style.cssText = 'left:300px;top:698px;width:800px';
       if (mode === 'compact') pr.style.cssText = 'left:14px;top:348px;width:506px';
-      icon('spark', pr, mode === 'wide' ? 18 : 15);
+      if (mode === 'mid') pr.style.cssText = 'left:12px;top:' + (midw ? 206 : 250) + 'px;width:404px';
+      icon('spark', pr, mode === 'wide' ? 18 : mode === 'mid' ? 14 : 15);
       R.promptBox = el('span', 'sg-prompt-text', pr); R.prompt = el('span', '', R.promptBox);
       R.gen = el('span', 'sg-btn is-primary', pr, T('生成', 'Generate'));
 
       if (mode !== 'mini') {
         var lang = el('div', 'sg-langs', stage);
-        lang.style.cssText = mode === 'wide' ? 'left:300px;top:778px;width:800px' : 'left:14px;top:406px;width:506px';
+        lang.style.cssText = mode === 'wide' ? 'left:300px;top:778px;width:800px' : mode === 'mid' ? 'left:12px;top:' + (midw ? 254 : 298) + 'px;width:404px' : 'left:14px;top:406px;width:506px';
         R.langChips = LANG.map(function (l) { return el('span', 'sg-lang', lang, l[0]); });
         R.langText = el('div', 'sg-lang-text', lang);
       }
@@ -1021,22 +1071,27 @@
         R.q = V.map(function (v) {
           var it = el('div', 'sg-q', qb);
           var th = el('div', 'sg-q-thumb', it);
-          var ts = sv('svg', { viewBox: '0 0 ' + CW + ' ' + CH, preserveAspectRatio: 'xMidYMid slice', width: mode === 'wide' ? 92 : 64, height: mode === 'wide' ? 66 : 46 }, th);
-          bg(ts, v.key); battery(ts, 250, 250, 1, v.key === 'studio');
+          var ts = sv('svg', { viewBox: '0 0 ' + CW + ' ' + CH, preserveAspectRatio: 'xMidYMid slice', width: mode === 'wide' ? 92 : midw ? 44 : mode === 'mid' ? 48 : 64, height: mode === 'wide' ? 66 : midw ? 31 : mode === 'mid' ? 34 : 46 }, th);
+          bg(ts, v.key); battery(ts, 250, 250, 1, v.key === 'studio', 2);
           var m = el('div', 'sg-q-main', it);
-          el('b', '', m, v.label);
+          el('b', '', m, mode === 'mid' ? v.short : v.label);
           var st = el('span', 'sg-q-state', m);
           var qbar = el('i', 'sg-q-bar', m); var f = el('i', '', qbar);
           return { it: it, st: st, f: f, v: v };
         });
-        var note = el('div', 'sg-note', stage);
-        icon('shield', note, mode === 'wide' ? 18 : 15);
+        var note = el('div', 'sg-note', midw ? null : stage);
+        icon('shield', note, mode === 'wide' ? 18 : mode === 'mid' ? 13 : 15);
         var nt = el('div', '', note);
-        el('b', '', nt, T('发布前', 'Before publishing'));
-        el('span', '', nt, T('每张图、每段视频都要你点通过', 'nothing goes live without your OK'));
+        // mid: one line under the queue
+        if (mode === 'mid') el('b', '', nt, T('发布前都要你点通过', 'Live only after your OK'));
+        else {
+          el('b', '', nt, T('发布前', 'Before publishing'));
+          el('span', '', nt, T('每张图、每段视频都要你点通过', mode === 'wide' ? 'nothing goes live without your OK' : 'you OK every image and video'));
+        }
       }
-      var tg = el('div', 'sg-tag', mode === 'compact' ? null : stage, mode === 'mini' ? T('演示数据', 'Demo data') : T('动态示意 · 演示数据', 'Illustrative motion · demo data'));
-      if (mode === 'compact') bar.insertBefore(tg, live);
+      var inBar = mode === 'compact' || mode === 'mid';
+      var tg = el('div', 'sg-tag', inBar ? null : stage, mode === 'mini' ? T('演示数据', 'Demo data') : T('动态示意 · 演示数据', 'Illustrative motion · demo data'));
+      if (inBar) bar.insertBefore(tg, live);
     }
 
     function tick(t) {
@@ -1091,7 +1146,7 @@
 
     return {
       layouts: layouts,
-      pick: function (w) { return w >= 1100 ? 'wide' : w >= 560 ? 'compact' : 'mini'; },
+      pick: function (w, h) { var n = basePick(w, h); return (n === 'mid' || n === 'mini') && h / w < 0.52 && Math.min(w / 640, h / 316) >= 0.92 ? 'midw' : n; },
       build: build, tick: tick, still: 2 * P + 4.6, cue: function (t) { return Math.ceil(t / P) * P; }
     };
   }

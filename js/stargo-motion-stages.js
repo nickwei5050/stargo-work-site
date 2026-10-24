@@ -29,8 +29,8 @@
 
    tick(t) is a pure function of time; only transform and opacity animate.
    Layouts, by the box's width (3:2), so the scale stays near 1:
-     card   336 × 224  from 315px (1366px screens and up)
-     cards  272 × 181  245–314px (about 1100–1365px screens)
+     card   336 × 224  from 330px (1440px screens and up)
+     cards  272 × 181  245–329px (about 1100–1439px screens)
      mini   180 × 120  165–244px (tablets)
      micro  the box's own size, under 165px (phones in landscape): the app
             mark, one big figure and its state, laid out by flexbox */
@@ -92,7 +92,9 @@
   var TAG = T('动态示意 · 演示数据', 'Illustrative motion · demo data'), TAG_S = T('演示数据', 'Demo data');
   var LAYOUTS = { card: { w: 336, h: 224 }, cards: { w: 272, h: 181 }, mini: { w: 180, h: 120 } };
   function pick(w, h) {
-    if (w >= 315) return 'card';
+    // card from 330 px (scale 0.98+; --sg-fit covers the last 2%): the 316 px box at 1366 takes cards at 1.16,
+    // where the full card would scale to 0.94 and its English rows would need more room than they have
+    if (w >= 330) return 'card';
     if (w >= 245) return 'cards';
     if (w >= 165) return 'mini';
     var W = Math.max(90, Math.round(w)), H = Math.max(60, Math.round(h)), k = 'micro-' + W + 'x' + H;
@@ -108,7 +110,7 @@
     return function () {
       var R = {};
       return {
-        layouts: LAYOUTS, pick: pick,
+        layouts: LAYOUTS, pick: pick, scaleVar: true,   // --sg-fit keeps the small type at 12 px+ (css/stargo-motion-stages.css)
         build: function (st, L, name) {
           var m = L.micro ? 'micro' : name;
           R = { m: m, card: m === 'card', cs: m === 'cards', k: 1 };
