@@ -171,16 +171,19 @@
  *                   |x|twitter|tiktok|youtube)\.com[^"]*"/g, 'href="contact.html"');
  *
  *   and because STARGO publishes no social accounts: CONTACT_INFO carries an
- *   email, a WhatsApp number and a website, and nothing else. Pointing an
- *   Instagram glyph at an account that does not exist would be inventing one.
+ *   email and a WhatsApp number, and nothing else. Pointing an Instagram glyph
+ *   at an account that does not exist would be inventing one. A link to
+ *   www.stargomoto.com is not a channel of this company: that domain is another
+ *   company's factory site.
  *   `target="_blank"` is left exactly where the donor put it, as the workforce
  *   page leaves it: it is an attribute, not a word.
  *
  *   V7-LX r2 supersedes the rest of this at render time: contact.html is only
  *   the extraction-time placeholder. render() gives the links the company's
- *   real channels (website, WhatsApp, email, and since 2026-10-21 phone and
- *   WeChat — the footer's list, from CONTACT_INFO) and neutral glyphs, so no
- *   network logo is drawn and no icon promises an account.
+ *   real channels (WhatsApp, email, and since 2026-10-21 phone and WeChat —
+ *   the footer's list, from CONTACT_INFO) and neutral glyphs, and drops the
+ *   fifth donor link, so no network logo is drawn and no icon promises an
+ *   account or another company's site.
  *
  * THE MOTION
  *   Three things move in this section. Two of them travel with the cut and one
@@ -363,27 +366,27 @@ export function render(frag, ctx) {
 
   /* V7-LX r2: STARGO has no social accounts, and five network logos that all
      opened the contact form promised profiles that do not exist. The row now
-     shows the company's three real channels, the ones the site footer lists
+     shows the company's real channels, the ones the site footer lists
      (C.CONTACT_INFO), each with a plain glyph of what it is and a name that
-     says where it goes, in the footer's own words: the website (a globe),
-     WhatsApp (a speech bubble) and email (an envelope). The first three
-     donor links are kept — their `data-w-id`s carry the glyph roll (IX2
-     MOUSE_OVER/OUT) — and the last two were removed, so the row stayed a
-     centred row of equal circles. Both stacked copies of each glyph are
-     replaced, as the roll swaps one for the other.
-     2026-10-21: the last two donor links come back as the phone (a handset,
-     a tel: link) and WeChat (two speech bubbles) — the same five channels and
-     glyphs as the footer and side menu rows (tools/chrome.mjs). WeChat has no
+     says where it goes, in the footer's own words: WhatsApp (a speech
+     bubble) and email (an envelope). It does not link www.stargomoto.com:
+     that domain is another company's factory site, and labelling it as this
+     company's website misstates who operates the product. The donor links
+     are reused in order — their `data-w-id`s carry the glyph roll (IX2
+     MOUSE_OVER/OUT) — and the fifth is removed, so the row stays a centred
+     row of equal circles. Both stacked copies of each glyph are replaced, as
+     the roll swaps one for the other.
+     2026-10-21: two more donor links carry the phone (a handset, a tel: link)
+     and WeChat (two speech bubbles) — the same four channels and glyphs as
+     the footer and side menu rows (tools/chrome.mjs). WeChat has no
      web link, so its link becomes a <button> that copies the ID
      (chrome.mjs wechatCopy, js/stargo-forms.js); it keeps its `data-w-id`
      and so the roll, and ships `hidden` until the script arms it. */
   const CI = C.CONTACT_INFO;
-  if (!CI?.siteHref || !CI?.whatsappHref || !CI?.email || !CI?.phoneHref || !CI?.wechat) throw new Error('cn-about: copy.mjs CONTACT_INFO needs siteHref, whatsappHref, email, phoneHref and wechat');
+  if (!CI?.whatsappHref || !CI?.email || !CI?.phoneHref || !CI?.wechat || !CI?.legalName) throw new Error('cn-about: copy.mjs CONTACT_INFO needs whatsappHref, email, phoneHref, wechat and legalName');
   const closed = (paths) => paths.replace(/<(path|circle|rect)\b([^>]*?)\/>/g, '<$1$2></$1>');
   const svg = (inner) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${inner}</svg>`;
   const CHANNELS = [
-    { href: CI.siteHref, external: true, label: { zh: 'STARGO 企业官网', en: 'STARGO corporate website' },
-      glyph: svg('<circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9s1.3-6.4 3.8-9z"></path>') },
     { href: CI.whatsappHref, external: true, label: { zh: '通过 WhatsApp 联系 STARGO WORK', en: 'Message STARGO WORK on WhatsApp' },
       glyph: svg('<path d="M20.5 11.6a8.4 8.4 0 0 1-12.2 7.5L3.5 20.5l1.4-4.6A8.4 8.4 0 1 1 20.5 11.6z"></path>') },
     { href: `mailto:${CI.email}`, external: false, label: { zh: '发邮件给 STARGO WORK', en: 'Email STARGO WORK' },
@@ -429,7 +432,7 @@ export function render(frag, ctx) {
       return a;
     }).join('');
     html = html.slice(0, at + OPEN.length) + out + html.slice(end + 4);
-    if ((html.match(/class="cn-social-link w-inline-block"/g) ?? []).length !== 5) throw new Error('cn-about: the social row should hold the five channels');
+    if ((html.match(/class="cn-social-link w-inline-block"/g) ?? []).length !== 4) throw new Error('cn-about: the social row should hold the four channels');
   }
 
   /* -------------------------------------------------------- the button --- */
