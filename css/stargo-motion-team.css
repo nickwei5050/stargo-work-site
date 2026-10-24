@@ -279,7 +279,12 @@
 .sg-team.is-mini .sg-team-pip { width: 8px; height: 8px; right: -3px; bottom: -3px; border-width: 1.5px; }
 .sg-team.is-mini .sg-team-tx { flex: 1; }
 .sg-team.is-mini .sg-team-name { font-size: 12.5px; line-height: 14px; }
-.sg-team.is-mini .sg-team-status { font-size: 12px; line-height: 14px; margin-top: 1px; }
+.sg-team.is-mini .sg-team-status { font-size: 12px; line-height: 14px; }
+/* the short tile (js buildMini): 13px lines, a 24px bar and an 18px choice, so every lane keeps
+   3.5px round its two lines */
+.sg-team.is-mini.is-low .sg-app-bar { height: 24px; }
+.sg-team.is-mini.is-low .sg-team-name, .sg-team.is-mini.is-low .sg-team-status { line-height: 13px; }
+.sg-team.is-mini.is-low .sg-team-choice { height: 18px; }
 .sg-team.is-mini .sg-team-lane[data-tone="done"] .sg-team-st-ico { display: none; }
 .sg-team.is-mini .sg-team-dg { gap: 7px; padding: 0 7px; }
 .sg-team.is-mini .sg-team-dico { width: 20px; height: 20px; border-radius: 6px; border: 0; }

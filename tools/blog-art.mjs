@@ -153,7 +153,8 @@ function coverGuide(ctx) {
   const n = String(kinds.length);
   const word = zh ? '张图' : 'figures';
   const left = gx > m ? gx - 24 : W - m;
-  const subLines = zh ? ['从获客到经营'] : (left - m >= textWidth('acquisition → operations', G.sub) ? ['acquisition → operations'] : ['acquisition →', 'operations']);
+  // wrapped, the arrow leads the second line rather than hanging at the end of the first
+  const subLines = zh ? ['从获客到经营'] : (left - m >= textWidth('acquisition → operations', G.sub) ? ['acquisition → operations'] : ['acquisition', '→ operations']);
   subLines.forEach((l, i) => { fits(`guide ${v} sub`, l, G.sub, left - m, 500); out += T(m, G.subY - (subLines.length - 1 - i) * G.sub * 1.3, l, G.sub, 'k-acc w5' + (v === 'home' ? ' k-sm' : '')); });
   const numW = textWidth(n, G.num, 600) * 0.92;
   const uS = G.unit[ctx.lang];
@@ -438,7 +439,8 @@ function coverRoles(ctx) {
   // the eyebrow, then 「288 个专业岗位」 / "288 specialized roles" on one baseline
   const sub = zh ? ['十类职能 · 按任务组队'] : ['ten functions · teams by task'];
   const subRoom = (v === 'card' ? W - m : xs - 16) - m;
-  const subLines = textWidth(sub[0], S.sub) <= subRoom ? sub : (zh ? ['十类职能', '按任务组队'] : ['ten functions ·', 'teams by task']);
+  // wrapped, the two halves take a line each and the ' · ' between them goes (it hung at the end of the first line)
+  const subLines = textWidth(sub[0], S.sub) <= subRoom ? sub : (zh ? ['十类职能', '按任务组队'] : ['ten functions', 'teams by task']);
   subLines.forEach((l, i) => { fits(`roles ${v} sub`, l, S.sub, subRoom, 500); out += T(m, S.subY - (subLines.length - 1 - i) * S.sub * 1.3, l, S.sub, 'k-acc w5' + (v === 'home' ? ' k-sm' : '')); });
   const numW = textWidth('288', S.num, 600) * 0.96;
   out += T(m - S.num * 0.04, S.base, '288', S.num, 'k-txt w6 k-num');

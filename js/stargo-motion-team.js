@@ -471,13 +471,20 @@
 
     /* ---------------- mini: four tiles and one line ---------------- */
     function buildMini(stage) {
-      var pad = 8, cap = 28, gy = 55;
+      /* Each lane holds two lines (name, status) and keeps 3.5px above and below them inside its
+         border (QA round 4: at 280 × 157, 360px phones, the lines crossed the borders). On the
+         short tile (H 157-169, 'is-low': 13px lines, a 24px bar, an 18px choice) the bar, the goal
+         row, the gaps and the line give up those pixels; from H 174 (390px phones) the spacing is
+         the tile's own again (14px lines). */
+      var k = c01((H - 157) / 17);
+      function lp(a, b) { return Math.round(a + (b - a) * k); }
+      var pad = 8, padB = lp(6, 8), cap = lp(26, 28), gy = lp(47, 54), rg = lp(4, 5), gd = lp(4, 5);
       appBar(stage, { mark: 11, tag: T('演示数据', 'Demo data') });
-      goalCard(stage, pad, 31, W - 2 * pad, 20, null);
+      goalCard(stage, pad, lp(26, 31), W - 2 * pad, lp(18, 20), null);
       LIT = [2.55, 2.69, 2.83, 2.97];
-      var th = Math.floor((H - pad - cap - 5 - gy - 5) / 2), tw = (W - 2 * pad - 5) / 2;
-      R.lanes = ROLE.map(function (r, i) { return lane(stage, i, pad + (i % 2) * (tw + 5), gy + Math.floor(i / 2) * (th + 5), tw, th, { ico: 12, short: true }); });
-      dock(stage, pad, H - pad - cap, W - 2 * pad, cap, 'mini');
+      var th = Math.floor((H - padB - cap - gd - gy - rg) / 2), tw = (W - 2 * pad - 5) / 2;
+      R.lanes = ROLE.map(function (r, i) { return lane(stage, i, pad + (i % 2) * (tw + 5), gy + Math.floor(i / 2) * (th + rg), tw, th, { ico: 12, short: true }); });
+      dock(stage, pad, H - padB - cap, W - 2 * pad, cap, 'mini');
       cursor(stage, [64, 12], [26, 18]);
     }
 
@@ -485,7 +492,7 @@
       kind = L.kind; W = L.w; H = L.h;
       GOAL = GOALS[(kind === 'tile' && W < 552) || (kind === 'mid' && W < 660) ? 1 : 0];
       R = { stage: stage };
-      stage.className = 'sg-mo-stage sg-team is-' + kind + (kind === 'phone' && W < 350 ? ' is-narrow' : '') + (kind === 'tile' && W < 520 ? ' is-tight' : '');
+      stage.className = 'sg-mo-stage sg-team is-' + kind + (kind === 'phone' && W < 350 ? ' is-narrow' : '') + (kind === 'tile' && W < 520 ? ' is-tight' : '') + (kind === 'mini' && H < 170 ? ' is-low' : '');
       if (kind === 'wide' || kind === 'mid') buildLanes(stage);
       else if (kind === 'mini') buildMini(stage);
       else buildRows(stage);
