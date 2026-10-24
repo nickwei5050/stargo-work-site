@@ -1,6 +1,6 @@
 /* workforce.html, lane people (tools/code-art-people.mjs): the hero's five
    marquee role cards as STATIC code (.sg-rc) and the collage card's 'deskReport'
-   scene (js/stargo-motion-desk.js, .sg-desk). Loaded after css/stargo-motion.css.
+   scene (js/stargo-motion-rolecard.js, .sg-desk). Loaded after css/stargo-motion.css.
    Both keep the picture's .lx-feature-hero-image box: absolute, inset 0, under
    the card's own name panel and tag. The only motion the cards own is one
    opacity pulse on a running status dot. */
@@ -113,7 +113,7 @@
 @media (prefers-reduced-motion: reduce) {
   .sg-rc-st.is-run > i { animation: none; }
 }
-/* the marquee off screen: the dots rest (js/stargo-motion-desk.js sets the class) */
+/* the marquee off screen: the dots rest (js/stargo-motion-rolecard.js sets the class) */
 .sg-rc-rest .sg-rc-st.is-run > i { animation-play-state: paused; }
 
 /* Hover: the card's own name panel slides up and the app chip (roleChip) slides

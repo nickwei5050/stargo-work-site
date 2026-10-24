@@ -1,4 +1,4 @@
-/* CREW motion scenes (js/stargo-motion-crew.js): about.html's four AI-employee
+/* CREW motion scenes (js/stargo-motion-staff.js): about.html's four AI-employee
    tiles. Loaded after css/stargo-motion.css, whose app chrome (.sg-app-live,
    .sg-btn, .sg-tag, .sg-cc) and gate (.sg-gate-*) it shares. Prefix sg-crew.
    Sizes come from a few variables that a phone tile (.is-mini) resets; no text

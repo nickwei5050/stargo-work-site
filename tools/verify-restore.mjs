@@ -392,7 +392,7 @@ for (const lang of ['', 'en/']) {
        (site-images/batch-5 D01, D07, D02, D05; tools/replaceables.mjs
        ABOUT_CASE_STILLS), as a still in the clip's box; since 2026-10-23 each
        tile draws its AI employee at work in code instead (lane people:
-       tools/code-art-people.mjs ABOUT_CASE_SCENES, js/stargo-motion-crew.js).
+       tools/code-art-people.mjs ABOUT_CASE_SCENES, js/stargo-motion-staff.js).
        So the band holds no clip and no photograph, and exactly four motion
        hosts, each a labelled picture (role=img, its own aria-label) filling
        the clip's box. The band's `<img>`s are the two copies of the STARGO

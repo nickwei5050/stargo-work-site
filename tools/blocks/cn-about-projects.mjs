@@ -331,7 +331,7 @@
  *
  *   SINCE 2026-10-23 each tile draws its AI employee at work in code instead
  *   of a photograph (owner: 「图片改成代码」; tools/code-art-people.mjs
- *   ABOUT_CASE_SCENES → js/stargo-motion-crew.js): 市场信号, 报价, 跟进 and
+ *   ABOUT_CASE_SCENES → js/stargo-motion-staff.js): 市场信号, 报价, 跟进 and
  *   统筹, each in a small STARGO app window that ends on the person's call.
  *   The photographs below stay on disk and in ABOUT_CASE_STILLS as the record.
  *
@@ -964,7 +964,7 @@ export function render(frag, ctx) {
      SINCE 2026-10-23 (owner: 「图片改成代码」) each tile draws its AI employee
      at work in code instead: a motion scene in the clip's box
      (tools/code-art-people.mjs ABOUT_CASE_SCENES and caseScene;
-     js/stargo-motion-crew.js, css/stargo-motion-crew.css). The box, its glass,
+     js/stargo-motion-staff.js, css/stargo-motion-staff.css). The box, its glass,
      the wordmark roll (laid over the scene's app bar), the arrow and the
      tile's interaction stay. ABOUT_CASE_STILLS keeps the photographs' names
      so one line puts them back. */

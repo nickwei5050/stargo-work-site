@@ -53,15 +53,15 @@ export const MOTION_LABEL = {
     zh: '动态示意（演示数据）：一项任务在手机上组队，统筹、研究、销售、产品、创意分头推进、互相提问；你暂停后，任务卡留着已完成什么、在等什么、由谁拍板，继续后从中断的那一步接着做，最后汇总交你确认。',
     en: 'Illustrative motion (demo data): a task forms its team on the phone — lead, research, sales, product and creative split the work and ask each other; when you pause it, the task keeps what is done, what is waiting and who decides, then picks up at the step where it stopped and hands you the summary to confirm.',
   },
-  /* lane people (2026-10-23): about.html's four AI-employee tiles (js/stargo-motion-crew.js)
-     and the workforce desktop collage card (js/stargo-motion-desk.js) */
+  /* lane people (2026-10-23): about.html's four AI-employee tiles (js/stargo-motion-staff.js)
+     and the workforce desktop collage card (js/stargo-motion-rolecard.js) */
   crewSignal: {
     zh: '动态示意（演示数据）：市场信号 AI 员工在 Growth OS 里扫描招聘、招标等信号，候选客户随之重新排序；Nordwerk Energie 升到第一，推荐理由写好后，联系与否由你决定。',
     en: 'Illustrative motion (demo data): the Market Signal AI scans hiring and tender signals in Growth OS and the buyer list re-ranks; Nordwerk Energie moves to the top with a written reason, and whether to contact them is your call.',
   },
   crewQuote: {
-    zh: '动态示意（演示数据）：报价 AI 员工为 Ahmed Al-Rashid 的 72V 锂电池组询盘逐行生成报价 Q-1042，底价校验发现单价低于底价，报价提交审批，等你批准，批准前不会发给客户。',
-    en: 'Illustrative motion (demo data): the Quotation AI builds quote Q-1042 line by line for Ahmed Al-Rashid’s 72V lithium pack inquiry; the floor-price check finds the unit price below the floor, so the quote waits for your approval and nothing goes to the buyer first.',
+    zh: '动态示意（演示数据）：报价 AI 员工为 Ahmed Al-Rashid 的 72V 锂电池组询盘逐行生成报价 Q-1046，底价校验发现单价低于底价，报价提交审批，等你批准，批准前不会发给客户。',
+    en: 'Illustrative motion (demo data): the Quotation AI builds quote Q-1046 line by line for Ahmed Al-Rashid’s 72V lithium pack inquiry; the floor-price check finds the unit price below the floor, so the quote waits for your approval and nothing goes to the buyer first.',
   },
   crewFollow: {
     zh: '动态示意（演示数据）：报价发出后，Müller Energie 三天没有回复；跟进 AI 员工起草了一封跟进信，停在待你确认，你确认后才会发出。',
@@ -108,16 +108,16 @@ export const SCENE_FILE = {
   team: 'team',
   feed: 'phone',
   squad: 'phone',
-  crewSignal: 'crew',
-  crewQuote: 'crew',
-  crewFollow: 'crew',
-  crewCoord: 'crew',
-  deskReport: 'desk',
+  crewSignal: 'staff',
+  crewQuote: 'staff',
+  crewFollow: 'staff',
+  crewCoord: 'staff',
+  deskReport: 'rolecard',
 };
 /* scene files that ship their own stylesheet */
 export const SCENE_CSS = new Set([
   'team',
   'phone',
-  'crew',
-  'desk',
+  'staff',
+  'rolecard',
 ]);

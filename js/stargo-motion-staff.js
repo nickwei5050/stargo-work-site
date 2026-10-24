@@ -2,7 +2,7 @@
    where the stills D01, D07, D02, D05 were), each AI employee at its work in the
    product's dark chrome; every loop ends at a person and nothing is sent.
      crewSignal 市场信号  signals arrive, buyers re-rank, the top one waits for you (Growth OS)
-     crewQuote  报价      Q-1042 is built, fails the floor-price check, waits for approval (Sales Desk)
+     crewQuote  报价      Q-1046 is built, fails the floor-price check, waits for approval (Sales Desk)
      crewFollow 跟进      Müller Energie silent three days; a follow-up waits for your OK (客户会话)
      crewCoord  统筹      a goal split into five steps for four roles; the summary waits (数字员工)
    The site's one demo cast; each tile carries the engine's demo-data tag.
@@ -10,7 +10,7 @@
    408–879 × 352–560), 'is-mid' below 400 tall (480–767 px screens, landscape
    phones), where a scene drops a block rather than squeeze one and sizes the
    rest from the space left; 'mini' on phones (256–415 × 192). The tile's STARGO
-   wordmark sits over the app bar's left end (css/stargo-motion-crew.css).
+   wordmark sits over the app bar's left end (css/stargo-motion-staff.css).
    Blinks are driven here, so they stop with the tick off screen. */
 (window.STARGO_SCENES = window.STARGO_SCENES || []).push(function (K) {
   'use strict';
@@ -257,7 +257,7 @@
     ];
     var CHECK0 = 4.1, CHECK1 = 5.3, GATE = 6.3;
     var D = {
-      title: T('报价 Q-1042', 'Quote Q-1042'), who: T('Ahmed Al-Rashid · 阿联酋', 'Ahmed Al-Rashid · UAE'),
+      title: T('报价 Q-1046', 'Quote Q-1046'), who: T('Ahmed Al-Rashid · 阿联酋', 'Ahmed Al-Rashid · UAE'),
       ask: T('询盘：72V 锂电池组的价格，50 套', 'Inquiry: price for the 72V lithium pack, 50 units'),
       total: T('合计', 'Total'), check: T('底价校验', 'Floor-price check'), checking: T('核对中…', 'Checking…'), checkingN: T('底价校验中…', 'Checking the floor price…'),
       below: T('单价低于底价 US$ 426（-3.3%）', 'Unit price below the US$ 426 floor (-3.3%)'), belowMini: T('低于底价 3.3%', 'Below floor, -3.3%'),
@@ -271,7 +271,7 @@
     function build(stage, L) {
       var F = frame(stage, L, 'Sales Desk', 'doc'), full = F.full, R = { F: F }, y = F.top;
       var hd = box('sg-crew-qhead', stage, F.pad, y, F.iw, full ? 48 : 20);
-      var t1 = el('div', 'sg-crew-qtitle', hd); el('b', '', t1, full ? D.title : 'Q-1042'); el('span', '', t1, D.who);
+      var t1 = el('div', 'sg-crew-qtitle', hd); el('b', '', t1, full ? D.title : 'Q-1046'); el('span', '', t1, D.who);
       if (full) el('div', 'sg-crew-qask', hd, D.ask);
       y += full ? (F.mid ? 58 : 62) : 24;
       /* Gate on the floor, check above, table in what is left; without room for

@@ -5,13 +5,13 @@
  *
  *   about.html, the four AI-employee tiles (tools/blocks/cn-about-projects.mjs):
  *     one motion scene per tile, in the clip's own box (caseScene below;
- *     js/stargo-motion-crew.js, css/stargo-motion-crew.css).
+ *     js/stargo-motion-staff.js, css/stargo-motion-staff.css).
  *   workforce.html, the hero's five marquee role cards (each drawn twice for the
- *     loop): STATIC code cards (roleCard below; css/stargo-motion-desk.css).
+ *     loop): STATIC code cards (roleCard below; css/stargo-motion-rolecard.css).
  *     They ride a moving marquee, so nothing in them ticks: one opacity pulse
  *     on a status dot is all the motion they own.
  *   workforce.html, the collage card under 「网页桌面与 AI 办公」: the 'deskReport'
- *     scene (js/stargo-motion-desk.js), a mini web desktop where the 报告 AI 员工
+ *     scene (js/stargo-motion-rolecard.js), a mini web desktop where the 报告 AI 员工
  *     drafts the weekly report and stops at 待你确认.
  *
  * Every picture says what it is: the scenes carry the engine's tags
