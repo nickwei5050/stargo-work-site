@@ -78,3 +78,6 @@
 .lx-answers-card-sticky .lx-answers-card:nth-child(3){animation-range:entry 20% cover 50%}
 @keyframes sg-tilt{from{rotate:-5deg;translate:0 64px}to{rotate:0deg;translate:0 0}}
 }}
+/* 首页蓝 (blueA, owner 2026-10-24): on the homepage the accordion wash and the loop phrase underline take the blue tokens of css/stargo-blue.css instead of orange */
+html[data-stargo-home] .sg-acc .products-card-name-block::after{background:rgba(122,82,251,.16)}
+@media (max-width:767px) and (prefers-reduced-motion:no-preference){html[data-stargo-home] .animation-section:has([data-stage]) .cta-sm-title::after{background:var(--sgb-accent-grad)}}
