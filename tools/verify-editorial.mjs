@@ -114,8 +114,10 @@ CODE_DRAWN_CAP.forEach((id) => CODE_DRAWN.add(id));
 ['b01v2-visual-guide', 'b02-one-workflow', 'b03-inquiry-to-quote', 'b04v2-approval-handover', 'b05-288-relay',
   'b06-browser-os', 'b07v2-knowledge-library'].forEach((id) => CODE_DRAWN.add(id));
 /* Taken off the homepage by the homemore lane (2026-10-23): the five stage
-   cards and the pricing band's enterprise card are code-drawn scenes now
-   (js/stargo-motion-stages.js, js/stargo-motion-org.js). P02 and P04 were
+   cards and the pricing band's enterprise card became code-drawn scenes
+   (js/stargo-motion-stages.js, js/stargo-motion-org.js); since 2026-10-24
+   (lane panels) the stage cards show real screens instead (tools/replaceables.mjs
+   HOME_STAGE_SHOTS, counted with the product imagery above). P02 and P04 were
    placed only there (P01, P03 and P05 stay on capabilities.html); T01 only
    in the pricing band. Still listed in tools/replaceables.mjs HOME_STAGES /
    HOME_PRICING_CARD, so each can go back in one line. */

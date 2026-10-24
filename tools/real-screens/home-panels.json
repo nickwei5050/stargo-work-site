@@ -1,0 +1,269 @@
+{
+ "note": "Lane panels (2026-10-24): the homepage's 两大业务引擎 / Two core engines switcher (Growth OS and AI 创作 panels; Sales Desk and ERP already show live09-sales-desk-case-4x3 and live23-erp-items-16x9) and the five business-stage cards (001-005). The switcher's desktop panels are the 1672 x 941 box the motion scenes had; the phone accordion's copies are the same box at 280-660 px wide, so Growth OS there shows a closer crop of the same home. The stage cards are Mono's 3:2 .image-wrap.for-service, 172-338 px wide, so each card shows one readable part of a screen (UI text about 8-13 px at 333 px). Each crop's edges were placed between content rows and columns measured on the capture, so no word is cut.",
+ "shots": [
+  {
+   "id": "live35-panels-canvas-16x9",
+   "src": "raw/35-ai-canvas.png",
+   "crop": [
+    350,
+    0,
+    2318,
+    1305
+   ],
+   "max": 1600,
+   "what": "AI 创作 panel: the infinite canvas's first screen, its tab bar from the logo to the theme switch and the 无限画布 hero; the right edge stops before the version number and the GitHub icon, the bottom before the divider over the prompt library",
+   "alt": [
+    "AI 创作的无限画布首页：顶部是我的画布、生图工作台、视频创作台、提示词库和我的资产，中间写着在无限画布中生成、连接和重组图片、文字与图形",
+    "The AI Creative infinite canvas home: My canvases, image studio, video studio, prompt library and My assets along the top, and the promise to generate, link and remix images, text and shapes on one canvas"
+   ],
+   "out": {
+    "width": 1600,
+    "height": 901,
+    "bytes": 51092,
+    "sourcePixels": [
+     2318,
+     1305
+    ],
+    "sha256": "ae0513cfb4de4eadc670842ba9fbac6eebbea75ff7cd580d13eeb11cc726f52b",
+    "variants": [
+     {
+      "src": "assets/stargo-product/live35-panels-canvas-16x9-480.webp",
+      "width": 480,
+      "height": 270,
+      "bytes": 6712
+     },
+     {
+      "src": "assets/stargo-product/live35-panels-canvas-16x9-768.webp",
+      "width": 768,
+      "height": 432,
+      "bytes": 21318
+     },
+     {
+      "src": "assets/stargo-product/live35-panels-canvas-16x9-1024.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 31878
+     }
+    ]
+   }
+  },
+  {
+   "id": "live05-panels-growth-phone-16x9",
+   "src": "asset:live05-growth-home-start-5x4",
+   "crop": [
+    0,
+    0,
+    1120,
+    630
+   ],
+   "max": 1120,
+   "what": "Growth OS panel in the phone and tablet accordion: the home's heading, the onboarding bar and the top of the 开始找客户 card (the cut runs through the card's empty middle)",
+   "alt": [
+    "Growth OS 主动获客首页：已经找到 1 位候选客户，上手指引完成 5/6，下一步发送开发信，下面是开始找客户",
+    "The Growth OS home: one prospect found so far, onboarding 5 of 6 done with outreach emails next, and the card to start finding customers below"
+   ],
+   "out": {
+    "width": 1120,
+    "height": 630,
+    "bytes": 25140,
+    "sourcePixels": [
+     1120,
+     630
+    ],
+    "sha256": "d668d12867acbaa053e1e90744d3148ef2e9acd8ab594aafdabc88d0dd0903fb",
+    "variants": [
+     {
+      "src": "assets/stargo-product/live05-panels-growth-phone-16x9-480.webp",
+      "width": 480,
+      "height": 270,
+      "bytes": 7904
+     },
+     {
+      "src": "assets/stargo-product/live05-panels-growth-phone-16x9-768.webp",
+      "width": 768,
+      "height": 432,
+      "bytes": 15480
+     },
+     {
+      "src": "assets/stargo-product/live05-panels-growth-phone-16x9-1024.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 21812
+     }
+    ]
+   }
+  },
+  {
+   "id": "m02-panels-stage-inquiry-3x2",
+   "src": "mobile/m02-quote-on-customer.png",
+   "crop": [
+    60,
+    146,
+    1050,
+    700
+   ],
+   "max": 1050,
+   "what": "stage 002 外贸销售: a customer conversation under the app bar, the header with the stage, the model and quantity picked out, and the buyer's message; the bottom stops before the next message",
+   "alt": [
+    "Sales Desk 手机端的客户会话：Adventure Works 询价，已识别型号 DEMO B200、数量 8，客户原话是报 8 台 DEMO B200，运到美国休斯敦，CIF",
+    "A Sales Desk conversation on the phone: Adventure Works asks for 8 DEMO B200 units delivered to Houston, USA, CIF, with the model and quantity already picked out"
+   ],
+   "out": {
+    "width": 1050,
+    "height": 700,
+    "bytes": 32152,
+    "sourcePixels": [
+     1050,
+     700
+    ],
+    "sha256": "2101057677a7cd0a337e0cf3d7eecf00b6a93b01b4d55e1626e791ed8c74882e",
+    "variants": [
+     {
+      "src": "assets/stargo-product/m02-panels-stage-inquiry-3x2-480.webp",
+      "width": 480,
+      "height": 320,
+      "bytes": 14284
+     },
+     {
+      "src": "assets/stargo-product/m02-panels-stage-inquiry-3x2-768.webp",
+      "width": 768,
+      "height": 512,
+      "bytes": 23304
+     },
+     {
+      "src": "assets/stargo-product/m02-panels-stage-inquiry-3x2-1024.webp",
+      "width": 1024,
+      "height": 683,
+      "bytes": 31552
+     }
+    ]
+   }
+  },
+  {
+   "id": "live23-panels-stage-items-3x2",
+   "src": "raw/23-erp-items.png",
+   "crop": [
+    780,
+    335,
+    864,
+    576
+   ],
+   "max": 864,
+   "what": "stage 003 企业履约: the ERP item list's header row and six STARGO items with their status, between the checkbox column and the item-group column",
+   "alt": [
+    "ERP 物料列表：STARGO 自有型号逐行列出，状态都是已启用",
+    "The ERP item list: STARGO's own models, one per row, every one enabled"
+   ],
+   "out": {
+    "width": 864,
+    "height": 576,
+    "bytes": 32872,
+    "sourcePixels": [
+     864,
+     576
+    ],
+    "sha256": "b5452e928758a6493c9c70e718bdf8617bdf2eac88240d799a0814d63cd98554",
+    "variants": [
+     {
+      "src": "assets/stargo-product/live23-panels-stage-items-3x2-480.webp",
+      "width": 480,
+      "height": 320,
+      "bytes": 15244
+     },
+     {
+      "src": "assets/stargo-product/live23-panels-stage-items-3x2-768.webp",
+      "width": 768,
+      "height": 512,
+      "bytes": 27882
+     }
+    ]
+   }
+  },
+  {
+   "id": "live12-panels-stage-quote-3x2",
+   "src": "raw/12-sales-desk-quotes.png",
+   "crop": [
+    780,
+    330,
+    960,
+    640
+   ],
+   "max": 960,
+   "what": "stage 004 回款与服务: the Sales Desk quotes table's quote, amount and validity columns, right of the masked customer column and left of the next-step column",
+   "alt": [
+    "Sales Desk 报价列表：报价 Q-13D55F08-01 金额 USD 24,925.50，11/14 到期、还剩 24 天，等你审批；另两条还不能报价",
+    "The Sales Desk quotes list: quote Q-13D55F08-01 for USD 24,925.50, due 11/14 with 24 days left and waiting for your approval; two more cannot be quoted yet"
+   ],
+   "out": {
+    "width": 960,
+    "height": 640,
+    "bytes": 14376,
+    "sourcePixels": [
+     960,
+     640
+    ],
+    "sha256": "3a2844772edaa4658c6eb0ffd25b43aa969f4d6a29b726683cdb000bd97415b4",
+    "variants": [
+     {
+      "src": "assets/stargo-product/live12-panels-stage-quote-3x2-480.webp",
+      "width": 480,
+      "height": 320,
+      "bytes": 5456
+     },
+     {
+      "src": "assets/stargo-product/live12-panels-stage-quote-3x2-768.webp",
+      "width": 768,
+      "height": 512,
+      "bytes": 10556
+     }
+    ]
+   }
+  },
+  {
+   "id": "live51-panels-stage-board-3x2",
+   "src": "raw/51-mobile-sales-desk-board.png",
+   "crop": [
+    24,
+    314,
+    1122,
+    748
+   ],
+   "max": 1122,
+   "what": "stage 005 复购与改进: the six tiles of the phone deal board, inside the tiles' own edges and left of the scrollbar",
+   "alt": [
+    "Sales Desk 手机端看板：待我回复 4、超 24 小时没回 0、等你审批 1、今天跟进 0、有成交信号 2、本月成交 0",
+    "The Sales Desk board on the phone: 4 waiting for my reply, none unanswered for over 24 hours, 1 waiting for your approval, no follow-ups due today, 2 with buying signals and none won this month"
+   ],
+   "out": {
+    "width": 1122,
+    "height": 748,
+    "bytes": 27192,
+    "sourcePixels": [
+     1122,
+     748
+    ],
+    "sha256": "87fa096ce2e314a33280a53d63591f190f4b375aa0aad80073f669b8628d4077",
+    "variants": [
+     {
+      "src": "assets/stargo-product/live51-panels-stage-board-3x2-480.webp",
+      "width": 480,
+      "height": 320,
+      "bytes": 10548
+     },
+     {
+      "src": "assets/stargo-product/live51-panels-stage-board-3x2-768.webp",
+      "width": 768,
+      "height": 512,
+      "bytes": 17734
+     },
+     {
+      "src": "assets/stargo-product/live51-panels-stage-board-3x2-1024.webp",
+      "width": 1024,
+      "height": 683,
+      "bytes": 24028
+     }
+    ]
+   }
+  }
+ ]
+}

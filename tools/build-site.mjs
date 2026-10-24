@@ -24,7 +24,8 @@ import { POSTS, BLOG_UI, postPath, featured, others, coverSrc, coverSrcset, cove
 import { loadBlocks, art, capTitle, DONORS } from './block-lib.mjs';
 import { PRODUCT_CAPTION } from './editorial-images.mjs';
 // HOME_STAGES and HOME_PRICING_CARD are not placed since 2026-10-23 (homemore: code-drawn scenes); imported so a photo can go back in one line.
-import { HERO, HOME_MODULES, HOME_STAGES, HOME_ROLE_CARD, HOME_PRICING_CARD, HOME_BLOG_COVERS, NOTICES_CARDS, CAP_PHOTOS, ENTERPRISE_PHOTOS, CONTACT_CARD, WORKFORCE_ROLES, WORKFORCE_BLOG_COVERS } from './replaceables.mjs';
+// HOME_MODULE_SHOTS / HOME_STAGE_SHOTS: the switcher panels and stage cards that show real screens (lane panels, 2026-10-24).
+import { HERO, HOME_MODULES, HOME_MODULE_SHOTS, HOME_STAGE_SHOTS, HOME_STAGES, HOME_ROLE_CARD, HOME_PRICING_CARD, HOME_BLOG_COVERS, NOTICES_CARDS, CAP_PHOTOS, ENTERPRISE_PHOTOS, CONTACT_CARD, WORKFORCE_ROLES, WORKFORCE_BLOG_COVERS } from './replaceables.mjs';
 import { SITE } from './paths.mjs';
 import { productTour } from './product-tour.mjs';
 import { appSuite } from './app-suite.mjs';
@@ -33,7 +34,8 @@ import { ATMOS_HOME, nightHalves, codeStill, boardHost, requestHost, plantHost }
 import { CAPSALES_SCENES } from './motion-capsales.mjs';
 import { AREA_SCENES, placeAreaScenes } from './code-art-capareas.mjs'; // capareas: capability area cards
 import { theatreTiles } from './code-art-theatre.mjs';
-import { homeStageScenes, homePricingScene, homeMoreAssets, swapToMotion } from './code-art-homemore.mjs'; // homemore lane: stage cards + enterprise card as code
+import { homeStageShots, homePricingScene, homeMoreAssets, swapToMotion } from './code-art-homemore.mjs'; // homemore lane: enterprise card as code; lane panels: the stage cards' real screens
+import { realShot, withRealCss } from './real-screens.mjs';   // 真实截图 (2026-10-24): slots that show the system's own screens
 import { roleCard, roleChip, ROLE_CARDS, withSceneAssets } from './code-art-people.mjs'; // lane people
 import { webpPage } from './image-refs.mjs';
 import { enterpriseArt } from './code-art-enterprise.mjs';   // enterprise lane: code-drawn pictures
@@ -452,8 +454,12 @@ const PAGES = {};
 
 /* ---- index.html — Mono homepage + three Scalora modules --------------- */
 /* The homepage's motion scenes (tools/motion-scenes.mjs): the scene files load before the engine. */
-/* homemore: the five stage cards and the pricing band's enterprise card (tools/code-art-homemore.mjs) */
-const HOME_MOTION = motionAssets(['loop', 'radar', 'studio', ...PAIN_SCENES, 'stage-find', 'stage-sell', 'stage-make', 'stage-pay', 'stage-again', 'org', ...ATMOS_HOME]); // + lane atmos (R1 doors, R2 card)
+/* homemore: the pricing band's enterprise card (tools/code-art-homemore.mjs). Lane panels (2026-10-24): 'radar',
+   'studio' and the five stage-* scenes are no longer on the page — the switcher's Growth OS and AI 创作 panels
+   and the five stage cards show real screens (tools/replaceables.mjs HOME_MODULE_SHOTS, HOME_STAGE_SHOTS) — so the
+   world map (js/stargo-motion-map.js, radar only) and the stage files (js/stargo-motion-stages.js and its sheet)
+   are not loaded here any more. Their code stays for the way back. */
+const HOME_MOTION = motionAssets(['loop', ...PAIN_SCENES, 'org', ...ATMOS_HOME]); // + lane atmos (R1 doors, R2 card)
 PAGES['index.html'] = (lang) => {
   const t = (p) => (typeof p === 'string' ? p : p[lang]);
   const { fn: s } = makeSub('home');
@@ -542,11 +548,14 @@ PAGES['index.html'] = (lang) => {
        2026-10-21, then the owner's photographs P01–P05 (site-images/batch-2),
        fitted by rules in css/stargo-fusion.css that are dormant now. Both sets
        stay listed in tools/replaceables.mjs HOME_STAGES for the owner. */
-    /* homemore (2026-10-23): the five cards are code-drawn scenes now, one
+    /* homemore (2026-10-23): the five cards were code-drawn scenes, one
        host per stage so Mono's switching is untouched
        (tools/code-art-homemore.mjs, js/stargo-motion-stages.js). HOME_STAGES
-       keeps P01–P05 and the screens before them for the owner's decision. */
-    h = homeStageScenes(h, lang);
+       keeps P01–P05 and the screens before them for the owner's decision.
+       Lane panels (2026-10-24, 「我需要真实系统截图放在特定的地方」): each scene drew
+       a product window, so each card shows a real screen of that part of the
+       system now, one slot per stage in the same place (HOME_STAGE_SHOTS). */
+    h = homeStageShots(h, lang, HOME_STAGE_SHOTS);
     // Retain the original grid/zoom animation. The centre is a real video,
     // sourced from the owner's fourth template; surrounding imagery is separate.
     const theatre = HERO.theatre;
@@ -731,17 +740,33 @@ PAGES['index.html'] = (lang) => {
     if (slots !== 8 || used.size !== 4) throw new Error(`index: expected 8 product panels (4 desktop + 4 phone) showing 4 pictures, found ${slots} showing ${used.size}`);
     if (/prodect-dashboard-0\d\.svg/.test(products)) throw new Error('index: Scalora dashboard drawing survives');
   }
-  /* 代码动画: the Growth OS and AI 创作 panels show motion drawn in code
-     instead of their generated stills (tools/motion-scenes.mjs). The host keeps
-     the still's 1672 × 941 box, so the switcher does not move. */
+  /* 真实界面 (lane panels, 2026-10-24): the Growth OS and AI 创作 panels show
+     the system's own screens again (tools/replaceables.mjs HOME_MODULE_SHOTS).
+     The owner, 17:27 UTC: 「你现在也全是代码了，我系统的画面都没有了！我需要真实
+     系统截图放在特定的地方」. From 2026-10-23 until now these two panels were the
+     code-drawn 'radar' and 'studio' scenes (tools/motion-scenes.mjs), drawings of
+     the product's UI; the Sales Desk and ERP panels kept their captures.
+
+     The slot keeps the 1672 × 941 box the scenes had (css/stargo-fusion.css,
+     section 4: `.sg-real-panel`, the same rules `.sg-mo-panel` had), so the
+     switcher does not move. The desktop tabs and the phone accordion are two
+     copies of the four panels; the accordion's Growth OS shows a closer crop of
+     the same home, which still reads at the 280–310px a phone gives it. */
   {
-    const swaps = [['Growth OS', 'radar'], ['AI 创作', 'studio'], ['AI Creative', 'studio']];
+    const at = products.indexOf('<div class="products-cards-mobile">');
+    if (at === -1) throw new Error('index: the switcher\'s phone accordion is not where it was');
+    const SIZES = { desk: '(max-width: 1439px) 52vw, 860px', phone: '(max-width: 767px) 80vw, 86vw' };
     let n = 0;
-    for (const [key, scene] of swaps) {
-      const src = HOME_MODULES[key].replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      products = products.replace(new RegExp(`<img src="${src}"[^>]*class="prodect-dashboard-image"/>`, 'g'), () => { n++; return motionHost(scene, lang, 'sg-mo-panel'); });
-    }
-    if (n !== 4) throw new Error(`index: expected 4 motion panels (Growth OS and AI 创作, desktop and phone), found ${n}`);
+    const swap = (part, which) => {
+      let out = part;
+      for (const [key, shot] of Object.entries(HOME_MODULE_SHOTS)) {
+        const src = HOME_MODULES[key].replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        out = out.replace(new RegExp(`<img src="${src}"[^>]*class="prodect-dashboard-image"/>`, 'g'), () => { n++; return realShot(shot[which], lang, { sizes: SIZES[which], cls: 'sg-real-panel' }); });
+      }
+      return out;
+    };
+    products = swap(products.slice(0, at), 'desk') + swap(products.slice(at), 'phone');
+    if (n !== 4) throw new Error(`index: expected 4 real-screen panels (Growth OS and AI 创作, desktop and phone), found ${n}`);
   }
   const integration = addRootClass(sub('sc-integration', frag('integration.html'), C.HOME_SC_INTEGRATION), 'sc-scope');
   const insertBefore = (html, anchor, fragment, label) => { const i = html.indexOf(anchor); if (i === -1) throw new Error(`insertion anchor not found for ${label}`); return html.slice(0, i) + fragment + '\n' + html.slice(i); };
@@ -778,6 +803,7 @@ PAGES['index.html'] = (lang) => {
      scalora's and before stargo-fusion.css, the same order the capability page
      puts the donor sheets in. */
   h = h.replace(monoLink, (m) => `${m}\n<link href="css/${DONORS.offgrid.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/${DONORS.rototo.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/scalora-modules.sc.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-tour.css" rel="stylesheet" type="text/css"/>\n${HOME_MOTION.css}\n<link href="css/stargo-blue.css" rel="stylesheet" type="text/css"/>`); // 首页蓝: the homepage palette tokens (css/stargo-blue.css), after the scene sheets
+  h = withRealCss(h);   // 真实截图: the switcher's two real-screen panels and the five stage cards (css/stargo-real.css)
   /* Mono's own page-load curtain goes. `.preloader` is a fixed black sheet
      with the wordmark on it (Mono's css: z-index 9999, resting at
      translateY(-120%)), dropped over the page and lifted again by the IX3

@@ -125,7 +125,22 @@
     width: auto;
     height: auto;
   }
+  /* a real-screen slot's picture fills its slot (below); the rule above is for the panels' bare pictures */
+  .sc-scope.products .products-cards-dashboard-block .sg-real-img { max-width: none; max-height: none; width: 100%; height: 100%; }
 }
+/* 真实界面 (lane panels, 2026-10-24; the owner: 「我需要真实系统截图放在特定的地方」): the
+   Growth OS and AI 创作 panels are real-screen slots (tools/real-screens.mjs,
+   tools/replaceables.mjs HOME_MODULE_SHOTS) where the code-drawn 'radar' and
+   'studio' scenes were. The slot keeps the scenes' 1672 × 941 box with the rules
+   `.sg-mo-panel` had in css/stargo-motion.css — full width, capped by the panel's
+   height and, from 992, by the screen's height — so the switcher does not move.
+   Measured before and after at 1440 × 900, 1920 × 1080, 1280 × 720, 1024 × 768,
+   768 × 1024, 390 × 844 and 360 × 740, zh and en: every panel box identical. */
+.sc-scope.products .sg-real.sg-real-panel { width: 100%; height: auto; max-height: 100%; aspect-ratio: 1672 / 941; border-radius: 8px; }
+@media (min-width: 992px) {
+  .sc-scope.products .sg-real.sg-real-panel { width: min(100%, calc((100vh - 262px) * 1.7768)); }
+}
+@media (max-width: 767px) { .sc-scope.products .sg-real.sg-real-panel { border-radius: 2px; } }
 
 /* Hero rotating gallery: slightly larger tiles so product screenshots stay
    legible in the orbit without dominating the sticky video grid. */
@@ -3673,6 +3688,21 @@ html[lang^="en"] .lx-scope .stargo-post :is(.sgc-role-name, .sgc-role-task, .sgc
    donor's own switch has duration 0, so an instant hold matches it. Nothing
    else about the section changes. */
 .service-media-wrap.sgp-stage-hold { opacity: 1 !important; }
+/* …and its title with it (QA round 5, home #13, 2026-10-24): past the midline the
+   runtime set the last title back to its dim .12 while its card was still held
+   on screen — the tail js/stargo-stage-hold.js measures (up to half a viewport
+   height of scroll) with card 5 up and no title lit. The title held is the same
+   stage as the picture held, so the list always says which stage the card shows
+   (scroll-swept in 40px steps at 768 × 1024 to 1920 × 1080: no step where they differ). */
+.service-title-wrap.sgp-stage-hold { opacity: 1 !important; }
+/* 真实界面 (lane panels, 2026-10-24): each stage card is a real-screen slot
+   (tools/code-art-homemore.mjs homeStageShots, tools/replaceables.mjs
+   HOME_STAGE_SHOTS) where the code-drawn scene host was, in the same place:
+   filling Mono's 3:2 `.image-wrap.for-service`, which keeps its radius and its
+   own clip. A hairline inside the edge keeps the pale screens apart from the
+   white page; static, nothing here animates. */
+.image-wrap.for-service > .sg-real.sg-real-stagecard { position: absolute; inset: 0; border-radius: inherit; }
+.image-wrap.for-service > .sg-real.sg-real-stagecard::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(28, 17, 80, .12); pointer-events: none; }
 
 /* ---- V7-BLOG r3: the owner's product screenshots (handoff of 2026-09-18) --
 
