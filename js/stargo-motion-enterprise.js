@@ -565,7 +565,9 @@
       // narrow and phone: the six steps as a row of dots and one line for the current step. The narrow box
       // is the picture's, which Mono's parallax slides by a tenth of its height: its last 40px stay empty.
       if (name === 'narrow') return { hd: [18, 18, 324], hz: true, cw: 214, st: [18, 106], ctl: [292, 130, 46], pr: [180, 194], log: [18, 238, 292, 3, 27], tag: [342, 402], short: true };
-      return { hd: [12, 16, 316], hz: true, cw: 214, nolh: true, st: [14, 60], ctl: [284, 104, 44], pr: null, log: [12, 176, 292, 1, 26], tag: [328, 166], short: true };
+      // phone: the tag sits under the run log, out of the pause / resume ring's reach (its pulse is smaller here),
+      // and above y 240, where the picture's rounded box (.image-wrap, 240px tall) cuts the 252px stage
+      return { hd: [12, 16, 316], hz: true, cw: 214, nolh: true, st: [14, 60], ctl: [284, 104, 44], rs: 0.4, pr: null, log: [12, 168, 292, 1, 26], tag: [328, 235], short: true };
     }
     function build(stage, L, name) {
       stage.className = 'sg-mo-stage sg-en sg-en-stop is-' + name + (name === 'phone' || name === 'narrow' ? ' is-compact' : '');
@@ -637,7 +639,7 @@
       cl(R.btn, 'is-press', (u >= PAUSE - 0.25 && u < PAUSE + 0.1) || (u >= RESUME - 0.25 && u < RESUME + 0.1));
       var rp = u >= PAUSE ? seg(u, PAUSE, PAUSE + 0.9) : 0, rq = u >= RESUME ? seg(u, RESUME, RESUME + 0.9) : 0, rr = rq > 0 ? rq : rp;
       op(R.ring, rr > 0 && rr < 1 ? 0.7 * (1 - rr) : 0);
-      tf(R.ring, 0, 0, 0.9 + 0.5 * ease.out(rr));
+      tf(R.ring, 0, 0, 0.9 + (G.rs || 0.5) * ease.out(rr));
       if (!paused && pk !== 'wait') rot(R.arc, u * 140);
       op(R.arc, paused || pk === 'wait' ? 0.25 : 1);
       for (var p = 0; p < R.pr.length; p++) cl(R.pr[p], 'is-on', u >= PROPS[p][1] && fade > 0.5);

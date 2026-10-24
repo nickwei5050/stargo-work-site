@@ -135,8 +135,8 @@
         bodyM: T('建议联系 · 上次下单 60 天', 'Suggest a check-in call'),
         pillS: T('补货周期到了', 'Restock due'), bodyS: T('建议联系', 'Worth a call'), pc2: 'is-gray' }
     ];
-    /* tall: 1440 and up (host 280 px or more); mid: laptops (host 224–279, so the type is never scaled
-       under its size); mini: the hand-held phone on a phone screen (142–155 px wide), cut at about 80% of
+    /* tall: 1440 and up (host 280 × 606 or more); mid: laptops (any host it fits at 1 or more, so the type
+       is never scaled under its size); mini: the hand-held phone on a phone screen (142–155 px wide), cut at about 80% of
        its height; crop-WxH: 768 to about 900 px, where only the left part of the phone shows (made on
        demand: the size of that part, at a scale of 1 to ~1.35) */
     var layouts = { tall: { w: 280, h: 606 }, mid: { w: 224, h: 485 }, mini: { w: 140, h: 303 } };
@@ -291,7 +291,8 @@
           if (!layouts[k]) layouts[k] = { w: W, h: H, crop: true };
           return k;
         }
-        return w >= 280 ? 'tall' : w >= 200 ? 'mid' : 'mini';
+        // tall only where it fits at 1 or more: 1366 × 768 gives a 282 × 603 host, which would scale it to 0.995
+        return w >= 280 && h >= 606 ? 'tall' : w >= 200 ? 'mid' : 'mini';
       },
       // the composed frame: all three in, the follow-up approved and waiting to be sent
       build: build, tick: tick, still: 8.4, start: 0.2,
@@ -366,10 +367,12 @@
     for (q = 0; q <= STEPS.length; q++) DONE_N.push(q + ' / ' + STEPS.length + T(' 完成', ' done'));
     // the task's sub line says rounds and budget are capped, so the meters carry only their values
     for (q = 0; q <= ROUNDS.length; q++) { ROUND_N.push(q + T('/12 轮', '/12')); BUDGET_N.push('¥' + BUDGET[q] + '/200'); }
-    var STATE_T = [T('进行中', 'Running'), T('已暂停', 'Paused'), T('等你确认', 'Your OK')], STATE_C = ['sgp-pill sgp-state is-run', 'sgp-pill sgp-state is-amber', 'sgp-pill sgp-state is-amber'];
-    var R, mode, lv;
+    // the 236–249 px phone (1024 px) keeps the whole task title beside its state: 待确认 there, not 等你确认
+    var STATE_T = [T('进行中', 'Running'), T('已暂停', 'Paused'), T('等你确认', 'Your OK')], STATE_TN = [STATE_T[0], STATE_T[1], T('待确认', 'Your OK')], STATE_C = ['sgp-pill sgp-state is-run', 'sgp-pill sgp-state is-amber', 'sgp-pill sgp-state is-amber'];
+    var R, mode, lv, stateT = STATE_T;
 
     function build(stage, L, name) {
+      stateT = L.kind ? STATE_TN : STATE_T;
       name = L.kind || name;
       mode = name; lv = LV[name]; R = { chips: [], rows: [] };
       var mini = name === 'mini';
@@ -425,10 +428,12 @@
         R.b1 = bubble(talk, 2, 3, T('起订量？能贴牌吗？', 'MOQ? Own label?'), '');
         R.b2 = bubble(talk, 3, 2, T('200 组起，可以贴牌。', 'MOQ 200, label OK.'), 'is-r');
         // it covers the steps still queued (4 and 5) and its bubbles end above the fold: where the card's window
-        // ends higher (the 236–249 px phone at 1024–1180), the thread rises over step 3 rather than run past it
+        // ends higher (the phones and the 236–250 px phone at 1024–1180), the thread rises over step 3 rather
+        // than run past it. Its top always sits on a row's top line, so it covers whole rows and never slices one.
         var sTop = steps.offsetParent === stage ? steps.offsetTop : steps.offsetTop + main.offsetTop;
         var end = Math.min(steps.offsetHeight, L.fold - sTop - 4), need = R.b1.offsetHeight + R.b2.offsetHeight + 6;
-        var top = Math.min(R.rows[3].row.offsetTop, end - need - 12);
+        var top = R.rows[3].row.offsetTop, room = end - need - 12;
+        for (var rk = 3; rk > 0 && top > room; rk--) top = R.rows[rk - 1].row.offsetTop;
         css(talk, 'top', top + 'px');
         css(talk, 'justify-content', 'flex-start');
         css(talk, 'padding-top', Math.max(0, Math.round((end - top - need) / 2)) + 'px');
@@ -551,7 +556,7 @@
       css(R.toast, 'transform', 'translate(-50%,' + ((ta - 1) * 10).toFixed(1) + 'px)');
       // the task's state
       var s = out > 0.5 ? 0 : tt >= STEPS[4].rf ? 2 : paused ? 1 : 0;
-      textSwap(R.state, STATE_T[s]);
+      textSwap(R.state, stateT[s]);
       put(R.state, 'cls', STATE_C[s]);
     }
     function bubbleAt(b, tt, w, keep) {
