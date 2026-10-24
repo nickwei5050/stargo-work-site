@@ -95,6 +95,13 @@ const RETIRED = new Set(['g01-cta-loading-bay-dusk', 'r1-sales-rep', 'r3-sales-d
    motion scenes now. Their files stay registered and published. */
 const CODE_DRAWN_CAP = ['c01v2-command-growth', 'c02v2-customer-knowledge', 'c03-commerce-fulfilment', 'c04v2-team-management', 'c09-288-flatlay', 'c10-progress-board'];
 CODE_DRAWN_CAP.forEach((id) => CODE_DRAWN.add(id));
+/* Also drawn in code since 2026-10-23: the homepage theatre's windows around the film
+   (W01, W03–W06; tools/code-art-theatre.mjs), the capability page's Sales Desk rows and
+   quote band (C05–C07; tools/motion-capsales.mjs), its Growth OS row backgrounds
+   (C11v2, C12–C14) and intelligence's closing card (I02). */
+['w01-trade-office', 'w03-warehouse', 'w04-qc-lab', 'w05-owner-office', 'w06-showroom',
+  'c05-unified-inbox', 'c06-customer-360', 'c07-quote-approval',
+  'c11v2-company-research', 'c12-trade-intelligence', 'c13-restock', 'c14-decision-makers', 'i02-keep-or-revert'].forEach((id) => CODE_DRAWN.add(id));
 const photosUnused = photos.filter(a => !all.includes(a.src) && !SUPERSEDED.has(a.id) && !RETIRED.has(a.id) && !CODE_DRAWN.has(a.id)).map(a => a.id);
 assert.deepEqual(photosUnused, [], 'every registered photograph is placed');
 console.log(`generated imagery: ${manifest.assets.length - unused.length} placed, ${unused.length} retained but unused (${unused.join(', ')})`);
@@ -243,8 +250,9 @@ async function worker() {
       // Pages that use the templates' own imagery (lifelogx pages, blog) request none of the generated set.
       // About joined them when it was rebuilt from cinery's blocks (its pictures are cinery's clips and
       // photographs, like the pricing page's); only the shared menu carries generated art there.
+      // Enterprise joined them on 2026-10-23, when every one of its pictures became code-drawn motion.
       if (hasImageArea) assert(assets.length > 0, 'visible new images requested');
-      else assert((width < 992 && ['contact', 'pricing'].includes(name)) || /intelligence|workforce|blog|pricing|about/.test(name), 'only approved template-imagery pages omit generated art');
+      else assert((width < 992 && ['contact', 'pricing'].includes(name)) || /intelligence|workforce|blog|pricing|about|enterprise/.test(name), 'only approved template-imagery pages omit generated art');
       const card = await page.evaluate((OWN) => [...document.querySelectorAll(OWN)].find(i => {
         const r = i.getBoundingClientRect();
         return r.width > 180 && r.height > 150 && !i.closest('.menu-wrapper,nav,.navbar,.menu-bottom');
