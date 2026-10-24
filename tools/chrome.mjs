@@ -943,7 +943,7 @@ export function remapLinks(html) {
 /** Pages one or two folders down: every root-relative asset path moves up by `up`. */
 export function relocateAssets(html, up = '../') {
   return html
-    .replace(/((?:src|href|data-src|data-poster-url|poster)=")(assets|css|js)\//g, `$1${up}$2/`)
+    .replace(/((?:src|href|data-src(?:-[a-z]+)*|data-poster-url|poster)=")(assets|css|js)\//g, `$1${up}$2/`)   // data-src-*: the about page's film sources (tools/about-film.mjs)
     .replace(/(srcset=")([^"]*)"/g, (_, a, v) => `${a}${v.replace(/(^|,\s*)(assets\/)/g, `$1${up}$2`)}"`)
     .replace(/(data-video-urls=")([^"]*)"/g, (_, a, v) => `${a}${v.replace(/(^|,)(assets\/)/g, `$1${up}$2`)}"`)
     .replace(/(data-mobile-src=")(assets\/)/g, `$1${up}$2`)

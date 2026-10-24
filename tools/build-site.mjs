@@ -38,6 +38,7 @@ import { roleCard, roleChip, ROLE_CARDS, withSceneAssets } from './code-art-peop
 import { webpPage } from './image-refs.mjs';
 import { enterpriseArt } from './code-art-enterprise.mjs';   // enterprise lane: code-drawn pictures
 import { a11yPage } from './a11y.mjs';
+import { filmSection, FILM_CSS, FILM_JS } from './about-film.mjs';   // the about page's brand film (2026-10-24)
 import { speedPage } from './speed.mjs';
 /* The owner's photographs on the blog and intelligence pages (group "blog", 2026-10-21). */
 import { BLOG_COVERS, INTEL_PHOTOS } from './replaceables.mjs';
@@ -1626,8 +1627,10 @@ PAGES['about.html'] = (lang) => {
      and putting them back is one block away. */
   void b;
   const aboutBody = [
+    // The brand film opens the page (owner, 2026-10-24 13:55 UTC: 「…放到关于页面的第一个板块全屏播放」); the introduction card follows it.
+    filmSection(lang, 'intro'),
     // A01 → code (2026-10-24): the plant at dawn under the introduction card (tools/code-art-atmos.mjs 'plant')
-    renderBlock('cn-about', lang).replace('<div class="cn-intro-background">', () => `<div class="cn-intro-background">${plantHost(lang)}`),
+    renderBlock('cn-about', lang).replace('<div class="cn-about">', '<div class="cn-about" id="intro">').replace('<div class="cn-intro-background">', () => `<div class="cn-intro-background">${plantHost(lang)}`),
     renderBlock('cn-about-projects', lang),
     renderBlock('cn-about-reviews', lang),
   ].join('\n');
@@ -1635,10 +1638,11 @@ PAGES['about.html'] = (lang) => {
   const aboutSheets = [...new Set(Object.values(DONORS).map((d) => d.sheet))]
     .filter((f) => existsSync(`${SITE}/css/${f}`));
   if (!aboutBody.includes('data-sg-scene="plant"')) throw new Error('about: the introduction band lost its code-drawn plant');
+  if (!aboutBody.includes('<div class="cn-about" id="intro">') || !aboutBody.startsWith('<section class="sg-film"')) throw new Error('about: the brand film must open the page and hand over to #intro');
   const aboutMotion = motionAssets(['plant']);
-  let out = inMonoShell(aboutBody + bigMark(), [...aboutSheets, 'donor-fonts.css', 'lifelogx.lx.css', 'stargo-fusion.css', 'stargo-motion.css', 'stargo-motion-atmos.css'])
+  let out = inMonoShell(aboutBody + bigMark(), [...aboutSheets, 'donor-fonts.css', 'lifelogx.lx.css', 'stargo-fusion.css', 'stargo-motion.css', 'stargo-motion-atmos.css', FILM_CSS])
     .replace('<body ', '<body class="stargo-dark-page" ')
-    .replace('</body>', `<script src="js/stargo-video-defer.js" defer></script><script src="js/capability-blocks.js" defer></script>${aboutMotion.js}</body>`);   // keep </body>: tools/chrome.mjs attaches the forms and tabs scripts in front of it
+    .replace('</body>', `<script src="${FILM_JS}" defer></script><script src="js/stargo-video-defer.js" defer></script><script src="js/capability-blocks.js" defer></script>${aboutMotion.js}</body>`);   // keep </body>: tools/chrome.mjs attaches the forms and tabs scripts in front of it
 
   /* The projects band is four of cinery's own case-study clips — the owner
      asked for them back on 2026-09-15 (「恢复原模版」) after a still-image

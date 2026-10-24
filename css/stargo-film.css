@@ -1,0 +1,362 @@
+/* 品牌片 — the about page's first screen (owner, 2026-10-24 13:55 UTC:
+   「Tailscale 传了个视频过来，你帮我放到关于页面的第一个板块全屏播放」).
+   tools/about-film.mjs writes the section, js/stargo-film.js runs it.
+
+   The film's lyrics are drawn into the picture, centred along its lower edge,
+   and reach about a fifth of the width from either side. Nothing may cover
+   them, so the controls never sit on the picture: on landscape screens the
+   film fills the screen above a slim bar that holds them, and on upright
+   screens it runs across the width with its label above and the controls
+   below. The picture is cropped to its box from 6:5 to 2:1, keeping its lower
+   edge (object-position 80%: at 2:1 the bottom loses 2% and the lyrics end
+   above 96%); wider than 2:1 it is shown whole on black.
+
+   Paint is static except the video itself: no backdrop-filter over a playing
+   picture (it would be re-blurred every frame), and the only animations are
+   opacity and transform on small marks. */
+.sg-film {
+  --sgf-bg: #07060d;
+  --sgf-ui: rgba(12, 9, 26, .72);
+  --sgf-ui-hover: rgba(30, 22, 62, .86);
+  --sgf-edge: rgba(255, 255, 255, .2);
+  --sgf-text: #f6f3ff;
+  --sgf-muted: rgba(240, 236, 255, .74);
+  --sgf-accent: #9fdcff;
+  --sgf-grad: linear-gradient(90deg, #6fc7f2, #a48cff);
+  --sgf-pad: clamp(20px, 3.2vw, 48px);
+  --sgf-bar: 76px;
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) var(--sgf-bar);
+  height: 100vh;
+  height: 100svh;
+  min-height: 320px;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--sgf-bg);
+  color: var(--sgf-text);
+  font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.sg-film__frame { position: relative; min-height: 0; overflow: hidden; }
+.sg-film__poster,
+.sg-film__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: 50% 80%;
+  background: transparent;
+}
+.sg-film__video { opacity: 0; transition: opacity .7s ease; cursor: pointer; }
+.sg-film.is-live .sg-film__video { opacity: 1; }
+
+/* The site's bar sits over the top of the film: a short shade keeps its
+   words readable on the film's bright scenes (the yellow radar, the paper
+   charts). Nothing shades the lower edge, where the lyrics are. */
+.sg-film__shade {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 168px;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(7, 6, 13, .66) 0%, rgba(7, 6, 13, .3) 52%, rgba(7, 6, 13, 0) 100%);
+}
+
+/* How far the film has run: the seam between picture and bar. */
+.sg-film__progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  height: 2px;
+  background: rgba(255, 255, 255, .1);
+  pointer-events: none;
+}
+.sg-film__progress i {
+  position: absolute;
+  inset: 0;
+  background: var(--sgf-grad);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform .26s linear;
+}
+
+.sg-film__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-width: 0;
+  padding: 0 var(--sgf-pad);
+}
+.sg-film__ui { display: flex; align-items: center; gap: 20px; min-width: 0; }
+.sg-film__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.2;
+  letter-spacing: .06em;
+  color: var(--sgf-muted);
+  white-space: nowrap;
+}
+.sg-film__len { color: var(--sgf-text); font-variant-numeric: tabular-nums; }
+.sg-film__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(240, 236, 255, .5);
+}
+.sg-film.is-playing .sg-film__dot { background: var(--sgf-accent); box-shadow: 0 0 0 3px rgba(159, 220, 255, .18); }
+
+.sg-film__controls { display: flex; align-items: center; gap: 8px; }
+.sg-film:not(.is-ready) .sg-film__controls,
+.sg-film.is-idle .sg-film__controls { display: none; }
+
+.sg-film__btn {
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  min-width: 44px;
+  margin: 0;
+  padding: 0 18px 0 14px;
+  border: 1px solid var(--sgf-edge);
+  border-radius: 99px;
+  background: var(--sgf-ui);
+  color: var(--sgf-text);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: .02em;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color .2s ease, border-color .2s ease, transform .2s ease;
+}
+.sg-film__btn.sg-film__icon { width: 44px; padding: 0; }
+@media (hover: hover) {
+  .sg-film__btn:hover { background: var(--sgf-ui-hover); border-color: rgba(255, 255, 255, .36); }
+}
+.sg-film__btn:active { transform: scale(.96); }
+.sg-film__btn:focus-visible,
+.sg-film__start:focus-visible,
+.sg-film__next:focus-visible { outline: 2px solid var(--sgf-accent); outline-offset: 3px; }
+
+.sg-film__i {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.sg-film__i--play { fill: currentColor; stroke-width: 1.2; }
+.sg-film__i--sound,
+.sg-film.is-sound .sg-film__i--muted,
+.sg-film__toggle .sg-film__i--play,
+.sg-film.is-paused .sg-film__toggle .sg-film__i--pause,
+.sg-film__i--exit,
+.sg-film.is-full .sg-film__i--full { display: none; }
+.sg-film.is-sound .sg-film__i--sound,
+.sg-film.is-paused .sg-film__toggle .sg-film__i--play,
+.sg-film.is-full .sg-film__i--exit { display: block; }
+
+/* The sound button asks first: while the film plays silently its edge
+   breathes twice, then rests. With sound on, four bars move with it. */
+.sg-film__sound { position: relative; }
+.sg-film__sound::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 1px solid var(--sgf-accent);
+  opacity: 0;
+  pointer-events: none;
+}
+.sg-film.is-playing:not(.is-sound) .sg-film__sound::after { animation: sgf-ask 2.4s ease-out 1.2s 2; }
+@keyframes sgf-ask {
+  0% { opacity: .9; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.18, 1.5); }
+}
+.sg-film__eq { display: none; align-items: flex-end; gap: 2px; height: 14px; margin-left: -2px; }
+.sg-film.is-sound .sg-film__eq { display: inline-flex; }
+.sg-film__eq i {
+  display: block;
+  width: 2px;
+  height: 14px;
+  border-radius: 1px;
+  background: var(--sgf-accent);
+  transform: scaleY(.3);
+  transform-origin: 50% 100%;
+}
+.sg-film.is-sound.is-playing .sg-film__eq i { animation: sgf-eq 1s ease-in-out infinite alternate; }
+.sg-film.is-sound.is-playing .sg-film__eq i:nth-child(2) { animation-duration: .7s; animation-delay: -.3s; }
+.sg-film.is-sound.is-playing .sg-film__eq i:nth-child(3) { animation-duration: 1.2s; animation-delay: -.6s; }
+.sg-film.is-sound.is-playing .sg-film__eq i:nth-child(4) { animation-duration: .85s; animation-delay: -.15s; }
+@keyframes sgf-eq {
+  0% { transform: scaleY(.25); }
+  100% { transform: scaleY(1); }
+}
+
+/* Shown when the film waits for a tap: reduced motion, Save-Data, or a
+   browser that refused to start it (iOS Low Power Mode). */
+.sg-film__start {
+  appearance: none;
+  -webkit-appearance: none;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 3;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--sgf-text);
+  font: inherit;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  -webkit-tap-highlight-color: transparent;
+}
+.sg-film.is-idle .sg-film__start { display: flex; }
+.sg-film__start .sg-film__i {
+  box-sizing: content-box;
+  width: 30px;
+  height: 30px;
+  padding: 25px 23px 25px 27px;
+  border-radius: 50%;
+  border: 1px solid var(--sgf-edge);
+  background: var(--sgf-ui);
+  transition: background-color .2s ease, transform .3s ease;
+}
+@media (hover: hover) {
+  .sg-film__start:hover .sg-film__i { background: var(--sgf-ui-hover); transform: scale(1.06); }
+}
+.sg-film__start > span {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: 99px;
+  background: var(--sgf-ui);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: .03em;
+}
+.sg-film__start small { font-size: 13px; color: var(--sgf-muted); font-variant-numeric: tabular-nums; }
+
+.sg-film__next {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  margin-right: -14px;
+  padding: 0 14px;
+  border-radius: 99px;
+  color: var(--sgf-text);
+  font-size: 14px;
+  letter-spacing: .03em;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color .2s ease;
+}
+.sg-film__next .sg-film__i { width: 18px; height: 18px; animation: sgf-down 2.2s ease-in-out infinite; }
+@media (hover: hover) {
+  .sg-film__next:hover { background: var(--sgf-ui-hover); color: var(--sgf-text); }
+}
+@keyframes sgf-down {
+  0%, 100% { transform: translateY(-2px); }
+  50% { transform: translateY(3px); }
+}
+
+/* Wider than 2:1: the whole picture on black, nothing cropped. */
+@media (min-aspect-ratio: 2/1) {
+  .sg-film__poster,
+  .sg-film__video { object-fit: contain; }
+}
+/* Short landscape screens (a phone on its side): a slimmer bar, the sound
+   button as an icon (its words stay as its accessible name), no film label. */
+@media (min-aspect-ratio: 6/5) and (max-height: 500px) {
+  .sg-film { --sgf-bar: 60px; }
+  .sg-film__label { display: none; }
+  .sg-film__sound { width: 44px; padding: 0; }
+  .sg-film__sound .sg-film__btn-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .sg-film.is-sound .sg-film__eq { display: none; }
+}
+
+/* Upright screens: the whole picture across the width, lit from behind by
+   its own colours; the label above it, the controls beneath. */
+@media (max-aspect-ratio: 6/5) {
+  .sg-film {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 22px;
+    padding: 96px 0 88px;
+    box-sizing: border-box;
+    background:
+      radial-gradient(70% 34% at 50% 46%, rgba(122, 82, 251, .2), transparent 72%),
+      radial-gradient(60% 26% at 50% 54%, rgba(69, 176, 226, .12), transparent 72%),
+      var(--sgf-bg);
+  }
+  .sg-film__frame {
+    flex: none;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    box-shadow: 0 30px 80px -30px rgba(122, 82, 251, .45);
+  }
+  .sg-film__shade { display: none; }
+  .sg-film__bar,
+  .sg-film__ui { display: contents; }
+  .sg-film__label { order: -1; align-self: center; }
+  .sg-film__controls { order: 1; align-self: center; }
+  .sg-film__next { position: absolute; left: 50%; bottom: 24px; margin: 0; padding: 0 16px; transform: translateX(-50%); }
+  .sg-film__start { gap: 10px; }
+  .sg-film__start .sg-film__i { width: 24px; height: 24px; padding: 19px 17px 19px 21px; }
+}
+@media (max-aspect-ratio: 6/5) and (max-height: 640px) {
+  .sg-film { gap: 14px; padding-top: 80px; padding-bottom: 76px; }
+  .sg-film__label { display: none; }
+}
+
+/* Full screen (desktop browsers and tablets; an iPhone hands the film to its
+   own player): the whole picture over the same bar. */
+.sg-film:fullscreen {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) var(--sgf-bar);
+  height: 100%;
+  padding: 0;
+  background: #000;
+}
+.sg-film:fullscreen .sg-film__frame { width: auto; aspect-ratio: auto; box-shadow: none; }
+.sg-film:fullscreen .sg-film__poster,
+.sg-film:fullscreen .sg-film__video { object-fit: contain; }
+.sg-film:fullscreen .sg-film__shade,
+.sg-film:fullscreen .sg-film__next { display: none; }
+.sg-film:fullscreen .sg-film__bar,
+.sg-film:fullscreen .sg-film__ui { display: flex; }
+.sg-film:fullscreen .sg-film__label { order: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sg-film__video { transition: none; }
+  .sg-film.is-playing:not(.is-sound) .sg-film__sound::after,
+  .sg-film.is-sound.is-playing .sg-film__eq i,
+  .sg-film__next .sg-film__i { animation: none; }
+  .sg-film.is-sound .sg-film__eq i { transform: scaleY(.6); }
+}
