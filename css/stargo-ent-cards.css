@@ -114,8 +114,8 @@
   .sg-em-2 .sg-em-in { justify-content: center; padding: 5%; gap: 0; }
   .sg-em-2 .sg-em-tag { left: 5%; right: auto; top: 5%; bottom: auto; margin-top: 2px; }
   .sg-em-mx-h > span:first-child { visibility: hidden; }
-  .sg-em-mx-h, .sg-em-mx-r { grid-template-columns: minmax(0, 1fr) 2.3em 4.5em; min-height: 1.62em; gap: .25em; }
-  .sg-em-c.is-a { padding: 0 .35em; }
+  .sg-em-mx-h, .sg-em-mx-r { grid-template-columns: minmax(0, 1fr) 2.3em 5em; min-height: 1.62em; gap: .25em; } /* 5em: the 「Approval」 cell, whole */
+  .sg-em-c.is-a { padding: 0 .2em; }
   /* 3: the quote and its chain, the step waiting on you in orange (no buttons) */
   .sg-em-3 .sg-em-in { padding-top: 7%; gap: .6em; } /* 7%: the chain sits clear of the 演示数据 tag below it */
   .sg-em-chain > i { margin-top: .95em; }

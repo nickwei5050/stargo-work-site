@@ -36,7 +36,7 @@
 .sgi-ct { min-width: 0; display: flex; align-items: baseline; gap: 8px; white-space: nowrap; }
 .sgi-cn { flex: none; font-size: 12.5px; color: rgba(244, 238, 232, .5); font-variant-numeric: tabular-nums; }
 .sgi-ct b { min-width: 0; overflow: hidden; text-overflow: ellipsis; font-size: 15px; font-weight: 600; color: #f8f1e7; }
-.sgi-pill { flex: none; font-size: 12.5px; line-height: 1.2; padding: 4px 10px; border-radius: 99px; border: 1px solid rgba(255, 236, 220, .16); color: rgba(244, 238, 232, .75); white-space: nowrap; }
+.sgi-pill { flex: none; font-size: 12.5px; line-height: 1.2; padding: 4px 10px; border-radius: 99px; border: 1px solid rgba(255, 236, 220, .16); color: rgba(244, 238, 232, .75); white-space: nowrap; text-align: center; }
 .sgi-pill.is-ask { color: #ffb37a; background: rgba(236, 111, 16, .16); border-color: rgba(255, 138, 61, .6); }
 .sgi-pill.is-run { color: #ffb37a; border-color: rgba(255, 138, 61, .35); }
 .sgi-pill.is-ok { color: #b9ecc6; background: rgba(120, 200, 140, .12); border-color: rgba(120, 200, 140, .36); }

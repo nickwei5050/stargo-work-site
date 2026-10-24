@@ -115,7 +115,10 @@
   function FeedScene() {
     var P = 12;
     var ARR = [0.6, 2.1, 3.6];           // each item slides in
-    var ARR_MINI = [0.6, 2.1, 6.9];      // the phone's mini list: the third comes once the first has folded
+    // the phone's mini list holds two at a time: the approved follow-up leaves (LEAVE) before the third
+    // arrives. Where the page shows too little of the phone for two (the next section covers more of it in
+    // zh at 320–340 px: shownH), it holds one at a time and the restock item is left out.
+    var ARR_MINI = [0.6, 2.1, 8.9], ARR_ONE = [0.6, 8.9, 99], LEAVE = [8.5, 9.0];
     var TAP = 5.75, C0 = 6.0, C1 = 6.55; // the tap on 批准, then the item folds
     var O0 = 11.1, O1 = 11.75;           // the list clears for the next round
     var ITEMS = [
@@ -138,12 +141,21 @@
        demand: the size of that part, at a scale of 1 to ~1.35) */
     var layouts = { tall: { w: 280, h: 606 }, mid: { w: 224, h: 485 }, mini: { w: 140, h: 303 } };
     var NUM = ['', '1', '2', '3'];
-    var R, arr;
+    var R, arr, hostEl = null, need2 = 0, ro = null;
+    // mini: two slots where the part of the phone the page shows holds them (in stage px, at the Runner's
+    // scale), else one. Measured when built and again whenever the page's layout settles differently
+    // (late fonts or images above change where the next section starts): a ResizeObserver, never per frame.
+    function miniFit() {
+      if (!R || !R.leave || !hostEl.clientHeight) return;
+      var s = Math.min(hostEl.clientWidth / 140, hostEl.clientHeight / 303);
+      arr = shownH(hostEl) / s >= need2 + 2 ? ARR_MINI : ARR_ONE;
+    }
 
     function build(stage, L, name) {
       R = { items: [] };
       var tall = name === 'tall', mid = name === 'mid', crop = !!L.crop;
       var full = R.full = tall || mid;   // the app's own card with its header, avatars and times
+      hostEl = stage.parentNode;
       arr = full || crop ? ARR : ARR_MINI;
       stage.className = 'sg-mo-stage sgp sgp-feed is-' + (crop ? 'mini is-crop' : name);
       statusBar(stage);
@@ -217,6 +229,20 @@
         ob.h = ob.it.offsetHeight;
         ob.hd = ob.done ? ob.done.offsetHeight : ob.h;
       }
+      if (!full && !crop) {
+        // the deepest the two-slot list reaches: the follow-up (whole or approved) over the quote, or the
+        // quote over the restock item once the approved one has left
+        var I = R.items, g = R.gap;
+        need2 = card.offsetTop + Math.max(I[0].h + g + I[1].h, I[0].hd + g + I[1].h, I[1].h + g + I[2].h);
+        R.leave = true;
+        miniFit();
+        if (!ro && window.ResizeObserver) {
+          ro = new ResizeObserver(miniFit);
+          ro.observe(document.body);
+          var sec = hostEl.closest('.lx-section');
+          if (sec) ro.observe(sec);
+        }
+      }
     }
 
     function tick(t) {
@@ -237,10 +263,12 @@
           tapAt(o.ok, tt, TAP);
         }
         if (tt >= arr[i] + 0.15) arrived++;
-        css(o.it, 'transform', 'translateY(' + (y + (1 - a) * 16 - out * 8).toFixed(1) + 'px)');
-        css(o.it, 'opacity', (a * (1 - out)).toFixed(3));
+        // mini: the approved follow-up rises out of the list and the others move up into its place
+        var lv = R.leave && o.done ? ease.io(seg(tt, LEAVE[0], LEAVE[1])) : 0;
+        css(o.it, 'transform', 'translateY(' + (y + (1 - a) * 16 - out * 8 - lv * 12).toFixed(1) + 'px)');
+        css(o.it, 'opacity', (a * (1 - out) * (1 - lv)).toFixed(3));
         cl(o.it, 'is-new', tt >= arr[i] && tt < arr[i] + 1.6);
-        y += a * (h + R.gap);
+        y += a * (1 - lv) * (h + R.gap);
       }
       var waiting = out > 0.5 ? 0 : arrived - (tt >= C0 + 0.2 ? 1 : 0);
       if (R.count) textSwap(R.count, NUM[waiting]);
@@ -271,6 +299,27 @@
     };
   }
   function ZH_OR(zh, en) { return K.ZH ? zh : en; }
+  /* How much of a host the page shows, in its own px: its box, cut by ancestors that clip and by later
+     in-flow blocks that start above its foot and paint over it (on phones the next section covers the
+     foot of the hand-held phone, by an amount that depends on how the copy above it wraps). Read when the
+     Runner fits the host (load, resize, coming into view), never per frame. */
+  function shownH(host) {
+    // layout boxes (offset*), not screen rectangles: a reveal that is still sliding the band in does not count
+    var hb = box(host), b = hb[1] + hb[3];
+    for (var a = host.parentElement; a && a !== document.body; a = a.parentElement) {
+      var cs = getComputedStyle(a);
+      if (cs.overflowY !== 'visible' || cs.overflowX !== 'visible') { var ab = box(a); b = Math.min(b, ab[1] + ab[3]); }
+      for (var s = a.nextElementSibling; s; s = s.nextElementSibling) {
+        if (!s.offsetParent || !s.offsetHeight) continue;
+        var q = box(s);
+        if (q[1] >= b || q[1] <= hb[1] || q[0] + q[2] <= hb[0] || q[0] >= hb[0] + hb[2]) continue;
+        if (getComputedStyle(s).position === 'absolute') continue;
+        b = q[1];
+      }
+    }
+    return b - hb[1];
+  }
+  function box(e) { var w = e.offsetWidth, h = e.offsetHeight, x = 0, y = 0; for (; e; e = e.offsetParent) { x += e.offsetLeft; y += e.offsetTop; } return [x, y, w, h]; }
 
   /* =====================================================================
      SQUAD — 按任务组队, then 工作暂停，背景不必从头解释.
@@ -324,7 +373,7 @@
       name = L.kind || name;
       mode = name; lv = LV[name]; R = { chips: [], rows: [] };
       var mini = name === 'mini';
-      stage.className = 'sg-mo-stage sgp sgp-squad is-' + name;
+      stage.className = 'sg-mo-stage sgp sgp-squad is-' + name + (L.kind ? ' is-narrow' : '');
       statusBar(stage);
       var bar = appBar(stage, mini ? '' : T('工作台', 'Workspace'), T('任务', 'Tasks'));
       if (mini) tag(bar, true); else { barTools(bar); tag(el('div', 'sgp-tagline', stage), false); }
@@ -375,7 +424,14 @@
         var talk = R.talk = el('div', 'sgp-talk', steps);
         R.b1 = bubble(talk, 2, 3, T('起订量？能贴牌吗？', 'MOQ? Own label?'), '');
         R.b2 = bubble(talk, 3, 2, T('200 组起，可以贴牌。', 'MOQ 200, label OK.'), 'is-r');
-        css(talk, 'top', R.rows[3].row.offsetTop + 'px');
+        // it covers the steps still queued (4 and 5) and its bubbles end above the fold: where the card's window
+        // ends higher (the 236–249 px phone at 1024–1180), the thread rises over step 3 rather than run past it
+        var sTop = steps.offsetParent === stage ? steps.offsetTop : steps.offsetTop + main.offsetTop;
+        var end = Math.min(steps.offsetHeight, L.fold - sTop - 4), need = R.b1.offsetHeight + R.b2.offsetHeight + 6;
+        var top = Math.min(R.rows[3].row.offsetTop, end - need - 12);
+        css(talk, 'top', top + 'px');
+        css(talk, 'justify-content', 'flex-start');
+        css(talk, 'padding-top', Math.max(0, Math.round((end - top - need) / 2)) + 'px');
       }
       // the dim and the saved context, anchored above the fold
       R.dim = el('div', 'sgp-dim', stage);

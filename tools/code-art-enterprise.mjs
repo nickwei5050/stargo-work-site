@@ -77,7 +77,8 @@ const CARDS = [
       'Illustration (demo data): account and role permissions — the sales manager may read and change customer records, the sales AI may read and needs approval to change, and the orders desk may only read.'),
     draw: (t) => {
       const Y = `<span class="sg-em-c is-y">${ico('check')}</span>`;
-      const A = `<span class="sg-em-c is-a">${two(t, B('需审批', 'Approval'), B('审批', 'Approve'))}</span>`;
+      // a noun on phones too (「Approve」 read as the AI approving): its edits need approval
+      const A = `<span class="sg-em-c is-a">${t(B('需审批', 'Approval'))}</span>`;
       const N = `<span class="sg-em-c is-n">${ico('lock')}</span>`;
       const rows = [[ico('person'), B('销售经理', 'Sales manager'), B('经理', 'Manager'), Y, Y], [ico('bot'), B('销售 AI', 'Sales AI'), B('销售 AI', 'Sales AI'), Y, A], [ico('person'), B('跟单', 'Orders desk'), B('跟单', 'Orders'), Y, N]];
       return `<div class="sg-em-mx"><div class="sg-em-mx-h"><span>${t(B('客户资料', 'Customer records'))}</span><span>${two(t, B('查看', 'Read'), B('看', 'Read'))}</span><span>${two(t, B('修改', 'Change'), B('改', 'Edit'))}</span></div>${rows.map(([i, n, ns, a, b]) => `<div class="sg-em-mx-r"><span class="sg-em-who">${i}<b>${two(t, n, ns)}</b></span>${a}${b}</div>`).join('')}</div>`;

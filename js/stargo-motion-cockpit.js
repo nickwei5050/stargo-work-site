@@ -136,13 +136,15 @@
      ===================================================================== */
   function OverviewScene() {
     var P = 12, IN = 1, SHIP = 3, QUOTE = 5, SYNC = 7, OK = 9.2, OUT = 9.7, SHIP2 = 10.8;
+    // what joins the approvals; each number is one deal across the site: Q-1041 is the approved forklift
+    // order (PI-1041), Q-1043 the Swedish quote blocked in BLOCKER, PI-2207 the Nigerian proforma done there
     var POOL = [
       [T('报价 Q-1039', 'Quote Q-1039'), T('巴西', 'Brazil')],
       [T('样品寄送', 'Samples'), T('2 组', '2 sets')],
       [T('开发信', 'Outreach'), T('20 封', '20 emails')],
-      [T('报价 Q-1041', 'Quote Q-1041'), T('瑞典', 'Sweden')],
+      [T('报价 Q-1044', 'Quote Q-1044'), T('波兰', 'Poland')],
       [T('产品主图', 'Product images'), T('3 张', '3 images')],
-      [T('形式发票 PI-2207', 'Proforma PI-2207'), T('尼日利亚', 'Nigeria')]
+      [T('形式发票 PI-2208', 'Proforma PI-2208'), T('越南', 'Vietnam')]
     ];
     var SRC = [T('邮箱', 'Email'), T('阿里国际站', 'Alibaba.com'), 'CRM', T('网盘', 'Drive')];
     var NOTE = [T(' · 运输中 · 预计今天', ' · in transit · due today'), T(' · 已签收 · 准时 ✓', ' · delivered on time ✓'), T(' · 已发货 · 运输中', ' · shipped · in transit')];
@@ -248,7 +250,8 @@
           if (R.dk !== key) {
             var fl = R.dk !== undefined;
             R.dk = key;
-            put(R.dnote, 'text', 'PO-' + (2203 + k + (dp === 2 ? 1 : 0)) + (R.narrow ? NOTE_S : NOTE)[dp]);
+            // customer orders run from PO-3301 up, clear of the proformas PI-2207 / PI-2208 named beside them
+            put(R.dnote, 'text', 'PO-' + (3301 + k + (dp === 2 ? 1 : 0)) + (R.narrow ? NOTE_S : NOTE)[dp]);
             cl(R.dnote, 'is-ok', dp === 1);
             if (fl) flash(R.dnote);
           }
