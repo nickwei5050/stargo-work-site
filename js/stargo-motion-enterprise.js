@@ -464,7 +464,8 @@
       R.k = []; R.b = []; R.p = [];
       var kp = G.kp, kw = (kp[2] - (kp[4] - 1) * 10) / kp[4];
       (R.phone ? [0, 1, 5] : [0, 1, 2, 3, 4, 5]).forEach(function (ki, i) {
-        var c = at(stage, 'sg-en-card sg-en-kpi' + (ki === 5 ? ' is-ap' : ki === 3 ? ' is-ex' : ''), kp[0] + (i % kp[4]) * (kw + 10), kp[1] + Math.floor(i / kp[4]) * (kp[3] + 10), kw, kp[3]);
+        // is-co: the costs card, whose four-digit yen total leaves no room beside it for the day's delta
+        var c = at(stage, 'sg-en-card sg-en-kpi' + (ki === 5 ? ' is-ap' : ki === 3 ? ' is-ex' : ki === 4 ? ' is-co' : ''), kp[0] + (i % kp[4]) * (kw + 10), kp[1] + Math.floor(i / kp[4]) * (kp[3] + 10), kw, kp[3]);
         el('span', 'sg-en-k', c, KPI[ki]);
         var vr = el('div', 'sg-en-kvr', c);
         R.k.push({ i: ki, r: vr, v: el('b', 'sg-en-kval', vr), d: el('em', 'sg-en-kd', vr) });

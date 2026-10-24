@@ -9,7 +9,7 @@
 .lx-scope .sg-rc { position: absolute; inset: 0; width: 100%; height: 100%; display: flex; flex-direction: column; gap: 8px; padding: 14px 14px 15px; border-radius: 12px; border: 1px solid rgba(255, 236, 220, .09); background: radial-gradient(130% 80% at 15% 0%, #261c13 0%, #16110d 52%, #100d0a 100%); color: #f4eee8; font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; font-size: 12px; line-height: 1.35; text-align: left; -webkit-font-smoothing: antialiased; overflow: hidden; }
 .sg-rc-head { display: flex; align-items: center; justify-content: space-between; }
 .sg-rc-ico { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 9px; color: #1b130b; background: linear-gradient(140deg, #ffd9a8, #ec8a2e); }
-.sg-rc-tag { padding: 1px 6px; border-radius: 5px; border: 1px solid rgba(255, 236, 220, .14); color: rgba(244, 238, 232, .55); font-size: 12px; letter-spacing: .03em; }
+.sg-rc-tag { white-space: nowrap; padding: 1px 6px; border-radius: 5px; border: 1px solid rgba(255, 236, 220, .14); color: rgba(244, 238, 232, .55); font-size: 12px; letter-spacing: .03em; }
 .sg-rc-name { margin-top: 4px; font-size: 15px; font-weight: 600; letter-spacing: -.005em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sg-rc-task { margin-top: -3px; font-size: 12.5px; color: rgba(244, 238, 232, .62); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
 .sg-rc-app { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; margin-top: 2px; padding: 2px 7px 2px 6px; border-radius: 6px; background: rgba(255, 236, 220, .05); color: rgba(244, 238, 232, .5); font-size: 12px; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
@@ -96,7 +96,7 @@
   .sg-rc-ico { width: 20px; height: 20px; }
   .sg-rc-ico svg { width: 12px; height: 12px; }
   .sg-rc-tag { padding: 0 4px; }
-  .sg-rc:lang(en) .sg-rc-ico { display: none; } /* 'Illustration' takes the head row of a 96 px card */
+  .sg-rc-ico { display: none; } /* the 演示数据 / Demo data tag takes the head row of a 96 px card */
   .sg-rc-name { font-size: 12px; }
   .sg-rc-task, .sg-rc-rk span, .sg-rc-rk b, .sg-rc-recon > div { display: none; }
   .sg-rc-checks { flex-direction: row; gap: 4px; }
@@ -118,7 +118,7 @@
 
 /* Hover: the card's own name panel slides up and the app chip (roleChip) slides
    in under the head row; the code card's words and drawing step back, its head
-   (glyph and 示意 tag) stays. */
+   (glyph and 演示数据 tag) stays. */
 .sg-rc > * { transition: opacity .35s ease; }
 .lx-feature-hero-card:hover .sg-rc > :not(.sg-rc-head), .lx-feature-hero-card:focus-visible .sg-rc > :not(.sg-rc-head) { opacity: 0; }
 .sg-rc-chip { display: inline-flex; align-items: center; gap: 6px; height: 24px; max-width: 100%; margin-top: 38px; padding: 0 10px 0 9px; border-radius: 99px; background: rgba(255, 236, 220, .08); border: 1px solid rgba(255, 236, 220, .16); color: #f4eee8; font: 600 12px/1 Inter, "PingFang SC", "Microsoft YaHei", sans-serif; white-space: nowrap; overflow: hidden; }

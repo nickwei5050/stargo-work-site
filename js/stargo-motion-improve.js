@@ -28,13 +28,15 @@
 
   function Improve() {
     var P = 20;
+    // every rate is a whole number of replies in 120 emails (the sample the card names): v1 5/120 = 4.2%,
+    // v2 8/120 = 6.7%; the runs are 120 emails too (#231 4/120, #232 7/120).
     // run log: [run, task, result, tone, appears at, short task, short result]; the first two are
     // already there. The short forms are for the narrow layouts
     var LOG = [
-      ['#229', T('开发信', 'Outreach email'), T('回复率 4.1% · 达标', 'Reply rate 4.1% · on target'), 'ok', -2, T('开发信', 'Email'), T('回复率 4.1%', 'Replies 4.1%')],
+      ['#229', T('开发信', 'Outreach email'), T('回复率 4.2% · 达标', 'Reply rate 4.2% · on target'), 'ok', -2, T('开发信', 'Email'), T('回复率 4.2%', 'Replies 4.2%')],
       ['#230', T('报价单', 'Quote'), T('准时发出 · 达标', 'Sent on time · on target'), 'ok', -1, T('报价单', 'Quote'), T('准时发出', 'Sent on time')],
-      ['#231', T('开发信', 'Outreach email'), T('回复率 3.2% · 人工修正 1 处', 'Reply rate 3.2% · 1 human fix'), 'fix', 0.6, T('开发信', 'Email'), T('人工修正 1 处', '1 human fix')],
-      ['#232', T('开发信 v2', 'Outreach email v2'), T('回复率 6.5% · 达标', 'Reply rate 6.5% · on target'), 'ok', 15.4, T('开发信 v2', 'Email v2'), T('回复率 6.5%', 'Replies 6.5%')]
+      ['#231', T('开发信', 'Outreach email'), T('回复率 3.3% · 人工修正 1 处', 'Reply rate 3.3% · 1 human fix'), 'fix', 0.6, T('开发信', 'Email'), T('人工修正 1 处', '1 human fix')],
+      ['#232', T('开发信 v2', 'Outreach email v2'), T('回复率 5.8% · 达标', 'Reply rate 5.8% · on target'), 'ok', 15.4, T('开发信 v2', 'Email v2'), T('回复率 5.8%', 'Replies 5.8%')]
     ];
     var A_IN = 1.6, BAR1 = 2.2, BAR2 = 2.8, ASK = 4.2, TAP = 6.0, R0 = 6.6, STEPS = [6.9, 7.9, 8.9], DONE = 9.8;
     var B_IN = 10.6, B_BAD = 12.0, B_REV = 13.4, B_KEEP = 14.0, OUT0 = P - 1.4, OUT1 = P - 0.6;
@@ -76,7 +78,7 @@
       el('b', '', at, T('开发信 v2', sq ? 'Email v2' : 'Outreach email v2'));
       R.aPill = el('span', 'sgi-pill', ah);
       el('div', 'sgi-sub', a, T('从 #231 的人工修正复盘：开头先提对方的储能项目', 'From the fix on #231: open with the buyer’s storage project'));
-      R.bars = [[T('现行 v1', 'Current v1'), 4.1], [T('新版 v2', 'New v2'), 6.8]].map(function (b, i) {
+      R.bars = [[T('现行 v1', 'Current v1'), 4.2], [T('新版 v2', 'New v2'), 6.7]].map(function (b, i) {
         var r = el('div', 'sgi-ab' + (i ? ' is-new' : ''), a);
         el('span', 'sgi-ab-k', r, b[0]);
         var tr = el('span', 'sgi-ab-tr', r); var f = el('i', '', tr);
@@ -84,7 +86,8 @@
         return { f: f, v: v, max: b[1] };
       });
       var foot = el('div', 'sgi-foot', a);
-      R.sample = el('span', 'sgi-sample', foot, T('小样本 · 各 40 封', 'Small sample · 40 each'));
+      // the tall strip leaves about 100px beside the Approve button: English says it in fewer letters there
+      R.sample = el('span', 'sgi-sample', foot, T('小样本 · 各 120 封', name === 'tall' ? '120 emails each' : 'Small sample · 120 each'));
       R.btn = el('span', 'sgi-btn', foot, T('批准', 'Approve'));
       R.tap = el('i', 'sgi-tap', R.btn);
       var ro = R.ro = el('div', 'sgi-ro', foot);
