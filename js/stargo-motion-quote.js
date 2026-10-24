@@ -1,10 +1,14 @@
 /* QUOTE — 03 「报价有依据，利润有边界，文件有版本」 on the capability page (the quote band; the owner's
    AI photograph c07-quote-approval was here until 2026-10-23, 「图片改成代码」).
 
-   Q-1042 for Müller Energie is drafted line by line, each price labelled with where it came from
-   (历史成交价 · 包装规则 · 货代报价). The margin guard finds it 2.8 points under the 18% floor and
-   stops it; the sales director taps 批准, for this order only; v3 is kept as the formal version beside
-   v1 (the price list) and v2 (the buyer's target), and can become the PI only after your OK.
+   Q-1042 for Müller Energie (200 pcs 48V 100Ah, DAP Hamburg) is drafted line by line, each price
+   labelled with where it came from (历史成交价 · 包装规则 · 货代报价): 200 × €735 = €147,000, export
+   crating €1,200, DAP freight €2,350, total €150,550. The floor-price guard finds the unit price €15
+   (2%) under the €750 floor price (低于底价) and stops it for your approval; you tap 批准, for this
+   order only; v3 (€735/pc) is kept as the formal version beside v1 (the price list, €780/pc, €159,550)
+   and v2 (the buyer's target, €720/pc, €147,550), each with the same €3,550 of crating and freight,
+   and it becomes the PI only after your OK. Nothing is sent by the scene. The same figures as the
+   homepage's quote window (js/stargo-motion-desk.js).
 
    Three layouts, cut to the host's own size (scale ~1, so no text is under 12 CSS px on a phone):
      card    desktop, the band's 3:2 box from 400 wide: the sheet and the margin guard on the left, the
@@ -42,20 +46,24 @@
     var P = 16, OUT0 = 14.9, OUT1 = 15.6;
     // [item, quantity, amount, where the price came from]
     var LINES = [
-      ['48V 100Ah', '× 200', '€79,000', T('历史成交价', 'Past deals')],
+      ['48V 100Ah', '× 200', '€147,000', T('历史成交价', 'Past deals')],
       [T('出口木箱', 'Crating'), '× 200', '€1,200', T('包装规则', 'Packing rule')],
       [T('DAP 汉堡', 'DAP Hamburg'), '× 1', '€2,350', T('货代报价', 'Freight')]
     ];
-    var TOTAL = 82550, MARGIN = 15.2, FLOOR = 18, SCALE = 30;   // the meter runs 0–30 %
+    // the unit price against the floor price: the meter runs €650–€800 per pc
+    var TOTAL = 150550, PRICE = 735, FLOOR = 750, LO = 650, HI = 800;
+    function at(v) { return (v - LO) / (HI - LO); }
+    var PRICE_T = '€' + PRICE, FLOOR_T = T('底价 €', 'Floor €') + FLOOR;
     var AT = { line: [0.4, 0.95, 1.5], total: 2.05, meter: 2.6, flag: 3.55, ask: 3.9, tap: 6.2, ok: 6.35, v3: 7.0, pi: 7.7 };
     var GO1 = 4.1, GO2 = 7.0, SLIDE = 0.55;   // the narrow panels: to the approval, to the versions
-    // v3 is the draft on the sheet; v1 and v2 were kept before it
-    var VERS = [['v3', '', '€82,550'], ['v2', T('客户目标价', 'Buyer target'), '€76,000'], ['v1', T('按价格表', 'Price list'), '€86,400']];
+    // v3 is the draft on the sheet; v1 and v2 were kept before it (each + €3,550 crating and freight);
+    // [version, name, name with its unit price where the row has room, total]
+    var VERS = [['v3', '', '', '€150,550'], ['v2', T('客户目标价', 'Buyer target'), T('客户目标价 €720', 'Buyer target €720'), '€147,550'], ['v1', T('按价格表', 'Price list'), T('价格表 €780', 'Price list €780'), '€159,550']];
     var V3 = [T('起草中', 'Drafting'), T('待审批', 'Awaiting approval'), T('已批准', 'Approved'), T('正式版 · 已批准', 'Formal · approved')];
     var V3_CARD = [V3[0], V3[1], V3[2], T('正式版', 'Formal')];   // the card's column is narrow: the lock says the rest
     var STATUS = [T('起草中', 'Drafting'), T('等你审批', 'To approve'), T('已批准', 'Approved'), T('v3 正式版', 'v3 formal')];
     var STEPS = [T('起草', 'Draft'), T('审批', 'Approve'), T('正式版', 'Formal')];
-    var ASK = [T('等待报价草稿', 'Waiting for the draft'), T('Q-1042 低于底线 2.8 个点', '2.8 pts under the floor'), T('仅限本单 · 10:42', 'This order only · 10:42')];
+    var ASK = [T('等待报价草稿', 'Waiting for the draft'), T('Q-1042 每组低于底价 €15', '€15/pc below the floor'), T('仅限本单 · 10:42', 'This order only · 10:42')];
     var layouts = {}, R, kind;
 
     function lay(k, w, h, full) { var key = k + (full ? '-f-' : '-') + w + 'x' + h; if (!layouts[key]) layouts[key] = { w: w, h: h, kind: k, full: full }; return key; }
@@ -122,17 +130,17 @@
       var tot = el('div', 'sgs-total', sheet);
       el('span', '', tot, T('合计 · EUR', 'Total · EUR'));
       R.totalV = el('b', '', tot, '€0');
-      // the margin guard
+      // the floor-price guard: the unit price against the floor price
       var guard = R.guard = el('div', 'sgs-guard', p1);
       var gh = el('div', 'sgs-guard-h', guard);
-      el('span', '', gh, T('毛利', 'Margin'));
-      R.marginV = el('b', '', gh, '0.0%');
+      el('span', '', gh, T('单价', 'Unit price'));
+      el('b', '', gh, PRICE_T);
       R.flag = el('span', 'sgs-flag', gh);
       glyph('alert', R.flag, 12, 'sg-ico sgs-fi-low'); glyph('check', R.flag, 12, 'sg-ico sgs-fi-ok'); R.flagT = el('span', '', R.flag, '');
       var meter = el('div', 'sgs-meter', guard);
       R.bar = el('i', 'sgs-meter-f', meter);
-      var fl = el('span', 'sgs-floor', meter); fl.style.left = (FLOOR / SCALE * 100) + '%';
-      el('em', '', fl, T('底线 ', 'Floor ') + FLOOR + '%');
+      var fl = el('span', 'sgs-floor', meter); fl.style.left = (at(FLOOR) * 100).toFixed(2) + '%';
+      el('em', '', fl, FLOOR_T);
       // card: the approver over the versions, a column of its own beside the sheet and the guard
       if (card) p2 = p3 = el('div', 'sgs-q-r', pane);
       // tall: the approver and the versions share one place and slide
@@ -142,25 +150,25 @@
         p2 = panel(R.track, R.tw); p3 = panel(R.track, R.tw);
       }
       if (narrow) {
-        // the approval screen opens on what stopped the quote: the margin against the floor
+        // the approval screen opens on what stopped the quote: the unit price against the floor price
         var rc = el('div', 'sgs-recap', p2), rh = el('div', 'sgs-guard-h', rc);
-        el('span', '', rh, T('毛利', 'Margin')); el('b', '', rh, MARGIN + '%');
-        var rf = el('span', 'sgs-flag', rh); glyph('alert', rf, 12); el('span', '', rf, T('低于底线 18%', 'Floor 18%'));
+        el('span', '', rh, T('单价', 'Unit price')); el('b', '', rh, PRICE_T);
+        var rf = el('span', 'sgs-flag', rh); glyph('alert', rf, 12); el('span', '', rf, T('低于底价 €750', 'Floor €750'));
         var rm = el('div', 'sgs-meter', rc), rb = el('i', 'sgs-meter-f', rm);
-        rb.style.transform = 'scaleX(' + (MARGIN / SCALE).toFixed(4) + ')';
-        el('span', 'sgs-floor', rm).style.left = (FLOOR / SCALE * 100) + '%';
+        rb.style.transform = 'scaleX(' + at(PRICE).toFixed(4) + ')';
+        el('span', 'sgs-floor', rm).style.left = (at(FLOOR) * 100).toFixed(2) + '%';
       }
       // the approver
       var ap = R.ask = el('div', 'sgs-ask', p2);
       R.ring = el('i', 'sgs-ask-ring', ap);
-      var at = el('div', 'sgs-ask-t', ap);
-      el('b', '', at, T('审批人：销售总监', 'Approver: sales director'));
-      R.askS = el('span', '', at, '');
+      var aT = el('div', 'sgs-ask-t', ap);
+      el('b', '', aT, T('审批人：你', 'Approver: you'));
+      R.askS = el('span', '', aT, '');
       var btns = el('div', 'sgs-ask-b', ap);
       R.ok = el('span', 'sg-btn is-primary sgs-btn', btns);
       R.okT = el('span', '', R.ok, '');
       R.ret = el('span', 'sg-btn sgs-btn sgs-ret', btns, T('退回', 'Return'));
-      R.askM = el('em', '', narrow ? btns : at, '');   // who drafted it, when: beside the buttons on a phone
+      R.askM = el('em', '', narrow ? btns : aT, '');   // who drafted it, when: beside the buttons on a phone
       var tp = el('i', 'sgs-tap', R.ok);
       R.tapDot = el('i', 'sgs-tap-dot', tp); R.tapRing = el('i', 'sgs-tap-ring', tp);
       // the versions; on a phone they open on what the quote is
@@ -170,11 +178,12 @@
       }
       var vs = R.vers = el('div', 'sgs-vers', p3);
       el('div', 'sgs-vers-k', vs, T('版本 · 每版留底', 'Versions · all kept'));
+      var roomy = !/is-thin/.test(stage.className);
       R.v = VERS.map(function (v, i) {
         var r = el('div', 'sgs-ver' + (i === 0 ? ' is-top' : ''), vs);
         el('b', '', r, v[0]);
-        var s = el('span', 'sgs-ver-n', r, v[1]);
-        el('em', '', r, v[2]);
+        var s = el('span', 'sgs-ver-n', r, roomy ? v[2] : v[1]);
+        el('em', '', r, v[3]);
         if (i === 0) glyph('lock', r, 12, 'sg-ico sgs-lock');
         return { r: r, s: s };
       });
@@ -188,13 +197,12 @@
       for (i = 0; i < R.lines.length; i++) { arrive(R.lines[i], ease.out(seg(tau, AT.line[i], AT.line[i] + 0.45)), 6); cl(R.lines[i], 'is-src', tau >= AT.line[i] && tau < AT.line[i] + 1.1); }
       put(R.totalV, 'text', '€' + K.fmt(TOTAL * ease.out(seg(tau, AT.total - 0.3, AT.total + 0.5))));
       var mp = ease.io(seg(tau, AT.meter, AT.meter + 0.9));
-      css(R.bar, 'transform', 'scaleX(' + (mp * MARGIN / SCALE).toFixed(4) + ')');
-      put(R.marginV, 'text', (MARGIN * mp).toFixed(1) + '%');
+      css(R.bar, 'transform', 'scaleX(' + (mp * at(PRICE)).toFixed(4) + ')');
       var ph = tau < AT.flag ? 0 : tau < AT.ok ? 1 : tau < AT.v3 ? 2 : 3, okd = ph >= 2;
       cl(R.guard, 'is-low', ph === 1);
       cl(R.guard, 'is-ok', okd);
       arrive(R.flag, ease.out(seg(tau, AT.flag, AT.flag + 0.35)), 3);
-      put(R.flagT, 'text', okd ? T('低于底线 · 已批准', 'Approved') : T('低于底线 · 需审批', 'Below floor'));
+      put(R.flagT, 'text', okd ? T('低于底价 · 已批准', 'Approved') : T('低于底价 · 需审批', 'Below floor'));
       // the approver: on screen from the start, waiting for the draft; then waiting for you (a ring
       // that breathes: its own layer, opacity only); then the tap; then approved, 退回 set aside
       var idle = tau < AT.ask, wait = !idle && !okd;

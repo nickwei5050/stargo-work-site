@@ -144,8 +144,8 @@ export const MOTION_LABEL = {
     en: 'Illustrative motion (demo data): the account view of Müller Energie GmbH assembles piece by piece: contacts and their roles, the stage (quote), needs and samples, quotes Q-1042 and Q-1031, documents and the latest conversations. Then Q-1042 is approved, the MSDS is attached, and the follow-up carrying both waits for your OK before anything is sent.',
   },
   quote: {
-    zh: '动态示意（演示数据）：给 Müller Energie 的报价 Q-1042 逐行起草，每个价格都标出依据（历史成交价、包装规则、货代报价）；毛利 15.2% 低于 18% 的底线，停下来等审批。销售总监点了批准（仅限本单），v3 存为正式版，按价格表的 v1 和客户目标价的 v2 也都留底可对比；转成 PI 发送前仍由你确认。',
-    en: 'Illustrative motion (demo data): quote Q-1042 for Müller Energie is drafted line by line, each price labelled with its source (past deal prices, the packing rule, the forwarder’s rate). At a 15.2% margin it is under the 18% floor and stops for approval. The sales director approves it for this order only; v3 is kept as the formal version, with v1 (price list) and v2 (buyer target) kept for comparison, and the PI goes out only after your OK.',
+    zh: '动态示意（演示数据）：给 Müller Energie 的报价 Q-1042（48V 100Ah × 200 组，DAP 汉堡）逐行起草，每个价格都标出依据（历史成交价、包装规则、货代报价），合计 €150,550；单价 €735 低于 €750 的底价，停下来等你审批。你点了批准（仅限本单），v3 存为正式版，按价格表的 v1 和客户目标价的 v2 也都留底可对比；转成 PI 发送前仍由你确认。',
+    en: 'Illustrative motion (demo data): quote Q-1042 for Müller Energie (200 pcs 48V 100Ah, DAP Hamburg) is drafted line by line, each price labelled with its source (past deal prices, the packing rule, the forwarder’s rate), €150,550 in total. At €735 a pack it is below the €750 floor price, so it stops for your approval. You approve it for this order only; v3 is kept as the formal version, with v1 (price list) and v2 (buyer target) kept for comparison, and the PI goes out only after your OK.',
   },
   creative: {
     zh: '动态示意（演示数据）：三张 48V 100Ah 电池包的参考图进 AI 创作，依次做出白底主图、仓库场景图和 15 秒短视频的四个分镜，每一项都先进审核队列；你点了通过，发布与否仍由你决定，不会自动发布。',
