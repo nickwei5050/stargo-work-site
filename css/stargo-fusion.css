@@ -135,6 +135,12 @@
 @media (min-width: 1440px) {
   .ro-gallery .ro-home-header-img-wrap { width: 20rem; }
 }
+/* The tiles are pale product captures on a white hero, so each gets a static
+   hairline and a soft shadow to separate it from the ground (homemore,
+   2026-10-23). Painted once: the wheel turns the parent, never these. */
+.ro-gallery .ro-home-header-img {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .08), 0 6px 16px rgba(20, 16, 12, .08);
+}
 
 /* ======================================================================
    Brand wordmark, language switch, and the two foreign page bodies
@@ -3708,14 +3714,16 @@ html[lang^="en"] .lx-scope .stargo-post :is(.sgc-role-name, .sgc-role-task, .sgc
   [src$="/288-ai-employees-not-288-chatbots.webp"]
 ) { padding-top: 56px; padding-bottom: 6px; }
 
-/* The same for the three "keep reading" cards under the third-party notices
+/* The same for the "keep reading" cards under the third-party notices
    (tools/build-site.mjs, PAGES['notices.html']). The half-card is about
-   1.4 : 1 and these pictures are 16:9, so the box holds the picture's own
-   border colour instead of cropping 13% off each side of an interface. The
-   band is this page's alone — .blog-photo-overlay exists nowhere else. */
-.blog-flex .blog-photo-overlay[src$="/sw003-ai-workspace-home.webp"] { object-fit: contain; background-color: #0e2b5a; }
-.blog-flex .blog-photo-overlay[src$="/sw004-experts-library.webp"] { object-fit: contain; background-color: #021d4d; }
-.blog-flex .blog-photo-overlay[src$="/live18-quote-approval-16x9.webp"] { object-fit: contain; background-color: #f4f6f8; }
+   1.4 : 1 and these captures are 16:9, so the box holds each capture's own
+   ground colour instead of cropping 13% off each side of an interface.
+   [src*=] because the build adds ?v= to the address. (homemore, 2026-10-23:
+   the first card is now the Growth OS home on its #f4f6fa plate, the second
+   the 'team' scene.) The band is this page's alone — .blog-photo-overlay
+   exists nowhere else. */
+.blog-flex .blog-photo-overlay[src*="/live05-growth-home-16x9"] { object-fit: contain; background-color: #f4f6fa; }
+.blog-flex .blog-photo-overlay[src*="/live18-quote-approval-16x9"] { object-fit: contain; background-color: #f4f6f8; }
 /* V7-BLOG-END */
 
 
@@ -5077,6 +5085,8 @@ html[lang^="en"] .button-text.w-variant-83ed8c83-4d97-b61d-2146-78e915c17bb4 { t
         Growth OS home overrides it with #f4f6fa and gos11 with #072c6d, the
         edge of each of those stills. The letterbox reads as more of the picture rather than as a bar,
         and the card keeps Mono's 10px radius and its own `overflow: hidden`. */
+/* Dormant since 2026-10-23 (homemore): no stage card holds a picture now
+   (js/stargo-motion-stages.js draws them); kept for a product screen put back. */
 body:has(#loop) .image-wrap.for-service .paralax-image[src*="assets/stargo-product/"] {
   height: 100%;
   object-fit: contain;
@@ -5361,7 +5371,10 @@ button.button-link .navigation-text-main { text-align: left; }
   .photo-hero[src*="stargo-photo/h09-"] { object-position: 50% calc(17.5% - 55px); }
 }
 
-/* P01–P05, the five stage cards. Mono's `.paralax-image` covers the 3:2
+/* Dormant since 2026-10-23 (homemore): the five stage cards are code-drawn
+   scenes (js/stargo-motion-stages.js); these rules apply again only if the
+   photographs go back (tools/replaceables.mjs HOME_STAGES).
+   P01–P05, the five stage cards. Mono's `.paralax-image` covers the 3:2
    card at 105% of its height (334x234 at 1440), as the illustration in
    (004) always did; H29 above fits only product screens. P05 is centred. */
 body:has(#loop) .image-wrap.for-service .paralax-image[src*="stargo-photo/p01-"] { object-position: 40% 50%; }
@@ -5428,7 +5441,9 @@ body:has(#loop) .image-wrap.for-service .paralax-image[src*="stargo-photo/p04-"]
    card's flight and its text are untouched. */
 .testimonials-card._03 img.stargo-role-photo.sgp-upright { transform: scaleY(-1); }
 
-/* T01, the pricing band's image card beside 企业版. */
+/* T01, the pricing band's image card beside 企业版. Dormant since 2026-10-23
+   (homemore): the card is the code-drawn 'org' scene; this applies again only
+   if the photograph goes back (tools/replaceables.mjs HOME_PRICING_CARD). */
 .testi-grid .image-wrap.rnd .paralax-image[src*="stargo-photo/t01-"] { object-position: 50% 58%; }
 
 /* B01–B04, the four newest-article cards. Mono sizes `.testimonials-photo`

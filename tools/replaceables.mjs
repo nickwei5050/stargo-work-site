@@ -289,6 +289,7 @@ export const PRODUCT_IDS = {
   desktopHome: 'live01-desktop-home-16x9',
   caseWide: 'live09-sales-desk-case-16x9',
   mobileCase: 'live52-mobile-case-16x9',
+  mobilePair: 'live51-52-mobile-pair-16x9', // both phone captures whole on one 16:9 plate (homemore, 2026-10-23)
 };
 
 export const PRODUCT = Object.fromEntries(
@@ -306,8 +307,8 @@ PRODUCT.documentPack = PRODUCT.documents;
  *
  * Since 2026-10-23 (homemore lane) all six are real captures of the product
  * with demo data, every one 16:9 like the tile: the web desktop, the Growth
- * OS home, the ERP item list, the Sales Desk case on a phone, the Sales Desk
- * case and quote approval. They replaced, in the same slots, the generated
+ * OS home, the ERP item list, the two phone screens (deal board and an
+ * inquiry, whole, side by side), the Sales Desk case and quote approval. They replaced, in the same slots, the generated
  * marketing composites sw003 (workspace), sw004 (experts), sw006 (teams),
  * sw008 (workflows) and sw028 (inquiry reply).
  */
@@ -315,7 +316,7 @@ export const GALLERY_TILES = [
   PRODUCT_IDS.desktopHome,
   PRODUCT_IDS.growthTile,
   PRODUCT_IDS.erpItems,
-  PRODUCT_IDS.mobileCase,
+  PRODUCT_IDS.mobilePair,
   PRODUCT_IDS.caseWide,
   PRODUCT_IDS.quoteApproval,
 ];
@@ -449,10 +450,12 @@ export const STORY_ART = {
 };
 
 /** Notices “keep reading” cards, in card order. Since 2026-10-23 (homemore)
- *  the first is the real web-desktop capture (it was the sw003 composite) and
- *  the second, 数字员工, is the code-drawn 'team' scene (`motion`, placed by
- *  tools/build-site.mjs; it was the sw004 composite). */
-export const NOTICES_CARDS = [PRODUCT.desktopHome, { motion: 'team' }, PRODUCT.quoteApproval];
+ *  the first is the real Growth OS home capture (it was the sw003 composite;
+ *  the web-desktop capture live01 is kept off this card because at this size
+ *  its 'Stargo Office 365.app' icon label is readable) and the second, 数字员工,
+ *  is the code-drawn 'team' scene (`motion`, placed by tools/build-site.mjs; it
+ *  was the sw004 composite). */
+export const NOTICES_CARDS = [PRODUCT.growthTile, { motion: 'team' }, PRODUCT.quoteApproval];
 
 /**
  * The owner's photographs on about, contact, pricing and workforce

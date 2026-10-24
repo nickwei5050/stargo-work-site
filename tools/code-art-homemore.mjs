@@ -40,8 +40,8 @@ const LABELS = {
     en: 'Illustrative motion (demo data): PT Surya Energi orders about every 60 days and its last order was 60 days ago; Growth OS suggests a reorder of 120 packs of 64V 104Ah with a follow-up draft, and contacts the customer only after you confirm.',
   },
   org: {
-    zh: '示意（演示数据）：企业版——多家公司、品牌、部门和账号各有自己的权限、审批和数据边界，共用同一支 AI 员工队伍；一份报价按审批路线逐级批准；现有 CRM、ERP 经授权接入；全部运行在私有化部署的环境里，由专属前置部署工程师对接。',
-    en: 'Illustration (demo data): Enterprise — several companies, brands, departments and accounts, each with its own permissions, approvals and data boundary, sharing one AI workforce; a quote passes its approval route step by step; existing CRM and ERP connect with authorization; all of it in a private deployment, with a dedicated forward-deployed engineer.',
+    zh: '动态示意（演示数据）：企业版——多家公司、品牌、部门和账号各有自己的权限、审批和数据边界，共用同一支 AI 员工队伍；低于底价的报价 Q-1042 按审批路线逐级由人批准；现有 CRM、ERP 经授权接入；全部运行在私有化部署的环境里，由专属前置部署工程师对接。',
+    en: 'Illustrative motion (demo data): Enterprise — several companies, brands, departments and accounts, each with its own permissions, approvals and data boundary, sharing one AI workforce; quote Q-1042, below the floor price, goes up its approval route with a person signing at each step; existing CRM and ERP connect with authorization; all of it in a private deployment, with a dedicated forward-deployed engineer.',
   },
 };
 Object.assign(MOTION_LABEL, LABELS);

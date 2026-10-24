@@ -81,7 +81,14 @@ const productsUnused = products.filter(a => !all.includes(a.src)).map(a => a.id)
 const SUPERSEDED = new Set(photos.filter(a => photos.some(b => b.ref === `${a.ref}v2`)).map(a => a.id));
 /* Put back to the template's models at the owner's request (2026-10-23): the
    demo band's group photograph and the scenario slider's portraits. */
-const RETIRED = new Set(['g01-cta-loading-bay-dusk', 'r1-sales-rep', 'r3-sales-director', 'r4-general-manager', 'i01-observe-process', 'i03-hand-phone-blank']);
+const RETIRED = new Set(['g01-cta-loading-bay-dusk', 'r1-sales-rep', 'r3-sales-director', 'r4-general-manager', 'i01-observe-process', 'i03-hand-phone-blank',
+  /* Taken off the homepage by the homemore lane (2026-10-23): the five stage
+     cards and the pricing band's enterprise card are code-drawn scenes now
+     (js/stargo-motion-stages.js, js/stargo-motion-org.js). P02 and P04 were
+     placed only there (P01, P03 and P05 stay on capabilities.html); T01 only
+     in the pricing band. Still listed in tools/replaceables.mjs HOME_STAGES /
+     HOME_PRICING_CARD, so each can go back in one line. */
+  'p02-sales', 'p04-payment-docs', 't01-enterprise-campus']);
 const photosUnused = photos.filter(a => !all.includes(a.src) && !SUPERSEDED.has(a.id) && !RETIRED.has(a.id)).map(a => a.id);
 assert.deepEqual(photosUnused, [], 'every registered photograph is placed');
 console.log(`generated imagery: ${manifest.assets.length - unused.length} placed, ${unused.length} retained but unused (${unused.join(', ')})`);

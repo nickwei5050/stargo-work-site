@@ -115,6 +115,8 @@ const productText = {
   'live01-desktop-home-16x9': ['网页桌面：AI 工作台、成交工作台、企业管理、视频制作等业务应用都在同一个桌面里', 'The web desktop: the AI workspace, the Sales Desk, enterprise management, video tools and other business apps on one desktop'],
   'live43-app-connections-16x9': ['应用连接：1,568 个可连接服务、18,345 个本地可执行操作，以及工具调用趋势和最近调用记录', 'App connections: 1,568 connectable services and 18,345 local executable actions, with the trend and the record of recent tool calls'],
   'live52-mobile-case-16x9': ['手机上的 Sales Desk：一封询盘的型号和数量已经整理出来，下面是买家的原话', 'The Sales Desk on a phone: the model and quantity of an inquiry already pulled out, above the buyer\u2019s own message'],
+  /* homemore (2026-10-23): live51 and live52 whole, side by side on one 16:9 plate, for the hero gallery. */
+  'live51-52-mobile-pair-16x9': ['手机上的成交看板和一封询盘：左边是待回复、待审批和成交信号，右边是 AI 起草的回复，批准后才会发给客户', 'The deal board and an inquiry on a phone: replies due, approvals and buying signals on the left, an AI-drafted reply on the right that reaches the customer only after approval'],
   'live52-mobile-case-needs': ['买方需求提取：型号 DEMO C300、数量 4 直接列在买家原话上方', 'Buyer need extraction: model DEMO C300 and quantity 4 listed right above the buyer\u2019s own words'],
   'live52-mobile-case-screen': ['在手机上回询盘：英文来信可一键翻译，AI 给出下一步建议并起草回复，批准后才会发给客户', 'Answering an inquiry on a phone: the incoming message can be translated in one tap, AI suggests the next step and drafts a reply, and nothing reaches the customer before approval'],
   'live51-mobile-board-screen': ['手机上的成交看板：待回复、待审批和成交信号一目了然，等你批的报价单随时处理', 'The deal board on a phone: replies due, approvals waiting and buying signals at a glance, with the quote awaiting your approval one tap away'],

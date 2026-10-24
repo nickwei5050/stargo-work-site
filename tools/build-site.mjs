@@ -23,6 +23,7 @@ import * as C from './copy.mjs';
 import { POSTS, BLOG_UI, postPath, featured, others, coverSrc, coverSrcset, coverAlt, formatDate, renderBody, titleHtml } from './blog.mjs';
 import { loadBlocks, art, capTitle, DONORS } from './block-lib.mjs';
 import { PRODUCT_CAPTION } from './editorial-images.mjs';
+// HOME_STAGES and HOME_PRICING_CARD are not placed since 2026-10-23 (homemore: code-drawn scenes); imported so a photo can go back in one line.
 import { HERO, HOME_MODULES, HOME_STAGES, HOME_SILOS, HOME_ROLE_CARD, HOME_PRICING_CARD, HOME_BLOG_COVERS, NOTICES_CARDS, CAP_PHOTOS, ENTERPRISE_PHOTOS, CONTACT_CARD, WORKFORCE_ROLES, WORKFORCE_BLOG_COVERS } from './replaceables.mjs';
 import { SITE } from './paths.mjs';
 import { productTour } from './product-tour.mjs';
@@ -480,43 +481,10 @@ PAGES['index.html'] = (lang) => {
        as for the stages below. */
     const cards = ['699b6466d5f19893993a4d79_work-1.webp', '699b6466d5f19893993a4d34_work-5.webp', '699b6466d5f19893993a4d1a_work-4.webp', '699b6466d5f19893993a4d8f_work-8.webp'];
     cards.forEach((k, i) => { h = swapImg(h, k, HOME_SILOS[i], { alt: 'STARGO WORK' }); });
-    /* The five stages, in order (V6 §4.6). Four of them carry the owner's own
-       product. The sentences stayed; on 2026-09-22 the three older 1268px
-       stills were swapped for curated pack screens (filenames unchanged):
-
-         (001) 主动获客 — the Growth OS home (since 2026-10-21 a clean
-               capture with demo data; the still before it showed an
-               infrastructure panel). It is not the control tower: that
-               picture is the Growth OS panel below, so the two sections do
-               not repeat.
-         (002) 外贸销售 — the Sales Desk case: inquiry list, extracted facts
-               and the next step (clean capture, 2026-10-21; it replaced a
-               generated render).
-         (003) 企业履约 — the ERP item list (clean capture, 2026-10-21; the
-               Sales Desk still before it showed a live mailbox).
-         (005) 复购与改进 — gos11 is now the workspace home (alt-home.webp).
-               The pack has no separate reactivation still; this is the
-               remaining home screen, fitted in the same card.
-
-       (004) 回款与服务 keeps the concept illustration it had — trade signals
-       carried to a customer's destination — because no released screen is about
-       collection, reconciliation or support.
-
-       Since 2026-10-21 all five cards show the owner's photographs instead
-       (site-images/batch-2, P01–P05; tools/replaceables.mjs HOME_STAGES keeps
-       the screens above for the owner's decision), and Mono's `cover` fills
-       the card with them again (H29 is keyed on the product folder).
-
-       All five go in with a non-empty alt, which is a marker and not copy:
-       any non-empty value stops tools/editorial-images.mjs treating the image
-       as decoration, and it then writes the registered sentence over it in the
-       page's language. Same route the four core-system panels take with their
-       slot title, and `stillImage` below with 'STARGO OS'.
-
-       The card is `.image-wrap.for-service`, `aspect-ratio: 3 / 2`; a
-       screenshot in it is fitted, not cropped, by H29 in css/stargo-fusion.css.
-       (002) and (003) are cut to 3:2 and fill it; the Growth OS home (about
-       2:1) and gos11 sit on plates of their own edge colour. */
+    /* The five stages, in order (V6 §4.6). History: product screens until
+       2026-10-21, then the owner's photographs P01–P05 (site-images/batch-2),
+       fitted by rules in css/stargo-fusion.css that are dormant now. Both sets
+       stay listed in tools/replaceables.mjs HOME_STAGES for the owner. */
     /* homemore (2026-10-23): the five cards are code-drawn scenes now, one
        host per stage so Mono's switching is untouched
        (tools/code-art-homemore.mjs, js/stargo-motion-stages.js). HOME_STAGES
@@ -2521,9 +2489,9 @@ PAGES['notices.html'] = (lang) => {
      marker — any non-empty alt stops tools/editorial-images.mjs treating a
      picture as decoration — and that pass then writes the registered sentence
      for each screen, in the page's language, over it. */
-  /* homemore (2026-10-23): 能力 shows the real web desktop and 数字员工 the
-     code-drawn 'team' scene in place of the two generated composites
-     (tools/replaceables.mjs NOTICES_CARDS; tools/code-art-homemore.mjs). */
+  /* homemore (2026-10-23): 能力 shows the real Growth OS home capture and
+     数字员工 the code-drawn 'team' scene in place of the two generated
+     composites (tools/replaceables.mjs NOTICES_CARDS; tools/code-art-homemore.mjs). */
   [['699b6466d5f19893993a4dca_Sleek', NOTICES_CARDS[0]], ['699b6466d5f19893993a4d64_blog-2', NOTICES_CARDS[1]], ['699b6466d5f19893993a4e03_Futuristic', NOTICES_CARDS[2]]]
     .forEach(([k, src]) => { h = typeof src === 'string' ? swapImg(h, k, src, { alt: PRODUCT_CAPTION[lang] }) : swapToMotion(h, k, src.motion, lang, 'sg-mo-notice'); });
   /* The post template tags its "Related Stories" band <h1>, a second h1 after

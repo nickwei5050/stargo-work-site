@@ -709,6 +709,39 @@
    ]
   },
   {
+   "id": "live51-52-mobile-pair-16x9",
+   "sw": "LIVE51",
+   "src": "assets/stargo-product/live51-52-mobile-pair-16x9.webp",
+   "width": 1170,
+   "height": 658,
+   "bytes": 30466,
+   "sourceFile": "site-images/screens-final/clean/51-mobile-sales-desk-board.png",
+   "sourceSha256": "1e379c709b936e7f8049bb3b8ed2793c01910676cc68d14bf68f893ad51cbd89",
+   "sourcePixels": [
+    1170,
+    2672
+   ],
+   "crop": "live51-mobile-board-screen (from clean/51-mobile-sales-desk-board.png, the sourceFile) and live52-mobile-case-screen (from clean/52-mobile-sales-desk-case.png) (1170x2672 each) whole, scaled to 594px tall with rounded corners, side by side on a 1170x658 plate #ece8e1, so the hero gallery's 16:9 tile shows both phone screens instead of a zoomed cut; sourceSha256 is that plate's PNG (homemore, 2026-10-23)",
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-product/live51-52-mobile-pair-16x9-480.webp",
+     "width": 480,
+     "bytes": 7280
+    },
+    {
+     "src": "assets/stargo-product/live51-52-mobile-pair-16x9-768.webp",
+     "width": 768,
+     "bytes": 15116
+    },
+    {
+     "src": "assets/stargo-product/live51-52-mobile-pair-16x9-1024.webp",
+     "width": 1024,
+     "bytes": 23056
+    }
+   ]
+  },
+  {
    "id": "live52-mobile-case-screen",
    "sw": "LIVE52",
    "src": "assets/stargo-product/live52-mobile-case-screen.webp",
