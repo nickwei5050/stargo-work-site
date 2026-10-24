@@ -71,7 +71,11 @@
 .sgg-ship { fill: #ffd2a8; }
 .sgg-rec .sgg-l1 { gap: 10px; }
 
-/* the order rhythm: the hairline is its axis */
+/* texture kept to its row's band (the dossier's orbits), a still clip */
+.sgg-bandclip { position: absolute; left: 0; width: 100%; overflow: hidden; pointer-events: none; }
+.sgg-bandclip .sgg-orbit-l { position: absolute; }
+/* the order rhythm: its own axis in the strip above the row's type */
+.sgg-axis { fill: none; stroke: rgba(255, 236, 220, .28); stroke-width: 1; }
 .sgg-bar rect { fill: rgba(246, 205, 165, .62); }
 .sgg-bar-d { font-size: 12.5px; fill: rgba(244, 238, 232, .66); }
 .sgg-span-l { fill: none; stroke: rgba(255, 236, 220, .38); }

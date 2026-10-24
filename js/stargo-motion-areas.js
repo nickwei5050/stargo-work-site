@@ -27,6 +27,21 @@
   // the entry of a [time, value, …] table in force at tau
   function at(tb, tau) { var j = 0; while (j + 1 < tb.length && tau >= tb[j + 1][0]) j++; return j; }
 
+  /* The template's sticky stack (IX2 a-215, css/stargo-fusion.css) scales a card below 1 while the
+     next card covers it (and while it arrives); its words would read under 12px, so the scene dims
+     until the card is whole again (css .sga-recede). Read from the style IX2 writes: no layout. */
+  function recede(stage) {
+    var host = stage.parentNode, card = host && host.closest ? host.closest('.work-card') : null;
+    if (!card || card.sgaMO || !window.MutationObserver) return;
+    function check() {
+      var tf = card.style.transform || '', i = tf.indexOf('scale'), s = i < 0 ? 1 : parseFloat(tf.slice(tf.indexOf('(', i) + 1));
+      cl(host, 'sga-recede', s < 0.999);
+    }
+    card.sgaMO = new MutationObserver(check);
+    card.sgaMO.observe(card, { attributes: true, attributeFilter: ['style'] });
+    check();
+  }
+
   function AreaScene(key) {
     return function () {
       var P = 14, CLEAR = 13.2, START = 1.6;
@@ -268,6 +283,7 @@
         kind = L.kind; W = L.w; H = L.h; Lc = L; stg = stage; R = { stage: stage, stp: [] }; FT = K.capFit(); Q = [];
         stage.textContent = '';
         stage.className = 'sg-mo-stage sga sga-' + key + ' is-' + kind;
+        recede(stage);
         var c = cap(stage);
         capK = capKey(c);
         if (kind === 'phone') buildPhone(stage, c); else buildDesk(stage, c);

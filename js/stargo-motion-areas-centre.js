@@ -45,11 +45,14 @@
       // the first and last labels stay inside the window
       var N = d.rail.length, gap = (o.w - 24) / N, l = 12 + gap / 2;
       if (gap > 198) { l = 111; gap = (o.w - 222) / (N - 1); }
-      var r = o.w - l, lw = Math.min(gap - 8, 190), y = 46 + Math.max(26, (o.h - 46 - 74) / 2);
+      var r = o.w - l, lw = Math.min(gap - 8, 190), y = 46 + Math.max(26, (o.h - 46 - 74) / 2), ly = 22, lh = o.w < 760 ? 56 : 38;
+      // a short window (1366 × 768): the rail rises and its labels close up to it; shorter
+      // still, the labels keep only the station names
+      if (y + ly + lh > o.h - 4) { ly = 18; y = Math.max(58, o.h - 4 - ly - lh); cl(c, 'is-nosub', y + ly + lh > o.h - 4); }
       box('sga-rl', c, l, y, r - l, 2);
       var fill = box('sga-rl is-fill', c, l, y, r - l, 2), tok = box('sga-tok', c, l - 7, y - 6, 14, 14);
       var nodes = d.rail.map(function (n, i) {
-        var x = l + i * gap, nd = box('sga-nd', c, x - 13, y - 12, 26, 26), lb = box('sga-nl', c, x - lw / 2, y + 22, lw);
+        var x = l + i * gap, nd = box('sga-nd', c, x - 13, y - 12, 26, 26), lb = box('sga-nl', c, x - lw / 2, y + ly, lw);
         glyph(i === N - 1 ? 'coin' : i === 0 ? 'doc' : i === 2 ? 'box' : i === 3 ? 'check' : i === 4 ? 'send' : 'doc', nd, 13);
         el('b', '', lb, n[0]);
         var sub = el('span', '', lb, n[3] ? n[1] + ' 0/' + n[3] : W < 900 && n[4] ? n[4] : n[1]);
