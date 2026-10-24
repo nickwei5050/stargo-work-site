@@ -192,7 +192,7 @@
 .is-phone .sg-pn-cust-ch i { width: 20px; height: 20px; border-radius: 6px; }
 .sg-pn-cust-line { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 12.5px; color: rgba(255, 226, 204, .7); opacity: 0; transition: opacity .35s; }
 .is-tall .sg-pn-cust { padding: 14px 18px; gap: 10px; }
-.is-tall .sg-pn-cust-f { gap: 6px 16px; }
+.is-tall .sg-pn-cust-f { gap: 6px 16px; grid-template-columns: auto auto; justify-content: space-between; }   /* each column as wide as its words: "48V 100Ah + Bluetooth BMS" shows whole */
 .is-tall .sg-pn-cust-r { font-size: 13.5px; }
 .is-tall .sg-pn-cust-src { display: none; }
 .is-tall.sg-pain-chats .sg-pn-pw-body { padding: 10px 14px; }

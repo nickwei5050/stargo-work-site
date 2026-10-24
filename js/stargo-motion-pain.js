@@ -300,7 +300,8 @@
       var n = R.name, ph = R.phone, X = { w: [] };
       var WIN = [
         { ic: 'mail', name: T('邮件', 'Mail'), who: 'Jonas Weber', k: T('报价', 'Price'), l: 'Re: Quotation v2', v: 'USD 128 / pc · 200 pcs', pv: 'USD 128 / pc' },
-        { ic: 'chat', name: 'WhatsApp', who: '+49 151 ••• 2207', k: T('规格', 'Spec'), l: '', v: 'Can the 48V 100Ah come with a Bluetooth BMS?', pv: 'Bluetooth BMS?' },
+        // lv: the low layout's window has room for one line of the question (1280 × 720, 1366 × 768)
+        { ic: 'chat', name: 'WhatsApp', who: '+49 151 ••• 2207', k: T('规格', 'Spec'), l: '', v: 'Can the 48V 100Ah come with a Bluetooth BMS?', lv: 'Bluetooth BMS on the 48V 100Ah?', pv: 'Bluetooth BMS?' },
         { ic: 'store', name: T('阿里国际站', 'Alibaba.com'), who: 'Muller Energie', k: T('样品', 'Sample'), l: T('样品申请', 'Sample request'), v: '2 pcs, ship to Hamburg', pv: T('2 组，寄汉堡', '2 pcs to Hamburg') },
         { ic: 'form', name: T('官网表单', 'Website form'), who: 'muller-energie.de', k: T('公司', 'Company'), l: 'Müller Energie GmbH', v: T('储能集成 · 年采购约 2,000 组', 'Storage integrator · ~2,000 packs a year'), pv: 'Müller Energie GmbH' }
       ];
@@ -325,7 +326,7 @@
           e = o.w;
           var b = o.body;
           el('span', 'sg-pn-frag-k', b, d.k);
-          if (i === 1) { el('div', 'sg-pn-bubble', b, d.v); }
+          if (i === 1) { el('div', 'sg-pn-bubble', b, n === 'low' ? d.lv : d.v); }
           else { if (d.l) el('div', 'sg-pn-frag-l', b, d.l); el('div', 'sg-pn-frag-v', b, d.v); }
         }
         X.w.push({ e: e, x: r[0], y: r[1], cw: r[2], chh: r[3], off: G.off[i] });
@@ -595,13 +596,15 @@
         } else {
           for (var j = 0; j < PINGS.length; j++) {
             var a = ease.out(seg(u, PINGS[j][2], PINGS[j][2] + 0.4));
-            op(X.pings[j], a * (1 - 0.55 * fix));
+            // a ping that the log scrolls up past the window's top fades as it goes, so no sliver of it stays cut by the edge
+            var gone = j + maxVis < PINGS.length ? seg(u, PINGS[j + maxVis][2] - 0.5, PINGS[j + maxVis][2] - 0.3) : 0;
+            op(X.pings[j], a * (1 - gone) * (1 - 0.55 * fix));
             put(X.pings[j], '-transform', a >= 1 ? 'none' : 'translateY(' + (10 * (1 - a)).toFixed(1) + 'px) scale(' + (0.97 + 0.03 * a).toFixed(4) + ')');
           }
-          // older pings scroll up when the window is full
+          // older pings scroll up when the window is full: the log makes room first, then the new ping fades in
           if (!pingH && X.pings[1]) pingH = X.pings[1].offsetTop - X.pings[0].offsetTop;
           var sc = 0;
-          for (var q = maxVis; q < PINGS.length; q++) sc += ease.io(seg(u, PINGS[q][2] - 0.05, PINGS[q][2] + 0.35));
+          for (var q = maxVis; q < PINGS.length; q++) sc += ease.io(seg(u, PINGS[q][2] - 0.4, PINGS[q][2]));
           put(X.stack, '-transform', sc ? 'translateY(' + (-sc * pingH).toFixed(1) + 'px)' : 'none');
         }
         op(X.metric.m, cnt ? 1 - 0.7 * fix : 0);

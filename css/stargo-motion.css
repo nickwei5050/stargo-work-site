@@ -75,7 +75,7 @@
 .sg-out > * { position: relative; z-index: 1; }
 .sg-in-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .sg-in-name { font-size: 17px; font-weight: 600; color: #f8f1e7; }
-.sg-in-new { font-size: 12.5px; font-weight: 600; letter-spacing: .04em; color: #1b130b; background: #f3c27a; border-radius: 99px; padding: 3px 8px; opacity: 0; transform: scale(.8); transition: opacity .35s, transform .45s cubic-bezier(.34, 1.56, .64, 1); }
+.sg-in-new { font-size: 13px; font-weight: 600; letter-spacing: .04em; color: #1b130b; background: #f3c27a; border-radius: 99px; padding: 3px 8px; opacity: 0; transform: scale(.8); transition: opacity .35s, transform .45s cubic-bezier(.34, 1.56, .64, 1); }
 .sg-in-new.is-on { opacity: 1; transform: none; }
 .sg-in-msg { font-size: 15.5px; color: rgba(248, 241, 231, .66); margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sg-in-who { font-size: 13px; color: rgba(248, 241, 231, .58); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -215,11 +215,11 @@
 .sg-radar.is-compact .sg-list-head { height: 34px; }
 .sg-radar.is-compact .sg-list-head b { font-size: 15px; }
 .sg-radar.is-compact .sg-list-head span { font-size: 13px; }
-.sg-radar.is-compact .sg-row { height: 70px; padding: 0 12px; gap: 10px; border-radius: 12px; }
-.sg-radar.is-compact .sg-cc { width: 32px; height: 23px; font-size: 12.5px; border-radius: 6px; }
+.sg-radar.is-compact .sg-row { height: 70px; padding: 0 12px; gap: 9px; border-radius: 12px; }
+.sg-radar.is-compact .sg-cc { width: 32px; height: 23px; font-size: 13px; border-radius: 6px; }
 .sg-radar.is-compact .sg-row-main b { font-size: 14px; }
-.sg-radar.is-compact .sg-row-main span { font-size: 12.5px; margin-top: 3px; }
-.sg-radar.is-compact .sg-row-score { width: 36px; }
+.sg-radar.is-compact .sg-row-main span { font-size: 13px; margin-top: 3px; }
+.sg-radar.is-compact .sg-row-score { width: 30px; }
 .sg-radar.is-compact .sg-row-score b { font-size: 18px; }
 .sg-radar.is-compact .sg-row-score > i { margin-top: 5px; }
 .sg-radar.is-compact .sg-ai { left: 14px; top: 250px; width: 470px; height: 124px; padding: 14px 18px; border-radius: 14px; }
@@ -245,7 +245,6 @@
 .sg-bat-brand { font-size: 26px; font-weight: 800; letter-spacing: .16em; fill: #fff; }
 .sg-bat-spec { font-size: 14px; font-weight: 500; letter-spacing: .04em; fill: rgba(255, 255, 255, .7); }
 .sg-canvas-tag { position: absolute; left: 16px; top: 16px; font-size: 13px; font-weight: 600; color: #fff; background: rgba(15, 12, 10, .62); border: 1px solid rgba(255, 255, 255, .14); padding: 6px 12px; border-radius: 99px; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
-.sg-canvas-mark { position: absolute; right: 16px; bottom: 14px; font-size: 11px; letter-spacing: .14em; font-weight: 600; color: rgba(255, 255, 255, .55); mix-blend-mode: difference; }
 .sg-prompt { position: absolute; height: 64px; display: flex; align-items: center; gap: 12px; padding: 0 12px 0 20px; border-radius: 14px; background: rgba(255, 255, 255, .04); border: 1px solid rgba(255, 236, 220, .1); color: #ffb37a; }
 .sg-prompt-text { flex: 1; min-width: 0; font-size: 17px; color: #f4eee8; white-space: nowrap; overflow: hidden; display: flex; align-items: center; }
 .sg-prompt-text > span { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -281,14 +280,13 @@
 .sg-studio .sg-note { left: 1124px; top: 698px; width: 452px; height: 124px; }
 /* compact studio: 800 × 450 — canvas, prompt and languages on the left, queue on the right */
 .sg-studio.is-compact .sg-canvas { border-radius: 12px; }
-.sg-studio.is-compact .sg-canvas-tag { left: 10px; top: 10px; font-size: 12px; padding: 4px 10px; }
-.sg-studio.is-compact .sg-canvas-mark { right: 12px; bottom: 10px; font-size: 10px; }
+.sg-studio.is-compact .sg-canvas-tag { left: 10px; top: 10px; font-size: 13px; padding: 3px 10px; }
 .sg-studio.is-compact .sg-prompt { height: 48px; padding: 0 8px 0 14px; gap: 10px; border-radius: 12px; }
 .sg-studio.is-compact .sg-prompt-text { font-size: 15px; }
 .sg-studio.is-compact .sg-prompt .sg-btn { height: 34px; min-width: 70px; padding: 0 12px; font-size: 13px; border-radius: 9px; }
 .sg-studio.is-compact:lang(en) .sg-prompt .sg-btn { min-width: 86px; }
 .sg-studio.is-compact .sg-langs { height: 34px; gap: 6px; }
-.sg-studio.is-compact .sg-lang { font-size: 12.5px; padding: 3px 7px; }
+.sg-studio.is-compact .sg-lang { font-size: 13px; padding: 2px 7px; }
 .sg-studio.is-compact .sg-lang-text { font-size: 14px; margin-left: 6px; }
 .sg-studio.is-compact .sg-queue { left: 534px; top: 54px; width: 252px; gap: 8px; }
 .sg-studio.is-compact .sg-queue-h { height: 26px; }
@@ -300,7 +298,7 @@
 .sg-studio.is-compact .sg-q-bar { margin-top: 6px; }
 .sg-studio.is-compact .sg-note { left: 534px; top: 372px; width: 252px; height: 52px; padding: 9px 12px; gap: 9px; align-items: center; border-radius: 12px; }
 .sg-studio.is-compact .sg-note b { font-size: 13px; }
-.sg-studio.is-compact .sg-note span { font-size: 12.5px; margin-top: 2px; white-space: nowrap; }
+.sg-studio.is-compact .sg-note span { font-size: 13px; margin-top: 2px; white-space: nowrap; }
 .sg-studio.is-compact .sg-note { line-height: 1.25; }
 /* mini studio: 272 × 153 — the prompt sits over the top of the picture, the product right of its label */
 .sg-studio.is-mini .sg-canvas { border-radius: 9px; }
@@ -334,3 +332,61 @@
 .sg-q-state.is-review + .sg-q-bar i { background: rgba(255, 197, 107, .5); }
 .sg-studio.is-mini .sg-btn.is-primary { box-shadow: none; }
 @media (max-width: 767px) { .sg-mo-panel { border-radius: 2px; } }
+/* loop 'short' (1100 × 560, short laptop screens): the line under the core keeps clear of the cards either side */
+.sg-loop.is-short .sg-loop-status { font-size: 17px; }
+/* loop square (tablets, 640 × 680, scale ≥ 1.2): five 104 px stage cards inside the 48 px inset; "Understand" / "Coordinate" fit one line */
+.sg-loop.is-compact:not(.is-phone) .sg-out { padding: 14px 9px; }
+.sg-loop.is-compact:not(.is-phone) .sg-out-name { font-size: 15px; }
+
+/* ---- mid (640 × 360): the switcher's panel where it is squeezed (1280 × 720, 1366 × 768, tablets), shown at a
+   scale of 0.92-1.2; nothing on it is set under 13 px, so every word renders at 12 px or more ---- */
+:is(.sg-radar, .sg-studio).is-mid .sg-app-bar { height: 38px; padding: 0 14px; gap: 8px; font-size: 15px; }
+:is(.sg-radar, .sg-studio).is-mid .sg-app-mark { width: 20px; height: 20px; border-radius: 6px; }
+:is(.sg-radar, .sg-studio).is-mid .sg-app-crumb::before { margin-right: 8px; }
+:is(.sg-radar, .sg-studio).is-mid .sg-app-live { font-size: 13px; padding: 3px 9px; gap: 6px; }
+:is(.sg-radar, .sg-studio).is-mid .sg-app-bar .sg-tag { position: static; transform: none; margin-left: auto; font-size: 13px; letter-spacing: .02em; }
+:is(.sg-radar, .sg-studio).is-mid .sg-app-bar .sg-tag + .sg-app-live { margin-left: 12px; }
+.sg-radar.is-mid .sg-kpis { left: 12px; top: 306px; gap: 22px; }
+.sg-radar.is-mid .sg-kpi span { font-size: 13px; }
+.sg-radar.is-mid .sg-kpi b { font-size: 18px; margin-top: 1px; }
+.sg-radar.is-mid .sg-list { left: 344px; top: 46px; width: 284px; height: 214px; }
+.sg-radar.is-mid .sg-list-head { height: 28px; }
+.sg-radar.is-mid .sg-list-head b { font-size: 14px; }
+.sg-radar.is-mid .sg-list-head span { font-size: 13px; }
+.sg-radar.is-mid .sg-row { height: 56px; padding: 0 10px; gap: 8px; border-radius: 10px; }
+.sg-radar.is-mid .sg-cc { width: 28px; height: 20px; font-size: 13px; letter-spacing: .02em; border-radius: 5px; }
+.sg-radar.is-mid .sg-row-main b { font-size: 13.5px; line-height: 1.3; }
+.sg-radar.is-mid .sg-row-main span { font-size: 13px; line-height: 1.3; margin-top: 1px; }
+.sg-radar.is-mid .sg-row-score { width: 26px; }
+.sg-radar.is-mid .sg-row-score b { font-size: 16px; }
+.sg-radar.is-mid .sg-row-score > i { margin-top: 3px; }
+.sg-radar.is-mid .sg-ai { left: 12px; top: 182px; width: 320px; height: 116px; padding: 10px 14px; border-radius: 12px; }
+.sg-radar.is-mid .sg-ai-head { font-size: 13px; gap: 7px; white-space: nowrap; }
+.sg-radar.is-mid .sg-ai-text { font-size: 14px; line-height: 1.45; margin-top: 5px; min-height: 40px; }
+.sg-radar.is-mid .sg-note { left: 344px; top: 268px; width: 284px; height: 78px; padding: 12px 14px; gap: 10px; border-radius: 12px; }
+.sg-radar.is-mid .sg-note b { font-size: 13.5px; }
+.sg-radar.is-mid .sg-note span { font-size: 13px; margin-top: 3px; }
+.sg-studio.is-mid .sg-canvas { border-radius: 10px; }
+.sg-studio.is-mid .sg-canvas-tag { left: 8px; top: 8px; font-size: 13px; padding: 2px 9px; }
+.sg-studio.is-mid .sg-prompt { height: 40px; padding: 0 5px 0 12px; gap: 8px; border-radius: 10px; }
+.sg-studio.is-mid .sg-prompt-text { font-size: 14px; }
+.sg-studio.is-mid .sg-prompt .sg-btn { height: 30px; min-width: 62px; padding: 0 10px; font-size: 13px; border-radius: 8px; box-shadow: none; }
+.sg-studio.is-mid:lang(en) .sg-prompt .sg-btn { min-width: 80px; }
+.sg-studio.is-mid .sg-langs { height: auto; flex-wrap: wrap; gap: 4px 5px; }
+.sg-studio.is-mid .sg-lang { font-size: 13px; padding: 1px 7px; border-radius: 6px; }
+.sg-studio.is-mid .sg-lang-text { flex: 1 0 100%; margin: 1px 0 0; font-size: 13.5px; }
+.sg-studio.is-mid .sg-queue { left: 428px; top: 46px; width: 200px; gap: 6px; }
+.sg-studio.is-mid .sg-queue-h { height: 22px; }
+.sg-studio.is-mid .sg-queue-h b { font-size: 14px; }
+.sg-studio.is-mid .sg-queue-h span { font-size: 13px; }
+.sg-studio.is-mid .sg-q { padding: 6px; gap: 8px; border-radius: 10px; }
+.sg-studio.is-mid .sg-q-thumb { border-radius: 6px; }
+.sg-studio.is-mid .sg-q-main b { font-size: 13px; line-height: 1.3; }
+.sg-studio.is-mid .sg-q-state { font-size: 13px; line-height: 1.3; margin-top: 1px; }
+.sg-studio.is-mid .sg-q-bar { margin-top: 5px; }
+.sg-studio.is-mid .sg-note { left: 428px; top: 322px; width: 200px; height: 30px; padding: 0 10px; gap: 7px; border-radius: 9px; }
+.sg-studio.is-mid .sg-note b { font-size: 13px; white-space: nowrap; }
+.sg-studio.is-midw .sg-queue { gap: 5px; }
+.sg-studio.is-midw .sg-q { padding: 5px 6px; }
+.sg-studio.is-midw .sg-q-main b, .sg-studio.is-midw .sg-q-state { line-height: 1.25; }
+.sg-studio.is-midw .sg-q-bar { margin-top: 4px; }
