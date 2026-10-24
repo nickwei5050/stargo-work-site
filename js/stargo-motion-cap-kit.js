@@ -37,5 +37,31 @@
     if (h != null) s.height = h + 'px';
     return e;
   };
+  /* Texts that have shorter forms (areas, crew): each is written in its first form and, once
+     the scene is built, takes the next form while it still overflows its box. Layout is read
+     once per pass, at build only; `done` hears the form that was kept. */
+  K.capAlts = function () {
+    var o = [];
+    for (var i = 0; i < arguments.length; i++) { var v = arguments[i]; if (v != null && o.indexOf(v) < 0) o.push(v); }
+    return o;
+  };
+  K.capFit = function () {
+    // a text overflows when its own width runs past its box, by any fraction of a pixel (which
+    // scrollWidth rounds away, while the ellipsis still shows); half a pixel to spare
+    var L = [], rng = document.createRange();
+    function over(e) { rng.selectNodeContents(e); return rng.getBoundingClientRect().width > e.getBoundingClientRect().width - 0.5; }
+    return {
+      add: function (e, list, done) { K.put(e, 'text', list[0]); if (list.length > 1 || done) L.push({ e: e, l: list, k: 0, done: done }); return e; },
+      run: function () {
+        for (var pass = 0; pass < 4; pass++) {
+          var ov = L.map(function (f) { return f.k < f.l.length - 1 && over(f.e); }), any = false;
+          L.forEach(function (f, i) { if (ov[i]) { f.k++; K.put(f.e, 'text', f.l[f.k]); any = true; } });
+          if (!any) break;
+        }
+        var D = L; L = [];
+        D.forEach(function (f) { if (f.done) f.done(f.l[f.k]); });
+      }
+    };
+  };
   return {};
 });

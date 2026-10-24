@@ -1,6 +1,7 @@
 /* AREAS · the centrepieces — the one drawing each area card is built around (the
    scenes are js/stargo-motion-areas.js; a window of the cast with a `body` gets one).
-   Each returns its tick(tau) and, when rows follow it, the x where they start. */
+   Each returns its tick(tau) and, when rows follow it, the x where they start. Last, where
+   the hand-off chips between windows land (K.sgaHandoff). */
 (window.STARGO_SCENES = window.STARGO_SCENES || []).push(function (K) {
   'use strict';
   var ZH = K.ZH, el = K.el, sv = K.sv, put = K.put, cl = K.cl, seg = K.seg, ease = K.ease;
@@ -79,6 +80,8 @@
       var q = box('sga-row is-q is-on sga-goal', c, x0, gy, gw, 36);
       glyph('search', q, 15, 'sga-q-ico');
       var qt = el('span', 'sga-q', q), qs = el('span', '', qt), car = el('i', 'sga-car', qt), chars = Array.from(d.goal[3]), qn = -1;
+      // a goal too long for its field is typed in its short form (measured once the card is built)
+      if (o.fit) o.fit.add(qs, K.capAlts(d.goal[3], d.goal[4], d.goal[5]), function (v) { chars = Array.from(v); });
       var svg = sv('svg', { class: 'sga-wires', width: o.w, height: o.h, 'aria-hidden': 'true' }, c);
       if (tall) sv('path', { d: 'M' + (x0 + inner / 2) + ' ' + (gy + 36) + 'V' + cy, class: 'sga-wire' }, svg);
       // the four in one row under the coordinator, centred on it where they fit
@@ -97,7 +100,7 @@
         return { e: e, w: sv('path', { d: dd, class: 'sga-wire is-lit', opacity: 0 }, svg), t: rl[2] };
       });
       var note = ry + H1 + 26 <= o.h - 6 ? box('sga-note', c, x0, ry + H1 + 8, inner, 18, d.note) : null;
-      return { tick: function (tau) {
+      return { full: function (on) { put(qs, 'text', on ? chars.join('') : ''); qn = -1; }, tick: function (tau) {
         var n = tau >= CLEAR ? 0 : Math.round(chars.length * seg(tau, d.goal[0], d.goal[1]));
         if (n !== qn) { qn = n; put(qs, 'text', n ? chars.slice(0, n).join('') : d.goal[2]); cl(q, 'is-ph', !n); }
         put(car, '-opacity', tau >= d.goal[0] && tau < d.goal[1] + 0.6 && (tau < d.goal[1] || (tau * 2.4 | 0) % 2 === 0) ? '1' : '0');
@@ -106,6 +109,86 @@
         if (note) cl(note, 'is-on', tau >= d.crew[4][2] + 0.3 && tau < CLEAR);
       } };
     }
+  };
+  /* The hand-off chips of an area card (js/stargo-motion-areas.js), placed once its texts are
+     final: stg the stage (W wide), Q its typing fields, SHOWN how long a chip is on screen. */
+  K.sgaHandoff = function (stg, W, Q, SHOWN, links) {
+    var RISE = 10;
+    /* Where a hand-off chip lands: the free space of the destination window nearest the row it
+       is for, swept from the window's near edge, clear of every text, pill and glyph that is on
+       screen while the chip is (rows by their time spans, earlier chips by theirs). Read once per
+       build. Nowhere free: no chip, the guide alone carries the hand-off. */
+    function marks(w) {
+      if (w.marks) return w.marks;
+      var M = w.marks = [], sr = stg.getBoundingClientRect(), k = sr.width / W || 1, rng = document.createRange();
+      function add(r, ro) {
+        if (!r.width || !r.height) return;
+        // a row is measured before it first shows, 6px below its place (.sga-row's rise), and it
+        // sinks back there as it leaves: it covers its place and those 6px
+        var f = ro ? ro.at : -1, u = ro ? ro.__until + 0.5 : 99, dy = ro ? -6 : 0;
+        M.push([(r.left - sr.left) / k - 3, (r.top - sr.top) / k + dy - 3, (r.right - sr.left) / k + 3, (r.bottom - sr.top) / k + 3, f, u]);
+      }
+      function walk(n, ro) {
+        for (var c = n.firstChild; c; c = c.nextSibling) {
+          if (c.nodeType === 3) { if (c.data.trim()) { rng.selectNodeContents(c); add(rng.getBoundingClientRect(), ro); } continue; }
+          if (c.nodeType !== 1 || c.classList.contains('sga-bar')) continue;
+          var r2 = c.__ro || ro;
+          if (c.matches('.sga-cc, .sga-gi, .sga-meter, .sga-pill, .sga-v, .sga-fact, .sga-tile, .sga-gate, .sga-btns, .sga-crew, .sga-nd, .sga-q-ico')) add(c.getBoundingClientRect(), r2);
+          if (c.namespaceURI !== 'http://www.w3.org/2000/svg') walk(c, r2);
+        }
+      }
+      // measured as wide as they get: facts with their values, fields with their full text
+      function facts(on) { w.rows.forEach(function (o) { if (o.f && o.r.k === 'fx') o.f.forEach(function (F) { put(F.t, 'text', on ? F.v : F.f[0]); }); }); }
+      w.rows.forEach(function (o) { o.r.__until = o.until; });
+      facts(true);
+      if (w.body && w.body.full) w.body.full(true);
+      Q.forEach(function (o) { put(o.q, 'text', o.chars.length >= Array.from(o.ph || '').length ? o.chars.join('') : o.ph); });
+      walk(w.c, null);
+      Q.forEach(function (o) { put(o.q, 'text', ''); });
+      if (w.body && w.body.full) w.body.full(false);
+      facts(false);
+      return M;
+    }
+    function lane(o) {
+      var a = o.a, b = o.b, t0 = o.l.t, t1 = t0 + SHOWN, M = marks(b), yt = o.yb == null ? o.ya : o.yb, cw, ch;
+      // a free box of the chip's size in b; `swept`: so is the strip from b's near edge to it
+      function find(swept) {
+        // risen in place, it starts RISE lower
+        var best = null, bc = 1e9, n = Math.floor((b.w - 20 - cw) / 16), lo = swept ? 0 : RISE;
+        for (var y = b.y + 46; y + ch + lo <= b.y + b.h - 5; y += 2) {
+          for (var j = 0; j <= n; j++) {
+            var xl = o.right ? b.x + 10 + j * 16 : b.x + b.w - 10 - cw - j * 16;
+            var x0 = swept && o.right ? b.x : xl, x1 = swept && !o.right ? b.x + b.w : xl + cw + 4, free = true;
+            for (var m = 0; m < M.length && free; m++) { var q = M[m]; if (q[5] > t0 - 0.1 && q[4] < t1 && q[0] < x1 && q[2] > x0 && q[1] < y + ch + lo && q[3] > y) free = false; }
+            if (!free) continue;
+            var cost = Math.abs(y + ch / 2 - yt) + j * (swept ? 10 : 3);
+            if (cost < bc) { bc = cost; best = [xl, y]; }
+            break;
+          }
+        }
+        return best;
+      }
+      // slid in from the edge; else risen in place; then the same at a smaller size (and shorter text)
+      var best = null, slide = false;
+      for (var k = 0; k < 2 && !best; k++) {
+        if (k) { cl(o.chip, 'is-sm', true); if (o.l.ts) put(o.chip.firstChild.lastChild, 'text', o.l.ts); }
+        cw = o.chip.firstChild.offsetWidth; ch = o.chip.firstChild.offsetHeight;
+        best = find(true); slide = !!best;
+        if (!best) best = find(false);
+      }
+      if (!best) { o.clip.parentNode.removeChild(o.clip); o.chip = null; return; }
+      // the chip keeps its place while it is shown: a later chip to this window goes round it
+      M.push([best[0] - 4, best[1] - 4, best[0] + cw + 4, best[1] + ch + 4, t0, t1]);
+      var edge = o.right ? a.x + a.w : a.x, cl0 = o.right ? edge : b.x, cw0 = o.right ? b.x + b.w - edge : edge - b.x, yl = best[1] + ch / 2;
+      var cs = o.clip.style; cs.left = cl0 + 'px'; cs.top = (best[1] - 28) + 'px'; cs.width = cw0 + 'px'; cs.height = (ch + 56) + 'px';
+      o.chip.style.left = (best[0] - cl0) + 'px'; o.chip.style.top = '28px';
+      // it starts just behind the source window's edge (or a little low, where it rises in place)
+      o.dx = slide ? (o.right ? -(best[0] - cl0 + cw + 2) : (edge - best[0] + 2)) : 0; o.dy = slide ? 0 : RISE;
+      put(o.chip, '-transform', 'translate(' + o.dx + 'px,' + o.dy + 'px)');
+      var bx = o.right ? b.x : b.x + b.w, gx = (edge + bx) / 2;
+      o.guide.setAttribute('d', 'M' + edge + ' ' + o.ya + 'C' + gx + ' ' + o.ya + ' ' + gx + ' ' + yl + ' ' + bx + ' ' + yl);
+    }
+    links.forEach(function (o) { if (o.chip) lane(o); });
   };
   return {};
 });
