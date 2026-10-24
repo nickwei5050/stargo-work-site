@@ -57,14 +57,16 @@ for (const spec of specs) {
   }
 }
 
+const REGISTRY = JSON.parse(readFileSync(new URL('./imagegen/product-assets.json', import.meta.url), 'utf8')).assets;
 function parentSource(id) {
-  const reg = JSON.parse(readFileSync(new URL('./imagegen/product-assets.json', import.meta.url), 'utf8')).assets;
-  const a = reg.find((x) => x.id === id);
+  const a = REGISTRY.find((x) => x.id === id);
   if (!a) throw new Error(`real-screens: asset:${id} is not a registered product image`);
   return a.sourceFile;
 }
 
-const byId = new Map(REAL_ASSETS.map((a) => [a.id, a]));
+/* A slot may also show a capture already published before this pass (live05-growth-home-16x9 and the
+   other live and m rows of tools/imagegen/product-assets.json): the same clean captures. */
+const byId = new Map([...REGISTRY.filter((a) => /^(?:live|m)\d{2}-/.test(a.id)), ...REAL_ASSETS].map((a) => [a.id, a]));
 export const realAsset = (id) => {
   const a = byId.get(id);
   if (!a) throw new Error(`real-screens: no crop ${id}`);
