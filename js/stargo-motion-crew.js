@@ -5,11 +5,13 @@
 
    crewRoles — 「288 个跨部门专业岗位」: the role directory as 288 dots in its ten
      functions (tools/copy.mjs WORKFORCE_ROLE_GROUPS: 15, 50, 16, 5, 20, 4, 14, 19, 129,
-     16). A task is typed; the directory narrows to the five roles it needs, which
-     lift out into one team. 288 is a directory, not 288 people.
+     16). A task is typed; the directory narrows to the four roles it needs and a
+     coordinator (the team scene's "4 at work" and its coordinator), who lift out into
+     one team that is then handed to the board. 288 is a directory, not 288 people.
    crewBoard — 「员工任务、进度与成果」: a board where tasks move 待开始 → 进行中 →
-     待你确认 → 已完成 with what they delivered attached. A person approves the email
-     draft; the quote below the floor price keeps waiting for approval.
+     待你确认 → 已完成 with what they delivered attached, and the results collect in a
+     tray under the board. A person approves the email draft (the buttons take the
+     result's place in its card); the quote below the floor price keeps waiting.
 
    Layouts follow the host so the scale stays ~1 (type ≥ 12px on phones):
      tall   W × 724  (W 440–640)  desktop cards
@@ -19,28 +21,10 @@
   'use strict';
   var T = K.T, ZH = K.ZH, el = K.el, sv = K.sv, put = K.put, cl = K.cl, c01 = K.c01, seg = K.seg, ease = K.ease, mod = K.mod, textSwap = K.textSwap;
 
-  var GL = {
-    research: 'M10.5 4.5a6 6 0 1 0 0 12 6 6 0 0 0 0-12zM15 15l4.5 4.5',
-    product: 'M12 3.5l7.5 4.2v8.6L12 20.5l-7.5-4.2V7.7zM4.5 7.7 12 12l7.5-4.3M12 12v8.5',
-    sales: 'M4.5 8.5h15v10h-15zM9 8.5V6.2c0-.7.5-1.2 1.2-1.2h3.6c.7 0 1.2.5 1.2 1.2v2.3M4.5 13h15',
-    creative: 'M4.5 5.5h15v13h-15zM4.5 15.5l4.5-4.5 4 4 2.5-2.5 4 4M15 9.5h.01',
-    layers: 'M12 4l8 4.5-8 4.5-8-4.5zM4 12.5l8 4.5 8-4.5M4 16.5l8 4.5 8-4.5',
-    search: 'M10.5 4.5a6 6 0 1 0 0 12 6 6 0 0 0 0-12zM15 15l4.5 4.5',
-    check: 'M5 12.5l4.5 4.5L19 7.5',
-    doc: 'M7 3.5h7l4 4v13H7zM14 3.5v4h4M9.5 12h6M9.5 15.5h6'
-  };
-  function glyph(name, parent, size, cls) {
-    var s = sv('svg', { viewBox: '0 0 24 24', width: size, height: size, fill: 'none', 'aria-hidden': 'true', class: cls || 'sg-ico' }, parent);
-    sv('path', { d: GL[name], stroke: 'currentColor', 'stroke-width': 1.7, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, s);
-    return s;
-  }
-  function box(cls, parent, x, y, w, h, text) {
-    var e = el('div', cls, parent, text), s = e.style;
-    s.left = x + 'px'; s.top = y + 'px';
-    if (w != null) s.width = w + 'px';
-    if (h != null) s.height = h + 'px';
-    return e;
-  }
+  // the glyphs are the capabilities page's (js/stargo-motion-cap-kit.js), under the roles' names
+  var GA = { research: 'search', product: 'box', creative: 'image' };
+  function glyph(n, p, s, c) { return K.capGlyph(GA[n] || n, p, s, c); }
+  function box(c, p, x, y, w, h, t) { return K.capBox(c, p, x, y, w, h, t); }
   function pick(w, h) {
     if (h >= 620 && w >= 420) return { kind: 'tall', w: Math.max(440, Math.min(640, Math.round(w / 4) * 4)), h: 724 };
     if (h >= 440 && w >= 560) return { kind: 'mid', w: Math.max(560, Math.min(720, Math.round(w / 4) * 4)), h: 500 };
@@ -68,26 +52,29 @@
   }
 
   /* ===================== crewRoles: 288 → the five a task needs ===================== */
+  // the ten functions as tools/copy.mjs WORKFORCE_ROLE_GROUPS names them (English shortened to fit
+  // the label column: tall, then tablet)
   var DEPTS = [
-    [T('企业通用支持', 'Enterprise'), T('通用支持', 'Enterprise'), 15], [T('客户开发与市场', 'Marketing'), T('客户开发', 'Marketing'), 50],
-    [T('销售', 'Sales'), T('销售', 'Sales'), 16], [T('客户服务', 'Service'), T('客户服务', 'Service'), 5],
-    [T('风控与合规', 'Risk'), T('风控合规', 'Risk'), 20], [T('供应链', 'Supply chain'), T('供应链', 'Supply'), 4],
+    [T('企业通用支持', 'Enterprise essentials'), T('通用支持', 'Enterprise'), 15], [T('客户开发与市场', 'Customer development'), T('客户开发', 'Customer dev.'), 50],
+    [T('销售', 'Sales'), T('销售', 'Sales'), 16], [T('客户服务', 'Customer service'), T('客户服务', 'Customer service'), 5],
+    [T('风控与合规', 'Risk & compliance'), T('风控合规', 'Risk & compliance'), 20], [T('供应链', 'Supply chain'), T('供应链', 'Supply chain'), 4],
     [T('财务', 'Finance'), T('财务', 'Finance'), 14], [T('运营', 'Operations'), T('运营', 'Operations'), 19],
-    [T('产品与工程', 'Engineering'), T('产品工程', 'Engineering'), 129], [T('专业服务', 'Services'), T('专业服务', 'Services'), 16]
+    [T('产品与工程', 'Product & engineering'), T('产品工程', 'Engineering'), 129], [T('专业服务', 'Professional services'), T('专业服务', 'Prof. services'), 16]
   ];
-  // the five: department, the dot's index in it, glyph, name, short name, phone name
+  // the four and their coordinator (from 运营, as the workforce page's 统筹协调 AI 员工):
+  // department, the dot's index in it, glyph, name, short name, phone name
   var PICKS = [
     [1, 7, 'research', T('市场研究员', 'Market researcher'), T('市场研究员', 'Researcher'), T('研究员', 'Research')],
     [8, 40, 'product', T('产品工程师', 'Product engineer'), T('产品工程师', 'Engineer'), T('工程师', 'Engineer')],
     [2, 3, 'sales', T('销售', 'Sales'), T('销售', 'Sales'), T('销售', 'Sales')],
     [1, 31, 'creative', T('创意', 'Creative'), T('创意', 'Creative'), T('创意', 'Creative')],
-    [0, 4, 'layers', T('统筹', 'Coordinator'), T('统筹', 'Coordinator'), T('统筹', 'Lead')]
+    [7, 9, 'layers', T('统筹', 'Coordinator'), T('统筹', 'Coordinator'), T('统筹', 'Coordinator')]
   ];
   // the width of the five chips in a row (a generous estimate of the type), to choose the names that fit
   function slotsW(ix, ph) { return PICKS.reduce(function (s, p) { return s + Array.from(p[ix]).length * (ZH ? 13.5 : 7.4) + (ph ? 23 : 51); }, -7); }
 
   function RolesScene() {
-    var P = 14, TY0 = 0.4, TY1 = 2, GO = 2.2, SCAN0 = 2.4, SCAN1 = 3.7, FLY0 = 3.9, FLY = 0.75, STEP = 0.32, TEAM = 6.1, CLEAR = 12.8;
+    var P = 11, TY0 = 0.4, TY1 = 2, GO = 2.2, SCAN0 = 2.4, SCAN1 = 3.7, FLY0 = 3.9, FLY = 0.75, STEP = 0.32, TEAM = 6.1, HAND = 7.6, CLEAR = 10.4;
     var TASK = Array.from(T('开发德国储能经销商', 'Find storage distributors in Germany'));
     var lp = picker(), R, kind, W, H;
 
@@ -101,10 +88,11 @@
       var head = box('sgc-head', stage, pad, top, W - 2 * pad, ph ? 34 : 44);
       R.num = el('b', 'sgc-num', head, '288');
       R.numK = el('span', 'sgc-numk', head, T('个岗位 · 10 个职能', 'roles · 10 functions'));
+      R.numX = el('span', 'sgc-numx', head, T('+ 统筹', '+ coordinator'));
       var qy = ph ? top + 40 : top + (mid ? 52 : 56), qh = ph ? 34 : 40;
       var q = box('sgc-q', stage, pad, qy, W - 2 * pad, qh);
       glyph('search', q, 15, 'sgc-q-ico');
-      var qt = el('span', 'sgc-q-text', q); R.q = el('span', '', qt); R.qn = -1;
+      var qt = el('span', 'sgc-q-text', q); R.q = el('span', '', qt); R.car = el('i', 'sgc-car', qt); R.qn = -1;
       R.go = el('span', 'sg-btn is-primary sgc-go', q, T('筛选', 'Filter'));
       // the directory
       var inner = W - 2 * pad - (ph ? 20 : 28), nm = ph ? 5 : slotsW(3) <= inner ? 3 : 4, two = ph && slotsW(5, 1) > inner;
@@ -112,7 +100,7 @@
       var fy = qy + qh + (ph ? 10 : 16), fh = H - fy - trayH - (ph ? 10 : 16);
       // tablets set the ten functions in two columns of five, so the dots keep their size
       var cols = mid ? 2 : 1, cg = 26, colW = (W - 2 * pad - cg * (cols - 1)) / cols, split = mid ? 5 : DEPTS.length;
-      var labW = ph ? 0 : mid ? (ZH ? 100 : 124) : W < 560 ? (ZH ? 104 : 120) : 150, fw = colW - labW;
+      var labW = ph ? 0 : mid ? (ZH ? 100 : 146) : W < 560 ? (ZH ? 104 : 140) : ZH ? 150 : 186, fw = colW - labW;
       var pitch = 18, rows, minH = ph ? 0 : 17, gap0 = ph ? (two ? 2 : 4) : 7;
       function colH(a, b, g) { var h = -g; for (var i = a; i < b; i++) h += Math.max(rows[i] * pitch, minH) + g; return h; }
       for (; pitch >= 8; pitch--) {
@@ -167,9 +155,10 @@
     function tick(t) {
       var tau = mod(t, P), i;
       cl(R.stage, 'is-clear', tau >= CLEAR);
-      var n = Math.round(TASK.length * c01((tau - TY0) / (TY1 - TY0)));
+      var n = tau >= CLEAR ? 0 : Math.round(TASK.length * c01((tau - TY0) / (TY1 - TY0)));
       if (R.qn !== n) { R.qn = n; put(R.q, 'text', n ? TASK.slice(0, n).join('') : T('写下一个任务…', 'Describe a task…')); cl(R.q, 'is-ph', !n); }
-      cl(R.q.parentNode, 'is-typing', tau >= TY0 - 0.2 && tau < TY1 + 0.3);
+      // the caret blinks in script, so it stops with the scene off screen
+      put(R.car, '-opacity', tau >= TY0 - 0.2 && tau < TY1 + 0.6 && (tau < TY1 || (tau * 2.4 | 0) % 2 === 0) ? '1' : '0');
       cl(R.go, 'is-press', tau >= GO && tau < GO + 0.18);
       cl(R.go, 'is-done', tau >= GO + 0.18 && tau < CLEAR);
       // the scan narrows 288 to 5
@@ -178,10 +167,11 @@
         put(R.scan[i], 'opacity', u > 0 && u < 1 ? '1' : '0');
         put(R.scan[i], 'transform', 'translate(' + (R.fw * ease.io(u)).toFixed(1) + ' 0)');
       }
-      var cnt = tau < SCAN0 ? 288 : Math.round(288 - 283 * ease.out(u));
+      // while it counts down the line says it is matching; at the end, four and a coordinator
+      var cnt = tau < SCAN0 || tau >= CLEAR ? 288 : Math.round(288 - 284 * ease.out(u));
       if (R.cnt !== cnt) { R.cnt = cnt; put(R.num, 'text', String(cnt)); }
-      var k2 = tau >= SCAN1 && tau < CLEAR ? 1 : 0;
-      if (R.k2 !== k2) { R.k2 = k2; textSwap(R.numK, k2 ? T('个岗位适合这项任务', 'roles fit this task') : T('个岗位 · 10 个职能', 'roles · 10 functions')); }
+      var k2 = tau < SCAN0 || tau >= CLEAR ? 0 : tau < SCAN1 ? 1 : 2;
+      if (R.k2 !== k2) { R.k2 = k2; textSwap(R.numK, [T('个岗位 · 10 个职能', 'roles · 10 functions'), T('匹配中…', 'matching…'), T('个岗位', 'roles')][k2]); cl(R.numX, 'is-on', k2 === 2); }
       for (i = 0; i < R.dept.length; i++) {
         var D = R.dept[i], dim = on && tau >= SCAN0 + (SCAN1 - SCAN0) * 0.15 * (i % 4 + 1);
         cl(D.p, 'is-dim', dim);
@@ -205,24 +195,28 @@
         put(p.fly, '-opacity', moving ? '1' : '0');
         cl(p.slot, 'is-on', tau >= p.t + FLY - 0.05 && tau < CLEAR);
       }
-      var formed = tau >= TEAM && tau < CLEAR ? 1 : 0;
-      if (R.formed !== formed) { R.formed = formed; textSwap(R.teamBtn, formed ? T('已组队 · 5 位', 'Team of 5 formed') : T('待组队', 'Not formed')); cl(R.teamBtn, 'is-on', !!formed); cl(R.tray, 'is-on', !!formed); }
+      // formed, then handed to the task board (the next card)
+      var formed = tau >= CLEAR ? 0 : tau >= HAND ? 2 : tau >= TEAM ? 1 : 0;
+      if (R.formed !== formed) { R.formed = formed; textSwap(R.teamBtn, [T('待组队', 'Not formed'), T('已组队 · 4 位 + 统筹', 'Team: 4 + coordinator'), T('已派活 · 见任务看板', 'Assigned · see the task board')][formed]); cl(R.teamBtn, 'is-on', !!formed); cl(R.tray, 'is-on', !!formed); }
     }
-    return { layouts: lp.layouts, pick: lp.pick, build: build, tick: tick, start: 0, still: 8.5, cue: function (t) { return Math.ceil(t / P) * P; } };
+    return { layouts: lp.layouts, pick: lp.pick, build: build, tick: tick, start: 0, still: 7, cue: function (t) { return Math.ceil(t / P) * P; } };
   }
 
   /* ===================== crewBoard: tasks, progress, results ===================== */
   var COLS = [T('待开始', 'To do'), T('进行中', 'In progress'), T('待你确认', 'Needs you'), T('已完成', 'Done')];
   // role glyph, role, task, [[time, column]], what it delivers (shown from the column it names)
+  // moves at least MOVE apart, so no two cards travel at once
   var TASKS = [
-    { g: 'research', role: T('市场研究员', 'Researcher'), a: T('筛选储能经销商', 'List storage distributors'), s: [[0, 0], [1, 1], [4.6, 3]], out: T('12 家客户', '12 accounts') },
-    { g: 'product', role: T('产品工程师', 'Product engineer'), a: T('核对 48V 100Ah 规格', 'Check the 48V 100Ah specs'), s: [[0, 0], [0.6, 1], [3.3, 3]], out: T('规格核对 3/3', 'Specs 3 of 3') },
-    { g: 'sales', role: T('销售', 'Sales'), a: T('起草开发信', 'Draft the outreach email'), s: [[0, 0], [3.6, 1], [6.3, 2], [9.1, 3]], out: T('开发信草稿', 'Email draft'), out2: T('草稿已批准', 'Approved') },
-    { g: 'creative', role: T('创意', 'Creative'), a: T('做开发信配图', 'Make the email images'), s: [[0, 0], [5, 1], [7.8, 3]], out: T('素材 3 张', '3 images') },
+    { g: 'research', role: T('市场研究员', 'Researcher'), a: T('筛选储能经销商', 'List storage distributors'), s: [[0, 0], [1.4, 1], [4.8, 3]], out: T('12 家客户', '12 accounts') },
+    { g: 'product', role: T('产品工程师', 'Product engineer'), a: T('核对 48V 规格', 'Check the 48V specs'), s: [[0, 0], [0.6, 1], [3.2, 3]], out: T('规格核对 3/3', 'Specs 3 of 3') },
+    { g: 'sales', role: T('销售', 'Sales'), a: T('起草开发信', 'Draft the outreach email'), s: [[0, 0], [4, 1], [6.5, 2], [9.3, 3]], out: T('开发信草稿', 'Email draft'), out2: T('草稿已批准', 'Approved') },
+    { g: 'creative', role: T('创意', 'Creative'), a: T('做开发信配图', 'Make the email images'), s: [[0, 0], [5.6, 1], [7.8, 3]], out: T('素材 3 张', '3 images') },
     { g: 'doc', role: T('销售', 'Sales'), a: T('报价 Q-1042', 'Quote Q-1042'), s: [[0, 2]], out: T('低于底价 · 待审批', 'Below floor price'), wait: 1 }
   ];
+  // the tray under a tall board: each result as its task is done
+  var OUTS = [['product', T('规格核对 3/3', 'Spec check 3/3'), 3.2], ['research', T('12 家客户名单', '12-account list'), 4.8], ['creative', T('开发信配图 3 张', '3 email images'), 7.8], ['sales', T('开发信 · 已批准', 'Email · approved'), 9.3]];
   function BoardScene() {
-    var P = 15, TAP = 8.7, CLEAR = 14, MOVE = 0.65;
+    var P = 15, TAP = 8.9, CLEAR = 14, MOVE = 0.65;
     var lp = picker(), R, kind, W, H;
     // every moment a card changes column, and where each card sits after it
     var EV = [];
@@ -260,13 +254,24 @@
       } else {
         var cg = 8, cw = Math.floor((W - 2 * pad - 3 * cg) / 4), ch = kind === 'mid' ? 80 : 104, sg = kind === 'mid' ? 6 : 8;
         R.geo = { x: function (c) { return pad + c * (cw + cg); }, y: function (s) { return by + 34 + s * (ch + sg); } };
+        // a tall board ends where four done cards end; the results tray takes the rest
+        var colH = kind === 'tall' ? 34 + 4 * (ch + sg) + 4 : H - by - pad;
+        if (kind === 'tall') tray(stage, pad, by + colH + 10, W - 2 * pad, H - pad - by - colH - 10);
         COLS.forEach(function (c, j) {
-          var col = box('sgc-col is-c' + j, stage, R.geo.x(j), by, cw, H - by - pad);
+          var col = box('sgc-col is-c' + j, stage, R.geo.x(j), by, cw, colH);
           var hd = el('div', 'sgc-col-h', col); el('i', '', hd); el('span', '', hd, c);
         });
         TASKS.forEach(function (k) { R.cards.push(card(stage, k, 0, 0, cw, ch, false)); });
       }
       R.cur = cursor(stage);
+    }
+    function tray(stage, x, y, w, h) {
+      // the roles card's team tray, holding what the tasks hand in
+      var t = box('sgc-tray sgc-res', stage, x, y, w, h), hd = el('div', 'sgc-tray-h sgc-res-h', t);
+      el('b', '', hd, T('交付成果', 'Results'));
+      R.resN = el('span', '', hd, '0 / ' + OUTS.length);
+      var row = el('div', 'sgc-slots', t);
+      R.res = OUTS.map(function (o) { var c = el('span', 'sgc-slot sgc-res-i', row); glyph(o[0], c, 13); el('span', '', c, o[1]); return c; });
     }
     function card(stage, k, x, y, w, h, row) {
       var c = box('sgc-card' + (row ? ' is-row' : ''), stage, x, y, w, h);
@@ -308,13 +313,18 @@
           put(o.c, 'data-col', String(c));
           if (o.pill) textSwap(o.pill, COLS[c]);
           if (o.steps) for (var s = 0; s < 4; s++) cl(o.steps[s], 'is-on', s <= c);
-          var shown = c === 3 || (c === 2 && !!k.wait) || (c === 2 && !!k.out2);
+          var shown = c === 3 || (c === 2 && !!k.wait);
           cl(o.out, 'is-on', shown);
           put(o.outT, 'text', c === 3 && k.out2 ? k.out2 : k.out);
         }
         if (o.btns) { cl(o.btns, 'is-on', c === 2); cl(o.ok, 'is-press', tau >= TAP - 0.04 && tau < TAP + 0.2); }
       }
       for (i = 1; i < 4; i++) put(R.sum[i - 1], 'text', String(cnt[i]));
+      if (R.res) {
+        var nr = 0;
+        for (i = 0; i < R.res.length; i++) { var got = tau >= OUTS[i][2] && tau < CLEAR; if (got) nr++; cl(R.res[i], 'is-on', got); }
+        put(R.resN, 'text', nr + ' / ' + OUTS.length);
+      }
       // the person approves the draft
       var cu = R.cur, card2 = R.cards[2];
       if (tau < TAP - 1.3 || tau > TAP + 0.9) { put(cu.c, '-opacity', '0'); return; }

@@ -23,14 +23,16 @@
 .sgc-head { position: absolute; display: flex; align-items: baseline; gap: 12px; white-space: nowrap; }
 .sgc-num { font-size: 44px; font-weight: 600; line-height: 1; letter-spacing: -.03em; color: #fff3df; font-variant-numeric: tabular-nums; }
 .sgc-numk { font-size: 14px; color: rgba(244, 238, 232, .6); }
+.sgc-numx { margin-left: -6px; font-size: 14px; font-weight: 600; color: #f3c27a; opacity: 0; transition: opacity .4s; }
+.sgc-numx.is-on { opacity: 1; }
 .sgc.is-phone .sgc-num { font-size: 30px; }
-.sgc.is-phone .sgc-numk { font-size: 12.5px; }
+.sgc.is-phone :is(.sgc-numk, .sgc-numx) { font-size: 12.5px; }
 .sgc-q { position: absolute; display: flex; align-items: center; gap: 10px; padding: 0 5px 0 13px; border-radius: 11px; background: rgba(0, 0, 0, .2); border: 1px solid rgba(255, 236, 220, .1); }
 .sgc-q-ico { flex: none; color: rgba(244, 238, 232, .45); }
 .sgc-q-text { flex: 1; min-width: 0; display: flex; align-items: center; font-size: 15px; font-weight: 600; color: #f8f1e7; white-space: nowrap; overflow: hidden; }
 .sgc-q-text > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .sgc-q-text > span.is-ph { color: rgba(244, 238, 232, .32); font-weight: 400; }
-.sgc-q-text.is-typing::after { content: ""; flex: none; width: 2px; height: 1.05em; margin-left: 2px; background: #ff8a3d; animation: sg-blink 1s steps(1) infinite; }
+.sgc-car { flex: none; width: 2px; height: 1.05em; margin-left: 2px; background: #ff8a3d; opacity: 0; }
 .sgc-go { flex: none; height: 30px; padding: 0 14px; font-size: 13px; border-radius: 8px; }
 .sgc.is-phone .sgc-q-text { font-size: 13.5px; }
 .sgc.is-phone .sgc-go { height: 26px; padding: 0 10px; font-size: 12.5px; }
@@ -70,20 +72,16 @@
 .sgc-sum-i { display: inline-flex; align-items: baseline; gap: 6px; }
 .sgc-sum-i i { width: 7px; height: 7px; border-radius: 50%; align-self: center; }
 .sgc-sum-i b { font-size: 19px; font-weight: 600; color: #f8f1e7; font-variant-numeric: tabular-nums; }
-.sgc-sum-i.is-c1 i { background: #f3c27a; }
-.sgc-sum-i.is-c2 i { background: #ff8a3d; }
-.sgc-sum-i.is-c2 b { color: #ffb37a; }
-.sgc-sum-i.is-c3 i { background: #9fe0b0; }
+.sgc-sum-i.is-c2 b, .sgc-col.is-c2 .sgc-col-h { color: #ffb37a; }
 .sgc.is-phone .sgc-sum { gap: 12px; font-size: 12px; }
 .sgc.is-phone .sgc-sum-i b { font-size: 16px; }
 .sgc-col { position: absolute; border-radius: 13px; background: rgba(255, 246, 232, .022); border: 1px solid rgba(255, 236, 220, .05); }
 .sgc-col.is-c2 { background: rgba(255, 138, 61, .035); border-color: rgba(255, 138, 61, .16); }
 .sgc-col-h { display: flex; align-items: center; gap: 7px; height: 32px; padding: 0 11px; font-size: 13px; font-weight: 600; color: rgba(244, 238, 232, .7); white-space: nowrap; }
 .sgc-col-h i { width: 7px; height: 7px; border-radius: 50%; background: rgba(244, 238, 232, .3); }
-.sgc-col.is-c1 .sgc-col-h i { background: #f3c27a; }
-.sgc-col.is-c2 .sgc-col-h { color: #ffb37a; }
-.sgc-col.is-c2 .sgc-col-h i { background: #ff8a3d; }
-.sgc-col.is-c3 .sgc-col-h i { background: #9fe0b0; }
+.is-c1 > .sgc-col-h i, .sgc-sum-i.is-c1 i { background: #f3c27a; }
+.is-c2 > .sgc-col-h i, .sgc-sum-i.is-c2 i { background: #ff8a3d; }
+.is-c3 > .sgc-col-h i, .sgc-sum-i.is-c3 i { background: #9fe0b0; }
 .sgc-card { position: absolute; left: 0; top: 0; z-index: 2; padding: 10px 11px; border-radius: 11px; background: #1d1712; border: 1px solid rgba(255, 228, 190, .1); transition: border-color .5s, background-color .5s; }
 .sgc-card.is-moving { z-index: 4; border-color: rgba(255, 226, 176, .6); }
 .sgc-card[data-col="1"] { border-color: rgba(243, 194, 122, .32); }
@@ -91,8 +89,10 @@
 .sgc-card[data-col="3"] { border-color: rgba(120, 200, 140, .26); }
 .sgc-card-r { display: flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(244, 238, 232, .5); white-space: nowrap; overflow: hidden; }
 .sgc-card-r svg { flex: none; color: #f3c27a; }
-.sgc-card-t { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin-top: 5px; font-size: 13.5px; font-weight: 600; line-height: 1.3; color: #f8f1e7; }
-.sgc.is-mid .sgc-card-t { -webkit-line-clamp: 1; font-size: 13px; }
+.sgc-card-t { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin-top: 5px; font-size: 13.5px; font-weight: 600; line-height: 1.3; color: #f8f1e7; text-wrap: balance; }
+/* a tablet card keeps two lines for its title and lets the role go */
+.sgc.is-mid .sgc-card-r { display: none; }
+.sgc.is-mid .sgc-card-t { margin-top: 0; font-size: 13px; }
 .sgc.is-mid .sgc-out { bottom: 8px; height: 20px; }
 .sgc-out { position: absolute; left: 11px; right: 11px; bottom: 9px; display: flex; align-items: center; gap: 5px; height: 22px; padding: 0 7px; border-radius: 6px; font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; color: #fff3df; background: rgba(243, 194, 122, .12); opacity: 0; transform: translateY(4px); transition: opacity .4s, transform .5s cubic-bezier(.22, 1, .36, 1); }
 .sgc-out > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
@@ -103,9 +103,16 @@
 .sgc-btns { position: absolute; display: flex; gap: 5px; opacity: 0; transition: opacity .35s; }
 .sgc-btns.is-on { opacity: 1; }
 .sgc-btns .sg-btn { height: 24px; padding: 0 8px; font-size: 12px; border-radius: 7px; }
-/* in a board column the draft's card grows a row of buttons while it waits */
-.sgc-board:not(.is-list) .sgc-btns { left: 11px; top: calc(100% + 6px); }
-.sgc-board.is-tall:not(.is-list) .sgc-card[data-col="2"] .sgc-out { bottom: 9px; }
+/* in a board column the draft's buttons take its result's place while it waits */
+.sgc-board:not(.is-list) .sgc-btns { left: 11px; bottom: 8px; }
+.sgc.is-mid .sgc-btns .sg-btn { height: 22px; }
+
+/* the results tray under a tall board: the roles card's tray, its items green when handed in */
+.sgc-res-h { font-size: 13px; color: rgba(244, 238, 232, .55); }
+.sgc-res-h b { color: #f8f1e7; }
+.sgc-res-h span { font-variant-numeric: tabular-nums; }
+.sgc-res-i { height: 28px; padding: 0 10px; font-size: 12.5px; }
+.sgc-res-i.is-on { border-color: rgba(120, 200, 140, .32); background: rgba(120, 200, 140, .08); }
 
 /* the list (phones and narrow cards): one row per task, a four-step track, the column as a pill */
 .sgc-card.is-row { padding: 7px 10px 0 10px; }
@@ -123,12 +130,12 @@
 .sgc-card.is-row .sgc-out { left: auto; right: 9px; bottom: auto; top: 30px; max-width: 46%; height: 20px; }
 .sgc-card.is-row .sgc-btns { right: 9px; top: 29px; }
 .sgc-card.is-row:has(.sgc-btns.is-on) .sgc-out { opacity: 0; }
-.sgc-board.is-list:not(.is-phone) .sgc-card.is-row .sgc-card-t { top: 26px; font-size: 14px; }
-.sgc-board.is-list:not(.is-phone) .sgc-card.is-row .sgc-out { top: 38px; }
-.sgc-board.is-list:not(.is-phone) .sgc-card.is-row .sgc-btns { top: 37px; }
+.sgc.is-list:not(.is-phone) .is-row .sgc-card-t { top: 26px; font-size: 14px; }
+.sgc.is-list:not(.is-phone) .is-row .sgc-out { top: 38px; }
+.sgc.is-list:not(.is-phone) .is-row .sgc-btns { top: 37px; }
 /* phone rows: the result or the buttons take the pill's place */
 .sgc-board.is-phone .sgc-card.is-row :is(.sgc-out, .sgc-btns) { top: 6px; }
 .sgc-board.is-phone .sgc-card.is-row:has(:is(.sgc-out, .sgc-btns).is-on) .sgc-pill { opacity: 0; }
 
 /* the loop clears before it starts again */
-.sgc.is-clear :is(.sgc-out, .sgc-slot, .sgc-btns, .sgc-q-text > span) { opacity: 0; transition-delay: 0s; }
+.sgc.is-clear :is(.sgc-out, .sgc-btns) { opacity: 0; transition-delay: 0s; }

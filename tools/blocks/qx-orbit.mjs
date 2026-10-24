@@ -179,6 +179,13 @@ export function render(frag, ctx) {
      (CAP_PHOTOS.orbit until then): the donor's `.qx-rotated-images` box stays,
      so the size, radius, clipping and upright counter-turn are the donor's.
      Each says which step it is and that it is an illustration. */
+  /* Each thumbnail names its step as the step list does: 「触达」 / "Engage"
+     (the English code's word in sentence case: ENGAGE → Engage, FOLLOW-UP →
+     Follow-up). */
+  const names = Object.fromEntries(codes.map((code) => {
+    const [num, word] = code.split(' · ');
+    return [num, ctx.lang === 'zh' ? word : word.charAt(0) + word.slice(1).toLowerCase()];
+  }));
   if (ORBIT_FILES.length !== 8) throw new Error(`qx-orbit: the code art should name the eight thumbnails, names ${ORBIT_FILES.length}`);
   for (const file of ORBIT_FILES) {
     const open = `<img src="assets/qubix/${file}.`;
@@ -186,7 +193,7 @@ export function render(frag, ctx) {
     if (at === -1 || html.indexOf(open, at + 1) !== -1) throw new Error(`qx-orbit: expected one orbit photograph ${file}`);
     const tag = html.slice(at, html.indexOf('>', at) + 1);
     if (!tag.includes('alt="Image"') || !tag.includes('qx-all-image-cover')) throw new Error(`qx-orbit: the orbit photograph ${file} is no longer the donor's cover image`);
-    html = html.slice(0, at) + orbitArt(file, ctx.lang) + html.slice(at + tag.length);
+    html = html.slice(0, at) + orbitArt(file, ctx.lang, names) + html.slice(at + tag.length);
   }
   if (/alt="Image"|assets\/qubix\/[^"]*Rectangle/.test(html)) throw new Error('qx-orbit: a donor orbit photograph survived');
 
