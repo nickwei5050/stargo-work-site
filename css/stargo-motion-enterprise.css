@@ -222,6 +222,8 @@
 .sg-en-kpi.is-ex .sg-en-kval { color: var(--am2); }
 .sg-en-kd { font-style: normal; font-size: 13px; font-weight: 600; color: var(--or2); opacity: 0; transform: translateY(5px); transition: opacity .3s, transform .5s cubic-bezier(.34, 1.56, .64, 1); }
 .sg-en-kd.is-on { opacity: 1; transform: none; }
+/* costs: '¥1,860' fills the card's width, so the day's '+¥340' sits at the right end of the label row */
+.sg-en-kpi.is-co .sg-en-kd { position: absolute; top: 11px; right: 14px; }
 .sg-en-chart { position: absolute; display: flex; flex-direction: column; padding-bottom: 24px; }
 .sg-en-chh { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; height: 32px; white-space: nowrap; }
 .sg-en-chh b { font-size: 15px; font-weight: 600; }
@@ -294,7 +296,9 @@
 .sg-en-props .sg-en-chip svg { opacity: .3; }
 .sg-en-props .sg-en-chip.is-on { color: #d6f5de; border-color: var(--grb); background: rgba(120, 200, 140, .08); }
 .sg-en-props .sg-en-chip.is-on svg { opacity: 1; color: var(--gr); }
-.sg-en-slog { position: absolute; padding: 12px 16px; border-radius: 14px; background: rgba(0, 0, 0, .2); border: 1px solid rgba(255, 236, 220, .06); box-sizing: content-box; }
+/* content-box: the scene sizes the log by its rows; two classes, so the stage's own '.sg-mo-stage * { border-box }'
+   (css/stargo-motion.css, linked later) does not squeeze the padding into that height and hang the last row below */
+.sg-en-stop .sg-en-slog { position: absolute; padding: 12px 16px; border-radius: 14px; background: rgba(0, 0, 0, .2); border: 1px solid rgba(255, 236, 220, .06); box-sizing: content-box; }
 .sg-en-lrow { position: absolute; left: 0; display: flex; align-items: center; gap: 12px; font-size: 14px; white-space: nowrap; opacity: 0; }
 .sg-en-lrow time { flex: none; font-size: 13px; color: var(--dim); font-variant-numeric: tabular-nums; }
 .sg-en-lrow span { min-width: 0; overflow: hidden; text-overflow: ellipsis; color: rgba(244, 238, 232, .8); }

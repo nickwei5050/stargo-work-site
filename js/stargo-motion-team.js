@@ -16,12 +16,20 @@
 
    Layouts, picked by the host's size (the type stays at its design size, so
    on phones the stage scale is ~1 and nothing is under 12 CSS px):
-     wide   1280 × 615   capabilities card from a 1180px wide card (1280px
-                         screens) up: four lanes on a shared timeline,
-                         hand-off arrows, and the coordinator's card
-     mid     700 × 500   the same card on tablets and small laptops
-     phone   W × 350     the same card on phones (W follows the host, 320–500)
-     tile    552 × 311   workforce tile on desktop and tablet
+     wide   W × 615      capabilities card from a 1180px wide card (1280px
+                         screens) up, W 1180–1280 following the card: four
+                         lanes on a shared timeline, hand-off arrows, and
+                         the coordinator's card
+     mid     700 × 500   the same card on tablets and small laptops; in the
+             W × H       notices page's 「继续看」 card (596–682 × 480) it
+                         follows the host (W 560–700, H 440–500) so it is
+                         drawn at scale 1, not shrunk to 0.85–0.96
+     phone   W × 350     the same card on phones (W follows the host, 320–500;
+                         a host under 350px tall, the notices card on tablets,
+                         gets H = its height, down to 300)
+     tile    W × W/1.78  workforce tile on desktop and tablet (W 470–552, so
+                         at 1180–1366px screens it is drawn at its size, not
+                         scaled under it)
      mini    W × W/1.78  workforce tile on phones (W 280–340) */
 (window.STARGO_SCENES = window.STARGO_SCENES || []).push(function (K) {
   'use strict';
@@ -60,7 +68,9 @@
 
     /* ---------------- the script: seconds into a 22 s loop ---------------- */
     var P = 22;
-    var GOAL = Array.from(T('开发德国储能经销商（演示）', 'Find storage distributors in Germany (demo)'));
+    // the goal as typed; tiles narrower than 552 (1180-1366px screens) type the English one shorter
+    var GOALS = [Array.from(T('开发德国储能经销商（演示）', 'Find storage distributors in Germany (demo)')), Array.from(T('开发德国储能经销商（演示）', 'Germany storage distributors (demo)'))];
+    var GOAL = GOALS[0];
     var TYPE0 = 0.3, TYPE1 = TYPE0 + Math.min(1.8, GOAL.length / (K.ZH ? 8 : 24));
     var ASSIGN = 2.25;                  // the person presses 分派
     var SPLIT0 = 2.4, SPLIT1 = 3.15;    // the goal fans out to the four lanes
@@ -86,7 +96,7 @@
     var HAND = [
       { a: 1, b: 2, t: 6.6, text: T('规格已核对 → 可写开发信', 'Specs checked → write the email'), got: T('收到规格 → 写开发信', 'Got the specs → email') },
       { a: 2, b: 3, t: 8.1, text: T('开发信要配图 → 做 3 张素材', 'Email needs images → make 3'), got: T('收到要点 → 做配图', 'Got the brief → images') },
-      { a: 0, b: 2, t: 9.6, text: T('12 家名单 → 排开发顺序', '12 accounts → plan the order'), got: T('收到 12 家名单', 'Got 12 accounts') }
+      { a: 0, b: 2, t: 9.6, text: T('12 家名单 → 排开发顺序', '12 accounts → rank for outreach'), got: T('收到 12 家名单', 'Got 12 accounts') }
     ];
     var IDLE = T('待分派', 'Not assigned yet'), DELIVERED = T('已交付', 'Delivered');
     var STATUS = [
@@ -94,16 +104,16 @@
         [TAP + 0.05, T('你已确认：仅德国', 'You: Germany only'), 'ok'], [ASK1, T('核实采购联系人', 'Verifying buyer contacts'), 'w'], [9.4, DELIVERED, 'done']],
       [[0, IDLE, 'idle'], [3.1, T('核对 48V 100Ah 规格', 'Checking 48V 100Ah specs'), 'w'], [4.5, T('电压、容量已核对', 'Voltage, capacity OK'), 'w'],
         [5.4, T('核对认证文件', 'Checking certificates'), 'w'], [6.5, DELIVERED, 'done']],
-      [[0, IDLE, 'idle'], [3, T('等规格和客户名单', 'Waiting on specs, list'), 'd'], [6.7, T('起草开发信', 'Drafting the email'), 'w'],
-        [9.8, T('排开发顺序', 'Planning the order'), 'w'], [12.2, DELIVERED, 'done']],
-      [[0, IDLE, 'idle'], [3.2, T('整理产品照片和卖点', 'Sorting photos and points'), 'w'], [4.8, T('等开发信要点', 'Waiting for the brief'), 'd'],
+      [[0, IDLE, 'idle'], [3, T('等规格和客户名单', 'Needs specs, accounts'), 'd'], [6.7, T('起草开发信', 'Drafting the email'), 'w'],
+        [9.8, T('排开发顺序', 'Ranking accounts'), 'w'], [12.2, DELIVERED, 'done']],
+      [[0, IDLE, 'idle'], [3.2, T('整理产品照片和卖点', 'Photos and selling points'), 'w'], [4.8, T('等开发信要点', 'Waiting for the brief'), 'd'],
         [8.2, T('做开发信配图', 'Making email images'), 'w'], [12.8, DELIVERED, 'done']]
     ];
     var SHORT = [                       // the mini layout's second line
       [[0, T('待分派', 'Waiting'), 'idle'], [3, T('筛选中', 'Screening'), 'w'], [ASK0, T('等你确认', 'Needs you'), 'h'], [TAP + 0.05, T('你已确认', 'You chose'), 'ok'],
         [ASK1, T('核实中', 'Verifying'), 'w'], [9.4, T('12 家客户', '12 accounts'), 'done']],
       [[0, T('待分派', 'Waiting'), 'idle'], [3.1, T('核对规格', 'Checking'), 'w'], [6.5, T('规格核对', 'Spec check'), 'done']],
-      [[0, T('待分派', 'Waiting'), 'idle'], [3, T('等接力', 'Waiting'), 'd'], [6.7, T('起草开发信', 'Drafting'), 'w'], [9.8, T('排顺序', 'Ordering'), 'w'],
+      [[0, T('待分派', 'Waiting'), 'idle'], [3, T('等接力', 'Waiting'), 'd'], [6.7, T('起草开发信', 'Drafting'), 'w'], [9.8, T('排顺序', 'Ranking'), 'w'],
         [12.2, T('开发计划', 'Outreach plan'), 'done']],
       [[0, T('待分派', 'Waiting'), 'idle'], [3.2, T('整理素材', 'Gathering'), 'w'], [4.8, T('等接力', 'Waiting'), 'd'], [8.2, T('做配图', 'Making'), 'w'],
         [12.8, T('素材 3 张', '3 images'), 'done']]
@@ -122,7 +132,7 @@
       if (i === 1) return compact ? (st === 2 ? T('规格核对', 'Specs checked') : T('规格核对 ' + n + '/3', 'Specs ' + n + '/3')) : n + '/3';
       if (i === 2) {
         if (st === 2) return compact ? T('开发计划 3 轮', 'Plan · 3 touches') : T('3 轮', '3 touches');
-        return compact ? (n ? T('开发计划 · 排序', 'Plan · ordering') : T('开发计划 · 起草', 'Plan · drafting')) : (n ? T('排序中', 'Ordering') : T('起草中', 'Drafting'));
+        return compact ? (n ? T('开发计划 · 排序', 'Plan · ranking') : T('开发计划 · 起草', 'Plan · drafting')) : (n ? T('排序中', 'Ranking') : T('起草中', 'Drafting'));
       }
       if (st === 2) return compact ? T('素材 3 张', '3 images') : T('3 张', '3 images');
       return compact ? T('素材 ' + n + ' 张', n + ' of 3 images') : T(n + ' 张', n + ' of 3');
@@ -198,14 +208,17 @@
        to 0.8. The tile keeps the picture's 1672 × 941 box, so it is always about 1.78 wide to 1 tall. */
     function pick(w, h) {
       var a = w / h;
-      if (h >= 560) return a > 1.55 && w >= 1180 ? lay('wide', 1280, 615) : lay('mid', 700, 500);
+      if (h >= 560) return a > 1.55 && w >= 1180 ? lay('wide', Math.min(1280, Math.floor(w / 10) * 10), 615) : lay('mid', 700, 500);
       if (a >= 1.62) {
-        if (w >= 470) return lay('tile', 552, 311);
+        if (w >= 552) return lay('tile', 552, 311);
+        if (w >= 470) { var tw = Math.floor(w / 10) * 10; return lay('tile', tw, Math.floor(tw * 941 / 1672)); }
         var mw = Math.max(280, Math.min(340, Math.floor(w / 10) * 10));
         return lay('mini', mw, Math.floor(mw * 941 / 1672));
       }
-      if (w >= 560) return lay('mid', 700, 500);
-      return lay('phone', Math.max(320, Math.min(500, Math.floor(w * 350 / h / 2) * 2)), 350);
+      // a host this short is a card, not the capabilities band: draw at its own size where it is under 700 × 500
+      if (w >= 560) return lay('mid', Math.min(700, Math.floor(w / 2) * 2), Math.max(440, Math.min(500, Math.floor(h))));
+      var ph = Math.max(300, Math.min(350, Math.floor(h)));
+      return lay('phone', Math.max(320, Math.min(500, Math.floor(w * ph / h / 2) * 2)), ph);
     }
 
     var kind, W, H, R, LIT;
@@ -279,7 +292,7 @@
       var ta = el('div', 'sg-team-dtx', ga), cp;
       if (mode === 'card') { el('span', 'sg-team-who', ta, D.askWho); el('b', '', ta, D.askQ); cp = el('span', 'sg-team-choices', ta); }
       else if (mode === 'phone') { el('b', '', ta, D.askShort); cp = el('span', 'sg-team-choices', ta); }
-      else { el('b', '', ta, mode === 'mini' ? D.askMini : kind === 'tile' ? D.askShort : D.askLine); cp = el('span', 'sg-team-choices', ga); }
+      else { el('b', '', ta, mode === 'mini' ? D.askMini : kind === 'tile' || (kind === 'mid' && W < 660) ? D.askShort : D.askLine); cp = el('span', 'sg-team-choices', ga); }
       R.pick = el('span', 'sg-team-choice', cp, D.pick);
       R.other = el('span', 'sg-team-choice', cp, D.other);
       var go = grp('ok'); ico(go, 'check', 'is-ok'); texts(go, D.ok, mode === 'mini' ? null : D.okSub);
@@ -291,13 +304,13 @@
         el('span', 'sg-btn is-primary', bt, D.approve); el('span', 'sg-btn', bt, D.revise);
       }
     }
-    function cursor(stage, from) {
+    function cursor(stage, from, away) {
       var c = R.cur = el('div', 'sg-team-cur', stage);
       R.rip = el('i', 'sg-team-rip', c);
       var p = sv('svg', { viewBox: '0 0 16 20', width: 16, height: 20, class: 'sg-team-ptr', 'aria-hidden': 'true' }, c);
       sv('path', { d: 'M1.5 1.5v14.6l3.9-3.7 2.7 6 2.5-1.1-2.7-5.9 5.4-.2z' }, p);
       el('span', 'sg-team-you', c, T('你', 'You'));
-      R.curFrom = from; R.curAt = null;
+      R.curFrom = from; R.curAway = away; R.curAt = null;
     }
 
     /* ---------------- the shared timeline ---------------- */
@@ -351,10 +364,14 @@
 
     /* ---------------- wide and mid: lanes on a timeline ---------------- */
     function buildLanes(stage) {
-      var wide = kind === 'wide';
+      var wide = kind === 'wide', d = wide ? 1280 - W : 700 - W;
+      // mid is designed at 700 × 500; a narrower stage gives up timeline (the outputs stay right-aligned), a
+      // shorter one shrinks everything under the 46px app bar by f
+      var f = wide ? 1 : (H - 46) / 454;
+      function v(y) { return Math.round(46 + (y - 46) * f); }
       var g = R.g = wide
-        ? { gx: 24, gy: 72, gw: 820, gh: 64, sx: 40, lx: 56, lw: 788, ly: 152, lh: 96, lg: 12, t0: 280, t1: 600 }
-        : { gx: 20, gy: 60, gw: 660, gh: 52, sx: 32, lx: 46, lw: 634, ly: 126, lh: 62, lg: 8, t0: 232, t1: 460 };
+        ? { gx: 24, gy: 72, gw: 820 - d, gh: 64, sx: 40, lx: 56, lw: 788 - d, ly: 152, lh: 96, lg: 12, t0: 280, t1: 600 - d }
+        : { gx: 20, gy: v(60), gw: 660 - d, gh: Math.round(52 * f), sx: 32, lx: 46, lw: 634 - d, ly: v(126), lh: Math.round(62 * f), lg: Math.round(8 * f), t0: 232, t1: 460 - d };
       function top(i) { return g.ly + i * (g.lh + g.lg); }
       function cy(i) { return top(i) + g.lh / 2; }
       appBar(stage, { mark: 14, crumb: true, pill: true, tag: wide ? null : T('动态示意 · 演示数据', 'Illustrative motion · demo data') });
@@ -388,17 +405,20 @@
         return { g: gr, line: line, head: head, dot: dot, x: x, y1: y1, y2: y2, h: h };
       });
       R.hand.forEach(function (o) {
-        var lab = o.lab = box('sg-team-hand-lab', stage, o.x + 10, top(o.h.a) + g.lh + g.lg / 2);
         var parts = o.h.text.split(' → ');
+        // on a narrow mid card a label that would run past the lanes' right edge opens to the arrow's left
+        // (its width estimated from its text: 12.5px type, padding, the arrow glyph)
+        var est = parts.join('').length * (K.ZH ? 12.6 : 6.9) + 48, flip = !wide && o.x + 10 + est > g.lx + g.lw - 6;
+        var lab = o.lab = box('sg-team-hand-lab' + (flip ? ' is-l' : ''), stage, flip ? o.x - 10 : o.x + 10, top(o.h.a) + g.lh + g.lg / 2);
         el('span', '', lab, parts[0]); glyph('arrow', lab, 13); el('span', '', lab, parts[1]);
       });
-      if (wide) buildCoord(stage, svg, cy); else dock(stage, 20, 412, 660, 68, 'bar');
-      cursor(stage, wide ? [150, 70] : [120, 46]);
+      if (wide) buildCoord(stage, svg, cy); else dock(stage, 20, v(412), 660 - d, Math.round(68 * f), 'bar');
+      cursor(stage, wide ? [120, 40] : [-120, -50], wide ? [26, 18] : [24, -10]);
     }
 
     // the coordinator's card on the wide layout, and the threads its results arrive on
     function buildCoord(stage, svg, cy) {
-      var cx = 940, cyy = 72, cw = 316, ch = 500;
+      var cx = W - 340, cyy = 72, cw = 316, ch = 500;
       var c = box('sg-team-coord sg-team-card', stage, cx, cyy, cw, ch);
       var hd = el('div', 'sg-team-coord-h', c);
       var av = el('div', 'sg-team-av is-coord', hd); glyph('layers', av, 22);
@@ -417,7 +437,7 @@
       var rb = el('i', 'sg-team-rbar', R.rev); R.revFill = el('i', '', rb);
       dock(c, 14, 324, cw - 28, 162, 'card');
       R.threads = [0, 1, 2, 3].map(function (i) {
-        var a = [56 + 772, cy(i)], b = [cx, cyy + 98 + i * 48];
+        var a = [R.g.lx + R.g.lw - 16, cy(i)], b = [cx, cyy + 98 + i * 48];
         var p = K.curve(a, [1, 0], b, [-1, 0], 0.55);
         sv('path', { d: K.bezD(p), class: 'sg-thread' }, svg);
         return {
@@ -431,37 +451,48 @@
 
     /* ---------------- phone and tile: lanes as rows ---------------- */
     function buildRows(stage) {
-      var ph = kind === 'phone';
+      var ph = kind === 'phone', k = c01((H - 264) / 47), kp = c01((H - 300) / 50);
+      function lerp(a, b) { return Math.round(a + (b - a) * k); }
+      function lp(a, b) { return Math.round(a + (b - a) * kp); }
+      // the phone card is 350 tall; a shorter host (300–350) tightens it towards the 300 column
       var g = R.g = ph
-        ? { pad: 12, gy: 44, gh: 48, ry: 100, rh: 42, rg: 5, dy: 290, dh: 52 }
-        : { pad: 14, gy: 48, gh: 36, ry: 92, rh: 32, rg: 6, dy: 246, dh: 51 };
-      appBar(stage, { mark: ph ? 12 : 13, crumb: !ph, pill: true, tag: ph ? T('演示数据', 'Demo data') : T('动态示意 · 演示数据', 'Illustrative motion · demo data') });
+        ? { pad: 12, gy: lp(38, 44), gh: lp(46, 48), ry: lp(89, 100), rh: lp(37, 42), rg: lp(4, 5), dy: lp(250, 290), dh: lp(44, 52) }
+        : { pad: lerp(12, 14), gy: lerp(44, 48), gh: lerp(32, 36), ry: lerp(82, 92), rh: lerp(28, 32), rg: lerp(4, 6), dy: lerp(212, 246), dh: lerp(45, 51) };
+      appBar(stage, { mark: ph ? 12 : 13, crumb: !ph && W >= 520, pill: true, tag: ph ? T('演示数据', 'Demo data') : T('动态示意 · 演示数据', 'Illustrative motion · demo data') });
       goalCard(stage, g.pad, g.gy, W - 2 * g.pad, g.gh, ph ? ASSIGN_S : ASSIGN_T);
       LIT = [2.55, 2.69, 2.83, 2.97];
-      R.lanes = ROLE.map(function (r, i) { return lane(stage, i, g.pad, g.ry + i * (g.rh + g.rg), W - 2 * g.pad, g.rh, { ico: ph ? 15 : 13, chip: 'one' }); });
+      R.lanes = ROLE.map(function (r, i) { return lane(stage, i, g.pad, g.ry + i * (g.rh + g.rg), W - 2 * g.pad, g.rh, { ico: ph ? 15 : 13, chip: 'one', short: !ph && W < 520 }); });
       var svg = svgLayer(stage);
       // a thin timeline under each one-line row; the phone's two-line rows have no room for one
       if (!ph) R.tracks = [0, 1, 2, 3].map(function (i) { var y = g.ry + i * (g.rh + g.rg) + g.rh - 1.5; return track(svg, i, g.pad + 10, W - g.pad - 10, y, 2); });
       dock(stage, g.pad, g.dy, W - 2 * g.pad, g.dh, ph ? 'phone' : 'bar');
-      cursor(stage, ph ? [70, 34] : [110, 30]);
+      cursor(stage, ph ? [-80, -40] : [-120, -46], [24, -10]);
     }
 
     /* ---------------- mini: four tiles and one line ---------------- */
     function buildMini(stage) {
-      var pad = 8, cap = 28, gy = 55;
+      /* Each lane holds two lines (name, status) and keeps 3.5px above and below them inside its
+         border (QA round 4: at 280 × 157, 360px phones, the lines crossed the borders). On the
+         short tile (H 157-169, 'is-low': 13px lines, a 24px bar, an 18px choice) the bar, the goal
+         row, the gaps and the line give up those pixels; from H 174 (390px phones) the spacing is
+         the tile's own again (14px lines). */
+      var k = c01((H - 157) / 17);
+      function lp(a, b) { return Math.round(a + (b - a) * k); }
+      var pad = 8, padB = lp(6, 8), cap = lp(26, 28), gy = lp(47, 54), rg = lp(4, 5), gd = lp(4, 5);
       appBar(stage, { mark: 11, tag: T('演示数据', 'Demo data') });
-      goalCard(stage, pad, 31, W - 2 * pad, 20, null);
+      goalCard(stage, pad, lp(26, 31), W - 2 * pad, lp(18, 20), null);
       LIT = [2.55, 2.69, 2.83, 2.97];
-      var th = Math.floor((H - pad - cap - 5 - gy - 5) / 2), tw = (W - 2 * pad - 5) / 2;
-      R.lanes = ROLE.map(function (r, i) { return lane(stage, i, pad + (i % 2) * (tw + 5), gy + Math.floor(i / 2) * (th + 5), tw, th, { ico: 12, short: true }); });
-      dock(stage, pad, H - pad - cap, W - 2 * pad, cap, 'mini');
-      cursor(stage, [64, 12]);
+      var th = Math.floor((H - padB - cap - gd - gy - rg) / 2), tw = (W - 2 * pad - 5) / 2;
+      R.lanes = ROLE.map(function (r, i) { return lane(stage, i, pad + (i % 2) * (tw + 5), gy + Math.floor(i / 2) * (th + rg), tw, th, { ico: 12, short: true }); });
+      dock(stage, pad, H - padB - cap, W - 2 * pad, cap, 'mini');
+      cursor(stage, [64, 12], [26, 18]);
     }
 
     function build(stage, L) {
       kind = L.kind; W = L.w; H = L.h;
+      GOAL = GOALS[(kind === 'tile' && W < 552) || (kind === 'mid' && W < 660) ? 1 : 0];
       R = { stage: stage };
-      stage.className = 'sg-mo-stage sg-team is-' + kind + (kind === 'phone' && W < 350 ? ' is-narrow' : '');
+      stage.className = 'sg-mo-stage sg-team is-' + kind + (kind === 'phone' && W < 350 ? ' is-narrow' : '') + (kind === 'tile' && W < 520 ? ' is-tight' : '') + (kind === 'mini' && H < 170 ? ' is-low' : '');
       if (kind === 'wide' || kind === 'mid') buildLanes(stage);
       else if (kind === 'mini') buildMini(stage);
       else buildRows(stage);
@@ -484,7 +515,7 @@
         var h = HAND[k];
         if (h.b !== i) continue;
         cl(L.c, 'is-recv', tau >= h.t + 0.1 && tau < h.t + 0.9);
-        if (relay && tau >= h.t + 0.15 && tau < h.t + 1.55) { key = 100 + k; text = kind === 'phone' ? h.got : h.text; tone = 'hand'; }
+        if (relay && tau >= h.t + 0.15 && tau < h.t + 1.55) { key = 100 + k; text = kind === 'phone' || (kind === 'tile' && W < 552) ? h.got : h.text; tone = 'hand'; }
         if (tau >= h.t + 0.1 && tau < h.t + 0.9) break;
       }
       if (L.key !== key) { L.key = key; put(L.c, 'data-tone', tone); textSwap(L.st, text); }
@@ -541,7 +572,7 @@
       }
       var u = ease.io(seg(tau, ASK0 + 0.55, TAP - 0.12)), out = ease.io(seg(tau, ASK1 + 0.05, ASK1 + 0.5));
       var press = Math.sin(Math.PI * seg(tau, TAP - 0.04, TAP + 0.22));
-      var cx = at[0] + R.curFrom[0] * (1 - u) + 26 * out, cy = at[1] + R.curFrom[1] * (1 - u) + 18 * out;
+      var cx = at[0] + R.curFrom[0] * (1 - u) + R.curAway[0] * out, cy = at[1] + R.curFrom[1] * (1 - u) + R.curAway[1] * out;
       put(c, '-transform', 'translate(' + cx.toFixed(1) + 'px,' + cy.toFixed(1) + 'px) scale(' + (1 - 0.14 * press).toFixed(3) + ')');
       put(c, '-opacity', (seg(tau, ASK0 + 0.5, ASK0 + 0.75) * (1 - out)).toFixed(3));
       var rp = seg(tau, TAP, TAP + 0.62);

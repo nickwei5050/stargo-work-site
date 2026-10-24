@@ -23,22 +23,28 @@ import * as C from './copy.mjs';
 import { POSTS, BLOG_UI, postPath, featured, others, coverSrc, coverSrcset, coverAlt, formatDate, renderBody, titleHtml } from './blog.mjs';
 import { loadBlocks, art, capTitle, DONORS } from './block-lib.mjs';
 import { PRODUCT_CAPTION } from './editorial-images.mjs';
+// HOME_STAGES and HOME_PRICING_CARD are not placed since 2026-10-23 (homemore: code-drawn scenes); imported so a photo can go back in one line.
 import { HERO, HOME_MODULES, HOME_STAGES, HOME_ROLE_CARD, HOME_PRICING_CARD, HOME_BLOG_COVERS, NOTICES_CARDS, CAP_PHOTOS, ENTERPRISE_PHOTOS, CONTACT_CARD, WORKFORCE_ROLES, WORKFORCE_BLOG_COVERS } from './replaceables.mjs';
 import { SITE } from './paths.mjs';
 import { productTour } from './product-tour.mjs';
 import { appSuite } from './app-suite.mjs';
 import { motionHost, motionAssets, SCENE_FILE, MOTION_CSS, MOTION_SCRIPTS, PAIN_SCENES } from './motion-scenes.mjs';
+import { ATMOS_HOME, nightHalves, codeStill, boardHost, requestHost, plantHost } from './code-art-atmos.mjs';   // lane atmos: atmosphere photographs → code
 import { CAPSALES_SCENES } from './motion-capsales.mjs';
 import { AREA_SCENES, placeAreaScenes } from './code-art-capareas.mjs'; // capareas: capability area cards
 import { theatreTiles } from './code-art-theatre.mjs';
+import { homeStageScenes, homePricingScene, homeMoreAssets, swapToMotion } from './code-art-homemore.mjs'; // homemore lane: stage cards + enterprise card as code
+import { roleCard, roleChip, ROLE_CARDS, withSceneAssets } from './code-art-people.mjs'; // lane people
 import { webpPage } from './image-refs.mjs';
 import { enterpriseArt } from './code-art-enterprise.mjs';   // enterprise lane: code-drawn pictures
 import { a11yPage } from './a11y.mjs';
+import { filmSection, FILM_CSS, FILM_JS } from './about-film.mjs';   // the about page's brand film (2026-10-24)
 import { speedPage } from './speed.mjs';
 /* The owner's photographs on the blog and intelligence pages (group "blog", 2026-10-21). */
 import { BLOG_COVERS, INTEL_PHOTOS } from './replaceables.mjs';
 import { GROWTH_ROWS } from './replaceables.mjs'; // capgrowth: the Growth OS rows' background scenes
 import { blogCover, blogArtSheet } from './blog-art.mjs';   // lane "blog" (2026-10-23): the code-drawn article covers
+import { vignettePage } from './code-art-vignettes.mjs';   // lane "vignettes" (2026-10-24): the mosaic and ring photographs drawn in code
 
 /** The capability page's donor blocks, one module each in tools/blocks. */
 const CAP_BLOCKS = await loadBlocks();
@@ -446,7 +452,8 @@ const PAGES = {};
 
 /* ---- index.html — Mono homepage + three Scalora modules --------------- */
 /* The homepage's motion scenes (tools/motion-scenes.mjs): the scene files load before the engine. */
-const HOME_MOTION = motionAssets(['loop', 'radar', 'studio', ...PAIN_SCENES]);
+/* homemore: the five stage cards and the pricing band's enterprise card (tools/code-art-homemore.mjs) */
+const HOME_MOTION = motionAssets(['loop', 'radar', 'studio', ...PAIN_SCENES, 'stage-find', 'stage-sell', 'stage-make', 'stage-pay', 'stage-again', 'org', ...ATMOS_HOME]); // + lane atmos (R1 doors, R2 card)
 PAGES['index.html'] = (lang) => {
   const t = (p) => (typeof p === 'string' ? p : p[lang]);
   const { fn: s } = makeSub('home');
@@ -531,46 +538,15 @@ PAGES['index.html'] = (lang) => {
       h = h.replace(/<img\b[^>]*>/g, (tag) => (tag.includes(k) && /class="paralax-image"/.test(tag) ? (hit++, motionHost(PAIN_SCENES[i], lang, 'paralax-image sg-pain-host')) : tag));
       if (hit !== 1) throw new Error(`index: expected one problem-card picture ${k}, found ${hit}`);
     });
-    /* The five stages, in order (V6 §4.6). Four of them carry the owner's own
-       product. The sentences stayed; on 2026-09-22 the three older 1268px
-       stills were swapped for curated pack screens (filenames unchanged):
-
-         (001) 主动获客 — the Growth OS home (since 2026-10-21 a clean
-               capture with demo data; the still before it showed an
-               infrastructure panel). It is not the control tower: that
-               picture is the Growth OS panel below, so the two sections do
-               not repeat.
-         (002) 外贸销售 — the Sales Desk case: inquiry list, extracted facts
-               and the next step (clean capture, 2026-10-21; it replaced a
-               generated render).
-         (003) 企业履约 — the ERP item list (clean capture, 2026-10-21; the
-               Sales Desk still before it showed a live mailbox).
-         (005) 复购与改进 — gos11 is now the workspace home (alt-home.webp).
-               The pack has no separate reactivation still; this is the
-               remaining home screen, fitted in the same card.
-
-       (004) 回款与服务 keeps the concept illustration it had — trade signals
-       carried to a customer's destination — because no released screen is about
-       collection, reconciliation or support.
-
-       Since 2026-10-21 all five cards show the owner's photographs instead
-       (site-images/batch-2, P01–P05; tools/replaceables.mjs HOME_STAGES keeps
-       the screens above for the owner's decision), and Mono's `cover` fills
-       the card with them again (H29 is keyed on the product folder).
-
-       All five go in with a non-empty alt, which is a marker and not copy:
-       any non-empty value stops tools/editorial-images.mjs treating the image
-       as decoration, and it then writes the registered sentence over it in the
-       page's language. Same route the four core-system panels take with their
-       slot title, and `stillImage` below with 'STARGO OS'.
-
-       The card is `.image-wrap.for-service`, `aspect-ratio: 3 / 2`; a
-       screenshot in it is fitted, not cropped, by H29 in css/stargo-fusion.css.
-       (002) and (003) are cut to 3:2 and fill it; the Growth OS home (about
-       2:1) and gos11 sit on plates of their own edge colour. */
-    const CONTENT = { alt: 'STARGO WORK' };
-    const scenes = [['Scene%20%239.webp', HOME_STAGES[0].file, CONTENT], ['Scene%20%235.webp', HOME_STAGES[1].file, CONTENT], ['Scene%20%2310%20(Light)', HOME_STAGES[2].file, CONTENT], ['Scene%20%238.webp', HOME_STAGES[3].file, CONTENT], ['Scene%2018.webp', HOME_STAGES[4].file, CONTENT]];
-    scenes.forEach(([k, src, opts]) => { h = swapImg(h, k, src, opts); });
+    /* The five stages, in order (V6 §4.6). History: product screens until
+       2026-10-21, then the owner's photographs P01–P05 (site-images/batch-2),
+       fitted by rules in css/stargo-fusion.css that are dormant now. Both sets
+       stay listed in tools/replaceables.mjs HOME_STAGES for the owner. */
+    /* homemore (2026-10-23): the five cards are code-drawn scenes now, one
+       host per stage so Mono's switching is untouched
+       (tools/code-art-homemore.mjs, js/stargo-motion-stages.js). HOME_STAGES
+       keeps P01–P05 and the screens before them for the owner's decision. */
+    h = homeStageScenes(h, lang);
     // Retain the original grid/zoom animation. The centre is a real video,
     // sourced from the owner's fourth template; surrounding imagery is separate.
     const theatre = HERO.theatre;
@@ -600,12 +576,17 @@ PAGES['index.html'] = (lang) => {
     // background in css/stargo-fusion.css.
     const stickyVideo = [...h.matchAll(/<video id="([^"]+)-video"/g)].map((m) => m[1]).find((id) => h.slice(h.indexOf('<section class="testimonials-section"'), h.indexOf('<section class="section drk"')).includes(`id="${id}-video"`));
     if (!stickyVideo) throw new Error('index: sticky card video');
-    h = stillImage(h, stickyVideo, HOME_ROLE_CARD, 'STARGO WORK', 'stargo-still stargo-role-photo');
+    // Since 2026-10-24 (「现场氛围也全部换成代码」) the card draws today's priorities in code instead
+    // (tools/code-art-atmos.mjs 'board'), and the two-door picture before the cards is the code-drawn
+    // night network ('night') where R1v2 was. HOME_ROLE_CARD is no longer placed here.
+    h = codeStill(h, stickyVideo, boardHost(lang));
+    h = s(h, '<div class="photo-half _01"></div><div class="photo-half _02"></div>', nightHalves(lang), { count: 1 });
     // Mono's toss ends with the card turned over (rotateX(180deg), back face visible), which
     // drew R2 upside down; js/stargo-card-upright.js turns the picture back over while it is.
     h = s(h, '</body>', '<script src="js/stargo-card-upright.js" defer></script></body>', { count: 1 });
     // The pricing band's image card: the owner's enterprise campus (T01) in place of brand-glow-square.
-    h = swapImg(h, '699b6466d5f19893993a4f1a_Sunset-Serenity', HOME_PRICING_CARD, { alt: 'STARGO WORK' });
+    // homemore (2026-10-23): T01 (HOME_PRICING_CARD) → the code-drawn 'org' scene, what the 企业版 copy beside it lists.
+    h = homePricingScene(h, lang);
     h = swapImg(h, '699b6466d5f19893993a4efc_Smiling%20Bearded', 'assets/brand/stargo-s-mark-256.webp');   // the chat card's bearded-man avatar → the owner's S + star mark
     // The blog grid: the template's four cards, filled with the four newest articles.
     // Since 2026-10-23 the four cards draw their article's cover in code (tools/blog-art.mjs, the 'home'
@@ -796,7 +777,7 @@ PAGES['index.html'] = (lang) => {
      or the page it introduces flashes past underneath it. It goes before
      scalora's and before stargo-fusion.css, the same order the capability page
      puts the donor sheets in. */
-  h = h.replace(monoLink, (m) => `${m}\n<link href="css/${DONORS.offgrid.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/${DONORS.rototo.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/scalora-modules.sc.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-tour.css" rel="stylesheet" type="text/css"/>\n${HOME_MOTION.css}`);
+  h = h.replace(monoLink, (m) => `${m}\n<link href="css/${DONORS.offgrid.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/${DONORS.rototo.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/scalora-modules.sc.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-tour.css" rel="stylesheet" type="text/css"/>\n${HOME_MOTION.css}\n<link href="css/stargo-blue.css" rel="stylesheet" type="text/css"/>`); // 首页蓝: the homepage palette tokens (css/stargo-blue.css), after the scene sheets
   /* Mono's own page-load curtain goes. `.preloader` is a fixed black sheet
      with the wordmark on it (Mono's css: z-index 9999, resting at
      translateY(-120%)), dropped over the page and lifted again by the IX3
@@ -1395,20 +1376,42 @@ PAGES['workforce.html'] = (lang) => {
      tools/editorial-images.mjs replaces with the photograph's own sentence.
      The marquee is this page's first screen, so its pictures load with the
      page; the collage card further down keeps lazy loading. */
+  /* lane people (2026-10-23, owner: 「图片改成代码」): the photographs above no
+     longer ship. Each marquee card draws its role at work as a STATIC code card
+     (tools/code-art-people.mjs roleCard; it keeps the picture's
+     .lx-feature-hero-image box, so the card, its hover panel and the marquee
+     are unchanged), and the collage card is the 'deskReport' scene: a mini web
+     desktop where the 报告 AI 员工 drafts the weekly report and stops at
+     待你确认. WORKFORCE_ROLES keeps the photographs' names so a line puts
+     them back. */
   {
     const COLLAGE = '694277bf9dc048830e6fca2e';
-    for (const [key, src] of Object.entries(WORKFORCE_ROLES)) {
-      let n = 0;
-      b = b.replace(/<img\b[^>]*>/g, (tag) => {
-        if (!tag.includes(`/${key}_`)) return tag;
-        if (!/\bclass="lx-feature-hero-image"/.test(tag)) throw new Error(`workforce: the ${key} picture is no longer a role card's .lx-feature-hero-image`);
-        n++;
-        const photo = tag.replace(/src="[^"]*"/, `src="${src}"`).replace(/alt="[^"]*"/, 'alt="STARGO WORK"');
-        return key === COLLAGE ? photo : photo.replace(/\s*loading="lazy"/, '');
-      });
-      const want = key === COLLAGE ? 1 : 2;
-      if (n !== want) throw new Error(`workforce: expected ${want} role card(s) showing ${key}, found ${n}`);
-    }
+    if (Object.keys(WORKFORCE_ROLES).length !== 6 || W.roles.length !== ROLE_CARDS) throw new Error('workforce: five role cards and the collage card');
+    let n = 0;
+    b = b.replace(/<a\b[^>]*class="lx-feature-hero-card lx-_(\d) w-inline-block"[^>]*>[\s\S]*?<\/a>/g, (card, k) => {
+      const i = Number(k) - 1;
+      if (!card.includes(roleName(W.roles[i].name))) throw new Error(`workforce: role card ${k} no longer names ${t(W.roles[i].name)}`);
+      let m = 0;
+      let out = card.replace(/<img\b[^>]*class="lx-feature-hero-image"[^>]*>/g, () => { m++; return roleCard(i, lang, t(W.roles[i].name)); });
+      if (m !== 1) throw new Error(`workforce: role card ${k} should hold one picture, found ${m}`);
+      // the hover chip names the app the role works in, not a social network (roleChip)
+      m = 0;
+      out = out.replace(/<img\b[^>]*class="lx-social-media-logo[^"]*"[^>]*>/g, () => { m++; return roleChip(i, lang); });
+      if (m !== 1) throw new Error(`workforce: role card ${k} should hold one hover logo, found ${m}`);
+      n++;
+      return out;
+    });
+    if (n !== 10) throw new Error(`workforce: expected the five role cards twice (10), found ${n}`);
+    let c = 0;
+    b = b.replace(/<img\b[^>]*>/g, (tag) => {
+      if (!tag.includes(`/${COLLAGE}_`)) return tag;
+      if (!/\bclass="lx-feature-hero-image"/.test(tag)) throw new Error('workforce: the collage picture is no longer a .lx-feature-hero-image');
+      c++;
+      return motionHost('deskReport', lang, 'lx-feature-hero-image sg-mo-desk');
+    });
+    if (c !== 1) throw new Error(`workforce: expected one collage picture, found ${c}`);
+    b = b.replace(/(data-sg-scene="deskReport"(?:(?!<\/a>)[\s\S])*?)<img\b[^>]*class="lx-social-media-logo[^"]*"[^>]*>/, (_, pre) => pre + roleChip('desk', lang));
+    if (b.includes('lx-social-media-logo"') || /class="lx-social-media-logo /.test(b)) throw new Error('workforce: a social-network logo survives on a card');
   }
   // the template's cards link to the studio's own social accounts
   b = b.replace(/href="https:\/\/(?:www\.)?(?:linkedin|instagram|facebook|x|twitter|tiktok|youtube)\.com[^"]*"/g, 'href="contact.html"');
@@ -1572,7 +1575,7 @@ PAGES['workforce.html'] = (lang) => {
       .filter((re) => re.test(b)).map((re) => String(re));
     if (leftovers.length) throw new Error(`workforce: template copy survives: ${leftovers.join(', ')}`);
   }
-  const motion = motionAssets([W.tile.motion]);
+  const motion = motionAssets([W.tile.motion, 'deskReport']); // deskReport: lane people
   const page = inMonoShell(b + bigMark(), ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
   /* inMonoShell links css/ files by name; the scene's sheets go after the
      page's own, and its scripts (the scene, then the engine) before </body>. */
@@ -1624,16 +1627,22 @@ PAGES['about.html'] = (lang) => {
      and putting them back is one block away. */
   void b;
   const aboutBody = [
-    renderBlock('cn-about', lang),
+    // The brand film opens the page (owner, 2026-10-24 13:55 UTC: 「…放到关于页面的第一个板块全屏播放」); the introduction card follows it.
+    filmSection(lang, 'intro'),
+    // A01 → code (2026-10-24): the plant at dawn under the introduction card (tools/code-art-atmos.mjs 'plant')
+    renderBlock('cn-about', lang).replace('<div class="cn-about">', '<div class="cn-about" id="intro">').replace('<div class="cn-intro-background">', () => `<div class="cn-intro-background">${plantHost(lang)}`),
     renderBlock('cn-about-projects', lang),
     renderBlock('cn-about-reviews', lang),
   ].join('\n');
 
   const aboutSheets = [...new Set(Object.values(DONORS).map((d) => d.sheet))]
     .filter((f) => existsSync(`${SITE}/css/${f}`));
-  let out = inMonoShell(aboutBody + bigMark(), [...aboutSheets, 'donor-fonts.css', 'lifelogx.lx.css', 'stargo-fusion.css'])
+  if (!aboutBody.includes('data-sg-scene="plant"')) throw new Error('about: the introduction band lost its code-drawn plant');
+  if (!aboutBody.includes('<div class="cn-about" id="intro">') || !aboutBody.startsWith('<section class="sg-film"')) throw new Error('about: the brand film must open the page and hand over to #intro');
+  const aboutMotion = motionAssets(['plant']);
+  let out = inMonoShell(aboutBody + bigMark(), [...aboutSheets, 'donor-fonts.css', 'lifelogx.lx.css', 'stargo-fusion.css', 'stargo-motion.css', 'stargo-motion-atmos.css', FILM_CSS])
     .replace('<body ', '<body class="stargo-dark-page" ')
-    .replace('</body>', '<script src="js/stargo-video-defer.js" defer></script><script src="js/capability-blocks.js" defer></script></body>');   // keep </body>: tools/chrome.mjs attaches the forms and tabs scripts in front of it
+    .replace('</body>', `<script src="${FILM_JS}" defer></script><script src="js/stargo-video-defer.js" defer></script><script src="js/capability-blocks.js" defer></script>${aboutMotion.js}</body>`);   // keep </body>: tools/chrome.mjs attaches the forms and tabs scripts in front of it
 
   /* The projects band is four of cinery's own case-study clips — the owner
      asked for them back on 2026-09-15 (「恢复原模版」) after a still-image
@@ -1689,6 +1698,9 @@ PAGES['about.html'] = (lang) => {
       throw new Error('about: a data-video-urls survived, Webflow will fetch the clip eagerly');
     }
   }
+  /* lane people (2026-10-23): the four AI-employee tiles are code-drawn scenes
+     (tools/code-art-people.mjs); load the files of every scene on the page, once. */
+  out = withSceneAssets(out);
   return out;
 };
 
@@ -2450,8 +2462,12 @@ PAGES['contact.html'] = (lang) => {
     const FILM = '6b9abecd-3545-3c29-02b3-795e2774129e';
     const card = findByClass(h, 'div', 'testimonials-card');
     if (!card || !card.text.includes(`id="${FILM}-video"`)) throw new Error('contact: the quote card no longer holds the Professional Portrait film');
-    h = stillImage(h, FILM, CONTACT_CARD, 'STARGO WORK', 'stargo-still stargo-contact-photo')
-      .replace(' loading="lazy" class="stargo-still stargo-contact-photo"', ' class="stargo-still stargo-contact-photo"');
+    // Since 2026-10-24 a code-drawn scene of what happens after the form (tools/code-art-atmos.mjs
+    // 'request') in place of K01; CONTACT_CARD is no longer placed.
+    h = codeStill(h, FILM, requestHost(lang));
+    const mo = motionAssets(['request']);
+    h = s(h, '</head>', `${mo.css}\n</head>`, { count: 1 });
+    h = s(h, '</body>', `${mo.js}</body>`, { count: 1 });
   }
   // A honeypot field for the form endpoint.
   h = h.replace(/(<form id="email-form"[^>]*>)/, '$1<div class="stargo-hp" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"/></div>');
@@ -2528,7 +2544,7 @@ PAGES['contact.html'] = (lang) => {
 
   /* The quote card is the other column and is untouched — 「图6」 is why B2 was
      chosen over replacing the page. Assert it survived the splice. */
-  if (!findByClass(h, 'div', 'testimonials-card')?.text.includes('class="stargo-still stargo-contact-photo"')) throw new Error('contact: the quote card lost its picture in the swap');
+  if (!findByClass(h, 'div', 'testimonials-card')?.text.includes('data-sg-scene="request"')) throw new Error('contact: the quote card lost its picture in the swap');
   /* Not the number of forms on the page — the Mono shell carries a second one
      in its footer — but the number that reach this site's endpoint. Exactly
      one form may post to /api/contact, and it must be the one that came out of
@@ -2593,8 +2609,11 @@ PAGES['notices.html'] = (lang) => {
      marker — any non-empty alt stops tools/editorial-images.mjs treating a
      picture as decoration — and that pass then writes the registered sentence
      for each screen, in the page's language, over it. */
+  /* homemore (2026-10-23): 能力 shows the real Growth OS home capture and
+     数字员工 the code-drawn 'team' scene in place of the two generated
+     composites (tools/replaceables.mjs NOTICES_CARDS; tools/code-art-homemore.mjs). */
   [['699b6466d5f19893993a4dca_Sleek', NOTICES_CARDS[0]], ['699b6466d5f19893993a4d64_blog-2', NOTICES_CARDS[1]], ['699b6466d5f19893993a4e03_Futuristic', NOTICES_CARDS[2]]]
-    .forEach(([k, src]) => { h = swapImg(h, k, src, { alt: PRODUCT_CAPTION[lang] }); });
+    .forEach(([k, src]) => { h = typeof src === 'string' ? swapImg(h, k, src, { alt: PRODUCT_CAPTION[lang] }) : swapToMotion(h, k, src.motion, lang, 'sg-mo-notice'); });
   /* The post template tags its "Related Stories" band <h1>, a second h1 after
      the notice's own title. It becomes h2; `.inner-title._02` carries its
      size, weight and spacing, and Mono's h1/h2 element rules differ only in
@@ -2659,6 +2678,7 @@ for (const lang of C.LANGS) {
     let html = build(lang);
     html = blogArtSheet(html, `${lang}/${name}`);   // tools/blog-art.mjs: the covers' sheet, on the pages that draw one
     html = applyChrome(html, { lang, current: name });
+    html = vignettePage(html, lang, name);   // tools/code-art-vignettes.mjs: the homepage mosaic and the 每项 工作 ring, after the chrome has written the mosaic
     html = a11yPage(html, { lang, name });   // Z15: landmarks, skip link, heading semantics, names
     html = remapLinks(html);
     html = webpPage(html);
@@ -2683,6 +2703,15 @@ for (const lang of C.LANGS) {
         const f = part.trim().split(/\s+/)[0];
         if (f.startsWith('assets/') && !existsSync(`${SITE}/${decodeURIComponent(f)}`) && !existsSync(`${SITE}/${f}`)) throw new Error(`[${lang}/${name}] missing srcset asset: ${f}`);
       }
+    }
+    /* perfdata 2026-10-24: page conditions the CSS used to ask with body:has(#loop) / body:has(#atlas) /
+       body:not(:has(.rk-price-tiers)) are stamped on <html data-sg-page> here instead. A :has() on body puts
+       the whole page under it, and Chrome then re-matched every p / li / div those rules reach each time a
+       code-drawn scene inserted a node or toggled a class (about 3x the style work of production on a
+       phone scroll of capabilities). The marks are static, as the elements they stand for are. */
+    {
+      const marks = [[/\sid="loop"/, 'loop'], [/\sid="atlas"/, 'atlas'], [/\sclass="[^"]*\brk-price-tiers\b/, 'price-tiers']].filter(([re]) => re.test(html)).map(([, m]) => m);
+      if (marks.length) html = html.replace(/<html(?=[\s>])/, `<html data-sg-page="${marks.join(' ')}"`);
     }
     // Every local file the page loads carries its content hash (Z18).
     html = versionPage(html);

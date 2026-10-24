@@ -18,6 +18,48 @@
     all('.products-cards-dashboard-size', acc).forEach(function (s) { ro.observe(s); });
   }
 
+  // Paint budget: a code-drawn scene, or the drawings on the orbit and the 「每项工作」 ring, more than half a
+  // screen away from the viewport are not rendered (`sg-far` → content-visibility: hidden, css/stargo-phone.css),
+  // so their layers and paint chunks stop costing every frame while the page scrolls. Half a screen of margin
+  // each way, so a drawing is back before it comes in; no box changes size.
+  // A drawing is never hidden while it is on screen:
+  //  - from 768px the enterprise story panels slide in sideways inside a clip the margin cannot see past, so
+  //    the track (.sutdio-animation) stands for its four panels: all four show while the track is near;
+  //  - a jump (an anchor link, scroll restoration, find in page) moves the page further in one frame than the
+  //    margin covers, and the observer only reports after that frame is painted, so on a scroll event that
+  //    moved a quarter of a screen or more, the drawings now near the screen are shown before that frame
+  //    paints (one pass per such event; ordinary scrolling only compares two numbers).
+  if ('IntersectionObserver' in w) {
+    var farEls = all('.sg-mo, .qx-orbit, .cn-produce'), wide = w.matchMedia('(min-width: 768px)'), byProxy = new Map();
+    var far = new IntersectionObserver(function (es) {
+      for (var i = 0; i < es.length; i++) {
+        var hs = byProxy.get(es[i].target);
+        if (hs) for (var j = 0; j < hs.length; j++) hs[j].classList.toggle('sg-far', !es[i].isIntersecting);
+      }
+    }, { rootMargin: '50%' });
+    var wire = function () {
+      far.disconnect(); byProxy.clear();
+      farEls.forEach(function (h) {
+        var p = (wide.matches && h.closest('.sutdio-animation')) || h, l = byProxy.get(p);
+        if (!l) { byProxy.set(p, l = []); far.observe(p); }
+        l.push(h);
+      });
+    };
+    wire();
+    if (wide.addEventListener) wide.addEventListener('change', wire);
+    var lastY = w.pageYOffset;
+    var near = function (hs, p) {
+      if (!hs[0].classList.contains('sg-far')) return;
+      var r = p.getBoundingClientRect(), vh = w.innerHeight, vw = w.innerWidth;
+      if (r.bottom > -vh / 2 && r.top < vh * 1.5 && r.right > -vw / 2 && r.left < vw * 1.5) for (var j = 0; j < hs.length; j++) hs[j].classList.remove('sg-far');
+    };
+    w.addEventListener('scroll', function () {
+      var y = w.pageYOffset, dy = y - lastY;
+      lastY = y;
+      if (dy * dy >= w.innerHeight * w.innerHeight / 16) byProxy.forEach(near);
+    }, { passive: true });
+  }
+
   if (!w.matchMedia('(max-width: 767px)').matches || !('IntersectionObserver' in w)) return;
 
   // One observer; its root is a thin band across the middle of the screen.

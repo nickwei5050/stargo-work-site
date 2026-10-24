@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, readdirSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { SITE, req } from './paths.mjs';
+import { REAL_ASSETS } from './real-screens.mjs';
 const { chromium } = req('@playwright/test');
 /* Repo-relative paths below; run from anywhere. */
 process.chdir(SITE);
@@ -12,6 +13,8 @@ const manifest = JSON.parse(readFileSync('tools/imagegen/assets-manifest.json', 
    size on disk, alt/width/height on the page. They are derivatives of the
    supplied originals, so the source hash is the PNG's, not a generator's. */
 const products = JSON.parse(readFileSync('tools/imagegen/product-assets.json', 'utf8')).assets;
+/* and the crops cut from the owner's captures for the real-screen slots (tools/real-screens.mjs) */
+products.push(...REAL_ASSETS);
 /* The owner's photographs (tools/imagegen/photo-assets.json; batch 3 of
    2026-10-21 and every batch after it): the same checks. They are
    AI-generated images, not documentary photographs and not product screens,
@@ -88,7 +91,11 @@ const SUPERSEDED = new Set(photos.filter(a => photos.some(b => b.ref === `${a.re
    enterprise cockpit column's E05–E07 and the homepage problem cards' S01–S04
    gave way to code-drawn motion at the owner's choice (2026-10-23,
    tools/replaceables.mjs ENTERPRISE_PHOTOS and HOME_SILOS). */
-const RETIRED = new Set(['g01-cta-loading-bay-dusk', 'r1-sales-rep', 'r3-sales-director', 'r4-general-manager', 'i01-observe-process', 'i03-hand-phone-blank', 'e05-cockpit-overview', 'e06-cockpit-blocker', 'e07-cockpit-budget', 's01-inquiry-rework', 's02-scattered-chats', 's03v2-spreadsheet-memory', 's04-chasing-order']);
+const RETIRED = new Set(['g01-cta-loading-bay-dusk', 'r1-sales-rep', 'r3-sales-director', 'r4-general-manager', 'i01-observe-process', 'i03-hand-phone-blank', 'e05-cockpit-overview', 'e06-cockpit-blocker', 'e07-cockpit-budget', 's01-inquiry-rework', 's02-scattered-chats', 's03v2-spreadsheet-memory', 's04-chasing-order',
+  /* drawn in code where they were placed (atmos, 2026-10-24, tools/code-art-atmos.mjs): the homepage's door
+     picture (R1v2), its third scenario card (R2), about's introduction band (A01), the contact quote card (K01)
+     and the side menu card (G02). Their files stay registered and published. */
+  'r1v2-sales-rep-wide', 'r2-trade-manager', 'a01-empty-workshop', 'k01-meeting-table', 'g02-menu-harbour-night']);
 /* Drawn in code where they were placed (capareas, 2026-10-23,
    tools/code-art-capareas.mjs): the four capability area cards (C01v2, C02v2,
    C03, C04v2) and the first two cards of 「让 AI 团队把活干完」 (C09, C10) are
@@ -106,6 +113,18 @@ CODE_DRAWN_CAP.forEach((id) => CODE_DRAWN.add(id));
    (tools/blog-art.mjs); the articles' share images stay the raster covers in assets/blog/. */
 ['b01v2-visual-guide', 'b02-one-workflow', 'b03-inquiry-to-quote', 'b04v2-approval-handover', 'b05-288-relay',
   'b06-browser-os', 'b07v2-knowledge-library'].forEach((id) => CODE_DRAWN.add(id));
+/* Taken off the homepage by the homemore lane (2026-10-23): the five stage
+   cards and the pricing band's enterprise card are code-drawn scenes now
+   (js/stargo-motion-stages.js, js/stargo-motion-org.js). P02 and P04 were
+   placed only there (P01, P03 and P05 stay on capabilities.html); T01 only
+   in the pricing band. Still listed in tools/replaceables.mjs HOME_STAGES /
+   HOME_PRICING_CARD, so each can go back in one line. */
+['p01-prospecting', 'p02-sales', 'p04-payment-docs', 'p05-reorder', 't01-enterprise-campus',
+  // lane people: the about AI-employee tiles and the workforce role cards
+  'd01-market-research', 'd02-follow-up', 'd03-product-spec', 'd04-finance', 'd05-coordination', 'd06-reporting', 'd07-quotation',
+  // lane vignettes: the homepage opening mosaic and the capabilities 每项 工作 ring
+  'h01-port-blue-hour', 'h02-night-inquiry', 'h03-sample-wall', 'h04-caliper-qc', 'h05-assembly-line', 'h06-packing',
+  'h07-owner-walk', 'h08-product-shoot', 'h09-container-loading', 'h10-video-showing', 'p03-fulfilment', 'w02-workshop', 'c08-product-references'].forEach((id) => CODE_DRAWN.add(id));
 const photosUnused = photos.filter(a => !all.includes(a.src) && !SUPERSEDED.has(a.id) && !RETIRED.has(a.id) && !CODE_DRAWN.has(a.id)).map(a => a.id);
 assert.deepEqual(photosUnused, [], 'every registered photograph is placed');
 console.log(`generated imagery: ${manifest.assets.length - unused.length} placed, ${unused.length} retained but unused (${unused.join(', ')})`);
@@ -255,8 +274,11 @@ async function worker() {
       // About joined them when it was rebuilt from cinery's blocks (its pictures are cinery's clips and
       // photographs, like the pricing page's); only the shared menu carries generated art there.
       // Enterprise joined them on 2026-10-23, when every one of its pictures became code-drawn motion.
+      // Contact joined them on 2026-10-24 (atmos): its one picture, the quote card's K01, is code-drawn motion now.
+      // The homepage and capabilities joined them on 2026-10-24 (vignettes, atmos): the opening mosaic, the
+      // scenario doors and the 每项工作 ring were their last generated photographs; all are code-drawn now.
       if (hasImageArea) assert(assets.length > 0, 'visible new images requested');
-      else assert((width < 992 && ['contact', 'pricing'].includes(name)) || /intelligence|workforce|blog|pricing|about|enterprise/.test(name), 'only approved template-imagery pages omit generated art');
+      else assert((width < 992 && ['contact', 'pricing'].includes(name)) || /intelligence|workforce|blog|pricing|about|enterprise|contact|index|capabilities/.test(name), 'only approved template-imagery pages omit generated art');
       const card = await page.evaluate((OWN) => [...document.querySelectorAll(OWN)].find(i => {
         const r = i.getBoundingClientRect();
         return r.width > 180 && r.height > 150 && !i.closest('.menu-wrapper,nav,.navbar,.menu-bottom');

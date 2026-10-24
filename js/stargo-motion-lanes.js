@@ -1,8 +1,8 @@
 /* Growth OS row 2 background, capabilities.html 「贸易情报」: a dotted world
    map, the shipping lanes from four Chinese and Vietnamese ports to four
    buyers' ports, and one buyer at a time — its lane lit, its ship sailing,
-   its purchase records and supplier change under the hovered row's
-   thumbnail. Kept apart from js/stargo-motion-growth.js for its map data;
+   its purchase records and supplier change under the row's type, beside
+   the hovered row's thumbnail. Kept apart from js/stargo-motion-growth.js for its map data;
    it draws with that file's kit (K.growth, loaded first) and its styles are
    in css/stargo-motion-growth.css. */
 (window.STARGO_SCENES = window.STARGO_SCENES || []).push(function (K) {
@@ -28,12 +28,12 @@
     ['qz', [[109.5, 17], [110, 10], [108, 3], [106.9, -2]], 'jkt', 2],
     ['sz', [[114, 17], [109, 10]].concat(SG.slice(0, 2), [[96, -2], [80, -15], [60, -28], [35, -36], [20, -36.5], [10, -28], [5, -10], [3, 0]]), 'los', 3]
   ];
-  // buyer, its records, what changed
+  // buyer, its records, what changed, its short name
   var BUYER = [
-    ['Nordwerk Energie GmbH', T('近 12 个月 9 票 · HS 8507.60', '9 shipments in 12 months'), T('供应商 2 → 3，新增越南工厂', 'Suppliers 2 → 3, one in Vietnam')],
-    ['Gulf Coast Lift Supply', T('叉车电池 · 近 6 个月 4 票', 'Forklift batteries · 4 in 6 months'), T('铅酸换锂电，采购量 +35%', 'Lead-acid to lithium, +35%')],
-    ['PT Surya Energi', T('约每 60 天一票', 'About one shipment every 60 days'), T('上次下单已 60 天', 'Last order 60 days ago')],
-    ['Lagos Power Ltd', T('离网储能 · 首次进口', 'Off-grid storage · first import'), T('新进口商', 'New importer')]
+    ['Nordwerk Energie GmbH', T('近 12 个月 9 票 · HS 8507.60', '9 shipments in 12 months'), T('供应商 2 → 3，新增越南工厂', 'Suppliers 2 → 3, one in Vietnam'), 'Nordwerk Energie'],
+    ['Gulf Coast Lift Supply', T('叉车电池 · 近 6 个月 4 票', 'Forklift batteries · 4 in 6 months'), T('铅酸换锂电，采购量 +35%', 'Lead-acid to lithium, +35%'), 'Gulf Coast Lift'],
+    ['PT Surya Energi', T('约每 60 天一票', 'About one shipment every 60 days'), T('上次下单已 60 天', 'Last order 60 days ago'), 'PT Surya'],
+    ['Lagos Power Ltd', T('离网储能 · 首次进口', 'Off-grid storage · first import'), T('新进口商', 'New importer'), 'Lagos Power']
   ];
   function Lanes() {
     var P = 20, SLOT = P / BUYER.length, R, S = shaped();
@@ -92,20 +92,31 @@
         var p = px(PORT[k][0], PORT[k][1]);
         R.ports[k] = node(svg, p[0], p[1], /^(nb|sz|qz|hp)$/.test(k) ? 'sgg-dot is-origin' : 'sgg-dot');
       });
-      // the records, under the hovered row's thumbnail, across the hairline below it; the route is named there
-      var fb = strip(G, 2, 'd'), tc = th ? (th.l + th.r) / 2 : L.w / 2, rw = Math.min(460, G.cr - G.cl), rx = clamp(tc - rw / 2, G.cl, G.cr - rw);
+      // the records, under row 2's type beside the hovered thumbnail (the corner with more room), so they
+      // stay in the row's own band; the route is named there
+      var C = H.corners ? H.corners(G, 1) : null, fb = C ? C.b : strip(G, 2, 'u'), bL = C ? C.L >= C.R : true;
+      var rw = Math.min(460, C ? (bL ? C.L : C.R) : G.cr - G.cl), rx = C ? (bL ? C.lx - rw : C.rx) : G.cl;
+      // a corner too narrow for a whole line (992–1279 in en): the route keeps only its port of call, then
+      // the buyer takes its short name; a second line too long keeps what changed. Measured once, here.
+      var rg = document.createRange();
+      function cut(e) { rg.selectNodeContents(e); var b = e.getBoundingClientRect(); return b.width > 0 && rg.getBoundingClientRect().right - b.left > b.width + 0.05; }
       BUYER.forEach(function (b, i) {
         var from = [], to;
         LANE.forEach(function (l) { if (l[3] === i) { to = PORT[l[2]][2]; if (from.indexOf(PORT[l[0]][2]) < 0) from.push(PORT[l[0]][2]); } });
         var c = box(stage, 'is-2 sgg-rec', rx, fb.y, rw, 'l');
-        var l2 = two(c, null, b[0], b[1] + ' · ');
-        el('span', 'sgg-route', l2.previousSibling, from.join(' / ') + ' → ' + to);
+        var l2 = two(c, null, b[0], b[1] + ' · '), l1 = l2.previousSibling, nm = l1.lastChild;
+        var rt = el('span', 'sgg-route', l1, from.join(' / ') + ' → ' + to);
         el('span', 'sgg-chg', l2, b[2]);
+        if (cut(nm)) { rt.textContent = '→ ' + to; if (cut(nm) && b[3]) nm.textContent = b[3]; }
+        if (cut(l2)) { l2.textContent = ''; el('span', 'sgg-chg', l2, b[2]); }
         R.buyers.push(c);
       });
       tag(stage, G.cr, strip(G, 1, 'd').y, 'r');
+      if (H.late) H.late(stage, L, R, function () { return R; }, build, function () { tick(lt); });
     }
+    var lt = 0;
     function tick(t) {
+      lt = t;
       var u = mod(t, P), act = Math.floor(u / SLOT), v = u - act * SLOT, pv = R.pv, k;
       for (k in R.ports) pv[k] = 0;
       R.lanes.forEach(function (o) {

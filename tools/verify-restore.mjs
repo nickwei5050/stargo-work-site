@@ -100,7 +100,10 @@ const TEXT_AUDIT = `(() => {
     const cx = Math.min(Math.max(r0.left + r0.width / 2, 1), vw - 1), cy = Math.min(Math.max(r0.top + r0.height / 2, 1), vh - 1);
     if (r0.top >= 0 && r0.bottom <= vh && el.closest('.lx-gradient-section, .lx-no-writing, .lx-cta-author-list, .lx-community-loop, .cta-sm-title, .marquee, .products-cards-mobile, .stargo-skip') === null) {
       const hit = document.elementFromPoint(cx, cy);
-      if (hit && hit !== el && !el.contains(hit) && !hit.contains(el)) {
+      // The notices 「继续看」 cards stack (sticky): a later card slides over the one before it by design,
+      // and since 2026-10-24 one of them is a code-drawn scene with words, not only pictures.
+      const stacked = hit && hit.closest('.blog-photo-wrapper') && el.closest('.blog-photo-wrapper') && hit.closest('.blog-photo-wrapper') !== el.closest('.blog-photo-wrapper');
+      if (hit && hit !== el && !el.contains(hit) && !hit.contains(el) && !stacked) {
         const hcs = getComputedStyle(hit);
         const opaque = hcs.pointerEvents !== 'none' && (parseFloat(hcs.opacity) > 0.15) && !(hit.tagName === 'DIV' && hcs.backgroundColor === 'rgba(0, 0, 0, 0)' && !hcs.backgroundImage.includes('url') && !hit.querySelector(':scope > img, :scope > video'));
         if (opaque && !/stargo-media-toggle|circle-wrap|menu-bottom|crosshair|cursor/.test(hit.className)) issues.push({ kind: 'covered', text: t.slice(0, 40), by: (hit.tagName + '.' + hit.className).slice(0, 70) });
@@ -178,12 +181,16 @@ for (const width of WIDTHS.filter((w) => [390, 768, 1024, 1280, 1440, 1920].incl
          text, so each one is brought into view in turn instead. */
       if (width < 768) {
         /* Each heading must be readable at some point while the section
-           scrolls past (scroll-linked transforms still move them). */
+           scrolls past (scroll-linked transforms still move them). Phones
+           light one line at a time as it crosses the middle of the screen
+           (js/stargo-phone-fx.js focus; the others dim), and the lines sit
+           about 60px apart and above the section's top, so the walk starts two
+           screens up and moves in small steps, as a reader's scroll does. */
         const n = await page.locator('.lx-gradient-section-text h3').count();
         const read = new Set();
         const vh = heightFor(width);
-        for (let y = grad.top - vh; y <= grad.top + grad.height + vh; y += vh / 4) {
-          await scrollTo(page, y); await page.waitForTimeout(250);
+        for (let y = grad.top - 2 * vh; y <= grad.top + grad.height + vh; y += vh / 12) {
+          await scrollTo(page, y); await page.waitForTimeout(650);
           const states = await page.evaluate(() => [...document.querySelectorAll('.lx-gradient-section-text h3')].map((h) => { const r = h.getBoundingClientRect(); let op = parseFloat(getComputedStyle(h).opacity); for (let a = h.parentElement; a && !a.classList.contains('lx-gradient-section'); a = a.parentElement) op *= parseFloat(getComputedStyle(a).opacity); return { op, top: r.top, bottom: r.bottom, left: r.left, right: r.right }; }));
           states.forEach((st, i) => { if (st.op > 0.6 && st.top >= 0 && st.bottom <= vh && st.left >= -1 && st.right <= width + 1) read.add(i); });
         }
@@ -308,9 +315,10 @@ for (const width of WIDTHS.filter((w) => [390, 768, 1280, 1440].includes(w))) fo
     // scenario cards (sticky testimonials): the portrait picture on card 3, four cards, illustrative labels, mark, through the scroll
     // (since 2026-10-21 the owner's photograph R2 as a still where the template's portrait film played)
     assert.equal(await page.locator('.testimonials-card').count(), 4);
-    const film = await page.evaluate(() => { const v = document.querySelector('.testimonials-card._03 .w-background-video > img.stargo-still'); return v ? { src: v.getAttribute('src'), alt: v.getAttribute('alt') } : { src: '', alt: '' }; });
-    assert(/stargo-photo\/r2-trade-manager-/.test(film.src), `portrait still on card 3: ${film.src}`);
-    assert(film.alt.length > 20, `portrait still on card 3 carries its own alt: "${film.alt}"`);
+    // (since 2026-10-24 a code-drawn scene, tools/code-art-atmos.mjs 'board', in place of R2)
+    const film = await page.evaluate(() => { const v = document.querySelector('.testimonials-card._03 .w-background-video > [data-sg-scene="board"]'); return v ? { role: v.getAttribute('role'), alt: v.getAttribute('aria-label') || '' } : { role: '', alt: '' }; });
+    assert.equal(film.role, 'img', 'code-drawn priorities scene on card 3');
+    assert(film.alt.length > 20 && /演示数据|demo data/i.test(film.alt), `the scene on card 3 says what it is: "${film.alt}"`);
     assert.equal(await page.locator('.testimonials-card .stargo-card-mark').count(), 4, 'STARGO mark on the four cards');
     const labels = await page.locator('.testimonials-card .card-author .top-text:not(.sml)').allInnerTexts();
     assert(labels.every((l) => /示例|illustrative/i.test(l)), `scenario cards labelled: ${labels.join(' | ')}`);
@@ -391,22 +399,27 @@ for (const lang of ['', 'en/']) {
        「11.3 MB 无引用的 cinery 案例片，帮我恢复原模版」); since 2026-10-21 each
        tile shows the owner's own photograph of its role instead
        (site-images/batch-5 D01, D07, D02, D05; tools/replaceables.mjs
-       ABOUT_CASE_STILLS), as a still in the clip's box. So the band holds no
-       clip, and exactly four stills, each an owner photograph with its own
-       alt, filling its box. The band's other `<img>`s are the two copies of
-       the STARGO wordmark each tile stacks for its hover roll. What must NOT
-       come back is a client name, a year or a logoipsum mark — the role names
-       asserted above are what the tile line says. */
-    assert.equal(await page.locator('.cn-about-projects video, .cn-about-projects source').count(), 0, 'the tiles show stills, not clips');
-    const stills = await page.locator('.cn-about-projects .cn-case-video > img.stargo-still').evaluateAll((imgs) => imgs.map((i) => {
-      const r = i.getBoundingClientRect(); const b = i.parentElement.getBoundingClientRect();
-      return { src: i.getAttribute('src'), alt: i.getAttribute('alt') ?? '', fills: Math.abs(r.width - b.width) < 2 && Math.abs(r.height - b.height) < 2 };
+       ABOUT_CASE_STILLS), as a still in the clip's box; since 2026-10-23 each
+       tile draws its AI employee at work in code instead (lane people:
+       tools/code-art-people.mjs ABOUT_CASE_SCENES, js/stargo-motion-staff.js).
+       So the band holds no clip and no photograph, and exactly four motion
+       hosts, each a labelled picture (role=img, its own aria-label) filling
+       the clip's box. The band's `<img>`s are the two copies of the STARGO
+       wordmark each tile stacks for its hover roll. What must NOT come back
+       is a client name, a year or a logoipsum mark — the role names asserted
+       above are what the tile line says. */
+    assert.equal(await page.locator('.cn-about-projects video, .cn-about-projects source').count(), 0, 'the tiles show code-drawn scenes, not clips');
+    assert.equal(await page.locator('.cn-about-projects .cn-case-video > img').count(), 0, 'no photograph left in a tile');
+    const scenes = await page.locator('.cn-about-projects .cn-case-video > .sg-mo-case[data-sg-scene]').evaluateAll((hs) => hs.map((h) => {
+      const r = h.getBoundingClientRect(); const b = h.parentElement.getBoundingClientRect();
+      return { scene: h.dataset.sgScene, role: h.getAttribute('role'), label: h.getAttribute('aria-label') ?? '', fills: Math.abs(r.width - b.width) < 2 && Math.abs(r.height - b.height) < 2 };
     }));
-    assert.equal(stills.length, 4, 'one still per tile');
-    stills.forEach((s, i) => {
-      assert.match(s.src ?? '', /(?:^|\/)assets\/stargo-photo\/(?:d01-market-research|d07-quotation|d02-follow-up|d05-coordination)-\d+\.webp(?:\?v=[0-9a-f]{12})?$/, `tile ${i + 1} shows the owner's photograph: ${s.src}`);
-      assert(s.alt.length > 20, `tile ${i + 1}'s still carries its own alt: "${s.alt}"`);
-      assert(s.fills, `tile ${i + 1}'s still fills its box`);
+    assert.equal(scenes.length, 4, 'one code-drawn scene per tile');
+    scenes.forEach((s, i) => {
+      assert.match(s.scene, /^crew(?:Signal|Quote|Follow|Coord)$/, `tile ${i + 1} hosts its crew scene: ${s.scene}`);
+      assert.equal(s.role, 'img', `tile ${i + 1}'s scene is a labelled picture`);
+      assert(s.label.length > 20, `tile ${i + 1}'s scene carries its own label: "${s.label}"`);
+      assert(s.fills, `tile ${i + 1}'s scene fills its box`);
     });
     assert(await page.locator('.cn-about a[href$="/contact"]').count() >= 1, 'About reaches the contact page');
     const intro = await page.locator('.cn-about').innerText();

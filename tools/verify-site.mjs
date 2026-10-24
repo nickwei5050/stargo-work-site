@@ -45,8 +45,11 @@ for (const page of PAGES) {
 
   let status = 0;
   try {
-    const resp = await p.goto(`${BASE}/${page}`, { waitUntil: 'networkidle', timeout: 90000 });
+    const resp = await p.goto(`${BASE}/${page}`, { waitUntil: 'load', timeout: 90000 });
     status = resp?.status() ?? 0;
+    // A film that plays (the about page's first screen) keeps one request open as
+    // it streams, so its page never goes network-idle: wait for idle, but not forever.
+    await p.waitForLoadState('networkidle', { timeout: 20000 }).catch(() => {});
   } catch (e) {
     console.log(`FAIL ${page}: could not load — ${String(e).split('\n')[0]}`);
     failures++;

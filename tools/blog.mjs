@@ -750,7 +750,7 @@ ${chartStart('en', 1)}
     date: '2026-08-13',
     modified: '2026-09-17',
     cover: 'from-inquiry-to-quote',
-    section: B('销售与报价', 'Sales and quoting'),
+    section: B('销售与报价', 'Sales & quoting'),   // en: '&' so the eyebrow of the 360px homepage card shows it whole
     keywords: B(['Sales Desk', '询盘处理', '外贸报价', 'PI', '报价审批'], ['Sales Desk', 'inquiry handling', 'export quotation', 'proforma invoice', 'quote approval']),
     mentions: ['Sales Desk', 'Growth OS'],
     title: B('Sales Desk：从询盘到报价审批、出 PI', 'Sales Desk: from inquiry to an approved quote and PI'),
@@ -836,7 +836,8 @@ ${chartStart('en', 1)}
     date: '2026-07-30',
     modified: '2026-09-17',
     cover: 'approval-gates-for-ai-in-trade',
-    section: B('管理与控制', 'Management and control'),
+    // en 'Governance' (was 'Management and control'): the section is the covers' eyebrow, and the long name was cut on phone and tablet cards
+    section: B('管理与控制', 'Governance'),
     keywords: B(['AI 审批', '人工确认', '老板驾驶舱', '预算控制', '人工接管'], ['AI approvals', 'human review', 'owner’s cockpit', 'budget limits', 'human takeover']),
     title: B('谁来做决定：审批、记录、预算与接管', 'Who decides? Approvals, records, budgets and human takeover'),
     titleChunks: ['谁来做决定：', '审批、', '记录、', '预算与接管'],

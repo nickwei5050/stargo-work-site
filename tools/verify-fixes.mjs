@@ -139,7 +139,7 @@ try {
             form: box(form).width,
             card: box(form.closest('.cn-contact-form-wrapper')),
             photo: box(document.querySelector('.testimonials-card')),
-            fields: [...form.querySelectorAll('input:not([type=submit]):not([name=website]), select, textarea')].map((e) => ({ name: e.name, width: box(e).width })),
+            fields: [...form.querySelectorAll('input:not([type=submit]):not([type=hidden]):not([name=website]), select, textarea')].map((e) => ({ name: e.name, width: box(e).width })),
           };
         });
         assert.equal(m.fields.length, 10, 'ten fields');

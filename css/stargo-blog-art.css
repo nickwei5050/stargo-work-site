@@ -198,3 +198,31 @@ div.sgcv::before {
 @container (max-width: 239.98px) { .sgcv-meta { left: 10px; top: 10px; } }
 /* The homepage card: Mono's arrow badge covers the top right. */
 .blog-grid .sgcv-meta { right: 74px; }
+
+/* 首页蓝 (owner 2026-10-24): the homepage's four covers in the homepage palette of the approval
+   card (tokens in css/stargo-blue.css): the calm aurora behind, each cover's glow in violet, ice-blue
+   accent, glass tiles with light hairlines, white type, the honesty tag a small glass pill. Colours
+   only; the blog pages and workforce keep the covers' own look (no data-stargo-home there). */
+html[data-stargo-home] .blog-grid div.sgcv {
+  --sgcv-pink: var(--sgb-accent);
+  --sgcv-hot: var(--sgb-accent-2);
+  --sgcv-acc: 159, 220, 255;     /* --sgb-accent as r, g, b, for its tints */
+  --sgcv-w: 255, 255, 255;
+  --sgcv-bg: var(--sgb-deep);
+  --sgcv-glow: color-mix(in srgb, var(--sgb-violet) 42%, transparent);
+  --sgcv-glow2: color-mix(in srgb, var(--sgb-cyan) 12%, transparent);
+  --sgcv-tile: color-mix(in srgb, var(--sgb-deep) 86%, transparent);
+  --sgcv-tile-ln: var(--sgb-hair);
+  --sgcv-win: color-mix(in srgb, var(--sgb-deep) 86%, transparent);
+  --sgcv-win-ln: var(--sgb-glass-edge);
+  --sgcv-core: var(--sgb-deep);
+  --sgcv-ink: var(--sgb-ink);
+  --sgcv-txt: var(--sgb-text);
+  --sgcv-mut: var(--sgb-muted);
+  --sgcv-soft: color-mix(in srgb, var(--sgb-text) 86%, transparent);
+  --sgcv-meta: color-mix(in srgb, var(--sgb-text) 90%, transparent);
+  background: radial-gradient(90% 75% at var(--sgcv-gx, 0%) var(--sgcv-gy, 0%), var(--sgcv-glow), var(--sgcv-glow2) 45%, transparent 72%), var(--sgb-aurora-calm);
+}
+/* what has not happened yet (发送 in 批准 ≠ 发送) stays quiet, but at 3:1 or more on the aurora */
+html[data-stargo-home] .blog-grid .sgcv-art .k-dim { fill: rgba(var(--sgcv-w), .44); }
+html[data-stargo-home] .blog-grid .sgcv-tag { color: var(--sgb-text); background: color-mix(in srgb, var(--sgb-ink) 45%, transparent); border-color: var(--sgb-glass-edge); }

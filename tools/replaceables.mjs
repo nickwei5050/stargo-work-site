@@ -101,6 +101,8 @@ export const HERO = {
  * (tools/chrome.mjs): a still photograph where the magical-orb clip played
  * (G02, 2026-10-21). The orb clip stays everywhere else it is drawn — the
  * navbar logo and the pricing cards.
+ * Since 2026-10-24 (「现场氛围也全部换成代码」) the card draws a harbour in code
+ * (tools/code-art-atmos.mjs MENU_ART); MENU_CARD is no longer placed.
  */
 export const MENU_CARD = photoFile('g02-menu-harbour-night', 768);
 
@@ -116,6 +118,11 @@ export const MENU_CARD = photoFile('g02-menu-harbour-night', 768);
  * still of the clip it repeats (video-10 twice: H09 both times), except the
  * second repeat of video-11, which takes C08 instead of a second P03 so every
  * still is in the inner ring too. The ids are the manifests' own.
+ *
+ * Since 2026-10-24 (lane "vignettes") every card draws the code vignette of
+ * the photograph named here instead (tools/code-art-vignettes.mjs, placed by
+ * its page pass after tools/blocks/cn-produce.mjs has written the stills), so
+ * none of these files is fetched by the page; the map stays the record.
  */
 export const RING_STILLS = {
   /* outer ring */
@@ -275,9 +282,14 @@ export const PRODUCT_IDS = {
   erpItems: 'live23-erp-items-16x9',
   erpStage: 'live23-erp-items-3x2',
   growthHome: 'live05-growth-home-2x1',
+  growthTile: 'live05-growth-home-16x9',   // the same capture on a 16:9 plate (homemore, 2026-10-23)
   growthStartThumb: 'live05-growth-home-start-5x4',
   needs: 'live52-mobile-case-needs',
   quoteApproval: 'live18-quote-approval-16x9',
+  desktopHome: 'live01-desktop-home-16x9',
+  caseWide: 'live09-sales-desk-case-16x9',
+  mobileCase: 'live52-mobile-case-16x9',
+  mobilePair: 'live51-52-mobile-pair-16x9', // both phone captures whole on one 16:9 plate (homemore, 2026-10-23)
 };
 
 export const PRODUCT = Object.fromEntries(
@@ -292,13 +304,20 @@ PRODUCT.documentPack = PRODUCT.documents;
 /**
  * Hero rotating gallery (tools/blocks/ro-gallery.mjs). Six screens, each
  * shown four times. Stems only; the block adds assets/stargo-product/ and .webp.
+ *
+ * Since 2026-10-23 (homemore lane) all six are real captures of the product
+ * with demo data, every one 16:9 like the tile: the web desktop, the Growth
+ * OS home, the ERP item list, the two phone screens (deal board and an
+ * inquiry, whole, side by side), the Sales Desk case and quote approval. They replaced, in the same slots, the generated
+ * marketing composites sw003 (workspace), sw004 (experts), sw006 (teams),
+ * sw008 (workflows) and sw028 (inquiry reply).
  */
 export const GALLERY_TILES = [
-  PRODUCT_IDS.workspace,
-  PRODUCT_IDS.experts,
-  PRODUCT_IDS.teams,
-  PRODUCT_IDS.workflows,
-  PRODUCT_IDS.inquiry,
+  PRODUCT_IDS.desktopHome,
+  PRODUCT_IDS.growthTile,
+  PRODUCT_IDS.erpItems,
+  PRODUCT_IDS.mobilePair,
+  PRODUCT_IDS.caseWide,
   PRODUCT_IDS.quoteApproval,
 ];
 
@@ -326,6 +345,10 @@ export const HOME_MODULES = {
  * can put a screen back by swapping one line.
  *   001 PRODUCT.growthHome · 002 PRODUCT.caseStage · 003 PRODUCT.erpStage
  *   004 editorialToken('brand-family-01') · 005 PRODUCT.reactivation
+ *
+ * Since 2026-10-23 (homemore) none of these is placed: the five cards are
+ * code-drawn scenes (tools/code-art-homemore.mjs, js/stargo-motion-stages.js).
+ * The list stays as the record of what can go back, one line per card.
  */
 export const HOME_STAGES = [
   { id: 'acquisition', label: '001 主动获客', file: photoFile('p01-prospecting', 480) },
@@ -348,7 +371,11 @@ export const HOME_STAGES = [
  *  the os-* stills in a fixed order; each os-* still becomes, wherever it
  *  falls in the mosaic, the photograph the batch-1 manifest names for it
  *  (H01–H10). The cursor tooltip's picture rotator (`.image-text-rotator`)
- *  after it keeps the os-* stills. */
+ *  after it keeps the os-* stills.
+ *  Since 2026-10-24 (lane "vignettes"; owner: 能用代码的图片都改成代码) no
+ *  photograph is placed here: tools/code-art-vignettes.mjs draws, in each
+ *  tile, the vignette of the photograph this map names (VIGNETTE_OF), in the
+ *  same cycle order and box. The map stays the record and the way back. */
 export const HOME_MOSAIC = {
   'os-cockpit': photoFile('h05-assembly-line', 1024),
   'os-sales-desk': photoFile('h02-night-inquiry', 1024),
@@ -372,10 +399,14 @@ export const HOME_SILOS = [
 /** The four scenario cards' film card (`.testimonials-card._03`): R2, the
  *  trade manager at the whiteboard, as a still where the template's
  *  portrait film played. The split photograph behind the cards
- *  (`.photo-half`, R1) is a CSS background: css/stargo-fusion.css. */
+ *  (`.photo-half`, R1) is a CSS background: css/stargo-fusion.css.
+ *  Since 2026-10-24 both are code-drawn (tools/code-art-atmos.mjs 'board' and
+ *  'night'); HOME_ROLE_CARD is no longer placed. */
 export const HOME_ROLE_CARD = photoFile('r2-trade-manager', 1024);
 /** The pricing band's image card beside 企业版 (T01), in place of
- *  brand-glow-square. */
+ *  brand-glow-square. Not placed since 2026-10-23 (homemore): the card is the
+ *  code-drawn 'org' scene (js/stargo-motion-org.js); kept so the photograph
+ *  can go back with one line. */
 export const HOME_PRICING_CARD = photoFile('t01-enterprise-campus', 1024);
 /** The homepage's four newest-article cards (B01–B04), by article slug. A
  *  slug not listed keeps its article cover from assets/blog/. The blog index
@@ -428,8 +459,13 @@ export const STORY_ART = {
   improvement: 'brand-loop',
 };
 
-/** Notices “keep reading” cards, in card order. */
-export const NOTICES_CARDS = [PRODUCT.workspaceHome, PRODUCT.expertsLibrary, PRODUCT.quoteApproval];
+/** Notices “keep reading” cards, in card order. Since 2026-10-23 (homemore)
+ *  the first is the real Growth OS home capture (it was the sw003 composite;
+ *  the web-desktop capture live01 is kept off this card because at this size
+ *  its 'Stargo Office 365.app' icon label is readable) and the second, 数字员工,
+ *  is the code-drawn 'team' scene (`motion`, placed by tools/build-site.mjs; it
+ *  was the sw004 composite). */
+export const NOTICES_CARDS = [PRODUCT.growthTile, { motion: 'team' }, PRODUCT.quoteApproval];
 
 /**
  * The owner's photographs on about, contact, pricing and workforce
@@ -456,7 +492,9 @@ export const ROLE_SLIDES = {
 };
 /** about.html's four AI-employee tiles (tools/blocks/cn-about-projects.mjs),
  *  by the clip's video id: a still in place of each cinery case-study film,
- *  matched by the tile's role (D01 市场信号, D07 报价, D02 跟进, D05 统筹). */
+ *  matched by the tile's role (D01 市场信号, D07 报价, D02 跟进, D05 统筹).
+ *  Since 2026-10-23 the tiles draw these roles in code (tools/code-art-people.mjs
+ *  ABOUT_CASE_SCENES); kept as the record of which photograph each replaced. */
 export const ABOUT_CASE_STILLS = {
   'fb6f08c0-bccf-aeab-a33d-45198963fe74': photoFile('d01-market-research', 1024),
   'fb6f08c0-bccf-aeab-a33d-45198963fe90': photoFile('d07-quotation', 1024),
@@ -465,12 +503,16 @@ export const ABOUT_CASE_STILLS = {
 };
 /** contact.html's quote card (`.testimonials-card._03.rl`, beside the
  *  form): K01, the meeting table, as a still where the template's
- *  Professional Portrait film played. */
+ *  Professional Portrait film played. Since 2026-10-24 code-drawn instead
+ *  (tools/code-art-atmos.mjs 'request'); CONTACT_CARD is no longer placed. */
 export const CONTACT_CARD = photoFile('k01-meeting-table', 768);
 /** workforce.html's five marquee role cards (`.lx-feature-hero-card.lx-_1`
  *  … `lx-_5`, each drawn twice for the loop) and the collage card in the
  *  desktop item (报告 AI 员工), keyed by the lifelogx asset id of the
- *  picture each showed (D01–D06). */
+ *  picture each showed (D01–D06). Since 2026-10-23 the cards are static code
+ *  cards and the collage card the 'deskReport' scene (tools/code-art-people.mjs
+ *  roleCard, tools/build-site.mjs); kept as the record, the build only checks
+ *  that the six slots are still there. */
 export const WORKFORCE_ROLES = {
   '6941e78a09a85d0bd053b266': photoFile('d01-market-research', 1024),   // Item → Variant 1
   '694ab25174cbe821ec5d8930': photoFile('d02-follow-up', 1024),         // ChatGPT Image Dec 23, 2025, 04_16_19 PM

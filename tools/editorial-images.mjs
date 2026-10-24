@@ -1,5 +1,6 @@
 /** Final image pass: keep every template element/class/animation target intact. */
 import { readFileSync } from 'node:fs';
+import { REAL_ASSETS, REAL_TEXT } from './real-screens.mjs';
 const { assets } = JSON.parse(readFileSync(new URL('./imagegen/assets-manifest.json', import.meta.url), 'utf8'));
 if (assets.length !== 43) throw new Error('All 43 editorial images must exist before building');
 const byId = new Map(assets.map(a => [a.id, a]));
@@ -44,6 +45,9 @@ const descriptions = {
    caption the blocks print under a full-bleed product image. Nothing here may
    read as a real screenshot, a customer or a result. */
 const products = JSON.parse(readFileSync(new URL('./imagegen/product-assets.json', import.meta.url), 'utf8')).assets;
+/* 真实截图 (2026-10-24, tools/real-screens.mjs): the crops cut from the owner's captures for the
+   places that had drawn the system in code. Same registry shape, same rules. */
+products.push(...REAL_ASSETS);
 for (const a of products) {
   /* Each id keeps the surface it came from and the source document's own
      number, so a screen can be found again in the document it was taken from. */
@@ -62,11 +66,11 @@ for (const a of products) {
     throw new Error(`Product image id and source disagree: ${a.id} is ${a.sourceFile}`);
   }
   if (live) {
-    const capture = a.sourceFile?.match(/screens-final\/(?:clean|slot-crops)\/(?:[a-z]+-row\d+-)?(\d{2})-[\w-]+\.png$/);
+    const capture = a.sourceFile?.match(/(?:screens-final\/(?:clean|slot-crops)\/(?:[a-z]+-row\d+-)?|^site-screens\/raw\/)(\d{2})-[\w-]+\.png$/);
     if (!capture || capture[1] !== live[1]) throw new Error(`Product image id and source disagree: ${a.id} is ${a.sourceFile}`);
   }
   if (mobile) {
-    const capture = a.sourceFile?.match(/^site-images\/mobile\/m(\d{2})-[\w-]+\.png$/);
+    const capture = a.sourceFile?.match(/^site-(?:images|screens)\/mobile\/m(\d{2})-[\w-]+\.png$/);
     if (!capture || capture[1] !== mobile[1]) throw new Error(`Product image id and source disagree: ${a.id} is ${a.sourceFile}`);
   }
   byId.set(a.id, a);
@@ -108,11 +112,15 @@ const productText = {
   'live23-erp-items-16x9': ['ERP 物料列表：177 个 STARGO 自有型号的名称、启用状态和物料组', 'The ERP item list: the name, status and item group of 177 STARGO products'],
   'live23-erp-items-3x2': ['ERP 物料列表：177 个 STARGO 自有型号的名称、启用状态和物料组', 'The ERP item list: the name, status and item group of 177 STARGO products'],
   'live05-growth-home-2x1': ['Growth OS 主动获客首页：上手进度，还有“开始找客户”和“发送开发信”两个入口，启动前都会先请你确认', 'The Growth OS home: onboarding progress and the two starting points, finding customers and sending outreach emails, each confirmed with you before it runs'],
+  /* homemore (2026-10-23): the same capture on a 16:9 plate of its own page ground, for the hero gallery. */
+  'live05-growth-home-16x9': ['Growth OS 主动获客首页：上手进度，还有“开始找客户”和“发送开发信”两个入口，启动前都会先请你确认', 'The Growth OS home: onboarding progress and the two starting points, finding customers and sending outreach emails, each confirmed with you before it runs'],
   'live05-growth-home-start-3x2': ['Growth OS 开始找客户：按你填写的产品和目标客户找新的潜在客户，由 AI 判断是否合适并写下理由', 'Growth OS, finding customers: new prospects found from the products and target customers you enter, with AI judging whether each fits and writing down why'],
   'live05-growth-home-start-5x4': ['Growth OS 开始找客户：按你填写的产品和目标客户找新的潜在客户，由 AI 判断是否合适并写下理由', 'Growth OS, finding customers: new prospects found from the products and target customers you enter, with AI judging whether each fits and writing down why'],
   'live01-desktop-home-16x9': ['网页桌面：AI 工作台、成交工作台、企业管理、视频制作等业务应用都在同一个桌面里', 'The web desktop: the AI workspace, the Sales Desk, enterprise management, video tools and other business apps on one desktop'],
   'live43-app-connections-16x9': ['应用连接：1,568 个可连接服务、18,345 个本地可执行操作，以及工具调用趋势和最近调用记录', 'App connections: 1,568 connectable services and 18,345 local executable actions, with the trend and the record of recent tool calls'],
   'live52-mobile-case-16x9': ['手机上的 Sales Desk：一封询盘的型号和数量已经整理出来，下面是买家的原话', 'The Sales Desk on a phone: the model and quantity of an inquiry already pulled out, above the buyer\u2019s own message'],
+  /* homemore (2026-10-23): live51 and live52 whole, side by side on one 16:9 plate, for the hero gallery. */
+  'live51-52-mobile-pair-16x9': ['手机上的成交看板和一封询盘：左边是待回复、待审批和成交信号，右边是 AI 起草的回复，批准后才会发给客户', 'The deal board and an inquiry on a phone: replies due, approvals and buying signals on the left, an AI-drafted reply on the right that reaches the customer only after approval'],
   'live52-mobile-case-needs': ['买方需求提取：型号 DEMO C300、数量 4 直接列在买家原话上方', 'Buyer need extraction: model DEMO C300 and quantity 4 listed right above the buyer\u2019s own words'],
   'live52-mobile-case-screen': ['在手机上回询盘：英文来信可一键翻译，AI 给出下一步建议并起草回复，批准后才会发给客户', 'Answering an inquiry on a phone: the incoming message can be translated in one tap, AI suggests the next step and drafts a reply, and nothing reaches the customer before approval'],
   'live51-mobile-board-screen': ['手机上的成交看板：待回复、待审批和成交信号一目了然，等你批的报价单随时处理', 'The deal board on a phone: replies due, approvals waiting and buying signals at a glance, with the quote awaiting your approval one tap away'],
@@ -122,6 +130,7 @@ const productText = {
   'm04-mobile-followups-screen': ['手机上的跟进提醒：每条都写明到期时间、过了几天和下一步该做什么。产品界面示意（演示数据）', 'Follow-ups on mobile: each item shows when it was due, how overdue it is and the next step. Product UI (demo data)'],
   'live18-quote-approval-16x9': ['销售工作台的报价审批：从邮件接入到 PI 单据每一步的状态，待审批的报价单独列出，只能由人批准', 'Quote approval in the sales workbench: the status of every step from incoming email to PI, with the quote awaiting approval listed on its own and approvable only by a person'],
 };
+Object.assign(productText, REAL_TEXT);
 export const PRODUCT_CAPTION = { zh: '产品界面示意（演示数据）', en: 'Illustrative product interface · demo data' };
 /* The caption every AI-generated picture on this site ends its alt with: the
    generated editorial set below and the owner's photographs. The notices page
@@ -462,7 +471,7 @@ export function editorialImages(html, lang) {
     const text = (product ?? descriptions[id])?.[lang === 'zh' ? 0 : 1];
     /* The homepage product tour (tools/product-tour.mjs) shows captures of the
        running system and says so; only their data is demo data. */
-    const tour = /sg-tour-img/.test(tag);
+    const tour = /sg-tour-img|sg-real-img/.test(tag);
     const suffix = product && /演示数据|demo data/.test(text)
       ? ''
       : tour
@@ -471,7 +480,9 @@ export function editorialImages(html, lang) {
       ? (lang === 'zh' ? `。${PRODUCT_CAPTION.zh}` : ` — ${PRODUCT_CAPTION.en}`)
       : CONCEPT_CAPTION[lang === 'zh' ? 'zh' : 'en'];
     const alt = decorative || !text ? '' : `${text}${suffix}`;
-    let result = tag.replace(/\s(?:alt|srcset|sizes|width|height|decoding)="[^"]*"/g, '');
+    /* a real-screen slot names its own width (tools/real-screens.mjs realShot) */
+    const ownSizes = tag.match(/\bdata-sizes="([^"]*)"/)?.[1];
+    let result = tag.replace(/\s(?:alt|srcset|sizes|width|height|decoding|data-sizes)="[^"]*"/g, '');
     const attrs = [`alt="${alt}"`, `width="${asset.width}"`, `height="${asset.height}"`, 'decoding="async"'];
     if (asset.variants.length) {
       const variants = [...asset.variants, asset];
@@ -510,7 +521,7 @@ export function editorialImages(html, lang) {
       const tourPhone = tour && /sg-tour-phone/.test(before);
       /* Gallery tiles are ~18–20rem after the curated-asset pass; the core-system
          dashboard plate may grow to 1040px on desktop (css/stargo-fusion.css). */
-      attrs.push(`sizes="${tourPhone ? '(max-width: 767px) 45vw, 260px' : tour ? '(max-width: 991px) calc(100vw - 32px), min(1180px, calc(100vw - 420px))' : rkCard ? '(max-width: 767px) 180px, (max-width: 991px) 340px, (max-width: 1919px) 440px, 660px' : rkThumb ? '(max-width: 1439px) 200px, 300px' : phone ? '(max-width: 767px) 280px, 330px' : tile ? '(max-width: 1439px) 288px, 320px' : dashboard ? '(max-width: 991px) 92vw, (max-width: 1439px) 70vw, 1040px' : thumb ? '(max-width: 1439px) 186px, 250px' : card ? '(max-width: 767px) 45vw, 360px' : small ? '(max-width: 767px) 50vw, 400px' : '(max-width: 767px) 100vw, (max-width: 991px) 75vw, 60vw'}"`);
+      attrs.push(`sizes="${ownSizes ? ownSizes : tourPhone ? '(max-width: 767px) 45vw, 260px' : tour ? '(max-width: 991px) calc(100vw - 32px), min(1180px, calc(100vw - 420px))' : rkCard ? '(max-width: 767px) 180px, (max-width: 991px) 340px, (max-width: 1919px) 440px, 660px' : rkThumb ? '(max-width: 1439px) 200px, 300px' : phone ? '(max-width: 767px) 280px, 330px' : tile ? '(max-width: 1439px) 288px, 320px' : dashboard ? '(max-width: 991px) 92vw, (max-width: 1439px) 70vw, 1040px' : thumb ? '(max-width: 1439px) 186px, 250px' : card ? '(max-width: 767px) 45vw, 360px' : small ? '(max-width: 767px) 50vw, 400px' : '(max-width: 767px) 100vw, (max-width: 991px) 75vw, 60vw'}"`);
     }
     return result.replace(/\s*\/?>(\s*)$/, ` ${attrs.join(' ')}/>$1`);
   });

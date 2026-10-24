@@ -126,9 +126,9 @@
         why: T('语气太硬，先问清需求', 'Too pushy — ask their needs first'), w: T('语气太硬，先问需求', 'Too pushy — ask first') },
       { ic: 'page', t: T('产品页 · 48V 储能柜', 'Product page · 48V rack storage'), s: T('3 张主图 · 中英两版', '3 images · 2 languages'), p: T('产品页', 'Product page'), rule: 2, by: T('市场主管', 'Marketing lead'), ok: true,
         why: T('参数与规格书一致，可以发布', 'Specs match the datasheet'), w: T('与规格书一致', 'Matches the datasheet') },
-      { ic: 'mail', t: T('开发信 · 已修改', 'Outreach · revised'), s: T('先问需求 · 销售 AI 重写', 'Asks first · rewritten'), p: T('改后开发信', 'Revised outreach'), rule: 1, by: T('你', 'You'), ok: true,
+      { ic: 'mail', t: T('开发信 · 已修改', 'Outreach · revised'), s: T('先问需求 · 销售 AI 重写', 'Asks first · rewritten'), p: T('改后开发信', 'Revised outreach'), rp: T('改后开发信', 'Outreach v2'), rule: 1, by: T('你', 'You'), ok: true,
         why: T('先问需求，语气合适，可以发', 'Asks first, right tone — send'), w: T('先问需求，可以发', 'Asks first — send') },
-      { ic: 'doc', t: T('报价 Q-1042', 'Quote Q-1042'), s: T('低于底价 · 销售 AI 提交', 'Below floor · sales AI'), p: 'Q-1042', rule: 0, by: T('你', 'You'), wait: true }
+      { ic: 'doc', t: T('报价 Q-1042', 'Quote Q-1042'), s: T('低于底价 · 销售 AI 提交', 'Below the floor price'), p: 'Q-1042', rule: 0, by: T('你', 'You'), wait: true }
     ];
     var N = IT.length;
     var RS = [T('报价 → 你', 'Quotes → you'), T('联系客户 → 你', 'Outreach → you'), T('发布内容 → 市场主管', 'Publishing → marketing lead')];
@@ -216,7 +216,7 @@
       var ds = dec === 'wait' ? T('等你拍板', 'Your call') : dec === 'ok' ? T('已批准', 'Approved') : T('已驳回', 'Rejected');
       say(R.badge, ds, true);
       pill(R, ds, dec);
-      if (I.wait) { say(R.why, T('写下原因，再批准或驳回', 'Write a reason, then decide'), true); R.why.__tk = null; }
+      if (I.wait) { say(R.why, T('写下原因，再批准或驳回', R.band ? 'Add a reason, then decide' : 'Write a reason, then decide'), true); R.why.__tk = null; }
       else { R.why.__s = null; typedC(R.why, R.col ? I.why : I.w, live ? seg(v, TYPE0, TYPE1) : 1); }
       cl(R.why, 'is-ph', !!I.wait);
       cl(R.why, 'is-typing', live && !I.wait && v > TYPE0 && v < PRESS);
@@ -238,7 +238,8 @@
           o2.d = d;
           var it2 = IT[d];
           state(o2.e, it2.ok ? 'ok' : 'no');
-          put(o2.a, 'text', (it2.ok ? T('批准 · ', 'Approved · ') : T('驳回 · ', 'Rejected · ')) + it2.p + (R.col ? ' · ' + it2.by : ''));
+          // the band's record column is 228px: it names the rewrite by its short name (rp)
+          put(o2.a, 'text', (it2.ok ? T('批准 · ', 'Approved · ') : T('驳回 · ', 'Rejected · ')) + (R.band && it2.rp ? it2.rp : it2.p) + (R.col ? ' · ' + it2.by : ''));
           put(o2.b, 'text', R.col ? T('原因：', 'Reason: ') + it2.why : it2.w);
           if (o2.tm) put(o2.tm, 'text', '14:' + (32 + d * 4));
         }
@@ -344,7 +345,8 @@
     var G, R;
     function geo(name) {
       if (name === 'col') return { kind: 'col', hub: [56, 106], hr: 26, x0: 92, y0: 160, nw: 348, nh: 64, step: 72, tag: [444, 630] };
-      if (name === 'band') return { kind: 'band', hub: [450, 132], hr: 30, nw: 240, nh: 58, at: [[136, 79], [136, 143], [136, 207], [764, 79], [764, 143], [764, 207]] };
+      // band: 256px nodes, so 「Product info」 keeps its whole name beside 「Not connected」 (17px from each side)
+      if (name === 'band') return { kind: 'band', hub: [450, 132], hr: 30, nw: 256, nh: 58, at: [[145, 79], [145, 143], [145, 207], [755, 79], [755, 143], [755, 207]] };
       return { kind: 'list', hub: [52, 110], hr: 30, nw: 240, nh: 31, at: [0, 1, 2, 3, 4, 5].map(function (i) { return [230, 22 + i * 35]; }), tag: [350, 226] };
     }
     function build(stage, L, name) {
@@ -464,7 +466,8 @@
       R.k = []; R.b = []; R.p = [];
       var kp = G.kp, kw = (kp[2] - (kp[4] - 1) * 10) / kp[4];
       (R.phone ? [0, 1, 5] : [0, 1, 2, 3, 4, 5]).forEach(function (ki, i) {
-        var c = at(stage, 'sg-en-card sg-en-kpi' + (ki === 5 ? ' is-ap' : ki === 3 ? ' is-ex' : ''), kp[0] + (i % kp[4]) * (kw + 10), kp[1] + Math.floor(i / kp[4]) * (kp[3] + 10), kw, kp[3]);
+        // is-co: the costs card, whose four-digit yen total leaves no room beside it for the day's delta
+        var c = at(stage, 'sg-en-card sg-en-kpi' + (ki === 5 ? ' is-ap' : ki === 3 ? ' is-ex' : ki === 4 ? ' is-co' : ''), kp[0] + (i % kp[4]) * (kw + 10), kp[1] + Math.floor(i / kp[4]) * (kp[3] + 10), kw, kp[3]);
         el('span', 'sg-en-k', c, KPI[ki]);
         var vr = el('div', 'sg-en-kvr', c);
         R.k.push({ i: ki, r: vr, v: el('b', 'sg-en-kval', vr), d: el('em', 'sg-en-kd', vr) });
@@ -542,7 +545,7 @@
       [2.5, '14:31:58', T('第 2 步 匹配产品与库存 ✓', 'Step 2 · product matched ✓'), T('第 2 步 ✓', 'Step 2 ✓'), 'ok'],
       [3.6, '14:32:08', T('你 暂停 · 停在第 3 步，进度已保存', 'You paused · held at step 3, progress kept'), T('暂停在第 3 步 · 已保存', 'Paused at step 3 · saved'), 'stop'],
       [7.1, '14:35:40', T('你 继续 · 从第 3 步接着做', 'You resumed · from step 3'), T('从第 3 步继续', 'Resumed from step 3'), 'go'],
-      [9.5, '14:35:57', T('第 4 步 核对底价 ✓', 'Step 4 · floor price checked ✓'), T('第 4 步 底价 ✓', 'Step 4 · floor price ✓'), 'ok'],
+      [9.5, '14:35:57', T('第 4 步 低于底价 · 转你审批', 'Step 4 · below the floor price · to you'), T('第 4 步 低于底价', 'Step 4 · below floor'), 'wait'],   // Q-1042, €735 against €750
       [10.7, '14:36:03', T('第 6 步 等你审批 · 不会自动发送', 'Step 6 · waits for you · never sends itself'), T('等你审批 · 不自动发', 'Waits for you · no auto-send'), 'wait']
     ];
     var PROPS = [[T('可管理', 'Manage'), 0.2], [T('可停止', 'Stop'), PAUSE + 0.1], [T('可追踪', 'Trace'), PAUSE + 0.3], [T('可验证', 'Verify'), 9.5]];
@@ -562,7 +565,9 @@
       // narrow and phone: the six steps as a row of dots and one line for the current step. The narrow box
       // is the picture's, which Mono's parallax slides by a tenth of its height: its last 40px stay empty.
       if (name === 'narrow') return { hd: [18, 18, 324], hz: true, cw: 214, st: [18, 106], ctl: [292, 130, 46], pr: [180, 194], log: [18, 238, 292, 3, 27], tag: [342, 402], short: true };
-      return { hd: [12, 16, 316], hz: true, cw: 214, nolh: true, st: [14, 60], ctl: [284, 104, 44], pr: null, log: [12, 176, 292, 1, 26], tag: [328, 166], short: true };
+      // phone: the tag sits under the run log, out of the pause / resume ring's reach (its pulse is smaller here),
+      // and above y 240, where the picture's rounded box (.image-wrap, 240px tall) cuts the 252px stage
+      return { hd: [12, 16, 316], hz: true, cw: 214, nolh: true, st: [14, 60], ctl: [284, 104, 44], rs: 0.4, pr: null, log: [12, 168, 292, 1, 26], tag: [328, 235], short: true };
     }
     function build(stage, L, name) {
       stage.className = 'sg-mo-stage sg-en sg-en-stop is-' + name + (name === 'phone' || name === 'narrow' ? ' is-compact' : '');
@@ -597,6 +602,8 @@
         var pr = at(stage, 'sg-en-props', G.pr[0], G.pr[1]);
         PROPS.forEach(function (p) { R.pr.push(chip(pr, '', p[0], 'check')); });
       }
+      // content size: the box's padding and border come on top (content-box, css/stargo-motion-enterprise.css), so
+      // the rows end inside it and its right edge lines up with the header's
       var lg = G.log, log = at(stage, 'sg-en-slog', lg[0], lg[1], lg[2], (G.nolh ? 0 : 34) + lg[3] * lg[4]);
       if (!G.nolh) { var lh = el('div', 'sg-en-rec-h', log); el('b', '', lh, T('运行记录', 'Run log')); el('span', '', lh, T('每一步都有记录', 'Every step on record')); }
       var body = el('div', 'sg-en-rec-body', log); body.style.height = (lg[3] * lg[4]) + 'px';
@@ -632,7 +639,7 @@
       cl(R.btn, 'is-press', (u >= PAUSE - 0.25 && u < PAUSE + 0.1) || (u >= RESUME - 0.25 && u < RESUME + 0.1));
       var rp = u >= PAUSE ? seg(u, PAUSE, PAUSE + 0.9) : 0, rq = u >= RESUME ? seg(u, RESUME, RESUME + 0.9) : 0, rr = rq > 0 ? rq : rp;
       op(R.ring, rr > 0 && rr < 1 ? 0.7 * (1 - rr) : 0);
-      tf(R.ring, 0, 0, 0.9 + 0.5 * ease.out(rr));
+      tf(R.ring, 0, 0, 0.9 + (G.rs || 0.5) * ease.out(rr));
       if (!paused && pk !== 'wait') rot(R.arc, u * 140);
       op(R.arc, paused || pk === 'wait' ? 0.25 : 1);
       for (var p = 0; p < R.pr.length; p++) cl(R.pr[p], 'is-on', u >= PROPS[p][1] && fade > 0.5);

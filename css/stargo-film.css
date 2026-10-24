@@ -1,0 +1,523 @@
+/* 品牌片 — the about page's first screen (owner, 2026-10-24 13:55 UTC:
+   「Tailscale 传了个视频过来，你帮我放到关于页面的第一个板块全屏播放」).
+   tools/about-film.mjs writes the section, js/stargo-film.js runs it.
+
+   The film's lyrics are drawn into the picture, centred along its lower edge
+   (the Chinese line ends 3% above the bottom) and reach a fifth of the width
+   from either side. Nothing may cover them, so the controls never sit on the
+   picture: on landscape screens the film fills the screen above a slim bar
+   that holds them, and on upright screens a taller crop of the picture runs
+   across the width with its label above and the controls below.
+
+   The frame is a size container, so the crop follows the frame, not the
+   window: cropped to cover it, keeping its lower edge (object-position 100%),
+   up to 11:5. That is every common desktop browser window (1920 × 960 leaves
+   a 2.17:1 frame over the bar), and it takes at most 19% off the top, most of
+   it the strip the site bar and its shade already sit on; the lyrics, 3% above
+   the lower edge, stay whole. Anchored at the very bottom, a scene title 13–17%
+   down (BUYER RADAR) is either whole or gone at the common sizes, never sliced. Only wider than that (ultrawide screens) does the
+   whole picture stand on black, its sides fading into it.
+
+   Paint is static except the video itself: no backdrop-filter over a playing
+   picture (it would be re-blurred every frame), and the only animations are
+   opacity and transform. */
+.sg-film {
+  --sgf-bg: #000;
+  --sgf-ui: rgba(14, 11, 28, .74);
+  --sgf-ui-hover: rgba(34, 26, 68, .88);
+  --sgf-edge: rgba(255, 255, 255, .2);
+  --sgf-text: #f6f3ff;
+  --sgf-ink: #07060d;
+  --sgf-muted: rgba(240, 236, 255, .72);
+  --sgf-accent: #9fdcff;
+  --sgf-grad: linear-gradient(90deg, #6fc7f2, #a48cff);
+  --sgf-pad: clamp(20px, 3.2vw, 48px);
+  /* The site bar's grid: 1400px wide, centred, its logo 1% in from its left edge
+     (measured: 34px at 1440, 13 at 1280, 279 at 1920). */
+  --sgf-x: calc(max(0px, 50% - 700px) + 1%);
+  --sgf-bar: 76px;
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) var(--sgf-bar);
+  height: 100vh;
+  height: 100svh;
+  min-height: 320px;
+  /* clip, not hidden: a scroll container would become the frame's view() timeline,
+     and the picture would never sink and dim as the page moves on */
+  overflow: hidden;
+  overflow: clip;
+  isolation: isolate;
+  background: var(--sgf-bg);
+  color: var(--sgf-text);
+  font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  /* The site hides the pointer for its crosshair; the film keeps the ordinary
+     one (js/stargo-film.js hides the crosshair while the mouse is over it). */
+  cursor: default;
+}
+.sg-film-pointer .plus-line-wrapper { opacity: 0 !important; }
+
+.sg-film__frame { position: relative; min-height: 0; overflow: hidden; container-type: size; }
+.sg-film__poster,
+.sg-film__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: 50% 100%;
+  background: transparent;
+}
+.sg-film__video { opacity: 0; transition: opacity .7s ease; cursor: pointer; }
+.sg-film.is-live .sg-film__video { opacity: 1; }
+
+/* How far the film has run: the seam along the picture's lower edge. */
+.sg-film__progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  height: 2px;
+  margin-inline: auto;
+  background: rgba(255, 255, 255, .1);
+  pointer-events: none;
+}
+.sg-film__progress i {
+  position: absolute;
+  inset: 0;
+  background: var(--sgf-grad);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform .26s linear;
+}
+
+/* the picture's sides on an ultrawide screen: a fade into the black, so the film reads as
+   lit from the middle, not as a box that did not fit */
+.sg-film__edges { display: none; position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+@container (min-aspect-ratio: 11/5) {
+  .sg-film__poster,
+  .sg-film__video { object-fit: contain; object-position: 50% 50%; }
+  .sg-film__progress { width: calc(100cqh * 16 / 9); }
+  .sg-film__edges {
+    display: block;
+    left: calc(50% - 100cqh * 8 / 9 - 1px);
+    right: calc(50% - 100cqh * 8 / 9 - 1px);
+    background: linear-gradient(90deg, #000, rgba(0, 0, 0, 0) 7%, rgba(0, 0, 0, 0) 93%, #000);
+  }
+}
+@supports not (container-type: size) {
+  @media (min-aspect-ratio: 2/1) {
+    .sg-film__poster,
+    .sg-film__video { object-fit: contain; object-position: 50% 50%; }
+  }
+}
+
+/* The site bar sits over the top of the film: a short shade keeps its words
+   readable on the film's bright scenes (the yellow radar, the paper charts).
+   Nothing shades the lower edge, where the lyrics are. */
+.sg-film__shade {
+  position: absolute;
+  inset: 0 0 auto;
+  height: clamp(88px, 17vh, 184px);
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(0, 0, 0, .74) 0%, rgba(0, 0, 0, .6) 30%, rgba(0, 0, 0, .24) 65%, rgba(0, 0, 0, 0) 100%);
+}
+
+/* The bar on the site's grid: the label under the logo, the controls on the
+   lyrics' centre line, the cue to read on at the right. */
+.sg-film__bar {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 16px;
+  min-width: 0;
+  padding: 0 var(--sgf-x);
+  background: var(--sgf-bg);
+}
+.sg-film__ui { display: contents; }
+.sg-film__label {
+  grid-column: 1;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.2;
+  letter-spacing: .06em;
+  color: var(--sgf-muted);
+  white-space: nowrap;
+  /* the template dims every paragraph (qubix: p { opacity: .7 }); this one has its own colours */
+  opacity: 1;
+}
+.sg-film__len { color: var(--sgf-text); font-variant-numeric: tabular-nums; }
+.sg-film__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(240, 236, 255, .5);
+  transition: background-color .3s ease, box-shadow .3s ease;
+}
+.sg-film.is-playing .sg-film__dot { background: var(--sgf-accent); box-shadow: 0 0 0 3px rgba(159, 220, 255, .18); }
+
+.sg-film__controls { grid-column: 2; display: flex; align-items: center; gap: 8px; }
+.sg-film:not(.is-ready) .sg-film__controls,
+.sg-film.is-idle .sg-film__controls { display: none; }
+
+.sg-film__btn {
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  min-width: 44px;
+  margin: 0;
+  padding: 0 18px 0 14px;
+  border: 1px solid var(--sgf-edge);
+  border-radius: 99px;
+  background: var(--sgf-ui);
+  color: var(--sgf-text);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: .02em;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color .2s ease, border-color .2s ease, color .2s ease, transform .2s ease;
+}
+.sg-film__btn.sg-film__icon { width: 44px; padding: 0; }
+@media (hover: hover) {
+  .sg-film__btn:hover { background: var(--sgf-ui-hover); border-color: rgba(255, 255, 255, .36); }
+}
+.sg-film__btn:active { transform: scale(.96); }
+/* the site's focus ring (css/stargo-fusion.css), so a keyboard reader follows one colour down the page */
+.sg-film__btn:focus-visible,
+.sg-film__start:focus-visible,
+.sg-film__next:focus-visible { outline: 2px solid #e8823a; outline-offset: 3px; }
+
+.sg-film__i {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.sg-film__i--play { fill: currentColor; stroke-width: 1.2; }
+.sg-film.is-sound .sg-film__i--muted,
+.sg-film__toggle .sg-film__i--play,
+.sg-film.is-paused .sg-film__toggle .sg-film__i--pause,
+.sg-film__i--exit,
+.sg-film.is-full .sg-film__i--full { display: none; }
+.sg-film.is-paused .sg-film__toggle .sg-film__i--play,
+.sg-film.is-full .sg-film__i--exit { display: block; }
+
+/* The sound button is the one thing the bar asks for: while the film plays
+   silently it is the light button, and a ring leaves its edge every few
+   seconds. With sound on it joins the others, and four bars stand for the
+   music: moving while it plays, held while it is paused. */
+.sg-film__sound { position: relative; }
+/* both states of its words in one cell, so the buttons beside it never move */
+.sg-film__btn-label { display: inline-grid; justify-items: center; }
+.sg-film__btn-label > * { grid-area: 1 / 1; }
+.sg-film__btn-ghost { visibility: hidden; }
+.sg-film:not(.is-sound) .sg-film__sound { background: var(--sgf-text); border-color: var(--sgf-text); color: var(--sgf-ink); }
+@media (hover: hover) {
+  .sg-film:not(.is-sound) .sg-film__sound:hover { background: #fff; border-color: #fff; }
+}
+.sg-film__sound::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 1px solid var(--sgf-accent);
+  opacity: 0;
+  pointer-events: none;
+}
+.sg-film.is-playing:not(.is-sound) .sg-film__sound::after { animation: sgf-ask 6s ease-out 1.2s infinite; }
+.sg-film.is-away .sg-film__sound::after { animation-play-state: paused; }
+@keyframes sgf-ask {
+  0% { opacity: .9; transform: scale(1); }
+  32%, 100% { opacity: 0; transform: scale(1.14); }
+}
+.sg-film__eq { display: none; justify-content: center; align-items: flex-end; gap: 2px; width: 20px; height: 14px; margin: 3px 0; }
+.sg-film.is-sound .sg-film__eq { display: inline-flex; }
+.sg-film__eq i {
+  display: block;
+  width: 2px;
+  height: 14px;
+  border-radius: 1px;
+  background: var(--sgf-accent);
+  transform: scaleY(.45);
+  transform-origin: 50% 100%;
+}
+.sg-film__eq i:nth-child(2) { transform: scaleY(.8); }
+.sg-film__eq i:nth-child(3) { transform: scaleY(.6); }
+.sg-film__eq i:nth-child(4) { transform: scaleY(.35); }
+.sg-film.is-sound.is-playing .sg-film__eq i { animation: sgf-eq 1s ease-in-out infinite alternate; }
+.sg-film.is-sound.is-playing .sg-film__eq i:nth-child(2) { animation-duration: .7s; animation-delay: -.3s; }
+.sg-film.is-sound.is-playing .sg-film__eq i:nth-child(3) { animation-duration: 1.2s; animation-delay: -.6s; }
+.sg-film.is-sound.is-playing .sg-film__eq i:nth-child(4) { animation-duration: .85s; animation-delay: -.15s; }
+@keyframes sgf-eq {
+  0% { transform: scaleY(.25); }
+  100% { transform: scaleY(1); }
+}
+
+/* Shown when the film waits for a tap: reduced motion, Save-Data, or a
+   browser that refused to start it (iOS Low Power Mode). It takes the
+   controls' place in the bar, so the first frame stays whole and the bar
+   reads as it will while the film plays; a tap anywhere on the picture does
+   the same. */
+.sg-film__start {
+  appearance: none;
+  -webkit-appearance: none;
+  grid-column: 2;
+  justify-self: center;
+  display: none;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 99px;
+  background: none;
+  color: var(--sgf-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.sg-film.is-idle .sg-film__start { display: inline-flex; }
+.sg-film__start .sg-film__i {
+  box-sizing: content-box;
+  width: 16px;
+  height: 16px;
+  padding: 14px 13px 14px 15px;
+  border-radius: 50%;
+  background: var(--sgf-text);
+  color: var(--sgf-ink);
+  transition: transform .3s ease;
+}
+@media (hover: hover) {
+  .sg-film__start:hover .sg-film__i { transform: scale(1.06); }
+}
+.sg-film__start:active .sg-film__i { transform: scale(.96); }
+.sg-film__start > span {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 99px;
+  background: var(--sgf-ui);
+  border: 1px solid var(--sgf-edge);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: .03em;
+  white-space: nowrap;
+}
+
+.sg-film__next {
+  grid-column: 3;
+  justify-self: end;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  margin-right: -14px;
+  padding: 0 14px;
+  border-radius: 99px;
+  color: var(--sgf-text);
+  font-size: 14px;
+  letter-spacing: .03em;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color .2s ease;
+}
+.sg-film__next .sg-film__i { width: 18px; height: 18px; animation: sgf-down 2.2s ease-in-out 2s 3; }
+@media (hover: hover) {
+  .sg-film__next:hover { background: var(--sgf-ui-hover); color: var(--sgf-text); }
+}
+@keyframes sgf-down {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
+
+/* The lyric line under the picture is for upright screens only (below). */
+.sg-film__cap { display: none; }
+
+/* Read on: as the page scrolls past, the picture sinks a little behind the
+   bar and dims, so the next block arrives over a quieter screen. */
+@supports (animation-timeline: view()) {
+  @media (min-aspect-ratio: 6/5) and (prefers-reduced-motion: no-preference) {
+    .sg-film__frame {
+      animation-name: sgf-leave;
+      animation-duration: 1ms;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 100%;
+    }
+  }
+}
+@keyframes sgf-leave {
+  to { opacity: .35; transform: translateY(6%); }
+}
+
+/* Short landscape screens (a phone on its side): a slimmer bar, the sound
+   button as an icon (its words stay as its accessible name), no film label. */
+@media (min-aspect-ratio: 6/5) and (max-height: 500px) {
+  .sg-film { --sgf-bar: 60px; }
+  .sg-film__label { display: none; }
+  .sg-film__sound { width: 44px; padding: 0; }
+  .sg-film__sound .sg-film__btn-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+}
+
+/* Upright screens: a 4:3 crop of the picture across the width (the lyrics
+   come out a third larger than the whole 16:9 picture would give them, and
+   every scene's boxes still fit; 6:5 would cut the order and shipment boxes
+   at the sides), lit from behind by its own
+   colours; the label above it, the controls beneath, the cue at their right.
+   The block is as tall as that, so the introduction follows on the same
+   screen. */
+@media (max-aspect-ratio: 6/5) {
+  .sg-film {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    height: auto;
+    min-height: 0;
+    padding: 72px 0 24px;
+    box-sizing: border-box;
+    background:
+      radial-gradient(80% 40% at 50% 46%, rgba(122, 82, 251, .2), transparent 72%),
+      radial-gradient(70% 30% at 50% 56%, rgba(69, 176, 226, .12), transparent 72%),
+      var(--sgf-bg);
+  }
+  .sg-film__frame {
+    flex: none;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    box-shadow: 0 30px 80px -30px rgba(122, 82, 251, .45);
+  }
+  .sg-film__poster,
+  .sg-film__video { object-position: 49.6% 50%; }
+  .sg-film__shade { display: none; }
+  .sg-film__bar { display: contents; }
+  .sg-film__label { order: -1; align-self: flex-start; margin: 0 16px; }
+  .sg-film__controls { order: 1; align-self: flex-start; margin: 0 16px; }
+  .sg-film__next { position: absolute; right: 2px; bottom: 24px; margin: 0; }
+  /* Before the script runs the controls' row keeps its height; while the film
+     waits, its play button takes that row. */
+  .sg-film:not(.is-ready) .sg-film__controls { display: flex; visibility: hidden; }
+  .sg-film__start { order: 1; align-self: flex-start; margin: 0 16px; }
+  /* The pair being sung, written out under the picture: the words drawn into
+     it are 8–11px at this width. Two lines, the page's language first; the
+     space is kept while nothing is sung, so nothing below moves. */
+  .sg-film__cap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    min-height: 44px;
+    margin: -2px 16px 0;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity .35s ease, transform .35s ease;
+  }
+  .sg-film__cap.is-on { opacity: 1; transform: none; }
+  .sg-film__cap-a { font-size: 15px; font-weight: 600; line-height: 1.3; letter-spacing: .02em; color: var(--sgf-text); }
+  .sg-film__cap-b { font-size: 13px; line-height: 1.3; letter-spacing: .02em; color: var(--sgf-muted); }
+}
+/* Where the controls and the cue's words would meet (English below 390px,
+   any language below 350px), the cue keeps its arrow in a round button and
+   its words as its accessible name. */
+@media (max-aspect-ratio: 6/5) and (max-width: 389px) {
+  .sg-film__next:lang(en) { width: 44px; padding: 0; right: 16px; justify-content: center; border: 1px solid var(--sgf-edge); background: var(--sgf-ui); }
+  .sg-film__next:lang(en) span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+}
+@media (max-aspect-ratio: 6/5) and (max-width: 349px) {
+  .sg-film__next { width: 44px; padding: 0; right: 16px; justify-content: center; border: 1px solid var(--sgf-edge); background: var(--sgf-ui); }
+  .sg-film__next span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+}
+@media (max-aspect-ratio: 6/5) and (min-width: 600px) {
+  .sg-film { gap: 18px; padding-top: 96px; padding-bottom: 28px; }
+  .sg-film__label,
+  .sg-film__controls,
+  .sg-film__start { margin: 0 var(--sgf-pad); }
+  .sg-film__cap { margin: -4px var(--sgf-pad) 0; }
+  .sg-film__next { right: calc(var(--sgf-pad) - 14px); bottom: 28px; }
+}
+
+/* Full screen (desktop browsers and tablets; an iPhone hands the film to its
+   own player): the whole picture over the bar, its controls alone. */
+.sg-film.is-full {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) var(--sgf-bar);
+  justify-content: normal;
+  gap: 0;
+  height: 100%;
+  padding: 0;
+  background: #000;
+}
+.sg-film.is-full .sg-film__frame { width: auto; aspect-ratio: auto; box-shadow: none; animation: none; }
+.sg-film.is-full .sg-film__poster,
+.sg-film.is-full .sg-film__video { object-fit: contain; object-position: 50% 50%; }
+.sg-film.is-full .sg-film__progress {
+  width: min(100%, calc(100cqh * 16 / 9));
+  bottom: max(0px, calc(50cqh - 100cqw * 9 / 32));
+}
+.sg-film.is-full .sg-film__shade,
+.sg-film.is-full .sg-film__label,
+.sg-film.is-full .sg-film__next { display: none; }
+.sg-film.is-full .sg-film__bar { display: grid; padding: 0 var(--sgf-pad); }
+.sg-film.is-full .sg-film__controls { margin: 0; justify-self: center; }
+/* Full screen held upright (an iPad, where a page cannot turn the screen): the same 4:3 crop
+   as inline, a little larger, with its lyric line and the controls right under it, all three
+   centred as one group, so going full screen never makes the film smaller. */
+@media (max-aspect-ratio: 6/5) {
+  .sg-film.is-full { display: flex; flex-direction: column; justify-content: center; gap: 18px; }
+  .sg-film.is-full .sg-film__frame { width: 100%; aspect-ratio: 4 / 3; }
+  .sg-film.is-full .sg-film__poster,
+  .sg-film.is-full .sg-film__video { object-fit: cover; object-position: 49.6% 50%; }
+  .sg-film.is-full .sg-film__progress { width: auto; bottom: 0; }
+  .sg-film.is-full .sg-film__bar { display: contents; }
+  .sg-film.is-full .sg-film__controls { align-self: center; margin: 0; }
+}
+
+/* For a reader who cannot see the lyrics drawn into the picture: the scene
+   and every line, in the page, off screen (the video's description). */
+.sg-film__words {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sg-film__video { transition: none; }
+  .sg-film.is-playing:not(.is-sound) .sg-film__sound::after,
+  .sg-film.is-sound.is-playing .sg-film__eq i,
+  .sg-film__next .sg-film__i { animation: none; }
+}

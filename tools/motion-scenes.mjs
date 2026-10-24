@@ -100,12 +100,12 @@ export const MOTION_LABEL = {
     en: 'Illustrative motion: sales asks the team chat three times where an order is and nobody answers, because production status is not in the sales view; at the end scheduled, QC and loaded appear in the sales view itself.',
   },
   'cockpit-overview': {
-    zh: '动态示意（演示数据）：老板驾驶舱总览。商机进展的询盘和报价数随新数据增加，交付状态显示准时与延迟的订单，待审批事项升到 3 项，你批准一项后回到 2 项；数据来源里邮箱、阿里国际站、CRM 和网盘已接入，ERP 未接入，缺的数据已标出。',
-    en: 'Illustrative motion with demo data: the owner’s cockpit overview. Inquiry and quote counts rise as new data arrives, delivery shows on-time against late orders, and pending approvals rise to three and fall back to two when you approve one. Email, Alibaba.com, CRM and the shared drive are connected; the ERP is not, and its missing data is flagged.',
+    zh: '动态示意（演示数据）：老板驾驶舱总览。商机进展的询盘和报价数随新数据增加，交付状态显示准时与延迟的订单，待审批事项升到 3 项，你批准一项后回到 2 项；数据来源里邮箱、客户记录、产品知识、ERP 和网盘已接入（5/5），网盘的财务目录没有授权，缺的财务数据已标出。',
+    en: 'Illustrative motion with demo data: the owner’s cockpit overview. Inquiry and quote counts rise as new data arrives, delivery shows on-time against late orders, and pending approvals rise to three and fall back to two when you approve one. Email, customer records, product knowledge, the ERP and the shared drive are connected (5 of 5); the drive’s finance folder is not authorized, so its missing figures are flagged.',
   },
   'cockpit-blocker': {
-    zh: '动态示意（演示数据）：任务与卡点。报价 Q-1042 的负责人是销售 AI，卡在缺底价，等你处理；你接手、填上底价后交回销售 AI，报价更新后仍要等你审批才发出，不会自动发送。',
-    en: 'Illustrative motion with demo data: tasks and blockers. Quote Q-1042, owned by the sales AI, is blocked on a missing floor price and waits for you; you take it, enter the price and hand it back, and the updated quote still waits for your approval before it is sent. Nothing is sent automatically.',
+    zh: '动态示意（演示数据）：任务与卡点。报价 Q-1043 的负责人是销售 AI，卡在缺底价，等你处理；你接手、填上底价后交回销售 AI，报价更新后仍要等你审批才发出，不会自动发送。',
+    en: 'Illustrative motion with demo data: tasks and blockers. Quote Q-1043, owned by the sales AI, is blocked on a missing floor price and waits for you; you take it, enter the price and hand it back, and the updated quote still waits for your approval before it is sent. Nothing is sent automatically.',
   },
   'cockpit-budget': {
     zh: '动态示意（演示数据）：用量与预算。本月 AI 用量逐日上升，到 80% 时提醒你；下一批任务会超出上限时，新任务先暂停，等你批准。',
@@ -144,8 +144,8 @@ export const MOTION_LABEL = {
     en: 'Illustrative motion (demo data): the account view of Müller Energie GmbH assembles piece by piece: contacts and their roles, the stage (quote), needs and samples, quotes Q-1042 and Q-1031, documents and the latest conversations. Then Q-1042 is approved, the MSDS is attached, and the follow-up carrying both waits for your OK before anything is sent.',
   },
   quote: {
-    zh: '动态示意（演示数据）：给 Müller Energie 的报价 Q-1042 逐行起草，每个价格都标出依据（历史成交价、包装规则、货代报价）；毛利 15.2% 低于 18% 的底线，停下来等审批。销售总监点了批准（仅限本单），v3 存为正式版，按价格表的 v1 和客户目标价的 v2 也都留底可对比；转成 PI 发送前仍由你确认。',
-    en: 'Illustrative motion (demo data): quote Q-1042 for Müller Energie is drafted line by line, each price labelled with its source (past deal prices, the packing rule, the forwarder’s rate). At a 15.2% margin it is under the 18% floor and stops for approval. The sales director approves it for this order only; v3 is kept as the formal version, with v1 (price list) and v2 (buyer target) kept for comparison, and the PI goes out only after your OK.',
+    zh: '动态示意（演示数据）：给 Müller Energie 的报价 Q-1042（48V 100Ah × 200 组，DAP 汉堡）逐行起草，每个价格都标出依据（历史成交价、包装规则、货代报价），合计 €150,550；单价 €735 低于 €750 的底价，停下来等你审批。你点了批准（仅限本单），v3 存为正式版，按价格表的 v1 和客户目标价的 v2 也都留底可对比；转成 PI 发送前仍由你确认。',
+    en: 'Illustrative motion (demo data): quote Q-1042 for Müller Energie (200 pcs 48V 100Ah, DAP Hamburg) is drafted line by line, each price labelled with its source (past deal prices, the packing rule, the forwarder’s rate), €150,550 in total. At €735 a pack it is below the €750 floor price, so it stops for your approval. You approve it for this order only; v3 is kept as the formal version, with v1 (price list) and v2 (buyer target) kept for comparison, and the PI goes out only after your OK.',
   },
   creative: {
     zh: '动态示意（演示数据）：三张 48V 100Ah 电池包的参考图进 AI 创作，依次做出白底主图、仓库场景图和 15 秒短视频的四个分镜，每一项都先进审核队列；你点了通过，发布与否仍由你决定，不会自动发布。',
@@ -176,6 +176,28 @@ export const MOTION_LABEL = {
   'desk-cockpit': {
     zh: '动态示意（演示数据）：经营驾驶舱跟着其他窗口更新今日询盘、等你审批、在制订单和待审素材，并显示最新动态。',
     en: 'Illustrative motion (demo data): the business cockpit follows the other windows — inquiries today, items awaiting you, open orders and images to review — and shows the latest event.',
+  },
+  /* lane people (2026-10-23): about.html's four AI-employee tiles (js/stargo-motion-staff.js)
+     and the workforce desktop collage card (js/stargo-motion-rolecard.js) */
+  crewSignal: {
+    zh: '动态示意（演示数据）：市场信号 AI 员工在 Growth OS 里扫描招聘、招标等信号，候选客户随之重新排序；Nordwerk Energie 升到第一，推荐理由写好后，联系与否由你决定。',
+    en: 'Illustrative motion (demo data): the Market Signal AI scans hiring and tender signals in Growth OS and the buyer list re-ranks; Nordwerk Energie moves to the top with a written reason, and whether to contact them is your call.',
+  },
+  crewQuote: {
+    zh: '动态示意（演示数据）：报价 AI 员工为 Ahmed Al-Rashid 的 72V 锂电池组询盘逐行生成报价 Q-1046，底价校验发现单价低于底价，报价提交审批，等你批准，批准前不会发给客户。',
+    en: 'Illustrative motion (demo data): the Quotation AI builds quote Q-1046 line by line for Ahmed Al-Rashid’s 72V lithium pack inquiry; the floor-price check finds the unit price below the floor, so the quote waits for your approval and nothing goes to the buyer first.',
+  },
+  crewFollow: {
+    zh: '动态示意（演示数据）：报价发出后，Müller Energie 三天没有回复；跟进 AI 员工起草了一封跟进信，停在待你确认，你确认后才会发出。',
+    en: 'Illustrative motion (demo data): three days after the quote, Müller Energie has not replied; the Follow-up AI drafts a follow-up email and stops for your OK — it goes out only after you confirm.',
+  },
+  crewCoord: {
+    zh: '动态示意（演示数据）：统筹 AI 员工把目标「开拓巴西电动两轮市场」拆成五步，交给研究、产品、销售和创意四位 AI 员工分头推进，最后汇总，等你确认，确认前不对外发送。',
+    en: 'Illustrative motion (demo data): the Coordination AI splits the goal of opening the Brazil e-scooter market into five steps for four AI employees (research, product, sales and creative), then sums up and waits for your confirmation before anything goes out.',
+  },
+  deskReport: {
+    zh: '动态示意（演示数据）：网页桌面里的报告应用，报告 AI 员工汇总本周询盘、报价和订单，起草第 43 周周报，停在待你确认。',
+    en: 'Illustrative motion (demo data): in the browser desktop’s report app, the Reporting AI totals this week’s inquiries, quotes and orders and drafts the week 43 report, then waits for your OK.',
   },
 };
 
@@ -271,6 +293,21 @@ export const SCENE_FILE = {
   'desk-erp': 'desk',
   'desk-creative': 'desk',
   'desk-cockpit': 'desk',
+  'stage-find': 'stages',   // homemore: the five homepage stage cards
+  'stage-sell': 'stages',
+  'stage-make': 'stages',
+  'stage-pay': 'stages',
+  'stage-again': 'stages',
+  org: 'org',               // homemore: the pricing band's enterprise card
+  crewSignal: 'staff',
+  crewQuote: 'staff',
+  crewFollow: 'staff',
+  crewCoord: 'staff',
+  deskReport: 'rolecard',
+  night: 'atmos',          // lane atmos (tools/code-art-atmos.mjs): homepage R1 and about A01 …
+  plant: 'atmos',
+  board: 'atmos-cards',    // … and the homepage R2 card and the contact K01 card
+  request: 'atmos-cards',
 };
 /* scene files that ship their own stylesheet */
 export const SCENE_CSS = new Set([
@@ -287,6 +324,12 @@ export const SCENE_CSS = new Set([
   'areas-centre',
   'crew',
   'desk',
+  'stages',
+  'org',
+  'staff',
+  'rolecard',
+  'atmos',
+  'atmos-cards',
 ]);
 
 /* pain — the homepage's four problem cards, in page order (S01–S04): one file and one stylesheet */

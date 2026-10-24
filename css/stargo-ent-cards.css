@@ -23,7 +23,7 @@
 .sg-em-use-k b { color: var(--or); font-variant-numeric: tabular-nums; }
 .sg-em-meter { position: relative; height: 6px; margin: .4em 0 1.2em; border-radius: 3px; background: rgba(255, 236, 220, .1); }
 .sg-em-meter::after { content: ""; position: absolute; right: 0; top: -4px; bottom: -4px; width: 2px; border-radius: 1px; background: var(--am); }
-.sg-em-meter i { position: absolute; left: 0; top: 0; bottom: 0; width: 62%; border-radius: inherit; background: linear-gradient(90deg, #ec6f10, var(--or)); transform-origin: 0 50%; transition: transform .6s cubic-bezier(.22, 1, .36, 1); }
+.sg-em-meter i { position: absolute; left: 0; top: 0; bottom: 0; width: 97%; border-radius: inherit; background: linear-gradient(90deg, #ec6f10, var(--or)); transform-origin: 0 50%; transition: transform .6s cubic-bezier(.22, 1, .36, 1); }
 
 /* 2 · roles × read / change */
 .sg-em-mx { display: flex; flex-direction: column; }
@@ -114,10 +114,10 @@
   .sg-em-2 .sg-em-in { justify-content: center; padding: 5%; gap: 0; }
   .sg-em-2 .sg-em-tag { left: 5%; right: auto; top: 5%; bottom: auto; margin-top: 2px; }
   .sg-em-mx-h > span:first-child { visibility: hidden; }
-  .sg-em-mx-h, .sg-em-mx-r { grid-template-columns: minmax(0, 1fr) 2.3em 4.5em; min-height: 1.62em; gap: .25em; }
-  .sg-em-c.is-a { padding: 0 .35em; }
+  .sg-em-mx-h, .sg-em-mx-r { grid-template-columns: minmax(0, 1fr) 2.3em 5em; min-height: 1.62em; gap: .25em; } /* 5em: the 「Approval」 cell, whole */
+  .sg-em-c.is-a { padding: 0 .2em; }
   /* 3: the quote and its chain, the step waiting on you in orange (no buttons) */
-  .sg-em-3 .sg-em-in { padding-top: 10%; gap: .6em; }
+  .sg-em-3 .sg-em-in { padding-top: 7%; gap: .6em; } /* 7%: the chain sits clear of the 演示数据 tag below it */
   .sg-em-chain > i { margin-top: .95em; }
   .sg-em-step { width: auto; min-width: 2.6em; }
   /* 4 and 5: the square cards */
@@ -137,7 +137,7 @@
 @media (hover: hover) {
   .team-wrapper:hover .sg-em-app.is-off .sg-em-tile { color: #f3d3a0; background: rgba(255, 220, 170, .08); border-color: rgba(255, 220, 170, .12); }
   .team-wrapper:hover .sg-em-app.is-off .sg-em-sw, .team-wrapper:hover .sg-em-chain > i:last-of-type { background: var(--gr); }
-  .team-wrapper:hover .sg-em-meter i { transform: scaleX(1.13); }
+  .team-wrapper:hover .sg-em-meter i { transform: scaleX(1.03); } /* 97% creeps up to the limit line, never past it */
   .team-wrapper:hover .sg-em-mx-r:nth-child(3) { background: rgba(236, 111, 16, .06); }
   .team-wrapper:hover .sg-em-step.is-wait em { color: var(--gr); }
   .team-wrapper:hover .sg-em-step.is-wait .sg-em-ico { color: var(--gr); background: rgba(120, 200, 140, .12); border-color: rgba(120, 200, 140, .5); }

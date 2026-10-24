@@ -23,7 +23,8 @@
  */
 (function () {
   var UPRIGHT = 'sgp-upright';
-  var photos = [].slice.call(document.querySelectorAll('.testimonials-card img[src*="stargo-photo"]'));
+  // since 2026-10-24 card _03 holds a code-drawn scene (.sgk-host, tools/code-art-atmos.mjs) in place of R2
+  var photos = [].slice.call(document.querySelectorAll('.testimonials-card img[src*="stargo-photo"], .testimonials-card .sgk-host'));
   if (!photos.length || typeof DOMMatrixReadOnly === 'undefined' || typeof MutationObserver === 'undefined') return;
   photos.forEach(function (img) {
     var card = img.closest('.testimonials-card');

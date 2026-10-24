@@ -31,6 +31,7 @@
 .sgs-pill.is-hist { color: #d9d0c6; background: rgba(255,236,220,.1); }
 .sgs-pill.is-spam { color: rgba(244,238,232,.62); background: rgba(255,255,255,.05); box-shadow: inset 0 0 0 1px rgba(255,236,220,.14); }
 .sgs-pill.is-wait { color: #ffb37a; background: rgba(236,111,16,.14); box-shadow: inset 0 0 0 1px rgba(255,138,61,.45); }
+.sgs-wd { flex: none; width: 6px; height: 6px; margin-right: 5px; border-radius: 50%; background: #ff8a3d; will-change: opacity; }
 /* channel tiles: the loop scene's four channels */
 .sgs-ch { flex: none; width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; color: #f3d3a0; background: rgba(255,220,170,.08); box-shadow: inset 0 0 0 1px rgba(255,220,170,.09); }
 .sgs-ch.is-chat { color: #9fe0b0; background: rgba(120,200,140,.1); }
@@ -47,14 +48,21 @@
 .sgs-tab.is-new.is-hit { background: rgba(243,194,122,.12); }
 .sgs-list { position: relative; flex: 1; overflow: hidden; }
 .sgs-list-fade { position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; pointer-events: none; background: linear-gradient(rgba(18,14,11,0), #120e0b 92%); }
+/* the part-row under the last whole row: a skeleton row (texture for 'more below', no words) */
+.sgs-skel .sgs-ch { background: rgba(255,236,220,.05); box-shadow: inset 0 0 0 1px rgba(255,236,220,.06); }
+.sgs-skel-1, .sgs-skel-2 { display: block; height: 8px; border-radius: 4px; background: rgba(255,236,220,.1); }
+.sgs-skel-1 { width: 40%; margin-top: 5px; }
+.sgs-skel-2 { width: 64%; height: 7px; margin-top: 14px; background: rgba(255,236,220,.06); }
 .sgs-msg { position: absolute; left: 0; right: 0; top: 0; display: flex; gap: 9px; padding: 9px 12px 0; border-bottom: 1px solid rgba(255,236,220,.06); will-change: transform; }
 .sgs-msg.is-fresh { background: linear-gradient(90deg, rgba(243,194,122,.07), rgba(243,194,122,0) 80%); }
 .sgs-msg-b { position: relative; flex: 1; min-width: 0; }
 .sgs-msg-1 { display: flex; align-items: center; gap: 8px; height: 18px; }
 .sgs-msg-1 > b { flex: 1; min-width: 0; font-size: 13px; color: #f8f1e7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sgs-msg-2 { height: 18px; margin-top: 5px; overflow: hidden; }
+/* line two: the preview and the tags share one place and crossfade (js), so neither is ever cut */
+.sgs-msg-2 { position: relative; height: 18px; margin-top: 5px; }
+.sgs-prev, .sgs-msg-3 { position: absolute; left: 0; right: 0; top: 0; }
 .sgs-prev { height: 18px; line-height: 18px; font-size: 12px; color: rgba(244,238,232,.62); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sgs-msg-3 { display: flex; align-items: center; gap: 4px; height: 18px; white-space: nowrap; overflow: hidden; }
+.sgs-msg-3 { display: flex; align-items: center; gap: 4px; height: 18px; white-space: nowrap; opacity: 0; }
 .sgs-chip { flex: none; font-size: 12px; line-height: 16px; padding: 0 5px; border-radius: 5px; color: #f3d3a0; background: rgba(255,220,170,.08); }
 .sgs-to { flex: none; display: inline-flex; align-items: center; gap: 3px; margin-left: 3px; font-size: 12px; color: #9fe0b0; }
 .sgs-msg.is-spam .sgs-to { color: rgba(244,238,232,.55); }

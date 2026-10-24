@@ -124,51 +124,93 @@
         built = true;
         scene.tick(reduced.matches ? scene.still : t);
       }
-      var s = Math.min(fw / W, fh / H);
-      var tr = 'translate(' + ((w - W * s) / 2).toFixed(1) + 'px,' + ((h - H * s) / 2).toFixed(1) + 'px) scale(' + s.toFixed(4) + ')';
-      if (tr !== lastFit) { stage.style.transform = tr; lastFit = tr; }
+      var s = Math.min(fw / W, fh / H), sk = s.toFixed(4);
+      var tr = 'translate(' + ((w - W * s) / 2).toFixed(1) + 'px,' + ((h - H * s) / 2).toFixed(1) + 'px) scale(' + sk + ')';
+      if (tr !== lastFit) {
+        stage.style.transform = tr; lastFit = tr;
+        // a scene that sets scaleVar gets the fit scale as --sg-fit on its stage, so its CSS can keep type at
+        // 12px or more on screen when a short screen scales the stage down (font-size: max(13px, calc(12px / var(--sg-fit))))
+        if (scene.scaleVar) stage.style.setProperty('--sg-fit', sk);
+      }
       return true;
     }
-    var shown = true, visT = 0;
+    var shown = true, visT = 0, tmo = 0;
     function frame(now) {
       raf = 0;
       if (!visible || document.hidden) { last = 0; return; }
       if (viewportFit) fit();
       if (reduced.matches) { last = 0; if (viewportFit) raf = requestAnimationFrame(frame); return; }
-      if (now - visT > 250) {
+      if (now - visT > 240) {
         visT = now;
         var sh = host.checkVisibility ? host.checkVisibility({ opacityProperty: true, visibilityProperty: true }) : true;
         if (sh && !shown && scene.cue) t = scene.cue(t);
         shown = sh;
       }
-      if (!shown) { last = 0; raf = requestAnimationFrame(frame); return; }
+      // a host that is on screen but not shown (a parked slide, a closed tab) is looked at again in 250ms, not every frame
+      if (!shown) { last = 0; tmo = setTimeout(function () { tmo = 0; wake(); }, 250); return; }
       var dt = last ? Math.min((now - last) / 1000, 0.1) : 0;
       last = now; t += dt;
+      // the scene clock, readable on the host (tools/verify-motion.mjs checks that it runs on screen)
+      host.__sgT = t;
       if (built) scene.tick(t);
       raf = requestAnimationFrame(frame);
     }
     function wake() {
       if (reduced.matches) { if (built) scene.tick(scene.still); if (!viewportFit) return; }
-      if (!raf && visible && !document.hidden) raf = requestAnimationFrame(frame);
+      if (!raf && !tmo && visible && !document.hidden) raf = requestAnimationFrame(frame);
     }
     host.classList.add('sg-mo-on');
-    if ('ResizeObserver' in window) new ResizeObserver(function () { fit(); }).observe(host);
+    // A host that the observer reports as intersecting with a zero-area rectangle is either parked just
+    // beside the screen (a sliding panel: not on screen, so it does not tick, and the observer's second
+    // threshold reports the moment it slides in) or is itself 0 × 0 while its box grows (the sticky band
+    // grows 「一条业务主线」 out of a 0 × 0 box). A 0 × 0 target counts as fully visible, so its ratio stays 1
+    // as it grows and the observer never calls again: such a host (pend) is looked at again when it is
+    // resized and, for growth the resize observer cannot see (a transform), every 250 ms while it is
+    // still 0 × 0. Hosts with a real box never take this path, so scrolling costs nothing extra.
+    var inter = false, pend = false, poll = 0;
+    function recheck() {
+      poll = 0;
+      if (!pend || !inter) return;
+      var r = host.getBoundingClientRect();
+      if (r.width > 0 && r.height > 0) {
+        // the box is real now: if it is on screen it ticks; if not, the observer reports it from here on
+        pend = false;
+        if (r.bottom > -120 && r.top < window.innerHeight + 120 && r.right > 0 && r.left < window.innerWidth) { visible = true; fit(); wake(); }
+      } else if (!document.hidden) poll = setTimeout(recheck, 250);
+    }
+    if ('ResizeObserver' in window) new ResizeObserver(function (es) {
+      var cr = es[es.length - 1].contentRect;
+      // a ticking host that shrinks back to 0 × 0 stops until it grows again
+      if (visible && inter && (cr.width < 1 || cr.height < 1)) { visible = false; pend = true; }
+      fit();
+      if (pend && !poll) recheck();
+    }).observe(host);
     window.addEventListener('resize', fit);
     fit();
     if (!near) {
       var nio = new IntersectionObserver(function (es) {
-        if (!es[es.length - 1].isIntersecting) return;
-        near = true; nio.disconnect(); fit();
+        for (var i = 0; i < es.length; i++) if (es[i].isIntersecting) { near = true; nio.disconnect(); fit(); return; }
       }, { rootMargin: '100% 0px' });
       nio.observe(host);
+      // From 768px the enterprise story panels (.sutdio-animation) slide in sideways inside a clip that the
+      // margin cannot see past, so a host there would still be unbuilt in the first frame its panel shows:
+      // the track is watched as well, and all four panels are built once it comes within a screen. On a
+      // phone the panels stack and each host is watched on its own, as everywhere else.
+      var track = window.matchMedia && window.matchMedia('(min-width: 768px)').matches && host.closest('.sutdio-animation');
+      if (track) nio.observe(track);
     }
     if ('IntersectionObserver' in window) {
-      // A host that only touches the viewport's edge (a sliding panel parked just beside the screen) reports
-      // isIntersecting with a zero-area rectangle; it is not on screen, so it does not tick. The second
-      // threshold makes the observer report the moment such a host actually comes into view.
-      new IntersectionObserver(function (es) { var e = es[es.length - 1], r = e.intersectionRect; visible = e.isIntersecting && r.width > 0 && r.height > 0; if (visible) fit(); wake(); }, { rootMargin: '120px 0px', threshold: [0, 0.001] }).observe(host);
+      new IntersectionObserver(function (es) {
+        var e = es[es.length - 1], r = e.intersectionRect, b = e.boundingClientRect;
+        inter = e.isIntersecting;
+        visible = inter && r.width > 0 && r.height > 0;
+        pend = inter && !visible && (b.width < 1 || b.height < 1);
+        if (visible) fit();
+        if (pend && !poll) recheck();
+        wake();
+      }, { rootMargin: '120px 0px', threshold: [0, 0.001] }).observe(host);
     } else { visible = true; wake(); }
-    document.addEventListener('visibilitychange', wake);
+    document.addEventListener('visibilitychange', function () { if (pend && !poll) recheck(); wake(); });
     if (reduced.addEventListener) reduced.addEventListener('change', function () { t = scene.still; if (built) scene.tick(t); wake(); });
   }
 
@@ -210,8 +252,13 @@
     var layouts = {
       wide: { w: 1600, h: 800 },
       mid: { w: 1240, h: 700 },
+      // short laptop screens (1280 × 720, 1366 × 768, 1024 × 768): the band leaves ~550-600 px between its captions,
+      // so this layout is wider than tall and keeps the stage at a scale of ~0.93-1.07, every word at 12 px or more
+      short: { w: 1100, h: 560 },
       square: { w: 640, h: 680 },
-      phone: { w: 400, h: 296 }   // the part of the phone band left visible above the next section's curve
+      // the part of the phone band left visible above the next section's curve; sized to the band itself
+      // (360 × 260 at 360 px, 390 × 290 at 390) so the scale is 1 or more and no text drops under 12 px
+      phone: { w: 360, h: 260 }
     };
     function geometry(name) {
       var g = { w: layouts[name].w, h: layouts[name].h };
@@ -231,24 +278,34 @@
         g.outA = function (r) { return { p: [r.x, r.y + r.h / 2], d: [-1, 0] }; };
         g.ticker = { x: 620, y: 620 };
         g.tag = { x: 1216, y: 60 };
+      } else if (name === 'short') {
+        g.core = { x: 550, y: 250, s: 0.62 };
+        g.inp = [0, 1, 2, 3].map(function (i) { return { x: 16, y: 56 + i * 104, w: 360, h: 90 }; });
+        g.out = [0, 1, 2, 3, 4].map(function (i) { return { x: 724, y: 34 + i * 92, w: 360, h: 80 }; });
+        g.inA = function (r) { return { p: [r.x + r.w, r.y + r.h / 2], d: [1, 0] }; };
+        g.outA = function (r) { return { p: [r.x, r.y + r.h / 2], d: [-1, 0] }; };
+        g.ticker = { x: 550, y: 498 };
+        g.tag = { x: 1084, y: 26 };
       } else if (name === 'phone') {
-        g.core = { x: 200, y: 136, s: 0.36 };
-        g.inp = [0, 1, 2, 3].map(function (i) { return { x: 10, y: 36 + i * 52, w: 114, h: 44 }; });
-        g.out = [0, 1, 2, 3, 4].map(function (i) { return { x: 276, y: 30 + i * 42, w: 114, h: 36 }; });
+        g.core = { x: 180, y: 119, s: 0.3 };
+        g.inp = [0, 1, 2, 3].map(function (i) { return { x: 6, y: 30 + i * 46, w: 111, h: 40 }; });
+        g.out = [0, 1, 2, 3, 4].map(function (i) { return { x: 243, y: 26 + i * 37, w: 111, h: 32 }; });
         g.inA = function (r) { return { p: [r.x + r.w, r.y + r.h / 2], d: [1, 0] }; };
         g.outA = function (r) { return { p: [r.x, r.y + r.h / 2], d: [-1, 0] }; };
         g.ticker = null;
-        g.status = { x: 200, y: 254 };
-        g.tag = { x: 390, y: 20 };
+        g.status = { x: 180, y: 224 };
+        g.tag = { x: 354, y: 19 };
       } else {
         g.core = { x: 320, y: 330, s: 0.62 };
-        g.inp = [0, 1, 2, 3].map(function (i) { return { x: 16 + (i % 2) * 312, y: 34 + Math.floor(i / 2) * 74, w: 296, h: 62 }; });
-        g.out = [0, 1, 2, 3, 4].map(function (i) { return { x: 16 + i * 122, y: 506, w: 112, h: 104 }; });
+        // inset 48 px a side: the band opens its window over this picture from the middle out, so the cards stay
+        // whole inside the window for most of that zoom, not only once it covers the screen
+        g.inp = [0, 1, 2, 3].map(function (i) { return { x: 48 + (i % 2) * 280, y: 34 + Math.floor(i / 2) * 74, w: 264, h: 62 }; });
+        g.out = [0, 1, 2, 3, 4].map(function (i) { return { x: 48 + i * 110, y: 506, w: 104, h: 104 }; });
         g.inA = function (r, i) { return i < 2 ? { p: [i === 0 ? r.x + r.w + 4 : r.x - 4, r.y + r.h / 2], d: [0, 1] } : { p: [r.x + r.w / 2, r.y + r.h], d: [0, 1] }; };
         g.outA = function (r) { return { p: [r.x + r.w / 2, r.y], d: [0, -1] }; };
         g.ticker = null;
         g.status = { x: 320, y: 428 };
-        g.tag = { x: 624, y: 664 };
+        g.tag = { x: 592, y: 664 };
       }
       return g;
     }
@@ -258,33 +315,35 @@
     }
 
     function build(stage, _, name) {
-      compact = name !== 'wide' && name !== 'mid';
+      compact = name !== 'wide' && name !== 'mid' && name !== 'short';
       var phone = name === 'phone';
       L = geometry(name);
       R = { inp: [], out: [], parts: [], inPath: [], outPath: [], phone: phone };
       R.host = stage.parentNode;   // tells the page which stage the caption names (data-stage, read by css/stargo-phone.css)
-      stage.className = 'sg-mo-stage sg-loop' + (compact ? ' is-compact' : '') + (phone ? ' is-phone' : '') + (name === 'mid' ? ' is-mid' : '');
+      stage.className = 'sg-mo-stage sg-loop' + (compact ? ' is-compact' : '') + (phone ? ' is-phone' : '') + (name === 'mid' || name === 'short' ? ' is-mid' : '') + (name === 'short' ? ' is-short' : '');
       var svg = sv('svg', { class: 'sg-loop-svg', width: L.w, height: L.h, viewBox: '0 0 ' + L.w + ' ' + L.h }, stage);
       var defs = sv('defs', {}, svg);
+      // colours as style (var(--sgb-*): the homepage's tokens in css/stargo-blue.css; the warm originals elsewhere)
+      function stop(gr, o, c, a) { sv('stop', { offset: o, style: 'stop-color:' + c + (a == null ? '' : ';stop-opacity:' + a) }, gr); }
       var g1 = sv('radialGradient', { id: 'sgl-halo' }, defs);
-      sv('stop', { offset: '0', 'stop-color': '#f2b45a', 'stop-opacity': '.28' }, g1);
-      sv('stop', { offset: '.45', 'stop-color': '#c77a2a', 'stop-opacity': '.08' }, g1);
-      sv('stop', { offset: '1', 'stop-color': '#000', 'stop-opacity': '0' }, g1);
+      stop(g1, '0', 'var(--sgb-cyan, #f2b45a)', '.28');
+      stop(g1, '.45', 'var(--sgb-violet, #c77a2a)', '.1');
+      stop(g1, '1', '#000', '0');
       var g2 = sv('radialGradient', { id: 'sgl-orb', cx: '.38', cy: '.32', r: '.8' }, defs);
-      sv('stop', { offset: '0', 'stop-color': '#3b2a18' }, g2);
-      sv('stop', { offset: '.6', 'stop-color': '#17110b' }, g2);
-      sv('stop', { offset: '1', 'stop-color': '#0b0806' }, g2);
+      stop(g2, '0', 'var(--sgb-indigo, #3b2a18)');
+      stop(g2, '.6', 'var(--sgb-deep, #17110b)');
+      stop(g2, '1', 'var(--sgb-ink, #0b0806)');
       var g3 = sv('linearGradient', { id: 'sgl-gold', x1: '0', y1: '0', x2: '1', y2: '1' }, defs);
-      sv('stop', { offset: '0', 'stop-color': '#fff4dc' }, g3);
-      sv('stop', { offset: '.5', 'stop-color': '#f3c27a' }, g3);
-      sv('stop', { offset: '1', 'stop-color': '#c9802f' }, g3);
+      stop(g3, '0', 'var(--sgb-bubble, #fff4dc)');
+      stop(g3, '.5', 'var(--sgb-accent, #f3c27a)');
+      stop(g3, '1', 'var(--sgb-lilac, #c9802f)');
       var g4 = sv('radialGradient', { id: 'sgl-dot' }, defs);
-      sv('stop', { offset: '0', 'stop-color': '#ffe2b0', 'stop-opacity': '.9' }, g4);
-      sv('stop', { offset: '1', 'stop-color': '#f0a64a', 'stop-opacity': '0' }, g4);
+      stop(g4, '0', 'var(--sgb-ice, #ffe2b0)', '.9');
+      stop(g4, '1', 'var(--sgb-accent, #f0a64a)', '0');
       var g5 = sv('linearGradient', { id: 'sgl-rim', x1: '0', y1: '0', x2: '0', y2: '1' }, defs);
-      sv('stop', { offset: '0', 'stop-color': '#ffe9c4', 'stop-opacity': '.9' }, g5);
-      sv('stop', { offset: '.5', 'stop-color': '#f0b25e', 'stop-opacity': '.25' }, g5);
-      sv('stop', { offset: '1', 'stop-color': '#f0b25e', 'stop-opacity': '.65' }, g5);
+      stop(g5, '0', 'var(--sgb-ice, #ffe9c4)', '.9');
+      stop(g5, '.5', 'var(--sgb-lilac, #f0b25e)', '.25');
+      stop(g5, '1', 'var(--sgb-accent, #f0b25e)', '.65');
       var f = sv('filter', { id: 'sgl-blur', x: '-50%', y: '-50%', width: '200%', height: '200%' }, defs);
       sv('feGaussianBlur', { stdDeviation: '7' }, f);
 
@@ -327,7 +386,7 @@
       sv('circle', { r: 74, fill: 'url(#sgl-orb)' }, R.orb);
       sv('circle', { r: 73.5, fill: 'none', stroke: 'url(#sgl-rim)', 'stroke-width': 1.2 }, R.orb);
       sv('ellipse', { cx: -22, cy: -34, rx: 30, ry: 14, fill: '#fff', opacity: '.06', transform: 'rotate(-28 -22 -34)' }, R.orb);
-      R.starGlow = sv('path', { d: STAR, fill: '#f6c67f', filter: 'url(#sgl-blur)', opacity: '.75' }, R.orb);
+      R.starGlow = sv('path', { d: STAR, style: 'fill:var(--sgb-violet, #f6c67f)', filter: 'url(#sgl-blur)', opacity: '.75' }, R.orb);
       sv('path', { d: STAR, fill: 'url(#sgl-gold)' }, R.orb);
       R.wave = sv('circle', { r: 74, class: 'sg-wave' }, core);
       svg.appendChild(R.gate); // the gate paints above the rings, under the particles
@@ -562,9 +621,34 @@
 
     return {
       layouts: layouts,
-      pick: function (w, h, sw) { return w / h > 1.2 && w > 560 ? (sw < 1400 ? 'mid' : 'wide') : w / h > 1.1 ? 'phone' : 'square'; },
+      // From tablet up the band fits the stage to the screen less ~170 px for its captions (sw × sh below, the
+      // same all through the band's zoom). The first layout that the screen shows at a scale of 0.935 or more
+      // wins, so the smallest type (13 px on the stage) stays at 12 px or more; failing that, the one that
+      // scales least far down.
+      pick: function (w, h, sw) {
+        if (!(w / h > 1.2 && w > 560)) return w / h > 1.1 ? 'phone' : 'square';
+        var sh = h * sw / w, best = 'short', bs = 0, order = ['wide', 'mid', 'short'];
+        for (var i = 0; i < order.length; i++) {
+          var Lx = layouts[order[i]], s = Math.min(sw / Lx.w, sh / Lx.h);
+          if (s >= 0.935) return order[i];
+          if (s > bs) { bs = s; best = order[i]; }
+        }
+        return best;
+      },
       // start a few events in, so the cards and counters are already alive
       build: build, tick: tick, still: 6 * P + 2.28, start: 4 * P + 0.3
+    };
+  }
+
+  /* The core-systems switcher's panels (radar, studio) pick the largest layout the panel shows at a scale that
+     keeps their smallest type (13 px on compact and mid, 12 px on wide) at 12 px or more: compact (800 × 450)
+     on wide laptop screens, mid (640 × 360) where the switcher squeezes the panel (1280 × 720, 1366 × 768,
+     tablets), mini (272 × 153) on phones and the narrow two-column screens. */
+  var PANEL = ['wide', 1, 'compact', 0.92, 'mid', 0.92];
+  function panelPick(layouts) {
+    return function (w, h) {
+      for (var i = 0; i < PANEL.length; i += 2) { var Lx = layouts[PANEL[i]]; if (Math.min(w / Lx.w, h / Lx.h) >= PANEL[i + 1]) return PANEL[i]; }
+      return 'mini';
     };
   }
 
@@ -582,7 +666,7 @@
       ['AE', [55.27, 25.2], 'Gulf Solar Trading', T('光伏储能', 'Solar storage'), T('迪拜', 'Dubai'), 88, T('中标两个离网项目，需求与储能系列一致，交期是关键。', 'Won two off-grid projects; matches the storage series, lead time decides.')],
       ['SE', [18.07, 59.33], 'Nordic Mobility AB', T('电动自行车', 'E-bikes'), T('斯德哥尔摩', 'Stockholm'), 93, T('年采购约 2,000 组，官网列出 CE 与 UN38.3 要求，我们资料齐全。', 'About 2,000 packs a year; asks for CE and UN38.3, which we have.')],
       ['ID', [106.85, -6.2], 'PT Surya Energi', T('电动三轮', 'E-tricycles'), T('雅加达', 'Jakarta'), 90, T('电动三轮销量增长 40%，64V 104Ah 与其车型匹配。', 'Tricycle sales up 40%; 64V 104Ah fits their models.')],
-      ['PL', [21.01, 52.23], 'Wisła E-Bike Sp. z o.o.', T('电动自行车', 'E-bikes'), T('华沙', 'Warsaw'), 86, T('正在扩产，LinkedIn 显示新任采购总监到岗，适合首封开发信。', 'Expanding, with a new purchasing director: a good first email.')],
+      ['PL', [21.01, 52.23], 'Wisła E-Bike Sp. z o.o.', T('电动自行车', 'E-bikes'), T('华沙', 'Warsaw'), 86, T('正在扩产，职业社交主页显示新任采购总监到岗，适合首封开发信。', 'Expanding, with a new purchasing director: a good first email.')],
       ['AU', [151.2, -33.87], 'Harbour Off-Grid Pty', T('房车储能', 'RV storage'), T('悉尼', 'Sydney'), 92, T('房车改装业务需要 12V 100Ah，询价历史显示偏好 LiFePO4。', 'RV conversions need 12V 100Ah; past requests prefer LiFePO4.')],
       ['MX', [-99.13, 19.43], 'Movilidad Verde SA', T('物流车队', 'Delivery fleets'), T('墨西哥城', 'Mexico City'), 87, T('城配车队电动化，预算已批，下季度采购。', 'Electrifying city delivery; budget approved, buying next quarter.')],
       ['NG', [3.38, 6.52], 'Lagos Power Ltd', T('离网储能', 'Off-grid storage'), T('拉各斯', 'Lagos'), 85, T('离网储能需求旺，曾询价 30 套，适合 CIF 报价。', 'Strong off-grid demand; asked for 30 sets before, quote CIF.')],
@@ -591,7 +675,8 @@
     ];
     var P = 5.6;
     var L, R, mode;
-    var layouts = { wide: { w: 1600, h: 900 }, compact: { w: 800, h: 450 }, mini: { w: 380, h: 214 } };
+    // mini is the phone accordion panel's own size at 360 px (302 × 170 at 390), so its type never scales under 12 px
+    var layouts = { wide: { w: 1600, h: 900 }, compact: { w: 800, h: 450 }, mid: { w: 640, h: 360 }, mini: { w: 272, h: 153 } };
 
     function proj(ll) { return [(ll[0] + 180) / 360 * MAP.w, (MAP.top - ll[1]) / (MAP.top - MAP.bottom) * MAP.h]; }
     function buyer(k) { return B[mod(k, B.length)]; }
@@ -606,13 +691,14 @@
       if (mode !== 'mini') el('span', 'sg-app-crumb', bar, T('主动获客', 'Prospecting'));
       var live = el('span', 'sg-app-live', bar); el('i', '', live); el('span', '', live, T('AI 扫描中', 'AI scanning'));
       // map
-      var mapBox = { wide: { x: 28, y: 150, w: 1024 }, compact: { x: 14, y: 60, w: 470 }, mini: { x: 8, y: 36, w: 364 } }[mode];
+      // mid: 292 wide, so the factory's label (right of its dot) ends clear of the shortlist beside the map
+      var mapBox = { wide: { x: 28, y: 150, w: 1024 }, compact: { x: 14, y: 60, w: 470 }, mid: { x: 12, y: 56, w: 292 }, mini: { x: 4, y: 28, w: 264 } }[mode];
       var ms = mapBox.w / MAP.w;
       var svg = sv('svg', { class: 'sg-radar-map', width: L.w, height: L.h, viewBox: '0 0 ' + L.w + ' ' + L.h }, stage);
       var defs = sv('defs', {}, svg);
       var gd = sv('radialGradient', { id: 'sgr-glow-' + mode }, defs);
-      sv('stop', { offset: '0', 'stop-color': '#ff8a3d', 'stop-opacity': '.55' }, gd);
-      sv('stop', { offset: '1', 'stop-color': '#ff8a3d', 'stop-opacity': '0' }, gd);
+      sv('stop', { offset: '0', style: 'stop-color:var(--sgb-accent, #ff8a3d);stop-opacity:.55' }, gd);
+      sv('stop', { offset: '1', style: 'stop-color:var(--sgb-accent, #ff8a3d);stop-opacity:0' }, gd);
       var g = sv('g', { transform: 'translate(' + mapBox.x + ',' + mapBox.y + ') scale(' + ms.toFixed(4) + ')' }, svg);
       var d = '';
       for (var i = 0; i < MAP.dots.length; i += 2) d += 'M' + MAP.dots[i] + ' ' + MAP.dots[i + 1] + 'h0';
@@ -660,9 +746,11 @@
         el('b', '', head, T('候选客户', 'Prospects'));
         el('span', '', head, T('最新发现 · 按匹配度', 'Newest · by fit'));
         R.listBody = el('div', 'sg-list-body', list);
-        R.rowH = mode === 'wide' ? 92 : 70; R.rowGap = mode === 'wide' ? 10 : 8; R.rowsMax = mode === 'wide' ? 5 : 3;
+        R.rowH = mode === 'wide' ? 92 : mode === 'mid' ? 56 : 70; R.rowGap = mode === 'wide' ? 10 : mode === 'mid' ? 6 : 8; R.rowsMax = mode === 'wide' ? 5 : 3;
         var ai = el('div', 'sg-ai', stage);
-        var ah = el('div', 'sg-ai-head', ai); icon('spark', ah, mode === 'wide' ? 18 : 15); R.aiWho = el('span', '', ah);
+        var ah = el('div', 'sg-ai-head', ai); icon('spark', ah, mode === 'wide' ? 18 : mode === 'mid' ? 14 : 15); R.aiWho = el('span', '', ah);
+        // mid: a shorter English lead-in, so the longest buyer name still shows whole
+        R.aiLead = T('AI 判断 · ', mode === 'mid' ? 'AI view · ' : 'AI reasoning · ');
         R.aiText = el('div', 'sg-ai-text', ai); R.aiTyped = el('span', '', R.aiText); R.aiRest = el('span', 'sg-ai-rest', R.aiText);
         if (mode === 'wide') {
           var btns = el('div', 'sg-ai-btns', ai);
@@ -670,13 +758,14 @@
           el('span', 'sg-btn', btns, T('查看依据', 'See why'));
         }
         var note = el('div', 'sg-note', stage);
-        icon('shield', note, mode === 'wide' ? 18 : 15);
+        icon('shield', note, mode === 'wide' ? 18 : mode === 'mid' ? 14 : 15);
         var nt = el('div', '', note);
         el('b', '', nt, T('发开发信前', 'Before any outreach'));
         el('span', '', nt, T('数量和花费会先请你确认', 'you confirm quantity and cost'));
       }
-      var tg = el('div', 'sg-tag', mode === 'compact' ? null : stage, mode === 'mini' ? T('演示数据', 'Demo data') : T('动态示意 · 演示数据', 'Illustrative motion · demo data'));
-      if (mode === 'compact') bar.insertBefore(tg, live);
+      var inBar = mode === 'compact' || mode === 'mid';
+      var tg = el('div', 'sg-tag', inBar ? null : stage, mode === 'mini' ? T('演示数据', 'Demo data') : T('动态示意 · 演示数据', 'Illustrative motion · demo data'));
+      if (inBar) bar.insertBefore(tg, live);
     }
 
     // does a right-opening pin label at map point p (lw px wide) overlap the factory label?
@@ -779,7 +868,7 @@
           cl(r, 'is-out', idx < 0);
           cl(r, 'is-new', +kk2 === top);
         }
-        put(R.aiWho, 'text', T('AI 判断 · ', 'AI reasoning · ') + cur[2]);
+        put(R.aiWho, 'text', R.aiLead + cur[2]);
         var shownAi = typed(cur[6], seg(tauTop, 1.2, 1.2 + td));
         put(R.aiTyped, 'text', shownAi); put(R.aiRest, 'text', cur[6].slice(shownAi.length));
         cl(R.aiTyped, 'is-typing', tauTop < 1.3 + td);
@@ -799,7 +888,7 @@
 
     return {
       layouts: layouts,
-      pick: function (w) { return w >= 1100 ? 'wide' : w >= 560 ? 'compact' : 'mini'; },
+      pick: panelPick(layouts),
       build: build, tick: tick, still: 4 * P + 4.4, start: 3 * P + 0.4, cue: function (t) { return Math.ceil(t / P) * P; }
     };
   }
@@ -810,10 +899,11 @@
      ===================================================================== */
   function StudioScene() {
     var V = [
-      { key: 'studio', label: T('主图 · 白底', 'Main image · white'), prompt: T('白底主图，柔光，突出铭牌', 'White background, soft light') },
-      { key: 'ware', label: T('场景图 · 仓库 16:9', 'Scene · warehouse 16:9'), prompt: T('仓库货架前，暖色顶灯', 'Warehouse racks, warm light') },
-      { key: 'solar', label: T('场景图 · 户外储能', 'Scene · outdoor storage'), prompt: T('户外光伏板前，日落逆光', 'Solar panels at sunset') },
-      { key: 'city', label: T('短视频 · 15 秒', 'Short video · 15 s'), prompt: T('城市夜景，镜头缓慢推近', 'City at night, slow push-in') }
+      // short: the queue's own name for the job on the mid layout, where its column is narrow
+      { key: 'studio', label: T('主图 · 白底', 'Main image · white'), short: T('白底主图', 'Main image'), prompt: T('白底主图，柔光，突出铭牌', 'White background, soft light') },
+      { key: 'ware', label: T('场景图 · 仓库 16:9', 'Scene · warehouse 16:9'), short: T('仓库场景 16:9', 'Warehouse 16:9'), prompt: T('仓库货架前，暖色顶灯', 'Warehouse racks, warm light') },
+      { key: 'solar', label: T('场景图 · 户外储能', 'Scene · outdoor storage'), short: T('户外储能', 'Outdoor storage'), prompt: T('户外光伏板前，日落逆光', 'Solar panels at sunset') },
+      { key: 'city', label: T('短视频 · 15 秒', 'Short video · 15 s'), short: T('短视频 15 秒', 'Video · 15 s'), prompt: T('城市夜景，镜头缓慢推近', 'City at night, slow push-in') }
     ];
     var LANG = [
       ['中文', '长寿命磷酸铁锂电池，3000 次以上循环。'],
@@ -823,9 +913,24 @@
       ['RU', 'Батарея LiFePO4: более 3000 циклов.']
     ];
     var P = 6.2, LP = P / 2;
-    var PAL = { studio: ['#f6f4f1', '#ebe7e1', '#d9d3cb'], ware: ['#2a2019', '#1c1612', '#3a2c20', '#ffc27a'], solar: ['#3f2f5c', '#e9826a', '#f7b36b', '#ffe2a6'], city: ['#0a0f24', '#18213f', '#0e1430', '#ffcf7a'] };
+    // 首页蓝: on the homepage the generated pictures take the css/stargo-blue.css tokens (read once per build,
+    // never per frame); without them, the warm originals
+    var PAL, CS;
+    function tk(n, fb) { var v = CS ? CS.getPropertyValue('--sgb-' + n).trim() : ''; return v || fb; }
+    function palette() {
+      CS = getComputedStyle(document.documentElement);
+      PAL = {
+        studio: ['#fff', tk('ice', '#ebe7e1'), tk('lilac', '#d9d3cb')],
+        ware: [tk('indigo', '#2a2019'), tk('deep', '#1c1612'), tk('violet', '#3a2c20'), tk('cyan', '#ffc27a')],
+        solar: [tk('deep', '#3f2f5c'), tk('violet', '#e9826a'), tk('cyan', '#f7b36b'), tk('ice', '#ffe2a6')],
+        city: [tk('ink', '#0a0f24'), tk('deep', '#18213f'), tk('indigo', '#0e1430'), tk('accent', '#ffcf7a')]
+      };
+    }
     var L, R, mode;
-    var layouts = { wide: { w: 1600, h: 900 }, compact: { w: 800, h: 450 }, mini: { w: 380, h: 214 } };
+    // as RadarScene, plus midw: mid for the wider, shorter box the switcher leaves AI 创作 where its copy runs long
+    // (640 × 312 at 1280 × 720 in English): the same parts with a shorter canvas and queue, and no note under it
+    var layouts = { wide: { w: 1600, h: 900 }, compact: { w: 800, h: 450 }, mid: { w: 640, h: 360 }, midw: { w: 640, h: 316 }, mini: { w: 272, h: 153 } };
+    var basePick = panelPick(layouts);
     var CW = 788, CH = 560; // canvas drawing size
 
     function bg(parent, key) {
@@ -838,44 +943,49 @@
         return 'url(#' + gr.id + ')';
       }
       if (key === 'studio') {
-        sv('rect', { width: CW, height: CH, fill: lin([[0, '#f6f4f1'], [0.62, '#ebe7e1'], [1, '#d9d3cb']]) }, g);
+        sv('rect', { width: CW, height: CH, fill: lin([[0, '#fff'], [0.62, tk('ice', '#ebe7e1')], [1, tk('lilac', '#d9d3cb')]]) }, g);
         sv('ellipse', { cx: CW / 2, cy: CH * 0.78, rx: CW * 0.46, ry: 60, fill: '#fff', opacity: '.55' }, g);
       } else if (key === 'ware') {
-        sv('rect', { width: CW, height: CH, fill: lin([[0, '#2a2019'], [0.7, '#15100d'], [1, '#0d0a08']]) }, g);
+        sv('rect', { width: CW, height: CH, fill: lin([[0, tk('indigo', '#2a2019')], [0.7, tk('deep', '#15100d')], [1, tk('ink', '#0d0a08')]]) }, g);
+        var rack = tk('deep', '#1c1612'), box1 = tk('violet', '#3a2c20'), box2 = tk('indigo', '#2f241b');
         for (var i = 0; i < 6; i++) {
           var x = 20 + i * 132;
-          sv('rect', { x: x, y: 70, width: 110, height: 300, fill: '#1c1612', stroke: '#2b221b' }, g);
-          for (var j = 0; j < 4; j++) sv('rect', { x: x + 8, y: 86 + j * 72, width: 94, height: 46, fill: j % 2 ? '#3a2c20' : '#2f241b', rx: 3 }, g);
+          sv('rect', { x: x, y: 70, width: 110, height: 300, fill: rack, stroke: tk('hair', '#2b221b') }, g);
+          for (var j = 0; j < 4; j++) sv('rect', { x: x + 8, y: 86 + j * 72, width: 94, height: 46, fill: j % 2 ? box1 : box2, opacity: j % 2 ? '.55' : '1', rx: 3 }, g);
         }
         [140, 400, 660].forEach(function (cx) {
           var rg = sv('radialGradient', { id: id + 'l' + cx }, defs);
-          sv('stop', { offset: 0, 'stop-color': '#ffc27a', 'stop-opacity': '.55' }, rg);
-          sv('stop', { offset: 1, 'stop-color': '#ffc27a', 'stop-opacity': '0' }, rg);
+          sv('stop', { offset: 0, 'stop-color': tk('cyan', '#ffc27a'), 'stop-opacity': '.55' }, rg);
+          sv('stop', { offset: 1, 'stop-color': tk('cyan', '#ffc27a'), 'stop-opacity': '0' }, rg);
           sv('ellipse', { cx: cx, cy: 40, rx: 160, ry: 130, fill: 'url(#' + rg.id + ')' }, g);
         });
-        sv('rect', { y: 380, width: CW, height: CH - 380, fill: lin([[0, '#1a1410'], [1, '#0c0907']]) }, g);
+        sv('rect', { y: 380, width: CW, height: CH - 380, fill: lin([[0, tk('deep', '#1a1410')], [1, tk('ink', '#0c0907')]]) }, g);
       } else if (key === 'solar') {
-        sv('rect', { width: CW, height: CH, fill: lin([[0, '#3f2f5c'], [0.45, '#e9826a'], [0.72, '#f7b36b'], [1, '#2a1d22']]) }, g);
-        sv('circle', { cx: CW * 0.7, cy: CH * 0.58, r: 54, fill: '#ffe2a6', opacity: '.9' }, g);
-        sv('rect', { y: CH * 0.66, width: CW, height: CH * 0.34, fill: '#21171c' }, g);
+        sv('rect', { width: CW, height: CH, fill: lin([[0, tk('deep', '#3f2f5c')], [0.45, tk('violet', '#e9826a')], [0.72, tk('cyan', '#f7b36b')], [1, tk('plum', '#2a1d22')]]) }, g);
+        sv('circle', { cx: CW * 0.7, cy: CH * 0.58, r: 54, fill: tk('ice', '#ffe2a6'), opacity: '.9' }, g);
+        sv('rect', { y: CH * 0.66, width: CW, height: CH * 0.34, fill: tk('ink', '#21171c') }, g);
+        var pv = tk('indigo', '#1b2236'), pe = tk('blue', '#3a4566');
         for (var p = 0; p < 7; p++) {
           var px = -30 + p * 120;
-          sv('path', { d: 'M' + px + ' ' + (CH * 0.66) + 'l40 -60h96l-24 60z', fill: '#1b2236', stroke: '#3a4566', 'stroke-width': 1.5 }, g);
-          sv('path', { d: 'M' + (px + 36) + ' ' + (CH * 0.66 - 30) + 'h92', stroke: '#3a4566', 'stroke-width': 1 }, g);
+          sv('path', { d: 'M' + px + ' ' + (CH * 0.66) + 'l40 -60h96l-24 60z', fill: pv, stroke: pe, 'stroke-width': 1.5 }, g);
+          sv('path', { d: 'M' + (px + 36) + ' ' + (CH * 0.66 - 30) + 'h92', stroke: pe, 'stroke-width': 1 }, g);
         }
       } else {
-        sv('rect', { width: CW, height: CH, fill: lin([[0, '#0a0f24'], [0.65, '#18213f'], [1, '#0b0d16']]) }, g);
+        sv('rect', { width: CW, height: CH, fill: lin([[0, tk('ink', '#0a0f24')], [0.65, tk('deep', '#18213f')], [1, tk('ink', '#0b0d16')]]) }, g);
+        var tower = tk('indigo', '#0e1430'), lit = tk('ice', '#ffcf7a');
         for (var b = 0; b < 14; b++) {
           var bw = 40 + hash(b) * 50, bh = 120 + hash(b + 9) * 220, bx = b * 58 - 10;
-          sv('rect', { x: bx, y: 400 - bh, width: bw, height: bh, fill: '#0e1430' }, g);
-          for (var w = 0; w < 8; w++) if (hash(b * 10 + w) > 0.55) sv('rect', { x: bx + 6 + (w % 3) * 12, y: 400 - bh + 14 + Math.floor(w / 3) * 26, width: 6, height: 9, fill: '#ffcf7a', opacity: '.75' }, g);
+          sv('rect', { x: bx, y: 400 - bh, width: bw, height: bh, fill: tower }, g);
+          for (var w = 0; w < 8; w++) if (hash(b * 10 + w) > 0.55) sv('rect', { x: bx + 6 + (w % 3) * 12, y: 400 - bh + 14 + Math.floor(w / 3) * 26, width: 6, height: 9, fill: lit, opacity: '.75' }, g);
         }
-        sv('rect', { y: 400, width: CW, height: CH - 400, fill: '#0a0c14' }, g);
-        sv('rect', { y: 402, width: CW, height: 2, fill: '#ec6f10', opacity: '.55' }, g);
+        sv('rect', { y: 400, width: CW, height: CH - 400, fill: tk('ink', '#0a0c14') }, g);
+        sv('rect', { y: 402, width: CW, height: 2, fill: tk('accent', '#ec6f10'), opacity: '.55' }, g);
       }
       return g;
     }
-    function battery(parent, x, y, s, light) {
+    // bars: 0 the nameplate's brand and spec line are text; 1 the spec line (too small to read on a scaled-down
+    // canvas) is a plain bar; 2 both are bars (queue thumbnails, the phone panel): texture, never sub-12 px words
+    function battery(parent, x, y, s, light, bars) {
       var g = sv('g', { transform: 'translate(' + x + ',' + y + ') scale(' + s + ')' }, parent);
       var id = 'sgb' + Math.floor(Math.random() * 1e6);
       var defs = sv('defs', {}, g);
@@ -891,16 +1001,18 @@
       sv('rect', { x: 0, y: 30, width: 280, height: 2, fill: '#fff', opacity: '.22' }, g);
       // handles + terminals
       sv('path', { d: 'M96 18 q0 -18 18 -18 h52 q18 0 18 18', fill: 'none', stroke: '#141416', 'stroke-width': 9, 'stroke-linecap': 'round' }, g);
-      [[46, '#c0392b'], [234, '#18181b']].forEach(function (tm) {
+      [[46, tk('violet', '#c0392b'), tk('lilac', '#e0574a')], [234, '#18181b', '#3a3a40']].forEach(function (tm) {
         sv('ellipse', { cx: tm[0], cy: 16, rx: 14, ry: 6, fill: '#0c0c0e' }, g);
         sv('rect', { x: tm[0] - 11, y: 2, width: 22, height: 14, fill: tm[1] }, g);
-        sv('ellipse', { cx: tm[0], cy: 2, rx: 11, ry: 4.5, fill: tm[1] === '#18181b' ? '#3a3a40' : '#e0574a' }, g);
+        sv('ellipse', { cx: tm[0], cy: 2, rx: 11, ry: 4.5, fill: tm[2] }, g);
       });
       // label plate
       sv('rect', { x: 34, y: 70, width: 212, height: 90, rx: 8, fill: '#101012', stroke: '#2c2c31' }, g);
-      sv('rect', { x: 34, y: 70, width: 8, height: 90, rx: 3, fill: '#ec6f10' }, g);
-      var t1 = sv('text', { x: 60, y: 106, class: 'sg-bat-brand' }, g); t1.textContent = 'STARGO';
-      var t2 = sv('text', { x: 60, y: 134, class: 'sg-bat-spec' }, g); t2.textContent = 'LiFePO4 · 12.8V 100Ah';
+      sv('rect', { x: 34, y: 70, width: 8, height: 90, rx: 3, fill: tk('accent', '#ec6f10') }, g);
+      if (bars > 1) sv('rect', { x: 60, y: 86, width: 132, height: 20, rx: 4, fill: '#fff', opacity: '.88' }, g);
+      else { var t1 = sv('text', { x: 60, y: 106, class: 'sg-bat-brand' }, g); t1.textContent = 'STARGO'; }
+      if (bars) sv('rect', { x: 60, y: 124, width: 120, height: 9, rx: 4.5, fill: '#fff', opacity: '.22' }, g);
+      else { var t2 = sv('text', { x: 60, y: 134, class: 'sg-bat-spec' }, g); t2.textContent = 'LiFePO4 · 12.8V 100Ah'; }
       // glint
       var clip = sv('clipPath', { id: id + 'c' }, defs);
       sv('rect', { x: 0, y: 30, width: 280, height: 170 }, clip);
@@ -909,23 +1021,26 @@
     }
 
     function build(stage, Ld, name) {
-      mode = name;
+      palette();
+      var midw = name === 'midw';
+      mode = midw ? 'mid' : name;
       L = Ld; R = {};
-      stage.className = 'sg-mo-stage sg-studio is-' + mode;
+      stage.className = 'sg-mo-stage sg-studio is-' + mode + (midw ? ' is-midw' : '');
       var bar = el('div', 'sg-app-bar', stage);
       var mk = el('span', 'sg-app-mark', bar); icon('spark', mk, 14);
       el('b', '', bar, T('AI 创作', 'AI Creative'));
-      if (mode !== 'mini') el('span', 'sg-app-crumb', bar, T('产品图与视频', 'Product images & video'));
+      if (mode !== 'mini') el('span', 'sg-app-crumb', bar, mode === 'mid' ? T('产品图与视频', 'Images & video') : T('产品图与视频', 'Product images & video'));
       var live = R.live = el('span', 'sg-app-live', bar); el('i', '', live); R.liveText = el('span', '', live, T('生成中', 'Generating'));
 
-      var cv = { wide: { x: 300, y: 72, w: 800, h: 610 }, compact: { x: 14, y: 54, w: 506, h: 284 }, mini: { x: 6, y: 36, w: 368, h: 160 } }[mode];
+      var cv = { wide: { x: 300, y: 72, w: 800, h: 610 }, compact: { x: 14, y: 54, w: 506, h: 284 }, mid: { x: 12, y: 46, w: 404, h: midw ? 152 : 196 }, mini: { x: 5, y: 31, w: 262, h: 104 } }[mode];
       var canvas = el('div', 'sg-canvas', stage);
       canvas.style.cssText = 'left:' + cv.x + 'px;top:' + cv.y + 'px;width:' + cv.w + 'px;height:' + cv.h + 'px';
       var svg = sv('svg', { viewBox: '0 0 ' + CW + ' ' + CH, preserveAspectRatio: 'xMidYMid slice', width: cv.w, height: cv.h }, canvas);
       R.bgs = V.map(function (v) { return bg(svg, v.key); });
       R.cam = sv('g', {}, svg);
-      var bt = mode === 'mini' ? [261, 223, 0.78] : [250, 250, 1];
-      R.bat = battery(R.cam, bt[0], bt[1], bt[2], true);
+      // mini: smaller and right of centre, clear of the prompt over the top and the label at the bottom left
+      var bt = mode === 'mini' ? [392, 242, 0.62] : midw ? [250, 190, 1] : [250, 250, 1];   // midw: up into the shorter crop
+      R.bat = battery(R.cam, bt[0], bt[1], bt[2], true, mode === 'mini' ? 2 : mode === 'wide' ? 0 : 1);
       R.cells = [];
       var cols = 16, rows = 11;
       var mg = sv('g', {}, svg);
@@ -933,7 +1048,7 @@
         var c = sv('rect', { x: ((x * CW) / cols).toFixed(1), y: ((y * CH) / rows).toFixed(1), width: (CW / cols + 0.6).toFixed(1), height: (CH / rows + 0.6).toFixed(1), opacity: 0 }, mg);
         R.cells.push({ e: c, o: (y / rows) * 0.62 + hash(x * 31 + y * 7) * 0.38, l: hash(x * 13 + y * 17), y: y / rows });
       }
-      R.scan = sv('rect', { x: 0, width: CW, height: 3, fill: '#ffb36b', opacity: 0 }, svg);
+      R.scan = sv('rect', { x: 0, width: CW, height: 3, fill: tk('accent', '#ffb36b'), opacity: 0 }, svg);
       // only the world around the product regenerates: the pack is masked out of the mosaic and the scan line
       var mk = sv('mask', { id: 'sgs-keep-' + mode, maskUnits: 'userSpaceOnUse', x: 0, y: 0, width: CW, height: CH }, sv('defs', {}, svg));
       sv('rect', { width: CW, height: CH, fill: '#fff' }, mk);
@@ -945,13 +1060,14 @@
       var pr = el('div', 'sg-prompt', mode === 'mini' ? canvas : stage);
       if (mode === 'wide') pr.style.cssText = 'left:300px;top:698px;width:800px';
       if (mode === 'compact') pr.style.cssText = 'left:14px;top:348px;width:506px';
-      icon('spark', pr, mode === 'wide' ? 18 : 15);
+      if (mode === 'mid') pr.style.cssText = 'left:12px;top:' + (midw ? 206 : 250) + 'px;width:404px';
+      icon('spark', pr, mode === 'wide' ? 18 : mode === 'mid' ? 14 : 15);
       R.promptBox = el('span', 'sg-prompt-text', pr); R.prompt = el('span', '', R.promptBox);
       R.gen = el('span', 'sg-btn is-primary', pr, T('生成', 'Generate'));
 
       if (mode !== 'mini') {
         var lang = el('div', 'sg-langs', stage);
-        lang.style.cssText = mode === 'wide' ? 'left:300px;top:778px;width:800px' : 'left:14px;top:406px;width:506px';
+        lang.style.cssText = mode === 'wide' ? 'left:300px;top:778px;width:800px' : mode === 'mid' ? 'left:12px;top:' + (midw ? 254 : 298) + 'px;width:404px' : 'left:14px;top:406px;width:506px';
         R.langChips = LANG.map(function (l) { return el('span', 'sg-lang', lang, l[0]); });
         R.langText = el('div', 'sg-lang-text', lang);
       }
@@ -963,7 +1079,7 @@
         ].map(function (a, i) {
           var r = el('div', 'sg-rail-row', rail);
           el('span', '', r, a[0]);
-          if (i === 1) { var sw = el('span', 'sg-swatches', r); ['#0d0d0d', '#ec6f10', '#f4f1ec', '#3a6df0'].forEach(function (c) { el('i', '', sw).style.background = c; }); }
+          if (i === 1) { var sw = el('span', 'sg-swatches', r); [tk('ink', '#0d0d0d'), tk('violet', '#ec6f10'), tk('ice', '#f4f1ec'), tk('blue', '#3a6df0')].forEach(function (c) { el('i', '', sw).style.background = c; }); }
           else el('em', '', r, a[1]);
           return r;
         });
@@ -978,22 +1094,27 @@
         R.q = V.map(function (v) {
           var it = el('div', 'sg-q', qb);
           var th = el('div', 'sg-q-thumb', it);
-          var ts = sv('svg', { viewBox: '0 0 ' + CW + ' ' + CH, preserveAspectRatio: 'xMidYMid slice', width: mode === 'wide' ? 92 : 64, height: mode === 'wide' ? 66 : 46 }, th);
-          bg(ts, v.key); battery(ts, 250, 250, 1, v.key === 'studio');
+          var ts = sv('svg', { viewBox: '0 0 ' + CW + ' ' + CH, preserveAspectRatio: 'xMidYMid slice', width: mode === 'wide' ? 92 : midw ? 44 : mode === 'mid' ? 48 : 64, height: mode === 'wide' ? 66 : midw ? 31 : mode === 'mid' ? 34 : 46 }, th);
+          bg(ts, v.key); battery(ts, 250, 250, 1, v.key === 'studio', 2);
           var m = el('div', 'sg-q-main', it);
-          el('b', '', m, v.label);
+          el('b', '', m, mode === 'mid' ? v.short : v.label);
           var st = el('span', 'sg-q-state', m);
           var qbar = el('i', 'sg-q-bar', m); var f = el('i', '', qbar);
           return { it: it, st: st, f: f, v: v };
         });
-        var note = el('div', 'sg-note', stage);
-        icon('shield', note, mode === 'wide' ? 18 : 15);
+        var note = el('div', 'sg-note', midw ? null : stage);
+        icon('shield', note, mode === 'wide' ? 18 : mode === 'mid' ? 13 : 15);
         var nt = el('div', '', note);
-        el('b', '', nt, T('发布前', 'Before publishing'));
-        el('span', '', nt, T('每张图、每段视频都要你点通过', 'nothing goes live without your OK'));
+        // mid: one line under the queue
+        if (mode === 'mid') el('b', '', nt, T('发布前都要你点通过', 'Live only after your OK'));
+        else {
+          el('b', '', nt, T('发布前', 'Before publishing'));
+          el('span', '', nt, T('每张图、每段视频都要你点通过', mode === 'wide' ? 'nothing goes live without your OK' : 'you OK every image and video'));
+        }
       }
-      var tg = el('div', 'sg-tag', mode === 'compact' ? null : stage, mode === 'mini' ? T('演示数据', 'Demo data') : T('动态示意 · 演示数据', 'Illustrative motion · demo data'));
-      if (mode === 'compact') bar.insertBefore(tg, live);
+      var inBar = mode === 'compact' || mode === 'mid';
+      var tg = el('div', 'sg-tag', inBar ? null : stage, mode === 'mini' ? T('演示数据', 'Demo data') : T('动态示意 · 演示数据', 'Illustrative motion · demo data'));
+      if (inBar) bar.insertBefore(tg, live);
     }
 
     function tick(t) {
@@ -1048,7 +1169,7 @@
 
     return {
       layouts: layouts,
-      pick: function (w) { return w >= 1100 ? 'wide' : w >= 560 ? 'compact' : 'mini'; },
+      pick: function (w, h) { var n = basePick(w, h); return (n === 'mid' || n === 'mini') && h / w < 0.52 && Math.min(w / 640, h / 316) >= 0.92 ? 'midw' : n; },
       build: build, tick: tick, still: 2 * P + 4.6, cue: function (t) { return Math.ceil(t / P) * P; }
     };
   }

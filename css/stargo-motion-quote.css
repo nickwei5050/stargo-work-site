@@ -1,4 +1,4 @@
-/* QUOTE scene (js/stargo-motion-quote.js): Q-1042 drafted, stopped by the margin guard, approved, kept
+/* QUOTE scene (js/stargo-motion-quote.js): Q-1042 drafted, stopped by the floor-price guard, approved, kept
    as v3. Loaded after css/stargo-motion-sales.css, whose chrome (.sgs, .sgs-bar, pills) and reduced-motion
    rule it uses. Every text is 12px or more on a stage drawn at ~1:1. --sgs-room (0–1.6, set by the scene)
    is the spare height of a bigger box, spent on the rows. */
@@ -9,6 +9,11 @@
    filter is dropped, so the live scene is not drawn through a filter surface every frame. */
 .rk-stats .rk-rt-image-apperance.sg-mo { display: block; width: 100%; height: 100%; aspect-ratio: 3 / 2; }
 .rk-stats .rk-rt-image-apperance.sg-mo[style*="blur(0px)"] { filter: none !important; }
+/* renok's reveal also zooms this element from 2x to 1x over 2 s inside its clipping wrapper: right for a
+   photograph, but on a product screen it cut the edges (the 动态示意 tag, the top row, the last version
+   row) for the first two seconds at every width. The wrapper's own grow (0.7 -> 1) and the blur-to-sharp
+   still play; the scene's own zoom is held at 1, so the screen is whole from the first frame. */
+.rk-stats .rk-rt-image-apperance.sg-mo { transform: none !important; }
 
 .sgs-status { flex: none; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 99px; color: rgba(244,238,232,.75); background: rgba(255,236,220,.07); transition: color .3s, background-color .3s; }
 .sgs-status.is-wait { color: #ffb37a; background: rgba(236,111,16,.16); }
@@ -31,7 +36,7 @@
 .sgs-total { display: flex; align-items: baseline; justify-content: space-between; height: 28px; padding-top: 6px; font-size: 12px; color: rgba(244,238,232,.55); }
 .sgs-total b { font-size: 16px; color: #f8f1e7; font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
 
-/* ---------- the margin guard ---------- */
+/* ---------- the floor-price guard (unit price against the floor price) ---------- */
 .sgs-guard, .sgs-recap { grid-area: guard; min-width: 0; padding: 8px 9px 24px; border-radius: 10px; background: rgba(255,255,255,.03); box-shadow: inset 0 0 0 1px rgba(255,236,220,.08); transition: background-color .4s; }
 .sgs-guard-h { display: flex; align-items: center; gap: 6px; height: 18px; font-size: 12px; color: rgba(244,238,232,.6); white-space: nowrap; }
 .sgs-guard-h > b { font-size: 14px; color: #f8f1e7; font-variant-numeric: tabular-nums; }
@@ -83,6 +88,7 @@
 .sgs-pi, .sgs-sum { grid-area: pi; align-self: end; display: flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(244,238,232,.62); white-space: nowrap; overflow: hidden; }
 .sgs-pi span, .sgs-sum span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .sgs-pi .sg-ico, .sgs-sum .sg-ico { color: #f3c27a; }
+.sgs-pi .sgs-wd { margin: 0 0 0 2px; }
 
 /* ---------- card: two columns, everything on screen from the start ---------- */
 .sgs-quote.is-card .sgs-q-pane { grid-template-columns: 1.25fr 1fr; grid-template-rows: auto auto 1fr; grid-template-areas: "sheet right" "guard right" "pi right"; column-gap: 12px; row-gap: calc(9px + 9px * var(--sgs-room, 0)); padding: calc(10px + 8px * var(--sgs-room, 0)) 12px calc(12px + 6px * var(--sgs-room, 0)); align-items: start; }
@@ -94,8 +100,10 @@
 .sgs-quote.is-tall .sgs-q-pane { grid-template-columns: 1fr; grid-template-rows: auto auto auto 1fr; grid-template-areas: "sheet" "guard" "slot" "pi"; gap: calc(10px + 8px * var(--sgs-room, 0)); padding: 10px 12px 12px; }
 .sgs-quote.is-tall .sgs-sheet-k { margin-bottom: 4px; }
 .sgs-slot { grid-area: slot; min-width: 0; overflow: hidden; margin: 0 -5px; }
-.sgs-track { display: flex; align-items: flex-start; will-change: transform; }
-.sgs-panel { flex: none; min-width: 0; }
+/* the panels lie in one place and follow one another by a short slide and a fade (js), never cut by an edge */
+.sgs-track { display: grid; align-items: start; }
+.sgs-panel { grid-area: 1 / 1; min-width: 0; will-change: opacity; }
+.sgs-panel.is-away { visibility: hidden; }
 .sgs-quote.is-tall .sgs-panel { padding: 5px; }
 
 /* ---------- narrow: three steps over three panels that slide, one at a time ---------- */

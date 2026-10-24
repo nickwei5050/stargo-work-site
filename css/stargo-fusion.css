@@ -135,6 +135,12 @@
 @media (min-width: 1440px) {
   .ro-gallery .ro-home-header-img-wrap { width: 20rem; }
 }
+/* The tiles are pale product captures on a white hero, so each gets a static
+   hairline and a soft shadow to separate it from the ground (homemore,
+   2026-10-23). Painted once: the wheel turns the parent, never these. */
+.ro-gallery .ro-home-header-img {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .08), 0 6px 16px rgba(20, 16, 12, .08);
+}
 
 /* ======================================================================
    Brand wordmark, language switch, and the two foreign page bodies
@@ -2866,7 +2872,12 @@ h1.inner-title.stargo-contact-title {
       `text-wrap: pretty` reworks only the last lines of a paragraph. Chinese
       pages only, and never on the pricing page, whose layout this change must
       leave exactly as it was. */
-html[lang^="zh"] body:not(:has(.rk-price-tiers)) :is(p, li, .qx-body, .lx-text-size-regular, .lx-text-size-medium, .rk-rt-insights-text, .cn-accordion-answer-text, .cn-text-size-large) {
+/* perfdata 2026-10-24: the page conditions below were body:has(#loop), body:has(#atlas) and
+   body:not(:has(.rk-price-tiers)). tools/build-site.mjs now stamps them on <html data-sg-page="loop atlas
+   price-tiers">, because a :has() on body made Chrome re-match every p / li / div these rules reach each
+   time a scene inserted a node or toggled a class. "body:is([data-sg-page~=loop] *, #sg-page-loop)" keeps
+   the old specificity (1,0,1): :is() counts its strongest argument, and #sg-page-* matches nothing. */
+html[lang^="zh"] body:not([data-sg-page~="price-tiers"] *) :is(p, li, .qx-body, .lx-text-size-regular, .lx-text-size-medium, .rk-rt-insights-text, .cn-accordion-answer-text, .cn-text-size-large) {
   text-wrap: pretty;
 }
 
@@ -3719,14 +3730,16 @@ html[lang^="en"] .lx-scope .stargo-post :is(.sgc-role-name, .sgc-role-task, .sgc
   [src$="/288-ai-employees-not-288-chatbots.webp"]
 ) { padding-top: 56px; padding-bottom: 6px; }
 
-/* The same for the three "keep reading" cards under the third-party notices
+/* The same for the "keep reading" cards under the third-party notices
    (tools/build-site.mjs, PAGES['notices.html']). The half-card is about
-   1.4 : 1 and these pictures are 16:9, so the box holds the picture's own
-   border colour instead of cropping 13% off each side of an interface. The
-   band is this page's alone — .blog-photo-overlay exists nowhere else. */
-.blog-flex .blog-photo-overlay[src$="/sw003-ai-workspace-home.webp"] { object-fit: contain; background-color: #0e2b5a; }
-.blog-flex .blog-photo-overlay[src$="/sw004-experts-library.webp"] { object-fit: contain; background-color: #021d4d; }
-.blog-flex .blog-photo-overlay[src$="/live18-quote-approval-16x9.webp"] { object-fit: contain; background-color: #f4f6f8; }
+   1.4 : 1 and these captures are 16:9, so the box holds each capture's own
+   ground colour instead of cropping 13% off each side of an interface.
+   [src*=] because the build adds ?v= to the address. (homemore, 2026-10-23:
+   the first card is now the Growth OS home on its #f4f6fa plate, the second
+   the 'team' scene.) The band is this page's alone — .blog-photo-overlay
+   exists nowhere else. */
+.blog-flex .blog-photo-overlay[src*="/live05-growth-home-16x9"] { object-fit: contain; background-color: #f4f6fa; }
+.blog-flex .blog-photo-overlay[src*="/live18-quote-approval-16x9"] { object-fit: contain; background-color: #f4f6f8; }
 /* V7-BLOG-END */
 
 
@@ -3803,7 +3816,7 @@ html[lang^="en"] .qx-whatwedo .qx-wrapper-content-service .qx-h2,
 html[lang^="en"] .qx-whatwedo .qx-wrapper-content-service .qx-text-heading-servie,
 html[lang^="en"] .qx-projects .qx-project-card-title,
 html[lang^="en"] .rk-testimonials .rk-rt-text-style-h4,
-html[lang^="en"] body:has(#atlas) #start h2.about-title {
+html[lang^="en"] body:is([data-sg-page~="atlas"] *, #sg-page-atlas) #start h2.about-title {
   text-wrap: balance;
 }
 
@@ -3818,7 +3831,7 @@ html[lang^="en"] body:has(#atlas) #start h2.about-title {
 html[lang^="en"] .rk-insight .rk-rt-insights-text {
   text-wrap: pretty;
 }
-html[lang^="en"] body:has(#atlas) .macro-desc {
+html[lang^="en"] body:is([data-sg-page~="atlas"] *, #sg-page-atlas) .macro-desc {
   text-wrap: balance;
 }
 
@@ -4023,17 +4036,42 @@ html[lang="en"] .lx-scope .lx-v7-sentence {
      both languages. On phones the cards sit at the screen edges exactly where
      the lede's lines run, so the text is made legible instead: a black band
      behind the text block (behind the text, in front of the cards) dims a
-     card where it passes under the text. The same veil, as a soft ellipse,
-     is behind the text on wider screens, for the moments the cards' scroll
-     motion carries them under it. The cards keep their places and motion. */
-.lx-scope .lx-hero-features .lx-feature-hero-text-holder::before {
+     card where it passes under the text. The same veil is behind the text on
+     wider screens, for the moments the cards' scroll motion carries them
+     under it. The cards keep their places and motion.
+   - The veil (QA round 3): the cards never rest (the marquee carries every
+     card through the text block within a minute), and a soft ellipse left
+     card words legible at the lede's line ends and under the button. The
+     veil is now two soft-edged rectangles in the page's own black, 94%:
+     ::before covers the title and the lede (8px past every line), ::after
+     the 预约演示 / Book a Demo button (16rem wide, so the cards beside the
+     button stay in view). A card fades out as it slides under the copy and
+     comes back past it; no card word reads under or through the text. Each
+     is a horizontal ramp masked by a vertical one: static, painted once.
+     The button is opaque (the template's 20% white let a card's words show
+     through it); same colour as before over the black. */
+.lx-scope .lx-hero-features .lx-feature-hero-text-holder::before,
+.lx-scope .lx-hero-features .lx-feature-hero-text-holder::after {
   content: "";
   position: absolute;
   z-index: -1;
-  inset: -2.5rem -3rem;
-  background: radial-gradient(closest-side, rgba(0, 0, 0, .85) 62%, rgba(0, 0, 0, 0));
   pointer-events: none;
+  background: linear-gradient(90deg, rgba(0, 0, 2, 0), rgba(0, 0, 2, .94) var(--sg-vx), rgba(0, 0, 2, .94) calc(100% - var(--sg-vx)), rgba(0, 0, 2, 0));
+  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 0), #000 var(--sg-vy), #000 calc(100% - var(--sg-vy)), rgba(0, 0, 0, 0));
+  mask-image: linear-gradient(rgba(0, 0, 0, 0), #000 var(--sg-vy), #000 calc(100% - var(--sg-vy)), rgba(0, 0, 0, 0));
 }
+.lx-scope .lx-hero-features .lx-feature-hero-text-holder::before { --sg-vx: 3.5rem; --sg-vy: 2.5rem; inset: -3rem -4rem; }
+.lx-scope .lx-hero-features .lx-feature-hero-text-holder::after { --sg-vx: 2rem; --sg-vy: 2rem; top: calc(100% - 1rem); left: calc(50% - 8rem); width: 16rem; height: 9.5rem; }
+/* (QA round 4) The solid veil cut through a card at any point, so a card beside the copy could
+   show its demo numbers while its 示意 · 演示数据 tag sat under the veil. With JS the cards dim as
+   a whole, tag and words alike, while they overlap the copy or the button
+   (js/stargo-motion-rolecard.js adds sg-rc-zoned once it runs; css/stargo-motion-rolecard.css),
+   so no veil is needed and none is drawn: every dimmed card is dimmed evenly, never in part.
+   Without JS the solid veils above stay. */
+.lx-scope .lx-hero-features.sg-rc-zoned .lx-feature-hero-text-holder::before,
+.lx-scope .lx-hero-features.sg-rc-zoned .lx-feature-hero-text-holder::after { content: none; }
+.lx-scope .lx-hero-features .lx-about-button-holder .lx-button.lx-is-secondary { background-color: #333335; }
+.lx-scope .lx-hero-features .lx-about-button-holder .lx-button.lx-is-secondary:hover { background-color: #262628; }
 html[lang^="zh"] .lx-scope .lx-hero-features .lx-feature-description-holder .lx-text-size-regular {
   word-break: keep-all;
   overflow-wrap: anywhere;
@@ -4060,10 +4098,8 @@ html[lang^="zh"] .lx-scope .lx-hero-features .lx-feature-description-holder .lx-
     padding-left: 1rem;
     padding-right: 1rem;
   }
-  .lx-scope .lx-hero-features .lx-feature-hero-text-holder::before {
-    inset: -1.5rem 0;
-    background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .8) 1.5rem, rgba(0, 0, 0, .8) calc(100% - 1.5rem), rgba(0, 0, 0, 0));
-  }
+  /* phones: the veil is a full-width band (the lede runs edge to edge) */
+  .lx-scope .lx-hero-features .lx-feature-hero-text-holder::before { --sg-vx: 0px; --sg-vy: 1.5rem; inset: -1.5rem 0; }
 }
 
 /* workforce.html, Chinese — the role-group intro beside the list
@@ -4710,22 +4746,22 @@ html[lang^="en"] .sc-scope.sc-hero .hero-title-block h2 { text-wrap: balance; }
      ("(Five/business/stages)" before); the FAQ caption does the same
      (「(常见问/题)」 at 320) with the row's three dots each centred in their
      columns, still evenly spaced. */
-html[lang^="zh"] body:has(#loop) section.with-minus .bottom-grid > p.top-text:first-child,
+html[lang^="zh"] body:is([data-sg-page~="loop"] *, #sg-page-loop) section.with-minus .bottom-grid > p.top-text:first-child,
 html[lang^="zh"] .testimonials-section .testimonials-width > div > p.top-text {
   word-break: keep-all;
 }
-html[lang^="zh"] body:has(#loop) section.with-minus .bottom-grid > p.top-text:first-child,
+html[lang^="zh"] body:is([data-sg-page~="loop"] *, #sg-page-loop) section.with-minus .bottom-grid > p.top-text:first-child,
 html[lang^="zh"] .testimonials-section .testimonials-width > div:has(> p.top-text) {
   min-width: 0;
 }
 @media (max-width: 479px) {
-  body:has(#loop) section:has(.service-title) .bottom-grid.grd > p.top-text:first-child,
+  body:is([data-sg-page~="loop"] *, #sg-page-loop) section:has(.service-title) .bottom-grid.grd > p.top-text:first-child,
   html[lang^="zh"] #compare .bottom-grid.mw.grd > p.top-text {
     margin-right: calc(-100% - 10px + 28px);
     min-width: 0;
     text-wrap: balance;
   }
-  body:has(#loop) section:has(.service-title) .bottom-grid.grd > .circle-divider { justify-self: end; }
+  body:is([data-sg-page~="loop"] *, #sg-page-loop) section:has(.service-title) .bottom-grid.grd > .circle-divider { justify-self: end; }
   html[lang^="zh"] #compare .bottom-grid.mw.grd > .circle-divider { justify-self: center; }
 }
 
@@ -4737,7 +4773,7 @@ html[lang^="zh"] .testimonials-section .testimonials-width > div:has(> p.top-tex
        458px box). Layout only; the words may change. */
 html[lang^="en"] .sc-scope.integration .integration-title-block h2,
 html[lang^="en"] .sc-scope.products .products-title-block h2,
-html[lang^="en"] body:has(#loop) section.with-minus h2.h2:not(.card-half h2) {
+html[lang^="en"] body:is([data-sg-page~="loop"] *, #sg-page-loop) section.with-minus h2.h2:not(.card-half h2) {
   text-wrap: balance;
 }
 @media (min-width: 768px) {
@@ -4778,16 +4814,16 @@ html[lang^="en"] .footer-part-1 h2.h2 > span { display: block; text-wrap: balanc
      take `pretty`; the article titles break only at their punctuation and
      spaces, balanced (「…的正确顺/序」 → 「从一条流程开始：」/「企业引入 AI
      的正确顺序」). */
-html[lang^="en"] body:has(#loop) :is(.bottom-grid > p.top-text:first-child, section.gr p.top-text, .testimonials-section p.top-text, .team-circle p.top-text, .caption-text, .p-chat, .products-card-name-block .heading-style-h5, .products-cards-dashboard-block .heading-style-h4, .faq-wrapper .toggle-header, .blog-txt, section.drk h2.h2.for-stats, .top-text.for-tst, .top-text.for-sst, p.p-max, p.top-text._05) {
+html[lang^="en"] body:is([data-sg-page~="loop"] *, #sg-page-loop) :is(.bottom-grid > p.top-text:first-child, section.gr p.top-text, .testimonials-section p.top-text, .team-circle p.top-text, .caption-text, .p-chat, .products-card-name-block .heading-style-h5, .products-cards-dashboard-block .heading-style-h4, .faq-wrapper .toggle-header, .blog-txt, section.drk h2.h2.for-stats, .top-text.for-tst, .top-text.for-sst, p.p-max, p.top-text._05) {
   text-wrap: balance;
 }
-html[lang^="en"] body:has(#loop) :is(.paragraph-p1, p.p-no-bottom, #compare p.top-text, #compare h2.h2._01.sm._600) {
+html[lang^="en"] body:is([data-sg-page~="loop"] *, #sg-page-loop) :is(.paragraph-p1, p.p-no-bottom, #compare p.top-text, #compare h2.h2._01.sm._600) {
   text-wrap: pretty;
 }
-html[lang^="zh"] body:has(#loop) :is(.top-text.for-tst.sts, .top-text.for-sst, .sc-scope.integration .integration-info-block div, .paragraph-p1) {
+html[lang^="zh"] body:is([data-sg-page~="loop"] *, #sg-page-loop) :is(.top-text.for-tst.sts, .top-text.for-sst, .sc-scope.integration .integration-info-block div, .paragraph-p1) {
   text-wrap: pretty;
 }
-html[lang^="zh"] body:has(#loop) .blog-txt {
+html[lang^="zh"] body:is([data-sg-page~="loop"] *, #sg-page-loop) .blog-txt {
   word-break: keep-all;
   overflow-wrap: anywhere;
   text-wrap: balance;
@@ -4798,7 +4834,7 @@ html[lang^="zh"] body:has(#loop) .blog-txt {
        at 40px, and below 340px the card holds 257 — it broke 「预约企/业演示。」.
        It keeps one line: the size steps down with the card there (35.7px at
        320) and the phrase is never broken inside. */
-html[lang^="zh"] body:has(#loop) section.ctc h2.h2.for-ctn {
+html[lang^="zh"] body:is([data-sg-page~="loop"] *, #sg-page-loop) section.ctc h2.h2.for-ctn {
   font-size: min(40px, calc((100vw - 70px) / 7));
   word-break: keep-all;
 }
@@ -5001,21 +5037,21 @@ html[lang^="zh"] .sc-scope.sc-hero .hero-title-changeing-word { display: flex; }
      pushed the dot to a second line at 480–767 and the button itself below
      the row at 768–991). The dots sit where the template puts them. */
 @media (min-width: 480px) and (max-width: 991px) {
-  body:has(#loop) .bottom-grid._1.grd > #w-node-_834d27be-a307-1552-5d45-d5d881496a66-993a4bf1 {
+  body:is([data-sg-page~="loop"] *, #sg-page-loop) .bottom-grid._1.grd > #w-node-_834d27be-a307-1552-5d45-d5d881496a66-993a4bf1 {
     grid-area: 1 / 3 / 2 / 5;
     justify-self: end;
   }
-  body:has(#loop) .bottom-grid._1.grd > .circle-divider.hide-crc { grid-area: 1 / 3 / 2 / 4; }
+  body:is([data-sg-page~="loop"] *, #sg-page-loop) .bottom-grid._1.grd > .circle-divider.hide-crc { grid-area: 1 / 3 / 2 / 4; }
 }
 @media (max-width: 479px) {
-  html[lang^="en"] body:has(#loop) .bottom-grid._1.grd > #w-node-_834d27be-a307-1552-5d45-d5d881496a66-993a4bf1 {
+  html[lang^="en"] body:is([data-sg-page~="loop"] *, #sg-page-loop) .bottom-grid._1.grd > #w-node-_834d27be-a307-1552-5d45-d5d881496a66-993a4bf1 {
     grid-column: 1 / 5;
     grid-row: 2 / 3;
     justify-self: start;
   }
 }
-html[lang^="en"] body:has(#loop) section.ctc h2.h2.for-ctn { font-size: min(40px, calc((100vw - 70px) / 7.7)); }
-html[lang^="en"] body:has(#loop) .animation-section .cta-sm-title { font-size: min(var(--button--cta-title), calc((100vw - 16px) / 9)); }
+html[lang^="en"] body:is([data-sg-page~="loop"] *, #sg-page-loop) section.ctc h2.h2.for-ctn { font-size: min(40px, calc((100vw - 70px) / 7.7)); }
+html[lang^="en"] body:is([data-sg-page~="loop"] *, #sg-page-loop) .animation-section .cta-sm-title { font-size: min(var(--button--cta-title), calc((100vw - 16px) / 9)); }
 html[lang^="en"] .button-text.w-variant-83ed8c83-4d97-b61d-2146-78e915c17bb4 { text-transform: none; }
 
 /* H26. Notices, English: the (Keep reading) subtitle broke the brand name
@@ -5088,7 +5124,9 @@ html[lang^="en"] .button-text.w-variant-83ed8c83-4d97-b61d-2146-78e915c17bb4 { t
         Growth OS home overrides it with #f4f6fa and gos11 with #072c6d, the
         edge of each of those stills. The letterbox reads as more of the picture rather than as a bar,
         and the card keeps Mono's 10px radius and its own `overflow: hidden`. */
-body:has(#loop) .image-wrap.for-service .paralax-image[src*="assets/stargo-product/"] {
+/* Dormant since 2026-10-23 (homemore): no stage card holds a picture now
+   (js/stargo-motion-stages.js draws them); kept for a product screen put back. */
+body:is([data-sg-page~="loop"] *, #sg-page-loop) .image-wrap.for-service .paralax-image[src*="assets/stargo-product/"] {
   height: 100%;
   object-fit: contain;
   background-color: #dfeafe;
@@ -5096,10 +5134,10 @@ body:has(#loop) .image-wrap.for-service .paralax-image[src*="assets/stargo-produ
 /* Screens whose edge is not #dfeafe (the Growth OS home's page ground, the
    workspace home's dark chrome). The letterbox has to be the picture's own
    edge or the plate reads as a bar. */
-body:has(#loop) .image-wrap.for-service .paralax-image[src*="live05-growth-home-2x1"] {
+body:is([data-sg-page~="loop"] *, #sg-page-loop) .image-wrap.for-service .paralax-image[src*="live05-growth-home-2x1"] {
   background-color: #f4f6fa;
 }
-body:has(#loop) .image-wrap.for-service .paralax-image[src*="gos11-dormant-reactivation"] {
+body:is([data-sg-page~="loop"] *, #sg-page-loop) .image-wrap.for-service .paralax-image[src*="gos11-dormant-reactivation"] {
   background-color: #072c6d;
 }
 
@@ -5133,7 +5171,8 @@ body:has(#loop) .image-wrap.for-service .paralax-image[src*="gos11-dormant-react
         45% dark wash (`.bg-overflow`, later in the markup) and under the
         avatar and the text (z-index 2). The card's own `overflow: hidden` and
         100px radius clip it. */
-.contact-info.no-shadow > img.stargo-menu-photo {
+/* 2026-10-24 (atmos): the harbour is an inline line drawing now (tools/code-art-atmos.mjs MENU_ART). */
+.contact-info.no-shadow > .stargo-menu-art {
   position: absolute;
   inset: 0;
   z-index: 1;
@@ -5142,6 +5181,20 @@ body:has(#loop) .image-wrap.for-service .paralax-image[src*="gos11-dormant-react
   height: 100%;
   object-fit: cover;
   object-position: 50% 50%;
+}
+/* 2026-10-24 (rest): the drawing's 示意 / Illustration tag (tools/code-art-atmos.mjs menuTag). The pill has no
+   free end, so the tag hangs under its right end, in the 30px between the card and the social icons. The
+   column's 10px row gap still applies around it; its margins (6 − 10 above, 16 + 10 − 22 + 10 + 20 = 30 below)
+   leave the icons exactly where they were. */
+.social-menu-wrapper > .stargo-menu-tag {
+  align-self: flex-end;
+  margin: -4px 18px -22px 0;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: .04em;
+  white-space: nowrap;
+  color: rgba(244, 238, 232, .45);
+  pointer-events: none;
 }
 
 /* W01–W06. The homepage grid's six stills left on 2026-10-23 for code-drawn
@@ -5364,13 +5417,16 @@ button.button-link .navigation-text-main { text-align: left; }
   .photo-hero[src*="stargo-photo/h09-"] { object-position: 50% calc(17.5% - 55px); }
 }
 
-/* P01–P05, the five stage cards. Mono's `.paralax-image` covers the 3:2
+/* Dormant since 2026-10-23 (homemore): the five stage cards are code-drawn
+   scenes (js/stargo-motion-stages.js); these rules apply again only if the
+   photographs go back (tools/replaceables.mjs HOME_STAGES).
+   P01–P05, the five stage cards. Mono's `.paralax-image` covers the 3:2
    card at 105% of its height (334x234 at 1440), as the illustration in
    (004) always did; H29 above fits only product screens. P05 is centred. */
-body:has(#loop) .image-wrap.for-service .paralax-image[src*="stargo-photo/p01-"] { object-position: 40% 50%; }
-body:has(#loop) .image-wrap.for-service .paralax-image[src*="stargo-photo/p02-"] { object-position: 35% 40%; }
-body:has(#loop) .image-wrap.for-service .paralax-image[src*="stargo-photo/p03-"] { object-position: 45% 0%; }
-body:has(#loop) .image-wrap.for-service .paralax-image[src*="stargo-photo/p04-"] { object-position: 0% 100%; }
+body:is([data-sg-page~="loop"] *, #sg-page-loop) .image-wrap.for-service .paralax-image[src*="stargo-photo/p01-"] { object-position: 40% 50%; }
+body:is([data-sg-page~="loop"] *, #sg-page-loop) .image-wrap.for-service .paralax-image[src*="stargo-photo/p02-"] { object-position: 35% 40%; }
+body:is([data-sg-page~="loop"] *, #sg-page-loop) .image-wrap.for-service .paralax-image[src*="stargo-photo/p03-"] { object-position: 45% 0%; }
+body:is([data-sg-page~="loop"] *, #sg-page-loop) .image-wrap.for-service .paralax-image[src*="stargo-photo/p04-"] { object-position: 0% 100%; }
 
 /* S01–S04, the four pain-point cards (1.36:1 at 1440, 1.47:1 at 390). S01
    and S02 are centred; S03 keeps the left edge, S04 (the dusk version) its
@@ -5412,13 +5468,10 @@ body:has(#loop) .image-wrap.for-service .paralax-image[src*="stargo-photo/p04-"]
    the halves' parent). The ancestor's transform turns the fixed attachment
    into a scrolling one, so the boxes, not the viewport, are the
    positioning areas, as before. */
-.photo-half._01, .photo-half._02 {
-  --r1w: max(100vw, 177.78vh);
-  background-image: url("../assets/stargo-photo/r1v2-sales-rep-wide-2880.webp");
-  background-size: var(--r1w) auto;
-}
-.photo-half._01 { width: calc(50% + 1px); background-position: calc((100vw - var(--r1w)) * 0.55) 35%; }
-.photo-half._02 { background-position: calc((100vw - var(--r1w)) * 0.55 - 50vw) 35%; }
+.photo-half._01, .photo-half._02 { background-image: none; }
+.photo-half._01 { width: calc(50% + 1px); }
+/* 2026-10-24 (atmos): R1v2 is no longer drawn here. Each half holds the code-drawn 'night' picture
+   (tools/code-art-atmos.mjs, css/stargo-motion-atmos.css); the 1px overlap above still hides the join. */
 
 /* R2, the scenario film card (`.testimonials-card._03`): a portrait still
    in the film's box, 400x450 (0.89:1) from 480 up and ~1.07:1 on a phone,
@@ -5431,7 +5484,9 @@ body:has(#loop) .image-wrap.for-service .paralax-image[src*="stargo-photo/p04-"]
    card's flight and its text are untouched. */
 .testimonials-card._03 img.stargo-role-photo.sgp-upright { transform: scaleY(-1); }
 
-/* T01, the pricing band's image card beside 企业版. */
+/* T01, the pricing band's image card beside 企业版. Dormant since 2026-10-23
+   (homemore): the card is the code-drawn 'org' scene; this applies again only
+   if the photograph goes back (tools/replaceables.mjs HOME_PRICING_CARD). */
 .testi-grid .image-wrap.rnd .paralax-image[src*="stargo-photo/t01-"] { object-position: 50% 58%; }
 
 /* B01–B04, the four newest-article cards. Mono sizes `.testimonials-photo`
@@ -5588,10 +5643,8 @@ img[src*="stargo-photo/e06-cockpit-blocker-"] { object-position: 50% 20%; }
         (`.cn-about .cn-intro-background`, css/cinery.cn2.css): an empty
         assembly workshop at dawn where cinery's projector-theatre photograph
         was. Its cover, no-repeat and fixed attachment are cinery's. */
-.cn-about .cn-intro-background {
-  background-image: url("../assets/stargo-photo/a01-empty-workshop-2048.webp");
-  background-position: 50% 50%;
-}
+/* 2026-10-24 (atmos): the band draws the plant at dawn in code instead (tools/code-art-atmos.mjs
+   'plant', css/stargo-motion-atmos.css), so no photograph is set here. */
 
 /* R1–R4. The four scenario slides on about and pricing (`.cn-cover-image`,
         a cover crop of 0.92:1 at 1440, 0.51:1 at 768 and 1.03:1 at 390).
@@ -6211,3 +6264,13 @@ img[src*="stargo-photo/e06-cockpit-blocker-"] { object-position: 50% 20%; }
 html.w-mod-js:not(.sg-ix-late) [data-sg-first]:not([style]) { animation: sg-first-wait 1.2s; }
 @keyframes sg-first-wait { from, to { opacity: 0; } }
 [data-sg-settled] { opacity: 1 !important; transform: none !important; filter: none !important; }
+
+/* ---- homemore (2026-10-23): pictures that became code or real captures ----
+   notices.html 「继续看」: the 能力 card is the real web desktop (16:9 in a
+   1.4:1 card), held at its left edge so the app column stays whole and only
+   the wave background loses width; the 数字员工 card is the code-drawn 'team'
+   scene, filling the card the picture filled. The homepage's stage cards and
+   enterprise card style their hosts in css/stargo-motion-stages.css and
+   css/stargo-motion-org.css. */
+.blog-flex .blog-photo-overlay[src*="/live01-desktop-home-16x9"] { object-position: 0% 50%; }
+.blog-photo-wrapper > .sg-mo-notice { position: absolute; inset: 0; }

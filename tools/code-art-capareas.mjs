@@ -68,7 +68,7 @@ const ORBIT = [
     '<path d="M20 26h70a9 9 0 0 1 9 9v22a9 9 0 0 1-9 9H38l-12 10V66h-6a9 9 0 0 1-9-9V35a9 9 0 0 1 9-9z" class="o-box"/><path d="M26 41h50M26 51h36" class="o-ln"/>'
     + '<path d="M58 72h70a9 9 0 0 1 9 9v22a9 9 0 0 1-9 9h-6v10l-12-10H58a9 9 0 0 1-9-9V81a9 9 0 0 1 9-9z" class="o-box is-acc"/><path d="M60 87h48M60 97h36" class="o-hi"/>'
     + '<circle cx="124" cy="92" r="7" class="o-acc"/><path d="M120.5 92.5l2.5 2.5 4.5-5" class="o-cut"/>'],
-  ['69ad41712a2f75c0ed1f8027_Rectangle_10', '06', ['按规则起草报价，低于底价的等人审批', 'pricing by rule; below the floor waits for approval'],
+  ['69ad41712a2f75c0ed1f8027_Rectangle_10', '06', ['按规则起草报价，低于底价的等人审批', 'pricing by rule; below the floor price waits for approval'],
     '<path d="M36 18h56l18 18v84H36z" class="o-box"/><path d="M92 18v18h18" class="o-ln"/>'
     + '<path d="M46 50h40M46 62h52M46 74h30" class="o-ln"/>'
     + '<rect x="46" y="86" width="52" height="5" rx="2.5" class="o-track"/><rect x="46" y="86" width="22" height="5" rx="2.5" class="o-acc"/><path d="M76 81v15" class="o-floor"/>'

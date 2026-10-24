@@ -1,0 +1,115 @@
+/* 代码小景 — the trade-business vignettes (lane "vignettes", 2026-10-24).
+   tools/code-art-vignettes.mjs draws each vignette once into a hidden sprite
+   and places a host per tile: the homepage's opening mosaic
+   (.hero-photo-wrapper, where H01–H10 were) and the capability page's
+   「每项 工作」 ring cards (.cn-produce, H01–H10, P03, C08, W02). Static: no
+   script, no animation, nothing to pause off-screen. */
+
+/* The sprite must stay rendered (a display:none ancestor would drop its
+   gradients and patterns in Chrome and Firefox), so it is a 0 × 0 box out of
+   the flow: the hero's grid and the ring's wheel never see it. */
+.sgv-sprite { position: absolute; width: 0; height: 0; overflow: hidden; pointer-events: none; }
+
+.sgv {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: #15110e;
+  container-type: inline-size;
+  font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.sgv > svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: hidden; }
+/* Two windows onto one drawing: the whole canvas, or its middle where the
+   box is small (the phone mosaic, the tablet's narrow column). */
+.sgv-near { display: none !important; }
+@container (max-width: 440px) {
+  .sgv-far { display: none !important; }
+  .sgv-near { display: block !important; }
+}
+/* The mosaic's second column (.photo-hero) repeats the first column's
+   pictures in the template's cycle order, and the columns drift past each
+   other, so it never looks through the same window as its neighbour: the
+   near window where the boxes are wide, and below 440px its own portrait
+   detail of the moment (tools/code-art-vignettes.mjs ALT). */
+.sgv-alt { display: none !important; }
+.sgv.photo-hero > .sgv-far { display: none !important; }
+.sgv.photo-hero > .sgv-near { display: block !important; }
+@container (max-width: 440px) {
+  .sgv.photo-hero > .sgv-near { display: none !important; }
+  .sgv.photo-hero > .sgv-alt { display: block !important; }
+}
+
+/* The honest tag, in the corner the white hero card never covers first. */
+.sgv-tag {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  padding: 4px 9px 5px;
+  border-radius: 99px;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: .04em;
+  color: rgba(244, 238, 232, .78);
+  background: rgba(21, 17, 14, .9);
+  border: 1px solid rgba(255, 236, 220, .14);
+  pointer-events: none;
+  white-space: nowrap;
+}
+/* Small tiles (the phone mosaic, the phone ring): the same 12px words, a
+   tighter pill closer to the corner, so it covers less of the drawing. */
+.sgv-tag-s { display: none; }
+@container (max-width: 240px) {
+  .sgv-tag { right: 6px; bottom: 6px; padding: 2px 6px 3px; letter-spacing: .01em; }
+  .sgv-tag-l { display: none; }
+  .sgv-tag-s { display: inline; }
+}
+
+/* The homepage mosaic. The left column drew each photograph whole at its own
+   ratio, so each tile keeps that ratio; the right column's box is Mono's
+   `.photo-hero` (100% × 400px, 250px on phones), which the host keeps. */
+.photo-block .sgv.stargo-mosaic { width: 100%; }
+.sgv-r16 { aspect-ratio: 1024 / 577; }
+.sgv-r3 { aspect-ratio: 1024 / 683; }
+.sgv-r1 { aspect-ratio: 1 / 1; }
+
+/* The capability ring: the card's `.w-background-video` box, filled as its
+   still was (css/stargo-fusion.css `.w-background-video > img.stargo-still`).
+   Its cards are drawn for the card's own box (tools/code-art-vignettes.mjs
+   RING): L for the 344 × 312 card (768px and up), S for the 192 × 182 card
+   that cinery uses below 768px, each keeping its words clear of the tag. */
+.w-background-video > .sgv-card { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sgv-ring-s { display: none !important; }
+@container (max-width: 240px) {
+  .sgv-ring-l { display: none !important; }
+  .sgv-ring-s { display: block !important; }
+}
+.sgv-card .sgv-tag { right: auto; left: 50%; bottom: 12px; transform: translateX(-50%); }
+/* Cinery draws the whole wheel smaller on tablets and phones (.cn-cta-wrapper:
+   scale .8 below 992px, .6 below 480px), which took the 12px tag down to 9.6px
+   and 7.2px on screen. Here the tag is counter-scaled so it reads at 12px, in
+   its short form (演示数据 / Demo data; each card's name for a screen reader
+   still starts 示意 / Illustration) and close to the card's lower edge, below
+   the part of the drawing that names the moment. */
+@media screen and (max-width: 991px) {
+  .cn-produce .sgv-card .sgv-tag { bottom: 8px; padding: 3px 9px 4px; font-size: 15px; letter-spacing: .02em; } /* 12 ÷ .8 */
+  .cn-produce .sgv-card .sgv-tag-l { display: none; }
+  .cn-produce .sgv-card .sgv-tag-s { display: inline; }
+}
+@media screen and (max-width: 479px) {
+  .cn-produce .sgv-card .sgv-tag { bottom: 6px; padding: 4px 10px 5px; font-size: 20px; } /* 12 ÷ .6 */
+}
+/* The inner circle is mirrored by cinery (`.cn-cta-circle-wrapper.cn-_02`);
+   flip the drawing back so its words read the right way round. */
+.cn-produce .cn-cta-circle-wrapper.cn-_02 .w-background-video > .sgv-card { transform: scaleX(-1); }
+
+/* 首页蓝 (owner 2026-10-24): the homepage's opening mosaic in the palette of the approval card.
+   The sprite is re-painted from the tokens at build time (tools/code-art-vignettes-blue.mjs); its
+   ground is the calm aurora here, and the honesty tag a small glass pill. The capability ring keeps
+   its own look (no data-stargo-home there). */
+html[data-stargo-home] .sgv { background: var(--sgb-aurora-calm); }
+/* the hairline gaps between the mosaic's tiles show the hero's own ground: ink, not #111, so the wall reads as one */
+html[data-stargo-home] .hero-agency { background-color: var(--sgb-ink); }
+html[data-stargo-home] .sgv-tag { color: var(--sgb-text); background: color-mix(in srgb, var(--sgb-ink) 62%, transparent); border-color: var(--sgb-glass-edge); }

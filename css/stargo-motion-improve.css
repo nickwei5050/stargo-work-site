@@ -7,6 +7,9 @@
 .lx-scope .lx-cta-image.sg-mo { background: radial-gradient(90% 80% at 72% 28%, #221a14 0%, #16110e 58%, #110d0b 100%); }
 
 .sgi { color: #f4eee8; font-size: 13px; }
+/* a picture, not a control: its cross-faded layers (the rollout track parked at opacity 0 over the
+   sample line and the 批准 button, card B over card A) must not take taps or hit tests from the text they fade over */
+.sgi, .sgi * { pointer-events: none; }
 .sgi-ico { display: block; flex: none; }
 /* the card rounds the box's right-hand corners (80px from 992 up, 70px below): the bar's tag and the last card keep
    40px from the right edge and the cards 40px from the bottom, inside the curve; the tag and the cards share that edge */
@@ -33,7 +36,7 @@
 .sgi-ct { min-width: 0; display: flex; align-items: baseline; gap: 8px; white-space: nowrap; }
 .sgi-cn { flex: none; font-size: 12.5px; color: rgba(244, 238, 232, .5); font-variant-numeric: tabular-nums; }
 .sgi-ct b { min-width: 0; overflow: hidden; text-overflow: ellipsis; font-size: 15px; font-weight: 600; color: #f8f1e7; }
-.sgi-pill { flex: none; font-size: 12.5px; line-height: 1.2; padding: 4px 10px; border-radius: 99px; border: 1px solid rgba(255, 236, 220, .16); color: rgba(244, 238, 232, .75); white-space: nowrap; }
+.sgi-pill { flex: none; font-size: 12.5px; line-height: 1.2; padding: 4px 10px; border-radius: 99px; border: 1px solid rgba(255, 236, 220, .16); color: rgba(244, 238, 232, .75); white-space: nowrap; text-align: center; }
 .sgi-pill.is-ask { color: #ffb37a; background: rgba(236, 111, 16, .16); border-color: rgba(255, 138, 61, .6); }
 .sgi-pill.is-run { color: #ffb37a; border-color: rgba(255, 138, 61, .35); }
 .sgi-pill.is-ok { color: #b9ecc6; background: rgba(120, 200, 140, .12); border-color: rgba(120, 200, 140, .36); }
@@ -53,7 +56,7 @@
 .sgi-sample { position: absolute; left: 0; top: 50%; transform: translateY(-50%); font-size: 12.5px; color: rgba(244, 238, 232, .5); white-space: nowrap; }
 .sgi-btn { position: absolute; right: 0; top: 0; height: 30px; padding: 0 16px; display: inline-flex; align-items: center; border-radius: 9px; background: #ec6f10; color: #fff; font-size: 13px; font-weight: 600; opacity: 0; transition: transform .18s; white-space: nowrap; }
 .sgi-tap { position: absolute; left: 50%; top: 50%; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; background: rgba(255, 255, 255, .55); opacity: 0; pointer-events: none; }
-.sgi-ro { position: absolute; inset: 0; opacity: 0; }
+.sgi-ro { position: absolute; inset: 0; opacity: 0; pointer-events: none; } /* drawn only: it cross-fades over the sample line */
 .sgi-ro-tr { position: absolute; left: 8px; right: 16px; top: 7px; height: 6px; border-radius: 3px; background: rgba(255, 236, 220, .08); }
 .sgi-ro-tr > i { position: absolute; inset: 0; border-radius: 3px; background: linear-gradient(90deg, #ec6f10, #ffb37a); transform-origin: 0 50%; transform: scaleX(0); }
 .sgi-ro-m { position: absolute; top: -4px; display: flex; flex-direction: column; align-items: center; transform: translateX(-50%); }
@@ -90,6 +93,7 @@
 .sgi.is-tall .sgi-pill { grid-area: pill; }
 .sgi.is-tall .sgi-ab { grid-template-columns: 68px 1fr 38px; gap: 8px; }
 .sgi.is-tall .sgi-keep { align-items: flex-start; }
+.sgi.is-tall .sgi-btn { padding: 0 14px; } /* clear of the sample line beside it */
 .sgi.is-tall .sgi-keep .sgi-ico { margin-top: 2px; }
 .sgi.is-small .sgi-body { top: 46px; bottom: 10px; gap: 5px; }
 .sgi.is-small .sgi-bar { height: 38px; }

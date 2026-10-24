@@ -87,22 +87,32 @@
     var kind = L.kind, W = L.w, H = L.h, rw = L.rail, row = app.pos.charAt(0), side = app.pos.charAt(1);
     var small = kind === 'tall' || kind === 'slim', low = H < 260, phone = small && !rw;
     var bar = small ? 30 : low ? 34 : 38, foot = row === 'b' ? 0 : small || low ? 22 : 24, pad = small ? 8 : low ? 9 : 12;
-    var cw = W - rw, full = !small;   // content width; full-size pictures carry the full tag
+    // ins: the middle row sits level with the film, so while the ring zooms out to its rest its outer side is the
+    // last to come on screen; its content keeps a fifth of the rail more room there, so the note, the tag and the
+    // pill on that side are whole a little before the zoom settles (the rail itself keeps its width)
+    var ins = row === 'm' && rw && (kind === 'land' || kind === 'mid') ? Math.round(rw * 0.2) : 0;
+    var cw = W - rw - ins, full = !small;   // content width; full-size pictures carry the full tag
     stage.className = 'sg-mo-stage sgd sgd-' + app.key + ' is-' + kind + ' at-' + row + (low ? ' is-low' : '') + (phone ? ' is-phone' : '');
     var st = stage.style;
     st.setProperty('--bar', bar + 'px'); st.setProperty('--foot', foot + 'px'); st.setProperty('--pad', pad + 'px');
-    st.setProperty('--l', (side === 'l' ? rw : 0) + 'px'); st.setProperty('--r', (side === 'r' ? rw : 0) + 'px');
+    st.setProperty('--l', (side === 'l' ? rw + ins : 0) + 'px'); st.setProperty('--r', (side === 'r' ? rw + ins : 0) + 'px');
     var R = { kind: kind, W: cw, H: H, row: row, small: small, low: low, phone: phone };
     if (rw) {   // the desktop's app rail, in the band the template keeps off screen
       var rl = div('sgd-rail is-' + side, stage);
+      if (ins) rl.style.width = rw + 'px';
       for (var i = 0; i < 6; i++) ico(ORDER[i], span('sgd-ri' + (ORDER[i] === app.key ? ' is-me' : ''), rl), 13);
     }
     var tag = full ? T('动态示意 · 演示数据', 'Illustrative motion · demo data') : T('演示数据', 'Demo data');
     var b = div('sgd-bar', stage);
     if (kind === 'land' || kind === 'mid') { var d = span('sgd-dots', b); el('i', '', d); el('i', '', d); el('i', '', d); }
     ico(app.key, span('sgd-mark', b), small ? 12 : 13);
-    el('b', 'sgd-name', b, small || kind === 'sq' || cw < 360 ? app.short || app.name : app.name);
-    if ((kind === 'land' || kind === 'mid') && cw >= (row === 'b' ? 600 : K.ZH ? 420 : 470) && app.crumb) span('sgd-crumb', b, app.crumb);
+    // quiet: a desktop top-row window rests with its title bar at the screen's top edge (on 16:9 screens the words
+    // would show as a sliver there), so its name and crumb live only in the status bar at its foot
+    var quiet = row === 't' && rw && (kind === 'land' || kind === 'mid'), crumb = (kind === 'land' || kind === 'mid') && cw >= (row === 'b' ? 600 : K.ZH ? 420 : 470) && app.crumb;
+    if (!quiet) {
+      el('b', 'sgd-name', b, small || kind === 'sq' || cw < 360 ? app.short || app.name : app.name);
+      if (crumb) span('sgd-crumb', b, app.crumb);
+    }
     function mkPill(parent, cls) {
       R.pill = span('', parent); R.pcls = 'sgd-pill ' + cls + 'is-';
       R.pdot = el('i', '', R.pill); R.ptx = span('', R.pill);
@@ -114,7 +124,7 @@
       var f = div('sgd-foot', stage);
       if (row === 't') {   // a status bar: whose window, what it is doing, what it is
         f.className = 'sgd-foot is-status';
-        if (!small && cw >= (K.ZH ? 0 : 300)) { var id = span('sgd-fid', f); ico(app.key, span('sgd-fmark', id), 10); el('b', '', id, app.short || app.name); }
+        if (!small && cw >= (K.ZH ? 0 : 300)) { var id = span('sgd-fid', f); ico(app.key, span('sgd-fmark', id), 10); el('b', '', id, app.short || app.name); if (quiet && crumb && cw >= (K.ZH ? 420 : 600)) span('sgd-crumb', id, app.crumb); }   // en: only where the state pill keeps its room
         if (kind !== 'sq') mkPill(f, 'in-foot ');
       } else if (!small && cw >= (K.ZH ? 330 : 440)) span('sgd-note', f, app.note);
       span('sgd-tag', f, tag);
@@ -333,12 +343,14 @@
       var e = R.empty = div('sgd-q-empty', R.body);
       ico('quote', span('sgd-q-eic', e), 16);
       el('b', '', e, slim ? T('暂无待审批', 'Nothing waiting') : T('暂无等你审批的报价', 'No quote waiting for you'));
-      if (!slim) span('', e, T('低于底价的报价会停在这里，等你决定', 'Quotes under the floor price stop here for you'));
+      if (!slim) span('', e, T('低于底价的报价会停在这里，等你决定', 'Quotes below the floor price stop here for you'));
       var card = R.card = div('sgd-q-card', R.body), top = div('sgd-q-top', card);
       el('b', 'sgd-q-id', top, 'Q-1042');
       if (!slim) span('sgd-q-v', top, 'v2');
       span('sgd-q-who', slim ? card : top, small ? 'Müller Energie' : MULLER);
-      if (!(slim && R.low)) div('sgd-q-spec', card, slim ? '48V 100Ah × 200' : SPEC + ' · ' + DAP);
+      // the spec and the incoterm are kept whole: a narrow card wraps between them, never inside 汉堡 / Hamburg
+      if (slim && !R.low) div('sgd-q-spec', card, '48V 100Ah × 200');
+      else if (!slim) { var sp = div('sgd-q-spec is-split', card); span('', sp, SPEC); span('', sp, DAP); }
       if (!small && !R.low) {   // the price against the floor, in words and on a line
         var pr = div('sgd-q-price', card);
         el('b', '', pr, '€735'); span('', pr, T('/ 组 · 底价 €750', '/ pc · floor €750'));
@@ -432,45 +444,46 @@
   };
 
   /* =================== AI 创作: the review queue (bottom left) =================== */
+  // the three drafts' paint is in css/stargo-motion-desk.css (.sgd-th-svg .t-*), so the homepage palette themes them
   function thumb(parent, k) {
     var id = 'sgd' + (++serial);
     var s = sv('svg', { viewBox: '0 0 160 104', preserveAspectRatio: 'xMidYMid slice', class: 'sgd-th-svg', 'aria-hidden': 'true' }, parent);
     var defs = sv('defs', {}, s);
-    function lin(n, a, b) { var g = sv('linearGradient', { id: id + n, x1: 0, y1: 0, x2: 0, y2: 1 }, defs); sv('stop', { offset: 0, 'stop-color': a }, g); sv('stop', { offset: 1, 'stop-color': b }, g); return 'url(#' + id + n + ')'; }
-    function pack(x, y, w, h) {   // a lithium pack: top, side, front, the orange band and the nameplate
-      sv('path', { d: 'M' + x + ' ' + y + 'l8-7h' + w + 'l-8 7z', fill: '#4a4a50' }, s);
-      sv('path', { d: 'M' + (x + w) + ' ' + y + 'l8-7v' + h + 'l-8 7z', fill: '#1c1c20' }, s);
-      sv('rect', { x: x, y: y, width: w, height: h, rx: 1.5, fill: '#2d2d32' }, s);
-      sv('rect', { x: x, y: y + h * 0.3, width: w, height: 2.6, fill: '#ec6f10' }, s);
-      sv('rect', { x: x + 6, y: y + h * 0.52, width: w * 0.42, height: 3, rx: 1.5, fill: 'rgba(255,255,255,.55)' }, s);
-      sv('rect', { x: x + 6, y: y + h * 0.68, width: w * 0.28, height: 2.4, rx: 1.2, fill: 'rgba(255,255,255,.28)' }, s);
+    function lin(n, a, b) { var g = sv('linearGradient', { id: id + n, x1: 0, y1: 0, x2: 0, y2: 1 }, defs); sv('stop', { offset: 0, class: a }, g); sv('stop', { offset: 1, class: b }, g); return 'url(#' + id + n + ')'; }
+    function pack(x, y, w, h) {   // a lithium pack: top, side, front, the accent band and the nameplate
+      sv('path', { d: 'M' + x + ' ' + y + 'l8-7h' + w + 'l-8 7z', class: 't-ptop' }, s);
+      sv('path', { d: 'M' + (x + w) + ' ' + y + 'l8-7v' + h + 'l-8 7z', class: 't-pside' }, s);
+      sv('rect', { x: x, y: y, width: w, height: h, rx: 1.5, class: 't-pfront' }, s);
+      sv('rect', { x: x, y: y + h * 0.3, width: w, height: 2.6, class: 't-band' }, s);
+      sv('rect', { x: x + 6, y: y + h * 0.52, width: w * 0.42, height: 3, rx: 1.5, class: 't-plate' }, s);
+      sv('rect', { x: x + 6, y: y + h * 0.68, width: w * 0.28, height: 2.4, rx: 1.2, class: 't-plate2' }, s);
     }
     if (k === 0) {        // main image, white background
-      sv('rect', { width: 160, height: 104, fill: lin('a', '#f4f1ec', '#ddd6cc') }, s);
-      sv('ellipse', { cx: 82, cy: 84, rx: 46, ry: 6, fill: 'rgba(0,0,0,.16)' }, s);
+      sv('rect', { width: 160, height: 104, fill: lin('a', 't-s-paper0', 't-s-paper1') }, s);
+      sv('ellipse', { cx: 82, cy: 84, rx: 46, ry: 6, class: 't-shadow' }, s);
       pack(50, 40, 56, 40);
     } else if (k === 1) { // scene: a 48V rack in a dim room
-      sv('rect', { width: 160, height: 104, fill: lin('b', '#2c2119', '#120d0a') }, s);
+      sv('rect', { width: 160, height: 104, fill: lin('b', 't-s-room0', 't-s-room1') }, s);
       var rg = sv('radialGradient', { id: id + 'r', cx: 0.5, cy: 0, r: 0.75 }, defs);
-      sv('stop', { offset: 0, 'stop-color': '#ffbe78', 'stop-opacity': 0.16 }, rg); sv('stop', { offset: 1, 'stop-color': '#ffbe78', 'stop-opacity': 0 }, rg);
+      sv('stop', { offset: 0, class: 't-s-lamp0' }, rg); sv('stop', { offset: 1, class: 't-s-lamp1' }, rg);
       sv('rect', { width: 160, height: 86, fill: 'url(#' + id + 'r)' }, s);
-      sv('rect', { y: 86, width: 160, height: 18, fill: '#0e0a08' }, s);
-      sv('rect', { x: 58, y: 16, width: 44, height: 72, rx: 3, fill: '#1e1a17', stroke: '#3d3229' }, s);
+      sv('rect', { y: 86, width: 160, height: 18, class: 't-floor' }, s);
+      sv('rect', { x: 58, y: 16, width: 44, height: 72, rx: 3, class: 't-rack' }, s);
       for (var i = 0; i < 4; i++) {
-        sv('rect', { x: 62, y: 21 + i * 16.5, width: 36, height: 12, rx: 1.5, fill: '#2d2621' }, s);
-        sv('circle', { cx: 92, cy: 27 + i * 16.5, r: 1.6, fill: i === 1 ? '#ff8a3d' : '#9fe0b0' }, s);
-        sv('rect', { x: 66, y: 25.5 + i * 16.5, width: 14, height: 2.4, rx: 1.2, fill: 'rgba(255,255,255,.25)' }, s);
+        sv('rect', { x: 62, y: 21 + i * 16.5, width: 36, height: 12, rx: 1.5, class: 't-slot' }, s);
+        sv('circle', { cx: 92, cy: 27 + i * 16.5, r: 1.6, class: i === 1 ? 't-led-on' : 't-led' }, s);
+        sv('rect', { x: 66, y: 25.5 + i * 16.5, width: 14, height: 2.4, rx: 1.2, class: 't-plate2' }, s);
       }
     } else {              // detail page, German
-      sv('rect', { width: 160, height: 104, fill: '#1b1512' }, s);
-      sv('rect', { x: 24, y: 9, width: 112, height: 95, rx: 4, fill: '#f4f0ea' }, s);
-      sv('rect', { x: 24, y: 9, width: 112, height: 11, rx: 4, fill: '#24201d' }, s);
-      sv('circle', { cx: 31, cy: 14.5, r: 2, fill: '#ec6f10' }, s);
-      sv('rect', { x: 30, y: 28, width: 46, height: 34, rx: 2, fill: '#e6e0d7' }, s);
+      sv('rect', { width: 160, height: 104, class: 't-desk' }, s);
+      sv('rect', { x: 24, y: 9, width: 112, height: 95, rx: 4, class: 't-page' }, s);
+      sv('rect', { x: 24, y: 9, width: 112, height: 11, rx: 4, class: 't-head' }, s);
+      sv('circle', { cx: 31, cy: 14.5, r: 2, class: 't-cta' }, s);
+      sv('rect', { x: 30, y: 28, width: 46, height: 34, rx: 2, class: 't-img' }, s);
       pack(37, 41, 28, 16);
-      [[82, 30, 46], [82, 37, 38], [82, 44, 42], [30, 70, 98], [30, 77, 86], [30, 84, 92]].forEach(function (l) { sv('rect', { x: l[0], y: l[1], width: l[2], height: 3, rx: 1.5, fill: '#cfc7bb' }, s); });
-      sv('rect', { x: 82, y: 52, width: 24, height: 10, rx: 5, fill: '#ec6f10' }, s);
-      sv('rect', { x: 87, y: 55.8, width: 14, height: 2.4, rx: 1.2, fill: '#fff' }, s);
+      [[82, 30, 46], [82, 37, 38], [82, 44, 42], [30, 70, 98], [30, 77, 86], [30, 84, 92]].forEach(function (l) { sv('rect', { x: l[0], y: l[1], width: l[2], height: 3, rx: 1.5, class: 't-line' }, s); });
+      sv('rect', { x: 82, y: 52, width: 24, height: 10, rx: 5, class: 't-cta' }, s);
+      sv('rect', { x: 87, y: 55.8, width: 14, height: 2.4, rx: 1.2, class: 't-ctatx' }, s);
     }
   }
   var CREATIVE = {
@@ -522,7 +535,7 @@
   /* =================== 经营驾驶舱: the day, from the other five (middle left) =================== */
   var E = {
     mul: SALES.B, wait: QUOTE.B + 1.2, appr: QUOTE.B + QUOTE.TAP1, sent: QUOTE.B + QUOTE.TAP2, inbox: SALES.B + SALES.RS,
-    so: ERP.B, board: ERP.B + ERP.RS, clear: CREATIVE.B - 0.9, img: CREATIVE.B + CREATIVE.G0[2] + CREATIVE.GEN
+    so: ERP.B, board: ERP.B + ERP.RS, img: CREATIVE.B + CREATIVE.G0[0] + CREATIVE.GEN
   };
   var EV = [
     [GROWTH.B + 1.95, 'Nordwerk Energie · ' + T('匹配 94', 'match 94')],
@@ -533,7 +546,7 @@
     [SALES.B + 8.2, 'Müller Energie · ' + T('定金已到账', 'deposit in')],
     [E.so, 'SO-2041 · ' + T('新订单', 'new order')],
     [ERP.B + 2.7, 'SO-2041 · ' + T('已装柜', 'loaded')],
-    [E.img, T('3 张素材待审核', '3 images to review')],
+    [E.img, T('AI 创作 · 素材待你审核', 'AI Creative · images to review'), T('AI 创作 · 素材待审核', 'Creative · images to review')],
     [16.7 + 0.3, T('今天：你批准 1 · 你发送 1 · 自动发送 0', 'Today: you approved 1 · sent 1 · auto-sent 0'), T('今天：你批准 1 · 你发送 1 · 自动发送 0', 'Approved 1 · sent 1 · auto-sent 0')]
   ];
   var COCKPIT = {
@@ -565,7 +578,10 @@
       textSwap(R.v[1], String(wait));
       cl(R.v[1], 'is-hot', wait === 1);
       textSwap(R.v[2], String(tau >= E.so && tau < E.board ? 7 : 6));
-      textSwap(R.v[3], String(tau >= E.img || tau < E.clear ? 3 : 0));
+      // images to review: counted image by image exactly as the AI 创作 window counts them, so the Live panel never disagrees
+      var uc = mod(tau - CREATIVE.B, P), imgs = 0;
+      for (var k = 0; k < 3; k++) if (uc >= CREATIVE.G0[k] + CREATIVE.GEN && uc < P - 0.9) imgs++;
+      textSwap(R.v[3], String(imgs));
       if (R.today) css(R.today, 'transform', 'scaleY(' + (inq === 24 ? 0.64 : 0.6) + ')');
       var last = EV.length - 1, glow = 0;
       for (var i = 0; i < EV.length; i++) {

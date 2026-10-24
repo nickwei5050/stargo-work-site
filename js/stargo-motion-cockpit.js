@@ -7,9 +7,12 @@
    They show what the paragraph beside them says, with demo data:
      cockpit-overview  商机进展 counts tick up, 交付状态 shows on-time against
                        late, 待审批 rises to 3 and falls back when you approve
-                       one; the data-source row reads ERP 未接入 · 缺数据，已标出,
-                       because figures only come from connected systems.
-     cockpit-blocker   「报价 Q-1042 · 负责人 销售 AI · 卡点：缺底价 · 等你」
+                       one; the data-source row lists the five systems the
+                       Connect panel above connects (邮箱, 客户记录, 产品知识,
+                       ERP, 网盘) and flags the finance folder it leaves
+                       unauthorized: 财务目录未授权 · 缺数据，已标出, because
+                       figures only come from connected systems.
+     cockpit-blocker   「报价 Q-1043 · 负责人 销售 AI · 卡点：缺底价 · 等你」
                        pulses; a person takes it, types the floor price and
                        hands it back; the quote then waits for approval —
                        nothing is sent by itself.
@@ -130,21 +133,25 @@
      OVERVIEW — 商机进展, 交付状态, 待审批, and where the figures come from.
      One 12 s beat: an inquiry arrives (1 s), an order is delivered on time
      (3 s), a new quote joins the approvals (5 s), the sources sync and the
-     missing ERP is flagged (7 s), you approve the oldest item (9.2 s), the
+     unauthorized finance folder is flagged (7 s), you approve the oldest item (9.2 s), the
      next order ships (10.8 s). Counts carry over from beat to beat, so the
      loop never jumps back.
      ===================================================================== */
   function OverviewScene() {
     var P = 12, IN = 1, SHIP = 3, QUOTE = 5, SYNC = 7, OK = 9.2, OUT = 9.7, SHIP2 = 10.8;
+    // what joins the approvals; each number is one deal across the site: Q-1041 is the approved forklift
+    // order (PI-1041), Q-1043 the Swedish quote blocked in BLOCKER, PI-2207 the Nigerian proforma done there
     var POOL = [
       [T('报价 Q-1039', 'Quote Q-1039'), T('巴西', 'Brazil')],
       [T('样品寄送', 'Samples'), T('2 组', '2 sets')],
       [T('开发信', 'Outreach'), T('20 封', '20 emails')],
-      [T('报价 Q-1041', 'Quote Q-1041'), T('瑞典', 'Sweden')],
+      [T('报价 Q-1044', 'Quote Q-1044'), T('波兰', 'Poland')],
       [T('产品主图', 'Product images'), T('3 张', '3 images')],
-      [T('形式发票 PI-2207', 'Proforma PI-2207'), T('尼日利亚', 'Nigeria')]
+      [T('形式发票 PI-2208', 'Proforma PI-2208'), T('越南', 'Vietnam')]
     ];
-    var SRC = [T('邮箱', 'Email'), T('阿里国际站', 'Alibaba.com'), 'CRM', T('网盘', 'Drive')];
+    // the same five systems ent-connect (js/stargo-motion-enterprise.js) connects, 5/5; the drive's finance folder
+    // is the one it leaves unauthorized, so its figures are missing here and flagged
+    var SRC = [T('邮箱', 'Email'), T('客户记录', 'Customers'), T('产品知识', 'Products'), 'ERP', T('网盘', 'Drive')];
     var NOTE = [T(' · 运输中 · 预计今天', ' · in transit · due today'), T(' · 已签收 · 准时 ✓', ' · delivered on time ✓'), T(' · 已发货 · 运输中', ' · shipped · in transit')];
     var NOTE_S = [T(' · 预计今天到', ' · due today'), T(' · 准时签收 ✓', ' · on time ✓'), T(' · 已发货', ' · shipped')];
     var MINI = [T('等你拍板', 'Your call'), T('新报价 · 等你', 'Needs your OK'), T('你已批准 ✓', 'You approved ✓')];
@@ -152,7 +159,7 @@
 
     function build(stage, L) {
       R = chrome(stage, L, 'sg-ck-ov', T('总览', 'Overview'), T('驾驶舱总览', 'Cockpit'));
-      live(R, T('已接入 4/5', '4 of 5 connected'));
+      live(R, T('已接入 5/5', '5 of 5 connected'));
       var body = el('div', 'sg-ck-body', stage);
       if (R.tier === 'full') {
         var fu = el('div', 'sg-ck-tile sg-ck-funnel', body);
@@ -191,7 +198,7 @@
         var so = el('div', 'sg-ck-tile sg-ck-src', body);
         el('span', 'sg-ck-src-h', so, T('数据来源', 'Data sources'));
         R.src = SRC.map(function (n) { var c = el('span', 'sg-ck-chip', so); ico('check', c, 13); el('span', '', c, n); return c; });
-        R.gap = el('span', 'sg-ck-chip is-gap', so); ico('alert', R.gap, 14); el('span', '', R.gap, T('ERP 未接入 · 缺数据，已标出', 'ERP not connected · data missing, flagged'));
+        R.gap = el('span', 'sg-ck-chip is-gap', so); ico('alert', R.gap, 14); el('span', '', R.gap, T('财务目录未授权 · 缺数据，已标出', 'Finance folder not authorized · flagged'));
       } else if (R.tier === 'tab') {
         var l1 = el('div', 'sg-ck-line', body);
         el('span', 'sg-ck-k', l1, T('商机进展', 'Opportunities'));
@@ -210,7 +217,7 @@
         var l3 = el('div', 'sg-ck-line', body);
         el('span', 'sg-ck-k', l3, T('待审批', 'Awaiting approval'));
         R.n = el('b', 'sg-ck-big', l3);
-        R.gap = el('span', 'sg-ck-chip is-gap', body); ico('alert', R.gap, 13); el('span', '', R.gap, T('ERP 未接入 · 缺数据，已标出', 'ERP not connected · flagged'));
+        R.gap = el('span', 'sg-ck-chip is-gap', body); ico('alert', R.gap, 13); el('span', '', R.gap, T('财务目录未授权 · 已标出', 'Finance not authorized'));
       } else {
         el('span', 'sg-ck-k', body, T('待审批', 'Approvals'));
         R.n = el('b', 'sg-ck-big', body);
@@ -248,7 +255,8 @@
           if (R.dk !== key) {
             var fl = R.dk !== undefined;
             R.dk = key;
-            put(R.dnote, 'text', 'PO-' + (2203 + k + (dp === 2 ? 1 : 0)) + (R.narrow ? NOTE_S : NOTE)[dp]);
+            // customer orders run from PO-3301 up, clear of the proformas PI-2207 / PI-2208 named beside them
+            put(R.dnote, 'text', 'PO-' + (3301 + k + (dp === 2 ? 1 : 0)) + (R.narrow ? NOTE_S : NOTE)[dp]);
             cl(R.dnote, 'is-ok', dp === 1);
             if (fl) flash(R.dnote);
           }
@@ -274,7 +282,7 @@
   function ZHs() { return K.ZH; }
 
   /* =====================================================================
-     BLOCKER — 任务负责人和卡点. The quote Q-1042 is held up by a missing floor
+     BLOCKER — 任务负责人和卡点. The quote Q-1043 is held up by a missing floor
      price and waits for you; a person takes it (a visible tap), types the
      price and hands it back to the sales AI, which updates the quote; the
      quote then waits for approval. 14 s, ending on a soft fade back.
@@ -313,7 +321,7 @@
       var body = R.body = el('div', 'sg-ck-body', stage);
       if (R.tier !== 'mini') {
         var full = R.tier === 'full', list = el('div', 'sg-ck-tasks', body);
-        var q = R.q = task(list, [T('报价 Q-1042', 'Quote Q-1042'), T('瑞典', 'Sweden'), T('销售 AI', 'Sales AI'), 1, 'block', '', full ? T('今天', 'Today') : ''], !full);
+        var q = R.q = task(list, [T('报价 Q-1043', 'Quote Q-1043'), T('瑞典', 'Sweden'), T('销售 AI', 'Sales AI'), 1, 'block', '', full ? T('今天', 'Today') : ''], !full);
         q.r.classList.add('is-key');
         // the blocker itself: beside the status on desktop, in place of the deadline on the small tile
         if (full) { R.why = el('span', 'sg-ck-why', null, T('卡点：缺底价', 'Blocker: no floor price')); q.chips.insertBefore(R.why, q.st); }
@@ -324,7 +332,7 @@
         if (full) {
           var d = el('div', 'sg-ck-tile sg-ck-detail', body);
           var dh = el('div', 'sg-ck-th', d);
-          el('b', '', dh, T('Q-1042 · 卡点详情', 'Q-1042 · blocker'));
+          el('b', '', dh, T('Q-1043 · 卡点详情', 'Q-1043 · blocker'));
           R.dOwner = el('span', '', dh);
           el('p', 'sg-ck-dp', d, T('销售 AI 已起草报价 v2（电动自行车电池，约 2,000 组/年）。缺底价：要由有权限的人来定。', 'The sales AI has drafted quote v2 (e-bike packs, about 2,000 a year). It is missing the floor price, which someone with authority must set.'));
           var fd = el('div', 'sg-ck-field', d);
@@ -350,7 +358,7 @@
         if (full) el('span', '', R.touch, T('你', 'You'));
       } else {
         el('span', 'sg-ck-k', body, T('卡点', 'Blocker'));
-        el('b', 'sg-ck-mid', body, 'Q-1042');
+        el('b', 'sg-ck-mid', body, 'Q-1043');
         el('span', 'sg-ck-mwhy', body, T('缺底价', 'No floor price'));
         if (R.H >= 140) R.mo = owner(body, OWN_S[0], 1);
         R.st = el('span', 'sg-ck-mchip', body);
@@ -364,7 +372,8 @@
       var ph = tau < TAP1 + 0.1 ? 0 : tau < TAP2 + 0.1 ? 1 : tau < REVIEW ? 2 : 3, mine = ph === 1;
       var g0 = seg(tau, TAP1, TAP1 + 0.6), g1 = seg(tau, TAP2, TAP2 + 0.6), first = g0 > 0 && g0 < 1;
       beat(R.body, tau, P, FADE);
-      live(R, ph === 0 ? T('1 个卡点', '1 blocker') : T('0 个卡点', '0 blockers'), ph === 0 ? 'warn' : 'idle');
+      // the count drops only once the price is handed back: while you hold the task the blocker is still there
+      live(R, ph === 0 ? T('1 个卡点', '1 blocker') : ph === 1 ? T('1 个卡点 · 处理中', R.narrow ? 'Being handled' : '1 blocker · being handled') : T('0 个卡点', '0 blockers'), ph === 0 ? 'warn' : ph === 1 ? '' : 'idle');
       if (R.st) {
         // mini: one status, tapped where it stands
         var mp = ph === 0 ? 0 : ph === 1 ? 1 : 2;
@@ -419,7 +428,8 @@
       ring(R.rip, first ? target(R, 'b1', R.b1, k) : target(R, 'b2', b2, k), first ? g0 : g1);
     }
 
-    return { layouts: S.layouts, pick: S.pick, build: build, tick: tick, still: 4.9 };
+    // the still: handed back and waiting for approval, so the pill, the row and the log agree
+    return { layouts: S.layouts, pick: S.pick, build: build, tick: tick, still: 8.6 };
   }
 
   /* =====================================================================
@@ -569,7 +579,8 @@
       if (w0 > 0 && w0 < 1) at(R.m80r, 'r', 5 + 16 * ease.out(w0));
       op(R.proj, ease.out(seg(tau, HOLD, HOLD + 0.5)));
       cl(R.lim, 'is-hold', held); cl(R.over, 'is-hold', held);
-      if (R.roles) for (var i = 0; i < R.roles.length; i++) { var o = R.roles[i]; num(o.v, Math.round(u * o.s / 10) * 10, true); sx(o.f, o.s / SHARE[0] * u / CUM[TODAY]); }
+      // each role rounded to 10 on its own, the last one the headline minus the others, so the four add up
+      if (R.roles) for (var i = 0, rest = Math.round(u / 10) * 10; i < R.roles.length; i++) { var o = R.roles[i], rv = i < R.roles.length - 1 ? Math.round(u * o.s / 10) * 10 : rest; rest -= rv; num(o.v, rv, true); sx(o.f, o.s / SHARE[0] * u / CUM[TODAY]); }
       if (R.gate) { say(R.rule, RULE[warned ? 1 : 0]); cl(R.gate, 'is-warn', warned && !held); cl(R.gate, 'is-hold', held); }
       if (R.status) { say(R.status, TAB[ph]); cl(R.status, 'is-warn', ph === 1); cl(R.status, 'is-hold', ph === 2); }
     }

@@ -27,6 +27,7 @@
 .sga-win.is-on .sga-app { color: #1b130b; background: linear-gradient(140deg, #ffe7bf, #eeb062); border-color: transparent; }
 .sga-grp { min-width: 0; overflow: hidden; text-overflow: ellipsis; font-size: 12.5px; color: rgba(244, 238, 232, .42); }
 .sga-grp::before { content: "/"; margin-right: 8px; color: rgba(244, 238, 232, .2); }
+.sga-grp:empty { display: none; }
 .sga-st { margin-left: auto; flex: none; display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: 99px; font-size: 12.5px; color: rgba(244, 238, 232, .5); border: 1px solid rgba(255, 236, 220, .1); transition: color .4s, background-color .4s, border-color .4s; }
 .sga-st i { width: 6px; height: 6px; border-radius: 50%; background: rgba(244, 238, 232, .35); transition: background-color .4s; }
 .sga-st[data-tone="w"], .sga-pill[data-tone="w"] { color: #f3d3a0; border-color: rgba(243, 194, 122, .3); background: rgba(243, 194, 122, .07); }
@@ -66,6 +67,8 @@
 .sga-steps { display: flex; flex-wrap: wrap; gap: 12px 14px; height: 18px; margin-top: 5px; white-space: nowrap; overflow: hidden; }
 .sga-step { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: rgba(244, 238, 232, .34); transition: color .4s; }
 .sga-step em { font-style: normal; }
+.sga-steps.is-tight { column-gap: 9px; }
+.sga-steps.is-tight .sga-step { gap: 5px; font-size: 12px; }
 .sga-step i { width: 8px; height: 8px; border-radius: 50%; border: 1px solid rgba(255, 228, 190, .3); transition: background-color .35s, border-color .35s, transform .45s cubic-bezier(.34, 1.56, .64, 1); transform: scale(.8); }
 .sga-step.is-on { color: #f3dcb6; }
 .sga-step.is-on i { background: #f3c27a; border-color: #f3c27a; transform: none; }
@@ -99,7 +102,7 @@
 
 /* an inquiry in the thread: its words light as they become the account's facts */
 .sga-row.is-msg { align-items: flex-start; padding-top: 9px; gap: 10px; background: rgba(0, 0, 0, .14); }
-.sga-cc.is-av { width: 30px; height: 30px; border-radius: 50%; font-size: 11.5px; }
+.sga-cc.is-av { width: 30px; height: 30px; border-radius: 50%; font-size: 12px; letter-spacing: .02em; }
 .sga-msg { flex: 1; min-width: 0; }
 .sga-msg-h { display: flex; gap: 8px; align-items: baseline; white-space: nowrap; font-size: 12.5px; color: rgba(244, 238, 232, .45); }
 .sga-msg-h b { font-size: 13.5px; font-weight: 600; color: #f8f1e7; }
@@ -116,3 +119,8 @@
 .sga-row.is-tight .sga-fact { padding: 0 8px; font-size: 12px; }
 .sga-fact.is-on { color: #fff3df; font-weight: 600; border-style: solid; border-color: rgba(243, 194, 122, .5); background: rgba(243, 194, 122, .1); }
 .sga-fact.is-miss.is-on { color: #ffb37a; border-color: rgba(255, 138, 61, .5); background: rgba(236, 111, 16, .1); }
+/* the sticky stack's receding card (js recede()): the picture stays and dims under the veil, its words
+   fade (--sga-w on the host) before they would read under 12px, the tag keeps its size above the veil */
+.sga-veil { position: absolute; z-index: 6; background: #15110e; opacity: 0; pointer-events: none; }
+.sga .sga-tag { z-index: 7; transform-origin: 100% 100%; }
+.sga :is(.sga-bar > b, .sga-grp, .sga-st, .sga-tx, .sga-v, .sga-pill, .sga-cc, .sga-q, .sga-msg, .sga-fact, .sga-steps, .sga-btns, .sga-chip b, .sga-pin-t, .sga-nl, .sga-crew span, .sga-note) { opacity: var(--sga-w, 1); }

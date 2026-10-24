@@ -19,7 +19,8 @@ import { editorialImages, photoAlt } from './editorial-images.mjs';
 import { readFileSync, existsSync } from 'node:fs';
 import { CAP_JUMPS, NAV, SECONDARY, MORE, LANG_SWITCH, CHROME, META, CONTACT_INFO, CONTACT_UI, SITE_URL } from './copy.mjs';
 import { POSTS, BLOG_UI, postPath, coverSrc, faqEntities, wordCount } from './blog.mjs';
-import { OG, OS_ART, MENU_CARD, HOME_MOSAIC } from './replaceables.mjs';
+import { OG, OS_ART, HOME_MOSAIC } from './replaceables.mjs';
+import { MENU_ART, menuTag } from './code-art-atmos.mjs';   // lane atmos: the side-menu card's harbour, drawn in code, and its tag
 
 /** Every page the build produces, as root-relative names. */
 export const SITE_PAGES = [...NAV, ...SECONDARY, ...MORE].map((n) => n.href).concat(POSTS.map(postPath));
@@ -816,8 +817,50 @@ function zhFullStops(html) {
   return html.slice(0, at) + body;
 }
 
+/**
+ * The cursor tooltip's picture rotator (`.text-tool-tip .image-text-rotator`,
+ * nine os-* stills; homemore, 2026-10-23). Measured on the built site, every
+ * page that carries the tooltip downloaded all nine at their 1200px width
+ * (about 580 KB) on load: they sit in a `position: fixed` box that covers the
+ * screen, so `loading="lazy"` sees them in view although their own box,
+ * `.view-all-work-img`, is 0 × 0. That box only grows (to 70 × 70, Mono's "All
+ * Work PIll Hover In", a-236) while the pointer is on one of three buttons:
+ * 「看业务主线」 on the homepage, and two on the enterprise page; on every
+ * other page nothing can ever show them.
+ *
+ * So the files wait in `data-sg-src` / `data-sg-srcset` (the markup and
+ * classes the Image Slide Rotator, a-238, moves stay as they were), `sizes`
+ * names the 70px box, and on a page with one of those buttons a few lines put
+ * them back once a button is within a screen of view — on a device with a
+ * mouse, the only kind that hovers. The picture under the cursor is the one it
+ * was; it is just fetched where it can be seen, at the size it is shown.
+ */
+const TIP_TRIGGERS = ['7821829e-5017-66e8-880e-9d87324de2d8', 'dc71ec3d-4af4-cfcd-49d1-aed148b4ec7a', '1187708b-a165-c23b-cd3a-99f2591a91d0'];
+function tipImages(html) {
+  const box = findByClass(html, 'div', 'image-text-rotator');
+  if (!box) return html;
+  if (findByClass(html, 'div', 'image-text-rotator', 1)) throw new Error('chrome: expected one tooltip picture rotator');
+  let n = 0;
+  const inner = box.text.replace(/<img\b[^>]*>/g, (tag) => {
+    n++;
+    return tag.replace(/\ssrc="/, ' data-sg-src="').replace(/\ssrcset="/, ' data-sg-srcset="').replace(/\ssizes="[^"]*"/, ' sizes="70px"');
+  });
+  if (!n || /\ssrc="/.test(inner.replace(/data-sg-src="/g, ''))) throw new Error('chrome: tooltip pictures not deferred');
+  let out = html.slice(0, box.start) + inner + html.slice(box.end);
+  const sel = TIP_TRIGGERS.map((id) => `[data-w-id="${id}"]`).join(',');
+  if (TIP_TRIGGERS.some((id) => out.includes(`data-w-id="${id}"`))) {
+    const loader = `<script>(function(){var m=window.matchMedia,s='${sel}';if(!m||!m('(hover: hover)').matches)return;`
+      + `function go(){[].forEach.call(document.querySelectorAll('.image-text-rotator img[data-sg-src]'),function(i){var x=i.getAttribute('data-sg-srcset');if(x)i.srcset=x;i.src=i.getAttribute('data-sg-src');i.removeAttribute('data-sg-src');i.removeAttribute('data-sg-srcset');});}`
+      + `if(!('IntersectionObserver'in window)){go();return;}`
+      + `var io=new IntersectionObserver(function(e){for(var k=0;k<e.length;k++)if(e[k].isIntersecting){io.disconnect();go();return;}},{rootMargin:'100% 0px'});`
+      + `[].forEach.call(document.querySelectorAll(s),function(t){io.observe(t);});})();</script>`;
+    out = out.replace('</body>', `${loader}</body>`);
+  }
+  return out;
+}
+
 /** Template people and stock photos in the shared chrome → STARGO imagery. */
-function chromeImagery(html) {
+function chromeImagery(html, lang) {
   let out = html;
   // The "Talk to Denis" avatar in the overlay menu.
   out = out.replace(/<img[^>]*class="photo-image"[^>]*\/>/g, `<img src="${AVATAR}" loading="lazy" alt="" class="photo-image"/>`);
@@ -867,7 +910,11 @@ function chromeImagery(html) {
     if (out.indexOf(orb, at + 1) !== -1) throw new Error('chrome: expected one side-menu card orb');
     const el = extractElement(out, out.lastIndexOf('<div', at), 'div');
     if (!/^<div\b[^>]*>\s*<video\b[\s\S]*<\/video>\s*<\/div>$/.test(el.text)) throw new Error('chrome: the side-menu card orb is not a background video');
-    out = out.slice(0, el.start) + `<img src="${MENU_CARD}" alt="" aria-hidden="true" loading="lazy" class="stargo-menu-photo"/>` + out.slice(el.end);
+    // since 2026-10-24 an inline line drawing (MENU_ART) instead of the photograph G02 (MENU_CARD)
+    out = out.slice(0, el.start) + MENU_ART + out.slice(el.end);
+    // ...and its 示意 / Illustration tag, right after the card's link (2026-10-24, lane rest)
+    const close = out.indexOf('</a>', el.start) + '</a>'.length;
+    out = out.slice(0, close) + menuTag(lang) + out.slice(close);
   }
   return out;
 }
@@ -896,7 +943,7 @@ export function remapLinks(html) {
 /** Pages one or two folders down: every root-relative asset path moves up by `up`. */
 export function relocateAssets(html, up = '../') {
   return html
-    .replace(/((?:src|href|data-src|data-poster-url|poster)=")(assets|css|js)\//g, `$1${up}$2/`)
+    .replace(/((?:src|href|data-src(?:-[a-z]+)*|data-poster-url|poster)=")(assets|css|js)\//g, `$1${up}$2/`)   // data-src-*: the about page's film sources (tools/about-film.mjs)
     .replace(/(srcset=")([^"]*)"/g, (_, a, v) => `${a}${v.replace(/(^|,\s*)(assets\/)/g, `$1${up}$2`)}"`)
     .replace(/(data-video-urls=")([^"]*)"/g, (_, a, v) => `${a}${v.replace(/(^|,)(assets\/)/g, `$1${up}$2`)}"`)
     .replace(/(data-mobile-src=")(assets\/)/g, `$1${up}$2`)
@@ -947,7 +994,7 @@ export function applyChrome(html, { lang, current }) {
   out = footerContact(out, lang);
   out = dropUnrelatedSocial(out);
   out = wordmark(out);
-  out = chromeImagery(out);
+  out = chromeImagery(out, lang);
   out = sideMenu(out, lang);
   out = scripts(out);
   out = linkHygiene(out, lang);
@@ -956,6 +1003,7 @@ export function applyChrome(html, { lang, current }) {
   if (lang === 'zh') out = zhRuntimeNames(zhFullStops(out));
   out = uniqueLayoutIds(out);
   out = editorialImages(out, lang);
+  out = tipImages(out);   // homemore: the cursor tooltip's os-* stills load only where they can show
   /* Stylesheets and scripts get their content-hash ?v= in
      tools/asset-version.mjs versionPage, with every other local asset the
      page loads (Z18); tools/build-site.mjs runs it once the page is final. */
