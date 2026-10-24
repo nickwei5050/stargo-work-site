@@ -119,3 +119,6 @@
 .sga-row.is-tight .sga-fact { padding: 0 8px; font-size: 12px; }
 .sga-fact.is-on { color: #fff3df; font-weight: 600; border-style: solid; border-color: rgba(243, 194, 122, .5); background: rgba(243, 194, 122, .1); }
 .sga-fact.is-miss.is-on { color: #ffb37a; border-color: rgba(255, 138, 61, .5); background: rgba(236, 111, 16, .1); }
+/* the sticky stack's receding (and arriving) card is scaled below 1: its scene dims until the card is whole (js recede()) */
+.sg-mo > .sga { transition: opacity .25s ease; }
+.sg-mo.sga-recede > .sga { opacity: .14; transition: none; } /* out in the same frame as the first scale write, back gently */

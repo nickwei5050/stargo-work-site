@@ -42,6 +42,11 @@
  * 284 × 236 (x 258–542, y 132–368), which every crop of either window keeps;
  * the rest of the canvas is context that wide tiles show.
  *
+ * The ring's cards are a picture people look at, so since 2026-10-24 (QA round
+ * 3) they no longer look through those windows: each moment is drawn again for
+ * the card's own two boxes with fewer, larger words, every word >= 12px on
+ * screen at every width and clear of the tag (RING, ringSprite, ringHost).
+ *
  * Honesty: every host is role="img" with a short sentence that starts
  * 「示意：」/ "Illustration: ", and carries the 示意 / Illustration pill. The
  * pictures claim nothing the pages around them do not; the products are the
@@ -85,14 +90,14 @@ const appBar = (x, y, w, name, right, { h = 34, r = 12, fill = RAISE } = {}) =>
   + text(x + 32, y + h / 2 + 5, 14, name, { w: 600 })
   + (right ? text(x + w - 14, y + h / 2 + 5, 13, right, { f: MUTE, a: 'end' }) : '');
 /** A lithium pack seen from the front: case, two terminals, a label band. */
-function pack(x, y, w, h, label, { hot = false, body = '#2c221b', band = '#3a2d24' } = {}) {
+function pack(x, y, w, h, label, { hot = false, body = '#2c221b', band = '#3a2d24', lz } = {}) {
   const t = Math.max(4, h * 0.09);
   return rect(x + w * 0.18, y - t, w * 0.12, t + 2, '#5b4a3e', { rx: 2 })
     + rect(x + w * 0.70, y - t, w * 0.12, t + 2, hot ? OR : '#5b4a3e', { rx: 2 })
     + rr(x, y, w, h, Math.min(8, h * 0.14), body, { stroke: hot ? OR2 : HAIR, 'stroke-width': hot ? 2 : 1 })
     + rect(x, y + h * 0.56, w, h * 0.2, band)
     + rect(x + w * 0.08, y + h * 0.18, w * 0.06, h * 0.22, hot ? OR : 'rgba(236,111,16,.55)', { rx: 1.5 })
-    + (label ? text(x + w / 2, y + h * 0.56 + h * 0.2 * 0.5 + Math.min(14, h * 0.18) * 0.36, Math.min(14, h * 0.18), label, { a: 'middle', w: 600, f: hot ? INK : MUTE }) : '');
+    + (label ? text(x + w / 2, y + h * 0.56 + h * 0.2 * 0.5 + (lz || Math.min(14, h * 0.18)) * 0.36, lz || Math.min(14, h * 0.18), label, { a: 'middle', w: 600, f: hot ? INK : MUTE }) : '');
 }
 /** A pill: rounded box with centred text. */
 const pill = (x, y, w, h, s, { fill = 'rgba(236,111,16,.16)', f = PEACH, stroke = 'rgba(236,111,16,.45)', size = 13, wt = 600 } = {}) =>
@@ -463,6 +468,522 @@ const ART = {
   },
 };
 
+/* ------------------------------------------------- the ring's own cards -- */
+/* The 「每项 工作」 ring is a picture people stop and look at, not a texture
+   behind a hero card, so its cards do not look through a window onto the
+   800 × 500 drawings (whose captions came out at 3 to 12 px there). Each
+   moment is drawn again for the card's own box, with fewer, larger words:
+     L  344 × 312, the card on screens 768px and up (scale 1 on desktop,
+        .8 on tablets, where cinery shrinks the wheel): every word >= 15
+        units, so >= 12px on screen; nothing to read below y 266, the strip
+        the tag sits in (bottom 12px desktop, 8px tablet);
+     S  192 × 182, the card below 768px (wheel at .8, then .6 below 480px):
+        one or two figures, every word >= 20 units (>= 12px at .6), nothing
+        to read below y 140, the strip of the counter-scaled tag.
+   The far/near windows and the mosaic's drawings above are unchanged. */
+const RW = { L: [344, 312], S: [192, 182] };
+/** Ground for a card: the warm near-black, the grid and a soft light. */
+const gnd = (w, h, gx = w / 2, gy = h / 2) => rect(0, 0, w, h, BG) + rect(0, 0, w, h, 'url(#sgv-grid)')
+  + `<ellipse cx="${n(gx)}" cy="${n(gy)}" rx="${n(w * 0.62)}" ry="${n(h * 0.56)}" fill="url(#sgv-glow)"/>`;
+/** A pill sized to its words (bold Latin runs a little wider than est()). */
+const pw = (s, z, pad = 12) => n(est(s, z) * 1.06 + pad * 2);
+const chip = (x, y, s, z, o = {}) => pill(x, y, pw(s, z, o.pad || 12), z + 15, s, { size: z, ...o });
+/** An app bar across a panel, its name at `z`. */
+const bar = (x, y, w, name, right, z) => {
+  const h = z + 23;
+  return path(`M${x} ${y + h}V${y + 12}q0-12 12-12h${w - 24}q12 0 12 12V${y + h}z`, { fill: RAISE })
+    + circ(x + 17, y + h / 2, 4.5, OR) + text(x + 30, y + h / 2 + z * 0.36, z, name, { w: 600 })
+    + (right ? text(x + w - 14, y + h / 2 + z * 0.36, z, right, { f: MUTE, a: 'end' }) : '');
+};
+const lines = (x, y, ws, gap = 10, h = 5, fill = 'rgba(244,238,232,.16)') => ws.map((w, i) => rr(x, y + i * gap, w, h, h / 2, fill)).join('');
+
+const RING = {
+  port: {
+    L: (T) => {
+      let s = rect(0, 0, 344, 312, 'url(#sgv-dusk)');
+      for (let i = 0; i < 18; i++) s += rect(4 + i * 19 + ((i * 7) % 7), 202 - ((i * 13) % 4), 5 + (i % 3) * 2, 2, i % 5 ? 'rgba(255,214,170,.32)' : 'rgba(255,179,122,.7)');
+      s += rect(0, 208, 344, 104, '#0d0e12') + rect(0, 211, 344, 3, 'rgba(236,111,16,.35)');
+      for (let i = 0; i < 6; i++) s += rect(12 + ((i * 97) % 280), 236 + i * 12, 40 + ((i * 41) % 70), 1.2, 'rgba(180,196,220,.1)');
+      // the ship alongside, right, its boxes stacked under the board
+      s += path('M168 176h176v32H186z', { fill: '#0a0c10' }) + rect(168, 176, 176, 3, 'rgba(236,111,16,.55)');
+      const box = ['#3b2f27', '#2b3442', '#7a3d12', '#4a3a2e', '#233040', '#5c4536'];
+      for (let c = 0; c < 6; c++) for (let r = 0; r < 2; r++) s += rect(190 + c * 26, 158 - r * 17, 24, 15, box[(c * 3 + r) % box.length]);
+      // the quay crane, left, lifting a box
+      const steel = '#3a4150';
+      s += path('M28 208l22-140h8l-18 140zM120 208l-22-140h-8l18 140z', { fill: steel });
+      s += rect(38, 148, 72, 5, steel) + rect(44, 104, 60, 4, steel);
+      s += rect(0, 60, 186, 10, '#454d5e') + path('M66 60l-22-34h7l26 34zM60 26h8v34h-8z', { fill: steel });
+      s += line(64, 26, 0, 60, '#454d5e', 3) + line(64, 26, 186, 60, '#454d5e', 3);
+      s += rect(58, 70, 28, 13, '#2a303c') + rect(61, 73, 8, 5, 'rgba(255,214,170,.6)');
+      s += line(66, 83, 66, 124, '#6b7385', 1.5) + line(78, 83, 78, 124, '#6b7385', 1.5);
+      s += rect(42, 124, 60, 5, '#555e70') + rr(42, 129, 60, 26, 2, '#b4561a') + rect(42, 129, 60, 26, 'url(#sgv-ribs)');
+      s += `<ellipse cx="72" cy="160" rx="70" ry="48" fill="url(#sgv-lamp)"/>` + circ(72, 158, 3.5, PEACH);
+      s += rect(70, 216, 5, 70, 'rgba(255,179,122,.2)');
+      // the sailing board
+      s += rr(160, 20, 166, 112, 12, 'rgba(31,24,19,.95)', { stroke: HAIR });
+      s += text(176, 48, 15, 'SO-2041 · ETA', { f: MUTE }) + circ(310, 43, 4.5, OK);
+      s += text(175, 92, 36, T('11·18', '18 Nov'), { w: 600, ls: '-0.5' });
+      s += text(176, 118, 15, T('汉堡 · DAP', 'Hamburg · DAP'), { f: PEACH, w: 600 });
+      return s;
+    },
+    S: (T) => {
+      let s = rect(0, 0, 192, 182, 'url(#sgv-dusk)');
+      for (let i = 0; i < 10; i++) s += rect(4 + i * 19, 118 - (i % 3), 5, 2, i % 4 ? 'rgba(255,214,170,.3)' : 'rgba(255,179,122,.7)');
+      s += rect(0, 120, 192, 62, '#0d0e12') + rect(0, 122, 192, 3, 'rgba(236,111,16,.35)');
+      s += path('M96 104h96v18H106z', { fill: '#0a0c10' });
+      for (let c = 0; c < 5; c++) s += rect(110 + c * 17, 92 - (c % 2) * 11, 15, 11, ['#3b2f27', '#2b3442', '#7a3d12', '#4a3a2e', '#233040'][c]);
+      const steel = '#3a4150';
+      s += path('M14 122l14-84h6l-11 84zM70 122l-14-84h-6l11 84z', { fill: steel });
+      s += rect(0, 32, 104, 7, '#454d5e') + rect(36, 39, 16, 9, '#2a303c');
+      s += line(40, 48, 40, 70, '#6b7385', 1.2) + line(48, 48, 48, 70, '#6b7385', 1.2);
+      s += rr(24, 70, 40, 18, 2, '#b4561a') + rect(24, 70, 40, 18, 'url(#sgv-ribs)');
+      s += `<ellipse cx="44" cy="92" rx="42" ry="30" fill="url(#sgv-lamp)"/>`;
+      s += rr(74, 22, 106, 76, 10, 'rgba(31,24,19,.95)', { stroke: HAIR });
+      s += text(86, 56, T(26, 24), T('11·18', '18 Nov'), { w: 600 });
+      s += text(86, 84, 20, T('汉堡', 'Hamburg'), { f: PEACH, w: 600 });
+      return s;
+    },
+  },
+
+  inquiry: {
+    L: (T) => {
+      let s = gnd(344, 312, 200, 150);
+      s += rr(14, 14, 316, 320, 14, PANEL, { stroke: HAIR });
+      s += bar(14, 14, 316, T('客户会话', 'Conversations'), T('1 条新消息', '1 new'), 15);
+      s += text(30, 100, 44, '02:14', { w: 600, ls: '-1' });
+      s += text(172, 98, 15, T('德国 · 19:14', 'Germany · 19:14'), { f: MUTE });
+      s += rr(28, 116, 288, 142, 10, RAISE, { stroke: 'rgba(236,111,16,.5)' }) + rect(28, 128, 3, 118, OR);
+      s += text(44, 140, 15, T('新询盘 · RFQ', 'New RFQ'), { f: PEACH, w: 600 });
+      s += text(44, 166, 18, 'Müller Energie GmbH', { w: 600 });
+      s += text(44, 189, 15, '200 pcs 48V 100Ah,', { f: MUTE }) + text(44, 208, 15, 'DAP Hamburg?', { f: MUTE });
+      s += chip(44, 220, T('回复已起草 · 待你确认', 'Reply drafted · your call'), 15);
+      return s;
+    },
+    S: (T) => {
+      let s = gnd(192, 182, 110, 80);
+      s += rr(8, 8, 176, 190, 14, PANEL, { stroke: HAIR });
+      s += circ(24, 24, 4.5, OR) + lines(36, 21, [64], 0, 6, 'rgba(244,238,232,.22)');
+      s += text(20, 70, 38, '02:14', { w: 600, ls: '-1' });
+      s += rr(18, 84, 156, 52, 9, RAISE, { stroke: 'rgba(236,111,16,.5)' }) + rect(18, 92, 3, 36, OR);
+      s += text(30, 109, 20, T('新询盘', 'New RFQ'), { f: PEACH, w: 600 });
+      s += lines(30, 118, [118], 0, 6);
+      return s;
+    },
+  },
+
+  samples: {
+    L: (T) => {
+      let s = gnd(344, 312, 170, 160);
+      const shelf = (y) => rect(0, y, 344, 7, '#3a2e25') + rect(0, y + 7, 344, 2, 'rgba(0,0,0,.4)');
+      for (const x of [10, 334]) s += rect(x, 0, 6, 312, '#2e241d');
+      s += shelf(104) + shelf(222);
+      s += pack(24, 52, 82, 52, '48V', { lz: 15 }) + pack(118, 44, 76, 60, '60V', { lz: 15 }) + pack(206, 56, 64, 48, '48V', { lz: 15 }) + pack(282, 46, 60, 58, '');
+      s += `<ellipse cx="160" cy="180" rx="120" ry="56" fill="url(#sgv-lamp)" opacity=".8"/>`;
+      s += pack(22, 166, 64, 56, '') + pack(98, 140, 132, 82, '72V 40Ah', { hot: true, body: '#3a2c22', band: '#4a382b', lz: 17 }) + pack(246, 172, 80, 50, '60V', { lz: 15 });
+      for (const [x, w] of [[24, 70], [104, 96], [212, 60], [282, 52]]) s += pack(x, 252, w, 52, '');
+      // the tag on the 72V sample
+      s += line(222, 140, 230, 128, MUTE, 1.2) + circ(222, 140, 2.5, MUTE);
+      s += rr(200, 70, 126, 58, 8, '#efe6dc') + circ(212, 82, 3, BG);
+      s += text(222, 88, 15, T('样品 A-12', 'Sample A-12'), { f: '#6b5a4c', w: 600 });
+      s += text(212, 115, 17, T('72V 锂电', '72V Li-ion'), { f: '#1f1813', w: 700 });
+      return s;
+    },
+    S: (T) => {
+      let s = gnd(192, 182, 90, 90);
+      const shelf = (y) => rect(0, y, 192, 6, '#3a2e25') + rect(0, y + 6, 192, 2, 'rgba(0,0,0,.4)');
+      s += shelf(122);
+      s += pack(-30, 82, 56, 40, '') + pack(170, 86, 50, 36, '');
+      s += `<ellipse cx="88" cy="100" rx="70" ry="36" fill="url(#sgv-lamp)" opacity=".8"/>`;
+      s += pack(36, 64, 108, 58, '72V', { hot: true, body: '#3a2c22', band: '#4a382b', lz: 22 });
+      s += line(132, 64, 142, 52, MUTE, 1.2);
+      s += rr(118, 14, 66, 38, 7, '#efe6dc') + circ(127, 23, 2.5, BG);
+      s += text(151, 42, 20, 'A-12', { f: '#1f1813', w: 700, a: 'middle' });
+      for (const [x, w] of [[10, 60], [84, 70], [164, 50]]) s += pack(x, 146, w, 40, '');
+      return s;
+    },
+  },
+
+  qc: {
+    L: (T) => {
+      let s = gnd(344, 312, 160, 190);
+      s += rect(0, 214, 344, 98, '#100d0b') + line(0, 214, 344, 214, 'rgba(255,236,220,.12)');
+      // the part under the jaws
+      s += rr(64, 150, 136, 70, 6, '#3a2d24', { stroke: HAIR }) + rect(64, 194, 136, 12, '#4a382b');
+      s += rect(88, 134, 22, 18, '#8a7766', { rx: 2 }) + rect(150, 134, 22, 18, OR, { rx: 2 });
+      // the beam, its scale, the jaws
+      s += rr(0, 100, 344, 26, 4, '#9aa0a8') + rect(0, 100, 344, 4, '#c4c8cd');
+      let ticks = '';
+      for (let i = 0; i <= 70; i++) ticks += `M${n(4.5 + i * 4.8)} 100v${i % 10 ? (i % 5 ? 6 : 10) : 14}`;
+      s += path(ticks, { stroke: '#2b2f35', 'stroke-width': 1, fill: 'none' });
+      s += path('M44 126h20v96h-9l-11-12z', { fill: '#8d939b' }) + path('M44 100v-24h20v24z', { fill: '#8d939b' });
+      s += path('M200 126h20v84l-11 12h-9z', { fill: '#8d939b' });
+      s += rr(178, 20, 148, 104, 10, '#22262c', { stroke: 'rgba(255,255,255,.12)' });
+      s += rr(188, 30, 128, 54, 6, '#0f1a14');
+      s += text(308, 70, 32, '100.02', { f: OK, w: 600, a: 'end' });
+      s += text(190, 110, 15, 'mm', { f: DIM });
+      // the tolerance band and the verdict
+      s += rr(18, 226, 204, 40, 10, 'rgba(31,24,19,.94)', { stroke: HAIR });
+      s += text(30, 251, 15, '±0.05', { f: MUTE });
+      s += rect(84, 243, 124, 6, 'rgba(244,238,232,.1)', { rx: 3 }) + rect(115, 243, 62, 6, 'rgba(159,224,176,.45)', { rx: 3 });
+      s += rect(146 + 0.02 / 0.05 * 31 - 1.5, 236, 3, 20, INK, { rx: 1.5 });
+      s += chip(232, 228, T('合格', 'Pass'), 15, { fill: 'rgba(159,224,176,.14)', f: OK, stroke: 'rgba(159,224,176,.45)', pad: 16 });
+      return s;
+    },
+    S: (T) => {
+      let s = gnd(192, 182, 96, 110);
+      s += rect(0, 128, 192, 54, '#100d0b');
+      s += rr(46, 132, 90, 50, 5, '#3a2d24') + rect(62, 122, 14, 12, '#8a7766') + rect(106, 122, 14, 12, OR);
+      s += rr(0, 104, 192, 18, 3, '#9aa0a8') + rect(0, 104, 192, 3, '#c4c8cd');
+      let ticks = '';
+      for (let i = 0; i <= 40; i++) ticks += `M${n(2.5 + i * 4.8)} 104v${i % 10 ? (i % 5 ? 5 : 8) : 11}`;
+      s += path(ticks, { stroke: '#2b2f35', 'stroke-width': 1, fill: 'none' });
+      s += path('M30 122h14v60H30z', { fill: '#8d939b' }) + path('M136 122h14v60h-14z', { fill: '#8d939b' });
+      s += rr(28, 10, 136, 96, 10, '#22262c', { stroke: 'rgba(255,255,255,.12)' });
+      s += rr(36, 18, 120, 46, 6, '#0f1a14');
+      s += text(148, 52, 28, '100.02', { f: OK, w: 600, a: 'end' });
+      s += tick(48, 85, 1.1) + text(62, 92, 20, T('合格', 'Pass'), { f: OK, w: 600 });
+      return s;
+    },
+  },
+
+  line: {
+    L: (T) => {
+      let s = gnd(344, 312, 172, 190);
+      s += rect(0, 196, 344, 18, '#2a211b') + rect(0, 196, 344, 3, '#3d3128') + rect(0, 214, 344, 16, 'url(#sgv-roll)');
+      for (let i = 0; i < 6; i++) s += pack(-14 + i * 64, 168, 46, 28, '', { hot: i === 3 });
+      s += `<ellipse cx="${-14 + 3 * 64 + 23}" cy="182" rx="60" ry="34" fill="url(#sgv-lamp)"/>`;
+      // the stations: S3 named, its neighbours as lights
+      for (const x of [40, 304]) s += rr(x - 22, 128, 44, 28, 8, RAISE, { stroke: HAIR }) + circ(x, 142, 4, OK);
+      const st = T('S3 测试', 'S3 Test');
+      const w3 = pw(st, 15, 14) + 14;
+      s += rr(201 - w3 / 2, 126, w3, 32, 9, 'rgba(236,111,16,.16)', { stroke: 'rgba(236,111,16,.55)' }) + circ(201 - w3 / 2 + 16, 142, 4, OR2);
+      s += text(201 - w3 / 2 + 28, 147, 15, st, { f: PEACH, w: 600 });
+      s += line(201, 158, 201, 168, 'rgba(255,236,220,.2)', 1.2, { 'stroke-dasharray': '3 3' });
+      // today's rate
+      s += rr(18, 16, 308, 98, 12, 'rgba(31,24,19,.95)', { stroke: HAIR });
+      s += text(32, 42, 15, T('A 线 · 今日', 'Line A · today'), { f: MUTE });
+      s += text(312, 42, 15, T('良率 99.2%', 'Yield 99.2%'), { f: DIM, a: 'end' });
+      s += text(31, 96, 46, '126', { w: 600, ls: '-1' }) + text(124, 96, 15, T('组 / 小时', 'packs / h'), { f: MUTE });
+      const bars = [16, 22, 20, 28, 26, 32, 29, 36];
+      bars.forEach((h, i) => { s += rect(244 + i * 9, 98 - h, 6, h, i === bars.length - 1 ? OR : 'rgba(244,238,232,.22)', { rx: 1 }); });
+      return s;
+    },
+    S: (T) => {
+      let s = gnd(192, 182, 96, 110);
+      s += rect(0, 116, 192, 14, '#2a211b') + rect(0, 116, 192, 2, '#3d3128') + rect(0, 130, 192, 14, 'url(#sgv-roll)');
+      for (let i = 0; i < 4; i++) s += pack(-12 + i * 56, 94, 38, 22, '', { hot: i === 2 });
+      s += `<ellipse cx="119" cy="104" rx="40" ry="24" fill="url(#sgv-lamp)"/>`;
+      s += text(16, 52, 42, '126', { w: 600, ls: '-1' });
+      s += text(18, 80, 20, T('组 / 小时', 'packs / h'), { f: MUTE });
+      const bars = [12, 18, 16, 22, 20, 28];
+      bars.forEach((h, i) => { s += rect(124 + i * 9, 60 - h, 6, h, i === bars.length - 1 ? OR : 'rgba(244,238,232,.22)', { rx: 1 }); });
+      return s;
+    },
+  },
+
+  packing: {
+    L: (T) => {
+      let s = gnd(344, 312, 150, 150);
+      s += path('M0 0h140L40 312H0z', { fill: 'rgba(255,226,190,.035)' });
+      s += rr(14, 36, 190, 290, 5, '#6f5139', { stroke: 'rgba(0,0,0,.3)' }) + rect(160, 36, 20, 290, '#86684d') + rect(14, 186, 190, 2, 'rgba(0,0,0,.25)');
+      const ink = '#21170f';
+      s += rr(26, 52, 124, 112, 3, 'none', { stroke: ink, 'stroke-width': 1.6 });
+      s += text(88, 80, 16, 'MÜLLER', { f: ink, a: 'middle', w: 700 }) + text(88, 104, 15, 'HAMBURG', { f: ink, a: 'middle', w: 600 });
+      s += text(88, 134, 15, 'C/NO. 12/40', { f: ink, a: 'middle', w: 600 });
+      s += text(28, 216, 15, '48V 100Ah', { f: ink, w: 700 });
+      // the packing list
+      s += rr(176, 52, 150, 206, 12, 'rgba(31,24,19,.96)', { stroke: HAIR });
+      s += text(190, 80, 15, T('装箱单', 'Packing list'), { w: 600 });
+      const rows = [[T('电池组 × 5', 'Packs × 5'), 1], [T('合格证', 'Certificate'), 1], [T('封箱', 'Seal'), 0]];
+      rows.forEach(([l, d], i) => {
+        const y = 98 + i * 34;
+        s += rr(190, y, 18, 18, 5, d ? 'rgba(159,224,176,.16)' : 'none', { stroke: d ? 'rgba(159,224,176,.6)' : 'rgba(244,238,232,.3)' });
+        if (d) s += tick(199, y + 9, 0.9);
+        s += text(216, y + 15, 15, l, { f: d ? INK : MUTE });
+      });
+      s += rect(190, 206, 122, 5, 'rgba(244,238,232,.1)', { rx: 2.5 }) + rect(190, 206, 37, 5, OR, { rx: 2.5 });
+      s += text(190, 236, 15, T('第 12 / 40 箱', 'Carton 12 / 40'), { f: MUTE });
+      return s;
+    },
+    S: (T) => {
+      let s = gnd(192, 182, 80, 80);
+      s += rr(10, 12, 128, 190, 4, '#6f5139', { stroke: 'rgba(0,0,0,.3)' }) + rect(108, 12, 14, 190, '#86684d');
+      const ink = '#21170f';
+      s += rr(20, 24, 98, 84, 3, 'none', { stroke: ink, 'stroke-width': 1.5 });
+      s += text(69, 56, 20, 'MÜLLER', { f: ink, a: 'middle', w: 700 }) + text(69, 90, 20, '12/40', { f: ink, a: 'middle', w: 600 });
+      s += rr(128, 34, 56, 104, 9, 'rgba(31,24,19,.96)', { stroke: HAIR });
+      [1, 1, 0].forEach((d, i) => {
+        const y = 48 + i * 26;
+        s += rr(138, y, 14, 14, 4, d ? 'rgba(159,224,176,.16)' : 'none', { stroke: d ? 'rgba(159,224,176,.6)' : 'rgba(244,238,232,.3)' });
+        if (d) s += tick(145, y + 7, 0.7);
+        s += rr(158, y + 5, 18, 4, 2, 'rgba(244,238,232,.2)');
+      });
+      s += rect(138, 124, 38, 4, 'rgba(244,238,232,.1)', { rx: 2 }) + rect(138, 124, 12, 4, OR, { rx: 2 });
+      return s;
+    },
+  },
+
+  owner: {
+    L: (T) => {
+      let s = gnd(344, 312, 172, 120);
+      s += path('M0 312L140 150h64L344 312z', { fill: '#1b1511' });
+      for (let i = 0; i < 3; i++) {
+        const k = 1 - i * 0.25;
+        s += rect(4 + i * 30, 230 - 110 * k, 26 * k, 110 * k, '#211a15', { stroke: HAIR });
+        s += rect(314 - i * 30, 230 - 110 * k, 26 * k, 110 * k, '#211a15', { stroke: HAIR });
+      }
+      s += circ(292, 92, 4, OR2) + `<ellipse cx="292" cy="92" rx="28" ry="20" fill="url(#sgv-lamp)"/>`;
+      // the phone
+      s += rr(90, 10, 164, 340, 28, '#0b0908', { stroke: 'rgba(255,255,255,.14)' });
+      s += rr(97, 17, 150, 330, 22, PANEL) + rr(152, 24, 40, 9, 4.5, '#0b0908');
+      s += text(112, 58, 15, T('今日 · 柳州工厂', 'Liuzhou plant'), { f: MUTE });
+      s += text(110, 100, 38, '1,240', { w: 600, ls: '-1' });
+      s += text(112, 122, 15, T('组 · 今日下线', 'packs today'), { f: DIM });
+      const bars = [22, 30, 27, 38, 33, 44, 26];
+      bars.forEach((h, i) => { s += rect(113 + i * 18, 178 - h, 11, h, i === 5 ? OR : 'rgba(244,238,232,.2)', { rx: 2 }); });
+      s += rr(108, 190, 128, 66, 10, 'rgba(236,111,16,.14)', { stroke: 'rgba(236,111,16,.5)' });
+      s += text(120, 216, 17, 'Q-1042', { w: 600 }) + text(120, 242, 15, T('待你审批', 'For approval'), { f: PEACH, w: 600 });
+      return s;
+    },
+    S: (T) => {
+      let s = gnd(192, 182, 96, 70);
+      s += path('M0 182L78 90h36L192 182z', { fill: '#1b1511' });
+      s += rect(6, 70, 20, 70, '#211a15', { stroke: HAIR }) + rect(166, 70, 20, 70, '#211a15', { stroke: HAIR });
+      s += rr(40, 8, 112, 200, 22, '#0b0908', { stroke: 'rgba(255,255,255,.14)' });
+      s += rr(45, 13, 102, 192, 18, PANEL) + rr(82, 18, 28, 6, 3, '#0b0908');
+      s += text(54, 56, 28, '1,240', { w: 600, ls: '-0.5' });
+      [14, 20, 17, 26, 22, 30].forEach((h, i) => { s += rect(56 + i * 14, 92 - h, 8, h, i === 5 ? OR : 'rgba(244,238,232,.2)', { rx: 2 }); });
+      s += rr(52, 102, 88, 34, 9, 'rgba(236,111,16,.14)', { stroke: 'rgba(236,111,16,.5)' });
+      s += text(96, 126, 20, 'Q-1042', { f: PEACH, w: 600, a: 'middle' });
+      return s;
+    },
+  },
+
+  shoot: {
+    L: (T) => {
+      let s = gnd(344, 312, 172, 150);
+      // zh names the batch on the left; en's longer words split the other way
+      const p1 = T('AI 创作 · 产品图 4 张', 'AI Creative');
+      const p2 = T('待你确认', '4 shots · your call');
+      s += chip(18, 16, p1, 15);
+      s += chip(326 - pw(p2, 15), 16, p2, 15, { fill: RAISE, f: INK, stroke: HAIR });
+      const cell = [['#e9e2da', '#cfc5ba', '#2c221b'], ['#3b2414', '#7a3d12', '#2c221b'], ['#141010', '#2a2019', '#3a2d24'], ['#24303c', '#3f4b55', '#2c221b']];
+      cell.forEach(([a, b, body], i) => {
+        const x = 18 + (i % 2) * 158;
+        const y = 58 + Math.floor(i / 2) * 104;
+        s += `<defs><linearGradient id="sgvr-c${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs>`;
+        s += rr(x, y, 150, 96, 10, `url(#sgvr-c${i})`, i === 0 ? { stroke: OR, 'stroke-width': 3 } : { stroke: HAIR });
+        s += `<ellipse cx="${x + 75}" cy="${y + 80}" rx="42" ry="6" fill="rgba(0,0,0,.28)"/>`;
+        s += pack(x + 44, y + 30, 62, 46, '', { body, band: i === 0 ? '#3a2d24' : '#4a382b' });
+        if (i === 0) s += circ(x + 132, y + 18, 10, OR) + tick(x + 132, y + 18, 0.85, INK) + text(x + 12, y + 86, 15, T('白底', 'White'), { f: '#5a4a3e', w: 600 });
+      });
+      return s;
+    },
+    S: (T) => {
+      let s = gnd(192, 182, 96, 90);
+      const p = T('AI 创作', 'AI Creative');
+      s += chip(96 - pw(p, 20, 12) / 2, 12, p, 20);
+      const cell = [['#e9e2da', '#cfc5ba'], ['#3b2414', '#7a3d12'], ['#141010', '#2a2019'], ['#24303c', '#3f4b55']];
+      cell.forEach(([a, b], i) => {
+        const x = 14 + (i % 2) * 86;
+        const y = 58 + Math.floor(i / 2) * 70;
+        s += `<defs><linearGradient id="sgvs-c${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs>`;
+        s += rr(x, y, 78, 62, 8, `url(#sgvs-c${i})`, i === 0 ? { stroke: OR, 'stroke-width': 2.5 } : { stroke: HAIR });
+        s += pack(x + 20, y + 20, 38, 28, '', { band: i === 0 ? '#3a2d24' : '#4a382b' });
+        if (i === 0) s += circ(x + 66, y + 13, 8, OR) + tick(x + 66, y + 13, 0.7, INK);
+      });
+      return s;
+    },
+  },
+
+  load: {
+    L: (T) => {
+      let s = gnd(344, 312, 200, 180);
+      s += rect(0, 236, 344, 76, '#0f0c0a');
+      s += text(22, 40, 15, T('装柜方案 · 40HQ', 'Load plan · 40HQ'), { f: MUTE });
+      s += text(20, 90, 46, '14', { w: 600 }) + text(78, 90, 20, T('/ 20 托', '/ 20 pallets'), { f: MUTE, w: 500 });
+      s += chip(326 - pw('SO-2041', 15), 64, 'SO-2041', 15);
+      s += rr(10, 108, 360, 124, 6, '#1c1713', { stroke: 'rgba(255,236,220,.22)', 'stroke-width': 2 });
+      for (let c = 0; c < 7; c++) for (let r = 0; r < 2; r++) {
+        const k = c * 2 + r;
+        const x = 20 + c * 46;
+        const y = 116 + r * 56;
+        if (c < 6) s += rr(x, y, 42, 50, 3, k >= 10 ? '#9a6b43' : '#6f5139', { stroke: 'rgba(0,0,0,.35)' }) + rect(x, y + 43, 42, 7, '#3a2d24') + rect(x + 5, y + 10, 32, 1.5, 'rgba(0,0,0,.25)') + rect(x + 5, y + 26, 32, 1.5, 'rgba(0,0,0,.25)');
+        else s += rr(x, y, 42, 50, 3, 'none', { stroke: 'rgba(255,236,220,.2)', 'stroke-dasharray': '4 4' });
+      }
+      s += `<ellipse cx="300" cy="170" rx="80" ry="60" fill="url(#sgv-lamp)" opacity=".8"/>`;
+      s += rect(22, 244, 300, 6, 'rgba(244,238,232,.1)', { rx: 3 }) + rect(22, 244, 210, 6, OR, { rx: 3 });
+      s += text(22, 266, 15, T('70% · 约 9.2 t', '70% · about 9.2 t'), { f: MUTE });
+      return s;
+    },
+    S: (T) => {
+      let s = gnd(192, 182, 120, 100);
+      s += text(14, 50, 40, '14', { w: 600 }) + text(64, 50, 20, '/ 20', { f: MUTE, w: 500 });
+      s += chip(178 - pw('40HQ', 20, 10), 20, '40HQ', 20, { pad: 10 });
+      s += rr(6, 64, 200, 80, 5, '#1c1713', { stroke: 'rgba(255,236,220,.22)', 'stroke-width': 1.5 });
+      for (let c = 0; c < 5; c++) for (let r = 0; r < 2; r++) {
+        const x = 12 + c * 36;
+        const y = 70 + r * 36;
+        if (c < 4) s += rr(x, y, 32, 32, 3, c === 3 ? '#9a6b43' : '#6f5139', { stroke: 'rgba(0,0,0,.35)' }) + rect(x, y + 27, 32, 5, '#3a2d24');
+        else s += rr(x, y, 32, 32, 3, 'none', { stroke: 'rgba(255,236,220,.2)', 'stroke-dasharray': '3 3' });
+      }
+      return s;
+    },
+  },
+
+  video: {
+    L: (T) => {
+      let s = gnd(344, 312, 172, 110);
+      s += rr(14, 14, 316, 196, 14, '#0d0b09', { stroke: HAIR });
+      s += `<ellipse cx="172" cy="112" rx="140" ry="84" fill="url(#sgv-lamp)" opacity=".9"/>`;
+      s += rr(126, 56, 92, 112, 8, '#2c221b', { stroke: 'rgba(255,179,122,.4)' });
+      for (let i = 0; i < 4; i++) s += rr(134, 64 + i * 25, 76, 19, 4, '#3a2d24') + rect(140, 71 + i * 25, 14, 5, i === 1 ? OR : 'rgba(236,111,16,.5)', { rx: 1.5 });
+      const app = T('视频制作', 'Video Studio');
+      s += chip(26, 24, app, 15, { fill: 'rgba(21,17,14,.8)', f: INK, stroke: HAIR, pad: 10 });
+      s += text(318, 46, 15, '0:18 / 0:45', { f: MUTE, a: 'end' });
+      s += circ(172, 118, 24, 'rgba(21,17,14,.62)', { stroke: 'rgba(255,255,255,.5)', 'stroke-width': 1.5 }) + path('M165 106l20 12-20 12z', { fill: INK });
+      s += rect(28, 190, 288, 4, 'rgba(244,238,232,.18)', { rx: 2 }) + rect(28, 190, 115, 4, OR, { rx: 2 }) + circ(143, 192, 6, INK);
+      for (let i = 0; i < 4; i++) {
+        const x = 14 + i * 80;
+        const hot = i === 1;
+        s += rr(x, 220, 76, 46, 8, hot ? 'rgba(236,111,16,.14)' : PANEL, { stroke: hot ? OR : HAIR, 'stroke-width': hot ? 2 : 1 });
+        s += rr(x + 40, 228, 28, 30, 4, hot ? '#4a382b' : '#2c221b');
+        s += text(x + 10, 249, 15, `0${i + 1}`, { f: hot ? PEACH : MUTE, w: 600 });
+      }
+      return s;
+    },
+    S: (T) => {
+      let s = gnd(192, 182, 96, 70);
+      s += rr(8, 8, 176, 124, 12, '#0d0b09', { stroke: HAIR });
+      s += `<ellipse cx="96" cy="66" rx="80" ry="50" fill="url(#sgv-lamp)" opacity=".9"/>`;
+      s += rr(70, 30, 52, 66, 6, '#2c221b', { stroke: 'rgba(255,179,122,.4)' });
+      for (let i = 0; i < 3; i++) s += rr(75, 36 + i * 19, 42, 14, 3, '#3a2d24') + rect(79, 41 + i * 19, 9, 4, i === 1 ? OR : 'rgba(236,111,16,.5)');
+      s += circ(96, 64, 17, 'rgba(21,17,14,.62)', { stroke: 'rgba(255,255,255,.5)', 'stroke-width': 1.2 }) + path('M91 55l15 9-15 9z', { fill: INK });
+      s += text(20, 34, 20, '0:18', { f: MUTE, w: 600 });
+      s += rect(20, 114, 152, 4, 'rgba(244,238,232,.18)', { rx: 2 }) + rect(20, 114, 61, 4, OR, { rx: 2 }) + circ(81, 116, 5, INK);
+      for (let i = 0; i < 3; i++) s += rr(8 + i * 60, 140, 56, 36, 6, i === 1 ? 'rgba(236,111,16,.14)' : PANEL, { stroke: i === 1 ? OR : HAIR });
+      return s;
+    },
+  },
+
+  fulfil: {
+    L: (T) => {
+      let s = gnd(344, 312, 172, 160);
+      s += rr(14, 14, 316, 320, 14, PANEL, { stroke: HAIR });
+      s += bar(14, 14, 316, 'ERP', T('履约', 'Fulfilment'), 15);
+      s += text(30, 86, 24, 'SO-2041', { w: 700 }) + text(314, 86, 15, '200 × 48V', { f: MUTE, a: 'end' });
+      s += text(30, 110, 15, 'Müller Energie GmbH', { f: MUTE });
+      const st = [[T('下单', 'Order'), '10·08'], [T('备货', 'Stock'), '10·15'], [T('质检', 'QC'), '10·21'], [T('装柜', 'Load'), T('今天', 'Today')], [T('到港', 'Arrive'), '11·18']];
+      const x0 = 48;
+      const dx = 62;
+      s += rect(x0, 171, dx * 3, 3, OR) + rect(x0 + dx * 3, 171, dx, 3, 'rgba(244,238,232,.16)');
+      st.forEach(([l, d], i) => {
+        const x = x0 + i * dx;
+        s += text(x, 148, 15, d, { f: i === 3 ? PEACH : DIM, a: 'middle', w: i === 3 ? 600 : undefined });
+        if (i < 3) s += circ(x, 172, 10, OR) + tick(x, 172, 0.8, INK);
+        else if (i === 3) s += circ(x, 172, 15, 'rgba(236,111,16,.18)') + circ(x, 172, 9, BG, { stroke: OR2, 'stroke-width': 3 });
+        else s += circ(x, 172, 8, BG, { stroke: 'rgba(244,238,232,.3)', 'stroke-width': 2 });
+        s += text(x, 206, 15, l, { f: i <= 3 ? INK : MUTE, a: 'middle', w: i === 3 ? 700 : 500 });
+      });
+      s += chip(30, 224, T('抽检 20 组 · 通过', '20 spot-checked · pass'), 15, { fill: 'rgba(159,224,176,.1)', f: OK, stroke: 'rgba(159,224,176,.35)' });
+      return s;
+    },
+    S: (T) => {
+      let s = gnd(192, 182, 96, 80);
+      s += rr(8, 8, 176, 190, 14, PANEL, { stroke: HAIR });
+      s += circ(24, 30, 4.5, OR) + text(36, 38, 22, 'SO-2041', { w: 700 });
+      const x0 = 30;
+      const dx = 33;
+      s += rect(x0, 79, dx * 3, 3, OR) + rect(x0 + dx * 3, 79, dx, 3, 'rgba(244,238,232,.16)');
+      for (let i = 0; i < 5; i++) {
+        const x = x0 + i * dx;
+        if (i < 3) s += circ(x, 80, 7, OR) + tick(x, 80, 0.55, INK);
+        else if (i === 3) s += circ(x, 80, 12, 'rgba(236,111,16,.18)') + circ(x, 80, 7, BG, { stroke: OR2, 'stroke-width': 2.5 });
+        else s += circ(x, 80, 6, BG, { stroke: 'rgba(244,238,232,.3)', 'stroke-width': 2 });
+      }
+      s += text(x0 + 3 * dx, 118, 20, T('装柜', 'Load'), { f: PEACH, w: 700, a: 'middle' });
+      return s;
+    },
+  },
+
+  refs: {
+    L: (T) => {
+      let s = gnd(344, 312, 230, 150);
+      const ref = (x, y, rot, bg) => `<g transform="rotate(${rot} ${x + 50} ${y + 60})">${rr(x, y, 100, 120, 8, '#efe6dc')}${rect(x + 7, y + 7, 86, 86, bg)}${pack(x + 22, y + 36, 56, 40, '', { body: '#2c221b' })}${rect(x + 8, y + 102, 40, 6, 'rgba(107,90,76,.45)', { rx: 3 })}</g>`;
+      s += ref(14, 34, -8, '#cfc6bb') + ref(36, 86, 4, '#b9b0a6') + ref(20, 138, -3, '#d8d0c6');
+      s += path('M146 150h22', { stroke: OR2, 'stroke-width': 2, fill: 'none' }) + path('M166 144l9 6-9 6z', { fill: OR2 });
+      s += `<defs><linearGradient id="sgvr-gen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b2414"/><stop offset=".62" stop-color="#6a3612"/><stop offset=".62" stop-color="#2a1a10"/><stop offset="1" stop-color="#160f0a"/></linearGradient></defs>`;
+      s += rr(180, 16, 146, 256, 14, 'url(#sgvr-gen)', { stroke: 'rgba(255,179,122,.45)', 'stroke-width': 1.5 });
+      s += `<ellipse cx="253" cy="190" rx="58" ry="9" fill="rgba(0,0,0,.4)"/>`;
+      s += pack(206, 112, 94, 70, '48V', { body: '#2a2019', band: '#3a2d24', hot: true, lz: 16 });
+      const p1 = T('AI 创作', 'AI Creative');
+      s += chip(253 - pw(p1, 15, 10) / 2, 28, p1, 15, { fill: 'rgba(21,17,14,.75)', f: INK, stroke: HAIR, pad: 10 });
+      const p2 = T('待你确认', 'Your call');
+      s += chip(253 - pw(p2, 15) / 2, 214, p2, 15);
+      return s;
+    },
+    S: (T) => {
+      let s = gnd(192, 182, 130, 80);
+      const ref = (x, y, rot, bg) => `<g transform="rotate(${rot} ${x + 30} ${y + 36})">${rr(x, y, 60, 72, 5, '#efe6dc')}${rect(x + 5, y + 5, 50, 50, bg)}${pack(x + 14, y + 22, 32, 24, '', { body: '#2c221b' })}</g>`;
+      s += ref(8, 22, -8, '#cfc6bb') + ref(22, 60, 5, '#b9b0a6');
+      s += path('M88 86h12', { stroke: OR2, 'stroke-width': 2, fill: 'none' }) + path('M98 81l7 5-7 5z', { fill: OR2 });
+      s += `<defs><linearGradient id="sgvs-gen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b2414"/><stop offset=".62" stop-color="#6a3612"/><stop offset=".62" stop-color="#2a1a10"/><stop offset="1" stop-color="#160f0a"/></linearGradient></defs>`;
+      s += rr(110, 10, 74, 168, 10, 'url(#sgvs-gen)', { stroke: 'rgba(255,179,122,.45)', 'stroke-width': 1.5 });
+      s += text(147, 40, 20, T('主图', 'Main'), { w: 600, a: 'middle' });
+      s += pack(118, 66, 58, 44, '', { body: '#2a2019', band: '#3a2d24', hot: true });
+      return s;
+    },
+  },
+
+  floor: {
+    L: (T) => {
+      let s = gnd(344, 312, 172, 160);
+      s += rr(10, 14, 324, 320, 10, 'rgba(31,24,19,.55)', { stroke: 'rgba(255,236,220,.18)', 'stroke-width': 1.5 });
+      s += text(26, 40, 15, T('柳州工厂 · 2 号车间', 'Liuzhou · Workshop 2'), { f: MUTE });
+      s += rect(10, 132, 324, 44, 'rgba(255,236,220,.04)') + line(16, 154, 328, 154, 'rgba(255,236,220,.16)', 1.5, { 'stroke-dasharray': '10 8' });
+      const state = ['run', 'run', 'run', 'wait', 'run', 'idle', 'wait', 'run'];
+      const col = { run: OK, wait: OR2, idle: DIM };
+      state.forEach((k, i) => {
+        const row = i < 4 ? 0 : 1;
+        const c = i % 4;
+        const x = 24 + c * 76;
+        const y = row ? 184 : 54;
+        const hot = i === 6;
+        s += rr(x, y, 68, 72, 9, hot ? 'rgba(236,111,16,.12)' : '#231b15', { stroke: hot ? OR : HAIR, 'stroke-width': hot ? 2 : 1 });
+        s += rr(x + 10, y + 10, 48, 28, 5, '#2e241d') + circ(x + 34, y + 24, 8, 'none', { stroke: 'rgba(255,236,220,.14)', 'stroke-width': 1.5 });
+        s += text(x + 10, y + 61, 15, `${row ? 'B' : 'A'}${c + 1}`, { f: hot ? PEACH : MUTE, w: 600 });
+        s += circ(x + 55, y + 56, 5.5, col[k]);
+      });
+      s += line(210, 170, 210, 184, OR, 1.5);
+      const note = T('B3 待料 12 分钟', 'B3 waiting 12 min');
+      const w = pw(note, 15, 0) + 44;
+      s += rr(172 - w / 2, 137, w, 34, 10, 'rgba(21,17,14,.96)', { stroke: 'rgba(236,111,16,.55)' }) + circ(172 - w / 2 + 17, 154, 4, OR2);
+      s += text(172 - w / 2 + 29, 159, 15, note, { f: PEACH, w: 600 });
+      return s;
+    },
+    S: (T) => {
+      let s = gnd(192, 182, 96, 80);
+      s += rr(6, 6, 180, 190, 8, 'rgba(31,24,19,.55)', { stroke: 'rgba(255,236,220,.18)', 'stroke-width': 1.2 });
+      const state = ['run', 'run', 'idle', 'run', 'run', 'wait'];
+      const col = { run: OK, wait: OR2, idle: DIM };
+      state.forEach((k, i) => {
+        const row = i < 3 ? 0 : 1;
+        const c = i % 3;
+        const x = 18 + c * 56;
+        const y = row ? 104 : 14;
+        const hot = i === 5;
+        s += rr(x, y, 48, 38, 7, hot ? 'rgba(236,111,16,.12)' : '#231b15', { stroke: hot ? OR : HAIR, 'stroke-width': hot ? 2 : 1 });
+        s += rr(x + 7, y + 7, 28, 18, 4, '#2e241d') + circ(x + 40, y + 30, 4, col[k]);
+      });
+      const note = T('B3 待料', 'B3 waiting');
+      const w = pw(note, 20, 0) + 40;
+      s += rr(96 - w / 2, 58, w, 38, 10, 'rgba(21,17,14,.96)', { stroke: 'rgba(236,111,16,.55)' }) + circ(96 - w / 2 + 15, 77, 4, OR2);
+      s += text(96 - w / 2 + 26, 84, 20, note, { f: PEACH, w: 600 });
+      return s;
+    },
+  },
+};
+
 /* --------------------------------------------------------- the catalogue -- */
 
 /** Photograph stem → vignette key. These are the pictures the two slots showed. */
@@ -555,6 +1076,25 @@ export function vignetteHost(key, lang, cls = '') {
 /** For a preview page. */
 export const VIGNETTE_ALT = ALT;
 
+/** The ring's sprite: each moment's L and S cards (RING), drawn once, hidden. */
+export function ringSprite(lang, keys) {
+  const T = (zh, en) => (lang === 'zh' ? zh : en);
+  const groups = [...new Set(keys)].map((k) => {
+    if (!RING[k]) throw new Error(`vignettes: no ring card for ${k}`);
+    return `<g id="sgvr-${k}" fill="${INK}">${RING[k].L(T)}</g><g id="sgvs-${k}" fill="${INK}">${RING[k].S(T)}</g>`;
+  }).join('');
+  return `<svg class="sgv-sprite" aria-hidden="true" focusable="false" width="0" height="0"><defs>${DEFS}</defs>${groups}</svg>`;
+}
+
+/** One ring card: the host, its two drawings (css/stargo-vignettes.css shows
+    one by the card's width), its tag. Same name and tag as a mosaic tile. */
+export function ringHost(key, lang) {
+  if (!LABEL[key]) throw new Error(`vignettes: no label for ${key}`);
+  const label = PREFIX[lang] + LABEL[key][lang === 'zh' ? 0 : 1];
+  const win = (c, id, [w, h]) => `<svg class="${c}" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><use href="#${id}-${key}"/></svg>`;
+  return `<div class="sgv sgv-${key} sgv-card" role="img" aria-label="${esc(label)}">${win('sgv-ring-l', 'sgvr', RW.L)}${win('sgv-ring-s', 'sgvs', RW.S)}<span class="sgv-tag" aria-hidden="true"><span class="sgv-tag-l">${TAG[lang][0]}</span><span class="sgv-tag-s">${TAG[lang][1]}</span></span></div>`;
+}
+
 /* ---------------------------------------------------- placing them -- */
 
 const PHOTO_SRC = /assets\/stargo-photo\/([a-z]\d\d[a-z0-9]*-[a-z-]+?)-\d+\.webp/;
@@ -580,7 +1120,7 @@ export function vignettePage(html, lang, name) {
     const key = m && VIGNETTE_OF[m[1]];
     if (!key) throw new Error(`vignettes: ${name}: no vignette for ${img.slice(0, 120)}`);
     keys.push(key);
-    return vignetteHost(key, lang, cls(m[1]));
+    return cls ? vignetteHost(key, lang, cls(m[1])) : ringHost(key, lang);
   };
   let out = html;
   if (name === 'index.html') {
@@ -595,7 +1135,7 @@ export function vignettePage(html, lang, name) {
     const a = out.indexOf('class="cn-produce');
     const end = a < 0 ? -1 : out.indexOf('</section>', a);
     if (a < 0 || end < 0) throw new Error('vignettes: capabilities: the 每项 工作 ring is not where it was');
-    const seg = out.slice(a, end).replace(/<img\b[^>]*\bclass="stargo-still"[^>]*\/>/g, (img) => swap(img, () => 'sgv-card'));
+    const seg = out.slice(a, end).replace(/<img\b[^>]*\bclass="stargo-still"[^>]*\/>/g, (img) => swap(img, null));
     out = out.slice(0, a) + seg + out.slice(end);
     const cards = Object.keys(RING_STILLS).length;
     if (keys.length !== cards) throw new Error(`vignettes: capabilities: expected ${cards} ring cards (RING_STILLS), drew ${keys.length}`);
@@ -604,7 +1144,7 @@ export function vignettePage(html, lang, name) {
   }
   const body = out.match(/<body\b[^>]*>/);
   if (!body) throw new Error(`vignettes: ${name}: no <body>`);
-  out = out.replace(body[0], `${body[0]}${vignetteSprite(lang, keys)}`);
+  out = out.replace(body[0], `${body[0]}${name === 'index.html' ? vignetteSprite(lang, keys) : ringSprite(lang, keys)}`);
   const fusion = '<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>';
   if (out.split(fusion).length !== 2) throw new Error(`vignettes: ${name}: no single stargo-fusion.css link`);
   return out.replace(fusion, `${fusion}\n<link href="css/stargo-vignettes.css" rel="stylesheet" type="text/css"/>`);

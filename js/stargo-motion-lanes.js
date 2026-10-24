@@ -1,8 +1,8 @@
 /* Growth OS row 2 background, capabilities.html 「贸易情报」: a dotted world
    map, the shipping lanes from four Chinese and Vietnamese ports to four
    buyers' ports, and one buyer at a time — its lane lit, its ship sailing,
-   its purchase records and supplier change under the hovered row's
-   thumbnail. Kept apart from js/stargo-motion-growth.js for its map data;
+   its purchase records and supplier change under the row's type, beside
+   the hovered row's thumbnail. Kept apart from js/stargo-motion-growth.js for its map data;
    it draws with that file's kit (K.growth, loaded first) and its styles are
    in css/stargo-motion-growth.css. */
 (window.STARGO_SCENES = window.STARGO_SCENES || []).push(function (K) {
@@ -92,8 +92,10 @@
         var p = px(PORT[k][0], PORT[k][1]);
         R.ports[k] = node(svg, p[0], p[1], /^(nb|sz|qz|hp)$/.test(k) ? 'sgg-dot is-origin' : 'sgg-dot');
       });
-      // the records, under the hovered row's thumbnail, across the hairline below it; the route is named there
-      var fb = strip(G, 2, 'd'), tc = th ? (th.l + th.r) / 2 : L.w / 2, rw = Math.min(460, G.cr - G.cl), rx = clamp(tc - rw / 2, G.cl, G.cr - rw);
+      // the records, under row 2's type beside the hovered thumbnail (the corner with more room), so they
+      // stay in the row's own band; the route is named there
+      var C = H.corners ? H.corners(G, 1) : null, fb = C ? C.b : strip(G, 2, 'u'), bL = C ? C.L >= C.R : true;
+      var rw = Math.min(460, C ? (bL ? C.L : C.R) : G.cr - G.cl), rx = C ? (bL ? C.lx - rw : C.rx) : G.cl;
       BUYER.forEach(function (b, i) {
         var from = [], to;
         LANE.forEach(function (l) { if (l[3] === i) { to = PORT[l[2]][2]; if (from.indexOf(PORT[l[0]][2]) < 0) from.push(PORT[l[0]][2]); } });

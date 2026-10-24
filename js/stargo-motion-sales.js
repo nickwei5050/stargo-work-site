@@ -67,12 +67,12 @@
     var P = 3;
     var CLS = { 'new': T('新询盘', 'New inquiry'), hist: T('历史消息', 'History'), spam: T('垃圾信息', 'Spam') }, CLS_S = { 'new': T('新询盘', 'New'), hist: T('历史', 'History'), spam: T('垃圾', 'Spam') };
     var MSG = [
-      { ch: 'mail', who: 'Müller Energie GmbH', text: '200 pcs 48V 100Ah, DAP Hamburg?', tags: [T('英语', 'EN'), T('询价', 'RFQ'), '48V 100Ah'], c: 'new', to: T('欧洲组', 'EU team') },
-      { ch: 'chat', who: 'Ahmed Al-Rashid', text: 'Price for the 72V lithium pack? 50 units.', tags: [T('英语', 'EN'), T('询价', 'RFQ'), T('72V 锂电', '72V pack')], c: 'new', to: T('中东组', 'ME team') },
-      { ch: 'store', who: 'Silva Mobilidade', text: 'Vocês fazem OEM? Qual o MOQ? 60V/72V', tags: [T('葡语', 'PT'), 'OEM', '60V/72V'], c: 'new', to: T('美洲组', 'Americas team') },
-      { ch: 'mail', who: 'PT Surya Energi', text: 'Re: Barang sudah tiba di Jakarta', tags: [T('印尼语', 'ID'), T('回复', 'Reply')], c: 'hist', to: T('并入客户记录', 'Filed to account') },
+      { ch: 'mail', who: 'Müller Energie GmbH', s: ['Müller Energie', 'Müller'], text: '200 pcs 48V 100Ah, DAP Hamburg?', tags: [T('英语', 'EN'), T('询价', 'RFQ'), '48V 100Ah'], c: 'new', to: T('欧洲组', 'EU team') },
+      { ch: 'chat', who: 'Ahmed Al-Rashid', s: [0, 'Ahmed'], text: 'Price for the 72V lithium pack? 50 units.', tags: [T('英语', 'EN'), T('询价', 'RFQ'), T('72V 锂电', '72V pack')], c: 'new', to: T('中东组', 'ME team') },
+      { ch: 'store', who: 'Silva Mobilidade', s: [0, 'Silva'], text: 'Vocês fazem OEM? Qual o MOQ? 60V/72V', tags: [T('葡语', 'PT'), 'OEM', '60V/72V'], c: 'new', to: T('美洲组', 'Americas team') },
+      { ch: 'mail', who: 'PT Surya Energi', s: [0, 'PT Surya'], text: 'Re: Barang sudah tiba di Jakarta', tags: [T('印尼语', 'ID'), T('回复', 'Reply')], c: 'hist', to: T('并入客户记录', 'Filed to account') },
       // a phishing message sent through the website form, from a reserved (never real) domain
-      { ch: 'form', who: 'billing@pay-verify.example', text: 'Urgent: verify your payment account', tags: [T('英语', 'EN'), T('钓鱼链接', 'Phishing')], c: 'spam', to: T('已拦截', 'Blocked') }
+      { ch: 'form', who: 'billing@pay-verify.example', s: ['Pay-Verify', 'Pay-Verify'], text: 'Urgent: verify your payment account', tags: [T('英语', 'EN'), T('钓鱼链接', 'Phishing')], c: 'spam', to: T('已拦截', 'Blocked') }
     ];
     var N = MSG.length;
     var READ = 0.3, ROLL = 1.45, CHIP = [1.65, 1.8, 1.95], SORT = 2.1, HAND = 2.35;
@@ -108,7 +108,10 @@
         var ic = el('span', 'sgs-ch is-' + m.ch, r); glyph(m.ch, ic, short ? 14 : 15);
         var body = el('div', 'sgs-msg-b', r);
         var l1 = el('div', 'sgs-msg-1', body);
-        el('b', '', l1, m.who);
+        // a sender is never cut: below 300px (desktops 992-1279) a long one shows its short name,
+        // below 216px (992-1010) every one its shortest, as a narrow inbox does
+        var sn = m.s && (L.w < 216 ? m.s[1] : L.w < 300 ? m.s[0] : 0);
+        el('b', '', l1, sn || m.who);
         var pill = el('span', 'sgs-pill is-' + m.c, l1, (L.w < 320 ? CLS_S : CLS)[m.c]);
         // line two holds two lines in one place: the preview, then (crossfaded) the tags and the hand-off
         var l2 = el('div', 'sgs-msg-2', body);

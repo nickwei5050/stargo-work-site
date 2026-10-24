@@ -48,6 +48,7 @@
 .sga-nl.is-on b { color: #f8f1e7; }
 .sga-nl.is-on span { color: rgba(244, 238, 232, .62); }
 .sga-win.is-tight .sga-nl span { white-space: normal; text-wrap: balance; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.sga-win.is-nosub .sga-nl span { display: none; }
 
 /* ---------- 数字员工's team ---------- */
 .sga-goal { transform: none; }

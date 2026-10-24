@@ -23,7 +23,7 @@
 }
 .sgv > svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: hidden; }
 /* Two windows onto one drawing: the whole canvas, or its middle where the
-   box is small (the phone mosaic, the tablet's narrow column, the ring). */
+   box is small (the phone mosaic, the tablet's narrow column). */
 .sgv-near { display: none !important; }
 @container (max-width: 440px) {
   .sgv-far { display: none !important; }
@@ -76,8 +76,16 @@
 .sgv-r1 { aspect-ratio: 1 / 1; }
 
 /* The capability ring: the card's `.w-background-video` box, filled as its
-   still was (css/stargo-fusion.css `.w-background-video > img.stargo-still`). */
+   still was (css/stargo-fusion.css `.w-background-video > img.stargo-still`).
+   Its cards are drawn for the card's own box (tools/code-art-vignettes.mjs
+   RING): L for the 344 × 312 card (768px and up), S for the 192 × 182 card
+   that cinery uses below 768px, each keeping its words clear of the tag. */
 .w-background-video > .sgv-card { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sgv-ring-s { display: none !important; }
+@container (max-width: 240px) {
+  .sgv-ring-l { display: none !important; }
+  .sgv-ring-s { display: block !important; }
+}
 .sgv-card .sgv-tag { right: auto; left: 50%; bottom: 12px; transform: translateX(-50%); }
 /* Cinery draws the whole wheel smaller on tablets and phones (.cn-cta-wrapper:
    scale .8 below 992px, .6 below 480px), which took the 12px tag down to 9.6px
