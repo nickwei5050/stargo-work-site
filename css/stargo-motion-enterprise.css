@@ -222,6 +222,8 @@
 .sg-en-kpi.is-ex .sg-en-kval { color: var(--am2); }
 .sg-en-kd { font-style: normal; font-size: 13px; font-weight: 600; color: var(--or2); opacity: 0; transform: translateY(5px); transition: opacity .3s, transform .5s cubic-bezier(.34, 1.56, .64, 1); }
 .sg-en-kd.is-on { opacity: 1; transform: none; }
+/* costs: '¥1,860' fills the card's width, so the day's '+¥340' sits at the right end of the label row */
+.sg-en-kpi.is-co .sg-en-kd { position: absolute; top: 11px; right: 14px; }
 .sg-en-chart { position: absolute; display: flex; flex-direction: column; padding-bottom: 24px; }
 .sg-en-chh { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; height: 32px; white-space: nowrap; }
 .sg-en-chh b { font-size: 15px; font-weight: 600; }

@@ -364,7 +364,8 @@
       var ph = tau < TAP1 + 0.1 ? 0 : tau < TAP2 + 0.1 ? 1 : tau < REVIEW ? 2 : 3, mine = ph === 1;
       var g0 = seg(tau, TAP1, TAP1 + 0.6), g1 = seg(tau, TAP2, TAP2 + 0.6), first = g0 > 0 && g0 < 1;
       beat(R.body, tau, P, FADE);
-      live(R, ph === 0 ? T('1 个卡点', '1 blocker') : T('0 个卡点', '0 blockers'), ph === 0 ? 'warn' : 'idle');
+      // the count drops only once the price is handed back: while you hold the task the blocker is still there
+      live(R, ph === 0 ? T('1 个卡点', '1 blocker') : ph === 1 ? T('1 个卡点 · 处理中', R.narrow ? 'Being handled' : '1 blocker · being handled') : T('0 个卡点', '0 blockers'), ph === 0 ? 'warn' : ph === 1 ? '' : 'idle');
       if (R.st) {
         // mini: one status, tapped where it stands
         var mp = ph === 0 ? 0 : ph === 1 ? 1 : 2;
@@ -419,7 +420,8 @@
       ring(R.rip, first ? target(R, 'b1', R.b1, k) : target(R, 'b2', b2, k), first ? g0 : g1);
     }
 
-    return { layouts: S.layouts, pick: S.pick, build: build, tick: tick, still: 4.9 };
+    // the still: handed back and waiting for approval, so the pill, the row and the log agree
+    return { layouts: S.layouts, pick: S.pick, build: build, tick: tick, still: 8.6 };
   }
 
   /* =====================================================================
@@ -569,7 +571,8 @@
       if (w0 > 0 && w0 < 1) at(R.m80r, 'r', 5 + 16 * ease.out(w0));
       op(R.proj, ease.out(seg(tau, HOLD, HOLD + 0.5)));
       cl(R.lim, 'is-hold', held); cl(R.over, 'is-hold', held);
-      if (R.roles) for (var i = 0; i < R.roles.length; i++) { var o = R.roles[i]; num(o.v, Math.round(u * o.s / 10) * 10, true); sx(o.f, o.s / SHARE[0] * u / CUM[TODAY]); }
+      // each role rounded to 10 on its own, the last one the headline minus the others, so the four add up
+      if (R.roles) for (var i = 0, rest = Math.round(u / 10) * 10; i < R.roles.length; i++) { var o = R.roles[i], rv = i < R.roles.length - 1 ? Math.round(u * o.s / 10) * 10 : rest; rest -= rv; num(o.v, rv, true); sx(o.f, o.s / SHARE[0] * u / CUM[TODAY]); }
       if (R.gate) { say(R.rule, RULE[warned ? 1 : 0]); cl(R.gate, 'is-warn', warned && !held); cl(R.gate, 'is-hold', held); }
       if (R.status) { say(R.status, TAB[ph]); cl(R.status, 'is-warn', ph === 1); cl(R.status, 'is-hold', ph === 2); }
     }

@@ -117,7 +117,7 @@
   .sg-em-mx-h, .sg-em-mx-r { grid-template-columns: minmax(0, 1fr) 2.3em 4.5em; min-height: 1.62em; gap: .25em; }
   .sg-em-c.is-a { padding: 0 .35em; }
   /* 3: the quote and its chain, the step waiting on you in orange (no buttons) */
-  .sg-em-3 .sg-em-in { padding-top: 10%; gap: .6em; }
+  .sg-em-3 .sg-em-in { padding-top: 7%; gap: .6em; } /* 7%: the chain sits clear of the 演示数据 tag below it */
   .sg-em-chain > i { margin-top: .95em; }
   .sg-em-step { width: auto; min-width: 2.6em; }
   /* 4 and 5: the square cards */

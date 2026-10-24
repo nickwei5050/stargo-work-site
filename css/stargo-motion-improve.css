@@ -90,6 +90,7 @@
 .sgi.is-tall .sgi-pill { grid-area: pill; }
 .sgi.is-tall .sgi-ab { grid-template-columns: 68px 1fr 38px; gap: 8px; }
 .sgi.is-tall .sgi-keep { align-items: flex-start; }
+.sgi.is-tall .sgi-btn { padding: 0 14px; } /* clear of the sample line beside it */
 .sgi.is-tall .sgi-keep .sgi-ico { margin-top: 2px; }
 .sgi.is-small .sgi-body { top: 46px; bottom: 10px; gap: 5px; }
 .sgi.is-small .sgi-bar { height: 38px; }

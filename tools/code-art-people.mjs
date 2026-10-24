@@ -15,7 +15,8 @@
  *     drafts the weekly report and stops at 待你确认.
  *
  * Every picture says what it is: the scenes carry the engine's tags
- * (动态示意 · 演示数据 / 演示数据), the static cards a 示意 / Illustration tag.
+ * (动态示意 · 演示数据 / 演示数据), the static cards a 示意 · 演示数据 / Illustration ·
+ * demo data tag (演示数据 / Demo data on the narrow cards).
  * Names and numbers are the site's one demo cast.
  */
 import { escapeHtml } from './lib-html.mjs';
@@ -100,7 +101,10 @@ const ROLES = [
     viz: (t) => `<div class="sg-rc-steps">${[B('研', 'R'), B('产', 'P'), B('销', 'S'), B('创', 'C'), B('统', 'L')].map((x, i) => `<i class="${i < 3 ? 'is-done' : i === 3 ? 'is-run' : ''}">${t(x)}</i>`).join('')}</div>`,
   },
 ];
-const TAG = B('示意', 'Illustration');
+// the cards show demo data, so their tag says so: 示意 · 演示数据 on the wide cards, 演示数据 from 991px down;
+// English says 'Demo data' throughout ('Illustration · demo data' would wrap beside the glyph of a 208px card)
+const TAG = B('示意 · 演示数据', 'Demo data');
+const TAG_S = B('演示数据', 'Demo data');
 const LABEL = B('示意（演示数据）：', 'Illustration (demo data): ');
 
 /**
@@ -116,7 +120,7 @@ export function roleCard(i, lang, roleName) {
   const t = (p) => p[lang];
   const label = `${t(LABEL)}${roleName}${lang === 'zh' ? '，' : ', '}${t(r.task)}${lang === 'zh' ? '，' : ' — '}${t(r.stl)}`;
   return `<div class="lx-feature-hero-image sg-rc sg-rc-${i + 1}" role="img" aria-label="${escapeHtml(label)}">`
-    + `<div class="sg-rc-head"><span class="sg-rc-ico">${svg(r.ico, 16)}</span><span class="sg-rc-tag">${t(TAG)}</span></div>`
+    + `<div class="sg-rc-head"><span class="sg-rc-ico">${svg(r.ico, 16)}</span><span class="sg-rc-tag"><span class="sg-rc-l">${t(TAG)}</span><span class="sg-rc-s">${t(TAG_S)}</span></span></div>`
     + `<div class="sg-rc-name">${escapeHtml(t(r.name))}</div>`
     + `<div class="sg-rc-task"><span class="sg-rc-l">${escapeHtml(t(r.task))}</span><span class="sg-rc-s">${escapeHtml(t(r.ts))}</span></div>`
     + `<div class="sg-rc-app">${escapeHtml(t(r.app))}</div>`
@@ -132,7 +136,7 @@ export const ROLE_CARDS = ROLES.length;
  * parties' marks, on cards that link to the contact page): the site app the
  * role works in, drawn in code. `i` is the role's index; 'desk' is the
  * collage card's web desktop. It lands under the card's head row, so the
- * card's 示意 tag stays in sight.
+ * card's 演示数据 tag stays in sight.
  */
 export function roleChip(i, lang) {
   const name = i === 'desk' ? B('网页桌面', 'Web desktop') : ROLES[i]?.chip;
