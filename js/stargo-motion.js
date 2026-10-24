@@ -323,25 +323,27 @@
       stage.className = 'sg-mo-stage sg-loop' + (compact ? ' is-compact' : '') + (phone ? ' is-phone' : '') + (name === 'mid' || name === 'short' ? ' is-mid' : '') + (name === 'short' ? ' is-short' : '');
       var svg = sv('svg', { class: 'sg-loop-svg', width: L.w, height: L.h, viewBox: '0 0 ' + L.w + ' ' + L.h }, stage);
       var defs = sv('defs', {}, svg);
+      // colours as style (var(--sgb-*): the homepage's tokens in css/stargo-blue.css; the warm originals elsewhere)
+      function stop(gr, o, c, a) { sv('stop', { offset: o, style: 'stop-color:' + c + (a == null ? '' : ';stop-opacity:' + a) }, gr); }
       var g1 = sv('radialGradient', { id: 'sgl-halo' }, defs);
-      sv('stop', { offset: '0', 'stop-color': '#f2b45a', 'stop-opacity': '.28' }, g1);
-      sv('stop', { offset: '.45', 'stop-color': '#c77a2a', 'stop-opacity': '.08' }, g1);
-      sv('stop', { offset: '1', 'stop-color': '#000', 'stop-opacity': '0' }, g1);
+      stop(g1, '0', 'var(--sgb-cyan, #f2b45a)', '.28');
+      stop(g1, '.45', 'var(--sgb-violet, #c77a2a)', '.1');
+      stop(g1, '1', '#000', '0');
       var g2 = sv('radialGradient', { id: 'sgl-orb', cx: '.38', cy: '.32', r: '.8' }, defs);
-      sv('stop', { offset: '0', 'stop-color': '#3b2a18' }, g2);
-      sv('stop', { offset: '.6', 'stop-color': '#17110b' }, g2);
-      sv('stop', { offset: '1', 'stop-color': '#0b0806' }, g2);
+      stop(g2, '0', 'var(--sgb-indigo, #3b2a18)');
+      stop(g2, '.6', 'var(--sgb-deep, #17110b)');
+      stop(g2, '1', 'var(--sgb-ink, #0b0806)');
       var g3 = sv('linearGradient', { id: 'sgl-gold', x1: '0', y1: '0', x2: '1', y2: '1' }, defs);
-      sv('stop', { offset: '0', 'stop-color': '#fff4dc' }, g3);
-      sv('stop', { offset: '.5', 'stop-color': '#f3c27a' }, g3);
-      sv('stop', { offset: '1', 'stop-color': '#c9802f' }, g3);
+      stop(g3, '0', 'var(--sgb-bubble, #fff4dc)');
+      stop(g3, '.5', 'var(--sgb-accent, #f3c27a)');
+      stop(g3, '1', 'var(--sgb-lilac, #c9802f)');
       var g4 = sv('radialGradient', { id: 'sgl-dot' }, defs);
-      sv('stop', { offset: '0', 'stop-color': '#ffe2b0', 'stop-opacity': '.9' }, g4);
-      sv('stop', { offset: '1', 'stop-color': '#f0a64a', 'stop-opacity': '0' }, g4);
+      stop(g4, '0', 'var(--sgb-ice, #ffe2b0)', '.9');
+      stop(g4, '1', 'var(--sgb-accent, #f0a64a)', '0');
       var g5 = sv('linearGradient', { id: 'sgl-rim', x1: '0', y1: '0', x2: '0', y2: '1' }, defs);
-      sv('stop', { offset: '0', 'stop-color': '#ffe9c4', 'stop-opacity': '.9' }, g5);
-      sv('stop', { offset: '.5', 'stop-color': '#f0b25e', 'stop-opacity': '.25' }, g5);
-      sv('stop', { offset: '1', 'stop-color': '#f0b25e', 'stop-opacity': '.65' }, g5);
+      stop(g5, '0', 'var(--sgb-ice, #ffe9c4)', '.9');
+      stop(g5, '.5', 'var(--sgb-lilac, #f0b25e)', '.25');
+      stop(g5, '1', 'var(--sgb-accent, #f0b25e)', '.65');
       var f = sv('filter', { id: 'sgl-blur', x: '-50%', y: '-50%', width: '200%', height: '200%' }, defs);
       sv('feGaussianBlur', { stdDeviation: '7' }, f);
 
@@ -384,7 +386,7 @@
       sv('circle', { r: 74, fill: 'url(#sgl-orb)' }, R.orb);
       sv('circle', { r: 73.5, fill: 'none', stroke: 'url(#sgl-rim)', 'stroke-width': 1.2 }, R.orb);
       sv('ellipse', { cx: -22, cy: -34, rx: 30, ry: 14, fill: '#fff', opacity: '.06', transform: 'rotate(-28 -22 -34)' }, R.orb);
-      R.starGlow = sv('path', { d: STAR, fill: '#f6c67f', filter: 'url(#sgl-blur)', opacity: '.75' }, R.orb);
+      R.starGlow = sv('path', { d: STAR, style: 'fill:var(--sgb-violet, #f6c67f)', filter: 'url(#sgl-blur)', opacity: '.75' }, R.orb);
       sv('path', { d: STAR, fill: 'url(#sgl-gold)' }, R.orb);
       R.wave = sv('circle', { r: 74, class: 'sg-wave' }, core);
       svg.appendChild(R.gate); // the gate paints above the rings, under the particles
@@ -695,8 +697,8 @@
       var svg = sv('svg', { class: 'sg-radar-map', width: L.w, height: L.h, viewBox: '0 0 ' + L.w + ' ' + L.h }, stage);
       var defs = sv('defs', {}, svg);
       var gd = sv('radialGradient', { id: 'sgr-glow-' + mode }, defs);
-      sv('stop', { offset: '0', 'stop-color': '#ff8a3d', 'stop-opacity': '.55' }, gd);
-      sv('stop', { offset: '1', 'stop-color': '#ff8a3d', 'stop-opacity': '0' }, gd);
+      sv('stop', { offset: '0', style: 'stop-color:var(--sgb-accent, #ff8a3d);stop-opacity:.55' }, gd);
+      sv('stop', { offset: '1', style: 'stop-color:var(--sgb-accent, #ff8a3d);stop-opacity:0' }, gd);
       var g = sv('g', { transform: 'translate(' + mapBox.x + ',' + mapBox.y + ') scale(' + ms.toFixed(4) + ')' }, svg);
       var d = '';
       for (var i = 0; i < MAP.dots.length; i += 2) d += 'M' + MAP.dots[i] + ' ' + MAP.dots[i + 1] + 'h0';
@@ -911,7 +913,19 @@
       ['RU', 'Батарея LiFePO4: более 3000 циклов.']
     ];
     var P = 6.2, LP = P / 2;
-    var PAL = { studio: ['#f6f4f1', '#ebe7e1', '#d9d3cb'], ware: ['#2a2019', '#1c1612', '#3a2c20', '#ffc27a'], solar: ['#3f2f5c', '#e9826a', '#f7b36b', '#ffe2a6'], city: ['#0a0f24', '#18213f', '#0e1430', '#ffcf7a'] };
+    // 首页蓝: on the homepage the generated pictures take the css/stargo-blue.css tokens (read once per build,
+    // never per frame); without them, the warm originals
+    var PAL, CS;
+    function tk(n, fb) { var v = CS ? CS.getPropertyValue('--sgb-' + n).trim() : ''; return v || fb; }
+    function palette() {
+      CS = getComputedStyle(document.documentElement);
+      PAL = {
+        studio: ['#fff', tk('ice', '#ebe7e1'), tk('lilac', '#d9d3cb')],
+        ware: [tk('indigo', '#2a2019'), tk('deep', '#1c1612'), tk('violet', '#3a2c20'), tk('cyan', '#ffc27a')],
+        solar: [tk('deep', '#3f2f5c'), tk('violet', '#e9826a'), tk('cyan', '#f7b36b'), tk('ice', '#ffe2a6')],
+        city: [tk('ink', '#0a0f24'), tk('deep', '#18213f'), tk('indigo', '#0e1430'), tk('accent', '#ffcf7a')]
+      };
+    }
     var L, R, mode;
     // as RadarScene, plus midw: mid for the wider, shorter box the switcher leaves AI 创作 where its copy runs long
     // (640 × 312 at 1280 × 720 in English): the same parts with a shorter canvas and queue, and no note under it
@@ -929,40 +943,43 @@
         return 'url(#' + gr.id + ')';
       }
       if (key === 'studio') {
-        sv('rect', { width: CW, height: CH, fill: lin([[0, '#f6f4f1'], [0.62, '#ebe7e1'], [1, '#d9d3cb']]) }, g);
+        sv('rect', { width: CW, height: CH, fill: lin([[0, '#fff'], [0.62, tk('ice', '#ebe7e1')], [1, tk('lilac', '#d9d3cb')]]) }, g);
         sv('ellipse', { cx: CW / 2, cy: CH * 0.78, rx: CW * 0.46, ry: 60, fill: '#fff', opacity: '.55' }, g);
       } else if (key === 'ware') {
-        sv('rect', { width: CW, height: CH, fill: lin([[0, '#2a2019'], [0.7, '#15100d'], [1, '#0d0a08']]) }, g);
+        sv('rect', { width: CW, height: CH, fill: lin([[0, tk('indigo', '#2a2019')], [0.7, tk('deep', '#15100d')], [1, tk('ink', '#0d0a08')]]) }, g);
+        var rack = tk('deep', '#1c1612'), box1 = tk('violet', '#3a2c20'), box2 = tk('indigo', '#2f241b');
         for (var i = 0; i < 6; i++) {
           var x = 20 + i * 132;
-          sv('rect', { x: x, y: 70, width: 110, height: 300, fill: '#1c1612', stroke: '#2b221b' }, g);
-          for (var j = 0; j < 4; j++) sv('rect', { x: x + 8, y: 86 + j * 72, width: 94, height: 46, fill: j % 2 ? '#3a2c20' : '#2f241b', rx: 3 }, g);
+          sv('rect', { x: x, y: 70, width: 110, height: 300, fill: rack, stroke: tk('hair', '#2b221b') }, g);
+          for (var j = 0; j < 4; j++) sv('rect', { x: x + 8, y: 86 + j * 72, width: 94, height: 46, fill: j % 2 ? box1 : box2, opacity: j % 2 ? '.55' : '1', rx: 3 }, g);
         }
         [140, 400, 660].forEach(function (cx) {
           var rg = sv('radialGradient', { id: id + 'l' + cx }, defs);
-          sv('stop', { offset: 0, 'stop-color': '#ffc27a', 'stop-opacity': '.55' }, rg);
-          sv('stop', { offset: 1, 'stop-color': '#ffc27a', 'stop-opacity': '0' }, rg);
+          sv('stop', { offset: 0, 'stop-color': tk('cyan', '#ffc27a'), 'stop-opacity': '.55' }, rg);
+          sv('stop', { offset: 1, 'stop-color': tk('cyan', '#ffc27a'), 'stop-opacity': '0' }, rg);
           sv('ellipse', { cx: cx, cy: 40, rx: 160, ry: 130, fill: 'url(#' + rg.id + ')' }, g);
         });
-        sv('rect', { y: 380, width: CW, height: CH - 380, fill: lin([[0, '#1a1410'], [1, '#0c0907']]) }, g);
+        sv('rect', { y: 380, width: CW, height: CH - 380, fill: lin([[0, tk('deep', '#1a1410')], [1, tk('ink', '#0c0907')]]) }, g);
       } else if (key === 'solar') {
-        sv('rect', { width: CW, height: CH, fill: lin([[0, '#3f2f5c'], [0.45, '#e9826a'], [0.72, '#f7b36b'], [1, '#2a1d22']]) }, g);
-        sv('circle', { cx: CW * 0.7, cy: CH * 0.58, r: 54, fill: '#ffe2a6', opacity: '.9' }, g);
-        sv('rect', { y: CH * 0.66, width: CW, height: CH * 0.34, fill: '#21171c' }, g);
+        sv('rect', { width: CW, height: CH, fill: lin([[0, tk('deep', '#3f2f5c')], [0.45, tk('violet', '#e9826a')], [0.72, tk('cyan', '#f7b36b')], [1, tk('plum', '#2a1d22')]]) }, g);
+        sv('circle', { cx: CW * 0.7, cy: CH * 0.58, r: 54, fill: tk('ice', '#ffe2a6'), opacity: '.9' }, g);
+        sv('rect', { y: CH * 0.66, width: CW, height: CH * 0.34, fill: tk('ink', '#21171c') }, g);
+        var pv = tk('indigo', '#1b2236'), pe = tk('blue', '#3a4566');
         for (var p = 0; p < 7; p++) {
           var px = -30 + p * 120;
-          sv('path', { d: 'M' + px + ' ' + (CH * 0.66) + 'l40 -60h96l-24 60z', fill: '#1b2236', stroke: '#3a4566', 'stroke-width': 1.5 }, g);
-          sv('path', { d: 'M' + (px + 36) + ' ' + (CH * 0.66 - 30) + 'h92', stroke: '#3a4566', 'stroke-width': 1 }, g);
+          sv('path', { d: 'M' + px + ' ' + (CH * 0.66) + 'l40 -60h96l-24 60z', fill: pv, stroke: pe, 'stroke-width': 1.5 }, g);
+          sv('path', { d: 'M' + (px + 36) + ' ' + (CH * 0.66 - 30) + 'h92', stroke: pe, 'stroke-width': 1 }, g);
         }
       } else {
-        sv('rect', { width: CW, height: CH, fill: lin([[0, '#0a0f24'], [0.65, '#18213f'], [1, '#0b0d16']]) }, g);
+        sv('rect', { width: CW, height: CH, fill: lin([[0, tk('ink', '#0a0f24')], [0.65, tk('deep', '#18213f')], [1, tk('ink', '#0b0d16')]]) }, g);
+        var tower = tk('indigo', '#0e1430'), lit = tk('ice', '#ffcf7a');
         for (var b = 0; b < 14; b++) {
           var bw = 40 + hash(b) * 50, bh = 120 + hash(b + 9) * 220, bx = b * 58 - 10;
-          sv('rect', { x: bx, y: 400 - bh, width: bw, height: bh, fill: '#0e1430' }, g);
-          for (var w = 0; w < 8; w++) if (hash(b * 10 + w) > 0.55) sv('rect', { x: bx + 6 + (w % 3) * 12, y: 400 - bh + 14 + Math.floor(w / 3) * 26, width: 6, height: 9, fill: '#ffcf7a', opacity: '.75' }, g);
+          sv('rect', { x: bx, y: 400 - bh, width: bw, height: bh, fill: tower }, g);
+          for (var w = 0; w < 8; w++) if (hash(b * 10 + w) > 0.55) sv('rect', { x: bx + 6 + (w % 3) * 12, y: 400 - bh + 14 + Math.floor(w / 3) * 26, width: 6, height: 9, fill: lit, opacity: '.75' }, g);
         }
-        sv('rect', { y: 400, width: CW, height: CH - 400, fill: '#0a0c14' }, g);
-        sv('rect', { y: 402, width: CW, height: 2, fill: '#ec6f10', opacity: '.55' }, g);
+        sv('rect', { y: 400, width: CW, height: CH - 400, fill: tk('ink', '#0a0c14') }, g);
+        sv('rect', { y: 402, width: CW, height: 2, fill: tk('accent', '#ec6f10'), opacity: '.55' }, g);
       }
       return g;
     }
@@ -984,14 +1001,14 @@
       sv('rect', { x: 0, y: 30, width: 280, height: 2, fill: '#fff', opacity: '.22' }, g);
       // handles + terminals
       sv('path', { d: 'M96 18 q0 -18 18 -18 h52 q18 0 18 18', fill: 'none', stroke: '#141416', 'stroke-width': 9, 'stroke-linecap': 'round' }, g);
-      [[46, '#c0392b'], [234, '#18181b']].forEach(function (tm) {
+      [[46, tk('violet', '#c0392b'), tk('lilac', '#e0574a')], [234, '#18181b', '#3a3a40']].forEach(function (tm) {
         sv('ellipse', { cx: tm[0], cy: 16, rx: 14, ry: 6, fill: '#0c0c0e' }, g);
         sv('rect', { x: tm[0] - 11, y: 2, width: 22, height: 14, fill: tm[1] }, g);
-        sv('ellipse', { cx: tm[0], cy: 2, rx: 11, ry: 4.5, fill: tm[1] === '#18181b' ? '#3a3a40' : '#e0574a' }, g);
+        sv('ellipse', { cx: tm[0], cy: 2, rx: 11, ry: 4.5, fill: tm[2] }, g);
       });
       // label plate
       sv('rect', { x: 34, y: 70, width: 212, height: 90, rx: 8, fill: '#101012', stroke: '#2c2c31' }, g);
-      sv('rect', { x: 34, y: 70, width: 8, height: 90, rx: 3, fill: '#ec6f10' }, g);
+      sv('rect', { x: 34, y: 70, width: 8, height: 90, rx: 3, fill: tk('accent', '#ec6f10') }, g);
       if (bars > 1) sv('rect', { x: 60, y: 86, width: 132, height: 20, rx: 4, fill: '#fff', opacity: '.88' }, g);
       else { var t1 = sv('text', { x: 60, y: 106, class: 'sg-bat-brand' }, g); t1.textContent = 'STARGO'; }
       if (bars) sv('rect', { x: 60, y: 124, width: 120, height: 9, rx: 4.5, fill: '#fff', opacity: '.22' }, g);
@@ -1004,6 +1021,7 @@
     }
 
     function build(stage, Ld, name) {
+      palette();
       var midw = name === 'midw';
       mode = midw ? 'mid' : name;
       L = Ld; R = {};
@@ -1030,7 +1048,7 @@
         var c = sv('rect', { x: ((x * CW) / cols).toFixed(1), y: ((y * CH) / rows).toFixed(1), width: (CW / cols + 0.6).toFixed(1), height: (CH / rows + 0.6).toFixed(1), opacity: 0 }, mg);
         R.cells.push({ e: c, o: (y / rows) * 0.62 + hash(x * 31 + y * 7) * 0.38, l: hash(x * 13 + y * 17), y: y / rows });
       }
-      R.scan = sv('rect', { x: 0, width: CW, height: 3, fill: '#ffb36b', opacity: 0 }, svg);
+      R.scan = sv('rect', { x: 0, width: CW, height: 3, fill: tk('accent', '#ffb36b'), opacity: 0 }, svg);
       // only the world around the product regenerates: the pack is masked out of the mosaic and the scan line
       var mk = sv('mask', { id: 'sgs-keep-' + mode, maskUnits: 'userSpaceOnUse', x: 0, y: 0, width: CW, height: CH }, sv('defs', {}, svg));
       sv('rect', { width: CW, height: CH, fill: '#fff' }, mk);
@@ -1061,7 +1079,7 @@
         ].map(function (a, i) {
           var r = el('div', 'sg-rail-row', rail);
           el('span', '', r, a[0]);
-          if (i === 1) { var sw = el('span', 'sg-swatches', r); ['#0d0d0d', '#ec6f10', '#f4f1ec', '#3a6df0'].forEach(function (c) { el('i', '', sw).style.background = c; }); }
+          if (i === 1) { var sw = el('span', 'sg-swatches', r); [tk('ink', '#0d0d0d'), tk('violet', '#ec6f10'), tk('ice', '#f4f1ec'), tk('blue', '#3a6df0')].forEach(function (c) { el('i', '', sw).style.background = c; }); }
           else el('em', '', r, a[1]);
           return r;
         });

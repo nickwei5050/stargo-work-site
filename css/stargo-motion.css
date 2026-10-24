@@ -390,3 +390,150 @@
 .sg-studio.is-midw .sg-q { padding: 5px 6px; }
 .sg-studio.is-midw .sg-q-main b, .sg-studio.is-midw .sg-q-state { line-height: 1.25; }
 .sg-studio.is-midw .sg-q-bar { margin-top: 4px; }
+
+/* =================== 首页蓝 (homepage only) ===================
+   Owner, 2026-10-24: 「首页你做的那些我希望色彩可以统一高级点的渐变蓝色就像首页的审批示意流程这个板块这样子」.
+   The loop, radar and studio scenes and the honesty tag on the homepage take the tokens of
+   css/stargo-blue.css (declared on html[data-stargo-home]): the scene sits on the calm aurora,
+   panels are dark glass with the light top sheen and the glass edge, the one accent is ice blue,
+   a step waiting for a person is a white bubble, done is --sgb-ok. Colour only: sizes, layout and
+   motion are the rules above; other pages keep the warm look. Static paint, nothing animates here. */
+/* the honesty tag: a small glass pill that reads on the aurora (its box grows up-left from the
+   same anchor, so the words stay inside the corner they were placed in) */
+html[data-stargo-home] .sg-tag { color: var(--sgb-text); background: var(--sgb-glass), rgba(18, 10, 46, .62); border: 1px solid var(--sgb-glass-edge); border-radius: 99px; padding: 3px 10px; line-height: 1.25; }
+/* a tag placed by its corner on the stage keeps its words where they were: the pill grows evenly around them */
+html[data-stargo-home] :is(.sg-loop, .sg-radar, .sg-studio, .sg-pain) > .sg-tag { transform: translate(calc(-100% + 11px), calc(-100% + 4px)); }
+/* the phone card's tag sits 19 px from the top edge: a slimmer pill, kept 4 px inside the corner */
+html[data-stargo-home] .sg-pain.is-phone > .sg-tag { padding: 2px 8px; transform: translate(calc(-100% + 6px), calc(-100% + 6px)); }
+html[data-stargo-home] .sg-loop.is-phone > .sg-tag { padding: 2px 7px; transform: translate(calc(-100% + 2px), calc(-100% + 5px)); }
+/* the small switcher panels place their tag 6 px inside the corner: a slim pill that ends exactly at that anchor */
+html[data-stargo-home] :is(.sg-radar, .sg-studio).is-mini > .sg-tag { padding: 1px 6px; transform: translate(-100%, -100%); }
+/* hosts: the calm aurora, with a violet bloom behind the loop's core */
+html[data-stargo-home] .absolute-photo.sg-mo-host { background-image: radial-gradient(34% 40% at 50% 46%, rgba(122, 82, 251, .34), transparent 72%), var(--sgb-aurora-calm) !important; }
+html[data-stargo-home] .sg-mo-panel, html[data-stargo-home] .sg-mo-panel[data-sg-scene="radar"], html[data-stargo-home] .sg-mo-panel[data-sg-scene="studio"] { background: var(--sgb-aurora-calm); }
+html[data-stargo-home] :is(.sg-radar, .sg-studio) { background: var(--sgb-aurora-calm); color: var(--sgb-text); }
+html[data-stargo-home] .sg-mo-panel > :is(.sg-radar, .sg-studio) { background: none; }
+html[data-stargo-home] .sg-mo-panel .sg-app-bar::after { background: var(--sgb-hair); }
+/* the app chrome of the two product windows */
+html[data-stargo-home] :is(.sg-radar, .sg-studio) .sg-app-bar { border-bottom-color: var(--sgb-hair); background: linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .02)); }
+html[data-stargo-home] :is(.sg-radar, .sg-studio, .sg-pain) .sg-app-mark { color: var(--sgb-ink); background: var(--sgb-accent-grad); }
+html[data-stargo-home] :is(.sg-radar, .sg-studio) .sg-app-crumb { color: var(--sgb-muted); }
+html[data-stargo-home] :is(.sg-radar, .sg-studio) .sg-app-crumb::before { color: var(--sgb-faint); }
+html[data-stargo-home] :is(.sg-radar, .sg-studio) .sg-app-live { color: var(--sgb-accent); background: rgba(159, 220, 255, .12); border-color: rgba(159, 220, 255, .32); }
+html[data-stargo-home] :is(.sg-radar, .sg-studio) .sg-app-live i { background: var(--sgb-accent); }
+html[data-stargo-home] :is(.sg-radar, .sg-studio) .sg-app-live.is-idle { color: var(--sgb-muted); background: rgba(255, 255, 255, .06); border-color: var(--sgb-hair); }
+html[data-stargo-home] :is(.sg-radar, .sg-studio) .sg-app-live.is-idle i { background: var(--sgb-faint); }
+/* buttons: glass; the primary one the accent gradient with dark words */
+html[data-stargo-home] :is(.sg-radar, .sg-studio, .sg-pain) .sg-btn { color: var(--sgb-text); background: rgba(255, 255, 255, .08); border-color: var(--sgb-glass-edge); }
+html[data-stargo-home] :is(.sg-radar, .sg-studio, .sg-pain) .sg-btn.is-primary { color: var(--sgb-ink); background: var(--sgb-accent-grad); border-color: transparent; box-shadow: 0 8px 24px -10px rgba(122, 82, 251, .8); }
+html[data-stargo-home] :is(.sg-radar, .sg-studio, .sg-pain) .sg-btn.is-press { box-shadow: 0 0 0 6px rgba(159, 220, 255, .22); }
+html[data-stargo-home] :is(.sg-radar, .sg-studio, .sg-pain) .sg-btn.is-done { color: var(--sgb-ok); background: rgba(142, 240, 212, .14); border-color: rgba(142, 240, 212, .38); box-shadow: none; }
+html[data-stargo-home] :is(.sg-radar, .sg-studio, .sg-pain) .sg-btn.is-busy { color: var(--sgb-ice); background: rgba(159, 220, 255, .18); }
+html[data-stargo-home] .sg-studio.is-mini .sg-btn.is-primary { box-shadow: none; }
+
+/* ---- loop ---- */
+html[data-stargo-home] .sg-loop { color: var(--sgb-text); }
+html[data-stargo-home] .sg-thread { stroke: rgba(183, 160, 255, .2); }
+html[data-stargo-home] .sg-flow { stroke: rgba(159, 220, 255, .62); }
+html[data-stargo-home] .sg-head { fill: #fff; }
+html[data-stargo-home] .sg-trail { fill: var(--sgb-accent); }
+html[data-stargo-home] .sg-ring-a { stroke: rgba(183, 160, 255, .14); }
+html[data-stargo-home] .sg-ring-b { stroke: rgba(183, 160, 255, .42); }
+html[data-stargo-home] .sg-arc { stroke: var(--sgb-accent); }
+html[data-stargo-home] .sg-arc-2 { stroke: rgba(195, 178, 255, .6); }
+html[data-stargo-home] .sg-bead { fill: var(--sgb-ice); }
+html[data-stargo-home] .sg-ring-d { stroke: rgba(183, 160, 255, .26); }
+html[data-stargo-home] .sg-wave { stroke: var(--sgb-accent); }
+/* the human gate: glass at rest, a white bubble while it waits for a person, mint once approved */
+html[data-stargo-home] .sg-loop .sg-gate-ring { fill: rgba(18, 10, 46, .9); stroke: var(--sgb-glass-edge); }
+html[data-stargo-home] .sg-loop .sg-gate-core { fill: var(--sgb-lilac); }
+html[data-stargo-home] .sg-loop .sg-gate-label { fill: var(--sgb-muted); stroke: var(--sgb-ink); }
+html[data-stargo-home] .sg-loop .sg-gate.is-wait .sg-gate-ring { stroke: #fff; fill: var(--sgb-bubble); }
+html[data-stargo-home] .sg-loop .sg-gate.is-wait .sg-gate-core { fill: var(--sgb-indigo); }
+html[data-stargo-home] .sg-loop .sg-gate.is-wait .sg-gate-label { fill: var(--sgb-text); }
+html[data-stargo-home] .sg-loop .sg-gate.is-ok .sg-gate-ring { stroke: var(--sgb-ok); }
+html[data-stargo-home] .sg-loop .sg-gate.is-ok .sg-gate-core { fill: var(--sgb-ok); }
+html[data-stargo-home] .sg-loop .sg-gate.is-ok .sg-gate-label { fill: var(--sgb-ok); }
+html[data-stargo-home] .sg-card.is-wait { border-color: rgba(255, 255, 255, .7); }
+html[data-stargo-home] .sg-out.is-wait::before { background: #fff; }
+html[data-stargo-home] .sg-out.is-wait .sg-out-detail { color: var(--sgb-text); }
+html[data-stargo-home] .sg-out.is-wait .sg-step.is-on, html[data-stargo-home] .sg-out.is-wait .sg-out-pip { background: #fff; }
+html[data-stargo-home] .sg-loop-brand { color: var(--sgb-muted); }
+html[data-stargo-home] .sg-loop-status { color: var(--sgb-text); }
+html[data-stargo-home] .sg-loop.is-compact:not(.is-phone) .sg-loop-status { background: var(--sgb-glass), rgba(18, 10, 46, .7); border-color: var(--sgb-glass-edge); }
+/* the cards: dark glass with the light top sheen and the glass edge */
+html[data-stargo-home] .sg-card { background: var(--sgb-glass), var(--sgb-glass-dark); border-color: var(--sgb-glass-edge); }
+html[data-stargo-home] .sg-card::after { background: radial-gradient(120% 140% at 0% 50%, rgba(159, 220, 255, .2), rgba(122, 82, 251, .06) 60%, transparent); }
+html[data-stargo-home] .sg-out::after { background: radial-gradient(120% 140% at 100% 50%, rgba(159, 220, 255, .2), rgba(122, 82, 251, .06) 60%, transparent); }
+html[data-stargo-home] .sg-card.is-on { border-color: rgba(159, 220, 255, .6); box-shadow: 0 0 0 1px rgba(159, 220, 255, .08), 0 28px 70px -28px rgba(122, 82, 251, .7); }
+html[data-stargo-home] .sg-in-ico { color: var(--sgb-accent); background: rgba(159, 220, 255, .08); border-color: rgba(159, 220, 255, .16); }
+html[data-stargo-home] .sg-in-ico::before { background: var(--sgb-accent-grad); }
+html[data-stargo-home] .sg-in.is-on .sg-in-ico { color: var(--sgb-ink); }
+html[data-stargo-home] .sg-in-name, html[data-stargo-home] .sg-out-name, html[data-stargo-home] .sg-ticker-i b { color: var(--sgb-text); }
+html[data-stargo-home] .sg-in-new { color: var(--sgb-bubble-text); background: var(--sgb-bubble); }
+html[data-stargo-home] .sg-in-msg, html[data-stargo-home] .sg-in-who, html[data-stargo-home] .sg-out-n, html[data-stargo-home] .sg-out-detail { color: var(--sgb-muted); }
+/* on the phone the resting steps are dimmed by the card's own opacity: their numbers take the full text colour so they stay above 4.5:1 */
+html[data-stargo-home] .sg-loop.is-phone .sg-out-n { color: var(--sgb-text); }
+html[data-stargo-home] .sg-out::before { background: var(--sgb-accent); }
+html[data-stargo-home] .sg-chip { color: var(--sgb-ice); background: rgba(159, 220, 255, .12); border-color: rgba(159, 220, 255, .28); }
+html[data-stargo-home] .sg-chip.is-ask { color: var(--sgb-muted); background: none; }
+html[data-stargo-home] .sg-mini-radar { border-color: rgba(159, 220, 255, .32); background: radial-gradient(circle, rgba(159, 220, 255, .12) 0 30%, transparent 31%); }
+html[data-stargo-home] .sg-mini-radar i { background: conic-gradient(from 0deg, rgba(159, 220, 255, .6), transparent 28%); }
+html[data-stargo-home] .sg-step, html[data-stargo-home] .sg-out-pip { background: rgba(255, 255, 255, .16); }
+html[data-stargo-home] .sg-step.is-on { background: var(--sgb-accent); }
+html[data-stargo-home] .sg-bar { background: rgba(255, 255, 255, .12); }
+html[data-stargo-home] .sg-bar i { background: var(--sgb-accent-grad); }
+html[data-stargo-home] .sg-spark path { stroke: var(--sgb-accent); }
+html[data-stargo-home] .sg-spark circle { fill: #fff; }
+html[data-stargo-home] .sg-out.is-on .sg-out-pip { background: var(--sgb-accent); box-shadow: 0 0 0 4px rgba(159, 220, 255, .18); }
+html[data-stargo-home] .sg-ticker { background: var(--sgb-glass), var(--sgb-glass-dark); border-color: var(--sgb-glass-edge); }
+html[data-stargo-home] .sg-ticker-k, html[data-stargo-home] .sg-ticker-i { color: var(--sgb-muted); }
+
+/* ---- radar ---- */
+html[data-stargo-home] .sg-dots { stroke: rgba(183, 160, 255, .34); }
+html[data-stargo-home] .sg-home { fill: #fff; }
+html[data-stargo-home] .sg-home-ring { stroke: var(--sgb-accent); }
+html[data-stargo-home] .sg-map-label { fill: var(--sgb-text); stroke: var(--sgb-ink); }
+html[data-stargo-home] .sg-arc-line { stroke: var(--sgb-accent); }
+html[data-stargo-home] .sg-arc-dot { fill: #fff; }
+html[data-stargo-home] .sg-pin-c { fill: var(--sgb-accent); stroke: var(--sgb-ink); }
+html[data-stargo-home] .sg-pin-rip { stroke: var(--sgb-accent); }
+html[data-stargo-home] .sg-pin-lab rect { fill: rgba(18, 10, 46, .9); stroke: rgba(159, 220, 255, .55); }
+html[data-stargo-home] .sg-pin-lab text { fill: #fff; }
+html[data-stargo-home] .sg-kpi span, html[data-stargo-home] .sg-list-head span, html[data-stargo-home] .sg-queue-h span { color: var(--sgb-muted); }
+html[data-stargo-home] :is(.sg-row, .sg-ai, .sg-note, .sg-float, .sg-prompt, .sg-rail-row, .sg-q) { background: var(--sgb-glass), var(--sgb-glass-dark); border-color: var(--sgb-glass-edge); }
+html[data-stargo-home] :is(.sg-row.is-new, .sg-float.is-new, .sg-rail-row.is-on, .sg-q.is-on) { border-color: rgba(159, 220, 255, .62); background: linear-gradient(180deg, rgba(159, 220, 255, .22), rgba(159, 220, 255, .06) 45%, rgba(159, 220, 255, .03)), var(--sgb-glass-dark); }
+html[data-stargo-home] .sg-cc { color: var(--sgb-ice); background: rgba(159, 220, 255, .14); border-color: rgba(159, 220, 255, .3); }
+html[data-stargo-home] .sg-row-main span, html[data-stargo-home] .sg-float-score span { color: var(--sgb-muted); }
+html[data-stargo-home] .sg-row-score b, html[data-stargo-home] .sg-float-score b { color: var(--sgb-accent); }
+html[data-stargo-home] .sg-row-score > i, html[data-stargo-home] .sg-q-bar { background: rgba(255, 255, 255, .12); }
+html[data-stargo-home] .sg-row-score > i > i, html[data-stargo-home] .sg-q-bar i { background: var(--sgb-accent-grad); }
+html[data-stargo-home] .sg-ai-head { color: var(--sgb-accent); }
+html[data-stargo-home] .sg-ai-text { color: var(--sgb-text); }
+html[data-stargo-home] .sg-ai-text .is-typing::after, html[data-stargo-home] .sg-prompt-text.is-typing::after { background: var(--sgb-accent); }
+html[data-stargo-home] .sg-note { color: var(--sgb-ok); }
+html[data-stargo-home] .sg-note b { color: var(--sgb-text); }
+html[data-stargo-home] .sg-note span { color: var(--sgb-muted); }
+html[data-stargo-home] .sg-float { box-shadow: var(--sgb-shadow); }
+html[data-stargo-home] .sg-radar.is-mini .sg-tag { background: var(--sgb-glass), rgba(18, 10, 46, .82); }
+
+/* ---- studio ---- */
+html[data-stargo-home] .sg-canvas { background: var(--sgb-ink); box-shadow: 0 0 0 1px var(--sgb-glass-edge), var(--sgb-shadow); }
+html[data-stargo-home] .sg-canvas-tag { color: #fff; background: rgba(18, 10, 46, .66); }
+html[data-stargo-home] .sg-studio.is-mini .sg-prompt { background: var(--sgb-glass), rgba(18, 10, 46, .8); }
+html[data-stargo-home] .sg-prompt { color: var(--sgb-accent); }
+html[data-stargo-home] .sg-prompt-text { color: var(--sgb-text); }
+html[data-stargo-home] .sg-lang { color: var(--sgb-muted); border-color: var(--sgb-glass-edge); background: rgba(255, 255, 255, .05); }
+html[data-stargo-home] .sg-lang.is-on { color: var(--sgb-ink); background: var(--sgb-accent-grad); border-color: transparent; }
+html[data-stargo-home] .sg-lang-text { color: var(--sgb-text); }
+html[data-stargo-home] .sg-rail-h { color: var(--sgb-muted); }
+html[data-stargo-home] .sg-rail-row em { color: var(--sgb-muted); }
+html[data-stargo-home] .sg-pill { color: var(--sgb-ice); background: rgba(159, 220, 255, .12); border-color: rgba(159, 220, 255, .28); }
+html[data-stargo-home] .sg-q-state { color: var(--sgb-muted); }
+/* 待你审核: the white bubble */
+html[data-stargo-home] .sg-q-state.is-review { width: fit-content; max-width: 100%; padding: 0 7px; border-radius: 99px; color: var(--sgb-bubble-text); background: var(--sgb-bubble); font-weight: 600; }
+html[data-stargo-home] .sg-q-state.is-ok { color: var(--sgb-ok); }
+html[data-stargo-home] .sg-q.is-approving { border-color: rgba(142, 240, 212, .6); background: linear-gradient(180deg, rgba(142, 240, 212, .16), rgba(142, 240, 212, .04)), var(--sgb-glass-dark); }
+html[data-stargo-home] .sg-q-state.is-ok + .sg-q-bar i { background: rgba(142, 240, 212, .6); }
+html[data-stargo-home] .sg-q-state.is-review + .sg-q-bar i { background: rgba(255, 255, 255, .7); }
+html[data-stargo-home] .sg-swatches i { box-shadow: inset 0 0 0 1px var(--sgb-glass-edge); }
