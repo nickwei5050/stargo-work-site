@@ -121,7 +121,8 @@
         for (var j = k + 1; j < n; j++) after += ease.out(seg(u, LOG[j][4], LOG[j][4] + 0.5));
         var pk = ease.out(seg(u, LOG[k][4], LOG[k][4] + 0.5)), slot = vis - 1 - after;
         var y = (slot + 0.45 * (1 - pk)) * R.rowH;
-        var o = pk * c01(slot + 1) * c01(vis - slot) * fade;
+        // a run leaving the top of the window is gone by the time two thirds of it have passed the edge
+        var o = pk * c01(1.5 * (slot + 1) - 0.5) * c01(vis - slot) * fade;
         css(R.rows[k], 'transform', 'translateY(' + y.toFixed(1) + 'px)');
         css(R.rows[k], 'opacity', o.toFixed(3));
         cl(R.rows[k], 'is-new', u >= LOG[k][4] && u < LOG[k][4] + 2.4);
