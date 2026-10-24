@@ -221,8 +221,11 @@ function head(html, lang, current) {
   const ogImage = post ? `${SITE_URL}/${coverSrc(post)}` : `${SITE_URL}/${OG_IMAGE}`;
   const pageType = current === 'about.html' ? 'AboutPage' : current === 'blog.html' ? 'CollectionPage' : current === 'contact.html' ? 'ContactPage' : 'WebPage';
   const blogUrl = cleanUrl(lang, 'blog.html');
+  /* sameAs is omitted. A factory domain is not a profile of this organization,
+     and naming it here would say the two are the same entity. legalName is the
+     registered operator of the product site. */
   const graph = [
-    { '@type': 'Organization', '@id': ORG_ID, name: 'Stargo Work', alternateName: '星贸智能', url: `${SITE_URL}/`, logo: `${SITE_URL}/${ICON(512)}`, email: CONTACT_INFO.email, telephone: CONTACT_INFO.whatsapp, address: { '@type': 'PostalAddress', addressLocality: 'Liuzhou', addressRegion: 'Guangxi', addressCountry: 'CN' }, sameAs: [CONTACT_INFO.siteHref] },
+    { '@type': 'Organization', '@id': ORG_ID, name: 'Stargo Work', legalName: CONTACT_INFO.legalName, alternateName: '星贸智能', url: `${SITE_URL}/`, logo: `${SITE_URL}/${ICON(512)}`, email: CONTACT_INFO.email, telephone: CONTACT_INFO.whatsapp, address: { '@type': 'PostalAddress', addressLocality: 'Liuzhou', addressRegion: 'Guangxi', addressCountry: 'CN' } },
     { '@type': 'WebSite', '@id': SITE_ID, url: `${SITE_URL}/`, name: BRAND[lang], alternateName: lang === 'zh' ? 'Stargo Work' : BRAND.zh, inLanguage: ['zh-CN', 'en'], publisher: { '@id': ORG_ID } },
     { '@type': pageType, '@id': self, url: self, name: title, description, inLanguage, isPartOf: { '@id': SITE_ID }, ...(post ? { primaryImageOfPage: ogImage } : {}) },
   ];
@@ -410,29 +413,31 @@ function scripts(html) {
  *  - external links that do open a new tab carry rel="noopener noreferrer".
  */
 /* The footer's social links carry no text of their own (they are icons), so
-   their names live in aria-label and title — in the page's language: a Chinese
-   screen reader should not switch to English for three links. */
+   their names live in aria-label and title — in the page's language. */
 const SOCIAL_LABELS = {
   mail: { zh: '发邮件给 STARGO WORK', en: 'Email STARGO WORK' },
   whatsapp: { zh: '通过 WhatsApp 联系 STARGO WORK', en: 'WhatsApp STARGO WORK' },
-  site: { zh: 'STARGO 企业官网', en: 'STARGO corporate website' },
 };
-const socialKind = (href) => (href.startsWith('mailto:') ? 'mail' : href.includes('wa.me/') ? 'whatsapp' : 'site');
+const socialKind = (href) => (href.startsWith('mailto:') ? 'mail' : href.includes('wa.me/') ? 'whatsapp' : null);
 
-/* The icon on each of those buttons says where it goes. The template drew an
-   Instagram camera, an X logo and a third-party star on them; STARGO has no
-   accounts there, and the buttons lead to the corporate website, WhatsApp and
-   e-mail. Each now carries a plain line glyph for its destination — a globe, a
-   speech bubble, an envelope — drawn in the template's icon style: white, 16px,
-   centred in the same 40px round tile (the X tile's square `sq` variant goes,
-   so the three match), and still the `.social-icon` the template's hover lift
-   moves. The glyph is decoration; the button's name is its aria-label.
-   The about page's intro card shows the same three channels (V7-LX,
-   tools/blocks/cn-about.mjs CHANNELS): the paths below are that card's paths,
-   point for point, so the site draws one icon set. */
+/* The template's LinkedIn tile used to be retargeted at www.stargomoto.com and
+   named as this product company's corporate website. That domain is another
+   company's factory site, so the tile is removed. The two that remain are
+   WhatsApp and e-mail. The about page's intro card shows the same two
+   (tools/blocks/cn-about.mjs CHANNELS). Each glyph is a plain line icon in the
+   template's style: white, 16px, centred in the same 40px round tile (the X
+   tile's square `sq` variant goes, so the two match), and still the
+   `.social-icon` the template's hover lift moves. The glyph is decoration;
+   the button's name is its aria-label. */
+function dropUnrelatedSocial(html) {
+  return html.replace(/<a\b[^>]*\bclass="social-wrapper\b[^"]*"[^>]*>[\s\S]*?<\/a>/g, (a) => {
+    const href = (a.match(/href="([^"]*)"/) || [])[1] || '';
+    if (/^https:\/\/www\.linkedin\.com\/?$/.test(href) || /^https:\/\/(www\.)?stargomoto\.com\/?$/.test(href)) return '';
+    return a;
+  });
+}
 const SOCIAL_GLYPH = (paths) => `<svg class="social-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${paths}</svg>`;
 const SOCIAL_ICONS = {
-  site: SOCIAL_GLYPH('<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9s1.3-6.4 3.8-9z"/>'),
   whatsapp: SOCIAL_GLYPH('<path d="M20.5 11.6a8.4 8.4 0 0 1-12.2 7.5L3.5 20.5l1.4-4.6A8.4 8.4 0 1 1 20.5 11.6z"/>'),
   mail: SOCIAL_GLYPH('<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/>'),
 };
@@ -443,7 +448,9 @@ function socialIcons(html) {
     const href = (a.match(/href="([^"]*)"/) || [])[1] || '';
     const img = /<img\b[^>]*\bclass="social-icon\b[^"]*"[^>]*\/>/;
     if (!img.test(a)) throw new Error('chrome: a social button has no icon to replace');
-    return a.replace(/class="social-wrapper sq /, 'class="social-wrapper ').replace(img, SOCIAL_ICONS[socialKind(href)]);
+    const kind = socialKind(href);
+    if (!SOCIAL_ICONS[kind]) throw new Error(`chrome: social button is not email or WhatsApp (${href})`);
+    return a.replace(/class="social-wrapper sq /, 'class="social-wrapper ').replace(img, SOCIAL_ICONS[kind]);
   });
   if (TEMPLATE_SOCIAL_ART.test(out)) throw new Error('chrome: a template social-network icon survives');
   return out;
@@ -522,7 +529,9 @@ function linkHygiene(html, lang) {
     const href = (tag.match(/href="([^"]*)"/) || [])[1] || '';
     const external = /^(https?:)?\/\//.test(href) || /^(mailto|tel):/.test(href);
     if (/\bsocial-wrapper\b/.test(tag)) {
-      const label = SOCIAL_LABELS[socialKind(href)][lang];
+      const kind = socialKind(href);
+      if (!kind) throw new Error(`chrome: social button is not email or WhatsApp (${href})`);
+      const label = SOCIAL_LABELS[kind][lang];
       tag = tag.replace('<a ', `<a aria-label="${label}" title="${label}" `);
     }
     if (!external) return tag.replace(/\s*target="_blank"/g, '');
@@ -683,6 +692,7 @@ export function applyChrome(html, { lang, current }) {
   out = bottomPill(out, L, current);
   out = footerPages(out, L, current);
   for (const [a, b] of CHROME) out = opt(out, a, b[lang]);
+  out = dropUnrelatedSocial(out);
   out = wordmark(out);
   out = chromeImagery(out);
   out = sideMenu(out, lang);
@@ -713,6 +723,11 @@ export function applyChrome(html, { lang, current }) {
     return `${attr}${path}?v=${hash}"`;
   });
   if (/monostudio|Mōno™ Studio/i.test(out)) throw new Error(`chrome: template brand survives in ${current}`);
+  if (/STARGO 企业官网|corporate website/i.test(out)) throw new Error(`chrome: factory domain still labelled as this company's website in ${current}`);
+  if (/https?:\/\/(www\.)?stargomoto\.com|www\.stargomoto\.com/i.test(out)) throw new Error(`chrome: factory site linked from ${current}`);
+  if (out.includes('新利')) throw new Error(`chrome: another company's name is on ${current}`);
+  const visible = out.slice(out.indexOf('<body')).replace(/<script\b[\s\S]*?<\/script>/g, '');
+  if (!visible.includes(CONTACT_INFO.legalName)) throw new Error(`chrome: legal entity is not visible on ${current}`);
   return out;
 }
 
