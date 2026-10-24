@@ -138,14 +138,14 @@
       { n: 'Gulf Coast Lift Supply', sn: 'Gulf Coast Lift', cc: 'US', sub: T('叉车与仓储 · 休斯敦', 'Forklift fleets · Houston'), s0: 85, s1: 91 }
     ];
     var SIG = [
-      { at: 1.1, b: 3, k: T('招聘', 'Hiring'), text: T('车队换锂电，正在招聘采购专员', 'Fleet moving to lithium, hiring a buyer') },
+      { at: 1.1, b: 3, k: T('招聘', 'Hiring'), text: T('车队换锂电，正在招聘采购专员', 'Fleet moving to lithium, hiring a buyer'), m: T('', 'Going lithium, hiring a buyer') },
       { at: 4.5, b: 2, k: T('招标', 'Tender'), text: T('近 90 天第 3 条储能招标', 'Third storage tender in 90 days') }
     ];
     var RANK = [[0, 1, 2, 3], [0, 2, 3, 1], [1, 3, 0, 2]], RE = [2.3, 5.7];
     var WHY = 7.7, TYPE1 = 10.1, ASK = 10.5;
     var D = {
       // the sources the site's own copy names (采购记录、招聘、扩张和企业动态), and no others
-      scanK: T('正在扫描', 'Scanning'), scan: T('招聘、招标、采购记录和官网动态…', 'Hiring, tenders, purchase records, websites…'),
+      scanK: T('正在扫描', 'Scanning'), scan: T('招聘、招标、采购记录和官网动态…', 'Hiring, tenders, purchase records, websites…'), scanM: T('', 'Hiring, tenders, purchases…'),
       sigK: T('新信号', 'New signal'), whyK: T('推荐理由', 'Why this buyer'),
       why: T('近 90 天发布 3 条储能招标，产品线与 48V 100Ah 高度匹配，建议优先联系采购经理。', 'Three storage tenders in 90 days and a product line that fits 48V 100Ah. Contact the purchasing manager first.'),
       whyMid: T('近 90 天发布 3 条储能招标，产品线与 48V 100Ah 高度匹配。', 'Three storage tenders in 90 days; the product line fits 48V 100Ah.'),
@@ -162,7 +162,8 @@
     function build(stage, L) {
       var F = frame(stage, L, 'Growth OS', 'signal'), full = F.full, R = { F: F };
       // a narrow tile keeps the suggestion on the signal card, so the top buyer's row keeps its name
-      var narrow = R.narrow = full && F.W < 600;
+      var narrow = full && F.W < 600;
+      R.sn = narrow || !full;
       var ch = full ? (narrow ? 104 : 92) : 40;
       var card = R.card = box('sg-crew-card sg-crew-sig', stage, F.pad, F.top, F.iw, ch);
       if (narrow) cl(card, 'is-ask', true);
@@ -209,10 +210,10 @@
       var st = tau < SIG[0].at ? -1 : tau < SIG[1].at ? 0 : tau < WHY ? 1 : 2;
       if (R.st !== st) {
         R.st = st;
-        // a narrow card names the signal's kind alone, so the buyer's name fits beside it
-        if (st < 0) { put(R.k, 'text', D.scanK); put(R.who, 'text', ''); put(R.text, 'text', D.scan); }
-        else if (st < 2) { put(R.k, 'text', R.narrow ? SIG[st].k : D.sigK + ' · ' + SIG[st].k); put(R.who, 'text', R.narrow ? B[SIG[st].b].sn : B[SIG[st].b].n); put(R.text, 'text', SIG[st].text); }
-        else { put(R.k, 'text', D.whyK); put(R.who, 'text', R.narrow ? B[2].sn : B[2].n); R.typer.n = -1; }
+        // a narrow card or a phone names the signal's kind alone and the buyer's short name, so both fit
+        if (st < 0) { put(R.k, 'text', D.scanK); put(R.who, 'text', ''); put(R.text, 'text', !F.full && D.scanM || D.scan); }
+        else if (st < 2) { put(R.k, 'text', R.sn ? SIG[st].k : D.sigK + ' · ' + SIG[st].k); put(R.who, 'text', R.sn ? B[SIG[st].b].sn : B[SIG[st].b].n); put(R.text, 'text', !F.full && SIG[st].m || SIG[st].text); }
+        else { put(R.k, 'text', D.whyK); put(R.who, 'text', R.sn ? B[2].sn : B[2].n); R.typer.n = -1; }
         put(R.card, 'data-st', st < 0 ? 'scan' : st < 2 ? 'sig' : 'why');
         if (st >= 0) K.flash(R.text);
       }
