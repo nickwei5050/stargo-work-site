@@ -114,7 +114,10 @@ CODE_DRAWN_CAP.forEach((id) => CODE_DRAWN.add(id));
    HOME_PRICING_CARD, so each can go back in one line. */
 ['p01-prospecting', 'p02-sales', 'p04-payment-docs', 'p05-reorder', 't01-enterprise-campus',
   // lane people: the about AI-employee tiles and the workforce role cards
-  'd01-market-research', 'd02-follow-up', 'd03-product-spec', 'd04-finance', 'd05-coordination', 'd06-reporting', 'd07-quotation'].forEach((id) => CODE_DRAWN.add(id));
+  'd01-market-research', 'd02-follow-up', 'd03-product-spec', 'd04-finance', 'd05-coordination', 'd06-reporting', 'd07-quotation',
+  // lane vignettes: the homepage opening mosaic and the capabilities 每项 工作 ring
+  'h01-port-blue-hour', 'h02-night-inquiry', 'h03-sample-wall', 'h04-caliper-qc', 'h05-assembly-line', 'h06-packing',
+  'h07-owner-walk', 'h08-product-shoot', 'h09-container-loading', 'h10-video-showing', 'p03-fulfilment', 'w02-workshop', 'c08-product-references'].forEach((id) => CODE_DRAWN.add(id));
 const photosUnused = photos.filter(a => !all.includes(a.src) && !SUPERSEDED.has(a.id) && !RETIRED.has(a.id) && !CODE_DRAWN.has(a.id)).map(a => a.id);
 assert.deepEqual(photosUnused, [], 'every registered photograph is placed');
 console.log(`generated imagery: ${manifest.assets.length - unused.length} placed, ${unused.length} retained but unused (${unused.join(', ')})`);

@@ -151,7 +151,11 @@ export function speedPage(html, name) {
       if (k > 2) return tag;
       return tag.replace(' loading="lazy"', k === 1 ? ' loading="eager" fetchpriority="high"' : ' loading="eager"');
     });
-    if (!/fetchpriority="high" class="photo-hero"/.test(out)) throw new Error(`speed: ${name}: first hero picture not found`);
+    /* Since 2026-10-24 the mosaic is drawn in code (tools/code-art-vignettes.mjs):
+       its tiles are `div.photo-hero.sgv` hosts with nothing to fetch, so there is
+       no picture to hurry. */
+    if (!k && !/class="sgv sgv-\w+ photo-hero"/.test(out)) throw new Error(`speed: ${name}: the hero mosaic has neither a picture nor a code-drawn tile`);
+    if (k && !/fetchpriority="high" class="photo-hero"/.test(out)) throw new Error(`speed: ${name}: first hero picture not found`);
   }
 
   out = out.replace(/(<video id="stargo-brand-film"[^>]*?)\sposter="/, '$1 data-poster="');

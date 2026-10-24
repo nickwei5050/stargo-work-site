@@ -42,6 +42,7 @@ import { speedPage } from './speed.mjs';
 import { BLOG_COVERS, INTEL_PHOTOS } from './replaceables.mjs';
 import { GROWTH_ROWS } from './replaceables.mjs'; // capgrowth: the Growth OS rows' background scenes
 import { blogCover, blogArtSheet } from './blog-art.mjs';   // lane "blog" (2026-10-23): the code-drawn article covers
+import { vignettePage } from './code-art-vignettes.mjs';   // lane "vignettes" (2026-10-24): the mosaic and ring photographs drawn in code
 
 /** The capability page's donor blocks, one module each in tools/blocks. */
 const CAP_BLOCKS = await loadBlocks();
@@ -2661,6 +2662,7 @@ for (const lang of C.LANGS) {
     let html = build(lang);
     html = blogArtSheet(html, `${lang}/${name}`);   // tools/blog-art.mjs: the covers' sheet, on the pages that draw one
     html = applyChrome(html, { lang, current: name });
+    html = vignettePage(html, lang, name);   // tools/code-art-vignettes.mjs: the homepage mosaic and the 每项 工作 ring, after the chrome has written the mosaic
     html = a11yPage(html, { lang, name });   // Z15: landmarks, skip link, heading semantics, names
     html = remapLinks(html);
     html = webpPage(html);

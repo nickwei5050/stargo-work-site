@@ -1,0 +1,69 @@
+/* 代码小景 — the trade-business vignettes (lane "vignettes", 2026-10-24).
+   tools/code-art-vignettes.mjs draws each vignette once into a hidden sprite
+   and places a host per tile: the homepage's opening mosaic
+   (.hero-photo-wrapper, where H01–H10 were) and the capability page's
+   「每项 工作」 ring cards (.cn-produce, H01–H10, P03, C08, W02). Static: no
+   script, no animation, nothing to pause off-screen. */
+
+/* The sprite must stay rendered (a display:none ancestor would drop its
+   gradients and patterns in Chrome and Firefox), so it is a 0 × 0 box out of
+   the flow: the hero's grid and the ring's wheel never see it. */
+.sgv-sprite { position: absolute; width: 0; height: 0; overflow: hidden; pointer-events: none; }
+
+.sgv {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: #15110e;
+  container-type: inline-size;
+  font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.sgv > svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: hidden; }
+/* Two windows onto one drawing: the whole canvas, or its middle where the
+   box is small (the phone mosaic, the tablet's narrow column, the ring). */
+.sgv-near { display: none !important; }
+@container (max-width: 440px) {
+  .sgv-far { display: none !important; }
+  .sgv-near { display: block !important; }
+}
+
+/* The honest tag, in the corner the white hero card never covers first. */
+.sgv-tag {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  padding: 4px 9px 5px;
+  border-radius: 99px;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: .04em;
+  color: rgba(244, 238, 232, .78);
+  background: rgba(21, 17, 14, .74);
+  border: 1px solid rgba(255, 236, 220, .14);
+  pointer-events: none;
+  white-space: nowrap;
+}
+/* Small tiles (the phone mosaic, the phone ring): the same 12px words, a
+   tighter pill closer to the corner, so it covers less of the drawing. */
+@container (max-width: 240px) {
+  .sgv-tag { right: 6px; bottom: 6px; padding: 2px 6px 3px; letter-spacing: .01em; }
+}
+
+/* The homepage mosaic. The left column drew each photograph whole at its own
+   ratio, so each tile keeps that ratio; the right column's box is Mono's
+   `.photo-hero` (100% × 400px, 250px on phones), which the host keeps. */
+.photo-block .sgv.stargo-mosaic { width: 100%; }
+.sgv-r16 { aspect-ratio: 1024 / 577; }
+.sgv-r3 { aspect-ratio: 1024 / 683; }
+.sgv-r1 { aspect-ratio: 1 / 1; }
+
+/* The capability ring: the card's `.w-background-video` box, filled as its
+   still was (css/stargo-fusion.css `.w-background-video > img.stargo-still`). */
+.w-background-video > .sgv-card { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sgv-card .sgv-tag { right: auto; left: 50%; bottom: 12px; transform: translateX(-50%); }
+/* The inner circle is mirrored by cinery (`.cn-cta-circle-wrapper.cn-_02`);
+   flip the drawing back so its words read the right way round. */
+.cn-produce .cn-cta-circle-wrapper.cn-_02 .w-background-video > .sgv-card { transform: scaleX(-1); }
