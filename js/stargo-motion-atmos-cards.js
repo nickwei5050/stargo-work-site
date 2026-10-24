@@ -96,48 +96,133 @@
 
   /* =====================================================================
      REQUEST — after the form.
+     The stage is the host's own size (one layout per host size, made by
+     pick), so it is never scaled and its 12px type stays 12px. The card's
+     quote and author line wrap differently at every width and in each
+     language, so build reads the card's own text boxes once (and again when
+     the web fonts land), never per frame, and places the parts below them:
+     the four steps at the foot, with the richest labels that leave at least
+     16px between neighbours; above them the 「提交表单之后」 / After you submit
+     row with its 演示数据 / Demo data tag, when it clears the author line by
+     8px; else the tag alone, beside the author's first line (or in the gap
+     under the card's mark row).
      ===================================================================== */
   function RequestScene() {
     var P = 12;
-    // tag: just under the card's mark row; the steps sit at the foot of the card, under its author line
-    var layouts = {
-      card: { w: 370, h: 450, x: 25, tag: 58, foot: 14 },
-      narrow: { w: 286, h: 450, x: 25, tag: 82, foot: 10 },
-      wide: { w: 346, h: 350, x: 16, tag: 54, foot: 8 }
-    };
-    // the page's own words: 提交后我们先了解你的需求，会议时间另行确认 / 我们会通过你留下的联系方式联系你
-    var STEP = [
-      [T('收到申请', 'Request in'), '', T('收到申请', 'Received')],
-      [T('先了解需求', 'We learn'), T('', 'your needs'), T('了解需求', 'We learn')],
-      [T('按你留的方式', 'We contact'), T('联系你', 'you'), T('联系你', 'We contact')],
-      [T('会议时间', 'Meeting time'), T('另行确认', 'set separately'), T('另定时间', 'Meeting')]
+    var layouts = {};
+    // the page's own words: 提交后我们先了解你的需求，会议时间另行确认 / 我们会通过你留下的联系方式联系你.
+    // Label sets, richest first: two lines (Chinese only), one line, short.
+    var SETS = [
+      K.ZH ? [['收到申请'], ['先了解需求'], ['按你留的方式', '联系你'], ['会议时间', '另行确认']] : null,
+      [[T('已收到', 'Received')], [T('了解需求', 'We learn')], [T('联系你', 'We contact')], [T('另定时间', 'Meeting')]],
+      [[T('收到', 'Request')], [T('需求', 'Needs')], [T('联系', 'Contact')], [T('定时间', 'Meeting')]]
     ];
     var AT = [0.8, 2.4, 4.0, 5.6];
+    var GAP = 16, HEAD = 20;
     var R;
-    function build(stage, L, name) {
-      R = { st: [] };
-      stage.className = 'sg-mo-stage sgk sgk-request is-' + name;
+    function build(stage, L) {
+      var mode = L.h < 400 ? 'wide' : L.w < 330 ? 'narrow' : 'card';
+      R = { st: [], tx: [], stage: stage, L: L };
+      stage.className = 'sg-mo-stage sgk sgk-request is-' + mode;
       el('div', 'sgk-glow', stage);
-      // the English quote runs longer: the full two-line steps and the caption only where the card leaves room;
-      // on the tablet card the English quote reaches the author line's foot, so its tag goes under the mark
-      var full = K.ZH && name === 'card', cap = K.ZH || name === 'card';
-      var line = el('div', 'sgk-steps', stage), rowH = full ? 48 : 33;
-      line.style.left = L.x + 'px'; line.style.right = L.x + 'px'; line.style.top = (L.h - L.foot - rowH) + 'px';
-      if (!K.ZH && name === 'narrow') { var tg = el('span', 'sg-tag sgk-tag sgk-corner', stage, MINI); tg.style.left = L.x + 'px'; tg.style.top = L.tag + 'px'; }
-      else {
-        var h = el('div', 'sgk-head', stage);
-        h.style.left = L.x + 'px'; h.style.right = L.x + 'px'; h.style.top = (L.h - L.foot - rowH - (cap ? 26 : 22)) + 'px';
-        if (cap) { var mk = el('span', 'sgk-mark', h); K.icon('mail', mk, 11); el('b', '', h, T('提交表单之后', 'After you submit')); }
-        el('span', 'sg-tag sgk-tag', h, MINI);
-      }
-      R.fill = el('i', 'sgk-fill', line);
-      STEP.forEach(function (s, i) {
-        var c = el('div', 'sgk-step', line);
+      R.line = el('div', 'sgk-steps', stage);
+      R.fill = el('i', 'sgk-fill', R.line);
+      for (var i = 0; i < 4; i++) {
+        var c = el('div', 'sgk-step', R.line);
         el('i', 'sgk-dot', c);
-        var tx = el('span', 'sgk-step-t', c, full ? s[0] : s[2]);
-        if (s[1] && full) { tx.appendChild(document.createElement('br')); tx.appendChild(document.createTextNode(s[1])); }
+        R.tx.push(el('span', 'sgk-step-t', c));
         R.st.push(c);
+      }
+      R.head = el('div', 'sgk-head', stage);
+      var mk = el('span', 'sgk-mark', R.head); K.icon('mail', mk, 11);
+      el('b', '', R.head, T('提交表单之后', 'After you submit'));
+      R.tag = el('span', 'sg-tag sgk-tag', R.head, MINI);
+      place();
+      var mine = R;
+      if (document.fonts && document.fonts.status !== 'loaded') document.fonts.ready.then(function () { if (R === mine) place(); });
+    }
+    function labels(set) {
+      R.tx.forEach(function (t, i) {
+        var s = set[i];
+        t.textContent = s[0];
+        if (s[1]) { t.appendChild(document.createElement('br')); t.appendChild(document.createTextNode(s[1])); }
       });
+    }
+    // the smallest space between neighbouring labels centred under their dots (c), and with the end labels
+    // drawn to the line's ends (e)
+    function gaps(col) {
+      var w = R.tx.map(function (t) { return t.offsetWidth; }), c = 1e9;
+      for (var i = 0; i < 3; i++) c = Math.min(c, col - (w[i] + w[i + 1]) / 2);
+      var e = Math.min(col - (w[1] + w[2]) / 2, col - w[1] / 2 - w[0] + (col - w[0]) / 2 + w[0] / 2, col - w[2] / 2 - w[3] / 2 + (col - w[3]) / 2);
+      return { c: c, e: e };
+    }
+    function place() {
+      var L = R.L, host = R.stage.parentNode, card = host && host.closest ? host.closest('.testimonials-card') : null;
+      var x = 25, ab = Math.round(L.h * 0.7), lines = [], au = [], gapBox = null;
+      if (card) {
+        var hb = host.getBoundingClientRect(), k = hb.width / (host.clientWidth || 1) || 1;
+        var rel = function (r) { return [(r.left - hb.left) / k, (r.top - hb.top) / k, (r.right - hb.left) / k, (r.bottom - hb.top) / k]; };
+        var rects = function (root, out) {
+          var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT), n, rg = document.createRange();
+          while ((n = w.nextNode())) {
+            if (!n.data.trim()) continue;
+            rg.selectNodeContents(n);
+            var rs = rg.getClientRects();
+            for (var j = 0; j < rs.length; j++) if (rs[j].width > 1) out.push(rel(rs[j]));
+          }
+          return out;
+        };
+        var a = card.querySelector('.card-author'), q = card.querySelector('.card-testi > .top-text'), m = card.querySelector('.flex-btw');
+        if (a) {
+          au = rects(a, []);
+          x = Math.max(12, Math.round(rel(a.getBoundingClientRect())[0]));
+          if (au.length) ab = Math.ceil(Math.max.apply(null, au.map(function (r) { return r[3]; })));
+          lines = au.slice();
+        }
+        if (q) { var ql = rects(q, []); lines = lines.concat(ql); if (m && ql.length) gapBox = [rel(m.getBoundingClientRect())[3], ql[0][1]]; }
+      }
+      R.line.style.left = x + 'px'; R.line.style.right = x + 'px';
+      R.head.style.left = x + 'px'; R.head.style.right = x + 'px';
+      var col = (L.w - 2 * x) / 4, avail = L.h - ab, footMax = L.h >= 400 ? 14 : 10;
+      // which label sets leave room between neighbours (centred, or with the ends drawn out)
+      var ok = SETS.map(function (set) {
+        if (!set) return null;
+        labels(set);
+        var g = gaps(col);
+        return g.c >= GAP ? 'c' : g.e >= GAP ? 'e' : null;
+      });
+      var tries = [];
+      [true, false].forEach(function (head) { [false, true].forEach(function (tight) { if (!(head && tight)) SETS.forEach(function (s, i) { if (ok[i]) tries.push({ set: i, head: head, tight: tight }); }); }); });
+      if (!tries.length) tries.push({ set: 2, head: false, tight: true });
+      var pick = null, foot = 8, rowH = 33;
+      for (var t = 0; t < tries.length; t++) {
+        var tr = tries[t];
+        labels(SETS[tr.set]);
+        cl(R.line, 'is-tight', tr.tight); cl(R.line, 'is-ends', ok[tr.set] === 'e');
+        rowH = R.line.offsetHeight;
+        var need = rowH + 8 + (tr.head ? HEAD + 6 : 0);
+        if (need + (tr.tight ? 6 : 8) <= avail || t === tries.length - 1) { pick = tr; foot = Math.max(4, Math.min(footMax, avail - need)); break; }
+      }
+      var top = L.h - foot - rowH;
+      R.line.style.top = top + 'px';
+      if (pick.head) {
+        R.head.style.display = '';
+        R.head.style.top = (top - 6 - HEAD) + 'px';
+        if (R.tag.parentNode !== R.head) { R.head.appendChild(R.tag); R.tag.className = 'sg-tag sgk-tag'; R.tag.style.left = R.tag.style.top = ''; }
+        return;
+      }
+      // no room for the row: the tag alone, beside an author line it clears by 12px, else under the mark row
+      R.head.style.display = 'none';
+      if (R.tag.parentNode !== R.stage) { R.stage.appendChild(R.tag); R.tag.className = 'sg-tag sgk-tag sgk-corner'; }
+      var tw = R.tag.offsetWidth, th = R.tag.offsetHeight, tl = L.w - x - tw, at = null;
+      var clear = function (y) { return lines.every(function (r) { return r[3] <= y - 1 || r[1] >= y + th + 1 || r[2] + 12 <= tl; }); };
+      for (var i2 = 0; i2 < au.length && at === null; i2++) {
+        var y = Math.round((au[i2][1] + au[i2][3] - th) / 2);
+        if (clear(y)) at = [tl, y];
+      }
+      if (at === null && gapBox && gapBox[1] - gapBox[0] >= th + 8) at = [x, Math.round((gapBox[0] + gapBox[1] - th) / 2)];
+      if (at === null) at = [tl, Math.max(0, top - th - 4)];
+      R.tag.style.left = at[0] + 'px'; R.tag.style.top = at[1] + 'px';
     }
     function tick(t) {
       var ph = mod(t, P), out = seg(ph, 11, 11.8);
@@ -148,7 +233,12 @@
     }
     return {
       layouts: layouts,
-      pick: function (w, h) { var r = w / h; return r > 0.95 ? 'wide' : r < 0.72 ? 'narrow' : 'card'; },
+      // one layout per host size: the stage is never scaled
+      pick: function (w, h) {
+        var W = Math.max(200, Math.round(w)), H = Math.max(200, Math.round(h)), name = W + 'x' + H;
+        if (!layouts[name]) layouts[name] = { w: W, h: H };
+        return name;
+      },
       build: build, tick: tick, still: 7.5, start: 0.2
     };
   }

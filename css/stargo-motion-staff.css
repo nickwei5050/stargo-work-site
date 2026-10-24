@@ -31,7 +31,9 @@
 .sg-crew-live { flex: none; min-width: 6.8em; justify-content: center; }
 .sg-crew-live i { animation: none; }
 .sg-crew-live.is-wait { color: #ffc79c; background: rgba(236,111,16,.16); border-color: rgba(255,138,61,.55); }
-.sg-crew-tag { font-size: 12px; }
+/* 12.5px: the about tiles enter with a 3D push-back (the template's cn-case-study-block reveal, ~.975 at its
+   deepest), so the honesty tag stays at 12px or more on screen while a tile settles */
+.sg-tag.sg-crew-tag { font-size: 12.5px; }
 .is-mini .sg-crew-bar { padding: 0 8px 0 10px; }
 .is-mini .sg-crew-brand { width: 76px; height: 12px; }
 .is-mini .sg-crew-app { gap: 5px; padding-left: 8px; font-size: 12.5px; }

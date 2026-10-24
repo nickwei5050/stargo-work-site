@@ -4036,17 +4036,34 @@ html[lang="en"] .lx-scope .lx-v7-sentence {
      both languages. On phones the cards sit at the screen edges exactly where
      the lede's lines run, so the text is made legible instead: a black band
      behind the text block (behind the text, in front of the cards) dims a
-     card where it passes under the text. The same veil, as a soft ellipse,
-     is behind the text on wider screens, for the moments the cards' scroll
-     motion carries them under it. The cards keep their places and motion. */
-.lx-scope .lx-hero-features .lx-feature-hero-text-holder::before {
+     card where it passes under the text. The same veil is behind the text on
+     wider screens, for the moments the cards' scroll motion carries them
+     under it. The cards keep their places and motion.
+   - The veil (QA round 3): the cards never rest (the marquee carries every
+     card through the text block within a minute), and a soft ellipse left
+     card words legible at the lede's line ends and under the button. The
+     veil is now two soft-edged rectangles in the page's own black, 94%:
+     ::before covers the title and the lede (8px past every line), ::after
+     the 预约演示 / Book a Demo button (16rem wide, so the cards beside the
+     button stay in view). A card fades out as it slides under the copy and
+     comes back past it; no card word reads under or through the text. Each
+     is a horizontal ramp masked by a vertical one: static, painted once.
+     The button is opaque (the template's 20% white let a card's words show
+     through it); same colour as before over the black. */
+.lx-scope .lx-hero-features .lx-feature-hero-text-holder::before,
+.lx-scope .lx-hero-features .lx-feature-hero-text-holder::after {
   content: "";
   position: absolute;
   z-index: -1;
-  inset: -2.5rem -3rem;
-  background: radial-gradient(closest-side, rgba(0, 0, 0, .85) 62%, rgba(0, 0, 0, 0));
   pointer-events: none;
+  background: linear-gradient(90deg, rgba(0, 0, 2, 0), rgba(0, 0, 2, .94) var(--sg-vx), rgba(0, 0, 2, .94) calc(100% - var(--sg-vx)), rgba(0, 0, 2, 0));
+  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 0), #000 var(--sg-vy), #000 calc(100% - var(--sg-vy)), rgba(0, 0, 0, 0));
+  mask-image: linear-gradient(rgba(0, 0, 0, 0), #000 var(--sg-vy), #000 calc(100% - var(--sg-vy)), rgba(0, 0, 0, 0));
 }
+.lx-scope .lx-hero-features .lx-feature-hero-text-holder::before { --sg-vx: 3.5rem; --sg-vy: 2.5rem; inset: -3rem -4rem; }
+.lx-scope .lx-hero-features .lx-feature-hero-text-holder::after { --sg-vx: 2rem; --sg-vy: 2rem; top: calc(100% - 1rem); left: calc(50% - 8rem); width: 16rem; height: 9.5rem; }
+.lx-scope .lx-hero-features .lx-about-button-holder .lx-button.lx-is-secondary { background-color: #333335; }
+.lx-scope .lx-hero-features .lx-about-button-holder .lx-button.lx-is-secondary:hover { background-color: #262628; }
 html[lang^="zh"] .lx-scope .lx-hero-features .lx-feature-description-holder .lx-text-size-regular {
   word-break: keep-all;
   overflow-wrap: anywhere;
@@ -4073,10 +4090,8 @@ html[lang^="zh"] .lx-scope .lx-hero-features .lx-feature-description-holder .lx-
     padding-left: 1rem;
     padding-right: 1rem;
   }
-  .lx-scope .lx-hero-features .lx-feature-hero-text-holder::before {
-    inset: -1.5rem 0;
-    background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .8) 1.5rem, rgba(0, 0, 0, .8) calc(100% - 1.5rem), rgba(0, 0, 0, 0));
-  }
+  /* phones: the veil is a full-width band (the lede runs edge to edge) */
+  .lx-scope .lx-hero-features .lx-feature-hero-text-holder::before { --sg-vx: 0px; --sg-vy: 1.5rem; inset: -1.5rem 0; }
 }
 
 /* workforce.html, Chinese — the role-group intro beside the list

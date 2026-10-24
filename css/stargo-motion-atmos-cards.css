@@ -47,3 +47,8 @@
 .sgk-step.is-on .sgk-dot { background: #ec6f10; border-color: #ff8a3d; }
 .sgk-step.is-on .sgk-step-t { color: rgba(248, 241, 231, .92); }
 .sgk-step.is-now .sgk-dot { transform: scale(1.3); }
+/* the scene picks these from the card's measured text: a short card closes up the dot and its label, and
+   labels that would stand closer than 16px draw the end ones out to the line's ends */
+.sgk-steps.is-tight .sgk-step { gap: 4px; }
+.sgk-steps.is-ends .sgk-step:first-child .sgk-step-t { align-self: flex-start; text-align: left; }
+.sgk-steps.is-ends .sgk-step:last-child .sgk-step-t { align-self: flex-end; text-align: right; }
