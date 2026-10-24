@@ -87,22 +87,32 @@
     var kind = L.kind, W = L.w, H = L.h, rw = L.rail, row = app.pos.charAt(0), side = app.pos.charAt(1);
     var small = kind === 'tall' || kind === 'slim', low = H < 260, phone = small && !rw;
     var bar = small ? 30 : low ? 34 : 38, foot = row === 'b' ? 0 : small || low ? 22 : 24, pad = small ? 8 : low ? 9 : 12;
-    var cw = W - rw, full = !small;   // content width; full-size pictures carry the full tag
+    // ins: the middle row sits level with the film, so while the ring zooms out to its rest its outer side is the
+    // last to come on screen; its content keeps a fifth of the rail more room there, so the note, the tag and the
+    // pill on that side are whole a little before the zoom settles (the rail itself keeps its width)
+    var ins = row === 'm' && rw && (kind === 'land' || kind === 'mid') ? Math.round(rw * 0.2) : 0;
+    var cw = W - rw - ins, full = !small;   // content width; full-size pictures carry the full tag
     stage.className = 'sg-mo-stage sgd sgd-' + app.key + ' is-' + kind + ' at-' + row + (low ? ' is-low' : '') + (phone ? ' is-phone' : '');
     var st = stage.style;
     st.setProperty('--bar', bar + 'px'); st.setProperty('--foot', foot + 'px'); st.setProperty('--pad', pad + 'px');
-    st.setProperty('--l', (side === 'l' ? rw : 0) + 'px'); st.setProperty('--r', (side === 'r' ? rw : 0) + 'px');
+    st.setProperty('--l', (side === 'l' ? rw + ins : 0) + 'px'); st.setProperty('--r', (side === 'r' ? rw + ins : 0) + 'px');
     var R = { kind: kind, W: cw, H: H, row: row, small: small, low: low, phone: phone };
     if (rw) {   // the desktop's app rail, in the band the template keeps off screen
       var rl = div('sgd-rail is-' + side, stage);
+      if (ins) rl.style.width = rw + 'px';
       for (var i = 0; i < 6; i++) ico(ORDER[i], span('sgd-ri' + (ORDER[i] === app.key ? ' is-me' : ''), rl), 13);
     }
     var tag = full ? T('动态示意 · 演示数据', 'Illustrative motion · demo data') : T('演示数据', 'Demo data');
     var b = div('sgd-bar', stage);
     if (kind === 'land' || kind === 'mid') { var d = span('sgd-dots', b); el('i', '', d); el('i', '', d); el('i', '', d); }
     ico(app.key, span('sgd-mark', b), small ? 12 : 13);
-    el('b', 'sgd-name', b, small || kind === 'sq' || cw < 360 ? app.short || app.name : app.name);
-    if ((kind === 'land' || kind === 'mid') && cw >= (row === 'b' ? 600 : K.ZH ? 420 : 470) && app.crumb) span('sgd-crumb', b, app.crumb);
+    // quiet: a desktop top-row window rests with its title bar at the screen's top edge (on 16:9 screens the words
+    // would show as a sliver there), so its name and crumb live only in the status bar at its foot
+    var quiet = row === 't' && rw && (kind === 'land' || kind === 'mid'), crumb = (kind === 'land' || kind === 'mid') && cw >= (row === 'b' ? 600 : K.ZH ? 420 : 470) && app.crumb;
+    if (!quiet) {
+      el('b', 'sgd-name', b, small || kind === 'sq' || cw < 360 ? app.short || app.name : app.name);
+      if (crumb) span('sgd-crumb', b, app.crumb);
+    }
     function mkPill(parent, cls) {
       R.pill = span('', parent); R.pcls = 'sgd-pill ' + cls + 'is-';
       R.pdot = el('i', '', R.pill); R.ptx = span('', R.pill);
@@ -114,7 +124,7 @@
       var f = div('sgd-foot', stage);
       if (row === 't') {   // a status bar: whose window, what it is doing, what it is
         f.className = 'sgd-foot is-status';
-        if (!small && cw >= (K.ZH ? 0 : 300)) { var id = span('sgd-fid', f); ico(app.key, span('sgd-fmark', id), 10); el('b', '', id, app.short || app.name); }
+        if (!small && cw >= (K.ZH ? 0 : 300)) { var id = span('sgd-fid', f); ico(app.key, span('sgd-fmark', id), 10); el('b', '', id, app.short || app.name); if (quiet && crumb && cw >= (K.ZH ? 420 : 600)) span('sgd-crumb', id, app.crumb); }   // en: only where the state pill keeps its room
         if (kind !== 'sq') mkPill(f, 'in-foot ');
       } else if (!small && cw >= (K.ZH ? 330 : 440)) span('sgd-note', f, app.note);
       span('sgd-tag', f, tag);

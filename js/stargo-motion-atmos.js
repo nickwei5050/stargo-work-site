@@ -134,7 +134,9 @@
       R.shipLit = sv('g', { class: 'sga-shiplit' }, svg);
       for (var m = 0; m < 3; m++) { sv('rect', { x: f1(s0 + 15 + m * 9), y: sy - 33, width: 6, height: 5, class: 'sga-lamp' }, R.shipLit); sv('rect', { x: f1(s0 + 15 + m * 9), y: sy + 30 + m * 3, width: 6, height: 26 - m * 6, class: 'sga-reflect' }, R.shipLit); }
       sv('circle', { cx: f1(s1 + 20), cy: sy - 16, r: 1.8, class: 'sga-lamp' }, R.shipLit);
-      R.port = label(stage, 'sga-place', q, gy + 22, T('钦州港', 'Qinzhou port'), '');
+      // under the quay's containers, ending 16px short of the doors' seam (W / 2): each door carries its own half of
+      // the stage, so a label that crossed the seam (en 'Qinzhou port' did, from the quay at 0.445 W) split in two as the doors opened
+      R.port = label(stage, 'sga-place is-left', W * 0.5 - 16, gy + 22, T('钦州港', 'Qinzhou port'), '');
       // the container that travels, and the pulse
       R.box = sv('rect', { x: -11, y: -5, width: 22, height: 10, rx: 1, class: 'sga-moving' }, svg);
       R.pulse = sv('g', { class: 'sga-pulse' }, svg);

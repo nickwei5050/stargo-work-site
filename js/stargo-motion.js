@@ -659,7 +659,7 @@
       ['AE', [55.27, 25.2], 'Gulf Solar Trading', T('光伏储能', 'Solar storage'), T('迪拜', 'Dubai'), 88, T('中标两个离网项目，需求与储能系列一致，交期是关键。', 'Won two off-grid projects; matches the storage series, lead time decides.')],
       ['SE', [18.07, 59.33], 'Nordic Mobility AB', T('电动自行车', 'E-bikes'), T('斯德哥尔摩', 'Stockholm'), 93, T('年采购约 2,000 组，官网列出 CE 与 UN38.3 要求，我们资料齐全。', 'About 2,000 packs a year; asks for CE and UN38.3, which we have.')],
       ['ID', [106.85, -6.2], 'PT Surya Energi', T('电动三轮', 'E-tricycles'), T('雅加达', 'Jakarta'), 90, T('电动三轮销量增长 40%，64V 104Ah 与其车型匹配。', 'Tricycle sales up 40%; 64V 104Ah fits their models.')],
-      ['PL', [21.01, 52.23], 'Wisła E-Bike Sp. z o.o.', T('电动自行车', 'E-bikes'), T('华沙', 'Warsaw'), 86, T('正在扩产，LinkedIn 显示新任采购总监到岗，适合首封开发信。', 'Expanding, with a new purchasing director: a good first email.')],
+      ['PL', [21.01, 52.23], 'Wisła E-Bike Sp. z o.o.', T('电动自行车', 'E-bikes'), T('华沙', 'Warsaw'), 86, T('正在扩产，职业社交主页显示新任采购总监到岗，适合首封开发信。', 'Expanding, with a new purchasing director: a good first email.')],
       ['AU', [151.2, -33.87], 'Harbour Off-Grid Pty', T('房车储能', 'RV storage'), T('悉尼', 'Sydney'), 92, T('房车改装业务需要 12V 100Ah，询价历史显示偏好 LiFePO4。', 'RV conversions need 12V 100Ah; past requests prefer LiFePO4.')],
       ['MX', [-99.13, 19.43], 'Movilidad Verde SA', T('物流车队', 'Delivery fleets'), T('墨西哥城', 'Mexico City'), 87, T('城配车队电动化，预算已批，下季度采购。', 'Electrifying city delivery; budget approved, buying next quarter.')],
       ['NG', [3.38, 6.52], 'Lagos Power Ltd', T('离网储能', 'Off-grid storage'), T('拉各斯', 'Lagos'), 85, T('离网储能需求旺，曾询价 30 套，适合 CIF 报价。', 'Strong off-grid demand; asked for 30 sets before, quote CIF.')],

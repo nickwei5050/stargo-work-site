@@ -193,8 +193,9 @@
           wide: { mail: [40, 52, 466, 196], pdf: [534, 52, 466, 196], sheet: [40, 474, 960, 214], col: [[22, 260], [300, 210], [526, 120], [664, 260]] },
           low: { mail: [32, 46, 436, 160], pdf: [492, 46, 436, 160], sheet: [32, 402, 896, 170], col: [[20, 250], [290, 200], [500, 110], [626, 250]] },
           square: { mail: [24, 52, 352, 186], pdf: [384, 52, 352, 186], sheet: [24, 408, 712, 214], col: [[16, 200], [226, 160], [398, 84], [494, 196]] },
-          tall: { mail: [16, 40, 488, 82], pdf: [16, 128, 488, 70], sheet: [16, 438, 488, 156], col: [[14, 150], [170, 118], [296, 56], [362, 112]] }
+          tall: { mail: [16, 40, 488, 82], pdf: [16, 128, 488, 70], sheet: [16, 438, 488, 156], col: [[14, 146], [166, 112], [284, 56], [346, 128]] }
         }[n];
+        // tall (tablet portrait): the delivery column is the widest, so 'FOB Shenzhen' shows whole at 14px
         var tall = n === 'tall', low = n === 'low', nOld = tall || low ? 1 : 2;
         // the mail
         var m = win(R.body, G.mail, 'mail', T('邮件', 'Mail'), T('1 封未读', '1 unread'));
@@ -303,8 +304,10 @@
         // lv: the low layout's window has room for one line of the question (1280 × 720, 1366 × 768)
         { ic: 'chat', name: 'WhatsApp', who: '+49 151 ••• 2207', k: T('规格', 'Spec'), l: '', v: 'Can the 48V 100Ah come with a Bluetooth BMS?', lv: 'Bluetooth BMS on the 48V 100Ah?', pv: 'Bluetooth BMS?' },
         { ic: 'store', name: T('阿里国际站', 'Alibaba.com'), who: 'Muller Energie', k: T('样品', 'Sample'), l: T('样品申请', 'Sample request'), v: '2 pcs, ship to Hamburg', pv: T('2 组，寄汉堡', '2 pcs to Hamburg') },
-        { ic: 'form', name: T('官网表单', 'Website form'), who: 'muller-energie.de', k: T('公司', 'Company'), l: 'Müller Energie GmbH', v: T('储能集成 · 年采购约 2,000 组', 'Storage integrator · ~2,000 packs a year'), pv: 'Müller Energie GmbH' }
+        { ic: 'form', name: T('官网表单', 'Website form'), who: 'muller-energie.de', k: T('公司', 'Company'), l: 'Müller Energie GmbH', v: T('储能集成 · 年采购约 2,000 组', 'Storage integrator · ~2,000 packs a year'), pv: T('Müller Energie GmbH', 'Müller Energie') }
       ];
+      // phone (344 px stage, ~1:1 at 360-390 px): each chip is 220 wide, so every pv shows whole after its key
+      // (en 'Company' is wider than zh 公司, so en drops the GmbH there; the customer card below names it in full)
       // who comes to the front, and when
       var ORDER = [0, 2, 1, 3, 0, 2], S0 = 1.2, SP = 1.1, FIX = 7.6;
       var G = {
@@ -312,7 +315,7 @@
         low: { w: [[48, 46, 380, 156], [344, 70, 360, 138], [276, 398, 370, 156], [566, 420, 364, 150]], off: [[14, 5], [-14, -5], [14, -5], [-14, 5]], metric: [48, 566], card: [180, 400, 600, 176] },
         square: { w: [[24, 52, 330, 168], [262, 80, 330, 158], [152, 410, 316, 168], [410, 436, 326, 160]], off: [[12, 5], [-12, -5], [12, -5], [-12, 5]], metric: [24, 598], card: [110, 414, 540, 196] },
         tall: { w: [[16, 48, 300, 140], [204, 64, 300, 128], [16, 436, 300, 140], [204, 448, 300, 154]], off: [[10, 4], [-10, -4], [10, -4], [-10, 4]], metric: null, card: [30, 434, 460, 168] },
-        phone: { w: [[8, 0, 200, 29], [136, 3, 200, 29], [8, 4, 200, 30], [136, 16, 200, 30]], off: [[6, 1], [-6, -1], [6, -1], [-6, 1]], metric: null, card: [8, 0, 328, 48] }
+        phone: { w: [[8, 0, 220, 29], [116, 3, 220, 29], [8, 4, 220, 30], [116, 16, 220, 30]], off: [[6, 1], [-6, -1], [6, -1], [-6, 1]], metric: null, card: [8, 0, 328, 48] }
       }[n];
       WIN.forEach(function (d, i) {
         var e, r = G.w[i];

@@ -48,7 +48,8 @@
 .sga-node-rip { fill: none; stroke: #ff8a3d; stroke-width: 1.2; transform-box: fill-box; transform-origin: center; opacity: 0; }
 .sga-node.is-hot .sga-node-ring { stroke: #ff8a3d; }
 .sga-node.is-hot .sga-node-core { fill: #ff8a3d; }
-.sga-buyer.is-left { transform: translateX(-100%); text-align: right; }
+/* .sga-place.is-left: the port's label ends short of the doors' seam (js/stargo-motion-atmos.js) */
+.sga-buyer.is-left, .sga-place.is-left { transform: translateX(-100%); text-align: right; }
 .sga-line { fill: none; stroke: rgba(255, 236, 220, .26); stroke-width: 1.2; stroke-linejoin: round; }
 .sga-glass { stroke: rgba(255, 236, 220, .1); stroke-width: 1; }
 .sga-win-dim { fill: rgba(255, 236, 220, .035); stroke: rgba(255, 236, 220, .1); stroke-width: 1; }

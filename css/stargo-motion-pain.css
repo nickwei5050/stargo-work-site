@@ -98,6 +98,8 @@
 .is-tall .sg-pn-mail-sub { font-size: 14px; margin-top: 1px; }
 .is-tall .sg-pn-doc { display: flex; gap: 6px; padding: 3px 10px; }
 .is-tall .sg-pn-pf { flex: 1; min-width: 0; flex-direction: column; align-items: flex-start; justify-content: center; gap: 1px; height: 30px; margin: 0; padding: 0 8px; }
+/* the model line (LFP-48100 · 48V 100Ah) is the long one: it takes the room the quantity and delivery do not need, so it shows whole on tablets */
+.is-tall .sg-pn-pf:first-child { flex: 1.5; }
 .is-tall .sg-pn-pf-k { width: auto; font-size: 12.5px; line-height: 1.1; }
 .is-tall .sg-pn-pf-v { font-size: 13px; line-height: 1.15; max-width: 100%; }
 .is-tall .sg-pn-fix-strip { flex-wrap: wrap; align-content: center; gap: 9px 10px; padding: 0 12px 0 14px; }

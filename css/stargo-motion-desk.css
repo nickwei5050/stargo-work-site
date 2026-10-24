@@ -47,6 +47,9 @@
 .sgd-note { min-width: 0; overflow: hidden; text-overflow: ellipsis; color: rgba(185, 236, 198, .66); }
 .sgd-fid { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(244, 238, 232, .8); }
 .sgd-fmark { width: 15px; height: 15px; border-radius: 4px; }
+/* a desktop top-row window's crumb, moved from its title bar to its status bar (js/stargo-motion-desk.js quiet) */
+.sgd-fid .sgd-crumb { font-size: 12px; font-weight: 400; }
+.sgd-fid .sgd-crumb::before { margin: 0 6px 0 0; }
 
 /* the small windows: no traffic lights, tighter */
 .sgd.is-tall .sgd-bar, .sgd.is-slim .sgd-bar { gap: 6px; padding: 0 8px; }
