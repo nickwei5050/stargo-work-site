@@ -125,39 +125,63 @@
       { av: 'ME', avc: 'is-cyan', name: 'Müller Energie', when: T('刚刚', 'now'),
         pill: T('3 天未回复', 'No reply in 3 days'), pc: 'is-red', body: T('已起草跟进 · 待你确认', 'Follow-up drafted · needs your OK'),
         bodyM: T('已起草跟进 · 待你确认', 'Follow-up drafted'),
-        pillS: T('3 天未回复', '3 days, no reply'), bodyS: T('已起草', 'Drafted'), act: true },
+        pillS: T('3 天未回复', '3 days, no reply'), bodyS: T('已起草', 'Drafted'), bodyX: T('已起草', 'Draft'), act: true },
       { avIco: 'doc', avc: 'is-amber', name: T('报价 Q-1042', 'Quote Q-1042'), when: '09:12',
         pill: T('低于底价', 'Below floor price'), pc: 'is-red', body: T('等你审批 · 批了才能发给客户', 'Needs your approval to go out'),
         bodyM: T('等你审批 · 批了才能发', 'Needs your approval'),
-        pillS: T('低于底价', 'Below floor price'), bodyS: T('等你审批', 'Needs approval'), pc2: 'is-amber' },
+        pillS: T('低于底价', 'Below floor price'), pillX: T('低于底价', 'Below floor'), bodyS: T('等你审批', 'Needs approval'), pc2: 'is-amber' },
       { av: 'PS', avc: 'is-green', name: 'PT Surya', when: '08:30',
         pill: T('补货周期到了', 'Restock cycle due'), pc: 'is-gray', body: T('建议联系 · 上次下单已 60 天', 'Suggest a check-in call'),
         bodyM: T('建议联系 · 上次下单 60 天', 'Suggest a check-in call'),
         pillS: T('补货周期到了', 'Restock due'), bodyS: T('建议联系', 'Worth a call'), pc2: 'is-gray' }
     ];
     /* tall: 1440 and up (host 280 × 606 or more); mid: laptops (any host it fits at 1 or more, so the type
-       is never scaled under its size); mini: the hand-held phone on a phone screen (142–155 px wide), cut at about 80% of
-       its height; crop-WxH: 768 to about 900 px, where only the left part of the phone shows (made on
+       is never scaled under its size; mid-WxH, the same at the host's own size from 200 to 223 px wide);
+       mini: the hand-held phone on a phone screen (140–155 px wide; mini-WxH at the host's own size under
+       140, 320–354 px screens), whole or cut by the next section; crop-WxH: where only the left part of the phone shows (768 to about 900 px until QA
+       round 5, 2026-10-24; the band now shows the whole phone there, so a fallback; made on
        demand: the size of that part, at a scale of 1 to ~1.35) */
     var layouts = { tall: { w: 280, h: 606 }, mid: { w: 224, h: 485 }, mini: { w: 140, h: 303 } };
     var NUM = ['', '1', '2', '3'];
-    var R, arr, hostEl = null, need2 = 0, ro = null;
-    // mini: two slots where the part of the phone the page shows holds them (in stage px, at the Runner's
-    // scale), else one. Measured when built and again whenever the page's layout settles differently
-    // (late fonts or images above change where the next section starts): a ResizeObserver, never per frame.
+    var R, arr, hostEl = null, need2 = 0, need3 = 0, ro = null, LM = layouts.mini;
+    /* mini: where the page shows the whole phone (375–430px screens: the next section starts below it), the
+       screen is the app's whole 待办 page: all three items stay, over the tab bar (QA round 5, 2026-10-24: at
+       390 the list filled the top 60% and the rest stayed blank cream for the whole loop). Where the next
+       section cuts the phone (320–360px, and zh at 390 where the heading wraps to more lines), no tab bar,
+       and as many of the three as the part it shows holds (in stage px, at the Runner's scale): all three,
+       else two slots, the approved one leaving to make room for the third, else one. Measured when built and again whenever the page's layout
+       settles differently (late fonts or images above change where the next section starts): a
+       ResizeObserver, never per frame.
+       2026-10-24 (QA round 5, later the same day): snug, when the three rows miss the shown part by a few
+       px (zh at 390: 242 px shown, 254 needed, so two rows and ~55 px of blank cream over the next
+       section's edge), the rows trim their own top and bottom padding and the gaps between their lines
+       (.is-snug, 6 px a row, words and sizes unchanged) and all three stay. Both sets of row heights are
+       measured when built, so a switch only swaps numbers. */
     function miniFit() {
-      if (!R || !R.leave || !hostEl.clientHeight) return;
-      var s = Math.min(hostEl.clientWidth / 140, hostEl.clientHeight / 303);
-      arr = shownH(hostEl) / s >= need2 + 2 ? ARR_MINI : ARR_ONE;
+      if (!R || !R.mini || !hostEl.clientHeight) return;
+      var s = Math.min(hostEl.clientWidth / LM.w, hostEl.clientHeight / LM.h), sh = shownH(hostEl) / s;
+      var whole = sh >= LM.h - 6 && need3 <= LM.h - R.tabH, three = whole || sh >= need3 + 2;
+      var snug = !three && sh >= R.need3S + 2;
+      three = three || snug;
+      R.leave = !three;
+      arr = three ? ARR : sh >= need2 + 2 ? ARR_MINI : ARR_ONE;
+      cl(R.stage, 'is-whole', whole);
+      cl(R.stage, 'is-snug', snug);
+      var H = snug ? R.hS : R.hN;
+      for (var k = 0; k < R.items.length; k++) { R.items[k].h = H[k][0]; R.items[k].hd = H[k][1]; }
     }
 
     function build(stage, L, name) {
-      R = { items: [] };
-      var tall = name === 'tall', mid = name === 'mid', crop = !!L.crop;
+      R = { items: [], stage: stage };
+      if (L.mini) name = 'mini';
+      if (L.mid) name = 'mid';
+      var tall = name === 'tall', mid = name === 'mid', crop = !!L.crop, mini = name === 'mini';
+      // xs: a host-sized mini under 140px (125 at 320, 133 at 340), with tighter insets and a few shorter words
+      var xs = mini && L.w < 140;
       var full = R.full = tall || mid;   // the app's own card with its header, avatars and times
-      hostEl = stage.parentNode;
+      hostEl = stage.parentNode; LM = mini ? L : layouts.mini;
       arr = full || crop ? ARR : ARR_MINI;
-      stage.className = 'sg-mo-stage sgp sgp-feed is-' + (crop ? 'mini is-crop' : name);
+      stage.className = 'sg-mo-stage sgp sgp-feed is-' + (crop ? 'mini is-crop' : name) + (xs ? ' is-xs' : '');
       statusBar(stage);
       var bar = appBar(stage, tall ? T('工作台', 'Workspace') : '', T('待办', 'To-do'), mid);
       // the full tag wherever it fits on its own line; the phone's mini says 演示数据 in its bar
@@ -182,7 +206,7 @@
         el('b', '', r1, d.name);
         if (full) el('em', '', r1, d.when);
         var o = { it: it, full: fu };
-        el('div', 'sgp-r2', fu).appendChild(el('span', 'sgp-pill ' + d.pc, null, full ? d.pill : d.pillS));
+        el('div', 'sgp-r2', fu).appendChild(el('span', 'sgp-pill ' + d.pc, null, full ? d.pill : xs && d.pillX || d.pillS));
         if (full) {
           el('div', 'sgp-body', fu, mid ? d.bodyM : d.body);
           if (d.act) {
@@ -193,7 +217,7 @@
         } else if (d.act || crop) {
           // on a phone only the follow-up has a second line, so the list stays above the section's edge
           var r3 = el('div', 'sgp-r3', fu);
-          if (d.act) { el('span', 'sgp-body', r3, d.bodyS); o.ok = btn(r3, T('批准', 'Approve'), 'is-primary'); }
+          if (d.act) { el('span', 'sgp-body', r3, xs ? d.bodyX : d.bodyS); o.ok = btn(r3, T('批准', 'Approve'), 'is-primary'); }
           else r3.appendChild(el('span', 'sgp-pill ' + d.pc2, null, d.bodyS));
         }
         if (d.act) {
@@ -208,10 +232,11 @@
         }
         R.items.push(o);
       }
-      if (full || crop) {
-        // the tab bar; where the phone is cut, the two tabs that show
+      if (full || crop || mini) {
+        // the tab bar; where the phone is cut, the two tabs that show; on the mini, three, the third named AI
+        // alone (css/stargo-motion-phone.css shows it only on a whole phone, .is-whole)
         var tb = el('div', 'sgp-tabs', stage);
-        var TABS = [['inbox', T('待办', 'To-do')], ['chat', T('对话', 'Chats')], ['spark', T('AI · 客户', 'AI · Buyers')]];
+        var TABS = [['inbox', T('待办', 'To-do')], ['chat', T('对话', 'Chats')], ['spark', mini ? 'AI' : T('AI · 客户', 'AI · Buyers')]];
         for (var j = 0; j < (crop ? 2 : 3); j++) {
           var tab = el('span', 'sgp-tab' + (j === 0 ? ' is-on' : ''), tb);
           var ic = el('span', 'sgp-tab-i', tab); ico(TABS[j][0], ic, tall ? 22 : 20, 'sgp-ico', 2);
@@ -229,12 +254,20 @@
         ob.h = ob.it.offsetHeight;
         ob.hd = ob.done ? ob.done.offsetHeight : ob.h;
       }
-      if (!full && !crop) {
+      if (mini) {
         // the deepest the two-slot list reaches: the follow-up (whole or approved) over the quote, or the
-        // quote over the restock item once the approved one has left
-        var I = R.items, g = R.gap;
-        need2 = card.offsetTop + Math.max(I[0].h + g + I[1].h, I[0].hd + g + I[1].h, I[1].h + g + I[2].h);
-        R.leave = true;
+        // quote over the restock item once the approved one has left; and all three, over the tab bar
+        var g = R.gap, ct = card.offsetTop;
+        // each row's [whole, approved] height, as drawn now: the plain set, then the snug one
+        var rowsH = function () { return R.items.map(function (o) { return [o.it.offsetHeight, o.done ? o.done.offsetHeight : o.it.offsetHeight]; }); };
+        var H = R.hN = rowsH();
+        cl(stage, 'is-snug', true); var S = R.hS = rowsH(); cl(stage, 'is-snug', false);
+        need2 = ct + Math.max(H[0][0] + g + H[1][0], H[0][1] + g + H[1][0], H[1][0] + g + H[2][0]);
+        need3 = ct + H[0][0] + g + H[1][0] + g + H[2][0] + 4;
+        R.need3S = ct + S[0][0] + g + S[1][0] + g + S[2][0] + 4;
+        // the tab bar's height as it shows on a whole phone (it is hidden otherwise, so it is measured shown)
+        cl(stage, 'is-whole', true); R.tabH = tb.offsetHeight;
+        R.mini = R.leave = true;
         miniFit();
         if (!ro && window.ResizeObserver) {
           ro = new ResizeObserver(miniFit);
@@ -283,7 +316,7 @@
     return {
       layouts: layouts,
       pick: function (w, h) {
-        // narrower than the phone's 546:1182 screen: the band cuts the phone on its right (768 to ~900 px)
+        // narrower than the phone's 546:1182 screen: the band cuts the phone on its right (the fallback)
         if (w / h < 0.452 && w >= 100) {
           var s = Math.max(1, h / 560);
           if (w / s < 132) s = w / 132;
@@ -292,7 +325,21 @@
           return k;
         }
         // tall only where it fits at 1 or more: 1366 × 768 gives a 282 × 603 host, which would scale it to 0.995
-        return w >= 280 && h >= 606 ? 'tall' : w >= 200 ? 'mid' : 'mini';
+        if (w >= 280 && h >= 606) return 'tall';
+        if (w >= 224) return 'mid';
+        /* 200–223 px wide (the whole phone at 768–991 px, zh: css/stargo-motion-phone.css), mid drawn at the
+           host's own size, so its words stay at their size (QA round 5, 2026-10-24: 224 × 485 at 0.98) */
+        if (w >= 200) {
+          var Wd = Math.floor(w), Hd = Math.floor(h), kd = 'mid-' + Wd + 'x' + Hd;
+          if (!layouts[kd]) layouts[kd] = { w: Wd, h: Hd, mid: true };
+          return kd;
+        }
+        // the phone's mini under 140px wide (125 × 270 at 320, 133 × 288 at 340) is drawn at the host's own
+        // size, so its words stay at 12px (QA round 5: 140 × 303 drawn at 0.89, words at 10.7px)
+        if (w >= 140 || w < 100) return 'mini';
+        var Wm = Math.floor(w), Hm = Math.floor(h), km = 'mini-' + Wm + 'x' + Hm;
+        if (!layouts[km]) layouts[km] = { w: Wm, h: Hm, mini: true };
+        return km;
       },
       // the composed frame: all three in, the follow-up approved and waiting to be sent
       build: build, tick: tick, still: 8.4, start: 0.2,
@@ -355,11 +402,13 @@
     // the card's phone is 236–249 px wide at 1024 px: there mid is drawn that wide rather than scaled under 1.
     // Phones under 336 px (320–335) show it 225–235 px wide: there `xs` packs the rows tighter (step 4, which
     // picks the task up again, stays above the fold) and takes a few shorter strings, so nothing drops under 12px.
-    function midAt(w) {
+    // The height is floored, and never over the host's own (QA round 5, 2026-10-24: at 320 the 225-wide phone
+    // was laid out 487 tall in a 486 host, so it was drawn at 0.998 and its words at 11.97px).
+    function midAt(w, h) {
       var W = Math.max(220, Math.min(250, Math.floor(w)));
       if (W === 250) return 'mid';
-      var k = 'mid-' + W;
-      if (!layouts[k]) layouts[k] = { w: W, h: Math.round(W * 541 / 250), fold: Math.round(W * 408 / 250), kind: 'mid', xs: W < 236 };
+      var H = Math.floor(Math.min(W * 541 / 250, h || 1e4)), k = 'mid-' + W + 'x' + H;
+      if (!layouts[k]) layouts[k] = { w: W, h: H, fold: Math.round(W * 408 / 250), kind: 'mid', xs: W < 236 };
       return k;
     }
     var LV = { tall: 0, mid: 1, mini: 2 };
@@ -607,7 +656,7 @@
 
     return {
       layouts: layouts,
-      pick: function (w) { return w >= 300 ? 'tall' : w >= 200 ? midAt(w) : 'mini'; },
+      pick: function (w, h) { return w >= 300 ? 'tall' : w >= 200 ? midAt(w, h) : 'mini'; },
       // the composed frame: the team at work, paused, its context on screen
       build: build, tick: tick, still: 11.0, start: 0.1,
       cue: function (t) { return Math.ceil(t / P) * P; }

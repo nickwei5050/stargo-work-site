@@ -42,7 +42,9 @@
     var B_IN = 10.6, B_BAD = 12.0, B_REV = 13.4, B_KEEP = 14.0, OUT0 = P - 1.4, OUT1 = P - 0.6;
     // every layout is drawn at about its box's own size, so no type renders under 12px: wide the card's
     // 512 x 429 box from 1440 up, wide2 its 1.32:1 box below that (one run in the log, no log heading),
-    // tall the 768-991 strip, square the 1:1 phone card (358px at 390), small the same below 350px
+    // tall the 768-991 strip, square the 1:1 phone card (358px at 390), small the same below 350px, and
+    // under 324px small at the card's own size (288 at 320, 308 at 340; QA round 5, 2026-10-24: 324 drawn
+    // into 288 put its words at 11.1px), xs below 300px tall with tighter cards (css/stargo-motion-improve.css)
     var layouts = { wide: { w: 512, h: 430, vis: 2 }, wide2: { w: 512, h: 388, vis: 1 }, tall: { w: 288, h: 536, vis: 3 }, square: { w: 352, h: 352, vis: 1 }, small: { w: 324, h: 324, vis: 1 } };
     var A_PILL = [T('小样本测试', 'Testing'), T('等你批准', 'Awaiting approval'), T('逐步采用', 'Rolling out'), T('已采用', 'Adopted')];
     var B_PILL = [T('试用 10%', 'Trial 10%'), T('效果变差', 'Doing worse'), T('已撤回', 'Reverted')];
@@ -50,8 +52,9 @@
 
     function build(stage, Ld, name) {
       L = Ld; R = { rows: [] };
+      if (Ld.small) name = 'small';
       var sq = name === 'square' || name === 'small', narrow = name !== 'wide' && name !== 'wide2';
-      stage.className = 'sg-mo-stage sgi is-' + (name === 'small' ? 'square is-small' : name === 'wide2' ? 'wide is-wide2' : name);
+      stage.className = 'sg-mo-stage sgi is-' + (name === 'small' ? 'square is-small' + (Ld.h < 300 ? ' is-xs' : '') : name === 'wide2' ? 'wide is-wide2' : name);
       var bar = el('div', 'sgi-bar', stage);
       var mk = el('span', 'sgi-mark', bar); ico('loop', mk, 13);
       el('b', '', bar, T('改进记录', 'Improvements'));
@@ -189,7 +192,17 @@
 
     return {
       layouts: layouts,
-      pick: function (w, h) { var r = w / h; return r > 1.26 ? 'wide2' : r > 1.12 ? 'wide' : r < 0.78 ? 'tall' : w < 350 ? 'small' : 'square'; },
+      pick: function (w, h) {
+        var r = w / h;
+        if (r > 1.26) return 'wide2';
+        if (r > 1.12) return 'wide';
+        if (r < 0.78) return 'tall';
+        if (w >= 350) return 'square';
+        if (w >= 324 && h >= 324) return 'small';
+        var W = Math.max(260, Math.floor(w)), H = Math.max(260, Math.floor(h)), k = 'small-' + W + 'x' + H;
+        if (!layouts[k]) layouts[k] = { w: W, h: H, vis: 1, small: true };
+        return k;
+      },
       build: build, tick: tick, still: 16.5, cue: function (t) { return Math.ceil(t / P) * P; }
     };
   }

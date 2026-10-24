@@ -102,3 +102,8 @@
 .sgi.is-small .sgi-foot { margin-top: 6px; }
 .sgi.is-small .sgi-ct b { font-size: 14px; }
 .sgi.is-small .sgi-cn { display: none; }
+/* xs: small at the card's own size under 300px tall (288 × 288 at 320): the same content, about 16px less */
+.sgi.is-xs .sgi-body { top: 44px; bottom: 8px; gap: 4px; }
+.sgi.is-xs .sgi-card { padding: 5px 11px 6px; }
+.sgi.is-xs .sgi-ab, .sgi.is-xs .sgi-metric, .sgi.is-xs .sgi-keep { margin-top: 3px; }
+.sgi.is-xs .sgi-foot { margin-top: 4px; }

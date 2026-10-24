@@ -40,6 +40,12 @@
 .is-mini .sg-crew-live { font-size: 12px; padding: 2px 8px; gap: 5px; min-width: 0; }
 .is-mini .sg-crew-live i { width: 6px; height: 6px; }
 .sg-crew.is-narrow .sg-crew-app svg { display: none; }
+/* xs: a mini under 280px (the about tiles at 320–340px screens; QA round 5, 2026-10-24): the live pill and
+   the bar's gaps a little tighter, so 「Growth OS」 and 「Sales Desk」 stay whole beside the wordmark (the page's own
+   logo, laid over .sg-crew-brand, so that keeps its size) */
+.sg-crew.is-xs .sg-crew-bar { gap: 4px; padding-right: 6px; }
+.sg-crew.is-xs .sg-crew-app { padding-left: 6px; }
+.sg-crew.is-xs .sg-crew-live { padding: 2px 6px; gap: 3px; }
 
 .sg-crew-card { position: absolute; border-radius: var(--r); background: linear-gradient(180deg, rgba(255,246,232,.05), rgba(255,246,232,.018)); border: 1px solid rgba(255,228,190,.09); transition: border-color .5s, background-color .5s, opacity .4s; }
 .sg-crew-k { display: flex; align-items: center; gap: 6px; font-size: 12.5px; letter-spacing: .04em; color: rgba(244,238,232,.5); white-space: nowrap; }

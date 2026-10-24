@@ -75,10 +75,13 @@
     return { g: g, ring: ring };
   }
 
-  // the frame of all four: app bar (leaving the wordmark its corner), live pill, tag, body
+  // the frame of all four: app bar (leaving the wordmark its corner), live pill, tag, body. `app` may be
+  // [name, short name]: the short one on a mini under 285 px (340 px screens and under). xs: a mini under 280 px (the about tiles at
+  // 320–340 px screens; QA round 5, 2026-10-24), with a smaller wordmark and the scenes' shortest words.
   function frame(stage, L, app, ico) {
-    var full = L.kind === 'full', W = L.w, H = L.h, mid = full && H < 400;
-    stage.className = 'sg-mo-stage sg-crew is-' + L.kind + (mid ? ' is-mid' : '') + (W < 330 ? ' is-narrow' : '');
+    var full = L.kind === 'full', W = L.w, H = L.h, mid = full && H < 400, xs = !full && W < 280;
+    if (typeof app !== 'string') app = !full && W < 285 ? app[1] : app[0];
+    stage.className = 'sg-mo-stage sg-crew is-' + L.kind + (mid ? ' is-mid' : '') + (W < 330 ? ' is-narrow' : '') + (xs ? ' is-xs' : '');
     var bh = full ? 56 : 36;
     var bar = box('sg-crew-bar', stage, 0, 0, W, bh);
     el('span', 'sg-crew-brand', bar);
@@ -92,7 +95,7 @@
     tag.style.left = (W - (full ? 18 : 10)) + 'px';
     tag.style.top = (H - (full ? 12 : 5)) + 'px';
     var pad = full ? 20 : 10, top = bh + (full ? (mid ? 14 : 16) : 8), bottom = H - (full ? 34 : 22);
-    return { full: full, mid: mid, W: W, H: H, pad: pad, top: top, bottom: bottom, iw: W - 2 * pad, live: live, dot: dot, liveT: liveT, liveK: -1 };
+    return { full: full, mid: mid, xs: xs, W: W, H: H, pad: pad, top: top, bottom: bottom, iw: W - 2 * pad, live: live, dot: dot, liveT: liveT, liveK: -1 };
   }
   // the live pill: its words by phase (a phone's own shorter set when given), its dot blinking until it waits
   function liveTick(F, k, texts, mini, tau) {
@@ -106,7 +109,9 @@
   }
   function pick(w, h) {
     var k = w >= 380 && h >= 290 ? 'full' : 'mini';
-    var W = k === 'full' ? Math.max(380, Math.min(820, w)) : Math.max(260, Math.min(420, w));
+    // a mini as narrow as its tile down to 240 (the about tiles are 256 wide at 320), so it is never drawn
+    // under 1 (QA round 5, 2026-10-24: 260 drawn into 256, words at 11.8px)
+    var W = k === 'full' ? Math.max(380, Math.min(820, w)) : Math.max(240, Math.min(420, w));
     var H = k === 'full' ? Math.max(290, Math.min(640, h)) : Math.max(170, Math.min(280, h));
     W = Math.floor(W / 2) * 2; H = Math.floor(H / 2) * 2;
     var name = k + '-' + W + 'x' + H;
@@ -134,22 +139,25 @@
     var B = [
       { n: 'Nordic Mobility AB', cc: 'SE', sub: T('电动自行车 · 斯德哥尔摩', 'E-bikes · Stockholm'), s0: 93, s1: 93 },
       { n: 'Silva Mobilidade Ltda', cc: 'BR', sub: T('电动两轮 · 圣保罗', 'E-scooters · São Paulo'), s0: 89, s1: 89 },
-      { n: 'Nordwerk Energie GmbH', sn: 'Nordwerk Energie', cc: 'DE', sub: T('储能系统集成 · 汉堡', 'Storage integrator · Hamburg'), s0: 88, s1: 94 },
+      { n: 'Nordwerk Energie GmbH', sn: 'Nordwerk Energie', xn: 'Nordwerk', cc: 'DE', sub: T('储能系统集成 · 汉堡', 'Storage integrator · Hamburg'), s0: 88, s1: 94 },
       { n: 'Gulf Coast Lift Supply', sn: 'Gulf Coast Lift', cc: 'US', sub: T('叉车与仓储 · 休斯敦', 'Forklift fleets · Houston'), s0: 85, s1: 91 }
     ];
     var SIG = [
-      { at: 1.1, b: 3, k: T('招聘', 'Hiring'), text: T('车队换锂电，正在招聘采购专员', 'Fleet moving to lithium, hiring a buyer'), m: T('', 'Going lithium, hiring a buyer') },
-      { at: 4.5, b: 2, k: T('招标', 'Tender'), text: T('近 90 天第 3 条储能招标', 'Third storage tender in 90 days') }
+      { at: 1.1, b: 3, k: T('招聘', 'Hiring'), text: T('车队换锂电，正在招聘采购专员', 'Fleet moving to lithium, hiring a buyer'), m: T('', 'Going lithium, hiring a buyer'), x: T('车队换锂电，招聘采购专员', 'Fleet going lithium') },
+      { at: 4.5, b: 2, k: T('招标', 'Tender'), text: T('近 90 天第 3 条储能招标', 'Third storage tender in 90 days'), x: T('', '3rd tender in 90 days') }
     ];
     var RANK = [[0, 1, 2, 3], [0, 2, 3, 1], [1, 3, 0, 2]], RE = [2.3, 5.7];
     var WHY = 7.7, TYPE1 = 10.1, ASK = 10.5;
     var D = {
-      // the sources the site's own copy names (采购记录、招聘、扩张和企业动态), and no others
-      scanK: T('正在扫描', 'Scanning'), scan: T('招聘、招标、采购记录和官网动态…', 'Hiring, tenders, purchase records, websites…'), scanM: T('', 'Hiring, tenders, purchases…'),
+      // the sources the site's own copy names (采购记录、招聘、扩张和企业动态), and no others.
+      // 2026-10-24 (QA round 5, about crew tiles): the zh mini tile at 355 px has a 185 px line, and the
+      // full 16-glyph list wrapped into the one-line clamp, so zh gets its own 14-glyph mini line too
+      scanK: T('正在扫描', 'Scanning'), scan: T('招聘、招标、采购记录和官网动态…', 'Hiring, tenders, purchase records, websites…'), scanM: T('招聘、招标、采购和官网动态…', 'Hiring, tenders, purchases…'),
+      scanX: T('招聘、招标、采购记录…', 'Hiring, tenders…'),
       sigK: T('新信号', 'New signal'), whyK: T('推荐理由', 'Why this buyer'),
       why: T('近 90 天发布 3 条储能招标，产品线与 48V 100Ah 高度匹配，建议优先联系采购经理。', 'Three storage tenders in 90 days and a product line that fits 48V 100Ah. Contact the purchasing manager first.'),
       whyMid: T('近 90 天发布 3 条储能招标，产品线与 48V 100Ah 高度匹配。', 'Three storage tenders in 90 days; the product line fits 48V 100Ah.'),
-      whyMini: T('近 90 天 3 条储能招标', '3 storage tenders'),
+      whyMini: T('近 90 天 3 条储能招标', '3 storage tenders'), whyX: T('3 条储能招标', ''),
       ask: T('建议优先联系 · 由你决定', 'Contact first? Your call'), askMini: T('由你决定', 'Your call'),
       list: T('候选客户 · 按匹配度排序', 'Buyers, ranked by fit'), scanned: T('今日已扫描 ', 'Scanned today: '),
       live: [T('扫描中', 'Scanning'), T('写推荐', 'Writing'), T('等你决定', 'Your call')]
@@ -173,7 +181,7 @@
       R.k = el('span', 'sg-crew-chip', hd);
       R.who = el('b', '', hd);
       R.text = el('div', 'sg-crew-sig-text', tx);
-      R.typer = new Typer(R.text, !full ? D.whyMini : narrow ? D.whyMid : D.why);
+      R.typer = new Typer(R.text, F.xs && D.whyX || (!full ? D.whyMini : narrow ? D.whyMid : D.why));
       R.delta = el('span', 'sg-crew-delta', card);
       glyph('up', R.delta, full ? 13 : 11); el('span', '', R.delta, '+6');
       R.ask = el('span', 'sg-crew-ask', full && !narrow ? null : narrow ? tx : card);
@@ -195,7 +203,7 @@
         var rk = el('span', 'sg-crew-rank', r);
         el('span', 'sg-cc', r, b.cc);
         var m = el('div', 'sg-crew-row-m', r);
-        el('b', '', m, b.n);
+        el('b', '', m, F.xs && b.sn || b.n);
         if (full && rh >= 46) el('span', '', m, b.sub);
         var sc = el('div', 'sg-crew-score', r);
         var v = el('b', '', sc);
@@ -211,9 +219,9 @@
       if (R.st !== st) {
         R.st = st;
         // a narrow card or a phone names the signal's kind alone and the buyer's short name, so both fit
-        if (st < 0) { put(R.k, 'text', D.scanK); put(R.who, 'text', ''); put(R.text, 'text', !F.full && D.scanM || D.scan); }
-        else if (st < 2) { put(R.k, 'text', R.sn ? SIG[st].k : D.sigK + ' · ' + SIG[st].k); put(R.who, 'text', R.sn ? B[SIG[st].b].sn : B[SIG[st].b].n); put(R.text, 'text', !F.full && SIG[st].m || SIG[st].text); }
-        else { put(R.k, 'text', D.whyK); put(R.who, 'text', R.sn ? B[2].sn : B[2].n); R.typer.n = -1; }
+        if (st < 0) { put(R.k, 'text', D.scanK); put(R.who, 'text', ''); put(R.text, 'text', F.xs && D.scanX || !F.full && D.scanM || D.scan); }
+        else if (st < 2) { put(R.k, 'text', R.sn ? SIG[st].k : D.sigK + ' · ' + SIG[st].k); put(R.who, 'text', F.xs && B[SIG[st].b].xn || (R.sn ? B[SIG[st].b].sn : B[SIG[st].b].n)); put(R.text, 'text', F.xs && SIG[st].x || !F.full && SIG[st].m || SIG[st].text); }
+        else { put(R.k, 'text', D.whyK); put(R.who, 'text', F.xs ? B[2].xn : R.sn ? B[2].sn : B[2].n); R.typer.n = -1; }
         put(R.card, 'data-st', st < 0 ? 'scan' : st < 2 ? 'sig' : 'why');
         if (st >= 0) K.flash(R.text);
       }
@@ -251,9 +259,9 @@
   /* ============================= 报价 ============================= */
   function QuoteScene() {
     var LINES = [
-      { at: 1.0, k: T('72V 锂电池组', '72V lithium pack'), q: T('50 套', '50 sets'), u: 'US$ 412', v: 20600 },
+      { at: 1.0, k: T('72V 锂电池组', '72V lithium pack'), x: T('', '72V pack'), q: T('50 套', '50 sets'), u: 'US$ 412', v: 20600 },
       { at: 1.9, k: T('运输文件 UN38.3 · MSDS', 'UN38.3 · MSDS documents'), q: '', u: T('含', 'incl.'), v: 0 },
-      { at: 2.8, k: T('海运 · CIF Jebel Ali', 'Sea freight · CIF Jebel Ali'), q: '', u: '', v: 1180 }
+      { at: 2.8, k: T('海运 · CIF Jebel Ali', 'Sea freight · CIF Jebel Ali'), x: T('', 'Sea · CIF Jebel Ali'), q: '', u: '', v: 1180 }
     ];
     var CHECK0 = 4.1, CHECK1 = 5.3, GATE = 6.3;
     var D = {
@@ -291,7 +299,7 @@
         if (i === 1 && !docs) return null;
         var r = el('div', 'sg-crew-qrow', tb); r.style.height = rh + 'px';
         // a line without a quantity or a unit price gives its label those columns
-        el('span', 'sg-crew-qk', r, l.k);
+        el('span', 'sg-crew-qk', r, F.xs && l.x || l.k);
         if (full && l.q) el('span', 'sg-crew-qq', r, l.q);
         var u = l.u ? el('span', 'sg-crew-qu', r, l.u) : null;
         el('b', 'sg-crew-qv', r, l.v ? 'US$ ' + K.fmt(l.v) : '—');
@@ -346,7 +354,7 @@
     var MAIL = 'Hello, following up on our quote for 200 pcs 48V 100Ah, DAP Hamburg. Happy to answer questions or arrange a sample pack first.';
     var MAIL_2 = 'Following up on our quote for 200 pcs 48V 100Ah, DAP Hamburg. Can we answer any questions?';
     // one-line drafts, longest first: the first that fits whole is typed (≈ 8 / 6.9 px a character)
-    var MAIL_1 = ['Following up on our quote for 200 pcs 48V 100Ah, DAP Hamburg…', 'Following up on our quote for 200 pcs 48V 100Ah…', 'Following up on our 48V 100Ah quote…'];
+    var MAIL_1 = ['Following up on our quote for 200 pcs 48V 100Ah, DAP Hamburg…', 'Following up on our quote for 200 pcs 48V 100Ah…', 'Following up on our 48V 100Ah quote…', 'Following up on our quote…'];
     var MAIL_LONG = 'Hello,\nFollowing up on the quote we sent on 20 October for 200 pcs 48V 100Ah, DAP Hamburg. Is there anything we can clarify? We can also arrange a sample pack first.\nBest regards';
     var D = {
       who: 'Müller Energie GmbH', where: T('德国 · 询盘 200 pcs 48V 100Ah, DAP Hamburg', 'Germany · inquiry: 200 pcs 48V 100Ah, DAP Hamburg'),
@@ -360,7 +368,7 @@
       liveM: [T('盯进度', 'Watching'), T('起草中', 'Drafting'), T('待你确认', 'Your OK')]
     };
     function build(stage, L) {
-      var F = frame(stage, L, T('客户会话', 'Customer Chat'), 'mail'), full = F.full, R = { F: F }, y = F.top;
+      var F = frame(stage, L, [T('客户会话', 'Customer Chat'), T('客户会话', 'Chat')], 'mail'), full = F.full, R = { F: F }, y = F.top;
       var two = full && F.H >= 440;
       var hd = box('sg-crew-fhead', stage, F.pad, y, F.iw, full ? 44 : 24);
       el('span', 'sg-crew-av', hd, 'ME');
@@ -399,7 +407,7 @@
       if (long) el('div', 'sg-crew-draft-subj', dr, 'Re: 200 pcs 48V 100Ah, DAP Hamburg');
       R.body = el('div', 'sg-crew-draft-text', dr);
       if (lines <= 1) cl(dr, 'is-one', true);
-      var one = MAIL_1[2], cap = (F.iw - (full ? 32 : 16)) / (full ? 8 : 6.9);
+      var one = MAIL_1[MAIL_1.length - 1], cap = (F.iw - (full ? 32 : 16)) / (full ? 8 : 6.9);
       for (var mi = MAIL_1.length - 1; mi >= 0; mi--) if (MAIL_1[mi].length <= cap) one = MAIL_1[mi];
       R.typer = new Typer(R.body, long ? MAIL_LONG : lines >= 3 ? MAIL : lines === 2 ? MAIL_2 : one);
       var g = gateBox(F, stage, y + dh + gap, gh, D.gate, D.gateSub, D.send, D.edit);

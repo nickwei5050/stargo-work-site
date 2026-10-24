@@ -83,15 +83,44 @@
   // A short column (a laptop's short window) takes the phone layout; a box too small for any is left empty.
   function panelPick(w, h) {
     var k = 12 / 13;
-    if ((window.innerWidth || w) < 768) return 'phone';
     if (w > h * 2) return w >= 900 * k && h >= 250 * k ? 'band' : 'off';
     if (w >= 460 * k && h >= 640 * k) return 'col';
     return w >= 360 && h >= 520 ? 'phone' : 'off';
   }
-  function panel(sc) {
+  /* Phones (under 768px). The host is the whole panel, 560px tall, and the panel's heading and sentence sit
+     over its lower part: higher in English (more lines) and on narrow screens. QA round 5 (2026-10-24) found
+     the fixed 360 × 520 stage scaled to 0.89 at 320px (words at 10.7px) and centred down into the heading:
+     「(Decisions)」 on the 「Rejected · Outreach」 row, 「(Oversight)」 over the weekday letters. So the phone
+     layout is now built at the host's own width (360 at most; a wider phone scales it up, at most 560 / 520,
+     as before) and as tall as the host, so the stage is never scaled under 1 and starts at the panel's top;
+     and each scene fits its rows into `f`, the stage px above the heading's type less a 12px clearance. The
+     heading is measured from the page's layout (offsetTop chains, so a heading still sliding in does not
+     count) whenever the runner fits the host; `f` is part of the layout's name, so a heading that moves
+     (a late font re-wraps the sentence) is laid out again the next time the host comes into view. */
+  function phoneAt(host, w, h) {
+    var s = w >= 360 ? Math.max(1, Math.min(w / 360, h / 520)) : 1, W = w >= 360 ? 360 : Math.max(280, Math.floor(w));
+    var H = Math.floor(h / s), f = Math.floor(Math.min(H, (headTop(host, h) - 12) / s));
+    var k = 'phone-' + W + 'x' + H + '-' + f;
+    if (!PANEL[k]) PANEL[k] = { w: W, h: H, f: f, phone: true };
+    return k;
+  }
+  // where the panel's heading starts, in the host's px: its line box less the part of the type above it
+  // (the template sets the heading's line-height under its size, so the glyphs rise above the box)
+  function headTop(host, h) {
+    var st = host && host.closest('.studio-sticky'), hd = st && st.querySelector('.about-flx h2');
+    if (!hd || !hd.offsetHeight) return h;
+    var cs = getComputedStyle(hd), fs = parseFloat(cs.fontSize) || 0, lh = parseFloat(cs.lineHeight) || fs;
+    return yOf(hd) - yOf(host) - Math.max(0, (fs * 1.2 - lh) / 2);
+  }
+  function yOf(e) { for (var y = 0; e; e = e.offsetParent) y += e.offsetTop; return y; }
+  // the stage px a phone layout leaves above its rows: up to 20, less where the heading leaves less room
+  function topPad(L, nat) { return Math.max(0, Math.min(20, (L.f == null ? 520 : L.f) - nat)); }
+  function panel(sc, key) {
     var b = sc.build, t = sc.tick, off = false;
-    sc.layouts = PANEL; sc.pick = panelPick;
-    sc.build = function (stage, L, name) { off = name === 'off'; if (off) stage.className = 'sg-mo-stage'; else b(stage, L, name); };
+    sc.layouts = PANEL;
+    // each panel scene is on the page once: its host is found by its name
+    sc.pick = function (w, h) { return (window.innerWidth || w) < 768 ? phoneAt(document.querySelector('[data-sg-scene="' + key + '"]'), w, h) : panelPick(w, h); };
+    sc.build = function (stage, L, name) { off = name === 'off'; if (off) stage.className = 'sg-mo-stage'; else b(stage, L, L.phone ? 'phone' : name); };
     sc.tick = function (u) { if (!off) t(u); };
     return sc;
   }
@@ -102,7 +131,8 @@
   function chrome(stage, name, cls, mark, app, crumb, tag) {
     stage.className = 'sg-mo-stage sg-en ' + cls + ' is-' + name;
     var R = { phone: name === 'phone', band: name === 'band', col: name === 'col' };
-    if (R.phone) { at(stage, 'sg-tag', tag[0], tag[1], null, null, TAG_MINI); return R; }
+    // tag[2]: 'l' anchors the phone's tag by its left end, 'c' by its middle (else by its right end)
+    if (R.phone) { at(stage, 'sg-tag' + (tag[2] ? ' is-' + tag[2] : ''), tag[0], tag[1], null, null, TAG_MINI); return R; }
     var bar = el('div', 'sg-app-bar', stage);
     var mk = el('span', 'sg-app-mark', bar); ico(mark, mk, 15);
     el('b', '', bar, app);
@@ -123,23 +153,26 @@
     var P = 6.4, HOLD = 6.4, TT = 3 * P + HOLD, ARRIVE = 1.3, SWAP = 1.1, TYPE0 = 1.5, TYPE1 = 3.0, PRESS = 3.3, DONE = 3.6, OUT = 4.6, REC = 3.8;
     var IT = [
       { ic: 'mail', t: T('开发信 · Nordwerk Energie', 'Outreach · Nordwerk Energie'), s: T('首次联系 · 销售 AI 起草', 'First contact · sales AI'), p: T('开发信', 'Outreach'), rule: 1, by: T('你', 'You'), ok: false,
-        why: T('语气太硬，先问清需求', 'Too pushy — ask their needs first'), w: T('语气太硬，先问需求', 'Too pushy — ask first') },
+        why: T('语气太硬，先问清需求', 'Too pushy — ask their needs first'), w: T('语气太硬，先问需求', 'Too pushy — ask first'), wn: T('语气太硬，先问需求', 'Too pushy') },
       { ic: 'page', t: T('产品页 · 48V 储能柜', 'Product page · 48V rack storage'), s: T('3 张主图 · 中英两版', '3 images · 2 languages'), p: T('产品页', 'Product page'), rule: 2, by: T('市场主管', 'Marketing lead'), ok: true,
-        why: T('参数与规格书一致，可以发布', 'Specs match the datasheet'), w: T('与规格书一致', 'Matches the datasheet') },
+        why: T('参数与规格书一致，可以发布', 'Specs match the datasheet'), w: T('与规格书一致', 'Matches the datasheet'), wn: T('与规格书一致', 'Specs match') },
       { ic: 'mail', t: T('开发信 · 已修改', 'Outreach · revised'), s: T('先问需求 · 销售 AI 重写', 'Asks first · rewritten'), p: T('改后开发信', 'Revised outreach'), rp: T('改后开发信', 'Outreach v2'), rule: 1, by: T('你', 'You'), ok: true,
-        why: T('先问需求，语气合适，可以发', 'Asks first, right tone — send'), w: T('先问需求，可以发', 'Asks first — send') },
+        why: T('先问需求，语气合适，可以发', 'Asks first, right tone — send'), w: T('先问需求，可以发', 'Asks first — send'), wn: T('先问需求，可以发', 'Asks first') },
       { ic: 'doc', t: T('报价 Q-1042', 'Quote Q-1042'), s: T('低于底价 · 销售 AI 提交', 'Below the floor price'), p: 'Q-1042', rule: 0, by: T('你', 'You'), wait: true }
     ];
     var N = IT.length;
     var RS = [T('报价 → 你', 'Quotes → you'), T('联系客户 → 你', 'Outreach → you'), T('发布内容 → 市场主管', 'Publishing → marketing lead')];
     var G, R;
-    function geo(name) {
+    function geo(name, L) {
       if (name === 'col') return { rules: [20, 58, 420], lock: true, gx: 404, ty: 192, gr: 22, iw: 250, ih: 54, q: [116, 56], ex: 90, dy: 26, card: [20, 252, 420, 152], rec: [20, 420, 420], rows: 3, rh: 46, tag: [444, 630] };
       if (name === 'band') return { one: [16, 60, 300], gx: 300, ty: 146, gr: 20, iw: 214, ih: 50, q: [54, 4], ex: 40, dy: 22, card: [340, 92, 300, 146], rec: [656, 54, 228], rows: 3, rh: 44 };
-      return { gx: 318, ty: 46, gr: 18, iw: 196, ih: 44, q: [94, 40], ex: 50, dy: 14, card: [12, 84, 336, 112], rec: [12, 206, 336], rows: 2, rh: 30, tag: [350, 274] };
+      // phone, at the host's width W: from the top, the tag over the track's left end, the track and the gate
+      // (W − 42), the decision card (its rows end by 86px, so 90 tall) and two record rows: 233px of rows
+      var W = L.w, oy = topPad(L, 233), ty = oy + 43;
+      return { gx: W - 42, ty: ty, gr: 18, iw: 196, ih: 44, q: [W - 266, W - 320], ex: 50, dy: 14, card: [12, ty + 36, W - 24, 90], rec: [12, ty + 136, W - 24], rows: 2, rh: 30, tag: [12, oy + 15, 'l'], narrow: W < 350 };
     }
     function build(stage, L, name) {
-      G = geo(name);
+      G = geo(name, L);
       R = chrome(stage, name, 'sg-en-decide', 'person', T('审批', 'Approvals'), T('规则由你们定', 'Your rules'), G.tag);
       R.items = []; R.rows = [];
       if (G.rules) {
@@ -210,9 +243,13 @@
       }
       // the decision card: the last decision while the next item travels, then the item at the gate
       var live = !(v < SWAP && idx > 0), I = IT[live ? idx : idx - 1];
-      say(R.title, R.col ? I.t : I.p, true);
+      // a narrow phone card names the rewrite by its short name (Outreach v2), so it keeps its whole name beside the chip
+      say(R.title, R.col ? I.t : G.narrow && I.rp ? I.rp : I.p, true);
       var dec = I.wait ? 'wait' : live ? (v >= DONE ? (I.ok ? 'ok' : 'no') : 'wait') : (I.ok ? 'ok' : 'no');
       state(R.card, dec);
+      // is-nob: the card's item is being (or was) rejected. A phone card has room for one chip: 驳回 / Reject for
+      // a rejection (it is the one pressed, and it stays lit amber once rejected), else 批准 / Approve
+      cl(R.card, 'is-nob', !I.wait && !I.ok);
       var ds = dec === 'wait' ? T('等你拍板', 'Your call') : dec === 'ok' ? T('已批准', 'Approved') : T('已驳回', 'Rejected');
       say(R.badge, ds, true);
       pill(R, ds, dec);
@@ -239,15 +276,16 @@
           var it2 = IT[d];
           state(o2.e, it2.ok ? 'ok' : 'no');
           // the band's record column is 228px: it names the rewrite by its short name (rp)
-          put(o2.a, 'text', (it2.ok ? T('批准 · ', 'Approved · ') : T('驳回 · ', 'Rejected · ')) + (R.band && it2.rp ? it2.rp : it2.p) + (R.col ? ' · ' + it2.by : ''));
-          put(o2.b, 'text', R.col ? T('原因：', 'Reason: ') + it2.why : it2.w);
+          put(o2.a, 'text', (it2.ok ? T('批准 · ', 'Approved · ') : T('驳回 · ', 'Rejected · ')) + ((R.band || G.narrow) && it2.rp ? it2.rp : it2.p) + (R.col ? ' · ' + it2.by : ''));
+          // a narrow phone row (320–349px) keeps the verb, the name and the reason whole: the shortest reasons there
+          put(o2.b, 'text', R.col ? T('原因：', 'Reason: ') + it2.why : G.narrow && it2.wn ? it2.wn : it2.w);
           if (o2.tm) put(o2.tm, 'text', '14:' + (32 + d * 4));
         }
         tf(o2.e, 0, (j === 0 && adding ? 0 : j - (adding ? 1 - k3 : 0)) * G.rh);
         op(o2.e, (j === 0 && adding ? k3 : j >= G.rows ? (adding ? 1 - k3 : 0) : 1) * fade);
       }
     }
-    return panel({ build: build, tick: tick, still: 3 * P + 2.6, start: P + 0.2 });
+    return panel({ build: build, tick: tick, still: 3 * P + 2.6, start: P + 0.2 }, 'ent-decide');
   }
 
   /* =====================================================================
@@ -258,6 +296,8 @@
   function VerifyScene() {
     var P = 16, START = 0.9, STEP = 1.45, C0 = 1.3, FIX = 9.3, REOK = 9.9, DONE = 10.4;
     var SRC = [T('询盘邮件', 'Inquiry email'), T('生产排期', 'Schedule'), T('产品资料', 'Product file')];
+    // a narrow phone (320–349px) leaves the value column about 90px: 「DAP Hamburg」 keeps it beside 「Inquiry」
+    var SRC_N = [T('询盘邮件', 'Inquiry'), SRC[1], SRC[2]], src = SRC;
     var F = [
       { k: T('型号', 'Model'), v: '48V 100Ah', src: 0 },
       { k: T('数量', 'Quantity'), v: T('200 组', '200 pcs'), src: 0 },
@@ -266,13 +306,16 @@
       { k: T('认证', 'Certificates'), v: 'CE · UN38.3', src: 2 }
     ];
     var G, R;
-    function geo(name) {
+    function geo(name, L) {
       if (name === 'col') return { hd: [20, 66, 420], doc: [20, 156, 420], dh: 36, rh: 48, note: [20, 446, 420], rec: [20, 478, 420], tag: [444, 630] };
       if (name === 'band') return { hd: [16, 58, 250], doc: [282, 52, 404], dh: 0, rh: 36, note: [16, 128, 250], rec: [706, 54, 180] };
-      return { hd: [12, 12, 336], doc: [12, 70, 336], dh: 0, rh: 36, note: [12, 40, 336], rec: [12, 254, 336], tag: [350, 300] };
+      // phone, at the host's width W: the steps, the note with the tag at its right end, the five lines (36px
+      // each, 32 where the heading leaves less room) and the record under them (two lines, 38px): 288 / 268px
+      var W = L.w, rh = L.f == null || L.f >= 288 ? 36 : 32, oy = topPad(L, 106 + 5 * rh);
+      return { hd: [12, oy + 8, W - 24], doc: [12, oy + 66, W - 24], dh: 0, rh: rh, note: [12, oy + 36, W - 24], rec: [12, oy + 70 + 5 * rh, W - 24], tag: [W - 12, oy + 52], narrow: W < 350 };
     }
     function build(stage, L, name) {
-      G = geo(name);
+      G = geo(name, L); src = G.narrow ? SRC_N : SRC;
       R = chrome(stage, name, 'sg-en-verify', 'check', T('结果核对', 'Checks'), T('报价草稿 · 对照 3 份来源', 'Quote draft · 3 sources'), G.tag);
       R.f = [];
       var h = at(stage, 'sg-en-vhead', G.hd[0], G.hd[1], G.hd[2]);
@@ -292,7 +335,7 @@
         var r = el('div', 'sg-en-vrow', doc);
         r.style.height = G.rh + 'px';
         el('span', 'sg-en-vk', r, f.k);
-        var o = { e: r, v: el('b', 'sg-en-vv', r, f.v), s: el('span', 'sg-en-vsrc', r, SRC[f.src]) };
+        var o = { e: r, v: el('b', 'sg-en-vv', r, f.v), s: el('span', 'sg-en-vsrc', r, src[f.src]) };
         var m = el('span', 'sg-en-vmark', r); ico('check', m, 14, 'sg-ico sg-en-vok'); ico('cross', m, 14, 'sg-ico sg-en-vno');
         o.m = m;
         R.f.push(o);
@@ -313,7 +356,7 @@
         var k = F[i].bad ? (u >= REOK ? 'ok' : u >= FIX ? 'scan' : res ? 'no' : scan ? 'scan' : 'idle') : (res ? 'ok' : scan ? 'scan' : 'idle');
         state(f.e, k);
         op(f.m, (k === 'ok' || k === 'no') ? fade : 0);
-        if (F[i].bad) { say(f.v, u >= FIX + 0.1 ? F[i].fix : F[i].v); say(f.s, k === 'no' ? F[i].bad : SRC[F[i].src], true); }
+        if (F[i].bad) { say(f.v, u >= FIX + 0.1 ? F[i].fix : F[i].v); say(f.s, k === 'no' ? F[i].bad : src[F[i].src], true); }
       }
       var flagged = u >= C0 + 3 * STEP + 0.9 && u < REOK;
       say(R.note, u < START ? T('已提交 ≠ 已完成', 'Submitted ≠ done') : flagged ? T('1 处不一致 · 已退回修正', '1 mismatch · sent back to fix') : u < DONE ? T('逐项对照来源', 'Checking each line') : T('核对过才算数 ✓', 'Counts once checked ✓'), u < 0.2);
@@ -325,7 +368,7 @@
       state(R.stuck, flagged ? 'no' : 'idle');
       pill(R, flagged ? T('退回修正', 'Sent back') : stepK === 0 ? T('已提交', 'Submitted') : stepK === 1 ? T('核对中', 'Checking') : T('已核对', 'Checked'), flagged ? 'no' : stepK === 2 ? 'ok' : 'wait');
     }
-    return panel({ build: build, tick: tick, still: 11.2, start: 6.4 });
+    return panel({ build: build, tick: tick, still: 11.2, start: 6.4 }, 'ent-verify');
   }
 
   /* =====================================================================
@@ -337,20 +380,26 @@
     var NODES = [
       { ic: 'mail', n: T('邮箱', 'Email'), p: [T('可读', 'Read'), T('发信需审批', 'Sending needs approval')] },
       { ic: 'users', n: T('客户记录', 'Customer records'), s: T('客户记录', 'Customers'), p: [T('可读', 'Read'), T('可改', 'Change')] },
-      { ic: 'book', n: T('产品知识', 'Product knowledge'), s: T('产品知识', 'Product info'), p: [T('可读', 'Read')] },
+      { ic: 'book', n: T('产品知识', 'Product knowledge'), s: T('产品知识', 'Product info'), ph: T('产品知识', 'Products'), p: [T('可读', 'Read')] },
       { ic: 'box', n: 'ERP', p: [T('可读', 'Read'), T('改单需审批', 'Edits need approval')] },
       { ic: 'folder', n: T('网盘 · 产品资料', 'Drive · Specs'), s: T('网盘 · 产品资料', 'Specs'), p: [T('可读', 'Read')] },
       { ic: 'folder', n: T('网盘 · 财务目录', 'Drive · Finance'), s: T('网盘 · 财务目录', 'Finance'), p: [], deny: true }
     ];
     var G, R;
-    function geo(name) {
+    function geo(name, L) {
       if (name === 'col') return { kind: 'col', hub: [56, 106], hr: 26, x0: 92, y0: 160, nw: 348, nh: 64, step: 72, tag: [444, 630] };
       // band: 256px nodes, so 「Product info」 keeps its whole name beside 「Not connected」 (17px from each side)
       if (name === 'band') return { kind: 'band', hub: [450, 132], hr: 30, nw: 256, nh: 58, at: [[145, 79], [145, 143], [145, 207], [755, 79], [755, 143], [755, 207]] };
-      return { kind: 'list', hub: [52, 110], hr: 30, nw: 240, nh: 31, at: [0, 1, 2, 3, 4, 5].map(function (i) { return [230, 22 + i * 35]; }), tag: [350, 226] };
+      // phone, at the host's width W: the hub in a 104px column on the left with its count, its refusal and the
+      // tag under it; the six systems on the right, as wide as the column leaves (206px at 320, so 「Customers」
+      // keeps its name beside 「Needs your OK」), 35px apart (33 where the heading leaves less room)
+      var W = L.w, nw = Math.min(246, W - 114), p = 35, nh = 31;
+      if (L.f != null && L.f < 5 * p + nh + 4) { p = 33; nh = 29; }
+      var oy = topPad(L, 5 * p + nh), y0 = oy + nh / 2, hy = y0 + 2.5 * p;
+      return { kind: 'list', hub: [52, hy], hr: 30, nw: nw, nh: nh, at: [0, 1, 2, 3, 4, 5].map(function (i) { return [W - 10 - nw / 2, y0 + i * p]; }), tag: [52, hy + 96, 'c'] };
     }
     function build(stage, L, name) {
-      G = geo(name);
+      G = geo(name, L);
       R = chrome(stage, name, 'sg-en-connect', 'link', T('应用连接', 'App Connections'), T('逐项接入', 'One at a time'), G.tag);
       R.n = [];
       var svg = sv('svg', { class: 'sg-en-svg', width: L.w, height: L.h, viewBox: '0 0 ' + L.w + ' ' + L.h }, stage);
@@ -382,7 +431,8 @@
         var c = at(stage, 'sg-en-card sg-en-node' + (nd.deny ? ' is-deny' : ''), x, y, G.nw, G.nh);
         var tp = el('div', 'sg-en-ntop', c);
         var ib = el('span', 'sg-en-nico', tp); ico(nd.ic, ib, list ? 14 : 17);
-        el('b', 'sg-en-nname', tp, col ? nd.n : (nd.s || nd.n));
+        // the phone's list names product knowledge 「Products」, as the cockpit's sources do, so it fits a 206px row
+        el('b', 'sg-en-nname', tp, col ? nd.n : list && nd.ph ? nd.ph : (nd.s || nd.n));
         o.st = el('span', 'sg-en-nst', tp);
         if (nd.deny) ico('lock', o.st, 13);
         o.stt = el('span', '', o.st);
@@ -435,7 +485,7 @@
         if (R.count) { say(R.count, cs); op(R.deny, no ? 1 : 0); }
       }
     }
-    return panel({ build: build, tick: tick, still: LAST + 2.6, start: S0 + 2 * GAP + 2.3 });
+    return panel({ build: build, tick: tick, still: LAST + 2.6, start: S0 + 2 * GAP + 2.3 }, 'ent-connect');
   }
 
   /* =====================================================================
@@ -445,8 +495,12 @@
   function OperateScene() {
     var P = 18, D0 = 0.6, DAY = 1.45, END = D0 + 7 * DAY;
     var KPI = [T('商机', 'Opportunities'), T('订单', 'Orders'), T('任务完成', 'Tasks done'), T('异常', 'Exceptions'), T('费用', 'Costs'), T('待审批', 'Approvals')];
-    // per day: opportunities, orders, tasks, exceptions, cost (yuan), approvals
-    var DD = [[4, 1, 6, 0, 260, 0], [3, 0, 7, 0, 310, 0], [5, 1, 6, 1, 280, 0], [2, 2, 8, 0, 340, 1], [6, 1, 7, 1, 300, 0], [2, 1, 4, 0, 220, 0], [1, 0, 3, 0, 150, 0]];
+    // per day: opportunities, orders, tasks, exceptions, cost (yuan), approvals. The week's three approvals are
+    // the owner's queue in the cockpit overview below (js/stargo-motion-cockpit.js POOL, its still shows the same
+    // three): the German outreach, 20 emails (Tue), quote Q-1042 below the floor price (Thu) and quote Q-1043 (Fri,
+    // the one the blocker scene hands back for approval). QA round 5 (2026-10-24) read 「Approvals 1」 here
+    // against 「Awaiting approval 3」 there, a queue that never held Q-1042.
+    var DD = [[4, 1, 6, 0, 260, 0], [3, 0, 7, 0, 310, 1], [5, 1, 6, 1, 280, 0], [2, 2, 8, 0, 340, 1], [6, 1, 7, 1, 300, 1], [2, 1, 4, 0, 220, 0], [1, 0, 3, 0, 150, 0]];
     var WD = [T('一', 'M'), T('二', 'T'), T('三', 'W'), T('四', 'T'), T('五', 'F'), T('六', 'S'), T('日', 'S')];
     var DAYN = K.ZH ? ['周一', '周二', '周三', '周四', '周五', '周六', '周日'] : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     var PR = [ // rank 0 first; d = the day it appears
@@ -455,20 +509,23 @@
       { d: 4, c: 'idle', t: T('PT Surya Energi · 该补货了', 'PT Surya Energi · restock due'), s: T('PT Surya · 补货', 'PT Surya · restock'), o: T('销售 AI · 周五', 'Sales AI · Fri'), tg: T('补货', 'Restock') }
     ];
     var MAXB = 7, G, R;
-    function geo(name) {
+    function geo(name, L) {
       if (name === 'col') return { kp: [20, 66, 420, 74, 3], ch: [20, 248, 420, 160], pr: [20, 428, 420, 50], tag: [444, 630] };
       if (name === 'band') return { kp: [16, 54, 372, 86, 3], ch: [404, 54, 192, 182], pr: [616, 54, 268, 50] };
-      return { kp: [12, 26, 336, 56, 3, 3], ch: [12, 94, 336, 56], pr: null, tag: [350, 22] };
+      // phone, at the host's width W: the tag at the top right, three figures and the week's bars: 143px. The
+      // figures are (W − 44) / 3 wide; under 100px (W < 344) 「Opportunities」 does not fit one, so it says 「Deals」
+      var W = L.w, oy = topPad(L, 143);
+      return { kp: [12, oy + 19, W - 24, 56, 3, 3], ch: [12, oy + 87, W - 24, 56], pr: null, tag: [W - 12, oy + 15], narrow: W < 344 };
     }
     function build(stage, L, name) {
-      G = geo(name);
+      G = geo(name, L);
       R = chrome(stage, name, 'sg-en-operate', 'gauge', T('经营驾驶舱', 'Business Cockpit'), T('本周', 'This week'), G.tag);
       R.k = []; R.b = []; R.p = [];
       var kp = G.kp, kw = (kp[2] - (kp[4] - 1) * 10) / kp[4];
       (R.phone ? [0, 1, 5] : [0, 1, 2, 3, 4, 5]).forEach(function (ki, i) {
         // is-co: the costs card, whose four-digit yen total leaves no room beside it for the day's delta
         var c = at(stage, 'sg-en-card sg-en-kpi' + (ki === 5 ? ' is-ap' : ki === 3 ? ' is-ex' : ki === 4 ? ' is-co' : ''), kp[0] + (i % kp[4]) * (kw + 10), kp[1] + Math.floor(i / kp[4]) * (kp[3] + 10), kw, kp[3]);
-        el('span', 'sg-en-k', c, KPI[ki]);
+        el('span', 'sg-en-k', c, ki === 0 && G.narrow ? T('商机', 'Deals') : KPI[ki]);
         var vr = el('div', 'sg-en-kvr', c);
         R.k.push({ i: ki, r: vr, v: el('b', 'sg-en-kval', vr), d: el('em', 'sg-en-kd', vr) });
       });
@@ -526,7 +583,7 @@
         op(R.p[r], dd >= PR[r].d ? fade : 0);
       }
     }
-    return panel({ build: build, tick: tick, still: END + 1.4, start: D0 + 3.3 * DAY });
+    return panel({ build: build, tick: tick, still: END + 1.4, start: D0 + 3.3 * DAY }, 'ent-operate');
   }
 
   /* =====================================================================
@@ -553,12 +610,20 @@
     var layouts = { square: { w: 680, h: 660 }, tall: { w: 520, h: 640 }, mid: { w: 520, h: 510 }, narrow: { w: 360, h: 460 }, phone: { w: 340, h: 252 } };
     // the largest layout drawn at 12px or more (square and tall use 13px type, the others 12px)
     function pick(w, h) {
-      if (h < w * 0.8 && w < 560) return 'phone';
+      // A phone's box is 252px tall and 307–374px wide. Under 340 it is drawn at the box's own width
+      // (phone-W): QA round 5 (2026-10-24) found the 307 × 252 box at 320px taking the 360 × 460 narrow
+      // layout at a scale of 0.55 (words at 6.6px), and the 340 phone layout at 0.96 in the 326px box at 340px.
+      if (w < 560 && (h < w * 0.8 || h < 300)) {
+        var W = Math.max(280, Math.min(340, Math.floor(w)));
+        if (W === 340) return 'phone';
+        if (!layouts['phone-' + W]) layouts['phone-' + W] = { w: W, h: 252, phone: true };
+        return 'phone-' + W;
+      }
       if (w >= 628 && h >= 609) return h > w * 1.08 ? 'tall' : 'square';
       if (w >= 480 && h >= 591 && h > w * 1.08) return 'tall';
       return w >= 520 && h >= 510 ? 'mid' : 'narrow';
     }
-    function geo(name) {
+    function geo(name, L) {
       if (name === 'square') return { hd: [34, 44, 612], st: [34, 120, 330, 52], ctl: [520, 236, 92], pr: [520, 362], log: [34, 466, 580, 3, 27], tag: [646, 452] };
       if (name === 'mid') return { hd: [24, 26, 472], st: [24, 92, 270, 44], ctl: [404, 166, 70], pr: [404, 250], log: [24, 358, 440, 2, 26], tag: [496, 344] };
       if (name === 'tall') return { hd: [26, 40, 468], st: [26, 112, 250, 50], ctl: [400, 224, 80], pr: [400, 336], log: [26, 444, 436, 3, 27], tag: [494, 432] };
@@ -566,12 +631,16 @@
       // is the picture's, which Mono's parallax slides by a tenth of its height: its last 40px stay empty.
       if (name === 'narrow') return { hd: [18, 18, 324], hz: true, cw: 214, st: [18, 106], ctl: [292, 130, 46], pr: [180, 194], log: [18, 238, 292, 3, 27], tag: [342, 402], short: true };
       // phone: the tag sits under the run log, out of the pause / resume ring's reach (its pulse is smaller here),
-      // and above y 240, where the picture's rounded box (.image-wrap, 240px tall) cuts the 252px stage
-      return { hd: [12, 16, 316], hz: true, cw: 214, nolh: true, st: [14, 60], ctl: [284, 104, 44], rs: 0.4, pr: null, log: [12, 168, 292, 1, 26], tag: [328, 235], short: true };
+      // and above y 240, where the picture's rounded box (.image-wrap, 240px tall) cuts the 252px stage. Built at
+      // the box's width W (340 at most): the control keeps 56px from the right edge, the step dots close up
+      // (34px apart, 31 at W 307) to stay 10px clear of it, and the current-step line takes what is left.
+      var W = L.w, sp = Math.min(34, Math.floor((W - 150) / 5));
+      return { hd: [12, 16, W - 24], hz: true, sp: sp, cw: W - 126, nolh: true, st: [14, 60], ctl: [W - 56, 104, 44], rs: 0.4, pr: null, log: [12, 168, W - 48, 1, 26], tag: [W - 12, 235], short: true };
     }
     function build(stage, L, name) {
-      stage.className = 'sg-mo-stage sg-en sg-en-stop is-' + name + (name === 'phone' || name === 'narrow' ? ' is-compact' : '');
-      G = geo(name); R = { s: [], log: [], pr: [] };
+      if (L.phone) name = 'phone';
+      stage.className = 'sg-mo-stage sg-en sg-en-stop is-' + name + (name === 'phone' || name === 'narrow' ? ' is-compact' : '') + (L.w < 330 ? ' is-xs' : '');
+      G = geo(name, L); R = { s: [], log: [], pr: [] };
       var h = at(stage, 'sg-en-shead', G.hd[0], G.hd[1], G.hd[2]);
       var ht = el('div', 'sg-en-stitle', h);
       if (!G.short) el('span', 'sg-en-k', ht, T('AI 任务 · 负责人 销售 AI · 审批人 你', 'AI task · owner sales AI · approver you'));
@@ -579,7 +648,7 @@
       R.pill = el('span', 'sg-en-spill', h);
       var st = G.st;
       STEPS.forEach(function (s, i) {
-        var r = G.hz ? at(stage, 'sg-en-sstep', st[0] + i * 34, st[1], 28, 28) : at(stage, 'sg-en-sstep', st[0], st[1] + i * st[3], st[2], st[3] - 8);
+        var r = G.hz ? at(stage, 'sg-en-sstep', st[0] + i * (G.sp || 34), st[1], 28, 28) : at(stage, 'sg-en-sstep', st[0], st[1] + i * st[3], st[2], st[3] - 8);
         var n = el('span', 'sg-en-sn', r);
         var spin = el('i', 'sg-en-sspin', n);
         el('span', 'sg-en-snum', n, String(i + 1));

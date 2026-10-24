@@ -232,6 +232,12 @@ export const BLOG_COVERS = {
  * closing card (#lx-evolution), `phone` the hand-held phone of the "no
  * writing" band, whose screen layer (since 2026-10-23 the code-drawn 'feed'
  * scene, js/stargo-motion-phone.js) stays laid over it.
+ * 2026-10-24 (QA round 5, entintel): on 768–991 px touch screens the phone
+ * and its screen layer are sized from the holder's height as well as its
+ * width (css/stargo-motion-phone.css, the tablet block), so the grid cell no
+ * longer slices the phone; the picture file and its crop are unchanged. On
+ * the narrowest phones the feed draws its three rows and tab bar whole at
+ * scale 1 instead of a cropped two-row view with the bottom left blank.
  */
 export const INTEL_PHOTOS = {
   observe: photoFile('i01-observe-process', 2048),
@@ -571,6 +577,11 @@ export const PLACED = {
  * Since 2026-10-23 `principle`, `modules` and E01–E04 are drawn in code on the
  * built pages (tools/code-art-enterprise.mjs replaces them after the page is
  * built); the entries stay so the pipeline and the files stay as they were.
+ * 2026-10-24 (QA round 5, entintel): the cockpit overview's pending approvals
+ * (3: the outreach emails, Q-1042 below the floor price, Q-1043) are the same
+ * three the 经营 / Oversight panel lists, so the two pictures never disagree;
+ * the five module cards keep their demo tag at least 8 px clear of the card's
+ * words from 320 to 768 px (css/stargo-ent-cards.css).
  */
 export const ENTERPRISE_PHOTOS = {
   cockpit: [{ motion: 'cockpit-overview' }, { motion: 'cockpit-blocker' }, { motion: 'cockpit-budget' }],

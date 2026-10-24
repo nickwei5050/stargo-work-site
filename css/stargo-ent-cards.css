@@ -110,14 +110,18 @@
   .sg-em-use { display: flex; align-items: center; gap: .6em; }
   .sg-em-use-k > span:last-child { display: none; }
   .sg-em-meter { flex: 1; margin: 0 4px 0 0; }
-  /* 2: three rows; the tag takes the header's first cell */
-  .sg-em-2 .sg-em-in { justify-content: center; padding: 5%; gap: 0; }
-  .sg-em-2 .sg-em-tag { left: 5%; right: auto; top: 5%; bottom: auto; margin-top: 2px; }
-  .sg-em-mx-h > span:first-child { visibility: hidden; }
+  /* 2: the two roles whose rights differ (Sales AI: changes need approval; Orders: read only) from the top,
+     and the tag in the bottom-right corner they leave free, as on the wide cards. QA round 5 (2026-10-24):
+     with three rows the card had no free corner, the tag sat in the header's first cell, and in English
+     「Demo data」 (62px) ran 1.6px into 「Read」 (360px) and came within 2.5px of it at 768. The manager's
+     row (every right) is the one left out; the card's description still names all three. */
+  .sg-em-2 .sg-em-in { justify-content: flex-start; padding: 5% 5% 0; gap: 0; }
+  .sg-em-2 .sg-em-mx > .sg-em-mx-r:nth-child(2) { display: none; }
+  .sg-em-mx-h > span:first-child { visibility: hidden; white-space: nowrap; overflow: hidden; }
   .sg-em-mx-h, .sg-em-mx-r { grid-template-columns: minmax(0, 1fr) 2.3em 5em; min-height: 1.62em; gap: .25em; } /* 5em: the 「Approval」 cell, whole */
   .sg-em-c.is-a { padding: 0 .2em; }
   /* 3: the quote and its chain, the step waiting on you in orange (no buttons) */
-  .sg-em-3 .sg-em-in { padding-top: 7%; gap: .6em; } /* 7%: the chain sits clear of the 演示数据 tag below it */
+  .sg-em-3 .sg-em-in { padding-top: 5%; gap: .6em; } /* 5%: the chain's names end 8px or more over the 演示数据 tag below them (QA round 5: 7px at 360) */
   .sg-em-chain > i { margin-top: .95em; }
   .sg-em-step { width: auto; min-width: 2.6em; }
   /* 4 and 5: the square cards */
@@ -129,8 +133,38 @@
   .sg-em-vault-h { gap: .5em; }
   .sg-em-shield { width: 1.9em; height: 1.9em; }
   .sg-em-shield > .sg-em-ico { width: 1.4em; height: 1.4em; }
-  .sg-em-5 .sg-em-tag { top: 7px; right: 10px; bottom: auto; }
-  .sg-em-5 .sg-em-in { padding-bottom: 7%; }
+  /* 4: the rows stop 8px over the tag's line at the foot (QA round 5: 「Needs your OK」 came within 2.8px of
+     it at 360); they are flexible, so they give up the height */
+  .sg-em-4 .sg-em-in { padding-bottom: 28px; }
+  /* 5: the tag on its own line over the heading, which has no room beside it in English (QA round 5: 「Demo
+     data」 touched 「Accounts」 at 360 and 768), and the account rows a little lower so all of it still fits */
+  .sg-em-5 .sg-em-tag { top: 7px; right: 7cqw; bottom: auto; }
+  .sg-em-5 .sg-em-in { padding-top: 31px; padding-bottom: 7%; }
+  .sg-em-5 .sg-em-acc li { padding-top: .15em; padding-bottom: .15em; }
+}
+
+/* the narrowest cards (320–350px phones: 149–165px wide): the apps, the chain and the work record tighter,
+   so the tag keeps its 8px there too */
+@container (max-width: 165px) {
+  /* 1: from the top, with smaller tiles, so the usage line ends 8px over the tag (English 「Usage 97%」
+     reaches under its left end) */
+  .sg-em-1 .sg-em-in { justify-content: flex-start; padding-top: 4px; gap: .4em; }
+  .sg-em-1 .sg-em-tile { width: 1.7em; height: 1.7em; }
+  .sg-em-3 .sg-em-in { padding-top: 4px; gap: .4em; }
+  .sg-em-3 .sg-em-step { gap: .2em; }
+  .sg-em-3 .sg-em-step .sg-em-ico { padding: .25em; }
+  .sg-em-4 .sg-em-in { padding: 6% 4% 28px; }
+  .sg-em-4 .sg-em-log { gap: .1em; }
+  /* and every row's words whole: before, English 「Lead time · stop」 and 「Re-check passed」 ended in … at
+     320 and 340, as 「Manager」 and 「Sales AI」 did in card 2 */
+  .sg-em-4 .sg-em-log li { gap: .3em; padding: 0 .2em; }
+  .sg-em-2 .sg-em-in { padding: 4% 3% 0; }
+  .sg-em-2 .sg-em-mx-h, .sg-em-2 .sg-em-mx-r { grid-template-columns: minmax(0, 1fr) 1.9em 5em; gap: .2em; }
+  /* 5: the heading, the three accounts and the no-access line packed closer under the tag's line */
+  .sg-em-5 .sg-em-tag { top: 4px; }
+  .sg-em-5 .sg-em-in { padding-top: 28px; padding-bottom: 4px; gap: .3em; }
+  .sg-em-5 .sg-em-acc { gap: .15em; }
+  .sg-em-5 .sg-em-acc li { padding-top: .05em; padding-bottom: .05em; }
 }
 
 /* a pointer resting on a card: the module does its one job */
