@@ -32,7 +32,9 @@
 /* canvas */
 .sgc-canvas { position: relative; flex: 1 1 0; min-height: 120px; border-radius: 14px; overflow: hidden; background: #0e0b09; box-shadow: 0 0 0 1px rgba(255,236,220,.1), 0 30px 70px -40px rgba(0,0,0,.9); }
 .sgc-art { display: block; }
-.sgc-defs { position: absolute; width: 0; height: 0; overflow: hidden; pointer-events: none; }
+/* the pictures' shared parts, drawn once and placed with <use> (whose copies inherit from the <use>, so they
+   still show): the originals themselves are never on screen, and are hidden as such */
+.sgc-defs { position: absolute; width: 0; height: 0; overflow: hidden; pointer-events: none; visibility: hidden; }
 .sgc-canvas > .sgc-art, .sgc-shot > .sgc-art { position: absolute; inset: 0; }
 .sgc-ref > .sgc-art { width: 100%; height: 100%; }
 .sgc-shots { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 8px; padding: 48px 10px 10px; background: #0e0b09; }
@@ -72,6 +74,8 @@
 .sgc-st { margin-left: auto; flex: none; display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; color: rgba(244,238,232,.5); }
 .sgc-ck { display: none; width: 16px; height: 16px; border-radius: 50%; place-items: center; color: #10291a; background: #9fe0b0; }
 .sgc-st.is-wait { color: #ffc56b; }
+.sgc-wd { display: none; width: 6px; height: 6px; border-radius: 50%; background: #ffc56b; will-change: opacity; }
+.sgc-st.is-wait .sgc-wd { display: block; }
 .sgc-st.is-ok { color: #b9ecc6; }
 .sgc-st.is-ok .sgc-ck { display: grid; }
 .sgc-note { flex: none; font-size: 12.5px; color: rgba(244,238,232,.6); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

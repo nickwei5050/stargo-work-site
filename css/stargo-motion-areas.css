@@ -102,7 +102,7 @@
 
 /* an inquiry in the thread: its words light as they become the account's facts */
 .sga-row.is-msg { align-items: flex-start; padding-top: 9px; gap: 10px; background: rgba(0, 0, 0, .14); }
-.sga-cc.is-av { width: 30px; height: 30px; border-radius: 50%; font-size: 11.5px; }
+.sga-cc.is-av { width: 30px; height: 30px; border-radius: 50%; font-size: 12px; letter-spacing: .02em; }
 .sga-msg { flex: 1; min-width: 0; }
 .sga-msg-h { display: flex; gap: 8px; align-items: baseline; white-space: nowrap; font-size: 12.5px; color: rgba(244, 238, 232, .45); }
 .sga-msg-h b { font-size: 13.5px; font-weight: 600; color: #f8f1e7; }

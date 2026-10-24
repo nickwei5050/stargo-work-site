@@ -34,8 +34,10 @@
       A.win.forEach(function (d) { d.st.unshift([0, T('待命', 'Ready'), 'i']); });
       function lay(kind, w, h) { var k = kind + '-' + w + 'x' + h; if (!layouts[k]) layouts[k] = { w: w, h: h, kind: kind }; return k; }
       function pick(w, h) {
-        if (w < 560 || h < 330) return lay('phone', Math.max(300, Math.min(558, Math.round(w / 2) * 2)), Math.max(220, Math.min(440, Math.round(h / 2) * 2)));
-        return lay('desk', Math.max(720, Math.min(1400, Math.round(w / 20) * 20)), Math.max(380, Math.min(900, Math.round(h / 20) * 20)));
+        // floored, not rounded: a layout never larger than its host, so the stage is never scaled under 1
+        // (a 12px label stays 12px; a rounded-up 1220 in a 1212 host drew it at 11.9)
+        if (w < 560 || h < 330) return lay('phone', Math.max(300, Math.min(558, Math.floor(w / 2) * 2)), Math.max(220, Math.min(440, Math.floor(h / 2) * 2)));
+        return lay('desk', Math.max(720, Math.min(1400, Math.floor(w / 20) * 20)), Math.max(380, Math.min(900, Math.floor(h / 20) * 20)));
       }
       var R, FT, Q, fontsWait = false, kind, W, H, Lc = null, stg = null, card = null, nextCard = null, covered = false, chk = -1, capEl = null, capRO = null, capK = '', lastT = START;
 
@@ -369,9 +371,14 @@
           var o = R.links[i], t0 = o.l.t, u = seg(tau, t0, t0 + 0.9), e = ease.io(u), moving = u > 0 && u < 1;
           if (o.guide) {
             // out of the edge, a moment in its place, gone before the next thing needs the space
-            var shown = o.chip && tau >= t0 && tau < t0 + FLY + HOLD + FADE;
-            if (shown) { var g = 1 - ease.out(seg(tau, t0, t0 + FLY)); put(o.chip, '-transform', 'translate(' + (o.dx * g).toFixed(1) + 'px,' + (o.dy * g).toFixed(1) + 'px)'); }
-            if (o.chip) put(o.chip, '-opacity', shown ? (1 - seg(tau, t0 + FLY + HOLD, t0 + FLY + HOLD + FADE)).toFixed(3) : '0');
+            var shown = o.chip && tau >= t0 && tau < t0 + FLY + HOLD + FADE, faint = 1;
+            if (shown) {
+              var g = 1 - ease.out(seg(tau, t0, t0 + FLY)), gone = Math.abs(o.dx) * (1 - g);
+              put(o.chip, '-transform', 'translate(' + (o.dx * g).toFixed(1) + 'px,' + (o.dy * g).toFixed(1) + 'px)');
+              // faint while the edge still cuts it, full once it is wholly out (12px later)
+              if (o.out) faint = gone < o.out ? 0.3 * gone / o.out : 0.3 + 0.7 * c01((gone - o.out) / 12);
+            }
+            if (o.chip) put(o.chip, '-opacity', shown ? (faint * (1 - seg(tau, t0 + FLY + HOLD, t0 + FLY + HOLD + FADE))).toFixed(3) : '0');
             cl(o.guide, 'is-lit', tau >= t0 && tau < t0 + 1.6);
           } else if (o.wire) {
             put(o.wire, 'opacity', tau >= t0 && tau < CLEAR ? '1' : '0');

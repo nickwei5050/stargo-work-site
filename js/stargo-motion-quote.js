@@ -14,8 +14,10 @@
      card    desktop, the band's 3:2 box from 400 wide: the sheet and the margin guard on the left, the
              approver and the versions on the right, all on the screen from the start, filling in
      tall    a portrait box (tablets, small laptops): one column; the approver slides away to the versions
-     narrow  phones and the 1280 desktop: three steps (起草 · 审批 · 正式版) over three panels that slide
-             one after another, like an app's screens, so no card ever lies over another
+     narrow  phones and the 1280 desktop: three steps (起草 · 审批 · 正式版) over three panels that follow
+             one another like an app's screens (the one leaving slides a little left and fades out, the
+             next slides in from the right and fades in), so no card ever lies over another and no
+             text is ever cut by the edge it passes
    Queued on window.STARGO_SCENES and run by js/stargo-motion.js (tick(t) a pure function of time,
    `still` the reduced-motion frame); a frame writes only transforms, opacity, classes and changed text
    through put(). Styles: css/stargo-motion-quote.css, after css/stargo-motion-sales.css (the chrome). */
@@ -55,7 +57,7 @@
     function at(v) { return (v - LO) / (HI - LO); }
     var PRICE_T = '€' + PRICE, FLOOR_T = T('底价 €', 'Floor €') + FLOOR;
     var AT = { line: [0.4, 0.95, 1.5], total: 2.05, meter: 2.6, flag: 3.55, ask: 3.9, tap: 6.2, ok: 6.35, v3: 7.0, pi: 7.7 };
-    var GO1 = 4.1, GO2 = 7.0, SLIDE = 0.55;   // the narrow panels: to the approval, to the versions
+    var GO1 = 4.1, GO2 = 7.0, SLIDE = 0.6, SHIFT = 22;   // the narrow panels: to the approval, to the versions
     // v3 is the draft on the sheet; v1 and v2 were kept before it (each + €3,550 crating and freight);
     // [version, name, name with its unit price where the row has room, total]
     var VERS = [['v3', '', '', '€150,550'], ['v2', T('客户目标价', 'Buyer target'), T('客户目标价 €720', 'Buyer target €720'), '€147,550'], ['v1', T('按价格表', 'Price list'), T('价格表 €780', 'Price list €780'), '€159,550']];
@@ -108,10 +110,11 @@
         });
       }
       var pane = R.pane = el('div', 'sgs-q-pane', stage), p1 = pane, p2 = pane, p3 = pane, slot = null;
-      R.track = null;
+      R.track = null; R.panels = null;
       if (narrow) {
-        R.track = el('div', 'sgs-track', pane); R.tw = L.w; R.go = [GO1, GO2];
+        R.track = el('div', 'sgs-track', pane); R.go = [GO1, GO2];
         p1 = panel(R.track, L.w); p2 = panel(R.track, L.w); p3 = panel(R.track, L.w);
+        R.panels = [p1, p2, p3];
       }
       // the sheet
       var sheet = el('div', 'sgs-sheet', p1);
@@ -146,8 +149,9 @@
       // tall: the approver and the versions share one place and slide
       if (tall) {
         slot = el('div', 'sgs-slot', pane);
-        R.track = el('div', 'sgs-track', slot); R.tw = L.w - 14; R.go = [GO2];   // the slot reaches 5px past the pane's padding, for the ring
-        p2 = panel(R.track, R.tw); p3 = panel(R.track, R.tw);
+        R.track = el('div', 'sgs-track', slot); R.go = [GO2];   // the slot reaches 5px past the pane's padding, for the ring
+        p2 = panel(R.track, L.w - 14); p3 = panel(R.track, L.w - 14);
+        R.panels = [p2, p3];
       }
       if (narrow) {
         // the approval screen opens on what stopped the quote: the unit price against the floor price
@@ -190,6 +194,7 @@
       var pi = R.pi = el('div', 'sgs-pi', narrow ? p3 : pane);
       glyph('doc', pi, 13);
       el('span', '', pi, T('v3 可转 PI · 发送前由你确认', 'PI from v3 · sent after your OK'));
+      R.wd = el('i', 'sgs-wd', pi);   // breathes while the PI waits for you (opacity only)
     }
     function tick(t) {
       var tau = mod(t, P), i;
@@ -226,12 +231,20 @@
       arrive(R.ask, ease.out(seg(tau, 0.1, 0.5)), 6);
       arrive(R.vers, ease.out(seg(tau, 0.25, 0.65)), 6);
       arrive(R.pi, ease.out(seg(tau, AT.pi, AT.pi + 0.5)), 5);
+      css(R.wd, 'opacity', tau >= AT.pi + 0.5 && tau < OUT0 ? (0.6 + 0.4 * Math.sin((tau - AT.pi) * 4.2)).toFixed(2) : '1');
       if (R.status) { put(R.status, 'text', STATUS[ph]); cl(R.status, 'is-wait', ph === 1); cl(R.status, 'is-ok', okd); }
-      // the panels slide one after another (narrow), or the approver gives way to the versions (tall)
-      if (R.track) {
+      // the panels follow one another (narrow), or the approver gives way to the versions (tall): the panels
+      // lie in one place; the one leaving moves left and fades by 60% of the way, the next comes in from the
+      // right over the last 60%, so the two only cross faintly and neither is ever far enough off to be cut
+      if (R.panels) {
         var off = 0;
         for (i = 0; i < R.go.length; i++) off += ease.io(seg(tau, R.go[i], R.go[i] + SLIDE));
-        css(R.track, 'transform', off > 0 ? 'translate3d(' + (-off * R.tw).toFixed(1) + 'px,0,0)' : 'none');
+        for (i = 0; i < R.panels.length; i++) {
+          var d = off - i, a = d < 0 ? -d : d, away = a >= 0.6;
+          css(R.panels[i], 'opacity', away ? '0' : (1 - a / 0.6).toFixed(3));
+          css(R.panels[i], 'transform', a < 0.001 || away ? 'none' : 'translate3d(' + (-d * SHIFT).toFixed(1) + 'px,0,0)');
+          cl(R.panels[i], 'is-away', away);
+        }
       }
       if (R.steps) {
         var cur = tau < GO1 ? 0 : tau < GO2 ? 1 : 2, done = [tau >= GO1, okd, tau >= AT.v3 + 0.2];

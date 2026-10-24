@@ -91,7 +91,13 @@
       if (bare) { ws = ws.map(function (w) { return w - 20; }); tot = sum(); }
       if (tot > inner) { var k = (inner - 30) / (tot - 30); ws = ws.map(function (w) { return Math.floor(w * k); }); tot = inner; }
       var ry = cy + H1 + 18, rx = Math.max(x0, Math.min(x0 + inner - tot, cx + cw / 2 - tot / 2)), bus = cy + H1 + 9, mx = cx + cw / 2;
-      function chip(rl, x, y, w, g) { var e = box('sga-crew', c, x, y, w, H1); if (g) glyph(rl[0], e, 13); el('span', '', e, rl[1]); return e; }
+      // a role name never shows cut: a bare row (no glyphs) has tighter padding, and a name that still does not
+      // fit takes its short form (measured once the card is built)
+      function chip(rl, x, y, w, g) {
+        var e = box('sga-crew' + (g ? '' : ' is-bare'), c, x, y, w, H1); if (g) glyph(rl[0], e, 13);
+        var sp = el('span', '', e, rl[1]); if (o.fit && rl[3]) o.fit.add(sp, K.capAlts(rl[1], rl[3]));
+        return e;
+      }
       var cE = chip(co, cx, cy, cw, 1); cl(cE, 'is-co', true);
       var nodes = roles.map(function (rl, i) {
         var e = chip(rl, rx, ry, ws[i], !bare), ex = rx + ws[i] / 2, dd = 'M' + mx + ' ' + (cy + H1) + 'V' + bus + 'H' + ex + 'V' + ry;
@@ -184,6 +190,9 @@
       o.chip.style.left = (best[0] - cl0) + 'px'; o.chip.style.top = '28px';
       // it starts just behind the source window's edge (or a little low, where it rises in place)
       o.dx = slide ? (o.right ? -(best[0] - cl0 + cw + 2) : (edge - best[0] + 2)) : 0; o.dy = slide ? 0 : RISE;
+      // how far it has to travel before it is wholly out of the edge (its words are never shown cut: it
+      // stays faint until then, js/stargo-motion-areas.js)
+      o.out = slide ? cw + 2 : 0;
       put(o.chip, '-transform', 'translate(' + o.dx + 'px,' + o.dy + 'px)');
       var bx = o.right ? b.x : b.x + b.w, gx = (edge + bx) / 2;
       o.guide.setAttribute('d', 'M' + edge + ' ' + o.ya + 'C' + gx + ' ' + o.ya + ' ' + gx + ' ' + yl + ' ' + bx + ' ' + yl);
