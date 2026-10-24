@@ -143,6 +143,13 @@ export function render(frag, ctx) {
   if (words.length !== 2) throw new Error(`qx-orbit: expected a two-word brand in LX_WORKFORCE.ctaLogo, got "${brand}"`);
   html = setText(html, 'qx-hero-rotated-info-text', escapeHtml(words[0]));
   html = setText(html, 'qx-hero-rotated-info-text-two', escapeHtml(words[1]));
+  /* Under 768 the eight thumbnails are too small to carry their own 示意 /
+     Illustration tag, so the ring says it once, under the brand in its centre
+     (qx-orbit.css section H shows it only there). Each thumbnail's aria-label
+     still says it to a screen reader, so this line is aria-hidden. */
+  const TWO = `class="qx-hero-rotated-info-text-two">${escapeHtml(words[1])}</div>`;
+  if (html.split(TWO).length !== 2) throw new Error('qx-orbit: expected one second brand line in the ring');
+  html = html.replace(TWO, `${TWO}<div class="sg-ob-ring-tag" aria-hidden="true">${ctx.lang === 'zh' ? '示意' : 'Illustration'}</div>`);
 
   /* ---------------------------------------------------- the tags ---- */
   const codes = stageCodes(C, ctx.lang);

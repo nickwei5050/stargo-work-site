@@ -137,7 +137,7 @@
     var SHORT = [T('官网', 'Website'), T('主营产品', 'Products'), T('认证', 'Certified'), T('市场渠道', 'Markets'), T('规模', 'Size'), T('新闻', 'News')];
     function build(stage, L) {
       var G = base(stage, L, 'dossier'), svg = G.svg, wide = G.wide, th = G.rows[0].th;
-      var nb = strip(G, 1, 'u'), fb = strip(G, 1, 'd'), slots = [], pw, px, c;
+      var nb = strip(G, 1, 'u'), fb = strip(G, 1, 'd'), slots = [], pw, px, c, oy = fb.y;
       R = { f: [], dots: [] };
       if (wide && th) {
         // the company sits under row 1's thumbnail, across the hairline from it; facts flank both
@@ -150,13 +150,16 @@
         tag(stage, G.cr, strip(G, 0, 'd').y, 'r');
         c = R.core = box(stage, 'sgg-core is-2', px, fb.y, pw, 'l');
       } else {
-        // phones and tablets: the whole section's background; the facts as chips above the hairline under
-        // row 1, the company and the tag below it
-        var n = 3, cw = Math.min(118, (G.cr - G.cl - 16) / 3), step = (G.cr - G.cl - cw) / (n - 1);
-        pw = Math.min(G.w >= 600 ? 440 : 236, G.cr - G.cl - 84); px = G.cl;
-        for (var s = 0; s < n; s++) slots.push({ x: G.cl + s * step, y: nb.y, a: 'l', w: cw, to: [px + 16 + s * (pw - 32) / 2, fb.t] });
-        tag(stage, G.cr, fb.y, 'r', true);
-        c = R.core = box(stage, 'sgg-core is-1', px, fb.y, pw, 'l');
+        // phones and tablets: the whole section's background, and all of it inside row 1's own band
+        // (the strips below the band's top hairline and above its bottom one), so nothing of the
+        // company file reads as belonging to row 2: the company and the tag under the top hairline,
+        // over the row's title; the facts as chips under its description. No links: they would
+        // cross the row's type.
+        var n = 3, cw = Math.min(118, (G.cr - G.cl - 16) / 3), step = (G.cr - G.cl - cw) / (n - 1), top = strip(G, 0, 'd');
+        pw = Math.min(G.w >= 600 ? 440 : 236, G.cr - G.cl - 84); px = G.cl; oy = top.y;
+        for (var s = 0; s < n; s++) slots.push({ x: G.cl + s * step, y: nb.y, a: 'l', w: cw });
+        tag(stage, G.cr, top.y, 'r', true);
+        c = R.core = box(stage, 'sgg-core is-1', px, top.y, pw, 'l');
       }
       avatar(c, 'NE');
       var nm = el('div', 'sgg-nm', c);
@@ -167,8 +170,8 @@
       F.forEach(function (f, i) {
         var sl = slots[i % slots.length], o = { at: 0.6 + i * D, keep: i >= 3 };
         // a link leaves a fact from its edge nearest the company
-        var from = !wide ? [sl.x + sl.w / 2, nb.b] : sl.y === nb.y ? [sl.a === 'r' ? sl.x - 26 : sl.x + 26, nb.b] : [sl.x, fb.y];
-        o.line = link(svg, from, sl.to, wide ? 0.12 : 0.08);
+        var from = !wide ? null : sl.y === nb.y ? [sl.a === 'r' ? sl.x - 26 : sl.x + 26, nb.b] : [sl.x, fb.y];
+        o.line = wide ? link(svg, from, sl.to, 0.12) : null;
         if (wide) {
           o.card = box(stage, 'is-2' + (f[3] ? ' is-ask' : ''), sl.x, sl.y, sl.w, sl.a);
           two(o.card, f[0], f[1], f[2]);
@@ -180,7 +183,7 @@
         R.f.push(o);
       });
       // orbits around the company: their own small layers, turned by a transform
-      var ox = px + pw / 2, oy = fb.y;
+      var ox = px + pw / 2;
       R.orbit = (wide ? [150, 250] : [90, 150]).map(function (r, i) {
         var s = sv('svg', { class: 'sgg-orbit-l', width: 2 * r + 4, height: 2 * r + 4, viewBox: '0 0 ' + (2 * r + 4) + ' ' + (2 * r + 4) }, null);
         stage.insertBefore(s, G.svg.nextSibling);
@@ -195,7 +198,7 @@
       R.orbit.forEach(function (o) { css(o.s, 'transform', 'rotate(' + mod(t * 4 * o.dir, 360).toFixed(2) + 'deg)'); });
       R.f.forEach(function (o, i) {
         var gone = o.keep ? out : 1 - seg(u, o.at + 5.2, o.at + 5.6);
-        draw(o.line, ease.io(seg(u, o.at, o.at + 0.6)) * (o.keep ? 1 : 1 - seg(u, o.at + 3.2, o.at + 3.8)), 0.9 * (o.keep ? out : 1));
+        if (o.line) draw(o.line, ease.io(seg(u, o.at, o.at + 0.6)) * (o.keep ? 1 : 1 - seg(u, o.at + 3.2, o.at + 3.8)), 0.9 * (o.keep ? out : 1));
         var p = ease.out(seg(u, o.at + 0.4, o.at + 1));
         appear(o.card, p, gone);
         var land = u >= o.at + 0.9 && out > 0.5;

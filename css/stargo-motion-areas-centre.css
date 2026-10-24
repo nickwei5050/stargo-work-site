@@ -15,8 +15,12 @@
 .sga-sr.is-lit.is-up { transform-origin: 50% 100%; }
 .sga-sd { position: absolute; border-radius: 50%; background: #fff3df; opacity: 0; }
 .sga-sn { position: absolute; border-radius: 50%; background: rgba(243, 194, 122, .55); }
-.sga-chip { position: absolute; left: 0; top: 0; z-index: 5; opacity: 0; pointer-events: none; }
-.sga-chip > span { display: inline-flex; align-items: center; gap: 7px; height: 32px; padding: 0 13px; border-radius: 10px; font-size: 13px; white-space: nowrap; color: #fff3df; background: #2b1e13; border: 1px solid rgba(243, 194, 122, .55); box-shadow: 0 16px 36px -14px rgba(0, 0, 0, .9); transform: translate(-50%, -50%); }
+/* a hand-off chip comes out of its source window's edge: its lane clips it there, and it lands in
+   free space of the next window (js/stargo-motion-areas.js lane()) */
+.sga-lane { position: absolute; z-index: 5; overflow: hidden; pointer-events: none; }
+.sga-chip { position: absolute; opacity: 0; }
+.sga-chip > span { display: inline-flex; align-items: center; gap: 7px; height: 32px; padding: 0 13px; border-radius: 10px; font-size: 13px; white-space: nowrap; color: #fff3df; background: #2b1e13; border: 1px solid rgba(243, 194, 122, .55); box-shadow: 0 16px 36px -14px rgba(0, 0, 0, .9); }
+.sga-chip.is-sm > span { gap: 5px; height: 24px; padding: 0 9px; border-radius: 8px; font-size: 12px; }
 .sga-chip b { font-weight: 600; }
 .sga-chip svg { color: #f3c27a; }
 

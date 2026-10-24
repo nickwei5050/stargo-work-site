@@ -3,8 +3,10 @@
    around the card's glass caption, with one centrepiece each: 智搜's radar (areaGrowth),
    an inquiry whose words become the account's facts and a reply wired to its sources
    (areaContext), one order on a rail from quote to collection (areaDeal), a goal handed
-   to a coordinator and four roles (areaTeam). Work passes as a chip across a band, a dot
-   down a side or a wire; every area ends at a person and nothing is sent by itself.
+   to a coordinator and four roles (areaTeam). Work passes as a chip out of one window's edge
+   into the next window's free space (never over a line of text), a dot down a side or a
+   wire; every area ends at a person and nothing is sent by itself. A text that does not fit
+   its box takes the shorter form the cast gives it, measured once the card is built.
    Every window has a resting state, and the loop fades back to it. The caption is
    measured (and watched), so nothing runs under it in any language:
      desk   W 720–1400 × H 380–900   bands above and below the caption; the honesty
@@ -21,6 +23,7 @@
   var T = K.T, ZH = K.ZH, el = K.el, sv = K.sv, put = K.put, cl = K.cl, c01 = K.c01, seg = K.seg, ease = K.ease, mod = K.mod, textSwap = K.textSwap;
   function glyph(n, p, s, c) { return K.capGlyph(n, p, s, c); }
   function box(c, p, x, y, w, h, t) { return K.capBox(c, p, x, y, w, h, t); }
+  var alts = K.capAlts;
   // the entry of a [time, value, …] table in force at tau
   function at(tb, tau) { var j = 0; while (j + 1 < tb.length && tau >= tb[j + 1][0]) j++; return j; }
 
@@ -34,7 +37,7 @@
         if (w < 560 || h < 330) return lay('phone', Math.max(300, Math.min(558, Math.round(w / 2) * 2)), Math.max(220, Math.min(440, Math.round(h / 2) * 2)));
         return lay('desk', Math.max(720, Math.min(1400, Math.round(w / 20) * 20)), Math.max(380, Math.min(900, Math.round(h / 20) * 20)));
       }
-      var R, kind, W, H, Lc = null, stg = null, card = null, nextCard = null, covered = false, chk = -1, capEl = null, capRO = null, capK = '', lastT = START;
+      var R, FT, Q, fontsWait = false, kind, W, H, Lc = null, stg = null, card = null, nextCard = null, covered = false, chk = -1, capEl = null, capRO = null, capK = '', lastT = START;
 
       /* the caption's box in stage pixels (the host is not transformed; its ancestors may be) */
       function cap(stage) {
@@ -81,11 +84,12 @@
         var bar = el('div', 'sga-bar', c);
         var ic = el('span', 'sga-app', bar); glyph(d.g, ic, 15);
         el('b', '', bar, d.app);
-        if (w >= 430) el('span', 'sga-grp', bar, d.grp);
+        if (w >= 430) FT.add(el('span', 'sga-grp', bar), [d.grp, '']);   // a group name that does not fit goes
         var st = el('span', 'sga-st', bar); el('i', '', st);
         var o = { c: c, d: d, x: x, y: y, w: w, h: h, st: el('span', '', st), stEl: st, stK: -1, rows: [], slotY: [] };
         var top = 46, left = 10, rw = w - 20;
         if (d.body) {
+          o.fit = FT;
           o.body = K.sgaBody[d.body](c, d, o, W, CLEAR);
           if (o.body.left) { left = o.body.left; rw = w - left - 10; } else return o;
         }
@@ -112,18 +116,24 @@
       }
       function row(c, r, x, y, w, slot, wo) {
         var e = box('sga-row is-' + r.k + (r.o ? ' is-old' : ''), c, x, y, w, ROWH[r.k]);
-        // a narrow row takes its short strings; a very narrow one leaves its pill to the window's status
+        e.__ro = r;   // its time span, for the hand-off chips (lane)
+        // a narrow row takes its short strings; a very narrow one leaves its pill to the window's status.
+        // Any text that still overflows takes its next shorter form once the window is built (FT).
         var o = { e: e, r: r, slot: slot, y: y, vis: null }, sh = w < (r.bar ? 540 : 380);
+        var ta = sh ? alts(r.as || r.a, r.ax) : alts(r.a, r.as, r.ax), tb = sh ? alts(r.bs || r.b, r.bx) : alts(r.b, r.bs, r.bx);
         if (r.k === 'q') {
           glyph(r.pen ? 'pen' : 'search', e, 15, 'sga-q-ico');
-          var qt = el('span', 'sga-q', e); o.q = el('span', '', qt); o.car = el('i', 'sga-car', qt); o.qn = -1; o.chars = Array.from(r.a);
+          var qt = el('span', 'sga-q', e); o.q = el('span', '', qt); o.car = el('i', 'sga-car', qt); o.qn = -1; o.ph = r.ph;
+          // the typed line, measured in full; the placeholder after it (Q)
+          FT.add(o.q, alts(r.a, r.as), function (v) { o.chars = Array.from(v); });
+          Q.push(o);
           return o;
         }
         if (r.k === 'gt') {
           var gs = sv('svg', { viewBox: '-20 -20 40 40', width: 34, height: 34, class: 'sg-gate is-wait sga-gate', 'aria-hidden': 'true' }, e);
           o.ring = sv('circle', { r: 16, class: 'sg-gate-ring' }, gs);
           sv('rect', { x: -6, y: -6, width: 12, height: 12, rx: 2.4, transform: 'rotate(45)', class: 'sg-gate-core' }, gs);
-          var gt = el('div', 'sga-tx', e); el('b', '', gt, sh && r.as ? r.as : r.a); el('span', '', gt, sh && r.bs ? r.bs : r.b);
+          var gt = el('div', 'sga-tx', e); FT.add(el('b', '', gt), ta); FT.add(el('span', '', gt), tb);
           if (w >= 470) { var bt = el('span', 'sga-btns', e); el('span', 'sg-btn is-primary', bt, T('确认', 'Confirm')); el('span', 'sg-btn', bt, T('修改', 'Revise')); }
           return o;
         }
@@ -138,14 +148,17 @@
           var mt = el('div', 'sga-msg', e), hd = el('div', 'sga-msg-h', mt); el('b', '', hd, r.a); el('span', '', hd, r.ch);
           var bb = el('div', 'sga-bub', mt);
           o.hl = [];
-          r.parts.forEach(function (p) { if (typeof p === 'string') bb.appendChild(document.createTextNode(p)); else o.hl.push([el('mark', '', bb, p[0]), p[1]]); });
+          // a message of one plain string has a shorter form for a narrow window
+          if (r.ps) FT.add(bb, alts(r.parts[0], r.ps));
+          else r.parts.forEach(function (p) { if (typeof p === 'string') bb.appendChild(document.createTextNode(p)); else o.hl.push([el('mark', '', bb, p[0]), p[1]]); });
           return o;
         }
         if (r.cc) el('span', 'sga-cc', e, r.cc); else if (r.g) { var gi = el('span', 'sga-gi', e); glyph(r.g, gi, r.k === 'pm' ? 13 : 14); }
-        var tx = el('div', 'sga-tx', e); el('b', '', tx, sh && r.as ? r.as : r.a);
+        var tx = el('div', 'sga-tx', e); FT.add(el('b', '', tx), ta);
         if (r.k === 'st') {
           var ss = el('div', 'sga-steps', tx);
           o.steps = r.s2.map(function (s) { var sp = el('span', 'sga-step', ss); el('i', '', sp); el('em', '', sp, s[0]); return sp; });
+          R.stp.push({ ss: ss, o: o });
           return o;
         }
         if (r.k === 'th') {
@@ -154,7 +167,7 @@
           o.th = r.s2.map(function (s, k) { var tile = el('i', 'sga-tile is-t' + k, th); glyph(k === 2 ? 'play' : 'image', tile, 14); return tile; });
           return o;
         }
-        if (r.b) el('span', '', tx, sh && r.bs ? r.bs : r.b);
+        if (r.b) FT.add(el('span', '', tx), tb);
         if (r.bar && w >= 400) {
           var mb = el('i', 'sga-meter', e); o.fill = el('i', '', mb);
           if (r.floor) { var fl = el('i', 'sga-floor', mb); fl.style.left = (r.floor * 100) + '%'; }
@@ -175,16 +188,21 @@
         if (l.k === 'chip' || l.k === 'wire') {
           var right = a.x < b.x, ya = rowAt(a, l.ra), yb = rowAt(b, l.rb);
           if (ya == null || yb == null) { if (l.k === 'wire') return null; ya = ya || a.y + 74; yb = yb || b.y + 74; }
-          var x0 = right ? a.x + a.w - (l.k === 'wire' ? 10 : 56) : a.x + 56, x1 = right ? b.x + (l.k === 'wire' ? 10 : 56) : b.x + b.w - 56;
-          o.p = [[x0, ya], [x0 + (x1 - x0) * 0.35, ya - (l.k === 'wire' ? 0 : 34)], [x0 + (x1 - x0) * 0.65, yb - (l.k === 'wire' ? 0 : 34)], [x1, yb]];
           if (l.k === 'wire') {
+            var x0 = right ? a.x + a.w - 10 : a.x + 10, x1 = right ? b.x + 10 : b.x + b.w - 10;
+            o.p = [[x0, ya], [x0 + (x1 - x0) * 0.35, ya], [x0 + (x1 - x0) * 0.65, yb], [x1, yb]];
             var dd = 'M' + o.p[0] + 'C' + o.p[1] + ' ' + o.p[2] + ' ' + o.p[3];
             o.wire = sv('path', { d: dd, class: 'sga-wire is-lit is-cite', opacity: 0 }, R.svg);
             o.dot = sv('circle', { r: 3.4, class: 'sga-dot', opacity: 0 }, R.svg);
             return o;
           }
+          // the chip comes out of the source window's edge (its lane clips it there) and lands in the
+          // destination's free space; where it lands is worked out once the texts are final
+          // (K.sgaHandoff, js/stargo-motion-areas-centre.js)
+          o.a = a; o.b = b; o.right = right; o.ya = ya; o.yb = yb;
           o.guide = sv('path', { d: 'M' + (right ? a.x + a.w : a.x) + ' ' + ya + 'H' + (right ? b.x : b.x + b.w), class: 'sga-guide' }, R.svg);
-          o.chip = el('div', 'sga-chip', stage); var ci = el('span', '', o.chip); glyph('arrow', ci, 13); el('b', '', ci, l.text);
+          o.clip = el('div', 'sga-lane', stage);
+          o.chip = el('div', 'sga-chip', o.clip); var ci = el('span', '', o.chip); glyph('arrow', ci, 13); el('b', '', ci, l.text);
           return o;
         }
         // down (or up) a side, beside the caption
@@ -197,6 +215,9 @@
         box('sga-sn', stage, x - 3, y0 - 3, 6, 6); box('sga-sn', stage, x - 3, y1 - 3, 6, 6);
         return o;
       }
+
+      // a hand-off chip: out of the edge in FLY, shown HOLD, gone in FADE (placed by K.sgaHandoff)
+      var FLY = 0.7, HOLD = 0.45, FADE = 0.3;
 
       /* ---------------- phone: what the caption leaves above and below it ---------------- */
       function buildPhone(stage, c) {
@@ -212,15 +233,24 @@
           var e = A.pn.map(function (s) { return Array.from(s).length * (ZH ? 12 : 6.9) + (big ? 14 : 0) + g; }), t = e.reduce(function (a, b) { return a + b; }, 0);
           return { t: t, w: e.map(function (x) { return t <= av ? x + (av - t) / n : x * av / t; }) };
         }
-        var narrow = big && fit(18).t > av, ws = fit(big ? (narrow ? 0 : 18) : 11).w, cx = pad;
-        cl(stage, 'is-narrow', narrow);
-        R.chips = (big || small) ? A.win.map(function (d, i) {
-          var h = big ? 28 : 16, e = box(big ? 'sga-pchip' : 'sga-plab', stage, cx, Math.max(4, Math.round((gt - h) / 2)), ws[i], h);
-          cx += ws[i] + gap;
-          if (big) glyph(d.g, e, 13); else el('i', '', e);
-          el('span', '', e, A.pn[i]);
-          return { c: e, d: d };
-        }) : [];
+        function chips(narrow) {
+          var ws = fit(big ? (narrow ? 0 : 18) : 11).w, cx = pad;
+          cl(stage, 'is-narrow', narrow);
+          return (big || small) ? A.win.map(function (d, i) {
+            var h = big ? 28 : 16, e = box(big ? 'sga-pchip' : 'sga-plab', stage, cx, Math.max(4, Math.round((gt - h) / 2)), ws[i], h);
+            cx += ws[i] + gap;
+            if (big) glyph(d.g, e, 13); else el('i', '', e);
+            return { c: e, d: d, s: el('span', '', e, A.pn[i]) };
+          }) : [];
+        }
+        var narrow = big && fit(18).t > av;
+        R.chips = chips(narrow);
+        // the estimate is only an estimate: a name that is still cut drops the glyphs, as a narrower phone does
+        var rg = document.createRange();
+        if (big && !narrow && R.chips.some(function (c) { rg.selectNodeContents(c.s); return rg.getBoundingClientRect().width > c.s.getBoundingClientRect().width - 0.5; })) {
+          R.chips.forEach(function (c) { stage.removeChild(c.c); });
+          R.chips = chips(true);
+        }
         if (gb >= 30) {
           var line = box('sga-pline', stage, pad, Math.round(cb + (gb - 22) / 2), W - 2 * pad, 22);
           R.pdot = el('i', '', line);
@@ -233,12 +263,35 @@
       }
 
       function build(stage, L) {
-        kind = L.kind; W = L.w; H = L.h; Lc = L; stg = stage; R = { stage: stage };
+        kind = L.kind; W = L.w; H = L.h; Lc = L; stg = stage; R = { stage: stage, stp: [] }; FT = K.capFit(); Q = [];
         stage.textContent = '';
         stage.className = 'sg-mo-stage sga sga-' + key + ' is-' + kind;
         var c = cap(stage);
         capK = capKey(c);
         if (kind === 'phone') buildPhone(stage, c); else buildDesk(stage, c);
+        // texts that overflow take their shorter forms (measured beside the widest status and pill each
+        // window and row will show); then the fields' placeholders, in the same boxes
+        var wide = [];
+        function longest(tb) { var v = ''; tb.forEach(function (e) { if (e[1].length > v.length) v = e[1]; }); return v; }
+        (R.wl || []).forEach(function (w) { wide.push([w.st, longest(w.d.st)]); w.rows.forEach(function (o) { if (o.p) wide.push([o.p, longest(o.r.p)]); }); });
+        wide.forEach(function (x) { x[0].textContent = x[1]; });
+        FT.run();
+        wide.forEach(function (x) { x[0].textContent = ''; });
+        Q.forEach(function (o) { if (o.r.ph) FT.add(o.q, alts(o.r.ph, o.r.phs), function (v) { o.ph = v; }); });
+        FT.run();
+        Q.forEach(function (o) { put(o.q, 'text', ''); });
+        // a row of steps that wraps (its last step cut away) closes up, then takes its short labels
+        function wraps(x) { return x.ss.lastChild.offsetTop > x.ss.firstChild.offsetTop; }
+        R.stp.forEach(function (x) { x.w = wraps(x); });
+        R.stp.forEach(function (x) { if (x.w) cl(x.ss, 'is-tight', true); });
+        R.stp.forEach(function (x) { x.w = x.w && wraps(x); });
+        R.stp.forEach(function (x) { if (x.w) x.o.r.s2.forEach(function (st, k) { if (st[2]) put(x.o.steps[k].lastChild, 'text', st[2]); }); });
+        if (kind === 'desk') K.sgaHandoff(stg, W, Q, FLY + HOLD + FADE, R.links);
+        // measured in a fallback font: lay out again once the webfonts are in
+        if (!fontsWait && document.fonts && document.fonts.status !== 'loaded') {
+          fontsWait = true;
+          document.fonts.ready.then(function () { if (Lc) { build(stg, Lc); tick(lastT); } });
+        }
         // the caption changes size when its webfont arrives or its text reflows: lay out again
         if (!capRO && capEl && window.ResizeObserver) {
           capRO = new ResizeObserver(function () {
@@ -262,7 +315,7 @@
         if (o.vis !== vis) { o.vis = vis; cl(o.e, 'is-on', vis); }
         if (r.k === 'q') {
           var n = live ? Math.round(o.chars.length * seg(tau, r.t0, r.t1)) : 0;
-          if (o.qn !== n) { o.qn = n; put(o.q, 'text', n || !r.ph ? o.chars.slice(0, n).join('') : r.ph); cl(o.e, 'is-ph', !n && !!r.ph); }
+          if (o.qn !== n) { o.qn = n; put(o.q, 'text', n || !o.ph ? o.chars.slice(0, n).join('') : o.ph); cl(o.e, 'is-ph', !n && !!o.ph); }
           // the caret blinks in script, so it stops with the scene
           put(o.car, '-opacity', tau >= r.t0 && tau < r.t1 + 0.7 && (tau < r.t1 || (tau * 2.4 | 0) % 2 === 0) ? '1' : '0');
           return;
@@ -314,9 +367,11 @@
         }
         for (i = 0; i < R.links.length; i++) {
           var o = R.links[i], t0 = o.l.t, u = seg(tau, t0, t0 + 0.9), e = ease.io(u), moving = u > 0 && u < 1;
-          if (o.chip) {
-            if (moving) { bezAt(o.p, e); put(o.chip, '-transform', 'translate(' + pt[0].toFixed(1) + 'px,' + pt[1].toFixed(1) + 'px)'); }
-            put(o.chip, '-opacity', moving ? (Math.min(1, u * 6, (1 - u) * 6)).toFixed(3) : '0');
+          if (o.guide) {
+            // out of the edge, a moment in its place, gone before the next thing needs the space
+            var shown = o.chip && tau >= t0 && tau < t0 + FLY + HOLD + FADE;
+            if (shown) { var g = 1 - ease.out(seg(tau, t0, t0 + FLY)); put(o.chip, '-transform', 'translate(' + (o.dx * g).toFixed(1) + 'px,' + (o.dy * g).toFixed(1) + 'px)'); }
+            if (o.chip) put(o.chip, '-opacity', shown ? (1 - seg(tau, t0 + FLY + HOLD, t0 + FLY + HOLD + FADE)).toFixed(3) : '0');
             cl(o.guide, 'is-lit', tau >= t0 && tau < t0 + 1.6);
           } else if (o.wire) {
             put(o.wire, 'opacity', tau >= t0 && tau < CLEAR ? '1' : '0');
