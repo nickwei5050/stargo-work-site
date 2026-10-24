@@ -9,7 +9,7 @@
                        late, 待审批 rises to 3 and falls back when you approve
                        one; the data-source row reads ERP 未接入 · 缺数据，已标出,
                        because figures only come from connected systems.
-     cockpit-blocker   「报价 Q-1042 · 负责人 销售 AI · 卡点：缺底价 · 等你」
+     cockpit-blocker   「报价 Q-1043 · 负责人 销售 AI · 卡点：缺底价 · 等你」
                        pulses; a person takes it, types the floor price and
                        hands it back; the quote then waits for approval —
                        nothing is sent by itself.
@@ -274,7 +274,7 @@
   function ZHs() { return K.ZH; }
 
   /* =====================================================================
-     BLOCKER — 任务负责人和卡点. The quote Q-1042 is held up by a missing floor
+     BLOCKER — 任务负责人和卡点. The quote Q-1043 is held up by a missing floor
      price and waits for you; a person takes it (a visible tap), types the
      price and hands it back to the sales AI, which updates the quote; the
      quote then waits for approval. 14 s, ending on a soft fade back.
@@ -313,7 +313,7 @@
       var body = R.body = el('div', 'sg-ck-body', stage);
       if (R.tier !== 'mini') {
         var full = R.tier === 'full', list = el('div', 'sg-ck-tasks', body);
-        var q = R.q = task(list, [T('报价 Q-1042', 'Quote Q-1042'), T('瑞典', 'Sweden'), T('销售 AI', 'Sales AI'), 1, 'block', '', full ? T('今天', 'Today') : ''], !full);
+        var q = R.q = task(list, [T('报价 Q-1043', 'Quote Q-1043'), T('瑞典', 'Sweden'), T('销售 AI', 'Sales AI'), 1, 'block', '', full ? T('今天', 'Today') : ''], !full);
         q.r.classList.add('is-key');
         // the blocker itself: beside the status on desktop, in place of the deadline on the small tile
         if (full) { R.why = el('span', 'sg-ck-why', null, T('卡点：缺底价', 'Blocker: no floor price')); q.chips.insertBefore(R.why, q.st); }
@@ -324,7 +324,7 @@
         if (full) {
           var d = el('div', 'sg-ck-tile sg-ck-detail', body);
           var dh = el('div', 'sg-ck-th', d);
-          el('b', '', dh, T('Q-1042 · 卡点详情', 'Q-1042 · blocker'));
+          el('b', '', dh, T('Q-1043 · 卡点详情', 'Q-1043 · blocker'));
           R.dOwner = el('span', '', dh);
           el('p', 'sg-ck-dp', d, T('销售 AI 已起草报价 v2（电动自行车电池，约 2,000 组/年）。缺底价：要由有权限的人来定。', 'The sales AI has drafted quote v2 (e-bike packs, about 2,000 a year). It is missing the floor price, which someone with authority must set.'));
           var fd = el('div', 'sg-ck-field', d);
@@ -350,7 +350,7 @@
         if (full) el('span', '', R.touch, T('你', 'You'));
       } else {
         el('span', 'sg-ck-k', body, T('卡点', 'Blocker'));
-        el('b', 'sg-ck-mid', body, 'Q-1042');
+        el('b', 'sg-ck-mid', body, 'Q-1043');
         el('span', 'sg-ck-mwhy', body, T('缺底价', 'No floor price'));
         if (R.H >= 140) R.mo = owner(body, OWN_S[0], 1);
         R.st = el('span', 'sg-ck-mchip', body);

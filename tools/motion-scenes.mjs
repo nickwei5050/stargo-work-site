@@ -104,8 +104,8 @@ export const MOTION_LABEL = {
     en: 'Illustrative motion with demo data: the owner’s cockpit overview. Inquiry and quote counts rise as new data arrives, delivery shows on-time against late orders, and pending approvals rise to three and fall back to two when you approve one. Email, Alibaba.com, CRM and the shared drive are connected; the ERP is not, and its missing data is flagged.',
   },
   'cockpit-blocker': {
-    zh: '动态示意（演示数据）：任务与卡点。报价 Q-1042 的负责人是销售 AI，卡在缺底价，等你处理；你接手、填上底价后交回销售 AI，报价更新后仍要等你审批才发出，不会自动发送。',
-    en: 'Illustrative motion with demo data: tasks and blockers. Quote Q-1042, owned by the sales AI, is blocked on a missing floor price and waits for you; you take it, enter the price and hand it back, and the updated quote still waits for your approval before it is sent. Nothing is sent automatically.',
+    zh: '动态示意（演示数据）：任务与卡点。报价 Q-1043 的负责人是销售 AI，卡在缺底价，等你处理；你接手、填上底价后交回销售 AI，报价更新后仍要等你审批才发出，不会自动发送。',
+    en: 'Illustrative motion with demo data: tasks and blockers. Quote Q-1043, owned by the sales AI, is blocked on a missing floor price and waits for you; you take it, enter the price and hand it back, and the updated quote still waits for your approval before it is sent. Nothing is sent automatically.',
   },
   'cockpit-budget': {
     zh: '动态示意（演示数据）：用量与预算。本月 AI 用量逐日上升，到 80% 时提醒你；下一批任务会超出上限时，新任务先暂停，等你批准。',
