@@ -124,9 +124,14 @@
         built = true;
         scene.tick(reduced.matches ? scene.still : t);
       }
-      var s = Math.min(fw / W, fh / H);
-      var tr = 'translate(' + ((w - W * s) / 2).toFixed(1) + 'px,' + ((h - H * s) / 2).toFixed(1) + 'px) scale(' + s.toFixed(4) + ')';
-      if (tr !== lastFit) { stage.style.transform = tr; lastFit = tr; }
+      var s = Math.min(fw / W, fh / H), sk = s.toFixed(4);
+      var tr = 'translate(' + ((w - W * s) / 2).toFixed(1) + 'px,' + ((h - H * s) / 2).toFixed(1) + 'px) scale(' + sk + ')';
+      if (tr !== lastFit) {
+        stage.style.transform = tr; lastFit = tr;
+        // a scene that sets scaleVar gets the fit scale as --sg-fit on its stage, so its CSS can keep type at
+        // 12px or more on screen when a short screen scales the stage down (font-size: max(13px, calc(12px / var(--sg-fit))))
+        if (scene.scaleVar) stage.style.setProperty('--sg-fit', sk);
+      }
       return true;
     }
     var shown = true, visT = 0, tmo = 0;
@@ -145,6 +150,8 @@
       if (!shown) { last = 0; tmo = setTimeout(function () { tmo = 0; wake(); }, 250); return; }
       var dt = last ? Math.min((now - last) / 1000, 0.1) : 0;
       last = now; t += dt;
+      // the scene clock, readable on the host (tools/verify-motion.mjs checks that it runs on screen)
+      host.__sgT = t;
       if (built) scene.tick(t);
       raf = requestAnimationFrame(frame);
     }
@@ -153,7 +160,31 @@
       if (!raf && !tmo && visible && !document.hidden) raf = requestAnimationFrame(frame);
     }
     host.classList.add('sg-mo-on');
-    if ('ResizeObserver' in window) new ResizeObserver(function () { fit(); }).observe(host);
+    // A host that the observer reports as intersecting with a zero-area rectangle is either parked just
+    // beside the screen (a sliding panel: not on screen, so it does not tick, and the observer's second
+    // threshold reports the moment it slides in) or is itself 0 × 0 while its box grows (the sticky band
+    // grows 「一条业务主线」 out of a 0 × 0 box). A 0 × 0 target counts as fully visible, so its ratio stays 1
+    // as it grows and the observer never calls again: such a host (pend) is looked at again when it is
+    // resized and, for growth the resize observer cannot see (a transform), every 250 ms while it is
+    // still 0 × 0. Hosts with a real box never take this path, so scrolling costs nothing extra.
+    var inter = false, pend = false, poll = 0;
+    function recheck() {
+      poll = 0;
+      if (!pend || !inter) return;
+      var r = host.getBoundingClientRect();
+      if (r.width > 0 && r.height > 0) {
+        // the box is real now: if it is on screen it ticks; if not, the observer reports it from here on
+        pend = false;
+        if (r.bottom > -120 && r.top < window.innerHeight + 120 && r.right > 0 && r.left < window.innerWidth) { visible = true; fit(); wake(); }
+      } else if (!document.hidden) poll = setTimeout(recheck, 250);
+    }
+    if ('ResizeObserver' in window) new ResizeObserver(function (es) {
+      var cr = es[es.length - 1].contentRect;
+      // a ticking host that shrinks back to 0 × 0 stops until it grows again
+      if (visible && inter && (cr.width < 1 || cr.height < 1)) { visible = false; pend = true; }
+      fit();
+      if (pend && !poll) recheck();
+    }).observe(host);
     window.addEventListener('resize', fit);
     fit();
     if (!near) {
@@ -164,12 +195,17 @@
       nio.observe(host);
     }
     if ('IntersectionObserver' in window) {
-      // A host that only touches the viewport's edge (a sliding panel parked just beside the screen) reports
-      // isIntersecting with a zero-area rectangle; it is not on screen, so it does not tick. The second
-      // threshold makes the observer report the moment such a host actually comes into view.
-      new IntersectionObserver(function (es) { var e = es[es.length - 1], r = e.intersectionRect; visible = e.isIntersecting && r.width > 0 && r.height > 0; if (visible) fit(); wake(); }, { rootMargin: '120px 0px', threshold: [0, 0.001] }).observe(host);
+      new IntersectionObserver(function (es) {
+        var e = es[es.length - 1], r = e.intersectionRect, b = e.boundingClientRect;
+        inter = e.isIntersecting;
+        visible = inter && r.width > 0 && r.height > 0;
+        pend = inter && !visible && (b.width < 1 || b.height < 1);
+        if (visible) fit();
+        if (pend && !poll) recheck();
+        wake();
+      }, { rootMargin: '120px 0px', threshold: [0, 0.001] }).observe(host);
     } else { visible = true; wake(); }
-    document.addEventListener('visibilitychange', wake);
+    document.addEventListener('visibilitychange', function () { if (pend && !poll) recheck(); wake(); });
     if (reduced.addEventListener) reduced.addEventListener('change', function () { t = scene.still; if (built) scene.tick(t); wake(); });
   }
 

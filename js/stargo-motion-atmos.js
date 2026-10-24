@@ -201,6 +201,9 @@
     return {
       layouts: layouts,
       pick: function (w, h) { var r = w / h; return r >= 1.95 ? 'ultra' : r >= 1.7 ? 'wide' : r >= 1.45 ? 'std' : 'box'; },
+      // the stage is drawn for 900px-high screens; shorter ones (1280 × 720 scales it to 0.8) keep the labels at
+      // 12px or more through --sg-fit (css/stargo-motion-atmos.css)
+      scaleVar: true,
       build: build, tick: tick, still: 15.6, start: 0.4
     };
   }

@@ -524,7 +524,7 @@
   /* =================== 经营驾驶舱: the day, from the other five (middle left) =================== */
   var E = {
     mul: SALES.B, wait: QUOTE.B + 1.2, appr: QUOTE.B + QUOTE.TAP1, sent: QUOTE.B + QUOTE.TAP2, inbox: SALES.B + SALES.RS,
-    so: ERP.B, board: ERP.B + ERP.RS, clear: CREATIVE.B - 0.9, img: CREATIVE.B + CREATIVE.G0[2] + CREATIVE.GEN
+    so: ERP.B, board: ERP.B + ERP.RS, img: CREATIVE.B + CREATIVE.G0[0] + CREATIVE.GEN
   };
   var EV = [
     [GROWTH.B + 1.95, 'Nordwerk Energie · ' + T('匹配 94', 'match 94')],
@@ -535,7 +535,7 @@
     [SALES.B + 8.2, 'Müller Energie · ' + T('定金已到账', 'deposit in')],
     [E.so, 'SO-2041 · ' + T('新订单', 'new order')],
     [ERP.B + 2.7, 'SO-2041 · ' + T('已装柜', 'loaded')],
-    [E.img, T('3 张素材待审核', '3 images to review')],
+    [E.img, T('AI 创作 · 素材待你审核', 'AI Creative · images to review'), T('AI 创作 · 素材待审核', 'Creative · images to review')],
     [16.7 + 0.3, T('今天：你批准 1 · 你发送 1 · 自动发送 0', 'Today: you approved 1 · sent 1 · auto-sent 0'), T('今天：你批准 1 · 你发送 1 · 自动发送 0', 'Approved 1 · sent 1 · auto-sent 0')]
   ];
   var COCKPIT = {
@@ -567,7 +567,10 @@
       textSwap(R.v[1], String(wait));
       cl(R.v[1], 'is-hot', wait === 1);
       textSwap(R.v[2], String(tau >= E.so && tau < E.board ? 7 : 6));
-      textSwap(R.v[3], String(tau >= E.img || tau < E.clear ? 3 : 0));
+      // images to review: counted image by image exactly as the AI 创作 window counts them, so the Live panel never disagrees
+      var uc = mod(tau - CREATIVE.B, P), imgs = 0;
+      for (var k = 0; k < 3; k++) if (uc >= CREATIVE.G0[k] + CREATIVE.GEN && uc < P - 0.9) imgs++;
+      textSwap(R.v[3], String(imgs));
       if (R.today) css(R.today, 'transform', 'scaleY(' + (inq === 24 ? 0.64 : 0.6) + ')');
       var last = EV.length - 1, glow = 0;
       for (var i = 0; i < EV.length; i++) {

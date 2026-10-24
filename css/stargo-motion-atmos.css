@@ -26,6 +26,13 @@
 .sga-lamp { fill: #ffc690; }
 
 /* =================== NIGHT =================== */
+/* The night stage is drawn for a 900px-high screen and scaled to the screen it is on (0.8 at 1280 × 720, 0.85 at
+   1024 × 768 and 1366 × 768); the runner hands that scale in as --sg-fit, so no label or tag renders under 12px. */
+.sga-night .sga-label b { font-size: max(15px, calc(12.6px / var(--sg-fit, 1))); }
+.sga-night .sga-label span { font-size: max(13px, calc(12.2px / var(--sg-fit, 1))); }
+.sga-night .sga-tag { font-size: max(12.5px, calc(12.2px / var(--sg-fit, 1))); color: rgba(244, 238, 232, .5); }
+/* a dark halo keeps the labels clear of the buyer lines that pass behind them */
+.sga-night .sga-label { text-shadow: 0 0 6px rgba(13, 11, 9, .95); }
 .sga-stars { stroke: rgba(255, 236, 220, .32); stroke-width: 1.6; stroke-linecap: round; fill: none; }
 .sga-star { fill: #ffe9d2; }
 .sga-hills { fill: rgba(255, 236, 220, .012); stroke: rgba(255, 236, 220, .06); stroke-width: 1; }
