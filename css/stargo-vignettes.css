@@ -79,6 +79,20 @@
    still was (css/stargo-fusion.css `.w-background-video > img.stargo-still`). */
 .w-background-video > .sgv-card { position: absolute; inset: 0; width: 100%; height: 100%; }
 .sgv-card .sgv-tag { right: auto; left: 50%; bottom: 12px; transform: translateX(-50%); }
+/* Cinery draws the whole wheel smaller on tablets and phones (.cn-cta-wrapper:
+   scale .8 below 992px, .6 below 480px), which took the 12px tag down to 9.6px
+   and 7.2px on screen. Here the tag is counter-scaled so it reads at 12px, in
+   its short form (演示数据 / Demo data; each card's name for a screen reader
+   still starts 示意 / Illustration) and close to the card's lower edge, below
+   the part of the drawing that names the moment. */
+@media screen and (max-width: 991px) {
+  .cn-produce .sgv-card .sgv-tag { bottom: 8px; padding: 3px 9px 4px; font-size: 15px; letter-spacing: .02em; } /* 12 ÷ .8 */
+  .cn-produce .sgv-card .sgv-tag-l { display: none; }
+  .cn-produce .sgv-card .sgv-tag-s { display: inline; }
+}
+@media screen and (max-width: 479px) {
+  .cn-produce .sgv-card .sgv-tag { bottom: 6px; padding: 4px 10px 5px; font-size: 20px; } /* 12 ÷ .6 */
+}
 /* The inner circle is mirrored by cinery (`.cn-cta-circle-wrapper.cn-_02`);
    flip the drawing back so its words read the right way round. */
 .cn-produce .cn-cta-circle-wrapper.cn-_02 .w-background-video > .sgv-card { transform: scaleX(-1); }

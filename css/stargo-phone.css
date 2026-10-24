@@ -1,5 +1,7 @@
 /* Phone parity: what each rule does and why is in tools/chrome.mjs (phoneFx). Compositor-only. */
 :root{--sg-e:cubic-bezier(.2,.7,.2,1);--sg-o:cubic-bezier(.5,1,.89,1)}
+/* paint budget: a motion host, or the orbit's and the ring's drawings, more than half a screen from the viewport skip rendering (sg-far, js/stargo-phone-fx.js), so their layers and paint chunks stop costing every frame; layout-neutral (.sg-mo contains layout and paint and its stage is absolutely placed; .sg-ob and .sgv-card fill boxes sized by their parents) */
+.sg-mo.sg-far,.qx-orbit.sg-far .sg-ob,.cn-produce.sg-far .sgv-card{content-visibility:hidden}
 /* the stage lines and the flip hint lay out from the first paint: css/stargo-motion-stages.css */
 /* accordion */
 .products-cards-mobile{counter-reset:sg}

@@ -213,7 +213,7 @@ const ART = {
     s += rect(282, 380, 248, 6, 'rgba(244,238,232,.1)', { rx: 3 }) + rect(344, 380, 124, 6, 'rgba(159,224,176,.45)', { rx: 3 });
     s += rect(406 + 0.02 / 0.05 * 62 - 1.5, 374, 3, 18, INK, { rx: 1.5 });
     s += pill(586, 352, 92, 30, T('合格', 'Pass'), { fill: 'rgba(159,224,176,.14)', f: OK, stroke: 'rgba(159,224,176,.45)', size: 14 });
-    s += text(632, 404, 12, T('抽检 20 组', 'Sample 20'), { f: DIM, a: 'middle' });
+    s += text(632, 404, 12, T('抽检 20 组', '20 spot-checked'), { f: DIM, a: 'middle' });
     return s;
   },
 
@@ -260,7 +260,7 @@ const ART = {
     // the packing list
     s += rr(400, 134, 196, 230, 12, 'rgba(31,24,19,.96)', { stroke: HAIR });
     s += text(416, 160, 14, T('装箱单 · SO-2041', 'Packing list · SO-2041'), { w: 600 });
-    const rows = [[T('电池组 × 5', 'Packs × 5'), 1], [T('说明书 · 合格证', 'Manual · cert.'), 1], [T('唛头照片', 'Mark photo'), 1], [T('封箱 · 称重', 'Seal · weigh'), 0]];
+    const rows = [[T('电池组 × 5', 'Packs × 5'), 1], [T('说明书 · 合格证', 'Manual · cert.'), 1], [T('唛头照片', 'Shipping-mark photo'), 1], [T('封箱 · 称重', 'Seal · weigh'), 0]];
     rows.forEach(([l, d], i) => {
       const y = 182 + i * 34;
       s += rr(416, y, 18, 18, 5, d ? 'rgba(159,224,176,.16)' : 'none', { stroke: d ? 'rgba(159,224,176,.6)' : 'rgba(244,238,232,.3)' });
@@ -287,17 +287,24 @@ const ART = {
     s += rr(318, 56, 164, 392, 28, '#0b0908', { stroke: 'rgba(255,255,255,.14)' });
     s += rr(326, 64, 148, 376, 22, PANEL);
     s += rr(380, 72, 40, 10, 5, '#0b0908');
-    s += text(338, 104, 11, '07:40', { f: MUTE }) + text(462, 104, 11, T('巡厂', 'Walk'), { f: MUTE, a: 'end' });
+    s += text(338, 104, 11, '07:40', { f: MUTE }) + text(462, 104, 11, T('巡厂', 'Factory walk'), { f: MUTE, a: 'end' });
     s += text(338, 132, 13, T('今日 · 柳州工厂', 'Today · Liuzhou'), { f: MUTE });
     s += text(338, 176, 36, '1,240', { w: 600, ls: '-1' });
     s += text(338, 196, 12, T('组 · 已下线', 'packs off the line'), { f: DIM });
     const bars = [30, 42, 38, 52, 46, 60, 34];
     bars.forEach((h, i) => { s += rect(340 + i * 18, 270 - h, 11, h, i === 5 ? OR : 'rgba(244,238,232,.2)', { rx: 2 }); });
     s += line(338, 284, 462, 284);
-    s += text(338, 306, 13, T('出货', 'Shipped'), { f: MUTE }) + text(462, 306, 13, T('2 柜', '2 boxes'), { a: 'end', w: 600 });
-    s += text(338, 330, 13, T('在制', 'In work'), { f: MUTE }) + text(462, 330, 13, T('6 单', '6 orders'), { a: 'end', w: 600 });
+    // 出货 2 柜 · 在制 6 单: label then value in Chinese; in English the number leads, as
+    // 'Shipped … 2 containers' does not fit the 124-unit line beside its label
+    if (T(true, false)) {
+      s += text(338, 306, 13, '出货', { f: MUTE }) + text(462, 306, 13, '2 柜', { a: 'end', w: 600 });
+      s += text(338, 330, 13, '在制', { f: MUTE }) + text(462, 330, 13, '6 单', { a: 'end', w: 600 });
+    } else {
+      s += text(338, 306, 13, '2', { w: 600 }) + text(351, 306, 12, 'containers shipped', { f: MUTE });
+      s += text(338, 330, 13, '6', { w: 600 }) + text(351, 330, 12, 'orders on the line', { f: MUTE });
+    }
     s += rr(336, 346, 128, 40, 10, 'rgba(236,111,16,.14)', { stroke: 'rgba(236,111,16,.5)' });
-    s += text(346, 363, 12, T('待你审批', 'Your approval'), { f: PEACH, w: 600 }) + text(346, 379, 11, 'Q-1042', { f: MUTE });
+    s += text(346, 363, 12, T('待你审批', 'Needs your OK'), { f: PEACH, w: 600 }) + text(346, 379, 11, 'Q-1042', { f: MUTE });
     s += rr(372, 420, 56, 4, 2, 'rgba(244,238,232,.3)');
     return s;
   },
@@ -364,13 +371,14 @@ const ART = {
     s += rr(338, 128, 124, 150, 8, '#2c221b', { stroke: 'rgba(255,179,122,.4)' });
     for (let i = 0; i < 4; i++) s += rr(348, 140 + i * 34, 104, 26, 4, '#3a2d24') + rect(356, 150 + i * 34, 18, 6, i === 1 ? OR : 'rgba(236,111,16,.5)', { rx: 1.5 });
     s += `<ellipse cx="400" cy="286" rx="90" ry="8" fill="rgba(0,0,0,.4)"/>`;
-    s += pill(184, 80, 92, 26, T('视频制作', 'Video'), { fill: 'rgba(21,17,14,.8)', f: INK, stroke: HAIR, size: 12 });
-    s += text(616, 98, 12, T('48V 机架储能 · 产品片', '48V rack storage · film'), { f: MUTE, a: 'end' });
+    const app = T('视频制作', 'Video Studio');
+    s += pill(184, 80, Math.max(92, n(est(app, 12) + 22)), 26, app, { fill: 'rgba(21,17,14,.8)', f: INK, stroke: HAIR, size: 12 });
+    s += text(604, 98, 12, T('48V 机架储能 · 产品片', '48V rack storage · product film'), { f: MUTE, a: 'end' });
     s += circ(400, 206, 28, 'rgba(21,17,14,.62)', { stroke: 'rgba(255,255,255,.5)', 'stroke-width': 1.5 }) + path('M392 192l24 14-24 14z', { fill: INK });
     s += rect(190, 312, 420, 4, 'rgba(244,238,232,.18)', { rx: 2 }) + rect(190, 312, 168, 4, OR, { rx: 2 }) + circ(358, 314, 6, INK);
     s += text(190, 302, 12, '0:18 / 0:45', { f: MUTE });
     // the storyboard
-    const shots = [T('开场', 'Open'), T('细节', 'Detail'), T('应用', 'In use'), T('联系', 'Contact')];
+    const shots = [T('开场', 'Opening'), T('细节', 'Detail'), T('应用', 'In use'), T('联系', 'Contact')];
     shots.forEach((l, i) => {
       const x = 168 + i * 118;
       s += rr(x, 352, 110, 64, 8, i === 1 ? 'rgba(236,111,16,.14)' : PANEL, { stroke: i === 1 ? OR : HAIR, 'stroke-width': i === 1 ? 2 : 1 });
@@ -403,7 +411,7 @@ const ART = {
       else s += circ(x, 269, 8, BG, { stroke: 'rgba(244,238,232,.3)', 'stroke-width': 2 });
       s += text(x, 302, 13, l, { f: i <= 3 ? INK : MUTE, a: 'middle', w: i === 3 ? 700 : 500 });
     });
-    s += pill(256, 334, 288, 28, T('抽检 20 组 · 电压 / 内阻 · 通过', 'Sample 20 · voltage / IR · passed'), { fill: 'rgba(159,224,176,.1)', f: OK, stroke: 'rgba(159,224,176,.35)', size: 12 });
+    s += pill(256, 334, 288, 28, T('抽检 20 组 · 电压 / 内阻 · 通过', '20 spot-checked · voltage / IR · pass'), { fill: 'rgba(159,224,176,.1)', f: OK, stroke: 'rgba(159,224,176,.35)', size: 12 });
     return s;
   },
 
@@ -413,7 +421,7 @@ const ART = {
     const ref = (x, y, rot, bg, i) => `<g transform="rotate(${rot} ${x + 60} ${y + 70})">${rr(x, y, 120, 140, 8, '#efe6dc')}${rect(x + 8, y + 8, 104, 100, bg)}${pack(x + 28, y + 44, 64, 46, '', { body: '#2c221b' })}${text(x + 10, y + 128, 11, `${T('参考', 'Ref')} ${i}`, { f: '#6b5a4c', w: 600 })}</g>`;
     s += ref(130, 120, -8, '#cfc6bb', 1) + ref(176, 150, 4, '#b9b0a6', 2) + ref(222, 190, -3, '#d8d0c6', 3);
     [['#8a8f96', 196], ['#efe9e1', 222], ['#191512', 248]].forEach(([c, x]) => { s += circ(x, 368, 9, c, { stroke: 'rgba(255,255,255,.25)' }); });
-    s += text(268, 372, 11, T('灰 · 白 · 黑', 'Grey · ivory · black'), { f: DIM });
+    s += text(268, 372, 11, T('灰 · 白 · 黑', 'Grey · white · black'), { f: DIM });
     // the arrow through AI 创作
     s += path('M362 260h52', { stroke: OR2, 'stroke-width': 2, fill: 'none' }) + path('M410 253l10 7-10 7z', { fill: OR2 });
     s += text(392, 246, 12, T('AI 创作', 'AI Creative'), { f: PEACH, a: 'middle', w: 600 });
@@ -446,11 +454,11 @@ const ART = {
       s += circ(x + 76, y + 87, 6, col[k]);
     });
     s += line(344, 272, 344, 290, OR, 1.5);
-    const note = T('B3 待料 12 分钟 · 已通知仓库', 'B3 waiting for stock · 12 min');
+    const note = T('B3 待料 12 分钟 · 已通知仓库', 'B3 waiting 12 min · warehouse told');
     s += rr(300, 234, est(note, 13) + 48, 34, 10, 'rgba(21,17,14,.96)', { stroke: 'rgba(236,111,16,.55)' }) + circ(318, 251, 4, OR2);
     s += text(330, 256, 13, note, { f: PEACH, w: 600 });
     s += text(70, 46, 13, T('柳州工厂 · 2 号车间', 'Liuzhou plant · Workshop 2'), { f: MUTE });
-    s += text(730, 46, 13, T('运行 9 · 待料 2 · 停机 1', 'Running 9 · waiting 2 · idle 1'), { f: MUTE, a: 'end' });
+    s += text(730, 46, 13, T('运行 9 · 待料 2 · 停机 1', 'Running 9 · waiting 2 · stopped 1'), { f: MUTE, a: 'end' });
     return s;
   },
 };
@@ -476,7 +484,7 @@ export const VIGNETTE_OF = {
 
 /** Each host's name for a screen reader: what the picture is, said once. */
 const LABEL = {
-  port: ['蓝调时分的集装箱码头：岸桥吊着一个货柜，船期看板显示 SO-2041 发往汉堡。', 'A container quay at blue hour: a crane lifts a box, and the sailing board shows SO-2041 bound for Hamburg.'],
+  port: ['蓝调时分的集装箱码头：岸桥吊着一个货柜，船期看板显示 SO-2041 发往汉堡。', 'A container quay at blue hour: a crane lifts a container, and the sailing board shows SO-2041 bound for Hamburg.'],
   inquiry: ['凌晨 02:14，客户会话里来了 Müller Energie 的新询盘，回复已起草，等你确认。', 'At 02:14 a new RFQ from Müller Energie arrives in Conversations; a reply is drafted and waits for you.'],
   samples: ['样品墙上摆着 48V、60V、72V 锂电池组，一组 72V 样品挂着标签。', 'A sample wall of 48V, 60V and 72V lithium packs, one 72V sample tagged.'],
   qc: ['卡尺量电池组端子：读数 100.02 mm，在 ±0.05 公差内，合格。', 'A caliper on a pack terminal reads 100.02 mm, inside the ±0.05 tolerance: pass.'],
@@ -485,7 +493,7 @@ const LABEL = {
   owner: ['老板在车间里看手机：今日产出、出货、在制，和一张待他审批的报价。', 'The owner on the shop floor checks his phone: today’s output, shipments, open orders and one quote for his approval.'],
   shoot: ['AI 创作生成的四张产品图，选中一张，等你确认。', 'AI Creative’s four product shots, one picked, waiting for your call.'],
   load: ['40HQ 装柜方案：20 托已装 14 托。', 'The 40HQ load plan: 14 of 20 pallets in.'],
-  video: ['视频制作：产品片的播放器和四个分镜。', 'Video: the product film’s player and its four storyboard shots.'],
+  video: ['视频制作：产品片的播放器和四个分镜。', 'Video Studio: the product film’s player and its four storyboard shots.'],
   fulfil: ['订单 SO-2041 的履约节点：下单、备货、质检已完成，今天装柜。', 'Order SO-2041’s milestones: ordered, stocked and inspected, loading today.'],
   refs: ['三张产品参考图经 AI 创作生成一张主图，等你确认。', 'Three reference pictures become one main image in AI Creative, waiting for your call.'],
   floor: ['柳州工厂 2 号车间平面图：每台设备的运行状态，B3 待料。', 'The floor plan of workshop 2 at the Liuzhou plant: each machine’s state, B3 waiting for stock.'],

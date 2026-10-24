@@ -72,6 +72,8 @@
 .sgw.is-phone .is-two .sgw-slots { flex-wrap: wrap; }
 .sgw.is-phone .sgw-slot { height: 26px; padding: 0 8px; font-size: 12px; }
 .sgw.is-mid .sgw-slots { margin-top: 8px; }
+.sgw-tray.is-tight .sgw-slots { gap: 5px; }
+.sgw-tray.is-tight .sgw-slot { gap: 5px; padding: 0 7px; }
 
 /* ================= board: tasks moving to 待你确认 and 已完成 ================= */
 .sgw-sum { position: absolute; display: flex; align-items: center; gap: 18px; white-space: nowrap; font-size: 13px; color: rgba(244, 238, 232, .55); }
@@ -112,6 +114,13 @@
 /* in a board column the draft's buttons take its result's place while it waits */
 .sgw-board:not(.is-list) .sgw-btns { left: 11px; bottom: 8px; }
 .sgw.is-mid .sgw-btns .sg-btn { height: 22px; }
+/* long role: ellipsis. Columns under 150px (is-narrow): 2-line result pill, buttons share the width */
+.sgw-card-r > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.sgw-board.is-narrow .sgw-out { left: 8px; right: 8px; height: auto; min-height: 22px; padding: 3px 6px; line-height: 15px; white-space: normal; }
+.sgw-board.is-narrow.is-mid .sgw-out { min-height: 20px; padding: 2px 6px; }
+.sgw-board.is-narrow .sgw-out > span { text-wrap: balance; }
+.sgw-board.is-narrow:not(.is-list) .sgw-btns { left: 8px; right: 8px; gap: 4px; }
+.sgw-board.is-narrow .sgw-btns .sg-btn { flex: 1 1 auto; min-width: 0; padding: 0 6px; }
 
 /* the results tray under a tall board: the roles card's tray, its items green when handed in */
 .sgw-res-h { font-size: 13px; color: rgba(244, 238, 232, .55); }
