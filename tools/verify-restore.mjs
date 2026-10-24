@@ -178,12 +178,16 @@ for (const width of WIDTHS.filter((w) => [390, 768, 1024, 1280, 1440, 1920].incl
          text, so each one is brought into view in turn instead. */
       if (width < 768) {
         /* Each heading must be readable at some point while the section
-           scrolls past (scroll-linked transforms still move them). */
+           scrolls past (scroll-linked transforms still move them). Phones
+           light one line at a time as it crosses the middle of the screen
+           (js/stargo-phone-fx.js focus; the others dim), and the lines sit
+           about 60px apart and above the section's top, so the walk starts two
+           screens up and moves in small steps, as a reader's scroll does. */
         const n = await page.locator('.lx-gradient-section-text h3').count();
         const read = new Set();
         const vh = heightFor(width);
-        for (let y = grad.top - vh; y <= grad.top + grad.height + vh; y += vh / 4) {
-          await scrollTo(page, y); await page.waitForTimeout(250);
+        for (let y = grad.top - 2 * vh; y <= grad.top + grad.height + vh; y += vh / 12) {
+          await scrollTo(page, y); await page.waitForTimeout(650);
           const states = await page.evaluate(() => [...document.querySelectorAll('.lx-gradient-section-text h3')].map((h) => { const r = h.getBoundingClientRect(); let op = parseFloat(getComputedStyle(h).opacity); for (let a = h.parentElement; a && !a.classList.contains('lx-gradient-section'); a = a.parentElement) op *= parseFloat(getComputedStyle(a).opacity); return { op, top: r.top, bottom: r.bottom, left: r.left, right: r.right }; }));
           states.forEach((st, i) => { if (st.op > 0.6 && st.top >= 0 && st.bottom <= vh && st.left >= -1 && st.right <= width + 1) read.add(i); });
         }
