@@ -119,6 +119,8 @@
 .sga-row.is-tight .sga-fact { padding: 0 8px; font-size: 12px; }
 .sga-fact.is-on { color: #fff3df; font-weight: 600; border-style: solid; border-color: rgba(243, 194, 122, .5); background: rgba(243, 194, 122, .1); }
 .sga-fact.is-miss.is-on { color: #ffb37a; border-color: rgba(255, 138, 61, .5); background: rgba(236, 111, 16, .1); }
-/* the sticky stack's receding (and arriving) card is scaled below 1: its scene dims until the card is whole (js recede()) */
-.sg-mo > .sga { transition: opacity .25s ease; }
-.sg-mo.sga-recede > .sga { opacity: .14; transition: none; } /* out in the same frame as the first scale write, back gently */
+/* the sticky stack's receding card (js recede()): the picture stays and dims under the veil, its words
+   fade (--sga-w on the host) before they would read under 12px, the tag keeps its size above the veil */
+.sga-veil { position: absolute; z-index: 6; background: #15110e; opacity: 0; pointer-events: none; }
+.sga .sga-tag { z-index: 7; transform-origin: 100% 100%; }
+.sga :is(.sga-bar > b, .sga-grp, .sga-st, .sga-tx, .sga-v, .sga-pill, .sga-cc, .sga-q, .sga-msg, .sga-fact, .sga-steps, .sga-btns, .sga-chip b, .sga-pin-t, .sga-nl, .sga-crew span, .sga-note) { opacity: var(--sga-w, 1); }

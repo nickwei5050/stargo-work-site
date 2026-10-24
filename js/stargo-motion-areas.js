@@ -27,19 +27,35 @@
   // the entry of a [time, value, …] table in force at tau
   function at(tb, tau) { var j = 0; while (j + 1 < tb.length && tau >= tb[j + 1][0]) j++; return j; }
 
-  /* The template's sticky stack (IX2 a-215, css/stargo-fusion.css) scales a card below 1 while the
-     next card covers it (and while it arrives); its words would read under 12px, so the scene dims
-     until the card is whole again (css .sga-recede). Read from the style IX2 writes: no layout. */
+  /* The template's sticky stack (IX2 a-215, css/stargo-fusion.css) scales a card from 1 down to ~0.7
+     while the next card covers it (its picture is on screen down to ~0.81). Like the photograph it
+     replaced, the picture stays as the card recedes: it dims gently under a veil (to .45 by 0.82),
+     its words fade before they would read under 12px (--sga-w: .35 by 0.988, where 12px type reads
+     11.9px, gone by 0.975, where 12.5px type still reads 12.2px), and the honesty tag keeps its size
+     on screen (scaled by 1 / s); on the card before the last it goes by 0.885, so the strip the last
+     card leaves of it never shows half a tag. Read from the style IX2 writes (no layout); written only when a
+     rounded value changes, so a scroll through the stack costs a few dozen writes. */
   function recede(stage) {
     var host = stage.parentNode, card = host && host.closest ? host.closest('.work-card') : null;
-    if (!card || card.sgaMO || !window.MutationObserver) return;
-    function check() {
-      var tf = card.style.transform || '', i = tf.indexOf('scale'), s = i < 0 ? 1 : parseFloat(tf.slice(tf.indexOf('(', i) + 1));
-      cl(host, 'sga-recede', s < 0.999);
+    if (!card || !window.MutationObserver) return;
+    if (!card.sgaMO) {
+      // the card before the last one stays in a strip above it once the stack is done: its tag goes first
+      var nx = card.nextElementSibling, q = { w: -1, v: -1, k: -1, out: !!(nx && nx.classList.contains('work-card') && !(nx.nextElementSibling && nx.nextElementSibling.classList.contains('work-card'))) };
+      host.sgaRc = function (force) {
+        var tf = card.style.transform || '', i = tf.indexOf('scale'), s = i < 0 ? 1 : parseFloat(tf.slice(tf.indexOf('(', i) + 1));
+        if (!(s > 0.3 && s < 1)) s = 1;
+        var f = c01((s - 0.975) / 0.024), w = Math.round(f * f * 20) / 20, v = Math.round(c01((1 - s) / 0.18) * 30) * 0.015, k = Math.round(200 / s) / 200;
+        if (w !== q.w) { q.w = w; host.style.setProperty('--sga-w', w); }
+        if (force || v !== q.v) { q.v = v; if (stage.sgaVeil) put(stage.sgaVeil, '-opacity', v.toFixed(3)); }
+        if (force || k !== q.k) {
+          q.k = k;
+          if (stage.sgaTag) { put(stage.sgaTag, '-transform', k > 1 ? 'translate(-100%, -100%) scale(' + k.toFixed(3) + ')' : ''); if (q.out) put(stage.sgaTag, '-opacity', (Math.round(c01((s - 0.885) / 0.025) * 20) / 20).toString()); }
+        }
+      };
+      card.sgaMO = new MutationObserver(function () { host.sgaRc(false); });
+      card.sgaMO.observe(card, { attributes: true, attributeFilter: ['style'] });
     }
-    card.sgaMO = new MutationObserver(check);
-    card.sgaMO.observe(card, { attributes: true, attributeFilter: ['style'] });
-    check();
+    if (host.sgaRc) host.sgaRc(true);
   }
 
   function AreaScene(key) {
@@ -93,7 +109,9 @@
         });
         R.links = [];
         A.links.forEach(function (l) { var o = R.win[l.a] && R.win[l.b] ? link(stage, l) : null; if (o) R.links.push(o); });
-        var tag = el('div', 'sg-tag sga-tag', stage, T('动态示意 · 演示数据', 'Illustrative motion · demo data'));
+        // the sticky stack's veil over the picture, and the tag above it (recede())
+        stage.sgaVeil = box('sga-veil', stage, 0, 0, W, H);
+        var tag = stage.sgaTag = el('div', 'sg-tag sga-tag', stage, T('动态示意 · 演示数据', 'Illustrative motion · demo data'));
         tag.style.left = (W - m) + 'px'; tag.style.top = (m + 8) + 'px';
       }
       function win(stage, d, x, y, w, h) {
@@ -101,7 +119,7 @@
         var bar = el('div', 'sga-bar', c);
         var ic = el('span', 'sga-app', bar); glyph(d.g, ic, 15);
         el('b', '', bar, d.app);
-        if (w >= 430) FT.add(el('span', 'sga-grp', bar), [d.grp, '']);   // a group name that does not fit goes
+        if (w >= 430) FT.add(el('span', 'sga-grp', bar), alts(d.grp, d.grs, ''));   // a group name that does not fit goes
         var st = el('span', 'sga-st', bar); el('i', '', st);
         var o = { c: c, d: d, x: x, y: y, w: w, h: h, st: el('span', '', st), stEl: st, stK: -1, rows: [], slotY: [] };
         var top = 46, left = 10, rw = w - 20;
@@ -283,10 +301,11 @@
         kind = L.kind; W = L.w; H = L.h; Lc = L; stg = stage; R = { stage: stage, stp: [] }; FT = K.capFit(); Q = [];
         stage.textContent = '';
         stage.className = 'sg-mo-stage sga sga-' + key + ' is-' + kind;
-        recede(stage);
+        stage.sgaVeil = stage.sgaTag = null;
         var c = cap(stage);
         capK = capKey(c);
         if (kind === 'phone') buildPhone(stage, c); else buildDesk(stage, c);
+        recede(stage);
         // texts that overflow take their shorter forms (measured beside the widest status and pill each
         // window and row will show); then the fields' placeholders, in the same boxes
         var wide = [];
