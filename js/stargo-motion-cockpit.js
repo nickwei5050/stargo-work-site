@@ -7,8 +7,11 @@
    They show what the paragraph beside them says, with demo data:
      cockpit-overview  商机进展 counts tick up, 交付状态 shows on-time against
                        late, 待审批 rises to 3 and falls back when you approve
-                       one; the data-source row reads ERP 未接入 · 缺数据，已标出,
-                       because figures only come from connected systems.
+                       one; the data-source row lists the five systems the
+                       Connect panel above connects (邮箱, 客户记录, 产品知识,
+                       ERP, 网盘) and flags the finance folder it leaves
+                       unauthorized: 财务目录未授权 · 缺数据，已标出, because
+                       figures only come from connected systems.
      cockpit-blocker   「报价 Q-1043 · 负责人 销售 AI · 卡点：缺底价 · 等你」
                        pulses; a person takes it, types the floor price and
                        hands it back; the quote then waits for approval —
@@ -130,7 +133,7 @@
      OVERVIEW — 商机进展, 交付状态, 待审批, and where the figures come from.
      One 12 s beat: an inquiry arrives (1 s), an order is delivered on time
      (3 s), a new quote joins the approvals (5 s), the sources sync and the
-     missing ERP is flagged (7 s), you approve the oldest item (9.2 s), the
+     unauthorized finance folder is flagged (7 s), you approve the oldest item (9.2 s), the
      next order ships (10.8 s). Counts carry over from beat to beat, so the
      loop never jumps back.
      ===================================================================== */
@@ -146,7 +149,9 @@
       [T('产品主图', 'Product images'), T('3 张', '3 images')],
       [T('形式发票 PI-2208', 'Proforma PI-2208'), T('越南', 'Vietnam')]
     ];
-    var SRC = [T('邮箱', 'Email'), T('阿里国际站', 'Alibaba.com'), 'CRM', T('网盘', 'Drive')];
+    // the same five systems ent-connect (js/stargo-motion-enterprise.js) connects, 5/5; the drive's finance folder
+    // is the one it leaves unauthorized, so its figures are missing here and flagged
+    var SRC = [T('邮箱', 'Email'), T('客户记录', 'Customers'), T('产品知识', 'Products'), 'ERP', T('网盘', 'Drive')];
     var NOTE = [T(' · 运输中 · 预计今天', ' · in transit · due today'), T(' · 已签收 · 准时 ✓', ' · delivered on time ✓'), T(' · 已发货 · 运输中', ' · shipped · in transit')];
     var NOTE_S = [T(' · 预计今天到', ' · due today'), T(' · 准时签收 ✓', ' · on time ✓'), T(' · 已发货', ' · shipped')];
     var MINI = [T('等你拍板', 'Your call'), T('新报价 · 等你', 'Needs your OK'), T('你已批准 ✓', 'You approved ✓')];
@@ -154,7 +159,7 @@
 
     function build(stage, L) {
       R = chrome(stage, L, 'sg-ck-ov', T('总览', 'Overview'), T('驾驶舱总览', 'Cockpit'));
-      live(R, T('已接入 4/5', '4 of 5 connected'));
+      live(R, T('已接入 5/5', '5 of 5 connected'));
       var body = el('div', 'sg-ck-body', stage);
       if (R.tier === 'full') {
         var fu = el('div', 'sg-ck-tile sg-ck-funnel', body);
@@ -193,7 +198,7 @@
         var so = el('div', 'sg-ck-tile sg-ck-src', body);
         el('span', 'sg-ck-src-h', so, T('数据来源', 'Data sources'));
         R.src = SRC.map(function (n) { var c = el('span', 'sg-ck-chip', so); ico('check', c, 13); el('span', '', c, n); return c; });
-        R.gap = el('span', 'sg-ck-chip is-gap', so); ico('alert', R.gap, 14); el('span', '', R.gap, T('ERP 未接入 · 缺数据，已标出', 'ERP not connected · data missing, flagged'));
+        R.gap = el('span', 'sg-ck-chip is-gap', so); ico('alert', R.gap, 14); el('span', '', R.gap, T('财务目录未授权 · 缺数据，已标出', 'Finance folder not authorized · flagged'));
       } else if (R.tier === 'tab') {
         var l1 = el('div', 'sg-ck-line', body);
         el('span', 'sg-ck-k', l1, T('商机进展', 'Opportunities'));
@@ -212,7 +217,7 @@
         var l3 = el('div', 'sg-ck-line', body);
         el('span', 'sg-ck-k', l3, T('待审批', 'Awaiting approval'));
         R.n = el('b', 'sg-ck-big', l3);
-        R.gap = el('span', 'sg-ck-chip is-gap', body); ico('alert', R.gap, 13); el('span', '', R.gap, T('ERP 未接入 · 缺数据，已标出', 'ERP not connected · flagged'));
+        R.gap = el('span', 'sg-ck-chip is-gap', body); ico('alert', R.gap, 13); el('span', '', R.gap, T('财务目录未授权 · 已标出', 'Finance not authorized'));
       } else {
         el('span', 'sg-ck-k', body, T('待审批', 'Approvals'));
         R.n = el('b', 'sg-ck-big', body);
