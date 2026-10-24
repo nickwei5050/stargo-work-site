@@ -102,6 +102,10 @@ CODE_DRAWN_CAP.forEach((id) => CODE_DRAWN.add(id));
 ['w01-trade-office', 'w03-warehouse', 'w04-qc-lab', 'w05-owner-office', 'w06-showroom',
   'c05-unified-inbox', 'c06-customer-360', 'c07-quote-approval',
   'c11v2-company-research', 'c12-trade-intelligence', 'c13-restock', 'c14-decision-makers', 'i02-keep-or-revert'].forEach((id) => CODE_DRAWN.add(id));
+/* The seven article covers (B01v2–B07v2) are code-drawn since 2026-10-24, at the owner's choice
+   (tools/blog-art.mjs); the articles' share images stay the raster covers in assets/blog/. */
+['b01v2-visual-guide', 'b02-one-workflow', 'b03-inquiry-to-quote', 'b04v2-approval-handover', 'b05-288-relay',
+  'b06-browser-os', 'b07v2-knowledge-library'].forEach((id) => CODE_DRAWN.add(id));
 const photosUnused = photos.filter(a => !all.includes(a.src) && !SUPERSEDED.has(a.id) && !RETIRED.has(a.id) && !CODE_DRAWN.has(a.id)).map(a => a.id);
 assert.deepEqual(photosUnused, [], 'every registered photograph is placed');
 console.log(`generated imagery: ${manifest.assets.length - unused.length} placed, ${unused.length} retained but unused (${unused.join(', ')})`);
