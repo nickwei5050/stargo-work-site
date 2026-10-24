@@ -44,7 +44,7 @@
       { n: 'PT Surya Energi', c: T('印度尼西亚 · 补货周期到了', 'Indonesia · due to restock'), x: 0.905, y: 0.46, side: -1 },
       { n: 'Nordwerk Energie GmbH', c: T('德国 · 匹配度 94', 'Germany · fit 94'), x: 0.6, y: 0.13, side: 1 }
     ];
-    var WIN = 12, RIP = [0.6, 6.4, 9.6, 13.4], R, G;   // RIP: when each buyer's ring ripples
+    var WIN = 12, RIP = [0.6, 6.4, 9.6, 13.4], R, G, tio = null;   // RIP: when each buyer's ring ripples
 
     function build(stage, L, name) {
       var W = L.w, H = L.h, gy = Math.round(H * 0.68);
@@ -142,9 +142,23 @@
       R.pulse = sv('g', { class: 'sga-pulse' }, svg);
       sv('circle', { r: 14, class: 'sga-glow' }, R.pulse); sv('circle', { r: 3.6, class: 'sga-head' }, R.pulse);
       R.trail = [0, 1, 2].map(function () { return sv('circle', { r: 2.2, class: 'sga-head' }, svg); });
+      // The tag rides the left door's inner edge, right-aligned with 钦州港 (W / 2 − 16): the doors slide outwards,
+      // so at the stage's outer edge it left the screen in the opening's first frames, while the inner edges are the
+      // last of the picture to go. 94px above the foot keeps it clear of the fixed pill navigation (from 992px:
+      // 50px tall, 15px off the bottom, across the middle), and the same place serves the resting frame and the still.
       var tag = el('div', 'sg-tag sga-tag', stage, TAG);
-      tag.style.left = (W - 26) + 'px'; tag.style.top = (H - 26) + 'px';
-      if (name === 'box' || name === 'std') tag.style.top = (gy - 18) + 'px';
+      tag.style.left = (W * 0.5 - 16) + 'px'; tag.style.top = (H - 94) + 'px';
+      // Near the end of the opening a door's strip is narrower than the tag: there it steps out (css: .is-out, gone
+      // at once, back with a fade) rather than being sliced by the screen's edge. An observer on the tag itself, its
+      // root 96px in from the sides, so the tag is gone before the edge even when the observer reports several
+      // frames late on a busy page (a fade-out there was still showing as the edge reached it at 1024px); it
+      // reports only when the tag crosses that line, never per frame. (The copy in the right door lies outside its
+      // half, so it is always out.)
+      if (tio) tio.disconnect();
+      if ('IntersectionObserver' in window) {
+        tio = new IntersectionObserver(function (es) { var e = es[es.length - 1]; cl(e.target, 'is-out', e.intersectionRatio < 0.99); }, { rootMargin: '0px -96px', threshold: [0.99] });
+        tio.observe(tag);
+      }
     }
     function pulseAt(p, u, back) {
       var q = bez(p, u); at(R.pulse, q[0], q[1]);

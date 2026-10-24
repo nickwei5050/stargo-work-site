@@ -286,6 +286,36 @@
 .sgp-squad.is-narrow .sgp-talk { padding-left: 5px; padding-right: 5px; }
 .sgp-squad.is-narrow .sgp-bub { gap: 4px; }
 .sgp-squad.is-narrow .sgp-bub-m { padding: 3px 6px 4px; }
+/* squad tight: the rows packed ~20 px closer, for a phone whose card crops it above the fifth step (320–355 px;
+   js/stargo-motion-phone.js fitRows decides, from where the card's crop falls) */
+.sgp-squad.is-tight .sgp-main { gap: 6px; padding-top: 1px; }
+.sgp-squad.is-tight .sgp-task { padding-top: 7px; padding-bottom: 7px; }
+.sgp-squad.is-tight .sgp-ctl { margin-top: 6px; }
+.sgp-squad.is-tight .sgp-chips { margin-top: 3px; }
+.sgp-squad.is-tight .sgp-link { top: 12px; }
+.sgp-squad.is-tight .sgp-chip { gap: 2px; }
+.sgp-squad.is-tight .sgp-chip .sgp-av { width: 24px; height: 24px; }
+.sgp-squad.is-tight .sgp-chip-t { line-height: 1.2; }
+.sgp-squad.is-tight .sgp-steps { padding-top: 4px; padding-bottom: 3px; }
+.sgp-squad.is-tight .sgp-steps .sgp-label { margin-bottom: 1px; }
+.sgp-squad.is-tight .sgp-step { height: 26px; }
+/* squad xs: 220–235 px wide, phones under 336 px (always tight as well). The same type; a little less
+   padding at the sides, and the chips run edge to edge so the role names keep a gap between them */
+.sgp-squad.is-xs .sgp-bar { padding: 0 9px 0 11px; gap: 5px; }
+.sgp-squad.is-xs .sgp-bar-t { font-size: 13.5px; }
+.sgp-squad.is-xs .sgp-main { padding-left: 7px; padding-right: 7px; }
+.sgp-squad.is-xs .sgp-task { padding-left: 9px; padding-right: 9px; }
+.sgp-squad.is-xs .sgp-ctl { gap: 6px; }
+.sgp-squad.is-xs .sgp-limits { gap: 7px; }
+.sgp-squad.is-xs .sgp-chips { margin-left: -2px; margin-right: -2px; padding: 0; }
+.sgp-squad.is-xs .sgp-steps { padding-left: 9px; padding-right: 9px; }
+.sgp-squad.is-xs .sgp-toast { padding: 0 10px; }
+.sgp-squad.is-xs .sgp-talk { padding-left: 3px; padding-right: 3px; }
+.sgp-squad.is-xs .sgp-bub { gap: 3px; }
+.sgp-squad.is-xs .sgp-bub-m { padding: 3px 5px 4px; }
+/* English role names under the chips (Lead … Creative) take the chips' whole width from 236 px down:
+   regular weight and a touch tighter, so a clear gap (5 px at 225) stays between them */
+html[lang="en"] .sgp-squad.is-narrow .sgp-chip-t { font-weight: 400; letter-spacing: -.02em; }
 .sgp-squad.is-mid .sgp-at { margin-right: 3px; }
 .sgp-squad.is-mid .sgp-sheet { padding: 7px 12px 10px; border-radius: 16px 16px 0 0; }
 .sgp-squad.is-mid .sgp-grab { margin-bottom: 9px; }

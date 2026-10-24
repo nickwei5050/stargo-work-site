@@ -30,7 +30,11 @@
    1024 × 768 and 1366 × 768); the runner hands that scale in as --sg-fit, so no label or tag renders under 12px. */
 .sga-night .sga-label b { font-size: max(15px, calc(12.6px / var(--sg-fit, 1))); }
 .sga-night .sga-label span { font-size: max(13px, calc(12.2px / var(--sg-fit, 1))); }
-.sga-night .sga-tag { font-size: max(12.5px, calc(12.2px / var(--sg-fit, 1))); color: rgba(244, 238, 232, .5); }
+.sga-night .sga-tag { font-size: max(12.5px, calc(12.2px / var(--sg-fit, 1))); color: rgba(244, 238, 232, .5); transition: opacity .2s; }
+/* the tag rides the left door's inner edge; once that door's strip is too narrow to hold it, it is gone at once
+   (no fade-out, so no frame of it meets the screen's edge) and fades back in when the strip is wide enough again */
+.sga-night .sga-tag.is-out { opacity: 0; transition: none; }
+@media (prefers-reduced-motion: reduce) { .sga-night .sga-tag { transition: none; } }
 /* a dark halo keeps the labels clear of the buyer lines that pass behind them */
 .sga-night .sga-label { text-shadow: 0 0 6px rgba(13, 11, 9, .95); }
 .sga-stars { stroke: rgba(255, 236, 220, .32); stroke-width: 1.6; stroke-linecap: round; fill: none; }
