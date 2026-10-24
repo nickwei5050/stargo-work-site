@@ -776,7 +776,7 @@ PAGES['index.html'] = (lang) => {
      or the page it introduces flashes past underneath it. It goes before
      scalora's and before stargo-fusion.css, the same order the capability page
      puts the donor sheets in. */
-  h = h.replace(monoLink, (m) => `${m}\n<link href="css/${DONORS.offgrid.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/${DONORS.rototo.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/scalora-modules.sc.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-tour.css" rel="stylesheet" type="text/css"/>\n${HOME_MOTION.css}`);
+  h = h.replace(monoLink, (m) => `${m}\n<link href="css/${DONORS.offgrid.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/${DONORS.rototo.sheet}" rel="stylesheet" type="text/css"/>\n<link href="css/scalora-modules.sc.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-fusion.css" rel="stylesheet" type="text/css"/>\n<link href="css/stargo-tour.css" rel="stylesheet" type="text/css"/>\n${HOME_MOTION.css}\n<link href="css/stargo-blue.css" rel="stylesheet" type="text/css"/>`); // 首页蓝: the homepage palette tokens (css/stargo-blue.css), after the scene sheets
   /* Mono's own page-load curtain goes. `.preloader` is a fixed black sheet
      with the wordmark on it (Mono's css: z-index 9999, resting at
      translateY(-120%)), dropped over the page and lifted again by the IX3

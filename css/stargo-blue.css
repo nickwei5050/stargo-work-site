@@ -1,0 +1,50 @@
+/* 首页蓝 — the homepage's code-drawn pictures in one palette (owner, 2026-10-24 13:28 UTC:
+   「首页你做的那些我希望色彩可以统一高级点的渐变蓝色就像首页的审批示意流程这个板块这样子」).
+   The reference is the homepage's approval-flow card (.video-card: 审批流程示意): an indigo →
+   blue → cyan → violet → plum aurora, a frosted glass panel, white pill bubbles with dark text.
+   Loaded on the homepage only, after the scene sheets; every rule is scoped to the homepage's
+   <html data-stargo-home> so the same scenes elsewhere keep their own look. Scene sheets use the
+   tokens below in their own [data-stargo-home] rules. Static paint only: no backdrop-filter or
+   animated filters inside scenes (phone scroll cost). */
+html[data-stargo-home] {
+  /* base, darkest first */
+  --sgb-ink: #120a2e;
+  --sgb-deep: #1c1150;
+  --sgb-indigo: #2f2080;
+  --sgb-plum: #47134a;
+  /* light */
+  --sgb-blue: #3f6fe2;
+  --sgb-cyan: #45b0e2;
+  --sgb-violet: #7a52fb;
+  --sgb-lilac: #b7a0ff;
+  --sgb-ice: #e4f2fc;
+  /* text on the dark glass */
+  --sgb-text: #f7f5ff;
+  --sgb-muted: rgba(236, 232, 255, .72);
+  --sgb-faint: rgba(236, 232, 255, .5);
+  --sgb-hair: rgba(255, 255, 255, .14);
+  /* the one accent (what orange did: a step waiting for a person, live state, the active item) */
+  --sgb-accent: #9fdcff;
+  --sgb-accent-2: #c3b2ff;
+  --sgb-accent-grad: linear-gradient(90deg, #6fc7f2, #a48cff);
+  /* states: done / ok, and the one warning (below the floor price, a risk flag) */
+  --sgb-ok: #8ef0d4;
+  --sgb-warn: #ffa6c9;
+  /* surfaces */
+  --sgb-aurora:
+    radial-gradient(58% 46% at 52% 16%, rgba(69, 176, 226, .78), transparent 72%),
+    radial-gradient(52% 58% at 70% 58%, rgba(122, 82, 251, .82), transparent 72%),
+    radial-gradient(46% 56% at 12% 74%, rgba(80, 22, 82, .9), transparent 72%),
+    radial-gradient(34% 36% at 46% 62%, rgba(183, 160, 255, .55), transparent 72%),
+    linear-gradient(162deg, #2c0f60 0%, #2f1773 38%, #3b1240 100%);
+  --sgb-aurora-calm:
+    radial-gradient(70% 60% at 60% 10%, rgba(69, 176, 226, .42), transparent 72%),
+    radial-gradient(60% 70% at 85% 80%, rgba(122, 82, 251, .5), transparent 72%),
+    linear-gradient(165deg, #1a0f47 0%, #21125a 50%, #2a0f3c 100%);
+  --sgb-glass: linear-gradient(180deg, rgba(255, 255, 255, .18) 0%, rgba(255, 255, 255, .06) 40%, rgba(255, 255, 255, .03) 100%);
+  --sgb-glass-dark: linear-gradient(180deg, rgba(30, 18, 84, .78) 0%, rgba(18, 10, 46, .82) 100%);
+  --sgb-glass-edge: rgba(255, 255, 255, .22);
+  --sgb-bubble: #ffffff;
+  --sgb-bubble-text: #1c1c22;
+  --sgb-shadow: 0 18px 50px -18px rgba(10, 4, 40, .65);
+}
