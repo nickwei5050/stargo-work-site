@@ -400,7 +400,7 @@ function coverFor(post, lang, slot, tag) {
   const attr = (name) => tag.match(new RegExp(`\\s${name}="([^"]*)"`))?.[1];
   const keep = ['data-w-id', 'style'].filter((a) => attr(a) != null).map((a) => `${a}="${attr(a)}"`).join(' ');
   const key = `${post.slug}/${lang}`;
-  if (!FIGURES.has(key)) FIGURES.set(key, (renderBody(post, lang).match(/<figure class="sgc\b/g) ?? []).length);
+  if (!FIGURES.has(key)) FIGURES.set(key, [...renderBody(post, lang).matchAll(/<figure class="sgc sgc--([\w-]+)"/g)].map((f) => f[1]));   // the figures' kinds, in order (the guide's contact sheet draws each)
   return blogCover(post, lang, slot, { classes: attr('class') ?? '', attrs: keep, no: POSTS.length - POSTS.indexOf(post), figures: FIGURES.get(key) });
 }
 
