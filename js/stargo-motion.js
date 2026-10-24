@@ -189,10 +189,15 @@
     fit();
     if (!near) {
       var nio = new IntersectionObserver(function (es) {
-        if (!es[es.length - 1].isIntersecting) return;
-        near = true; nio.disconnect(); fit();
+        for (var i = 0; i < es.length; i++) if (es[i].isIntersecting) { near = true; nio.disconnect(); fit(); return; }
       }, { rootMargin: '100% 0px' });
       nio.observe(host);
+      // From 768px the enterprise story panels (.sutdio-animation) slide in sideways inside a clip that the
+      // margin cannot see past, so a host there would still be unbuilt in the first frame its panel shows:
+      // the track is watched as well, and all four panels are built once it comes within a screen. On a
+      // phone the panels stack and each host is watched on its own, as everywhere else.
+      var track = window.matchMedia && window.matchMedia('(min-width: 768px)').matches && host.closest('.sutdio-animation');
+      if (track) nio.observe(track);
     }
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(function (es) {
