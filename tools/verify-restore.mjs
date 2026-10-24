@@ -312,9 +312,10 @@ for (const width of WIDTHS.filter((w) => [390, 768, 1280, 1440].includes(w))) fo
     // scenario cards (sticky testimonials): the portrait picture on card 3, four cards, illustrative labels, mark, through the scroll
     // (since 2026-10-21 the owner's photograph R2 as a still where the template's portrait film played)
     assert.equal(await page.locator('.testimonials-card').count(), 4);
-    const film = await page.evaluate(() => { const v = document.querySelector('.testimonials-card._03 .w-background-video > img.stargo-still'); return v ? { src: v.getAttribute('src'), alt: v.getAttribute('alt') } : { src: '', alt: '' }; });
-    assert(/stargo-photo\/r2-trade-manager-/.test(film.src), `portrait still on card 3: ${film.src}`);
-    assert(film.alt.length > 20, `portrait still on card 3 carries its own alt: "${film.alt}"`);
+    // (since 2026-10-24 a code-drawn scene, tools/code-art-atmos.mjs 'board', in place of R2)
+    const film = await page.evaluate(() => { const v = document.querySelector('.testimonials-card._03 .w-background-video > [data-sg-scene="board"]'); return v ? { role: v.getAttribute('role'), alt: v.getAttribute('aria-label') || '' } : { role: '', alt: '' }; });
+    assert.equal(film.role, 'img', 'code-drawn priorities scene on card 3');
+    assert(film.alt.length > 20 && /演示数据|demo data/i.test(film.alt), `the scene on card 3 says what it is: "${film.alt}"`);
     assert.equal(await page.locator('.testimonials-card .stargo-card-mark').count(), 4, 'STARGO mark on the four cards');
     const labels = await page.locator('.testimonials-card .card-author .top-text:not(.sml)').allInnerTexts();
     assert(labels.every((l) => /示例|illustrative/i.test(l)), `scenario cards labelled: ${labels.join(' | ')}`);

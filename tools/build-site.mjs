@@ -29,6 +29,7 @@ import { SITE } from './paths.mjs';
 import { productTour } from './product-tour.mjs';
 import { appSuite } from './app-suite.mjs';
 import { motionHost, motionAssets, SCENE_FILE, MOTION_CSS, MOTION_SCRIPTS, PAIN_SCENES } from './motion-scenes.mjs';
+import { ATMOS_HOME, nightHalves, codeStill, boardHost, requestHost, plantHost } from './code-art-atmos.mjs';   // lane atmos: atmosphere photographs → code
 import { CAPSALES_SCENES } from './motion-capsales.mjs';
 import { AREA_SCENES, placeAreaScenes } from './code-art-capareas.mjs'; // capareas: capability area cards
 import { theatreTiles } from './code-art-theatre.mjs';
@@ -451,7 +452,7 @@ const PAGES = {};
 /* ---- index.html — Mono homepage + three Scalora modules --------------- */
 /* The homepage's motion scenes (tools/motion-scenes.mjs): the scene files load before the engine. */
 /* homemore: the five stage cards and the pricing band's enterprise card (tools/code-art-homemore.mjs) */
-const HOME_MOTION = motionAssets(['loop', 'radar', 'studio', ...PAIN_SCENES, 'stage-find', 'stage-sell', 'stage-make', 'stage-pay', 'stage-again', 'org']);
+const HOME_MOTION = motionAssets(['loop', 'radar', 'studio', ...PAIN_SCENES, 'stage-find', 'stage-sell', 'stage-make', 'stage-pay', 'stage-again', 'org', ...ATMOS_HOME]); // + lane atmos (R1 doors, R2 card)
 PAGES['index.html'] = (lang) => {
   const t = (p) => (typeof p === 'string' ? p : p[lang]);
   const { fn: s } = makeSub('home');
@@ -574,7 +575,11 @@ PAGES['index.html'] = (lang) => {
     // background in css/stargo-fusion.css.
     const stickyVideo = [...h.matchAll(/<video id="([^"]+)-video"/g)].map((m) => m[1]).find((id) => h.slice(h.indexOf('<section class="testimonials-section"'), h.indexOf('<section class="section drk"')).includes(`id="${id}-video"`));
     if (!stickyVideo) throw new Error('index: sticky card video');
-    h = stillImage(h, stickyVideo, HOME_ROLE_CARD, 'STARGO WORK', 'stargo-still stargo-role-photo');
+    // Since 2026-10-24 (「现场氛围也全部换成代码」) the card draws today's priorities in code instead
+    // (tools/code-art-atmos.mjs 'board'), and the two-door picture before the cards is the code-drawn
+    // night network ('night') where R1v2 was. HOME_ROLE_CARD is no longer placed here.
+    h = codeStill(h, stickyVideo, boardHost(lang));
+    h = s(h, '<div class="photo-half _01"></div><div class="photo-half _02"></div>', nightHalves(lang), { count: 1 });
     // Mono's toss ends with the card turned over (rotateX(180deg), back face visible), which
     // drew R2 upside down; js/stargo-card-upright.js turns the picture back over while it is.
     h = s(h, '</body>', '<script src="js/stargo-card-upright.js" defer></script></body>', { count: 1 });
@@ -1621,16 +1626,19 @@ PAGES['about.html'] = (lang) => {
      and putting them back is one block away. */
   void b;
   const aboutBody = [
-    renderBlock('cn-about', lang),
+    // A01 → code (2026-10-24): the plant at dawn under the introduction card (tools/code-art-atmos.mjs 'plant')
+    renderBlock('cn-about', lang).replace('<div class="cn-intro-background">', () => `<div class="cn-intro-background">${plantHost(lang)}`),
     renderBlock('cn-about-projects', lang),
     renderBlock('cn-about-reviews', lang),
   ].join('\n');
 
   const aboutSheets = [...new Set(Object.values(DONORS).map((d) => d.sheet))]
     .filter((f) => existsSync(`${SITE}/css/${f}`));
-  let out = inMonoShell(aboutBody + bigMark(), [...aboutSheets, 'donor-fonts.css', 'lifelogx.lx.css', 'stargo-fusion.css'])
+  if (!aboutBody.includes('data-sg-scene="plant"')) throw new Error('about: the introduction band lost its code-drawn plant');
+  const aboutMotion = motionAssets(['plant']);
+  let out = inMonoShell(aboutBody + bigMark(), [...aboutSheets, 'donor-fonts.css', 'lifelogx.lx.css', 'stargo-fusion.css', 'stargo-motion.css', 'stargo-motion-atmos.css'])
     .replace('<body ', '<body class="stargo-dark-page" ')
-    .replace('</body>', '<script src="js/stargo-video-defer.js" defer></script><script src="js/capability-blocks.js" defer></script></body>');   // keep </body>: tools/chrome.mjs attaches the forms and tabs scripts in front of it
+    .replace('</body>', `<script src="js/stargo-video-defer.js" defer></script><script src="js/capability-blocks.js" defer></script>${aboutMotion.js}</body>`);   // keep </body>: tools/chrome.mjs attaches the forms and tabs scripts in front of it
 
   /* The projects band is four of cinery's own case-study clips — the owner
      asked for them back on 2026-09-15 (「恢复原模版」) after a still-image
@@ -2450,8 +2458,12 @@ PAGES['contact.html'] = (lang) => {
     const FILM = '6b9abecd-3545-3c29-02b3-795e2774129e';
     const card = findByClass(h, 'div', 'testimonials-card');
     if (!card || !card.text.includes(`id="${FILM}-video"`)) throw new Error('contact: the quote card no longer holds the Professional Portrait film');
-    h = stillImage(h, FILM, CONTACT_CARD, 'STARGO WORK', 'stargo-still stargo-contact-photo')
-      .replace(' loading="lazy" class="stargo-still stargo-contact-photo"', ' class="stargo-still stargo-contact-photo"');
+    // Since 2026-10-24 a code-drawn scene of what happens after the form (tools/code-art-atmos.mjs
+    // 'request') in place of K01; CONTACT_CARD is no longer placed.
+    h = codeStill(h, FILM, requestHost(lang));
+    const mo = motionAssets(['request']);
+    h = s(h, '</head>', `${mo.css}\n</head>`, { count: 1 });
+    h = s(h, '</body>', `${mo.js}</body>`, { count: 1 });
   }
   // A honeypot field for the form endpoint.
   h = h.replace(/(<form id="email-form"[^>]*>)/, '$1<div class="stargo-hp" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"/></div>');
@@ -2528,7 +2540,7 @@ PAGES['contact.html'] = (lang) => {
 
   /* The quote card is the other column and is untouched — 「图6」 is why B2 was
      chosen over replacing the page. Assert it survived the splice. */
-  if (!findByClass(h, 'div', 'testimonials-card')?.text.includes('class="stargo-still stargo-contact-photo"')) throw new Error('contact: the quote card lost its picture in the swap');
+  if (!findByClass(h, 'div', 'testimonials-card')?.text.includes('data-sg-scene="request"')) throw new Error('contact: the quote card lost its picture in the swap');
   /* Not the number of forms on the page — the Mono shell carries a second one
      in its footer — but the number that reach this site's endpoint. Exactly
      one form may post to /api/contact, and it must be the one that came out of

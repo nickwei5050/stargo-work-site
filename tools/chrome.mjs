@@ -19,7 +19,8 @@ import { editorialImages, photoAlt } from './editorial-images.mjs';
 import { readFileSync, existsSync } from 'node:fs';
 import { CAP_JUMPS, NAV, SECONDARY, MORE, LANG_SWITCH, CHROME, META, CONTACT_INFO, CONTACT_UI, SITE_URL } from './copy.mjs';
 import { POSTS, BLOG_UI, postPath, coverSrc, faqEntities, wordCount } from './blog.mjs';
-import { OG, OS_ART, MENU_CARD, HOME_MOSAIC } from './replaceables.mjs';
+import { OG, OS_ART, HOME_MOSAIC } from './replaceables.mjs';
+import { MENU_ART } from './code-art-atmos.mjs';   // lane atmos: the side-menu card's harbour, drawn in code
 
 /** Every page the build produces, as root-relative names. */
 export const SITE_PAGES = [...NAV, ...SECONDARY, ...MORE].map((n) => n.href).concat(POSTS.map(postPath));
@@ -909,7 +910,8 @@ function chromeImagery(html) {
     if (out.indexOf(orb, at + 1) !== -1) throw new Error('chrome: expected one side-menu card orb');
     const el = extractElement(out, out.lastIndexOf('<div', at), 'div');
     if (!/^<div\b[^>]*>\s*<video\b[\s\S]*<\/video>\s*<\/div>$/.test(el.text)) throw new Error('chrome: the side-menu card orb is not a background video');
-    out = out.slice(0, el.start) + `<img src="${MENU_CARD}" alt="" aria-hidden="true" loading="lazy" class="stargo-menu-photo"/>` + out.slice(el.end);
+    // since 2026-10-24 an inline line drawing (MENU_ART) instead of the photograph G02 (MENU_CARD)
+    out = out.slice(0, el.start) + MENU_ART + out.slice(el.end);
   }
   return out;
 }

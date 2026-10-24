@@ -88,7 +88,11 @@ const SUPERSEDED = new Set(photos.filter(a => photos.some(b => b.ref === `${a.re
    enterprise cockpit column's E05–E07 and the homepage problem cards' S01–S04
    gave way to code-drawn motion at the owner's choice (2026-10-23,
    tools/replaceables.mjs ENTERPRISE_PHOTOS and HOME_SILOS). */
-const RETIRED = new Set(['g01-cta-loading-bay-dusk', 'r1-sales-rep', 'r3-sales-director', 'r4-general-manager', 'i01-observe-process', 'i03-hand-phone-blank', 'e05-cockpit-overview', 'e06-cockpit-blocker', 'e07-cockpit-budget', 's01-inquiry-rework', 's02-scattered-chats', 's03v2-spreadsheet-memory', 's04-chasing-order']);
+const RETIRED = new Set(['g01-cta-loading-bay-dusk', 'r1-sales-rep', 'r3-sales-director', 'r4-general-manager', 'i01-observe-process', 'i03-hand-phone-blank', 'e05-cockpit-overview', 'e06-cockpit-blocker', 'e07-cockpit-budget', 's01-inquiry-rework', 's02-scattered-chats', 's03v2-spreadsheet-memory', 's04-chasing-order',
+  /* drawn in code where they were placed (atmos, 2026-10-24, tools/code-art-atmos.mjs): the homepage's door
+     picture (R1v2), its third scenario card (R2), about's introduction band (A01), the contact quote card (K01)
+     and the side menu card (G02). Their files stay registered and published. */
+  'r1v2-sales-rep-wide', 'r2-trade-manager', 'a01-empty-workshop', 'k01-meeting-table', 'g02-menu-harbour-night']);
 /* Drawn in code where they were placed (capareas, 2026-10-23,
    tools/code-art-capareas.mjs): the four capability area cards (C01v2, C02v2,
    C03, C04v2) and the first two cards of 「让 AI 团队把活干完」 (C09, C10) are
@@ -267,8 +271,9 @@ async function worker() {
       // About joined them when it was rebuilt from cinery's blocks (its pictures are cinery's clips and
       // photographs, like the pricing page's); only the shared menu carries generated art there.
       // Enterprise joined them on 2026-10-23, when every one of its pictures became code-drawn motion.
+      // Contact joined them on 2026-10-24 (atmos): its one picture, the quote card's K01, is code-drawn motion now.
       if (hasImageArea) assert(assets.length > 0, 'visible new images requested');
-      else assert((width < 992 && ['contact', 'pricing'].includes(name)) || /intelligence|workforce|blog|pricing|about|enterprise/.test(name), 'only approved template-imagery pages omit generated art');
+      else assert((width < 992 && ['contact', 'pricing'].includes(name)) || /intelligence|workforce|blog|pricing|about|enterprise|contact/.test(name), 'only approved template-imagery pages omit generated art');
       const card = await page.evaluate((OWN) => [...document.querySelectorAll(OWN)].find(i => {
         const r = i.getBoundingClientRect();
         return r.width > 180 && r.height > 150 && !i.closest('.menu-wrapper,nav,.navbar,.menu-bottom');

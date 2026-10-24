@@ -5143,7 +5143,8 @@ body:has(#loop) .image-wrap.for-service .paralax-image[src*="gos11-dormant-react
         45% dark wash (`.bg-overflow`, later in the markup) and under the
         avatar and the text (z-index 2). The card's own `overflow: hidden` and
         100px radius clip it. */
-.contact-info.no-shadow > img.stargo-menu-photo {
+/* 2026-10-24 (atmos): the harbour is an inline line drawing now (tools/code-art-atmos.mjs MENU_ART). */
+.contact-info.no-shadow > .stargo-menu-art {
   position: absolute;
   inset: 0;
   z-index: 1;
@@ -5425,13 +5426,10 @@ body:has(#loop) .image-wrap.for-service .paralax-image[src*="stargo-photo/p04-"]
    the halves' parent). The ancestor's transform turns the fixed attachment
    into a scrolling one, so the boxes, not the viewport, are the
    positioning areas, as before. */
-.photo-half._01, .photo-half._02 {
-  --r1w: max(100vw, 177.78vh);
-  background-image: url("../assets/stargo-photo/r1v2-sales-rep-wide-2880.webp");
-  background-size: var(--r1w) auto;
-}
-.photo-half._01 { width: calc(50% + 1px); background-position: calc((100vw - var(--r1w)) * 0.55) 35%; }
-.photo-half._02 { background-position: calc((100vw - var(--r1w)) * 0.55 - 50vw) 35%; }
+.photo-half._01, .photo-half._02 { background-image: none; }
+.photo-half._01 { width: calc(50% + 1px); }
+/* 2026-10-24 (atmos): R1v2 is no longer drawn here. Each half holds the code-drawn 'night' picture
+   (tools/code-art-atmos.mjs, css/stargo-motion-atmos.css); the 1px overlap above still hides the join. */
 
 /* R2, the scenario film card (`.testimonials-card._03`): a portrait still
    in the film's box, 400x450 (0.89:1) from 480 up and ~1.07:1 on a phone,
@@ -5603,10 +5601,8 @@ img[src*="stargo-photo/e06-cockpit-blocker-"] { object-position: 50% 20%; }
         (`.cn-about .cn-intro-background`, css/cinery.cn2.css): an empty
         assembly workshop at dawn where cinery's projector-theatre photograph
         was. Its cover, no-repeat and fixed attachment are cinery's. */
-.cn-about .cn-intro-background {
-  background-image: url("../assets/stargo-photo/a01-empty-workshop-2048.webp");
-  background-position: 50% 50%;
-}
+/* 2026-10-24 (atmos): the band draws the plant at dawn in code instead (tools/code-art-atmos.mjs
+   'plant', css/stargo-motion-atmos.css), so no photograph is set here. */
 
 /* R1–R4. The four scenario slides on about and pricing (`.cn-cover-image`,
         a cover crop of 0.92:1 at 1440, 0.51:1 at 768 and 1.03:1 at 390).
