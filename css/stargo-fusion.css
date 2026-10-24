@@ -4062,6 +4062,14 @@ html[lang="en"] .lx-scope .lx-v7-sentence {
 }
 .lx-scope .lx-hero-features .lx-feature-hero-text-holder::before { --sg-vx: 3.5rem; --sg-vy: 2.5rem; inset: -3rem -4rem; }
 .lx-scope .lx-hero-features .lx-feature-hero-text-holder::after { --sg-vx: 2rem; --sg-vy: 2rem; top: calc(100% - 1rem); left: calc(50% - 8rem); width: 16rem; height: 9.5rem; }
+/* (QA round 4) The solid veil cut through a card at any point, so a card beside the copy could
+   show its demo numbers while its 示意 · 演示数据 tag sat under the veil. With JS the cards dim as
+   a whole, tag and words alike, while they overlap the copy or the button
+   (js/stargo-motion-rolecard.js adds sg-rc-zoned once it runs; css/stargo-motion-rolecard.css),
+   so no veil is needed and none is drawn: every dimmed card is dimmed evenly, never in part.
+   Without JS the solid veils above stay. */
+.lx-scope .lx-hero-features.sg-rc-zoned .lx-feature-hero-text-holder::before,
+.lx-scope .lx-hero-features.sg-rc-zoned .lx-feature-hero-text-holder::after { content: none; }
 .lx-scope .lx-hero-features .lx-about-button-holder .lx-button.lx-is-secondary { background-color: #333335; }
 .lx-scope .lx-hero-features .lx-about-button-holder .lx-button.lx-is-secondary:hover { background-color: #262628; }
 html[lang^="zh"] .lx-scope .lx-hero-features .lx-feature-description-holder .lx-text-size-regular {

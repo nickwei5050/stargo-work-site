@@ -115,6 +115,14 @@
 }
 /* the marquee off screen: the dots rest (js/stargo-motion-rolecard.js sets the class) */
 .sg-rc-rest .sg-rc-st.is-run > i { animation-play-state: paused; }
+/* A card whose box overlaps the hero's copy or button zone is dimmed as a whole, its 演示数据 tag
+   with its words (js/stargo-motion-rolecard.js sets sg-rc-dim; the card itself carries Webflow's
+   inline opacity, so its two children take it). 6%: the brightest word left is ~14/255 on the
+   black, a shape behind the copy and no longer text. It fades out in .45s, which the marquee's
+   15 px/s drift covers in 7px, inside the zone's 12-16px margin; it comes back more slowly. */
+.lx-hero-features .lx-feature-hero-card.sg-rc-dim > * { opacity: .06; }
+.sg-rc-zoned .lx-feature-hero-card > * { transition: opacity .9s cubic-bezier(.25, .1, .25, 1); }
+.sg-rc-zoned .lx-feature-hero-card.sg-rc-dim > * { transition: opacity .45s cubic-bezier(.33, 1, .68, 1); }
 
 /* Hover: the card's own name panel slides up and the app chip (roleChip) slides
    in under the head row; the code card's words and drawing step back, its head

@@ -20,6 +20,65 @@
   var hero = document.getElementById('lx-roles');
   if (hero && 'IntersectionObserver' in window) {
     new IntersectionObserver(function (es) { hero.classList.toggle('sg-rc-rest', !es[es.length - 1].isIntersecting); }).observe(hero);
+    copyZones(hero);
+  }
+
+  /* The marquee carries every card under the hero's copy within a minute. A card whose box
+     overlaps the copy zone (the title and lede, PAD px round them) or the button zone is
+     dimmed AS A WHOLE (sg-rc-dim: its 演示数据 tag with its words, css/stargo-motion-rolecard.css)
+     and comes back past it, so no card word reads under the copy and a card never shows its
+     words without its tag. The browser computes the overlaps: one IntersectionObserver per
+     zone, rooted in the hero's image holder with the zone as its rootMargin, so nothing here
+     runs per frame. The two copies of a card ride one holder height apart and the marquee
+     jumps back by exactly that height, so a card and its twin share one state: the copy that
+     lands in a zone at the jump is already dim. Re-measured when the hero or the copy resizes.
+     Once this runs (sg-rc-zoned) the solid veil behind the copy (css/stargo-fusion.css) is
+     dropped, so a card is only ever dimmed evenly; without JS the veil stays. */
+  function copyZones(hero) {
+    var root = hero.querySelector('.lx-feature-hero-images-holder');
+    var copy = hero.querySelector('.lx-feature-hero-text-holder');
+    var btn = hero.querySelector('.lx-about-button-holder .lx-button');
+    var cards = hero.querySelectorAll('.lx-feature-hero-card');
+    if (!root || !copy || !btn || !cards.length || !('ResizeObserver' in window)) return;
+    var PAD = [16, 12]; // the zones' margins round the copy and the button, px
+    var n = cards.length, hit = [], twin = [], obs = [], ready = false, i;
+    for (i = 0; i < n; i++) {
+      hit.push(0);
+      var m = / lx-_(\d)/.exec(' ' + cards[i].className);
+      twin.push(m ? m[1] : String(i));
+    }
+    function apply() {
+      for (var a = 0; a < n; a++) {
+        var dim = false;
+        for (var b = 0; b < n; b++) if (twin[b] === twin[a] && hit[b]) { dim = true; break; }
+        if (cards[a].classList.contains('sg-rc-dim') !== dim) cards[a].classList.toggle('sg-rc-dim', dim);
+      }
+      // the first states land without a fade; the fades start, and the veil goes, two frames later
+      if (!ready) { ready = true; requestAnimationFrame(function () { requestAnimationFrame(function () { hero.classList.add('sg-rc-zoned'); }); }); }
+    }
+    function watch() {
+      for (var k = 0; k < obs.length; k++) obs[k].disconnect();
+      obs = [];
+      var r = root.getBoundingClientRect();
+      [copy, btn].forEach(function (z, k) {
+        var b = z.getBoundingClientRect(), p = PAD[k];
+        if (!b.width || !r.width) return;
+        var margin = [b.top - p - r.top, r.right - b.right - p, r.bottom - b.bottom - p, b.left - p - r.left]
+          .map(function (v) { return Math.round(-v) + 'px'; }).join(' ');
+        var bit = 1 << k;
+        var io = new IntersectionObserver(function (es) {
+          for (var e = 0; e < es.length; e++) {
+            var c = Array.prototype.indexOf.call(cards, es[e].target);
+            hit[c] = es[e].isIntersecting ? hit[c] | bit : hit[c] & ~bit;
+          }
+          apply();
+        }, { root: root, rootMargin: margin });
+        for (var c = 0; c < n; c++) io.observe(cards[c]);
+        obs.push(io);
+      });
+    }
+    var ro = new ResizeObserver(watch);
+    ro.observe(root); ro.observe(copy);
   }
 
   function DeskScene() {
