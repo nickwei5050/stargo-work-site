@@ -2,28 +2,34 @@
    「Tailscale 传了个视频过来，你帮我放到关于页面的第一个板块全屏播放」).
    tools/about-film.mjs writes the section, js/stargo-film.js runs it.
 
-   The film's lyrics are drawn into the picture, centred along its lower edge,
-   and reach about a fifth of the width from either side. Nothing may cover
-   them, so the controls never sit on the picture: on landscape screens the
-   film fills the screen above a slim bar that holds them, and on upright
-   screens it runs across the width with its label above and the controls
-   below. The picture is cropped to its box from 6:5 to 2:1, keeping its lower
-   edge (object-position 80%: at 2:1 the bottom loses 2% and the lyrics end
-   above 96%); wider than 2:1 it is shown whole on black.
+   The film's lyrics are drawn into the picture, centred along its lower edge
+   (the Chinese line ends 3% above the bottom) and reach a fifth of the width
+   from either side. Nothing may cover them, so the controls never sit on the
+   picture: on landscape screens the film fills the screen above a slim bar
+   that holds them, and on upright screens a taller crop of the picture runs
+   across the width with its label above and the controls below.
+
+   The frame is a size container, so the crop follows the frame, not the
+   window: cropped to cover it, keeping its lower edge (object-position 92%),
+   up to 19:10, which takes at most 6% off the top (some scenes put a window
+   edge or a label 11% down); wider than that, the whole picture on black.
 
    Paint is static except the video itself: no backdrop-filter over a playing
    picture (it would be re-blurred every frame), and the only animations are
-   opacity and transform on small marks. */
+   opacity and transform. */
 .sg-film {
-  --sgf-bg: #07060d;
-  --sgf-ui: rgba(12, 9, 26, .72);
-  --sgf-ui-hover: rgba(30, 22, 62, .86);
+  --sgf-bg: #000;
+  --sgf-ui: rgba(14, 11, 28, .74);
+  --sgf-ui-hover: rgba(34, 26, 68, .88);
   --sgf-edge: rgba(255, 255, 255, .2);
   --sgf-text: #f6f3ff;
-  --sgf-muted: rgba(240, 236, 255, .74);
+  --sgf-ink: #07060d;
+  --sgf-muted: rgba(240, 236, 255, .72);
   --sgf-accent: #9fdcff;
   --sgf-grad: linear-gradient(90deg, #6fc7f2, #a48cff);
   --sgf-pad: clamp(20px, 3.2vw, 48px);
+  /* The site bar's grid: 1400px wide, centred, its logo 1% in from its left edge. */
+  --sgf-x: max(var(--sgf-pad), calc(50% - 700px + 1%));
   --sgf-bar: 76px;
   position: relative;
   display: grid;
@@ -37,8 +43,13 @@
   color: var(--sgf-text);
   font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
   -webkit-font-smoothing: antialiased;
+  /* The site hides the pointer for its crosshair; the film keeps the ordinary
+     one (js/stargo-film.js hides the crosshair while the mouse is over it). */
+  cursor: default;
 }
-.sg-film__frame { position: relative; min-height: 0; overflow: hidden; }
+.sg-film-pointer .plus-line-wrapper { opacity: 0 !important; }
+
+.sg-film__frame { position: relative; min-height: 0; overflow: hidden; container-type: size; }
 .sg-film__poster,
 .sg-film__video {
   position: absolute;
@@ -47,25 +58,13 @@
   height: 100%;
   display: block;
   object-fit: cover;
-  object-position: 50% 80%;
+  object-position: 50% 92%;
   background: transparent;
 }
 .sg-film__video { opacity: 0; transition: opacity .7s ease; cursor: pointer; }
 .sg-film.is-live .sg-film__video { opacity: 1; }
 
-/* The site's bar sits over the top of the film: a short shade keeps its
-   words readable on the film's bright scenes (the yellow radar, the paper
-   charts). Nothing shades the lower edge, where the lyrics are. */
-.sg-film__shade {
-  position: absolute;
-  inset: 0 0 auto;
-  height: 168px;
-  z-index: 1;
-  pointer-events: none;
-  background: linear-gradient(180deg, rgba(7, 6, 13, .66) 0%, rgba(7, 6, 13, .3) 52%, rgba(7, 6, 13, 0) 100%);
-}
-
-/* How far the film has run: the seam between picture and bar. */
+/* How far the film has run: the seam along the picture's lower edge. */
 .sg-film__progress {
   position: absolute;
   left: 0;
@@ -73,6 +72,7 @@
   bottom: 0;
   z-index: 2;
   height: 2px;
+  margin-inline: auto;
   background: rgba(255, 255, 255, .1);
   pointer-events: none;
 }
@@ -85,16 +85,47 @@
   transition: transform .26s linear;
 }
 
-.sg-film__bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  min-width: 0;
-  padding: 0 var(--sgf-pad);
+@container (min-aspect-ratio: 19/10) {
+  .sg-film__poster,
+  .sg-film__video { object-fit: contain; object-position: 50% 50%; }
+  .sg-film__progress { width: calc(100cqh * 16 / 9); }
 }
-.sg-film__ui { display: flex; align-items: center; gap: 20px; min-width: 0; }
+@supports not (container-type: size) {
+  @media (min-aspect-ratio: 7/4) {
+    .sg-film__poster,
+    .sg-film__video { object-fit: contain; object-position: 50% 50%; }
+  }
+}
+
+/* The site bar sits over the top of the film: a short shade keeps its words
+   readable on the film's bright scenes (the yellow radar, the paper charts).
+   Nothing shades the lower edge, where the lyrics are. */
+.sg-film__shade {
+  position: absolute;
+  inset: 0 0 auto;
+  height: clamp(88px, 17vh, 184px);
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(0, 0, 0, .74) 0%, rgba(0, 0, 0, .6) 30%, rgba(0, 0, 0, .24) 65%, rgba(0, 0, 0, 0) 100%);
+}
+
+/* The bar on the site's grid: the label under the logo, the controls on the
+   lyrics' centre line, the cue to read on at the right. */
+.sg-film__bar {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 16px;
+  min-width: 0;
+  padding: 0 var(--sgf-x);
+  background: var(--sgf-bg);
+}
+.sg-film__ui { display: contents; }
 .sg-film__label {
+  grid-column: 1;
+  justify-self: start;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -111,10 +142,11 @@
   height: 6px;
   border-radius: 50%;
   background: rgba(240, 236, 255, .5);
+  transition: background-color .3s ease, box-shadow .3s ease;
 }
 .sg-film.is-playing .sg-film__dot { background: var(--sgf-accent); box-shadow: 0 0 0 3px rgba(159, 220, 255, .18); }
 
-.sg-film__controls { display: flex; align-items: center; gap: 8px; }
+.sg-film__controls { grid-column: 2; display: flex; align-items: center; gap: 8px; }
 .sg-film:not(.is-ready) .sg-film__controls,
 .sg-film.is-idle .sg-film__controls { display: none; }
 
@@ -141,7 +173,7 @@
   white-space: nowrap;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  transition: background-color .2s ease, border-color .2s ease, transform .2s ease;
+  transition: background-color .2s ease, border-color .2s ease, color .2s ease, transform .2s ease;
 }
 .sg-film__btn.sg-film__icon { width: 44px; padding: 0; }
 @media (hover: hover) {
@@ -163,19 +195,23 @@
   stroke-linejoin: round;
 }
 .sg-film__i--play { fill: currentColor; stroke-width: 1.2; }
-.sg-film__i--sound,
 .sg-film.is-sound .sg-film__i--muted,
 .sg-film__toggle .sg-film__i--play,
 .sg-film.is-paused .sg-film__toggle .sg-film__i--pause,
 .sg-film__i--exit,
 .sg-film.is-full .sg-film__i--full { display: none; }
-.sg-film.is-sound .sg-film__i--sound,
 .sg-film.is-paused .sg-film__toggle .sg-film__i--play,
 .sg-film.is-full .sg-film__i--exit { display: block; }
 
-/* The sound button asks first: while the film plays silently its edge
-   breathes twice, then rests. With sound on, four bars move with it. */
+/* The sound button is the one thing the bar asks for: while the film plays
+   silently it is the light button, and a ring leaves its edge every few
+   seconds. With sound on it joins the others, and four bars stand for the
+   music: moving while it plays, held while it is paused. */
 .sg-film__sound { position: relative; }
+.sg-film:not(.is-sound) .sg-film__sound { background: var(--sgf-text); border-color: var(--sgf-text); color: var(--sgf-ink); }
+@media (hover: hover) {
+  .sg-film:not(.is-sound) .sg-film__sound:hover { background: #fff; border-color: #fff; }
+}
 .sg-film__sound::after {
   content: "";
   position: absolute;
@@ -185,12 +221,13 @@
   opacity: 0;
   pointer-events: none;
 }
-.sg-film.is-playing:not(.is-sound) .sg-film__sound::after { animation: sgf-ask 2.4s ease-out 1.2s 2; }
+.sg-film.is-playing:not(.is-sound) .sg-film__sound::after { animation: sgf-ask 6s ease-out 1.2s infinite; }
+.sg-film.is-away .sg-film__sound::after { animation-play-state: paused; }
 @keyframes sgf-ask {
   0% { opacity: .9; transform: scale(1); }
-  100% { opacity: 0; transform: scale(1.18, 1.5); }
+  32%, 100% { opacity: 0; transform: scale(1.14); }
 }
-.sg-film__eq { display: none; align-items: flex-end; gap: 2px; height: 14px; margin-left: -2px; }
+.sg-film__eq { display: none; justify-content: center; align-items: flex-end; gap: 2px; width: 20px; height: 14px; margin: 3px 0; }
 .sg-film.is-sound .sg-film__eq { display: inline-flex; }
 .sg-film__eq i {
   display: block;
@@ -198,9 +235,12 @@
   height: 14px;
   border-radius: 1px;
   background: var(--sgf-accent);
-  transform: scaleY(.3);
+  transform: scaleY(.45);
   transform-origin: 50% 100%;
 }
+.sg-film__eq i:nth-child(2) { transform: scaleY(.8); }
+.sg-film__eq i:nth-child(3) { transform: scaleY(.6); }
+.sg-film__eq i:nth-child(4) { transform: scaleY(.35); }
 .sg-film.is-sound.is-playing .sg-film__eq i { animation: sgf-eq 1s ease-in-out infinite alternate; }
 .sg-film.is-sound.is-playing .sg-film__eq i:nth-child(2) { animation-duration: .7s; animation-delay: -.3s; }
 .sg-film.is-sound.is-playing .sg-film__eq i:nth-child(3) { animation-duration: 1.2s; animation-delay: -.6s; }
@@ -211,16 +251,17 @@
 }
 
 /* Shown when the film waits for a tap: reduced motion, Save-Data, or a
-   browser that refused to start it (iOS Low Power Mode). */
+   browser that refused to start it (iOS Low Power Mode). It sits low on the
+   left, under the logo, so the first frame stays whole; a tap anywhere on the
+   picture does the same. */
 .sg-film__start {
   appearance: none;
   -webkit-appearance: none;
   position: absolute;
-  left: 50%;
-  top: 50%;
+  left: var(--sgf-x);
+  bottom: clamp(20px, 4.5vh, 44px);
   z-index: 3;
   display: none;
-  flex-direction: column;
   align-items: center;
   gap: 14px;
   margin: 0;
@@ -229,38 +270,43 @@
   background: none;
   color: var(--sgf-text);
   font: inherit;
+  text-align: left;
   cursor: pointer;
-  transform: translate(-50%, -50%);
   -webkit-tap-highlight-color: transparent;
 }
 .sg-film.is-idle .sg-film__start { display: flex; }
 .sg-film__start .sg-film__i {
   box-sizing: content-box;
-  width: 30px;
-  height: 30px;
-  padding: 25px 23px 25px 27px;
+  width: 22px;
+  height: 22px;
+  padding: 21px 19px 21px 23px;
   border-radius: 50%;
-  border: 1px solid var(--sgf-edge);
-  background: var(--sgf-ui);
-  transition: background-color .2s ease, transform .3s ease;
+  background: var(--sgf-text);
+  color: var(--sgf-ink);
+  transition: transform .3s ease;
 }
 @media (hover: hover) {
-  .sg-film__start:hover .sg-film__i { background: var(--sgf-ui-hover); transform: scale(1.06); }
+  .sg-film__start:hover .sg-film__i { transform: scale(1.06); }
 }
+.sg-film__start:active .sg-film__i { transform: scale(.96); }
 .sg-film__start > span {
   display: inline-flex;
   align-items: baseline;
   gap: 8px;
-  padding: 7px 14px;
+  padding: 8px 14px;
   border-radius: 99px;
   background: var(--sgf-ui);
   font-size: 15px;
   font-weight: 500;
+  line-height: 1.2;
   letter-spacing: .03em;
+  white-space: nowrap;
 }
 .sg-film__start small { font-size: 13px; color: var(--sgf-muted); font-variant-numeric: tabular-nums; }
 
 .sg-film__next {
+  grid-column: 3;
+  justify-self: end;
   display: inline-flex;
   flex: none;
   align-items: center;
@@ -274,89 +320,152 @@
   letter-spacing: .03em;
   text-decoration: none;
   white-space: nowrap;
+  cursor: pointer;
   transition: background-color .2s ease;
 }
-.sg-film__next .sg-film__i { width: 18px; height: 18px; animation: sgf-down 2.2s ease-in-out infinite; }
+.sg-film__next .sg-film__i { width: 18px; height: 18px; animation: sgf-down 2.2s ease-in-out 2s 3; }
 @media (hover: hover) {
   .sg-film__next:hover { background: var(--sgf-ui-hover); color: var(--sgf-text); }
 }
 @keyframes sgf-down {
-  0%, 100% { transform: translateY(-2px); }
-  50% { transform: translateY(3px); }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
 }
 
-/* Wider than 2:1: the whole picture on black, nothing cropped. */
-@media (min-aspect-ratio: 2/1) {
-  .sg-film__poster,
-  .sg-film__video { object-fit: contain; }
+/* Read on: as the page scrolls past, the picture sinks a little behind the
+   bar and dims, so the next block arrives over a quieter screen. */
+@supports (animation-timeline: view()) {
+  @media (min-aspect-ratio: 6/5) and (prefers-reduced-motion: no-preference) {
+    .sg-film__frame {
+      animation-name: sgf-leave;
+      animation-duration: 1ms;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 100%;
+    }
+  }
 }
+@keyframes sgf-leave {
+  to { opacity: .35; transform: translateY(6%); }
+}
+
 /* Short landscape screens (a phone on its side): a slimmer bar, the sound
    button as an icon (its words stay as its accessible name), no film label. */
 @media (min-aspect-ratio: 6/5) and (max-height: 500px) {
   .sg-film { --sgf-bar: 60px; }
   .sg-film__label { display: none; }
   .sg-film__sound { width: 44px; padding: 0; }
-  .sg-film__sound .sg-film__btn-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  .sg-film.is-sound .sg-film__eq { display: none; }
+  .sg-film__sound .sg-film__btn-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
 }
 
-/* Upright screens: the whole picture across the width, lit from behind by
-   its own colours; the label above it, the controls beneath. */
+/* Upright screens: a 4:3 crop of the picture across the width (the lyrics
+   come out a third larger than the whole 16:9 picture would give them, and
+   every scene's boxes still fit; 6:5 would cut the order and shipment boxes
+   at the sides), lit from behind by its own
+   colours; the label above it, the controls beneath, the cue at their right.
+   The block is as tall as that, so the introduction follows on the same
+   screen. */
 @media (max-aspect-ratio: 6/5) {
   .sg-film {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: 22px;
-    padding: 96px 0 88px;
+    gap: 14px;
+    height: auto;
+    min-height: 0;
+    padding: 72px 0 24px;
     box-sizing: border-box;
     background:
-      radial-gradient(70% 34% at 50% 46%, rgba(122, 82, 251, .2), transparent 72%),
-      radial-gradient(60% 26% at 50% 54%, rgba(69, 176, 226, .12), transparent 72%),
+      radial-gradient(80% 40% at 50% 46%, rgba(122, 82, 251, .2), transparent 72%),
+      radial-gradient(70% 30% at 50% 56%, rgba(69, 176, 226, .12), transparent 72%),
       var(--sgf-bg);
   }
   .sg-film__frame {
     flex: none;
     width: 100%;
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 4 / 3;
     box-shadow: 0 30px 80px -30px rgba(122, 82, 251, .45);
   }
+  .sg-film__poster,
+  .sg-film__video { object-position: 49.6% 50%; }
   .sg-film__shade { display: none; }
-  .sg-film__bar,
-  .sg-film__ui { display: contents; }
-  .sg-film__label { order: -1; align-self: center; }
-  .sg-film__controls { order: 1; align-self: center; }
-  .sg-film__next { position: absolute; left: 50%; bottom: 24px; margin: 0; padding: 0 16px; transform: translateX(-50%); }
-  .sg-film__start { gap: 10px; }
-  .sg-film__start .sg-film__i { width: 24px; height: 24px; padding: 19px 17px 19px 21px; }
+  .sg-film__bar { display: contents; }
+  .sg-film__label { order: -1; align-self: flex-start; margin: 0 16px; }
+  .sg-film__controls { order: 1; align-self: flex-start; margin: 0 16px; }
+  .sg-film__next { position: absolute; right: 2px; bottom: 24px; margin: 0; }
+  /* While the film waits, its play button takes the controls' row, under the
+     picture, so the first frame stays whole and the row keeps its height. */
+  .sg-film:not(.is-ready) .sg-film__controls,
+  .sg-film.is-idle .sg-film__controls { display: flex; visibility: hidden; }
+  .sg-film__frame { overflow: visible; }
+  .sg-film__start { top: calc(100% + 14px); bottom: auto; left: 16px; gap: 10px; }
+  .sg-film__start .sg-film__i { width: 16px; height: 16px; padding: 14px 13px 14px 15px; }
 }
-@media (max-aspect-ratio: 6/5) and (max-height: 640px) {
-  .sg-film { gap: 14px; padding-top: 80px; padding-bottom: 76px; }
-  .sg-film__label { display: none; }
+@media (max-aspect-ratio: 6/5) and (max-width: 399px) {
+  /* The length is in the label above; the button and the cue share one row. */
+  .sg-film__start small { display: none; }
+}
+/* Where the controls and the cue's words would meet (English below 390px,
+   any language below 350px), the cue keeps its arrow in a round button and
+   its words as its accessible name. */
+@media (max-aspect-ratio: 6/5) and (max-width: 389px) {
+  .sg-film__next:lang(en) { width: 44px; padding: 0; right: 16px; justify-content: center; border: 1px solid var(--sgf-edge); background: var(--sgf-ui); }
+  .sg-film__next:lang(en) span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+}
+@media (max-aspect-ratio: 6/5) and (max-width: 349px) {
+  .sg-film__next { width: 44px; padding: 0; right: 16px; justify-content: center; border: 1px solid var(--sgf-edge); background: var(--sgf-ui); }
+  .sg-film__next span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+}
+@media (max-aspect-ratio: 6/5) and (min-width: 600px) {
+  .sg-film { gap: 18px; padding-top: 96px; padding-bottom: 28px; }
+  .sg-film__label,
+  .sg-film__controls { margin: 0 var(--sgf-pad); }
+  .sg-film__next { right: calc(var(--sgf-pad) - 14px); bottom: 28px; }
+  .sg-film__start { top: calc(100% + 18px); left: var(--sgf-pad); }
 }
 
 /* Full screen (desktop browsers and tablets; an iPhone hands the film to its
-   own player): the whole picture over the same bar. */
-.sg-film:fullscreen {
+   own player): the whole picture over the bar, its controls alone. */
+.sg-film.is-full {
   display: grid;
   grid-template-rows: minmax(0, 1fr) var(--sgf-bar);
+  justify-content: normal;
+  gap: 0;
   height: 100%;
   padding: 0;
   background: #000;
 }
-.sg-film:fullscreen .sg-film__frame { width: auto; aspect-ratio: auto; box-shadow: none; }
-.sg-film:fullscreen .sg-film__poster,
-.sg-film:fullscreen .sg-film__video { object-fit: contain; }
-.sg-film:fullscreen .sg-film__shade,
-.sg-film:fullscreen .sg-film__next { display: none; }
-.sg-film:fullscreen .sg-film__bar,
-.sg-film:fullscreen .sg-film__ui { display: flex; }
-.sg-film:fullscreen .sg-film__label { order: 0; }
+.sg-film.is-full .sg-film__frame { width: auto; aspect-ratio: auto; box-shadow: none; animation: none; }
+.sg-film.is-full .sg-film__poster,
+.sg-film.is-full .sg-film__video { object-fit: contain; object-position: 50% 50%; }
+.sg-film.is-full .sg-film__progress {
+  width: min(100%, calc(100cqh * 16 / 9));
+  bottom: max(0px, calc(50cqh - 100cqw * 9 / 32));
+}
+.sg-film.is-full .sg-film__shade,
+.sg-film.is-full .sg-film__label,
+.sg-film.is-full .sg-film__next { display: none; }
+.sg-film.is-full .sg-film__bar { display: grid; padding: 0 var(--sgf-pad); }
+.sg-film.is-full .sg-film__controls { margin: 0; justify-self: center; }
+
+/* For a reader who cannot see the lyrics drawn into the picture: the scene
+   and every line, in the page, off screen (the video's description). */
+.sg-film__words {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .sg-film__video { transition: none; }
   .sg-film.is-playing:not(.is-sound) .sg-film__sound::after,
   .sg-film.is-sound.is-playing .sg-film__eq i,
   .sg-film__next .sg-film__i { animation: none; }
-  .sg-film.is-sound .sg-film__eq i { transform: scaleY(.6); }
 }
