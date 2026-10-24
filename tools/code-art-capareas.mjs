@@ -10,6 +10,10 @@
  *     `.paralax-image`, so IX2's 10% scroll drift does not slide a product screen
  *     under the fixed glass caption. The phone settle-in zoom of lane parity
  *     (css/stargo-phone.css) names the host as well as the photo.
+ *     Since 2026-10-24 (the owner: 「我需要真实系统截图放在特定的地方」) the four
+ *     cards show crops of the system's own screens instead (tools/replaceables.mjs
+ *     CAP_REAL.areas, placeAreaScenes below); the scenes stay registered as the
+ *     way back, and the page no longer loads them while every card has a screen.
  *
  *   一条业务主线 /09 — the eight thumbnails orbiting STARGO WORK (were
  *     CAP_PHOTOS.orbit). The ring already turns, so each is a still: inline SVG
@@ -24,12 +28,22 @@
  */
 import { escapeHtml } from './lib-html.mjs';
 import { motionHost } from './motion-scenes.mjs';
+import { CAP_REAL } from './replaceables.mjs';
+import { realSlot, CAP_REAL_SIZES } from './real-capabilities.mjs';
 
 /* The four area cards, in card order (#g01, #g04, #g07, #g10), by the template
    picture each card's <img> still names when the page is cut. */
 export const AREA_SCENES = ['areaGrowth', 'areaContext', 'areaDeal', 'areaTeam'];
 const AREA_KEYS = ['699b6466d5f19893993a4d79_work-1.webp', '699b6466d5f19893993a4d1a_work-4.webp', '699b6466d5f19893993a4d34_work-5.webp', '699b6466d5f19893993a4d8f_work-8.webp'];
 
+/* 真实截图 (2026-10-24, the owner at 17:27 UTC: 「你现在也全是代码了，我系统的画面都没有了！我需要真实
+   系统截图放在特定的地方」): a card whose entry in tools/replaceables.mjs CAP_REAL.areas is set shows that
+   crop of the system's own screen in place of its scene — Growth OS home, the Sales Desk customer list, the
+   ERP item list, the digital employees' open marketplace — with the 真实界面 · 演示数据 tag
+   (tools/real-capabilities.mjs). The slot fills the same picture box (css/stargo-real-capabilities.css) and,
+   like the scene, is not the template's `.paralax-image`, so IX2's scroll drift does not slide the screen
+   under the glass caption; on phones its picture (never its tag) takes the settle-in zoom the scenes'
+   ground had. An entry set to null puts that card's scene back. */
 export function placeAreaScenes(html, lang) {
   AREA_KEYS.forEach((key, i) => {
     let hit = 0;
@@ -37,7 +51,8 @@ export function placeAreaScenes(html, lang) {
       if (!tag.includes(key)) return tag;
       if (!/class="paralax-image"/.test(tag)) throw new Error(`capabilities: the area picture ${key} is no longer the card's .paralax-image`);
       hit++;
-      return motionHost(AREA_SCENES[i], lang, 'sg-mo-area');
+      const shot = CAP_REAL.areas?.[i];
+      return shot ? realSlot(shot, lang, 'sg-real-area', CAP_REAL_SIZES.area) : motionHost(AREA_SCENES[i], lang, 'sg-mo-area');
     });
     if (hit !== 1) throw new Error(`capabilities: expected one area picture ${key}, found ${hit}`);
   });

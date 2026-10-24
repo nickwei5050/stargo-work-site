@@ -31,6 +31,10 @@ const P = 'assets/stargo-product/';
 const specs = (existsSync(DIR) ? readdirSync(DIR) : []).filter((f) => f.endsWith('.json')).sort()
   .map((f) => ({ file: f, ...JSON.parse(readFileSync(new URL(f, DIR), 'utf8')) }));
 
+/* the published product images, read before the specs: a cut of a published crop (`asset:<id>`) names its
+   capture through them (parentSource below) */
+const REGISTRY = JSON.parse(readFileSync(new URL('./imagegen/product-assets.json', import.meta.url), 'utf8')).assets;
+
 export const REAL_ASSETS = [];
 export const REAL_TEXT = {};
 for (const spec of specs) {
@@ -57,7 +61,6 @@ for (const spec of specs) {
   }
 }
 
-const REGISTRY = JSON.parse(readFileSync(new URL('./imagegen/product-assets.json', import.meta.url), 'utf8')).assets;
 function parentSource(id) {
   const a = REGISTRY.find((x) => x.id === id);
   if (!a) throw new Error(`real-screens: asset:${id} is not a registered product image`);

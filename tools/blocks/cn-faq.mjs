@@ -48,8 +48,9 @@
  * cut section's lost <body> belongs.
  */
 import { setText, setTextAll, capability } from '../block-lib.mjs';
-import { CAP_PHOTOS } from '../replaceables.mjs';
+import { CAP_PHOTOS, CAP_REAL } from '../replaceables.mjs';
 import { hostFromImg } from '../motion-capsales.mjs';
+import { realFromImg, CAP_REAL_SIZES } from '../real-capabilities.mjs';
 
 /** The story this block carries: CAPABILITY_SHOWCASE.stories[4]. */
 const STORY = 4;
@@ -67,6 +68,12 @@ const PICTURE = CAP_PHOTOS.creative;
     The C08 height rule in css/stargo-fusion.css then applies again; while MOTION is set it matches
     nothing, and the scene host carries the same rule in css/stargo-motion-creative.css. */
 const MOTION = 'creative';
+/** Since 2026-10-24 the portrait is the system's own screen (the owner, 17:27 UTC: 「你现在也全是代码了，我系统的
+    画面都没有了！我需要真实系统截图放在特定的地方」): 一键复刻爆款视频, the reference-video form of AI 创作, cut from
+    the owner's capture (tools/replaceables.mjs CAP_REAL.creative; its left half on upright screens), with the
+    真实界面 · 演示数据 tag. It comes before MOTION; set CAP_REAL.creative to null and the scene plays again. The
+    slot keeps cinery's class, so the card's frame, radius and height are as they were. */
+const REAL = CAP_REAL.creative;
 
 export const donor = {
   id: 'cn-faq',
@@ -286,7 +293,10 @@ export function render(frag, ctx) {
   if (alts !== 1) throw new Error(`cn-faq: expected one ${DONOR_ALT} on the portrait, found ${alts}`);
   const IMG = /<img src="assets\/cinery\/[^"]*portrait[^"]*"[^>]*class="cn-faq-image"\/>/;
   if (!IMG.test(end)) throw new Error('cn-faq: the portrait is no longer the one cinery <img> of class cn-faq-image');
-  if (MOTION) {
+  if (REAL) {
+    /* the slot keeps the class cinery's card sizes and rounds (cn-faq-image) */
+    end = end.replace(IMG, (tag) => realFromImg(tag, REAL, lang, 'sg-real-creative', CAP_REAL_SIZES.creative));
+  } else if (MOTION) {
     /* the host keeps the class cinery's card sizes and rounds (cn-faq-image) */
     end = end.replace(IMG, (tag) => hostFromImg(tag, MOTION, lang, `sg-mo-${MOTION}`));
   } else {

@@ -1,0 +1,48 @@
+/* 真实截图 on capabilities.html (tools/real-capabilities.mjs; loaded after css/stargo-real.css).
+   The owner, 2026-10-24 17:27 UTC: 「你现在也全是代码了，我系统的画面都没有了！我需要真实系统截图放在特定的地方」.
+   Each slot keeps the box its scene had (and the photograph before it); these are the scene hosts' box rules
+   (css/stargo-motion-areas.css, -sales.css, -quote.css, -creative.css, -crew.css), which this page no longer
+   loads while the slots show screens, written for .sg-real. Static: nothing here animates but the template's
+   own reveal and, on phones, the area cards' settle-in zoom of the picture. */
+
+/* 四个板块，十四类能力: the slot fills the card's picture box under the glass caption */
+.wrok-wrapper .image-wrap > .sg-real-area { position: absolute; inset: 0; width: 100%; height: 100%; }
+/* below 480 the glass caption fills the card down to 19px above its foot (Workforce & management, four lines
+   in English), so the tag sits in that strip, slimmer (no border, 16px line), the way the scenes' tag did */
+@media (max-width: 479px) {
+  .wrok-wrapper .sg-real-area > .sg-real-tag { bottom: 1px; padding: 0 9px; line-height: 16px; border-width: 0; }
+}
+
+/* Sales Desk rows: qubix's 349 × 244 thumbnail; below 480 the shapes the photographs had (16:9, square).
+   qubix zooms a row's picture to 1.1 on hover (an inline IX2 transform): on a screen with its tag that would
+   push the tag out of the box, so the slots keep still, as the scenes did. */
+.qx-news .qx-blog-item-image > .sg-real { display: block; }
+.qx-news .qx-all-image-cover.sg-real { transform: none !important; }
+@media (max-width: 479px) {
+  .qx-news .qx-blog-item-image > .sg-real-inbox { height: auto; aspect-ratio: 16 / 9; }
+  .qx-news .qx-blog-item-image > .sg-real-account { height: auto; aspect-ratio: 1 / 1; }
+}
+
+/* the quote band: renok's picture box, 3:2 where its height follows the picture; the reveal's blur stays on
+   this element and is dropped once it has cleared; its 2x-to-1x zoom is held at 1, so the screen and its tag
+   are whole from the first frame (the wrapper's own grow still plays) */
+.rk-stats .rk-rt-image-apperance.sg-real { display: block; width: 100%; height: 100%; aspect-ratio: 3 / 2; transform: none !important; }
+.rk-stats .rk-rt-image-apperance.sg-real[style*="blur(0px)"] { filter: none !important; }
+
+/* the 图片 / 视频 portrait: cinery's card (its frame, its rounded picture, the questions column's height from
+   992 up) */
+.cn-faq .cn-faq-image.sg-real { display: block; }
+@media (min-width: 992px) {
+  .cn-faq .cn-faq-image.sg-real { height: 0; min-height: 100%; }
+}
+
+/* 让 AI 团队把活干完, card 1: the frame's whole box; the hover pill stays above it */
+.qx-projects .qx-project-img-wrap > .sg-real { flex: none; width: 100%; height: 100%; }
+
+/* phones: the area card's picture (never its tag) settles in as the scenes' ground did (css/stargo-phone.css,
+   whose sg-zoom it uses under the same conditions) */
+@supports (animation-timeline: view()) {
+  @media (max-width: 767px) and (prefers-reduced-motion: no-preference) {
+    .work-main .work-card .sg-real-area > picture { animation: sg-zoom linear both; animation-timeline: --sg-card; animation-range: entry 0% cover 60%; --sg-z: 1.16; }
+  }
+}

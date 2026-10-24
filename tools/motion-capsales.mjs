@@ -16,6 +16,14 @@
  * scale on the quote picture) are the element they were. qubix's 1.1× photo zoom on hover is switched
  * off for the two rows' hosts (css/stargo-motion-sales.css): it would crop a drawn screen's app bar and tag.
  * The same photographs keep their other places (the orbit thumbnails, the 每项工作 ring).
+ *
+ * 2026-10-24, the owner (17:27 UTC): 「你现在也全是代码了，我系统的画面都没有了！我需要真实系统截图放在特定的
+ * 地方」. All four places now show crops of the system's own screens instead (tools/replaceables.mjs CAP_REAL,
+ * tools/real-capabilities.mjs realFromImg, which keeps the picture's classes and style the way hostFromImg
+ * does): the Sales Desk case inbox, the mobile customer 360, the mobile quote list and the reference-video
+ * screen, each with the 真实界面 · 演示数据 tag. The scenes stay registered here and in their scripts; a block
+ * plays its scene again when its CAP_REAL entry is null, and build-site.mjs then loads the scene's script
+ * again (CAPSALES_SCENES minus the slots that show a screen).
  */
 import { motionHost } from './motion-scenes.mjs';
 
