@@ -271,6 +271,12 @@ export const SCENE_FILE = {
   'desk-erp': 'desk',
   'desk-creative': 'desk',
   'desk-cockpit': 'desk',
+  'stage-find': 'stages',   // homemore: the five homepage stage cards
+  'stage-sell': 'stages',
+  'stage-make': 'stages',
+  'stage-pay': 'stages',
+  'stage-again': 'stages',
+  org: 'org',               // homemore: the pricing band's enterprise card
 };
 /* scene files that ship their own stylesheet */
 export const SCENE_CSS = new Set([
@@ -287,6 +293,8 @@ export const SCENE_CSS = new Set([
   'areas-centre',
   'crew',
   'desk',
+  'stages',
+  'org',
 ]);
 
 /* pain — the homepage's four problem cards, in page order (S01–S04): one file and one stylesheet */

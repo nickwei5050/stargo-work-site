@@ -106,6 +106,13 @@ CODE_DRAWN_CAP.forEach((id) => CODE_DRAWN.add(id));
    (tools/blog-art.mjs); the articles' share images stay the raster covers in assets/blog/. */
 ['b01v2-visual-guide', 'b02-one-workflow', 'b03-inquiry-to-quote', 'b04v2-approval-handover', 'b05-288-relay',
   'b06-browser-os', 'b07v2-knowledge-library'].forEach((id) => CODE_DRAWN.add(id));
+/* Taken off the homepage by the homemore lane (2026-10-23): the five stage
+   cards and the pricing band's enterprise card are code-drawn scenes now
+   (js/stargo-motion-stages.js, js/stargo-motion-org.js). P02 and P04 were
+   placed only there (P01, P03 and P05 stay on capabilities.html); T01 only
+   in the pricing band. Still listed in tools/replaceables.mjs HOME_STAGES /
+   HOME_PRICING_CARD, so each can go back in one line. */
+['p02-sales', 'p04-payment-docs', 't01-enterprise-campus'].forEach((id) => CODE_DRAWN.add(id));
 const photosUnused = photos.filter(a => !all.includes(a.src) && !SUPERSEDED.has(a.id) && !RETIRED.has(a.id) && !CODE_DRAWN.has(a.id)).map(a => a.id);
 assert.deepEqual(photosUnused, [], 'every registered photograph is placed');
 console.log(`generated imagery: ${manifest.assets.length - unused.length} placed, ${unused.length} retained but unused (${unused.join(', ')})`);
