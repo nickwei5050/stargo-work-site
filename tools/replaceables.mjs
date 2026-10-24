@@ -150,29 +150,10 @@ export const RING_STILLS = {
  * hover thumbnails) keep them.
  */
 export const CAP_PHOTOS = {
-  /* 四个板块，十四类能力 (tools/build-site.mjs): the four area cards, in card
-     order, where brand-family-01, os-inquiries, brand-family-02 and
-     brand-family-04 were. */
-  areas: [
-    photoFile('c01v2-command-growth'),       // 指挥与增长 · #g01
-    photoFile('c02v2-customer-knowledge'),   // 客户与知识 · #g04
-    photoFile('c03-commerce-fulfilment'),  // 商务、履约与创作 · #g07
-    photoFile('c04v2-team-management'),      // 员工与管理 · #g10
-  ],
-  /* 一条业务主线 (tools/blocks/qx-orbit.mjs): the eight thumbnails that orbit
-     STARGO WORK, by the qubix file each one replaces (its name without the
-     extension; qx-rotated-one … eight, steps 01 and 03-09; step 02 has no
-     thumbnail of its own). */
-  orbit: {
-    '69ad4171521df4f0bc234d0f_Rectangle_9': photoFile('p01-prospecting', 480),          // 01 发现
-    '69ad0fbadd6325cf79cf0dea_Rectangle_5': photoFile('h10-video-showing', 1024),       // 03 触达
-    '69ad4172e2f6cf6c085066c0_Rectangle_7': photoFile('c05-unified-inbox', 768),        // 04 理解
-    '69ad417163eb1d1417d4efe7_Rectangle_11': photoFile('h02-night-inquiry', 1024),      // 05 回复
-    '69ad41712a2f75c0ed1f8027_Rectangle_10': photoFile('c07-quote-approval', 768),      // 06 报价
-    '69ad4171baff849bf5f57a38_Rectangle_8': photoFile('h09-container-loading', 1024),   // 07 执行
-    '69ad41721ce44afffca4eaf8_Rectangle_12': photoFile('d02-follow-up', 1024),          // 08 跟进
-    '69ad417169d8a230caca089c_Rectangle_6': photoFile('p05-reorder', 480),              // 09 学习
-  },
+  /* 四个板块，十四类能力 (the four area cards, C01–C04) and 一条业务主线's eight
+     orbit thumbnails were photographs here until 2026-10-23; they are drawn in
+     code now (tools/code-art-capareas.mjs: the motion scenes of
+     js/stargo-motion-areas.js, and static SVG for the orbit). */
   /* Growth OS (tools/blocks/cn-service.mjs): since 2026-10-23 the rows'
      four full-bleed backgrounds are code-drawn (GROWTH_ROWS[].scene); the
      night photographs C11v2-C14 are no longer placed. */
@@ -187,9 +168,9 @@ export const CAP_PHOTOS = {
   quote: photoFile('c07-quote-approval', 768),
   /* 图片 / 视频 (tools/blocks/cn-faq.mjs): the portrait beside the accordion. */
   creative: photoFile('c08-product-references', 1024),
-  /* 让 AI 团队把活干完 (tools/blocks/qx-projects.mjs, CAP_V6A.team.cards in
-     tools/copy.mjs): the first two cards. The third keeps its product screen. */
-  team: [photoFile('c09-288-flatlay', 1024), photoFile('c10-progress-board', 1024)],
+  /* 让 AI 团队把活干完 (tools/blocks/qx-projects.mjs): all three cards are
+     code-drawn scenes since 2026-10-23 (CAP_V6A.team.cards[].motion in
+     tools/copy.mjs; C09 and C10 were the first two). */
 };
 
 /* The demo band behind the glass form (index, capabilities, enterprise) is a

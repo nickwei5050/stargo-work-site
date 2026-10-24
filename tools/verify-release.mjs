@@ -95,21 +95,22 @@ try {
     const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
     await page.goto(`${BASE}/${lang}capabilities`, { waitUntil: 'load', timeout: NAV });
     await page.waitForTimeout(1500);
-    // Since 2026-10-21 the four area cards show the owner's photographs for
-    // the four areas (C01-C04, tools/replaceables.mjs CAP_PHOTOS.areas), in
-    // place of the generated art (brand-family-01, os-inquiries,
-    // brand-family-02, brand-family-04). Compared by photograph id, without
-    // the width in the file name.
-    const expected = ['c01v2-command-growth', 'c02v2-customer-knowledge', 'c03-commerce-fulfilment', 'c04v2-team-management'];
+    // Since 2026-10-23 each of the four area cards shows its own area drawn in
+    // code (tools/code-art-capareas.mjs, js/stargo-motion-areas.js), where the
+    // owner's photographs C01-C04 were (2026-10-21) and the generated art
+    // before them. Compared by scene, in card order, and the card keeps no photo.
+    const expected = ['areaGrowth', 'areaContext', 'areaDeal', 'areaTeam'];
     // The four area cards only: the V6 showcases link to groups too.
-    const actual = await page.locator('.wrok-wrapper a[href="#g01"] img,.wrok-wrapper a[href="#g04"] img,.wrok-wrapper a[href="#g07"] img,.wrok-wrapper a[href="#g10"] img')
-      .evaluateAll(imgs => imgs.map(i => { const src = i.getAttribute('src').split('?')[0]; return src.split('/').pop().replace(/stargo-photo\//.test(src) ? /-\d+\.webp$/ : /\.webp$/, ''); }));
-    assert.deepEqual(actual, expected, 'capability image/meaning mapping');
+    const cards = '.wrok-wrapper a[href="#g01"],.wrok-wrapper a[href="#g04"],.wrok-wrapper a[href="#g07"],.wrok-wrapper a[href="#g10"]';
+    const actual = await page.locator(cards.split(',').map(a => `${a} [data-sg-scene]`).join(','))
+      .evaluateAll(hosts => hosts.map(h => h.getAttribute('data-sg-scene')));
+    assert.deepEqual(actual, expected, 'capability scene/meaning mapping');
+    assert.equal(await page.locator(cards.split(',').map(a => `${a} img`).join(',')).count(), 0, 'the area cards load no photograph');
     await page.locator('.wrok-wrapper a[href="#g04"]').scrollIntoViewIfNeeded();
     await page.waitForTimeout(900);
     await page.screenshot({ path: `${OUT}/${lang ? 'en' : 'zh'}-capabilities-art.png` });
     scenarios.push(`${lang || 'zh/'}capabilities-390`);
-    console.log(`PASS live ${lang || 'zh/'} capabilities 390: four semantic image mappings`);
+    console.log(`PASS live ${lang || 'zh/'} capabilities 390: four area scenes in card order`);
     await page.close();
   }
 } finally { await browser.close(); }

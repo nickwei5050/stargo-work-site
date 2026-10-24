@@ -2195,19 +2195,22 @@ export const CAP_V6A = {
      illustration and that the employees message each other and work in
      parallel (available, owner 2026-09-17). Links go to the
      workforce page, where M10/M11 are told in full, and to the catalogue
-     group for the role and task entries. The first two pictures are the
-     owner's photographs since 2026-10-21 (C09, C10; tools/replaceables.mjs
-     CAP_PHOTOS.team), where this site's editorial art for specialised roles
-     and parallel work was. */
+     group for the role and task entries. The first two pictures were the
+     owner's photographs from 2026-10-21 (C09, C10), where this site's
+     editorial art for specialised roles and parallel work was; since
+     2026-10-23 all three are scenes drawn in code (`motion`). */
   team: {
     arrowHref: 'workforce.html',
     cards: [
       { title: B(`288 个${ZW}跨部门${ZW}专业岗位`, '288 cross-functional specialist roles'),
         text: B('按任务从岗位目录里挑人、组队协作，不替代真人。', 'A role directory to staff each task and form teams, not a replacement for people.'),
-        href: 'workforce.html#lx-role-groups', pill: B('认识数字员工', 'Meet the AI Workforce'), image: CAP_PHOTOS.team[0] },
+        /* capareas, 2026-10-23: the code-drawn 'crewRoles' scene (js/stargo-motion-crew.js) where the
+           owner's photograph C09 was — the 288 roles by function, narrowed to the five one task needs. */
+        href: 'workforce.html#lx-role-groups', pill: B('认识数字员工', 'Meet the AI Workforce'), motion: 'crewRoles' },
       { title: B(`员工任务、${ZW}进度与成果`, 'Tasks, progress and results'),
         text: B('谁在做什么、卡在哪一步、交付了什么，一眼看清；关键操作由人批准。', 'See who is doing what, what is waiting and what has been delivered; people approve the key actions.'),
-        href: '#g10', pill: B('员工能力组', 'AI workforce group'), image: CAP_PHOTOS.team[1] },
+        /* capareas: the 'crewBoard' scene where C10 was — tasks moving to 待你确认 and 已完成 with results attached. */
+        href: '#g10', pill: B('员工能力组', 'AI workforce group'), motion: 'crewBoard' },
       { title: B(`团队分工、${ZW}交流、${ZW}并行与接力`, 'Roles, messaging, parallel work and handoffs'),
         text: B('协作示意：市场研究员工找到目标客户，产品员工核对规格，销售员工制定开发计划，创意员工准备素材；员工之间直接交流、并行推进，统筹角色复核汇总后交负责人确认。图为示意，不是实时运行画面。', 'Illustrative: research finds target accounts, a product specialist checks specifications, sales plans outreach and creative prepares assets; the employees message each other and work in parallel, and a coordinator reviews and consolidates the package for the responsible person to confirm. The picture is an illustration, not a live view.'),
         /* The picture is the code-drawn 'team' scene (owner, 2026-10-23: no

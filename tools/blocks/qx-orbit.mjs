@@ -21,7 +21,8 @@
  *   - the eight orbit photographs were the donor's own, mirrored into
  *     assets/qubix by try-block; since 2026-10-21 each is one of the owner's
  *     photographs for its step (tools/replaceables.mjs CAP_PHOTOS.orbit, by
- *     the donor file it replaces), in the same <img>. The ring's own
+ *     the donor file it replaces), in the same <img>; since 2026-10-23 a
+ *     still drawn in code for its step (tools/code-art-capareas.mjs). The ring's own
  *     background PNG stays the donor's; it lives in the stylesheet.
  *
  * What is cut away, and why the shell stays:
@@ -62,7 +63,7 @@
  *     e-75/a-10 are ever carried by the tooling, delete that part of the css.
  */
 import { setText } from '../block-lib.mjs';
-import { CAP_PHOTOS } from '../replaceables.mjs';
+import { orbitArt, ORBIT_FILES } from '../code-art-capareas.mjs';
 
 export const donor = {
   id: 'qx-orbit',
@@ -172,24 +173,27 @@ export function render(frag, ctx) {
   const photos = (html.match(/alt="Image"/g) ?? []).length;
   if (photos !== 8) throw new Error(`qx-orbit: expected the eight orbit photographs, found ${photos} images left`);
 
-  /* ------------------------------------------- the owner's photographs ---- */
-  /* Each orbit thumbnail shows the owner's photograph for its step in the
-     donor's own <img> (class, lazy loading and the upright counter-turn
-     unchanged). The alt is a marker that tools/editorial-images.mjs replaces
-     with the photograph's own sentence from the batch manifest; it also
-     writes the srcset, sizes and size. */
-  const orbit = Object.entries(CAP_PHOTOS.orbit);
-  if (orbit.length !== 8) throw new Error(`qx-orbit: CAP_PHOTOS.orbit should name the eight thumbnails, names ${orbit.length}`);
-  for (const [file, photo] of orbit) {
+  /* ------------------------------------------- the eight pictures ---- */
+  /* Since 2026-10-23 each orbit thumbnail is a still drawn in code for its
+     step (tools/code-art-capareas.mjs) where the owner's photograph was
+     (CAP_PHOTOS.orbit until then): the donor's `.qx-rotated-images` box stays,
+     so the size, radius, clipping and upright counter-turn are the donor's.
+     Each says which step it is and that it is an illustration. */
+  /* Each thumbnail names its step as the step list does: 「触达」 / "Engage"
+     (the English code's word in sentence case: ENGAGE → Engage, FOLLOW-UP →
+     Follow-up). */
+  const names = Object.fromEntries(codes.map((code) => {
+    const [num, word] = code.split(' · ');
+    return [num, ctx.lang === 'zh' ? word : word.charAt(0) + word.slice(1).toLowerCase()];
+  }));
+  if (ORBIT_FILES.length !== 8) throw new Error(`qx-orbit: the code art should name the eight thumbnails, names ${ORBIT_FILES.length}`);
+  for (const file of ORBIT_FILES) {
     const open = `<img src="assets/qubix/${file}.`;
     const at = html.indexOf(open);
     if (at === -1 || html.indexOf(open, at + 1) !== -1) throw new Error(`qx-orbit: expected one orbit photograph ${file}`);
     const tag = html.slice(at, html.indexOf('>', at) + 1);
-    if (!tag.includes('alt="Image"')) throw new Error(`qx-orbit: the orbit photograph ${file} lost its alt attribute`);
-    html = html.slice(0, at) + tag
-      .replace(/src="[^"]*"/, `src="${photo}"`)
-      .replace(/\s(?:srcset|sizes)="[^"]*"/g, '')
-      .replace('alt="Image"', 'alt="STARGO WORK"') + html.slice(at + tag.length);
+    if (!tag.includes('alt="Image"') || !tag.includes('qx-all-image-cover')) throw new Error(`qx-orbit: the orbit photograph ${file} is no longer the donor's cover image`);
+    html = html.slice(0, at) + orbitArt(file, ctx.lang, names) + html.slice(at + tag.length);
   }
   if (/alt="Image"|assets\/qubix\/[^"]*Rectangle/.test(html)) throw new Error('qx-orbit: a donor orbit photograph survived');
 

@@ -29,6 +29,7 @@ import { productTour } from './product-tour.mjs';
 import { appSuite } from './app-suite.mjs';
 import { motionHost, motionAssets, SCENE_FILE, MOTION_CSS, MOTION_SCRIPTS, PAIN_SCENES } from './motion-scenes.mjs';
 import { CAPSALES_SCENES } from './motion-capsales.mjs';
+import { AREA_SCENES, placeAreaScenes } from './code-art-capareas.mjs'; // capareas: capability area cards
 import { webpPage } from './image-refs.mjs';
 import { a11yPage } from './a11y.mjs';
 import { speedPage } from './speed.mjs';
@@ -2340,6 +2341,8 @@ function capabilityShowcase(C, lang) {
       ...GROWTH_ROWS.map((row) => row.scene),
       /* lane capsales: the Sales Desk rows, the quote band and the 图片 / 视频 portrait (tools/motion-capsales.mjs) */
       ...CAPSALES_SCENES,
+      /* capareas: the four area cards and the first two AI-team cards (tools/code-art-capareas.mjs) */
+      ...AREA_SCENES,
     ]);
     h = h.replace(monoLink, (m) => `${m}\n${sheets}\n<link href="css/donor-fonts.css" rel="stylesheet" type="text/css"/>\n${motion.css}`);
     // the app band (#apps, tools/app-suite.mjs) brings its own sheet
@@ -2373,14 +2376,11 @@ function capabilityShowcase(C, lang) {
   // Assign by buyer meaning, not image sequence: growth, customer context,
   // commercial fulfillment, workforce/governance. Parallel-team art belongs
   // at the homepage Workforce door, not beneath the Commercial label.
-  /* Since 2026-10-21 the four cards show the owner's photographs for the four
-     areas (tools/replaceables.mjs CAP_PHOTOS.areas, C01-C04), where
-     brand-family-01, os-inquiries, brand-family-02 and brand-family-04 were.
-     The alt is a marker that tools/editorial-images.mjs replaces with the
-     photograph's own sentence. */
-  if (CAP_PHOTOS.areas.length !== 4) throw new Error('capabilities: one photograph per area card');
-  ['699b6466d5f19893993a4d79_work-1.webp', '699b6466d5f19893993a4d1a_work-4.webp', '699b6466d5f19893993a4d34_work-5.webp', '699b6466d5f19893993a4d8f_work-8.webp']
-    .forEach((k, i) => { h = swapImg(h, k, CAP_PHOTOS.areas[i], { alt: 'STARGO WORK' }); });
+  /* Since 2026-10-23 (capareas) each card's picture is a code-drawn scene of
+     that area's apps working together (tools/code-art-capareas.mjs,
+     js/stargo-motion-areas.js), where the owner's photographs C01-C04 were
+     (CAP_PHOTOS.areas until then). */
+  h = placeAreaScenes(h, lang);
   return h;
 };
 
