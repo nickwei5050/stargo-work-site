@@ -47,8 +47,8 @@
     var rip = el('i', 'sgw-rip', c);
     var p = sv('svg', { viewBox: '0 0 16 20', width: 16, height: 20, class: 'sgw-ptr', 'aria-hidden': 'true' }, c);
     sv('path', { d: 'M1.5 1.5v14.6l3.9-3.7 2.7 6 2.5-1.1-2.7-5.9 5.4-.2z' }, p);
-    el('span', 'sgw-you', c, T('你', 'You'));
-    return { c: c, rip: rip };
+    var you = el('span', 'sgw-you', c, T('你', 'You'));
+    return { c: c, rip: rip, you: you };
   }
 
   /* ===================== crewRoles: 288 → the five a task needs ===================== */
@@ -97,7 +97,9 @@
       R.go = el('span', 'sg-btn is-primary sgw-go', q, T('筛选', 'Filter'));
       // the directory
       var inner = W - 2 * pad - (ph ? 20 : 28), nm = ph ? 5 : slotsW(3) <= inner ? 3 : 4, two = ph && slotsW(5, 1) > inner;
-      var trayH = ph ? (two ? 94 : 62) : mid ? 76 : (W < 560 ? 116 : 90);
+      // five chips wider than the tray (English at a 560–620 wide card): tighter chips, and two rows if even those do not fit
+      var tight = !ph && slotsW(nm) > inner, wrap = tight && slotsW(nm) - 45 > inner;
+      var trayH = ph ? (two ? 94 : 62) : mid ? (wrap ? 114 : 76) : (W < 560 ? 116 : wrap ? 128 : 90);
       var fy = qy + qh + (ph ? 10 : 16), fh = H - fy - trayH - (ph ? 10 : 16);
       // tablets set the ten functions in two columns of five, so the dots keep their size
       var cols = mid ? 2 : 1, cg = 26, colW = (W - 2 * pad - cg * (cols - 1)) / cols, split = mid ? 5 : DEPTS.length;
@@ -140,7 +142,7 @@
       R.trayT = el('b', '', th, T('这次任务的团队', 'The team for this task'));
       R.teamBtn = el('span', 'sgw-team-st', th, T('待组队', 'Not formed'));
       var slots = el('div', 'sgw-slots', tray);
-      cl(tray, 'is-two', two);
+      cl(tray, 'is-two', two); cl(tray, 'is-tight', tight);
       R.picks = PICKS.map(function (p, i) {
         var at = R.dept[p[0]].pos[p[1]];
         var ring = sv('circle', { cx: at[0], cy: at[1], r: r + 3.5, class: 'sgw-ring', opacity: 0 }, svg);
@@ -198,7 +200,7 @@
       }
       // formed, then handed to the task board (the next card)
       var formed = tau >= CLEAR ? 0 : tau >= HAND ? 2 : tau >= TEAM ? 1 : 0;
-      if (R.formed !== formed) { R.formed = formed; textSwap(R.teamBtn, [T('待组队', 'Not formed'), T('已组队 · 4 位 + 统筹', 'Team: 4 + coordinator'), T('已派活 · 见任务看板', 'Assigned · see the task board')][formed]); cl(R.teamBtn, 'is-on', !!formed); cl(R.tray, 'is-on', !!formed); }
+      if (R.formed !== formed) { R.formed = formed; textSwap(R.teamBtn, [T('待组队', 'Not formed'), T('已组队 · 4 位 + 统筹', 'Team: 4 + coordinator'), T('已派活 · 见任务看板', kind === 'phone' ? 'Assigned · see board' : 'Assigned · see the task board')][formed]); cl(R.teamBtn, 'is-on', !!formed); cl(R.tray, 'is-on', !!formed); }
     }
     return { layouts: lp.layouts, pick: lp.pick, build: build, tick: tick, start: 0, still: 7, cue: function (t) { return Math.ceil(t / P) * P; } };
   }
@@ -209,7 +211,7 @@
   // moves at least MOVE apart, so no two cards travel at once
   var TASKS = [
     { g: 'research', role: T('市场研究员', 'Researcher'), a: T('筛选储能经销商', 'List storage distributors'), s: [[0, 0], [1.4, 1], [4.8, 3]], out: T('12 家客户', '12 accounts') },
-    { g: 'product', role: T('产品工程师', 'Product engineer'), a: T('核对 48V 规格', 'Check the 48V specs'), s: [[0, 0], [0.6, 1], [3.2, 3]], out: T('规格核对 3/3', 'Specs 3 of 3') },
+    { g: 'product', role: T('产品工程师', 'Product engineer'), rs: T('产品工程师', 'Engineer'), a: T('核对 48V 规格', 'Check the 48V specs'), s: [[0, 0], [0.6, 1], [3.2, 3]], out: T('规格核对 3/3', 'Specs 3 of 3') },
     { g: 'sales', role: T('销售', 'Sales'), a: T('起草开发信', 'Draft the outreach email'), s: [[0, 0], [4, 1], [6.5, 2], [9.3, 3]], out: T('开发信草稿', 'Email draft'), out2: T('草稿已批准', 'Approved') },
     { g: 'creative', role: T('创意', 'Creative'), a: T('做开发信配图', 'Make the email images'), s: [[0, 0], [5.6, 1], [7.8, 3]], out: T('素材 3 张', '3 images') },
     { g: 'doc', role: T('销售', 'Sales'), a: T('报价 Q-1042', 'Quote Q-1042'), s: [[0, 2]], out: T('低于底价 · 待审批', 'Below floor price'), wait: 1 }
@@ -218,7 +220,7 @@
   var OUTS = [['product', T('规格核对 3/3', 'Spec check 3/3'), 3.2], ['research', T('12 家客户名单', '12-account list'), 4.8], ['creative', T('开发信配图 3 张', '3 email images'), 7.8], ['sales', T('开发信 · 已批准', 'Email · approved'), 9.3]];
   function BoardScene() {
     var P = 15, TAP = 8.9, CLEAR = 14, MOVE = 0.65;
-    var lp = picker(), R, kind, W, H;
+    var lp = picker(), R, kind, W, H, tight = false;
     // every moment a card changes column, and where each card sits after it
     var EV = [];
     TASKS.forEach(function (k) { k.s.forEach(function (s) { if (EV.indexOf(s[0]) < 0) EV.push(s[0]); }); });
@@ -238,7 +240,7 @@
     var SL = EV.map(function (e) { return slots(e + 0.001); });
 
     function build(stage, L) {
-      kind = L.kind; W = L.w; H = L.h; R = { stage: stage };
+      kind = L.kind; W = L.w; H = L.h; R = { stage: stage }; tight = false;
       var list = kind === 'phone' || W < 560;
       stage.className = 'sg-mo-stage sgw sgw-board is-' + kind + (list ? ' is-list' : '');
       var ph = kind === 'phone', pad = ph ? 12 : 18;
@@ -254,6 +256,10 @@
         TASKS.forEach(function (k, i) { R.cards.push(card(stage, k, pad, by + i * (rh + rg), W - 2 * pad, rh, true)); });
       } else {
         var cg = 8, cw = Math.floor((W - 2 * pad - 3 * cg) / 4), ch = kind === 'mid' ? 80 : 104, sg = kind === 'mid' ? 6 : 8;
+        // columns under ~150px (a 1180–1440 desktop, a tablet): the result pill may take two lines and the
+        // buttons share the card's width (css is-narrow); under 140px the role and the second button go short
+        if (cw < 150) stage.className += ' is-narrow';
+        tight = cw < 140;
         R.geo = { x: function (c) { return pad + c * (cw + cg); }, y: function (s) { return by + 34 + s * (ch + sg); } };
         // a tall board ends where four done cards end; the results tray takes the rest
         var colH = kind === 'tall' ? 34 + 4 * (ch + sg) + 4 : H - by - pad;
@@ -272,11 +278,14 @@
       el('b', '', hd, T('交付成果', 'Results'));
       R.resN = el('span', '', hd, '0 / ' + OUTS.length);
       var row = el('div', 'sgw-slots', t);
+      // the four results in one row: tighter chips where they would not fit (English under a 640-wide board)
+      var need = OUTS.reduce(function (a, o) { return a + Array.from(o[1]).reduce(function (b, c) { return b + (c > '\u2e80' ? 13 : 6.8); }, 0) + 47; }, -7);
+      cl(t, 'is-tight', need > w - 28);
       R.res = OUTS.map(function (o) { var c = el('span', 'sgw-slot sgw-res-i', row); glyph(o[0], c, 13); el('span', '', c, o[1]); return c; });
     }
     function card(stage, k, x, y, w, h, row) {
       var c = box('sgw-card' + (row ? ' is-row' : ''), stage, x, y, w, h);
-      var hd = el('div', 'sgw-card-r', c); glyph(k.g, hd, 13); el('span', '', hd, k.role);
+      var hd = el('div', 'sgw-card-r', c); glyph(k.g, hd, 13); el('span', '', hd, !row && tight && k.rs ? k.rs : k.role);
       el('b', 'sgw-card-t', c, k.a);
       var o = { c: c, k: k, key: -1 };
       if (row) {
@@ -284,7 +293,7 @@
         o.pill = el('span', 'sgw-pill', c);
       }
       var out = o.out = el('span', 'sgw-out', c); glyph('check', out, 12); o.outT = el('span', '', out, k.out);
-      if (k.out2) { var bt = o.btns = el('span', 'sgw-btns', c); o.ok = el('span', 'sg-btn is-primary', bt, T('批准', 'Approve')); el('span', 'sg-btn', bt, T('修改', 'Revise')); }
+      if (k.out2) { var bt = o.btns = el('span', 'sgw-btns', c); o.ok = el('span', 'sg-btn is-primary', bt, T('批准', 'Approve')); el('span', 'sg-btn', bt, tight ? T('修改', 'Edit') : T('修改', 'Revise')); }
       return o;
     }
 
@@ -334,13 +343,15 @@
         if (!card2.ok.offsetWidth) { put(cu.c, '-opacity', '0'); return; }
         var ox = card2.ok.offsetWidth / 2, oy = card2.ok.offsetHeight * 0.6, n = card2.ok;
         for (; n && n !== R.stage; n = n.offsetParent) { ox += n.offsetLeft; oy += n.offsetTop; }
-        R.okAt = [ox, oy];
+        R.okAt = [ox, oy, 19 + cu.you.offsetWidth];
       }
       var x = R.okAt[0], y = R.okAt[1];
       if (R.geo) { posAt(2, tau); x += pt[0]; y += pt[1]; }
       var a = ease.io(seg(tau, TAP - 1.3, TAP - 0.1)), out = ease.io(seg(tau, TAP + 0.35, TAP + 0.9));
       var press = Math.sin(Math.PI * seg(tau, TAP - 0.04, TAP + 0.22));
-      put(cu.c, '-transform', 'translate(' + (x + 60 * (1 - a) + 22 * out).toFixed(1) + 'px,' + (y + 50 * (1 - a) + 16 * out).toFixed(1) + 'px) scale(' + (1 - 0.14 * press).toFixed(3) + ')');
+      // it comes in from the lower right and leaves that way, never so far that its 你 / You tag runs off the scene
+      var dx = Math.min(60 * (1 - a) + 22 * out, Math.max(0, W - x - R.okAt[2]));
+      put(cu.c, '-transform', 'translate(' + (x + dx).toFixed(1) + 'px,' + (y + 50 * (1 - a) + 16 * out).toFixed(1) + 'px) scale(' + (1 - 0.14 * press).toFixed(3) + ')');
       put(cu.c, '-opacity', (seg(tau, TAP - 1.3, TAP - 1.05) * (1 - out)).toFixed(3));
       var rp = seg(tau, TAP, TAP + 0.6);
       put(cu.rip, '-transform', 'scale(' + (0.35 + 1.7 * ease.out(rp)).toFixed(3) + ')');

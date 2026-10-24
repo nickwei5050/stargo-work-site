@@ -18,6 +18,17 @@
     all('.products-cards-dashboard-size', acc).forEach(function (s) { ro.observe(s); });
   }
 
+  // Paint budget: a code-drawn scene, or the drawings on the orbit and the 「每项工作」 ring, more than half a
+  // screen away from the viewport are not rendered (`sg-far` → content-visibility: hidden, css/stargo-phone.css),
+  // so their layers and paint chunks stop costing every frame while the page scrolls. Half a screen of margin
+  // each way, so a drawing is back before it comes in; no box changes size.
+  if ('IntersectionObserver' in w) {
+    var far = new IntersectionObserver(function (es) {
+      for (var i = 0; i < es.length; i++) es[i].target.classList.toggle('sg-far', !es[i].isIntersecting);
+    }, { rootMargin: '50%' });
+    all('.sg-mo, .qx-orbit, .cn-produce').forEach(function (h) { far.observe(h); });
+  }
+
   if (!w.matchMedia('(max-width: 767px)').matches || !('IntersectionObserver' in w)) return;
 
   // One observer; its root is a thin band across the middle of the screen.

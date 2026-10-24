@@ -1489,20 +1489,25 @@ html[lang^="zh"] .qx-news .qx-h2 { word-break: keep-all; }
 .qx-orbit .o-arc { fill: none; stroke: #f3c27a; stroke-width: 5; stroke-linecap: round; }
 .qx-orbit .o-loop { fill: none; stroke: #f3c27a; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .qx-orbit .o-bar { fill: rgba(243, 194, 122, .34); }
+/* Below 1280 the donor draws the whole ring at scale .9 (.84 below 360,
+   section G), so every label here is counter-scaled to stay 12px on screen:
+   13.4px × .9 and 14.3px × .84 (they were 10.8px, 2026-10-24 QA). */
 @media screen and (max-width: 1279px) {
-  .qx-orbit .sg-ob-tag { top: 7px; left: 11px; font-size: 12px; }
+  .qx-orbit .sg-ob-tag { top: 7px; left: 11px; font-size: 13.4px; }
   .qx-orbit .sg-ob-cap { left: 11px; bottom: 9px; }
-  .qx-orbit .sg-ob-cap em { font-size: 13px; }
+  .qx-orbit .sg-ob-cap b, .qx-orbit .sg-ob-cap em { font-size: 13.4px; }
 }
 @media screen and (max-width: 767px) {
   .qx-orbit .sg-ob-tag { display: none; }   /* a 60–100 px box: the ring's centre says it for all eight */
-  .qx-orbit .sg-ob-ring-tag { display: block; margin-top: 6px; font-size: 12px; line-height: 1; letter-spacing: .04em; white-space: nowrap; color: rgba(244, 238, 232, .58); }
+  .qx-orbit .sg-ob-ring-tag { display: block; margin-top: 6px; font-size: 13.4px; line-height: 1; letter-spacing: .04em; white-space: nowrap; color: rgba(244, 238, 232, .58); }
   .qx-orbit .sg-ob-cap { left: 9px; bottom: 8px; gap: 5px; }
-  .qx-orbit .sg-ob-cap em { font-size: 12px; }
 }
 @media screen and (max-width: 479px) {
   .qx-orbit .sg-ob-cap { left: 6px; bottom: 5px; }
   .qx-orbit .sg-ob-cap em { display: none; }
+}
+@media screen and (max-width: 359px) {
+  .qx-orbit .sg-ob-ring-tag, .qx-orbit .sg-ob-cap b { font-size: 14.3px; }
 }
 
 @font-face {
