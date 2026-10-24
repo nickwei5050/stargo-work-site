@@ -28,6 +28,7 @@
  */
 import { setText, capability } from '../block-lib.mjs';
 import { SALES_ROWS } from '../replaceables.mjs';
+import { hostFromImg } from '../motion-capsales.mjs';
 
 /** The story this block carries: CAPABILITY_SHOWCASE.stories[1]. */
 const STORY = 1;
@@ -56,8 +57,19 @@ const PICKS = ['Unified Inbox', 'Buyer Requirement Extraction', 'Account Overvie
  * reply under it. An entry may therefore be an editorial id or a path written
  * out; `pic` below resolves both, and tools/editorial-images.mjs gives either
  * kind its alt, its size and its variants.
+ *
+ * Rows 01 and 03 are the owner's photographs since 2026-10-21 (C05, a stack of
+ * printed inquiries settled into one letter tray; C06, one customer's file laid
+ * out on a table), where the editorial art was; row 02 keeps its screen.
  */
 const ROW_ART = SALES_ROWS;
+/* Since 2026-10-23 rows 01 and 03 are code-drawn scenes in place of C05 and C06 (tools/motion-capsales.mjs,
+   js/stargo-motion-sales.js): the inbox sorting messages from four channels, and Müller Energie's account
+   view filling in. Row 02 keeps the owner's real Sales Desk screen. The phone aspect rules for the C05/C06
+   photographs in css/stargo-fusion.css match nothing while a row is drawn in code (the scene hosts carry the
+   same shapes in css/stargo-motion-sales.css); they are left in place so that setting a row back to null
+   restores its photograph exactly, and so that this lane does not re-hash stargo-fusion.css on every page. */
+const ROW_MOTION = ['inbox', null, 'account'];
 /** An editorial id (assets/stargo-editorial) or a path exactly as written. */
 const pic = (v, art) => (v.startsWith('assets/') ? v : art(v));
 
@@ -186,6 +198,11 @@ export function render(frag, ctx) {
     if (!row.includes('alt=""')) throw new Error(`qx-news: row ${i + 1} lost its image alt attribute`);
     const PHOTO = /<img src="assets\/qubix\/[^"]+"/;
     if (!PHOTO.test(row)) throw new Error(`qx-news: row ${i + 1} lost its qubix photograph`);
+    if (ROW_MOTION[i]) {
+      /* the scene's host takes the <img>'s place, its class and its inline IX2 transform */
+      const IMG = /<img src="assets\/qubix\/[^"]+"[^>]*>/;
+      return row.replace(IMG, (tag) => hostFromImg(tag, ROW_MOTION[i], lang, `sg-mo-${ROW_MOTION[i]}`));
+    }
     row = row.replace(PHOTO, `<img src="${pic(ROW_ART[i], art)}"`);
     return row.replace('alt=""', `alt="${escapeHtml(t(words.text))}"`);
   });

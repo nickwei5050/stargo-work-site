@@ -166,6 +166,41 @@ if (mergedPayload.events['sc-e-133']?.action?.config?.actionListId !== 'sc-a-48'
 }
 delete mergedPayload.events['sc-e-133'];
 
+/* Page-level mouse-move interactions (speed lane). IX2 runs one
+   requestAnimationFrame loop for as long as a page is open, and every frame
+   its store walks every instance it has started; a continuous (pointer-driven)
+   instance is started for every target of every bound event, whatever the
+   breakpoint (an event's mediaQueries only gate its handler and its writes).
+   Every page carries the homepage's id (see foldPages above), so every page
+   started all the homepage-id copies: 15 identical events running a-226
+   "Circle Main Movement" (the cursor's "view work" bubble and cross-hair, 10
+   instances each) and 5 identical events running lx-a-37 (the Lifelogx footer
+   gradient that follows the pointer): 160 of the 228 instances on a phone, the
+   bulk of an idle loop measured at 1.1-2.0s of main thread per 5s at 4x CPU.
+   1. The copies go. Each wrote the same values to the same elements on the
+      same input, so one of each draws exactly what fifteen (or five) did, at
+      every width; only the duplicate work goes.
+   2. Below 768px (IX2's small and tiny) the one a-226 event stops listening:
+      everything it moves sits in .text-tool-tip and .plus-line-wrapper, which
+      Mono's stylesheet sets to display:none up to 991px (measured at 390, 600
+      and 767px: no box). lx-a-37 keeps every breakpoint: the footer gradient
+      shows on a phone and moves there today. */
+{
+  const seen = new Set();
+  let dropped = 0;
+  for (const [id, ev] of Object.entries(mergedPayload.events)) {
+    if (ev.eventTypeId !== 'MOUSE_MOVE' || ev.target?.appliesTo !== 'PAGE') continue;
+    const key = JSON.stringify([ev.target, ev.targets, ev.action, ev.config, ev.mediaQueries]);
+    if (!seen.has(key)) { seen.add(key); continue; }
+    delete mergedPayload.events[id];
+    dropped++;
+  }
+  if (dropped !== 18) throw new Error(`page mouse-move copies: expected 14 of a-226 and 4 of lx-a-37, dropped ${dropped}`);
+  const cursor = Object.values(mergedPayload.events).filter((ev) => ev.eventTypeId === 'MOUSE_MOVE' && ev.target?.appliesTo === 'PAGE' && ev.action?.config?.actionListId === 'a-226');
+  if (cursor.length !== 1) throw new Error(`page mouse-move: expected one a-226 event, found ${cursor.length}`);
+  cursor[0].mediaQueries = cursor[0].mediaQueries.filter((q) => q !== 'small' && q !== 'tiny');
+}
+
 /* Mono's overlay menu was built for a four-item nav and its open interaction
    a-190 names them one at a time: `.menu-item._01`, `._02`, `._03`, `._05`
    (`._04` was skipped in the template itself). Group 0 of that list is not
@@ -241,6 +276,86 @@ addIx3({ ix3Interactions: donorIx3, ix3Timelines: donorTl }, false);
 /* Scalora's ix3 interactions target page-scoped elements; the ones we import
    are the title reveals inside the three modules. They remain scoped to the
    homepage id, which is the page that carries those modules. */
+
+/* Mono's page-load curtain. Mono's homepage load timeline t-7c6ce201 (the
+   wf:load interaction i-04759f04) opens by dropping `.preloader` — a black
+   sheet with the wordmark — over the page, rising the wordmark's letters on
+   it, and lifting it again while the whole `.main-content` slides up from 10%
+   of its own height below. On this homepage that is 10% of 30,000–37,000px
+   (phone to desktop): 3,000–3,700px, so without the sheet over it the reader
+   would watch the page go blank, flash past and climb back (measured with
+   only the sheet hidden). Webflow's runtime starts at the window `load`,
+   which on anything but a fast connection comes long after the homepage has
+   been readable — measured here at 19–26s on Fast 4G and 43–46s on Slow 4G,
+   phone CPU — and the opening that used to hide it now plays once a session.
+   So these three actions go; build-site.mjs takes `.preloader` out of the homepage markup.
+   Each of the three targets exists on the homepage only (the page id is
+   shared, so this timeline runs on every page). The hero's load-in is taken
+   off the homepage just below; the menu's two actions stay as Mono wrote them. */
+{
+  const ID = 't-7c6ce201';
+  const CURTAIN = {
+    'ta-0f0cfd05': '["wf:inst",["699b6466d5f19893993a4bf1","668513fa-96bc-a471-9254-1244961a6485"]',   // the wordmark on the sheet
+    'ta-e8c40fcc': '["wf:class",["preloader"]',                                                       // the sheet itself
+    'ta-62256e8b': '["wf:inst",["699b6466d5f19893993a4bf1","ce714b43-ca02-f75e-a30b-e50c0386be7f"]',   // .main-content, sliding up behind it
+  };
+  if (!timelines.has(ID)) throw new Error(`ix3: Mono's homepage load timeline ${ID} is missing`);
+  const tl = JSON.parse(timelines.get(ID));
+  for (const [id, target] of Object.entries(CURTAIN)) {
+    const a = tl.actions.find((x) => x.id === id);
+    if (!a || !JSON.stringify(a.targets).includes(target)) throw new Error(`ix3: ${ID} no longer carries ${id} on ${target}`);
+  }
+  const kept = tl.actions.filter((a) => !(a.id in CURTAIN));
+  if (kept.length !== tl.actions.length - 3) throw new Error(`ix3: ${ID} curtain actions not removed`);
+
+  /* The hero's load-in, on the homepage only. The same timeline then hides
+     the hero — the big STARGO and WORK letters (split into characters and
+     dropped below their masks), the five lines of copy, the 预约企业演示 button
+     and the four dots — and brings it back over 1.35–3.3s. That is meant for a
+     hero nobody has seen yet. On this homepage it has been on screen since
+     Webflow's runtime arrived (the head's anti-flicker rule, html.w-mod-js
+     :not(.w-mod-ix3), hides it until then), and the timeline only starts at the
+     window `load`, after the images: on a first visit straight after the
+     opening's lift has uncovered it (measured: the whole hero blank for 2.0s
+     from 5.8–7.4s on a desktop, 2.3s at 20–49s on phones), and on any later
+     view after the reader has started reading. Until the opening played once a
+     session it ran under the opening's black screen and was never seen, so
+     what the owner approved — bracket, wipe, homepage — ends on a hero that
+     stays put, and here it does.
+     The two letter actions target instances that exist on the homepage only,
+     so they go. The other three target classes every page has, and every
+     other page keeps them exactly as Mono wrote them: they become the same
+     selector with the homepage left out (build-site.mjs marks its <html>
+     `data-stargo-home`). The menu's two actions are untouched. */
+  const HOME = '[data-stargo-home]';
+  const HERO_INST = {
+    'ta-e932201c': '["wf:inst",["699b6466d5f19893993a4bf1","11f4fc70-8a2d-088c-43e4-29580902aa2d"]',   // STARGO
+    'ta-acf7757b': '["wf:inst",["699b6466d5f19893993a4bf1","57b5af3e-8de7-1a3d-0bcc-71e02f1dacc5"]',   // WORK
+  };
+  const HERO_CLASS = {
+    'ta-209529dd': 'circle-divider',           // the dots
+    'ta-57eb7e75': 'contact-info.for-button',  // the button
+    'ta-e0e811e7': 'top-text.big',             // the copy
+  };
+  for (const [id, target] of Object.entries(HERO_INST)) {
+    const a = kept.find((x) => x.id === id);
+    if (!a || !JSON.stringify(a.targets).includes(target)) throw new Error(`ix3: ${ID} no longer carries ${id} on ${target}`);
+  }
+  const hero = kept.filter((a) => !(a.id in HERO_INST)).map((a) => {
+    if (!(a.id in HERO_CLASS)) return a;
+    const cls = HERO_CLASS[a.id];
+    if (a.targets.length !== 1 || a.targets[0][0] !== 'wf:class' || JSON.stringify(a.targets[0][1]) !== JSON.stringify([cls])) {
+      throw new Error(`ix3: ${ID} no longer carries ${a.id} on .${cls}`);
+    }
+    /* The runtime resolves `wf:class` as querySelectorAll('.' + name) and
+       `wf:selector` as querySelectorAll(selector), in the same document. */
+    return { ...a, targets: [['wf:selector', `.${cls}:not(${HOME} *)`, a.targets[0][2]]] };
+  });
+  if (hero.length !== kept.length - 2 || hero.filter((a) => JSON.stringify(a.targets).includes(`:not(${HOME} *)`)).length !== 3) {
+    throw new Error(`ix3: ${ID} hero load-in not taken off the homepage`);
+  }
+  timelines.set(ID, JSON.stringify({ ...tl, actions: hero }));
+}
 
 let out = monoSrc.slice(0, mono.ix2.argStart) + JSON.stringify(mergedPayload) + monoSrc.slice(mono.ix2.argEnd);
 const ix3 = readBundle(out).ix3;

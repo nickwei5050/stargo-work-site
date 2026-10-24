@@ -1,0 +1,200 @@
+/* The blog's code-drawn covers (tools/blog-art.mjs, lane "blog", 2026-10-23).
+   A cover takes the place of the article photograph in its box: the article
+   hero (.lx-blog-image.lx-details, 3:2), the 1:1 cards (.lx-blog-image) of the
+   blog index, the 「更多文章」 list and workforce, and the homepage's
+   .testimonials-photo (3 / 2.3). The box's own class keeps its size, ratio,
+   radius and reveal; this sheet paints what is inside it. Palette and marks
+   are the article charts' (V7-BLOG in css/stargo-fusion.css): near-black panel,
+   plum glow, hairlines, lifelogx pink; on the homepage the same covers take
+   the product's warm palette, like the code-drawn scenes around them. Static:
+   the one transition is the art layer's hover, transform only. */
+div.sgcv {
+  /* every colour is a token, so a page can re-tint the set (see .blog-grid) */
+  --sgcv-pink: #e393bd;          /* the accent */
+  --sgcv-hot: #f938a1;           /* what is lit */
+  --sgcv-acc: 227, 147, 189;     /* the accent as r, g, b, for its tints */
+  --sgcv-w: 255, 255, 255;       /* hairlines and dots, as r, g, b */
+  --sgcv-bg: #0b0a0c;
+  --sgcv-glow: rgba(108, 18, 76, .55);
+  --sgcv-glow2: rgba(80, 11, 56, .18);
+  --sgcv-tile: rgba(18, 17, 19, .92);
+  --sgcv-tile-ln: #2b292c;
+  --sgcv-win: rgba(16, 14, 17, .94);
+  --sgcv-win-ln: #343136;
+  --sgcv-core: #131114;
+  --sgcv-ink: #1a0611;           /* marks drawn on the accent */
+  --sgcv-txt: #f6f1f4;
+  --sgcv-mut: #8f8b92;
+  --sgcv-soft: #bdb9c0;
+  --sgcv-meta: #c9c7cb;
+  position: relative;
+  display: block;
+  overflow: hidden;
+  isolation: isolate;
+  container-type: inline-size;
+  box-sizing: border-box;
+  background: radial-gradient(90% 75% at var(--sgcv-gx, 0%) var(--sgcv-gy, 0%), var(--sgcv-glow), var(--sgcv-glow2) 45%, transparent 72%), var(--sgcv-bg);
+  color: var(--sgcv-txt);
+  object-fit: initial;
+  -webkit-user-select: none;
+  user-select: none;
+}
+/* The homepage: the warm product palette of the scenes on the same page
+   (#15110e panel, #ec6f10 / #ff8a3d accents, warm hairlines). */
+.blog-grid div.sgcv {
+  --sgcv-pink: #ff8a3d;
+  --sgcv-hot: #ec6f10;
+  --sgcv-acc: 255, 138, 61;
+  --sgcv-w: 255, 236, 220;
+  --sgcv-bg: #15110e;
+  --sgcv-glow: rgba(236, 111, 16, .26);
+  --sgcv-glow2: rgba(150, 62, 12, .1);
+  --sgcv-tile: rgba(31, 24, 19, .94);
+  --sgcv-tile-ln: rgba(255, 236, 220, .1);
+  --sgcv-win: rgba(31, 24, 19, .94);
+  --sgcv-win-ln: rgba(255, 236, 220, .12);
+  --sgcv-core: #1f1813;
+  --sgcv-ink: #2a1405;
+  --sgcv-txt: #f4eee8;
+  --sgcv-mut: #9d9087;
+  --sgcv-soft: #c9bdb2;
+  --sgcv-meta: #d2c5ba;
+}
+/* A grid of fine dots, scaled with the box like the art. */
+div.sgcv::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: radial-gradient(circle, rgba(var(--sgcv-w), .085) 0 1px, transparent 1.4px);
+  background-size: calc(100cqw / 32) calc(100cqw / 32);
+  background-position: 50% 50%;
+  -webkit-mask-image: radial-gradient(120% 100% at var(--sgcv-gx, 0%) var(--sgcv-gy, 0%), #000 0%, rgba(0, 0, 0, .35) 70%, transparent 100%);
+  mask-image: radial-gradient(120% 100% at var(--sgcv-gx, 0%) var(--sgcv-gy, 0%), #000 0%, rgba(0, 0, 0, .35) 70%, transparent 100%);
+  pointer-events: none;
+}
+/* The homepage card. The photograph took the card's full width from its own
+   intrinsic size (Mono sets only min-width/min-height, and phones drop the
+   min-width to 80px); a cover has none, so it takes the width outright. Mono
+   also paints a decorative SVG behind .testimonials-photo: the cover's own
+   background replaces it. */
+.blog-grid div.sgcv.testimonials-photo { width: 100%; background-repeat: no-repeat; background-size: auto; }
+.sgcv-guide { --sgcv-gx: 100%; --sgcv-gy: 0%; }
+.sgcv-start { --sgcv-gx: 70%; --sgcv-gy: 40%; }
+.sgcv-quote { --sgcv-gx: 50%; --sgcv-gy: 30%; }
+.sgcv-trio  { --sgcv-gx: 92%; --sgcv-gy: 50%; }
+.sgcv-loop  { --sgcv-gx: 72%; --sgcv-gy: 55%; }
+.sgcv-roles { --sgcv-gx: 30%; --sgcv-gy: 22%; }
+.sgcv-map   { --sgcv-gx: 66%; --sgcv-gy: 50%; }
+
+.sgcv-art {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
+  transform-origin: 50% 55%;
+  transition: transform .9s cubic-bezier(.2, .7, .2, 1);
+}
+:is(.lx-blog-link, .blog-wrapper):hover .sgcv-art { transform: scale(1.035); }
+@media (prefers-reduced-motion: reduce) { .sgcv-art { transition: none; } :is(.lx-blog-link, .blog-wrapper):hover .sgcv-art { transform: none; } }
+/* The hero draws two compositions: the wide one from 690px of box width, the
+   narrow one (its own layout, larger type) below. */
+.sgcv-art--n { display: none; }
+@container (max-width: 689.98px) { .sgcv-art--w { display: none; } .sgcv-art--n { display: block; } }
+/* The homepage card is ~200px wide on 992–1100px desktops: its small labels
+   step aside there and the big type carries the cover. */
+@container (max-width: 239.98px) { .sgcv-art .k-sm { display: none; } }
+
+/* Strokes and fills. */
+.sgcv-art path, .sgcv-art circle, .sgcv-art rect { fill: none; stroke: none; vector-effect: non-scaling-stroke; }
+.sgcv-art .k-ln { stroke: rgba(var(--sgcv-w), .26); stroke-width: 1.5px; }
+.sgcv-art .k-ln2 { stroke: rgba(var(--sgcv-w), .12); stroke-width: 1px; }
+.sgcv-art .k-dash { stroke: rgba(var(--sgcv-w), .18); stroke-width: 1px; stroke-dasharray: 2 6; }
+.sgcv-art .k-pk { stroke: var(--sgcv-pink); stroke-width: 1.5px; stroke-linecap: round; stroke-linejoin: round; }
+.sgcv-art .k-w2 { stroke-width: 2px; }
+.sgcv-art .k-w3 { stroke-width: 2.5px; stroke-linecap: round; stroke-linejoin: round; }
+.sgcv-art .k-ink { fill: var(--sgcv-bg); }
+.sgcv-art path.k-ink { fill: none; stroke: var(--sgcv-ink); }
+.sgcv-art .k-dot { fill: rgba(var(--sgcv-w), .5); }
+.sgcv-art .k-dot2 { fill: rgba(var(--sgcv-w), .24); }
+.sgcv-art .k-hot { fill: var(--sgcv-hot); }
+.sgcv-art .k-fillp, .sgcv-art .k-fillh { fill: var(--sgcv-pink); }
+.sgcv-art .k-fill2 { fill: rgba(var(--sgcv-w), .24); }
+.sgcv-art .k-node { fill: var(--sgcv-bg); stroke: var(--sgcv-pink); stroke-width: 2px; }
+.sgcv-art .k-node2 { fill: var(--sgcv-bg); stroke: rgba(var(--sgcv-w), .4); stroke-width: 1.5px; stroke-dasharray: 3 4; }
+.sgcv-art .k-tile { fill: var(--sgcv-tile); stroke: var(--sgcv-tile-ln); stroke-width: 1px; }
+.sgcv-art .k-tile-on { stroke: rgba(var(--sgcv-acc), .55); }
+.sgcv-art .k-win { fill: var(--sgcv-win); stroke: var(--sgcv-win-ln); stroke-width: 1px; }
+.sgcv-art .k-pill { fill: rgba(var(--sgcv-w), .05); stroke: rgba(var(--sgcv-w), .1); stroke-width: 1px; }
+.sgcv-art .k-core { fill: var(--sgcv-core); stroke: rgba(var(--sgcv-acc), .7); stroke-width: 1.5px; }
+.sgcv-art .k-core-on { fill: var(--sgcv-pink); stroke: none; }
+.sgcv-art .k-team { stroke: var(--sgcv-hot); stroke-width: 1.5px; stroke-linejoin: round; opacity: .8; }
+.sgcv-art .k-halo { fill: var(--sgcv-bg); }
+/* The ten role groups, largest first: the big one in the accent, the rest
+   alternating so each group's run reads as its own. */
+.sgcv-art .k-g0 { fill: rgba(var(--sgcv-acc), .78); }
+.sgcv-art .k-g1 { fill: rgba(var(--sgcv-w), .5); }
+.sgcv-art .k-g2 { fill: rgba(var(--sgcv-acc), .42); }
+.sgcv-art .k-g3 { fill: rgba(var(--sgcv-w), .3); }
+.sgcv-art .k-g4 { fill: rgba(var(--sgcv-acc), .3); }
+.sgcv-art .k-g5 { fill: rgba(var(--sgcv-w), .2); }
+.sgcv-art .k-g6 { fill: rgba(var(--sgcv-acc), .22); }
+.sgcv-art .k-g7 { fill: rgba(var(--sgcv-w), .15); }
+.sgcv-art .k-g8 { fill: rgba(var(--sgcv-acc), .18); }
+.sgcv-art .k-g9 { fill: rgba(var(--sgcv-w), .12); }
+
+/* Type. geometricPrecision keeps Chrome from laying the text out at the
+   on-screen scale: the reveal scales the cover from .9, and text laid out
+   mid-reveal was left painted 10% small and off its marks (seen at 390px). */
+.sgcv-art text { stroke: none; letter-spacing: -.01em; text-rendering: geometricPrecision; }
+.sgcv-art .k-txt, .sgcv-art tspan.k-txt { fill: var(--sgcv-txt); }
+.sgcv-art .k-acc, .sgcv-art tspan.k-acc { fill: var(--sgcv-pink); }
+.sgcv-art .k-mut { fill: var(--sgcv-mut); }
+.sgcv-art .k-soft { fill: var(--sgcv-soft); }
+.sgcv-art text.k-ink, .sgcv-art tspan.k-ink { fill: var(--sgcv-ink); }
+.sgcv-art .k-dim { fill: rgba(var(--sgcv-w), .26); }
+.sgcv-art .w4 { font-weight: 400; }
+.sgcv-art .w5 { font-weight: 500; }
+.sgcv-art .w6 { font-weight: 600; letter-spacing: -.035em; }
+.sgcv-art .k-num { font-variant-numeric: tabular-nums; }
+.sgcv-art .k-track { letter-spacing: .14em; }
+.sgcv-art.sgcv-zh .w6 { letter-spacing: -.01em; }
+
+/* The labels: the article's number and section, and the honesty pill. Never
+   below 12px; the section steps aside in boxes under 320px. */
+.sgcv-meta {
+  position: absolute;
+  z-index: 2;
+  left: 5.2cqw;
+  top: 5cqw;
+  right: 5.2cqw;
+  display: flex;
+  align-items: center;
+  gap: .6em;
+  font: 500 clamp(12px, 1.55cqw, 14px)/1.25 Inter, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+  letter-spacing: .05em;
+  color: var(--sgcv-meta);
+  white-space: nowrap;
+  pointer-events: none;
+}
+.sgcv-meta b { color: var(--sgcv-pink); font-weight: 600; font-variant-numeric: tabular-nums; }
+/* line-height and padding keep the descenders (g, p, q) inside the ellipsis clip */
+.sgcv-sec { min-width: 0; overflow: hidden; text-overflow: ellipsis; line-height: 1.45; padding-block: .08em; }
+.sgcv-tag {
+  flex: none;
+  padding: .2em .66em .22em;
+  border: 1px solid rgba(var(--sgcv-acc), .5);
+  border-radius: 999px;
+  color: var(--sgcv-pink);
+  font-size: 1em;
+  line-height: 1.25;
+  letter-spacing: .06em;
+}
+@container (max-width: 319.98px) { .sgcv-sec { display: none; } }
+@container (max-width: 239.98px) { .sgcv-meta { left: 10px; top: 10px; } }
+/* The homepage card: Mono's arrow badge covers the top right. */
+.blog-grid .sgcv-meta { right: 74px; }

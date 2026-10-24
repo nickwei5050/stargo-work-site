@@ -49,7 +49,7 @@ function watch(page) {
   page.on('pageerror', (e) => log.errors.push(String(e).split('\n')[0]));
   page.on('console', (m) => { if (m.type() === 'error' && !NOISE.test(m.text())) log.errors.push('console: ' + m.text().slice(0, 160)); });
   page.on('response', (r) => { if (r.status() >= 400) log.failed.push(`${r.status()} ${r.url().slice(0, 140)}`); });
-  page.on('requestfailed', (r) => { if (!/\.(mp4|webm)$/.test(r.url()) && !NOISE.test(r.failure()?.errorText || '')) log.failed.push('failed ' + r.url().slice(0, 140)); });
+  page.on('requestfailed', (r) => { if (!/\.(mp4|webm)(?:\?|$)/.test(r.url()) && !NOISE.test(r.failure()?.errorText || '')) log.failed.push('failed ' + r.url().slice(0, 140)); });
   page.on('request', (r) => { const u = new URL(r.url()); if (u.origin !== origin && !u.protocol.startsWith('data') && !u.protocol.startsWith('blob')) log.external.add(u.host); });
   return log;
 }
@@ -68,6 +68,8 @@ const TEXT_AUDIT = `(() => {
     if (t.length < 2) continue;
     const el = n.parentElement;
     if (!el || ['SCRIPT', 'STYLE', 'NOSCRIPT', 'OPTION'].includes(el.tagName)) continue;
+    // Screen-reader-only text (the split-text copies in js/stargo-splittext-cjk.js, the skip link) is clipped to 1px on purpose.
+    if (el.closest('[data-stargo-sr], .stargo-skip')) continue;
     const cs = getComputedStyle(el);
     if (cs.visibility === 'hidden' || cs.display === 'none') continue;
     let op = 1; for (let a = el; a && a !== document.body; a = a.parentElement) op *= parseFloat(getComputedStyle(a).opacity);
@@ -96,7 +98,7 @@ const TEXT_AUDIT = `(() => {
     // 3. covered: the centre of the first line hits another element that is not inside the text's own block
     const r0 = rects[0];
     const cx = Math.min(Math.max(r0.left + r0.width / 2, 1), vw - 1), cy = Math.min(Math.max(r0.top + r0.height / 2, 1), vh - 1);
-    if (r0.top >= 0 && r0.bottom <= vh && el.closest('.lx-gradient-section, .lx-no-writing, .lx-cta-author-list, .lx-community-loop, .cta-sm-title, .marquee, .products-cards-mobile') === null) {
+    if (r0.top >= 0 && r0.bottom <= vh && el.closest('.lx-gradient-section, .lx-no-writing, .lx-cta-author-list, .lx-community-loop, .cta-sm-title, .marquee, .products-cards-mobile, .stargo-skip') === null) {
       const hit = document.elementFromPoint(cx, cy);
       if (hit && hit !== el && !el.contains(hit) && !hit.contains(el)) {
         const hcs = getComputedStyle(hit);
@@ -171,7 +173,23 @@ for (const width of WIDTHS.filter((w) => [390, 768, 1024, 1280, 1440, 1920].incl
       // gradient section: the four headings appear in turn and are never hidden behind the overlay image
       const grad = await secTop(page, '.lx-gradient-section');
       let seen = 0;
-      for (const f of [0.05, 0.15, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 0.85, 0.3]) {
+      /* Below 768px the section is no longer pinned (review item Z10, the
+         phone lane in css/stargo-fusion.css): its headings are plain stacked
+         text, so each one is brought into view in turn instead. */
+      if (width < 768) {
+        /* Each heading must be readable at some point while the section
+           scrolls past (scroll-linked transforms still move them). */
+        const n = await page.locator('.lx-gradient-section-text h3').count();
+        const read = new Set();
+        const vh = heightFor(width);
+        for (let y = grad.top - vh; y <= grad.top + grad.height + vh; y += vh / 4) {
+          await scrollTo(page, y); await page.waitForTimeout(250);
+          const states = await page.evaluate(() => [...document.querySelectorAll('.lx-gradient-section-text h3')].map((h) => { const r = h.getBoundingClientRect(); let op = parseFloat(getComputedStyle(h).opacity); for (let a = h.parentElement; a && !a.classList.contains('lx-gradient-section'); a = a.parentElement) op *= parseFloat(getComputedStyle(a).opacity); return { op, top: r.top, bottom: r.bottom, left: r.left, right: r.right }; }));
+          states.forEach((st, i) => { if (st.op > 0.6 && st.top >= 0 && st.bottom <= vh && st.left >= -1 && st.right <= width + 1) read.add(i); });
+        }
+        assert.equal(read.size, n, `every gradient heading readable on a phone at some point (${[...read].join(',')} of ${n})`);
+        seen = n;
+      } else for (const f of [0.05, 0.15, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 0.85, 0.3]) {
         await scrollTo(page, grad.top + grad.height * f); await page.waitForTimeout(650);
         const states = await page.evaluate(() => [...document.querySelectorAll('.lx-gradient-section-text h3')].map((h) => { const r = h.getBoundingClientRect(); const cs = getComputedStyle(h); let op = parseFloat(cs.opacity); for (let a = h.parentElement; a && !a.classList.contains('lx-gradient-section'); a = a.parentElement) op *= parseFloat(getComputedStyle(a).opacity); return { op, top: r.top, bottom: r.bottom, left: r.left, right: r.right, z: cs.zIndex }; }));
         const visible = states.filter((s) => s.op > 0.6 && s.bottom > 0 && s.top < heightFor(width));
@@ -287,10 +305,12 @@ for (const width of WIDTHS.filter((w) => [390, 768, 1280, 1440].includes(w))) fo
     assert.equal(caption, '', `partner wall must carry no caption while its logos are the template's: "${caption}"`);
     await scrollTo(page, (await secTop(page, '.partner-grid')).top - 200); await page.waitForTimeout(1600);
     await page.screenshot({ path: `${OUT}/${id}-partners.png` });
-    // scenario cards (sticky testimonials): portrait film present, four cards, illustrative labels, mark, through the scroll
+    // scenario cards (sticky testimonials): the portrait picture on card 3, four cards, illustrative labels, mark, through the scroll
+    // (since 2026-10-21 the owner's photograph R2 as a still where the template's portrait film played)
     assert.equal(await page.locator('.testimonials-card').count(), 4);
-    const film = await page.evaluate(() => { const v = document.querySelector('.testimonials-card._03 video'); return v ? (v.currentSrc || '') + ' ' + [...v.querySelectorAll('source')].map((s) => s.getAttribute('src')).join(' ') : ''; });
-    assert(/Contemplative/.test(film), `portrait film on card 3: ${film.slice(0, 120)}`);
+    const film = await page.evaluate(() => { const v = document.querySelector('.testimonials-card._03 .w-background-video > img.stargo-still'); return v ? { src: v.getAttribute('src'), alt: v.getAttribute('alt') } : { src: '', alt: '' }; });
+    assert(/stargo-photo\/r2-trade-manager-/.test(film.src), `portrait still on card 3: ${film.src}`);
+    assert(film.alt.length > 20, `portrait still on card 3 carries its own alt: "${film.alt}"`);
     assert.equal(await page.locator('.testimonials-card .stargo-card-mark').count(), 4, 'STARGO mark on the four cards');
     const labels = await page.locator('.testimonials-card .card-author .top-text:not(.sml)').allInnerTexts();
     assert(labels.every((l) => /示例|illustrative/i.test(l)), `scenario cards labelled: ${labels.join(' | ')}`);
@@ -302,15 +322,18 @@ for (const width of WIDTHS.filter((w) => [390, 768, 1280, 1440].includes(w))) fo
     }
     const cardText = await page.evaluate(() => [...document.querySelectorAll('.testimonials-card .card-testi .for-tst')].map((t) => { const c = t.closest('.testimonials-card').getBoundingClientRect(); const r = t.getBoundingClientRect(); return r.top >= c.top - 1 && r.bottom <= c.bottom + 1; }));
     assert(cardText.every(Boolean), 'scenario quote fits its card');
-    // blog cards: four newest articles with template covers, dates and titles, linking into blog/
-    const cards = await page.locator('.blog-grid .w-dyn-item a').evaluateAll((as) => as.map((a) => ({ href: a.getAttribute('href'), img: a.querySelector('img').getAttribute('src'), ratio: a.querySelector('img').getBoundingClientRect().width / a.querySelector('img').getBoundingClientRect().height, title: a.querySelector('.blog-txt').textContent, date: a.querySelector('time')?.getAttribute('datetime') })));
+    // blog cards: four newest articles with dates and titles, linking into blog/; since 2026-10-23 each
+    // draws its article's cover in code (tools/blog-art.mjs, the 'home' slot) where the owner's
+    // photographs B01–B04 were: a decorative cover that fills the card's width and says it is an illustration
+    const cards = await page.locator('.blog-grid .w-dyn-item a').evaluateAll((as) => as.map((a) => { const c = a.querySelector('.testimonials-photo'); const r = c.getBoundingClientRect(); return { href: a.getAttribute('href'), cover: c.tagName === 'DIV' && c.classList.contains('sgcv') && c.getAttribute('aria-hidden') === 'true' && !!c.querySelector('svg.sgcv-art'), tag: (c.querySelector('.sgcv-tag')?.textContent || '').trim(), img: a.querySelector('img') ? a.querySelector('img').getAttribute('src') : '', ratio: r.width / r.height, full: r.width / a.getBoundingClientRect().width, title: a.querySelector('.blog-txt').textContent, date: a.querySelector('time')?.getAttribute('datetime') }; }));
     assert.equal(cards.length, 4);
-    for (const c of cards) { assert(/^blog\//.test(c.href), c.href); assert(/assets\/blog\//.test(c.img), c.img); assert(c.title.length > 8); assert(/^\d{4}-\d{2}-\d{2}$/.test(c.date || ''), 'dated'); assert(c.ratio > 1.15 && c.ratio < 1.5, `card image ratio ${c.ratio}`); }
+    for (const c of cards) { assert(/^(?:\/(?:en\/)?)?blog\//.test(c.href), c.href); assert(c.cover, `card draws its cover: ${c.href}`); assert(/^(?:示意|Illustration)$/.test(c.tag), `cover says it is an illustration: ${c.tag}`); assert.equal(c.img, '', `no photograph left on the card: ${c.img}`); assert(c.title.length > 8); assert(/^\d{4}-\d{2}-\d{2}$/.test(c.date || ''), 'dated'); assert(c.ratio > 1.15 && c.ratio < 1.5, `card image ratio ${c.ratio}`); assert(c.full > 0.8, `cover fills the card's width: ${c.full}`); }
     await scrollTo(page, (await secTop(page, '.blog-grid')).top - 160); await page.waitForTimeout(900);
     await page.screenshot({ path: `${OUT}/${id}-blog-cards.png` });
-    // contact band: the template photograph behind a glass card
+    // contact band: a photograph behind a glass card (since 2026-10-21 the
+    // owner's loading bay at dusk, G01, in place of the template's group photo)
     const ctc = await page.evaluate(() => { const ps = getComputedStyle(document.querySelector('.photo-section')); const card = getComputedStyle(document.querySelector('.section.ctc .contact-card')); return { bg: ps.backgroundImage, blur: card.backdropFilter || card.webkitBackdropFilter, cardBg: card.backgroundColor }; });
-    assert(/Joyful-Group/.test(ctc.bg), `contact photograph: ${ctc.bg.slice(0, 80)}`);
+    assert(/Joyful-Group-Outdoors/.test(ctc.bg), `contact photograph: ${ctc.bg.slice(0, 80)}`);
     assert(/blur/.test(ctc.blur), `glass card: ${ctc.blur}`);
     assert(/0\.1[0-9]|0\.2/.test(ctc.cardBg) || ctc.cardBg.includes('0.15'), `translucent card: ${ctc.cardBg}`);
     await scrollTo(page, (await secTop(page, '.section.ctc')).top + 80); await page.waitForTimeout(1200);
@@ -363,26 +386,29 @@ for (const lang of ['', 'en/']) {
       const label = c.label[lang === 'en/' ? 'en' : 'zh'];
       assert(roles.includes(label), `About names the role ${label}`);
     }
-    /* The tiles play cinery's own four clips. They were briefly replaced by four
-       still images on 2026-09-15 and the owner reverted that the same day —
-       「11.3 MB 无引用的 cinery 案例片，帮我恢复原模版」 — so these three assertions
-       are the inverted form of the ones that swap put here, kept rather than
-       deleted so the band stays guarded either way. Each tile is one `<video>`
-       with an mp4 and a webm; the band's only `<img>`s are the two copies of the
-       STARGO wordmark each tile stacks for its hover roll (8 in all). What must
-       NOT come back with the clips is a client name, a year or a logoipsum
-       mark — the role names asserted above are what the tile line says. */
-    assert.equal(await page.locator('.cn-about-projects video').count(), 4, 'four donor clips');
-    assert.equal(await page.locator('.cn-about-projects source').count(), 8, 'an mp4 and a webm per clip');
-    assert.equal(await page.locator('.cn-about-projects img.stargo-still').count(), 0,
-      'the still-image version of this band was reverted; the tiles play the template clips');
-    /* And every one of them is served from this origin. `data-src` as well as
-       `src`, so wiring js/stargo-video-defer.js into the About page later does
-       not turn this into a false failure. */
-    const clipSrcs = await page.locator('.cn-about-projects source')
-      .evaluateAll((ss) => ss.map((s) => s.getAttribute('src') || s.getAttribute('data-src')));
-    for (const src of clipSrcs) assert.match(src ?? '', /(?:^|\/)assets\/cinery\//, `clip served locally: ${src}`);
-    assert(await page.locator('.cn-about a[href$="contact.html"]').count() >= 1, 'About reaches the contact page');
+    /* The tiles' pictures. cinery's four case-study clips played here from
+       2026-09-15 (the owner reverted a still-image version the same day —
+       「11.3 MB 无引用的 cinery 案例片，帮我恢复原模版」); since 2026-10-21 each
+       tile shows the owner's own photograph of its role instead
+       (site-images/batch-5 D01, D07, D02, D05; tools/replaceables.mjs
+       ABOUT_CASE_STILLS), as a still in the clip's box. So the band holds no
+       clip, and exactly four stills, each an owner photograph with its own
+       alt, filling its box. The band's other `<img>`s are the two copies of
+       the STARGO wordmark each tile stacks for its hover roll. What must NOT
+       come back is a client name, a year or a logoipsum mark — the role names
+       asserted above are what the tile line says. */
+    assert.equal(await page.locator('.cn-about-projects video, .cn-about-projects source').count(), 0, 'the tiles show stills, not clips');
+    const stills = await page.locator('.cn-about-projects .cn-case-video > img.stargo-still').evaluateAll((imgs) => imgs.map((i) => {
+      const r = i.getBoundingClientRect(); const b = i.parentElement.getBoundingClientRect();
+      return { src: i.getAttribute('src'), alt: i.getAttribute('alt') ?? '', fills: Math.abs(r.width - b.width) < 2 && Math.abs(r.height - b.height) < 2 };
+    }));
+    assert.equal(stills.length, 4, 'one still per tile');
+    stills.forEach((s, i) => {
+      assert.match(s.src ?? '', /(?:^|\/)assets\/stargo-photo\/(?:d01-market-research|d07-quotation|d02-follow-up|d05-coordination)-\d+\.webp(?:\?v=[0-9a-f]{12})?$/, `tile ${i + 1} shows the owner's photograph: ${s.src}`);
+      assert(s.alt.length > 20, `tile ${i + 1}'s still carries its own alt: "${s.alt}"`);
+      assert(s.fills, `tile ${i + 1}'s still fills its box`);
+    });
+    assert(await page.locator('.cn-about a[href$="/contact"]').count() >= 1, 'About reaches the contact page');
     const intro = await page.locator('.cn-about').innerText();
     assert(intro.replace(/\s+/g, '').length > 40, 'the introduction band carries its paragraph');
     for (const f of [0.35, 0.6, 0.85]) { const H = await page.evaluate(() => document.documentElement.scrollHeight); await scrollTo(page, H * f); await page.waitForTimeout(700); }
@@ -396,7 +422,7 @@ for (const lang of ['', 'en/']) {
     assert.equal(blogNode.blogPost.length, POSTS.length, 'Blog JSON-LD lists every article');
     assert.equal(await page.locator('.lx-blog-item a').count(), POSTS.length);
     const hrefs = await page.locator('.lx-blog-item a').evaluateAll((as) => as.map((a) => a.getAttribute('href')));
-    assert.deepEqual(hrefs, POSTS.map(postPath));
+    assert.deepEqual(hrefs, POSTS.map((p) => `/${lang}${postPath(p).replace(/\.html$/, '')}`));
     assert.equal(await page.locator('.lx-blog-item time').count(), POSTS.length, 'dated cards');
     await page.screenshot({ path: `${OUT}/${L}-blog.png` });
     // Every article
@@ -416,7 +442,7 @@ for (const lang of ['', 'en/']) {
       assert.equal(await page.locator('a.lx-related-item').count(), Math.min(5, POSTS.length - 1), 'related links');
       assert.equal(await page.locator('.lx-blog-item a').count(), 3, 'more from the blog');
       const rel = await page.locator('a.lx-related-item, .lx-blog-item a').evaluateAll((as) => as.map((a) => a.getAttribute('href')));
-      assert(rel.every((r) => /^\.\.\/blog\//.test(r)) && !rel.includes(`../blog/${post.slug}.html`), `related links leave the article: ${rel.join(' ')}`);
+      assert(rel.every((r) => r.startsWith(`/${lang}blog/`)) && !rel.includes(`/${lang}blog/${post.slug}`), `related links leave the article: ${rel.join(' ')}`);
       // body becomes visible when scrolled into view (IX2 fade), stays inside the grid
       const H = await page.evaluate(() => document.documentElement.scrollHeight);
       await scrollTo(page, 500); await page.waitForTimeout(900);
@@ -454,8 +480,8 @@ for (const lang of ['', 'en/']) {
     assert.equal((await page.locator('h1').innerText()).replace(/\s+/g, ' ').trim(), POSTS[1].title[lang ? 'zh' : 'en'].replace(/\s+/g, ' '));
     // footer pages grid contains About and Blog; the overlay marks Blog current on an article
     const footer = await page.locator('.footer-small-grid a').evaluateAll((as) => as.map((a) => a.getAttribute('href')));
-    assert(footer.some((h) => /about\.html$/.test(h)) && footer.some((h) => /blog\.html$/.test(h)), 'About/Blog in the footer');
-    assert.equal(await page.locator('.nav-top-flex a[aria-current="page"]').getAttribute('href').then((h) => h.replace(/^(\.\.\/)+/, '')), 'blog.html', 'Blog marked current on an article');
+    assert(footer.some((h) => /\/about$/.test(h)) && footer.some((h) => /\/blog$/.test(h)), 'About/Blog in the footer');
+    assert.equal(await page.locator('.nav-top-flex a[aria-current="page"]').getAttribute('href'), lang ? '/blog' : '/en/blog', 'Blog marked current on an article (the page is in the other language now)');
     assert.deepEqual(log.errors, []);
   });
   await page.close();
@@ -529,10 +555,10 @@ for (const width of WIDTHS) {
         await auditText(page, `${id}@end`, [/Scroll for more|继续滚动/]);
         await scrollTo(page, 0); await page.waitForTimeout(300);
         // language switch, wordmark, current page, no template brand
-        const up = name.includes('/') ? '../' : '';
         const swap = await page.locator('.nav-menu a[hreflang]').first().getAttribute('href');
-        assert.equal(swap, lang ? `${up}../${name}` : `${up}en/${name}`, 'language switch');
-        assert.equal(await page.locator('a.logo-first').first().getAttribute('href'), `${up}index.html`, 'wordmark home link');
+        const clean = name.replace(/(^|\/)index\.html$/, '$1').replace(/\.html$/, '');
+        assert.equal(swap, lang ? `/${clean}` : `/en/${clean}`, 'language switch');
+        assert.equal(await page.locator('a.logo-first').first().getAttribute('href'), `/${lang}`, 'wordmark home link');
         const text = await page.evaluate(() => document.body.innerText);
         assert(!/Mōno|Lifelogx|Scalora|Tomato Store|Lorem/i.test(text), 'template brand in page text');
         assert.deepEqual(log.errors, [], 'JS/console errors');

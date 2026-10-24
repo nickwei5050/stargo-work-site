@@ -14,13 +14,12 @@
  * page is generated with root-relative names (contact.html, assets/…) and the
  * build relocates links and assets with relocateLinks / relocateAssets.
  */
-import { makeSub, findByClass, extractElement } from './lib-html.mjs';
-import { editorialImages } from './editorial-images.mjs';
-import { createHash } from 'node:crypto';
+import { makeSub, findByClass, extractElement, escapeHtml } from './lib-html.mjs';
+import { editorialImages, photoAlt } from './editorial-images.mjs';
 import { readFileSync, existsSync } from 'node:fs';
-import { CAP_JUMPS, NAV, SECONDARY, MORE, LANG_SWITCH, CHROME, META, CONTACT_INFO, SITE_URL } from './copy.mjs';
+import { CAP_JUMPS, NAV, SECONDARY, MORE, LANG_SWITCH, CHROME, META, CONTACT_INFO, CONTACT_UI, SITE_URL } from './copy.mjs';
 import { POSTS, BLOG_UI, postPath, coverSrc, faqEntities, wordCount } from './blog.mjs';
-import { OG, OS_ART } from './replaceables.mjs';
+import { OG, OS_ART, MENU_CARD, HOME_MOSAIC } from './replaceables.mjs';
 
 /** Every page the build produces, as root-relative names. */
 export const SITE_PAGES = [...NAV, ...SECONDARY, ...MORE].map((n) => n.href).concat(POSTS.map(postPath));
@@ -31,8 +30,9 @@ const ICON = (n) => `assets/brand/stargo-a-icon-${n}.png`;
 /** The name as the owner writes it on stargowork.com (2026-10-21): the full
     Chinese product name on Chinese pages, the brand alone on English ones. */
 export const BRAND = { zh: 'Stargo Work星贸智能AI外贸操作系统', en: 'Stargo Work' };
-const AVATAR = 'assets/stargo/avatar-core.png';
-/** Share cover. Token is rewritten to OG.file (og-cover.png, 1200×630). See tools/replaceables.mjs. */
+const AVATAR = 'assets/brand/stargo-s-mark-256.webp';   // the owner's S + star mark (2026-10-23), in place of the silver knot
+/** Share cover: the owner's photograph O01 as a 1200×630 JPEG since 2026-10-21
+    (tools/replaceables.mjs OG, tools/imagegen/prepare-share-card.mjs). */
 const OG_IMAGE = OG.token;
 
 /** Product screens that replace the template's photo strips (overlay menu) and image rotator (contact band). */
@@ -82,15 +82,16 @@ function replaceInner(html, el, inner) {
   return html.slice(0, el.start + openEnd) + inner + html.slice(el.end - closeLen);
 }
 
-/** A `w-background-video` block becomes a still image (same box, same interactions, no video). */
-export function stillImage(html, videoId, src, alt = '') {
+/** A `w-background-video` block becomes a still image (same box, same interactions, no video).
+ *  `cls` names the still; a slot that needs its own size or crop adds a class after `stargo-still`. */
+export function stillImage(html, videoId, src, alt = '', cls = 'stargo-still') {
   const i = html.indexOf(`id="${videoId}-video"`);
   if (i === -1) throw new Error(`still: video ${videoId} not found`);
   const vStart = html.lastIndexOf('<video', i);
   const vEnd = html.indexOf('</video>', i) + '</video>'.length;
   const wrapStart = html.lastIndexOf('<div', vStart);
   let wrap = html.slice(wrapStart, vStart).replace(/\s*data-(video-urls|poster-url|autoplay|loop)="[^"]*"/g, '');
-  return html.slice(0, wrapStart) + wrap + `<img src="${src}" alt="${alt}" loading="lazy" class="stargo-still"/>` + html.slice(vEnd);
+  return html.slice(0, wrapStart) + wrap + `<img src="${src}" alt="${alt}" loading="lazy" class="${cls}"/>` + html.slice(vEnd);
 }
 
 /* -------------------------------------------------------------- parts -- */
@@ -114,7 +115,11 @@ function links(lang, current) {
     href: onCaps ? `#${c.anchor}` : `capabilities.html#${c.anchor}`,
     label: t(c.label),
   }));
-  return { nav, more, secondary, swap, capJumps };
+  /* The site's demo CTA (footer button 「预约演示」/“Book a Demo”), reused as is. */
+  const demoCta = CHROME.find(([k]) => k === 'Let’s Collaborate');
+  if (!demoCta) throw new Error('chrome: demo CTA label not found');
+  const demo = { href: 'contact.html', label: t(demoCta[1]) };
+  return { nav, more, secondary, swap, capJumps, demo };
 }
 
 function topNav(html, L, current) {
@@ -122,8 +127,30 @@ function topNav(html, L, current) {
   if (!m) throw new Error('chrome: top nav not found');
   const tpl = firstLink(m[0]);
   const items = [...L.nav.slice(1), ...L.more, L.swap];   // the wordmark is the home link; About and Blog sit after the product pages
-  const out = items.map((n) => renderLink(tpl, n, isCurrent(n.href, current))).join('');
+  /* Lane phone (Z05): the demo request closes the list Webflow folds into the
+     phone menu below 992px. From 992px the bar shows the same list in a row,
+     where css/stargo-fusion.css ("Lane: phone") hides it, so the desktop bar
+     is unchanged. Never marked current: 联系 already is on the contact page. */
+  const demo = renderLink(tpl, L.demo, false).replace(/class="([^"]*)"/, 'class="$1 stargo-nav-demo"');
+  const out = items.map((n) => renderLink(tpl, n, isCurrent(n.href, current))).join('') + demo;
   return html.replace(m[0], `<nav role="navigation" class="nav-menu first w-nav-menu" data-lenis-prevent="">${out}</nav>`);
+}
+
+/**
+ * Lane phone (Z05): a compact demo pill in the header, beside the menu button,
+ * below 992px — the header comes back on scroll-up (js/stargo-phone-nav.js),
+ * so the demo request and the menu are one swipe away anywhere on the page.
+ * The label and the link are the site's existing demo CTA (CHROME, 'Let’s
+ * Collaborate'). Hidden from 992px up (css/stargo-fusion.css, "Lane: phone").
+ */
+function phoneHeader(html, L) {
+  const at = html.indexOf('class="last-part">');
+  if (at === -1 || html.indexOf('class="last-part">', at + 1) !== -1) throw new Error('chrome: expected one header .last-part');
+  const open = at + 'class="last-part">'.length;
+  const pill = `<a href="${L.demo.href}" class="stargo-phone-demo">${L.demo.label}</a>`;
+  let out = html.slice(0, open) + pill + html.slice(open);
+  if (out.includes('class="navigation-top') && !out.includes('js/stargo-phone-nav.js')) out = out.replace('</body>', '<script src="js/stargo-phone-nav.js" defer></script></body>');
+  return out;
 }
 
 /** Overlay menu: the product pages, About and Blog, and the language switch. Legal pages sit in its bottom row and in the footer. */
@@ -225,12 +252,13 @@ function head(html, lang, current) {
      and naming it here would say the two are the same entity. legalName is the
      registered operator of the product site. */
   const graph = [
-    { '@type': 'Organization', '@id': ORG_ID, name: 'Stargo Work', legalName: CONTACT_INFO.legalName, alternateName: '星贸智能', url: `${SITE_URL}/`, logo: `${SITE_URL}/${ICON(512)}`, email: CONTACT_INFO.email, telephone: CONTACT_INFO.whatsapp, address: { '@type': 'PostalAddress', addressLocality: 'Liuzhou', addressRegion: 'Guangxi', addressCountry: 'CN' } },
-    { '@type': 'WebSite', '@id': SITE_ID, url: `${SITE_URL}/`, name: BRAND[lang], alternateName: lang === 'zh' ? 'Stargo Work' : BRAND.zh, inLanguage: ['zh-CN', 'en'], publisher: { '@id': ORG_ID } },
+    { '@type': 'Organization', '@id': ORG_ID, name: 'Stargo Work', legalName: CONTACT_INFO.legalName, alternateName: '星贸智能', url: `${SITE_URL}/`, logo: `${SITE_URL}/${ICON(512)}`, email: CONTACT_INFO.email, telephone: CONTACT_INFO.phone, contactPoint: { '@type': 'ContactPoint', contactType: 'sales', telephone: CONTACT_INFO.phone, email: CONTACT_INFO.email, availableLanguage: ['zh-CN', 'en'] }, address: { '@type': 'PostalAddress', addressLocality: 'Liuzhou', addressRegion: 'Guangxi', addressCountry: 'CN' } },
+    /* One #site node, one name, on every page in both languages (Z15). */
+    { '@type': 'WebSite', '@id': SITE_ID, url: `${SITE_URL}/`, name: BRAND.en, alternateName: BRAND.zh, inLanguage: ['zh-CN', 'en'], publisher: { '@id': ORG_ID } },
     { '@type': pageType, '@id': self, url: self, name: title, description, inLanguage, isPartOf: { '@id': SITE_ID }, ...(post ? { primaryImageOfPage: ogImage } : {}) },
   ];
   if (current === 'index.html') {
-    graph.push({ '@type': 'SoftwareApplication', name: BRAND[lang], applicationCategory: 'BusinessApplication', operatingSystem: 'Web', url: `${SITE_URL}/`, description, offers: { '@type': 'AggregateOffer', priceCurrency: 'CNY', lowPrice: '10000', highPrice: '40000', offerCount: 4 }, provider: { '@id': ORG_ID } });
+    graph.push({ '@type': 'SoftwareApplication', name: BRAND[lang], applicationCategory: 'BusinessApplication', operatingSystem: 'Web', url: cleanUrl(lang, 'index.html'), description, offers: { '@type': 'AggregateOffer', priceCurrency: 'CNY', lowPrice: '10000', highPrice: '40000', offerCount: 4 }, provider: { '@id': ORG_ID } });
   }
   if (current === 'blog.html') {
     graph.push({
@@ -278,9 +306,15 @@ function head(html, lang, current) {
     `<meta property="og:locale" content="${lang === 'zh' ? 'zh_CN' : 'en_US'}"/>`,
     `<meta property="og:image" content="${ogImage}"/>`,
     post ? '<meta property="og:image:width" content="1200"/><meta property="og:image:height" content="800"/>' : '<meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/>',
+    /* The share card is the owner's photograph: it carries the owner's own
+       sentence for it and the AI caption (photoAlt), as the photographs on the
+       pages do. An article's cover has none here (its card and hero carry
+       theirs). */
+    ...(post ? [] : [`<meta property="og:image:alt" content="${escapeHtml(photoAlt(OG.id, lang))}"/>`]),
     ...(post ? [`<meta property="article:published_time" content="${post.date}"/>`, `<meta property="article:modified_time" content="${post.modified ?? post.date}"/>`, `<meta property="article:section" content="${(post.section ?? BLOG_UI.section)[lang]}"/>`, ...post.keywords[lang].map((k) => `<meta property="article:tag" content="${k}"/>`)] : []),
     '<meta name="twitter:card" content="summary_large_image"/>',
     `<meta name="twitter:image" content="${ogImage}"/>`,
+    ...(post ? [] : [`<meta name="twitter:image:alt" content="${escapeHtml(photoAlt(OG.id, lang))}"/>`]),
     '<meta name="theme-color" content="#0d0906"/>',
     `<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>`,   // no "</script>" can end the block early
   ].join('');
@@ -316,6 +350,100 @@ function head(html, lang, current) {
   const headText = out.slice(0, out.indexOf('<body')).replace(/<link[^>]*>/g, '');
   if (/Mōno|monostudio|Scalora|Lifelogx/i.test(headText)) throw new Error(`chrome: template metadata survives in <head> of ${current}`);
   return out;
+}
+
+/**
+ * Lane parity (2026-10-23): the phone interactions — css/stargo-phone.css and
+ * js/stargo-phone-fx.js — on every page, at no cost to the first view.
+ *
+ * Both files wait in an inert <template> (nothing inside one is fetched) and
+ * a few lines of inline script move them into <head> on the reader's first
+ * touch, scroll, wheel, key or press, and only on a phone-sized or touch
+ * screen. A page that is opened and never touched downloads neither, so the
+ * first paint, the LCP and the first 8 s are exactly what they were; on a
+ * desktop with a mouse nothing is ever fetched. Touch comes before the finger
+ * moves, so the sheet is normally in place by the time the page scrolls, and
+ * what it draws at the top of the page starts slowly (the hero's reveal eases
+ * in), so a sheet that lands mid-gesture does not jump.
+ *
+ * The URLs sit in ordinary src/href attributes inside the template, so
+ * relocateAssets() and the ?v= cache keys (tools/asset-version.mjs) treat them
+ * like any other script or stylesheet on the page.
+ *
+ * The two files are kept small (the lane's budget: about 6 KB of script and
+ * 4 KB of styles), so their notes live here rather than in them.
+ *
+ * What they do. Desktop scrubs pinned scenes; a phone gets the same sense of
+ * motion in its own stacked layout (Z10, owner decision 2026-10-22: 改成普通
+ * 排列) — nothing is pinned, nothing takes over the scroll, nothing is laid
+ * out differently, and every effect ends on exactly the layout Z10 draws. That
+ * layout is also the fallback: before the first touch, without scroll-driven
+ * animations (they sit behind @supports (animation-timeline: view())), and
+ * with reduced motion (motion sits behind prefers-reduced-motion:
+ * no-preference). Only opacity and the separate scale, translate and rotate
+ * properties move: Z10 pins `transform` (and on some boxes opacity) with
+ * !important, and the template's runtimes write inline `transform` and
+ * `scale`; the separate properties compose with both, and a pressed button's
+ * scale carries !important to beat the inline one.
+ *
+ *   Scroll-driven (css only). A timeline is named on a box outside any
+ *   overflow:hidden ancestor, which would otherwise become the scroller an
+ *   anonymous view() follows, and never move.
+ *   - Homepage hero: as the white card scrolls away it draws back (scale) and
+ *     the photo wall behind it opens, its columns drifting apart — desktop's
+ *     zoom-out in one screen of ordinary scrolling. Named on .hero-track
+ *     because .hero-agency clips; it eases in, so a sheet that arrives
+ *     mid-gesture does not jump.
+ *   - Homepage 「一个工作台…」: the product screens settle from close up as the
+ *     band comes up (desktop zooms them out while the band is pinned).
+ *   - Homepage problem cards and the capability page's four area cards
+ *     settle in, each photo easing back from close up (desktop stacks them).
+ *   - Workforce: the three collaboration cards settle from a tilt, one after
+ *     another (desktop fans them out while the section pins).
+ *
+ *   Lit lists (js: one IntersectionObserver whose root is a band ~2% of the
+ *   screen tall across the middle; the item nearest the middle carries the
+ *   class, and the last one keeps it so a list never goes dark mid-read).
+ *   - Homepage five business stages, over Mono's inline title opacity. Below
+ *     480px Mono hides the box that holds each stage's sentence, so a one-line
+ *     version (PHONE_FX.stageLines, tools/copy.mjs) sits under each title; the
+ *     list takes the grid's empty fourth column for it.
+ *   - Capability page insight rows: renok's hover underline draws and its
+ *     picture comes up beside the title, both of which renok hides below
+ *     992px; they are absolutely placed, so showing them moves nothing.
+ *   - Intelligence 「观察真实流程…」: the line at the middle at full strength,
+ *     the others stepped back — on the h3, because Z10 pins each box's opacity.
+ *   - Homepage 「一条业务主线」: the phrase that the loop scene's caption names
+ *     lights, with a short bar (the scene writes data-stage on its host when
+ *     the stage changes, js/stargo-motion.js).
+ *
+ *   One-shot cues (js, unobserved once played; never with reduced motion).
+ *   - Homepage pricing ladder: the first card turns a little when it reaches
+ *     the middle, the gesture a tap completes; a hint on touch screens says a
+ *     tap turns a card over (PHONE_FX.flipHint).
+ *   - Core-systems accordion (below 992px): each name shows n/4 and a chevron
+ *     that turns with the template's own open state (`sg-open`, from a
+ *     ResizeObserver); the next closed name gets a warm wash and a nudge,
+ *     once. Nothing ever opens on its own.
+ *
+ *   Touch. Buttons, pills and cards whose only response was a hover answer the
+ *   finger (:active; iOS needs a touchstart listener for it). A sideways swipe
+ *   on the product tour's screenshot (|dx| > 40px and > |dy|) changes tab, and
+ *   the new screen comes in from that side.
+ *
+ *   One layout fix, phones: workforce 「一个目标，一个团队。」 kept lifelogx's
+ *   centring shift (translate(0, -50%)) when Z10 put it back in the flow, so
+ *   its top half sat behind the third card.
+ */
+const PHONE_FX_LOADER = `<template id="sg-phone-fx"><link href="css/stargo-phone.css" rel="stylesheet" type="text/css"/><script src="js/stargo-phone-fx.js"></script></template>`
+  + `<script>(function(){var t=document.getElementById('sg-phone-fx'),m=window.matchMedia,E=['touchstart','pointerdown','scroll','wheel','keydown'],o={capture:true,passive:true};`
+  + `if(!t||!t.content||!m||!m('(max-width: 767px), (hover: none)').matches)return;`
+  + `function go(){E.forEach(function(e){removeEventListener(e,go,o)});[].forEach.call(t.content.children,function(n){var e=document.createElement(n.localName);[].forEach.call(n.attributes,function(a){e.setAttribute(a.name,a.value)});document.head.appendChild(e)})}`
+  + `E.forEach(function(e){addEventListener(e,go,o)})})();</script>`;
+function phoneFx(html) {
+  if (html.includes('id="sg-phone-fx"')) return html;
+  if (!html.includes('</body>')) throw new Error('chrome: no </body> for the phone interactions');
+  return html.replace('</body>', `${PHONE_FX_LOADER}</body>`);
 }
 
 function scripts(html) {
@@ -358,17 +486,10 @@ function scripts(html) {
     out = out.replace('<script src="js/app.fused.js"', '<script src="js/stargo-mobile-copy.js"></script><script src="js/app.fused.js"');
     if (!out.includes('js/stargo-mobile-copy.js')) throw new Error('chrome: bundle script tag not found');
   }
-  /* The homepage's opening animation (tools/blocks/og-intro.*), on the one page
-     that carries its overlay. It replays three donor animations with GSAP, so
-     it has to run after js/gsap.min.js: `defer` puts it after every classic
-     script in the document whatever order they were written in. The overlay
-     itself is painted by css/offgrid.og.css from the <head>, so the page is
-     covered from the first paint and this script only ever animates and then
-     removes it — nothing flashes while the bundle is still arriving. */
-  if (out.includes('data-og-intro') && !out.includes('js/stargo-intro.js')) {
-    out = out.replace('</body>', '<script src="js/stargo-intro.js" defer></script></body>');
-    if (!out.includes('js/stargo-intro.js')) throw new Error('chrome: no </body> to attach the opening animation to');
-  }
+  /* The homepage's opening animation (tools/blocks/og-intro.*) attaches no
+     script here: tools/build-site.mjs writes it inline, in the <head> and
+     straight after the overlay, because it has to decide and start before the
+     first paint rather than after the page bundle. */
   if (!out.includes('js/stargo-forms.js')) out = out.replace('</body>', '<script src="js/stargo-forms.js"></script></body>');
   if (!out.includes('js/stargo-tabs.js')) out = out.replace('</body>', '<script src="js/stargo-tabs.js"></script></body>');
   if (out.includes('id="stargo-side-menu"') && !out.includes('js/stargo-side-menu.js')) out = out.replace('</body>', '<script src="js/stargo-side-menu.js"></script></body>');
@@ -395,6 +516,7 @@ function scripts(html) {
   });
   out = out.replace(/\sdata-video-urls=/g, ' data-defer-video-urls=');
   if (out.includes('<video data-defer') && !out.includes('js/stargo-video-defer.js')) out = out.replace('</body>', '<script src="js/stargo-video-defer.js" defer></script></body>');
+  out = phoneFx(out);
   out = out.replace(
     'const nav = document.querySelector(".menu-bottom");',
     'const nav = document.querySelector(".menu-bottom");\n  if (!nav) return; // no pill on this page',
@@ -416,19 +538,44 @@ function scripts(html) {
    their names live in aria-label and title — in the page's language. */
 const SOCIAL_LABELS = {
   mail: { zh: '发邮件给 STARGO WORK', en: 'Email STARGO WORK' },
-  whatsapp: { zh: '通过 WhatsApp 联系 STARGO WORK', en: 'WhatsApp STARGO WORK' },
+  whatsapp: { zh: '通过 WhatsApp 联系 STARGO WORK', en: 'Message STARGO WORK on WhatsApp' },
+  phone: { zh: `${CONTACT_UI.call.zh} STARGO WORK`, en: `${CONTACT_UI.call.en} STARGO WORK` },
 };
-const socialKind = (href) => (href.startsWith('mailto:') ? 'mail' : href.includes('wa.me/') ? 'whatsapp' : null);
+const socialKind = (href) => (href.startsWith('mailto:') ? 'mail' : href.startsWith('tel:') ? 'phone' : href.includes('wa.me/') ? 'whatsapp' : null);
+
+/* WeChat has no web link, so wherever the site lists it the ID is copied
+   instead: a <button> carrying these attributes, which js/stargo-forms.js arms
+   (copies `data-stargo-copy`, shows and announces `data-stargo-copied`). A
+   control that is ONLY a copy action (an icon, a 「复制」 pill) ships `hidden`
+   and the script reveals it, so a page without the script never shows a
+   button that does nothing; where the ID is printed as text, the text stays. */
+export const wechatCopy = (lang) => ({
+  attrs: `data-stargo-copy="${CONTACT_INFO.wechat}" data-stargo-copied="${CONTACT_UI.wechatCopied[lang]}"`,
+  label: `${CONTACT_UI.copyWechat[lang]} ${CONTACT_INFO.wechat}`,
+});
 
 /* The template's LinkedIn tile used to be retargeted at www.stargomoto.com and
    named as this product company's corporate website. That domain is another
-   company's factory site, so the tile is removed. The two that remain are
-   WhatsApp and e-mail. The about page's intro card shows the same two
-   (tools/blocks/cn-about.mjs CHANNELS). Each glyph is a plain line icon in the
-   template's style: white, 16px, centred in the same 40px round tile (the X
-   tile's square `sq` variant goes, so the two match), and still the
-   `.social-icon` the template's hover lift moves. The glyph is decoration;
-   the button's name is its aria-label. */
+   company's factory site, so the tile is removed (dropUnrelatedSocial below).
+   The template drew an Instagram camera, an X logo and a third-party star on
+   the others; STARGO has no accounts there, and the two that remain lead to
+   WhatsApp and e-mail. Each now carries a plain line glyph for its
+   destination — a speech bubble, an envelope — drawn in the template's icon
+   style: white, 16px, centred in the same 40px round tile (the X tile's square
+   `sq` variant goes, so they match), and still the `.social-icon` the
+   template's hover lift moves. The glyph is decoration; the button's name is
+   its aria-label. The about page's intro card shows the same channels (V7-LX,
+   tools/blocks/cn-about.mjs CHANNELS): the paths below are that card's paths,
+   point for point, so the site draws one icon set.
+   Since 2026-10-21 the rows also carry the phone (a handset, a tel: link that
+   rings on a phone) and WeChat (two speech bubbles, a button that copies the
+   ID — see wechatCopy above), appended after the two; socialIcons() adds
+   them. After a copy, js/stargo-forms.js shows a check mark for two seconds. */
+/** The two glyphs added on 2026-10-21, shared with tools/blocks/cn-about.mjs. */
+export const GLYPH_PATHS = {
+  phone: '<path d="M5.5 3.5h3l1.5 4-2 1.3a11 11 0 0 0 7.2 7.2l1.3-2 4 1.5v3a2 2 0 0 1-2.2 2A17 17 0 0 1 3.5 5.7a2 2 0 0 1 2-2.2z"/>',
+  wechat: '<path d="M15.8 9.2C15.3 6 12.3 3.5 8.7 3.5 4.8 3.5 1.8 6.2 1.8 9.5c0 1.9 1 3.6 2.6 4.7l-.6 2.3 2.6-1.4c.8.2 1.5.3 2.3.3"/><path d="M22.2 14.6c0-2.8-2.8-5.1-6.2-5.1s-6.2 2.3-6.2 5.1 2.8 5.1 6.2 5.1c.7 0 1.4-.1 2-.3l2.4 1.3-.5-2.2c1.4-.9 2.3-2.3 2.3-3.9z"/><path d="M6.3 8.3h.01M11 8.3h.01M13.8 13.9h.01M18.2 13.9h.01"/>',
+};
 function dropUnrelatedSocial(html) {
   return html.replace(/<a\b[^>]*\bclass="social-wrapper\b[^"]*"[^>]*>[\s\S]*?<\/a>/g, (a) => {
     const href = (a.match(/href="([^"]*)"/) || [])[1] || '';
@@ -440,11 +587,13 @@ const SOCIAL_GLYPH = (paths) => `<svg class="social-icon" width="16" height="16"
 const SOCIAL_ICONS = {
   whatsapp: SOCIAL_GLYPH('<path d="M20.5 11.6a8.4 8.4 0 0 1-12.2 7.5L3.5 20.5l1.4-4.6A8.4 8.4 0 1 1 20.5 11.6z"/>'),
   mail: SOCIAL_GLYPH('<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/>'),
+  phone: SOCIAL_GLYPH(GLYPH_PATHS.phone),
+  wechat: SOCIAL_GLYPH(GLYPH_PATHS.wechat),
 };
 const TEMPLATE_SOCIAL_ART = /instagram%20|twitter%20|_contra\.png/;
 
-function socialIcons(html) {
-  const out = html.replace(/<a\b[^>]*\bclass="social-wrapper\b[^"]*"[^>]*>[\s\S]*?<\/a>/g, (a) => {
+function socialIcons(html, lang) {
+  let out = html.replace(/<a\b[^>]*\bclass="social-wrapper\b[^"]*"[^>]*>[\s\S]*?<\/a>/g, (a) => {
     const href = (a.match(/href="([^"]*)"/) || [])[1] || '';
     const img = /<img\b[^>]*\bclass="social-icon\b[^"]*"[^>]*\/>/;
     if (!img.test(a)) throw new Error('chrome: a social button has no icon to replace');
@@ -453,7 +602,50 @@ function socialIcons(html) {
     return a.replace(/class="social-wrapper sq /, 'class="social-wrapper ').replace(img, SOCIAL_ICONS[kind]);
   });
   if (TEMPLATE_SOCIAL_ART.test(out)) throw new Error('chrome: a template social-network icon survives');
+  /* Phone and WeChat after the two, in every row (the footer's and the side
+     menu card's). Each row is adjacent links and nothing else, so it closes on
+     the first </div> after it opens. */
+  const phone = SOCIAL_LABELS.phone[lang];
+  const wechat = wechatCopy(lang);
+  out = out.replace(/(<div class="social-content\b[^"]*">)([\s\S]*?)(<\/div>)/g, (m, open, row, close) => {
+    const kinds = [...row.matchAll(/<a\b[^>]*href="([^"]*)"[^>]*class="social-wrapper\b/g)].map((x) => socialKind(x[1]));
+    if (kinds.join() !== 'whatsapp,mail') throw new Error(`chrome: a social row is not WhatsApp, e-mail (${kinds.join()})`);
+    return open + row
+      + `<a aria-label="${phone}" title="${phone}" href="${CONTACT_INFO.phoneHref}" class="social-wrapper w-inline-block">${SOCIAL_ICONS.phone}</a>`
+      + `<button type="button" aria-label="${wechat.label}" title="${wechat.label}" ${wechat.attrs} class="social-wrapper stargo-copy-icon" hidden="">${SOCIAL_ICONS.wechat}</button>`
+      + close;
+  });
   return out;
+}
+
+/**
+ * The footer's 「(商务合作)」 list: e-mail and WhatsApp come from the template
+ * (copy.mjs CHROME), and the phone and WeChat rows are that WhatsApp row again —
+ * same component, same arrow, same hover — one a tel: link, the other a
+ * <button> that copies the WeChat ID (wechatCopy). The WeChat row prints the
+ * ID, so it is not hidden without the script; the script only adds the copy.
+ * Their channel words sit in `.stargo-ch`, not `.stargo-wa`: the 768-1279px
+ * rule that drops WhatsApp's number (css/stargo-fusion.css) must not touch them.
+ */
+function footerContact(html, lang) {
+  const L = CONTACT_INFO.labels;
+  const mark = `<span class="stargo-wa">WhatsApp </span><span class="stargo-wa-num">${CONTACT_INFO.whatsapp}</span>`;
+  const n = html.split(mark).length - 1;
+  if (n !== 1) throw new Error(`chrome: expected one footer WhatsApp row, found ${n}`);
+  const at = html.lastIndexOf('<a ', html.indexOf(mark));
+  const row = extractElement(html, at, 'a');
+  if (!row.text.includes(`href="${CONTACT_INFO.whatsappHref}"`) || !/\bclass="button-link\b/.test(row.text)) throw new Error('chrome: the footer WhatsApp row is not a button-link to WhatsApp');
+  const phoneRow = row.text
+    .replace(`href="${CONTACT_INFO.whatsappHref}"`, `href="${CONTACT_INFO.phoneHref}"`)
+    .replace(mark, `<span class="stargo-ch">${L.phoneShort[lang]} </span>${CONTACT_INFO.phone}`);
+  const wechat = wechatCopy(lang);
+  const wechatRow = row.text
+    .replace(/^<a /, '<button type="button" ')
+    .replace(`href="${CONTACT_INFO.whatsappHref}"`, `aria-label="${L.wechat[lang]} ${CONTACT_INFO.wechat}${CONTACT_UI.copyHint[lang]}" ${wechat.attrs} data-stargo-copied-short="${CONTACT_UI.copiedInline[lang]}"`)
+    .replace(/<\/a>$/, '</button>')
+    .replace(/<(\/?)div\b/g, '<$1span')   // a <button> holds phrasing content only; the classes keep their display: flex
+    .replace(mark, `<span class="stargo-ch">${L.wechat[lang]} </span><span data-stargo-copy-label="">${CONTACT_INFO.wechat}</span>`);
+  return html.slice(0, row.end) + phoneRow + wechatRow + html.slice(row.end);
 }
 
 /**
@@ -481,9 +673,11 @@ function elementSpan(html, open) {
 
 /* A clip's <source>s: the smaller H.264 copy from tools/encode-video.mjs where
    one exists (tools/data/video-h264.json), the 360 px orb wherever the logo
-   orb is drawn at logo size (everywhere but the side-menu card), and an
-   explicit type, so a browser that cannot play H.264 skips the mp4 instead of
-   downloading it first to find out. */
+   orb is drawn at logo size (the navbar logo and the pricing cards; the
+   side-menu card, the one place it was drawn large, has shown the G02 still
+   instead since 2026-10-21, so only a clip put back inside the menu would keep
+   the full-size orb), and an explicit type, so a browser that cannot play
+   H.264 skips the mp4 instead of downloading it first to find out. */
 let videoManifest = null;
 function videoSources(video, inMenu) {
   videoManifest ??= existsSync(new URL('./data/video-h264.json', import.meta.url))
@@ -554,7 +748,10 @@ function uniqueLayoutIds(html) {
 function formMarkup(html, lang) {
   return html.replace(/<form\b[^>]*>[\s\S]*?<\/form>/g, form => {
     const isNews = /id="Subscribe"/.test(form);
-    form = form.replace(/<form\b/, `<form data-stargo-form="${isNews ? 'newsletter' : 'contact'}"`).replace(/method="get"/, 'method="post" action="/api/contact"');
+    /* data-stargo-to / -wa: the e-mail and WhatsApp the script's fallback
+       notice names when a submission cannot be confirmed (copy.mjs
+       CONTACT_INFO), so the script itself carries no address. */
+    form = form.replace(/<form\b/, `<form data-stargo-form="${isNews ? 'newsletter' : 'contact'}" data-stargo-to="${CONTACT_INFO.email}" data-stargo-wa="${CONTACT_INFO.whatsapp}"`).replace(/method="get"/, 'method="post" action="/api/contact"');
     if (!form.includes('name="website"')) form = form.replace(/(<form[^>]*>)/, '$1<div class="stargo-hp" aria-hidden="true"><input aria-label="Website" name="website" type="text" tabindex="-1" autocomplete="off"/></div>');
     form = form.replace(/<input\b[^>]*>/g, tag => {
       if (/type="email"/.test(tag)) return tag.replace('<input ', `<input autocomplete="email" aria-label="${lang === 'zh' ? '邮箱' : 'Email'}" `);
@@ -562,7 +759,7 @@ function formMarkup(html, lang) {
       if (/name="(?:Subject|Last-Name)"/.test(tag)) return tag.replace('<input ', `<input autocomplete="organization" aria-label="${lang === 'zh' ? '公司' : 'Company'}" `);
       return tag;
     });
-    const consent = lang === 'zh' ? '提交前请阅读我们的 <a href="privacy.html">隐私政策</a>。我们仅用这些信息处理你的申请。' : 'Please read our <a href="privacy.html">Privacy Policy</a>. We use these details to respond to your request.';
+    const consent = lang === 'zh' ? '提交前请阅读<a href="privacy.html">隐私政策</a>。这些信息只用于处理你的申请。' : 'Please read our <a href="privacy.html">Privacy Policy</a> before submitting. We use these details only to respond to your request.';
     return form.replace('</form>', `<p class="stargo-form-consent">${consent}</p></form>`);
   }).replace(/(<div class="stargo-hp" aria-hidden="true"><input )aria-label="Website"( name="website")/g, `$1aria-label="${HONEYPOT_LABEL[lang]}"$2`);
 }
@@ -634,10 +831,43 @@ function chromeImagery(html) {
       const inner = el.text.replace(/<img[^>]*\/>/g, (img) => {
         const cl = (img.match(/class="([^"]*)"/) || [])[1];
         const src = SCREENS[i++ % SCREENS.length];
+        /* The photo strips are the homepage's opening mosaic (index only),
+           whose stills are the owner's photographs since 2026-10-21: each
+           os-* still the cycle would put here becomes the photograph
+           tools/replaceables.mjs HOME_MOSAIC names for it, so the cycle and
+           the rotator after it are unchanged. The strips' unclassed pictures
+           get `stargo-mosaic` so tools/editorial-images.mjs can size them;
+           `photo-hero` (the cover-cropped column) stays as it is. The alt is
+           a marker that tools/editorial-images.mjs replaces with the
+           photograph's own sentence. */
+        if (cls !== 'image-text-rotator') {
+          const photo = HOME_MOSAIC[src.match(/\/(os-[\w-]+)\.webp$/)?.[1]];
+          if (!photo) throw new Error(`chrome: no mosaic photograph for ${src}`);
+          return `<img src="${photo}" loading="lazy" alt="STARGO WORK" class="${cl || 'stargo-mosaic'}"/>`;
+        }
         return `<img src="${src}" loading="lazy" alt=""${cl ? ` class="${cl}"` : ''}/>`;
       });
       out = out.slice(0, el.start) + inner + out.slice(el.end);
     }
+  }
+  /* The side menu's 预约企业演示 card: the owner's harbour picture (G02,
+     tools/replaceables.mjs MENU_CARD) where the magical-orb clip played. The
+     clip's whole background-video block goes and one still fills the card
+     under its dark wash and its text (css/stargo-fusion.css). The orb is
+     `logo-bg ab` only here; the navbar and pricing orbs (`logo-bg`) stay
+     clips. The still is a backdrop inside the card's link, so it is
+     decorative (alt="" and aria-hidden): the link keeps the name its own text
+     gives it, the same as when the card held the clip.
+     tools/editorial-images.mjs keeps an empty alt empty. */
+  const orb = 'class="logo-bg ab w-background-video w-background-video-atom"';
+  const at = out.indexOf(orb);
+  if (at === -1) {
+    if (out.includes('<div class="menu-wrapper">')) throw new Error('chrome: the side-menu card has no orb to replace');
+  } else {
+    if (out.indexOf(orb, at + 1) !== -1) throw new Error('chrome: expected one side-menu card orb');
+    const el = extractElement(out, out.lastIndexOf('<div', at), 'div');
+    if (!/^<div\b[^>]*>\s*<video\b[\s\S]*<\/video>\s*<\/div>$/.test(el.text)) throw new Error('chrome: the side-menu card orb is not a background video');
+    out = out.slice(0, el.start) + `<img src="${MENU_CARD}" alt="" aria-hidden="true" loading="lazy" class="stargo-menu-photo"/>` + out.slice(el.end);
   }
   return out;
 }
@@ -680,6 +910,27 @@ export function relocateLinks(html, up) {
   return html.replace(/href="((?!(?:https?:)?\/\/|mailto:|tel:|\/|#)[^"]*?\.html(?:[#?][^"]*)?)"/g, (_, h) => `href="${up}${h}"`);
 }
 
+/**
+ * Internal page links as the clean, root-relative URLs the site is served at
+ * (Z17): `/contact`, `/en/pricing#plans`, `/blog/<slug>`, `/` and `/en/`.
+ * Cloudflare Pages answers `….html` with a redirect to the clean URL, so a
+ * link written as `contact.html` cost every first click a round trip. The
+ * build keeps writing `.html` links (assertInternalLinks checks them against
+ * the pages it produces); this runs last, resolving each relative link from
+ * the page's own path (`en/blog/x.html`). Absolute, anchor-only, mailto: and
+ * tel: links, and anything that is not one of the site's pages, stay as they
+ * are.
+ */
+export function cleanLinks(html, pagePath) {
+  const base = new URL(pagePath, 'https://site.invalid/');
+  return html.replace(/(\shref=")((?![a-z][a-z0-9+.-]*:|\/|#)[^"#?]*?\.html)((?:[?#][^"]*)?)"/gi, (whole, attr, path, rest) => {
+    const rel = new URL(path, base).pathname.slice(1);
+    const page = rel.replace(/^en\//, '');
+    if (!ALL_PAGES.has(page)) return whole;
+    return `${attr}/${rel.replace(/(^|\/)index\.html$/, '$1').replace(/\.html$/, '')}${rest}"`;
+  });
+}
+
 /* --------------------------------------------------------------- main -- */
 
 export function applyChrome(html, { lang, current }) {
@@ -688,40 +939,26 @@ export function applyChrome(html, { lang, current }) {
   let out = html;
   out = head(out, lang, current);
   out = topNav(out, L, current);
+  out = phoneHeader(out, L);
   out = overlayMenu(out, L, current);
   out = bottomPill(out, L, current);
   out = footerPages(out, L, current);
   for (const [a, b] of CHROME) out = opt(out, a, b[lang]);
+  out = footerContact(out, lang);
   out = dropUnrelatedSocial(out);
   out = wordmark(out);
   out = chromeImagery(out);
   out = sideMenu(out, lang);
   out = scripts(out);
   out = linkHygiene(out, lang);
-  out = socialIcons(out);
+  out = socialIcons(out, lang);
   out = formMarkup(out, lang);
   if (lang === 'zh') out = zhRuntimeNames(zhFullStops(out));
   out = uniqueLayoutIds(out);
   out = editorialImages(out, lang);
-  // Unhashed local runtimes used to stay stale for a day after deployments.
-  // Version the URL while retaining the original file and script ordering.
-  //
-  // The hash is taken over the file with CRLF folded to LF, not over the bytes
-  // as they happen to sit in this working tree. Git checks these stylesheets
-  // and scripts out with the platform's line endings (CRLF under Windows'
-  // core.autocrlf, LF everywhere else), so hashing the raw bytes made twelve of
-  // them — every hand-written script, and the donor sheets — hash differently
-  // on Windows and on Linux. The pages then differed by their ?v= tokens alone,
-  // from identical sources, which is precisely the thing a rebuild-and-diff
-  // check in CI exists to catch. Folding first makes the token depend on the
-  // file's content and nothing else, so the build is reproducible on any
-  // checkout. The value is a cache key; what the browser loads is unchanged.
-  out = out.replace(/((?:src|href)=")((?:css|js)\/[^"?]+\.(?:css|js))"/g, (_, attr, path) => {
-    const raw = readFileSync(new URL(`../${path}`, import.meta.url));
-    const content = Buffer.from(raw.toString('latin1').replace(/\r\n/g, '\n'), 'latin1');
-    const hash = createHash('sha256').update(content).digest('hex').slice(0, 12);
-    return `${attr}${path}?v=${hash}"`;
-  });
+  /* Stylesheets and scripts get their content-hash ?v= in
+     tools/asset-version.mjs versionPage, with every other local asset the
+     page loads (Z18); tools/build-site.mjs runs it once the page is final. */
   if (/monostudio|Mōno™ Studio/i.test(out)) throw new Error(`chrome: template brand survives in ${current}`);
   if (/STARGO 企业官网|corporate website/i.test(out)) throw new Error(`chrome: factory domain still labelled as this company's website in ${current}`);
   if (/https?:\/\/(www\.)?stargomoto\.com|www\.stargomoto\.com/i.test(out)) throw new Error(`chrome: factory site linked from ${current}`);

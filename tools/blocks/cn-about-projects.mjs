@@ -329,6 +329,20 @@
  *
  * WHAT THE PICTURES ARE (owner decision, 2026-09-15 — and the reversal, same day)
  *
+ *   SINCE 2026-10-21 the four tiles show the owner's own photographs, one per
+ *   role (site-images/batch-5, whose manifest names these four clips as the
+ *   slots they replace): D01 the market-research still life in tile 1, D07
+ *   the quotation samples in tile 2, D02 the follow-up hourglass in tile 3
+ *   and D05 the coordination row in tile 4, matched by the tile's role as the
+ *   manifest does. render() still asserts everything below about the cut and
+ *   its clips, then puts a still in each clip's box
+ *   (tools/replaceables.mjs ABOUT_CASE_STILLS). The twelve clip files stay in
+ *   the cut and so stay mirrored under assets/cinery/, but no page plays them
+ *   any more: that is the 11.3 MB of unreferenced footage the owner asked
+ *   about on 2026-09-15, back on disk. Files under assets/ are never deleted
+ *   here (they are served immutable); whether to drop them from the cut is
+ *   the owner's call. What follows is the history before that date.
+ *
  *   The four clips STAY, and each tile plays the one cinery put in it: the
  *   donor's `<video class="… w-background-video">` with its poster frame, its
  *   mp4 and its webm, exactly as the template ships it, pointed at this site's
@@ -469,6 +483,8 @@
  */
 import { readFileSync } from 'node:fs';
 import { setText, setTextAll, splitRepeat, DONORS } from '../block-lib.mjs';
+import { stillImage } from '../chrome.mjs';
+import { ABOUT_CASE_STILLS } from '../replaceables.mjs';
 
 /* ------------------------------------------------------------- the cut -- */
 
@@ -920,6 +936,32 @@ export function render(frag, ctx) {
   if (lang === 'zh') {
     const stray = [...new Set(spoken.match(/[A-Za-z]{2,}/g) ?? [])].filter((w) => !PRODUCT_WORDS.has(w.toUpperCase()));
     if (stray.length) throw new Error(`cn-about-projects: English on the Chinese page: ${stray.join(', ')}`);
+  }
+
+  /* ---------------------------------------------- the owner's photographs -- */
+
+  /* Since 2026-10-21 each tile shows the owner's photograph of its role
+     (site-images/batch-5; tools/replaceables.mjs ABOUT_CASE_STILLS, by the
+     clip's video id): D01 市场信号, D07 报价, D02 跟进, D05 统筹. Everything
+     above still reads the cut and the four clips in it, so a donor re-cut
+     fails here exactly as before; only then does each clip's `<video>` become
+     one still in the same `.cn-case-video` box (stillImage, the route the
+     capability ring's W02 card takes). The box, its glass, the wordmark roll
+     over it, the arrow and the tile's interaction are untouched. The still
+     fills the box with object-fit: cover (`.w-background-video >
+     img.stargo-still`, css/stargo-fusion.css); `stargo-case-photo` gives it
+     its size (tools/editorial-images.mjs) and its crop point (the "pages"
+     block of css/stargo-fusion.css). The alt is a marker that
+     tools/editorial-images.mjs replaces with the photograph's own sentence.
+     See WHAT THE PICTURES ARE in the header. */
+  if (Object.keys(ABOUT_CASE_STILLS).length !== CLIPS) {
+    throw new Error(`cn-about-projects: ABOUT_CASE_STILLS names ${Object.keys(ABOUT_CASE_STILLS).length} tiles, the band draws ${CLIPS}`);
+  }
+  for (const [id, src] of Object.entries(ABOUT_CASE_STILLS)) {
+    html = stillImage(html, id, src, 'STARGO WORK', 'stargo-still stargo-case-photo');
+  }
+  if (/<video\b|<source\b|data-video-urls=/.test(html)) {
+    throw new Error('cn-about-projects: a tile still carries its clip after the photographs went in');
   }
 
   return html;

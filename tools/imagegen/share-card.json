@@ -1,0 +1,34 @@
+{
+ "note": "The share card (og:image / twitter:image of every page without a picture of its own). Written by tools/imagegen/prepare-share-card.mjs: the supplied sRGB original resized with lanczos3 until it covers 1200x630, cut to 1200x630 at its centre, baseline JPEG; never upscaled, sharpened or recoloured.",
+ "authorization": "Owner image thread, site-images/batch-8 O01 (2026-10-21): the social share cover.",
+ "id": "o01-share-cover",
+ "ref": "O01",
+ "src": "assets/stargo-photo/o01-share-cover-1200x630.jpg",
+ "width": 1200,
+ "height": 630,
+ "bytes": 68431,
+ "sha256": "a894918c635a44a7016847dafaf3ab050a9f8eeed0304686cf8101d1688cf0b9",
+ "sourceFile": "site-images/batch-8/og-share-cover.png",
+ "sourceSha256": "e004e04c9631b8dfb41637ef004c565b4db71ff4c472613c13922669da503bf6",
+ "sourcePixels": [
+  2048,
+  1072
+ ],
+ "recipe": {
+  "resize": [
+   1204,
+   630
+  ],
+  "kernel": "lanczos3",
+  "crop": {
+   "left": 2,
+   "top": 0,
+   "width": 1200,
+   "height": 630
+  },
+  "position": "50% 50%",
+  "format": "jpeg",
+  "quality": 85
+ },
+ "upscaled": false
+}

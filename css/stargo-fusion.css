@@ -257,16 +257,16 @@ body.lx-page .navigation-top .lottie-white { filter: none; }
 
 /* 4. Template stock photography that is set in CSS → STARGO imagery (enterprise
       page hero backgrounds and the homepage vision band). The homepage contact
-      band keeps the template's group photograph behind its glass form. */
+      band's photograph behind its glass form is the owner's G01 (the batch 3
+      block further down). */
 .image-about, .image-about._01 { background-image: url("../assets/stargo-editorial/os-cockpit.webp"); }
 .image-about._02 { background-image: url("../assets/stargo-editorial/os-agent-center.webp"); }
 .image-about._03 { background-image: url("../assets/stargo-editorial/os-login.webp"); }
 .image-about._04 { background-image: url("../assets/stargo-editorial/os-trade-execution.webp"); }
 .absolute-photo { background-image: url("../assets/stargo-editorial/os-cockpit.webp"); }
-.team-small-card { background-image: url("../assets/stargo-editorial/avatar-01.png.webp"); }
-.team-small-card._02 { background-image: url("../assets/stargo-editorial/avatar-04.png.webp"); }
-.team-small-card._03 { background-image: url("../assets/stargo-editorial/avatar-06.png.webp"); }
-.team-small-card._04 { background-image: url("../assets/stargo-editorial/avatar-09.png.webp"); }
+/* The homepage team row: the owner's S + star mark in each circle (2026-10-23,
+   in place of the metallic avatars). */
+.team-small-card, .team-small-card._02, .team-small-card._03, .team-small-card._04 { background-image: url("../assets/brand/stargo-s-mark-256.webp"); background-color: #000; background-size: 84%; background-position: 50%; background-repeat: no-repeat; }
 
 /* 5. lifelogx pages (Intelligence, AI Workforce, About, Blog, articles) keep the
       template's own palette, gradients and imagery (owner decision, 2026-09-06).
@@ -516,7 +516,8 @@ button.toggle-header { width: 100%; border: 0; border-radius: 0; background: tra
 .footer .footer-small-grid:not(.sec):has(> .flex-item > a.button-link) { grid-template-columns: repeat(3, 1fr); }
 /* .navigation-text-main is a flex container, so the prefix span is a flex item
    and the space after "WhatsApp" is trimmed: put that gap back as a margin. */
-.footer .stargo-wa { margin-right: .3em; }
+.footer .stargo-wa,
+.footer .stargo-ch { margin-right: .3em; }
 /* The operator's registered name sits in the footer contact column, which is a
    nowrap flex label. Let that one label wrap inside its column so the 14
    characters are not clipped at tablet widths. */
@@ -540,9 +541,13 @@ button.toggle-header { width: 100%; border: 0; border-radius: 0; background: tra
    Below 768 the footer's bottom is a single column (see the mobile footer block
    at the end of this file) and the same link is 307px wide at 320 and 413px at
    430, so the prefix fits with 109-215px to spare and comes back — a phone must
-   not be told to ring a bare number with no channel on it. */
+   not be told to ring a bare number with no channel on it.
+   2026-10-21: the list now also has 「电话 +86 187 7512 7878」 (the same number)
+   and 「微信 …」 right under this row, so in this band it is the NUMBER that
+   goes and the word 「WhatsApp」 that stays: the row reads as the channel, the
+   phone row carries the digits, and no bare number is left unlabelled. */
 @media (min-width: 768px) and (max-width: 1279px) {
-  .footer .stargo-wa { display: none; }
+  .footer .stargo-wa-num { display: none; }
 }
 @media (max-width: 479px) {
   .footer .footer-small-grid:not(.sec):has(> .flex-item > a.button-link) { grid-template-columns: 1fr 1fr; }
@@ -1600,7 +1605,7 @@ html[lang^="zh"] .lx-scope .lx-heading-style-h4:has(br) {
    from the next.
 
    Measured after, at 430, the block reads top to bottom as 「(商务合作)」 /
-   sales@stargomoto.com / WhatsApp +86 187 7512 7878 / 「(运营主体)」 /
+   the e-mail address / WhatsApp +86 187 7512 7878 / 「(运营主体)」 /
    the registered company name / 「(地址)」 / 柳州 · 广西 · 中国 / 「(社交)」 / the
    round buttons. Heading top to the first line of the group it names: 41px
    every time (49px for the buttons, which are a 32px row rather than a line of
@@ -2705,7 +2710,9 @@ html[lang^="zh"] .testi-grid._01 .top-text.for-sst { text-wrap: pretty; }
       os-desktop fit the subjects as well but are pale, and the first try with
       them left the panel text unreadable at 1440 (they are used as framed
       pictures further down instead). All are landscape 1586×992 like the
-      pictures they replace, so the cover crop is unchanged. */
+      pictures they replace, so the cover crop is unchanged.
+      Since 2026-10-21 the owner's photographs take all four panels: see the
+      batch 7 block at the end of this file, which overrides these. */
 .image-about._01 { background-image: url("../assets/stargo-editorial/brand-family-04.webp"); }
 .image-about._02 { background-image: url("../assets/stargo-editorial/os-loading.webp"); }
 .image-about._03 { background-image: url("../assets/stargo-editorial/brand-family-03.webp"); }
@@ -4350,60 +4357,9 @@ html[lang^="en"] .team-grid .team-content .h2 { text-wrap: balance; }
 }
 
 /* intelligence.html (both languages), the "no writing" band — the text-free
-   screen laid over the hand-held phone (tools/build-site.mjs, V7-LX). The
-   layer has the photograph's box (it is its sibling, absolutely placed), so
-   the IX2 move/scale that both share lands them on the same pixels.
-   `.stargo-nw-frame` is the photograph's picture inside that box: the
-   template shows it object-fit: cover, anchored top left, from 768px (a box
-   720px tall, so the picture is height-driven and cropped at the right on
-   tablets), and at its natural ratio, full width, below 768px. The screen
-   sits on the phone's own screen in the 1262x1474 picture (x 153-699,
-   y 22-1204, 2px into the black bezel so no template pixel shows at the
-   edge); its outline is the screen's rounded rectangle with the three
-   fingertips that overlap the left edge cut out, so the fingers stay in
-   front. The black pill is the camera cut-out the screen covers. */
-.lx-scope .lx-no-writing-image-holder:has(> .stargo-nw-screen) { position: relative; }
-.lx-scope .lx-no-writing-image.stargo-nw-screen {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  pointer-events: none;
-  container-type: size;
-}
-.lx-scope .stargo-nw-frame {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: max(100cqw, 100cqh * 1262 / 1474);
-  height: max(100cqh, 100cqw * 1474 / 1262);
-}
-@media screen and (max-width: 767px) {
-  .lx-scope .stargo-nw-frame { width: 100%; height: auto; aspect-ratio: 1262 / 1474; }
-}
-.lx-scope .stargo-nw-frame .stargo-nw-art {
-  position: absolute;
-  left: 12.124%;
-  top: 1.493%;
-  width: 43.265%;
-  height: 80.19%;
-  max-width: none;
-  object-fit: cover;
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 546 1182' preserveAspectRatio='none'%3E%3Cpath d='M85 0H461A85 85 0 0 1 546 85V1097A85 85 0 0 1 461 1182H85A85 85 0 0 1 0 1097L0 1090L1.5 1087L4.5 1084L9.5 1081L13.5 1078L16.5 1075L19.5 1072L21.5 1069L22.5 1066L23.5 1063L24.5 1060L24.5 1057L24.5 1054L24.5 1051L24.5 1048L23.5 1045L22.5 1042L21.5 1039L21.5 1036L19.5 1033L17.5 1030L15.5 1027L12.5 1024L9.5 1021L6.5 1018L3.5 1015L1.5 1012L2.5 1009L2.5 1006L2.5 1003L0 1000L0 946L1.5 943L2.5 940L6.5 937L10.5 934L12.5 931L15.5 928L16.5 925L18.5 922L19.5 919L20.5 916L20.5 913L20.5 910L20.5 907L20.5 904L20.5 901L20.5 898L20.5 895L20.5 892L20.5 889L19.5 886L18.5 883L17.5 880L16.5 877L14.5 874L12.5 871L10.5 868L6.5 865L3.5 862L0 859L0 811L1.5 808L2.5 805L3.5 802L4.5 799L4.5 796L5.5 793L6.5 790L6.5 787L6.5 784L7.5 781L7.5 778L7.5 775L7.5 772L7.5 769L7.5 766L7.5 763L6.5 760L5.5 757L5.5 754L4.5 751L3.5 748L2.5 745L1.5 742L0 739V85A85 85 0 0 1 85 0Z'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 546 1182' preserveAspectRatio='none'%3E%3Cpath d='M85 0H461A85 85 0 0 1 546 85V1097A85 85 0 0 1 461 1182H85A85 85 0 0 1 0 1097L0 1090L1.5 1087L4.5 1084L9.5 1081L13.5 1078L16.5 1075L19.5 1072L21.5 1069L22.5 1066L23.5 1063L24.5 1060L24.5 1057L24.5 1054L24.5 1051L24.5 1048L23.5 1045L22.5 1042L21.5 1039L21.5 1036L19.5 1033L17.5 1030L15.5 1027L12.5 1024L9.5 1021L6.5 1018L3.5 1015L1.5 1012L2.5 1009L2.5 1006L2.5 1003L0 1000L0 946L1.5 943L2.5 940L6.5 937L10.5 934L12.5 931L15.5 928L16.5 925L18.5 922L19.5 919L20.5 916L20.5 913L20.5 910L20.5 907L20.5 904L20.5 901L20.5 898L20.5 895L20.5 892L20.5 889L19.5 886L18.5 883L17.5 880L16.5 877L14.5 874L12.5 871L10.5 868L6.5 865L3.5 862L0 859L0 811L1.5 808L2.5 805L3.5 802L4.5 799L4.5 796L5.5 793L6.5 790L6.5 787L6.5 784L7.5 781L7.5 778L7.5 775L7.5 772L7.5 769L7.5 766L7.5 763L6.5 760L5.5 757L5.5 754L4.5 751L3.5 748L2.5 745L1.5 742L0 739V85A85 85 0 0 1 85 0Z'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
-}
-.lx-scope .stargo-nw-frame::after {
-  content: "";
-  position: absolute;
-  left: 26.783%;
-  top: 2.782%;
-  width: 13.629%;
-  height: 3.528%;
-  border-radius: 999px;
-  background: #000;
-}
+   screen laid over the hand-held phone (tools/build-site.mjs, V7-LX): since
+   2026-10-21 the phone is the owner's photograph I03, and the rules that lay
+   the screen on its glass are in the "blog" block at the end of this file. */
 
 /* intelligence.html (both languages), the pink closing card (#lx-evolution):
    the STARGO WORK paragraph ran under the portrait. From 768px the text
@@ -5148,3 +5104,1110 @@ body:has(#loop) .image-wrap.for-service .paralax-image[src*="gos11-dormant-react
 }
 
 /* V7-HOME-END */
+
+/* ======================================================================
+   The owner's photographs, batch 3 (2026-10-21; site-images/batch-3,
+   registered in tools/imagegen/photo-assets.json). AI-generated images the
+   owner graded, not documentary photographs (their alt carries the site's
+   （AI 概念图） caption, tools/editorial-images.mjs); only resized here:
+   these rules place them and set the crop point the batch's manifest gives
+   for each one. Every box keeps its size; only the picture in it changes.
+   ====================================================================== */
+
+/* G01. The demo band behind the glass form (index, capabilities and
+        enterprise): Mono's `.photo-section` drew its group photograph here.
+        A loading bay at dusk instead. At 1440 the band is ~1.78:1, close to
+        the picture's 16:9, so the whole door shows with a jamb on each side.
+        On a 390 phone the band is ~0.51:1 and cover keeps only a centre strip
+        of the picture: the door opening fills the width and neither jamb
+        shows. No crop point can keep both jambs in a band that narrow; 51%
+        keeps the opening centred. The section's 0.65 opacity, cover and size
+        are Mono's. */
+/* 2026-10-23: the owner asked for Mono's group photograph back, so the
+   loading bay is no longer drawn here and the band is the template's. */
+
+/* G02. The side menu's 预约企业演示 card (tools/chrome.mjs): a harbour at
+        night where the magical-orb clip played. The clip's box was 220% of the
+        card, pushed up and left so the orb sat behind the text; the photograph
+        fills the card itself instead, at the clip's layer — under the card's
+        45% dark wash (`.bg-overflow`, later in the markup) and under the
+        avatar and the text (z-index 2). The card's own `overflow: hidden` and
+        100px radius clip it. */
+.contact-info.no-shadow > img.stargo-menu-photo {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+}
+
+/* W01–W06. The homepage grid's six stills left on 2026-10-23 for code-drawn
+        desktop windows (tools/code-art-theatre.mjs), and their crop points for
+        W04, W05 and W06 with them. W02, still in the capability ring, is
+        centred and needs none. */
+
+/* W02 in the capability ring's inner circle. Cinery mirrors that whole circle
+        (`.cn-cta-circle-wrapper.cn-_02 { transform: scaleX(-1) }`,
+        css/cinery.cn2.css) so it turns the other way round from the outer
+        one; its clips do not mind, but a still in it would read back to front.
+        Flipping the still once more, about its own centre, cancels the
+        circle's mirror for the picture alone: the card's box, tilt and the
+        ring's motion are untouched, and so are the clips beside it. A still
+        that sits in a mirrored ring anywhere else needs the same. */
+.cn-produce .cn-cta-circle-wrapper.cn-_02 .w-background-video > img.stargo-still { transform: scaleX(-1); }
+
+/* V8-CONTACT-START (2026-10-21): the owner's contact details --------------
+   copy.mjs CONTACT_INFO now names a contact person, a phone and a WeChat ID
+   beside the e-mail and WhatsApp. They appear in four places, each in the
+   component that place already uses:
+     - contact page, under the quote card: 「(直接联系)」, a list in Mono's own
+       type (tools/build-site.mjs);
+     - footer 「(商务合作)」: 电话 and 微信 rows, clones of the WhatsApp row
+       (tools/chrome.mjs footerContact);
+     - footer 「(社交)」, the side menu card and the about card: a handset and a
+       WeChat glyph after the three round buttons (chrome.mjs socialIcons,
+       tools/blocks/cn-about.mjs).
+   WeChat has no web link, so its controls are <button>s that copy the ID
+   (js/stargo-forms.js). */
+
+/* A copy control that is only that ships `hidden`; the script reveals it.
+   Several classes it wears set `display`, which outranks the attribute. */
+[data-stargo-copy][hidden] { display: none !important; }
+
+/* The script's one live region: read out, not drawn. */
+.stargo-sr {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* The template's link components, worn by a <button>: no UA chrome, so it
+   draws exactly as the <a> beside it. */
+button.button-link,
+button.social-wrapper,
+button.cn-social-link {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+  border: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+/* No padding here for `button.button-link`: the template's own `.button-link`
+   rules already clear the UA padding, and below 992px they give every row
+   `padding: 4px 0`. A reset here (0,1,1) outranked that (0,1,0), so the footer's
+   微信 row was a 16.5px target while the <a> rows above it were 25px, and sat 4px
+   out of their rhythm. On touch screens the <a> rows get 8px (the
+   `(pointer: coarse)` rule above names `a.button-link`); the button takes the
+   same. */
+@media (pointer: coarse) {
+  button.button-link { padding-top: 8px; padding-bottom: 8px; }
+}
+button.social-wrapper,
+button.cn-social-link { padding: 0; }
+button.button-link .social-circle-small,
+button.button-link .navigation-text-main { text-align: left; }
+
+/* Five round buttons where there were three. Each row is 40px circles with no
+   gap, so five need 200px: the side menu card is 174px wide and the footer's
+   「(社交)」 column is 181-194px wide at 768-1279px. There the circles are
+   34px — still well over the 24px minimum target — and the row keeps one line.
+   Nothing about the three existing buttons changes elsewhere. */
+.social-content .social-wrapper { flex: none; }
+.social-menu-wrapper .social-content .social-wrapper { width: 34px; height: 34px; }
+@media (min-width: 768px) and (max-width: 1279px) {
+  .footer .social-content.for-footer .social-wrapper { width: 34px; height: 34px; }
+}
+
+/* The contact page's 「(直接联系)」 list, under the quote card. The heading is
+   Mono's `p.top-text`, like 「(告诉我们你的公司)」 beside it; each row is a
+   label in `top-text sml` (Mono's small grey) and a value in `top-text`,
+   between the same 10%-black hairlines Mono draws its lists with. Five rows
+   of one line each, 40px of air above: from 992px the whole column (card +
+   list) is 768px tall, sticky at 108px, so its bottom is at 876px. */
+.stargo-direct { margin-top: 40px; }
+.stargo-direct-list { margin: 16px 0 0; padding: 0; border-bottom: 1px solid rgba(0, 0, 0, .1); }
+.stargo-direct-row {
+  display: grid;
+  grid-template-columns: minmax(5.5em, auto) minmax(0, 1fr);
+  column-gap: 16px;
+  align-items: center;
+  min-height: 44px;
+  padding: 6px 0;
+  border-top: 1px solid rgba(0, 0, 0, .1);
+}
+.stargo-direct-row > dt { margin: 0; }
+/* `sml` is Mono's .5 opacity: #808080 on white, 3.94:1 at 14.4px, under the
+   4.5:1 AA asks for. At .6 the label is #666 (5.7:1) and still reads as the
+   grey half of the row. */
+.stargo-direct-row > dt.top-text { opacity: .6; }
+.stargo-direct-row > dd {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  letter-spacing: -.3px;
+}
+/* Each link is the row's height to a finger: 12px above and below its one
+   line (18px + 24 = 42px, inside the 44px row), taken back by the same
+   negative margin so nothing moves. The underline is placed in the content
+   box, so it stays under the text, not at the foot of the padding. */
+.stargo-direct-row a { display: block; padding: 12px 0; margin: -12px 0; color: inherit; text-decoration: none; background-image: linear-gradient(currentColor, currentColor); background-origin: content-box; background-size: 0 1px; background-repeat: no-repeat; background-position: 0 100%; transition: background-size .35s; }
+.stargo-direct-row a:hover,
+.stargo-direct-row a:focus-visible { background-size: 100% 1px; }
+/* 「复制」: a small outlined pill in the label's size (25px), wide enough for
+   「已复制」 / "Copied" so the swap does not move anything. The button itself is
+   40px tall, the site's tap-target bar; the pill is drawn by ::before in its
+   middle, and the -7.5px margins keep the row as it was. */
+.stargo-copy {
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+  isolation: isolate;
+  min-width: 4.2em;
+  min-height: 40px;
+  margin: -7.5px 0;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: var(--button--font-size);
+  font-weight: var(--font-weight--500);
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
+  transition: color .2s;
+}
+.stargo-copy::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: calc(50% - .6em - 4px) 0;
+  border: 1px solid rgba(0, 0, 0, .2);
+  border-radius: 999px;
+  transition: background-color .2s, border-color .2s;
+}
+.stargo-copy:hover::before { border-color: rgba(0, 0, 0, .55); }
+/* The site's focus ring (#e8823a, 3px out), around the pill one sees. */
+.stargo-copy:focus-visible { outline: 0; }
+.stargo-copy:focus-visible::before { outline: 2px solid #e8823a; outline-offset: 3px; }
+.stargo-copy[data-stargo-copied-on] { color: #fff; }
+.stargo-copy[data-stargo-copied-on]::before { background-color: #000; border-color: #000; }
+
+/* The column is sticky from 992px (the contact-page rule further up), and with
+   the list under the card it is 768px tall: stuck at 108px it ends at 876px.
+   In a window under 900px tall (1366x768, 1280x720, 1536x864 laptops) its
+   last rows — 微信, WhatsApp, 邮箱 — would stay below the fold for as long as
+   it is stuck, i.e. until the form ends. The fixed menu pill (.menu-bottom)
+   also sits over the bottom ~62px of the window, so up to about 960px tall it
+   would cover the 邮箱 row. There the column scrolls with the page instead,
+   so the whole list passes through view. */
+@media screen and (min-width: 992px) and (max-height: 959px) {
+  .stargo-contact-page .contact-1-grid .max-w-left.add-cnt { position: static; }
+}
+/* V8-CONTACT-END */
+
+/* ======================================================================
+   The owner's photographs on the homepage (group "home", 2026-10-21;
+   site-images/batch-1, -2, -4 and -8: H01–H10, P01–P05, S01–S04, R1, R2,
+   T01 and B01–B04, on index.html and en/index.html only; the slots are in
+   tools/replaceables.mjs, HOME_MOSAIC to HOME_BLOG_COVERS). Graded finals,
+   only resized. Every box keeps its size; these rules set the crop point
+   each batch's manifest gives, scoped to the homepage slot, so the same
+   photograph elsewhere keeps whatever its own page sets.
+   ====================================================================== */
+
+/* H01–H10, the opening mosaic around the white hero card. The left column
+   (`.stargo-mosaic`) draws every picture whole at its own ratio, so H02 and
+   H05, which only appear there, need no crop point. The right column
+   (`.photo-hero`) is Mono's cover box: 1.71:1 at 1440, 0.75:1 at 390 and as
+   tall as 0.5:1 at 480–767. H01, H04, H06 and H08 are centred on desktop.
+   The left column's pictures were as wide as their column only because the
+   stills before them were 1600px wide (`max-width: 100%` did the rest);
+   these files stop at 1024, so `width: 100%` keeps the column full beyond
+   ~2130px too. */
+.photo-block img.stargo-mosaic { width: 100%; }
+.photo-hero[src*="stargo-photo/h03-"] { object-position: 50% 35%; }
+.photo-hero[src*="stargo-photo/h07-"] { object-position: 80% 73%; }
+.photo-hero[src*="stargo-photo/h09-"] { object-position: 50% 37%; }
+.photo-hero[src*="stargo-photo/h10-"] { object-position: 52% 50%; }
+@media (max-width: 767px) {
+  .photo-hero[src*="stargo-photo/h04-"] { object-position: 72% 50%; }
+  .photo-hero[src*="stargo-photo/h08-"] { object-position: 58% 50%; }
+  .photo-hero[src*="stargo-photo/h09-"] { object-position: 50% 50%; }
+}
+/* From 1460 up the right column stays 400px high but keeps widening (about
+   half the window: 694 at 1460, 917 at 1920, 1222 at 2560), so a fixed
+   percentage crops ever tighter from above: from about 1465 the manifest's
+   80% 73% cut off H07's head and 50% 37% the top of H09's container. There
+   each crop pins one row of the square to the box instead: `calc(P% - Lpx)`
+   puts the picture's row P% at P% of 400 less L, whatever the width. H07's
+   row 32% is the top of the man's head, H09's 17.5% the top of the
+   container's open doors; both land 15px below the top edge, the headroom
+   the manifest's crops give them at 1440, and the picture loses only from
+   the bottom as the box widens (H07 head to thighs at 1920, to the hands
+   at 2560; H09 container top to the driver at 2560). */
+@media (min-width: 1460px) {
+  .photo-hero[src*="stargo-photo/h07-"] { object-position: 80% calc(32% - 113px); }
+  .photo-hero[src*="stargo-photo/h09-"] { object-position: 50% calc(17.5% - 55px); }
+}
+
+/* P01–P05, the five stage cards. Mono's `.paralax-image` covers the 3:2
+   card at 105% of its height (334x234 at 1440), as the illustration in
+   (004) always did; H29 above fits only product screens. P05 is centred. */
+body:has(#loop) .image-wrap.for-service .paralax-image[src*="stargo-photo/p01-"] { object-position: 40% 50%; }
+body:has(#loop) .image-wrap.for-service .paralax-image[src*="stargo-photo/p02-"] { object-position: 35% 40%; }
+body:has(#loop) .image-wrap.for-service .paralax-image[src*="stargo-photo/p03-"] { object-position: 45% 0%; }
+body:has(#loop) .image-wrap.for-service .paralax-image[src*="stargo-photo/p04-"] { object-position: 0% 100%; }
+
+/* S01–S04, the four pain-point cards (1.36:1 at 1440, 1.47:1 at 390). S01
+   and S02 are centred; S03 keeps the left edge, S04 (the dusk version) its
+   walking man and the lit doorway. */
+.work-main-wrapper .paralax-image[src*="stargo-photo/s03-"] { object-position: 0% 50%; }
+.work-main-wrapper .paralax-image[src*="stargo-photo/s03v2-"] { object-position: 0% 50%; }
+.work-main-wrapper .paralax-image[src*="stargo-photo/s04-"] { object-position: 57% 50%; }
+
+/* R1, the photograph split across the two halves behind the scenario cards
+   (desktop only; Mono hides them at 991 and below). Mono's 200% size, fixed
+   attachment and left/right anchors stay. A CSS background carries no alt.
+   Each half is half the window wide and the whole window high, and the
+   picture is drawn as wide as the window, so how much of its height shows
+   depends on the window's shape, not its width: the manifest's 44% keeps
+   the rep's head and her papers in a 1440x900 window (hair 49px below the
+   top edge) but left 9 to 17px in 16:9 ones (1366x768, 1920x1080,
+   2560x1440) and 1px at 2560x1080. The height is therefore pinned to her
+   hair line, row 24.5% of the picture: `calc(24.5% - 18.5vh)` puts that row
+   6% of the window's height below the top in any window (hair measured at
+   50 to 94px, 6.5% of the height, from 1366x768 to 2560x1440; 58px at
+   1440x900, within a point of the manifest's 44% there), and
+   `max(…, 100%)` keeps the bottom edge covered in a window taller than it
+   is wide.
+   The file is 1639px wide, an odd number, so the halves meet in the middle
+   of one of its pixels, and Chromium left the left half's last column partly
+   unpainted: a 1px light line down the middle of the picture (none with an
+   even-width file). The left half now reaches 1px under the right one,
+   which paints over it, and its picture is 2px narrower than 200% of the
+   wider box, so both halves still draw it at the same size and it stays
+   continuous across the join. */
+/* Since the second round the halves show R1v2, the 16:9 wide version
+   (2880px, the image thread's crop 55% 35%) in place of the portrait R1,
+   which stays on the about and pricing slides. A 16:9 picture drawn as wide
+   as the window is shorter than most windows, so it is drawn at
+   `--r1w`, the window's width or 16/9 of its height, whichever is larger,
+   and placed in window coordinates: the left half at the crop offset, the
+   right half the same offset less its own 50vw, so the two halves still
+   draw one continuous picture (the site hides the scrollbar, so 100vw is
+   the halves' parent). The ancestor's transform turns the fixed attachment
+   into a scrolling one, so the boxes, not the viewport, are the
+   positioning areas, as before. */
+.photo-half._01, .photo-half._02 {
+  --r1w: max(100vw, 177.78vh);
+  background-image: url("../assets/stargo-photo/r1v2-sales-rep-wide-2880.webp");
+  background-size: var(--r1w) auto;
+}
+.photo-half._01 { width: calc(50% + 1px); background-position: calc((100vw - var(--r1w)) * 0.55) 35%; }
+.photo-half._02 { background-position: calc((100vw - var(--r1w)) * 0.55 - 50vw) 35%; }
+
+/* R2, the scenario film card (`.testimonials-card._03`): a portrait still
+   in the film's box, 400x450 (0.89:1) from 480 up and ~1.07:1 on a phone,
+   the manifest's crop for those card slots. */
+.testimonials-card._03 img.stargo-role-photo { object-position: 50% 40%; }
+/* Mono tosses the four cards away turned over (rotateX(180deg), back face
+   visible), which drew R2 upside down at the top of the window. While its
+   card is turned over, js/stargo-card-upright.js sets .sgp-upright and the
+   picture is turned back over inside its own box, which fills the card; the
+   card's flight and its text are untouched. */
+.testimonials-card._03 img.stargo-role-photo.sgp-upright { transform: scaleY(-1); }
+
+/* T01, the pricing band's image card beside 企业版. */
+.testi-grid .image-wrap.rnd .paralax-image[src*="stargo-photo/t01-"] { object-position: 50% 58%; }
+
+/* B01–B04, the four newest-article cards. Mono sizes `.testimonials-photo`
+   by its 3 / 2.3 aspect-ratio and min-width alone; the width and height a
+   photograph carries for layout stability would otherwise become its CSS
+   size, so they are set back to auto here and the box stays Mono's. B04
+   moves right; the others are centred. */
+.blog-grid .testimonials-photo[src*="stargo-photo/"] { width: auto; height: auto; }
+.blog-grid .testimonials-photo[src*="stargo-photo/b04-"] { object-position: 55% 50%; }
+.blog-grid .testimonials-photo[src*="stargo-photo/b04v2-"] { object-position: 55% 50%; }
+.blog-grid .testimonials-photo[src*="stargo-photo/b07v2-"] { object-position: 50% 40%; }
+
+/* ======================================================================
+   The owner's photographs on the capability page (group "cap", 2026-10-21;
+   site-images/batch-1, -2, -5 and -6, registered in
+   tools/imagegen/photo-assets.json and placed by tools/replaceables.mjs
+   RING_STILLS and CAP_PHOTOS). Graded finals, only resized: these rules set
+   the crop point a manifest gives where it is not the centre (50% 50% needs
+   no rule), the phone value below 768 where the manifest gives one, and keep
+   two Sales Desk cards at the shape they had on phones. Every box keeps its
+   size; only the picture in it changes. All of them are <img>s with alt
+   text; none is a CSS background. H, P and D photographs also appear on
+   other pages at other crops, so their rules are scoped to this page's
+   blocks; C01-C14 appear only here.
+   ====================================================================== */
+
+/* 「每项 工作」 ring (.cn-produce): every card is a still now, a 344 x 312
+   box (192 x 182 below 768), nearly square at every width. H08 takes the
+   manifest's square crop (55%); H02, H04 and H09 take their phone value
+   below 768, as W04 does. */
+.cn-produce img.stargo-still[src*="stargo-photo/h03-sample-wall-"] { object-position: 50% 35%; }
+.cn-produce img.stargo-still[src*="stargo-photo/h05-assembly-line-"] { object-position: 45% 50%; }
+.cn-produce img.stargo-still[src*="stargo-photo/h07-owner-walk-"] { object-position: 80% 73%; }
+.cn-produce img.stargo-still[src*="stargo-photo/h08-product-shoot-"] { object-position: 55% 50%; }
+.cn-produce img.stargo-still[src*="stargo-photo/h09-container-loading-"] { object-position: 50% 37%; }
+.cn-produce img.stargo-still[src*="stargo-photo/h10-video-showing-"] { object-position: 52% 50%; }
+.cn-produce img.stargo-still[src*="stargo-photo/p03-fulfilment-"] { object-position: 45% 0%; }
+@media (max-width: 767px) {
+  .cn-produce img.stargo-still[src*="stargo-photo/h02-night-inquiry-"] { object-position: 42% 50%; }
+  .cn-produce img.stargo-still[src*="stargo-photo/h04-caliper-qc-"] { object-position: 72% 50%; }
+  .cn-produce img.stargo-still[src*="stargo-photo/h09-container-loading-"] { object-position: 50% 50%; }
+}
+
+/* 一条业务主线 orbit (.qx-orbit): eight 148 x 168 thumbnails (0.88:1; 100 x
+   130 and 60 x 80 on phones). Every one is a portrait crop, so H02 takes the
+   manifest's portrait value (42%, look room on the left) at every width. */
+.qx-orbit img.qx-all-image-cover[src*="stargo-photo/p01-prospecting-"] { object-position: 40% 50%; }
+.qx-orbit img.qx-all-image-cover[src*="stargo-photo/h02-night-inquiry-"] { object-position: 42% 50%; }
+.qx-orbit img.qx-all-image-cover[src*="stargo-photo/h10-video-showing-"] { object-position: 52% 50%; }
+.qx-orbit img.qx-all-image-cover[src*="stargo-photo/h09-container-loading-"] { object-position: 50% 37%; }
+@media (max-width: 767px) {
+  .qx-orbit img.qx-all-image-cover[src*="stargo-photo/h09-container-loading-"] { object-position: 50% 50%; }
+}
+
+/* C03 (四个板块, 商务、履约与创作): the phone card is 1.47:1 and keeps the
+   desk and the open door at 40%. C05 (Sales Desk inbox, and the orbit's
+   step 04) 52%; C08 (the 图片 / 视频 portrait and its ring card) 50% 60%;
+   C10 (the AI team's progress board) 70%. */
+@media (max-width: 767px) {
+  img[src*="stargo-photo/c03-commerce-fulfilment-"] { object-position: 40% 50%; }
+}
+img[src*="stargo-photo/c05-unified-inbox-"] { object-position: 52% 50%; }
+img[src*="stargo-photo/c08-product-references-"] { object-position: 50% 60%; }
+img[src*="stargo-photo/c10-progress-board-"] { object-position: 70% 50%; }
+/* The second versions of C01, C02 and C04 (the four area cards) carry the
+   image thread's own crop points. */
+img[src*="stargo-photo/c01v2-"] { object-position: 50% 40%; }
+img[src*="stargo-photo/c02v2-"] { object-position: 75% 50%; }
+img[src*="stargo-photo/c04v2-"] { object-position: 30% 60%; }
+
+/* Sales Desk cards (.qx-news) below 480: qubix sets the card `height: auto`,
+   so a card is as tall as its picture's own shape. The art before these
+   photographs made the inbox card 16:9 and the customer card square; both
+   photographs are 3:2, so the cards keep those shapes here (the picture is
+   cover-cropped into them) and the column below does not move. */
+@media (max-width: 479px) {
+  .qx-news .qx-blog-item-image > img[src*="stargo-photo/c05-unified-inbox-"] { aspect-ratio: 16 / 9; }
+  .qx-news .qx-blog-item-image > img[src*="stargo-photo/c06-customer-360-"] { aspect-ratio: 1 / 1; }
+}
+
+/* The 图片 / 视频 card (.cn-faq) beside the questions (992 and up): the card
+   is meant to be as tall as the questions column, whatever the picture
+   (cn-faq.css). The art before C08 was landscape, so its own height never
+   reached the column's; C08 is a 2:3 portrait, and from 1366 up its own
+   height (611 x 917 to 760 x 1140) outgrew the column and pushed every
+   section below it down by 60 to 283px. Its height is taken out of the row
+   sizing and the picture fills the card the column sets, as before. */
+@media (min-width: 992px) {
+  .cn-faq .cn-faq-image[src*="stargo-photo/c08-product-references-"] { height: 0; min-height: 100%; }
+}
+
+/* ======================================================================
+   The owner's photographs, batch 7: the enterprise page (2026-10-21;
+   site-images/batch-7, E01–E13, registered in
+   tools/imagegen/photo-assets.json; the <img> slots are in
+   tools/replaceables.mjs ENTERPRISE_PHOTOS). Graded finals, only resized:
+   these rules place the four panel backgrounds and set the crop point the
+   batch's manifest gives for each picture that is cover-cropped. Every box
+   keeps its size; only the picture in it changes.
+   ====================================================================== */
+
+/* E01–E04. The four sticky story panels (决定, 核对, 连接, 经营), on
+        enterprise.html and en/enterprise.html only. The panels print white
+        text straight on the picture, so each is a dark photograph; as a CSS
+        background it has no alt. Each replaces the panel's picture set in
+        "4. Template stock photography" and in the V6-F "4. The four hero
+        panels' pictures" above (same specificity, later in the file). The
+        picture box (`.image-about`) is 125% of the panel (1800x1125 at 1440,
+        488x897 on a 390 phone), cover, and slides sideways as the panels
+        pass, so these crop points are of that box. A background cannot pick
+        a file by width, so the 2048 file serves every width. E01 sits on its
+        bottom edge on wide screens (the desk and the pen hand) and is centred
+        on phones; E03 keeps the clerk and the shelving at 45%. On a 390
+        phone panels 2 and 3 slide in from the right and show only box x
+        ~140-488 of 488, so E02's centred crop shows the right-hand tap and a
+        glove, and the tag on the left-hand tap only as the panel leaves (about
+        38% would keep both taps and the tag in view); 50% is the image
+        thread's setting and is kept until it decides. */
+/* Since 2026-10-23 (enterprise lane) the four panels are drawn in code: each box holds a motion
+   host, and css/stargo-motion-enterprise.css paints the box's ground over every picture rule above,
+   so no photograph is fetched for them. E01–E04 stay registered and published, unplaced. */
+
+/* E05–E08. The cockpit column (`.work-image-cover`) and the 原则 picture
+        (`.paralax-image`) are `object-fit: cover` in boxes whose shape
+        follows the text beside them, so each shows part of its picture.
+        E06 is portrait and keeps the owner's head (50% 20%) where its box is
+        squarer than the picture; E08 keeps the glove and the button (50%
+        42%). On phones, where the column's boxes are about 1.2:1, E05 moves
+        to 55% (the tablet and the tea), E06 is centred and E07 keeps both
+        hands on the ledger (34%). The five module cards draw their pictures
+        whole (`width: 100%`, height from the picture), so E09–E13 have no
+        crop point to set: the manifest's positions for them (E09 54%, E10
+        72% and E12 45% 25% / 45% 50%; E11 and E13 only if cover-cropped)
+        would change nothing there. */
+img[src*="stargo-photo/e06-cockpit-blocker-"] { object-position: 50% 20%; }
+/* (E08 and the module cards' E09–E13 are code drawings since 2026-10-23: tools/code-art-enterprise.mjs.) */
+@media (max-width: 767px) {
+  img[src*="stargo-photo/e05-cockpit-overview-"] { object-position: 55% 50%; }
+  img[src*="stargo-photo/e06-cockpit-blocker-"] { object-position: 50% 50%; }
+  img[src*="stargo-photo/e07-cockpit-budget-"] { object-position: 34% 50%; }
+}
+
+/* ======================================================================
+   The owner's photographs on about, contact, pricing and workforce
+   (group "pages", 2026-10-21; site-images/batch-4, batch-5 and batch-8,
+   registered in tools/imagegen/photo-assets.json, placed by
+   tools/replaceables.mjs ROLE_SLIDES … WORKFORCE_BLOG_COVERS). Graded
+   finals, only resized: these rules place the one CSS background and set
+   the crop point each batch's manifest gives. Every box keeps its size;
+   only the picture in it changes.
+   ====================================================================== */
+
+/* A01. about.html's introduction band behind 「从真实业务出发…」
+        (`.cn-about .cn-intro-background`, css/cinery.cn2.css): an empty
+        assembly workshop at dawn where cinery's projector-theatre photograph
+        was. Its cover, no-repeat and fixed attachment are cinery's. */
+.cn-about .cn-intro-background {
+  background-image: url("../assets/stargo-photo/a01-empty-workshop-2048.webp");
+  background-position: 50% 50%;
+}
+
+/* R1–R4. The four scenario slides on about and pricing (`.cn-cover-image`,
+        a cover crop of 0.92:1 at 1440, 0.51:1 at 768 and 1.03:1 at 390).
+        R2 keeps the manager's head and the whole row of boxes at 25% high;
+        on phones the manifest's mobile value centres it. */
+.cn-cover-image[src*="stargo-photo/r1-sales-rep-"] { object-position: 50% 44%; }
+.cn-cover-image[src*="stargo-photo/r2-trade-manager-"] { object-position: 50% 25%; }
+.cn-cover-image[src*="stargo-photo/r3-sales-director-"] { object-position: 50% 36%; }
+.cn-cover-image[src*="stargo-photo/r4-general-manager-"] { object-position: 50% 35%; }
+@media (max-width: 767px) {
+  .cn-cover-image[src*="stargo-photo/r2-trade-manager-"] { object-position: 50% 50%; }
+}
+
+/* D01, D07, D02, D05. about.html's four AI-employee tiles: a still in each
+        clip's box (`.w-background-video > img.stargo-still`, which fills it
+        with object-fit: cover). */
+.stargo-case-photo[src*="stargo-photo/d01-market-research-"] { object-position: 50% 52%; }
+.stargo-case-photo[src*="stargo-photo/d07-quotation-"] { object-position: 50% 55%; }
+
+/* K01. contact.html's quote card: the meeting table in the film's box,
+        under the card's washes, mark and quote. The card is 0.82:1 from 992
+        up (which the 0.82:1 picture fills) and 0.64–0.82:1 at 768–991
+        (full height shown), so 50% 50%, the manifest's desktop value, is
+        all there is to it there. Up to 767 the card is wider than the
+        picture and takes the manifest's mobile value, 50% 100%: the still
+        life sits high, between the mark and the label, and the quote reads
+        on the empty table below it. From 480 the card is 400px tall and
+        461–736px wide, so the picture is cut ever tighter as it widens and
+        100% would push the lamp's shade over the top edge and the bowl into
+        the label; the point steps down just enough to keep the lamp whole
+        and the notebook above the quote's first line, zh and en (measured
+        every 10px from 480 to 767 against the text's line boxes; at 50%
+        the lamp, sample and bowl sit under the quote's first lines). Below
+        430 the card (0.88–1.07:1) is too close to the picture's shape for
+        any point to lift the still life clear of the quote; 100% keeps it
+        highest. From 430 to 479 (1.2–1.3:1) 90% keeps the shade off the top
+        edge as that card widens. */
+.stargo-contact-photo { object-position: 50% 50%; }
+@media (max-width: 767px) { .stargo-contact-photo { object-position: 50% 100%; } }
+@media (min-width: 430px) and (max-width: 479px) { .stargo-contact-photo { object-position: 50% 90%; } }
+@media (min-width: 510px) and (max-width: 529px) { .stargo-contact-photo { object-position: 50% 95%; } }
+@media (min-width: 530px) and (max-width: 569px) { .stargo-contact-photo { object-position: 50% 90%; } }
+@media (min-width: 570px) and (max-width: 609px) { .stargo-contact-photo { object-position: 50% 80%; } }
+@media (min-width: 610px) and (max-width: 664px) { .stargo-contact-photo { object-position: 50% 75%; } }
+@media (min-width: 665px) and (max-width: 714px) { .stargo-contact-photo { object-position: 50% 70%; } }
+@media (min-width: 715px) and (max-width: 734px) { .stargo-contact-photo { object-position: 50% 68%; } }
+@media (min-width: 735px) and (max-width: 744px) { .stargo-contact-photo { object-position: 50% 67%; } }
+@media (min-width: 745px) and (max-width: 767px) { .stargo-contact-photo { object-position: 50% 65%; } }
+
+/* D01–D06. workforce.html's role cards (`.lx-feature-hero-image`, a 1 : 1.28
+        cover crop of a square picture). D03 keeps the caliper at the right
+        edge; D06 (the collage card) the report and the coffee. */
+.lx-feature-hero-image[src*="stargo-photo/d01-market-research-"] { object-position: 50% 52%; }
+.lx-feature-hero-image[src*="stargo-photo/d03-product-spec-"] { object-position: 100% 50%; }
+.lx-feature-hero-image[src*="stargo-photo/d06-reporting-"] { object-position: 57% 50%; }
+
+/* B01–B03. workforce.html's three article cards (`.lx-blog-image`, 1:1,
+        object-fit: cover, centred). The template sizes the card by
+        `aspect-ratio: 1` and `width: 100%`; the photograph's width and height
+        attributes would set a height of their own, so it goes back to auto. */
+.lx-blog-image:not(.lx-details)[src*="stargo-photo/"] { height: auto; }
+
+/* ======================================================================
+   The owner's photographs on the blog and the intelligence page (group
+   "blog", 2026-10-21; site-images/batch-8: B01–B07 on blog.html and the
+   seven articles, I01–I03 on intelligence.html, zh and en; the slots are
+   in tools/replaceables.mjs, BLOG_COVERS and INTEL_PHOTOS). Graded finals,
+   only resized. Every box keeps its size; these rules set the crop point
+   each manifest gives, scoped to these slots.
+   ====================================================================== */
+
+/* B01–B07, the article covers. They are 3:2, the article hero's own ratio,
+   so the hero shows each one whole; the 1:1 cards of the blog index and of
+   every article's 「更多文章」 list crop them. Lifelogx's aspect-ratio sizes
+   those boxes, so the photographs' width and height attributes give way to
+   it. B04 keeps the padlock and its blank tag (55%); on a phone B05 keeps
+   both cuffs (56%); the others are centred. The V7-BLOG r3 plate and
+   contain rules above key on the assets/blog/ files and do not reach these. */
+.lx-scope .lx-blog-image[src*="stargo-photo/b0"] { height: auto; }
+.lx-scope .lx-blog-image[src*="stargo-photo/b04-"] { object-position: 55% 50%; }
+.lx-scope .lx-blog-image[src*="stargo-photo/b04v2-"] { object-position: 55% 50%; }
+.lx-scope .lx-blog-image[src*="stargo-photo/b07v2-"] { object-position: 50% 40%; }
+@media (max-width: 767px) {
+  .lx-scope .lx-blog-image[src*="stargo-photo/b05-"] { object-position: 56% 50%; }
+}
+
+/* I01, the full-bleed picture under the four lines of #lx-more, is centred
+   (Lifelogx's own cover), so it needs no rule. The closing card's picture
+   (I02 until 2026-10-23) is the code-drawn 'improve' scene
+   (css/stargo-motion-improve.css), which lays itself out for the box's
+   shape: 1.32:1 at 1440, a tall strip at 768-991, 1:1 on phones. */
+/* From 768 up the picture's box (42% of the card, absolutely placed) and
+   the 66% text column overlap by design: the template's picture was a
+   cut-out, clear where the heading's end runs over it (en 768-1172, zh
+   992-1088). The scene is opaque, so the text column is drawn above it (no
+   box moves), and its left edge fades into the card instead of meeting the
+   pink in a hard seam. */
+.lx-scope .lx-cta-card:has(.lx-cta-image[data-sg-scene="improve"]) .lx-cta-content-holder {
+  position: relative;
+  z-index: 1;
+}
+@media (min-width: 768px) {
+  .lx-scope .lx-cta-image[data-sg-scene="improve"] {
+    -webkit-mask-image: linear-gradient(90deg, transparent, rgba(0, 0, 0, .44) 5%, rgba(0, 0, 0, .75) 10%, rgba(0, 0, 0, .94) 15%, #000 20%);
+    mask-image: linear-gradient(90deg, transparent, rgba(0, 0, 0, .44) 5%, rgba(0, 0, 0, .75) 10%, rgba(0, 0, 0, .94) 15%, #000 20%);
+  }
+}
+
+/* I03, the hand-held phone of the "no writing" band, a 2:3 portrait at
+   50% 15% in Lifelogx's cover box (531x720 at 1440; at 768-991 the template
+   narrows that box to a 128px strip, which shows the middle of the screen,
+   as it showed a strip of the template's phone). Below 768 the template
+   draws its picture at the picture's own ratio; the box keeps the template
+   picture's 1262:1474 there (358x418 at 390), so the band does not grow. */
+.lx-scope img.lx-no-writing-image[src*="stargo-photo/i03-"] { object-position: 50% 15%; }
+@media (max-width: 767px) {
+  .lx-scope img.lx-no-writing-image[src*="stargo-photo/i03-"] { height: auto; aspect-ratio: 1262 / 1474; }
+}
+/* From 768 up the big words stand right beside the picture's box. The
+   template's picture was a cut-out floating on the gradient; I03 is an
+   opaque photograph, so its sides (18% each) and top (12%) fade into the
+   gradient on an eased curve rather than meet the words in a hard-edged
+   rectangle (the bottom is the band's own edge). The hand and phone sit
+   at 18-75% of the frame, inside the fades. The screen layer over the
+   glass has the same box and takes the same mask: where the box shows
+   the whole frame width the screen (34-67%) is clear of the fades, and
+   where the template narrows the box to a strip (zh, about 768-880 px)
+   the screen's sides fade with the photograph's instead of standing out
+   as a hard-edged slab. */
+@media (min-width: 768px) {
+  .lx-scope img.lx-no-writing-image[src*="stargo-photo/i03-"],
+  .lx-scope .lx-no-writing-image-holder:has(> img[src*="stargo-photo/i03-"]) > .stargo-nw-screen {
+    -webkit-mask-image: linear-gradient(90deg, transparent, rgba(0, 0, 0, .1) 3.6%, rgba(0, 0, 0, .35) 7.2%, rgba(0, 0, 0, .65) 10.8%, rgba(0, 0, 0, .9) 14.4%, #000 18%, #000 82%, rgba(0, 0, 0, .9) 85.6%, rgba(0, 0, 0, .65) 89.2%, rgba(0, 0, 0, .35) 92.8%, rgba(0, 0, 0, .1) 96.4%, transparent), linear-gradient(transparent, rgba(0, 0, 0, .1) 2.4%, rgba(0, 0, 0, .35) 4.8%, rgba(0, 0, 0, .65) 7.2%, rgba(0, 0, 0, .9) 9.6%, #000 12%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(90deg, transparent, rgba(0, 0, 0, .1) 3.6%, rgba(0, 0, 0, .35) 7.2%, rgba(0, 0, 0, .65) 10.8%, rgba(0, 0, 0, .9) 14.4%, #000 18%, #000 82%, rgba(0, 0, 0, .9) 85.6%, rgba(0, 0, 0, .65) 89.2%, rgba(0, 0, 0, .35) 92.8%, rgba(0, 0, 0, .1) 96.4%, transparent), linear-gradient(transparent, rgba(0, 0, 0, .1) 2.4%, rgba(0, 0, 0, .35) 4.8%, rgba(0, 0, 0, .65) 7.2%, rgba(0, 0, 0, .9) 9.6%, #000 12%);
+    mask-composite: intersect;
+  }
+}
+
+/* The text-free screen over the hand-held phone of the "no writing" band.
+   2026-10-23: the owner asked for the template's phone back (I03 is no
+   longer placed), so these are again the rules that lay the screen on the
+   template composite (1262x1474, screen x 153-699, y 22-1204), with the
+   fingertips cut out and the camera pill drawn back. */
+.lx-scope .lx-no-writing-image-holder:has(> .stargo-nw-screen) { position: relative; }
+.lx-scope .lx-no-writing-image.stargo-nw-screen {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  container-type: size;
+}
+.lx-scope .stargo-nw-frame {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: max(100cqw, 100cqh * 1262 / 1474);
+  height: max(100cqh, 100cqw * 1474 / 1262);
+}
+@media screen and (max-width: 767px) {
+  .lx-scope .stargo-nw-frame { width: 100%; height: auto; aspect-ratio: 1262 / 1474; }
+}
+.lx-scope .stargo-nw-frame .stargo-nw-art {
+  position: absolute;
+  left: 12.124%;
+  top: 1.493%;
+  width: 43.265%;
+  height: 80.19%;
+  max-width: none;
+  object-fit: cover;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 546 1182' preserveAspectRatio='none'%3E%3Cpath d='M85 0H461A85 85 0 0 1 546 85V1097A85 85 0 0 1 461 1182H85A85 85 0 0 1 0 1097L0 1090L1.5 1087L4.5 1084L9.5 1081L13.5 1078L16.5 1075L19.5 1072L21.5 1069L22.5 1066L23.5 1063L24.5 1060L24.5 1057L24.5 1054L24.5 1051L24.5 1048L23.5 1045L22.5 1042L21.5 1039L21.5 1036L19.5 1033L17.5 1030L15.5 1027L12.5 1024L9.5 1021L6.5 1018L3.5 1015L1.5 1012L2.5 1009L2.5 1006L2.5 1003L0 1000L0 946L1.5 943L2.5 940L6.5 937L10.5 934L12.5 931L15.5 928L16.5 925L18.5 922L19.5 919L20.5 916L20.5 913L20.5 910L20.5 907L20.5 904L20.5 901L20.5 898L20.5 895L20.5 892L20.5 889L19.5 886L18.5 883L17.5 880L16.5 877L14.5 874L12.5 871L10.5 868L6.5 865L3.5 862L0 859L0 811L1.5 808L2.5 805L3.5 802L4.5 799L4.5 796L5.5 793L6.5 790L6.5 787L6.5 784L7.5 781L7.5 778L7.5 775L7.5 772L7.5 769L7.5 766L7.5 763L6.5 760L5.5 757L5.5 754L4.5 751L3.5 748L2.5 745L1.5 742L0 739V85A85 85 0 0 1 85 0Z'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 546 1182' preserveAspectRatio='none'%3E%3Cpath d='M85 0H461A85 85 0 0 1 546 85V1097A85 85 0 0 1 461 1182H85A85 85 0 0 1 0 1097L0 1090L1.5 1087L4.5 1084L9.5 1081L13.5 1078L16.5 1075L19.5 1072L21.5 1069L22.5 1066L23.5 1063L24.5 1060L24.5 1057L24.5 1054L24.5 1051L24.5 1048L23.5 1045L22.5 1042L21.5 1039L21.5 1036L19.5 1033L17.5 1030L15.5 1027L12.5 1024L9.5 1021L6.5 1018L3.5 1015L1.5 1012L2.5 1009L2.5 1006L2.5 1003L0 1000L0 946L1.5 943L2.5 940L6.5 937L10.5 934L12.5 931L15.5 928L16.5 925L18.5 922L19.5 919L20.5 916L20.5 913L20.5 910L20.5 907L20.5 904L20.5 901L20.5 898L20.5 895L20.5 892L20.5 889L19.5 886L18.5 883L17.5 880L16.5 877L14.5 874L12.5 871L10.5 868L6.5 865L3.5 862L0 859L0 811L1.5 808L2.5 805L3.5 802L4.5 799L4.5 796L5.5 793L6.5 790L6.5 787L6.5 784L7.5 781L7.5 778L7.5 775L7.5 772L7.5 769L7.5 766L7.5 763L6.5 760L5.5 757L5.5 754L4.5 751L3.5 748L2.5 745L1.5 742L0 739V85A85 85 0 0 1 85 0Z'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
+}
+.lx-scope .stargo-nw-frame::after {
+  content: "";
+  position: absolute;
+  left: 26.783%;
+  top: 2.782%;
+  width: 13.629%;
+  height: 3.528%;
+  border-radius: 999px;
+  background: #000;
+}
+
+/* ===========================================================================
+   Lane: phone (review items Z05 and Z10)
+   =========================================================================== */
+
+/* Z05. Phone and tablet header (below 992px).
+   tools/chrome.mjs adds a compact demo pill to the header's right-hand group
+   (`.stargo-phone-demo`, the site's own 预约演示 / Book a Demo CTA) and the same
+   CTA as the last item of the menu Webflow folds the top bar into
+   (`.stargo-nav-demo`). From 992px both are hidden: the desktop bar and its
+   pill are unchanged. js/stargo-phone-nav.js brings the header back when the
+   reader scrolls up: `stargo-nav-stick` on <html> makes it sticky at the top
+   of `.main-content` (its first child), keeping its place in the flow with a
+   negative margin of its own height so nothing below moves; `stargo-nav-show`
+   slides it on screen, on a white ground so it reads over any section. */
+.stargo-phone-demo { display: none; }
+@media (min-width: 992px) {
+  .nav-menu .button-link.stargo-nav-demo { display: none; }
+}
+@media (max-width: 991px) {
+  .navigation-top .last-part .stargo-phone-demo,
+  .absolute-element .last-part .stargo-phone-demo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 16px;
+    border-radius: 999px;
+    background: #111;
+    color: #fff;
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 500;
+    white-space: nowrap;
+    text-decoration: none;
+    margin-right: 6px;
+  }
+  .navigation-top .last-part .stargo-phone-demo:focus-visible,
+  .absolute-element .last-part .stargo-phone-demo:focus-visible { outline: 2px solid #111; outline-offset: 3px; }
+  html.stargo-nav-stick .navigation-top {
+    position: sticky;
+    top: 0;
+    margin-bottom: calc(-1 * var(--stargo-nav-h, 68px));
+    transform: translateY(-100%);
+    transition: transform .28s ease, background-color .2s ease;
+    background-color: #fff;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, .08);
+  }
+  html.stargo-nav-stick.stargo-nav-show .navigation-top { transform: none; }
+  /* Dark-hero pages draw the bar's text white; on the white ground it is dark.
+     Over those dark heroes the pill turns white until the bar is stuck. */
+  html.stargo-nav-stick .navigation-top .navigation-text-main { color: #111; }
+  html:not(.stargo-nav-stick) body:is(.lx-page, .stargo-dark-page, .stargo-dark-nav) .navigation-top .last-part .stargo-phone-demo { background: #fff; color: #111; }
+  html:not(.stargo-nav-stick) body:is(.lx-page, .stargo-dark-page, .stargo-dark-nav) .navigation-top .last-part .stargo-phone-demo:focus-visible { outline-color: #fff; }
+}
+@media (max-width: 991px) and (prefers-reduced-motion: reduce) {
+  html.stargo-nav-stick .navigation-top { transition: none; }
+}
+@media (max-width: 379px) {
+  /* 320–379px: the wordmark, the pill and the menu button share one row. */
+  .navigation-top .last-part .stargo-phone-demo,
+  .absolute-element .last-part .stargo-phone-demo { padding: 0 12px; font-size: 13px; margin-right: 2px; }
+  .navigation-top .stargo-wordmark.in-nav,
+  .absolute-element .stargo-wordmark.in-nav { height: 16px; width: auto; }
+}
+
+/* Z10. Pinned scroll scenes become plain stacked content on phones (owner's
+   decision, 2026-10-22: 改成普通排列). Below 768px every scene that held the
+   screen while the reader scrolled — a tall track with a sticky child whose
+   contents a scroll-scrubbed animation reveals — is laid out in the normal
+   flow instead: the track takes its content's height, the sticky child is a
+   plain block, and everything the scrub would reveal is drawn in its final,
+   readable state. The template's scroll animations keep running and writing
+   their inline styles; `!important` here outranks them, so nothing depends on
+   their timing. The scroll hints 「(继续滚动)」 and the 01/04 counter that only
+   meant something while the scene was pinned are not drawn. From 768px up
+   nothing here applies and the scenes scrub as before. */
+@media (max-width: 767px) {
+  /* Shared: split-text letters, words and lines inside these scenes. */
+  :is(.animation-section, .video-section, .sutdio-animation) :is(.gsap_split_letter, .gsap_split_word, .gsap_split_line) {
+    opacity: 1 !important;
+    transform: none !important;
+    translate: none !important;
+  }
+
+  /* Home — the hero: one screen, no 300vh track behind it. */
+  .hero-track { height: auto !important; }
+  .hero-track > .hero-agency { position: relative; }
+  .hero-track .hero { transform: none !important; }
+
+  /* Home and capabilities — the problem-card stack held for 158px. */
+  .work-main > .wrok-wrapper { position: relative; }
+
+  /* Home — 「(一条业务主线)」: the five phrases one under the other, then the orb. */
+  .animation-section { height: auto !important; }
+  .animation-section > .animation-sticky {
+    position: relative;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 120px 16px 0;
+  }
+  .animation-sticky > .absolute-top:not(.btm) { position: static; order: -1; margin-bottom: 24px; }
+  .animation-sticky > .absolute-top.btm { display: none; }
+  .animation-sticky > .spacer-xxl { display: none; }
+  .animation-sticky > .container { height: auto; }
+  .animation-sticky .flex-fst-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    height: auto;
+  }
+  .animation-sticky .flex-fst-cta > .cta-sm-title {
+    position: static;
+    opacity: 1 !important;
+    transform: none !important;
+    text-align: center;
+  }
+  .animation-sticky > .absolute-photo {
+    position: relative;
+    inset: auto;
+    width: calc(100% + 32px) !important;
+    height: 100vw !important;
+    margin: 40px -16px 0;
+    transform: none !important;
+  }
+
+  /* Home — 「一个工作台，管好每天的生意。」: one screen, the product screens
+     drawn at their own size behind the line instead of zooming out of it. */
+  .video-section { height: auto !important; }
+  .video-section > .sticky-video-section { position: relative; height: 100svh; min-height: 560px; overflow: hidden; }
+  .sticky-video-section > .video-grid { transform: none !important; opacity: .35 !important; }
+  .sticky-video-section .cta-sm-title._06 { opacity: 1 !important; transform: none !important; }
+
+  /* Home — the four sample scenes: four cards, one under the other. */
+  .testimonials-section { height: auto !important; }
+  .testimonials-section > .testimonials-sticky { position: relative; height: auto; padding: 80px 0 64px; }
+  .testimonials-sticky .testimonials-card-wrapper {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .testimonials-sticky .testimonials-card {
+    position: relative;
+    inset: auto;
+    transform: none !important;
+    translate: none !important;
+    rotate: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  .testimonials-sticky .number-rotator,
+  .testimonials-sticky > .absolute-top.btm { display: none; }
+
+  /* Enterprise — the four story panels: four full-width cards. */
+  /* Mono lays the four panels side by side (400vw) and slides the row
+     sideways as the reader scrolls down; here they stack. */
+  .sutdio-animation {
+    width: 100%;
+    height: auto !important;
+    flex-direction: column;
+    transform: none !important;
+    translate: none !important;
+  }
+  /* The next section's white curve rises 100px into the last panel. */
+  .sutdio-animation > .studio-sticky._04 { padding-bottom: 148px; }
+  .sutdio-animation > .studio-sticky {
+    position: relative;
+    top: auto;
+    height: auto;
+    min-height: 560px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-top: 120px;
+    padding-bottom: 48px;
+    overflow: hidden;
+  }
+  .sutdio-animation > .studio-sticky + .studio-sticky { margin-top: 0; }
+  .studio-sticky > [class*="image-about"] {
+    transform: none !important;
+    translate: none !important;
+    opacity: 1 !important;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .studio-sticky :is(.h2.for-abt, .top-text.for-abt) { opacity: 1 !important; transform: none !important; }
+
+  /* Workforce — the three collaboration cards, then 「一个目标，一个团队。」. */
+  .lx-answers-card-section-holder { height: auto !important; padding-top: 96px; padding-bottom: 96px; }
+  .lx-answers-card-section-holder > .lx-answers-card-sticky { position: relative; top: auto; height: auto; transform: none; }
+  .lx-answers-card-sticky .lx-answers-section-holder { height: auto; }
+  .lx-answers-card-sticky .lx-answers-card-section {
+    position: relative;
+    top: auto;
+    height: auto;
+    height: auto !important;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .lx-answers-card-sticky .lx-answers-card {
+    position: relative !important;
+    inset: auto;
+    top: auto;
+    z-index: auto;
+    transform: none !important;
+    margin: 0;
+  }
+  .lx-answers-card-sticky .lx-big-text-wrapper { position: relative; inset: auto; margin-top: 48px; }
+  .lx-answers-card-sticky .lx-big-text-on-gradient { opacity: 1 !important; transform: none !important; }
+
+  /* Intelligence — 「观察真实流程 … 用实际结果改进」 as one list over the photo. */
+  .lx-gradient-section { height: auto !important; }
+  .lx-gradient-section > .lx-gradient-section-image-bg {
+    position: relative;
+    top: auto;
+    height: auto;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .lx-gradient-section-image-bg > .lx-gradient-section-text { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .lx-gradient-section-text > .lx-gradient-section-text-holder {
+    position: static !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Intelligence — 「不再 等提醒 / 等回复 / 丢背景」: the three endings listed. */
+  .lx-no-writing { height: auto !important; }
+  .lx-no-writing > .lx-sticky-no-writing { position: relative; top: auto; height: auto; }
+  .lx-sticky-no-writing .lx-gradient-grid-item.lx-hide-on-desktop { display: flex; flex-direction: column; }
+  .lx-sticky-no-writing .lx-big-gradient-text {
+    position: static !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+/* ==========================================================================
+   FORM LANE (next round, Z12 + the phone-table mechanics of Z11)
+   ========================================================================== */
+
+/* Z12. The contact card's ten fields computed to 14px (cinery's `.w-input` /
+   `.w-select`), and iOS Safari zooms the page into any field under 16px when it
+   is focused. 16px on touch screens and phone widths only, so the desktop card
+   is drawn exactly as before. */
+@media (max-width: 991px), (hover: none) and (pointer: coarse) {
+  .cn-contact .cn-form-input,
+  .cn-contact .w-input,
+  .cn-contact .w-select,
+  .cn-contact textarea {
+    font-size: 16px;
+  }
+}
+
+/* Z12. A field js/stargo-forms.js marks invalid: its border, and the sentence
+   printed directly under it (p.stargo-field-error, tied to the field with
+   aria-describedby). #ff9e9e on the card's #232324 measures about 8:1. A
+   visible keyboard focus ring, which the card's fields did not have. */
+.cn-contact .cn-form-input[aria-invalid="true"] { border-color: #ff9e9e; }
+.cn-contact p.stargo-field-error {
+  margin: .375rem 0 0;
+  color: #ff9e9e;
+  opacity: 1;   /* the page's own paragraph rule fades p to .7 */
+  font-size: 14px;
+  line-height: 1.5;
+}
+.cn-contact p.stargo-field-error[hidden] { display: none; }
+.cn-contact .cn-form-input:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+/* The status line js/stargo-forms.js focuses after a send that did not go
+   through: focusable by script only, so no ring of its own. */
+.stargo-form-note[tabindex="-1"]:focus { outline: none; }
+
+/* Z11. The comparison chart on a phone is a sideways scrollport
+   (tools/blocks/rk-price-compare.css) holding 5 plans of which about 2 show.
+   It is a named, focusable region now (rk-price-compare.mjs), so it gets a
+   focus ring; and while more columns lie to the right, a fade over the right
+   edge says so. js/stargo-pricing.js sets .stargo-scroll-more on the chart's
+   parent only while the chart can still scroll right, so the fade goes when
+   the last column is reached, and never shows without the script. */
+.rk-price-compare .rk-rt-pricing-chart:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 4px;
+}
+@media screen and (max-width: 767px) {
+  .rk-price-compare .rk-rt-pricing-v1-content-2 { position: relative; }
+  .rk-price-compare .rk-rt-pricing-v1-content-2::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 3rem;
+    pointer-events: none;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0), var(--black, #000));
+    opacity: 0;
+    transition: opacity .25s;
+    z-index: 2;
+  }
+  .rk-price-compare .rk-rt-pricing-v1-content-2.stargo-scroll-more::after { opacity: 1; }
+}
+
+/* ==========================================================================
+   a11y lane (review items Z15 and Z20)
+   ========================================================================== */
+
+/* Z15 landmarks. tools/a11y.mjs wraps the page content between the top
+   navigation and the footer in <main id="main">. The wrapper adds no box:
+   every section keeps #Top as its layout parent, so stacking, sticky scenes
+   and the pinned sections behave exactly as before. */
+.stargo-main { display: contents; }
+.stargo-main-start { position: absolute; width: 1px; height: 1px; overflow: hidden; }
+.stargo-main-start:focus { outline: none; }
+
+/* Z15 skip link: the first stop for Tab, out of sight until it has focus. */
+.stargo-skip {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 2147483647;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 20px;
+  border-radius: 999px;
+  background: #0d0906;
+  color: #fff;
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1.2;
+  text-decoration: none;
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.stargo-skip:focus,
+.stargo-skip:focus-visible {
+  clip-path: none;
+  width: auto;
+  height: auto;
+  min-height: 44px;
+  overflow: visible;
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+/* Z20 contrast. Mono greys its secondary text with opacity, not colour: at
+   .34–.5 over #fff / #f5f5f5 that is 2.3–3.9:1, under the 4.5:1 that body
+   and meta text needs (WCAG 1.4.3 AA). Each is raised to .6 — 4.9:1 or more
+   on both light grounds, and still well above 4.5:1 for white text on the
+   dark sections — so the hierarchy reads as before, one step firmer.
+   `.add-max-w.full-color` (opacity 100) and `.top-text.sml._80-opc` (.8)
+   are more specific and keep their own values. */
+.add-max-w,
+.lighter-text,
+.top-text.sml,
+.top-text.gry,
+.small-ftd { opacity: .6; }
+/* The consent line and the other small greys sit on photographs behind
+   frosted glass, where .65 measured 2.4–2.8:1. */
+.top-text.gray-small { opacity: .85; }
+/* The homepage hero's “© 2026 STARGO WORK”: #999 on white is 2.8:1. The
+   same class in the dark footer keeps #999 (7:1 there). */
+.hero-agency .top-text.big.gray.sm { color: #6b6b6b; }
+/* Article dates on the black blog cards: #717171 is 4.3:1 on #000. */
+.lx-scope .lx-post-date { color: #808080; }
+
+/* Z20 small text: lifelogx's tiny size (.7rem = 11.2px; the role chips on
+   /workforce) is the one size under 12px left on the site. */
+.lx-text-size-tiny { font-size: .75rem; }
+
+/* Z20 tap targets on touch screens: at least 44 x 44 CSS px (WCAG 2.5.5).
+   Nothing moves: the hit area grows into a transparent border or padding
+   that a negative margin of the same size gives back, so every box keeps its
+   place and every visible edge stays where it was (background-clip keeps a
+   filled shape at its drawn size). */
+@media (pointer: coarse) {
+  /* Blocks and flex items with no fixed size: the extra is padding-free
+     transparent border, so the text and its underline stay put. */
+  a.button-with-line { border-top: 12px solid transparent; border-bottom: 12px solid transparent; margin-top: -12px; margin-bottom: -12px; }
+  a.qx-blog-title,
+  a.qx-project-card-title { border-top: 9px solid transparent; border-bottom: 9px solid transparent; margin-top: -9px; margin-bottom: -9px; }
+  a.rk-rt-button { border-top: 4px solid transparent; border-bottom: 4px solid transparent; margin-top: -4px; margin-bottom: -4px; }
+  /* Already padded to 33–35px by the touch-target block above; 6px more. */
+  a.button-link,
+  button.button-link { border-top: 6px solid transparent; border-bottom: 6px solid transparent; margin-top: -6px; margin-bottom: -6px; background-clip: padding-box; }
+  .legal-link { border-top: 5px solid transparent; border-bottom: 5px solid transparent; margin-top: -5px; margin-bottom: -5px; }
+  /* Inline links in a card's footer line (“ERP 与履约详情”, “对应能力组 09”):
+     vertical padding on an inline box widens what a finger hits and nothing
+     in the line's layout. */
+  a.rk-testimonials-link,
+  a.cn-question-link { padding-top: 14px; padding-bottom: 14px; }
+  /* The footer's 40px round channel icons on phones: 44px boxes whose 2px
+     transparent rim is not painted. (The side menu's and the tablet footer's
+     34px circles have no room for more and stay as they are.) */
+}
+@media (pointer: coarse) and (max-width: 767px) {
+  .footer .social-content.for-footer .social-wrapper {
+    width: 44px;
+    height: 44px;
+    margin: -2px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+}
+@media (pointer: coarse) {
+  /* /contact's direct lines: from the 40px bar to 44px. */
+  .stargo-direct-row a { padding: 14px 0; margin: -14px 0; }
+  .stargo-copy { min-height: 44px; margin: -9.5px 0; }
+}
+/* ===================================================== speed lane (Z13) ==
+   First-screen text the HTML no longer hides (tools/speed.mjs). A marked
+   element waits for the Webflow runtime only while scripts are on, the
+   runtime has not touched it and the one-second cap after the first paint
+   (`sg-ix-late`, set by the inline head script) has not passed. Without
+   scripts it is simply there. An element on screen at the cap that the
+   runtime had not started is pinned as it would end, so a late runtime does
+   not blank it and fade it in again.
+   The wait is a CSS animation, not a rule a script must lift, so it ends on
+   time even while the main thread is busy parsing the bundle. */
+html.w-mod-js:not(.sg-ix-late) [data-sg-first]:not([style]) { animation: sg-first-wait 1.2s; }
+@keyframes sg-first-wait { from, to { opacity: 0; } }
+[data-sg-settled] { opacity: 1 !important; transform: none !important; filter: none !important; }
