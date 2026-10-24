@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, readdirSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { SITE, req } from './paths.mjs';
+import { REAL_ASSETS } from './real-screens.mjs';
 const { chromium } = req('@playwright/test');
 /* Repo-relative paths below; run from anywhere. */
 process.chdir(SITE);
@@ -12,6 +13,8 @@ const manifest = JSON.parse(readFileSync('tools/imagegen/assets-manifest.json', 
    size on disk, alt/width/height on the page. They are derivatives of the
    supplied originals, so the source hash is the PNG's, not a generator's. */
 const products = JSON.parse(readFileSync('tools/imagegen/product-assets.json', 'utf8')).assets;
+/* and the crops cut from the owner's captures for the real-screen slots (tools/real-screens.mjs) */
+products.push(...REAL_ASSETS);
 /* The owner's photographs (tools/imagegen/photo-assets.json; batch 3 of
    2026-10-21 and every batch after it): the same checks. They are
    AI-generated images, not documentary photographs and not product screens,
