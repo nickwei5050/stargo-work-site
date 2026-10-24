@@ -78,8 +78,23 @@
   // the soft fade that hides a loop's seam: in over [0, .5], out over [P − 1.2, P − .3]
   function veil(u, P) { return Math.min(seg(u, 0, 0.5), 1 - seg(u, P - 1.2, P - 0.3)); }
 
-  var PANEL = { col: { w: 460, h: 640 }, band: { w: 900, h: 250 }, phone: { w: 360, h: 520 } };
-  function panelPick(w, h) { return (window.innerWidth || w) < 768 ? 'phone' : w > h * 2 ? 'band' : 'col'; }
+  var PANEL = { col: { w: 460, h: 640 }, band: { w: 900, h: 250 }, phone: { w: 360, h: 520 }, off: { w: 40, h: 40 } };
+  // col and band use 13px type, phone 12px: a layout is taken only where it draws its type at 12px or more.
+  // A short column (a laptop's short window) takes the phone layout; a box too small for any is left empty.
+  function panelPick(w, h) {
+    var k = 12 / 13;
+    if ((window.innerWidth || w) < 768) return 'phone';
+    if (w > h * 2) return w >= 900 * k && h >= 250 * k ? 'band' : 'off';
+    if (w >= 460 * k && h >= 640 * k) return 'col';
+    return w >= 360 && h >= 520 ? 'phone' : 'off';
+  }
+  function panel(sc) {
+    var b = sc.build, t = sc.tick, off = false;
+    sc.layouts = PANEL; sc.pick = panelPick;
+    sc.build = function (stage, L, name) { off = name === 'off'; if (off) stage.className = 'sg-mo-stage'; else b(stage, L, name); };
+    sc.tick = function (u) { if (!off) t(u); };
+    return sc;
+  }
   var TAG_FULL = T('动态示意 · 演示数据', 'Illustrative motion · demo data'), TAG_MINI = T('演示数据', 'Demo data');
   /* col and band are an app window: the app bar (mark, app name, where you are, a status pill) over the
      scene; phone has no chrome. The honesty tag sits in the band's bar, at the col's foot, and over the
@@ -231,7 +246,7 @@
         op(o2.e, (j === 0 && adding ? k3 : j >= G.rows ? (adding ? 1 - k3 : 0) : 1) * fade);
       }
     }
-    return { layouts: PANEL, pick: panelPick, build: build, tick: tick, still: 3 * P + 2.6, start: P + 0.2 };
+    return panel({ build: build, tick: tick, still: 3 * P + 2.6, start: P + 0.2 });
   }
 
   /* =====================================================================
@@ -309,7 +324,7 @@
       state(R.stuck, flagged ? 'no' : 'idle');
       pill(R, flagged ? T('退回修正', 'Sent back') : stepK === 0 ? T('已提交', 'Submitted') : stepK === 1 ? T('核对中', 'Checking') : T('已核对', 'Checked'), flagged ? 'no' : stepK === 2 ? 'ok' : 'wait');
     }
-    return { layouts: PANEL, pick: panelPick, build: build, tick: tick, still: 11.2, start: 6.4 };
+    return panel({ build: build, tick: tick, still: 11.2, start: 6.4 });
   }
 
   /* =====================================================================
@@ -418,7 +433,7 @@
         if (R.count) { say(R.count, cs); op(R.deny, no ? 1 : 0); }
       }
     }
-    return { layouts: PANEL, pick: panelPick, build: build, tick: tick, still: LAST + 2.6, start: S0 + 2 * GAP + 2.3 };
+    return panel({ build: build, tick: tick, still: LAST + 2.6, start: S0 + 2 * GAP + 2.3 });
   }
 
   /* =====================================================================
@@ -508,7 +523,7 @@
         op(R.p[r], dd >= PR[r].d ? fade : 0);
       }
     }
-    return { layouts: PANEL, pick: panelPick, build: build, tick: tick, still: END + 1.4, start: D0 + 3.3 * DAY };
+    return panel({ build: build, tick: tick, still: END + 1.4, start: D0 + 3.3 * DAY });
   }
 
   /* =====================================================================
