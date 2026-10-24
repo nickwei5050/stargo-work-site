@@ -21,7 +21,15 @@
 import { HERO } from './replaceables.mjs';
 import { motionHost, motionAssets, MOTION_CSS } from './motion-scenes.mjs';
 
+/* Each window is drawn for its place in the ring (js/stargo-motion-desk.js
+   gives it an app rail on the outer side, a status bar at the bottom in the
+   top row, its tag in the title bar in the bottom row), so the cells must keep
+   this order: top right, top left, middle left, the film, middle right,
+   bottom right, bottom left. */
+const RING = ['desk-sales', 'desk-growth', 'desk-cockpit', null, 'desk-quote', 'desk-erp', 'desk-creative'];
+
 export function theatreTiles(h, lang) {
+  if (HERO.code.join() !== RING.join()) throw new Error('index: the theatre windows are drawn for the ring order ' + RING.join());
   const scenes = [];
   HERO.code.forEach((scene, i) => {
     if (!scene) return;
@@ -34,7 +42,10 @@ export function theatreTiles(h, lang) {
   if (scenes.length !== 6) throw new Error(`index: expected six code-drawn theatre windows, placed ${scenes.length}`);
   // only the desk files: the page links the engine's own sheet and scripts itself
   const { css, js } = motionAssets(scenes);
-  const sheet = css.split('\n').filter((tag) => !tag.includes(`"${MOTION_CSS}"`)).join('\n');
+  // the windows are 20,000 px down the page and stay empty until they near the screen,
+  // so their sheet loads without holding up the first paint
+  const sheet = css.split('\n').filter((tag) => !tag.includes(`"${MOTION_CSS}"`)).join('\n')
+    .replace(' rel="stylesheet"', ` rel="stylesheet" media="print" onload="this.media='all'"`);
   const script = js.replace('<script src="js/stargo-motion.js" defer></script>', '');
   if (!sheet.includes('stargo-motion-desk.css') || !script.includes('stargo-motion-desk.js') || script.includes('stargo-motion.js"')) throw new Error('index: theatre scene files');
   for (const [anchor, tag] of [['</head>', sheet], ['</body>', script]]) {

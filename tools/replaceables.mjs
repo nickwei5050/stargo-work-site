@@ -508,6 +508,8 @@ export const WORKFORCE_BLOG_COVERS = {
  *  teamCard, both PRODUCT.teams until 2026-10-23) are the code-drawn 'team'
  *  scene now (tools/motion-scenes.mjs). */
 export const PLACED = {
+  // Feeds only the lifelogx about build that tools/build-site.mjs discards (its result is `void`ed):
+  // about.html / en/about.html never show the poster, so this slot has nothing on a page to replace.
   aboutBigImage: HERO.poster,
 };
 /* The quote band's picture and the 图片 / 视频 portrait (STORY_ART.quoteBand
