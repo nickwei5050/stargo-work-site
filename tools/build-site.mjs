@@ -2700,6 +2700,15 @@ for (const lang of C.LANGS) {
         if (f.startsWith('assets/') && !existsSync(`${SITE}/${decodeURIComponent(f)}`) && !existsSync(`${SITE}/${f}`)) throw new Error(`[${lang}/${name}] missing srcset asset: ${f}`);
       }
     }
+    /* perfdata 2026-10-24: page conditions the CSS used to ask with body:has(#loop) / body:has(#atlas) /
+       body:not(:has(.rk-price-tiers)) are stamped on <html data-sg-page> here instead. A :has() on body puts
+       the whole page under it, and Chrome then re-matched every p / li / div those rules reach each time a
+       code-drawn scene inserted a node or toggled a class (about 3x the style work of production on a
+       phone scroll of capabilities). The marks are static, as the elements they stand for are. */
+    {
+      const marks = [[/\sid="loop"/, 'loop'], [/\sid="atlas"/, 'atlas'], [/\sclass="[^"]*\brk-price-tiers\b/, 'price-tiers']].filter(([re]) => re.test(html)).map(([, m]) => m);
+      if (marks.length) html = html.replace(/<html(?=[\s>])/, `<html data-sg-page="${marks.join(' ')}"`);
+    }
     // Every local file the page loads carries its content hash (Z18).
     html = versionPage(html);
     // Pages in a folder (blog/) link and load one level up; English pages one more.

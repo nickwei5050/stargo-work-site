@@ -333,12 +333,14 @@
       var e = R.empty = div('sgd-q-empty', R.body);
       ico('quote', span('sgd-q-eic', e), 16);
       el('b', '', e, slim ? T('暂无待审批', 'Nothing waiting') : T('暂无等你审批的报价', 'No quote waiting for you'));
-      if (!slim) span('', e, T('低于底价的报价会停在这里，等你决定', 'Quotes under the floor price stop here for you'));
+      if (!slim) span('', e, T('低于底价的报价会停在这里，等你决定', 'Quotes below the floor price stop here for you'));
       var card = R.card = div('sgd-q-card', R.body), top = div('sgd-q-top', card);
       el('b', 'sgd-q-id', top, 'Q-1042');
       if (!slim) span('sgd-q-v', top, 'v2');
       span('sgd-q-who', slim ? card : top, small ? 'Müller Energie' : MULLER);
-      if (!(slim && R.low)) div('sgd-q-spec', card, slim ? '48V 100Ah × 200' : SPEC + ' · ' + DAP);
+      // the spec and the incoterm are kept whole: a narrow card wraps between them, never inside 汉堡 / Hamburg
+      if (slim && !R.low) div('sgd-q-spec', card, '48V 100Ah × 200');
+      else if (!slim) { var sp = div('sgd-q-spec is-split', card); span('', sp, SPEC); span('', sp, DAP); }
       if (!small && !R.low) {   // the price against the floor, in words and on a line
         var pr = div('sgd-q-price', card);
         el('b', '', pr, '€735'); span('', pr, T('/ 组 · 底价 €750', '/ pc · floor €750'));
