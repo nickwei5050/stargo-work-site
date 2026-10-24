@@ -211,7 +211,9 @@
       wide: { w: 1600, h: 800 },
       mid: { w: 1240, h: 700 },
       square: { w: 640, h: 680 },
-      phone: { w: 400, h: 296 }   // the part of the phone band left visible above the next section's curve
+      // the part of the phone band left visible above the next section's curve; sized to the band itself
+      // (360 × 260 at 360 px, 390 × 290 at 390) so the scale is 1 or more and no text drops under 12 px
+      phone: { w: 360, h: 260 }
     };
     function geometry(name) {
       var g = { w: layouts[name].w, h: layouts[name].h };
@@ -232,14 +234,14 @@
         g.ticker = { x: 620, y: 620 };
         g.tag = { x: 1216, y: 60 };
       } else if (name === 'phone') {
-        g.core = { x: 200, y: 136, s: 0.36 };
-        g.inp = [0, 1, 2, 3].map(function (i) { return { x: 10, y: 36 + i * 52, w: 114, h: 44 }; });
-        g.out = [0, 1, 2, 3, 4].map(function (i) { return { x: 276, y: 30 + i * 42, w: 114, h: 36 }; });
+        g.core = { x: 180, y: 119, s: 0.3 };
+        g.inp = [0, 1, 2, 3].map(function (i) { return { x: 6, y: 30 + i * 46, w: 111, h: 40 }; });
+        g.out = [0, 1, 2, 3, 4].map(function (i) { return { x: 243, y: 26 + i * 37, w: 111, h: 32 }; });
         g.inA = function (r) { return { p: [r.x + r.w, r.y + r.h / 2], d: [1, 0] }; };
         g.outA = function (r) { return { p: [r.x, r.y + r.h / 2], d: [-1, 0] }; };
         g.ticker = null;
-        g.status = { x: 200, y: 254 };
-        g.tag = { x: 390, y: 20 };
+        g.status = { x: 180, y: 224 };
+        g.tag = { x: 354, y: 19 };
       } else {
         g.core = { x: 320, y: 330, s: 0.62 };
         g.inp = [0, 1, 2, 3].map(function (i) { return { x: 16 + (i % 2) * 312, y: 34 + Math.floor(i / 2) * 74, w: 296, h: 62 }; });
@@ -591,7 +593,8 @@
     ];
     var P = 5.6;
     var L, R, mode;
-    var layouts = { wide: { w: 1600, h: 900 }, compact: { w: 800, h: 450 }, mini: { w: 380, h: 214 } };
+    // mini is the phone accordion panel's own size at 360 px (302 × 170 at 390), so its type never scales under 12 px
+    var layouts = { wide: { w: 1600, h: 900 }, compact: { w: 800, h: 450 }, mini: { w: 272, h: 153 } };
 
     function proj(ll) { return [(ll[0] + 180) / 360 * MAP.w, (MAP.top - ll[1]) / (MAP.top - MAP.bottom) * MAP.h]; }
     function buyer(k) { return B[mod(k, B.length)]; }
@@ -606,7 +609,7 @@
       if (mode !== 'mini') el('span', 'sg-app-crumb', bar, T('主动获客', 'Prospecting'));
       var live = el('span', 'sg-app-live', bar); el('i', '', live); el('span', '', live, T('AI 扫描中', 'AI scanning'));
       // map
-      var mapBox = { wide: { x: 28, y: 150, w: 1024 }, compact: { x: 14, y: 60, w: 470 }, mini: { x: 8, y: 36, w: 364 } }[mode];
+      var mapBox = { wide: { x: 28, y: 150, w: 1024 }, compact: { x: 14, y: 60, w: 470 }, mini: { x: 4, y: 28, w: 264 } }[mode];
       var ms = mapBox.w / MAP.w;
       var svg = sv('svg', { class: 'sg-radar-map', width: L.w, height: L.h, viewBox: '0 0 ' + L.w + ' ' + L.h }, stage);
       var defs = sv('defs', {}, svg);
@@ -825,7 +828,7 @@
     var P = 6.2, LP = P / 2;
     var PAL = { studio: ['#f6f4f1', '#ebe7e1', '#d9d3cb'], ware: ['#2a2019', '#1c1612', '#3a2c20', '#ffc27a'], solar: ['#3f2f5c', '#e9826a', '#f7b36b', '#ffe2a6'], city: ['#0a0f24', '#18213f', '#0e1430', '#ffcf7a'] };
     var L, R, mode;
-    var layouts = { wide: { w: 1600, h: 900 }, compact: { w: 800, h: 450 }, mini: { w: 380, h: 214 } };
+    var layouts = { wide: { w: 1600, h: 900 }, compact: { w: 800, h: 450 }, mini: { w: 272, h: 153 } };   // mini: as RadarScene
     var CW = 788, CH = 560; // canvas drawing size
 
     function bg(parent, key) {
@@ -875,7 +878,7 @@
       }
       return g;
     }
-    function battery(parent, x, y, s, light) {
+    function battery(parent, x, y, s, light, small) {
       var g = sv('g', { transform: 'translate(' + x + ',' + y + ') scale(' + s + ')' }, parent);
       var id = 'sgb' + Math.floor(Math.random() * 1e6);
       var defs = sv('defs', {}, g);
@@ -900,7 +903,9 @@
       sv('rect', { x: 34, y: 70, width: 212, height: 90, rx: 8, fill: '#101012', stroke: '#2c2c31' }, g);
       sv('rect', { x: 34, y: 70, width: 8, height: 90, rx: 3, fill: '#ec6f10' }, g);
       var t1 = sv('text', { x: 60, y: 106, class: 'sg-bat-brand' }, g); t1.textContent = 'STARGO';
-      var t2 = sv('text', { x: 60, y: 134, class: 'sg-bat-spec' }, g); t2.textContent = 'LiFePO4 · 12.8V 100Ah';
+      // drawn too small to read on the phone panel, the spec line is a plain bar there, not sub-12 px text
+      if (small) sv('rect', { x: 60, y: 124, width: 120, height: 9, rx: 4.5, fill: '#fff', opacity: '.22' }, g);
+      else { var t2 = sv('text', { x: 60, y: 134, class: 'sg-bat-spec' }, g); t2.textContent = 'LiFePO4 · 12.8V 100Ah'; }
       // glint
       var clip = sv('clipPath', { id: id + 'c' }, defs);
       sv('rect', { x: 0, y: 30, width: 280, height: 170 }, clip);
@@ -918,14 +923,15 @@
       if (mode !== 'mini') el('span', 'sg-app-crumb', bar, T('产品图与视频', 'Product images & video'));
       var live = R.live = el('span', 'sg-app-live', bar); el('i', '', live); R.liveText = el('span', '', live, T('生成中', 'Generating'));
 
-      var cv = { wide: { x: 300, y: 72, w: 800, h: 610 }, compact: { x: 14, y: 54, w: 506, h: 284 }, mini: { x: 6, y: 36, w: 368, h: 160 } }[mode];
+      var cv = { wide: { x: 300, y: 72, w: 800, h: 610 }, compact: { x: 14, y: 54, w: 506, h: 284 }, mini: { x: 5, y: 31, w: 262, h: 104 } }[mode];
       var canvas = el('div', 'sg-canvas', stage);
       canvas.style.cssText = 'left:' + cv.x + 'px;top:' + cv.y + 'px;width:' + cv.w + 'px;height:' + cv.h + 'px';
       var svg = sv('svg', { viewBox: '0 0 ' + CW + ' ' + CH, preserveAspectRatio: 'xMidYMid slice', width: cv.w, height: cv.h }, canvas);
       R.bgs = V.map(function (v) { return bg(svg, v.key); });
       R.cam = sv('g', {}, svg);
-      var bt = mode === 'mini' ? [261, 223, 0.78] : [250, 250, 1];
-      R.bat = battery(R.cam, bt[0], bt[1], bt[2], true);
+      // mini: smaller and right of centre, clear of the prompt over the top and the label at the bottom left
+      var bt = mode === 'mini' ? [392, 242, 0.62] : [250, 250, 1];
+      R.bat = battery(R.cam, bt[0], bt[1], bt[2], true, mode === 'mini');
       R.cells = [];
       var cols = 16, rows = 11;
       var mg = sv('g', {}, svg);

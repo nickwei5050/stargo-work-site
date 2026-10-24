@@ -113,20 +113,20 @@
 .sg-out-pip { width: 8px; height: 8px; border-radius: 50%; background: rgba(255, 228, 190, .18); transition: background .4s, box-shadow .4s; }
 .sg-out.is-on .sg-out-pip { background: #f3c27a; box-shadow: 0 0 0 4px rgba(243, 194, 122, .15); }
 
-/* phone: 400 × 296, channels left, stages right, the core between */
-.sg-loop.is-phone .sg-in { padding: 0 8px; gap: 6px; border-radius: 10px; }
-.sg-loop.is-phone .sg-in-ico { width: 22px; height: 22px; border-radius: 7px; }
+/* phone: 360 × 260 (scale ≥ 1 on phones, so every line here stays ≥ 12 px), channels left, stages right, the core between */
+.sg-loop.is-phone .sg-in { padding: 0 7px; gap: 5px; border-radius: 10px; }
+.sg-loop.is-phone .sg-in-ico { width: 20px; height: 20px; border-radius: 6px; }
 .sg-loop.is-phone .sg-in-name { font-size: 12.5px; white-space: nowrap; }
 .sg-loop.is-phone .sg-in-msg { display: none; }
-.sg-loop.is-phone .sg-out { flex-direction: row; align-items: center; justify-content: flex-start; gap: 7px; padding: 0 10px; border-radius: 10px; }
+.sg-loop.is-phone .sg-out { flex-direction: row; align-items: center; justify-content: flex-start; gap: 6px; padding: 0 8px; border-radius: 10px; }
 .sg-loop.is-phone .sg-out::before { left: -1px; right: auto; top: 26%; bottom: 26%; width: 2px; height: auto; }
-.sg-loop.is-phone .sg-out-n { font-size: 10px; letter-spacing: .04em; }
-.sg-loop.is-phone .sg-out-name { flex: 1; font-size: 13px; white-space: nowrap; }
+.sg-loop.is-phone .sg-out-n { font-size: 12.5px; letter-spacing: 0; font-variant-numeric: tabular-nums; }
+.sg-loop.is-phone .sg-out-name { flex: 1; font-size: 12.5px; white-space: nowrap; }
 .sg-loop.is-phone .sg-out-pip { display: none; }
 .sg-loop.is-phone :is(.sg-in-name, .sg-out-name) { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .sg-loop.is-phone .sg-gate-label { display: none; }
 .sg-loop.is-phone .sg-loop-status { font-size: 13px; color: rgba(246, 239, 230, .7); }
-.sg-loop.is-phone .sg-tag { font-size: 11.5px; letter-spacing: .02em; }
+.sg-loop.is-phone .sg-tag { font-size: 12.5px; letter-spacing: .01em; }
 @media (max-width: 767px) {
   /* the next section's curve covers the band's last ~100px on phones */
   .absolute-photo.sg-mo-host > .sg-mo { bottom: 100px; }
@@ -156,12 +156,13 @@
 .sg-radar .sg-tag, .sg-studio .sg-tag { left: 1576px; top: 886px; }
 .is-compact .sg-app-bar .sg-tag { position: static; transform: none; margin-left: auto; font-size: 13px; }
 .is-compact .sg-app-bar .sg-tag + .sg-app-live { margin-left: 14px; }
-.sg-radar.is-mini .sg-tag, .sg-studio.is-mini .sg-tag { left: 373px; top: 210px; font-size: 12.5px; letter-spacing: .02em; }
-.sg-studio.is-mini .sg-tag { top: 212px; line-height: 1.1; }
-.sg-radar.is-mini .sg-tag { top: 50px; padding: 1px 6px; border-radius: 5px; background: rgba(21, 17, 14, .82); font-size: 12.5px; }
-.is-mini .sg-app-bar { height: 30px; padding: 0 8px; gap: 7px; font-size: 14px; }
-.is-mini .sg-app-mark { width: 18px; height: 18px; border-radius: 5px; }
-.is-mini .sg-app-live { font-size: 13px; padding: 2px 8px; gap: 5px; }
+/* mini (phones): 272 × 153, the accordion panel's own size at 360 px, so it scales by 1 to 1.1 and every line stays ≥ 12 px */
+.sg-radar.is-mini .sg-tag, .sg-studio.is-mini .sg-tag { left: 266px; top: 152px; font-size: 12px; letter-spacing: .02em; }
+.sg-studio.is-mini .sg-tag { line-height: 1.1; }
+.sg-radar.is-mini .sg-tag { top: 50px; padding: 1px 6px; border-radius: 5px; background: rgba(21, 17, 14, .82); }
+.is-mini .sg-app-bar { height: 28px; padding: 0 7px; gap: 6px; font-size: 13.5px; }
+.is-mini .sg-app-mark { width: 17px; height: 17px; border-radius: 5px; }
+.is-mini .sg-app-live { font-size: 12px; padding: 1px 8px; gap: 5px; }
 
 /* =================== RADAR =================== */
 .sg-radar-map { position: absolute; left: 0; top: 0; }
@@ -228,15 +229,15 @@
 .sg-radar.is-compact .sg-note { left: 498px; top: 328px; width: 288px; height: 94px; padding: 14px 16px; gap: 10px; border-radius: 14px; }
 .sg-radar.is-compact .sg-note b { font-size: 14px; }
 .sg-radar.is-compact .sg-note span { font-size: 13px; margin-top: 4px; }
-/* mini radar: 380 × 214 — the map and one card for the newest prospect */
-.sg-float { position: absolute; left: 8px; top: 150px; width: 268px; height: 54px; display: flex; align-items: center; gap: 8px; padding: 0 10px; border-radius: 12px; background: rgba(24, 19, 15, .9); border: 1px solid rgba(255, 236, 220, .1); box-shadow: 0 14px 40px -16px rgba(0, 0, 0, .8); transition: border-color .5s, background .5s; }
+/* mini radar: 272 × 153 — the map and one card for the newest prospect */
+.sg-float { position: absolute; left: 6px; right: 6px; top: 100px; height: 47px; display: flex; align-items: center; gap: 8px; padding: 0 9px; border-radius: 11px; background: rgba(24, 19, 15, .9); border: 1px solid rgba(255, 236, 220, .1); box-shadow: 0 14px 40px -16px rgba(0, 0, 0, .8); transition: border-color .5s, background .5s; }
 .sg-float.is-new { border-color: rgba(236, 111, 16, .6); background: rgba(40, 24, 13, .92); }
-.sg-float .sg-cc { width: 32px; height: 23px; font-size: 12.5px; border-radius: 6px; }
-.sg-float .sg-row-main b { font-size: 15px; }
-.sg-float .sg-row-main span { font-size: 12px; margin-top: 2px; }
+.sg-float .sg-cc { width: 30px; height: 22px; font-size: 12px; border-radius: 6px; }
+.sg-float .sg-row-main b { font-size: 14px; line-height: 1.25; }
+.sg-float .sg-row-main span { font-size: 12px; line-height: 1.25; margin-top: 1px; }
 .sg-float-score { flex: none; text-align: right; }
-.sg-float-score span { display: block; font-size: 12px; color: rgba(244, 238, 232, .5); }
-.sg-float-score b { display: block; font-size: 20px; font-weight: 600; color: #ffb37a; font-variant-numeric: tabular-nums; }
+.sg-float-score span { display: block; font-size: 12px; line-height: 1.2; color: rgba(244, 238, 232, .5); }
+.sg-float-score b { display: block; font-size: 18px; line-height: 1.15; font-weight: 600; color: #ffb37a; font-variant-numeric: tabular-nums; }
 
 /* =================== STUDIO =================== */
 .sg-canvas { position: absolute; border-radius: 16px; overflow: hidden; background: #0e0b09; box-shadow: 0 0 0 1px rgba(255, 236, 220, .08), 0 30px 80px -40px rgba(0, 0, 0, .8); }
@@ -301,13 +302,14 @@
 .sg-studio.is-compact .sg-note b { font-size: 13px; }
 .sg-studio.is-compact .sg-note span { font-size: 12.5px; margin-top: 2px; white-space: nowrap; }
 .sg-studio.is-compact .sg-note { line-height: 1.25; }
-/* mini studio: 380 × 214 — the prompt sits over the top of the picture */
-.sg-studio.is-mini .sg-canvas { border-radius: 10px; }
-.sg-studio.is-mini .sg-prompt { left: 7px; right: 7px; top: 7px; height: 38px; padding: 0 5px 0 10px; gap: 8px; border-radius: 10px; background: rgba(16, 12, 10, .74); border-color: rgba(255, 255, 255, .14); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
-.sg-studio.is-mini .sg-prompt-text { font-size: 14px; }
-.sg-studio.is-mini .sg-prompt .sg-btn { height: 28px; min-width: 56px; padding: 0 10px; font-size: 13px; border-radius: 7px; }
-.sg-studio.is-mini:lang(en) .sg-prompt .sg-btn { min-width: 82px; }
-.sg-studio.is-mini .sg-canvas-tag { top: auto; bottom: 7px; left: 7px; font-size: 13px; padding: 3px 9px; }
+/* mini studio: 272 × 153 — the prompt sits over the top of the picture, the product right of its label */
+.sg-studio.is-mini .sg-canvas { border-radius: 9px; }
+.sg-studio.is-mini .sg-prompt { left: 5px; right: 5px; top: 5px; height: 30px; padding: 0 4px 0 9px; gap: 6px; border-radius: 8px; background: rgba(16, 12, 10, .74); border-color: rgba(255, 255, 255, .14); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.sg-studio.is-mini .sg-prompt > .sg-ico { display: none; }
+.sg-studio.is-mini .sg-prompt-text { font-size: 12px; }
+.sg-studio.is-mini .sg-prompt .sg-btn { height: 22px; min-width: 48px; padding: 0 8px; font-size: 12px; border-radius: 6px; }
+.sg-studio.is-mini:lang(en) .sg-prompt .sg-btn { min-width: 68px; }
+.sg-studio.is-mini .sg-canvas-tag { top: auto; bottom: 5px; left: 5px; font-size: 12px; line-height: 1.2; padding: 2px 8px; }
 
 @keyframes sg-spin { to { transform: rotate(360deg); } }
 @keyframes sg-blink { 50% { opacity: .2; } }

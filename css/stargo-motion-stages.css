@@ -175,3 +175,18 @@
 @media (prefers-reduced-motion: reduce) {
   .sg-stg * { transition:none !important; }
 }
+
+/* ---------- phone copy (tools/build-site.mjs ships both `hidden`) ----------
+   A one-line summary under each stage title below 480px, and the pricing
+   ladder's tap hint on touch screens. Moved here from css/stargo-phone.css,
+   which loads on the first touch, so the space they take exists at the first
+   layout and nothing below them reflows during the reader's first scroll. */
+@media (max-width:479px){
+.service-grid>.service-list{grid-column:1/-1!important}
+.service-list .service-title-wrap{display:grid;grid-template-columns:auto minmax(0,1fr);row-gap:2px}
+.service-title-wrap>.sg-stage-line{display:block;grid-column:2;margin:0 0 4px;font-size:14px;line-height:1.45;font-weight:400;letter-spacing:0;opacity:.62}
+}
+@media (hover:none){
+.sg-flip-hint{display:flex;align-items:center;gap:8px;width:fit-content;max-width:calc(100% - 32px);margin:0 auto 24px;padding:9px 16px;border:1px solid #ffecdc24;border-radius:99px;color:#f4eee8c7;font-size:13px;line-height:1.35}
+.sg-flip-icon{flex:none;color:#ff8a3d}
+}
