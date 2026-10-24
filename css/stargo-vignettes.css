@@ -60,8 +60,11 @@
 }
 /* Small tiles (the phone mosaic, the phone ring): the same 12px words, a
    tighter pill closer to the corner, so it covers less of the drawing. */
+.sgv-tag-s { display: none; }
 @container (max-width: 240px) {
   .sgv-tag { right: 6px; bottom: 6px; padding: 2px 6px 3px; letter-spacing: .01em; }
+  .sgv-tag-l { display: none; }
+  .sgv-tag-s { display: inline; }
 }
 
 /* The homepage mosaic. The left column drew each photograph whole at its own

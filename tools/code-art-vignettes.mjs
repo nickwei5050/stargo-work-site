@@ -491,8 +491,10 @@ const LABEL = {
   floor: ['柳州工厂 2 号车间平面图：每台设备的运行状态，B3 待料。', 'The floor plan of workshop 2 at the Liuzhou plant: each machine’s state, B3 waiting for stock.'],
 };
 
-const TAG = { zh: '示意', en: 'Illustration' };
-const PREFIX = { zh: '示意：', en: 'Illustration: ' };
+/* The drawings show the demo cast's business, so the tag says so: in full where
+   the tile is wide, '演示数据 / Demo data' on small tiles (css/stargo-vignettes.css). */
+const TAG = { zh: ['示意 · 演示数据', '演示数据'], en: ['Illustration · demo data', 'Demo data'] };
+const PREFIX = { zh: '示意（演示数据）：', en: 'Illustration (demo data): ' };
 
 /** The shared paint every drawing refers to (ids are unique on the page). */
 const DEFS = '<pattern id="sgv-grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="rgba(255,236,220,.045)" stroke-width="1"/></pattern>'
@@ -540,7 +542,7 @@ export function vignetteHost(key, lang, cls = '') {
   const win = (c, vb) => `<svg class="${c}" viewBox="${vb}" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><use href="#sgv-${key}"/></svg>`;
   const alt = /\bphoto-hero\b/.test(cls);
   if (alt && !ALT[key]) throw new Error(`vignettes: no second-column window for ${key}`);
-  return `<div class="sgv sgv-${key}${cls ? ` ${cls}` : ''}" role="img" aria-label="${esc(label)}">${win('sgv-far', '0 0 800 500')}${win('sgv-near', '190 60 420 380')}${alt ? win('sgv-alt', ALT[key]) : ''}<span class="sgv-tag" aria-hidden="true">${TAG[lang]}</span></div>`;
+  return `<div class="sgv sgv-${key}${cls ? ` ${cls}` : ''}" role="img" aria-label="${esc(label)}">${win('sgv-far', '0 0 800 500')}${win('sgv-near', '190 60 420 380')}${alt ? win('sgv-alt', ALT[key]) : ''}<span class="sgv-tag" aria-hidden="true"><span class="sgv-tag-l">${TAG[lang][0]}</span><span class="sgv-tag-s">${TAG[lang][1]}</span></span></div>`;
 }
 /** For a preview page. */
 export const VIGNETTE_ALT = ALT;
