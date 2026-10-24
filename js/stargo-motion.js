@@ -129,19 +129,20 @@
       if (tr !== lastFit) { stage.style.transform = tr; lastFit = tr; }
       return true;
     }
-    var shown = true, visT = 0;
+    var shown = true, visT = 0, tmo = 0;
     function frame(now) {
       raf = 0;
       if (!visible || document.hidden) { last = 0; return; }
       if (viewportFit) fit();
       if (reduced.matches) { last = 0; if (viewportFit) raf = requestAnimationFrame(frame); return; }
-      if (now - visT > 250) {
+      if (now - visT > 240) {
         visT = now;
         var sh = host.checkVisibility ? host.checkVisibility({ opacityProperty: true, visibilityProperty: true }) : true;
         if (sh && !shown && scene.cue) t = scene.cue(t);
         shown = sh;
       }
-      if (!shown) { last = 0; raf = requestAnimationFrame(frame); return; }
+      // a host that is on screen but not shown (a parked slide, a closed tab) is looked at again in 250ms, not every frame
+      if (!shown) { last = 0; tmo = setTimeout(function () { tmo = 0; wake(); }, 250); return; }
       var dt = last ? Math.min((now - last) / 1000, 0.1) : 0;
       last = now; t += dt;
       if (built) scene.tick(t);
@@ -149,7 +150,7 @@
     }
     function wake() {
       if (reduced.matches) { if (built) scene.tick(scene.still); if (!viewportFit) return; }
-      if (!raf && visible && !document.hidden) raf = requestAnimationFrame(frame);
+      if (!raf && !tmo && visible && !document.hidden) raf = requestAnimationFrame(frame);
     }
     host.classList.add('sg-mo-on');
     if ('ResizeObserver' in window) new ResizeObserver(function () { fit(); }).observe(host);

@@ -7,6 +7,9 @@
 .lx-scope .lx-cta-image.sg-mo { background: radial-gradient(90% 80% at 72% 28%, #221a14 0%, #16110e 58%, #110d0b 100%); }
 
 .sgi { color: #f4eee8; font-size: 13px; }
+/* a picture, not a control: its cross-faded layers (the rollout track parked at opacity 0 over the
+   sample line and the 批准 button, card B over card A) must not take taps or hit tests from the text they fade over */
+.sgi, .sgi * { pointer-events: none; }
 .sgi-ico { display: block; flex: none; }
 /* the card rounds the box's right-hand corners (80px from 992 up, 70px below): the bar's tag and the last card keep
    40px from the right edge and the cards 40px from the bottom, inside the curve; the tag and the cards share that edge */

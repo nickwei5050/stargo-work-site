@@ -185,6 +185,10 @@
 .sgd-q-v { font-size: 12px; color: rgba(244, 238, 232, .5); padding: 0 6px; border-radius: 5px; border: 1px solid rgba(255, 236, 220, .14); }
 .sgd-q-who { margin-left: auto; font-size: 12.5px; color: rgba(244, 238, 232, .6); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .sgd-q-spec { font-size: 13px; color: rgba(244, 238, 232, .84); }
+/* two unbreakable halves; the · sits in the gap and is clipped away when the second half starts a new line */
+.sgd-q-spec.is-split { display: flex; flex-wrap: wrap; column-gap: .9em; overflow: hidden; }
+.sgd-q-spec.is-split > span { position: relative; white-space: nowrap; }
+.sgd-q-spec.is-split > span + span::before { content: "·"; position: absolute; right: 100%; width: .9em; text-align: center; }
 .sgd-q-price { display: flex; align-items: baseline; gap: 7px; margin-top: auto; font-size: 12.5px; color: rgba(244, 238, 232, .58); }
 .sgd-q-price b { font-size: 22px; color: #f8f1e7; font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
 .sgd-q-gauge { margin-top: auto; padding: 18px 0 2px; }

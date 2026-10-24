@@ -128,7 +128,7 @@
         why: T('参数与规格书一致，可以发布', 'Specs match the datasheet'), w: T('与规格书一致', 'Matches the datasheet') },
       { ic: 'mail', t: T('开发信 · 已修改', 'Outreach · revised'), s: T('先问需求 · 销售 AI 重写', 'Asks first · rewritten'), p: T('改后开发信', 'Revised outreach'), rule: 1, by: T('你', 'You'), ok: true,
         why: T('先问需求，语气合适，可以发', 'Asks first, right tone — send'), w: T('先问需求，可以发', 'Asks first — send') },
-      { ic: 'doc', t: T('报价 Q-1042', 'Quote Q-1042'), s: T('低于底价 · 销售 AI 提交', 'Below floor · sales AI'), p: 'Q-1042', rule: 0, by: T('你', 'You'), wait: true }
+      { ic: 'doc', t: T('报价 Q-1042', 'Quote Q-1042'), s: T('低于底价 · 销售 AI 提交', 'Below the floor price'), p: 'Q-1042', rule: 0, by: T('你', 'You'), wait: true }
     ];
     var N = IT.length;
     var RS = [T('报价 → 你', 'Quotes → you'), T('联系客户 → 你', 'Outreach → you'), T('发布内容 → 市场主管', 'Publishing → marketing lead')];
