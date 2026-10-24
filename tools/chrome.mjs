@@ -20,7 +20,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import { CAP_JUMPS, NAV, SECONDARY, MORE, LANG_SWITCH, CHROME, META, CONTACT_INFO, CONTACT_UI, SITE_URL } from './copy.mjs';
 import { POSTS, BLOG_UI, postPath, coverSrc, faqEntities, wordCount } from './blog.mjs';
 import { OG, OS_ART, HOME_MOSAIC } from './replaceables.mjs';
-import { MENU_ART } from './code-art-atmos.mjs';   // lane atmos: the side-menu card's harbour, drawn in code
+import { MENU_ART, menuTag } from './code-art-atmos.mjs';   // lane atmos: the side-menu card's harbour, drawn in code, and its tag
 
 /** Every page the build produces, as root-relative names. */
 export const SITE_PAGES = [...NAV, ...SECONDARY, ...MORE].map((n) => n.href).concat(POSTS.map(postPath));
@@ -860,7 +860,7 @@ function tipImages(html) {
 }
 
 /** Template people and stock photos in the shared chrome → STARGO imagery. */
-function chromeImagery(html) {
+function chromeImagery(html, lang) {
   let out = html;
   // The "Talk to Denis" avatar in the overlay menu.
   out = out.replace(/<img[^>]*class="photo-image"[^>]*\/>/g, `<img src="${AVATAR}" loading="lazy" alt="" class="photo-image"/>`);
@@ -912,6 +912,9 @@ function chromeImagery(html) {
     if (!/^<div\b[^>]*>\s*<video\b[\s\S]*<\/video>\s*<\/div>$/.test(el.text)) throw new Error('chrome: the side-menu card orb is not a background video');
     // since 2026-10-24 an inline line drawing (MENU_ART) instead of the photograph G02 (MENU_CARD)
     out = out.slice(0, el.start) + MENU_ART + out.slice(el.end);
+    // ...and its 示意 / Illustration tag, right after the card's link (2026-10-24, lane rest)
+    const close = out.indexOf('</a>', el.start) + '</a>'.length;
+    out = out.slice(0, close) + menuTag(lang) + out.slice(close);
   }
   return out;
 }
@@ -991,7 +994,7 @@ export function applyChrome(html, { lang, current }) {
   out = footerContact(out, lang);
   out = dropUnrelatedSocial(out);
   out = wordmark(out);
-  out = chromeImagery(out);
+  out = chromeImagery(out, lang);
   out = sideMenu(out, lang);
   out = scripts(out);
   out = linkHygiene(out, lang);

@@ -91,5 +91,14 @@
 .sga-plan-title { position: absolute; line-height: 1.35; }
 .sga-plan-title b { display: block; font-size: 14px; font-weight: 600; color: rgba(246, 239, 230, .5); letter-spacing: .02em; }
 .sga-plan-title span { display: block; font-size: 12.5px; color: rgba(246, 239, 230, .32); }
-.sga-plant.is-tall .sga-st-name { font-size: 12px; }
-.sga-plant.is-tall .sga-tag { font-size: 12px; }
+.sga-feed { fill: none; stroke: rgba(255, 236, 220, .22); stroke-width: 1.2; stroke-linecap: round; }
+/* the plant is drawn at scale 1 (its stage is the host's size), so these are the sizes on screen */
+.sga-plant .sga-tag { font-size: 12.5px; color: rgba(244, 238, 232, .5); }
+.sga-plant.is-band .sga-st-name { font-size: 12.5px; line-height: 17px; }
+.sga-plan-title.is-row { white-space: nowrap; line-height: 17px; }
+.sga-plan-title.is-row b, .sga-plan-title.is-row span { display: inline; font-size: 12.5px; }
+.sga-plan-title.is-row span { margin-left: 10px; }
+/* The band's bottom fade was 12rem, made to blend the photograph into the page; over the dark plan it would
+   bury the strip under the card, where the stations, the title and the tag sit. It stays, shorter. */
+.cn-about .cn-intro-opacity.cn-is-bottom { height: 4rem; }
+@media screen and (max-width: 767px) { .cn-about .cn-intro-opacity.cn-is-bottom { height: 2.5rem; } }
