@@ -322,11 +322,12 @@ for (const width of WIDTHS.filter((w) => [390, 768, 1280, 1440].includes(w))) fo
     }
     const cardText = await page.evaluate(() => [...document.querySelectorAll('.testimonials-card .card-testi .for-tst')].map((t) => { const c = t.closest('.testimonials-card').getBoundingClientRect(); const r = t.getBoundingClientRect(); return r.top >= c.top - 1 && r.bottom <= c.bottom + 1; }));
     assert(cardText.every(Boolean), 'scenario quote fits its card');
-    // blog cards: four newest articles with dates and titles, linking into blog/; since 2026-10-21 the
-    // owner's photographs B01–B04 (tools/replaceables.mjs HOME_BLOG_COVERS), an article cover otherwise
-    const cards = await page.locator('.blog-grid .w-dyn-item a').evaluateAll((as) => as.map((a) => ({ href: a.getAttribute('href'), img: a.querySelector('img').getAttribute('src'), ratio: a.querySelector('img').getBoundingClientRect().width / a.querySelector('img').getBoundingClientRect().height, title: a.querySelector('.blog-txt').textContent, date: a.querySelector('time')?.getAttribute('datetime') })));
+    // blog cards: four newest articles with dates and titles, linking into blog/; since 2026-10-23 each
+    // draws its article's cover in code (tools/blog-art.mjs, the 'home' slot) where the owner's
+    // photographs B01–B04 were: a decorative cover that fills the card's width and says it is an illustration
+    const cards = await page.locator('.blog-grid .w-dyn-item a').evaluateAll((as) => as.map((a) => { const c = a.querySelector('.testimonials-photo'); const r = c.getBoundingClientRect(); return { href: a.getAttribute('href'), cover: c.tagName === 'DIV' && c.classList.contains('sgcv') && c.getAttribute('aria-hidden') === 'true' && !!c.querySelector('svg.sgcv-art'), tag: (c.querySelector('.sgcv-tag')?.textContent || '').trim(), img: a.querySelector('img') ? a.querySelector('img').getAttribute('src') : '', ratio: r.width / r.height, full: r.width / a.getBoundingClientRect().width, title: a.querySelector('.blog-txt').textContent, date: a.querySelector('time')?.getAttribute('datetime') }; }));
     assert.equal(cards.length, 4);
-    for (const c of cards) { assert(/^(?:\/(?:en\/)?)?blog\//.test(c.href), c.href); assert(/assets\/(?:blog|stargo-photo)\//.test(c.img), c.img); assert(c.title.length > 8); assert(/^\d{4}-\d{2}-\d{2}$/.test(c.date || ''), 'dated'); assert(c.ratio > 1.15 && c.ratio < 1.5, `card image ratio ${c.ratio}`); }
+    for (const c of cards) { assert(/^(?:\/(?:en\/)?)?blog\//.test(c.href), c.href); assert(c.cover, `card draws its cover: ${c.href}`); assert(/^(?:示意|Illustration)$/.test(c.tag), `cover says it is an illustration: ${c.tag}`); assert.equal(c.img, '', `no photograph left on the card: ${c.img}`); assert(c.title.length > 8); assert(/^\d{4}-\d{2}-\d{2}$/.test(c.date || ''), 'dated'); assert(c.ratio > 1.15 && c.ratio < 1.5, `card image ratio ${c.ratio}`); assert(c.full > 0.8, `cover fills the card's width: ${c.full}`); }
     await scrollTo(page, (await secTop(page, '.blog-grid')).top - 160); await page.waitForTimeout(900);
     await page.screenshot({ path: `${OUT}/${id}-blog-cards.png` });
     // contact band: a photograph behind a glass card (since 2026-10-21 the

@@ -200,6 +200,12 @@ export const CAP_PHOTOS = {
  * photograph's widest file; tools/editorial-images.mjs writes the srcset, the
  * size and the alt, css/stargo-fusion.css (the "blog" block at its end) the
  * crop point.
+ *
+ * Since 2026-10-23 (lane "blog") none of these photographs is placed: every
+ * one of those slots draws the article's cover in code (tools/blog-art.mjs,
+ * css/stargo-blog-art.css; tools/build-site.mjs coverFor). The three lists
+ * stay as the record of what B01–B07 were and where they went; the files stay
+ * in assets/stargo-photo/ until the owner decides.
  */
 export const BLOG_COVERS = {
   'stargo-work-visual-guide': photoFile('b01v2-visual-guide', 1600),
@@ -374,7 +380,8 @@ export const HOME_PRICING_CARD = photoFile('t01-enterprise-campus', 1024);
 /** The homepage's four newest-article cards (B01–B04), by article slug. A
  *  slug not listed keeps its article cover from assets/blog/. The blog index
  *  and the articles show the same photographs (BLOG_COVERS); only the
- *  articles' share images keep the assets/blog/ covers. */
+ *  articles' share images keep the assets/blog/ covers. Not placed since
+ *  2026-10-23: the cards draw their covers in code (see BLOG_COVERS). */
 export const HOME_BLOG_COVERS = {
   'stargo-work-visual-guide': photoFile('b01v2-visual-guide', 1600),
   'start-with-one-workflow': photoFile('b02-one-workflow', 1600),
@@ -476,7 +483,8 @@ export const WORKFORCE_ROLES = {
  *  by article slug. They showed the articles' covers, which are fitted
  *  product screenshots (tools/blog-covers.mjs: sw004, sw008, sw028); the
  *  blog index and the articles show the same photographs (BLOG_COVERS), and
- *  only the articles' share images keep those covers. */
+ *  only the articles' share images keep those covers. Not placed since
+ *  2026-10-23: the cards draw their covers in code (see BLOG_COVERS). */
 export const WORKFORCE_BLOG_COVERS = {
   'stargo-work-visual-guide': photoFile('b01v2-visual-guide', 1600),
   'start-with-one-workflow': photoFile('b02-one-workflow', 1600),

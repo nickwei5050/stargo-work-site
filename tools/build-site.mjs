@@ -38,6 +38,7 @@ import { speedPage } from './speed.mjs';
 /* The owner's photographs on the blog and intelligence pages (group "blog", 2026-10-21). */
 import { BLOG_COVERS, INTEL_PHOTOS } from './replaceables.mjs';
 import { GROWTH_ROWS } from './replaceables.mjs'; // capgrowth: the Growth OS rows' background scenes
+import { blogCover, blogArtSheet } from './blog-art.mjs';   // lane "blog" (2026-10-23): the code-drawn article covers
 
 /** The capability page's donor blocks, one module each in tools/blocks. */
 const CAP_BLOCKS = await loadBlocks();
@@ -383,6 +384,7 @@ function blogCards(html, list, item, posts, lang, cls) {
        size and alt over the marker alt. */
     const photo = cls.covers?.[p.slug];
     x = x.replace(imgRe, (tag) => {
+      if (cls.art) return coverFor(p, lang, cls.art, tag);   // the article's code-drawn cover (tools/blog-art.mjs)
       const bare = tag.replace(/\s*srcset="[^"]*"/g, '').replace(/\s*sizes="[^"]*"/g, '').replace(/\s*width="[^"]*"|\s*height="[^"]*"/g, '');
       if (photo) return bare.replace(/src="[^"]*"/, `src="${photo}"`).replace(/alt="[^"]*"/, 'alt="STARGO WORK"');
       return bare.replace(/src="[^"]*"/, `src="${coverSrc(p)}" srcset="${coverSrcset(p)}" sizes="${cls.sizes}"`);   // no width/height: the template sizes these by CSS aspect-ratio
@@ -404,6 +406,25 @@ function blogCards(html, list, item, posts, lang, cls) {
   };
   const inner = wrap.text.slice(0, first.start) + posts.map(render).join('') + wrap.text.slice(last.end);
   return html.slice(0, wrap.start) + inner + html.slice(wrap.end);
+}
+
+/* The blog's covers are drawn in code since 2026-10-23 (lane "blog",
+   tools/blog-art.mjs): the article hero, the cards of the blog index, of every
+   article's 「更多文章」 list, of the homepage's 最新文章 and of workforce's
+   文章 strip. The cover takes the picture's place in the template's tag: it
+   keeps the picture's class (which sizes the box: ratio, radius, width), its
+   data-w-id and its inline start state (the card's scale-in reveal), so
+   nothing about the box or its motion changes; only the photograph is gone,
+   and with it the download. `slot` is the box's ratio: 'hero' 3:2, 'card'
+   1:1, 'home' 3 / 2.3. The share images (og:image, BlogPosting) stay the
+   assets/blog/ covers. */
+const FIGURES = new Map();
+function coverFor(post, lang, slot, tag) {
+  const attr = (name) => tag.match(new RegExp(`\\s${name}="([^"]*)"`))?.[1];
+  const keep = ['data-w-id', 'style'].filter((a) => attr(a) != null).map((a) => `${a}="${attr(a)}"`).join(' ');
+  const key = `${post.slug}/${lang}`;
+  if (!FIGURES.has(key)) FIGURES.set(key, [...renderBody(post, lang).matchAll(/<figure class="sgc sgc--([\w-]+)"/g)].map((f) => f[1]));   // the figures' kinds, in order (the guide's contact sheet draws each)
+  return blogCover(post, lang, slot, { classes: attr('class') ?? '', attrs: keep, no: POSTS.length - POSTS.indexOf(post), figures: FIGURES.get(key) });
 }
 
 /** Mono page shell (nav … footer) with a foreign body dropped in. */
@@ -587,8 +608,9 @@ PAGES['index.html'] = (lang) => {
     h = swapImg(h, '699b6466d5f19893993a4f1a_Sunset-Serenity', HOME_PRICING_CARD, { alt: 'STARGO WORK' });
     h = swapImg(h, '699b6466d5f19893993a4efc_Smiling%20Bearded', 'assets/brand/stargo-s-mark-256.webp');   // the chat card's bearded-man avatar → the owner's S + star mark
     // The blog grid: the template's four cards, filled with the four newest articles.
-    // Since 2026-10-21 the four cards show the owner's photographs B01–B04 (HOME_BLOG_COVERS) instead of their article covers.
-    h = blogCards(h, 'blog-grid', 'w-dyn-item', featured(4), lang, { image: 'testimonials-photo', date: 'data-text ab', title: 'blog-txt', sizes: '(max-width: 767px) 100vw, (max-width: 991px) 50vw, 25vw', covers: HOME_BLOG_COVERS });
+    // Since 2026-10-23 the four cards draw their article's cover in code (tools/blog-art.mjs, the 'home'
+    // slot); the owner's photographs B01–B04 (HOME_BLOG_COVERS, 2026-10-21) are no longer placed.
+    h = blogCards(h, 'blog-grid', 'w-dyn-item', featured(4), lang, { image: 'testimonials-photo', date: 'data-text ab', title: 'blog-txt', sizes: '(max-width: 767px) 100vw, (max-width: 991px) 50vw, 25vw', art: 'home' });
   }
   const D = C.HOME_DUP_DESC;
   h = s(h, D.original, t(D.first), { nth: 0 });
@@ -1522,16 +1544,11 @@ PAGES['workforce.html'] = (lang) => {
   /* the article strip: our own posts */
   b = s(b, '>Stories<', `>${t(W.storiesTitle)}<`);
   b = s(b, '>we write and share<', `>${t(W.storiesSub)}<`);
-  /* Since 2026-10-21 the three cards show the owner's photographs B01–B03
-     (tools/replaceables.mjs WORKFORCE_BLOG_COVERS) instead of their article
-     covers; the blog index and the articles show the same photographs
-     (BLOG_COVERS), and only the articles' share images keep those covers. */
-  {
-    const strip = POSTS.slice(0, 3).map((p) => p.slug);
-    const lost = Object.keys(WORKFORCE_BLOG_COVERS).filter((slug) => !strip.includes(slug));
-    if (lost.length) throw new Error(`workforce: the article strip no longer shows ${lost.join(', ')}, which WORKFORCE_BLOG_COVERS gives a photograph`);
-  }
-  b = blogCards(b, 'lx-blog-list', 'lx-blog-item', POSTS.slice(0, 3), lang, { ...LX_CARD, covers: WORKFORCE_BLOG_COVERS });
+  /* Since 2026-10-23 the three cards draw their article's cover in code
+     (tools/blog-art.mjs, the 1:1 'card' slot), like the blog index and the
+     articles; the owner's photographs B01–B03 (WORKFORCE_BLOG_COVERS,
+     2026-10-21) are no longer placed. */
+  b = blogCards(b, 'lx-blog-list', 'lx-blog-item', POSTS.slice(0, 3), lang, { ...LX_CARD, art: 'card' });
 
   // The template's big square tile has "2.4M" painted into the artwork: a follower
   // count we have no basis for. Since 2026-10-23 a code-drawn scene takes the
@@ -1677,10 +1694,11 @@ PAGES['about.html'] = (lang) => {
 
 /* ---- blog.html — lifelogx blog index ------------------------------------ */
 const LX_CARD = { image: 'lx-blog-image', title: 'lx-blog-title', description: 'lx-blog-description', sizes: '(max-width: 767px) 100vw, (max-width: 991px) 50vw, 33vw' };
-/* The blog index and the articles' 「更多文章」 lists show each article's
-   cover photograph (tools/replaceables.mjs BLOG_COVERS, 2026-10-21); the
-   workforce page's article strip keeps LX_CARD and the covers. */
-const LX_PHOTO_CARD = { ...LX_CARD, covers: BLOG_COVERS };
+/* The blog index and the articles' 「更多文章」 lists draw each article's
+   cover in code since 2026-10-23 (tools/blog-art.mjs, the 1:1 'card' slot);
+   the cover photographs B01–B07 (tools/replaceables.mjs BLOG_COVERS,
+   2026-10-21) are no longer placed. */
+const LX_ART_CARD = { ...LX_CARD, art: 'card' };
 PAGES['blog.html'] = (lang) => {
   const t = (p) => (typeof p === 'string' ? p : p[lang]);
   const { fn: s } = makeSub('blog');
@@ -1714,15 +1732,10 @@ PAGES['blog.html'] = (lang) => {
      drawn keep-all, and those are its break points inside long phrases. */
   const intro = escapeHtml(t(BLOG_UI.intro)).replace(/&lt;wbr&gt;/g, '<wbr>');
   b = s(b, '>Discover Our Featured Stories</h1></div>', `>${headingHtml}</h1><div class="lx-feature-description-holder stargo-blog-intro"><div class="lx-text-size-regular">${intro}</div></div></div>`, { count: 1 });
-  b = blogCards(b, 'lx-blog-list', 'lx-blog-item', POSTS, lang, LX_PHOTO_CARD);
-  /* The first row of cards is in the first screen (three cards from 992 px,
-     two at 768-991, the first card on a phone): the first three pictures
-     load with the page, not lazily. */
-  {
-    let n = 0;
-    b = b.replace(/<img\b[^>]*class="lx-blog-image"[^>]*\/>/g, (tag) => (n++ < 3 ? tag.replace(' loading="lazy"', ' loading="eager"') : tag));
-    if ((b.match(/class="lx-blog-image"/g) ?? []).length !== POSTS.length || (b.match(/loading="eager"[^>]*class="lx-blog-image"/g) ?? []).length !== 3) throw new Error('blog: the first row of cards loads with the page');
-  }
+  b = blogCards(b, 'lx-blog-list', 'lx-blog-item', POSTS, lang, LX_ART_CARD);
+  /* Every card draws its cover in code: nothing for the first row to load
+     (it loaded its three photographs eagerly until 2026-10-23). */
+  if ((b.match(/class="lx-blog-image sgcv /g) ?? []).length !== POSTS.length || /<img\b[^>]*class="lx-blog-image"/.test(b)) throw new Error('blog: every card draws its cover');
   b = b.replace(/alt="Lifelogx[^"]*"/g, 'alt=""');
   if (/Lifelogx|Companion|Moments in Motion|Conversational AI/.test(b)) throw new Error('blog: template copy survives');
   return inMonoShell(b + bigMark(), ['lifelogx.lx.css', 'stargo-fusion.css']).replace('<body ', '<body class="lx-page" ');
@@ -1734,7 +1747,7 @@ function postPage(post, lang) {
   const { fn: s } = makeSub(`post:${post.slug}`);
   let b = frag('lx-post.html');
   // Lists first (they repeat the template's title), then the title itself.
-  b = blogCards(b, 'lx-blog-list', 'lx-blog-item', others(post, 3), lang, LX_PHOTO_CARD);
+  b = blogCards(b, 'lx-blog-list', 'lx-blog-item', others(post, 3), lang, LX_ART_CARD);
   {
     const list = findByClass(b, 'div', 'lx-related-list');
     if (!list) throw new Error('post: related list');
@@ -1745,19 +1758,18 @@ function postPage(post, lang) {
   b = s(b, '>How AI Companions Can Transform Your Life<', `>${titleHtml(post, lang, escapeHtml)}<`, { count: 1 });
   b = s(b, '>Related Items<', `>${t(BLOG_UI.related)}<`, { count: 1 });
   b = s(b, '>More from blog<', `>${t(BLOG_UI.more)}<`, { count: 1 });
-  /* The hero cover: the article's cover photograph since 2026-10-21
-     (tools/replaceables.mjs BLOG_COVERS). Its alt is a marker that
-     tools/editorial-images.mjs replaces with the photograph's own sentence,
-     and writes its srcset and sizes. An article without one keeps its cover
-     from assets/blog/: a cover made from one of the owner's product
-     screenshots says in its alt that it is a demonstration interface with
-     demo data, in the words tools/editorial-images.mjs uses for the same
-     pictures elsewhere (tools/blog.mjs coverAlt); the editorial covers stay
-     decorative. Either way it is the first screen's picture: it loads first. */
-  const photo = BLOG_COVERS[post.slug];
-  b = swapImg(b, '6945522d9e13fa6b32ace3c9_Futuristic', photo ?? coverSrc(post), { alt: photo ? 'STARGO WORK' : coverAlt(post, lang) });
-  b = b.replace(/(<img[^>]*class="lx-blog-image lx-details")\/>/, (m, tag) => `${tag.replace(' loading="lazy"', ' loading="eager" fetchpriority="high"')}${photo ? '' : ` srcset="${coverSrcset(post)}" sizes="(max-width: 991px) 100vw, 1180px"`}/>`);
-  if (!b.includes(photo ? `src="${photo}"` : coverSrcset(post)) || !/fetchpriority="high"[^>]*class="lx-blog-image lx-details"/.test(b)) throw new Error('post: hero image');
+  /* The hero cover is drawn in code since 2026-10-23 (tools/blog-art.mjs,
+     the 3:2 'hero' slot): a labelled image (role="img" and a sentence saying
+     it is an illustration and what it shows) in the template picture's box,
+     with its class, data-w-id and start state. It replaced the cover
+     photograph (tools/replaceables.mjs BLOG_COVERS, 2026-10-21), so the
+     first screen has no picture to wait for. The article still shares its
+     assets/blog/ cover (og:image, BlogPosting image). */
+  {
+    let hit = 0;
+    b = b.replace(/<img\b[^>]*6945522d9e13fa6b32ace3c9_Futuristic[^>]*>/g, (tag) => { hit++; return coverFor(post, lang, 'hero', tag); });
+    if (hit !== 1 || !/class="lx-blog-image lx-details sgcv /.test(b)) throw new Error(`post ${post.slug}: hero cover`);
+  }
   {
     // The rich-text block carries the interaction's initial state inline (opacity 0, data-w-id): keep its tag, replace its content.
     // renderBody() prints the answer paragraph, the 「要点速览」 takeaways, the
@@ -2644,6 +2656,7 @@ const written = [];
 for (const lang of C.LANGS) {
   for (const [name, build] of Object.entries(PAGES)) {
     let html = build(lang);
+    html = blogArtSheet(html, `${lang}/${name}`);   // tools/blog-art.mjs: the covers' sheet, on the pages that draw one
     html = applyChrome(html, { lang, current: name });
     html = a11yPage(html, { lang, name });   // Z15: landmarks, skip link, heading semantics, names
     html = remapLinks(html);
