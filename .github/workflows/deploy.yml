@@ -55,13 +55,19 @@ jobs:
         if: steps.secrets.outputs.ready == 'true'
         run: npx --yes wrangler@4.20.0 pages deploy dist --project-name stargo --branch main --commit-hash "$GITHUB_SHA" --commit-message "main@${GITHUB_SHA::7}"
 
+      # stargo.pages.dev is the retired host: functions/_middleware.js answers
+      # every page there with a 301 to the same page on https://stargowork.com,
+      # so a page passes on that redirect (or on a 200, before it is live).
       - name: Smoke-check production
         if: steps.secrets.outputs.ready == 'true'
         run: |
           sleep 20
           for path in / /en/ /pricing /contact; do
-            code=$(curl -s -o /dev/null -w '%{http_code}' "https://stargo.pages.dev$path")
-            echo "$path → $code"
-            [ "$code" = "200" ] || exit 1
+            got=$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' "https://stargo.pages.dev$path")
+            echo "$path → $got"
+            case "$got" in
+              "200 "*|"301 https://stargowork.com$path") ;;
+              *) exit 1 ;;
+            esac
           done
-          echo "Deployed main@${GITHUB_SHA::7} to https://stargo.pages.dev" >> "$GITHUB_STEP_SUMMARY"
+          echo "Deployed main@${GITHUB_SHA::7} to the stargo project (stargo.pages.dev redirects to https://stargowork.com)" >> "$GITHUB_STEP_SUMMARY"
