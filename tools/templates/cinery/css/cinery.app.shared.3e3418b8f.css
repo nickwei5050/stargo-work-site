@@ -53,7 +53,7 @@ h1 {
 
 mark {
   color: #000;
-  background: #ff0;
+  background: #eaf7ff;
 }
 
 small {
@@ -2594,7 +2594,7 @@ blockquote {
 }
 
 .form-message-success {
-  color: #114e0b;
+  color: #074662;
   text-align: center;
   background-color: #cef5ca;
   border-radius: 1rem;
@@ -2902,7 +2902,7 @@ blockquote {
 .fs-styleguide-header {
   color: #fff;
   background-color: #000;
-  background-image: radial-gradient(circle at 100% 100%, #dd23bb40, #0000 40%), radial-gradient(circle at 0 100%, #2d62ff4d, #0000 60%);
+  background-image: radial-gradient(circle at 100% 100%, #9c56ff40, #0000 40%), radial-gradient(circle at 0 100%, #2d62ff4d, #0000 60%);
 }
 
 .margin-custom2 {
@@ -3353,7 +3353,7 @@ blockquote {
 }
 
 .fs-styleguide-message {
-  color: #5e5515;
+  color: #5339ae;
   background-color: #fcf8d8;
   padding: .25rem .5rem;
   font-size: .875rem;
@@ -3404,7 +3404,7 @@ blockquote {
 }
 
 .fs-styleguide-label.is-tag {
-  background-color: #dd23bb;
+  background-color: #9c56ff;
 }
 
 .padding-xlarge {

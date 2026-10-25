@@ -214,6 +214,16 @@ function border(card, on) {
 
 /* ----------------------------------------------------------------- render -- */
 
+/** The ?plan= key a plan button hands the contact form: the English plan name,
+ *  lower-cased and hyphenated (standard, launch, growth, global-acquisition,
+ *  enterprise). tools/blocks/cn-contact.mjs derives the same keys from the same
+ *  PRICING entries with this function, so the two cannot drift apart. */
+export const planKey = (tier) => {
+  const en = typeof tier.name === 'string' ? tier.name : tier.name?.en;
+  if (!en) throw new Error('rk-price-tiers: a plan has no English name to key ?plan= on');
+  return en.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+};
+
 export function render(frag, ctx) {
   const { C, lang, t, escapeHtml } = ctx;
   const P = C.PRICING;
@@ -414,9 +424,12 @@ export function render(frag, ctx) {
 
     /* The button keeps two copies of its label, one rolling up behind the
        other. Every plan button goes to contact.html, exactly as the plan
-       buttons on this site's own pricing page do. */
+       buttons on this site's own pricing page do — carrying ?plan=<key>
+       (Z11, form lane) so the contact form can send which plan the visitor
+       came from (js/stargo-forms.js fills the form's hidden `plan` field from
+       it; tools/blocks/cn-contact.mjs lists the keys it accepts). */
     let bottom = setTextAll(rows.tail, 'rk-rt-button-text', escapeHtml(t(tier.cta)));
-    bottom = swap(bottom, 'href="pricing.html"', 'href="contact.html"', 'the plan button\'s link');
+    bottom = swap(bottom, 'href="pricing.html"', `href="contact.html?plan=${planKey(tier)}"`, 'the plan button\'s link');
     const notes = bottom.match(/<div>Billed\s+(?:monthly|yearly)<\/div>/g) ?? [];
     if (notes.length !== 1) throw new Error(`rk-price-tiers: a card should carry one period note, found ${notes.length}`);
     bottom = bottom.replace(notes[0], `<div>${escapeHtml(note)}</div>`);

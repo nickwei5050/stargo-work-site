@@ -13,10 +13,22 @@
  *     slot: the rewrite would run twice.
  *   - A product path (`assets/stargo-product/…`) or the hero film
  *     (`assets/stargo-motion/…`) is written as the final URL. Overwrite that
- *     file, including its width variants, and leave the name alone.
+ *     file, including its width variants, and leave the name alone: every
+ *     page loads it as `…?v=<content hash>` (tools/asset-version.mjs, Z18),
+ *     so the new bytes are a new URL and the year-long immutable cache cannot
+ *     keep the old picture. For anything that must disappear from browsers
+ *     that already hold it (a screenshot blurred for privacy), prefer a new
+ *     file name as well, so the old URL no longer exists on the site.
+ *   - An owner photograph (`assets/stargo-photo/<id>-<width>.webp`, registered
+ *     in tools/imagegen/photo-assets.json; AI-generated, captioned as such by
+ *     tools/editorial-images.mjs) is written as the final URL too, but never
+ *     overwritten: /assets is cached immutable for a year, so a new picture
+ *     gets a new id and tools/imagegen/prepare-photos.mjs writes it (it
+ *     refuses to replace a file with different bytes).
  *
- * The Open Graph file stays `og-cover.png` at 1200×630. Renaming it means
- * updating OG.token, OG.file, and every built meta tag together.
+ * The share card (OG) is the owner's photograph O01 since 2026-10-21, a
+ * 1200×630 JPEG written by tools/imagegen/prepare-share-card.mjs. Like every
+ * owner photograph it is never overwritten: a new card gets a new name here.
  *
  * Nothing here is new artwork. Every id is a file that already ships.
  */
@@ -27,34 +39,289 @@ export const editorialToken = (id, ext = 'webp') => `assets/stargo/${id}.${ext}`
 export const editorialFile = (id, ext = 'webp') => `assets/stargo-editorial/${id}.${ext}`;
 /** Owner product screenshot. Written as this path; width variants sit beside it. */
 export const productFile = (id) => `assets/stargo-product/${id}.webp`;
+/** Owner photograph: its widest file. The narrower ones carry their own width in the name. */
+export const photoFile = (id, width = 2048) => `assets/stargo-photo/${id}-${width}.webp`;
 
-/** Share cover. chrome.mjs writes `token`; pages publish `file`. */
+/**
+ * Share cover: og:image and twitter:image of every page that has no picture of
+ * its own (an article shares its own cover, tools/chrome.mjs). chrome.mjs
+ * writes `token`; pages publish `file`. Since 2026-10-21 it is the owner's
+ * photograph O01 (site-images/batch-8, a container ship at blue hour), cut to
+ * 1200×630 and written as a JPEG, because link previews do not all read WebP.
+ * It replaced the generated og-cover.png (editorialFile('og-cover', 'png')),
+ * which stays on disk. `id` keys its alt text in tools/editorial-images.mjs.
+ */
 export const OG = {
-  token: editorialToken('og-cover', 'png'),
-  file: editorialFile('og-cover', 'png'),
+  id: 'o01-share-cover',
+  token: 'assets/stargo-photo/o01-share-cover-1200x630.jpg',
+  file: 'assets/stargo-photo/o01-share-cover-1200x630.jpg',
   width: 1200,
   height: 630,
 };
 
 /**
  * Homepage sticky video grid (the Fearless Vision centre film plus the
- * stills around it). `theatre[centreIndex]` is replaced by `film` / `poster`
- * and is not shown as a still. The opening overlay (tools/blocks/og-intro.mjs)
- * has no image file.
+ * stills around it, under 「同一个工作空间，连接日常经营。」). `theatre[centreIndex]`
+ * is replaced by `film` / `poster` and is not shown as a still. The opening
+ * overlay (tools/blocks/og-intro.mjs) has no image file.
+ *
+ * Since 2026-10-21 the six stills are the owner's photographs
+ * (site-images/batch-3, W01–W06): trade office, workshop, warehouse, QC
+ * room, owner's office, showroom. They replaced the os-* stills here only; the
+ * os-* files keep their other places (hero mosaic, photo strips, dashboard and
+ * slide images, other pages).
+ *
+ * From 2026-10-23 (owner: 能用代码的图片都改成代码) to 2026-10-24 the six
+ * cells around the film were code-drawn windows of the STARGO WORK desktop
+ * instead of those photographs, one motion scene per cell, in DOM order
+ *   code: ['desk-sales', 'desk-growth', 'desk-cockpit', null, 'desk-quote', 'desk-erp', 'desk-creative']
+ * (js/stargo-motion-desk.js, css/stargo-motion-desk.css), telling one demo
+ * deal clockwise from the top left: Growth OS, Sales Desk, 报价审批, ERP,
+ * AI 创作, 经营驾驶舱. The scenes stay registered in tools/motion-scenes.mjs
+ * and their files stay in the repo, but no page loads them.
+ *
+ * Since 2026-10-24 (owner, 17:27 UTC: 「你现在也全是代码了，我系统的画面都没有了！
+ * 我需要真实系统截图放在特定的地方」) each of the six shows a crop of the
+ * owner's own captures (site-screens/raw and /mobile, 2026-10-21, demo data),
+ * placed by tools/real-theatre.mjs with the 真实界面 · 演示数据 tag. `real[i]`
+ * is cell i in DOM order (`at`: tr top right, tl top left, ml middle left, mr
+ * middle right, br bottom right, bl bottom left): `id` is the crop for
+ * landscape screens, `upright` the crop for portrait ones (null: the same crop,
+ * framed for the tall cell). The crops are cut in tools/real-screens/theatre.json
+ * (live05-growth-home-2x1 is the published clean Growth OS cut, used as it is).
+ * Each app keeps the cell its window had, so the ring still reads as the one
+ * deal: Growth OS, Sales Desk, the quote, ERP, AI 创作 and the day's counts.
+ * The ring cuts each cell's outer side and the top row's top off at every
+ * screen size, so each crop keeps expendable ground there; the Growth OS cut
+ * starts at its card's edge, so css/stargo-theatre.css sets it in from the cut
+ * side on its own ground (and says, per cell, which inner corner the tag takes,
+ * so it is on screen at rest). There is no usable capture of the business cockpit
+ * (经营驾驶舱; raw/40 shows a failed task), so the middle left cell shows the
+ * Sales Desk board (看板), whose counts and 等你审批 list are the nearest real
+ * screen.
+ *
+ * `theatre` keeps the photographs for the record; none of W01, W03–W06 is
+ * drawn on the site any more (W02 still is, in the capability ring). `poster`
+ * is the film's own first frame since 2026-10-23.
  */
 export const HERO = {
   film: 'assets/stargo-motion/orbit.mp4',
   poster: 'assets/stargo-motion/orbit-poster.webp',
   centreIndex: 3,
-  theatre: [
-    editorialToken('os-boot'),
-    editorialToken('os-loading'),
-    editorialToken('os-login'),
-    editorialToken('os-desktop'),
-    editorialToken('os-cockpit'),
-    editorialToken('os-agent-center'),
-    editorialToken('os-inquiries'),
+  real: [
+    { at: 'tr', screen: 'Sales Desk · 客户对话 (Northwind Traders)', id: 'live09-theatre-case-wide', upright: 'live52-theatre-case-up' },
+    { at: 'tl', screen: 'Growth OS · 首页 (开始找客户 / 发送开发信)', id: 'live05-growth-home-2x1', upright: null },
+    { at: 'ml', screen: 'Sales Desk · 看板 (in place of 经营驾驶舱)', id: 'live10-theatre-board-wide', upright: 'live51-theatre-board-up' },
+    null,
+    { at: 'mr', screen: 'Sales Desk · 报价 (等你审批 USD 24,925.50)', id: 'live12-theatre-quotes-wide', upright: 'm01-theatre-quotes-up' },
+    { at: 'br', screen: 'ERP · 物料 (STARGO items)', id: 'live23-theatre-items-wide', upright: null },
+    { at: 'bl', screen: 'AI 创作 · 无限画布', id: 'live35-theatre-canvas-wide', upright: 'live35-theatre-canvas-up' },
   ],
+  theatre: [
+    photoFile('w01-trade-office'),
+    photoFile('w02-workshop'),
+    photoFile('w03-warehouse'),
+    editorialToken('os-desktop'),
+    photoFile('w04-qc-lab'),
+    photoFile('w05-owner-office'),
+    photoFile('w06-showroom'),
+  ],
+};
+
+/**
+ * The side menu's 预约企业演示 contact card, on every page that has the menu
+ * (tools/chrome.mjs): a still photograph where the magical-orb clip played
+ * (G02, 2026-10-21). The orb clip stays everywhere else it is drawn — the
+ * navbar logo and the pricing cards. Its poster (the still before it plays,
+ * and under reduced motion) is the clip's own first frame since 2026-10-24
+ * (QA round 5 #4; the orb poster note in tools/encode-video.mjs) — until
+ * then it was a brown particle field from another clip.
+ * Since 2026-10-24 (「现场氛围也全部换成代码」) the card draws a harbour in code
+ * (tools/code-art-atmos.mjs MENU_ART); MENU_CARD is no longer placed.
+ */
+export const MENU_CARD = photoFile('g02-menu-harbour-night', 768);
+
+/**
+ * Capability page, 「每项 工作」 ring (tools/blocks/cn-produce.mjs): cards that
+ * show a still photograph instead of their clip, by the clip's video id.
+ * W02 (2026-10-21) takes the outer ring's video-15 card and the inner ring's
+ * card that repeats video-11.
+ *
+ * Since the owner's batches 1, 2 and 6 (2026-10-21) every card is a still.
+ * The outer ring's thirteen clips take H01-H10, P03, C08 and W02 in DOM order;
+ * the inner ring repeats the outer ring's clips, so each of its cards takes the
+ * still of the clip it repeats (video-10 twice: H09 both times), except the
+ * second repeat of video-11, which takes C08 instead of a second P03 so every
+ * still is in the inner ring too. The ids are the manifests' own.
+ *
+ * Since 2026-10-24 (lane "vignettes") every card draws the code vignette of
+ * the photograph named here instead (tools/code-art-vignettes.mjs, placed by
+ * its page pass after tools/blocks/cn-produce.mjs has written the stills), so
+ * none of these files is fetched by the page; the map stays the record.
+ */
+export const RING_STILLS = {
+  /* outer ring */
+  '883ab066-dd39-71d8-e308-0e0f4d18fa80': photoFile('h01-port-blue-hour', 1024),      // video-8
+  '883ab066-dd39-71d8-e308-0e0f4d18fa82': photoFile('h02-night-inquiry', 1024),       // video-2
+  '883ab066-dd39-71d8-e308-0e0f4d18fa84': photoFile('h03-sample-wall', 1024),         // video-1
+  '883ab066-dd39-71d8-e308-0e0f4d18fa86': photoFile('h04-caliper-qc', 1024),          // video-6
+  '883ab066-dd39-71d8-e308-0e0f4d18fa88': photoFile('h05-assembly-line', 1024),       // video-4
+  '883ab066-dd39-71d8-e308-0e0f4d18fa8a': photoFile('h06-packing', 1024),             // video-3
+  '883ab066-dd39-71d8-e308-0e0f4d18fa8c': photoFile('h07-owner-walk', 1024),          // video-7
+  '883ab066-dd39-71d8-e308-0e0f4d18fa8e': photoFile('h08-product-shoot', 1024),       // video-9
+  '883ab066-dd39-71d8-e308-0e0f4d18fa90': photoFile('h09-container-loading', 1024),   // video-10
+  '883ab066-dd39-71d8-e308-0e0f4d18fa92': photoFile('h10-video-showing', 1024),       // video014
+  '883ab066-dd39-71d8-e308-0e0f4d18fa94': photoFile('p03-fulfilment', 768),           // video-11
+  '883ab066-dd39-71d8-e308-0e0f4d18fa96': photoFile('c08-product-references', 1024),  // video-16
+  '883ab066-dd39-71d8-e308-0e0f4d18fa98': photoFile('w02-workshop'),                  // video-15
+  /* inner ring, in DOM order */
+  '883ab066-dd39-71d8-e308-0e0f4d18fa9c': photoFile('h01-port-blue-hour', 1024),      // video-8
+  '883ab066-dd39-71d8-e308-0e0f4d18fa9e': photoFile('h03-sample-wall', 1024),         // video-1
+  '883ab066-dd39-71d8-e308-0e0f4d18faa0': photoFile('h02-night-inquiry', 1024),       // video-2
+  '883ab066-dd39-71d8-e308-0e0f4d18faa2': photoFile('h05-assembly-line', 1024),       // video-4
+  '883ab066-dd39-71d8-e308-0e0f4d18faa4': photoFile('h04-caliper-qc', 1024),          // video-6
+  '883ab066-dd39-71d8-e308-0e0f4d18faa6': photoFile('h07-owner-walk', 1024),          // video-7
+  '883ab066-dd39-71d8-e308-0e0f4d18faa8': photoFile('h06-packing', 1024),             // video-3
+  '883ab066-dd39-71d8-e308-0e0f4d18faaa': photoFile('h09-container-loading', 1024),   // video-10
+  '883ab066-dd39-71d8-e308-0e0f4d18faab': photoFile('p03-fulfilment', 768),           // video-11
+  '883ab066-dd39-71d8-e308-0e0f4d18faad': photoFile('h09-container-loading', 1024),   // video-10 again
+  '883ab066-dd39-71d8-e308-0e0f4d18faae': photoFile('h08-product-shoot', 1024),       // video-9
+  '883ab066-dd39-71d8-e308-0e0f4d18faaf': photoFile('c08-product-references', 1024),  // video-11, 2nd repeat
+  '883ab066-dd39-71d8-e308-0e0f4d18fab1': photoFile('w02-workshop'),                  // video-11 repeat (W02)
+  '883ab066-dd39-71d8-e308-0e0f4d18fab3': photoFile('h10-video-showing', 1024),       // video014
+};
+
+/**
+ * The capability page's other photograph slots (the owner's batches 1, 2, 5
+ * and 6, 2026-10-21), each named by the batch manifest with the picture it
+ * showed until then. Every path is the photograph's widest file; the blocks
+ * write it as the src and tools/editorial-images.mjs adds the narrower widths,
+ * the size and the manifest's alt. Crop points are in css/stargo-fusion.css
+ * (the "capability page" block). The other places the replaced files appear
+ * (the homepage, enterprise, the side menu's slides, the Growth OS rows'
+ * hover thumbnails) keep them.
+ */
+export const CAP_PHOTOS = {
+  /* 四个板块，十四类能力 (the four area cards, C01–C04) and 一条业务主线's eight
+     orbit thumbnails were photographs here until 2026-10-23; they are drawn in
+     code now (tools/code-art-capareas.mjs: the motion scenes of
+     js/stargo-motion-areas.js, and static SVG for the orbit). */
+  /* Growth OS (tools/blocks/cn-service.mjs): since 2026-10-23 the rows'
+     four full-bleed backgrounds are code-drawn (GROWTH_ROWS[].scene); the
+     night photographs C11v2-C14 are no longer placed. */
+  /* Sales Desk (tools/blocks/qx-news.mjs, through SALES_ROWS): 统一询盘入口 and
+     客户全景. The middle row keeps its product screen. Since 2026-10-23 these four
+     slots (inbox, customer360, quote, creative) are drawn in code on the page
+     (scenes inbox, account, quote, creative: tools/motion-capsales.mjs); the
+     photographs stay here as the slot's source tag and the way back. */
+  inbox: photoFile('c05-unified-inbox', 768),
+  customer360: photoFile('c06-customer-360', 1600),
+  /* 报价 (tools/blocks/rk-stats.mjs, CAP_V6A.quote.image in tools/copy.mjs). */
+  quote: photoFile('c07-quote-approval', 768),
+  /* 图片 / 视频 (tools/blocks/cn-faq.mjs): the portrait beside the accordion. */
+  creative: photoFile('c08-product-references', 1024),
+  /* 让 AI 团队把活干完 (tools/blocks/qx-projects.mjs): all three cards are
+     code-drawn scenes since 2026-10-23 (CAP_V6A.team.cards[].motion in
+     tools/copy.mjs; C09 and C10 were the first two). */
+};
+
+/**
+ * 真实截图 on the capability page (lane capabilities, 2026-10-24). The owner, 17:27 UTC:
+ * 「你现在也全是代码了，我系统的画面都没有了！我需要真实系统截图放在特定的地方」. From
+ * 2026-10-23 to 2026-10-24 the slots below were code-drawn scenes of the product's screens
+ * (the area scenes of js/stargo-motion-areas.js, inbox / account / quote / creative of
+ * tools/motion-capsales.mjs, crewRoles of js/stargo-motion-crew.js), and before that the
+ * owner's photographs C01–C09 (CAP_PHOTOS above). Since 2026-10-24 each shows a crop of the
+ * system's own screens, cut from the owner's captures of 2026-10-21 (site-screens/raw and
+ * /mobile, already masked: demo customers, example.com mail, amounts × 0.87) in
+ * tools/real-screens/capabilities.json, and placed by tools/real-capabilities.mjs with the
+ * 真实界面 · 演示数据 tag. An entry: `id` the crop for landscape screens, `upright` the crop
+ * for portrait ones (left out: the one crop is cut tall enough for the tallest box it meets
+ * and wider boxes show its top), `pos` / `uprightPos` its object-position.
+ *   areas     四个板块，十四类能力 in card order (#g01, #g04, #g07, #g10): the Growth OS home
+ *             (the published live05 cuts as they are), the Sales Desk customer list (the
+ *             phone's list on upright screens), the ERP item list, and the digital employees'
+ *             open marketplace (the published StaffDeck composite sw004, right of its sidebar
+ *             so the upstream's mark stays out).
+ *   inbox     Sales Desk row 01 统一询盘入口: the case page's inquiry column.
+ *   account   Sales Desk row 03 客户全景: the phone's customer 360, 成交资料 4/10.
+ *   quote     03 报价有依据: the phone's quote list, Q-13D55F08-01 等你审批.
+ *   creative  the 图片 / 视频 portrait: 一键复刻爆款视频, the reference-video form.
+ *   crew      the first card of 让 AI 团队把活干完, 288 个跨部门专业岗位: 我的数字员工 from the
+ *             sw006 composite, below its 298 headcount (which would argue with the 288 roles).
+ * The second and third crew cards stay scenes: no capture of the digital employees' task
+ * board exists (site-screens/mobile/NOTES.md: StaffDeck was held by its onboarding), and the
+ * third is the teamwork example its caption calls 示意. Setting an entry to null shows that
+ * slot's scene again (the blocks and CAP_V6A in tools/copy.mjs keep the scene names).
+ */
+export const CAP_REAL = {
+  areas: [
+    { id: 'live05-growth-home-2x1', upright: 'live05-growth-home-start-5x4', pos: '0% 0%' },
+    { id: 'live11-capabilities-customers', upright: 'm05-capabilities-customers-up', pos: '0% 0%' },
+    { id: 'live23-capabilities-items', upright: 'live23-capabilities-items-up', pos: '0% 0%' },
+    { id: 'sw004-capabilities-library', upright: 'sw004-capabilities-library-up', pos: '0% 0%' },
+  ],
+  inbox: { id: 'live09-capabilities-inbox', pos: '0% 0%' },
+  account: { id: 'm06-capabilities-account', pos: '0% 0%' },
+  quote: { id: 'm01-capabilities-quote', pos: '0% 0%' },
+  creative: { id: 'live34-capabilities-video', upright: 'live34-capabilities-video-up', pos: '0% 0%' },
+  crew: { id: 'sw006-capabilities-staff', pos: '0% 0%' },
+};
+
+/* The demo band behind the glass form (index, capabilities, enterprise) is a
+   CSS background: css/stargo-fusion.css sets .photo-section to G01,
+   assets/stargo-photo/g01-cta-loading-bay-dusk-2048.webp. */
+
+/**
+ * The blog (group "blog", 2026-10-21; site-images/batch-8, B01–B07): each
+ * article's cover photograph, by article slug (tools/blog.mjs POSTS).
+ * It is the picture of the article's hero and of its card in the blog index
+ * (blog.html) and in every article's 「更多文章」 list (tools/build-site.mjs).
+ * A slug not listed keeps its cover from assets/blog/ there. The covers in
+ * assets/blog/ (tools/blog-covers.mjs) stay what the articles share
+ * (og:image, twitter:image, the BlogPosting image); the homepage's and
+ * workforce's article cards take the same photographs through their own
+ * lists, HOME_BLOG_COVERS and WORKFORCE_BLOG_COVERS. Values are each
+ * photograph's widest file; tools/editorial-images.mjs writes the srcset, the
+ * size and the alt, css/stargo-fusion.css (the "blog" block at its end) the
+ * crop point.
+ *
+ * Since 2026-10-23 (lane "blog") none of these photographs is placed: every
+ * one of those slots draws the article's cover in code (tools/blog-art.mjs,
+ * css/stargo-blog-art.css; tools/build-site.mjs coverFor). The three lists
+ * stay as the record of what B01–B07 were and where they went; the files stay
+ * in assets/stargo-photo/ until the owner decides.
+ */
+export const BLOG_COVERS = {
+  'stargo-work-visual-guide': photoFile('b01v2-visual-guide', 1600),
+  'start-with-one-workflow': photoFile('b02-one-workflow', 1600),
+  'from-inquiry-to-quote': photoFile('b03-inquiry-to-quote', 1600),
+  'approval-gates-for-ai-in-trade': photoFile('b04v2-approval-handover', 1600),
+  '288-ai-employees-not-288-chatbots': photoFile('b05-288-relay', 1600),
+  'ai-operating-system-for-global-trade': photoFile('b06-browser-os', 1600),
+  'enterprise-ontology-explained': photoFile('b07v2-knowledge-library', 1600),
+};
+
+/**
+ * intelligence.html, both languages (group "blog", 2026-10-21;
+ * site-images/batch-8, I01–I03), in place of the Lifelogx template's
+ * photographs: `observe` the full-bleed picture under the four lines
+ * 观察真实流程 … 用实际结果改进 (#lx-more), `closing` the picture of the pink
+ * closing card (#lx-evolution), `phone` the hand-held phone of the "no
+ * writing" band, whose screen layer (since 2026-10-23 the code-drawn 'feed'
+ * scene, js/stargo-motion-phone.js) stays laid over it.
+ * 2026-10-24 (QA round 5, entintel): on 768–991 px touch screens the phone
+ * and its screen layer are sized from the holder's height as well as its
+ * width (css/stargo-motion-phone.css, the tablet block), so the grid cell no
+ * longer slices the phone; the picture file and its crop are unchanged. On
+ * the narrowest phones the feed draws its three rows and tab bar whole at
+ * scale 1 instead of a cropped two-row view with the bottom left blank.
+ */
+export const INTEL_PHOTOS = {
+  observe: photoFile('i01-observe-process', 2048),
+  /* the closing card's picture (I02) is code-drawn since 2026-10-23: the
+     'improve' scene (js/stargo-motion-improve.js, tools/build-site.mjs lxPage) */
+  phone: photoFile('i03-hand-phone-blank', 768),
 };
 
 /**
@@ -99,9 +366,14 @@ export const PRODUCT_IDS = {
   erpItems: 'live23-erp-items-16x9',
   erpStage: 'live23-erp-items-3x2',
   growthHome: 'live05-growth-home-2x1',
+  growthTile: 'live05-growth-home-16x9',   // the same capture on a 16:9 plate (homemore, 2026-10-23)
   growthStartThumb: 'live05-growth-home-start-5x4',
   needs: 'live52-mobile-case-needs',
   quoteApproval: 'live18-quote-approval-16x9',
+  desktopHome: 'live01-desktop-home-16x9',
+  caseWide: 'live09-sales-desk-case-16x9',
+  mobileCase: 'live52-mobile-case-16x9',
+  mobilePair: 'live51-52-mobile-pair-16x9', // both phone captures whole on one 16:9 plate (homemore, 2026-10-23)
 };
 
 export const PRODUCT = Object.fromEntries(
@@ -116,19 +388,33 @@ PRODUCT.documentPack = PRODUCT.documents;
 /**
  * Hero rotating gallery (tools/blocks/ro-gallery.mjs). Six screens, each
  * shown four times. Stems only; the block adds assets/stargo-product/ and .webp.
+ *
+ * Since 2026-10-23 (homemore lane) all six are real captures of the product
+ * with demo data, every one 16:9 like the tile: the web desktop, the Growth
+ * OS home, the ERP item list, the two phone screens (deal board and an
+ * inquiry, whole, side by side), the Sales Desk case and quote approval. They replaced, in the same slots, the generated
+ * marketing composites sw003 (workspace), sw004 (experts), sw006 (teams),
+ * sw008 (workflows) and sw028 (inquiry reply).
  */
 export const GALLERY_TILES = [
-  PRODUCT_IDS.workspace,
-  PRODUCT_IDS.experts,
-  PRODUCT_IDS.teams,
-  PRODUCT_IDS.workflows,
-  PRODUCT_IDS.inquiry,
+  PRODUCT_IDS.desktopHome,
+  PRODUCT_IDS.growthTile,
+  PRODUCT_IDS.erpItems,
+  PRODUCT_IDS.mobilePair,
+  PRODUCT_IDS.caseWide,
   PRODUCT_IDS.quoteApproval,
 ];
 
 /**
  * Homepage core-system cards (Scalora product switcher), desktop and phone.
  * Keys are the start of the slot title in both languages.
+ *
+ * The build first puts these files into the four panels (desktop tabs and the
+ * phone accordion), then HOME_MODULE_SHOTS below takes over the Growth OS and
+ * AI 创作 / AI Creative panels. Sales Desk and ERP show these files as they are:
+ * the clean captures live09-sales-desk-case-4x3 and live23-erp-items-16x9.
+ * Growth OS (gos10, a curated still) and AI 创作 (os-boot, a generated still)
+ * stay listed as the way back.
  */
 export const HOME_MODULES = {
   'Growth OS': PRODUCT.growth,
@@ -139,34 +425,179 @@ export const HOME_MODULES = {
 };
 
 /**
+ * The switcher panels that show a real-screen slot (tools/real-screens.mjs),
+ * by the same keys: `desk` in the desktop tabs, `phone` in the phone and tablet
+ * accordion (the same 1672 × 941 box, 280–660px wide there).
+ *
+ * The owner, 2026-10-24 17:27 UTC: 「你现在也全是代码了，我系统的画面都没有了！我需要
+ * 真实系统截图放在特定的地方」. Since 2026-10-23 these two panels had been the
+ * code-drawn 'radar' (a world map ranking prospects) and 'studio' (a generated
+ * product shot) — drawings of a product UI, the kind of place he asked to show
+ * the real screen again. Lane panels (2026-10-24):
+ *   Growth OS   desk  live05-growth-home-16x9: the clean Growth OS home (the
+ *                     2x1 capture whole on its own page ground; raw/05 itself
+ *                     carries a blurred error box and is never used)
+ *               phone live05-panels-growth-phone-16x9: the same home, closer —
+ *                     the heading, the onboarding bar and 开始找客户 — so its
+ *                     words still read in a 280–310px panel
+ *   AI 创作      both  live35-panels-canvas-16x9: the infinite canvas's first
+ *                     screen, dark, its tab bar and the 无限画布 hero; stopped
+ *                     short of the version number, the GitHub icon and the
+ *                     prompt-library cards below (third-party pictures)
+ * The choice of 35 over 34 (the reference-video form): the four panels show one
+ * at a time, and the dark canvas reads as the creative tool it is beside the
+ * light Sales Desk and ERP screens, where the form's grey fields and dark green
+ * buttons read as a settings page. tools/real-screens/home-panels.json has the
+ * crops.
+ */
+export const HOME_MODULE_SHOTS = {
+  'Growth OS': { desk: 'live05-growth-home-16x9', phone: 'live05-panels-growth-phone-16x9' },
+  'AI 创作': { desk: 'live35-panels-canvas-16x9', phone: 'live35-panels-canvas-16x9' },
+  'AI Creative': { desk: 'live35-panels-canvas-16x9', phone: 'live35-panels-canvas-16x9' },
+};
+
+/**
  * Homepage five business-stage cards, in page order. `file` is the generator
- * path (a product path, or an editorial token).
+ * path (a product path, an editorial token or an owner photograph).
+ *
+ * Since 2026-10-21 all five are the owner's photographs (site-images/batch-2,
+ * P01–P05). They replaced, in order, the Growth OS home, the Sales Desk case
+ * and the ERP item list (the clean captures placed the same morning), the
+ * brand-family-01 illustration and the gos11 workspace home. Those product
+ * files keep their other places; the old values are kept here so the owner
+ * can put a screen back by swapping one line.
+ *   001 PRODUCT.growthHome · 002 PRODUCT.caseStage · 003 PRODUCT.erpStage
+ *   004 editorialToken('brand-family-01') · 005 PRODUCT.reactivation
+ *
+ * Since 2026-10-23 (homemore) none of these photographs is placed: the five
+ * cards were code-drawn scenes (tools/code-art-homemore.mjs,
+ * js/stargo-motion-stages.js) until 2026-10-24, and are real screens since
+ * (HOME_STAGE_SHOTS below). The list stays as the record of what can go back,
+ * one line per card.
  */
 export const HOME_STAGES = [
-  { id: 'acquisition', label: '001 主动获客', file: PRODUCT.growthHome },
-  { id: 'sales', label: '002 外贸销售', file: PRODUCT.caseStage },
-  { id: 'fulfillment', label: '003 企业履约', file: PRODUCT.erpStage },
-  { id: 'collection', label: '004 回款与服务', file: editorialToken('brand-family-01') },
-  { id: 'reorder', label: '005 复购与改进', file: PRODUCT.reactivation },
+  { id: 'acquisition', label: '001 主动获客', file: photoFile('p01-prospecting', 480) },
+  { id: 'sales', label: '002 外贸销售', file: photoFile('p02-sales', 480) },
+  { id: 'fulfillment', label: '003 企业履约', file: photoFile('p03-fulfilment', 768) },
+  { id: 'collection', label: '004 回款与服务', file: photoFile('p04-payment-docs', 480) },
+  { id: 'reorder', label: '005 复购与改进', file: photoFile('p05-reorder', 480) },
 ];
 
 /**
+ * The five stage cards' real-screen slots (tools/real-screens.mjs), in page
+ * order. Lane panels, 2026-10-24, after the owner's 「我需要真实系统截图放在特定的
+ * 地方」: every one of the five code-drawn scenes (stage-find … stage-again) drew
+ * a product window — Growth OS ranking prospects, Sales Desk drafting quote
+ * Q-1042, the ERP order steps, the document and payment checklist, the reorder
+ * rhythm — so each card shows the real screen of that part of the system now.
+ *
+ * The card is Mono's 3:2 `.image-wrap.for-service`, 172px wide at 768, 234 at
+ * 1024, 295 at 1280, 334 at 1440 and 338 at 1920, and hidden on phones (the list
+ * shows titles only there). So each slot is one readable part of a screen, cut
+ * 3:2, not a whole screen shrunk to a stamp: UI text is about 8–13px at 334px.
+ *   001 主动获客   live05-growth-home-start-3x2 (published): Growth OS's 开始找客户 card
+ *   002 外贸销售   m02-panels-stage-inquiry-3x2: a buyer's inquiry on the phone, model and quantity picked out
+ *   003 企业履约   live23-panels-stage-items-3x2: the ERP item list, six STARGO models
+ *   004 回款与服务 live12-panels-stage-quote-3x2: a quote's amount and validity, waiting for approval
+ *   005 复购与改进 live51-panels-stage-board-3x2: the deal board's six tiles
+ * There is no capture of orders, shipping documents or payments (mobile/NOTES.md:
+ * those views were empty for this inquiry), so 004 shows the quote that comes
+ * before them rather than anything drawn to look like them.
+ */
+export const HOME_STAGE_SHOTS = [
+  'live05-growth-home-start-3x2',
+  'm02-panels-stage-inquiry-3x2',
+  'live23-panels-stage-items-3x2',
+  'live12-panels-stage-quote-3x2',
+  'live51-panels-stage-board-3x2',
+];
+
+/**
+ * The homepage's other owner photographs (2026-10-21; site-images/batch-1,
+ * batch-2, batch-4 and batch-8), slot by slot. Each value is the photograph's
+ * widest file; tools/editorial-images.mjs writes the narrower ones into the
+ * srcset, the alt and the size, and css/stargo-fusion.css (the "home" block
+ * at its end) the crop point. Only these homepage slots change: every file
+ * they replace keeps its other places.
+ */
+/** The opening mosaic the white hero card shrinks to reveal
+ *  (`.hero-photo-wrapper` up and down; tools/chrome.mjs). The mosaic cycles
+ *  the os-* stills in a fixed order; each os-* still becomes, wherever it
+ *  falls in the mosaic, the photograph the batch-1 manifest names for it
+ *  (H01–H10). The cursor tooltip's picture rotator (`.image-text-rotator`)
+ *  after it keeps the os-* stills.
+ *  Since 2026-10-24 (lane "vignettes"; owner: 能用代码的图片都改成代码) no
+ *  photograph is placed here: tools/code-art-vignettes.mjs draws, in each
+ *  tile, the vignette of the photograph this map names (VIGNETTE_OF), in the
+ *  same cycle order and box. The map stays the record and the way back. */
+export const HOME_MOSAIC = {
+  'os-cockpit': photoFile('h05-assembly-line', 1024),
+  'os-sales-desk': photoFile('h02-night-inquiry', 1024),
+  'os-inquiries': photoFile('h03-sample-wall', 1024),
+  'os-agent-center': photoFile('h06-packing', 1024),
+  'os-quote-studio': photoFile('h04-caliper-qc', 1024),
+  'os-trade-execution': photoFile('h01-port-blue-hour', 1024),
+  'os-desktop': photoFile('h10-video-showing', 1024),
+  'os-login': photoFile('h07-owner-walk', 1024),
+  'os-boot': photoFile('h08-product-shoot', 1024),
+  'os-loading': photoFile('h09-container-loading', 1024),
+};
+/** The four pain-point cards under the loop band, in page order (S01–S04).
+ *  They replaced silo-email, silo-whatsapp, silo-excel and silo-erp. */
+export const HOME_SILOS = [
+  photoFile('s01-inquiry-rework', 1600),
+  photoFile('s02-scattered-chats', 1600),
+  photoFile('s03v2-spreadsheet-memory', 1600),
+  photoFile('s04-chasing-order', 2048),
+];
+/** The four scenario cards' film card (`.testimonials-card._03`): R2, the
+ *  trade manager at the whiteboard, as a still where the template's
+ *  portrait film played. The split photograph behind the cards
+ *  (`.photo-half`, R1) is a CSS background: css/stargo-fusion.css.
+ *  Since 2026-10-24 both are code-drawn (tools/code-art-atmos.mjs 'board' and
+ *  'night'); HOME_ROLE_CARD is no longer placed. */
+export const HOME_ROLE_CARD = photoFile('r2-trade-manager', 1024);
+/** The pricing band's image card beside 企业版 (T01), in place of
+ *  brand-glow-square. Not placed since 2026-10-23 (homemore): the card is the
+ *  code-drawn 'org' scene (js/stargo-motion-org.js); kept so the photograph
+ *  can go back with one line. */
+export const HOME_PRICING_CARD = photoFile('t01-enterprise-campus', 1024);
+/** The homepage's four newest-article cards (B01–B04), by article slug. A
+ *  slug not listed keeps its article cover from assets/blog/. The blog index
+ *  and the articles show the same photographs (BLOG_COVERS); only the
+ *  articles' share images keep the assets/blog/ covers. Not placed since
+ *  2026-10-23: the cards draw their covers in code (see BLOG_COVERS). */
+export const HOME_BLOG_COVERS = {
+  'stargo-work-visual-guide': photoFile('b01v2-visual-guide', 1600),
+  'start-with-one-workflow': photoFile('b02-one-workflow', 1600),
+  'from-inquiry-to-quote': photoFile('b03-inquiry-to-quote', 1600),
+  'approval-gates-for-ai-in-trade': photoFile('b04v2-approval-handover', 1600),
+};
+
+/**
  * Capability page, Growth OS rows (tools/blocks/cn-service.mjs).
- * `art` is the full-bleed editorial id. `shot` is the hover thumbnail stem,
- * or null when the row keeps the editorial art.
+ * `art` was the full-bleed editorial id; from 2026-10-21 the full-bleed
+ * backgrounds were the owner's photographs (C11v2-C14), and since 2026-10-23
+ * they are code-drawn scenes: `scene` names each row's background
+ * (js/stargo-motion-growth.js — 企业研究 a company file assembling, 贸易情报
+ * shipping lanes, 补货判断 PT Surya's order rhythm, 关键角色 the buying
+ * committee). `art` is only the hover thumbnail of a row whose `shot` (the
+ * hover thumbnail's product stem) is null.
  */
 export const GROWTH_ROWS = [
-  { art: 'brand-family-01', shot: null },
-  { art: OS_ART.salesDesk, shot: PRODUCT_IDS.growthStartThumb },
-  { art: OS_ART.loading, shot: PRODUCT_IDS.reorder },
-  { art: 'mobile-approvals', shot: PRODUCT_IDS.committee },
+  { art: 'brand-family-01', shot: null, scene: 'dossier' },
+  { art: OS_ART.salesDesk, shot: PRODUCT_IDS.growthStartThumb, scene: 'lanes' },
+  { art: OS_ART.loading, shot: PRODUCT_IDS.reorder, scene: 'rhythm' },
+  { art: 'mobile-approvals', shot: PRODUCT_IDS.committee, scene: 'committee' },
 ];
 
 /**
  * Capability page, Sales Desk rows (tools/blocks/qx-news.mjs).
- * An editorial id, or a product path written as-is.
+ * An editorial id, or a product or photograph path written as-is. Rows 1 and
+ * 3 are the owner's photographs since 2026-10-21 (C05, C06; they had
+ * os-desktop and os-inquiries).
  */
-export const SALES_ROWS = [OS_ART.desktop, PRODUCT.needs, OS_ART.inquiries];
+export const SALES_ROWS = [CAP_PHOTOS.inbox, PRODUCT.needs, CAP_PHOTOS.customer360];
 
 /** Capability showcase story pictures. Editorial ids. */
 export const STORY_ART = {
@@ -178,25 +609,140 @@ export const STORY_ART = {
   team: OS_ART.agentCenter,
   desktop: OS_ART.desktop,
   login: OS_ART.login,
-  quoteBand: OS_ART.quoteStudio,
   knowledge: 'brand-ontology',
   improvement: 'brand-loop',
 };
 
-/** Notices “keep reading” cards, in card order. */
-export const NOTICES_CARDS = [PRODUCT.workspaceHome, PRODUCT.expertsLibrary, PRODUCT.quoteApproval];
+/** Notices “keep reading” cards, in card order. Since 2026-10-23 (homemore)
+ *  the first is the real Growth OS home capture (it was the sw003 composite;
+ *  the web-desktop capture live01 is kept off this card because at this size
+ *  its 'Stargo Office 365.app' icon label is readable) and the second, 数字员工,
+ *  is the code-drawn 'team' scene (`motion`, placed by tools/build-site.mjs; it
+ *  was the sw004 composite). */
+export const NOTICES_CARDS = [PRODUCT.growthTile, { motion: 'team' }, PRODUCT.quoteApproval];
 
-/** Workforce / About pictures that reuse a hero or product slot. */
+/**
+ * The owner's photographs on about, contact, pricing and workforce
+ * (2026-10-21; site-images/batch-4, batch-5 and batch-8), slot by slot. Each
+ * value is the photograph's widest file; tools/editorial-images.mjs writes the
+ * narrower ones into the srcset, the alt and the size, and
+ * css/stargo-fusion.css (the "pages" block at its end) the crop point. Only
+ * these slots change: every file they replace keeps its other places.
+ *
+ * The about page's introduction band behind 「从真实业务出发…」 (A01, the
+ * empty workshop at dawn) is a CSS background: css/stargo-fusion.css.
+ */
+/** The four scenario slides of the testimonial slider on about.html
+ *  (tools/blocks/cn-about-reviews.mjs) and pricing.html (cn-reviews.mjs),
+ *  keyed by the cinery portrait each one showed (R1–R4, the slides' own
+ *  order: sales rep, trade manager, sales director, general manager). Only
+ *  the slides' cover picture changes; the 56px avatars in the pricing card's
+ *  rating block keep the template portraits. */
+export const ROLE_SLIDES = {
+  '695ffb11547e68b53adbfd91_client-04': photoFile('r1-sales-rep', 1639),
+  '695ffb11eb1deaba179419b4_client-02': photoFile('r2-trade-manager', 1024),
+  '695ffb115a835fdec642a548_client-03': photoFile('r3-sales-director', 1024),
+  '695ffb11be2d7e781e33b929_client-01': photoFile('r4-general-manager', 1024),
+};
+/** about.html's four AI-employee tiles (tools/blocks/cn-about-projects.mjs),
+ *  by the clip's video id: a still in place of each cinery case-study film,
+ *  matched by the tile's role (D01 市场信号, D07 报价, D02 跟进, D05 统筹).
+ *  Since 2026-10-23 the tiles draw these roles in code (tools/code-art-people.mjs
+ *  ABOUT_CASE_SCENES); kept as the record of which photograph each replaced. */
+export const ABOUT_CASE_STILLS = {
+  'fb6f08c0-bccf-aeab-a33d-45198963fe74': photoFile('d01-market-research', 1024),
+  'fb6f08c0-bccf-aeab-a33d-45198963fe90': photoFile('d07-quotation', 1024),
+  'fb6f08c0-bccf-aeab-a33d-45198963feae': photoFile('d02-follow-up', 1024),
+  'fb6f08c0-bccf-aeab-a33d-45198963feca': photoFile('d05-coordination', 1024),
+};
+/** contact.html's quote card (`.testimonials-card._03.rl`, beside the
+ *  form): K01, the meeting table, as a still where the template's
+ *  Professional Portrait film played. Since 2026-10-24 code-drawn instead
+ *  (tools/code-art-atmos.mjs 'request'); CONTACT_CARD is no longer placed. */
+export const CONTACT_CARD = photoFile('k01-meeting-table', 768);
+/** workforce.html's five marquee role cards (`.lx-feature-hero-card.lx-_1`
+ *  … `lx-_5`, each drawn twice for the loop) and the collage card in the
+ *  desktop item (报告 AI 员工), keyed by the lifelogx asset id of the
+ *  picture each showed (D01–D06). Since 2026-10-23 the cards are static code
+ *  cards and the collage card the 'deskReport' scene (tools/code-art-people.mjs
+ *  roleCard, tools/build-site.mjs); kept as the record, the build only checks
+ *  that the six slots are still there. */
+export const WORKFORCE_ROLES = {
+  '6941e78a09a85d0bd053b266': photoFile('d01-market-research', 1024),   // Item → Variant 1
+  '694ab25174cbe821ec5d8930': photoFile('d02-follow-up', 1024),         // ChatGPT Image Dec 23, 2025, 04_16_19 PM
+  '6942777374324a552a47ab30': photoFile('d03-product-spec', 480),       // Link - image 64 → bELwQd7…
+  '694277a49143d5ea0557c371': photoFile('d04-finance', 480),            // Link - image 64 → ujtmvGk…
+  '694aada59524a64f6280d410': photoFile('d05-coordination', 1024),      // ChatGPT Image Dec 23, 2025, 03_56_21 PM
+  '694277bf9dc048830e6fca2e': photoFile('d06-reporting', 480),          // Link - image 64 → V9yoYRx… (the collage card)
+};
+/** workforce.html's three article cards under 文章 / 我们写下来的 (B01–B03),
+ *  by article slug. They showed the articles' covers, which are fitted
+ *  product screenshots (tools/blog-covers.mjs: sw004, sw008, sw028); the
+ *  blog index and the articles show the same photographs (BLOG_COVERS), and
+ *  only the articles' share images keep those covers. Not placed since
+ *  2026-10-23: the cards draw their covers in code (see BLOG_COVERS). */
+export const WORKFORCE_BLOG_COVERS = {
+  'stargo-work-visual-guide': photoFile('b01v2-visual-guide', 1600),
+  'start-with-one-workflow': photoFile('b02-one-workflow', 1600),
+  'from-inquiry-to-quote': photoFile('b03-inquiry-to-quote', 1600),
+};
+
+/** Workforce / About pictures that reuse a hero or product slot. The
+ *  workforce tile and the capability page's teamwork card (workforceTile and
+ *  teamCard, both PRODUCT.teams until 2026-10-23) are the code-drawn 'team'
+ *  scene now (tools/motion-scenes.mjs). */
 export const PLACED = {
-  workforceTile: PRODUCT.teams,
+  // Feeds only the lifelogx about build that tools/build-site.mjs discards (its result is `void`ed):
+  // about.html / en/about.html never show the poster, so this slot has nothing on a page to replace.
   aboutBigImage: HERO.poster,
-  teamCard: PRODUCT.teams,
-  creativePicture: OS_ART.boot,
+};
+/* The quote band's picture and the 图片 / 视频 portrait (STORY_ART.quoteBand
+   and PLACED.creativePicture until 2026-10-21) are CAP_PHOTOS.quote and
+   CAP_PHOTOS.creative. */
+
+/**
+ * Enterprise page (enterprise.html and en/enterprise.html, the Mono studio
+ * layout: tools/build-site.mjs PAGES['enterprise.html'] and fromStudio). Since
+ * 2026-10-21 every picture on it is one of the owner's photographs
+ * (site-images/batch-7, E01–E13), in place of the site's concept art; the
+ * editorial files they replaced keep their places on the other pages and in
+ * the hidden nav-menu rotator.
+ * - `cockpit`: the three scroll-revealed pictures in the column beside
+ *   「(老板驾驶舱)」. They were E05 the dawn office, E06 the owner on the phone
+ *   at a stopped machine and E07 the ledger; on 2026-10-23 the owner chose to
+ *   replace these three with code-drawn motion (tools/motion-scenes.mjs), so
+ *   each entry names a scene, in page order: the cockpit overview, a blocker
+ *   a person takes over, and usage against the budget limit. E05–E07 stay
+ *   registered and published, unplaced (tools/verify-editorial.mjs RETIRED).
+ * - `principle`: the rounded parallax picture beside 「(原则)」, E08 the
+ *   emergency stop.
+ * - `modules`: the five cards under 「五个管理组件 (5)」, in card order: E09
+ *   pegboard, E10 badge reader, E11 stamp, E12 clipboard, E13 key cabinet
+ *   (its own file, not os-login). A card draws its picture whole, so the
+ *   picture's shape sets the card's height.
+ * The four sticky story panels (决定, 核对, 连接, 经营; E01–E04) are CSS
+ * backgrounds, set in css/stargo-fusion.css (the batch 7 block).
+ * Since 2026-10-23 `principle`, `modules` and E01–E04 are drawn in code on the
+ * built pages (tools/code-art-enterprise.mjs replaces them after the page is
+ * built); the entries stay so the pipeline and the files stay as they were.
+ * 2026-10-24 (QA round 5, entintel): the cockpit overview's pending approvals
+ * (3: the outreach emails, Q-1042 below the floor price, Q-1043) are the same
+ * three the 经营 / Oversight panel lists, so the two pictures never disagree;
+ * the five module cards keep their demo tag at least 8 px clear of the card's
+ * words from 320 to 768 px (css/stargo-ent-cards.css).
+ */
+export const ENTERPRISE_PHOTOS = {
+  cockpit: [{ motion: 'cockpit-overview' }, { motion: 'cockpit-blocker' }, { motion: 'cockpit-budget' }],
+  principle: photoFile('e08-emergency-stop', 1024),
+  modules: ['e09-capabilities', 'e10-access', 'e11-approval', 'e12-records', 'e13-key-cabinet'].map((id) => photoFile(id, 480)),
 };
 
 if (HERO.theatre.length !== 7) throw new Error('replaceables: hero theatre is seven cells');
 if (HERO.centreIndex !== 3) throw new Error('replaceables: the film replaces theatre cell 3');
-if (OG.width !== 1200 || OG.height !== 630) throw new Error('replaceables: og-cover stays 1200×630');
-if (!OG.file.endsWith('/og-cover.png') || !OG.token.endsWith('/og-cover.png')) {
-  throw new Error('replaceables: og-cover.png keeps its name');
+if (HERO.real.length !== 7 || HERO.real[HERO.centreIndex] !== null || HERO.real.filter(Boolean).length !== 6) throw new Error('replaceables: the theatre\'s real screens take the six cells around the film');
+if (OG.width !== 1200 || OG.height !== 630) throw new Error('replaceables: the share card stays 1200×630');
+/* A JPEG or PNG (link previews do not all read WebP), named with its size,
+   written as the final URL (no editorial token to rewrite). */
+if (OG.token !== OG.file || !/^assets\/[\w/-]+-1200x630\.(?:jpg|png)$/.test(OG.file)) {
+  throw new Error(`replaceables: the share card is a 1200x630 JPEG or PNG named with its size, not ${OG.file}`);
 }

@@ -25,6 +25,7 @@
     "verify:editorial": "node tools/verify-editorial.mjs",
     "verify:restore": "node tools/verify-restore.mjs",
     "verify:visual": "node tools/verify-visual-upgrade.mjs",
+    "verify:motion": "node tools/verify-motion.mjs",
     "verify:release": "node tools/verify-release.mjs",
     "verify:worker": "node tools/verify-worker.mjs",
     "verify:contact": "node --test tools/verify-contact-backend.mjs",

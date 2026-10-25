@@ -1,0 +1,192 @@
+/* 首页蓝 — the homepage's code-drawn pictures in one palette (owner, 2026-10-24 13:28 UTC:
+   「首页你做的那些我希望色彩可以统一高级点的渐变蓝色就像首页的审批示意流程这个板块这样子」).
+   The reference is the homepage's approval-flow card (.video-card: 审批流程示意): an indigo →
+   blue → cyan → violet → plum aurora, a frosted glass panel, white pill bubbles with dark text.
+   Loaded on the homepage only, after the scene sheets; every rule is scoped to the homepage's
+   <html data-stargo-home> so the same scenes elsewhere keep their own look. Scene sheets use the
+   tokens below in their own [data-stargo-home] rules. Static paint only: no backdrop-filter or
+   animated filters inside scenes (phone scroll cost). */
+
+/* ---- homefix lane (2026-10-24, QA round 5, homepage group findings #0 and #3) ----------------
+   The last two template blocks on the homepage that still spoke Scalora's copper orange, in
+   the owner's homepage blue (13:28 UTC: 「色彩可以统一高级点的渐变蓝色就像首页的审批示意流程这个
+   板块这样子」). QA round 5 measured them as the largest off-palette areas left: the #loop band
+   「先找客户，再推进到报价。」 on a brown hero-bg.svg (rgb(66,40,23)) under an orange card stack
+   (#fe7953 → #c44926, slab edges #a23c1e) and an orange CTA (#ec6f10, warm #ee6459 glow); and
+   the integration band's five pillar tops (#ec6f10 discs) and the ✦ eyebrow icon of three
+   eyebrows (an orange SVG, #EC6F10). Paint only: no size, position, transform, zoom or
+   timing changes — the band's geometry is held in css/stargo-fusion.css (fix 3, H3 and the
+   stack-zoom ladder), and the motion runtime still drives the same boxes. Scalora's accent
+   token (--border-color--border-color-03) is NOT rebound: other Scalora parts on other pages
+   use it. The tokens these rules use are defined just below this block (custom properties
+   resolve wherever the rule sits). */
+
+/* #loop band. The panel: the template's LED dot texture (the same 80px tile hero-bg.svg
+   carries at 30%, neutral grey, extracted next to it as assets/69a01660589c516ba5f0f917/
+   hero-dot-matrix.png with the 30% baked in) over the approval card's colours: deep ink at the
+   top under the white heading, and a violet glow with a cyan core rising from the bottom
+   behind the card stack, where the template had its orange glow. */
+html[data-stargo-home] .sc-scope.sc-hero .hero-inner {
+  background-color: var(--sgb-ink);
+  background-image:
+    url("../assets/69a01660589c516ba5f0f917/hero-dot-matrix.png"),
+    radial-gradient(78% 62% at 50% 106%, rgba(122, 82, 251, .66), transparent 72%),
+    radial-gradient(44% 34% at 50% 98%, rgba(69, 176, 226, .42), transparent 72%),
+    radial-gradient(34% 40% at 10% 88%, rgba(80, 22, 82, .55), transparent 72%),
+    radial-gradient(64% 42% at 50% -6%, rgba(63, 111, 226, .2), transparent 70%),
+    linear-gradient(180deg, #0d0726 0%, var(--sgb-ink) 38%, #1d1152 100%);
+  background-size: 80px 80px, auto, auto, auto, auto, auto;
+  background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+  background-position: 0 0, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%;
+}
+/* The eyebrow chip above the heading (fusion had it magenta for the pricing page's palette,
+   with !important — so these need it too). */
+html[data-stargo-home] .sc-scope.sc-hero .hero-section-caption-block {
+  background-color: rgba(122, 82, 251, .16) !important;
+  border-color: rgba(183, 160, 255, .34) !important;
+}
+html[data-stargo-home] .sc-scope.sc-hero .hero-caption-devider { background-color: rgba(183, 160, 255, .42) !important; }
+
+/* The card stack keeps its three kinds of card: the two solid slabs (Growth OS at the back,
+   the four small tiles in front) now carry the approval card's gradient, violet → indigo and
+   blue → violet; the two frosted panes between them stay clear glass. Each card's -6px slab
+   edge (the template draws thickness with a hard offset shadow) goes from rust/salmon to the
+   matching deep indigo, violet or lilac. White titles on the tiles: 4.6:1 or more everywhere
+   on their gradient (the orange tiles were 2.6:1). */
+html[data-stargo-home] .sc-scope.sc-hero .hero-card-01 {
+  background-image: linear-gradient(246deg, #7a52fb 1.64%, #4a2fc0 52%, #2f2080 99.27%);
+  box-shadow: -6px -6px #1c1150;
+}
+html[data-stargo-home] .sc-scope.sc-hero .hero-card-02 {
+  background-image: linear-gradient(246deg, rgba(122, 82, 251, .06) 1.64%, rgba(183, 160, 255, .05) 99.27%);
+  box-shadow: -6px -6px #8b6bff;
+}
+html[data-stargo-home] .sc-scope.sc-hero .hero-card-03 {
+  background-color: rgba(228, 242, 252, .13);
+  box-shadow: -6px -6px #6fc7f2;
+}
+html[data-stargo-home] .sc-scope.sc-hero :is(.hero-card-041, .hero-card-042) {
+  background-image: linear-gradient(246deg, #3f6fe2 1.64%, #5b5cf0 46.4%, #7a52fb 99.27%);
+  box-shadow: -6px -6px #2f2080;
+}
+
+/* 预约企业演示: the template's glowing pill (white 3px ring, inner glow, noise sheen from
+   buttons-bg.svg, which is neutral grey and stays) in violet → blue instead of orange, its
+   glow tinted violet. White 16px/600 text: 4.6–6:1 across the gradient. */
+html[data-stargo-home] .sc-scope.sc-hero .button-primary {
+  background-color: #5b4ff0;
+  background-image: url("../assets/69a01660589c516ba5f0f917/69b243342af40800c126d062_buttons-bg.svg"), linear-gradient(135deg, #7a52fb 0%, #5b5cf0 50%, #3f6fe2 100%);
+  background-size: cover, auto;
+  border-color: #d9ceff;
+  box-shadow: 0 0 0 3px var(--beckground-color--white), 0 2px 5px 0 #0003, 0 0 0 2px #ece6ff,
+    0 3.714px 4.846px 0 rgba(122, 82, 251, .11), 0 10.268px 13.398px 0 rgba(122, 82, 251, .22),
+    0 24.721px 32.257px 0 rgba(91, 79, 240, .18), 0 42px 107px 0 rgba(69, 176, 226, .3),
+    inset 0 1px 4px 2px #f1edff, inset 0 1px 18px 2px rgba(241, 237, 255, .85);
+}
+
+/* Integration band: the five pillar tops are the accent the band is built round, blue → violet
+   like the approval card (white glyphs on them 4.6:1 or more); the pillar bodies take a faint
+   indigo cast in the same light-left/dark-right shading, so they read as the same material. */
+html[data-stargo-home] .sc-scope.integration .integration-icon-block {
+  background-color: #5b5cf0;
+  background-image: linear-gradient(135deg, #3f6fe2 0%, #5b5cf0 48%, #7a52fb 100%);
+}
+html[data-stargo-home] .sc-scope.integration .integration-coloum-01 { background-image: linear-gradient(100deg, #2a2744, #131221); }
+html[data-stargo-home] .sc-scope.integration .integration-coloum-02 { background-image: linear-gradient(#302c4f, #131221); }
+
+/* The ✦ eyebrow icon (sc-hero, 两大引擎 and integration eyebrows) is an <img> of an orange SVG,
+   so it cannot follow a token. The same star, drawn in --sgb-accent-grad's two ends with an
+   indigo drop like the template's, is painted as the image's background, and the orange
+   original is moved out of its 16px box (an <img> clips its own picture to its box). */
+html[data-stargo-home] .caption-icon {
+  object-position: 64px 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='21' height='23' viewBox='0 0 21 23'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%239fdcff'/%3E%3Cstop offset='1' stop-color='%23a48cff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath id='s' d='M3.137 9.306C6.355 8.906 8.906 6.355 9.306 3.137 9.367 2.65 9.759 2.25 10.25 2.25s.883.4.944.887c.4 3.218 2.951 5.769 6.169 6.169.487.061.887.453.887.944s-.4.883-.887.944c-3.218.4-5.769 2.951-6.169 6.169-.061.487-.453.887-.944.887s-.883-.4-.944-.887c-.4-3.218-2.951-5.769-6.169-6.169C2.65 11.133 2.25 10.741 2.25 10.25s.4-.883.887-.944Z' fill='%232f2080' stroke='%232f2080' stroke-width='4.5' stroke-linejoin='round' transform='translate(0 2)'/%3E%3Cpath d='M3.137 9.306C6.355 8.906 8.906 6.355 9.306 3.137 9.367 2.65 9.759 2.25 10.25 2.25s.883.4.944.887c.4 3.218 2.951 5.769 6.169 6.169.487.061.887.453.887.944s-.4.883-.887.944c-3.218.4-5.769 2.951-6.169 6.169-.061.487-.453.887-.944.887s-.883-.4-.944-.887c-.4-3.218-2.951-5.769-6.169-6.169C2.65 11.133 2.25 10.741 2.25 10.25s.4-.883.887-.944Z' fill='url(%23g)' stroke='url(%23g)' stroke-width='4.5' stroke-linejoin='round'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
+}
+/* ---- end homefix lane ---------------------------------------------------------------------- */
+
+html[data-stargo-home] {
+  /* base, darkest first */
+  --sgb-ink: #120a2e;
+  --sgb-deep: #1c1150;
+  --sgb-indigo: #2f2080;
+  --sgb-plum: #47134a;
+  /* light */
+  --sgb-blue: #3f6fe2;
+  --sgb-cyan: #45b0e2;
+  --sgb-violet: #7a52fb;
+  --sgb-lilac: #b7a0ff;
+  --sgb-ice: #e4f2fc;
+  /* text on the dark glass */
+  --sgb-text: #f7f5ff;
+  --sgb-muted: rgba(236, 232, 255, .72);
+  --sgb-faint: rgba(236, 232, 255, .5);
+  --sgb-hair: rgba(255, 255, 255, .14);
+  /* the one accent (what orange did: a step waiting for a person, live state, the active item) */
+  --sgb-accent: #9fdcff;
+  --sgb-accent-2: #c3b2ff;
+  --sgb-accent-grad: linear-gradient(90deg, #6fc7f2, #a48cff);
+  /* states: done / ok, and the one warning (below the floor price, a risk flag) */
+  --sgb-ok: #7ee6ff;
+  --sgb-warn: #d0a6ff;
+  /* surfaces */
+  --sgb-aurora:
+    radial-gradient(58% 46% at 52% 16%, rgba(69, 176, 226, .78), transparent 72%),
+    radial-gradient(52% 58% at 70% 58%, rgba(122, 82, 251, .82), transparent 72%),
+    radial-gradient(46% 56% at 12% 74%, rgba(80, 22, 82, .9), transparent 72%),
+    radial-gradient(34% 36% at 46% 62%, rgba(183, 160, 255, .55), transparent 72%),
+    linear-gradient(162deg, #2c0f60 0%, #2f1773 38%, #3b1240 100%);
+  --sgb-aurora-calm:
+    radial-gradient(70% 60% at 60% 10%, rgba(69, 176, 226, .42), transparent 72%),
+    radial-gradient(60% 70% at 85% 80%, rgba(122, 82, 251, .5), transparent 72%),
+    linear-gradient(165deg, #1a0f47 0%, #21125a 50%, #2a0f3c 100%);
+  --sgb-glass: linear-gradient(180deg, rgba(255, 255, 255, .18) 0%, rgba(255, 255, 255, .06) 40%, rgba(255, 255, 255, .03) 100%);
+  --sgb-glass-dark: linear-gradient(180deg, rgba(30, 18, 84, .78) 0%, rgba(18, 10, 46, .82) 100%);
+  --sgb-glass-edge: rgba(255, 255, 255, .22);
+  --sgb-bubble: #ffffff;
+  --sgb-bubble-text: #1c1c22;
+  --sgb-shadow: 0 18px 50px -18px rgba(10, 4, 40, .65);
+}
+
+/* ── panels lane (2026-10-24) ─────────────────────────────────────────────────────────────
+   「两大业务引擎」, the four-panel switcher (desktop tabs from 992, the accordion below that). Its
+   frame was the donor's warm one — a #ec6f10 radial over the number-card texture behind each
+   panel, a 4px #ec6f102e bezel round each screen, the warm-grey #282522 selected tab and open
+   accordion header, an orange focus ring and nudge wash — beside blue scenes (QA round 5, home #1).
+   Repainted in the approval card's palette. Paint only: no width, padding, border width or size
+   changes, so the switcher's geometry and its measured boxes stay as they were. */
+/* behind each panel: the calm aurora under dark glass, no texture */
+html[data-stargo-home] .sc-scope.products .products-cards-dashboard-block {
+  background-color: var(--sgb-ink);
+  background-image: var(--sgb-glass-dark), var(--sgb-aurora-calm);
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+/* round each screen: the 4px bezel in dark glass, a 1px glass edge outside it, the approval card's 10px radius, its shadow */
+html[data-stargo-home] .sc-scope.products .prodect-dashboard-image-block {
+  border-color: rgba(18, 10, 46, .72);
+  border-radius: 10px;
+  box-shadow: 0 0 0 1px var(--sgb-glass-edge), var(--sgb-shadow);
+}
+@media (max-width: 479px) {
+  html[data-stargo-home] .sc-scope.products .prodect-dashboard-image-block { border-radius: 4.727px; }
+}
+/* the selected tab (desktop) and the open item's header (accordion: Webflow IX writes the warm grey inline,
+   js/stargo-phone-fx.js marks the open item sg-open) */
+html[data-stargo-home] .stargo-switcher .products-card-name-wrapper [aria-selected="true"] .products-card-name-inner-block,
+html[data-stargo-home] .sc-scope.products .sg-acc .sg-open .products-card-name-inner-block {
+  background-color: var(--sgb-indigo) !important;
+  box-shadow: inset 0 0 0 1px rgba(183, 160, 255, .34);
+}
+html[data-stargo-home] .stargo-switcher .products-card-name-wrapper [role="tab"] .products-card-name-inner-block,
+html[data-stargo-home] .sc-scope.products .sg-acc .products-card-name-inner-block {
+  transition: color .35s ease, background-color .35s ease, box-shadow .35s ease;
+}
+/* the accordion's "there is more" wash (css/stargo-phone.css) */
+html[data-stargo-home] .sc-scope.products .sg-acc .products-card-name-block::after { background: rgba(122, 82, 251, .24); }
+/* keyboard focus on the four names: the accent (#9fdcff on #1b1a19 11.7:1, on the indigo tab 8.6:1) */
+html[data-stargo-home] .sc-scope.products .products-card-name-block:focus-visible { outline-color: var(--sgb-accent); }
+@media (prefers-reduced-motion: reduce) {
+  html[data-stargo-home] .stargo-switcher .products-card-name-wrapper [role="tab"] .products-card-name-inner-block,
+  html[data-stargo-home] .sc-scope.products .sg-acc .products-card-name-inner-block { transition: none !important; }
+}

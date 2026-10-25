@@ -32,9 +32,10 @@
  * "AI Images, Video & Marketing": 图片 / 视频, Images / Video. The section's
  * name moves into the pill, where the donor put "FAQ".
  *
- * The photograph card holds this site's own editorial picture for images and
- * video — the precision aperture the homepage already uses for its AI creative
- * slot — in place of cinery's portrait of a man with a film camera. V6 §5.6's
+ * The photograph card holds a picture for images and video — the owner's
+ * photograph of a lamp sample beside printed shots of it (C08, since
+ * 2026-10-21; before it the precision aperture the homepage uses for its AI
+ * creative slot) — in place of cinery's portrait of a man with a film camera. V6 §5.6's
  * conservative option is one picture for the whole creative scope, and §10
  * asks that a picture and its words say the same thing: a studio portrait
  * reads as a film crew, which this section does not offer. The card, its
@@ -47,7 +48,9 @@
  * cut section's lost <body> belongs.
  */
 import { setText, setTextAll, capability } from '../block-lib.mjs';
-import { PLACED } from '../replaceables.mjs';
+import { CAP_PHOTOS, CAP_REAL } from '../replaceables.mjs';
+import { hostFromImg } from '../motion-capsales.mjs';
+import { realFromImg, CAP_REAL_SIZES } from '../real-capabilities.mjs';
 
 /** The story this block carries: CAPABILITY_SHOWCASE.stories[4]. */
 const STORY = 4;
@@ -55,8 +58,22 @@ const STORY = 4;
 const HEADING_GROUP = '09';
 /** V6 §5.6: seven topics, the donor accordion's count plus two clones. */
 const TOPICS = 7;
-/** The one editorial picture (tools/editorial-images.mjs gives it its alt, size and srcset). */
-const PICTURE = PLACED.creativePicture;
+/** The one picture (tools/editorial-images.mjs gives it its alt, size and
+    srcset). Since 2026-10-21 it is the owner's photograph of a lamp sample
+    with its printed product shots (C08), where the os-boot art was. */
+const PICTURE = CAP_PHOTOS.creative;
+/** Since 2026-10-23 the portrait is the code-drawn 'creative' scene (tools/motion-capsales.mjs,
+    js/stargo-motion-creative.js) in place of C08: reference photos of one pack become a main image,
+    a scene and a video storyboard, each waiting for a person's review. Set to null to show PICTURE.
+    The C08 height rule in css/stargo-fusion.css then applies again; while MOTION is set it matches
+    nothing, and the scene host carries the same rule in css/stargo-motion-creative.css. */
+const MOTION = 'creative';
+/** Since 2026-10-24 the portrait is the system's own screen (the owner, 17:27 UTC: 「你现在也全是代码了，我系统的
+    画面都没有了！我需要真实系统截图放在特定的地方」): 一键复刻爆款视频, the reference-video form of AI 创作, cut from
+    the owner's capture (tools/replaceables.mjs CAP_REAL.creative; its left half on upright screens), with the
+    真实界面 · 演示数据 tag. It comes before MOTION; set CAP_REAL.creative to null and the scene plays again. The
+    slot keeps cinery's class, so the card's frame, radius and height are as they were. */
+const REAL = CAP_REAL.creative;
 
 export const donor = {
   id: 'cn-faq',
@@ -276,7 +293,16 @@ export function render(frag, ctx) {
   if (alts !== 1) throw new Error(`cn-faq: expected one ${DONOR_ALT} on the portrait, found ${alts}`);
   const IMG = /<img src="assets\/cinery\/[^"]*portrait[^"]*"[^>]*class="cn-faq-image"\/>/;
   if (!IMG.test(end)) throw new Error('cn-faq: the portrait is no longer the one cinery <img> of class cn-faq-image');
-  end = end.replace(IMG, `<img src="${art(PICTURE)}" loading="lazy" alt="${escapeHtml(t(T.label))}" class="cn-faq-image"/>`);
+  if (REAL) {
+    /* the slot keeps the class cinery's card sizes and rounds (cn-faq-image) */
+    end = end.replace(IMG, (tag) => realFromImg(tag, REAL, lang, 'sg-real-creative', CAP_REAL_SIZES.creative));
+  } else if (MOTION) {
+    /* the host keeps the class cinery's card sizes and rounds (cn-faq-image) */
+    end = end.replace(IMG, (tag) => hostFromImg(tag, MOTION, lang, `sg-mo-${MOTION}`));
+  } else {
+    const src = PICTURE.startsWith('assets/') ? PICTURE : art(PICTURE);
+    end = end.replace(IMG, `<img src="${src}" loading="lazy" alt="${escapeHtml(t(T.label))}" class="cn-faq-image"/>`);
+  }
 
   const html = open + filled.join('') + end;
   /* "(05)" is not on this list: the counter is the story's own index, and it

@@ -18,9 +18,12 @@
  *     codes, not as English. The donor ships six tags in each of two identical
  *     `.home-marquee-box` copies (the second copy is what makes the roll
  *     seamless); each copy is rebuilt to nine by cloning the `.ui-link` unit.
- *   - the eight orbit photographs stay exactly as the donor shipped them,
- *     mirrored into assets/qubix by try-block. So does the ring's own
- *     background PNG, which lives in the stylesheet.
+ *   - the eight orbit photographs were the donor's own, mirrored into
+ *     assets/qubix by try-block; since 2026-10-21 each is one of the owner's
+ *     photographs for its step (tools/replaceables.mjs CAP_PHOTOS.orbit, by
+ *     the donor file it replaces), in the same <img>; since 2026-10-23 a
+ *     still drawn in code for its step (tools/code-art-capareas.mjs). The ring's own
+ *     background PNG stays the donor's; it lives in the stylesheet.
  *
  * What is cut away, and why the shell stays:
  *   The left column of the donor's grid holds three social links (Facebook,
@@ -60,6 +63,7 @@
  *     e-75/a-10 are ever carried by the tooling, delete that part of the css.
  */
 import { setText } from '../block-lib.mjs';
+import { orbitArt, ORBIT_FILES } from '../code-art-capareas.mjs';
 
 export const donor = {
   id: 'qx-orbit',
@@ -71,8 +75,10 @@ export const donor = {
   start: '<div class="hero-wrap">',
   end: 'alt="Image" class="mouse-image"/></div></div></a></div></div>',
   wrap: ['hero-section', 'w-layout-blockcontainer container w-container'],
-  /* No picture is substituted: every photograph, the ring PNG and the arrow SVG
-     are the donor's own, mirrored into assets/qubix by try-block. The three
+  /* No picture is substituted here: every photograph, the ring PNG and the
+     arrow SVG are the donor's own, mirrored into assets/qubix by try-block
+     (render() then puts the owner's photographs in the eight orbit <img>s,
+     since 2026-10-21). The three
      entries below are not images at all — they are the social links' hrefs,
      which the extractor's off-origin check refuses as unmapped assets. They are
      neutralised here (`images` is an exact-string substitution) so the
@@ -137,6 +143,13 @@ export function render(frag, ctx) {
   if (words.length !== 2) throw new Error(`qx-orbit: expected a two-word brand in LX_WORKFORCE.ctaLogo, got "${brand}"`);
   html = setText(html, 'qx-hero-rotated-info-text', escapeHtml(words[0]));
   html = setText(html, 'qx-hero-rotated-info-text-two', escapeHtml(words[1]));
+  /* Under 768 the eight thumbnails are too small to carry their own 示意 /
+     Illustration tag, so the ring says it once, under the brand in its centre
+     (qx-orbit.css section H shows it only there). Each thumbnail's aria-label
+     still says it to a screen reader, so this line is aria-hidden. */
+  const TWO = `class="qx-hero-rotated-info-text-two">${escapeHtml(words[1])}</div>`;
+  if (html.split(TWO).length !== 2) throw new Error('qx-orbit: expected one second brand line in the ring');
+  html = html.replace(TWO, `${TWO}<div class="sg-ob-ring-tag" aria-hidden="true">${ctx.lang === 'zh' ? '示意' : 'Illustration'}</div>`);
 
   /* ---------------------------------------------------- the tags ---- */
   const codes = stageCodes(C, ctx.lang);
@@ -160,14 +173,36 @@ export function render(frag, ctx) {
   html = html.replace('href="#Jump-Section"', 'href="#loop"');
 
   /* The link has no text of its own; the arrow's alt names where it goes,
-     with the loop table's own title. Every other image is decoration beside a
-     ring that already says the brand, and stops announcing itself as "Image". */
+     with the loop table's own title. */
   const MOUSE_ALT = 'alt="Image" class="qx-mouse-image"';
   if (!html.includes(MOUSE_ALT)) throw new Error('qx-orbit: the mouse arrow lost its alt attribute');
   html = html.replace(MOUSE_ALT, `alt="${escapeHtml(t(C.HOME_LOOP_TABLE.title))}" class="qx-mouse-image"`);
   const photos = (html.match(/alt="Image"/g) ?? []).length;
   if (photos !== 8) throw new Error(`qx-orbit: expected the eight orbit photographs, found ${photos} images left`);
-  html = html.replace(/alt="Image"/g, 'alt=""');
+
+  /* ------------------------------------------- the eight pictures ---- */
+  /* Since 2026-10-23 each orbit thumbnail is a still drawn in code for its
+     step (tools/code-art-capareas.mjs) where the owner's photograph was
+     (CAP_PHOTOS.orbit until then): the donor's `.qx-rotated-images` box stays,
+     so the size, radius, clipping and upright counter-turn are the donor's.
+     Each says which step it is and that it is an illustration. */
+  /* Each thumbnail names its step as the step list does: 「触达」 / "Engage"
+     (the English code's word in sentence case: ENGAGE → Engage, FOLLOW-UP →
+     Follow-up). */
+  const names = Object.fromEntries(codes.map((code) => {
+    const [num, word] = code.split(' · ');
+    return [num, ctx.lang === 'zh' ? word : word.charAt(0) + word.slice(1).toLowerCase()];
+  }));
+  if (ORBIT_FILES.length !== 8) throw new Error(`qx-orbit: the code art should name the eight thumbnails, names ${ORBIT_FILES.length}`);
+  for (const file of ORBIT_FILES) {
+    const open = `<img src="assets/qubix/${file}.`;
+    const at = html.indexOf(open);
+    if (at === -1 || html.indexOf(open, at + 1) !== -1) throw new Error(`qx-orbit: expected one orbit photograph ${file}`);
+    const tag = html.slice(at, html.indexOf('>', at) + 1);
+    if (!tag.includes('alt="Image"') || !tag.includes('qx-all-image-cover')) throw new Error(`qx-orbit: the orbit photograph ${file} is no longer the donor's cover image`);
+    html = html.slice(0, at) + orbitArt(file, ctx.lang, names) + html.slice(at + tag.length);
+  }
+  if (/alt="Image"|assets\/qubix\/[^"]*Rectangle/.test(html)) throw new Error('qx-orbit: a donor orbit photograph survived');
 
   return html;
 }

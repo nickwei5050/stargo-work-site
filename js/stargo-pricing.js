@@ -81,9 +81,9 @@
     var inner = card.querySelector('.pricing-card.growth') || card;
     g.fromTo(
       inner,
-      { boxShadow: '0 0 0 1px rgba(249,56,161,.20), 0 24px 70px -30px rgba(249,56,161,.35)' },
+      { boxShadow: '0 0 0 1px rgba(166, 112, 255,.20), 0 24px 70px -30px rgba(166, 112, 255,.35)' },
       {
-        boxShadow: '0 0 0 1px rgba(249,56,161,.55), 0 30px 90px -28px rgba(249,56,161,.80)',
+        boxShadow: '0 0 0 1px rgba(166, 112, 255,.55), 0 30px 90px -28px rgba(166, 112, 255,.80)',
         duration: 1.6, ease: 'sine.inOut', yoyo: true, repeat: 1,
         scrollTrigger: { trigger: card, start: 'top 80%', once: true },
       }
@@ -107,4 +107,29 @@
   });
 
   window.addEventListener('load', function () { ST.refresh(); });
+})();
+
+/* Z11 (form lane): the comparison chart's right-edge fade on phones. Runs
+   whatever the motion settings, since it is a cue, not motion: while the chart
+   can still scroll to the right its parent carries .stargo-scroll-more
+   (css/stargo-fusion.css, FORM LANE). */
+(function () {
+  'use strict';
+  var chart = document.querySelector('.rk-price-compare .rk-rt-pricing-chart');
+  if (!chart || !chart.parentElement) return;
+  var wrap = chart.parentElement;
+  var pending = false;
+  function update() {
+    pending = false;
+    var more = chart.scrollWidth - chart.clientWidth - chart.scrollLeft > 2;
+    wrap.classList.toggle('stargo-scroll-more', more);
+  }
+  function schedule() {
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(update);
+  }
+  chart.addEventListener('scroll', schedule, { passive: true });
+  window.addEventListener('resize', schedule);
+  update();
 })();

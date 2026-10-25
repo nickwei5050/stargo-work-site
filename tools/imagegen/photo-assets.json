@@ -1,0 +1,2422 @@
+{
+ "note": "Owner-supplied graded photographs: AI-generated images (made with an image model from a prompt brief, then graded), not documentary photographs; their alt carries the site's AI concept caption (tools/editorial-images.mjs). Written by tools/imagegen/prepare-photos.mjs: WebP q82 (lanczos3) resizes of the supplied sRGB originals, never cropped, retouched or upscaled; every file name carries its width. Alt text lives in tools/editorial-images.mjs, crop points in css/stargo-fusion.css, slots in tools/replaceables.mjs.",
+ "authorization": "Owner image thread, site-images/batch-1 to batch-8 (2026-10-21): graded finals for the homepage (opening mosaic, workspace grid, stage and problem cards, role scenes), the capability, enterprise, workforce, intelligence, about, contact and pricing pages, the blog covers, the demo band background and the side-menu card; resize and convert only. The share card (batch-8 O01) is not among them.",
+ "assets": [
+  {
+   "id": "h01-port-blue-hour",
+   "ref": "H01",
+   "src": "assets/stargo-photo/h01-port-blue-hour-1024.webp",
+   "width": 1024,
+   "height": 577,
+   "bytes": 61166,
+   "sourceFile": "site-images/batch-1/home-hero-01-port-blue-hour.png",
+   "sourceSha256": "08f9b04cda42f37b564a6b266ee7ca46aa3d6bb2301e3d711ac0c86e7591497f",
+   "sourcePixels": [
+    2048,
+    1153
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/h01-port-blue-hour-480.webp",
+     "width": 480,
+     "bytes": 16406
+    },
+    {
+     "src": "assets/stargo-photo/h01-port-blue-hour-768.webp",
+     "width": 768,
+     "bytes": 37460
+    }
+   ]
+  },
+  {
+   "id": "h02-night-inquiry",
+   "ref": "H02",
+   "src": "assets/stargo-photo/h02-night-inquiry-1024.webp",
+   "width": 1024,
+   "height": 577,
+   "bytes": 37098,
+   "sourceFile": "site-images/batch-1/home-hero-02-night-inquiry.png",
+   "sourceSha256": "1858dd4f7cc2b321c7fbb462b9d787eab3d864980407ed21e8e7452bc83e7faf",
+   "sourcePixels": [
+    2048,
+    1153
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/h02-night-inquiry-480.webp",
+     "width": 480,
+     "bytes": 11376
+    },
+    {
+     "src": "assets/stargo-photo/h02-night-inquiry-768.webp",
+     "width": 768,
+     "bytes": 23604
+    }
+   ]
+  },
+  {
+   "id": "h03-sample-wall",
+   "ref": "H03",
+   "src": "assets/stargo-photo/h03-sample-wall-1024.webp",
+   "width": 1024,
+   "height": 1024,
+   "bytes": 76368,
+   "sourceFile": "site-images/batch-1/home-hero-03-sample-wall.png",
+   "sourceSha256": "d3753ccb9fa00901dadbfe5e2761e0f4a1427b6277737119a9517439f347aaee",
+   "sourcePixels": [
+    2048,
+    2048
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/h03-sample-wall-480.webp",
+     "width": 480,
+     "bytes": 26288
+    },
+    {
+     "src": "assets/stargo-photo/h03-sample-wall-768.webp",
+     "width": 768,
+     "bytes": 50784
+    }
+   ]
+  },
+  {
+   "id": "h04-caliper-qc",
+   "ref": "H04",
+   "src": "assets/stargo-photo/h04-caliper-qc-1024.webp",
+   "width": 1024,
+   "height": 683,
+   "bytes": 47710,
+   "sourceFile": "site-images/batch-1/home-hero-04-caliper-qc.png",
+   "sourceSha256": "f8eb6ed720acf17c6bf8c9d6ab60f578d1a28e51923ea993953c05fa6fd17ff9",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/h04-caliper-qc-480.webp",
+     "width": 480,
+     "bytes": 12456
+    },
+    {
+     "src": "assets/stargo-photo/h04-caliper-qc-768.webp",
+     "width": 768,
+     "bytes": 28936
+    }
+   ]
+  },
+  {
+   "id": "h05-assembly-line",
+   "ref": "H05",
+   "src": "assets/stargo-photo/h05-assembly-line-1024.webp",
+   "width": 1024,
+   "height": 577,
+   "bytes": 48724,
+   "sourceFile": "site-images/batch-1/home-hero-05-assembly-line.png",
+   "sourceSha256": "4ae4b75019e2e9700997268bc45ccadff3d65d5194af745cfa47bb9e7bd3530f",
+   "sourcePixels": [
+    2048,
+    1153
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/h05-assembly-line-480.webp",
+     "width": 480,
+     "bytes": 18496
+    },
+    {
+     "src": "assets/stargo-photo/h05-assembly-line-768.webp",
+     "width": 768,
+     "bytes": 33246
+    }
+   ]
+  },
+  {
+   "id": "h06-packing",
+   "ref": "H06",
+   "src": "assets/stargo-photo/h06-packing-1024.webp",
+   "width": 1024,
+   "height": 683,
+   "bytes": 64068,
+   "sourceFile": "site-images/batch-1/home-hero-06-packing.png",
+   "sourceSha256": "1f0325d7865a2022c384ddc17945d927c92aef42edca67f7a0d8a1af4899bef6",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/h06-packing-480.webp",
+     "width": 480,
+     "bytes": 14768
+    },
+    {
+     "src": "assets/stargo-photo/h06-packing-768.webp",
+     "width": 768,
+     "bytes": 36380
+    }
+   ]
+  },
+  {
+   "id": "h07-owner-walk",
+   "ref": "H07",
+   "src": "assets/stargo-photo/h07-owner-walk-1024.webp",
+   "width": 1024,
+   "height": 1024,
+   "bytes": 88822,
+   "sourceFile": "site-images/batch-1/home-hero-07-owner-walk.png",
+   "sourceSha256": "448a35732bdbd53780de9e063e33f5a83f930562fb5908542cbf0dd902c57bf9",
+   "sourcePixels": [
+    2048,
+    2048
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/h07-owner-walk-480.webp",
+     "width": 480,
+     "bytes": 31528
+    },
+    {
+     "src": "assets/stargo-photo/h07-owner-walk-768.webp",
+     "width": 768,
+     "bytes": 60052
+    }
+   ]
+  },
+  {
+   "id": "h08-product-shoot",
+   "ref": "H08",
+   "src": "assets/stargo-photo/h08-product-shoot-1024.webp",
+   "width": 1024,
+   "height": 577,
+   "bytes": 29576,
+   "sourceFile": "site-images/batch-1/home-hero-08-product-shoot.png",
+   "sourceSha256": "ab4980388f81c2e074d35c28bdceae209920267676215cddca4f486deefbac7b",
+   "sourcePixels": [
+    2048,
+    1153
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/h08-product-shoot-480.webp",
+     "width": 480,
+     "bytes": 10546
+    },
+    {
+     "src": "assets/stargo-photo/h08-product-shoot-768.webp",
+     "width": 768,
+     "bytes": 19900
+    }
+   ]
+  },
+  {
+   "id": "h09-container-loading",
+   "ref": "H09",
+   "src": "assets/stargo-photo/h09-container-loading-1024.webp",
+   "width": 1024,
+   "height": 1024,
+   "bytes": 63638,
+   "sourceFile": "site-images/batch-1/home-hero-09-container-loading.png",
+   "sourceSha256": "16fa65e2ea7bfee05eb60a8759ce3930e27a4aa64f7249a2d9da9c048c3c7ff5",
+   "sourcePixels": [
+    2048,
+    2048
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/h09-container-loading-480.webp",
+     "width": 480,
+     "bytes": 17690
+    },
+    {
+     "src": "assets/stargo-photo/h09-container-loading-768.webp",
+     "width": 768,
+     "bytes": 39450
+    }
+   ]
+  },
+  {
+   "id": "h10-video-showing",
+   "ref": "H10",
+   "src": "assets/stargo-photo/h10-video-showing-1024.webp",
+   "width": 1024,
+   "height": 577,
+   "bytes": 34786,
+   "sourceFile": "site-images/batch-1/home-hero-10-video-showing.png",
+   "sourceSha256": "05532de3d4309117ec627d04a34a30d1d50c6f001f57bae925b16f440d3f59f4",
+   "sourcePixels": [
+    2048,
+    1153
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/h10-video-showing-480.webp",
+     "width": 480,
+     "bytes": 13180
+    },
+    {
+     "src": "assets/stargo-photo/h10-video-showing-768.webp",
+     "width": 768,
+     "bytes": 23556
+    }
+   ]
+  },
+  {
+   "id": "p01-prospecting",
+   "ref": "P01",
+   "src": "assets/stargo-photo/p01-prospecting-480.webp",
+   "width": 480,
+   "height": 320,
+   "bytes": 14930,
+   "sourceFile": "site-images/batch-2/home-stage-01-prospecting.png",
+   "sourceSha256": "d88bf4e67267afbd7bc4dfcfc92e28a8e071b68f30b8236c41f6b3d881f23960",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": []
+  },
+  {
+   "id": "p02-sales",
+   "ref": "P02",
+   "src": "assets/stargo-photo/p02-sales-480.webp",
+   "width": 480,
+   "height": 320,
+   "bytes": 11866,
+   "sourceFile": "site-images/batch-2/home-stage-02-sales.png",
+   "sourceSha256": "25e86faf1658783b374600529b74ebeec41aa7fc3f6e7159e5311d703233b378",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": []
+  },
+  {
+   "id": "p03-fulfilment",
+   "ref": "P03",
+   "src": "assets/stargo-photo/p03-fulfilment-768.webp",
+   "width": 768,
+   "height": 512,
+   "bytes": 36860,
+   "sourceFile": "site-images/batch-2/home-stage-03-fulfilment.png",
+   "sourceSha256": "f2a78ab15822c1a8520dc2b75093ba23810a04b751f70312435f8ccbadcfa485",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/p03-fulfilment-480.webp",
+     "width": 480,
+     "bytes": 19670
+    }
+   ]
+  },
+  {
+   "id": "p04-payment-docs",
+   "ref": "P04",
+   "src": "assets/stargo-photo/p04-payment-docs-480.webp",
+   "width": 480,
+   "height": 320,
+   "bytes": 17658,
+   "sourceFile": "site-images/batch-2/home-stage-04-payment-docs.png",
+   "sourceSha256": "eed08825324da210b80f1edc56f8d765b000523fa613684a927cf5f40489bdf6",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": []
+  },
+  {
+   "id": "p05-reorder",
+   "ref": "P05",
+   "src": "assets/stargo-photo/p05-reorder-480.webp",
+   "width": 480,
+   "height": 320,
+   "bytes": 15766,
+   "sourceFile": "site-images/batch-2/home-stage-05-reorder.png",
+   "sourceSha256": "9ad05280acfb5615d04e4d0a81a30edb66192221d23ec30ce6d6f6b72765b6fb",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": []
+  },
+  {
+   "id": "s01-inquiry-rework",
+   "ref": "S01",
+   "src": "assets/stargo-photo/s01-inquiry-rework-1600.webp",
+   "width": 1600,
+   "height": 1066,
+   "bytes": 58430,
+   "sourceFile": "site-images/batch-2/home-silo-01-inquiry-rework.png",
+   "sourceSha256": "22e5e8c8bacaa8d2539d119357ba00baf9dd7b01ad259b8ce0d2d5174c1605c7",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/s01-inquiry-rework-480.webp",
+     "width": 480,
+     "bytes": 8640
+    },
+    {
+     "src": "assets/stargo-photo/s01-inquiry-rework-768.webp",
+     "width": 768,
+     "bytes": 18058
+    },
+    {
+     "src": "assets/stargo-photo/s01-inquiry-rework-1024.webp",
+     "width": 1024,
+     "bytes": 28852
+    }
+   ]
+  },
+  {
+   "id": "s02-scattered-chats",
+   "ref": "S02",
+   "src": "assets/stargo-photo/s02-scattered-chats-1600.webp",
+   "width": 1600,
+   "height": 1066,
+   "bytes": 36888,
+   "sourceFile": "site-images/batch-2/home-silo-02-scattered-chats.png",
+   "sourceSha256": "490b3b6d2a286ff89f279b1f862a166e05eaed6b54e061b95a70e12151c807ff",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/s02-scattered-chats-480.webp",
+     "width": 480,
+     "bytes": 5234
+    },
+    {
+     "src": "assets/stargo-photo/s02-scattered-chats-768.webp",
+     "width": 768,
+     "bytes": 10080
+    },
+    {
+     "src": "assets/stargo-photo/s02-scattered-chats-1024.webp",
+     "width": 1024,
+     "bytes": 15718
+    }
+   ]
+  },
+  {
+   "id": "s03-spreadsheet-memory",
+   "ref": "S03",
+   "src": "assets/stargo-photo/s03-spreadsheet-memory-1600.webp",
+   "width": 1600,
+   "height": 1066,
+   "bytes": 74772,
+   "sourceFile": "site-images/batch-2/home-silo-03-spreadsheet-memory.png",
+   "sourceSha256": "fa29fec2106161d6d927d91ff5003cc33f5f0a6c4cdb9f34982ca4f469374478",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/s03-spreadsheet-memory-480.webp",
+     "width": 480,
+     "bytes": 9958
+    },
+    {
+     "src": "assets/stargo-photo/s03-spreadsheet-memory-768.webp",
+     "width": 768,
+     "bytes": 21138
+    },
+    {
+     "src": "assets/stargo-photo/s03-spreadsheet-memory-1024.webp",
+     "width": 1024,
+     "bytes": 35026
+    }
+   ]
+  },
+  {
+   "id": "s04-chasing-order",
+   "ref": "S04",
+   "src": "assets/stargo-photo/s04-chasing-order-2048.webp",
+   "width": 2048,
+   "height": 1266,
+   "bytes": 162650,
+   "sourceFile": "site-images/batch-2/home-silo-04-chasing-order.png",
+   "sourceSha256": "d2bdf89beb48def77b7eb54eb53392da811c424e389503afd92c8c196812e82e",
+   "sourcePixels": [
+    2048,
+    1266
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/s04-chasing-order-480.webp",
+     "width": 480,
+     "bytes": 15732
+    },
+    {
+     "src": "assets/stargo-photo/s04-chasing-order-768.webp",
+     "width": 768,
+     "bytes": 34428
+    },
+    {
+     "src": "assets/stargo-photo/s04-chasing-order-1024.webp",
+     "width": 1024,
+     "bytes": 56626
+    },
+    {
+     "src": "assets/stargo-photo/s04-chasing-order-1600.webp",
+     "width": 1600,
+     "bytes": 111644
+    }
+   ]
+  },
+  {
+   "id": "g01-cta-loading-bay-dusk",
+   "ref": "G01",
+   "src": "assets/stargo-photo/g01-cta-loading-bay-dusk-2048.webp",
+   "width": 2048,
+   "height": 1153,
+   "bytes": 120870,
+   "sourceFile": "site-images/batch-3/site-cta-loading-bay-dusk.png",
+   "sourceSha256": "60064c20e0bec45a1faa932d30b824769c5a3c4b92b257d5dea744f476fed252",
+   "sourcePixels": [
+    2048,
+    1153
+   ],
+   "upscaled": false,
+   "variants": []
+  },
+  {
+   "id": "g02-menu-harbour-night",
+   "ref": "G02",
+   "src": "assets/stargo-photo/g02-menu-harbour-night-768.webp",
+   "width": 768,
+   "height": 432,
+   "bytes": 24072,
+   "sourceFile": "site-images/batch-3/site-menu-harbour-night.png",
+   "sourceSha256": "d24d409215633ed0deb9269585dddec79833df8cbd8f697f5e4e575333e0285f",
+   "sourcePixels": [
+    2048,
+    1153
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/g02-menu-harbour-night-480.webp",
+     "width": 480,
+     "bytes": 10464
+    }
+   ]
+  },
+  {
+   "id": "w01-trade-office",
+   "ref": "W01",
+   "src": "assets/stargo-photo/w01-trade-office-2048.webp",
+   "width": 2048,
+   "height": 1153,
+   "bytes": 107402,
+   "sourceFile": "site-images/batch-3/home-space-01-trade-office.png",
+   "sourceSha256": "2603e2abc7d12812b9cd65b371b5f19c643683dad8a737ee00950da10cc32173",
+   "sourcePixels": [
+    2048,
+    1153
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/w01-trade-office-480.webp",
+     "width": 480,
+     "bytes": 13702
+    },
+    {
+     "src": "assets/stargo-photo/w01-trade-office-768.webp",
+     "width": 768,
+     "bytes": 27400
+    },
+    {
+     "src": "assets/stargo-photo/w01-trade-office-1024.webp",
+     "width": 1024,
+     "bytes": 39910
+    },
+    {
+     "src": "assets/stargo-photo/w01-trade-office-1600.webp",
+     "width": 1600,
+     "bytes": 76060
+    }
+   ]
+  },
+  {
+   "id": "w02-workshop",
+   "ref": "W02",
+   "src": "assets/stargo-photo/w02-workshop-2048.webp",
+   "width": 2048,
+   "height": 1153,
+   "bytes": 169270,
+   "sourceFile": "site-images/batch-3/home-space-02-workshop.png",
+   "sourceSha256": "c001f54c64cc44c7b4c046bd38844628ae0d7760de6dfbcc4e57c29d418ac022",
+   "sourcePixels": [
+    2048,
+    1153
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/w02-workshop-480.webp",
+     "width": 480,
+     "bytes": 23376
+    },
+    {
+     "src": "assets/stargo-photo/w02-workshop-768.webp",
+     "width": 768,
+     "bytes": 45960
+    },
+    {
+     "src": "assets/stargo-photo/w02-workshop-1024.webp",
+     "width": 1024,
+     "bytes": 69200
+    },
+    {
+     "src": "assets/stargo-photo/w02-workshop-1600.webp",
+     "width": 1600,
+     "bytes": 123210
+    }
+   ]
+  },
+  {
+   "id": "w03-warehouse",
+   "ref": "W03",
+   "src": "assets/stargo-photo/w03-warehouse-2048.webp",
+   "width": 2048,
+   "height": 1153,
+   "bytes": 207664,
+   "sourceFile": "site-images/batch-3/home-space-03-warehouse.png",
+   "sourceSha256": "52f5617cbcb521d3c93d9c0f5717e79fe45b47a6cd3e371014b7f04a951b14ca",
+   "sourcePixels": [
+    2048,
+    1153
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/w03-warehouse-480.webp",
+     "width": 480,
+     "bytes": 21918
+    },
+    {
+     "src": "assets/stargo-photo/w03-warehouse-768.webp",
+     "width": 768,
+     "bytes": 49134
+    },
+    {
+     "src": "assets/stargo-photo/w03-warehouse-1024.webp",
+     "width": 1024,
+     "bytes": 78734
+    },
+    {
+     "src": "assets/stargo-photo/w03-warehouse-1600.webp",
+     "width": 1600,
+     "bytes": 152102
+    }
+   ]
+  },
+  {
+   "id": "w04-qc-lab",
+   "ref": "W04",
+   "src": "assets/stargo-photo/w04-qc-lab-2048.webp",
+   "width": 2048,
+   "height": 1153,
+   "bytes": 120230,
+   "sourceFile": "site-images/batch-3/home-space-04-qc-lab.png",
+   "sourceSha256": "5e43b79dfd0cfed3278fa7aa376db6b4d65316863fdbfd22e466830c32ed85f4",
+   "sourcePixels": [
+    2048,
+    1153
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/w04-qc-lab-480.webp",
+     "width": 480,
+     "bytes": 15416
+    },
+    {
+     "src": "assets/stargo-photo/w04-qc-lab-768.webp",
+     "width": 768,
+     "bytes": 30286
+    },
+    {
+     "src": "assets/stargo-photo/w04-qc-lab-1024.webp",
+     "width": 1024,
+     "bytes": 45338
+    },
+    {
+     "src": "assets/stargo-photo/w04-qc-lab-1600.webp",
+     "width": 1600,
+     "bytes": 85346
+    }
+   ]
+  },
+  {
+   "id": "w05-owner-office",
+   "ref": "W05",
+   "src": "assets/stargo-photo/w05-owner-office-2048.webp",
+   "width": 2048,
+   "height": 1153,
+   "bytes": 60102,
+   "sourceFile": "site-images/batch-3/home-space-05-owner-office.png",
+   "sourceSha256": "aba8d71a505dd92c9181757ea0859611959186ae4d8eb1f7994f1ba06d4050cd",
+   "sourcePixels": [
+    2048,
+    1153
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/w05-owner-office-480.webp",
+     "width": 480,
+     "bytes": 5754
+    },
+    {
+     "src": "assets/stargo-photo/w05-owner-office-768.webp",
+     "width": 768,
+     "bytes": 11784
+    },
+    {
+     "src": "assets/stargo-photo/w05-owner-office-1024.webp",
+     "width": 1024,
+     "bytes": 19074
+    },
+    {
+     "src": "assets/stargo-photo/w05-owner-office-1600.webp",
+     "width": 1600,
+     "bytes": 39592
+    }
+   ]
+  },
+  {
+   "id": "w06-showroom",
+   "ref": "W06",
+   "src": "assets/stargo-photo/w06-showroom-2048.webp",
+   "width": 2048,
+   "height": 1153,
+   "bytes": 172344,
+   "sourceFile": "site-images/batch-3/home-space-06-showroom.png",
+   "sourceSha256": "a04c7174674c544bc56a8bf2c65f0a8435fcc56aae6b393b7cc5228375d4b3b3",
+   "sourcePixels": [
+    2048,
+    1153
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/w06-showroom-480.webp",
+     "width": 480,
+     "bytes": 18038
+    },
+    {
+     "src": "assets/stargo-photo/w06-showroom-768.webp",
+     "width": 768,
+     "bytes": 39014
+    },
+    {
+     "src": "assets/stargo-photo/w06-showroom-1024.webp",
+     "width": 1024,
+     "bytes": 62542
+    },
+    {
+     "src": "assets/stargo-photo/w06-showroom-1600.webp",
+     "width": 1600,
+     "bytes": 122230
+    }
+   ]
+  },
+  {
+   "id": "a01-empty-workshop",
+   "ref": "A01",
+   "src": "assets/stargo-photo/a01-empty-workshop-2048.webp",
+   "width": 2048,
+   "height": 1365,
+   "bytes": 215188,
+   "sourceFile": "site-images/batch-4/about-intro-empty-workshop.png",
+   "sourceSha256": "181500e99c3df3a6f686e72bd4e2c2e5281678c9c3c97fef5cd9e678b354063a",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": []
+  },
+  {
+   "id": "k01-meeting-table",
+   "ref": "K01",
+   "src": "assets/stargo-photo/k01-meeting-table-768.webp",
+   "width": 768,
+   "height": 938,
+   "bytes": 18460,
+   "sourceFile": "site-images/batch-4/contact-meeting-table.png",
+   "sourceSha256": "25f503535fac64b383c8ddf9021265baf5ce394a7db42bd13513aaf077b37c7b",
+   "sourcePixels": [
+    1677,
+    2048
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/k01-meeting-table-480.webp",
+     "width": 480,
+     "bytes": 8124
+    }
+   ]
+  },
+  {
+   "id": "r1-sales-rep",
+   "ref": "R1",
+   "src": "assets/stargo-photo/r1-sales-rep-1639.webp",
+   "width": 1639,
+   "height": 2048,
+   "bytes": 96666,
+   "sourceFile": "site-images/batch-4/role-01-sales-rep.png",
+   "sourceSha256": "977a596e25aa1c81c0dfe71dd621326aa0b7acc3118661c3a897fe032c33f6c1",
+   "sourcePixels": [
+    1639,
+    2048
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/r1-sales-rep-480.webp",
+     "width": 480,
+     "bytes": 12520
+    },
+    {
+     "src": "assets/stargo-photo/r1-sales-rep-768.webp",
+     "width": 768,
+     "bytes": 25016
+    },
+    {
+     "src": "assets/stargo-photo/r1-sales-rep-1024.webp",
+     "width": 1024,
+     "bytes": 41144
+    }
+   ]
+  },
+  {
+   "id": "r2-trade-manager",
+   "ref": "R2",
+   "src": "assets/stargo-photo/r2-trade-manager-1024.webp",
+   "width": 1024,
+   "height": 1280,
+   "bytes": 46610,
+   "sourceFile": "site-images/batch-4/role-02-trade-manager.png",
+   "sourceSha256": "e0ebd2e96f355c46eea74f3eee169c3b35d8916d729a11d3604187c1966b22b7",
+   "sourcePixels": [
+    1639,
+    2048
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/r2-trade-manager-480.webp",
+     "width": 480,
+     "bytes": 16744
+    },
+    {
+     "src": "assets/stargo-photo/r2-trade-manager-768.webp",
+     "width": 768,
+     "bytes": 31634
+    }
+   ]
+  },
+  {
+   "id": "r3-sales-director",
+   "ref": "R3",
+   "src": "assets/stargo-photo/r3-sales-director-1024.webp",
+   "width": 1024,
+   "height": 1280,
+   "bytes": 62514,
+   "sourceFile": "site-images/batch-4/role-03-sales-director.png",
+   "sourceSha256": "ce2a5b4f85e657236b2f5a31d45177c755815ac11ba757ce06493eb742b06d7b",
+   "sourcePixels": [
+    1639,
+    2048
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/r3-sales-director-480.webp",
+     "width": 480,
+     "bytes": 20606
+    },
+    {
+     "src": "assets/stargo-photo/r3-sales-director-768.webp",
+     "width": 768,
+     "bytes": 41080
+    }
+   ]
+  },
+  {
+   "id": "r4-general-manager",
+   "ref": "R4",
+   "src": "assets/stargo-photo/r4-general-manager-1024.webp",
+   "width": 1024,
+   "height": 1536,
+   "bytes": 111366,
+   "sourceFile": "site-images/batch-4/role-04-general-manager.png",
+   "sourceSha256": "4a36f94b1f87d2be0ee4e217a33854a0065b623a54e86138aeb6f90301b2bf0f",
+   "sourcePixels": [
+    1365,
+    2048
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/r4-general-manager-480.webp",
+     "width": 480,
+     "bytes": 36986
+    },
+    {
+     "src": "assets/stargo-photo/r4-general-manager-768.webp",
+     "width": 768,
+     "bytes": 73936
+    }
+   ]
+  },
+  {
+   "id": "t01-enterprise-campus",
+   "ref": "T01",
+   "src": "assets/stargo-photo/t01-enterprise-campus-1024.webp",
+   "width": 1024,
+   "height": 1024,
+   "bytes": 88982,
+   "sourceFile": "site-images/batch-4/pricing-enterprise-campus.png",
+   "sourceSha256": "a0a8bba0a0a8a6d5affe40d6ab5f27a111b598cad71bc312c903542bb5b8bd94",
+   "sourcePixels": [
+    2048,
+    2048
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/t01-enterprise-campus-480.webp",
+     "width": 480,
+     "bytes": 22124
+    },
+    {
+     "src": "assets/stargo-photo/t01-enterprise-campus-768.webp",
+     "width": 768,
+     "bytes": 54698
+    }
+   ]
+  },
+  {
+   "id": "d01-market-research",
+   "ref": "D01",
+   "src": "assets/stargo-photo/d01-market-research-1024.webp",
+   "width": 1024,
+   "height": 1024,
+   "bytes": 79432,
+   "sourceFile": "site-images/batch-5/ai-role-01-market-research.png",
+   "sourceSha256": "b9976d5c44725683612497c2f66fa990638cdf4af8669a673e1b60d6fb458b2e",
+   "sourcePixels": [
+    2048,
+    2048
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/d01-market-research-480.webp",
+     "width": 480,
+     "bytes": 16058
+    },
+    {
+     "src": "assets/stargo-photo/d01-market-research-768.webp",
+     "width": 768,
+     "bytes": 45390
+    }
+   ]
+  },
+  {
+   "id": "d02-follow-up",
+   "ref": "D02",
+   "src": "assets/stargo-photo/d02-follow-up-1024.webp",
+   "width": 1024,
+   "height": 1313,
+   "bytes": 55292,
+   "sourceFile": "site-images/batch-5/ai-role-02-follow-up.png",
+   "sourceSha256": "ec360b46b532fd27c2c5a99e60f0b8d0a8606e45b1c4fdfd48de1f23c9b4df7a",
+   "sourcePixels": [
+    1597,
+    2048
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/d02-follow-up-480.webp",
+     "width": 480,
+     "bytes": 11802
+    },
+    {
+     "src": "assets/stargo-photo/d02-follow-up-768.webp",
+     "width": 768,
+     "bytes": 31736
+    }
+   ]
+  },
+  {
+   "id": "d03-product-spec",
+   "ref": "D03",
+   "src": "assets/stargo-photo/d03-product-spec-480.webp",
+   "width": 480,
+   "height": 480,
+   "bytes": 7726,
+   "sourceFile": "site-images/batch-5/ai-role-03-product-spec.png",
+   "sourceSha256": "503d341293b0a94527a59cfc0bcb118b92bc9c741e7abfddde4ced85ed40a55c",
+   "sourcePixels": [
+    2048,
+    2048
+   ],
+   "upscaled": false,
+   "variants": []
+  },
+  {
+   "id": "d04-finance",
+   "ref": "D04",
+   "src": "assets/stargo-photo/d04-finance-480.webp",
+   "width": 480,
+   "height": 480,
+   "bytes": 7644,
+   "sourceFile": "site-images/batch-5/ai-role-04-finance.png",
+   "sourceSha256": "9ddfe1685ee726c41a5c315249b2151cacf8860eca3e367fc6c03e5bc591e8fd",
+   "sourcePixels": [
+    2048,
+    2048
+   ],
+   "upscaled": false,
+   "variants": []
+  },
+  {
+   "id": "d05-coordination",
+   "ref": "D05",
+   "src": "assets/stargo-photo/d05-coordination-1024.webp",
+   "width": 1024,
+   "height": 1024,
+   "bytes": 40708,
+   "sourceFile": "site-images/batch-5/ai-role-05-coordination.png",
+   "sourceSha256": "50db67b3badbed0fdfde3a878aec56e0ec4c2a19c3211329203bc899736b4844",
+   "sourcePixels": [
+    2048,
+    2048
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/d05-coordination-480.webp",
+     "width": 480,
+     "bytes": 9340
+    },
+    {
+     "src": "assets/stargo-photo/d05-coordination-768.webp",
+     "width": 768,
+     "bytes": 23528
+    }
+   ]
+  },
+  {
+   "id": "d06-reporting",
+   "ref": "D06",
+   "src": "assets/stargo-photo/d06-reporting-480.webp",
+   "width": 480,
+   "height": 480,
+   "bytes": 13098,
+   "sourceFile": "site-images/batch-5/ai-role-06-reporting.png",
+   "sourceSha256": "2365728e5a033b6e1f8a07d4e6baeb6cb8209e1ba76663f807b967a1f22e8f13",
+   "sourcePixels": [
+    2048,
+    2048
+   ],
+   "upscaled": false,
+   "variants": []
+  },
+  {
+   "id": "d07-quotation",
+   "ref": "D07",
+   "src": "assets/stargo-photo/d07-quotation-1024.webp",
+   "width": 1024,
+   "height": 1024,
+   "bytes": 56858,
+   "sourceFile": "site-images/batch-5/ai-role-07-quotation.png",
+   "sourceSha256": "9f15a35487cf8c5257661765bc2b950841c68acb9a63c47581df1ce0ee395fd0",
+   "sourcePixels": [
+    2048,
+    2048
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/d07-quotation-480.webp",
+     "width": 480,
+     "bytes": 11438
+    },
+    {
+     "src": "assets/stargo-photo/d07-quotation-768.webp",
+     "width": 768,
+     "bytes": 31742
+    }
+   ]
+  },
+  {
+   "id": "c01-command-growth",
+   "ref": "C01",
+   "src": "assets/stargo-photo/c01-command-growth-2048.webp",
+   "width": 2048,
+   "height": 1153,
+   "bytes": 109156,
+   "sourceFile": "site-images/batch-6/cap-pillar-01-command-growth.png",
+   "sourceSha256": "485105f450e1c06aa891300a1f7a0e317250f8574748c0b328d60787c4ac4950",
+   "sourcePixels": [
+    2048,
+    1153
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/c01-command-growth-480.webp",
+     "width": 480,
+     "bytes": 9960
+    },
+    {
+     "src": "assets/stargo-photo/c01-command-growth-768.webp",
+     "width": 768,
+     "bytes": 21054
+    },
+    {
+     "src": "assets/stargo-photo/c01-command-growth-1024.webp",
+     "width": 1024,
+     "bytes": 33886
+    },
+    {
+     "src": "assets/stargo-photo/c01-command-growth-1600.webp",
+     "width": 1600,
+     "bytes": 71052
+    }
+   ]
+  },
+  {
+   "id": "c02-customer-knowledge",
+   "ref": "C02",
+   "src": "assets/stargo-photo/c02-customer-knowledge-2048.webp",
+   "width": 2048,
+   "height": 1153,
+   "bytes": 121688,
+   "sourceFile": "site-images/batch-6/cap-pillar-02-customer-knowledge.png",
+   "sourceSha256": "8772a5000dce81ca2ce92f1073cdd94a89c5be69c1b500aa7a2ee2bde9ec6054",
+   "sourcePixels": [
+    2048,
+    1153
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/c02-customer-knowledge-480.webp",
+     "width": 480,
+     "bytes": 11418
+    },
+    {
+     "src": "assets/stargo-photo/c02-customer-knowledge-768.webp",
+     "width": 768,
+     "bytes": 22710
+    },
+    {
+     "src": "assets/stargo-photo/c02-customer-knowledge-1024.webp",
+     "width": 1024,
+     "bytes": 36732
+    },
+    {
+     "src": "assets/stargo-photo/c02-customer-knowledge-1600.webp",
+     "width": 1600,
+     "bytes": 80294
+    }
+   ]
+  },
+  {
+   "id": "c03-commerce-fulfilment",
+   "ref": "C03",
+   "src": "assets/stargo-photo/c03-commerce-fulfilment-2048.webp",
+   "width": 2048,
+   "height": 1153,
+   "bytes": 135024,
+   "sourceFile": "site-images/batch-6/cap-pillar-03-commerce-fulfilment.png",
+   "sourceSha256": "8109cdf69b539e2297db8b5657af7920348d8fbbe18c4f116073c79aadaaed48",
+   "sourcePixels": [
+    2048,
+    1153
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/c03-commerce-fulfilment-480.webp",
+     "width": 480,
+     "bytes": 15092
+    },
+    {
+     "src": "assets/stargo-photo/c03-commerce-fulfilment-768.webp",
+     "width": 768,
+     "bytes": 32846
+    },
+    {
+     "src": "assets/stargo-photo/c03-commerce-fulfilment-1024.webp",
+     "width": 1024,
+     "bytes": 51050
+    },
+    {
+     "src": "assets/stargo-photo/c03-commerce-fulfilment-1600.webp",
+     "width": 1600,
+     "bytes": 98936
+    }
+   ]
+  },
+  {
+   "id": "c04-team-management",
+   "ref": "C04",
+   "src": "assets/stargo-photo/c04-team-management-2048.webp",
+   "width": 2048,
+   "height": 1153,
+   "bytes": 110514,
+   "sourceFile": "site-images/batch-6/cap-pillar-04-team-management.png",
+   "sourceSha256": "444b0446b7a5fc869abc87f9ae967c05ce3ff401b41cdf91a5ae0ffbb4012e34",
+   "sourcePixels": [
+    2048,
+    1153
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/c04-team-management-480.webp",
+     "width": 480,
+     "bytes": 13630
+    },
+    {
+     "src": "assets/stargo-photo/c04-team-management-768.webp",
+     "width": 768,
+     "bytes": 25780
+    },
+    {
+     "src": "assets/stargo-photo/c04-team-management-1024.webp",
+     "width": 1024,
+     "bytes": 40016
+    },
+    {
+     "src": "assets/stargo-photo/c04-team-management-1600.webp",
+     "width": 1600,
+     "bytes": 77056
+    }
+   ]
+  },
+  {
+   "id": "c05-unified-inbox",
+   "ref": "C05",
+   "src": "assets/stargo-photo/c05-unified-inbox-768.webp",
+   "width": 768,
+   "height": 512,
+   "bytes": 21654,
+   "sourceFile": "site-images/batch-6/cap-salesdesk-unified-inbox.png",
+   "sourceSha256": "a9b3f012778d32544fe26a97f1728218957e407684e133ea10496f0db9408c81",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/c05-unified-inbox-480.webp",
+     "width": 480,
+     "bytes": 11632
+    }
+   ]
+  },
+  {
+   "id": "c06-customer-360",
+   "ref": "C06",
+   "src": "assets/stargo-photo/c06-customer-360-1600.webp",
+   "width": 1600,
+   "height": 1066,
+   "bytes": 137756,
+   "sourceFile": "site-images/batch-6/cap-salesdesk-customer-360.png",
+   "sourceSha256": "5110d658a627780761bd007400d46c90bd123bd17b017bcaa38f319381568cf3",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/c06-customer-360-480.webp",
+     "width": 480,
+     "bytes": 10244
+    },
+    {
+     "src": "assets/stargo-photo/c06-customer-360-768.webp",
+     "width": 768,
+     "bytes": 28030
+    },
+    {
+     "src": "assets/stargo-photo/c06-customer-360-1024.webp",
+     "width": 1024,
+     "bytes": 55284
+    }
+   ]
+  },
+  {
+   "id": "c07-quote-approval",
+   "ref": "C07",
+   "src": "assets/stargo-photo/c07-quote-approval-768.webp",
+   "width": 768,
+   "height": 512,
+   "bytes": 18676,
+   "sourceFile": "site-images/batch-6/cap-quote-approval.png",
+   "sourceSha256": "8a5ea3879d0d6714033d8ff8bda31c26158320e7b73637d861e824a9b6636b75",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/c07-quote-approval-480.webp",
+     "width": 480,
+     "bytes": 7734
+    }
+   ]
+  },
+  {
+   "id": "c08-product-references",
+   "ref": "C08",
+   "src": "assets/stargo-photo/c08-product-references-1024.webp",
+   "width": 1024,
+   "height": 1536,
+   "bytes": 33066,
+   "sourceFile": "site-images/batch-6/cap-ai-studio-product-references.png",
+   "sourceSha256": "d1eb413d6b32e8b1c02a50318235ec5cd31338aeb88ea3423bd7027192a988b2",
+   "sourcePixels": [
+    1365,
+    2048
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/c08-product-references-480.webp",
+     "width": 480,
+     "bytes": 8484
+    },
+    {
+     "src": "assets/stargo-photo/c08-product-references-768.webp",
+     "width": 768,
+     "bytes": 17858
+    }
+   ]
+  },
+  {
+   "id": "c09-288-flatlay",
+   "ref": "C09",
+   "src": "assets/stargo-photo/c09-288-flatlay-1024.webp",
+   "width": 1024,
+   "height": 1024,
+   "bytes": 169970,
+   "sourceFile": "site-images/batch-6/cap-ai-team-288-flatlay.png",
+   "sourceSha256": "8c07fcbe2d3e6b50bbf871de151b67d72f19c4742f06b031995fc8fb54c6125a",
+   "sourcePixels": [
+    2048,
+    2048
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/c09-288-flatlay-480.webp",
+     "width": 480,
+     "bytes": 27954
+    },
+    {
+     "src": "assets/stargo-photo/c09-288-flatlay-768.webp",
+     "width": 768,
+     "bytes": 93616
+    }
+   ]
+  },
+  {
+   "id": "c10-progress-board",
+   "ref": "C10",
+   "src": "assets/stargo-photo/c10-progress-board-1024.webp",
+   "width": 1024,
+   "height": 1024,
+   "bytes": 41834,
+   "sourceFile": "site-images/batch-6/cap-ai-team-progress-board.png",
+   "sourceSha256": "aacaf435d1e8e08a0c8883f936f2a6629479412a2b4450ee78398f80f41951aa",
+   "sourcePixels": [
+    2048,
+    2048
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/c10-progress-board-480.webp",
+     "width": 480,
+     "bytes": 13750
+    },
+    {
+     "src": "assets/stargo-photo/c10-progress-board-768.webp",
+     "width": 768,
+     "bytes": 26554
+    }
+   ]
+  },
+  {
+   "id": "c11-company-research",
+   "ref": "C11",
+   "src": "assets/stargo-photo/c11-company-research-2048.webp",
+   "width": 2048,
+   "height": 1365,
+   "bytes": 191618,
+   "sourceFile": "site-images/batch-6/cap-bg-01-company-research.png",
+   "sourceSha256": "49c3599e7fc09a7a42db71e5d016e926124d5988b0c43211e31522176c11fa0e",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/c11-company-research-480.webp",
+     "width": 480,
+     "bytes": 15762
+    },
+    {
+     "src": "assets/stargo-photo/c11-company-research-768.webp",
+     "width": 768,
+     "bytes": 37526
+    },
+    {
+     "src": "assets/stargo-photo/c11-company-research-1024.webp",
+     "width": 1024,
+     "bytes": 64932
+    },
+    {
+     "src": "assets/stargo-photo/c11-company-research-1600.webp",
+     "width": 1600,
+     "bytes": 132464
+    }
+   ]
+  },
+  {
+   "id": "c12-trade-intelligence",
+   "ref": "C12",
+   "src": "assets/stargo-photo/c12-trade-intelligence-2048.webp",
+   "width": 2048,
+   "height": 1365,
+   "bytes": 235572,
+   "sourceFile": "site-images/batch-6/cap-bg-02-trade-intelligence.png",
+   "sourceSha256": "687aacd26731e3acc214d82a1c0b45f65bf72e2ce3ffb4457513b8f42657ef62",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/c12-trade-intelligence-480.webp",
+     "width": 480,
+     "bytes": 16124
+    },
+    {
+     "src": "assets/stargo-photo/c12-trade-intelligence-768.webp",
+     "width": 768,
+     "bytes": 44404
+    },
+    {
+     "src": "assets/stargo-photo/c12-trade-intelligence-1024.webp",
+     "width": 1024,
+     "bytes": 77584
+    },
+    {
+     "src": "assets/stargo-photo/c12-trade-intelligence-1600.webp",
+     "width": 1600,
+     "bytes": 165602
+    }
+   ]
+  },
+  {
+   "id": "c13-restock",
+   "ref": "C13",
+   "src": "assets/stargo-photo/c13-restock-2048.webp",
+   "width": 2048,
+   "height": 1365,
+   "bytes": 291148,
+   "sourceFile": "site-images/batch-6/cap-bg-03-restock.png",
+   "sourceSha256": "cf882fd3c2b74c9c5743349d667c13f4862e540c8d8a9025c9cea52260434374",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/c13-restock-480.webp",
+     "width": 480,
+     "bytes": 22802
+    },
+    {
+     "src": "assets/stargo-photo/c13-restock-768.webp",
+     "width": 768,
+     "bytes": 59620
+    },
+    {
+     "src": "assets/stargo-photo/c13-restock-1024.webp",
+     "width": 1024,
+     "bytes": 103360
+    },
+    {
+     "src": "assets/stargo-photo/c13-restock-1600.webp",
+     "width": 1600,
+     "bytes": 216242
+    }
+   ]
+  },
+  {
+   "id": "c14-decision-makers",
+   "ref": "C14",
+   "src": "assets/stargo-photo/c14-decision-makers-2048.webp",
+   "width": 2048,
+   "height": 1365,
+   "bytes": 84592,
+   "sourceFile": "site-images/batch-6/cap-bg-04-decision-makers.png",
+   "sourceSha256": "509731c2498bf88fcb254776d943abd3dbbb9b71e0d00269ae4f9e439c5961f1",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/c14-decision-makers-480.webp",
+     "width": 480,
+     "bytes": 7306
+    },
+    {
+     "src": "assets/stargo-photo/c14-decision-makers-768.webp",
+     "width": 768,
+     "bytes": 17042
+    },
+    {
+     "src": "assets/stargo-photo/c14-decision-makers-1024.webp",
+     "width": 1024,
+     "bytes": 27340
+    },
+    {
+     "src": "assets/stargo-photo/c14-decision-makers-1600.webp",
+     "width": 1600,
+     "bytes": 57300
+    }
+   ]
+  },
+  {
+   "id": "e01-decide",
+   "ref": "E01",
+   "src": "assets/stargo-photo/e01-decide-2048.webp",
+   "width": 2048,
+   "height": 1365,
+   "bytes": 66654,
+   "sourceFile": "site-images/batch-7/ent-tab-01-decide.png",
+   "sourceSha256": "584d00887844b16f7119cd786b7857efddd8532872e6bd88db94d126e886f037",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": []
+  },
+  {
+   "id": "e02-verify",
+   "ref": "E02",
+   "src": "assets/stargo-photo/e02-verify-2048.webp",
+   "width": 2048,
+   "height": 1365,
+   "bytes": 67112,
+   "sourceFile": "site-images/batch-7/ent-tab-02-verify.png",
+   "sourceSha256": "cdf3ab3b69686a8f81eec1a60f44cd56e1b4d268d735a13f4b075a1d6ebfb1a8",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": []
+  },
+  {
+   "id": "e03-connect",
+   "ref": "E03",
+   "src": "assets/stargo-photo/e03-connect-2048.webp",
+   "width": 2048,
+   "height": 1365,
+   "bytes": 85992,
+   "sourceFile": "site-images/batch-7/ent-tab-03-connect.png",
+   "sourceSha256": "519e11492feeffebc1e2caa358c04c14e05a8cf8923e96dfc0c108a02823a38e",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": []
+  },
+  {
+   "id": "e04-operate",
+   "ref": "E04",
+   "src": "assets/stargo-photo/e04-operate-2048.webp",
+   "width": 2048,
+   "height": 1365,
+   "bytes": 151576,
+   "sourceFile": "site-images/batch-7/ent-tab-04-operate.png",
+   "sourceSha256": "47db87c6fbe9eb10cbec743e76cabb8c72967c6aac54ac58d6be3d0e478cb242",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": []
+  },
+  {
+   "id": "e05-cockpit-overview",
+   "ref": "E05",
+   "src": "assets/stargo-photo/e05-cockpit-overview-1024.webp",
+   "width": 1024,
+   "height": 768,
+   "bytes": 34280,
+   "sourceFile": "site-images/batch-7/ent-cockpit-01-overview.png",
+   "sourceSha256": "96d8ee5e638f52d01b886ec85c9c41ab9afdb5e2df2a89bc7c2c0c687cc2afe4",
+   "sourcePixels": [
+    2048,
+    1536
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/e05-cockpit-overview-480.webp",
+     "width": 480,
+     "bytes": 12256
+    },
+    {
+     "src": "assets/stargo-photo/e05-cockpit-overview-768.webp",
+     "width": 768,
+     "bytes": 22522
+    }
+   ]
+  },
+  {
+   "id": "e06-cockpit-blocker",
+   "ref": "E06",
+   "src": "assets/stargo-photo/e06-cockpit-blocker-1024.webp",
+   "width": 1024,
+   "height": 1280,
+   "bytes": 82810,
+   "sourceFile": "site-images/batch-7/ent-cockpit-02-blocker.png",
+   "sourceSha256": "417aa361528b615b70a0204e12a4c50e43c711b4ce3153de30f32d7a7c19f42c",
+   "sourcePixels": [
+    1639,
+    2048
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/e06-cockpit-blocker-480.webp",
+     "width": 480,
+     "bytes": 29844
+    },
+    {
+     "src": "assets/stargo-photo/e06-cockpit-blocker-768.webp",
+     "width": 768,
+     "bytes": 54964
+    }
+   ]
+  },
+  {
+   "id": "e07-cockpit-budget",
+   "ref": "E07",
+   "src": "assets/stargo-photo/e07-cockpit-budget-1024.webp",
+   "width": 1024,
+   "height": 683,
+   "bytes": 44134,
+   "sourceFile": "site-images/batch-7/ent-cockpit-03-budget.png",
+   "sourceSha256": "f4030029a3179beb0b8f35dc877aa1bdd2e9afac5233e14a40c48762f14eb7c6",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/e07-cockpit-budget-480.webp",
+     "width": 480,
+     "bytes": 12228
+    },
+    {
+     "src": "assets/stargo-photo/e07-cockpit-budget-768.webp",
+     "width": 768,
+     "bytes": 26734
+    }
+   ]
+  },
+  {
+   "id": "e08-emergency-stop",
+   "ref": "E08",
+   "src": "assets/stargo-photo/e08-emergency-stop-1024.webp",
+   "width": 1024,
+   "height": 1024,
+   "bytes": 71244,
+   "sourceFile": "site-images/batch-7/ent-principle-emergency-stop.png",
+   "sourceSha256": "743adf67b723ffc775bd99e8db124837a5296f6fbceb32f737c86e68c286369f",
+   "sourcePixels": [
+    2048,
+    2048
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/e08-emergency-stop-480.webp",
+     "width": 480,
+     "bytes": 21608
+    },
+    {
+     "src": "assets/stargo-photo/e08-emergency-stop-768.webp",
+     "width": 768,
+     "bytes": 45798
+    }
+   ]
+  },
+  {
+   "id": "e09-capabilities",
+   "ref": "E09",
+   "src": "assets/stargo-photo/e09-capabilities-480.webp",
+   "width": 480,
+   "height": 320,
+   "bytes": 16578,
+   "sourceFile": "site-images/batch-7/ent-module-01-capabilities.png",
+   "sourceSha256": "e424b70e2b4518863a2cd6f6a01af45a4ccd335483201779df4a0fbeb49fa8ff",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": []
+  },
+  {
+   "id": "e10-access",
+   "ref": "E10",
+   "src": "assets/stargo-photo/e10-access-480.webp",
+   "width": 480,
+   "height": 270,
+   "bytes": 10432,
+   "sourceFile": "site-images/batch-7/ent-module-02-access.png",
+   "sourceSha256": "1901bd5cd80e91b7c62c766e3146328a096dd302025e02423fb1d3ba7fb237dc",
+   "sourcePixels": [
+    2048,
+    1153
+   ],
+   "upscaled": false,
+   "variants": []
+  },
+  {
+   "id": "e11-approval",
+   "ref": "E11",
+   "src": "assets/stargo-photo/e11-approval-480.webp",
+   "width": 480,
+   "height": 320,
+   "bytes": 9796,
+   "sourceFile": "site-images/batch-7/ent-module-03-approval.png",
+   "sourceSha256": "f76a44f475d008b82c4739d25996b319fee70c25921ac0e26b632eda77eefe24",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": []
+  },
+  {
+   "id": "e12-records",
+   "ref": "E12",
+   "src": "assets/stargo-photo/e12-records-480.webp",
+   "width": 480,
+   "height": 480,
+   "bytes": 24578,
+   "sourceFile": "site-images/batch-7/ent-module-04-records.png",
+   "sourceSha256": "75121a737b774e89416451585b79c9e0416e9859bfb8c1e4a204b192d6985f91",
+   "sourcePixels": [
+    2048,
+    2048
+   ],
+   "upscaled": false,
+   "variants": []
+  },
+  {
+   "id": "e13-key-cabinet",
+   "ref": "E13",
+   "src": "assets/stargo-photo/e13-key-cabinet-480.webp",
+   "width": 480,
+   "height": 480,
+   "bytes": 20012,
+   "sourceFile": "site-images/batch-7/ent-module-05-key-cabinet.png",
+   "sourceSha256": "03cd540552241db085e1b6b3f6d497aa800e347bff7d33091a0ad5db5d052400",
+   "sourcePixels": [
+    2048,
+    2048
+   ],
+   "upscaled": false,
+   "variants": []
+  },
+  {
+   "id": "b01-visual-guide",
+   "ref": "B01",
+   "src": "assets/stargo-photo/b01-visual-guide-1600.webp",
+   "width": 1600,
+   "height": 1066,
+   "bytes": 167608,
+   "sourceFile": "site-images/batch-8/blog-cover-visual-guide.png",
+   "sourceSha256": "43a110f2623d92217b33c6396822c30c7ba6343f9a0a84252873d713418b4e0d",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/b01-visual-guide-480.webp",
+     "width": 480,
+     "bytes": 24980
+    },
+    {
+     "src": "assets/stargo-photo/b01-visual-guide-768.webp",
+     "width": 768,
+     "bytes": 55126
+    },
+    {
+     "src": "assets/stargo-photo/b01-visual-guide-1024.webp",
+     "width": 1024,
+     "bytes": 87632
+    }
+   ]
+  },
+  {
+   "id": "b02-one-workflow",
+   "ref": "B02",
+   "src": "assets/stargo-photo/b02-one-workflow-1600.webp",
+   "width": 1600,
+   "height": 1066,
+   "bytes": 78294,
+   "sourceFile": "site-images/batch-8/blog-cover-one-workflow.png",
+   "sourceSha256": "7db35db234f4437ad1ed8aba92998e168772173e9a1d90fc002ec719dc4508eb",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/b02-one-workflow-480.webp",
+     "width": 480,
+     "bytes": 14100
+    },
+    {
+     "src": "assets/stargo-photo/b02-one-workflow-768.webp",
+     "width": 768,
+     "bytes": 27228
+    },
+    {
+     "src": "assets/stargo-photo/b02-one-workflow-1024.webp",
+     "width": 1024,
+     "bytes": 41194
+    }
+   ]
+  },
+  {
+   "id": "b03-inquiry-to-quote",
+   "ref": "B03",
+   "src": "assets/stargo-photo/b03-inquiry-to-quote-1600.webp",
+   "width": 1600,
+   "height": 1066,
+   "bytes": 185876,
+   "sourceFile": "site-images/batch-8/blog-cover-inquiry-to-quote.png",
+   "sourceSha256": "0a447fc2ed04fd996eb2d04a327a3b0235467f435e873d09d344b24a501222bd",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/b03-inquiry-to-quote-480.webp",
+     "width": 480,
+     "bytes": 11268
+    },
+    {
+     "src": "assets/stargo-photo/b03-inquiry-to-quote-768.webp",
+     "width": 768,
+     "bytes": 38600
+    },
+    {
+     "src": "assets/stargo-photo/b03-inquiry-to-quote-1024.webp",
+     "width": 1024,
+     "bytes": 79620
+    }
+   ]
+  },
+  {
+   "id": "b04-approval-handover",
+   "ref": "B04",
+   "src": "assets/stargo-photo/b04-approval-handover-1600.webp",
+   "width": 1600,
+   "height": 1066,
+   "bytes": 108486,
+   "sourceFile": "site-images/batch-8/blog-cover-approval-handover.png",
+   "sourceSha256": "968b13b173de7a5dcfd6c66a628787d7d25283c78cb3a64beab671022c9f120b",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/b04-approval-handover-480.webp",
+     "width": 480,
+     "bytes": 13358
+    },
+    {
+     "src": "assets/stargo-photo/b04-approval-handover-768.webp",
+     "width": 768,
+     "bytes": 30166
+    },
+    {
+     "src": "assets/stargo-photo/b04-approval-handover-1024.webp",
+     "width": 1024,
+     "bytes": 51678
+    }
+   ]
+  },
+  {
+   "id": "b05-288-relay",
+   "ref": "B05",
+   "src": "assets/stargo-photo/b05-288-relay-1600.webp",
+   "width": 1600,
+   "height": 1066,
+   "bytes": 98208,
+   "sourceFile": "site-images/batch-8/blog-cover-288-relay.png",
+   "sourceSha256": "b44df919528877622025bafd9a53ed11706b16c918ca76a311286de8e0d384ce",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/b05-288-relay-480.webp",
+     "width": 480,
+     "bytes": 14328
+    },
+    {
+     "src": "assets/stargo-photo/b05-288-relay-768.webp",
+     "width": 768,
+     "bytes": 29498
+    },
+    {
+     "src": "assets/stargo-photo/b05-288-relay-1024.webp",
+     "width": 1024,
+     "bytes": 48468
+    }
+   ]
+  },
+  {
+   "id": "b06-browser-os",
+   "ref": "B06",
+   "src": "assets/stargo-photo/b06-browser-os-1600.webp",
+   "width": 1600,
+   "height": 1066,
+   "bytes": 59134,
+   "sourceFile": "site-images/batch-8/blog-cover-browser-os.png",
+   "sourceSha256": "3bdc3cb217af4eacbf2b880c25b25653e9756790eaf9074bd57e7a0e31adb1ee",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/b06-browser-os-480.webp",
+     "width": 480,
+     "bytes": 7154
+    },
+    {
+     "src": "assets/stargo-photo/b06-browser-os-768.webp",
+     "width": 768,
+     "bytes": 15006
+    },
+    {
+     "src": "assets/stargo-photo/b06-browser-os-1024.webp",
+     "width": 1024,
+     "bytes": 23962
+    }
+   ]
+  },
+  {
+   "id": "b07-knowledge-library",
+   "ref": "B07",
+   "src": "assets/stargo-photo/b07-knowledge-library-1600.webp",
+   "width": 1600,
+   "height": 1066,
+   "bytes": 61628,
+   "sourceFile": "site-images/batch-8/blog-cover-knowledge-library.png",
+   "sourceSha256": "fe06fef2c45d36cc1c36da3f30a4c2514326c27da4ff54bdd35fa50271683711",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/b07-knowledge-library-480.webp",
+     "width": 480,
+     "bytes": 10398
+    },
+    {
+     "src": "assets/stargo-photo/b07-knowledge-library-768.webp",
+     "width": 768,
+     "bytes": 20642
+    },
+    {
+     "src": "assets/stargo-photo/b07-knowledge-library-1024.webp",
+     "width": 1024,
+     "bytes": 31770
+    }
+   ]
+  },
+  {
+   "id": "i01-observe-process",
+   "ref": "I01",
+   "src": "assets/stargo-photo/i01-observe-process-2048.webp",
+   "width": 2048,
+   "height": 1365,
+   "bytes": 70138,
+   "sourceFile": "site-images/batch-8/intel-observe-process.png",
+   "sourceSha256": "93da0b1fd5aaa7b9baa495dea0a2fc803a058c11b162819e1b9aa9bbd77f217b",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/i01-observe-process-480.webp",
+     "width": 480,
+     "bytes": 9336
+    },
+    {
+     "src": "assets/stargo-photo/i01-observe-process-768.webp",
+     "width": 768,
+     "bytes": 17696
+    },
+    {
+     "src": "assets/stargo-photo/i01-observe-process-1024.webp",
+     "width": 1024,
+     "bytes": 25620
+    },
+    {
+     "src": "assets/stargo-photo/i01-observe-process-1600.webp",
+     "width": 1600,
+     "bytes": 47886
+    }
+   ]
+  },
+  {
+   "id": "i02-keep-or-revert",
+   "ref": "I02",
+   "src": "assets/stargo-photo/i02-keep-or-revert-768.webp",
+   "width": 768,
+   "height": 768,
+   "bytes": 73796,
+   "sourceFile": "site-images/batch-8/intel-keep-or-revert.png",
+   "sourceSha256": "b6cd0efb735e607417005447a5a3220f276954b332a69ca83e6207dca33b1dfd",
+   "sourcePixels": [
+    2048,
+    2048
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/i02-keep-or-revert-480.webp",
+     "width": 480,
+     "bytes": 30812
+    }
+   ]
+  },
+  {
+   "id": "i03-hand-phone-blank",
+   "ref": "I03",
+   "src": "assets/stargo-photo/i03-hand-phone-blank-768.webp",
+   "width": 768,
+   "height": 1152,
+   "bytes": 32362,
+   "sourceFile": "site-images/batch-8/intel-hand-phone-blank.png",
+   "sourceSha256": "5a1c105ec8211b360edd60109dd63ea85c09fb606956c4b74b1f990c1c316c5c",
+   "sourcePixels": [
+    1365,
+    2048
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/i03-hand-phone-blank-480.webp",
+     "width": 480,
+     "bytes": 14888
+    }
+   ]
+  },
+  {
+   "id": "s03v2-spreadsheet-memory",
+   "ref": "S03v2",
+   "src": "assets/stargo-photo/s03v2-spreadsheet-memory-1600.webp",
+   "width": 1600,
+   "height": 1066,
+   "bytes": 70778,
+   "sourceFile": "site-images/batch-2/home-silo-03-spreadsheet-memory-v2.png",
+   "sourceSha256": "2956e8b23fd725617de01759f116816b7c35bfb1ec89bc99caaba9f99ac8c5a4",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/s03v2-spreadsheet-memory-480.webp",
+     "width": 480,
+     "bytes": 9040
+    },
+    {
+     "src": "assets/stargo-photo/s03v2-spreadsheet-memory-768.webp",
+     "width": 768,
+     "bytes": 19714
+    },
+    {
+     "src": "assets/stargo-photo/s03v2-spreadsheet-memory-1024.webp",
+     "width": 1024,
+     "bytes": 32682
+    }
+   ]
+  },
+  {
+   "id": "r1v2-sales-rep-wide",
+   "ref": "R1v2",
+   "src": "assets/stargo-photo/r1v2-sales-rep-wide-2880.webp",
+   "width": 2880,
+   "height": 1620,
+   "bytes": 174148,
+   "sourceFile": "site-images/batch-4/role-01-sales-rep-wide.png",
+   "sourceSha256": "9771496720df3f56309b09daa60a72996e6cc5d38abe2d6cf07ea0450bbb81c6",
+   "sourcePixels": [
+    2880,
+    1620
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/r1v2-sales-rep-wide-480.webp",
+     "width": 480,
+     "bytes": 11524
+    },
+    {
+     "src": "assets/stargo-photo/r1v2-sales-rep-wide-768.webp",
+     "width": 768,
+     "bytes": 21922
+    },
+    {
+     "src": "assets/stargo-photo/r1v2-sales-rep-wide-1024.webp",
+     "width": 1024,
+     "bytes": 32776
+    },
+    {
+     "src": "assets/stargo-photo/r1v2-sales-rep-wide-1600.webp",
+     "width": 1600,
+     "bytes": 64484
+    },
+    {
+     "src": "assets/stargo-photo/r1v2-sales-rep-wide-2048.webp",
+     "width": 2048,
+     "bytes": 95344
+    }
+   ]
+  },
+  {
+   "id": "c01v2-command-growth",
+   "ref": "C01v2",
+   "src": "assets/stargo-photo/c01v2-command-growth-2048.webp",
+   "width": 2048,
+   "height": 1153,
+   "bytes": 150088,
+   "sourceFile": "site-images/batch-6/cap-pillar-01-command-growth-v2.png",
+   "sourceSha256": "849000a0d832edf3cc4763c11af7f8399fac5bb90d128d8a39bf6c3142ec737c",
+   "sourcePixels": [
+    2048,
+    1153
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/c01v2-command-growth-480.webp",
+     "width": 480,
+     "bytes": 18910
+    },
+    {
+     "src": "assets/stargo-photo/c01v2-command-growth-768.webp",
+     "width": 768,
+     "bytes": 37298
+    },
+    {
+     "src": "assets/stargo-photo/c01v2-command-growth-1024.webp",
+     "width": 1024,
+     "bytes": 57436
+    },
+    {
+     "src": "assets/stargo-photo/c01v2-command-growth-1600.webp",
+     "width": 1600,
+     "bytes": 108636
+    }
+   ]
+  },
+  {
+   "id": "c02v2-customer-knowledge",
+   "ref": "C02v2",
+   "src": "assets/stargo-photo/c02v2-customer-knowledge-2048.webp",
+   "width": 2048,
+   "height": 1365,
+   "bytes": 142854,
+   "sourceFile": "site-images/batch-6/cap-pillar-02-customer-knowledge-v2.png",
+   "sourceSha256": "f315cd05d4287a7837f6b1a4a81e6ed1a50baeb744bfbe9dfff5196f410e993e",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/c02v2-customer-knowledge-480.webp",
+     "width": 480,
+     "bytes": 13904
+    },
+    {
+     "src": "assets/stargo-photo/c02v2-customer-knowledge-768.webp",
+     "width": 768,
+     "bytes": 26346
+    },
+    {
+     "src": "assets/stargo-photo/c02v2-customer-knowledge-1024.webp",
+     "width": 1024,
+     "bytes": 44142
+    },
+    {
+     "src": "assets/stargo-photo/c02v2-customer-knowledge-1600.webp",
+     "width": 1600,
+     "bytes": 95506
+    }
+   ]
+  },
+  {
+   "id": "c04v2-team-management",
+   "ref": "C04v2",
+   "src": "assets/stargo-photo/c04v2-team-management-2048.webp",
+   "width": 2048,
+   "height": 1365,
+   "bytes": 210246,
+   "sourceFile": "site-images/batch-6/cap-pillar-04-team-management-v2.png",
+   "sourceSha256": "45a8fe5ab8a16a259d85c4cf2f89aee0306be5a1dabe39f56091b4f15237eee8",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/c04v2-team-management-480.webp",
+     "width": 480,
+     "bytes": 29340
+    },
+    {
+     "src": "assets/stargo-photo/c04v2-team-management-768.webp",
+     "width": 768,
+     "bytes": 57950
+    },
+    {
+     "src": "assets/stargo-photo/c04v2-team-management-1024.webp",
+     "width": 1024,
+     "bytes": 87168
+    },
+    {
+     "src": "assets/stargo-photo/c04v2-team-management-1600.webp",
+     "width": 1600,
+     "bytes": 153636
+    }
+   ]
+  },
+  {
+   "id": "c11v2-company-research",
+   "ref": "C11v2",
+   "src": "assets/stargo-photo/c11v2-company-research-2880.webp",
+   "width": 2880,
+   "height": 1920,
+   "bytes": 316642,
+   "sourceFile": "site-images/batch-6/cap-bg-01-company-research-2880.png",
+   "sourceSha256": "18b92b96be7229b9916e2a02dad5a32e9832ef7869e03e22e0f57b9a5f5ed7a4",
+   "sourcePixels": [
+    2880,
+    1920
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/c11v2-company-research-480.webp",
+     "width": 480,
+     "bytes": 15434
+    },
+    {
+     "src": "assets/stargo-photo/c11v2-company-research-768.webp",
+     "width": 768,
+     "bytes": 37342
+    },
+    {
+     "src": "assets/stargo-photo/c11v2-company-research-1024.webp",
+     "width": 1024,
+     "bytes": 64652
+    },
+    {
+     "src": "assets/stargo-photo/c11v2-company-research-1600.webp",
+     "width": 1600,
+     "bytes": 133230
+    },
+    {
+     "src": "assets/stargo-photo/c11v2-company-research-2048.webp",
+     "width": 2048,
+     "bytes": 196608
+    }
+   ]
+  },
+  {
+   "id": "b01v2-visual-guide",
+   "ref": "B01v2",
+   "src": "assets/stargo-photo/b01v2-visual-guide-1600.webp",
+   "width": 1600,
+   "height": 1066,
+   "bytes": 164110,
+   "sourceFile": "site-images/batch-8/blog-cover-visual-guide-v2.png",
+   "sourceSha256": "46650118c85af99af15c413655a3f67dc6faafbb2dff1c8746cdcd59f3524578",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/b01v2-visual-guide-480.webp",
+     "width": 480,
+     "bytes": 24994
+    },
+    {
+     "src": "assets/stargo-photo/b01v2-visual-guide-768.webp",
+     "width": 768,
+     "bytes": 54788
+    },
+    {
+     "src": "assets/stargo-photo/b01v2-visual-guide-1024.webp",
+     "width": 1024,
+     "bytes": 87432
+    }
+   ]
+  },
+  {
+   "id": "b04v2-approval-handover",
+   "ref": "B04v2",
+   "src": "assets/stargo-photo/b04v2-approval-handover-1600.webp",
+   "width": 1600,
+   "height": 1066,
+   "bytes": 107556,
+   "sourceFile": "site-images/batch-8/blog-cover-approval-handover-v2.png",
+   "sourceSha256": "17ff20a336b04b922b6372c3ac9c304bc0b6caace5afd600c3c42198e9571caa",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/b04v2-approval-handover-480.webp",
+     "width": 480,
+     "bytes": 13198
+    },
+    {
+     "src": "assets/stargo-photo/b04v2-approval-handover-768.webp",
+     "width": 768,
+     "bytes": 29788
+    },
+    {
+     "src": "assets/stargo-photo/b04v2-approval-handover-1024.webp",
+     "width": 1024,
+     "bytes": 51320
+    }
+   ]
+  },
+  {
+   "id": "b07v2-knowledge-library",
+   "ref": "B07v2",
+   "src": "assets/stargo-photo/b07v2-knowledge-library-1600.webp",
+   "width": 1600,
+   "height": 1066,
+   "bytes": 176574,
+   "sourceFile": "site-images/batch-8/blog-cover-knowledge-library-v2.png",
+   "sourceSha256": "e50e9c8249e1c262dd8046f32a9fad6d806406ebfa9d81910e8c156fdecdadc2",
+   "sourcePixels": [
+    2048,
+    1365
+   ],
+   "upscaled": false,
+   "variants": [
+    {
+     "src": "assets/stargo-photo/b07v2-knowledge-library-480.webp",
+     "width": 480,
+     "bytes": 21292
+    },
+    {
+     "src": "assets/stargo-photo/b07v2-knowledge-library-768.webp",
+     "width": 768,
+     "bytes": 49112
+    },
+    {
+     "src": "assets/stargo-photo/b07v2-knowledge-library-1024.webp",
+     "width": 1024,
+     "bytes": 82894
+    }
+   ]
+  }
+ ]
+}

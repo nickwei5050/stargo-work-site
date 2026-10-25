@@ -129,7 +129,7 @@ export const donor = {
 /** rototo's own alt text on the 24 wheel photographs, as the cut ships it. */
 const ALTS = { 'hero image': 23, office: 1 };
 
-/** The six screenshots the owner approved (handoff of 2026-09-18), registered in
+/** Six product screenshots (real captures with demo data since 2026-10-23), registered in
     tools/imagegen/product-assets.json. LAYOUT indexes this list. Slot list:
     tools/replaceables.mjs GALLERY_TILES. */
 const TILES = GALLERY_TILES;
@@ -254,7 +254,9 @@ export function render(frag, ctx) {
 
      `.ro-gallery .ro-home-header-img` is `aspect-ratio: 16/9; object-fit: cover`
      inside a `width: 14rem` wrapper (css/rototo.ro.css) and all six screenshots
-     are 1268×714 — 1.7759 against the box's 1.7778 — so `cover` scales them to
+     are 16:9 — since 2026-10-23 real captures of 1600×900 and 1170×658 (1.7781),
+     where the generated stills before them were 1268×714 (1.7759) against the
+     box's 1.7778 — so `cover` scales them to
      the tile's width and takes 0.13px off the height, about a fifteenth of a
      pixel top and bottom on the 224px tile. Nothing is cropped in any sense a
      reader could see and no interface loses an edge, so the donor's `cover`

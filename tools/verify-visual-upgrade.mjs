@@ -23,6 +23,10 @@ async function jump(page, selector, offset = 0) {
 for (const lang of ['', 'en/']) for (const width of [390, 768, 1440, 1920]) {
   const name = `${lang ? 'en' : 'zh'}-${width}`;
   const page = await browser.newPage({ viewport: { width, height: width < 992 ? 844 : 900 } });
+  /* The homepage opening (tools/blocks/og-intro.*) takes the first press as a skip; this checks
+     the switcher and the film, so the opening counts as seen. It used to pass without this only
+     because Webflow's start-up froze the page past the opening (speed lane, Z01). */
+  await page.addInitScript(() => { try { sessionStorage.setItem('stargo-intro', '1'); } catch (e) { /* plays */ } });
   const errors = [], badResponses = [];
   page.on('pageerror', e => errors.push(e.message));
   page.on('response', r => { if (r.status() >= 400) badResponses.push(`${r.status()} ${r.url()}`); });

@@ -17,27 +17,44 @@
  * Without IntersectionObserver every video is restored immediately, which is
  * the behaviour the template itself has.
  *
+ * Since 2026-10-21 that band's 27 cards show the owner's still photographs
+ * (tools/replaceables.mjs RING_STILLS), so it fetches no clip at all; the
+ * other donor clips on the site still come through here.
+ *
  * Since 2026-10-21 every page's template clips go through this (tools/chrome.mjs
  * writes the markup), with two refinements:
  *   - A reader who asks for reduced motion gets the poster frames and no
  *     download, the same stillness the Webflow runtime gives the clips it
  *     starts itself. Should the preference change, the clips in view start.
- *   - The orb in the side-menu contact card sits under the page while the
- *     menu is closed, where an observer would count it as visible. It loads
- *     when the menu is about to open: the pointer reaching the menu icon,
- *     the icon taking focus, or the menu losing `inert`.
+ *   - A clip in the side menu sits under the page while the menu is closed,
+ *     where an observer would count it as visible. It loads when the menu is
+ *     about to open: the pointer reaching the menu icon, the icon taking
+ *     focus, or the menu losing `inert`. That was the orb in the menu's
+ *     contact card; since 2026-10-21 the card shows a still photograph
+ *     (tools/chrome.mjs), so no page has a clip in its menu today and this
+ *     branch attaches nothing. It stays so a clip put back there still waits
+ *     for the menu instead of loading with the page.
  */
 (function () {
   var vids = document.querySelectorAll('video[data-defer]');
   if (!vids.length) return;
   var reduced = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
+  /* A clip whose sources carry data-mobile-src has a phone-sized copy
+     (tools/speed.mjs item 6: the homepage's approval demo). Below 768px that
+     copy is loaded instead; from 768px up the source is the same as ever.
+     Under Save-Data such a clip is not fetched at all and its poster stands,
+     as it does for reduced motion. */
+  var phone = window.matchMedia ? window.matchMedia('(max-width: 767px)').matches : false;
+  var saveData = !!(navigator.connection && navigator.connection.saveData);
 
   function load(v) {
     if (v.dataset.deferDone || reduced.matches) return;
+    var small = v.querySelector('source[data-mobile-src]');
+    if (small && saveData) { v.dataset.deferDone = 'save-data'; return; }
     v.dataset.deferDone = '1';
     var sources = v.querySelectorAll('source[data-src]');
     for (var i = 0; i < sources.length; i++) {
-      sources[i].setAttribute('src', sources[i].getAttribute('data-src'));
+      sources[i].setAttribute('src', (phone && sources[i].getAttribute('data-mobile-src')) || sources[i].getAttribute('data-src'));
       sources[i].removeAttribute('data-src');
     }
     v.load();
@@ -94,4 +111,31 @@
   function watch() { for (var j = 0; j < onPage.length; j++) if (!onPage[j].dataset.deferDone) { io.unobserve(onPage[j]); io.observe(onPage[j]); } }
   watch();
   if (reduced.addEventListener) reduced.addEventListener('change', function () { if (!reduced.matches) watch(); });
+})();
+
+/* The brand film's poster (speed lane, Z14). A <video preload="none"> still
+   fetches its poster with the page, 145 KB ahead of the first screen's own
+   pictures for a film far down the homepage. tools/speed.mjs ships it as
+   data-poster; it goes back two screens before the film comes into view, or at
+   once without IntersectionObserver. */
+(function () {
+  var vids = document.querySelectorAll('video[data-poster]');
+  if (!vids.length) return;
+  function show(v) {
+    if (!v.getAttribute('data-poster')) return;
+    v.setAttribute('poster', v.getAttribute('data-poster'));
+    v.removeAttribute('data-poster');
+  }
+  if (!('IntersectionObserver' in window)) { for (var i = 0; i < vids.length; i++) show(vids[i]); return; }
+  // The film's section is watched, not the clip: the clip sits in a sticky,
+  // clipped box that an observer would not count until it is on screen.
+  var io = new IntersectionObserver(function (entries) {
+    for (var i = 0; i < entries.length; i++) {
+      if (!entries[i].isIntersecting) continue;
+      var t = entries[i].target;
+      io.unobserve(t);
+      for (var k = 0; k < vids.length; k++) if (t === vids[k] || t.contains(vids[k])) show(vids[k]);
+    }
+  }, { rootMargin: '200% 0px' });
+  for (var j = 0; j < vids.length; j++) io.observe(vids[j].closest('section') || vids[j]);
 })();

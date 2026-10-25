@@ -39,14 +39,14 @@
   --tokens--text-tertiary: #333;
   --_spacings---tokens--space-xs: 8px;
   --_spacings---tokens--space-sm: 16px;
-  --tokens--primary: #33321c;
+  --tokens--primary: #2f2c4b;
   --_spacings---core--section-space: var(--_spacings---tokens--space-lg);
   --tokens--seondary-hover: transparent;
   --_typrography---font-weight--fontweightlight: 300;
   --_typrography---fonts--logo-font: "Oswald Variable", Arial, sans-serif;
   --_typrography---font-weight--fontweightblack: 900;
   --tokens--overlays: #0006;
-  --tokens--accent: #fffa8d;
+  --tokens--accent: #f3f3ff;
   --tokens--border: #ccc;
   --tokens--surface-alt: white;
   --_spacings---radius--radius-full-circle: 300px;

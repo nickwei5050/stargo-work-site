@@ -139,7 +139,7 @@ try {
             form: box(form).width,
             card: box(form.closest('.cn-contact-form-wrapper')),
             photo: box(document.querySelector('.testimonials-card')),
-            fields: [...form.querySelectorAll('input:not([type=submit]):not([name=website]), select, textarea')].map((e) => ({ name: e.name, width: box(e).width })),
+            fields: [...form.querySelectorAll('input:not([type=submit]):not([type=hidden]):not([name=website]), select, textarea')].map((e) => ({ name: e.name, width: box(e).width })),
           };
         });
         assert.equal(m.fields.length, 10, 'ten fields');
@@ -150,7 +150,7 @@ try {
         } else {
           assert(m.fields.every((r) => r.width >= 200), JSON.stringify(m.fields));
         }
-        assert.equal(await p.locator('form[data-stargo-form="contact"] a[href="privacy.html"]').count(), 1);
+        assert.equal(await p.locator('form[data-stargo-form="contact"] a[href$="/privacy"]').count(), 1);
       });
       await p.locator('form[data-stargo-form="contact"]').scrollIntoViewIfNeeded(); await p.waitForTimeout(300);
       await p.screenshot({ path: `${OUT}/${lang ? 'en' : 'zh'}-contact-${width}.png` });

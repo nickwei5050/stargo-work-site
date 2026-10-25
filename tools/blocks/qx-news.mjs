@@ -28,6 +28,9 @@
  */
 import { setText, capability } from '../block-lib.mjs';
 import { SALES_ROWS } from '../replaceables.mjs';
+import { hostFromImg } from '../motion-capsales.mjs';
+import { CAP_REAL } from '../replaceables.mjs';
+import { realFromImg, CAP_REAL_SIZES } from '../real-capabilities.mjs';
 
 /** The story this block carries: CAPABILITY_SHOWCASE.stories[1]. */
 const STORY = 1;
@@ -56,8 +59,26 @@ const PICKS = ['Unified Inbox', 'Buyer Requirement Extraction', 'Account Overvie
  * reply under it. An entry may therefore be an editorial id or a path written
  * out; `pic` below resolves both, and tools/editorial-images.mjs gives either
  * kind its alt, its size and its variants.
+ *
+ * Rows 01 and 03 are the owner's photographs since 2026-10-21 (C05, a stack of
+ * printed inquiries settled into one letter tray; C06, one customer's file laid
+ * out on a table), where the editorial art was; row 02 keeps its screen.
  */
 const ROW_ART = SALES_ROWS;
+/* Since 2026-10-23 rows 01 and 03 are code-drawn scenes in place of C05 and C06 (tools/motion-capsales.mjs,
+   js/stargo-motion-sales.js): the inbox sorting messages from four channels, and Müller Energie's account
+   view filling in. Row 02 keeps the owner's real Sales Desk screen. The phone aspect rules for the C05/C06
+   photographs in css/stargo-fusion.css match nothing while a row is drawn in code (the scene hosts carry the
+   same shapes in css/stargo-motion-sales.css); they are left in place so that setting a row back to null
+   restores its photograph exactly, and so that this lane does not re-hash stargo-fusion.css on every page. */
+const ROW_MOTION = ['inbox', null, 'account'];
+/* Since 2026-10-24 rows 01 and 03 show the system's own screens again (the owner, 17:27 UTC: 「你现在也全是代码了，
+   我系统的画面都没有了！我需要真实系统截图放在特定的地方」): the inquiry column of a Sales Desk case and the phone's
+   customer 360, cut from the owner's captures (tools/replaceables.mjs CAP_REAL, tools/real-capabilities.mjs), with
+   the 真实界面 · 演示数据 tag. A row's real screen comes before its scene; set its CAP_REAL entry to null and the
+   scene plays again. Like the scene hosts, the slot takes the <img>'s class and inline IX2 transform and keeps
+   still on hover (css/stargo-real-capabilities.css): qubix's 1.1 zoom would push the tag out of the box. */
+const ROW_REAL = [CAP_REAL.inbox, null, CAP_REAL.account];
 /** An editorial id (assets/stargo-editorial) or a path exactly as written. */
 const pic = (v, art) => (v.startsWith('assets/') ? v : art(v));
 
@@ -186,6 +207,16 @@ export function render(frag, ctx) {
     if (!row.includes('alt=""')) throw new Error(`qx-news: row ${i + 1} lost its image alt attribute`);
     const PHOTO = /<img src="assets\/qubix\/[^"]+"/;
     if (!PHOTO.test(row)) throw new Error(`qx-news: row ${i + 1} lost its qubix photograph`);
+    if (ROW_REAL[i]) {
+      /* the real screen takes the <img>'s place, its class and its inline IX2 transform */
+      const IMG = /<img src="assets\/qubix\/[^"]+"[^>]*>/;
+      return row.replace(IMG, (tag) => realFromImg(tag, ROW_REAL[i], lang, `sg-real-${ROW_MOTION[i]}`, CAP_REAL_SIZES.row));
+    }
+    if (ROW_MOTION[i]) {
+      /* the scene's host takes the <img>'s place, its class and its inline IX2 transform */
+      const IMG = /<img src="assets\/qubix\/[^"]+"[^>]*>/;
+      return row.replace(IMG, (tag) => hostFromImg(tag, ROW_MOTION[i], lang, `sg-mo-${ROW_MOTION[i]}`));
+    }
     row = row.replace(PHOTO, `<img src="${pic(ROW_ART[i], art)}"`);
     return row.replace('alt=""', `alt="${escapeHtml(t(words.text))}"`);
   });

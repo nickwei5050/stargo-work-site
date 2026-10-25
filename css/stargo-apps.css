@@ -1,0 +1,152 @@
+/* 应用套件 — the capability page's app band (#apps, tools/app-suite.mjs, js/stargo-apps.js).
+   Self-contained, prefix sg-apps. Black like the foundations above it and the catalogue
+   below it, on the same column: 1280 px inside 40 px from 992, 703 inside 32 to 991,
+   492 inside 24 to 767, the full width inside 16 below 480 (css/stargo-fusion.css, #atlas). */
+.sg-apps { position: relative; z-index: 1; background: #000; color: #fff; padding: 96px 40px 0; font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; font-weight: 400; -webkit-font-smoothing: antialiased; }
+.sg-apps *, .sg-apps *::before, .sg-apps *::after { box-sizing: border-box; }
+.sg-apps-inner { max-width: 1280px; margin: 0 auto; }
+.sg-apps p, .sg-apps h2, .sg-apps h3, .sg-apps ul { margin: 0; }
+/* the template's type for every paragraph (Mono: p { opacity: .7; letter-spacing: -.5px; font-weight: 500 })
+   stays out; :where keeps this at one class, so the band's own rules below still win */
+.sg-apps :where(p) { opacity: 1; letter-spacing: normal; font-weight: 400; }
+/* the template dims every list item (Mono: li { opacity: .7 }) */
+.sg-apps .sg-apps-cell { opacity: 1; margin: 0; padding: 0; list-style: none; min-width: 0; }
+.sg-apps-vh { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* ---- head: the title on the left, what the icons are (and are not) on the right ---- */
+.sg-apps-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 470px); align-items: end; gap: 24px 64px; padding-bottom: 56px; }
+.sg-apps-eyebrow { font-size: 13px; line-height: 18px; font-weight: 500; letter-spacing: .02em; color: rgba(255, 255, 255, .5); margin-bottom: 20px !important; }
+.sg-apps-title { font-size: clamp(38px, 4.1vw, 60px); line-height: 1.05; font-weight: 500; letter-spacing: -.035em; color: #fff; text-wrap: balance; }
+html[lang^="zh"] .sg-apps-title { letter-spacing: -.02em; word-break: keep-all; }
+.sg-apps-note { font-size: 15px; line-height: 24px; font-weight: 400; color: rgba(255, 255, 255, .56); text-wrap: pretty; padding-bottom: 4px; }
+
+/* ---- a category: a hairline, the name and count in the icons' own colour, then its icons ---- */
+.sg-apps-row { position: relative; display: grid; grid-template-columns: 336px minmax(0, 1fr); gap: 0 48px; padding: 34px 0 36px; }
+.sg-apps-row::before, .sg-apps-row:last-child::after { content: ""; position: absolute; left: 0; right: 0; height: 1px; background: rgba(255, 255, 255, .14); transform-origin: 0 50%; transition: transform 1.2s cubic-bezier(.22, 1, .36, 1); }
+.sg-apps-row::before { top: 0; }
+.sg-apps-row:last-child::after { bottom: 0; }
+
+/* the index hangs in its own column beside the name */
+.sg-apps-side { position: relative; display: grid; grid-template-columns: 40px minmax(0, 1fr); align-content: start; }
+.sg-apps-side > * { grid-column: 2; }
+.sg-apps-idx { grid-column: 1 !important; grid-row: 1; padding-top: 7px; font-size: 12px; line-height: 16px; letter-spacing: .08em; color: rgba(255, 255, 255, .46); font-variant-numeric: tabular-nums; }
+.sg-apps-cat { grid-row: 1; font-size: 22px; line-height: 28px; font-weight: 500; letter-spacing: -.3px; color: #fff; }
+.sg-apps-count { margin-top: 6px !important; font-size: 14px; line-height: 20px; color: rgba(255, 255, 255, .5); white-space: nowrap; }
+.sg-apps-n { display: inline-block; min-width: .62em; color: rgb(var(--c-rgb)); font-variant-numeric: tabular-nums; font-weight: 500; }
+.sg-apps-bar { display: inline-block; vertical-align: middle; position: relative; top: -1px; width: 28px; height: 2px; margin-left: 14px; border-radius: 2px; background: rgb(var(--c-rgb)); transform-origin: 0 50%; transition: transform .9s cubic-bezier(.22, 1, .36, 1) .2s, width .5s cubic-bezier(.22, 1, .36, 1); }
+.sg-apps-row.is-hot .sg-apps-bar { width: 52px; transition-delay: 0s; }
+
+/* the category's line and an app's role share one cell three lines tall, so the row never changes height */
+.sg-apps-say { display: grid; margin-top: 16px; min-height: 66px; }
+.sg-apps-say > * { grid-area: 1 / 1; }
+.sg-apps-desc { font-size: 14px; line-height: 22px; color: rgba(255, 255, 255, .54); text-wrap: pretty; transition: opacity .35s ease, transform .45s cubic-bezier(.22, 1, .36, 1); }
+.sg-apps-role { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; font-size: 14px; line-height: 22px; color: rgba(255, 255, 255, .68); text-wrap: pretty; opacity: 0; transform: translateY(6px); pointer-events: none; transition: opacity .3s ease, transform .45s cubic-bezier(.22, 1, .36, 1); }
+.sg-apps-role-name { font-weight: 500; color: #fff; margin-right: .2em; }
+.sg-apps-role-go { color: rgb(var(--c-rgb)); white-space: nowrap; margin-left: .2em; }
+.sg-apps-role-go::before { content: "\2192\00a0"; }
+/* Chinese lines break between phrases (the roles are written in short clauses), and both languages balance */
+.sg-apps-role { text-wrap: balance; }
+html[lang^="zh"] .sg-apps-role, html[lang^="zh"] .sg-apps-desc { word-break: keep-all; overflow-wrap: anywhere; }
+.sg-apps-row.is-hot .sg-apps-desc { opacity: 0; transform: translateY(-6px); }
+.sg-apps-row.is-hot .sg-apps-role { opacity: 1; transform: none; }
+
+/* ---- the icons: seven columns, so every category's icons sit on one grid ---- */
+.sg-apps-grid { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 26px 8px; align-self: start; }
+.sg-apps-tile { display: flex; flex-direction: column; align-items: center; gap: 13px; padding: 6px 2px 4px; color: rgba(255, 255, 255, .76); text-decoration: none; border-radius: 14px; -webkit-tap-highlight-color: transparent; transition: opacity .35s ease, color .25s ease; }
+.sg-apps-tile:focus { outline: none; }
+/* keyboard focus: the site's own ring (css/stargo-fusion.css), a little off the label */
+.sg-apps-tile:focus-visible { outline: 2px solid #9b8eff; outline-offset: 4px; }
+.sg-apps-ico { position: relative; z-index: 0; display: block; width: 64px; height: 64px; transition: transform .5s cubic-bezier(.22, 1, .36, 1); }
+.sg-apps-ico img { position: relative; display: block; width: 100%; height: 100%; border-radius: 15px; filter: drop-shadow(0 12px 16px rgba(0, 0, 0, .6)); outline: 1px solid transparent; outline-offset: 3px; transition: outline-color .3s ease; }
+/* a light in the category's colour behind the icon, and its pool on the floor */
+.sg-apps-ico::before { content: ""; position: absolute; z-index: -1; inset: -18px; border-radius: 50%; background: radial-gradient(closest-side, rgba(var(--c-rgb), .34), rgba(var(--c-rgb), .08) 55%, transparent 76%); opacity: 0; transition: opacity .45s ease; }
+.sg-apps-ico::after { content: ""; position: absolute; z-index: -1; left: 14%; right: 14%; bottom: -13px; height: 10px; border-radius: 50%; background: radial-gradient(closest-side, rgba(var(--c-rgb), .55), transparent); opacity: 0; transform: scaleX(.6); transition: opacity .45s ease, transform .5s cubic-bezier(.22, 1, .36, 1); }
+.sg-apps-name { display: block; max-width: 100%; font-size: 13.5px; line-height: 18px; text-align: center; overflow-wrap: anywhere; }
+html[lang^="zh"] .sg-apps-name { word-break: keep-all; }
+.sg-apps-short { display: none; }
+
+.sg-apps-tile.is-on { color: #fff; }
+.sg-apps-tile.is-on .sg-apps-ico { transform: translateY(-7px) scale(1.06); }
+.sg-apps-tile.is-on .sg-apps-ico::before { opacity: 1; }
+.sg-apps-tile.is-on .sg-apps-ico::after { opacity: 1; transform: scaleX(1) translateY(7px); }
+.sg-apps-tile.is-on:not(:focus-visible) .sg-apps-ico img { outline-color: rgba(var(--c-rgb), .55); }
+.sg-apps-row.is-hot .sg-apps-tile:not(.is-on) { opacity: .45; }
+
+/* ---- assemble (js/stargo-apps.js): rows waiting below the fold ---- */
+.sg-apps.is-armed .sg-apps-row:not(.is-in)::before,
+.sg-apps.is-armed .sg-apps-row:not(.is-in):last-child::after { transform: scaleX(0); }
+.sg-apps.is-armed .sg-apps-row:not(.is-in) .sg-apps-bar { transform: scaleX(0); }
+.sg-apps.is-armed .sg-apps-row:not(.is-in) .sg-apps-cell { opacity: 0; }
+.sg-apps.is-armed .sg-apps-side > * { transition: opacity .7s ease, transform .9s cubic-bezier(.22, 1, .36, 1); }
+.sg-apps.is-armed .sg-apps-side > .sg-apps-cat { transition-delay: .05s; }
+.sg-apps.is-armed .sg-apps-side > .sg-apps-count { transition-delay: .12s; }
+.sg-apps.is-armed .sg-apps-side > .sg-apps-say { transition-delay: .2s; }
+.sg-apps.is-armed .sg-apps-row:not(.is-in) .sg-apps-side > * { opacity: 0; transform: translateY(12px); }
+
+@media (max-width: 1199px) {
+  .sg-apps-row { grid-template-columns: 300px minmax(0, 1fr); column-gap: 28px; }
+  .sg-apps-side { grid-template-columns: 30px minmax(0, 1fr); }
+  .sg-apps-name { font-size: 13px; }
+  /* a column is ~85 px here: the two long English names take their short form */
+  .sg-apps-full { display: none; }
+  .sg-apps-short { display: inline; }
+}
+/* ---- 768–991: the category above its icons ---- */
+@media (max-width: 991px) {
+  .sg-apps { padding: 96px 32px 0; }
+  .sg-apps-inner { max-width: 703px; }
+  .sg-apps-head { grid-template-columns: 1fr; gap: 20px; padding-bottom: 44px; }
+  .sg-apps-row { grid-template-columns: 1fr; gap: 22px; padding: 28px 0 32px; }
+  .sg-apps-side { grid-template-columns: 34px minmax(0, 1fr) auto; align-items: baseline; }
+  .sg-apps-idx { padding-top: 0; }
+  .sg-apps-cat { grid-column: 2; }
+  .sg-apps-count { grid-column: 3 !important; grid-row: 1; margin: 0 !important; }
+  .sg-apps-say { grid-column: 2 / -1 !important; margin-top: 6px; min-height: 0; }
+  /* no role swap here: the words sit above the icons, and a longer line would push them down */
+  .sg-apps-role { display: none; }
+  .sg-apps-row.is-hot .sg-apps-desc { opacity: 1; transform: none; }
+  .sg-apps-ico { width: 56px; height: 56px; }
+  .sg-apps-ico img { border-radius: 13px; }
+}
+/* ---- phones: five columns, 48 px icons, short labels ---- */
+@media (max-width: 767px) {
+  .sg-apps { padding: 80px 24px 0; }
+  .sg-apps-inner { max-width: 492px; }
+  .sg-apps-head { padding-bottom: 36px; gap: 16px; }
+  .sg-apps-eyebrow { margin-bottom: 14px !important; }
+  .sg-apps-title { font-size: 34px; }
+  .sg-apps-note { font-size: 14px; line-height: 22px; }
+  .sg-apps-row { gap: 18px; padding: 22px 0 26px; }
+  .sg-apps-side { grid-template-columns: 28px minmax(0, 1fr) auto; }
+  .sg-apps-cat { font-size: 19px; line-height: 26px; }
+  .sg-apps-count { font-size: 13px; }
+  .sg-apps-bar { width: 20px; margin-left: 10px; }
+  .sg-apps-desc { font-size: 13.5px; line-height: 21px; }
+  /* the grid borrows 6 px of each gutter, so a long English word (Connections, Knowledge) fits a column at 360 */
+  .sg-apps-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 18px 0; }
+  .sg-apps .sg-apps-grid { margin: 0 -6px; }
+  /* an English word never breaks: the one word wider than a 360 px phone's column (Connections) runs 3 px over, beside a short neighbour */
+  html[lang^="en"] .sg-apps-name { overflow-wrap: normal; max-width: calc(100% - 6px); text-wrap: balance; }
+  .sg-apps-tile { gap: 9px; padding: 2px 0; border-radius: 10px; }
+  .sg-apps-tile:focus-visible { outline-offset: 2px; }
+  .sg-apps-ico { width: 48px; height: 48px; }
+  .sg-apps-ico img { border-radius: 11px; filter: drop-shadow(0 8px 12px rgba(0, 0, 0, .6)); }
+  .sg-apps-name { font-size: 12px; line-height: 15px; }
+  .sg-apps-full { display: none; }
+  .sg-apps-short { display: inline; }
+  .sg-apps-tile.is-on .sg-apps-ico { transform: translateY(-4px); }
+}
+@media (max-width: 479px) {
+  .sg-apps { padding: 72px 16px 0; }
+  .sg-apps-inner { max-width: none; }
+  .sg-apps-title { font-size: 31px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sg-apps-row::before, .sg-apps-row:last-child::after, .sg-apps-bar, .sg-apps-ico, .sg-apps-desc, .sg-apps-role, .sg-apps-ico::after { transition: none; }
+  .sg-apps-tile.is-on .sg-apps-ico { transform: none; }
+  .sg-apps-tile.is-on .sg-apps-ico::after { transform: scaleX(1); }
+  .sg-apps-row.is-hot .sg-apps-desc, .sg-apps-role { transform: none; }
+}
+@media print {
+  .sg-apps .sg-apps-row .sg-apps-cell, .sg-apps .sg-apps-side > * { opacity: 1 !important; transform: none !important; }
+}
