@@ -315,7 +315,14 @@
         low: { w: [[48, 46, 380, 156], [344, 70, 360, 138], [276, 398, 370, 156], [566, 420, 364, 150]], off: [[14, 5], [-14, -5], [14, -5], [-14, 5]], metric: [48, 566], card: [180, 400, 600, 176] },
         square: { w: [[24, 52, 330, 168], [262, 80, 330, 158], [152, 410, 316, 168], [410, 436, 326, 160]], off: [[12, 5], [-12, -5], [12, -5], [-12, 5]], metric: [24, 598], card: [110, 414, 540, 196] },
         tall: { w: [[16, 48, 300, 140], [204, 64, 300, 128], [16, 436, 300, 140], [204, 448, 300, 154]], off: [[10, 4], [-10, -4], [10, -4], [-10, 4]], metric: null, card: [30, 434, 460, 168] },
-        phone: { w: [[8, 0, 220, 29], [116, 3, 220, 29], [8, 4, 220, 30], [116, 16, 220, 30]], off: [[6, 1], [-6, -1], [6, -1], [-6, 1]], metric: null, card: [8, 0, 328, 48] }
+        // phone, QA round 5 (2026-10-24, 390 × 844): the pairs sat side by side 112px over each other on one
+        // line, so the chip in front hid the middle of the words behind it (「报价 USD 1|28」, 「Blue|tooth」).
+        // The band is ~30px tall between the tag and a title of up to three lines, too little to fan the pair
+        // apart, so each pair is now a small pile: the two windows lie one on the other, the one behind 8px to
+        // the right and 4px up, so only its rim shows (inside its 10px padding: no letter of it is visible), and
+        // the ORDER swap brings one whole window to the front at a time. The chips are opaque on a phone
+        // (css/stargo-motion-pain.css), so nothing ghosts through.
+        phone: { w: [[12, 2, 220, 29], [20, -2, 220, 29], [12, 6, 220, 30], [20, 2, 220, 30]], off: [[3, 1], [-3, -1], [3, -1], [-3, 1]], metric: null, card: [8, 0, 328, 48] }
       }[n];
       WIN.forEach(function (d, i) {
         var e, r = G.w[i];
@@ -364,20 +371,27 @@
         var k = u < S0 ? -1 : Math.min(ORDER.length - 1, Math.floor((u - S0) / SP));
         var f = k < 0 ? -1 : ORDER[k];
         var fx = ease.io(seg(u, FIX, FIX + 0.6));
-        for (var i = 0; i < 4; i++) {
-          var w = X.w[i], a = ease.out(seg(u, 0.1 + 0.18 * i, 0.55 + 0.18 * i));
-          // z: the most recent focus wins; the nudge eases in when focused and back out when another takes over
-          var z = i, p = 0;
+        // z: the most recent focus wins; the nudge eases in when focused and back out when another takes over
+        var Z = [], PN = [];
+        for (var i0 = 0; i0 < 4; i0++) {
+          var z0 = i0, p0 = 0;
           for (var j = 0; j <= k; j++) {
             var tj = S0 + j * SP;
-            if (ORDER[j] === i) { z = 10 + j; p = ease.out(seg(u, tj, tj + 0.4)); }
-            else if (p > 0 && z === 10 + j - 1) p = 1 - ease.out(seg(u, tj, tj + 0.4));
+            if (ORDER[j] === i0) { z0 = 10 + j; p0 = ease.out(seg(u, tj, tj + 0.4)); }
+            else if (p0 > 0 && z0 === 10 + j - 1) p0 = 1 - ease.out(seg(u, tj, tj + 0.4));
           }
+          Z.push(z0); PN.push(p0);
+        }
+        for (var i = 0; i < 4; i++) {
+          var w = X.w[i], a = ease.out(seg(u, 0.1 + 0.18 * i, 0.55 + 0.18 * i));
+          var z = Z[i], p = PN[i];
           put(w.e, '-z-index', String(z));
           cl(w.e, 'is-focus', i === f && u < FIX);
           var dx = w.off[0] * p, dy = w.off[1] * p + (1 - a) * 12, s = 1, o = a;
           if (fx > 0) {
-            if (i < 2) { o = a * (1 - 0.78 * fx); s = 1 - 0.04 * fx; dy -= 10 * fx; }
+            // on a phone the two top chips lie one on the other: the one behind goes out completely, so it
+            // never shows through the dimmed one in front
+            if (i < 2) { o = a * (1 - (ph && z < Z[1 - i] ? 1 : 0.78) * fx); s = 1 - 0.04 * fx; dy -= 10 * fx; }
             else { dx += (cx - (w.x + w.cw / 2)) * fx; dy += (cy - (w.y + w.chh / 2)) * fx; s = 1 - 0.45 * fx; o = a * (1 - fx); }
           }
           op(w.e, o);

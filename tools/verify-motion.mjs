@@ -10,7 +10,9 @@
  *       (a scene's designed pause) is a warning, not a failure;
  *   (b) its stage fits inside the host (a host that fits to the screen,
  *       data-sg-fit="viewport", inside the screen: the page grows that host
- *       over a screen-sized picture, so its tag is judged once it covers the screen);
+ *       over a screen-sized picture: while it grows its tag may be hidden but, if
+ *       shown, must sit whole inside the window, and once it covers the screen
+ *       the tag is judged as on any host);
  *   (c) its 动态示意 / 演示数据 tag is there, opaque and not clipped (on the
  *       homepage doors, by either half).
  *
@@ -175,7 +177,12 @@ const KIT = `window.__vm = (() => {
     if (tag) {
       const tr = R(tag.getBoundingClientRect());
       o.tag = { t: tag.textContent.trim().slice(0, 40), op: +opacity(tag, h).toFixed(2), px: +px(tag).toFixed(1), inHost: inside(tr, shown, 1.5), inScreen: inside(tr, vp(), 1.5), cut: !inside(tr, clipOf(tag, true), 1.5) };
-      if (o.fit === 'viewport' && o.covers < 0.95) { o.tag.inHost = true; o.tag.cut = false; o.tag.growing = true; }   // still growing over it
+      // A screen-fitted host still growing over its picture (covers < .95) may hide its tag, since the window can be
+      // smaller than the pill, but a tag that shows must already sit whole inside the window. Until 2026-10-24 a
+      // growing host's tag was not judged at all; QA round 5 then found the homepage band's pill outside the window
+      // and then half inside it while the band opened, and the band now keeps it inside or hidden (js/stargo-motion.js,
+      // the runner's view() hook). Once the window covers the screen, the tag is judged as on any host.
+      if (o.fit === 'viewport' && o.covers < 0.95) { o.tag.growing = true; o.tag.hidden = o.tag.op < 0.05; }
     } else o.tag = null;
     // warnings: smallest type on show, and text that a box cuts
     const small = [], cut = [], done = new Set();
@@ -260,7 +267,7 @@ for (const v of VIEWPORTS) {
         if (RM && (m.mut > 2 || m.clock > 0)) why.push(`ticks under reduced motion (clock +${m.clock} s, ${m.mut} changes)`);
         if (Math.max(...m.stageOut) > 2) why.push(`stage outside its host by ${m.stageOut.join('/')} px (l/t/r/b), scale ${m.scale}`);
         if (!m.tag) why.push('no 动态示意 / 演示数据 tag');
-        else if (m.tag.op < 0.3 || !m.tag.inHost || m.tag.cut || (m.fit === 'viewport' && !m.tag.inScreen)) {
+        else if (!(m.tag.growing && m.tag.hidden) && (m.tag.op < 0.3 || !m.tag.inHost || m.tag.cut || (m.fit === 'viewport' && !m.tag.inScreen))) {
           if (await page.evaluate((i) => window.__vm.twinTag(i), i)) row.tagViaTwin = true;
           else why.push(`tag not visible (${JSON.stringify(m.tag)})`);
         }

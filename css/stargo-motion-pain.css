@@ -169,6 +169,9 @@
 .sg-pn-pwin-v { min-width: 0; overflow: hidden; text-overflow: ellipsis; font-size: 12.5px; color: var(--sgb-text); }
 .sg-pn-pwin.is-focus { border-color: var(--sgb-glass-edge); box-shadow: 0 14px 30px -14px rgba(10, 4, 40, .95); }
 .sg-pn-pwin:not(.is-focus) > * { opacity: .8; }
+/* homefix lane, QA round 5: on a phone the two windows of a pair lie one on the other (js/stargo-motion-pain.js,
+   Chats G.phone), so the glass gets a solid ink base: the window behind never ghosts through the one in front */
+.sg-pain-chats.is-phone .sg-pn-pwin { background-color: var(--sgb-ink); }
 
 .sg-pn-cust { display: flex; flex-direction: column; gap: 14px; padding: 18px 22px; }
 .sg-pn-cust-h { display: flex; align-items: center; gap: 12px; }

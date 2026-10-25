@@ -38,11 +38,23 @@
   function NightScene() {
     var P = 18;
     var layouts = { box: { w: 1200, h: 900 }, std: { w: 1440, h: 900 }, wide: { w: 1600, h: 900 }, ultra: { w: 2000, h: 900 } };
+    /* Each buyer's line leaves the port along `a` and comes into the pin along −`b` (k: how far the bends reach,
+       as a share of the line's length). Until 2026-10-24 every line left straight up and came in from the lower
+       left, whichever side the name sat on, so Müller's bright line ran through Ahmed's two lines and ended over
+       its own 「…48V 100Ah」, and PT Surya's ended over 「…补货周期到了」 (QA round 5 #12, 1440 zh). Now the names
+       stand in two columns either side of the port's column, Nordwerk over Ahmed to its west and Müller over
+       PT Surya to its east, each name on the side its line does not come from: the lines rise up the middle
+       between the columns and turn out to their pins from below, so no line passes through a name. Every name
+       also stays east of the doors' seam (W / 2, + 16px): each door draws its own half of the stage, and a name
+       across the seam would split in two as they open (as en 'Qinzhou port' once did, see R.port below).
+       Checked in all four layouts with the widest strings (en, and the 0.8 fit of 1280 × 720 that sets the type
+       bigger in stage px): a line ends 18px from its own buyer's name and keeps ≥ 36px from every other name
+       and ≥ 24px from every other pin. */
     var BUY = [
-      { n: 'Müller Energie GmbH', c: T('德国 · 汉堡', 'Hamburg, Germany'), x: 0.83, y: 0.19, side: -1 },
-      { n: 'Ahmed Al-Rashid', c: T('阿联酋 · 询价 72V × 50 台', 'UAE · asks about 72V × 50'), x: 0.665, y: 0.33, side: 1 },
-      { n: 'PT Surya Energi', c: T('印度尼西亚 · 补货周期到了', 'Indonesia · due to restock'), x: 0.905, y: 0.46, side: -1 },
-      { n: 'Nordwerk Energie GmbH', c: T('德国 · 匹配度 94', 'Germany · fit 94'), x: 0.6, y: 0.13, side: 1 }
+      { n: 'Müller Energie GmbH', c: T('德国 · 汉堡', 'Hamburg, Germany'), x: 0.78, y: 0.22, side: 1, a: [0.32, -0.95], b: [-0.83, 0.56], k: 0.42 },
+      { n: 'Ahmed Al-Rashid', c: T('阿联酋 · 询价 72V × 50 台', 'UAE · asks about 72V × 50'), x: 0.7, y: 0.32, side: -1, a: [-0.4, -0.92], b: [0.69, 0.73], k: 0.54 },
+      { n: 'PT Surya Energi', c: T('印度尼西亚 · 补货周期到了', 'Indonesia · due to restock'), x: 0.95, y: 0.435, side: -1, a: [0.41, -0.91], b: [0.26, 0.97], k: 0.5 },
+      { n: 'Nordwerk Energie GmbH', c: T('德国 · 匹配度 94', 'Germany · fit 94'), x: 0.705, y: 0.145, side: -1, a: [0.1, -1], b: [0.05, 1], k: 0.6 }
     ];
     var WIN = 12, RIP = [0.6, 6.4, 9.6, 13.4], R, G, tio = null;   // RIP: when each buyer's ring ripples
 
@@ -74,7 +86,7 @@
       var port = G.hub = [G.ship[1] - 6, gy - 30];
       BUY.forEach(function (b, k) {
         var to = [W * b.x, H * b.y];
-        var p = curve(port, [0.05, -1], to, [-0.8, 0.6], 0.5);
+        var p = curve(port, b.a, to, b.b, b.k);
         sv('path', { d: bezD(p), class: 'sga-arc' }, svg);
         R.arcs.push({ p: p, hot: sv('path', { d: bezD(p), class: 'sga-arc is-hot' }, svg) });
         var g = sv('g', { class: 'sga-node' }, svg);

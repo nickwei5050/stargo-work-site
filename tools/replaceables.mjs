@@ -132,7 +132,10 @@ export const HERO = {
  * The side menu's 预约企业演示 contact card, on every page that has the menu
  * (tools/chrome.mjs): a still photograph where the magical-orb clip played
  * (G02, 2026-10-21). The orb clip stays everywhere else it is drawn — the
- * navbar logo and the pricing cards.
+ * navbar logo and the pricing cards. Its poster (the still before it plays,
+ * and under reduced motion) is the clip's own first frame since 2026-10-24
+ * (QA round 5 #4; the orb poster note in tools/encode-video.mjs) — until
+ * then it was a brown particle field from another clip.
  * Since 2026-10-24 (「现场氛围也全部换成代码」) the card draws a harbour in code
  * (tools/code-art-atmos.mjs MENU_ART); MENU_CARD is no longer placed.
  */

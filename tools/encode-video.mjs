@@ -40,6 +40,18 @@ const KEEP = new Set([
 ]);
 export const ORB = 'assets/699b6466d5f19893993a4bf2/699b6466d5f19893993a4f47_magical_orb_remix_mp4.mp4';
 const ORB_SMALL = { mp4: 'assets/stargo-motion/orb-360.mp4', webm: 'assets/stargo-motion/orb-360.webm' };
+/* The orb's poster — the still every orb video shows before it plays, when autoplay is refused and under
+   reduced motion (data-poster-url and the inline background-image of the template's background-video blocks,
+   on every page that draws the orb: header and footer logos, the 288 card, the 连起来 card, the chat and
+   pricing cards). The template shipped a frame of a different clip under the orb's name, a brown and gold
+   particle field, so a visitor with reduced motion saw a muddy brown square where the colourful ball should be (QA round 5 #4,
+   2026-10-24; owner: 「彩色小球不要换」). Since then it is frame 0 of the orb clip itself, 720 × 720, the frame
+   playback starts on, so the hand-off from poster to video is seamless. It is grabbed as Chromium decodes the
+   webm master (a <video> seeked to 0 and drawn to a canvas), not with ffmpeg: the master is VP8 in BT.601,
+   and an ffmpeg frame decoded in another matrix comes out a shade off the playing video (see KEEP). Same two
+   file names (the .jpg and its .jpg.webp twin), because every page names them; pages pick the new bytes up
+   through their ?v= content hash (tools/asset-version.mjs). This script does not write the poster:
+     assets/6985e0b80cd6611da631e928/69876c8586df2b3487263c51_magical_orb_remix_poster.0000000.jpg(.webp) */
 
 const walk = (dir, out = []) => {
   for (const e of readdirSync(dir, { withFileTypes: true })) {

@@ -105,9 +105,11 @@
       // A host that the page zooms past the screen (the sticky band scales its
       // box up to ~1.3×) is drawn inside a screen-sized window at its centre,
       // measured in the host's own pixels, so nothing ends up off screen.
-      var fw = w, fh = h;
+      var fw = w, fh = h, hr = null, k = 1;
       if (viewportFit) {
-        var k = host.getBoundingClientRect().width / w || 1, vw = window.innerWidth / k, vh = window.innerHeight / k;
+        hr = host.getBoundingClientRect();
+        k = hr.width / w || 1;
+        var vw = window.innerWidth / k, vh = window.innerHeight / k;
         // from tablet up, lay out for the whole screen (so the layout does not change while the band
         // zooms), keeping clear of the band's own captions at the top and bottom of the screen
         if (window.innerWidth >= 768) { fw = vw; fh = vh - 170 / k; } else { fw = Math.min(w, vw); fh = Math.min(h, vh); }
@@ -131,6 +133,21 @@
         // a scene that sets scaleVar gets the fit scale as --sg-fit on its stage, so its CSS can keep type at
         // 12px or more on screen when a short screen scales the stage down (font-size: max(13px, calc(12px / var(--sg-fit))))
         if (scene.scaleVar) stage.style.setProperty('--sg-fit', sk);
+      }
+      // A screen-fitted host is a window the page grows over the screen-sized stage (the homepage band opens
+      // 「一条业务主线」 from a point in the middle out to the whole screen). While it grows, a scene that has a
+      // view() hook is told which part of its stage the window shows, in stage px, so it can keep its words
+      // out of the window's edge (QA round 5: the band cut its own cards mid-word and its honesty tag sat
+      // outside the window, then half inside it). Once the window spans the screen it gets null: the band
+      // then only scrolls away, and its edge is an ordinary section edge.
+      if (viewportFit && scene.view) {
+        var iw = window.innerWidth, ih = window.innerHeight;
+        var growing = hr.width < iw - 2 || (hr.height < ih - 2 && hr.top > 0.5 && hr.bottom < ih - 0.5);
+        if (!growing) scene.view(null);
+        else {
+          var ss = k * s, ox = hr.left + k * (w - W * s) / 2, oy = hr.top + k * (h - H * s) / 2;
+          scene.view([(Math.max(hr.left, 0) - ox) / ss, (Math.max(hr.top, 0) - oy) / ss, (Math.min(hr.right, iw) - ox) / ss, (Math.min(hr.bottom, ih) - oy) / ss]);
+        }
       }
       return true;
     }
@@ -226,15 +243,19 @@
       { icon: 'store', name: T('阿里国际站', 'Alibaba.com'), p: T('阿里国际站', 'Alibaba') },
       { icon: 'form', name: T('官网表单', 'Website form'), p: T('官网表单', 'Web form') }
     ];
+    // [sender, country, message, the message in the tablet layout's narrower channel cards]. The cards of
+    // the square layout (portrait tablets) leave 192 stage px for the line, so five of the full messages
+    // ended in an ellipsis there ("Please send the catalogue an…"): each has a shorter wording of the same
+    // ask, measured at 140–170 px in the band's 12.5px type, so none is cut.
     var MSG = [
-      ['Müller Energie GmbH', T('德国', 'Germany'), '200 pcs 48V 100Ah, DAP Hamburg?'],
-      ['Ahmed Al-Rashid', T('阿联酋', 'UAE'), 'Price for the 72V lithium pack? 50 units.'],
-      ['Silva Mobilidade', T('巴西', 'Brazil'), 'Can you do OEM label? MOQ?'],
-      ['Nordic Mobility AB', T('瑞典', 'Sweden'), 'E-bike pack supplier wanted, 2,000/yr.'],
-      ['PT Surya Energi', T('印尼', 'Indonesia'), 'Lead time for 64V 104Ah packs?'],
-      ['Kowalski Sp. z o.o.', T('波兰', 'Poland'), 'Please send the catalogue and CE files.'],
-      ['Lagos Power Ltd', T('尼日利亚', 'Nigeria'), 'Off-grid storage, 30 sets, CIF Lagos.'],
-      ['Hanoi E-Moto JSC', T('越南', 'Vietnam'), 'Sample order first? 2 pcs 60V 30Ah.']
+      ['Müller Energie GmbH', T('德国', 'Germany'), '200 pcs 48V 100Ah, DAP Hamburg?', 'Quote 200 pcs 48V 100Ah?'],
+      ['Ahmed Al-Rashid', T('阿联酋', 'UAE'), 'Price for the 72V lithium pack? 50 units.', '72V pack price for 50 units?'],
+      ['Silva Mobilidade', T('巴西', 'Brazil'), 'Can you do OEM label? MOQ?', 'OEM label possible? MOQ?'],
+      ['Nordic Mobility AB', T('瑞典', 'Sweden'), 'E-bike pack supplier wanted, 2,000/yr.', 'E-bike packs, 2,000 a year.'],
+      ['PT Surya Energi', T('印尼', 'Indonesia'), 'Lead time for 64V 104Ah packs?', 'Lead time for 64V 104Ah?'],
+      ['Kowalski Sp. z o.o.', T('波兰', 'Poland'), 'Please send the catalogue and CE files.', 'Catalogue and CE files?'],
+      ['Lagos Power Ltd', T('尼日利亚', 'Nigeria'), 'Off-grid storage, 30 sets, CIF Lagos.', 'Off-grid, 30 sets, CIF Lagos.'],
+      ['Hanoi E-Moto JSC', T('越南', 'Vietnam'), 'Sample order first? 2 pcs 60V 30Ah.', '2 samples first, 60V 30Ah?']
     ];
     var ST = [
       { n: '01', name: T('找到客户', 'Find prospects'), p: T('找到客户', 'Prospects') },
@@ -460,6 +481,52 @@
       }
       var tag = el('div', 'sg-tag', stage, T('动态示意 · 演示数据', 'Illustrative motion · demo data'));
       tag.style.left = L.tag.x + 'px'; tag.style.top = L.tag.y + 'px';
+      // what view() keeps whole while the band's window grows: every box with words in it, and the tag
+      R.winEls = R.inp.map(function (o) { return o.c; }).concat(R.out.map(function (o) { return o.c; }), [lab, R.gate], R.tick ? [R.tick[0].parentNode.parentNode] : []);
+      R.tagEl = tag; R.winBox = null; R.winOn = false;
+    }
+
+    /* The homepage band grows its window over this stage from a point in the middle out to the whole
+       screen (the template's .absolute-photo, 0 → 100vw; the runner reports the part shown, in stage px).
+       QA round 5 (2026-10-24): on the way the window's edge cut the cards mid-word (「最高匹」,
+       「for 64V 104Ah packs?」) and the 动态示意 · 演示数据 tag, placed in the stage's corner, sat outside
+       the window for ~400px of scroll and was then cut by its edge. Now a box with words in it shows only
+       once it is wholly inside the window — it fades in over the next 24 stage px the window opens, so the
+       words appear as the window reaches them and are never shown cut — and the tag rides the window's
+       edge, 12px inside it, until it reaches its own place; it shows whenever the window can hold it
+       whole. Opacity and the separate translate property only (no layout), written only on change.
+       With the window open (null) everything is as designed. */
+    function view(win) {
+      if (!R.winEls) return;
+      if (!win) {
+        if (R.winOn) {
+          R.winOn = false;
+          R.winEls.forEach(function (e) { css(e, 'opacity', ''); });
+          css(R.tagEl, 'translate', ''); css(R.tagEl, 'opacity', '');
+        }
+        return;
+      }
+      if (!R.winBox) {
+        // stage px: the stage's own scale on screen, from its first box (boxes do not move on the stage)
+        var sr = R.tagEl.parentNode.getBoundingClientRect(), S = sr.width / L.w || 1;
+        var box = function (e, pad) { var r = e.getBoundingClientRect(); return [(r.left - sr.left) / S - pad, (r.top - sr.top) / S - 2, (r.right - sr.left) / S + pad, (r.bottom - sr.top) / S + 2]; };
+        css(R.tagEl, 'translate', '');
+        // the label under the core and the gate change their words: room for a longer line either side
+        R.winBox = R.winEls.map(function (e, i) { return box(e, i === R.inp.length + R.out.length ? 40 : i === R.inp.length + R.out.length + 1 ? 24 : 2); });
+        R.tagBox = box(R.tagEl, 0);
+      }
+      R.winOn = true;
+      R.winEls.forEach(function (e, i) {
+        var b = R.winBox[i], inset = Math.min(b[0] - win[0], b[1] - win[1], win[2] - b[2], win[3] - b[3]);
+        css(e, 'opacity', inset >= 24 ? '' : c01(inset / 24).toFixed(2));
+      });
+      // the tag moves no further than it must to sit 12px inside the window (top-right on the wide stages,
+      // bottom-right on the tablet one), so it settles in its own place as the window reaches it
+      var tb = R.tagBox, m = 12;
+      var fits = tb[2] - tb[0] + 2 * m <= win[2] - win[0] && tb[3] - tb[1] + 2 * m <= win[3] - win[1];
+      var dx = Math.min(Math.max(0, win[0] + m - tb[0]), win[2] - m - tb[2]), dy = Math.min(Math.max(0, win[1] + m - tb[1]), win[3] - m - tb[3]);
+      css(R.tagEl, 'translate', dx || dy ? dx.toFixed(1) + 'px ' + dy.toFixed(1) + 'px' : '');
+      css(R.tagEl, 'opacity', fits ? '' : '0');
     }
 
     // the event that started at k*P
@@ -538,7 +605,7 @@
         if (o.k !== kk) {
           var fl = o.k !== undefined;
           o.k = kk;
-          put(o.msg, 'text', m[2]);
+          put(o.msg, 'text', compact ? m[3] : m[2]);
           if (o.who) put(o.who, 'text', m[0] + ' · ' + m[1]);
           if (fl) { flash(o.msg); if (o.who) flash(o.who); }
         }
@@ -636,7 +703,7 @@
         return best;
       },
       // start a few events in, so the cards and counters are already alive
-      build: build, tick: tick, still: 6 * P + 2.28, start: 4 * P + 0.3
+      build: build, tick: tick, view: view, still: 6 * P + 2.28, start: 4 * P + 0.3
     };
   }
 
