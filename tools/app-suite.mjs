@@ -47,7 +47,7 @@ const ICON = (slug) => `${ICON_DIR}${slug}-128.webp`;
 /* The icons' own category colours: the short bar under each glyph. */
 export const APP_CATEGORIES = [
   { id: 'core', count: 6, color: '#8ddaf5', rgb: '141,218,245', name: { zh: '核心与智脑', en: 'Core & Intelligence' }, desc: { zh: 'AI 员工对话、企业知识、语音与浏览器', en: 'AI conversations, company knowledge, voice and the browser' } },
-  { id: 'business', count: 7, color: '#72ddca', rgb: '114,221,202', name: { zh: '业务与客户', en: 'Business & Customers' }, desc: { zh: '企业管理、客户会话、找客户与合规尽调', en: 'Company records, customer conversations, prospecting and due diligence' } },
+  { id: 'business', count: 7, color: '#8fa8ff', rgb: '143,168,255', name: { zh: '业务与客户', en: 'Business & Customers' }, desc: { zh: '企业管理、客户会话、找客户与合规尽调', en: 'Company records, customer conversations, prospecting and due diligence' } },
   { id: 'creative', count: 5, color: '#b8baf6', rgb: '184,186,246', name: { zh: '视觉与创作', en: 'Visual & Creative' }, desc: { zh: '创意画布、视频与 3D 图纸', en: 'A creative canvas, video and 3D drawings' } },
   { id: 'automation', count: 4, color: '#b1c2df', rgb: '177,194,223', name: { zh: '自动化与底座', en: 'Automation & Platform' }, desc: { zh: '流程、脚本、应用连接与模型接入', en: 'Workflows, scripts, app connections and model access' } },
 ];

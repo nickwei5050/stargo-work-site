@@ -202,7 +202,7 @@
 /* the site's focus ring (css/stargo-fusion.css), so a keyboard reader follows one colour down the page */
 .sg-film__btn:focus-visible,
 .sg-film__start:focus-visible,
-.sg-film__next:focus-visible { outline: 2px solid #e8823a; outline-offset: 3px; }
+.sg-film__next:focus-visible { outline: 2px solid #9b8eff; outline-offset: 3px; }
 
 .sg-film__i {
   width: 20px;

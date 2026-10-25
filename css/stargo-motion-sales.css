@@ -27,15 +27,15 @@
 .sgs-tagline { margin-left: auto; flex: none; font-size: 12px; letter-spacing: .02em; color: rgba(244,238,232,.5); white-space: nowrap; }
 .sgs .sg-ico { display: block; flex: none; }
 .sgs-pill { display: inline-flex; align-items: center; height: 20px; padding: 0 7px; border-radius: 6px; font-size: 12px; font-weight: 600; white-space: nowrap; flex: none; }
-.sgs-pill.is-new { color: #1b130b; background: #f3c27a; }
+.sgs-pill.is-new { color: #1b130b; background: #c7c5f9; }
 .sgs-pill.is-hist { color: #d9d0c6; background: rgba(255,236,220,.1); }
 .sgs-pill.is-spam { color: rgba(244,238,232,.62); background: rgba(255,255,255,.05); box-shadow: inset 0 0 0 1px rgba(255,236,220,.14); }
-.sgs-pill.is-wait { color: #ffb37a; background: rgba(236,111,16,.14); box-shadow: inset 0 0 0 1px rgba(255,138,61,.45); }
-.sgs-wd { flex: none; width: 6px; height: 6px; margin-right: 5px; border-radius: 50%; background: #ff8a3d; will-change: opacity; }
+.sgs-pill.is-wait { color: #c2befd; background: rgba(147, 130, 255,.14); box-shadow: inset 0 0 0 1px rgba(169, 160, 255,.45); }
+.sgs-wd { flex: none; width: 6px; height: 6px; margin-right: 5px; border-radius: 50%; background: #a9a0ff; will-change: opacity; }
 /* channel tiles: the loop scene's four channels */
-.sgs-ch { flex: none; width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; color: #f3d3a0; background: rgba(255,220,170,.08); box-shadow: inset 0 0 0 1px rgba(255,220,170,.09); }
-.sgs-ch.is-chat { color: #9fe0b0; background: rgba(120,200,140,.1); }
-.sgs-ch.is-store { color: #ffb37a; background: rgba(236,111,16,.13); }
+.sgs-ch { flex: none; width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; color: #d6d5f1; background: rgba(224, 224, 244,.08); box-shadow: inset 0 0 0 1px rgba(224, 224, 244,.09); }
+.sgs-ch.is-chat { color: #a3d6f4; background: rgba(70, 192, 253,.1); }
+.sgs-ch.is-store { color: #c2befd; background: rgba(147, 130, 255,.13); }
 .sgs-ch.is-form { color: #c5cdf0; background: rgba(170,185,255,.09); }
 
 /* =================== INBOX =================== */
@@ -44,8 +44,8 @@
 .sgs-tab { display: inline-flex; align-items: center; gap: 5px; height: 22px; padding: 0 7px; border-radius: 6px; font-size: 12px; color: rgba(244,238,232,.55); transition: color .3s, background-color .3s; }
 .sgs-tab b { font-size: 12px; font-weight: 600; color: rgba(244,238,232,.78); font-variant-numeric: tabular-nums; display: inline-block; transition: transform .45s cubic-bezier(.34, 1.56, .64, 1), color .3s; }
 .sgs-tab.is-hit { color: #f8f1e7; background: rgba(255,236,220,.07); }
-.sgs-tab.is-hit b { color: #ffb37a; transform: scale(1.18); }
-.sgs-tab.is-new.is-hit { background: rgba(243,194,122,.12); }
+.sgs-tab.is-hit b { color: #c2befd; transform: scale(1.18); }
+.sgs-tab.is-new.is-hit { background: rgba(199, 197, 249,.12); }
 .sgs-list { position: relative; flex: 1; overflow: hidden; }
 .sgs-list-fade { position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; pointer-events: none; background: linear-gradient(rgba(18,14,11,0), #120e0b 92%); }
 /* the part-row under the last whole row: a skeleton row (texture for 'more below', no words) */
@@ -54,7 +54,7 @@
 .sgs-skel-1 { width: 40%; margin-top: 5px; }
 .sgs-skel-2 { width: 64%; height: 7px; margin-top: 14px; background: rgba(255,236,220,.06); }
 .sgs-msg { position: absolute; left: 0; right: 0; top: 0; display: flex; gap: 9px; padding: 9px 12px 0; border-bottom: 1px solid rgba(255,236,220,.06); will-change: transform; }
-.sgs-msg.is-fresh { background: linear-gradient(90deg, rgba(243,194,122,.07), rgba(243,194,122,0) 80%); }
+.sgs-msg.is-fresh { background: linear-gradient(90deg, rgba(199, 197, 249,.07), rgba(199, 197, 249,0) 80%); }
 .sgs-msg-b { position: relative; flex: 1; min-width: 0; }
 .sgs-msg-1 { display: flex; align-items: center; gap: 8px; height: 18px; }
 .sgs-msg-1 > b { flex: 1; min-width: 0; font-size: 13px; color: #f8f1e7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -63,8 +63,8 @@
 .sgs-prev, .sgs-msg-3 { position: absolute; left: 0; right: 0; top: 0; }
 .sgs-prev { height: 18px; line-height: 18px; font-size: 12px; color: rgba(244,238,232,.62); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sgs-msg-3 { display: flex; align-items: center; gap: 4px; height: 18px; white-space: nowrap; opacity: 0; }
-.sgs-chip { flex: none; font-size: 12px; line-height: 16px; padding: 0 5px; border-radius: 5px; color: #f3d3a0; background: rgba(255,220,170,.08); }
-.sgs-to { flex: none; display: inline-flex; align-items: center; gap: 3px; margin-left: 3px; font-size: 12px; color: #9fe0b0; }
+.sgs-chip { flex: none; font-size: 12px; line-height: 16px; padding: 0 5px; border-radius: 5px; color: #d6d5f1; background: rgba(224, 224, 244,.08); }
+.sgs-to { flex: none; display: inline-flex; align-items: center; gap: 3px; margin-left: 3px; font-size: 12px; color: #a3d6f4; }
 .sgs-msg.is-spam .sgs-to { color: rgba(244,238,232,.55); }
 .sgs-msg.is-hist .sgs-to { color: #d9d0c6; }
 .sgs-chip, .sgs-to, .sgs-msg .sgs-pill { opacity: 0; transform: translate3d(0, 3px, 0) scale(.92); transition: opacity .3s, transform .45s cubic-bezier(.34, 1.56, .64, 1); }
@@ -72,7 +72,7 @@
 .sgs-msg .sgs-msg-b, .sgs-msg .sgs-ch { transition: opacity .5s; }
 .sgs-msg.is-done .sgs-msg-b, .sgs-msg.is-done .sgs-ch { opacity: .42; }
 /* the read: a line under the preview while it is read, clear of the hairline */
-.sgs-scan { position: absolute; left: 0; right: 0; bottom: -4px; height: 1.5px; border-radius: 1px; background: linear-gradient(90deg, rgba(255,138,61,0), #ff8a3d 70%, #ffd0a0); transform-origin: 0 50%; opacity: 0; }
+.sgs-scan { position: absolute; left: 0; right: 0; bottom: -4px; height: 1.5px; border-radius: 1px; background: linear-gradient(90deg, rgba(169, 160, 255,0), #a9a0ff 70%, #d7d6f3); transform-origin: 0 50%; opacity: 0; }
 .sgs-inbox.is-short .sgs-bar { height: 30px; }
 .sgs-inbox.is-short .sgs-tabs { height: 26px; }
 .sgs-inbox.is-short .sgs-msg { padding-top: 7px; }
@@ -88,7 +88,7 @@
 /* =================== ACCOUNT =================== */
 .sgs-acct-pane { flex: 1; display: flex; flex-direction: column; gap: 6px; padding: 8px 12px 9px; min-height: 0; }
 .sgs-acct-h { flex: none; display: flex; align-items: center; gap: 9px; }
-.sgs-av { flex: none; width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; font-size: 12px; font-weight: 700; letter-spacing: .02em; color: #1b130b; background: linear-gradient(140deg, #ffe2b8, #f0b062); }
+.sgs-av { flex: none; width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; font-size: 12px; font-weight: 700; letter-spacing: .02em; color: #1b130b; background: linear-gradient(140deg, #e5e5f4, #b9b4ff); }
 .sgs-acct-ht { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 8px; white-space: nowrap; }
 .sgs-acct-ht b { flex: none; font-size: 14px; color: #f8f1e7; }
 .sgs-acct-ht span { min-width: 0; font-size: 12px; color: rgba(244,238,232,.55); overflow: hidden; text-overflow: ellipsis; }
@@ -96,38 +96,38 @@
 .sgs-stages { position: relative; flex: none; height: 29px; }
 .sgs-st-track { position: relative; height: 100%; display: flex; justify-content: space-between; padding: 0 2px; }
 .sgs-st-track::before, .sgs-st-fill { content: ""; position: absolute; left: 16px; right: 16px; top: 5px; height: 2px; border-radius: 1px; background: rgba(255,236,220,.1); }
-.sgs-st-fill { display: block; background: linear-gradient(90deg, #d9954a, #ffcf94); transform-origin: 0 50%; transform: scaleX(0); }
+.sgs-st-fill { display: block; background: linear-gradient(90deg, #a095ff, #d6d4f6); transform-origin: 0 50%; transform: scaleX(0); }
 .sgs-st { position: relative; z-index: 1; width: 28px; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12px; color: rgba(244,238,232,.42); white-space: nowrap; transition: color .35s; }
 .sgs-st i { width: 12px; height: 12px; border-radius: 50%; background: #1d1612; box-shadow: inset 0 0 0 2px rgba(255,236,220,.18); transition: background-color .35s; }
 .sgs-st.is-on { color: rgba(244,238,232,.78); }
-.sgs-st.is-on i { background: #f3c27a; box-shadow: inset 0 0 0 2px #f3c27a; }
-.sgs-st.is-cur.is-on { color: #ffb37a; font-weight: 600; }
-.sgs-st.is-cur.is-on i { background: #ec6f10; box-shadow: 0 0 0 4px rgba(236,111,16,.22); }
+.sgs-st.is-on i { background: #c7c5f9; box-shadow: inset 0 0 0 2px #c7c5f9; }
+.sgs-st.is-cur.is-on { color: #c2befd; font-weight: 600; }
+.sgs-st.is-cur.is-on i { background: #9382ff; box-shadow: 0 0 0 4px rgba(147, 130, 255,.22); }
 .sgs-stages.is-mini { height: 15px; display: flex; align-items: center; gap: 12px; }
 .sgs-stages.is-mini .sgs-st-track { flex: 1; height: 8px; padding: 0 4px; }
 .sgs-stages.is-mini .sgs-st-track::before, .sgs-stages.is-mini .sgs-st-fill { left: 8px; right: 8px; top: 3px; }
 .sgs-stages.is-mini .sgs-st { width: 8px; }
 .sgs-stages.is-mini .sgs-st i { width: 8px; height: 8px; box-shadow: inset 0 0 0 1.5px rgba(255,236,220,.2); }
-.sgs-stages.is-mini .sgs-st.is-cur.is-on i { box-shadow: 0 0 0 3px rgba(236,111,16,.25); }
-.sgs-st-now { flex: none; font-size: 12px; line-height: 15px; font-weight: 600; color: #ffb37a; white-space: nowrap; }
+.sgs-stages.is-mini .sgs-st.is-cur.is-on i { box-shadow: 0 0 0 3px rgba(147, 130, 255,.25); }
+.sgs-st-now { flex: none; font-size: 12px; line-height: 15px; font-weight: 600; color: #c2befd; white-space: nowrap; }
 .sgs-tiles { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 1fr; gap: 6px; }
-.sgs-tile { min-width: 0; min-height: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: center; padding: 3px 9px; border-radius: 9px; background: linear-gradient(180deg, rgba(255,246,232,.05), rgba(255,246,232,.018)); box-shadow: inset 0 0 0 1px rgba(255,228,190,.08); transition: background-color .6s; }
-.sgs-tile.is-new { background-color: rgba(243,194,122,.08); box-shadow: inset 0 0 0 1px rgba(243,194,122,.42); }
+.sgs-tile { min-width: 0; min-height: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: center; padding: 3px 9px; border-radius: 9px; background: linear-gradient(180deg, rgba(255,246,232,.05), rgba(255,246,232,.018)); box-shadow: inset 0 0 0 1px rgba(231, 231, 243,.08); transition: background-color .6s; }
+.sgs-tile.is-new { background-color: rgba(199, 197, 249,.08); box-shadow: inset 0 0 0 1px rgba(199, 197, 249,.42); }
 .sgs-tile-k { display: flex; align-items: center; gap: 5px; height: 15px; font-size: 12px; color: rgba(244,238,232,.5); white-space: nowrap; }
-.sgs-tile-k .sg-ico { color: #f3c27a; }
+.sgs-tile-k .sg-ico { color: #c7c5f9; }
 .sgs-tile-r { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; height: 16px; line-height: 16px; font-size: 12px; white-space: nowrap; min-width: 0; }
 .sgs-tile-r b { font-size: 12.5px; color: #f8f1e7; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .sgs-tile-r span { flex: none; color: rgba(244,238,232,.55); transition: color .4s; }
-.sgs-tile-r.is-warn span { color: #ffb37a; font-weight: 600; }
-.sgs-tile-r.is-ok span { color: #9fe0b0; font-weight: 600; }
+.sgs-tile-r.is-warn span { color: #c2befd; font-weight: 600; }
+.sgs-tile-r.is-ok span { color: #a3d6f4; font-weight: 600; }
 .sgs-log { flex: none; display: flex; flex-direction: column; gap: 5px; }
 .sgs-log-r { display: flex; align-items: center; gap: 8px; font-size: 12px; white-space: nowrap; min-width: 0; }
 .sgs-log-r .sgs-ch { width: 22px; height: 22px; border-radius: 6px; }
 .sgs-log-r b { flex: none; font-weight: 500; color: rgba(244,238,232,.78); }
 .sgs-log-r span { min-width: 0; color: rgba(244,238,232,.52); overflow: hidden; text-overflow: ellipsis; }
-.sgs-next { flex: none; display: flex; align-items: center; gap: 7px; height: 28px; padding: 0 4px 0 9px; border-radius: 9px; color: #f3d3a0; background: rgba(255,255,255,.03); box-shadow: inset 0 0 0 1px rgba(255,236,220,.09); white-space: nowrap; transition: background-color .5s; }
+.sgs-next { flex: none; display: flex; align-items: center; gap: 7px; height: 28px; padding: 0 4px 0 9px; border-radius: 9px; color: #d6d5f1; background: rgba(255,255,255,.03); box-shadow: inset 0 0 0 1px rgba(255,236,220,.09); white-space: nowrap; transition: background-color .5s; }
 .sgs-next-t { flex: 1; min-width: 0; font-size: 12px; color: rgba(244,238,232,.85); overflow: hidden; text-overflow: ellipsis; }
-.sgs-next.is-on { background-color: rgba(236,111,16,.08); box-shadow: inset 0 0 0 1px rgba(255,138,61,.45); }
+.sgs-next.is-on { background-color: rgba(147, 130, 255,.08); box-shadow: inset 0 0 0 1px rgba(169, 160, 255,.45); }
 .sgs-acct.is-square .sgs-acct-pane { gap: 8px; padding: 12px 14px; }
 .sgs-acct.is-square .sgs-av { width: 34px; height: 34px; border-radius: 10px; font-size: 13px; }
 .sgs-acct.is-square .sgs-acct-ht { flex-direction: column; align-items: stretch; gap: 1px; }

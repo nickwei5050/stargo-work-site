@@ -10,13 +10,13 @@
    the one transition is the art layer's hover, transform only. */
 div.sgcv {
   /* every colour is a token, so a page can re-tint the set (see .blog-grid) */
-  --sgcv-pink: #e393bd;          /* the accent */
-  --sgcv-hot: #f938a1;           /* what is lit */
-  --sgcv-acc: 227, 147, 189;     /* the accent as r, g, b, for its tints */
+  --sgcv-pink: #ba9df8;          /* the accent */
+  --sgcv-hot: #a670ff;           /* what is lit */
+  --sgcv-acc: 186, 157, 248;     /* the accent as r, g, b, for its tints */
   --sgcv-w: 255, 255, 255;       /* hairlines and dots, as r, g, b */
   --sgcv-bg: #0b0a0c;
-  --sgcv-glow: rgba(108, 18, 76, .55);
-  --sgcv-glow2: rgba(80, 11, 56, .18);
+  --sgcv-glow: rgba(79, 0, 149, .55);
+  --sgcv-glow2: rgba(57, 10, 106, .18);
   --sgcv-tile: rgba(18, 17, 19, .92);
   --sgcv-tile-ln: #2b292c;
   --sgcv-win: rgba(16, 14, 17, .94);
@@ -42,13 +42,13 @@ div.sgcv {
 /* The homepage: the warm product palette of the scenes on the same page
    (#15110e panel, #ec6f10 / #ff8a3d accents, warm hairlines). */
 .blog-grid div.sgcv {
-  --sgcv-pink: #ff8a3d;
-  --sgcv-hot: #ec6f10;
-  --sgcv-acc: 255, 138, 61;
-  --sgcv-w: 255, 236, 220;
+  --sgcv-pink: #a9a0ff;
+  --sgcv-hot: #9382ff;
+  --sgcv-acc: 169, 160, 255;
+  --sgcv-w: 232, 234, 255;
   --sgcv-bg: #15110e;
-  --sgcv-glow: rgba(236, 111, 16, .26);
-  --sgcv-glow2: rgba(150, 62, 12, .1);
+  --sgcv-glow: rgba(147, 130, 255, .26);
+  --sgcv-glow2: rgba(94, 41, 216, .1);
   --sgcv-tile: rgba(31, 24, 19, .94);
   --sgcv-tile-ln: rgba(255, 236, 220, .1);
   --sgcv-win: rgba(31, 24, 19, .94);

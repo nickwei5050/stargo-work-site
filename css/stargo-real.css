@@ -18,7 +18,7 @@
   background: rgba(18, 10, 46, .74); border: 1px solid rgba(183, 160, 255, .34);
   box-shadow: 0 4px 14px rgba(10, 6, 30, .22);
 }
-.sg-real-tag::before { content: ""; display: inline-block; width: 6px; height: 6px; margin: 0 6px 1px 0; border-radius: 50%; background: #7ee2a8; vertical-align: middle; }
+.sg-real-tag::before { content: ""; display: inline-block; width: 6px; height: 6px; margin: 0 6px 1px 0; border-radius: 50%; background: #89d4ff; vertical-align: middle; }
 /* a slot too narrow for the whole tag (a phone's theatre cell) keeps 演示数据 / Demo data, as the
    motion scenes' tag does on small layouts */
 .sg-real-tag b { font-weight: inherit; }

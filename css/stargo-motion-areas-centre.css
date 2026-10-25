@@ -4,44 +4,44 @@
    phone's edges around the caption. Only transform and opacity move. */
 
 /* work passing between windows: a chip across a band, a wire, a dot down a side */
-.sga-guide { fill: none; stroke: rgba(255, 228, 190, .16); stroke-width: 1.4; stroke-dasharray: 2 5; stroke-linecap: round; transition: stroke .35s; }
-.sga-guide.is-lit { stroke: #f3c27a; }
-.sga-wire { fill: none; stroke: rgba(255, 228, 190, .14); stroke-width: 1.4; stroke-linecap: round; }
-.sga-wire.is-lit { stroke: #e7b267; transition: opacity .5s; }
+.sga-guide { fill: none; stroke: rgba(231, 231, 243, .16); stroke-width: 1.4; stroke-dasharray: 2 5; stroke-linecap: round; transition: stroke .35s; }
+.sga-guide.is-lit { stroke: #c7c5f9; }
+.sga-wire { fill: none; stroke: rgba(231, 231, 243, .14); stroke-width: 1.4; stroke-linecap: round; }
+.sga-wire.is-lit { stroke: #b8b3fa; transition: opacity .5s; }
 .sga-wire.is-cite { stroke-dasharray: 3 4; }
 .sga-dot { fill: #fff3df; }
-.sga-sr { position: absolute; border-radius: 1px; background: rgba(255, 228, 190, .1); }
-.sga-sr.is-lit { background: #e7b267; transform-origin: 50% 0; transform: scaleY(0); }
+.sga-sr { position: absolute; border-radius: 1px; background: rgba(231, 231, 243, .1); }
+.sga-sr.is-lit { background: #b8b3fa; transform-origin: 50% 0; transform: scaleY(0); }
 .sga-sr.is-lit.is-up { transform-origin: 50% 100%; }
 .sga-sd { position: absolute; border-radius: 50%; background: #fff3df; opacity: 0; }
-.sga-sn { position: absolute; border-radius: 50%; background: rgba(243, 194, 122, .55); }
+.sga-sn { position: absolute; border-radius: 50%; background: rgba(199, 197, 249, .55); }
 /* a hand-off chip comes out of its source window's edge: its lane clips it there, and it lands in
    free space of the next window (js/stargo-motion-areas.js lane()) */
 .sga-lane { position: absolute; z-index: 5; overflow: hidden; pointer-events: none; }
 .sga-chip { position: absolute; opacity: 0; }
-.sga-chip > span { display: inline-flex; align-items: center; gap: 7px; height: 32px; padding: 0 13px; border-radius: 10px; font-size: 13px; white-space: nowrap; color: #fff3df; background: #2b1e13; border: 1px solid rgba(243, 194, 122, .55); box-shadow: 0 16px 36px -14px rgba(0, 0, 0, .9); }
+.sga-chip > span { display: inline-flex; align-items: center; gap: 7px; height: 32px; padding: 0 13px; border-radius: 10px; font-size: 13px; white-space: nowrap; color: #fff3df; background: #2b1e13; border: 1px solid rgba(199, 197, 249, .55); box-shadow: 0 16px 36px -14px rgba(0, 0, 0, .9); }
 .sga-chip.is-sm > span { gap: 5px; height: 24px; padding: 0 9px; border-radius: 8px; font-size: 12px; }
 .sga-chip b { font-weight: 600; }
-.sga-chip svg { color: #f3c27a; }
+.sga-chip svg { color: #c7c5f9; }
 
 /* ---------- 智搜's radar ---------- */
-.sga-rr { fill: none; stroke: rgba(255, 228, 190, .12); stroke-width: 1; }
-.sga-sweep { fill: rgba(243, 194, 122, .1); }
-.sga-edge { stroke: rgba(243, 194, 122, .6); stroke-width: 1.4; stroke-linecap: round; }
-.sga-sig { fill: rgba(255, 228, 190, .28); }
+.sga-rr { fill: none; stroke: rgba(231, 231, 243, .12); stroke-width: 1; }
+.sga-sweep { fill: rgba(199, 197, 249, .1); }
+.sga-edge { stroke: rgba(199, 197, 249, .6); stroke-width: 1.4; stroke-linecap: round; }
+.sga-sig { fill: rgba(231, 231, 243, .28); }
 .sga-pin { opacity: .25; transition: opacity .4s; }
 .sga-pin.is-on { opacity: 1; }
-.sga-pin-r { fill: none; stroke: #ff8a3d; stroke-width: 1.5; }
-.sga-pin-c { fill: #ff8a3d; }
-.sga-pin-t { font-size: 12px; font-weight: 700; letter-spacing: .04em; fill: #ffd2b0; }
+.sga-pin-r { fill: none; stroke: #a9a0ff; stroke-width: 1.5; }
+.sga-pin-c { fill: #a9a0ff; }
+.sga-pin-t { font-size: 12px; font-weight: 700; letter-spacing: .04em; fill: #dadaf0; }
 
 /* ---------- the order's rail ---------- */
-.sga-rl { position: absolute; border-radius: 1px; background: rgba(255, 228, 190, .12); }
-.sga-rl.is-fill { background: linear-gradient(90deg, #ec6f10, #f3c27a); transform-origin: 0 50%; transform: scaleX(0); }
-.sga-tok { position: absolute; border-radius: 50%; background: #fff3df; box-shadow: 0 0 0 5px rgba(243, 194, 122, .18); z-index: 2; }
-.sga-nd { position: absolute; display: grid; place-items: center; border-radius: 50%; color: rgba(243, 211, 160, .5); background: #1c1611; border: 1px solid rgba(255, 228, 190, .18); transition: color .4s, background-color .4s, border-color .4s; z-index: 1; }
-.sga-nd.is-on { color: #1b130b; background: linear-gradient(140deg, #ffe7bf, #eeb062); border-color: transparent; }
-.sga-nd.is-hold { background: #ec6f10; color: #fff; box-shadow: 0 0 0 5px rgba(255, 138, 61, .2); }
+.sga-rl { position: absolute; border-radius: 1px; background: rgba(231, 231, 243, .12); }
+.sga-rl.is-fill { background: linear-gradient(90deg, #9382ff, #c7c5f9); transform-origin: 0 50%; transform: scaleX(0); }
+.sga-tok { position: absolute; border-radius: 50%; background: #fff3df; box-shadow: 0 0 0 5px rgba(199, 197, 249, .18); z-index: 2; }
+.sga-nd { position: absolute; display: grid; place-items: center; border-radius: 50%; color: rgba(214, 213, 241, .5); background: #1c1611; border: 1px solid rgba(231, 231, 243, .18); transition: color .4s, background-color .4s, border-color .4s; z-index: 1; }
+.sga-nd.is-on { color: #1b130b; background: linear-gradient(140deg, #e9e9f4, #b9b3ff); border-color: transparent; }
+.sga-nd.is-hold { background: #9382ff; color: #fff; box-shadow: 0 0 0 5px rgba(169, 160, 255, .2); }
 .sga-nl { position: absolute; text-align: center; white-space: nowrap; }
 .sga-nl b { display: block; font-size: 14px; font-weight: 600; color: rgba(248, 241, 231, .5); transition: color .4s; }
 .sga-nl span { display: block; margin-top: 3px; overflow: hidden; text-overflow: ellipsis; font-size: 12.5px; color: rgba(244, 238, 232, .34); font-variant-numeric: tabular-nums; transition: color .4s; }
@@ -52,28 +52,28 @@
 
 /* ---------- 数字员工's team ---------- */
 .sga-goal { transform: none; }
-.sga-crew { position: absolute; display: flex; align-items: center; justify-content: center; gap: 7px; padding: 0 11px; border-radius: 9px; font-size: 13px; font-weight: 600; white-space: nowrap; color: rgba(244, 238, 232, .45); background: rgba(255, 246, 232, .025); border: 1px dashed rgba(255, 228, 190, .2); transition: color .4s, background-color .4s, border-color .4s; }
+.sga-crew { position: absolute; display: flex; align-items: center; justify-content: center; gap: 7px; padding: 0 11px; border-radius: 9px; font-size: 13px; font-weight: 600; white-space: nowrap; color: rgba(244, 238, 232, .45); background: rgba(255, 246, 232, .025); border: 1px dashed rgba(231, 231, 243, .2); transition: color .4s, background-color .4s, border-color .4s; }
 .sga-crew span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .sga-crew.is-bare { padding: 0 6px; }
 .sga-crew svg { flex: none; }
-.sga-crew.is-on { color: #fff3df; border-style: solid; border-color: rgba(243, 194, 122, .5); background: rgba(243, 194, 122, .1); }
-.sga-crew.is-co.is-on { color: #1b130b; background: linear-gradient(140deg, #ffe7bf, #eeb062); border-color: transparent; }
+.sga-crew.is-on { color: #fff3df; border-style: solid; border-color: rgba(199, 197, 249, .5); background: rgba(199, 197, 249, .1); }
+.sga-crew.is-co.is-on { color: #1b130b; background: linear-gradient(140deg, #e9e9f4, #b9b3ff); border-color: transparent; }
 .sga-note { position: absolute; font-size: 12.5px; color: rgba(244, 238, 232, .4); transition: color .4s; }
-.sga-note.is-on { color: #f3d3a0; }
+.sga-note.is-on { color: #d6d5f1; }
 
 /* ---------- phone: the edges around the caption ---------- */
 .sga-pchip, .sga-plab { position: absolute; display: flex; align-items: center; justify-content: center; gap: 5px; font-size: 12px; font-weight: 600; white-space: nowrap; color: rgba(244, 238, 232, .5); transition: color .4s, background-color .4s, border-color .4s; }
-.sga-pchip { padding: 0 6px; border-radius: 9px; background: rgba(255, 246, 232, .03); border: 1px solid rgba(255, 228, 190, .1); }
+.sga-pchip { padding: 0 6px; border-radius: 9px; background: rgba(255, 246, 232, .03); border: 1px solid rgba(231, 231, 243, .1); }
 .sga-pchip > span, .sga-plab > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-.sga-pchip svg { flex: none; color: rgba(243, 211, 160, .55); transition: color .4s; }
-.sga-pchip.is-on { color: #fff3df; background: rgba(243, 194, 122, .12); border-color: rgba(243, 194, 122, .5); }
-.sga-pchip.is-on svg { color: #f3c27a; }
+.sga-pchip svg { flex: none; color: rgba(214, 213, 241, .55); transition: color .4s; }
+.sga-pchip.is-on { color: #fff3df; background: rgba(199, 197, 249, .12); border-color: rgba(199, 197, 249, .5); }
+.sga-pchip.is-on svg { color: #c7c5f9; }
 .sga-plab { line-height: 16px; }
 .sga-plab > i { flex: none; width: 6px; height: 6px; border-radius: 50%; background: rgba(244, 238, 232, .3); transition: background-color .4s; }
 .sga-plab.is-on { color: #fff3df; }
-.sga-plab.is-on > i { background: #ff8a3d; }
+.sga-plab.is-on > i { background: #a9a0ff; }
 .sga-pline { position: absolute; display: flex; align-items: center; gap: 8px; font-size: 12.5px; white-space: nowrap; }
-.sga-pline > i { flex: none; width: 7px; height: 7px; border-radius: 50%; background: #ff8a3d; }
+.sga-pline > i { flex: none; width: 7px; height: 7px; border-radius: 50%; background: #a9a0ff; }
 .sga-ptext { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; color: rgba(248, 241, 231, .82); }
 .sga-pline .sg-tag, .sga .sga-ptag { font-size: 12px; }
 .sga-pline .sg-tag { position: static; transform: none; flex: none; }

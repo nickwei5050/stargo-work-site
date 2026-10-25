@@ -81,9 +81,9 @@
     var inner = card.querySelector('.pricing-card.growth') || card;
     g.fromTo(
       inner,
-      { boxShadow: '0 0 0 1px rgba(249,56,161,.20), 0 24px 70px -30px rgba(249,56,161,.35)' },
+      { boxShadow: '0 0 0 1px rgba(166, 112, 255,.20), 0 24px 70px -30px rgba(166, 112, 255,.35)' },
       {
-        boxShadow: '0 0 0 1px rgba(249,56,161,.55), 0 30px 90px -28px rgba(249,56,161,.80)',
+        boxShadow: '0 0 0 1px rgba(166, 112, 255,.55), 0 30px 90px -28px rgba(166, 112, 255,.80)',
         duration: 1.6, ease: 'sine.inOut', yoyo: true, repeat: 1,
         scrollTrigger: { trigger: card, start: 'top 80%', once: true },
       }

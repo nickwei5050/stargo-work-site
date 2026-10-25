@@ -34,9 +34,9 @@
     // already there. The short forms are for the narrow layouts
     var LOG = [
       ['#229', T('开发信', 'Outreach email'), T('回复率 4.2% · 达标', 'Reply rate 4.2% · on target'), 'ok', -2, T('开发信', 'Email'), T('回复率 4.2%', 'Replies 4.2%')],
-      ['#230', T('报价单', 'Quote'), T('准时发出 · 达标', 'Sent on time · on target'), 'ok', -1, T('报价单', 'Quote'), T('准时发出', 'Sent on time')],
-      ['#231', T('开发信', 'Outreach email'), T('回复率 3.3% · 人工修正 1 处', 'Reply rate 3.3% · 1 human fix'), 'fix', 0.6, T('开发信', 'Email'), T('人工修正 1 处', '1 human fix')],
-      ['#232', T('开发信 v2', 'Outreach email v2'), T('回复率 5.8% · 达标', 'Reply rate 5.8% · on target'), 'ok', 15.4, T('开发信 v2', 'Email v2'), T('回复率 5.8%', 'Replies 5.8%')]
+      ['#17303e', T('报价单', 'Quote'), T('准时发出 · 达标', 'Sent on time · on target'), 'ok', -1, T('报价单', 'Quote'), T('准时发出', 'Sent on time')],
+      ['#1d303b', T('开发信', 'Outreach email'), T('回复率 3.3% · 人工修正 1 处', 'Reply rate 3.3% · 1 human fix'), 'fix', 0.6, T('开发信', 'Email'), T('人工修正 1 处', '1 human fix')],
+      ['#243037', T('开发信 v2', 'Outreach email v2'), T('回复率 5.8% · 达标', 'Reply rate 5.8% · on target'), 'ok', 15.4, T('开发信 v2', 'Email v2'), T('回复率 5.8%', 'Replies 5.8%')]
     ];
     var A_IN = 1.6, BAR1 = 2.2, BAR2 = 2.8, ASK = 4.2, TAP = 6.0, R0 = 6.6, STEPS = [6.9, 7.9, 8.9], DONE = 9.8;
     var B_IN = 10.6, B_BAD = 12.0, B_REV = 13.4, B_KEEP = 14.0, OUT0 = P - 1.4, OUT1 = P - 0.6;
@@ -83,7 +83,7 @@
       el('span', 'sgi-cn', at, T('改进 #12', sq ? '#12' : 'Change #12'));
       el('b', '', at, T('开发信 v2', sq ? 'Email v2' : 'Outreach email v2'));
       R.aPill = el('span', 'sgi-pill', ah);
-      el('div', 'sgi-sub', a, T('从 #231 的人工修正复盘：开头先提对方的储能项目', 'From the fix on #231: open with the buyer’s storage project'));
+      el('div', 'sgi-sub', a, T('从 #1d303b 的人工修正复盘：开头先提对方的储能项目', 'From the fix on #1d303b: open with the buyer’s storage project'));
       R.bars = [[T('现行 v1', 'Current v1'), 4.2], [T('新版 v2', 'New v2'), 6.7]].map(function (b, i) {
         var r = el('div', 'sgi-ab' + (i ? ' is-new' : ''), a);
         el('span', 'sgi-ab-k', r, b[0]);

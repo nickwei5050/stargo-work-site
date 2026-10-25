@@ -60,7 +60,7 @@
 .sgp-bar-t { display: flex; align-items: center; gap: 3px; min-width: 0; font-size: 15px; }
 .sgp-bar-t b { font-weight: 700; }
 .sgp-chev { color: #9a948f; margin: 0 1px; }
-.sgp-dot { margin-left: auto; width: 11px; height: 11px; border-radius: 50%; background: #e9c183; flex: none; }
+.sgp-dot { margin-left: auto; width: 11px; height: 11px; border-radius: 50%; background: #c4c2f2; flex: none; }
 .sgp-plus { flex: none; width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; color: #fff; background: #0044d3; box-shadow: 0 3px 8px -3px rgba(0, 68, 211, .6); }
 .sgp .sg-tag { position: static; transform: none; font-size: 12px; letter-spacing: .01em; color: #7a746f; white-space: nowrap; }
 .sgp-tagline { display: flex; justify-content: flex-end; align-items: center; height: 22px; padding: 0 16px; }
@@ -69,13 +69,13 @@
 /* avatars, pills, buttons, the finger */
 .sgp-av { flex: none; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; letter-spacing: .02em; color: #10191a; }
 .sgp-av.is-cyan { background: #8adbe9; }
-.sgp-av.is-amber { background: #ecc58c; color: #4f2c00; }
-.sgp-av.is-green { background: #9fd3b8; color: #123d29; }
-.sgp-av.is-pink { background: #f6b4ab; color: #5a0d17; }
+.sgp-av.is-amber { background: #c9c7f1; color: #34266e; }
+.sgp-av.is-green { background: #a2cce5; color: #223743; }
+.sgp-av.is-pink { background: #c7c0ec; color: #360e74; }
 .sgp-av.is-ink { background: #10191a; color: #fff; }
 .sgp-pill { display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 7px; font-size: 12.5px; font-weight: 500; white-space: nowrap; transition: background .35s, color .35s; }
-.sgp-pill.is-red { background: #fea7a0; color: #600a15; }
-.sgp-pill.is-amber { background: #e9c183; color: #5c3300; }
+.sgp-pill.is-red { background: #c2b8f7; color: #3a047f; }
+.sgp-pill.is-amber { background: #c4c2f2; color: #3d2985; }
 .sgp-pill.is-gray { background: #ebe5df; color: #262724; }
 .sgp-pill.is-run { background: #dfe7fa; color: #0040c4; }
 .sgp-btn { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 30px; padding: 0 14px; border-radius: 9px; font-size: 13px; font-weight: 600; color: #10191a; background: #fffdfa; border: 1px solid #d9d3cd; white-space: nowrap; transition: transform .16s cubic-bezier(.22, 1, .36, 1), background .3s, color .3s, box-shadow .3s; }
@@ -88,7 +88,7 @@
 .sgp-tap-ring { left: -18px; top: -18px; width: 36px; height: 36px; border: 2px solid rgba(16, 25, 26, .45); }
 
 /* =================== FEED: 待办 =================== */
-.sgp-card { position: relative; margin: 2px 10px 0; border-radius: 16px; background: #faf6f1; box-shadow: 0 1px 2px rgba(60, 40, 20, .05), 0 8px 22px -12px rgba(60, 40, 20, .18); overflow: hidden; }
+.sgp-card { position: relative; margin: 2px 10px 0; border-radius: 16px; background: #faf6f1; box-shadow: 0 1px 2px rgba(43, 39, 74, .05), 0 8px 22px -12px rgba(43, 39, 74, .18); overflow: hidden; }
 .sgp-card-h { height: 46px; display: flex; align-items: center; gap: 8px; padding: 0 14px; font-size: 15.5px; }
 .sgp-card-h b { font-weight: 700; }
 .sgp-empty { position: absolute; left: 14px; top: 44px; font-size: 12.5px; color: #7a746f; white-space: nowrap; }
@@ -104,8 +104,8 @@
 .sgp-acts { display: flex; gap: 8px; margin-top: 10px; }
 .sgp-done { position: absolute; left: 0; right: 0; top: 0; padding: 12px 14px; opacity: 0; white-space: nowrap; }
 .sgp-done-h { display: flex; align-items: center; gap: 8px; }
-.sgp-ck { flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: #2e8b5f; }
-.sgp-done-h b { font-size: 13.5px; font-weight: 700; color: #1d5a3d; }
+.sgp-ck { flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: #1d81b0; }
+.sgp-done-h b { font-size: 13.5px; font-weight: 700; color: #2a5269; }
 .sgp-done-h b + span { min-width: 0; font-size: 12px; color: #7a746f; overflow: hidden; text-overflow: ellipsis; }
 .sgp-done-s { margin: 3px 0 0 30px; font-size: 12.5px; color: #3b3c44; }
 .sgp-feed .sgp-item.is-done { background: #eef6f1; }
@@ -113,7 +113,7 @@
 .sgp-tab { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 12px; color: #4a4b52; white-space: nowrap; }
 .sgp-tab.is-on { color: #10191a; font-weight: 600; }
 .sgp-tab-i { position: relative; }
-.sgp-badge { position: absolute; left: 15px; top: -5px; min-width: 18px; height: 16px; padding: 0 4px; border-radius: 8px; display: grid; place-items: center; font-style: normal; font-size: 12px; font-weight: 600; color: #600a15; background: #fba7a6; opacity: 0; transform: scale(.6); transition: opacity .3s, transform .4s cubic-bezier(.34, 1.56, .64, 1); }
+.sgp-badge { position: absolute; left: 15px; top: -5px; min-width: 18px; height: 16px; padding: 0 4px; border-radius: 8px; display: grid; place-items: center; font-style: normal; font-size: 12px; font-weight: 600; color: #3a047f; background: #c2b7f5; opacity: 0; transform: scale(.6); transition: opacity .3s, transform .4s cubic-bezier(.34, 1.56, .64, 1); }
 .sgp-badge.is-on { opacity: 1; transform: none; }
 .sgp-home { position: absolute; left: 50%; bottom: 7px; width: 100px; height: 4px; margin-left: -50px; border-radius: 2px; background: #10191a; }
 /* tall and mid: the tabs keep clear of the screen's rounded corners (「AI · Buyers」 is the widest label) */
@@ -165,7 +165,7 @@
 .sgp-feed.is-mini .sg-tag { font-size: 12px; letter-spacing: 0; color: #6f6a66; }
 .sgp-feed.is-mini .sgp-card { position: absolute; left: 0; right: 0; top: 51px; bottom: 0; margin: 0; border-radius: 0; background: none; box-shadow: none; overflow: visible; }
 .sgp-feed.is-mini .sgp-list { top: 0; left: 6px; right: 6px; }
-.sgp-feed.is-mini .sgp-item { padding: 6px 7px 7px; border-radius: 10px; background: #faf6f1; box-shadow: 0 1px 2px rgba(60, 40, 20, .06), 0 4px 12px -6px rgba(60, 40, 20, .18); }
+.sgp-feed.is-mini .sgp-item { padding: 6px 7px 7px; border-radius: 10px; background: #faf6f1; box-shadow: 0 1px 2px rgba(43, 39, 74, .06), 0 4px 12px -6px rgba(43, 39, 74, .18); }
 .sgp-feed.is-mini .sgp-item.is-new { background: #fffdf9; }
 .sgp-feed.is-mini .sgp-item.is-done { background: #eef6f1; }
 .sgp-feed.is-mini .sgp-r1 { height: 17px; }
@@ -221,7 +221,7 @@
 .sgp-squad .sgp-bar { height: 42px; }
 .sgp-squad .sgp-tagline { height: 18px; }
 .sgp-main { display: flex; flex-direction: column; gap: 9px; padding: 2px 12px 0; }
-.sgp-task, .sgp-steps { border-radius: 14px; background: #faf6f1; box-shadow: 0 1px 2px rgba(60, 40, 20, .05), 0 6px 18px -10px rgba(60, 40, 20, .2); }
+.sgp-task, .sgp-steps { border-radius: 14px; background: #faf6f1; box-shadow: 0 1px 2px rgba(43, 39, 74, .05), 0 6px 18px -10px rgba(43, 39, 74, .2); }
 .sgp-task { padding: 11px 13px 11px; }
 .sgp-task-h { display: flex; align-items: center; justify-content: space-between; gap: 8px; height: 22px; white-space: nowrap; }
 .sgp-task-h b { min-width: 0; font-size: 15px; font-weight: 700; letter-spacing: -.005em; overflow: hidden; text-overflow: ellipsis; }
@@ -234,7 +234,7 @@
 .sgp-meter-b { display: block; height: 4px; margin-top: 5px; border-radius: 2px; background: #e4deda; overflow: hidden; }
 .sgp-meter-b i { display: block; height: 100%; border-radius: 2px; background: #0044d3; transform-origin: 0 50%; transform: scaleX(0); transition: transform .5s cubic-bezier(.22, 1, .36, 1); }
 .sgp-ctl .sgp-btn { height: 32px; padding: 0 12px; gap: 5px; }
-.sgp-btn.is-held { color: #5c3300; background: #f3e2c4; border-color: #e9c183; }
+.sgp-btn.is-held { color: #3d2985; background: #f3e2c4; border-color: #c4c2f2; }
 .sgp-label { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; height: 17px; font-size: 12.5px; color: #6f6a66; white-space: nowrap; }
 .sgp-label em { font-size: 12px; font-variant-numeric: tabular-nums; }
 .sgp-chips { position: relative; display: flex; justify-content: space-between; margin-top: 6px; padding: 0 4px; }
@@ -254,7 +254,7 @@
 .sgp-spin-fg { fill: none; stroke: #0044d3; stroke-width: 2.4; stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 100; opacity: 0; }
 .sgp-step.is-run .sgp-spin-fg { opacity: 1; }
 .sgp-ok, .sgp-wait { display: none; }
-.sgp-ok { width: 18px; height: 18px; border-radius: 50%; place-items: center; color: #fff; background: #2e8b5f; }
+.sgp-ok { width: 18px; height: 18px; border-radius: 50%; place-items: center; color: #fff; background: #1d81b0; }
 .sgp-step.is-fin .sgp-spin { display: none; }
 .sgp-step.is-fin .sgp-ok { display: grid; animation: sgp-pop .45s cubic-bezier(.34, 1.56, .64, 1); }
 .sgp-st.is-wait .sgp-ok { display: none; }
@@ -273,7 +273,7 @@
 .sgp-sheet { position: absolute; left: 0; right: 0; bottom: 0; padding: 8px 16px 14px; border-radius: 20px 20px 0 0; background: #fffdfa; box-shadow: 0 -12px 34px -14px rgba(16, 25, 26, .45); transform: translateY(104%); visibility: hidden; }
 .sgp-grab { display: block; width: 36px; height: 4px; margin: 0 auto 12px; border-radius: 2px; background: #d9d3cd; }
 .sgp-sheet-h { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-.sgp-sheet-i { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; color: #5c3300; background: #e9c183; }
+.sgp-sheet-i { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; color: #3d2985; background: #c4c2f2; }
 .sgp-sheet-h b { display: block; font-size: 16px; font-weight: 700; }
 .sgp-sheet-h b + span { display: block; font-size: 12.5px; color: #6f6a66; margin-top: 1px; }
 .sgp-ctx { display: grid; grid-template-columns: 58px 1fr; align-items: baseline; gap: 8px; padding: 8px 0; border-top: 1px solid #ece6e1; white-space: nowrap; }
@@ -283,7 +283,7 @@
 .sgp-sheet-b .sgp-btn { height: 38px; flex: 1; }
 .sgp-sheet-b .sgp-btn.is-primary { flex: 1.25; }
 .sgp-toast { position: absolute; left: 50%; display: flex; align-items: center; gap: 7px; height: 32px; padding: 0 14px; border-radius: 16px; font-size: 12.5px; font-weight: 500; color: #fff; background: #10191a; white-space: nowrap; opacity: 0; box-shadow: 0 10px 24px -10px rgba(16, 25, 26, .6); }
-.sgp-toast .sgp-ico { color: #9fd3b8; }
+.sgp-toast .sgp-ico { color: #a2cce5; }
 
 /* squad mid: 250 × 541, on phones */
 .sgp-squad.is-mid .sgp-status { height: 38px; padding: 2px 18px 0 24px; }

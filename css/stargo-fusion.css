@@ -299,7 +299,7 @@ body.lx-page .lx-scope { padding-top: 80px; }
 
 /* 6. The core-system switcher's four names are buttons as well as scroll stops. */
 .sc-scope.products .products-card-name-block { cursor: pointer; }
-.sc-scope.products .products-card-name-block:focus-visible { outline: 2px solid #e8823a; outline-offset: -2px; border-radius: 8px; }
+.sc-scope.products .products-card-name-block:focus-visible { outline: 2px solid #9b8eff; outline-offset: -2px; border-radius: 8px; }
 
 /* 7. Forms: honeypot off-screen; the status line under a form. */
 .stargo-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
@@ -327,7 +327,7 @@ html[lang="en"] .menu-bottom { max-width: 720px; }
 
 /* 12. Keyboard users get a visible focus ring (the template hides the cursor
        and relies on hover states only). */
-a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible { outline: 2px solid #e8823a; outline-offset: 3px; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible { outline: 2px solid #9b8eff; outline-offset: 3px; }
 
 /* 13. Mobile navigation: 44px tap targets and no page scroll while the
        Webflow nav overlay is open. */
@@ -456,7 +456,7 @@ button.toggle-header { width: 100%; border: 0; border-radius: 0; background: tra
 .lx-scope a.lx-related-item { color: inherit; text-decoration: none; transition: opacity .3s; }
 .lx-scope a.lx-related-item:hover { opacity: .75; }
 .lx-scope .lx-text-rich-text h3 { margin-top: 2.5rem; }
-.lx-scope .lx-text-rich-text a { color: var(--_semantics---primary, #e393bd); }
+.lx-scope .lx-text-rich-text a { color: var(--_semantics---primary, #ba9df8); }
 .lx-scope .lx-blog-details-image-holder .lx-blog-image.lx-details { width: 100%; }
 /* The holder is a shrink-to-fit flex item: 0px wide until the hero decodes,
    then it pushed the article down (CLS 0.15-0.36). Give it its final width up
@@ -625,20 +625,20 @@ button.toggle-header { width: 100%; border: 0; border-radius: 0; background: tra
    and the badge, the active tab, the plan icons, the promoted card and its top
    border all read pink-purple. Nothing else about the layout moves. */
 body.stargo-pricing-lx,
-body.stargo-pricing-lx .sc-scope { --border-color--border-color-03: #f938a1; }
+body.stargo-pricing-lx .sc-scope { --border-color--border-color-03: #a670ff; }
 
-body.stargo-pricing-lx .top-border { background-image: linear-gradient(#f938a1, #f938a100); }
+body.stargo-pricing-lx .top-border { background-image: linear-gradient(#a670ff, #a670ff00); }
 
 body.stargo-pricing-lx .sc-pricing-card.growth {
   background-image:
-    linear-gradient(117deg, #f938a12e .96%, #500b3800 95.98%),
+    linear-gradient(117deg, #a670ff2e .96%, #390a6a00 95.98%),
     url("../assets/69a01660589c516ba5f0f917/69a2a0d626d85bfe3d20a9ed_number-card-big-img.svg");
-  box-shadow: 0 0 0 1px #f938a133, 0 24px 70px -30px #f938a159;
+  box-shadow: 0 0 0 1px #a670ff33, 0 24px 70px -30px #a670ff59;
 }
 
 body.stargo-pricing-lx .button-primary {
   box-shadow: 0 0 0 3px var(--beckground-color--white), 0 2px 5px 0 #0003,
-    0 0 0 2px #f8eaf0, 0 3.714px 4.846px 0 #f938a11c, 0 10.2px 13.3px 0 #f938a114;
+    0 0 0 2px #f8eaf0, 0 3.714px 4.846px 0 #a670ff1c, 0 10.2px 13.3px 0 #a670ff14;
 }
 
 /* Scalora's eyebrow icon is an orange SVG, so it cannot follow the token: turn
@@ -654,11 +654,11 @@ body.stargo-pricing-lx .stargo-plan-badge {
   /* margin-right:100% pushes the plan name onto the next row while the badge
      itself stays the width of its words. */
   margin: 0 100% 12px 0;
-  border: 1px solid #f938a159;
+  border: 1px solid #a670ff59;
   border-radius: 999px;
   padding: 4px 10px;
   color: #ffe3f2;
-  background: #f938a11f;
+  background: #a670ff1f;
   font-size: 12px;
   letter-spacing: .04em;
   line-height: 1.2;
@@ -701,11 +701,11 @@ body.stargo-pricing-lx .stargo-plan-badge {
    alpha: the caption chip's fill and hairline, its divider, and the CTA icon
    block's border and wash. Rebind them to the Lifelogx magenta the rest of the
    page now uses. No orange remains on the page. */
-.hero-section-caption-block { background-color: rgba(249, 56, 161, .12) !important;
-  border-color: rgba(249, 56, 161, .22) !important; }
-.hero-caption-devider { background-color: rgba(249, 56, 161, .35) !important; }
-.cta-icon-block { border-color: rgba(249, 56, 161, .22) !important;
-  background-image: linear-gradient(90deg, rgba(249, 56, 161, .12), rgba(249, 56, 161, .40) 54.55%, rgba(249, 56, 161, .08)) !important; }
+.hero-section-caption-block { background-color: rgba(166, 112, 255, .12) !important;
+  border-color: rgba(166, 112, 255, .22) !important; }
+.hero-caption-devider { background-color: rgba(166, 112, 255, .35) !important; }
+.cta-icon-block { border-color: rgba(166, 112, 255, .22) !important;
+  background-image: linear-gradient(90deg, rgba(166, 112, 255, .12), rgba(166, 112, 255, .40) 54.55%, rgba(166, 112, 255, .08)) !important; }
 
 /* The pricing headline gets the Intelligence page's treatment: white type
    fading downward, so the two big statements on the site read as one family.
@@ -718,7 +718,7 @@ body.stargo-pricing-lx .stargo-plan-badge {
   -webkit-mask-image: linear-gradient(180deg, #000 22%, rgba(0, 0, 0, .28));
   mask-image: linear-gradient(180deg, #000 22%, rgba(0, 0, 0, .28));
 }
-.pricing-hero-title-block h1 .sub-title-text { color: #f938a1; }
+.pricing-hero-title-block h1 .sub-title-text { color: #a670ff; }
 
 /* Scalora accents one word of the headline in Instrument Serif Italic. That
    reads well in Latin, but the accent here contains Chinese, and a Latin italic
@@ -2922,9 +2922,9 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
    Palette and type are lifelogx's own: the pink primary, its deep tertiary,
    the dark border and greys, "42 Dotsans" for headings and Inter for text. */
 .lx-scope .stargo-post {
-  --sg-accent: var(--_semantics---primary, #e393bd);
-  --sg-hot: var(--_primitives---primary--secondary, #f938a1);
-  --sg-deep: var(--_primitives---primary--tertiary, #500b38);
+  --sg-accent: var(--_semantics---primary, #ba9df8);
+  --sg-hot: var(--_primitives---primary--secondary, #a670ff);
+  --sg-deep: var(--_primitives---primary--tertiary, #390a6a);
   --sg-line: var(--_primitives---primary--border-dark, #292829);
   --sg-card: #121113;
   --sg-card-2: #1a191c;
@@ -2944,9 +2944,9 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
 .lx-scope .stargo-post .sgp-takeaways {
   margin: 1.75rem 0 2.25rem;
   padding: 1.25rem 1.4rem 1.1rem;
-  border: 1px solid rgba(227, 147, 189, .38);
+  border: 1px solid rgba(186, 157, 248, .38);
   border-radius: 1rem;
-  background: linear-gradient(135deg, rgba(80, 11, 56, .62), rgba(18, 17, 19, .96) 70%);
+  background: linear-gradient(135deg, rgba(57, 10, 106, .62), rgba(18, 17, 19, .96) 70%);
 }
 .lx-scope .stargo-post .sgp-takeaways-title {
   margin: 0 0 .8rem;
@@ -2974,7 +2974,7 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
   height: .6rem;
   border-radius: 50%;
   background: var(--sg-accent);
-  box-shadow: 0 0 0 4px rgba(227, 147, 189, .16);
+  box-shadow: 0 0 0 4px rgba(186, 157, 248, .16);
 }
 
 /* The long guide's contents list. */
@@ -3024,7 +3024,7 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
 .lx-scope .stargo-post .sgp-cta {
   margin: 2.5rem 0 0;
   padding: 1.1rem 1.35rem;
-  border: 1px solid rgba(227, 147, 189, .3);
+  border: 1px solid rgba(186, 157, 248, .3);
   border-radius: 1rem;
   background: var(--sg-card);
   font-weight: 500;
@@ -3063,7 +3063,7 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
   padding: 1.25rem;
   border: 1px solid var(--sg-line);
   border-radius: 1.25rem;
-  background: radial-gradient(120% 80% at 0% 0%, rgba(80, 11, 56, .42), transparent 62%), var(--sg-panel);
+  background: radial-gradient(120% 80% at 0% 0%, rgba(57, 10, 106, .42), transparent 62%), var(--sg-panel);
   color: #fffffe;
   font-family: var(--_ui-styles---fonts--text, Inter, sans-serif);
   font-size: 1rem;
@@ -3076,7 +3076,7 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
 .lx-scope .stargo-post .sgc-no {
   flex: none;
   padding: .15rem .6rem;
-  border: 1px solid rgba(227, 147, 189, .45);
+  border: 1px solid rgba(186, 157, 248, .45);
   border-radius: 999px;
   color: var(--sg-accent);
   font-size: .72rem;
@@ -3119,7 +3119,7 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
   place-items: center;
   width: 1.35rem;
   height: 1.35rem;
-  border: 1px solid rgba(227, 147, 189, .5);
+  border: 1px solid rgba(186, 157, 248, .5);
   border-radius: 50%;
   background: var(--sg-panel);
   color: var(--sg-accent);
@@ -3185,7 +3185,7 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
 .lx-scope .stargo-post .sgc-lane .sgc-flow { margin-top: 1rem; }
 .lx-scope .stargo-post .sgc-handoff {
   padding: 1rem;
-  border: 1px solid rgba(227, 147, 189, .5);
+  border: 1px solid rgba(186, 157, 248, .5);
   border-radius: 1rem;
   background: linear-gradient(135deg, var(--sg-deep), #22091a);
 }
@@ -3259,7 +3259,7 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
   padding: .9rem 1.2rem;
   border-radius: 999px;
   background: radial-gradient(circle at 30% 25%, var(--sg-hot), var(--sg-deep) 72%);
-  box-shadow: 0 0 0 6px rgba(227, 147, 189, .12);
+  box-shadow: 0 0 0 6px rgba(186, 157, 248, .12);
   text-align: center;
 }
 .lx-scope .stargo-post .sgc-hub strong { font-family: var(--sg-head); font-size: 1.15rem; font-weight: 500; }
@@ -3268,15 +3268,15 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
 .lx-scope .stargo-post .sgc-role { display: grid; align-content: start; gap: .15rem; padding: .7rem .8rem; border: 1px solid var(--sg-line); border-radius: .75rem; background: var(--sg-card-2); }
 .lx-scope .stargo-post .sgc-role-name { font-size: .92rem; line-height: 1.3; }
 .lx-scope .stargo-post .sgc-role-task { color: var(--sg-soft); font-size: .8rem; line-height: 1.4; }
-.lx-scope .stargo-post .sgc-role-lead { border-color: rgba(227, 147, 189, .55); background: #251220; }
+.lx-scope .stargo-post .sgc-role-lead { border-color: rgba(186, 157, 248, .55); background: #251220; }
 .lx-scope .stargo-post .sgc-msgs { display: grid; gap: .45rem; }
 .lx-scope .stargo-post .sgc-msg {
   display: grid;
   gap: .1rem;
   padding: .5rem .75rem;
-  border: 1px solid rgba(227, 147, 189, .28);
+  border: 1px solid rgba(186, 157, 248, .28);
   border-radius: .8rem .8rem .8rem .2rem;
-  background: rgba(80, 11, 56, .35);
+  background: rgba(57, 10, 106, .35);
 }
 .lx-scope .stargo-post .sgc-msg-who { color: var(--sg-accent); font-size: .72rem; line-height: 1.35; }
 .lx-scope .stargo-post .sgc-msg-text { font-size: .88rem; }
@@ -3356,7 +3356,7 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
 }
 .lx-scope .stargo-post .sgc-formats { display: flex; align-items: flex-end; justify-content: space-around; gap: .75rem; padding: .25rem 0; }
 .lx-scope .stargo-post .sgc-format { display: grid; justify-items: center; gap: .3rem; text-align: center; font-size: .82rem; }
-.lx-scope .stargo-post .sgc-shape { display: block; border: 2px solid var(--sg-accent); border-radius: .35rem; background: rgba(227, 147, 189, .12); }
+.lx-scope .stargo-post .sgc-shape { display: block; border: 2px solid var(--sg-accent); border-radius: .35rem; background: rgba(186, 157, 248, .12); }
 .lx-scope .stargo-post .sgc-shape-portrait { width: 2.3rem; height: 4.1rem; }
 .lx-scope .stargo-post .sgc-shape-landscape { width: 5.4rem; height: 3.05rem; }
 .lx-scope .stargo-post .sgc-shape-square { width: 3.3rem; height: 3.3rem; }
@@ -3389,7 +3389,7 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
 .lx-scope .stargo-post .sgc-status { display: grid; align-content: start; gap: .55rem; padding: .9rem 1rem; border: 1px solid var(--sg-line); border-radius: .9rem; background: var(--sg-card); }
 .lx-scope .stargo-post .sgc-status-title { display: flex; align-items: center; gap: .5rem; font-size: .98rem; line-height: 1.35; }
 .lx-scope .stargo-post .sgc-status-title::before { content: ""; flex: none; width: .65rem; height: .65rem; border: 2px solid var(--sg-muted); border-radius: 50%; }
-.lx-scope .stargo-post .sgc-status-now { border-color: rgba(227, 147, 189, .6); background: linear-gradient(135deg, rgba(80, 11, 56, .7), var(--sg-card) 75%); }
+.lx-scope .stargo-post .sgc-status-now { border-color: rgba(186, 157, 248, .6); background: linear-gradient(135deg, rgba(57, 10, 106, .7), var(--sg-card) 75%); }
 .lx-scope .stargo-post .sgc-status-now .sgc-status-title::before { border-color: var(--sg-accent); background: var(--sg-accent); }
 .lx-scope .stargo-post .sgc-status-base .sgc-status-title::before { border-color: var(--sg-accent); background: linear-gradient(90deg, var(--sg-accent) 50%, transparent 50%); }
 .lx-scope .stargo-post .sgc-status-next { border-style: dashed; }
@@ -3408,7 +3408,7 @@ html[lang^="en"] .footer-part-1 h2.h2 { text-wrap: balance; }
 .lx-scope .stargo-post .sgc-checks li { position: relative; padding-left: 1.3rem; color: var(--sg-soft); font-size: .86rem; }
 .lx-scope .stargo-post .sgc-checks li::before { content: "✓"; position: absolute; left: 0; color: var(--sg-accent); }
 .lx-scope .stargo-post .sgc-questions { display: grid; gap: .35rem; }
-.lx-scope .stargo-post .sgc-questions li { padding: .45rem .7rem; border-radius: .6rem .6rem .6rem .15rem; background: rgba(80, 11, 56, .4); font-size: .86rem; }
+.lx-scope .stargo-post .sgc-questions li { padding: .45rem .7rem; border-radius: .6rem .6rem .6rem .15rem; background: rgba(57, 10, 106, .4); font-size: .86rem; }
 .lx-scope .stargo-post .sgc-chain-core li { background: var(--sg-deep); }
 @container (min-width: 560px) {
   .lx-scope .stargo-post .sgc-duo { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -4480,7 +4480,7 @@ html[lang^="zh"] .lx-scope .lx-cta-wrapper .lx-cta-logo-holder .lx-text-size-reg
 .cn-about-reviews .w-slider .w-slider-arrow-right:focus-visible,
 .cn-reviews .w-slider .w-slider-arrow-left:focus-visible,
 .cn-reviews .w-slider .w-slider-arrow-right:focus-visible {
-  outline: 2px solid #e8823a;
+  outline: 2px solid #9b8eff;
   outline-offset: -3px;
   border-radius: 16px;
 }
@@ -5385,7 +5385,7 @@ button.button-link .navigation-text-main { text-align: left; }
 .stargo-copy:hover::before { border-color: rgba(0, 0, 0, .55); }
 /* The site's focus ring (#e8823a, 3px out), around the pill one sees. */
 .stargo-copy:focus-visible { outline: 0; }
-.stargo-copy:focus-visible::before { outline: 2px solid #e8823a; outline-offset: 3px; }
+.stargo-copy:focus-visible::before { outline: 2px solid #9b8eff; outline-offset: 3px; }
 .stargo-copy[data-stargo-copied-on] { color: #fff; }
 .stargo-copy[data-stargo-copied-on]::before { background-color: #000; border-color: #000; }
 
@@ -6126,10 +6126,10 @@ img[src*="stargo-photo/e06-cockpit-blocker-"] { object-position: 50% 20%; }
    printed directly under it (p.stargo-field-error, tied to the field with
    aria-describedby). #ff9e9e on the card's #232324 measures about 8:1. A
    visible keyboard focus ring, which the card's fields did not have. */
-.cn-contact .cn-form-input[aria-invalid="true"] { border-color: #ff9e9e; }
+.cn-contact .cn-form-input[aria-invalid="true"] { border-color: #beb0fd; }
 .cn-contact p.stargo-field-error {
   margin: .375rem 0 0;
-  color: #ff9e9e;
+  color: #beb0fd;
   opacity: 1;   /* the page's own paragraph rule fades p to .7 */
   font-size: 14px;
   line-height: 1.5;

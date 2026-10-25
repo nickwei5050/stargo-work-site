@@ -21,9 +21,9 @@
 .sga-label b { display: block; font-size: 15px; font-weight: 600; letter-spacing: .01em; color: rgba(246, 239, 230, .62); transition: color .6s; }
 .sga-label span { display: block; margin-top: 3px; font-size: 13px; color: rgba(246, 239, 230, .4); transition: color .6s; }
 .sga-label.is-hot b { color: #f6efe6; }
-.sga-label.is-hot span { color: #ffb37a; }
+.sga-label.is-hot span { color: #c2befd; }
 .sga-tag { color: rgba(244, 238, 232, .42); font-size: 12.5px; }
-.sga-lamp { fill: #ffc690; }
+.sga-lamp { fill: #d0cef6; }
 
 /* =================== NIGHT =================== */
 /* The night stage is drawn for a 900px-high screen and scaled to the screen it is on (0.8 at 1280 × 720, 0.85 at
@@ -42,36 +42,36 @@
 .sga-hills { fill: rgba(255, 236, 220, .012); stroke: rgba(255, 236, 220, .06); stroke-width: 1; }
 .sga-line.sga-bld { fill: #110d0a; }
 .sga-moon { fill: rgba(255, 232, 205, .1); stroke: rgba(255, 232, 205, .22); stroke-width: 1; }
-.sga-halo { fill: rgba(255, 210, 160, .025); }
+.sga-halo { fill: rgba(217, 216, 244, .025); }
 .sga-ground { stroke: rgba(255, 236, 220, .16); stroke-width: 1; fill: none; }
-.sga-water { stroke: rgba(255, 220, 180, .07); stroke-width: 1; stroke-linecap: round; fill: none; }
-.sga-arc { fill: none; stroke: rgba(255, 205, 150, .12); stroke-width: 1; stroke-dasharray: 2 5; }
-.sga-arc.is-hot { stroke: rgba(255, 138, 61, .7); stroke-width: 1.4; stroke-dasharray: none; opacity: 0; }
-.sga-node-ring { fill: rgba(13, 11, 9, .9); stroke: rgba(255, 220, 180, .3); stroke-width: 1; }
-.sga-node-core { fill: rgba(255, 220, 180, .55); transition: fill .5s; }
-.sga-node-rip { fill: none; stroke: #ff8a3d; stroke-width: 1.2; transform-box: fill-box; transform-origin: center; opacity: 0; }
-.sga-node.is-hot .sga-node-ring { stroke: #ff8a3d; }
-.sga-node.is-hot .sga-node-core { fill: #ff8a3d; }
+.sga-water { stroke: rgba(225, 225, 242, .07); stroke-width: 1; stroke-linecap: round; fill: none; }
+.sga-arc { fill: none; stroke: rgba(213, 211, 245, .12); stroke-width: 1; stroke-dasharray: 2 5; }
+.sga-arc.is-hot { stroke: rgba(169, 160, 255, .7); stroke-width: 1.4; stroke-dasharray: none; opacity: 0; }
+.sga-node-ring { fill: rgba(13, 11, 9, .9); stroke: rgba(225, 225, 242, .3); stroke-width: 1; }
+.sga-node-core { fill: rgba(225, 225, 242, .55); transition: fill .5s; }
+.sga-node-rip { fill: none; stroke: #a9a0ff; stroke-width: 1.2; transform-box: fill-box; transform-origin: center; opacity: 0; }
+.sga-node.is-hot .sga-node-ring { stroke: #a9a0ff; }
+.sga-node.is-hot .sga-node-core { fill: #a9a0ff; }
 /* .sga-place.is-left: the port's label ends short of the doors' seam (js/stargo-motion-atmos.js) */
 .sga-buyer.is-left, .sga-place.is-left { transform: translateX(-100%); text-align: right; }
 .sga-line { fill: none; stroke: rgba(255, 236, 220, .26); stroke-width: 1.2; stroke-linejoin: round; }
 .sga-glass { stroke: rgba(255, 236, 220, .1); stroke-width: 1; }
 .sga-win-dim { fill: rgba(255, 236, 220, .035); stroke: rgba(255, 236, 220, .1); stroke-width: 1; }
-.sga-win { fill: #ffb773; opacity: 0; }
-.sga-door { fill: rgba(255, 170, 100, .4); opacity: 0; }
+.sga-win { fill: #c4c0ff; opacity: 0; }
+.sga-door { fill: rgba(187, 182, 255, .4); opacity: 0; }
 .sga-road { stroke: rgba(255, 236, 220, .18); stroke-width: 1; stroke-dasharray: 6 7; }
 .sga-quay { stroke: rgba(255, 236, 220, .32); stroke-width: 2; }
 .sga-box { fill: rgba(255, 236, 220, .04); stroke: rgba(255, 236, 220, .16); stroke-width: 1; }
-.sga-box.is-warm { fill: rgba(236, 111, 16, .14); stroke: rgba(255, 150, 80, .3); }
-.sga-beacon { fill: #ff5a3c; opacity: .7; }
+.sga-box.is-warm { fill: rgba(147, 130, 255, .14); stroke: rgba(175, 168, 255, .3); }
+.sga-beacon { fill: #9584ff; opacity: .7; }
 .sga-trolley { fill: rgba(255, 236, 220, .35); }
 .sga-cable { fill: rgba(255, 236, 220, .4); transform-box: fill-box; transform-origin: 50% 0; opacity: 0; }
 .sga-hull { fill: rgba(255, 236, 220, .05); stroke: rgba(255, 236, 220, .3); stroke-width: 1.2; stroke-linejoin: round; }
 .sga-shiplit { opacity: 0; }
-.sga-reflect { fill: rgba(255, 180, 110, .16); }
-.sga-moving { fill: #ec6f10; stroke: #ffb37a; stroke-width: 1; opacity: 0; }
+.sga-reflect { fill: rgba(194, 190, 255, .16); }
+.sga-moving { fill: #9382ff; stroke: #c2befd; stroke-width: 1; opacity: 0; }
 .sga-pulse { opacity: 0; }
-.sga-glow { fill: rgba(255, 138, 61, .22); }
+.sga-glow { fill: rgba(169, 160, 255, .22); }
 .sga-head { fill: #fff1e4; }
 .sga-night .sga-place { font-size: 14px; }
 
@@ -79,20 +79,20 @@
 .sga-grid { stroke: rgba(255, 236, 220, .16); stroke-width: 2.2; stroke-linecap: round; fill: none; }
 .sga-wall { fill: none; stroke: rgba(255, 236, 220, .14); stroke-width: 1.2; }
 .sga-wall.is-in { stroke: rgba(255, 236, 220, .06); }
-.sga-east { stroke: rgba(255, 190, 120, .32); stroke-width: 3; stroke-linecap: round; }
-.sga-dawn { position: absolute; top: 0; right: -200px; width: 900px; height: 100%; background: radial-gradient(60% 55% at 100% 35%, rgba(255, 160, 80, .2), rgba(255, 140, 60, .06) 55%, transparent 75%); opacity: 0; pointer-events: none; }
+.sga-east { stroke: rgba(201, 198, 253, .32); stroke-width: 3; stroke-linecap: round; }
+.sga-dawn { position: absolute; top: 0; right: -200px; width: 900px; height: 100%; background: radial-gradient(60% 55% at 100% 35%, rgba(181, 175, 255, .2), rgba(170, 161, 255, .06) 55%, transparent 75%); opacity: 0; pointer-events: none; }
 .sga-belt { fill: none; stroke: rgba(255, 236, 220, .07); stroke-width: 6; stroke-linejoin: round; }
 .sga-belt.is-dash { stroke: rgba(255, 236, 220, .14); stroke-width: 1; stroke-dasharray: 3 9; }
 .sga-mach { fill: #0f0c0a; stroke: rgba(255, 236, 220, .2); stroke-width: 1.2; }
-.sga-mach.is-lit { fill: rgba(236, 111, 16, .1); stroke: rgba(255, 150, 80, .75); }
+.sga-mach.is-lit { fill: rgba(147, 130, 255, .1); stroke: rgba(175, 168, 255, .75); }
 .sga-mach-ln { fill: none; stroke: rgba(255, 236, 220, .18); stroke-width: 1.2; stroke-linecap: round; }
 .sga-st-lit { opacity: 0; }
-.sga-pack { fill: #ffb37a; opacity: 0; }
+.sga-pack { fill: #c2befd; opacity: 0; }
 .sga-st-name { position: absolute; font-size: 13px; color: rgba(246, 239, 230, .34); white-space: nowrap; transition: color .8s; }
 .sga-st-name.is-w { transform: translateY(-50%); }
 .sga-st-name.is-n { transform: translateY(-100%); }
 .sga-st-name.is-b { transform: translateX(-50%); }
-.sga-st-name.is-on { color: rgba(255, 190, 130, .8); }
+.sga-st-name.is-on { color: rgba(201, 199, 250, .8); }
 .sga-plan-title { position: absolute; line-height: 1.35; }
 .sga-plan-title b { display: block; font-size: 14px; font-weight: 600; color: rgba(246, 239, 230, .5); letter-spacing: .02em; }
 .sga-plan-title span { display: block; font-size: 12.5px; color: rgba(246, 239, 230, .32); }

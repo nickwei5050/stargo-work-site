@@ -347,24 +347,24 @@
       // colours as style (var(--sgb-*): the homepage's tokens in css/stargo-blue.css; the warm originals elsewhere)
       function stop(gr, o, c, a) { sv('stop', { offset: o, style: 'stop-color:' + c + (a == null ? '' : ';stop-opacity:' + a) }, gr); }
       var g1 = sv('radialGradient', { id: 'sgl-halo' }, defs);
-      stop(g1, '0', 'var(--sgb-cyan, #f2b45a)', '.28');
-      stop(g1, '.45', 'var(--sgb-violet, #c77a2a)', '.1');
+      stop(g1, '0', 'var(--sgb-cyan, #bcb7ff)', '.28');
+      stop(g1, '.45', 'var(--sgb-violet, #8b74ff)', '.1');
       stop(g1, '1', '#000', '0');
       var g2 = sv('radialGradient', { id: 'sgl-orb', cx: '.38', cy: '.32', r: '.8' }, defs);
-      stop(g2, '0', 'var(--sgb-indigo, #3b2a18)');
+      stop(g2, '0', 'var(--sgb-indigo, #2c2948)');
       stop(g2, '.6', 'var(--sgb-deep, #17110b)');
       stop(g2, '1', 'var(--sgb-ink, #0b0806)');
       var g3 = sv('linearGradient', { id: 'sgl-gold', x1: '0', y1: '0', x2: '1', y2: '1' }, defs);
       stop(g3, '0', 'var(--sgb-bubble, #fff4dc)');
-      stop(g3, '.5', 'var(--sgb-accent, #f3c27a)');
-      stop(g3, '1', 'var(--sgb-lilac, #c9802f)');
+      stop(g3, '.5', 'var(--sgb-accent, #c7c5f9)');
+      stop(g3, '1', 'var(--sgb-lilac, #8f7aff)');
       var g4 = sv('radialGradient', { id: 'sgl-dot' }, defs);
-      stop(g4, '0', 'var(--sgb-ice, #ffe2b0)', '.9');
-      stop(g4, '1', 'var(--sgb-accent, #f0a64a)', '0');
+      stop(g4, '0', 'var(--sgb-ice, #e5e4f5)', '.9');
+      stop(g4, '1', 'var(--sgb-accent, #b2acff)', '0');
       var g5 = sv('linearGradient', { id: 'sgl-rim', x1: '0', y1: '0', x2: '0', y2: '1' }, defs);
-      stop(g5, '0', 'var(--sgb-ice, #ffe9c4)', '.9');
-      stop(g5, '.5', 'var(--sgb-lilac, #f0b25e)', '.25');
-      stop(g5, '1', 'var(--sgb-accent, #f0b25e)', '.65');
+      stop(g5, '0', 'var(--sgb-ice, #ebebf4)', '.9');
+      stop(g5, '.5', 'var(--sgb-lilac, #bab5ff)', '.25');
+      stop(g5, '1', 'var(--sgb-accent, #bab5ff)', '.65');
       var f = sv('filter', { id: 'sgl-blur', x: '-50%', y: '-50%', width: '200%', height: '200%' }, defs);
       sv('feGaussianBlur', { stdDeviation: '7' }, f);
 
@@ -407,7 +407,7 @@
       sv('circle', { r: 74, fill: 'url(#sgl-orb)' }, R.orb);
       sv('circle', { r: 73.5, fill: 'none', stroke: 'url(#sgl-rim)', 'stroke-width': 1.2 }, R.orb);
       sv('ellipse', { cx: -22, cy: -34, rx: 30, ry: 14, fill: '#fff', opacity: '.06', transform: 'rotate(-28 -22 -34)' }, R.orb);
-      R.starGlow = sv('path', { d: STAR, style: 'fill:var(--sgb-violet, #f6c67f)', filter: 'url(#sgl-blur)', opacity: '.75' }, R.orb);
+      R.starGlow = sv('path', { d: STAR, style: 'fill:var(--sgb-violet, #cbc9f9)', filter: 'url(#sgl-blur)', opacity: '.75' }, R.orb);
       sv('path', { d: STAR, fill: 'url(#sgl-gold)' }, R.orb);
       R.wave = sv('circle', { r: 74, class: 'sg-wave' }, core);
       svg.appendChild(R.gate); // the gate paints above the rings, under the particles
@@ -764,8 +764,8 @@
       var svg = sv('svg', { class: 'sg-radar-map', width: L.w, height: L.h, viewBox: '0 0 ' + L.w + ' ' + L.h }, stage);
       var defs = sv('defs', {}, svg);
       var gd = sv('radialGradient', { id: 'sgr-glow-' + mode }, defs);
-      sv('stop', { offset: '0', style: 'stop-color:var(--sgb-accent, #ff8a3d);stop-opacity:.55' }, gd);
-      sv('stop', { offset: '1', style: 'stop-color:var(--sgb-accent, #ff8a3d);stop-opacity:0' }, gd);
+      sv('stop', { offset: '0', style: 'stop-color:var(--sgb-accent, #a9a0ff);stop-opacity:.55' }, gd);
+      sv('stop', { offset: '1', style: 'stop-color:var(--sgb-accent, #a9a0ff);stop-opacity:0' }, gd);
       var g = sv('g', { transform: 'translate(' + mapBox.x + ',' + mapBox.y + ') scale(' + ms.toFixed(4) + ')' }, svg);
       var d = '';
       for (var i = 0; i < MAP.dots.length; i += 2) d += 'M' + MAP.dots[i] + ' ' + MAP.dots[i + 1] + 'h0';
@@ -988,9 +988,9 @@
       CS = getComputedStyle(document.documentElement);
       PAL = {
         studio: ['#fff', tk('ice', '#ebe7e1'), tk('lilac', '#d9d3cb')],
-        ware: [tk('indigo', '#2a2019'), tk('deep', '#1c1612'), tk('violet', '#3a2c20'), tk('cyan', '#ffc27a')],
-        solar: [tk('deep', '#3f2f5c'), tk('violet', '#e9826a'), tk('cyan', '#f7b36b'), tk('ice', '#ffe2a6')],
-        city: [tk('ink', '#0a0f24'), tk('deep', '#18213f'), tk('indigo', '#0e1430'), tk('accent', '#ffcf7a')]
+        ware: [tk('indigo', '#2a2019'), tk('deep', '#1c1612'), tk('violet', '#2e2c44'), tk('cyan', '#cbc9fc')],
+        solar: [tk('deep', '#3f2f5c'), tk('violet', '#9e91ff'), tk('cyan', '#bebaff'), tk('ice', '#e4e3f7')],
+        city: [tk('ink', '#0a0f24'), tk('deep', '#18213f'), tk('indigo', '#0e1430'), tk('accent', '#d4d2fe')]
       };
     }
     var L, R, mode;
@@ -1014,7 +1014,7 @@
         sv('ellipse', { cx: CW / 2, cy: CH * 0.78, rx: CW * 0.46, ry: 60, fill: '#fff', opacity: '.55' }, g);
       } else if (key === 'ware') {
         sv('rect', { width: CW, height: CH, fill: lin([[0, tk('indigo', '#2a2019')], [0.7, tk('deep', '#15100d')], [1, tk('ink', '#0d0a08')]]) }, g);
-        var rack = tk('deep', '#1c1612'), box1 = tk('violet', '#3a2c20'), box2 = tk('indigo', '#2f241b');
+        var rack = tk('deep', '#1c1612'), box1 = tk('violet', '#2e2c44'), box2 = tk('indigo', '#252435');
         for (var i = 0; i < 6; i++) {
           var x = 20 + i * 132;
           sv('rect', { x: x, y: 70, width: 110, height: 300, fill: rack, stroke: tk('hair', '#2b221b') }, g);
@@ -1022,14 +1022,14 @@
         }
         [140, 400, 660].forEach(function (cx) {
           var rg = sv('radialGradient', { id: id + 'l' + cx }, defs);
-          sv('stop', { offset: 0, 'stop-color': tk('cyan', '#ffc27a'), 'stop-opacity': '.55' }, rg);
-          sv('stop', { offset: 1, 'stop-color': tk('cyan', '#ffc27a'), 'stop-opacity': '0' }, rg);
+          sv('stop', { offset: 0, 'stop-color': tk('cyan', '#cbc9fc'), 'stop-opacity': '.55' }, rg);
+          sv('stop', { offset: 1, 'stop-color': tk('cyan', '#cbc9fc'), 'stop-opacity': '0' }, rg);
           sv('ellipse', { cx: cx, cy: 40, rx: 160, ry: 130, fill: 'url(#' + rg.id + ')' }, g);
         });
         sv('rect', { y: 380, width: CW, height: CH - 380, fill: lin([[0, tk('deep', '#1a1410')], [1, tk('ink', '#0c0907')]]) }, g);
       } else if (key === 'solar') {
-        sv('rect', { width: CW, height: CH, fill: lin([[0, tk('deep', '#3f2f5c')], [0.45, tk('violet', '#e9826a')], [0.72, tk('cyan', '#f7b36b')], [1, tk('plum', '#2a1d22')]]) }, g);
-        sv('circle', { cx: CW * 0.7, cy: CH * 0.58, r: 54, fill: tk('ice', '#ffe2a6'), opacity: '.9' }, g);
+        sv('rect', { width: CW, height: CH, fill: lin([[0, tk('deep', '#3f2f5c')], [0.45, tk('violet', '#9e91ff')], [0.72, tk('cyan', '#bebaff')], [1, tk('plum', '#2a1d22')]]) }, g);
+        sv('circle', { cx: CW * 0.7, cy: CH * 0.58, r: 54, fill: tk('ice', '#e4e3f7'), opacity: '.9' }, g);
         sv('rect', { y: CH * 0.66, width: CW, height: CH * 0.34, fill: tk('ink', '#21171c') }, g);
         var pv = tk('indigo', '#1b2236'), pe = tk('blue', '#3a4566');
         for (var p = 0; p < 7; p++) {
@@ -1039,14 +1039,14 @@
         }
       } else {
         sv('rect', { width: CW, height: CH, fill: lin([[0, tk('ink', '#0a0f24')], [0.65, tk('deep', '#18213f')], [1, tk('ink', '#0b0d16')]]) }, g);
-        var tower = tk('indigo', '#0e1430'), lit = tk('ice', '#ffcf7a');
+        var tower = tk('indigo', '#0e1430'), lit = tk('ice', '#d4d2fe');
         for (var b = 0; b < 14; b++) {
           var bw = 40 + hash(b) * 50, bh = 120 + hash(b + 9) * 220, bx = b * 58 - 10;
           sv('rect', { x: bx, y: 400 - bh, width: bw, height: bh, fill: tower }, g);
           for (var w = 0; w < 8; w++) if (hash(b * 10 + w) > 0.55) sv('rect', { x: bx + 6 + (w % 3) * 12, y: 400 - bh + 14 + Math.floor(w / 3) * 26, width: 6, height: 9, fill: lit, opacity: '.75' }, g);
         }
         sv('rect', { y: 400, width: CW, height: CH - 400, fill: tk('ink', '#0a0c14') }, g);
-        sv('rect', { y: 402, width: CW, height: 2, fill: tk('accent', '#ec6f10'), opacity: '.55' }, g);
+        sv('rect', { y: 402, width: CW, height: 2, fill: tk('accent', '#9382ff'), opacity: '.55' }, g);
       }
       return g;
     }
@@ -1068,14 +1068,14 @@
       sv('rect', { x: 0, y: 30, width: 280, height: 2, fill: '#fff', opacity: '.22' }, g);
       // handles + terminals
       sv('path', { d: 'M96 18 q0 -18 18 -18 h52 q18 0 18 18', fill: 'none', stroke: '#141416', 'stroke-width': 9, 'stroke-linecap': 'round' }, g);
-      [[46, tk('violet', '#c0392b'), tk('lilac', '#e0574a')], [234, '#18181b', '#3a3a40']].forEach(function (tm) {
+      [[46, tk('violet', '#7a3feb'), tk('lilac', '#9267ff')], [234, '#18181b', '#3a3a40']].forEach(function (tm) {
         sv('ellipse', { cx: tm[0], cy: 16, rx: 14, ry: 6, fill: '#0c0c0e' }, g);
         sv('rect', { x: tm[0] - 11, y: 2, width: 22, height: 14, fill: tm[1] }, g);
         sv('ellipse', { cx: tm[0], cy: 2, rx: 11, ry: 4.5, fill: tm[2] }, g);
       });
       // label plate
       sv('rect', { x: 34, y: 70, width: 212, height: 90, rx: 8, fill: '#101012', stroke: '#2c2c31' }, g);
-      sv('rect', { x: 34, y: 70, width: 8, height: 90, rx: 3, fill: tk('accent', '#ec6f10') }, g);
+      sv('rect', { x: 34, y: 70, width: 8, height: 90, rx: 3, fill: tk('accent', '#9382ff') }, g);
       if (bars > 1) sv('rect', { x: 60, y: 86, width: 132, height: 20, rx: 4, fill: '#fff', opacity: '.88' }, g);
       else { var t1 = sv('text', { x: 60, y: 106, class: 'sg-bat-brand' }, g); t1.textContent = 'STARGO'; }
       if (bars) sv('rect', { x: 60, y: 124, width: 120, height: 9, rx: 4.5, fill: '#fff', opacity: '.22' }, g);
@@ -1115,7 +1115,7 @@
         var c = sv('rect', { x: ((x * CW) / cols).toFixed(1), y: ((y * CH) / rows).toFixed(1), width: (CW / cols + 0.6).toFixed(1), height: (CH / rows + 0.6).toFixed(1), opacity: 0 }, mg);
         R.cells.push({ e: c, o: (y / rows) * 0.62 + hash(x * 31 + y * 7) * 0.38, l: hash(x * 13 + y * 17), y: y / rows });
       }
-      R.scan = sv('rect', { x: 0, width: CW, height: 3, fill: tk('accent', '#ffb36b'), opacity: 0 }, svg);
+      R.scan = sv('rect', { x: 0, width: CW, height: 3, fill: tk('accent', '#c1bdff'), opacity: 0 }, svg);
       // only the world around the product regenerates: the pack is masked out of the mosaic and the scan line
       var mk = sv('mask', { id: 'sgs-keep-' + mode, maskUnits: 'userSpaceOnUse', x: 0, y: 0, width: CW, height: CH }, sv('defs', {}, svg));
       sv('rect', { width: CW, height: CH, fill: '#fff' }, mk);
@@ -1146,7 +1146,7 @@
         ].map(function (a, i) {
           var r = el('div', 'sg-rail-row', rail);
           el('span', '', r, a[0]);
-          if (i === 1) { var sw = el('span', 'sg-swatches', r); [tk('ink', '#0d0d0d'), tk('violet', '#ec6f10'), tk('ice', '#f4f1ec'), tk('blue', '#3a6df0')].forEach(function (c) { el('i', '', sw).style.background = c; }); }
+          if (i === 1) { var sw = el('span', 'sg-swatches', r); [tk('ink', '#0d0d0d'), tk('violet', '#9382ff'), tk('ice', '#f4f1ec'), tk('blue', '#3a6df0')].forEach(function (c) { el('i', '', sw).style.background = c; }); }
           else el('em', '', r, a[1]);
           return r;
         });

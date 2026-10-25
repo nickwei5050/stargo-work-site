@@ -318,14 +318,14 @@
       var svg = sv('svg', { class: 'sg-team-fx', width: W, height: H, viewBox: '0 0 ' + W + ' ' + H, 'aria-hidden': 'true' }, stage);
       var defs = sv('defs', {}, svg);
       var g1 = sv('linearGradient', { id: sid + '-bar', x1: 0, y1: 0, x2: 1, y2: 0 }, defs);
-      sv('stop', { offset: 0, 'stop-color': '#d9954a' }, g1);
-      sv('stop', { offset: 1, 'stop-color': '#ffe2b0' }, g1);
+      sv('stop', { offset: 0, 'stop-color': '#a095ff' }, g1);
+      sv('stop', { offset: 1, 'stop-color': '#e5e4f5' }, g1);
       var hp = sv('pattern', { id: sid + '-hatch', width: 5, height: 5, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' }, defs);
-      sv('rect', { width: 5, height: 5, fill: 'rgba(255,138,61,.22)' }, hp);
-      sv('rect', { width: 2, height: 5, fill: '#ff8a3d' }, hp);
+      sv('rect', { width: 5, height: 5, fill: 'rgba(169, 160, 255,.22)' }, hp);
+      sv('rect', { width: 2, height: 5, fill: '#a9a0ff' }, hp);
       var g2 = sv('radialGradient', { id: sid + '-glow' }, defs);
-      sv('stop', { offset: 0, 'stop-color': '#ffd9a0', 'stop-opacity': '.75' }, g2);
-      sv('stop', { offset: 1, 'stop-color': '#f0a64a', 'stop-opacity': '0' }, g2);
+      sv('stop', { offset: 0, 'stop-color': '#ddddf6', 'stop-opacity': '.75' }, g2);
+      sv('stop', { offset: 1, 'stop-color': '#b2acff', 'stop-opacity': '0' }, g2);
       return svg;
     }
     function track(svg, i, x0, x1, y, th) {
@@ -334,7 +334,7 @@
       SEGS[i].forEach(function (s) {
         tr.segs.push(s[2] === 'd'
           ? sv('line', { x1: x0, y1: y, x2: x0, y2: y, class: 'sg-team-seg is-d', opacity: 0 }, svg)
-          : sv('rect', { x: x0, y: y - th / 2, width: 0, height: th, rx: th / 2, class: 'sg-team-seg is-' + s[2], fill: s[2] === 'w' ? 'url(#' + sid + '-bar)' : th > 3 ? 'url(#' + sid + '-hatch)' : '#ff8a3d', opacity: 0 }, svg));
+          : sv('rect', { x: x0, y: y - th / 2, width: 0, height: th, rx: th / 2, class: 'sg-team-seg is-' + s[2], fill: s[2] === 'w' ? 'url(#' + sid + '-bar)' : th > 3 ? 'url(#' + sid + '-hatch)' : '#a9a0ff', opacity: 0 }, svg));
       });
       if (th > 3) {
         tr.glow = sv('circle', { cy: y, r: 13, fill: 'url(#' + sid + '-glow)', opacity: 0 }, svg);

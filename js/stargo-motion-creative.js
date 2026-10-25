@@ -68,7 +68,7 @@
     grad('linearGradient', 'f', { x1: 0, y1: 0, x2: 0, y2: 1 }, [[0, '#323136'], [1, '#18171a']]);
     grad('radialGradient', 'sd', {}, [[0, '#000', '.6'], [1, '#000', '0']]);
     grad('radialGradient', 'sl', {}, [[0, '#000', '.3'], [1, '#000', '0']]);
-    grad('radialGradient', 'lamp', {}, [[0, '#ffc27a', '.5'], [1, '#ffc27a', '0']]);
+    grad('radialGradient', 'lamp', {}, [[0, '#cbc9fc', '.5'], [1, '#cbc9fc', '0']]);
     grad('linearGradient', 'ws', U(0, 300), [[0, '#f7f5f2'], [0.6, '#ece8e2'], [1, '#d8d2ca']]);
     grad('linearGradient', 'wb', U(0, 300), [[0, '#2b2019'], [0.68, '#15100d'], [1, '#0d0a08']]);
     grad('linearGradient', 'wf', U(190, 300), [[0, '#1b1511'], [1, '#0b0907']]);
@@ -81,7 +81,7 @@
     for (var i = 0; i < 5; i++) {
       var x = 6 + i * 80;
       sv('rect', { x: x, y: 36, width: 70, height: 150, fill: '#1d1712', stroke: '#2c231b' }, bw);
-      for (var j = 0; j < 3; j++) sv('rect', { x: x + 6, y: 46 + j * 46, width: 58, height: 30, rx: 2, fill: j % 2 ? '#3a2c20' : '#30251c' }, bw);
+      for (var j = 0; j < 3; j++) sv('rect', { x: x + 6, y: 46 + j * 46, width: 58, height: 30, rx: 2, fill: j % 2 ? '#2e2c44' : '#262536' }, bw);
     }
     [80, 220, 360].forEach(function (cx) { sv('ellipse', { cx: cx, cy: 18, rx: 110, ry: 90, fill: f('lamp') }, bw); });
     sv('rect', { x: -400, y: 190, width: 1200, height: 410, fill: f('wf') }, bw);
@@ -93,10 +93,10 @@
     sv('rect', { y: 18, width: 168, height: 100, fill: f('f') }, pk);
     sv('rect', { y: 18, width: 168, height: 1.5, fill: '#fff', opacity: '.22' }, pk);
     sv('path', { d: 'M58 10q0-10 10-10h32q10 0 10 10', fill: 'none', stroke: '#151417', 'stroke-width': 6, 'stroke-linecap': 'round' }, pk);
-    sv('rect', { x: 21, y: 2, width: 14, height: 9, rx: 2, fill: '#d2533f' }, pk);
+    sv('rect', { x: 21, y: 2, width: 14, height: 9, rx: 2, fill: '#805fff' }, pk);
     sv('rect', { x: 133, y: 2, width: 14, height: 9, rx: 2, fill: '#1b1b1e' }, pk);
     sv('rect', { x: 20, y: 42, width: 128, height: 54, rx: 5, fill: '#101012', stroke: '#2d2c31' }, pk);
-    sv('rect', { x: 20, y: 42, width: 5, height: 54, rx: 2, fill: '#ec6f10' }, pk);
+    sv('rect', { x: 20, y: 42, width: 5, height: 54, rx: 2, fill: '#9382ff' }, pk);
     var RULE = { d: 'M32 76.5h110M68 79v12M104 79v12', stroke: '#f4eee8', 'stroke-opacity': '.16', 'stroke-width': 0.7 };
     // the prints: the model (type or a bar), the fine print (type or bars), and the phones' stacked plate
     txt(g('pt'), 32, 59, 13, '48V 100Ah', { 'font-weight': 700, 'letter-spacing': '-.2' });
@@ -156,13 +156,13 @@
       use(parent, id + 'bgE');
       var mid = { 'text-anchor': 'middle', 'font-weight': 700, 'letter-spacing': '-.5' };
       if (narrow) {
-        sv('rect', { x: 180, y: 92, width: 40, height: 3, rx: 1.5, fill: '#ec6f10' }, parent);
+        sv('rect', { x: 180, y: 92, width: 40, height: 3, rx: 1.5, fill: '#9382ff' }, parent);
         txt(parent, 200, 150, 50, '48V', mid);
         txt(parent, 200, 190, 36, '100Ah', { 'text-anchor': 'middle', 'font-weight': 600, opacity: '.9' });
         bar(parent, 152, 206, 96, 5, '.4'); bar(parent, 166, 217, 68, 5, '.3');
         [150, 186, 222].forEach(function (x) { sv('rect', { x: x, y: 228, width: 28, height: 8, rx: 2, fill: 'none', stroke: '#f4eee8', 'stroke-opacity': '.3' }, parent); });
       } else {
-        sv('rect', { x: 176, y: 88, width: 48, height: 3, rx: 1.5, fill: '#ec6f10' }, parent);
+        sv('rect', { x: 176, y: 88, width: 48, height: 3, rx: 1.5, fill: '#9382ff' }, parent);
         txt(parent, 200, 140, 40, '48V 100Ah', mid);
         txt(parent, 200, 176, 22, T('长寿命磷酸铁锂', 'Long-life LiFePO4'), { 'text-anchor': 'middle', opacity: '.8' });
         txt(parent, 200, 204, 22, T('3000 次以上循环', '3,000+ cycles'), { 'text-anchor': 'middle', opacity: '.8' });

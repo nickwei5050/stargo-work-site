@@ -92,8 +92,8 @@ export const MENU_ART = '<svg class="stargo-menu-art" viewBox="0 0 220 92" prese
   + '<rect x="111" y="47.5" width="10" height="5.5"/><rect x="133" y="47.5" width="10" height="5.5"/><rect x="144" y="47.5" width="10" height="5.5"/>'
   + '<rect x="190" y="53.5" width="10" height="5.5"/><rect x="201" y="53.5" width="10" height="5.5"/><rect x="195" y="47.5" width="10" height="5.5"/>'
   + '</g>'
-  + '<rect x="128" y="53.5" width="10" height="5.5" fill="#ec6f10" fill-opacity=".8" stroke="#ffb37a" stroke-opacity=".8" stroke-width=".6"/>'
-  + '<g fill="#ffc690"><rect x="90.5" y="50" width="2.4" height="2"/><rect x="94.2" y="50" width="2.4" height="2"/><rect x="97.9" y="50" width="2.4" height="2"/><circle cx="153.5" cy="23" r="1" fill="#ff5a3c"/><circle cx="181.5" cy="28" r="1" fill="#ff5a3c"/></g>'
-  + '<path d="M90 72h4M95 72h4M89 76h5M96 77h3M91 81h4M97 82h3M90 86h3" stroke="#ffb37a" stroke-opacity=".55" stroke-width="1" stroke-linecap="round"/>'
+  + '<rect x="128" y="53.5" width="10" height="5.5" fill="#9382ff" fill-opacity=".8" stroke="#c2befd" stroke-opacity=".8" stroke-width=".6"/>'
+  + '<g fill="#d0cef6"><rect x="90.5" y="50" width="2.4" height="2"/><rect x="94.2" y="50" width="2.4" height="2"/><rect x="97.9" y="50" width="2.4" height="2"/><circle cx="153.5" cy="23" r="1" fill="#9584ff"/><circle cx="181.5" cy="28" r="1" fill="#9584ff"/></g>'
+  + '<path d="M90 72h4M95 72h4M89 76h5M96 77h3M91 81h4M97 82h3M90 86h3" stroke="#c2befd" stroke-opacity=".55" stroke-width="1" stroke-linecap="round"/>'
   + '<path d="M14 70h22M48 75h30M120 73h26M160 79h34M28 84h20M128 86h22" stroke="#ffe4c8" stroke-opacity=".08" stroke-width="1" stroke-linecap="round"/>'
   + '</svg>';

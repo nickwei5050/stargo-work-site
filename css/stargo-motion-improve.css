@@ -15,7 +15,7 @@
    40px from the right edge and the cards 40px from the bottom, inside the curve; the tag and the cards share that edge */
 .sgi-bar { position: absolute; left: 0; top: 0; right: 0; height: 44px; display: flex; align-items: center; gap: 9px; padding: 0 40px 0 84px; font-size: 14px; border-bottom: 1px solid rgba(255, 236, 220, .07); }
 .sgi-bar b { font-weight: 600; white-space: nowrap; }
-.sgi-mark { flex: none; width: 22px; height: 22px; border-radius: 7px; display: grid; place-items: center; color: #fff; background: linear-gradient(140deg, #ff9a4d, #ec6f10); }
+.sgi-mark { flex: none; width: 22px; height: 22px; border-radius: 7px; display: grid; place-items: center; color: #fff; background: linear-gradient(140deg, #b1abff, #9382ff); }
 .sgi .sgi-tag { position: static; transform: none; margin-left: auto; font-size: 12.5px; color: rgba(244, 238, 232, .6); }
 .sgi-body { position: absolute; left: 84px; right: 40px; top: 52px; bottom: 40px; display: flex; flex-direction: column; gap: 6px; }
 .sgi.is-wide2 .sgi-h { display: none; }
@@ -24,23 +24,23 @@
 .sgi-h { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 12.5px; letter-spacing: .03em; color: rgba(244, 238, 232, .5); margin-bottom: 4px; white-space: nowrap; }
 .sgi-log-win { position: relative; overflow: hidden; }
 .sgi-run { position: absolute; left: 0; right: 0; top: 0; height: 24px; display: flex; align-items: center; gap: 9px; padding: 0 10px; border-radius: 7px; background: rgba(255, 246, 232, .035); border: 1px solid rgba(255, 236, 220, .06); white-space: nowrap; opacity: 0; }
-.sgi-run.is-new { border-color: rgba(255, 138, 61, .4); }
+.sgi-run.is-new { border-color: rgba(169, 160, 255, .4); }
 .sgi-run-n { flex: none; font-weight: 600; color: rgba(244, 238, 232, .5); font-variant-numeric: tabular-nums; }
 .sgi-run-task { flex: none; color: #f4eee8; }
-.sgi-run-res { margin-left: auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; color: rgba(159, 224, 176, .9); }
-.sgi-run.is-fix .sgi-run-res { color: #ffb37a; }
+.sgi-run-res { margin-left: auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; color: rgba(163, 214, 244, .9); }
+.sgi-run.is-fix .sgi-run-res { color: #c2befd; }
 
 /* a change */
-.sgi-card { position: relative; border-radius: 14px; padding: 8px 14px; background: linear-gradient(180deg, rgba(255, 246, 232, .055), rgba(255, 246, 232, .02)); border: 1px solid rgba(255, 228, 190, .11); opacity: 0; }
+.sgi-card { position: relative; border-radius: 14px; padding: 8px 14px; background: linear-gradient(180deg, rgba(255, 246, 232, .055), rgba(255, 246, 232, .02)); border: 1px solid rgba(231, 231, 243, .11); opacity: 0; }
 .sgi-ch { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .sgi-ct { min-width: 0; display: flex; align-items: baseline; gap: 8px; white-space: nowrap; }
 .sgi-cn { flex: none; font-size: 12.5px; color: rgba(244, 238, 232, .5); font-variant-numeric: tabular-nums; }
 .sgi-ct b { min-width: 0; overflow: hidden; text-overflow: ellipsis; font-size: 15px; font-weight: 600; color: #f8f1e7; }
 .sgi-pill { flex: none; font-size: 12.5px; line-height: 1.2; padding: 4px 10px; border-radius: 99px; border: 1px solid rgba(255, 236, 220, .16); color: rgba(244, 238, 232, .75); white-space: nowrap; text-align: center; }
-.sgi-pill.is-ask { color: #ffb37a; background: rgba(236, 111, 16, .16); border-color: rgba(255, 138, 61, .6); }
-.sgi-pill.is-run { color: #ffb37a; border-color: rgba(255, 138, 61, .35); }
-.sgi-pill.is-ok { color: #b9ecc6; background: rgba(120, 200, 140, .12); border-color: rgba(120, 200, 140, .36); }
-.sgi-pill.is-bad { color: #ffab9c; background: rgba(240, 96, 72, .12); border-color: rgba(240, 96, 72, .45); }
+.sgi-pill.is-ask { color: #c2befd; background: rgba(147, 130, 255, .16); border-color: rgba(169, 160, 255, .6); }
+.sgi-pill.is-run { color: #c2befd; border-color: rgba(169, 160, 255, .35); }
+.sgi-pill.is-ok { color: #b9ecc6; background: rgba(70, 192, 253, .12); border-color: rgba(70, 192, 253, .36); }
+.sgi-pill.is-bad { color: #c0bcf6; background: rgba(145, 126, 255, .12); border-color: rgba(145, 126, 255, .45); }
 .sgi-pill.is-rev { color: #f4eee8; background: rgba(255, 236, 220, .08); }
 .sgi-sub { margin-top: 6px; font-size: 12.5px; color: rgba(244, 238, 232, .6); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
@@ -48,28 +48,28 @@
 .sgi-ab-k { color: rgba(244, 238, 232, .6); white-space: nowrap; }
 .sgi-ab-tr { display: block; height: 8px; border-radius: 4px; background: rgba(255, 236, 220, .07); overflow: hidden; }
 .sgi-ab-tr i { display: block; height: 100%; border-radius: 4px; background: rgba(244, 238, 232, .42); transform-origin: 0 50%; transform: scaleX(0); }
-.sgi-ab.is-new .sgi-ab-tr i { background: linear-gradient(90deg, #ec6f10, #ffb37a); }
+.sgi-ab.is-new .sgi-ab-tr i { background: linear-gradient(90deg, #9382ff, #c2befd); }
 .sgi-ab-v { text-align: right; font-weight: 600; color: #f4eee8; font-variant-numeric: tabular-nums; }
-.sgi-ab.is-new .sgi-ab-v { color: #ffb37a; }
+.sgi-ab.is-new .sgi-ab-v { color: #c2befd; }
 
 .sgi-foot { position: relative; height: 30px; margin-top: 8px; }
 .sgi-sample { position: absolute; left: 0; top: 50%; transform: translateY(-50%); font-size: 12.5px; color: rgba(244, 238, 232, .5); white-space: nowrap; }
-.sgi-btn { position: absolute; right: 0; top: 0; height: 30px; padding: 0 16px; display: inline-flex; align-items: center; border-radius: 9px; background: #ec6f10; color: #fff; font-size: 13px; font-weight: 600; opacity: 0; transition: transform .18s; white-space: nowrap; }
+.sgi-btn { position: absolute; right: 0; top: 0; height: 30px; padding: 0 16px; display: inline-flex; align-items: center; border-radius: 9px; background: #9382ff; color: #fff; font-size: 13px; font-weight: 600; opacity: 0; transition: transform .18s; white-space: nowrap; }
 .sgi-tap { position: absolute; left: 50%; top: 50%; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; background: rgba(255, 255, 255, .55); opacity: 0; pointer-events: none; }
 .sgi-ro { position: absolute; inset: 0; opacity: 0; pointer-events: none; } /* drawn only: it cross-fades over the sample line */
 .sgi-ro-tr { position: absolute; left: 8px; right: 16px; top: 7px; height: 6px; border-radius: 3px; background: rgba(255, 236, 220, .08); }
-.sgi-ro-tr > i { position: absolute; inset: 0; border-radius: 3px; background: linear-gradient(90deg, #ec6f10, #ffb37a); transform-origin: 0 50%; transform: scaleX(0); }
+.sgi-ro-tr > i { position: absolute; inset: 0; border-radius: 3px; background: linear-gradient(90deg, #9382ff, #c2befd); transform-origin: 0 50%; transform: scaleX(0); }
 .sgi-ro-m { position: absolute; top: -4px; display: flex; flex-direction: column; align-items: center; transform: translateX(-50%); }
 .sgi-ro-m i { width: 14px; height: 14px; border-radius: 50%; background: #1d1712; border: 2px solid rgba(255, 236, 220, .22); }
 .sgi-ro-m b { margin-top: 3px; font-size: 12.5px; font-weight: 600; color: rgba(244, 238, 232, .5); font-variant-numeric: tabular-nums; }
-.sgi-ro-m.is-on i { border-color: #ff8a3d; background: #ff8a3d; }
-.sgi-ro-m.is-on b { color: #ffb37a; }
+.sgi-ro-m.is-on i { border-color: #a9a0ff; background: #a9a0ff; }
+.sgi-ro-m.is-on b { color: #c2befd; }
 
 .sgi-metric { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-top: 6px; font-size: 12.5px; color: rgba(244, 238, 232, .6); white-space: nowrap; }
 .sgi-metric b { font-size: 14px; font-weight: 600; color: #f4eee8; font-variant-numeric: tabular-nums; }
-.sgi-metric b.is-bad { color: #ffab9c; }
+.sgi-metric b.is-bad { color: #c0bcf6; }
 .sgi-keep { display: flex; align-items: center; gap: 7px; margin-top: 6px; font-size: 12.5px; color: rgba(244, 238, 232, .8); opacity: 0; }
-.sgi-keep .sgi-ico { color: #ffb37a; }
+.sgi-keep .sgi-ico { color: #c2befd; }
 .sgi-keep span { text-wrap: balance; }
 
 /* square (phones, 1:1) and tall (768-991, the card's right strip) */

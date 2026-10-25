@@ -53,7 +53,7 @@ h1 {
 
 mark {
   color: #000;
-  background: #ff0;
+  background: #eaf7ff;
 }
 
 small {
@@ -2153,7 +2153,7 @@ textarea.w-input, textarea.w-select {
   --_color-palette---font-color--secondary: #121212;
   --_text-weights---semibold: 600;
   --_headings---h5: 2.5em;
-  --_color-palette---main-color: #fc5b30;
+  --_color-palette---main-color: #9382ff;
   --_text-weights---bold: 700;
   --_text-weights---extra-light: 0;
   --_text-classes---huge: 1.5em;
@@ -2167,7 +2167,7 @@ textarea.w-input, textarea.w-select {
   --margin-gsap: 0svh;
   --padding-mobile: 0svh;
   --_fonts---satoshi-variable: "Satoshi Variable", Arial, sans-serif;
-  --_color-palette---secondary-color: #d71c21;
+  --_color-palette---secondary-color: #7f46f2;
   --_fonts---bounded: Bounded;
   --_fonts---bounded-variable: "Bounded Variable";
   --_color-palette---background-color--secondary: #d9d9d9;
@@ -2443,7 +2443,7 @@ blockquote {
 }
 
 .fs-styleguide_label.is-tag {
-  background-color: #dd23bb;
+  background-color: #9c56ff;
 }
 
 .text-size-large {
@@ -2679,7 +2679,7 @@ blockquote {
 .fs-styleguide_header {
   color: #fff;
   background-color: #000;
-  background-image: radial-gradient(circle at 100% 100%, #dd23bb40, #0000 40%), radial-gradient(circle at 0 100%, #2d62ff4d, #0000 60%);
+  background-image: radial-gradient(circle at 100% 100%, #9c56ff40, #0000 40%), radial-gradient(circle at 0 100%, #2d62ff4d, #0000 60%);
 }
 
 .padding-vertical {
@@ -3045,7 +3045,7 @@ blockquote {
 }
 
 .form_message-success {
-  color: #114e0b;
+  color: #074662;
   background-color: #cef5ca;
   padding: 1.25rem;
 }
@@ -3320,7 +3320,7 @@ blockquote {
 }
 
 .fs-styleguide_message {
-  color: #5e5515;
+  color: #5339ae;
   background-color: #fcf8d8;
   border-radius: .25rem;
   padding: .25rem .5rem;

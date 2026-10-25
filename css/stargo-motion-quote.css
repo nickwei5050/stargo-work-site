@@ -16,8 +16,8 @@
 .rk-stats .rk-rt-image-apperance.sg-mo { transform: none !important; }
 
 .sgs-status { flex: none; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 99px; color: rgba(244,238,232,.75); background: rgba(255,236,220,.07); transition: color .3s, background-color .3s; }
-.sgs-status.is-wait { color: #ffb37a; background: rgba(236,111,16,.16); }
-.sgs-status.is-ok { color: #b9ecc6; background: rgba(120,200,140,.14); }
+.sgs-status.is-wait { color: #c2befd; background: rgba(147, 130, 255,.16); }
+.sgs-status.is-ok { color: #b9ecc6; background: rgba(70, 192, 253,.14); }
 .sgs-q-pane { flex: 1; min-height: 0; display: grid; }
 
 /* ---------- the sheet ---------- */
@@ -30,8 +30,8 @@
 .sgs-line-a b { font-size: 12.5px; color: #f8f1e7; }
 .sgs-line-a em { margin-left: 5px; color: rgba(244,238,232,.55); }
 .sgs-quote.is-thin .sgs-line-a em { display: none; }
-.sgs-src { flex: none; font-size: 12px; line-height: 16px; padding: 0 5px; border-radius: 5px; color: rgba(243,211,160,.75); background: rgba(255,220,170,.06); transition: color .4s, background-color .4s; }
-.sgs-line.is-src .sgs-src { color: #1b130b; background: #f3c27a; }
+.sgs-src { flex: none; font-size: 12px; line-height: 16px; padding: 0 5px; border-radius: 5px; color: rgba(214, 213, 241,.75); background: rgba(224, 224, 244,.06); transition: color .4s, background-color .4s; }
+.sgs-line.is-src .sgs-src { color: #1b130b; background: #c7c5f9; }
 .sgs-amt { flex: none; min-width: 50px; text-align: right; font-variant-numeric: tabular-nums; color: rgba(244,238,232,.85); }
 .sgs-total { display: flex; align-items: baseline; justify-content: space-between; height: 28px; padding-top: 6px; font-size: 12px; color: rgba(244,238,232,.55); }
 .sgs-total b { font-size: 16px; color: #f8f1e7; font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
@@ -40,14 +40,14 @@
 .sgs-guard, .sgs-recap { grid-area: guard; min-width: 0; padding: 8px 9px 24px; border-radius: 10px; background: rgba(255,255,255,.03); box-shadow: inset 0 0 0 1px rgba(255,236,220,.08); transition: background-color .4s; }
 .sgs-guard-h { display: flex; align-items: center; gap: 6px; height: 18px; font-size: 12px; color: rgba(244,238,232,.6); white-space: nowrap; }
 .sgs-guard-h > b { font-size: 14px; color: #f8f1e7; font-variant-numeric: tabular-nums; }
-.sgs-flag { margin-left: auto; min-width: 0; display: inline-flex; align-items: center; gap: 4px; font-weight: 600; color: #ffb37a; opacity: 0; }
+.sgs-flag { margin-left: auto; min-width: 0; display: inline-flex; align-items: center; gap: 4px; font-weight: 600; color: #c2befd; opacity: 0; }
 .sgs-flag span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .sgs-meter { position: relative; height: 6px; margin-top: 8px; border-radius: 3px; background: rgba(255,236,220,.08); }
-.sgs-meter-f { position: absolute; left: 0; top: 0; bottom: 0; width: 100%; border-radius: 3px; background: linear-gradient(90deg, #d9954a, #ffcf94); transform-origin: 0 50%; transform: scaleX(0); }
+.sgs-meter-f { position: absolute; left: 0; top: 0; bottom: 0; width: 100%; border-radius: 3px; background: linear-gradient(90deg, #a095ff, #d6d4f6); transform-origin: 0 50%; transform: scaleX(0); }
 .sgs-floor { position: absolute; top: -4px; bottom: -4px; width: 0; border-left: 1.5px dashed rgba(244,238,232,.55); }
 .sgs-floor em { position: absolute; left: -4px; top: 13px; transform: translateX(-50%); font-size: 12px; color: rgba(244,238,232,.5); white-space: nowrap; }
-.sgs-guard.is-low, .sgs-recap { background-color: rgba(236,111,16,.07); box-shadow: inset 0 0 0 1px rgba(255,138,61,.45); }
-.sgs-guard.is-low .sgs-meter-f, .sgs-recap .sgs-meter-f { background: linear-gradient(90deg, #c4561a, #ff8a3d); }
+.sgs-guard.is-low, .sgs-recap { background-color: rgba(147, 130, 255,.07); box-shadow: inset 0 0 0 1px rgba(169, 160, 255,.45); }
+.sgs-guard.is-low .sgs-meter-f, .sgs-recap .sgs-meter-f { background: linear-gradient(90deg, #7a53ff, #a9a0ff); }
 .sgs-guard.is-ok .sgs-flag { color: #b9ecc6; }
 .sgs-flag .sgs-fi-ok, .sgs-guard.is-ok .sgs-flag .sgs-fi-low { display: none; }
 .sgs-guard.is-ok .sgs-flag .sgs-fi-ok { display: block; }
@@ -56,12 +56,12 @@
 
 /* ---------- the approver ---------- */
 .sgs-ask { grid-area: ask; position: relative; min-width: 0; display: flex; flex-direction: column; gap: 8px; padding: 9px 10px 10px; border-radius: 10px; background: rgba(255,255,255,.03); box-shadow: inset 0 0 0 1px rgba(255,236,220,.09); }
-.sgs-ask-ring { position: absolute; inset: -1px; border-radius: 11px; box-shadow: 0 0 0 1px #ff8a3d, 0 0 0 4px rgba(255,138,61,.18); opacity: 0; will-change: opacity; pointer-events: none; }
-.sgs-ask.is-ok { box-shadow: inset 0 0 0 1px rgba(120,200,140,.4); }
+.sgs-ask-ring { position: absolute; inset: -1px; border-radius: 11px; box-shadow: 0 0 0 1px #a9a0ff, 0 0 0 4px rgba(169, 160, 255,.18); opacity: 0; will-change: opacity; pointer-events: none; }
+.sgs-ask.is-ok { box-shadow: inset 0 0 0 1px rgba(70, 192, 253,.4); }
 .sgs-ask-t b { display: block; font-size: 12.5px; color: #f8f1e7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sgs-ask-t span { display: block; font-size: 12px; color: #ffb37a; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color .3s; }
+.sgs-ask-t span { display: block; font-size: 12px; color: #c2befd; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color .3s; }
 .sgs-ask.is-idle .sgs-ask-t span { color: rgba(244,238,232,.5); }
-.sgs-ask.is-ok .sgs-ask-t span { color: #9fe0b0; }
+.sgs-ask.is-ok .sgs-ask-t span { color: #a3d6f4; }
 .sgs-ask-t em, .sgs-ask-b em { display: block; margin-top: 6px; font-size: 12px; color: rgba(244,238,232,.45); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sgs-ask-b { display: flex; align-items: center; gap: 6px; }
 .sgs-btn { position: relative; height: 28px; padding: 0 12px; border-radius: 8px; font-size: 12.5px; }
@@ -81,13 +81,13 @@
 .sgs-ver em { margin-left: auto; flex: none; font-variant-numeric: tabular-nums; color: rgba(244,238,232,.5); }
 .sgs-ver.is-top { background: none; border-style: dashed; border-color: rgba(255,236,220,.2); }
 .sgs-ver.is-top em, .sgs-ver.is-top .sgs-lock { display: none; }
-.sgs-lock { color: #9fe0b0; }
-.sgs-ver.is-on { color: #b9ecc6; background: rgba(120,200,140,.09); border-style: solid; border-color: rgba(120,200,140,.4); }
+.sgs-lock { color: #a3d6f4; }
+.sgs-ver.is-on { color: #b9ecc6; background: rgba(70, 192, 253,.09); border-style: solid; border-color: rgba(70, 192, 253,.4); }
 .sgs-ver.is-on b, .sgs-ver.is-on em { color: #f8f1e7; }
 .sgs-ver.is-on em, .sgs-ver.is-on .sgs-lock { display: block; }
 .sgs-pi, .sgs-sum { grid-area: pi; align-self: end; display: flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(244,238,232,.62); white-space: nowrap; overflow: hidden; }
 .sgs-pi span, .sgs-sum span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-.sgs-pi .sg-ico, .sgs-sum .sg-ico { color: #f3c27a; }
+.sgs-pi .sg-ico, .sgs-sum .sg-ico { color: #c7c5f9; }
 .sgs-pi .sgs-wd { margin: 0 0 0 2px; }
 
 /* ---------- card: two columns, everything on screen from the start ---------- */
@@ -113,12 +113,12 @@
 .sgs-step-n em { font-size: 12px; line-height: 17px; font-weight: 600; }
 .sgs-step-n .sg-ico, .sgs-step.is-done .sgs-step-n em { display: none; }
 .sgs-step.is-done .sgs-step-n .sg-ico { display: block; }
-.sgs-step.is-cur { color: #ffb37a; font-weight: 600; }
-.sgs-step.is-cur .sgs-step-n { color: #fff; background: #ec6f10; }
+.sgs-step.is-cur { color: #c2befd; font-weight: 600; }
+.sgs-step.is-cur .sgs-step-n { color: #fff; background: #9382ff; }
 .sgs-step.is-done { color: rgba(244,238,232,.8); }
-.sgs-step.is-done .sgs-step-n { color: #9fe0b0; background: rgba(120,200,140,.16); }
+.sgs-step.is-done .sgs-step-n { color: #a3d6f4; background: rgba(70, 192, 253,.16); }
 .sgs-step-l { flex: 1; min-width: 12px; height: 2px; border-radius: 1px; background: rgba(255,236,220,.1); overflow: hidden; }
-.sgs-step-l i { display: block; height: 100%; background: linear-gradient(90deg, #d9954a, #ffcf94); transform-origin: 0 50%; transform: scaleX(0); }
+.sgs-step-l i { display: block; height: 100%; background: linear-gradient(90deg, #a095ff, #d6d4f6); transform-origin: 0 50%; transform: scaleX(0); }
 .sgs-quote.is-narrow .sgs-q-pane { display: block; position: relative; overflow: hidden; }
 .sgs-quote.is-narrow .sgs-track { height: 100%; }
 .sgs-quote.is-narrow .sgs-panel { height: 100%; display: flex; flex-direction: column; gap: calc(6px + 5px * var(--sgs-room, 0)); padding: calc(5px + 6px * var(--sgs-room, 0)) 12px; }

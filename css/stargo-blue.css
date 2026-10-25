@@ -126,8 +126,8 @@ html[data-stargo-home] {
   --sgb-accent-2: #c3b2ff;
   --sgb-accent-grad: linear-gradient(90deg, #6fc7f2, #a48cff);
   /* states: done / ok, and the one warning (below the floor price, a risk flag) */
-  --sgb-ok: #8ef0d4;
-  --sgb-warn: #ffa6c9;
+  --sgb-ok: #7ee6ff;
+  --sgb-warn: #d0a6ff;
   /* surfaces */
   --sgb-aurora:
     radial-gradient(58% 46% at 52% 16%, rgba(69, 176, 226, .78), transparent 72%),

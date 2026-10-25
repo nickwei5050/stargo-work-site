@@ -472,14 +472,14 @@
       var svg = sv('svg', { class: 'sg-ck-svg', width: w, height: h, viewBox: '0 0 ' + w + ' ' + h }, box);
       var defs = sv('defs', {}, svg);
       var ag = sv('linearGradient', { id: id + 'a', x1: 0, y1: 0, x2: 0, y2: 1 }, defs);
-      sv('stop', { offset: 0, 'stop-color': '#ff8a3d', 'stop-opacity': '.26' }, ag);
-      sv('stop', { offset: 1, 'stop-color': '#ff8a3d', 'stop-opacity': '0' }, ag);
+      sv('stop', { offset: 0, 'stop-color': '#a9a0ff', 'stop-opacity': '.26' }, ag);
+      sv('stop', { offset: 1, 'stop-color': '#a9a0ff', 'stop-opacity': '0' }, ag);
       var lg = sv('linearGradient', { id: id + 'l', gradientUnits: 'userSpaceOnUse', x1: X(0), y1: 0, x2: X(TODAY), y2: 0 }, defs);
       var wf = (WARN_DAY / TODAY).toFixed(3);
       sv('stop', { offset: 0, 'stop-color': '#e9d4bf' }, lg);
-      sv('stop', { offset: wf, 'stop-color': '#ffc38f' }, lg);
-      sv('stop', { offset: wf, 'stop-color': '#ff8a3d' }, lg);
-      sv('stop', { offset: 1, 'stop-color': '#ff8a3d' }, lg);
+      sv('stop', { offset: wf, 'stop-color': '#ceccf6' }, lg);
+      sv('stop', { offset: wf, 'stop-color': '#a9a0ff' }, lg);
+      sv('stop', { offset: 1, 'stop-color': '#a9a0ff' }, lg);
       var clip = sv('clipPath', { id: id + 'c' }, defs);
       R.clip = sv('rect', { x: 0, y: 0, width: 0, height: h }, clip);
       // grid, the 80% line and the limit; their labels sit at the left, where this month's line is still low
