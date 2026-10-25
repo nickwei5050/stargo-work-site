@@ -508,6 +508,10 @@ function scripts(html) {
   const menu = elementSpan(out, '<div class="menu-wrapper" id="stargo-side-menu"');
   out = out.replace(/<video\b[^>]*>[\s\S]*?<\/video>/g, (v, at) => {
     if (/^<video[^>]*\sdata-stargo-video\b/.test(v)) return v;
+    /* A template clip is a backdrop (Webflow's background video), never content: hidden from
+       assistive tech, so the header orb no longer gives the logo link the name "Unable to play
+       media. Stargo Work" where a browser cannot play it (QA round 5, 2026-10-24). */
+    if (!/^<video[^>]*\saria-hidden=/.test(v)) v = v.replace('<video', '<video aria-hidden="true"');
     v = videoSources(v, menu && at > menu[0] && at < menu[1]);
     if (!/<source[^>]*\ssrc=/.test(v) || /^<video[^>]*\sdata-defer\b/.test(v)) return v;
     return v
@@ -516,7 +520,7 @@ function scripts(html) {
       .replace(/(<source[^>]*?)\ssrc=/g, '$1 data-src=');
   });
   out = out.replace(/\sdata-video-urls=/g, ' data-defer-video-urls=');
-  if (out.includes('<video data-defer') && !out.includes('js/stargo-video-defer.js')) out = out.replace('</body>', '<script src="js/stargo-video-defer.js" defer></script></body>');
+  if (/<video\b[^>]*\sdata-defer\b/.test(out) && !out.includes('js/stargo-video-defer.js')) out = out.replace('</body>', '<script src="js/stargo-video-defer.js" defer></script></body>');
   out = phoneFx(out);
   out = out.replace(
     'const nav = document.querySelector(".menu-bottom");',
