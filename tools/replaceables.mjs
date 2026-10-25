@@ -222,6 +222,49 @@ export const CAP_PHOTOS = {
      tools/copy.mjs; C09 and C10 were the first two). */
 };
 
+/**
+ * 真实截图 on the capability page (lane capabilities, 2026-10-24). The owner, 17:27 UTC:
+ * 「你现在也全是代码了，我系统的画面都没有了！我需要真实系统截图放在特定的地方」. From
+ * 2026-10-23 to 2026-10-24 the slots below were code-drawn scenes of the product's screens
+ * (the area scenes of js/stargo-motion-areas.js, inbox / account / quote / creative of
+ * tools/motion-capsales.mjs, crewRoles of js/stargo-motion-crew.js), and before that the
+ * owner's photographs C01–C09 (CAP_PHOTOS above). Since 2026-10-24 each shows a crop of the
+ * system's own screens, cut from the owner's captures of 2026-10-21 (site-screens/raw and
+ * /mobile, already masked: demo customers, example.com mail, amounts × 0.87) in
+ * tools/real-screens/capabilities.json, and placed by tools/real-capabilities.mjs with the
+ * 真实界面 · 演示数据 tag. An entry: `id` the crop for landscape screens, `upright` the crop
+ * for portrait ones (left out: the one crop is cut tall enough for the tallest box it meets
+ * and wider boxes show its top), `pos` / `uprightPos` its object-position.
+ *   areas     四个板块，十四类能力 in card order (#g01, #g04, #g07, #g10): the Growth OS home
+ *             (the published live05 cuts as they are), the Sales Desk customer list (the
+ *             phone's list on upright screens), the ERP item list, and the digital employees'
+ *             open marketplace (the published StaffDeck composite sw004, right of its sidebar
+ *             so the upstream's mark stays out).
+ *   inbox     Sales Desk row 01 统一询盘入口: the case page's inquiry column.
+ *   account   Sales Desk row 03 客户全景: the phone's customer 360, 成交资料 4/10.
+ *   quote     03 报价有依据: the phone's quote list, Q-13D55F08-01 等你审批.
+ *   creative  the 图片 / 视频 portrait: 一键复刻爆款视频, the reference-video form.
+ *   crew      the first card of 让 AI 团队把活干完, 288 个跨部门专业岗位: 我的数字员工 from the
+ *             sw006 composite, below its 298 headcount (which would argue with the 288 roles).
+ * The second and third crew cards stay scenes: no capture of the digital employees' task
+ * board exists (site-screens/mobile/NOTES.md: StaffDeck was held by its onboarding), and the
+ * third is the teamwork example its caption calls 示意. Setting an entry to null shows that
+ * slot's scene again (the blocks and CAP_V6A in tools/copy.mjs keep the scene names).
+ */
+export const CAP_REAL = {
+  areas: [
+    { id: 'live05-growth-home-2x1', upright: 'live05-growth-home-start-5x4', pos: '0% 0%' },
+    { id: 'live11-capabilities-customers', upright: 'm05-capabilities-customers-up', pos: '0% 0%' },
+    { id: 'live23-capabilities-items', upright: 'live23-capabilities-items-up', pos: '0% 0%' },
+    { id: 'sw004-capabilities-library', upright: 'sw004-capabilities-library-up', pos: '0% 0%' },
+  ],
+  inbox: { id: 'live09-capabilities-inbox', pos: '0% 0%' },
+  account: { id: 'm06-capabilities-account', pos: '0% 0%' },
+  quote: { id: 'm01-capabilities-quote', pos: '0% 0%' },
+  creative: { id: 'live34-capabilities-video', upright: 'live34-capabilities-video-up', pos: '0% 0%' },
+  crew: { id: 'sw006-capabilities-staff', pos: '0% 0%' },
+};
+
 /* The demo band behind the glass form (index, capabilities, enterprise) is a
    CSS background: css/stargo-fusion.css sets .photo-section to G01,
    assets/stargo-photo/g01-cta-loading-bay-dusk-2048.webp. */

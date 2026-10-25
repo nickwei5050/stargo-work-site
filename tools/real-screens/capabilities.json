@@ -1,0 +1,515 @@
+{
+ "note": "Lane capabilities (2026-10-24): the slots of capabilities.html that drew the product in code show the system's own screens again — the four area cards of 四个板块，十四类能力 (tools/code-art-capareas.mjs placeAreaShots), the Sales Desk rows 01 and 03 (tools/blocks/qx-news.mjs), the quote band (tools/blocks/rk-stats.mjs), the creative portrait (tools/blocks/cn-faq.mjs) and the first card of 让 AI 团队把活干完 (tools/blocks/qx-projects.mjs). A slot keeps its box; the crop covers it from the top (css/stargo-real.css), so a crop is cut tall enough for the tallest box it meets at full width, and wider boxes show its top. Where the box turns from wide on a desktop to tall or square on an upright screen, a second, upright crop is cut (or, for the customer area, the phone capture of the same list). The Growth OS area card shows the published live05-growth-home-2x1 and live05-growth-home-start-5x4 as they are. The team area and the first crew card are cut from the published StaffDeck composites sw004 and sw006 (the digital-employee app was not captured on 2026-10-21, site-screens/mobile/NOTES.md), right of the sidebar so the upstream's mark stays out, and below the 298 headcount figure, which would argue with the card's 288 positions.",
+ "shots": [
+  {
+   "id": "live11-capabilities-customers",
+   "src": "raw/11-sales-desk-customer-list.png",
+   "crop": [
+    820,
+    150,
+    2300,
+    1200
+   ],
+   "max": 1600,
+   "what": "the customer list from the 国家·当地时间 column rightwards, with the channel / stage / turn / sort filters above (the blurred name column is left out); area card 客户与知识 on wide screens",
+   "alt": [
+    "成交工作台的客户列表：每位客户的国家和当地时间、渠道、阶段、需求、最近往来和轮到谁",
+    "The Sales Desk customer list: each customer's country and local time, channel, stage, request, last contact and whose turn it is"
+   ],
+   "out": {
+    "width": 1600,
+    "height": 835,
+    "bytes": 44198,
+    "sourcePixels": [
+     2300,
+     1200
+    ],
+    "sha256": "3dd0c13502fee8897303203a93115671f82645bb4744d31b68afaf8bd32b26fa",
+    "variants": [
+     {
+      "src": "assets/stargo-product/live11-capabilities-customers-480.webp",
+      "width": 480,
+      "height": 250,
+      "bytes": 6858
+     },
+     {
+      "src": "assets/stargo-product/live11-capabilities-customers-768.webp",
+      "width": 768,
+      "height": 401,
+      "bytes": 14556
+     },
+     {
+      "src": "assets/stargo-product/live11-capabilities-customers-1024.webp",
+      "width": 1024,
+      "height": 534,
+      "bytes": 22738
+     }
+    ]
+   }
+  },
+  {
+   "id": "m05-capabilities-customers-up",
+   "src": "mobile/m05-customers.png",
+   "crop": [
+    0,
+    780,
+    1170,
+    980
+   ],
+   "max": 1170,
+   "what": "共 8 个客户 and the first two customers of the phone list (country, local time, stage, days waiting, the product asked for); area card 客户与知识 on upright screens",
+   "alt": [
+    "手机上的客户列表：国家、当地时间、阶段、等待天数和询价的产品",
+    "The customer list on a phone: country, local time, stage, days waiting and the product asked about"
+   ],
+   "out": {
+    "width": 1170,
+    "height": 980,
+    "bytes": 28720,
+    "sourcePixels": [
+     1170,
+     980
+    ],
+    "sha256": "3014fb91b41ac7f9b2a42035320f37d87d9ee7dd1cfec2f572180291f98a9f71",
+    "variants": [
+     {
+      "src": "assets/stargo-product/m05-capabilities-customers-up-480.webp",
+      "width": 480,
+      "height": 402,
+      "bytes": 11236
+     },
+     {
+      "src": "assets/stargo-product/m05-capabilities-customers-up-768.webp",
+      "width": 768,
+      "height": 643,
+      "bytes": 18716
+     },
+     {
+      "src": "assets/stargo-product/m05-capabilities-customers-up-1024.webp",
+      "width": 1024,
+      "height": 858,
+      "bytes": 24824
+     }
+    ]
+   }
+  },
+  {
+   "id": "live23-capabilities-items",
+   "src": "raw/23-erp-items.png",
+   "crop": [
+    310,
+    110,
+    2560,
+    1333
+   ],
+   "max": 1600,
+   "what": "the ERP item list below the top bar (the ERP mark and breadcrumb are left out): 物料 heading, filters, and the first rows of products with status and item group; area card 商务、履约与创作 on wide screens",
+   "alt": [
+    "ERP 物料列表：产品型号、启用状态、物料组和左侧的筛选条件",
+    "The ERP item list: product models, their status and item group, with filters on the left"
+   ],
+   "out": {
+    "width": 1600,
+    "height": 833,
+    "bytes": 80776,
+    "sourcePixels": [
+     2560,
+     1333
+    ],
+    "sha256": "dbab194df5d997ceaf6c738348b32cbc37ac437a88f2f8a3ce8a8e4cf789822f",
+    "variants": [
+     {
+      "src": "assets/stargo-product/live23-capabilities-items-480.webp",
+      "width": 480,
+      "height": 250,
+      "bytes": 12342
+     },
+     {
+      "src": "assets/stargo-product/live23-capabilities-items-768.webp",
+      "width": 768,
+      "height": 400,
+      "bytes": 26566
+     },
+     {
+      "src": "assets/stargo-product/live23-capabilities-items-1024.webp",
+      "width": 1024,
+      "height": 533,
+      "bytes": 42214
+     }
+    ]
+   }
+  },
+  {
+   "id": "live23-capabilities-items-up",
+   "src": "raw/23-erp-items.png",
+   "crop": [
+    780,
+    340,
+    1100,
+    917
+   ],
+   "max": 1100,
+   "what": "the 项目名称 / 状态 / 物料组 columns of the same list; area card 商务、履约与创作 on upright screens",
+   "alt": [
+    "ERP 物料列表：产品型号、启用状态和物料组",
+    "The ERP item list: product models, status and item group"
+   ],
+   "out": {
+    "width": 1100,
+    "height": 917,
+    "bytes": 63066,
+    "sourcePixels": [
+     1100,
+     917
+    ],
+    "sha256": "b958c542fee1f84d70a08ee85a11f131531b2f06b4e9305f6c8002e2d4929ca5",
+    "variants": [
+     {
+      "src": "assets/stargo-product/live23-capabilities-items-up-480.webp",
+      "width": 480,
+      "height": 400,
+      "bytes": 20484
+     },
+     {
+      "src": "assets/stargo-product/live23-capabilities-items-up-768.webp",
+      "width": 768,
+      "height": 640,
+      "bytes": 40082
+     },
+     {
+      "src": "assets/stargo-product/live23-capabilities-items-up-1024.webp",
+      "width": 1024,
+      "height": 854,
+      "bytes": 57896
+     }
+    ]
+   }
+  },
+  {
+   "id": "sw004-capabilities-library",
+   "src": "asset:sw004-experts-library",
+   "crop": [
+    318,
+    300,
+    1118,
+    580
+   ],
+   "max": 1118,
+   "what": "the 开放广场平台 page of the composite: the AI-employee, knowledge, skill, SOP and tool columns, right of the sidebar (its mark left out) and left of the composite's 3D badge; area card 员工与管理 on wide screens",
+   "alt": [
+    "开放广场：数字员工、知识库、技能、SOP 和工具分栏列出",
+    "The open marketplace: AI employees, knowledge bases, skills, SOPs and tools in separate columns"
+   ],
+   "out": {
+    "width": 1118,
+    "height": 580,
+    "bytes": 68614,
+    "sourcePixels": [
+     1118,
+     580
+    ],
+    "sha256": "5ae4e53ae596782d72b06a8326eb5b83df9a95a96f5cf25d675b3335dada63ee",
+    "variants": [
+     {
+      "src": "assets/stargo-product/sw004-capabilities-library-480.webp",
+      "width": 480,
+      "height": 249,
+      "bytes": 17012
+     },
+     {
+      "src": "assets/stargo-product/sw004-capabilities-library-768.webp",
+      "width": 768,
+      "height": 398,
+      "bytes": 36898
+     },
+     {
+      "src": "assets/stargo-product/sw004-capabilities-library-1024.webp",
+      "width": 1024,
+      "height": 531,
+      "bytes": 58872
+     }
+    ]
+   }
+  },
+  {
+   "id": "sw004-capabilities-library-up",
+   "src": "asset:sw004-experts-library",
+   "crop": [
+    318,
+    300,
+    692,
+    577
+   ],
+   "max": 692,
+   "what": "the first three columns of the same page (AI employees, knowledge bases, skills); area card 员工与管理 on upright screens",
+   "alt": [
+    "开放广场：数字员工、知识库和技能三栏",
+    "The open marketplace: AI employees, knowledge bases and skills"
+   ],
+   "out": {
+    "width": 692,
+    "height": 577,
+    "bytes": 43050,
+    "sourcePixels": [
+     692,
+     577
+    ],
+    "sha256": "67c916cbc9dd5b782dd3cc93ff3e7dc50c5e457b2c5d8d48a4cab1a6c8d2555d",
+    "variants": [
+     {
+      "src": "assets/stargo-product/sw004-capabilities-library-up-480.webp",
+      "width": 480,
+      "height": 400,
+      "bytes": 23700
+     }
+    ]
+   }
+  },
+  {
+   "id": "live09-capabilities-inbox",
+   "src": "raw/09-sales-desk-customer-case.png",
+   "crop": [
+    176,
+    476,
+    680,
+    700
+   ],
+   "max": 680,
+   "what": "the inquiry column of the case page: 新询盘 3 with Northwind Traders (selected), Contoso and Fabrikam, then 待我回复 1; Sales Desk row 01 统一询盘入口",
+   "alt": [
+    "成交工作台的询盘列表：新询盘按客户排开，写着需求、渠道、草稿状态和沉睡天数",
+    "The Sales Desk inquiry list: new inquiries by customer, with the request, channel, draft status and days dormant"
+   ],
+   "out": {
+    "width": 680,
+    "height": 700,
+    "bytes": 25178,
+    "sourcePixels": [
+     680,
+     700
+    ],
+    "sha256": "518563bc0957fe85a2b4e26da66ad180ff45275b391e103fe3bbcab550fd9032",
+    "variants": [
+     {
+      "src": "assets/stargo-product/live09-capabilities-inbox-480.webp",
+      "width": 480,
+      "height": 494,
+      "bytes": 17382
+     }
+    ]
+   }
+  },
+  {
+   "id": "m06-capabilities-account",
+   "src": "mobile/m06-customer-360.png",
+   "crop": [
+    0,
+    24,
+    1170,
+    1290
+   ],
+   "max": 1170,
+   "what": "the customer's header, the AI 助手 / 客户 360 switch and 成交资料 4/10 down to 付款方式; Sales Desk row 03 客户全景",
+   "alt": [
+    "手机上的客户 360：成交资料 4/10，型号、数量、目的国/港和贸易术语已填",
+    "Customer 360 on a phone: deal details 4 of 10, with model, quantity, destination and Incoterm filled in"
+   ],
+   "out": {
+    "width": 1170,
+    "height": 1290,
+    "bytes": 37386,
+    "sourcePixels": [
+     1170,
+     1290
+    ],
+    "sha256": "b9e901abc4f9266f7e37c687ab7a9b6c617cbc4034d7986ca5f9279f832739ee",
+    "variants": [
+     {
+      "src": "assets/stargo-product/m06-capabilities-account-480.webp",
+      "width": 480,
+      "height": 529,
+      "bytes": 13568
+     },
+     {
+      "src": "assets/stargo-product/m06-capabilities-account-768.webp",
+      "width": 768,
+      "height": 847,
+      "bytes": 24084
+     },
+     {
+      "src": "assets/stargo-product/m06-capabilities-account-1024.webp",
+      "width": 1024,
+      "height": 1129,
+      "bytes": 32926
+     }
+    ]
+   }
+  },
+  {
+   "id": "m01-capabilities-quote",
+   "src": "mobile/m01-quotes-list.png",
+   "crop": [
+    0,
+    300,
+    1170,
+    1700
+   ],
+   "max": 1170,
+   "what": "the quote tabs and the three quotes: Q-13D55F08-01 等你审批 with its amount and validity, then two 还不能报价; the quote band 报价有依据 (wide boxes show the tabs and the first quote)",
+   "alt": [
+    "手机上的报价列表：一份报价等你审批，金额和有效期写清，另两份还不能报价",
+    "The quote list on a phone: one quote waiting for your approval with its amount and validity, two more not ready to quote"
+   ],
+   "out": {
+    "width": 1170,
+    "height": 1700,
+    "bytes": 69376,
+    "sourcePixels": [
+     1170,
+     1700
+    ],
+    "sha256": "8a18c3785491b47c90630c16a0f867ae6610497634cb14e7662496c95080386d",
+    "variants": [
+     {
+      "src": "assets/stargo-product/m01-capabilities-quote-480.webp",
+      "width": 480,
+      "height": 697,
+      "bytes": 22140
+     },
+     {
+      "src": "assets/stargo-product/m01-capabilities-quote-768.webp",
+      "width": 768,
+      "height": 1116,
+      "bytes": 41112
+     },
+     {
+      "src": "assets/stargo-product/m01-capabilities-quote-1024.webp",
+      "width": 1024,
+      "height": 1488,
+      "bytes": 58066
+     }
+    ]
+   }
+  },
+  {
+   "id": "live34-capabilities-video",
+   "src": "raw/34-ai-reference-video.png",
+   "crop": [
+    480,
+    40,
+    2220,
+    1800
+   ],
+   "max": 1600,
+   "what": "the 一键复刻爆款视频 form from its heading to the 一键复刻 button; the creative portrait beside AI 创作 on wide screens",
+   "alt": [
+    "一键复刻爆款视频：上传参考视频，再填写产品、卖点、视频语言和配音",
+    "Remake a viral video in one step: upload a reference video, then fill in the product, selling points, language and voice-over"
+   ],
+   "out": {
+    "width": 1600,
+    "height": 1297,
+    "bytes": 53124,
+    "sourcePixels": [
+     2220,
+     1800
+    ],
+    "sha256": "05c90d7e669c1f8f382231a4134952e203ca4ca955d14ff3a3c0b669566d03f8",
+    "variants": [
+     {
+      "src": "assets/stargo-product/live34-capabilities-video-480.webp",
+      "width": 480,
+      "height": 389,
+      "bytes": 7542
+     },
+     {
+      "src": "assets/stargo-product/live34-capabilities-video-768.webp",
+      "width": 768,
+      "height": 623,
+      "bytes": 17120
+     },
+     {
+      "src": "assets/stargo-product/live34-capabilities-video-1024.webp",
+      "width": 1024,
+      "height": 830,
+      "bytes": 26936
+     }
+    ]
+   }
+  },
+  {
+   "id": "live34-capabilities-video-up",
+   "src": "raw/34-ai-reference-video.png",
+   "crop": [
+    480,
+    40,
+    960,
+    1010
+   ],
+   "max": 960,
+   "what": "the left part of the same form: heading, 1. 参考视频 and the first fields of 2. 你的产品; the creative portrait on upright screens",
+   "alt": [
+    "一键复刻爆款视频：上传参考视频，再填写你的产品",
+    "Remake a viral video in one step: upload a reference video, then describe your product"
+   ],
+   "out": {
+    "width": 960,
+    "height": 1010,
+    "bytes": 44646,
+    "sourcePixels": [
+     960,
+     1010
+    ],
+    "sha256": "0ed398af9a064453825bf6ee289dc545a730068a6ae08ff651460ca0e38efa48",
+    "variants": [
+     {
+      "src": "assets/stargo-product/live34-capabilities-video-up-480.webp",
+      "width": 480,
+      "height": 505,
+      "bytes": 17450
+     },
+     {
+      "src": "assets/stargo-product/live34-capabilities-video-up-768.webp",
+      "width": 768,
+      "height": 808,
+      "bytes": 33300
+     }
+    ]
+   }
+  },
+  {
+   "id": "sw006-capabilities-staff",
+   "src": "asset:sw006-expert-teams",
+   "crop": [
+    916,
+    262,
+    660,
+    679
+   ],
+   "max": 660,
+   "what": "the right two columns of 我的数字员工: 待审批 and 创建新员工, then six AI-employee cards (the 298 headcount and the sidebar with the upstream's mark are left out); first card of 让 AI 团队把活干完",
+   "alt": [
+    "我的数字员工：每位 AI 员工一张卡片，写着岗位、在线状态，以及资料、技能和 SOP 的数量",
+    "My AI employees: a card for each AI employee with role, online status and counts of materials, skills and SOPs"
+   ],
+   "out": {
+    "width": 660,
+    "height": 679,
+    "bytes": 31466,
+    "sourcePixels": [
+     660,
+     679
+    ],
+    "sha256": "1eab86390fc2b1279ec3ab984289e446196d0b0d597ddfbceaff01ce42daa282",
+    "variants": [
+     {
+      "src": "assets/stargo-product/sw006-capabilities-staff-480.webp",
+      "width": 480,
+      "height": 494,
+      "bytes": 19418
+     }
+    ]
+   }
+  }
+ ]
+}

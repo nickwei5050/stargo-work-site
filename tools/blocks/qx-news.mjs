@@ -29,6 +29,8 @@
 import { setText, capability } from '../block-lib.mjs';
 import { SALES_ROWS } from '../replaceables.mjs';
 import { hostFromImg } from '../motion-capsales.mjs';
+import { CAP_REAL } from '../replaceables.mjs';
+import { realFromImg, CAP_REAL_SIZES } from '../real-capabilities.mjs';
 
 /** The story this block carries: CAPABILITY_SHOWCASE.stories[1]. */
 const STORY = 1;
@@ -70,6 +72,13 @@ const ROW_ART = SALES_ROWS;
    same shapes in css/stargo-motion-sales.css); they are left in place so that setting a row back to null
    restores its photograph exactly, and so that this lane does not re-hash stargo-fusion.css on every page. */
 const ROW_MOTION = ['inbox', null, 'account'];
+/* Since 2026-10-24 rows 01 and 03 show the system's own screens again (the owner, 17:27 UTC: 「你现在也全是代码了，
+   我系统的画面都没有了！我需要真实系统截图放在特定的地方」): the inquiry column of a Sales Desk case and the phone's
+   customer 360, cut from the owner's captures (tools/replaceables.mjs CAP_REAL, tools/real-capabilities.mjs), with
+   the 真实界面 · 演示数据 tag. A row's real screen comes before its scene; set its CAP_REAL entry to null and the
+   scene plays again. Like the scene hosts, the slot takes the <img>'s class and inline IX2 transform and keeps
+   still on hover (css/stargo-real-capabilities.css): qubix's 1.1 zoom would push the tag out of the box. */
+const ROW_REAL = [CAP_REAL.inbox, null, CAP_REAL.account];
 /** An editorial id (assets/stargo-editorial) or a path exactly as written. */
 const pic = (v, art) => (v.startsWith('assets/') ? v : art(v));
 
@@ -198,6 +207,11 @@ export function render(frag, ctx) {
     if (!row.includes('alt=""')) throw new Error(`qx-news: row ${i + 1} lost its image alt attribute`);
     const PHOTO = /<img src="assets\/qubix\/[^"]+"/;
     if (!PHOTO.test(row)) throw new Error(`qx-news: row ${i + 1} lost its qubix photograph`);
+    if (ROW_REAL[i]) {
+      /* the real screen takes the <img>'s place, its class and its inline IX2 transform */
+      const IMG = /<img src="assets\/qubix\/[^"]+"[^>]*>/;
+      return row.replace(IMG, (tag) => realFromImg(tag, ROW_REAL[i], lang, `sg-real-${ROW_MOTION[i]}`, CAP_REAL_SIZES.row));
+    }
     if (ROW_MOTION[i]) {
       /* the scene's host takes the <img>'s place, its class and its inline IX2 transform */
       const IMG = /<img src="assets\/qubix\/[^"]+"[^>]*>/;

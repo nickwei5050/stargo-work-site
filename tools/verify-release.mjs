@@ -95,22 +95,37 @@ try {
     const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
     await page.goto(`${BASE}/${lang}capabilities`, { waitUntil: 'load', timeout: NAV });
     await page.waitForTimeout(1500);
-    // Since 2026-10-23 each of the four area cards shows its own area drawn in
+    // Since 2026-10-23 each of the four area cards showed its own area drawn in
     // code (tools/code-art-capareas.mjs, js/stargo-motion-areas.js), where the
     // owner's photographs C01-C04 were (2026-10-21) and the generated art
-    // before them. Compared by scene, in card order, and the card keeps no photo.
-    const expected = ['areaGrowth', 'areaContext', 'areaDeal', 'areaTeam'];
+    // before them. The owner, 2026-10-24 17:27 UTC: 「你现在也全是代码了，我系统的画面都没有了！
+    // 我需要真实系统截图放在特定的地方」: since then each card shows a screen of its own area
+    // (tools/replaceables.mjs CAP_REAL.areas: Growth OS home, the Sales Desk customer list, the ERP
+    // items, the experts library), the upright crop on this portrait phone. Compared by screen, in
+    // card order: every card's picture has decoded the upright crop and carries the 真实界面 tag,
+    // and no card hosts a drawn scene any more.
+    const expected = ['live05-growth-home-2x1', 'live11-capabilities-customers', 'live23-capabilities-items', 'sw004-capabilities-library'];
+    const upright = ['live05-growth-home-start-5x4', 'm05-capabilities-customers-up', 'live23-capabilities-items-up', 'sw004-capabilities-library-up'];
     // The four area cards only: the V6 showcases link to groups too.
     const cards = '.wrok-wrapper a[href="#g01"],.wrok-wrapper a[href="#g04"],.wrok-wrapper a[href="#g07"],.wrok-wrapper a[href="#g10"]';
-    const actual = await page.locator(cards.split(',').map(a => `${a} [data-sg-scene]`).join(','))
-      .evaluateAll(hosts => hosts.map(h => h.getAttribute('data-sg-scene')));
-    assert.deepEqual(actual, expected, 'capability scene/meaning mapping');
-    assert.equal(await page.locator(cards.split(',').map(a => `${a} img`).join(',')).count(), 0, 'the area cards load no photograph');
+    const actual = await page.locator(cards.split(',').map(a => `${a} [data-real]`).join(','))
+      .evaluateAll(slots => slots.map(s => s.getAttribute('data-real')));
+    assert.deepEqual(actual, expected, 'capability screen/meaning mapping');
+    assert.equal(await page.locator(cards.split(',').map(a => `${a} [data-sg-scene]`).join(',')).count(), 0, 'the area cards host no drawn scene');
+    for (const [i, id] of expected.entries()) {
+      const slot = page.locator(`.wrok-wrapper [data-real="${id}"]`);
+      await slot.scrollIntoViewIfNeeded();
+      await slot.locator('img').evaluate(img => img.decode().catch(() => {}));
+      const shot = await slot.evaluate(s => { const img = s.querySelector('img'); return { w: img.naturalWidth, src: img.currentSrc, tag: s.querySelector('.sg-real-tag')?.textContent.trim() }; });
+      assert(shot.w > 0, `${id}: the screen decodes`);
+      assert(shot.src.includes(`/${upright[i]}`), `${id}: the portrait phone loads the upright crop (${shot.src})`);
+      assert(/真实界面|Real screen/.test(shot.tag || ''), `${id}: the real-screen tag is shown`);
+    }
     await page.locator('.wrok-wrapper a[href="#g04"]').scrollIntoViewIfNeeded();
     await page.waitForTimeout(900);
     await page.screenshot({ path: `${OUT}/${lang ? 'en' : 'zh'}-capabilities-art.png` });
     scenarios.push(`${lang || 'zh/'}capabilities-390`);
-    console.log(`PASS live ${lang || 'zh/'} capabilities 390: four area scenes in card order`);
+    console.log(`PASS live ${lang || 'zh/'} capabilities 390: four area screens in card order, upright crops decoded and tagged`);
     await page.close();
   }
 } finally { await browser.close(); }

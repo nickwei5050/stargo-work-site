@@ -28,7 +28,8 @@
  *     2026-10-21 the owner's photographs C09 and C10 in the first two cards;
  *     since 2026-10-23 the third is the code-drawn 'team' motion scene,
  *     tools/motion-scenes.mjs, where the Expert Teams composite was;
- *     CAP_V6A.team.cards).
+ *     CAP_V6A.team.cards; since 2026-10-24 the first shows the system's own
+ *     我的数字员工 screen, CAP_V6A.team.cards[0].real).
  *   - the two arrow images announce themselves as "Image"; the anchor already
  *     leads somewhere the one-liner beside it explains, so the alt goes empty.
  *   - the category line has no colour of its own in the donor: it inherited
@@ -37,6 +38,7 @@
  */
 import { setText, capability } from '../block-lib.mjs';
 import { motionHost } from '../motion-scenes.mjs';
+import { realSlot, CAP_REAL_SIZES } from '../real-capabilities.mjs';
 
 /** The story this block carries: CAPABILITY_SHOWCASE.stories[5]. */
 const STORY = 5;
@@ -174,6 +176,11 @@ export function render(frag, ctx) {
        class, whose hover zoom would scale the scene's text. The hover pill
        beside it is untouched. css/stargo-motion-team.css sizes it, and the
        capability builder (tools/build-site.mjs) loads the scene's files. */
+    /* `real` comes before `motion` (2026-10-24, the owner: 「你现在也全是代码了，我系统的画面都没有了！我需要真实
+       系统截图放在特定的地方」): a crop of the system's own screen (tools/replaceables.mjs CAP_REAL) with the
+       真实界面 · 演示数据 tag, in the same frame and, like the scene, without the picture's class, whose hover
+       zoom would push the tag out of the card; the hover pill beside it is untouched. */
+    if (words.real) return card.replace(IMG, () => realSlot(words.real, ctx.lang, 'sg-real-crew', CAP_REAL_SIZES.crew));
     if (words.motion) return card.replace(IMG, () => motionHost(words.motion, ctx.lang, `sg-mo-${words.motion}-card`));
     /* `CAP_V6A.team.cards[].image` is an editorial id, or \u2014 since the owner's
        handoff of 2026-09-18 \u2014 a path written out, for one of their own product

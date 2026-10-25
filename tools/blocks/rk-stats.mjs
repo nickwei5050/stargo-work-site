@@ -41,6 +41,7 @@
  */
 import { setText, setTextAll, capability } from '../block-lib.mjs';
 import { hostFromImg } from '../motion-capsales.mjs';
+import { realFromImg, CAP_REAL_SIZES } from '../real-capabilities.mjs';
 
 export const donor = {
   id: 'rk-stats',
@@ -246,7 +247,15 @@ export function render(frag, ctx) {
      approved by a person and kept as v3. The host keeps the <img>'s class and inline blur and scale,
      so renok's reveal (rk-a-170, which targets .rk-rt-image-apperance) plays on it unchanged.
      `CAP_V6A.quote.motion` names the scene; without it the band shows `image` as before. */
-  if (Q.motion) {
+  /* Since 2026-10-24 (the owner, 17:27 UTC: 「你现在也全是代码了，我系统的画面都没有了！我需要真实系统截图放在
+     特定的地方」) `CAP_V6A.quote.real` comes first: the phone's quote list, Q-13D55F08-01 等你审批 with its
+     amount and validity (tools/replaceables.mjs CAP_REAL.quote, tools/real-capabilities.mjs), with the
+     真实界面 · 演示数据 tag. The slot keeps the <img>'s class and inline blur and scale like the scene host,
+     so renok's reveal plays on it as it did on the scene: the wrapper grows and the blur clears, while the 2×
+     zoom stays held at 1 (css/stargo-real-capabilities.css), so the screen and its tag are whole throughout. */
+  if (Q.real) {
+    html = html.replace(IMG, realFromImg(img[0], Q.real, lang, 'sg-real-quote', CAP_REAL_SIZES.quote));
+  } else if (Q.motion) {
     html = html.replace(IMG, hostFromImg(img[0], Q.motion, lang, `sg-mo-${Q.motion}`));
   } else {
     const src = Q.image.startsWith('assets/') ? Q.image : art(Q.image);

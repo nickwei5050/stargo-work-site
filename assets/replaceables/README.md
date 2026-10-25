@@ -75,6 +75,18 @@ Notices “keep reading” cards (`NOTICES_CARDS`): `sw003-ai-workspace-home`, `
 
 Workforce tile and the capability team card (`PLACED.workforceTile`, `PLACED.teamCard`): `assets/stargo-product/sw006-expert-teams.webp`.
 
+Capability page real screens (`CAP_REAL` in `tools/replaceables.mjs`, 2026-10-24; the owner: 「你现在也全是代码了，我系统的画面都没有了！我需要真实系统截图放在特定的地方」). These crops of the owner's captures take the places of the code-drawn scenes. Each carries the 真实界面 · 演示数据 tag. They are cut by `python3 tools/real-screens.py tools/real-screens/capabilities.json` and placed through `tools/real-capabilities.mjs`, with sizing in `css/stargo-real-capabilities.css`. Set an entry to `null` and that slot plays its scene again.
+
+| Slot | Crop (upright crop on portrait screens) |
+| --- | --- |
+| 四个板块 area cards (`CAP_REAL.areas`) | `live05-growth-home-2x1` (`live05-growth-home-start-5x4`), `live11-capabilities-customers` (`m05-capabilities-customers-up`), `live23-capabilities-items` (`live23-capabilities-items-up`), `sw004-capabilities-library` (`sw004-capabilities-library-up`) |
+| Sales Desk rows 01 and 03 (`CAP_REAL.inbox`, `.account`) | `live09-capabilities-inbox`, `m06-capabilities-account` |
+| Quote band (`CAP_REAL.quote`) | `m01-capabilities-quote` |
+| 图片 / 视频 portrait (`CAP_REAL.creative`) | `live34-capabilities-video` (`live34-capabilities-video-up`) |
+| AI team card 1 (`CAP_REAL.crew`) | `sw006-capabilities-staff` |
+
+The following stay drawn in code: the Growth OS row backgrounds, the 每项工作 ring, AI team card 2 (`crewBoard`; no capture of the task board exists), and the team card.
+
 ## Product screenshots
 
 All released screens live in `assets/stargo-product/`. Ids:

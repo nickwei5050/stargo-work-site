@@ -8,7 +8,7 @@
  * [templateString, pair, options] applied in sequence (long strings first,
  * so a short word never matches inside a sentence that is about to change).
  */
-import { STORY_ART, PLACED, CAP_PHOTOS } from './replaceables.mjs';
+import { STORY_ART, PLACED, CAP_PHOTOS, CAP_REAL } from './replaceables.mjs';
 
 export const B = (zh, en) => ({ zh, en });
 
@@ -2161,6 +2161,9 @@ export const CAP_V6A = {
     image: CAP_PHOTOS.quote,
     /* since 2026-10-23 the band draws the 'quote' scene (tools/motion-capsales.mjs) instead of `image` */
     motion: 'quote',
+    /* since 2026-10-24 (the owner: 「我需要真实系统截图放在特定的地方」) the band shows the system's own quote list
+       instead of the scene (tools/replaceables.mjs CAP_REAL.quote; null plays the scene again) */
+    real: CAP_REAL.quote,
     button: { label: B('报价能力详情', 'Quote details'), href: '#g07' },
     /* The paragraph's closing pointer to where product facts live. */
     facts: { lead: B('报价背后的产品资料，见', 'For the product facts behind a price, see'), label: B('产品与企业知识', 'Products & enterprise knowledge'), href: '#g06' },
@@ -2212,7 +2215,10 @@ export const CAP_V6A = {
         text: B('按任务从岗位目录里挑人、组队协作，不替代真人。', 'A role directory to staff each task and form teams, not a replacement for people.'),
         /* capareas, 2026-10-23: the code-drawn 'crewRoles' scene (js/stargo-motion-crew.js) where the
            owner's photograph C09 was — the 288 roles by function, narrowed to the five one task needs. */
-        href: 'workforce.html#lx-role-groups', pill: B('认识数字员工', 'Meet the AI Workforce'), motion: 'crewRoles' },
+        href: 'workforce.html#lx-role-groups', pill: B('认识数字员工', 'Meet the AI Workforce'), motion: 'crewRoles',
+        /* since 2026-10-24 (the owner: 「我需要真实系统截图放在特定的地方」) the card shows the system's own
+           我的数字员工 screen instead of the scene (tools/replaceables.mjs CAP_REAL.crew; null plays 'crewRoles') */
+        real: CAP_REAL.crew },
       { title: B(`员工任务、${ZW}进度与成果`, 'Tasks, progress and results'),
         text: B('谁在做什么、卡在哪一步、交付了什么，一眼看清；关键操作由人批准。', 'See who is doing what, what is waiting and what has been delivered; people approve the key actions.'),
         /* capareas: the 'crewBoard' scene where C10 was — tasks moving to 待你确认 and 已完成 with results attached. */

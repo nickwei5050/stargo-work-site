@@ -99,14 +99,20 @@ const RETIRED = new Set(['g01-cta-loading-bay-dusk', 'r1-sales-rep', 'r3-sales-d
 /* Drawn in code where they were placed (capareas, 2026-10-23,
    tools/code-art-capareas.mjs): the four capability area cards (C01v2, C02v2,
    C03, C04v2) and the first two cards of 「让 AI 团队把活干完」 (C09, C10) are
-   motion scenes now. Their files stay registered and published. */
+   motion scenes now. Their files stay registered and published.
+   2026-10-24, the owner (17:27 UTC): 「你现在也全是代码了，我系统的画面都没有了！我需要真实系统截图放在特定的地方」:
+   the four area cards and the first AI-team card now show crops of the system's own screens instead of
+   those scenes (tools/replaceables.mjs CAP_REAL; they are product images, checked with the others above,
+   their alt saying 演示数据 / demo data). The photographs stay off the page all the same, so they stay here. */
 const CODE_DRAWN_CAP = ['c01v2-command-growth', 'c02v2-customer-knowledge', 'c03-commerce-fulfilment', 'c04v2-team-management', 'c09-288-flatlay', 'c10-progress-board'];
 CODE_DRAWN_CAP.forEach((id) => CODE_DRAWN.add(id));
 /* Also off their places since 2026-10-23: the homepage theatre's photographs around the film
    (W01, W03–W06; drawn in code that day, the system's own screens since 2026-10-24,
    tools/real-theatre.mjs), and, drawn in code, the capability page's Sales Desk rows and
    quote band (C05–C07; tools/motion-capsales.mjs), its Growth OS row backgrounds
-   (C11v2, C12–C14) and intelligence's closing card (I02). */
+   (C11v2, C12–C14) and intelligence's closing card (I02). Since 2026-10-24 rows 1 and 3 of the
+   Sales Desk, the quote band and the 图片 / 视频 portrait show real screens there (CAP_REAL, as above);
+   the photographs stay unplaced. */
 ['w01-trade-office', 'w03-warehouse', 'w04-qc-lab', 'w05-owner-office', 'w06-showroom',
   'c05-unified-inbox', 'c06-customer-360', 'c07-quote-approval',
   'c11v2-company-research', 'c12-trade-intelligence', 'c13-restock', 'c14-decision-makers', 'i02-keep-or-revert'].forEach((id) => CODE_DRAWN.add(id));

@@ -36,6 +36,7 @@ import { AREA_SCENES, placeAreaScenes } from './code-art-capareas.mjs'; // capar
 import { theatreTiles } from './real-theatre.mjs';
 import { homeStageShots, homePricingScene, homeMoreAssets, swapToMotion } from './code-art-homemore.mjs'; // homemore lane: enterprise card as code; lane panels: the stage cards' real screens
 import { realShot, withRealCss } from './real-screens.mjs';   // 真实截图 (2026-10-24): slots that show the system's own screens
+import { sceneLeft, withCapRealCss } from './real-capabilities.mjs'; // capabilities: 真实截图 in the scenes' slots
 import { roleCard, roleChip, ROLE_CARDS, withSceneAssets } from './code-art-people.mjs'; // lane people
 import { webpPage } from './image-refs.mjs';
 import { enterpriseArt } from './code-art-enterprise.mjs';   // enterprise lane: code-drawn pictures
@@ -2393,15 +2394,20 @@ function capabilityShowcase(C, lang) {
        page, so the donor sheets added here still load before the overrides. */
     /* The teamwork card of #story-6 is a code-drawn scene (CAP_V6A.team, tools/blocks/qx-projects.mjs);
        its sheets follow the donors', its scripts the page's own below. */
-    const motion = motionAssets([
-      ...C.CAP_V6A.team.cards.map((c) => c.motion).filter(Boolean),
+    /* 2026-10-24 (the owner, 17:27 UTC: 「你现在也全是代码了，我系统的画面都没有了！我需要真实系统截图放在特定的
+       地方」): the slots that show the system's own screen now (tools/replaceables.mjs CAP_REAL — the four area
+       cards, the Sales Desk rows 01 and 03, the quote band, the 图片 / 视频 portrait and the first AI-team card)
+       drop their scenes from this list, so the page no longer downloads their scripts and sheets; a slot set
+       back to its scene brings them back (sceneLeft, tools/real-capabilities.mjs). */
+    const motion = motionAssets(sceneLeft([
+      ...C.CAP_V6A.team.cards.map((c) => (c.real ? null : c.motion)).filter(Boolean),
       /* capgrowth: the four backgrounds behind the Growth OS rows (tools/blocks/cn-service.mjs) */
       ...GROWTH_ROWS.map((row) => row.scene),
       /* lane capsales: the Sales Desk rows, the quote band and the 图片 / 视频 portrait (tools/motion-capsales.mjs) */
-      ...CAPSALES_SCENES,
+      ...CAPSALES_SCENES.filter((s) => s !== 'quote' || !C.CAP_V6A.quote.real),
       /* capareas: the four area cards and the first two AI-team cards (tools/code-art-capareas.mjs) */
       ...AREA_SCENES,
-    ]);
+    ]));
     h = h.replace(monoLink, (m) => `${m}\n${sheets}\n<link href="css/donor-fonts.css" rel="stylesheet" type="text/css"/>\n${motion.css}`);
     // the app band (#apps, tools/app-suite.mjs) brings its own sheet
     h = h.replace('<link href="css/donor-fonts.css" rel="stylesheet" type="text/css"/>', (m) => `${m}\n<link href="css/stargo-apps.css" rel="stylesheet" type="text/css"/>`);
@@ -2437,8 +2443,11 @@ function capabilityShowcase(C, lang) {
   /* Since 2026-10-23 (capareas) each card's picture is a code-drawn scene of
      that area's apps working together (tools/code-art-capareas.mjs,
      js/stargo-motion-areas.js), where the owner's photographs C01-C04 were
-     (CAP_PHOTOS.areas until then). */
+     (CAP_PHOTOS.areas until then). Since 2026-10-24 they show crops of the system's own screens
+     (tools/replaceables.mjs CAP_REAL.areas; the owner: 「我需要真实系统截图放在特定的地方」), and the page
+     links css/stargo-real.css and its own css/stargo-real-capabilities.css for those slots and the others. */
   h = placeAreaScenes(h, lang);
+  if (h.includes('data-real="')) h = withCapRealCss(h);
   return h;
 };
 
