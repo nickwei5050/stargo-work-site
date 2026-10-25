@@ -356,6 +356,13 @@ export const GALLERY_TILES = [
 /**
  * Homepage core-system cards (Scalora product switcher), desktop and phone.
  * Keys are the start of the slot title in both languages.
+ *
+ * The build first puts these files into the four panels (desktop tabs and the
+ * phone accordion), then HOME_MODULE_SHOTS below takes over the Growth OS and
+ * AI 创作 / AI Creative panels. Sales Desk and ERP show these files as they are:
+ * the clean captures live09-sales-desk-case-4x3 and live23-erp-items-16x9.
+ * Growth OS (gos10, a curated still) and AI 创作 (os-boot, a generated still)
+ * stay listed as the way back.
  */
 export const HOME_MODULES = {
   'Growth OS': PRODUCT.growth,
@@ -363,6 +370,38 @@ export const HOME_MODULES = {
   ERP: PRODUCT.erpItems,
   'AI 创作': editorialToken('os-boot'),
   'AI Creative': editorialToken('os-boot'),
+};
+
+/**
+ * The switcher panels that show a real-screen slot (tools/real-screens.mjs),
+ * by the same keys: `desk` in the desktop tabs, `phone` in the phone and tablet
+ * accordion (the same 1672 × 941 box, 280–660px wide there).
+ *
+ * The owner, 2026-10-24 17:27 UTC: 「你现在也全是代码了，我系统的画面都没有了！我需要
+ * 真实系统截图放在特定的地方」. Since 2026-10-23 these two panels had been the
+ * code-drawn 'radar' (a world map ranking prospects) and 'studio' (a generated
+ * product shot) — drawings of a product UI, the kind of place he asked to show
+ * the real screen again. Lane panels (2026-10-24):
+ *   Growth OS   desk  live05-growth-home-16x9: the clean Growth OS home (the
+ *                     2x1 capture whole on its own page ground; raw/05 itself
+ *                     carries a blurred error box and is never used)
+ *               phone live05-panels-growth-phone-16x9: the same home, closer —
+ *                     the heading, the onboarding bar and 开始找客户 — so its
+ *                     words still read in a 280–310px panel
+ *   AI 创作      both  live35-panels-canvas-16x9: the infinite canvas's first
+ *                     screen, dark, its tab bar and the 无限画布 hero; stopped
+ *                     short of the version number, the GitHub icon and the
+ *                     prompt-library cards below (third-party pictures)
+ * The choice of 35 over 34 (the reference-video form): the four panels show one
+ * at a time, and the dark canvas reads as the creative tool it is beside the
+ * light Sales Desk and ERP screens, where the form's grey fields and dark green
+ * buttons read as a settings page. tools/real-screens/home-panels.json has the
+ * crops.
+ */
+export const HOME_MODULE_SHOTS = {
+  'Growth OS': { desk: 'live05-growth-home-16x9', phone: 'live05-panels-growth-phone-16x9' },
+  'AI 创作': { desk: 'live35-panels-canvas-16x9', phone: 'live35-panels-canvas-16x9' },
+  'AI Creative': { desk: 'live35-panels-canvas-16x9', phone: 'live35-panels-canvas-16x9' },
 };
 
 /**
@@ -378,9 +417,11 @@ export const HOME_MODULES = {
  *   001 PRODUCT.growthHome · 002 PRODUCT.caseStage · 003 PRODUCT.erpStage
  *   004 editorialToken('brand-family-01') · 005 PRODUCT.reactivation
  *
- * Since 2026-10-23 (homemore) none of these is placed: the five cards are
- * code-drawn scenes (tools/code-art-homemore.mjs, js/stargo-motion-stages.js).
- * The list stays as the record of what can go back, one line per card.
+ * Since 2026-10-23 (homemore) none of these photographs is placed: the five
+ * cards were code-drawn scenes (tools/code-art-homemore.mjs,
+ * js/stargo-motion-stages.js) until 2026-10-24, and are real screens since
+ * (HOME_STAGE_SHOTS below). The list stays as the record of what can go back,
+ * one line per card.
  */
 export const HOME_STAGES = [
   { id: 'acquisition', label: '001 主动获客', file: photoFile('p01-prospecting', 480) },
@@ -388,6 +429,35 @@ export const HOME_STAGES = [
   { id: 'fulfillment', label: '003 企业履约', file: photoFile('p03-fulfilment', 768) },
   { id: 'collection', label: '004 回款与服务', file: photoFile('p04-payment-docs', 480) },
   { id: 'reorder', label: '005 复购与改进', file: photoFile('p05-reorder', 480) },
+];
+
+/**
+ * The five stage cards' real-screen slots (tools/real-screens.mjs), in page
+ * order. Lane panels, 2026-10-24, after the owner's 「我需要真实系统截图放在特定的
+ * 地方」: every one of the five code-drawn scenes (stage-find … stage-again) drew
+ * a product window — Growth OS ranking prospects, Sales Desk drafting quote
+ * Q-1042, the ERP order steps, the document and payment checklist, the reorder
+ * rhythm — so each card shows the real screen of that part of the system now.
+ *
+ * The card is Mono's 3:2 `.image-wrap.for-service`, 172px wide at 768, 234 at
+ * 1024, 295 at 1280, 334 at 1440 and 338 at 1920, and hidden on phones (the list
+ * shows titles only there). So each slot is one readable part of a screen, cut
+ * 3:2, not a whole screen shrunk to a stamp: UI text is about 8–13px at 334px.
+ *   001 主动获客   live05-growth-home-start-3x2 (published): Growth OS's 开始找客户 card
+ *   002 外贸销售   m02-panels-stage-inquiry-3x2: a buyer's inquiry on the phone, model and quantity picked out
+ *   003 企业履约   live23-panels-stage-items-3x2: the ERP item list, six STARGO models
+ *   004 回款与服务 live12-panels-stage-quote-3x2: a quote's amount and validity, waiting for approval
+ *   005 复购与改进 live51-panels-stage-board-3x2: the deal board's six tiles
+ * There is no capture of orders, shipping documents or payments (mobile/NOTES.md:
+ * those views were empty for this inquiry), so 004 shows the quote that comes
+ * before them rather than anything drawn to look like them.
+ */
+export const HOME_STAGE_SHOTS = [
+  'live05-growth-home-start-3x2',
+  'm02-panels-stage-inquiry-3x2',
+  'live23-panels-stage-items-3x2',
+  'live12-panels-stage-quote-3x2',
+  'live51-panels-stage-board-3x2',
 ];
 
 /**

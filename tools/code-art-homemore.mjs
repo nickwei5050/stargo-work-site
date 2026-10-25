@@ -6,7 +6,9 @@
  *     code-drawn scenes in place of the owner's photographs P01–P05
  *     (tools/replaceables.mjs HOME_STAGES), one host per stage so Mono's own
  *     per-stage switching keeps working (js/stargo-motion-stages.js,
- *     css/stargo-motion-stages.css).
+ *     css/stargo-motion-stages.css). Since 2026-10-24 (lane panels; the owner:
+ *     「我需要真实系统截图放在特定的地方」) the cards show real screens instead
+ *     (homeStageShots below); the scenes and their labels stay as the way back.
  *   - The pricing band's card beside 企业版: the code-drawn 'org' scene in place
  *     of T01 (HOME_PRICING_CARD) — what the Enterprise copy beside it lists,
  *     and nothing more (js/stargo-motion-org.js, css/stargo-motion-org.css).
@@ -17,6 +19,7 @@
  * file entries.
  */
 import { MOTION_LABEL, motionHost, motionAssets } from './motion-scenes.mjs';
+import { realShot } from './real-screens.mjs';
 
 const LABELS = {
   'stage-find': {
@@ -70,6 +73,33 @@ export function homeStageScenes(html, lang) {
     });
     if (n !== 1) throw new Error(`homemore: expected one stage picture ${key}, found ${n}`);
   }
+  return h;
+}
+
+/** The homepage's five stage pictures → five real-screen slots (lane panels, 2026-10-24).
+
+    The owner, 2026-10-24 17:27 UTC: 「你现在也全是代码了，我系统的画面都没有了！我需要真实
+    系统截图放在特定的地方」. Each of the five scenes above drew a window of the
+    product (Growth OS, Sales Desk, the ERP, the quote and the deal board), so the
+    card shows that part of the real system instead: `ids` are the crops in page
+    order (tools/replaceables.mjs HOME_STAGE_SHOTS). The slot takes the scene
+    host's place inside Mono's 3:2 `.image-wrap.for-service`, one per stage, so
+    Mono's per-stage switching and js/stargo-stage-hold.js work on it unchanged.
+    The card is 172–338px wide from 768 and not drawn on phones (the list shows
+    titles only there), hence `sizes`. homeStageScenes() stays as the way back. */
+export function homeStageShots(html, lang, ids) {
+  if (!Array.isArray(ids) || ids.length !== STAGE_SLOTS.length) throw new Error(`homemore: expected ${STAGE_SLOTS.length} stage screens, got ${ids && ids.length}`);
+  let h = html;
+  STAGE_SLOTS.forEach(([key], i) => {
+    let n = 0;
+    h = h.replace(/<img\b[^>]*>/g, (tag) => {
+      if (!tag.includes(key)) return tag;
+      if (!/class="paralax-image"/.test(tag)) throw new Error(`homemore: the stage picture ${key} is not Mono's .paralax-image`);
+      n++;
+      return realShot(ids[i], lang, { sizes: '(max-width: 1460px) 23.2vw, 340px', cls: 'sg-real-stagecard' });
+    });
+    if (n !== 1) throw new Error(`homemore: expected one stage picture ${key}, found ${n}`);
+  });
   return h;
 }
 

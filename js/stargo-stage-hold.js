@@ -60,11 +60,18 @@
      stylesheet's answer where it has not. */
   function runtimeLit(el, i) { return el.style.opacity === '' ? variant[i] : parseFloat(el.style.opacity) > 0; }
 
+  /* The title goes with its picture (QA round 5, home #13, 2026-10-24). The
+     runtime dims a stage's title at the same 50% offset as its picture, so
+     past the end the last card stayed up while all five titles sat at .12 —
+     the list said "no stage" beside a card that showed one. Holding the title
+     of the stage whose picture is held keeps the two in step: the last title
+     stays lit until its card leaves, the first before the list reaches the
+     midline, and mid-handoff the nearer one. */
   var current = -1;
   function hold(index) {
     if (index === current) return;                 // nothing to write on most frames
-    if (current >= 0) wraps[current].classList.remove(HOLD);
-    if (index >= 0) wraps[index].classList.add(HOLD);
+    if (current >= 0) { wraps[current].classList.remove(HOLD); titles[current].classList.remove(HOLD); }
+    if (index >= 0) { wraps[index].classList.add(HOLD); titles[index].classList.add(HOLD); }
     current = index;
   }
 
