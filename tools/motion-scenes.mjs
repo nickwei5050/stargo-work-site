@@ -100,8 +100,8 @@ export const MOTION_LABEL = {
     en: 'Illustrative motion: sales asks the team chat three times where an order is and nobody answers, because production status is not in the sales view; at the end scheduled, QC and loaded appear in the sales view itself.',
   },
   'cockpit-overview': {
-    zh: '动态示意（演示数据）：老板驾驶舱总览。商机进展的询盘和报价数随新数据增加，交付状态显示准时与延迟的订单，待审批事项升到 3 项，你批准一项后回到 2 项；数据来源里邮箱、客户记录、产品知识、ERP 和网盘已接入（5/5），网盘的财务目录没有授权，缺的财务数据已标出。',
-    en: 'Illustrative motion with demo data: the owner’s cockpit overview. Inquiry and quote counts rise as new data arrives, delivery shows on-time against late orders, and pending approvals rise to three and fall back to two when you approve one. Email, customer records, product knowledge, the ERP and the shared drive are connected (5 of 5); the drive’s finance folder is not authorized, so its missing figures are flagged.',
+    zh: '动态示意（演示数据）：老板驾驶舱总览。商机进展的询盘和报价数随新数据增加，交付状态显示准时与延迟的订单，待审批事项升到 3 项（开发信、低于底价的报价 Q-1042 和报价 Q-1043），你批准一项后回到 2 项；数据来源里邮箱、客户记录、产品知识、ERP 和网盘已接入（5/5），网盘的财务目录没有授权，缺的财务数据已标出。',
+    en: 'Illustrative motion with demo data: the owner’s cockpit overview. Inquiry and quote counts rise as new data arrives, delivery shows on-time against late orders, and pending approvals rise to three (the outreach emails, quote Q-1042 below the floor price and quote Q-1043) and fall back to two when you approve one. Email, customer records, product knowledge, the ERP and the shared drive are connected (5 of 5); the drive’s finance folder is not authorized, so its missing figures are flagged.',
   },
   'cockpit-blocker': {
     zh: '动态示意（演示数据）：任务与卡点。报价 Q-1043 的负责人是销售 AI，卡在缺底价，等你处理；你接手、填上底价后交回销售 AI，报价更新后仍要等你审批才发出，不会自动发送。',

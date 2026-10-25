@@ -140,13 +140,18 @@
   function OverviewScene() {
     var P = 12, IN = 1, SHIP = 3, QUOTE = 5, SYNC = 7, OK = 9.2, OUT = 9.7, SHIP2 = 10.8;
     // what joins the approvals; each number is one deal across the site: Q-1041 is the approved forklift
-    // order (PI-1041), Q-1043 the Swedish quote blocked in BLOCKER, PI-2207 the Nigerian proforma done there
+    // order (PI-1041), Q-1043 the Swedish quote blocked in BLOCKER (handed back, it waits for approval),
+    // PI-2207 the Nigerian proforma done there. The first three are the queue the still shows (k = 0: oldest
+    // at the foot, Q-1043 joining on top) and the week's three approvals of the enterprise 经营 / Operate panel
+    // (js/stargo-motion-enterprise.js OperateScene): the German outreach (20 emails, awaiting approval in
+    // BLOCKER too), quote Q-1042 below the floor price, the quote the whole page waits on, and Q-1043. QA round 5
+    // (2026-10-24): the queue used to be Q-1039, samples and outreach, so it never held Q-1042 or Q-1043.
     var POOL = [
-      [T('报价 Q-1039', 'Quote Q-1039'), T('巴西', 'Brazil')],
-      [T('样品寄送', 'Samples'), T('2 组', '2 sets')],
       [T('开发信', 'Outreach'), T('20 封', '20 emails')],
+      [T('报价 Q-1042', 'Quote Q-1042'), T('低于底价', 'Below floor')],
+      [T('报价 Q-1043', 'Quote Q-1043'), T('瑞典', 'Sweden')],
+      [T('样品寄送', 'Samples'), T('2 组', '2 sets')],
       [T('报价 Q-1044', 'Quote Q-1044'), T('波兰', 'Poland')],
-      [T('产品主图', 'Product images'), T('3 张', '3 images')],
       [T('形式发票 PI-2208', 'Proforma PI-2208'), T('越南', 'Vietnam')]
     ];
     // the same five systems ent-connect (js/stargo-motion-enterprise.js) connects, 5/5; the drive's finance folder

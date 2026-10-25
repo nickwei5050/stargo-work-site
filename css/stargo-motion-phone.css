@@ -7,8 +7,9 @@
 /* the hand-held phone of the 「不再 等提醒 / 等回复 / 丢背景」 band: the host takes the screen layer's
    place, size and mask (css/stargo-fusion.css .stargo-nw-art), so the fingertips stay in front */
 .lx-scope .stargo-nw-frame .sg-mo.stargo-nw-art { background: #f5f2ec; }
-/* From 768 to about 900 px the band's box is narrower than the phone, so the right part of the screen is
-   cut off (.stargo-nw-screen clips it). The host is narrowed to the part that shows (the frame starts at
+/* Where the band's box is narrower than the phone, the right part of the screen is cut off
+   (.stargo-nw-screen clips it). That was 768 to about 900 px until QA round 5 (2026-10-24); the composite
+   is now sized to the column there (the 768–991 rule below), so this stays as the fallback. The host is narrowed to the part that shows (the frame starts at
    the box's left edge and the screen at 12.124% of the frame), so the scene is laid out for it; its mask
    keeps the whole screen's size, so the screen's corners and the fingertips stay where they were. */
 @media (min-width: 768px) {
@@ -21,6 +22,27 @@
     height: min(80.19%, calc(100cqh - 1.493%));
     -webkit-mask-size: calc(max(100cqw, 100cqh * 1262 / 1474) * .43265) calc(max(100cqh, 100cqw * 1474 / 1262) * .8019);
     mask-size: calc(max(100cqw, 100cqh * 1262 / 1474) * .43265) calc(max(100cqh, 100cqw * 1474 / 1262) * .8019);
+  }
+}
+/* 768–991 px (QA round 5, 2026-10-24: "the phone mock is sliced by its grid cell", in production too): the
+   band's middle column (272px en, 224px zh at 768) is narrower than the phone at the column's height, and the
+   picture was laid over it like a cover, cut at the column's right edge through the phone and the scene.
+   Here the composite is sized so the whole phone fits the column with 2px to spare (or the column's height,
+   where that is smaller), the phone centred in it and the picture standing on the column's foot, as before;
+   the hand on the phone's left reaches into the margin column below the first word. The picture and the
+   screen layer get the same box, so the scroll-driven transforms that both carry stay in step. The scene
+   then gets the whole screen: feed mid (js/stargo-motion-phone.js), at its own size where it is narrower. */
+@media (min-width: 768px) and (max-width: 991px) {
+  .lx-scope .lx-no-writing-image-holder:has(> .stargo-nw-screen) { container-type: size; }
+  .lx-scope .lx-no-writing-image-holder:has(> .stargo-nw-screen) > .lx-no-writing-image {
+    --f: min(100cqh * 1262 / 1474, (100cqw - 4px) / .43265);
+    position: absolute;
+    left: calc((100cqw - var(--f) * .43265) / 2 - var(--f) * .12124);
+    top: auto;
+    bottom: 0;
+    width: var(--f);
+    height: calc(var(--f) * 1474 / 1262);
+    max-width: none;
   }
 }
 /* the phone of the 「按任务组队」 card: the top screen of the mockup, inside its rounded window */
@@ -160,6 +182,23 @@
 .sgp-feed.is-mini .sgp-ck { width: 15px; height: 15px; }
 .sgp-feed.is-mini .sgp-done-h b { font-size: 12.5px; }
 .sgp-feed.is-mini .sgp-done-s { margin: 2px 0 0; font-size: 12px; }
+/* The mini's tab bar shows only where the page shows the whole phone (.is-whole, set by the scene: 375–430px
+   screens), so the 待办 page reaches the screen's foot with all three items over it, as the app does. */
+.sgp-feed.is-mini:not(.is-crop):not(.is-whole) .sgp-tabs { display: none; }
+.sgp-feed.is-mini.is-whole .sgp-tabs { height: 42px; padding-top: 5px; }
+.sgp-feed.is-mini.is-whole .sgp-tab { gap: 1px; }
+.sgp-feed.is-mini.is-whole .sgp-tab-i svg { width: 17px; height: 17px; }
+.sgp-feed.is-mini.is-whole .sgp-badge { left: 11px; top: -5px; min-width: 16px; height: 15px; padding: 0 3px; }
+/* xs: the mini drawn at a host under 140px (320–354px screens), with tighter insets so every word stays whole */
+.sgp-feed.is-xs .sgp-list { left: 4px; right: 4px; }
+.sgp-feed.is-xs .sgp-item, .sgp-feed.is-xs .sgp-done { padding: 6px 6px 7px; }
+.sgp-feed.is-xs .sgp-btn { padding: 0 7px; }
+.sgp-feed.is-xs .sgp-status { padding: 0 6px 0 10px; }
+.sgp-feed.is-xs .sgp-bar { padding: 0 6px 0 8px; }
+/* snug (2026-10-24, QA round 5): set by the scene when three rows miss the part of the phone the page shows
+   by a few px (zh at 390); the rows' own vertical padding and line gaps trim 6 px a row, words unchanged */
+.sgp-feed.is-mini.is-snug .sgp-item, .sgp-feed.is-mini.is-snug .sgp-done { padding-top: 4px; padding-bottom: 5px; }
+.sgp-feed.is-mini.is-snug .sgp-r2, .sgp-feed.is-mini.is-snug .sgp-r3 { margin-top: 3px; }
 /* feed crop (with is-mini): the visible left part of the phone at 768 to ~900 px, W 140–235 × ~560.
    The status bar keeps its clock (the rest is behind the cut), the tab bar its first two tabs. */
 .sgp-feed.is-crop .sgp-status { height: 32px; padding: 4px 10px 0 18px; }
