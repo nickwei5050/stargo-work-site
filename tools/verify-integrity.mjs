@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync, mkdirSync, writeFileSync } from 'node:fs';
 import { SITE, req } from './paths.mjs';
+import { HERO } from './replaceables.mjs';
 const { chromium } = req('@playwright/test');
 /* Repo-relative paths below; run from anywhere. */
 process.chdir(SITE);
@@ -28,16 +29,40 @@ try {
     });
   }, files.map(f=>[f,readFileSync(f,'utf8')]));
   for(const c of checks) { results.push({ name:c.file,pass:c.errors.length===0,errors:c.errors }); console.log(c.errors.length?'FAIL':'PASS',c.file,[...new Set(c.errors)].join('; ')); }
-  /* The homepage theatre: the brand film in the centre and six code-drawn desktop windows round it
-     (tools/code-art-theatre.mjs), not the photographs W01–W06 they replaced — a merge that brings a still back fails here. */
+  /* The homepage theatre: the brand film in the centre and, round it, six slots with the system's own
+     screens (tools/real-theatre.mjs; tools/replaceables.mjs HERO.real records which crop each cell
+     shows, in the ring's DOM order). Not the photographs W01–W06 of 2026-10-23 and earlier, and not
+     the code-drawn desk windows (js/stargo-motion-desk.js) that stood in for the screens until the
+     owner asked for real captures on 2026-10-24 — a merge that brings either back fails here. Each
+     slot's <img> carries the alt (the slot itself is not role="img"), and the grid holds no other image. */
+  const theatreIds = HERO.real.filter(Boolean).map(c => c.id);
   for(const file of ['index.html','en/index.html']) {
-    const doc = await p.evaluate(h => { const d = new DOMParser().parseFromString(h,'text/html'); const g = d.querySelector('.video-grid'); return { hosts: g ? [...g.querySelectorAll('[data-sg-scene^="desk-"]')].map(e => e.dataset.sgScene) : [], film: !!(g && g.querySelector('video[data-stargo-video]')), stills: g ? g.querySelectorAll('img').length : -1 }; }, readFileSync(file,'utf8'));
+    const html = readFileSync(file,'utf8');
+    const doc = await p.evaluate(h => { const d = new DOMParser().parseFromString(h,'text/html'); const g = d.querySelector('.video-grid'); if (!g) return null;
+      const slots = [...g.querySelectorAll('.sg-real')];
+      return { slots: slots.map(s => s.dataset.real || ''), roleImg: slots.filter(s => s.hasAttribute('role') || s.hasAttribute('aria-label')).length,
+        alts: slots.map(s => { const i = s.querySelectorAll('img'); return i.length === 1 && i[0].classList.contains('sg-real-img') ? (i[0].getAttribute('alt') || '').trim() : ''; }),
+        tags: slots.filter(s => s.querySelector('.sg-real-tag')).length,
+        hosts: g.querySelectorAll('[data-sg-scene]').length, film: !!g.querySelector('video[data-stargo-video]'),
+        stills: g.querySelectorAll('img:not(.sg-real-img), img.stargo-still').length }; }, html);
     const errors = [];
-    if (doc.hosts.length !== 6 || new Set(doc.hosts).size !== 6) errors.push('theatre windows: '+doc.hosts.join(','));
-    if (!doc.film) errors.push('theatre film missing');
-    if (doc.stills !== 0) errors.push('theatre stills: '+doc.stills);
-    if (/stargo-photo\/w0[1-6]-/.test(readFileSync(file,'utf8'))) errors.push('a W01–W06 photograph is referenced');
+    if (!doc) errors.push('theatre grid missing');
+    else {
+      if (doc.slots.join() !== theatreIds.join()) errors.push('theatre slots: '+doc.slots.join(',')+' (HERO.real: '+theatreIds.join(',')+')');
+      if (doc.roleImg) errors.push(doc.roleImg+' theatre slot(s) carry role/aria-label; the <img> carries the alt');
+      if (doc.alts.some(a => !a)) errors.push('theatre slot without exactly one alt-bearing .sg-real-img');
+      if (doc.tags !== 6) errors.push('theatre slots with a 真实界面 tag: '+doc.tags);
+      if (doc.hosts !== 0) errors.push('theatre motion hosts: '+doc.hosts);
+      if (!doc.film) errors.push('theatre film missing');
+      if (doc.stills !== 0) errors.push('theatre stills: '+doc.stills);
+    }
+    if (/stargo-photo\/w0[1-6]-/.test(html)) errors.push('a W01–W06 photograph is referenced');
+    if (/stargo-motion-desk\.(js|css)/.test(html)) errors.push('the desk scenes (stargo-motion-desk) are loaded');
     results.push({ name:file+' theatre',pass:errors.length===0,errors }); console.log(errors.length?'FAIL':'PASS',file+' theatre',errors.join('; '));
+  }
+  { // nor does any other page load the desk scenes: they were the theatre's alone
+    const desk = files.filter(f => /stargo-motion-desk\.(js|css)/.test(readFileSync(f,'utf8')));
+    results.push({ name:'desk scenes unplaced',pass:desk.length===0,errors:desk }); console.log(desk.length?'FAIL':'PASS','desk scenes unplaced',desk.join(', '));
   }
   for(const lang of ['', 'en/']) {
     await p.goto(BASE+'/'+lang+'pricing.html',{waitUntil:'load'}); await p.waitForTimeout(1800);

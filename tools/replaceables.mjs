@@ -71,20 +71,52 @@ export const OG = {
  * os-* files keep their other places (hero mosaic, photo strips, dashboard and
  * slide images, other pages).
  *
- * Since 2026-10-23 (owner: 能用代码的图片都改成代码) the six cells around the
- * film are code-drawn windows of the STARGO WORK desktop instead of those
- * photographs: `code[i]` names the motion scene that takes cell i
- * (js/stargo-motion-desk.js, placed by tools/code-art-theatre.mjs). They tell
- * one demo deal clockwise from the top left: Growth OS, Sales Desk, 报价审批,
- * ERP, AI 创作, 经营驾驶舱. `theatre` keeps the photographs for the record;
- * none of W01, W03–W06 is drawn on the site any more (W02 still is, in the
- * capability ring). `poster` is the film's own first frame since the same day.
+ * From 2026-10-23 (owner: 能用代码的图片都改成代码) to 2026-10-24 the six
+ * cells around the film were code-drawn windows of the STARGO WORK desktop
+ * instead of those photographs, one motion scene per cell, in DOM order
+ *   code: ['desk-sales', 'desk-growth', 'desk-cockpit', null, 'desk-quote', 'desk-erp', 'desk-creative']
+ * (js/stargo-motion-desk.js, css/stargo-motion-desk.css), telling one demo
+ * deal clockwise from the top left: Growth OS, Sales Desk, 报价审批, ERP,
+ * AI 创作, 经营驾驶舱. The scenes stay registered in tools/motion-scenes.mjs
+ * and their files stay in the repo, but no page loads them.
+ *
+ * Since 2026-10-24 (owner, 17:27 UTC: 「你现在也全是代码了，我系统的画面都没有了！
+ * 我需要真实系统截图放在特定的地方」) each of the six shows a crop of the
+ * owner's own captures (site-screens/raw and /mobile, 2026-10-21, demo data),
+ * placed by tools/real-theatre.mjs with the 真实界面 · 演示数据 tag. `real[i]`
+ * is cell i in DOM order (`at`: tr top right, tl top left, ml middle left, mr
+ * middle right, br bottom right, bl bottom left): `id` is the crop for
+ * landscape screens, `upright` the crop for portrait ones (null: the same crop,
+ * framed for the tall cell). The crops are cut in tools/real-screens/theatre.json
+ * (live05-growth-home-2x1 is the published clean Growth OS cut, used as it is).
+ * Each app keeps the cell its window had, so the ring still reads as the one
+ * deal: Growth OS, Sales Desk, the quote, ERP, AI 创作 and the day's counts.
+ * The ring cuts each cell's outer side and the top row's top off at every
+ * screen size, so each crop keeps expendable ground there; the Growth OS cut
+ * starts at its card's edge, so css/stargo-theatre.css sets it in from the cut
+ * side on its own ground (and says, per cell, which inner corner the tag takes,
+ * so it is on screen at rest). There is no usable capture of the business cockpit
+ * (经营驾驶舱; raw/40 shows a failed task), so the middle left cell shows the
+ * Sales Desk board (看板), whose counts and 等你审批 list are the nearest real
+ * screen.
+ *
+ * `theatre` keeps the photographs for the record; none of W01, W03–W06 is
+ * drawn on the site any more (W02 still is, in the capability ring). `poster`
+ * is the film's own first frame since 2026-10-23.
  */
 export const HERO = {
   film: 'assets/stargo-motion/orbit.mp4',
   poster: 'assets/stargo-motion/orbit-poster.webp',
   centreIndex: 3,
-  code: ['desk-sales', 'desk-growth', 'desk-cockpit', null, 'desk-quote', 'desk-erp', 'desk-creative'],
+  real: [
+    { at: 'tr', screen: 'Sales Desk · 客户对话 (Northwind Traders)', id: 'live09-theatre-case-wide', upright: 'live52-theatre-case-up' },
+    { at: 'tl', screen: 'Growth OS · 首页 (开始找客户 / 发送开发信)', id: 'live05-growth-home-2x1', upright: null },
+    { at: 'ml', screen: 'Sales Desk · 看板 (in place of 经营驾驶舱)', id: 'live10-theatre-board-wide', upright: 'live51-theatre-board-up' },
+    null,
+    { at: 'mr', screen: 'Sales Desk · 报价 (等你审批 USD 24,925.50)', id: 'live12-theatre-quotes-wide', upright: 'm01-theatre-quotes-up' },
+    { at: 'br', screen: 'ERP · 物料 (STARGO items)', id: 'live23-theatre-items-wide', upright: null },
+    { at: 'bl', screen: 'AI 创作 · 无限画布', id: 'live35-theatre-canvas-wide', upright: 'live35-theatre-canvas-up' },
+  ],
   theatre: [
     photoFile('w01-trade-office'),
     photoFile('w02-workshop'),
@@ -580,7 +612,7 @@ export const ENTERPRISE_PHOTOS = {
 
 if (HERO.theatre.length !== 7) throw new Error('replaceables: hero theatre is seven cells');
 if (HERO.centreIndex !== 3) throw new Error('replaceables: the film replaces theatre cell 3');
-if (HERO.code.length !== 7 || HERO.code[HERO.centreIndex] !== null) throw new Error('replaceables: the theatre\'s code-drawn windows take the six cells around the film');
+if (HERO.real.length !== 7 || HERO.real[HERO.centreIndex] !== null || HERO.real.filter(Boolean).length !== 6) throw new Error('replaceables: the theatre\'s real screens take the six cells around the film');
 if (OG.width !== 1200 || OG.height !== 630) throw new Error('replaceables: the share card stays 1200×630');
 /* A JPEG or PNG (link previews do not all read WebP), named with its size,
    written as the final URL (no editorial token to rewrite). */

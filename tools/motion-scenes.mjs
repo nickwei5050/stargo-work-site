@@ -151,8 +151,11 @@ export const MOTION_LABEL = {
     zh: '动态示意（演示数据）：三张 48V 100Ah 电池包的参考图进 AI 创作，依次做出白底主图、仓库场景图和 15 秒短视频的四个分镜，每一项都先进审核队列；你点了通过，发布与否仍由你决定，不会自动发布。',
     en: 'Illustrative motion (demo data): three reference photos of a 48V 100Ah pack go into AI Creative, which makes a white-background main image, a warehouse scene and the four-shot storyboard of a 15-second video; each waits in a review queue, you approve them, and publishing is still your call: nothing goes out automatically.',
   },
-  /* The homepage theatre's six windows around the brand film (tools/code-art-theatre.mjs,
-     js/stargo-motion-desk.js), in the order the deal passes through them. */
+  /* The six code-drawn windows that stood round the homepage theatre's brand film from 2026-10-23
+     (js/stargo-motion-desk.js), in the order the deal passes through them. Since 2026-10-24 those
+     cells show the system's own screens (tools/real-theatre.mjs) and no page places these scenes;
+     they stay registered so a cell can go back to its window in one line (tools/replaceables.mjs
+     HERO keeps the history). */
   'desk-growth': {
     zh: '动态示意（演示数据）：Growth OS 的候选客户名单，Nordwerk Energie 以匹配度 94 排到第一，AI 写出理由。',
     en: 'Illustrative motion (demo data): the Growth OS shortlist, where Nordwerk Energie rises to the top with a fit of 94 and the AI writes down why.',

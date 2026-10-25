@@ -32,7 +32,7 @@ import { motionHost, motionAssets, SCENE_FILE, MOTION_CSS, MOTION_SCRIPTS, PAIN_
 import { ATMOS_HOME, nightHalves, codeStill, boardHost, requestHost, plantHost } from './code-art-atmos.mjs';   // lane atmos: atmosphere photographs → code
 import { CAPSALES_SCENES } from './motion-capsales.mjs';
 import { AREA_SCENES, placeAreaScenes } from './code-art-capareas.mjs'; // capareas: capability area cards
-import { theatreTiles } from './code-art-theatre.mjs';
+import { theatreTiles } from './real-theatre.mjs';
 import { homeStageScenes, homePricingScene, homeMoreAssets, swapToMotion } from './code-art-homemore.mjs'; // homemore lane: stage cards + enterprise card as code
 import { roleCard, roleChip, ROLE_CARDS, withSceneAssets } from './code-art-people.mjs'; // lane people
 import { webpPage } from './image-refs.mjs';
@@ -561,10 +561,14 @@ PAGES['index.html'] = (lang) => {
         h = h.replace(marker, `<video id="stargo-brand-film" data-stargo-video loop muted playsinline preload="none" poster="${HERO.poster}" aria-label="${lang === 'zh' ? '品牌概念动画：银色轨道同步运转' : 'Brand film: silver orbital forms moving together'}"><source src="${HERO.film}" type="video/mp4"/></video>`);
       }
     });
-    h = theatreTiles(h, lang);   // 代码动画: the six stills around the film → code-drawn desktop windows (tools/code-art-theatre.mjs)
-    // the button holds the film and the six windows around it (js/stargo-motion-desk.js), so it names motion, not video
-    const mediaLabel = lang === 'zh' ? '播放动画' : 'Play motion';
-    h = h.replace('<div class="sticky-video-section">', `<div class="sticky-video-section"><button class="stargo-media-toggle" type="button" aria-controls="stargo-brand-film" aria-pressed="false" data-play-label="${mediaLabel}" data-pause-label="${lang === 'zh' ? '暂停动画' : 'Pause motion'}">${mediaLabel}</button>`);
+    h = theatreTiles(h, lang);   // 真实截图: the six stills around the film → the owner's real screens (tools/real-theatre.mjs)
+    /* The button plays and pauses the centre film only (js/stargo-media.js). From 2026-10-24 01:07 it also
+       held the six code-drawn windows round it and said 播放动画 / Play motion for both; since the same
+       day's real screens (「我需要真实系统截图放在特定的地方」) the cells are still pictures, so it names
+       the one thing that moves: the brand film, which is an animation (品牌概念动画), hence 播放动画 /
+       暂停动画 and, in English, Play animation / Pause animation. */
+    const mediaLabel = lang === 'zh' ? '播放动画' : 'Play animation';
+    h = h.replace('<div class="sticky-video-section">', `<div class="sticky-video-section"><button class="stargo-media-toggle" type="button" aria-controls="stargo-brand-film" aria-pressed="false" data-play-label="${mediaLabel}" data-pause-label="${lang === 'zh' ? '暂停动画' : 'Pause animation'}">${mediaLabel}</button>`);
     const play = elementContaining(h, 'class="play-video w-inline-block w-lightbox"', 'a');
     h = h.slice(0, play.start) + h.slice(play.end);
     if (/youtube|embedly|w-lightbox/.test(h)) throw new Error('index: lightbox survives');

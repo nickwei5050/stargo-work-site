@@ -102,8 +102,9 @@ const RETIRED = new Set(['g01-cta-loading-bay-dusk', 'r1-sales-rep', 'r3-sales-d
    motion scenes now. Their files stay registered and published. */
 const CODE_DRAWN_CAP = ['c01v2-command-growth', 'c02v2-customer-knowledge', 'c03-commerce-fulfilment', 'c04v2-team-management', 'c09-288-flatlay', 'c10-progress-board'];
 CODE_DRAWN_CAP.forEach((id) => CODE_DRAWN.add(id));
-/* Also drawn in code since 2026-10-23: the homepage theatre's windows around the film
-   (W01, W03–W06; tools/code-art-theatre.mjs), the capability page's Sales Desk rows and
+/* Also off their places since 2026-10-23: the homepage theatre's photographs around the film
+   (W01, W03–W06; drawn in code that day, the system's own screens since 2026-10-24,
+   tools/real-theatre.mjs), and, drawn in code, the capability page's Sales Desk rows and
    quote band (C05–C07; tools/motion-capsales.mjs), its Growth OS row backgrounds
    (C11v2, C12–C14) and intelligence's closing card (I02). */
 ['w01-trade-office', 'w03-warehouse', 'w04-qc-lab', 'w05-owner-office', 'w06-showroom',

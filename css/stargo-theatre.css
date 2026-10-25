@@ -1,0 +1,53 @@
+/* 真实截图 in the homepage theatre (lane theatre, 2026-10-24; tools/real-theatre.mjs).
+   The six cells round the brand film are real-screen slots (css/stargo-real.css). This sheet
+   only says, per cell, what the shared slot cannot know: the ground under a crop (shown before
+   it loads, and in the strips a screen is set in on), the corner its 真实界面 · 演示数据 tag
+   takes, and where a screen sits in from its cell's edge so that the tag lies clear of its text.
+
+   The ring is wider and taller than the screen: at rest the outer ~9% of a row cell, the outer
+   ~14% of a middle cell and the top ~11% of the top row lie past the viewport's edge on every
+   screen from 768px up, and the bottom row's lower edge passes under the next section's curve.
+   So a tag sits in the cell's inner corner (toward the film), at the bottom in the top row and
+   at the top in the bottom row, where it is on screen from the moment the cell is. */
+.video-grid .sg-th { background: var(--sg-th-ground, #f5f1ec); }   /* Sales Desk's page ground */
+.video-grid .sg-th-tl { --sg-th-ground: #f4f6fa; }   /* Growth OS's page ground */
+.video-grid .sg-th-br { --sg-th-ground: #fff; }      /* ERP's page ground */
+.video-grid .sg-th-bl { --sg-th-ground: #0a0a0a; }   /* the canvas's dark ground */
+
+/* the tag's corner: tl and ml keep the shared bottom right */
+.video-grid :is(.sg-th-tr, .sg-th-mr) .sg-real-tag { right: auto; left: 10px; }
+.video-grid .sg-th-bl .sg-real-tag { bottom: auto; top: 10px; }
+.video-grid .sg-th-br .sg-real-tag { bottom: auto; right: auto; top: 10px; left: 10px; }
+@container (max-width: 210px) {
+  .video-grid :is(.sg-th-tr, .sg-th-mr) .sg-real-tag { left: 6px; }
+  .video-grid .sg-th-bl .sg-real-tag { top: 6px; }
+  .video-grid .sg-th-br .sg-real-tag { top: 6px; left: 6px; }
+}
+
+/* Set in from the cut side, on the screen's own ground, where a crop has no margin of its own to
+   give up: the Growth OS cut starts at its first card's edge. From 768px up only; below that the
+   grid is not zoomed (Z10 in css/stargo-fusion.css) and every cell shows whole. In portrait the
+   middle cells, which show phone captures with 20px margins, are set in the same way, and the
+   Growth OS screen, cut to its 开始找客户 card there, stands on a 44px strip of its ground: its
+   AI line runs the full width of the cut, so the tag takes that strip instead of the line. */
+@media (min-width: 768px) {
+  .video-grid .sg-th-tl > picture { margin-left: 9.5%; width: 90.5%; }
+}
+/* The board's panels end where the capture's scroll bar begins; on wide, short screens (3:2 and
+   wider: 1440×900, 1280×720, 1440×700) the cell is so low that the tag (wider in English) would
+   reach the 超时没回 line, so the board stands 28px in from the film side, on its own ground. A
+   squarer screen (1024×768) has the room already, and its cell is too narrow to give the 28px
+   without pushing the 等你审批 panel into the band the screen never shows. */
+@media (min-width: 768px) and (min-aspect-ratio: 3/2) {
+  .video-grid .sg-th-ml > picture { width: calc(100% - 28px); }
+}
+/* …where, instead, the ground beside the panels gives way, so the panel's text keeps off the edge */
+@media (min-width: 768px) and (max-aspect-ratio: 3/2) and (orientation: landscape) {
+  .video-grid .sg-th-ml .sg-real-img { object-position: 93% 0%; }
+}
+@media (min-width: 768px) and (orientation: portrait) {
+  .video-grid .sg-th-tl > picture { height: calc(100% - 44px); }
+  .video-grid .sg-th-ml > picture { margin-left: 14%; width: 86%; }
+  .video-grid .sg-th-ml .sg-real-tag { bottom: 6px; }   /* on the gap under 最可能成交, clear of its last line */
+  .video-grid .sg-th-mr > picture { width: 86%; }
+}

@@ -1,0 +1,419 @@
+{
+ "note": "Lane theatre (2026-10-24): the six cells around the brand film in the homepage theatre under 一个工作台，管好每天的生意。 (tools/real-theatre.mjs). Each cell has a landscape crop and, where a tall portrait cell reads better from a phone capture or a tighter frame, an upright one. Every crop keeps the cell's never-seen outer band (the ring is cut by the viewport: about 10% of a row cell and 14% of a middle cell on the outer side, about 11% at the top of the top row) on expendable ground. The Growth OS cell (top left) shows the published live05-growth-home-2x1 as it is.",
+ "shots": [
+  {
+   "id": "live09-theatre-case-wide",
+   "src": "raw/09-sales-desk-customer-case.png",
+   "crop": [
+    860,
+    980,
+    2340,
+    980
+   ],
+   "max": 1600,
+   "what": "lower half of the case: the buyer's message, the suggested next step, the reply draft with 提交审批, and the AI assistant's actions beside it (top right cell; its top band, the date and sender line, and its right band are never seen)",
+   "alt": [
+    "Sales Desk 里的一封询盘：Alex Morgan 请报 4 台 DEMO C300，DAP 发往瑞典斯德哥尔摩；下面是系统建议的下一步和给客户的回复草稿，AI 可以帮你做这一步",
+    "An inquiry in Sales Desk: Alex Morgan asks for a quote on 4 DEMO C300 units, DAP to Stockholm, Sweden; below it, the suggested next step and the reply draft, with AI ready to take that step"
+   ],
+   "out": {
+    "width": 1600,
+    "height": 670,
+    "bytes": 53274,
+    "sourcePixels": [
+     2340,
+     980
+    ],
+    "sha256": "4d6aa38085aeaeff6c2d8a91a255e8e58ca91c3e889854ae06a6445930087710",
+    "variants": [
+     {
+      "src": "assets/stargo-product/live09-theatre-case-wide-480.webp",
+      "width": 480,
+      "height": 201,
+      "bytes": 8882
+     },
+     {
+      "src": "assets/stargo-product/live09-theatre-case-wide-768.webp",
+      "width": 768,
+      "height": 322,
+      "bytes": 18612
+     },
+     {
+      "src": "assets/stargo-product/live09-theatre-case-wide-1024.webp",
+      "width": 1024,
+      "height": 429,
+      "bytes": 29120
+     }
+    ]
+   }
+  },
+  {
+   "id": "live52-theatre-case-up",
+   "src": "raw/52-mobile-sales-desk-case.png",
+   "crop": [
+    0,
+    436,
+    1128,
+    1253
+   ],
+   "max": 1128,
+   "what": "the same case on a phone, from under the model and quantity chips: the date, the buyer's message, 下一步 with 让 AI 做这一步, then the reply tab (portrait screens). A portrait cell from 768px up shows it down to the line under 下一步, so the tag in its inner corner sits on the gap there, clear of the button; the conversation pane's scroll thumb at the right edge is left out",
+   "alt": [
+    "手机上的同一封询盘：Alex Morgan 请报 4 台 DEMO C300，DAP 发往瑞典斯德哥尔摩；下面是系统建议的下一步，AI 可以帮你做这一步",
+    "The same inquiry on a phone: Alex Morgan asks for a quote on 4 DEMO C300 units, DAP to Stockholm, Sweden; below it, the suggested next step, with AI ready to take it"
+   ],
+   "out": {
+    "width": 1128,
+    "height": 1253,
+    "bytes": 47568,
+    "sourcePixels": [
+     1128,
+     1253
+    ],
+    "sha256": "29816cb250fddb70e9bd1ec9380c6f27ebec4943c638dae52a75906743708faa",
+    "variants": [
+     {
+      "src": "assets/stargo-product/live52-theatre-case-up-480.webp",
+      "width": 480,
+      "height": 533,
+      "bytes": 18156
+     },
+     {
+      "src": "assets/stargo-product/live52-theatre-case-up-768.webp",
+      "width": 768,
+      "height": 853,
+      "bytes": 31164
+     },
+     {
+      "src": "assets/stargo-product/live52-theatre-case-up-1024.webp",
+      "width": 1024,
+      "height": 1137,
+      "bytes": 43310
+     }
+    ]
+   }
+  },
+  {
+   "id": "live10-theatre-board-wide",
+   "src": "raw/10-sales-desk-board.png",
+   "crop": [
+    1440,
+    140,
+    1730,
+    800
+   ],
+   "max": 1600,
+   "what": "right half of the Sales Desk board, to the ground beside the panels (the scroll thumb stays out): the 今天跟进 / 有成交信号 / 本月成交 tiles, the 等你审批 panel with one quote and the head of the 超时没回 panel (middle left cell; the left band, empty board ground, is never seen). The 超时没回 note line stays out, so the tag in the cell's inner corner sits on that panel's empty right, in English too. There is no usable capture of the business cockpit, so this cell shows the board",
+   "alt": [
+    "Sales Desk 看板：今天跟进、有成交信号、本月成交的数字，等你审批的报价单列在一处",
+    "The Sales Desk board: counts for today's follow-ups, buying signals and deals closed this month, with the quote awaiting your approval listed on its own"
+   ],
+   "out": {
+    "width": 1600,
+    "height": 740,
+    "bytes": 20288,
+    "sourcePixels": [
+     1730,
+     800
+    ],
+    "sha256": "36c8924fee4b9592e4662e87c4845d1f7407d1c9baafbf0b63c812c70478f712",
+    "variants": [
+     {
+      "src": "assets/stargo-product/live10-theatre-board-wide-480.webp",
+      "width": 480,
+      "height": 222,
+      "bytes": 4182
+     },
+     {
+      "src": "assets/stargo-product/live10-theatre-board-wide-768.webp",
+      "width": 768,
+      "height": 355,
+      "bytes": 8186
+     },
+     {
+      "src": "assets/stargo-product/live10-theatre-board-wide-1024.webp",
+      "width": 1024,
+      "height": 474,
+      "bytes": 11680
+     }
+    ]
+   }
+  },
+  {
+   "id": "live51-theatre-board-up",
+   "src": "raw/51-mobile-sales-desk-board.png",
+   "crop": [
+    30,
+    0,
+    1120,
+    1730
+   ],
+   "max": 1150,
+   "what": "the board on a phone from its 工作台 › 看板 header: the six count tiles and 最可能成交, down to just above the 等你审批 heading, so the tag sits on the blank ground between the two cards (portrait screens); the page scroll thumb at the right edge is left out",
+   "alt": [
+    "手机上的 Sales Desk 看板：待我回复、超 24 小时没回、等你审批、今天跟进、有成交信号、本月成交六个数字，下面是最可能成交的客户",
+    "The Sales Desk board on a phone: six counts, for replies due, waiting over 24 hours, approvals, today's follow-ups, buying signals and deals closed this month, above the customers most likely to close"
+   ],
+   "out": {
+    "width": 1120,
+    "height": 1730,
+    "bytes": 54370,
+    "sourcePixels": [
+     1120,
+     1730
+    ],
+    "sha256": "308271171e3fdf1e51841c676096034dfcc48546217f4bcd7949160900a66b16",
+    "variants": [
+     {
+      "src": "assets/stargo-product/live51-theatre-board-up-480.webp",
+      "width": 480,
+      "height": 741,
+      "bytes": 21236
+     },
+     {
+      "src": "assets/stargo-product/live51-theatre-board-up-768.webp",
+      "width": 768,
+      "height": 1186,
+      "bytes": 36356
+     },
+     {
+      "src": "assets/stargo-product/live51-theatre-board-up-1024.webp",
+      "width": 1024,
+      "height": 1582,
+      "bytes": 48920
+     }
+    ]
+   }
+  },
+  {
+   "id": "live12-theatre-quotes-wide",
+   "src": "raw/12-sales-desk-quotes.png",
+   "crop": [
+    760,
+    300,
+    1172,
+    690
+   ],
+   "max": 1600,
+   "what": "the quote table from the 报价 column: 等你审批 Q-13D55F08-01, USD 24,925.50, 11/14 到期 还剩 24 天, two rows that cannot be quoted yet (middle right cell; the blurred customer column is left out, the 下一步 column falls in the right band that is never seen)",
+   "alt": [
+    "Sales Desk 报价列表：一张 USD 24,925.50 的报价等你审批，11/14 到期，还剩 24 天；另外两条还不能报价",
+    "The Sales Desk quote list: a USD 24,925.50 quote waits for your approval, due 11/14 with 24 days left; two more cannot be quoted yet"
+   ],
+   "out": {
+    "width": 1172,
+    "height": 690,
+    "bytes": 21226,
+    "sourcePixels": [
+     1172,
+     690
+    ],
+    "sha256": "9d0933a6d5f8ef5a7184c6a0d1adf6976a369efc3a4f509e0226ea46f14e292b",
+    "variants": [
+     {
+      "src": "assets/stargo-product/live12-theatre-quotes-wide-480.webp",
+      "width": 480,
+      "height": 283,
+      "bytes": 5792
+     },
+     {
+      "src": "assets/stargo-product/live12-theatre-quotes-wide-768.webp",
+      "width": 768,
+      "height": 452,
+      "bytes": 11872
+     },
+     {
+      "src": "assets/stargo-product/live12-theatre-quotes-wide-1024.webp",
+      "width": 1024,
+      "height": 603,
+      "bytes": 17884
+     }
+    ]
+   }
+  },
+  {
+   "id": "m01-theatre-quotes-up",
+   "src": "mobile/m01-quotes-list.png",
+   "crop": [
+    0,
+    260,
+    1170,
+    1830
+   ],
+   "max": 1170,
+   "what": "the quote list on a phone: the status tabs, the quote waiting for approval with amount and due date, two that cannot be quoted yet (portrait screens)",
+   "alt": [
+    "手机上的报价列表：一张 USD 24,925.50 的报价等你审批，11/14 到期，还剩 24 天；另外两条还不能报价",
+    "The quote list on a phone: a USD 24,925.50 quote waits for your approval, due 11/14 with 24 days left; two more cannot be quoted yet"
+   ],
+   "out": {
+    "width": 1170,
+    "height": 1830,
+    "bytes": 69174,
+    "sourcePixels": [
+     1170,
+     1830
+    ],
+    "sha256": "f64d2afae41d8b11b5a4a100948ad9d705d583fbd9d74187a8f5a8081d33ffd7",
+    "variants": [
+     {
+      "src": "assets/stargo-product/m01-theatre-quotes-up-480.webp",
+      "width": 480,
+      "height": 751,
+      "bytes": 21904
+     },
+     {
+      "src": "assets/stargo-product/m01-theatre-quotes-up-768.webp",
+      "width": 768,
+      "height": 1201,
+      "bytes": 41058
+     },
+     {
+      "src": "assets/stargo-product/m01-theatre-quotes-up-1024.webp",
+      "width": 1024,
+      "height": 1602,
+      "bytes": 59280
+     }
+    ]
+   }
+  },
+  {
+   "id": "live23-theatre-items-wide",
+   "src": "raw/23-erp-items.png",
+   "crop": [
+    760,
+    110,
+    1710,
+    720
+   ],
+   "max": 1600,
+   "what": "the item list from its left edge to the 列表视图 button: filters, the 项目名称 / 状态 / 物料组 / ID columns and the first rows (bottom right cell; the ERPNext mark and breadcrumb above y 100 are left out). Portrait screens show its left part",
+   "alt": [
+    "ERP 物料列表：STARGO 电池和电源产品的名称、启用状态和物料组",
+    "The ERP item list: STARGO battery and power products with their status and item group"
+   ],
+   "out": {
+    "width": 1600,
+    "height": 674,
+    "bytes": 49044,
+    "sourcePixels": [
+     1710,
+     720
+    ],
+    "sha256": "fdc9b4e1e501d3eea5c8f0c2f57d5ca43e3cadcf4ff0bab92b59a2fed661a38e",
+    "variants": [
+     {
+      "src": "assets/stargo-product/live23-theatre-items-wide-480.webp",
+      "width": 480,
+      "height": 202,
+      "bytes": 8558
+     },
+     {
+      "src": "assets/stargo-product/live23-theatre-items-wide-768.webp",
+      "width": 768,
+      "height": 323,
+      "bytes": 18022
+     },
+     {
+      "src": "assets/stargo-product/live23-theatre-items-wide-1024.webp",
+      "width": 1024,
+      "height": 431,
+      "bytes": 26538
+     }
+    ]
+   }
+  },
+  {
+   "id": "live35-theatre-canvas-wide",
+   "src": "raw/35-ai-canvas.png",
+   "crop": [
+    510,
+    380,
+    2000,
+    820
+   ],
+   "max": 1600,
+   "what": "the dark 无限画布 hero: title, the line under it and the two buttons, on its own dotted ground (bottom left cell; the top bar with its third-party icon and the prompt-library cards below are left out)",
+   "alt": [
+    "AI 创作的无限画布：在画布里生成、连接和重组图片、文字与图形",
+    "AI Creative's infinite canvas: generate, connect and rework images, text and shapes on one canvas"
+   ],
+   "out": {
+    "width": 1600,
+    "height": 656,
+    "bytes": 35636,
+    "sourcePixels": [
+     2000,
+     820
+    ],
+    "sha256": "c8de77c8d9c4f80c0f522a877e656323f75393b2e6ea36ab7781cca30c21c463",
+    "variants": [
+     {
+      "src": "assets/stargo-product/live35-theatre-canvas-wide-480.webp",
+      "width": 480,
+      "height": 197,
+      "bytes": 7340
+     },
+     {
+      "src": "assets/stargo-product/live35-theatre-canvas-wide-768.webp",
+      "width": 768,
+      "height": 315,
+      "bytes": 16714
+     },
+     {
+      "src": "assets/stargo-product/live35-theatre-canvas-wide-1024.webp",
+      "width": 1024,
+      "height": 420,
+      "bytes": 23820
+     }
+    ]
+   }
+  },
+  {
+   "id": "live35-theatre-canvas-up",
+   "src": "raw/35-ai-canvas.png",
+   "crop": [
+    620,
+    220,
+    1690,
+    1460
+   ],
+   "max": 1600,
+   "what": "the same hero framed for portrait cells, down to 沉淀每一次好结果 (the prompt-library cards below stay out)",
+   "alt": [
+    "AI 创作的无限画布：在画布里生成、连接和重组图片、文字与图形，好的结果可以沉淀下来",
+    "AI Creative's infinite canvas: generate, connect and rework images, text and shapes on one canvas, and keep the results that work"
+   ],
+   "out": {
+    "width": 1600,
+    "height": 1382,
+    "bytes": 70774,
+    "sourcePixels": [
+     1690,
+     1460
+    ],
+    "sha256": "146ca198991b32657201eef670a3b4a9503bf7aa24a7c57d325128387ae26185",
+    "variants": [
+     {
+      "src": "assets/stargo-product/live35-theatre-canvas-up-480.webp",
+      "width": 480,
+      "height": 415,
+      "bytes": 16002
+     },
+     {
+      "src": "assets/stargo-product/live35-theatre-canvas-up-768.webp",
+      "width": 768,
+      "height": 663,
+      "bytes": 32576
+     },
+     {
+      "src": "assets/stargo-product/live35-theatre-canvas-up-1024.webp",
+      "width": 1024,
+      "height": 885,
+      "bytes": 43990
+     }
+    ]
+   }
+  }
+ ]
+}
