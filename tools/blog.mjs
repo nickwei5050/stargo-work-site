@@ -355,9 +355,9 @@ const STATUS = {
   title: B('能力一览：现在能用什么', 'At a glance: what you can use today'),
   cols: [
     ['now', B('现已可用', 'Available now'), B(['AI 团队协作：组队、互发消息、并行处理、汇总交付', 'AI 一键生成视频：从制作需求到可导出的成片', '爆款结构再创作：从参考结构到三个原创方向'], ['AI teamwork: form a team, message, work in parallel, deliver one result', 'One-click AI video: from a brief to an exportable video', 'Viral creative adaptation: from a reference structure to three original directions'])],
-    ['base', B('核心应用', 'Core applications'), B(['网页桌面、客户管理与企业知识', '成交工作台', '创意工作室、ERP 与商城应用'], ['Browser desktop, customer management and enterprise knowledge', 'The Sales Desk workspace', 'Creative workspace, ERP and commerce applications'])],
+    ['base', B('核心应用', 'Core applications'), B(['网页桌面、客户管理与企业知识', '成交工作台', '创意工作室、ERP应用'], ['Browser desktop, customer management and enterprise knowledge', 'The Sales Desk workspace', 'Creative workspace and ERP'])],
     ['link', B('接入你们的系统', 'Connected to your systems'), B(['主动获客数据与客户联系，经你授权接入', '各渠道真实收发与业务交接', '真实价格、合同、签章、单证、物流与财务'], ['Lead Finder live data and outreach, with your authorization', 'Live channel messaging and business handoffs', 'Live prices, contracts, signatures, documents, logistics and finance'])],
-    ['next', B('也已上线', 'Also live'), B(['主动获客核心流程', '商品营销套件的|一键编排与局部检查', '企业级主动工作、统一长期记忆与高级改进', '原生客户端、移动端与小程序'], ['Lead Finder core workflows', 'One-click marketing-kit production and local checks', 'Enterprise-wide proactive work, unified long-term memory and advanced improvement', 'Native clients, mobile and mini-programs'])],
+    ['next', B('也已上线', 'Also live'), B(['主动获客核心流程', '商品营销套件的|一键编排与局部检查', '企业级主动工作、统一长期记忆与高级改进', '手机浏览器处理询盘和审批'], ['Lead Finder core workflows', 'One-click marketing-kit production and local checks', 'Enterprise-wide proactive work, unified long-term memory and advanced improvement', 'Inquiries and approvals in a phone browser'])],
   ],
   note: B('所有能力都在你们开通的服务、额度和权限内运行。发布到外部渠道、正式申报和付款，都由有审批权的人批准。', 'Every capability runs within the services, credits and access you enable. Publishing to external channels, official filings and payments are always approved by authorized people.'),
 };
@@ -471,11 +471,11 @@ const GUIDE_SECTIONS = [
   },
   {
     id: 'guide-erp',
-    h: B('ERP 与商城：前端拿订单，后台接得住吗？', 'ERP and commerce: can the back office keep up?'),
-    text: B('<p>销售与经营后台在同一个桌面：产品档案与物料清单保持一致，订单需求连着采购和到货，库存告诉业务员能不能交，生产、质检和交期跟给客户的承诺对得上，订单和发票一一对应。商品目录、商城后台和经销商门户也能按需接入。</p>',
-      '<p>Sales and the back office share one desktop. Product records and bills of materials stay consistent, order demand links to purchasing and incoming goods, stock shows what can be delivered, production, quality checks and lead times line up with what sales has promised, and orders match invoices. Catalogs, storefront administration and dealer portals connect as required.</p>'),
+    h: B('ERP：前端拿订单，后台接得住吗？', 'ERP: can the back office keep up?'),
+    text: B('<p>销售与经营后台在同一个桌面：产品档案与物料清单保持一致，订单需求连着采购和到货，库存告诉业务员能不能交，生产、质检和交期跟给客户的承诺对得上，订单和发票一一对应。</p>',
+      '<p>Sales and the back office share one desktop. Product records and bills of materials stay consistent, order demand links to purchasing and incoming goods, stock shows what can be delivered, production, quality checks and lead times line up with what sales has promised, and orders match invoices.</p>'),
     value: B('接单前知道能不能交，承诺时知道何时交，交付后记录对得上。', 'know whether and when you can deliver before you commit, with records that match afterwards.'),
-    cond: B('现已可用。ERP 和商城应用已经上线，跨系统联动和 AI 操作也都能用。见<a href="capabilities.html#g08">ERP、订单与履约</a>。', 'available now. ERP and commerce applications are live, and so are cross-system work and AI actions. See <a href="capabilities.html#g08">ERP and fulfillment</a>.'),
+    cond: B('现已可用。ERP 已经上线，跨系统联动和 AI 操作也都能用。见<a href="capabilities.html#g08">ERP、订单与履约</a>。', 'available now. The ERP is live, and so are cross-system work and AI actions. See <a href="capabilities.html#g08">ERP and fulfillment</a>.'),
   },
   {
     id: 'guide-delivery',
@@ -490,7 +490,7 @@ const GUIDE_SECTIONS = [
     h: B('AI 作图与品牌内容|能做什么？', 'What can AI do for images and brand content?'),
     text: B('<p>用自己的产品照片和参数、品牌标志和配色，按目标市场和渠道，生成和修改主图、场景图、卖点海报、详情页、图册和社媒素材；营销套件一次规划整组图片与文案，不准确的外观或参数可以局部修正，官网与搜索内容支持多语言和 SEO / GEO 规划。</p>',
       '<p>Starting from your own product photos and facts, logo, colors, market and channel, you generate and edit hero images, scenes, benefit posters, detail pages, catalogs and social assets. A marketing kit plans a full set of images and copy at once, inaccurate visuals or specifications can be corrected locally, and website and search content gets multilingual, SEO and GEO planning.</p>'),
-    value: B('一套产品资料，销售、官网、商城和社媒素材都从这里出。', 'one set of product facts feeds sales, website, commerce and social assets.'),
+    value: B('一套产品资料，销售、官网和社媒素材都从这里出。', 'one set of product facts feeds sales, website and social assets.'),
     cond: B('现已可用。营销套件一键生成整组图文，支持局部检查和修正；对外发布需单独授权。见<a href="capabilities.html#creative-images">AI 作图与图片编辑</a>。', 'available now. The marketing kit produces a full set of images and copy in one click, with local checks and fixes; external publishing needs separate authorization. See <a href="capabilities.html#creative-images">AI images</a>.'),
   },
   {
@@ -551,7 +551,7 @@ const GUIDE_SECTIONS = [
     text: B('<p>它就像一台公司专属的电脑：应用窗口、文件和 AI 员工都在同一个桌面上。AI 帮你做表格、写文档、翻译资料、出报告，语音能直接转成纪要和待办。网页操作、填表和上传下载都在授权环境里完成，不绕过登录和安全验证；邮箱、网盘、CRM 和 ERP 经你授权后接入。</p>',
       '<p>It works like a dedicated company computer: application windows, files and AI employees share one desktop. AI helps with spreadsheets, documents, translation and reports; speech becomes notes and tasks; routine web work, forms, uploads and downloads run in an authorized environment without bypassing sign-in or security checks; and email, drives, CRM and ERP connect through company authorization.</p>'),
     value: B('少在工具之间来回切换，入口、文件和 AI 员工都在一处。', 'less switching between tools, with entry points, files and AI employees in one place.'),
-    cond: B('现已可用。打开浏览器就能用；语音、自动化、对外操作和其他终端也都已上线。见<a href="capabilities.html#g01">工作台与经营总览</a>。', 'available now. Open a browser and start working; voice, automation, external actions and other clients are live too. See <a href="capabilities.html#g01">Workspace overview</a>.'),
+    cond: B('现已可用。打开浏览器就能用；语音、自动化和对外操作也都已上线。见<a href="capabilities.html#g01">工作台与经营总览</a>。', 'available now. Open a browser and start working; voice, automation and external actions are live too. See <a href="capabilities.html#g01">Workspace overview</a>.'),
   },
   {
     id: 'guide-owner',
@@ -628,7 +628,7 @@ export const POSTS = [
     takeaways: [
       B('一个网页桌面，两大核心引擎：主动获客，成交工作台。', 'One browser desktop, two core engines: Lead Finder for customer acquisition and Sales Desk for trade sales.'),
       B('业务循环：主动获客 → 外贸成交 → 企业履约 → 经营协同 → 复购增长。', 'The loop: acquisition → trade sales → fulfillment → business coordination → repeat growth.'),
-      B('288 个 AI 员工覆盖十类职能；AI 团队协作、一键视频和爆款再创作现已可用，在开通的服务、额度和权限内运行。', '288 AI employees across ten functions; AI teamwork, one-click video and viral adaptation are available now, within the services, credits and access you enable.'),
+      B('288 个 AI 员工覆盖十类职能；AI 团队协作和一键视频现已可用，在开通的服务、额度和权限内运行。', '288 AI employees across ten functions; AI teamwork and one-click video are available now, within the services, credits and access you enable.'),
       B('报价、联系客户、付款这些关键操作，由有审批权的人批准；批准了，不等于已经发出去。', 'Authorized people approve quotes, outreach and payments; approved is not the same as sent.'),
       B('先从一条业务流程做起，拿实际案例验证，跑通了再扩大范围。', 'Start with one workflow, validate it with real cases, then expand from there.'),
     ],
@@ -641,11 +641,11 @@ export const POSTS = [
         '主动获客主要解决“去哪里找客户、谁值得开发、下一步怎样联系”；成交工作台主要解决“怎样理解客户、持续跟进、报价并交接订单”。确认后的客户连同背景和任务一起转进销售流程，不用重新录入。',
         'Lead Finder focuses on finding accounts, qualifying opportunities and planning engagement. Sales Desk focuses on understanding customers, following up, quoting and handing over orders. Approved prospects carry their context and next actions into the sales process.'),
       Q('它只适用于外贸部门吗？', 'Is it only for the export department?',
-        '不是。它从主动获客和外贸销售入手，同时覆盖 ERP、商城、采购库存、生产质检、财务履约、内容创作、企业知识、办公和管理；接上你们现有的系统后，这些工作都能直接在 STARGO WORK 里完成。',
-        'No. Acquisition and trade sales are the starting point, while the scope also covers operations, commerce, purchasing, stock, production, quality, finance coordination, creative work, knowledge, office tasks and management. Once your existing systems are connected, all of this work can be done directly in STARGO WORK.'),
+        '不是。它从主动获客和外贸销售入手，同时覆盖 ERP、采购库存、生产质检、财务履约、内容创作、企业知识、办公和管理；接上你们现有的系统后，这些工作都能直接在 STARGO WORK 里完成。',
+        'No. Acquisition and trade sales are the starting point, while the scope also covers operations, purchasing, stock, production, quality, finance coordination, creative work, knowledge, office tasks and management. Once your existing systems are connected, all of this work can be done directly in STARGO WORK.'),
       Q('AI 一键视频与爆款再创作|是同一个功能吗？', 'Are one-click video and viral adaptation the same feature?',
-        '不是。一键视频根据产品资料和制作需求，依次完成脚本、分镜、画面、配音、字幕和导出，交付能播放、能导出的视频文件；爆款再创作先拆解有权使用的参考视频结构，再结合自家产品给出三个原创方向。两者已经上线，成片都经人工审核后再发布。',
-        'No. One-click video starts from product facts and a brief and organizes the script, storyboard, visuals, voiceover, captions and export into a playable, exportable file. Viral adaptation first studies the structure of an authorized reference video and develops three original directions for your product. Both are available now, and finished videos are reviewed by people before publishing.'),
+        '不是。一键视频根据产品资料和制作需求，依次完成脚本、分镜、画面、配音、字幕和导出，交付能播放、能导出的视频文件；爆款再创作先拆解有权使用的参考视频结构，再结合自家产品给出三个原创方向。一键视频已经上线，爆款再创作取得商业授权前暂不对客户开放；成片都经人工审核后再发布。',
+        'No. One-click video starts from product facts and a brief and organizes the script, storyboard, visuals, voiceover, captions and export into a playable, exportable file. Viral adaptation first studies the structure of an authorized reference video and develops three original directions for your product. One-click video is available now; viral adaptation is not yet open to customers until a commercial licence is in place. Finished videos are reviewed by people before publishing.'),
       Q('“复刻爆款”|是不是复制别人的视频？', 'Does viral adaptation copy someone else’s video?',
         '不是。这里指借鉴开场、节奏、镜头安排和转化逻辑，再用自己的产品与品牌制作原创内容。不直接复制原片、人脸、声音、音乐、标志或水印，也不保证生成内容一定成为爆款。',
         'No. It studies hooks, pacing, shot structure and calls to action, then develops original content for your product and brand. It does not copy footage, faces, voices, music, logos or watermarks, and it does not guarantee viral performance.'),
@@ -653,8 +653,8 @@ export const POSTS = [
         '不是。主动工作就是盯住客户、订单、期限和异常，提出下一步建议，在授权范围内推进任务。企业级主动工作、统一长期记忆和高级改进同样受权限约束，关键的事始终由人拍板。',
         'No. It means tracking customers, orders, deadlines and exceptions, recommending next steps and progressing authorized work. Enterprise-wide proactive work, unified long-term memory and advanced improvement follow the same permission rules, and people still make the key decisions.'),
       Q('所有渠道和全部功能|现在都能直接用吗？', 'Is every channel and feature available right away?',
-        '能。AI 团队协作、一键视频和爆款再创作已经上线，网页桌面、客户管理、企业知识、成交工作台、ERP 和商城等应用也都能用。这些功能都在你们开通的服务、额度和权限内运行；渠道收发、客户交接、价格、物流和财务，接上你们自己的账号和系统就能用。',
-        'Yes. AI teamwork, one-click video and viral adaptation are live, and applications such as the browser desktop, customer management, enterprise knowledge, Sales Desk, ERP and commerce are ready to use. Everything runs within the services, credits and access you enable, and channels, customer handoffs, prices, logistics and finance work as soon as they are connected to your own accounts and systems.'),
+        '能。AI 团队协作和一键视频已经上线（爆款再创作暂未对客户开放），网页桌面、客户管理、企业知识、成交工作台、ERP 等应用也都能用。这些功能都在你们开通的服务、额度和权限内运行；渠道收发、客户交接、价格、物流和财务，接上你们自己的账号和系统就能用。',
+        'Yes. AI teamwork and one-click video are live (viral adaptation is not yet open to customers), and applications such as the browser desktop, customer management, enterprise knowledge, Sales Desk and ERP are ready to use. Everything runs within the services, credits and access you enable, and channels, customer handoffs, prices, logistics and finance work as soon as they are connected to your own accounts and systems.'),
       Q('能自动签发证书、报关退税或代替专业判断吗？', 'Can it automatically issue certificates, file customs declarations, claim tax rebates or replace professional review?',
         '不能。它负责准备资料、核对、跟进和推进流程，证书签发、申报受理和审批都由官方机构办理。付款、合同法律审阅、贸易合规这些重要的事，仍由相关机构或你们有审批权的人确认。',
         'No. It handles preparation, checking, follow-up and workflow coordination, not official issuance, acceptance or approval. Payments, legal contract review and trade-compliance decisions remain with the relevant institutions or authorized people.'),
@@ -958,8 +958,8 @@ ${chartOwner('en', 1)}
 <p><strong>成交工作台</strong> 解决“怎样理解客户、持续跟进、报价并交接订单”：询盘和消息从同一个入口进来，客户资料、往来记录、产品匹配、回复草稿、跟进、报价和 PI 都串在同一条销售流程里。</p>
 <h3>其他能力怎样配合|这两条主线？</h3>
 <ul>
-<li><strong>ERP 与履约：</strong>连接产品物料、采购、库存、生产质检、订单发票与商城业务，再衔接物流、财务、单证和售后。</li>
-<li><strong>AI 创作：</strong>做产品图片、详情页、图册和多语言内容，还能一键生成视频、做爆款结构再创作。</li>
+<li><strong>ERP 与履约：</strong>连接产品物料、采购、库存、生产质检、订单和发票，再衔接物流、财务、单证和售后。</li>
+<li><strong>AI 创作：</strong>做产品图片、详情页、图册和多语言内容，还能一键生成视频。</li>
 <li><strong>288 个 AI 员工：</strong>覆盖十类职能的专业岗位，可以按任务组队协作。</li>
 <li><strong>企业知识与业务关系图：</strong>AI 既知道公司掌握哪些资料，也清楚事情之间怎样关联、该由谁负责。</li>
 <li><strong>老板驾驶舱与管理控制：</strong>看重点、看异常、做审批，费用和结果都可核对。</li>
@@ -970,12 +970,12 @@ ${chartLoop('zh', 1)}
 <h3>现在能用哪些功能？</h3>
 <p>各项能力都已上线，每个模块的情况如下：</p>
 <ul>
-<li><strong>团队与视频：</strong>AI 团队协作、一键生成视频和爆款结构再创作，在你们开通的服务、额度和权限内运行。协作轮数和预算有上限，成片经人工审核后才发布，对外操作要经审批人批准。</li>
+<li><strong>团队与视频：</strong>AI 团队协作和一键生成视频，在你们开通的服务、额度和权限内运行。协作轮数和预算有上限，成片经人工审核后才发布，对外操作要经审批人批准。</li>
 <li><strong>主动获客：</strong>数据和客户联系渠道，经你授权后接入。</li>
 <li><strong>成交工作台：</strong>工作台已上线，各渠道收发和业务交接，连上你们自己的账号就能用；实际价格、合同、签章和单证，与你们现有的系统对接。</li>
-<li><strong>ERP 与履约：</strong>ERP 和商城应用已上线，跨系统联动和 AI 操作也都能用；物流、财务和服务走你们已接入的系统。</li>
+<li><strong>ERP 与履约：</strong>ERP 已上线，跨系统联动和 AI 操作也都能用；物流、财务和服务走你们已接入的系统。</li>
 <li><strong>创作、知识与管理：</strong>创意工作室已上线，商品营销套件能一键编排、局部检查。企业知识和业务关系图也已上线。看板上的指标只取自已接入的数据。</li>
-<li><strong>使用终端：</strong>以网页桌面为主，打开浏览器就能用；语音、自动化和对外操作都已支持，也有原生客户端、移动端和小程序。</li>
+<li><strong>使用终端：</strong>以网页桌面为主，打开浏览器就能用；语音、自动化和对外操作都已支持，手机浏览器上也能处理询盘和审批。</li>
 </ul>
 <p>更深一层的原理见<a href="intelligence.html">企业智能</a>，全部能力见<a href="capabilities.html">能力全景</a>，岗位目录见<a href="workforce.html">数字员工</a>。</p>
 <p class="sgp-cta">想看它在你的业务里怎样运转？<a href="contact.html">预约企业演示</a>。</p>`,
@@ -995,8 +995,8 @@ ${chartLoop('zh', 1)}
 <p><strong>Sales Desk</strong> answers how to understand a customer, keep following up, quote and hand over the order. It brings inquiries and messages into one intake and keeps customer records, conversations, product fit, reply drafts, follow-ups, quotes and PIs in one sales workflow.</p>
 <h3>How do the other capabilities support the two engines?</h3>
 <ul>
-<li><strong>ERP and fulfillment:</strong> products, materials, purchasing, stock, production, quality, orders, invoices and commerce, followed by logistics, finance, documents and support.</li>
-<li><strong>AI creative work:</strong> product images, detail pages, catalogs and multilingual content, plus one-click video and viral creative adaptation.</li>
+<li><strong>ERP and fulfillment:</strong> products, materials, purchasing, stock, production, quality, orders, invoices, followed by logistics, finance, documents and support.</li>
+<li><strong>AI creative work:</strong> product images, detail pages, catalogs and multilingual content, plus one-click video.</li>
 <li><strong>288 AI employees:</strong> specialized roles across ten enterprise functions that can team up by task.</li>
 <li><strong>Enterprise knowledge and the business relationship map:</strong> what the company knows, how things connect and who is responsible.</li>
 <li><strong>Owner visibility and control:</strong> priorities, exceptions and approvals, with costs and results you can check.</li>
@@ -1007,12 +1007,12 @@ ${chartLoop('en', 1)}
 <h3>What is available today?</h3>
 <p>Every capability is live. Here is where each part of the system stands today:</p>
 <ul>
-<li><strong>AI teams and video:</strong> AI teamwork, one-click video and viral creative adaptation run within the services, credits and access you have enabled. Collaboration rounds and budgets are capped, finished videos are reviewed by people before publishing, and external actions must be approved by an authorized person.</li>
+<li><strong>AI teams and video:</strong> AI teamwork and one-click video run within the services, credits and access you have enabled. Collaboration rounds and budgets are capped, finished videos are reviewed by people before publishing, and external actions must be approved by an authorized person.</li>
 <li><strong>Lead Finder:</strong> data and outreach channels connect with your authorization.</li>
 <li><strong>Sales Desk:</strong> the workspace is live, and channel messaging and business handoffs work through your own accounts; live prices, contracts, signatures and documents come from your own systems.</li>
-<li><strong>ERP and fulfillment:</strong> ERP and commerce applications are live, and so are cross-system work and AI actions; logistics, finance and service run through your connected systems.</li>
+<li><strong>ERP and fulfillment:</strong> The ERP is live, and so are cross-system work and AI actions; logistics, finance and service run through your connected systems.</li>
 <li><strong>Creative work, knowledge and control:</strong> the creative workspace is live, with one-click marketing-kit production and local checks; enterprise knowledge and the relationship map are live; dashboard metrics come only from connected data.</li>
-<li><strong>Devices:</strong> the browser desktop is the main way in; voice, automation and external actions are supported, alongside native clients, mobile and mini-programs.</li>
+<li><strong>Devices:</strong> the browser desktop is the main way in; voice, automation and external actions are supported, and inquiries and approvals also work in a phone browser.</li>
 </ul>
 <p>Read the principles on <a href="intelligence.html">Enterprise Intelligence</a>, every business area on <a href="capabilities.html">Capabilities</a> and the role directory on <a href="workforce.html">AI Workforce</a>.</p>
 <p class="sgp-cta">Want to see it run on your own business? <a href="contact.html">Book a Demo</a>.</p>`),
@@ -1024,11 +1024,11 @@ ${chartLoop('en', 1)}
         '重点不在对话形式，而在任务是否连接了企业资料、客户历史、业务应用、责任、审批和结果。STARGO WORK 围绕完整业务流程组织这些信息与工作，而不把一次文字回答当作业务已经完成。',
         'The focus is not the chat format. It is whether the work connects enterprise information, customer history, business applications, ownership, approvals and results. STARGO WORK organizes those elements around a business workflow rather than equating a text answer with completed work.'),
       Q('它只适用于外贸部门吗？', 'Is it only for the export department?',
-        '不是。它从主动获客和外贸销售入手，同时覆盖 ERP、商城、采购库存、生产质检、财务履约、内容创作、企业知识、办公和管理；接上你们现有的系统后，这些工作都能直接在 STARGO WORK 里完成。',
-        'No. Acquisition and trade sales are the starting point, while the scope also covers operations, commerce, purchasing, stock, production, quality, finance coordination, creative work, knowledge, office tasks and management. Once your existing systems are connected, all of this work can be done directly in STARGO WORK.'),
+        '不是。它从主动获客和外贸销售入手，同时覆盖 ERP、采购库存、生产质检、财务履约、内容创作、企业知识、办公和管理；接上你们现有的系统后，这些工作都能直接在 STARGO WORK 里完成。',
+        'No. Acquisition and trade sales are the starting point, while the scope also covers operations, purchasing, stock, production, quality, finance coordination, creative work, knowledge, office tasks and management. Once your existing systems are connected, all of this work can be done directly in STARGO WORK.'),
       Q('需要安装客户端吗？', 'Do we need to install a client?',
-        '不需要。STARGO WORK 是网页桌面，打开浏览器、登录账号就能开始工作；原生电脑客户端、移动端和小程序也已提供，按需选用。',
-        'No. STARGO WORK is a browser desktop, so you can sign in and start working straight from your browser. Native desktop clients, mobile apps and mini-programs are also available if you want them.'),
+        '不需要。STARGO WORK 是网页桌面，打开浏览器、登录账号就能开始工作；手机浏览器上也能处理询盘和审批。',
+        'No. STARGO WORK is a browser desktop, so you can sign in and start working straight from your browser. Inquiries and approvals also work in a phone browser.'),
     ],
   },
   {
