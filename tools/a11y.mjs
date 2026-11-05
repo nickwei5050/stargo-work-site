@@ -174,12 +174,18 @@ function pageHeadings(html, { lang, name }) {
        paragraph with the text after it, and a <p> cannot hold a heading, so
        the paragraph is cut at its line break: <h1> for the title, <p> for the
        rest, both with the paragraph's own class (css/stargo-fusion.css takes
-       the heading's margins off, so the two stack as the one paragraph did). */
+       the heading's margins off, so the two stack as the one paragraph did).
+       The title keeps the inline wrapper it had as a role="heading" span:
+       tools/blocks/cn-about.js splits the text into lines for its entrance,
+       and SplitText takes an inline element that wraps over two lines (the
+       Chinese title on a phone) as one line box, which is how the paragraph
+       always rose. Without the span the widow line would get a box and a
+       0.1s step of its own (11 line boxes instead of 10 at 390 px, zh). */
     const at = html.indexOf('<section class="cn-section-home-intro">');
     const m = at === -1 ? null : html.slice(at).match(/^[\s\S]*?(<p class="cn-text-size-large">)((?:(?!<\/p>)[\s\S])*?)<br\/>/);
     if (!m || m[2].length > 400 || /<(?:p|div|a)\b/.test(m[2])) throw new Error(`${label}: intro line not found`);
     const open = at + m[0].length - '<br/>'.length - m[2].length - m[1].length;
-    html = html.slice(0, open) + `<h1 class="cn-text-size-large">${m[2]}</h1>${m[1]}` + html.slice(open + m[1].length + m[2].length + '<br/>'.length);
+    html = html.slice(0, open) + `<h1 class="cn-text-size-large"><span>${m[2]}</span></h1>${m[1]}` + html.slice(open + m[1].length + m[2].length + '<br/>'.length);
   }
   if (name === 'about.html' || name === 'pricing.html') {
     /* cinery's two-word display titles (“AI / 团队”, “四个 / 岗位”, “合适 /
