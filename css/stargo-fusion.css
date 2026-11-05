@@ -6294,19 +6294,6 @@ img[src*="stargo-photo/e06-cockpit-blocker-"] { object-position: 50% 20%; }
 html.w-mod-js:not(.sg-ix-late) [data-sg-first]:not([style]) { animation: sg-first-wait 1.2s; }
 @keyframes sg-first-wait { from, to { opacity: 0; } }
 [data-sg-settled] { opacity: 1 !important; transform: none !important; filter: none !important; }
-/* The heroes of /workforce and /intelligence (tools/speed.mjs, HERO_HOLD): the
-   page's own load timeline hides them at window `load` and plays them in, so
-   without this they show, vanish and fade in again. A `data-sg-hold` element is
-   kept at opacity 0 only until the runtime writes an opacity on it (for a
-   heading split into characters, on one of its characters: ="split"), for at
-   most 1.2s and only while `sg-ix-late` is not set. From then on the
-   timeline's start state keeps it hidden until its turn. Nothing is pinned, so
-   the staggered reveal is not cut short. A browser without :has() leaves the
-   split headings as they were. */
-html.w-mod-js:not(.sg-ix-late) [data-sg-hold=""]:not([style*="opacity"]) { animation: sg-first-wait 1.2s; }
-@supports selector(:has(*)) {
-  html.w-mod-js:not(.sg-ix-late) [data-sg-hold="split"]:not(:has([style*="opacity"])) { animation: sg-first-wait 1.2s; }
-}
 
 /* ---- homemore (2026-10-23): pictures that became code or real captures ----
    notices.html 「继续看」: the 能力 card is the real web desktop (16:9 in a
