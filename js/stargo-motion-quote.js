@@ -1,7 +1,7 @@
 /* QUOTE — 03 「报价有依据，利润有边界，文件有版本」 on the capability page (the quote band; the owner's
    AI photograph c07-quote-approval was here until 2026-10-23, 「图片改成代码」).
 
-   Q-1042 for Müller Energie (200 pcs 48V 100Ah, DAP Hamburg) is drafted line by line, each price
+   Q-1042 for Müller Handel (200 pcs A-200, DAP Hamburg) is drafted line by line, each price
    labelled with where it came from (历史成交价 · 包装规则 · 货代报价): 200 × €735 = €147,000, export
    crating €1,200, DAP freight €2,350, total €150,550. The floor-price guard finds the unit price €15
    (2%) under the €750 floor price (低于底价) and stops it for your approval; you tap 批准, for this
@@ -48,7 +48,7 @@
     var P = 16, OUT0 = 14.9, OUT1 = 15.6;
     // [item, quantity, amount, where the price came from]
     var LINES = [
-      ['48V 100Ah', '× 200', '€147,000', T('历史成交价', 'Past deals')],
+      ['A-200', '× 200', '€147,000', T('历史成交价', 'Past deals')],
       [T('出口木箱', 'Crating'), '× 200', '€1,200', T('包装规则', 'Packing rule')],
       [T('DAP 汉堡', 'DAP Hamburg'), '× 1', '€2,350', T('货代报价', 'Freight')]
     ];
@@ -93,7 +93,7 @@
       if (barH === 30) b.style.height = '30px';
       var mk = el('span', 'sg-app-mark', b); K.icon('spark', mk, 12);
       el('b', '', b, T('报价', 'Quote') + ' Q-1042');
-      if (!cust) el('span', 'sgs-crumb', b, 'Müller Energie');
+      if (!cust) el('span', 'sgs-crumb', b, 'Müller Handel');
       el('span', 'sgs-tagline', b, L.full ? T('动态示意 · 演示数据', 'Illustrative motion · demo data') : T('演示数据', 'Demo data'));
       R.status = card ? el('span', 'sgs-status', b) : null;
       // narrow: the three steps of the band (按规则起草 · 审批人批准 · 保留正式版本) over the panels
@@ -120,7 +120,7 @@
       var sheet = el('div', 'sgs-sheet', p1);
       if (cust) {
         var sk = el('div', 'sgs-sheet-k', sheet);
-        el('span', '', sk, 'Müller Energie GmbH');
+        el('span', '', sk, 'Müller Handel GmbH');
         if (tall) R.status = el('span', 'sgs-status', sk);
       }
       R.lines = LINES.map(function (l) {
@@ -178,7 +178,7 @@
       // the versions; on a phone they open on what the quote is
       if (narrow) {
         var sum = el('div', 'sgs-sum', p3); glyph('doc', sum, 13);
-        el('span', '', sum, T('48V 100Ah × 200 · DAP 汉堡', '48V 100Ah × 200 · DAP Hamburg'));
+        el('span', '', sum, T('A-200 × 200 · DAP 汉堡', 'A-200 × 200 · DAP Hamburg'));
       }
       var vs = R.vers = el('div', 'sgs-vers', p3);
       el('div', 'sgs-vers-k', vs, T('版本 · 每版留底', 'Versions · all kept'));

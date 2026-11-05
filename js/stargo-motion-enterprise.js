@@ -152,9 +152,9 @@
   function DecideScene() {
     var P = 6.4, HOLD = 6.4, TT = 3 * P + HOLD, ARRIVE = 1.3, SWAP = 1.1, TYPE0 = 1.5, TYPE1 = 3.0, PRESS = 3.3, DONE = 3.6, OUT = 4.6, REC = 3.8;
     var IT = [
-      { ic: 'mail', t: T('开发信 · Nordwerk Energie', 'Outreach · Nordwerk Energie'), s: T('首次联系 · 销售 AI 起草', 'First contact · sales AI'), p: T('开发信', 'Outreach'), rule: 1, by: T('你', 'You'), ok: false,
+      { ic: 'mail', t: T('开发信 · Nordwerk Handel', 'Outreach · Nordwerk Handel'), s: T('首次联系 · 销售 AI 起草', 'First contact · sales AI'), p: T('开发信', 'Outreach'), rule: 1, by: T('你', 'You'), ok: false,
         why: T('语气太硬，先问清需求', 'Too pushy — ask their needs first'), w: T('语气太硬，先问需求', 'Too pushy — ask first'), wn: T('语气太硬，先问需求', 'Too pushy') },
-      { ic: 'page', t: T('产品页 · 48V 储能柜', 'Product page · 48V rack storage'), s: T('3 张主图 · 中英两版', '3 images · 2 languages'), p: T('产品页', 'Product page'), rule: 2, by: T('市场主管', 'Marketing lead'), ok: true,
+      { ic: 'page', t: T('产品页 · A-200 产品', 'Product page · A-200 product range'), s: T('3 张主图 · 中英两版', '3 images · 2 languages'), p: T('产品页', 'Product page'), rule: 2, by: T('市场主管', 'Marketing lead'), ok: true,
         why: T('参数与规格书一致，可以发布', 'Specs match the datasheet'), w: T('与规格书一致', 'Matches the datasheet'), wn: T('与规格书一致', 'Specs match') },
       { ic: 'mail', t: T('开发信 · 已修改', 'Outreach · revised'), s: T('先问需求 · 销售 AI 重写', 'Asks first · rewritten'), p: T('改后开发信', 'Revised outreach'), rp: T('改后开发信', 'Outreach v2'), rule: 1, by: T('你', 'You'), ok: true,
         why: T('先问需求，语气合适，可以发', 'Asks first, right tone — send'), w: T('先问需求，可以发', 'Asks first — send'), wn: T('先问需求，可以发', 'Asks first') },
@@ -299,11 +299,11 @@
     // a narrow phone (320–349px) leaves the value column about 90px: 「DAP Hamburg」 keeps it beside 「Inquiry」
     var SRC_N = [T('询盘邮件', 'Inquiry'), SRC[1], SRC[2]], src = SRC;
     var F = [
-      { k: T('型号', 'Model'), v: '48V 100Ah', src: 0 },
+      { k: T('型号', 'Model'), v: 'A-200', src: 0 },
       { k: T('数量', 'Quantity'), v: T('200 组', '200 pcs'), src: 0 },
       { k: T('贸易术语', 'Trade term'), v: T('DAP 汉堡', 'DAP Hamburg'), src: 0 },
       { k: T('交期', 'Lead time'), v: T('15 天', '15 days'), fix: T('35 天', '35 days'), src: 1, bad: T('排期：最早 35 天', 'Schedule: 35 days') },
-      { k: T('认证', 'Certificates'), v: 'CE · UN38.3', src: 2 }
+      { k: T('认证', 'Certificates'), v: 'CE · RoHS', src: 2 }
     ];
     var G, R;
     function geo(name, L) {
@@ -322,7 +322,7 @@
       if (!R.phone) {
         var ht = el('div', 'sg-en-vtitle', h);
         el('span', 'sg-en-k', ht, T('销售 AI 起草', 'Drafted by the sales AI'));
-        el('b', '', ht, 'Müller Energie GmbH');
+        el('b', '', ht, 'Müller Handel GmbH');
       }
       var stp = R.band ? null : el('div', 'sg-en-vsteps', h);
       R.steps = R.band ? [] : [T('已提交', 'Submitted'), T('核对中', 'Checking'), T('已核对', 'Checked')].map(function (s) {
@@ -505,8 +505,8 @@
     var DAYN = K.ZH ? ['周一', '周二', '周三', '周四', '周五', '周六', '周日'] : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     var PR = [ // rank 0 first; d = the day it appears
       { d: 3, c: 'wait', t: T('报价 Q-1042 · 低于底价', 'Quote Q-1042 · below floor'), s: T('Q-1042 · 低于底价', 'Q-1042 · below floor'), o: T('你 · 今天', 'You · today'), tg: T('待审批', 'Approval') },
-      { d: 2, c: 'no', t: T('交期提醒 · 柳州工厂', 'Lead-time alert · Liuzhou plant'), s: T('交期 · 柳州工厂', 'Lead time · Liuzhou'), o: T('跟单 · 周四', 'Orders desk · Thu'), tg: T('异常', 'Exception') },
-      { d: 4, c: 'idle', t: T('PT Surya Energi · 该补货了', 'PT Surya Energi · restock due'), s: T('PT Surya · 补货', 'PT Surya · restock'), o: T('销售 AI · 周五', 'Sales AI · Fri'), tg: T('补货', 'Restock') }
+      { d: 2, c: 'no', t: T('交期提醒 · 工厂', 'Lead-time alert · the plant'), s: T('交期 · 工厂', 'Lead time · Plant'), o: T('跟单 · 周四', 'Orders desk · Thu'), tg: T('异常', 'Exception') },
+      { d: 4, c: 'idle', t: T('PT Surya Niaga · 该补货了', 'PT Surya Niaga · restock due'), s: T('PT Surya · 补货', 'PT Surya · restock'), o: T('销售 AI · 周五', 'Sales AI · Fri'), tg: T('补货', 'Restock') }
     ];
     var MAXB = 7, G, R;
     function geo(name, L) {
@@ -644,7 +644,7 @@
       var h = at(stage, 'sg-en-shead', G.hd[0], G.hd[1], G.hd[2]);
       var ht = el('div', 'sg-en-stitle', h);
       if (!G.short) el('span', 'sg-en-k', ht, T('AI 任务 · 负责人 销售 AI · 审批人 你', 'AI task · owner sales AI · approver you'));
-      el('b', '', ht, name === 'phone' ? T('报价跟进 · Müller Energie', 'Quote · Müller Energie') : T('报价跟进 · Müller Energie', 'Quote follow-up · Müller Energie'));
+      el('b', '', ht, name === 'phone' ? T('报价跟进 · Müller Handel', 'Quote · Müller Handel') : T('报价跟进 · Müller Handel', 'Quote follow-up · Müller Handel'));
       R.pill = el('span', 'sg-en-spill', h);
       var st = G.st;
       STEPS.forEach(function (s, i) {

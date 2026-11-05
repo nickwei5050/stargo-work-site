@@ -139,7 +139,7 @@
      ===================================================================== */
   function OverviewScene() {
     var P = 12, IN = 1, SHIP = 3, QUOTE = 5, SYNC = 7, OK = 9.2, OUT = 9.7, SHIP2 = 10.8;
-    // what joins the approvals; each number is one deal across the site: Q-1041 is the approved forklift
+    // what joins the approvals; each number is one deal across the site: Q-1041 is the approved
     // order (PI-1041), Q-1043 the Swedish quote blocked in BLOCKER (handed back, it waits for approval),
     // PI-2207 the Nigerian proforma done there. The first three are the queue the still shows (k = 0: oldest
     // at the foot, Q-1043 joining on top) and the week's three approvals of the enterprise 经营 / Operate panel
@@ -297,7 +297,7 @@
     var PRICE = ['', '8', '86', '86.', '86.0', '86.00'];
     var TASKS = [
       [T('样品寄送 S-0318', 'Samples S-0318'), T('巴西', 'Brazil'), T('跟单 AI', 'Order AI'), 1, 'run', T('进行中', 'In progress'), T('周五', 'Fri')],
-      [T('开发信 · 德国储能', 'Outreach · German storage'), T('20 封', '20 emails'), T('获客 AI', 'Prospecting AI'), 1, 'review', T('待审批', 'Awaiting approval'), T('明天', 'Tomorrow')],
+      [T('开发信 · 德国', 'Outreach · German dealers'), T('20 封', '20 emails'), T('获客 AI', 'Prospecting AI'), 1, 'review', T('待审批', 'Awaiting approval'), T('明天', 'Tomorrow')],
       [T('验厂资料', 'Factory audit files'), T('印尼客户', 'Indonesia'), T('质检主管', 'QC lead'), 0, 'run', T('进行中', 'In progress'), T('周四', 'Thu')],
       [T('形式发票 PI-2207', 'Proforma PI-2207'), T('尼日利亚', 'Nigeria'), T('跟单 AI', 'Order AI'), 1, 'done', T('已完成 · 结果已核对', 'Done · result checked'), T('昨天', 'Yesterday')]
     ];
@@ -339,7 +339,7 @@
           var dh = el('div', 'sg-ck-th', d);
           el('b', '', dh, T('Q-1043 · 卡点详情', 'Q-1043 · blocker'));
           R.dOwner = el('span', '', dh);
-          el('p', 'sg-ck-dp', d, T('销售 AI 已起草报价 v2（电动自行车电池，约 2,000 组/年）。缺底价：要由有权限的人来定。', 'The sales AI has drafted quote v2 (e-bike packs, about 2,000 a year). It is missing the floor price, which someone with authority must set.'));
+          el('p', 'sg-ck-dp', d, T('销售 AI 已起草报价 v2（家居用品，约 2,000 组/年）。缺底价：要由有权限的人来定。', 'The sales AI has drafted quote v2 (units, about 2,000 a year). It is missing the floor price, which someone with authority must set.'));
           var fd = el('div', 'sg-ck-field', d);
           el('span', '', fd, T('底价（美元/组）', 'Floor price (USD per pack)'));
           R.inp = el('span', 'sg-ck-input', fd); R.inpT = el('span', '', R.inp);

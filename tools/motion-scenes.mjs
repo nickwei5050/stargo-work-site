@@ -64,20 +64,20 @@ export const MOTION_LABEL = {
     en: 'Illustrative motion: inquiries from email, WhatsApp, Alibaba.com and the website flow into STARGO WORK, quotes pass a human approval, and work flows on to five stages.',
   },
   radar: {
-    zh: '动态示意：主动获客从柳州工厂出发在全球找到目标客户，按匹配度实时排序，并写出推荐理由。',
-    en: 'Illustrative motion: Lead Finder finds buyers worldwide from the Liuzhou factory, ranks them by fit and writes down why.',
+    zh: '动态示意：主动获客从工厂出发在全球找到目标客户，按匹配度实时排序，并写出推荐理由。',
+    en: 'Illustrative motion: Lead Finder finds buyers worldwide from the factory, ranks them by fit and writes down why.',
   },
   studio: {
     zh: '动态示意：AI 创作根据一句要求生成产品主图、场景图和短视频，并生成多语言卖点文案，全部人工审核后发布。',
     en: 'Illustrative motion: AI Creative turns one instruction into product images, scenes and short video plus copy in several languages, all reviewed before publishing.',
   },
   team: {
-    zh: '动态示意：目标「开发德国储能经销商」分给市场研究员、产品工程师、销售和创意四位 AI 员工并行推进、互相接力；目标国家先等你确认，统筹汇总成果后停在人工审批，等你拍板，不会自动发送。',
-    en: 'Illustrative motion: one goal, finding storage distributors in Germany, is split between four AI employees (market researcher, product engineer, sales and creative) who work in parallel and hand off to each other; a question about the target country waits for you, and a coordinator gathers the results and stops at a human approval, so nothing is sent automatically.',
+    zh: '动态示意：目标「开发德国进口经销商」分给市场研究员、产品工程师、销售和创意四位 AI 员工并行推进、互相接力；目标国家先等你确认，统筹汇总成果后停在人工审批，等你拍板，不会自动发送。',
+    en: 'Illustrative motion: one goal, finding import distributors in Germany, is split between four AI employees (market researcher, product engineer, sales and creative) who work in parallel and hand off to each other; a question about the target country waits for you, and a coordinator gathers the results and stops at a human approval, so nothing is sent automatically.',
   },
   feed: {
-    zh: '动态示意（演示数据）：手机上的待办自己列出来——Müller Energie 三天没回复，跟进信已起草、等你确认；报价 Q-1042 低于底价，等你审批；PT Surya 到了补货周期，建议联系。你点了批准，发送前仍由你确认。',
-    en: 'Illustrative motion (demo data): the phone’s to-do list fills itself — Müller Energie has not replied in three days and a follow-up is drafted for your OK; quote Q-1042 is below the floor price and needs your approval; PT Surya is due to restock. Once you approve, you still confirm before anything is sent.',
+    zh: '动态示意（演示数据）：手机上的待办自己列出来——Müller Handel 三天没回复，跟进信已起草、等你确认；报价 Q-1042 低于底价，等你审批；PT Surya 到了补货周期，建议联系。你点了批准，发送前仍由你确认。',
+    en: 'Illustrative motion (demo data): the phone’s to-do list fills itself — Müller Handel has not replied in three days and a follow-up is drafted for your OK; quote Q-1042 is below the floor price and needs your approval; PT Surya is due to restock. Once you approve, you still confirm before anything is sent.',
   },
   squad: {
     zh: '动态示意（演示数据）：一项任务在手机上组队，统筹、研究、销售、产品、创意分头推进、互相提问；你暂停后，任务卡留着已完成什么、在等什么、由谁拍板，继续后从中断的那一步接着做，最后汇总交你确认。',
@@ -115,20 +115,20 @@ export const MOTION_LABEL = {
      (tools/blocks/cn-service.mjs; js/stargo-motion-growth.js), in row order, and the closing card of
      intelligence.html (tools/build-site.mjs lxPage; js/stargo-motion-improve.js). */
   dossier: {
-    zh: '动态示意（演示数据）：主动获客为一家德国储能集成商建企业档案——官网、主营产品、认证、市场与渠道、新闻逐项汇总，每项注明来源和更新时间；只有一个来源的员工规模标为待核实。',
-    en: 'Illustrative motion (demo data): Lead Finder builds a file on a German storage integrator — website, products, certifications, markets and channels, news — each fact with its source and date; the company size, found in one source only, is marked to verify.',
+    zh: '动态示意（演示数据）：主动获客为一家德国分销商建企业档案——官网、主营产品、认证、市场与渠道、新闻逐项汇总，每项注明来源和更新时间；只有一个来源的员工规模标为待核实。',
+    en: 'Illustrative motion (demo data): Lead Finder builds a file on a German distributor — website, products, certifications, markets and channels, news — each fact with its source and date; the company size, found in one source only, is marked to verify.',
   },
   lanes: {
     zh: '动态示意（演示数据）：点阵世界地图上，从宁波、深圳、钦州、海防出发的海运航线通往汉堡、休斯敦、雅加达和拉各斯；航线逐条亮起，显示这位买家的采购记录和供应商变化。',
     en: 'Illustrative motion (demo data): on a dotted world map, shipping lanes run from Ningbo, Shenzhen, Qinzhou and Haiphong to Hamburg, Houston, Jakarta and Lagos; one lane at a time lights up with that buyer’s purchase records and supplier changes.',
   },
   rhythm: {
-    zh: '动态示意（演示数据）：PT Surya Energi 过去四次下单约每 60 天一次；距上次下单的天数逐日增加，到 60 天进入补货窗口，建议联系，跟进草稿等你确认。',
-    en: 'Illustrative motion (demo data): PT Surya Energi has ordered about every 60 days; the days since its last order count up to 60 and reach the restock window, so a check-in is suggested and the draft waits for your OK.',
+    zh: '动态示意（演示数据）：PT Surya Niaga 过去四次下单约每 60 天一次；距上次下单的天数逐日增加，到 60 天进入补货窗口，建议联系，跟进草稿等你确认。',
+    en: 'Illustrative motion (demo data): PT Surya Niaga has ordered about every 60 days; the days since its last order count up to 60 and reach the restock window, so a check-in is suggested and the draft waits for your OK.',
   },
   committee: {
-    zh: '动态示意（演示数据）：德国买家 Nordwerk Energie GmbH 的采购决策链——采购经理发起需求，技术负责人评估规格，财务总监批预算，总经理拍板，每人注明身份依据；你确认后才交给成交工作台。',
-    en: 'Illustrative motion (demo data): the buying committee of Nordwerk Energie GmbH, a German buyer — the purchasing manager raises the need, the head of engineering checks the spec, the finance director holds the budget and the managing director decides, each with the source that identifies them; it goes to Sales Desk only after you confirm.',
+    zh: '动态示意（演示数据）：德国买家 Nordwerk Handel GmbH 的采购决策链——采购经理发起需求，技术负责人评估规格，财务总监批预算，总经理拍板，每人注明身份依据；你确认后才交给成交工作台。',
+    en: 'Illustrative motion (demo data): the buying committee of Nordwerk Handel GmbH, a German buyer — the purchasing manager raises the need, the head of engineering checks the spec, the finance director holds the budget and the managing director decides, each with the source that identifies them; it goes to Sales Desk only after you confirm.',
   },
   improve: {
     zh: '动态示意（演示数据）：每次执行都记下结果和人工修正；新版开发信先在小样本上和现行版本对比，停在等你批准，批准后按 10%、50%、100% 逐步采用；另一项改动效果不好，被撤回，失败记录留作修复依据。',
@@ -136,20 +136,20 @@ export const MOTION_LABEL = {
   },
   /* capabilities.html, lane capsales (tools/motion-capsales.mjs) */
   inbox: {
-    zh: '动态示意（演示数据）：邮件、WhatsApp、阿里国际站和官网表单的消息落进同一个收件箱，每条先读出语言、意图和产品，再分成新询盘、历史消息或垃圾信息：Müller Energie 和 Ahmed Al-Rashid 的询价分给欧洲组和中东组，PT Surya 的回复并入客户记录，一条从官网表单发来的钓鱼信息被拦截。',
-    en: 'Illustrative motion (demo data): messages from email, WhatsApp, Alibaba.com and the website form land in one inbox; each is read for language, intent and product and sorted as a new inquiry, history or spam. The requests from Müller Energie and Ahmed Al-Rashid go to the EU and Middle East teams, PT Surya’s reply is filed to its account, and a phishing message sent through the website form is blocked.',
+    zh: '动态示意（演示数据）：邮件、WhatsApp、阿里国际站和官网表单的消息落进同一个收件箱，每条先读出语言、意图和产品，再分成新询盘、历史消息或垃圾信息：Müller Handel 和 Ahmed Al-Rashid 的询价分给欧洲组和中东组，PT Surya 的回复并入客户记录，一条从官网表单发来的钓鱼信息被拦截。',
+    en: 'Illustrative motion (demo data): messages from email, WhatsApp, Alibaba.com and the website form land in one inbox; each is read for language, intent and product and sorted as a new inquiry, history or spam. The requests from Müller Handel and Ahmed Al-Rashid go to the EU and Middle East teams, PT Surya’s reply is filed to its account, and a phishing message sent through the website form is blocked.',
   },
   account: {
-    zh: '动态示意（演示数据）：Müller Energie GmbH 的客户全景一块块拼起来：联系人和各自角色、商机阶段（报价）、需求与样品、报价 Q-1042 与 Q-1031、文件、最近的沟通；随后 Q-1042 获批、MSDS 附上，带着 v3 报价和 MSDS 的跟进信已起草，等你确认后才发送。',
-    en: 'Illustrative motion (demo data): the account view of Müller Energie GmbH assembles piece by piece: contacts and their roles, the stage (quote), needs and samples, quotes Q-1042 and Q-1031, documents and the latest conversations. Then Q-1042 is approved, the MSDS is attached, and the follow-up carrying both waits for your OK before anything is sent.',
+    zh: '动态示意（演示数据）：Müller Handel GmbH 的客户全景一块块拼起来：联系人和各自角色、商机阶段（报价）、需求与样品、报价 Q-1042 与 Q-1031、文件、最近的沟通；随后 Q-1042 获批、MSDS 附上，带着 v3 报价和 MSDS 的跟进信已起草，等你确认后才发送。',
+    en: 'Illustrative motion (demo data): the account view of Müller Handel GmbH assembles piece by piece: contacts and their roles, the stage (quote), needs and samples, quotes Q-1042 and Q-1031, documents and the latest conversations. Then Q-1042 is approved, the MSDS is attached, and the follow-up carrying both waits for your OK before anything is sent.',
   },
   quote: {
-    zh: '动态示意（演示数据）：给 Müller Energie 的报价 Q-1042（48V 100Ah × 200 组，DAP 汉堡）逐行起草，每个价格都标出依据（历史成交价、包装规则、货代报价），合计 €150,550；单价 €735 低于 €750 的底价，停下来等你审批。你点了批准（仅限本单），v3 存为正式版，按价格表的 v1 和客户目标价的 v2 也都留底可对比；转成 PI 发送前仍由你确认。',
-    en: 'Illustrative motion (demo data): quote Q-1042 for Müller Energie (200 pcs 48V 100Ah, DAP Hamburg) is drafted line by line, each price labelled with its source (past deal prices, the packing rule, the forwarder’s rate), €150,550 in total. At €735 a pack it is below the €750 floor price, so it stops for your approval. You approve it for this order only; v3 is kept as the formal version, with v1 (price list) and v2 (buyer target) kept for comparison, and the PI goes out only after your OK.',
+    zh: '动态示意（演示数据）：给 Müller Handel 的报价 Q-1042（A-200 × 200 组，DAP 汉堡）逐行起草，每个价格都标出依据（历史成交价、包装规则、货代报价），合计 €150,550；单价 €735 低于 €750 的底价，停下来等你审批。你点了批准（仅限本单），v3 存为正式版，按价格表的 v1 和客户目标价的 v2 也都留底可对比；转成 PI 发送前仍由你确认。',
+    en: 'Illustrative motion (demo data): quote Q-1042 for Müller Handel (200 pcs A-200, DAP Hamburg) is drafted line by line, each price labelled with its source (past deal prices, the packing rule, the forwarder’s rate), €150,550 in total. At €735 a pack it is below the €750 floor price, so it stops for your approval. You approve it for this order only; v3 is kept as the formal version, with v1 (price list) and v2 (buyer target) kept for comparison, and the PI goes out only after your OK.',
   },
   creative: {
-    zh: '动态示意（演示数据）：三张 48V 100Ah 电池包的参考图进 AI 创作，依次做出白底主图、仓库场景图和 15 秒短视频的四个分镜，每一项都先进审核队列；你点了通过，发布与否仍由你决定，不会自动发布。',
-    en: 'Illustrative motion (demo data): three reference photos of a 48V 100Ah pack go into AI Creative, which makes a white-background main image, a warehouse scene and the four-shot storyboard of a 15-second video; each waits in a review queue, you approve them, and publishing is still your call: nothing goes out automatically.',
+    zh: '动态示意（演示数据）：三张 A-200 产品的参考图进 AI 创作，依次做出白底主图、仓库场景图和 15 秒短视频的四个分镜，每一项都先进审核队列；你点了通过，发布与否仍由你决定，不会自动发布。',
+    en: 'Illustrative motion (demo data): three reference photos of a A-200 pack go into AI Creative, which makes a white-background main image, a warehouse scene and the four-shot storyboard of a 15-second video; each waits in a review queue, you approve them, and publishing is still your call: nothing goes out automatically.',
   },
   /* The six code-drawn windows that stood round the homepage theatre's brand film from 2026-10-23
      (js/stargo-motion-desk.js), in the order the deal passes through them. Since 2026-10-24 those
@@ -157,12 +157,12 @@ export const MOTION_LABEL = {
      they stay registered so a cell can go back to its window in one line (tools/replaceables.mjs
      HERO keeps the history). */
   'desk-growth': {
-    zh: '动态示意（演示数据）：主动获客的候选客户名单，Nordwerk Energie 以匹配度 94 排到第一，AI 写出理由。',
-    en: 'Illustrative motion (demo data): the Lead Finder shortlist, where Nordwerk Energie rises to the top with a fit of 94 and the AI writes down why.',
+    zh: '动态示意（演示数据）：主动获客的候选客户名单，Nordwerk Handel 以匹配度 94 排到第一，AI 写出理由。',
+    en: 'Illustrative motion (demo data): the Lead Finder shortlist, where Nordwerk Handel rises to the top with a fit of 94 and the AI writes down why.',
   },
   'desk-sales': {
-    zh: '动态示意（演示数据）：成交工作台收到 Müller Energie 的询盘，AI 读出 48V 100Ah、200 组、DAP 汉堡，报价 Q-1042 送去审批。',
-    en: 'Illustrative motion (demo data): Sales Desk receives Müller Energie’s inquiry, the AI reads out 48V 100Ah, 200 pcs and DAP Hamburg, and quote Q-1042 goes for approval.',
+    zh: '动态示意（演示数据）：成交工作台收到 Müller Handel 的询盘，AI 读出 A-200、200 组、DAP 汉堡，报价 Q-1042 送去审批。',
+    en: 'Illustrative motion (demo data): Sales Desk receives Müller Handel’s inquiry, the AI reads out A-200, 200 pcs and DAP Hamburg, and quote Q-1042 goes for approval.',
   },
   'desk-quote': {
     zh: '动态示意（演示数据）：报价 Q-1042 低于底价，停下等你审批；你点了批准，报价仍未发送，发送前由你确认。',
@@ -173,7 +173,7 @@ export const MOTION_LABEL = {
     en: 'Illustrative motion (demo data): order SO-2041 in the ERP goes through stocking, quality check and container loading.',
   },
   'desk-creative': {
-    zh: '动态示意（演示数据）：AI 创作生成三张产品图——白底主图、储能柜场景图和德语详情页，都停在待你审核。',
+    zh: '动态示意（演示数据）：AI 创作生成三张产品图——白底主图、使用场景图和德语详情页，都停在待你审核。',
     en: 'Illustrative motion (demo data): AI Creative renders three product images — a white-background main image, a rack scene and a German detail page — and each waits for your review.',
   },
   'desk-cockpit': {
@@ -183,20 +183,20 @@ export const MOTION_LABEL = {
   /* lane people (2026-10-23): about.html's four AI-employee tiles (js/stargo-motion-staff.js)
      and the workforce desktop collage card (js/stargo-motion-rolecard.js) */
   crewSignal: {
-    zh: '动态示意（演示数据）：市场信号 AI 员工在主动获客里扫描招聘、招标等信号，候选客户随之重新排序；Nordwerk Energie 升到第一，推荐理由写好后，联系与否由你决定。',
-    en: 'Illustrative motion (demo data): the Market Signal AI scans hiring and tender signals in Lead Finder and the buyer list re-ranks; Nordwerk Energie moves to the top with a written reason, and whether to contact them is your call.',
+    zh: '动态示意（演示数据）：市场信号 AI 员工在主动获客里扫描招聘、招标等信号，候选客户随之重新排序；Nordwerk Handel 升到第一，推荐理由写好后，联系与否由你决定。',
+    en: 'Illustrative motion (demo data): the Market Signal AI scans hiring and tender signals in Lead Finder and the buyer list re-ranks; Nordwerk Handel moves to the top with a written reason, and whether to contact them is your call.',
   },
   crewQuote: {
-    zh: '动态示意（演示数据）：报价 AI 员工为 Ahmed Al-Rashid 的 72V 锂电池组询盘逐行生成报价 Q-1046，底价校验发现单价低于底价，报价提交审批，等你批准，批准前不会发给客户。',
-    en: 'Illustrative motion (demo data): the Quotation AI builds quote Q-1046 line by line for Ahmed Al-Rashid’s 72V lithium pack inquiry; the floor-price check finds the unit price below the floor, so the quote waits for your approval and nothing goes to the buyer first.',
+    zh: '动态示意（演示数据）：报价 AI 员工为 Ahmed Al-Rashid 的 A-300询盘逐行生成报价 Q-1046，底价校验发现单价低于底价，报价提交审批，等你批准，批准前不会发给客户。',
+    en: 'Illustrative motion (demo data): the Quotation AI builds quote Q-1046 line by line for Ahmed Al-Rashid’s A-300 sample inquiry; the floor-price check finds the unit price below the floor, so the quote waits for your approval and nothing goes to the buyer first.',
   },
   crewFollow: {
-    zh: '动态示意（演示数据）：报价发出后，Müller Energie 三天没有回复；跟进 AI 员工起草了一封跟进信，停在待你确认，你确认后才会发出。',
-    en: 'Illustrative motion (demo data): three days after the quote, Müller Energie has not replied; the Follow-up AI drafts a follow-up email and stops for your OK — it goes out only after you confirm.',
+    zh: '动态示意（演示数据）：报价发出后，Müller Handel 三天没有回复；跟进 AI 员工起草了一封跟进信，停在待你确认，你确认后才会发出。',
+    en: 'Illustrative motion (demo data): three days after the quote, Müller Handel has not replied; the Follow-up AI drafts a follow-up email and stops for your OK — it goes out only after you confirm.',
   },
   crewCoord: {
-    zh: '动态示意（演示数据）：统筹 AI 员工把目标「开拓巴西电动两轮市场」拆成五步，交给研究、产品、销售和创意四位 AI 员工分头推进，最后汇总，等你确认，确认前不对外发送。',
-    en: 'Illustrative motion (demo data): the Coordination AI splits the goal of opening the Brazil e-scooter market into five steps for four AI employees (research, product, sales and creative), then sums up and waits for your confirmation before anything goes out.',
+    zh: '动态示意（演示数据）：统筹 AI 员工把目标「开拓巴西新市场」拆成五步，交给研究、产品、销售和创意四位 AI 员工分头推进，最后汇总，等你确认，确认前不对外发送。',
+    en: 'Illustrative motion (demo data): the Coordination AI splits the goal of opening the Brazil market into five steps for four AI employees (research, product, sales and creative), then sums up and waits for your confirmation before anything goes out.',
   },
   deskReport: {
     zh: '动态示意（演示数据）：网页桌面里的报告应用，报告 AI 员工汇总本周询盘、报价和订单，起草第 43 周周报，停在待你确认。',
@@ -208,24 +208,24 @@ export const MOTION_LABEL = {
    of 「让 AI 团队把活干完」 (js/stargo-motion-crew.js), where the owner's photographs C01–C04, C09 and C10 were. */
 Object.assign(MOTION_LABEL, {
   areaGrowth: {
-    zh: '动态示意（演示数据）：指挥与增长——智搜的雷达扫出 Nordwerk Energie（匹配 94）和 Gulf Coast Lift Supply（91），拓客核实采购经理、联系前等你授权；补货雷达提示 PT Surya 到了补货周期；指挥中心把它们排进「开发德国储能经销商」，开发计划等你确认。',
-    en: 'Illustrative motion (demo data): workspace and growth — the search radar finds Nordwerk Energie (fit 94) and Gulf Coast Lift Supply (91), outreach verifies the buyer and waits for your OK before any contact, the reorder radar flags PT Surya as due, and the command center turns them into an outreach plan that waits for you.',
+    zh: '动态示意（演示数据）：指挥与增长——智搜的雷达扫出 Nordwerk Handel（匹配 94）和 Gulf Coast Trading（91），拓客核实采购经理、联系前等你授权；补货雷达提示 PT Surya 到了补货周期；指挥中心把它们排进「开发德国进口经销商」，开发计划等你确认。',
+    en: 'Illustrative motion (demo data): workspace and growth — the search radar finds Nordwerk Handel (fit 94) and Gulf Coast Trading (91), outreach verifies the buyer and waits for your OK before any contact, the reorder radar flags PT Surya as due, and the command center turns them into an outreach plan that waits for you.',
   },
   areaContext: {
-    zh: '动态示意（演示数据）：客户与知识——Müller Energie 的邮件询盘进入客户会话，询盘里的 200 pcs、48V 100Ah、DAP Hamburg 被标出并写进客户全景，交期标为待确认；知识库找到规格书和交期表的出处；回复草稿引用这两处资料，发送前由你确认。',
-    en: 'Illustrative motion (demo data): customers and knowledge — in an email inquiry from Müller Energie the words 200 pcs, 48V 100Ah and DAP Hamburg are marked and become the account’s facts, with the lead time flagged to confirm; the knowledge base finds the spec sheet and lead times, and a reply draft cites both and waits for you to confirm before it is sent.',
+    zh: '动态示意（演示数据）：客户与知识——Müller Handel 的邮件询盘进入客户会话，询盘里的 200 pcs、A-200、DAP Hamburg 被标出并写进客户全景，交期标为待确认；知识库找到规格书和交期表的出处；回复草稿引用这两处资料，发送前由你确认。',
+    en: 'Illustrative motion (demo data): customers and knowledge — in an email inquiry from Müller Handel the words 200 pcs, A-200 and DAP Hamburg are marked and become the account’s facts, with the lead time flagged to confirm; the knowledge base finds the spec sheet and lead times, and a reply draft cites both and waits for you to confirm before it is sent.',
   },
   areaDeal: {
-    zh: '动态示意（演示数据）：商务、履约与创作——一笔订单沿着一条线走完：Q-1041 已批准，生成 PI-1041，24 台叉车电池经生产、质检到出货，再到回款；Q-1042 低于底价，等你审批；视频制作生成主图、场景图和短视频，人工审核后才发布；订金已到账，尾款催款信等你确认。',
-    en: 'Illustrative motion (demo data): commercial, delivery and creative — one order runs along a line: approved quote Q-1041 becomes PI-1041, 24 forklift batteries are built, checked and shipped, and the balance falls due; Q-1042 is below the floor price and waits for your approval; images and a short video wait for review; the deposit is in and the balance reminder waits for you.',
+    zh: '动态示意（演示数据）：商务、履约与创作——一笔订单沿着一条线走完：Q-1041 已批准，生成 PI-1041，24 台设备配件经生产、质检到出货，再到回款；Q-1042 低于底价，等你审批；视频制作生成主图、场景图和短视频，人工审核后才发布；订金已到账，尾款催款信等你确认。',
+    en: 'Illustrative motion (demo data): commercial, delivery and creative — one order runs along a line: approved quote Q-1041 becomes PI-1041, 24 sets of equipment parts are built, checked and shipped, and the balance falls due; Q-1042 is below the floor price and waits for your approval; images and a short video wait for review; the deposit is in and the balance reminder waits for you.',
   },
   areaTeam: {
-    zh: '动态示意（演示数据）：员工与管理——目标「开发德国储能经销商」交给一位统筹，统筹分给从 288 个岗位里挑出的 4 位 AI 员工；业务关系把客户、报价和负责人对上；审批中心允许读记录、起草开发信，发送要你批准；改进后的开发信 v2 经测试后，未经批准不会发布。',
-    en: 'Illustrative motion (demo data): workforce and management — the goal of finding storage distributors in Germany goes to a coordinator, who hands it to four AI employees chosen from 288 roles; the relationship map links customer, quote and owner; the approval center allows reading and drafting, but sending needs your approval; an improved email is tested and not released without approval.',
+    zh: '动态示意（演示数据）：员工与管理——目标「开发德国进口经销商」交给一位统筹，统筹分给从 288 个岗位里挑出的 4 位 AI 员工；业务关系把客户、报价和负责人对上；审批中心允许读记录、起草开发信，发送要你批准；改进后的开发信 v2 经测试后，未经批准不会发布。',
+    en: 'Illustrative motion (demo data): workforce and management — the goal of finding import distributors in Germany goes to a coordinator, who hands it to four AI employees chosen from 288 roles; the relationship map links customer, quote and owner; the approval center allows reading and drafting, but sending needs your approval; an improved email is tested and not released without approval.',
   },
   crewRoles: {
-    zh: '动态示意（演示数据）：288 个岗位按十个职能排开；输入任务「开发德国储能经销商」后，只留下这次需要的 4 个岗位和 1 位统筹——市场研究员、产品工程师、销售、创意，统筹来自运营——组成一支团队，交给任务看板。',
-    en: 'Illustrative motion (demo data): 288 roles laid out in ten functions; for the task of finding storage distributors in Germany only the four roles it needs and a coordinator stay lit — market researcher, product engineer, sales and creative, with a coordinator from operations — and form one team that is handed to the task board.',
+    zh: '动态示意（演示数据）：288 个岗位按十个职能排开；输入任务「开发德国进口经销商」后，只留下这次需要的 4 个岗位和 1 位统筹——市场研究员、产品工程师、销售、创意，统筹来自运营——组成一支团队，交给任务看板。',
+    en: 'Illustrative motion (demo data): 288 roles laid out in ten functions; for the task of finding import distributors in Germany only the four roles it needs and a coordinator stay lit — market researcher, product engineer, sales and creative, with a coordinator from operations — and form one team that is handed to the task board.',
   },
   crewBoard: {
     zh: '动态示意（演示数据）：员工任务看板——任务从待开始、进行中，到待你确认、已完成，交付的名单、规格核对和素材挂在任务上，也汇总在看板下方；开发信草稿由你批准后才算完成，报价 Q-1042 低于底价，一直等你审批。',

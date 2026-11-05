@@ -7,16 +7,16 @@
    0 is not ticked (the runner checks it every 250 ms).
 
    One demo deal runs through the five, with the site's one demo cast:
-     001 Growth OS · the shortlist: Nordwerk Energie GmbH 94 and Gulf Coast
-         Lift Supply 91, with the reason written down → 建议先开发;
-     002 Sales Desk · Müller Energie's inquiry (200 pcs 48V 100Ah, DAP
+     001 Growth OS · the shortlist: Nordwerk Handel GmbH 94 and Gulf Coast
+         Trading 91, with the reason written down → 建议先开发;
+     002 Sales Desk · Müller Handel's inquiry (200 pcs A-200, DAP
          Hamburg) → the needs read out → an AI draft of quote Q-1042 → 等你审批,
          and nothing is sent before you approve;
      003 ERP · the order PI-1042: 排产 → 质检 → 装柜 with dates, against the
          date sales promised;
      004 ERP · its documents (发票 / 装箱单 / 提单) tick off and the payment
          goes from the 30% deposit to 100%, reconciled;
-     005 Growth OS · PT Surya Energi is due to restock (60 days since the last
+     005 Growth OS · PT Surya Niaga is due to restock (60 days since the last
          order) → a suggested reorder → 等你确认.
    Every name and number is demo data and each scene says so in its bar.
 
@@ -144,12 +144,12 @@
 
   /* ---------------- 001 主动获客 · Growth OS ---------------- */
   var PROSPECTS = [
-    ['DE', 'Nordwerk Energie GmbH', 'Nordwerk', T('储能系统集成 · 汉堡', 'Storage integrator · Hamburg'), 94],
-    ['US', 'Gulf Coast Lift Supply', 'Gulf Coast', T('叉车与仓储 · 休斯敦', 'Forklift fleets · Houston'), 91]
+    ['DE', 'Nordwerk Handel GmbH', 'Nordwerk', T('分销商 · 汉堡', 'Distributor · Hamburg'), 94],
+    ['US', 'Gulf Coast Trading', 'Gulf Coast', T('仓储物流 · 休斯敦', 'Warehousing · Houston'), 91]
   ];
-  var REASON = T('近 90 天发布 3 条储能招标，产品线与 48V 100Ah 高度匹配，建议优先联系采购经理。',
-    'Three storage tenders in 90 days; fits 48V 100Ah. Contact the buyer first.');
-  var REASON_S = T('近 90 天发布 3 条储能招标，与 48V 100Ah 高度匹配。', 'Three storage tenders in 90 days; fits 48V 100Ah.');
+  var REASON = T('近 90 天发布 3 条采购招标，产品线与 A-200 高度匹配，建议优先联系采购经理。',
+    'Three purchase tenders in 90 days; fits A-200 100Ah. Contact the buyer first.');
+  var REASON_S = T('近 90 天发布 3 条采购招标，与 A-200 高度匹配。', 'Three purchase tenders in 90 days; fits A-200 100Ah.');
   var prospect = stage('find', T('主动获客', 'Lead Finder'), 'radar', 7.4, 1.95, function (R, b, m) {
     var big = m !== 'mini', cs = m === 'cards';
     if (m === 'card') {
@@ -168,7 +168,7 @@
     });
     if (big) {
       var ai = box('sg-stg-note', b, cs ? 10 : 12, cs ? 111 : 148, cs ? 252 : 312, cs ? 62 : 64);
-      var ah = el('div', 'sg-stg-note-k', ai); glyph('spark', ah, 12); el('span', '', ah, cs ? T('AI 判断', 'AI reasoning') : T('AI 判断 · Nordwerk Energie', 'AI reasoning · Nordwerk Energie'));
+      var ah = el('div', 'sg-stg-note-k', ai); glyph('spark', ah, 12); el('span', '', ah, cs ? T('AI 判断', 'AI reasoning') : T('AI 判断 · Nordwerk Handel', 'AI reasoning · Nordwerk Handel'));
       R.pick = el('span', 'sg-stg-flag', ah, T('建议先开发', 'Contact first'));
       R.why = typer(el('div', 'sg-stg-note-v', ai), cs ? REASON_S : REASON);
     }
@@ -191,9 +191,9 @@
   var deal = stage('sell', T('成交工作台', 'Sales Desk'), 'chat', 7.4, 2.0, function (R, b, m) {
     if (m === 'mini') {
       var mq = box('sg-stg-card', b, 8, 31, 164, 46);
-      el('b', 'sg-stg-name', mq, 'Müller Energie');
+      el('b', 'sg-stg-name', mq, 'Müller Handel');
       var ch = el('div', 'sg-stg-chips', mq);
-      R.chips = ['48V 100Ah', T('200 组', '200 pcs')].map(function (c) { return el('span', 'sg-stg-chip', ch, c); });
+      R.chips = ['A-200', T('200 组', '200 pcs')].map(function (c) { return el('span', 'sg-stg-chip', ch, c); });
       var g = box('sg-stg-act', b, 8, 86, 164, 24);
       R.btn = el('span', 'sg-stg-btn', g, T('AI 草稿 Q-1042', 'AI draft Q-1042'));
       R.gate = el('span', 'sg-stg-gate', g); glyph('shield', R.gate, 12); el('span', '', R.gate, T('等你审批', 'Needs approval'));
@@ -202,15 +202,15 @@
     var cs = m === 'cards', x = cs ? 10 : 12, w = cs ? 252 : 312;
     var q = box('sg-stg-card', b, x, cs ? 34 : 40, w, cs ? 50 : 54);
     var top = el('div', 'sg-stg-line', q); glyph('mail', top, 13, 'sg-ico sg-stg-dim');
-    el('b', '', top, 'Müller Energie GmbH'); if (!cs) el('span', 'sg-stg-dim', top, T('德国', 'Germany')); el('span', 'sg-stg-time', top, '09:12');
+    el('b', '', top, 'Müller Handel GmbH'); if (!cs) el('span', 'sg-stg-dim', top, T('德国', 'Germany')); el('span', 'sg-stg-time', top, '09:12');
     var msg = el('div', 'sg-stg-msg', q);
     if (cs) {   // no room for a chips row: the AI marks the needs inside the message
-      R.chips = ['200 pcs', ' ', '48V 100Ah', ', ', 'DAP Hamburg', '?'].map(function (c, i) { return i % 2 ? (msg.appendChild(document.createTextNode(c)), null) : el('span', 'sg-stg-hl', msg, c); }).filter(Boolean);
+      R.chips = ['200 pcs', ' ', 'A-200', ', ', 'DAP Hamburg', '?'].map(function (c, i) { return i % 2 ? (msg.appendChild(document.createTextNode(c)), null) : el('span', 'sg-stg-hl', msg, c); }).filter(Boolean);
     } else {
-      msg.textContent = '200 pcs 48V 100Ah, DAP Hamburg?';
+      msg.textContent = '200 pcs A-200, DAP Hamburg?';
       var chips = box('sg-stg-chips', b, x, 101, w, 22);
       el('span', 'sg-stg-dim', chips, T('AI 识别', 'AI reads'));
-      R.chips = ['48V 100Ah', T('200 组', '200 pcs'), T('DAP 汉堡', 'DAP Hamburg')].map(function (c) { return el('span', 'sg-stg-chip', chips, c); });
+      R.chips = ['A-200', T('200 组', '200 pcs'), T('DAP 汉堡', 'DAP Hamburg')].map(function (c) { return el('span', 'sg-stg-chip', chips, c); });
     }
     var d = box('sg-stg-card is-draft', b, x, cs ? 92 : 130, w, cs ? 48 : 54);
     var dk = el('div', 'sg-stg-note-k', d); glyph('spark', dk, 12); el('span', '', dk, T('AI 草稿 · 报价 Q-1042', 'AI draft · quote Q-1042'));
@@ -249,9 +249,9 @@
     var xs = mini ? [26, 90, 154] : cs ? [44, 136, 228] : [46, 168, 290], ty = mini ? 61 : cs ? 86 : 104;
     var hd = mini ? box('sg-stg-head', b, 8, 30, 164, 18) : box('sg-stg-head', b, x, cs ? 34 : 40, w, 18);
     el('b', '', hd, 'PI-1042');
-    if (m === 'card') el('span', 'sg-stg-dim', hd, 'Müller Energie GmbH');
+    if (m === 'card') el('span', 'sg-stg-dim', hd, 'Müller Handel GmbH');
     R.pill = el('span', 'sg-stg-pill', hd);
-    if (!mini) box('sg-stg-sub sg-stg-dim', b, x, cs ? 55 : 61, w, 16, T('48V 100Ah × 200 组 · DAP 汉堡', '48V 100Ah × 200 packs · DAP Hamburg'));
+    if (!mini) box('sg-stg-sub sg-stg-dim', b, x, cs ? 55 : 61, w, 16, T('A-200 × 200 组 · DAP 汉堡', 'A-200 × 200 packs · DAP Hamburg'));
     R.rail = el('i', '', box('sg-stg-rail', b, xs[0], ty - 1, xs[2] - xs[0], 2));
     R.rings = [];
     R.nodes = STEPS.map(function (s, i) {
@@ -341,10 +341,10 @@
   }, [100, '#%', T('已对账', 'Reconciled'), 30]);
 
   /* ---------------- 005 复购与改进 · Growth OS ---------------- */
-  var SUGGEST = T('补货 64V 104Ah × 120 组，跟进草稿已备好', 'Reorder 120 × 64V 104Ah; follow-up drafted');
+  var SUGGEST = T('补货 A-260 × 120 组，跟进草稿已备好', 'Reorder 120 × A-260; follow-up drafted');
   var reorder = stage('again', T('主动获客', 'Lead Finder'), 'repeat', 7.4, 1.75, function (R, b, m) {
     if (m === 'mini') {
-      el('b', '', box('sg-stg-head', b, 8, 31, 164, 16), 'PT Surya Energi');
+      el('b', '', box('sg-stg-head', b, 8, 31, 164, 16), 'PT Surya Niaga');
       var big = box('sg-stg-bigrow', b, 8, 52, 164, 28);
       R.days = el('b', 'sg-stg-big', big); el('span', 'sg-stg-dim', big, T('距上次下单', 'since last order'));
       var g = box('sg-stg-act', b, 8, 88, 164, 24);
@@ -354,7 +354,7 @@
     var cs = m === 'cards', x = cs ? 10 : 12, w = cs ? 252 : 312;
     var hd = box('sg-stg-head', b, x, cs ? 34 : 40, w, 18);
     el('span', 'sg-stg-cc', hd, 'ID');
-    el('b', '', hd, 'PT Surya Energi');
+    el('b', '', hd, 'PT Surya Niaga');
     if (!cs) el('span', 'sg-stg-dim', hd, T('雅加达', 'Jakarta'));
     R.due = el('span', 'sg-stg-pill is-run', hd, T('该补货了', 'Restock due'));
     // the order rhythm: three past orders 60 days apart, then today
@@ -372,7 +372,7 @@
     R.dayT = cs ? T('已 # 天', '# days, no order') : T('距上次下单已 # 天', '# days since last order');
     if (cs) {
       var sn = box('sg-stg-note is-line', b, x, 119, w, 26); glyph('spark', sn, 12, 'sg-ico sg-stg-spark');
-      R.text = typer(el('div', 'sg-stg-note-v', sn), T('补货 64V 104Ah × 120 组', 'Reorder 120 × 64V 104Ah'));
+      R.text = typer(el('div', 'sg-stg-note-v', sn), T('补货 A-260 × 120 组', 'Reorder 120 × A-260'));
     } else {
       var s = box('sg-stg-note', b, x, 134, w, 50);
       var sk = el('div', 'sg-stg-note-k', s); glyph('spark', sk, 12); el('span', '', sk, T('AI 建议', 'AI suggestion'));

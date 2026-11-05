@@ -49,7 +49,7 @@
   function tone(e, name) { if (e.__tone === name) return; if (e.__tone) e.classList.remove('is-' + e.__tone); e.__tone = name; if (name) e.classList.add('is-' + name); }
 
   var CO = [
-    { name: T('公司 A', 'Company A'), sub: T('柳州工厂', 'Liuzhou plant'), subS: T('柳州工厂', 'Liuzhou'), tags: [T('自有品牌', 'Own brand')],
+    { name: T('公司 A', 'Company A'), sub: T('工厂', 'the plant'), subS: T('工厂', 'Plant'), tags: [T('自有品牌', 'Own brand')],
       depts: [[T('生产部', 'Production'), 8], [T('采购部', 'Purchasing'), 4], [T('财务部', 'Finance'), 3]] },
     { name: T('公司 B', 'Company B'), sub: T('外贸公司', 'Trading arm'), subS: T('品牌 A · B', '2 brands'), tags: [T('品牌 A', 'Brand A'), T('品牌 B', 'Brand B')],
       depts: [[T('销售部', 'Sales'), 12], [T('市场部', 'Marketing'), 5], [T('财务部', 'Finance'), 2]] }

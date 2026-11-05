@@ -11,7 +11,7 @@
    board   — the homepage's third scenario card, 「客户可能到了补货周期，先核实
              采购信号，再给出跟进建议。」 (R2, the manager at the whiteboard, until
              2026-10-24): today's priority on the board the AI keeps current.
-             PT Surya Energi is due to restock; the buying signal is checked,
+             PT Surya Niaga is due to restock; the buying signal is checked,
              the follow-up is drafted, and it stops at 「等你确认」 — it is never
              sent on its own. The copper magnet that moves along the boxes is
              the one on the photograph's whiteboard.
@@ -39,7 +39,7 @@
   }
 
   /* =====================================================================
-     BOARD — 今日优先 · PT Surya Energi.
+     BOARD — 今日优先 · PT Surya Niaga.
      ===================================================================== */
   function BoardScene() {
     var P = 12;
@@ -59,7 +59,7 @@
       L = Ld; R = { b: [] };
       stage.className = 'sg-mo-stage sgk sgk-board is-' + name;
       el('div', 'sgk-glow', stage);
-      head(stage, L, 'spark', T('今日优先 · PT Surya Energi', 'Today · PT Surya Energi'), L.short ? null : T('AI 随时更新', 'AI-updated'));
+      head(stage, L, 'spark', T('今日优先 · PT Surya Niaga', 'Today · PT Surya Niaga'), L.short ? null : T('AI 随时更新', 'AI-updated'));
       var bw = (L.w - 2 * L.x - 3 * L.gap) / 4;
       BOX.forEach(function (b, i) {
         var x = L.x + i * (bw + L.gap);

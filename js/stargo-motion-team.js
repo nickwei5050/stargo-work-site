@@ -69,7 +69,7 @@
     /* ---------------- the script: seconds into a 22 s loop ---------------- */
     var P = 22;
     // the goal as typed; tiles narrower than 552 (1180-1366px screens) type the English one shorter
-    var GOALS = [Array.from(T('开发德国储能经销商（演示）', 'Find storage distributors in Germany (demo)')), Array.from(T('开发德国储能经销商（演示）', 'Germany storage distributors (demo)'))];
+    var GOALS = [Array.from(T('开发德国进口经销商（演示）', 'Find import distributors in Germany (demo)')), Array.from(T('开发德国进口经销商（演示）', 'Germany import distributors (demo)'))];
     var GOAL = GOALS[0];
     var TYPE0 = 0.3, TYPE1 = TYPE0 + Math.min(1.8, GOAL.length / (K.ZH ? 8 : 24));
     var ASSIGN = 2.25;                  // the person presses 分派
@@ -100,9 +100,9 @@
     ];
     var IDLE = T('待分派', 'Not assigned yet'), DELIVERED = T('已交付', 'Delivered');
     var STATUS = [
-      [[0, IDLE, 'idle'], [3, T('筛选德国储能经销商', 'Finding distributors'), 'w'], [ASK0, T('等你确认目标国家', 'Needs your answer'), 'h'],
+      [[0, IDLE, 'idle'], [3, T('筛选德国进口经销商', 'Finding distributors'), 'w'], [ASK0, T('等你确认目标国家', 'Needs your answer'), 'h'],
         [TAP + 0.05, T('你已确认：仅德国', 'You: Germany only'), 'ok'], [ASK1, T('核实采购联系人', 'Verifying buyer contacts'), 'w'], [9.4, DELIVERED, 'done']],
-      [[0, IDLE, 'idle'], [3.1, T('核对 48V 100Ah 规格', 'Checking 48V 100Ah specs'), 'w'], [4.5, T('电压、容量已核对', 'Voltage, capacity OK'), 'w'],
+      [[0, IDLE, 'idle'], [3.1, T('核对 A-200 规格', 'Checking A-200 specs'), 'w'], [4.5, T('电压、容量已核对', 'Voltage, capacity OK'), 'w'],
         [5.4, T('核对认证文件', 'Checking certificates'), 'w'], [6.5, DELIVERED, 'done']],
       [[0, IDLE, 'idle'], [3, T('等规格和客户名单', 'Needs specs, accounts'), 'd'], [6.7, T('起草开发信', 'Drafting the email'), 'w'],
         [9.8, T('排开发顺序', 'Ranking accounts'), 'w'], [12.2, DELIVERED, 'done']],

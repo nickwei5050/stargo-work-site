@@ -156,11 +156,11 @@
     var P = 18, D = 1.8, R, S = shaped();
     var F = [
       [T('官网', 'Website'), T('产品页 12 个 · 德英双语', '12 product pages · DE / EN'), T('来源：官网 · 10-21 更新', 'Source: website · 10-21')],
-      [T('主营产品', 'Products'), T('储能系统集成 · 48V 机架式', '48V rack storage'), T('来源：产品目录 · 10-18 更新', 'Source: catalogue · 10-18')],
-      [T('认证', 'Certified'), 'CE · UN38.3 · IEC 62619', T('来源：官网下载区 · 10-21 更新', 'Source: downloads · 10-21')],
+      [T('主营产品', 'Products'), T('分销商 · A-200 机架式', 'A-200 product range'), T('来源：产品目录 · 10-18 更新', 'Source: catalogue · 10-18')],
+      [T('认证', 'Certified'), 'CE · RoHS · IEC 62619', T('来源：官网下载区 · 10-21 更新', 'Source: downloads · 10-21')],
       [T('市场与渠道', 'Markets'), T('德国 · 奥地利 · 经销与集成', 'DE · AT · dealers'), T('来源：新闻稿 · 10-19 更新', 'Source: press release · 10-19')],
       [T('规模', 'Size'), T('员工约 120 人', 'About 120 staff'), T('仅一个来源 · 待核实', 'One source only · to verify'), true],
-      [T('新闻', 'News'), T('近 90 天 3 条储能招标', '3 storage tenders in 90 days'), T('来源：公开招标 · 10-20 更新', 'Source: public tenders · 10-20')]
+      [T('新闻', 'News'), T('近 90 天 3 条采购招标', '3 purchase tenders in 90 days'), T('来源：公开招标 · 10-20 更新', 'Source: public tenders · 10-20')]
     ];
     var SHORT = [T('官网', 'Website'), T('主营产品', 'Products'), T('认证', 'Certified'), T('市场渠道', 'Markets'), T('规模', 'Size'), T('新闻', 'News')];
     function build(stage, L) {
@@ -194,7 +194,7 @@
       }
       avatar(c, 'NE');
       var nm = el('div', 'sgg-nm', c);
-      el('b', '', nm, 'Nordwerk Energie GmbH');
+      el('b', '', nm, 'Nordwerk Handel GmbH');
       R.status = wide || G.w >= 600 ? el('span', 'sgg-st', nm) : null;
       if (wide) { var dl = el('span', 'sgg-dots', c); F.forEach(function (f) { R.dots.push(el('i', f[3] ? 'is-ask' : '', dl)); }); }
       appear(c, 1);
@@ -289,7 +289,7 @@
       // below the row: the judgement in the corner with more room, the draft in the other
       var bL = C.L >= C.R, cw = Math.min(440, bL ? C.L : C.R), gw = Math.min(T(196, 250), bL ? C.R : C.L);
       var c = R.card = box(stage, 'is-2 sgg-restock', bL ? C.lx : C.rx, C.b.y, cw, bL ? 'r' : 'l');
-      var l2 = two(c, null, 'PT Surya Energi', T('近 4 次下单，间隔 59–60 天 · 64V 104Ah', 'Last 4 orders 59–60 days apart · 64V 104Ah'));
+      var l2 = two(c, null, 'PT Surya Niaga', T('近 4 次下单，间隔 59–60 天 · A-260', 'Last 4 orders 59–60 days apart · A-260'));
       el('span', 'sgg-route', l2.previousSibling, T('印尼', 'Indonesia'));
       R.pill = pill(l2.previousSibling, T('补货周期到了', 'Restock due'), 'is-amber');
       var gd = R.draft = box(stage, 'is-1 sgg-draft', bL ? C.rx : C.lx, C.b.y, gw, bL ? 'l' : 'r');
@@ -381,7 +381,7 @@
       });
       var cap = R.cap = el('div', 'sgg-cap', stage);
       cap.style.left = Math.round(G.cl) + 'px'; cap.style.top = Math.round(C.b.y) + 'px';
-      var ct = el('div', '', cap); el('b', '', ct, 'Nordwerk Energie GmbH'); el('span', '', ct, T(' · 采购决策链', ' · buying committee'));
+      var ct = el('div', '', cap); el('b', '', ct, 'Nordwerk Handel GmbH'); el('span', '', ct, T(' · 采购决策链', ' · buying committee'));
       var tg = tag(cap, 0, 0, 'l'); tg.removeAttribute('style');
       var g = R.gate = box(stage, 'is-1 sgg-gate', G.cr, C.b.y, Math.min(T(330, 380), C.R), 'r');
       el('span', '', g, T('关键人 4 位 · 确认后交给成交工作台', '4 key people · then Sales Desk'));

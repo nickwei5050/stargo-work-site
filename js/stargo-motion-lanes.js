@@ -30,10 +30,10 @@
   ];
   // buyer, its records, what changed, its short name
   var BUYER = [
-    ['Nordwerk Energie GmbH', T('近 12 个月 9 票 · HS 8507.60', '9 shipments in 12 months'), T('供应商 2 → 3，新增越南工厂', 'Suppliers 2 → 3, one in Vietnam'), 'Nordwerk Energie'],
-    ['Gulf Coast Lift Supply', T('叉车电池 · 近 6 个月 4 票', 'Forklift batteries · 4 in 6 months'), T('铅酸换锂电，采购量 +35%', 'Lead-acid to lithium, +35%'), 'Gulf Coast Lift'],
-    ['PT Surya Energi', T('约每 60 天一票', 'About one shipment every 60 days'), T('上次下单已 60 天', 'Last order 60 days ago'), 'PT Surya'],
-    ['Lagos Power Ltd', T('离网储能 · 首次进口', 'Off-grid storage · first import'), T('新进口商', 'New importer'), 'Lagos Power']
+    ['Nordwerk Handel GmbH', T('近 12 个月 9 票 · HS 8507.60', '9 shipments in 12 months'), T('供应商 2 → 3，新增越南工厂', 'Suppliers 2 → 3, one in Vietnam'), 'Nordwerk Handel'],
+    ['Gulf Coast Trading', T('设备配件 · 近 6 个月 4 票', 'Equipment parts · 4 in 6 months'), T('铅酸换供应商，采购量 +35%', 'Switching suppliers, +35%'), 'Gulf Coast'],
+    ['PT Surya Niaga', T('约每 60 天一票', 'About one shipment every 60 days'), T('上次下单已 60 天', 'Last order 60 days ago'), 'PT Surya'],
+    ['Lagos Trading Ltd', T('户外用品 · 首次进口', 'Outdoor goods · first import'), T('新进口商', 'New importer'), 'Lagos Power']
   ];
   function Lanes() {
     var P = 20, SLOT = P / BUYER.length, R, S = shaped();

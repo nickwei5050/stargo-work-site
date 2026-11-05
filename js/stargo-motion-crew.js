@@ -76,7 +76,7 @@
   function RolesScene() {
     var P = 11, TY0 = 0.4, TY1 = 2, GO = 2.2, SCAN0 = 2.4, SCAN1 = 3.7, FLY0 = 3.9, FLY = 0.75, STEP = 0.32, TEAM = 6.1, HAND = 7.6, CLEAR = 10.4;
     // a phone's query box holds about 28 Latin characters, so the English task is said shorter there
-    var TASK_BY = [Array.from(T('开发德国储能经销商', 'Find storage distributors in Germany')), Array.from(T('开发德国储能经销商', 'Find German storage dealers'))];
+    var TASK_BY = [Array.from(T('开发德国进口经销商', 'Find import distributors in Germany')), Array.from(T('开发德国进口经销商', 'Find German import dealers'))];
     var lp = picker(), R, kind, W, H, TASK = TASK_BY[0];
 
     function build(stage, L) {
@@ -210,8 +210,8 @@
   // role glyph, role, task, [[time, column]], what it delivers (shown from the column it names)
   // moves at least MOVE apart, so no two cards travel at once
   var TASKS = [
-    { g: 'research', role: T('市场研究员', 'Researcher'), a: T('筛选储能经销商', 'List storage distributors'), s: [[0, 0], [1.4, 1], [4.8, 3]], out: T('12 家客户', '12 accounts') },
-    { g: 'product', role: T('产品工程师', 'Product engineer'), rs: T('产品工程师', 'Engineer'), a: T('核对 48V 规格', 'Check the 48V specs'), s: [[0, 0], [0.6, 1], [3.2, 3]], out: T('规格核对 3/3', 'Specs 3 of 3') },
+    { g: 'research', role: T('市场研究员', 'Researcher'), a: T('筛选进口经销商', 'List import distributors'), s: [[0, 0], [1.4, 1], [4.8, 3]], out: T('12 家客户', '12 accounts') },
+    { g: 'product', role: T('产品工程师', 'Product engineer'), rs: T('产品工程师', 'Engineer'), a: T('核对 A-200 规格', 'Check the A-200 specs'), s: [[0, 0], [0.6, 1], [3.2, 3]], out: T('规格核对 3/3', 'Specs 3 of 3') },
     { g: 'sales', role: T('销售', 'Sales'), a: T('起草开发信', 'Draft the outreach email'), s: [[0, 0], [4, 1], [6.5, 2], [9.3, 3]], out: T('开发信草稿', 'Email draft'), out2: T('草稿已批准', 'Approved') },
     { g: 'creative', role: T('创意', 'Creative'), a: T('做开发信配图', 'Make the email images'), s: [[0, 0], [5.6, 1], [7.8, 3]], out: T('素材 3 张', '3 images') },
     { g: 'doc', role: T('销售', 'Sales'), a: T('报价 Q-1042', 'Quote Q-1042'), s: [[0, 2]], out: T('低于底价 · 待审批', 'Below floor price'), wait: 1 }
