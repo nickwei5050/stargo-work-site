@@ -22,6 +22,7 @@ import { versionCss } from './asset-version.mjs';
 import { SITE_URL, META, NAV, MORE, SECONDARY, WORKFORCE_ROLE_GROUPS } from './copy.mjs';
 import { SITE_PAGES, cleanUrl } from './chrome.mjs';
 import { POSTS, postPath } from './blog.mjs';
+import { readPageDates, pageDateFor } from './page-dates.mjs';
 
 import { SITE } from './paths.mjs';
 const DIST = `${SITE}/dist`;
@@ -116,14 +117,18 @@ writeFileSync(`${DIST}/_routes.json`, `${JSON.stringify({
 // robots + sitemap (clean URLs, both languages, hreflang alternates).
 const pages = SITE_PAGES;
 const clean = (lang, p) => `${SITE_URL}/${lang === 'en' ? 'en/' : ''}${p === 'index.html' ? '' : p.replace(/\.html$/, '')}`;
-/* SOURCE_DATE_EPOCH (the reproducible-builds convention) pins the fallback
-   lastmod, so two runs of make-dist can be compared byte for byte. */
-const today = new Date(process.env.SOURCE_DATE_EPOCH ? +process.env.SOURCE_DATE_EPOCH * 1000 : Date.now()).toISOString().slice(0, 10);
+/* <lastmod>: an article carries its own date (tools/blog.mjs); every other page
+   the day its content last changed, from tools/data/page-dates.json, which
+   `npm run build` keeps up to date (tools/page-dates.mjs). Nothing here reads
+   the clock or git, so two runs, on any machine and any checkout depth, write
+   the same sitemap. */
 const postDate = Object.fromEntries(POSTS.map((post) => [postPath(post), post.modified ?? post.date]));
+const pageDates = readPageDates();
+const lastmod = (lang, p) => postDate[p] ?? pageDateFor(lang === 'en' ? `en/${p}` : p, pageDates);
 const urls = [];
 for (const p of pages) {
   for (const lang of ['zh', 'en']) {
-    urls.push(`  <url><loc>${clean(lang, p)}</loc><lastmod>${postDate[p] ?? today}</lastmod>` +
+    urls.push(`  <url><loc>${clean(lang, p)}</loc><lastmod>${lastmod(lang, p)}</lastmod>` +
       `<xhtml:link rel="alternate" hreflang="zh-CN" href="${clean('zh', p)}"/><xhtml:link rel="alternate" hreflang="en" href="${clean('en', p)}"/><xhtml:link rel="alternate" hreflang="x-default" href="${clean('zh', p)}"/>` +
       `<priority>${p === 'index.html' ? '1.0' : /privacy|terms|notices/.test(p) ? '0.2' : p.startsWith('blog/') ? '0.6' : '0.8'}</priority></url>`);
   }
