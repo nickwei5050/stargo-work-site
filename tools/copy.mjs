@@ -41,6 +41,9 @@ export const SECONDARY = [
   { href: 'terms.html', label: B('使用条款', 'Terms') },
   { href: 'notices.html', label: B('第三方声明', 'Notices') },
 ];
+/** The sister site for the marketing-system service (B2B website, SEO/GEO, content):
+    overlay menu, footer and pricing page. External, so never in SITE_PAGES. */
+export const GROWTH_LINK = { href: 'https://stargogrowth.com/', label: B('营销体系搭建', 'Marketing systems'), external: true };
 /** Content pages: overlay menu and footer, not the product navigation. Articles live under blog/. */
 export const MORE = [
   { href: 'about.html', label: B('关于', 'About') },
