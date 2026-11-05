@@ -54,7 +54,7 @@
 
 .sgi-foot { position: relative; height: 30px; margin-top: 8px; }
 .sgi-sample { position: absolute; left: 0; top: 50%; transform: translateY(-50%); font-size: 12.5px; color: rgba(244, 238, 232, .5); white-space: nowrap; }
-.sgi-btn { position: absolute; right: 0; top: 0; height: 30px; padding: 0 16px; display: inline-flex; align-items: center; border-radius: 9px; background: #9382ff; color: #fff; font-size: 13px; font-weight: 600; opacity: 0; transition: transform .18s; white-space: nowrap; }
+.sgi-btn { position: absolute; right: 0; top: 0; height: 30px; padding: 0 16px; display: inline-flex; align-items: center; border-radius: 9px; background: #6e63e0; color: #fff; font-size: 13px; font-weight: 600; opacity: 0; transition: transform .18s; white-space: nowrap; }
 .sgi-tap { position: absolute; left: 50%; top: 50%; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; background: rgba(255, 255, 255, .55); opacity: 0; pointer-events: none; }
 .sgi-ro { position: absolute; inset: 0; opacity: 0; pointer-events: none; } /* drawn only: it cross-fades over the sample line */
 .sgi-ro-tr { position: absolute; left: 8px; right: 16px; top: 7px; height: 6px; border-radius: 3px; background: rgba(255, 236, 220, .08); }
