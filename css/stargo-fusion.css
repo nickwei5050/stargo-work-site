@@ -4826,11 +4826,31 @@ html[lang^="en"] body:is([data-sg-page~="loop"] *, #sg-page-loop) section.with-m
      768 to 1439px and broke 「工具很/多，靠/人连接」. The copy marks the word
      boundaries (<wbr>) and `keep-all` breaks only there (and after 「，」):
      「工具/很多，/靠人/连接」 — one word a line, as the English heading has.
-   - The pricing heading broke 「从企业需要/的 AI 层级开始。」 at every width;
-     with `keep-all` it breaks at its spaces: 「从企业需要的/AI 层级开始。」. */
-html[lang^="zh"] section.gr h2.h2,
-html[lang^="zh"] section.drk h2.h2.for-stats {
+   - The pricing heading: see H7b. */
+html[lang^="zh"] section.gr h2.h2 {
   word-break: keep-all;
+}
+
+/* H7b. Homepage, Chinese: line breaking after the 2026-10-22 copy rewrite
+   (line breaking only: same type, same boxes, same words).
+   - The pricing heading used to be broken at its space by `keep-all`
+     (「从企业需要的/AI 层级开始。」). The title now reads
+     「从你需要的那一档开始。」 and has no space, so `keep-all` made it one
+     unbreakable 690px run in the 600px heading: from 992px up it stuck out 90px
+     past the right edge and pushed the orb onto a line of its own. Broken
+     normally and balanced it is two lines again, the orb at the start of the
+     first (「◉ 从你需要的/那一档开始。」). Below 992px it fits on one line and
+     does not move.
+   - The FAQ questions: 「报价、发消息、付款这些关键操作，谁说了算？」 left
+     「算？」 alone on its last line at 390 and 768 (and 「吗？」 of question 02
+     at 360). Balanced, a question that needs two lines gets two even ones;
+     a question that fits on one line does not move. */
+html[lang^="zh"] section.drk h2.h2.for-stats {
+  word-break: normal;
+  text-wrap: balance;
+}
+html[lang^="zh"][data-stargo-home] .faq-wrapper .toggle-header {
+  text-wrap: balance;
 }
 
 /* H17. Footer statement, English: the second sentence ("Delegate the work.
