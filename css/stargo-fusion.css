@@ -6366,6 +6366,31 @@ img[src*="stargo-photo/e06-cockpit-blocker-"] { object-position: 50% 20%; }
   .stargo-direct-row a { padding: 14px 0; margin: -14px 0; }
   .stargo-copy { min-height: 44px; margin: -9.5px 0; }
 }
+/* Z20 (phone lane, next round): three more targets under 44px at phone width.
+   Same rule as above: nothing moves and nothing is redrawn; only what a finger
+   hits grows. */
+@media (max-width: 767px) {
+  /* The header logo (the orb and the wordmark): 30px tall. 8px of padding on
+     each side, given back by the same margin, makes the link 46px tall; the
+     header bar (68px) and the logo's place in it do not change. */
+  .navbar > a.logo-first { padding-top: 8px; padding-bottom: 8px; margin-top: -8px; margin-bottom: -8px; }
+  /* 「真实界面」 tabs (home), 37px pills in a row that scrolls sideways. The
+     pill stays as drawn; an invisible layer reaching 4px past its edge above
+     and below is its hit area (45px; `inset` counts from inside the 1px
+     border). The row clips what sticks out of it, so it gets 4px of room
+     above and 8px below (it had 0 and 4), which its margins take back: the
+     row's place and the space after it are the same as before. */
+  .sg-tour .sg-tour-tab { position: relative; }
+  .sg-tour .sg-tour-tab::after { content: ""; position: absolute; inset: -5px 0; }
+  .sg-tour .sg-tour-tabs { padding-top: 4px; padding-bottom: 8px; margin-top: -4px; margin-bottom: 20px; }
+  /* The channel icons on /about: 40px glass circles, 12px apart. Drawn by
+     their own border and background (a lighter top-left edge), which a
+     transparent border would repaint, so the 3px on every side that makes
+     46px is an invisible layer (`inset` counts from inside the 1px top and
+     left border, hence 4px there). */
+  .cn-about .cn-social-link { position: relative; }
+  .cn-about .cn-social-link::after { content: ""; position: absolute; inset: -4px -3px -3px -4px; }
+}
 /* ===================================================== speed lane (Z13) ==
    First-screen text the HTML no longer hides (tools/speed.mjs). A marked
    element waits for the Webflow runtime only while scripts are on, the
