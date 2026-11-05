@@ -17,7 +17,7 @@
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 'node:fs';
 import { makeSub, findByClass, removeByClass, elementContaining, extractElement, setInner, setEachInner, setLink, escapeHtml, zhWbr, zhKeep as zhKeepWords } from './lib-html.mjs';
-import { versionPage } from './asset-version.mjs';
+import { versionPage, assertVersioned } from './asset-version.mjs';
 import { applyChrome, remapLinks, relocateAssets, relocateLinks, cleanLinks, assertInternalLinks, stillImage, WORDMARK } from './chrome.mjs';
 import * as C from './copy.mjs';
 import { POSTS, BLOG_UI, postPath, featured, others, coverSrc, coverSrcset, coverAlt, formatDate, renderBody, titleHtml } from './blog.mjs';
@@ -2765,6 +2765,8 @@ for (const lang of C.LANGS) {
       const hop = html.match(/\shref="(?![a-z][a-z0-9+.-]*:|\/\/)[^"]*\.html(?:[#?][^"]*)?"/i);
       if (hop) throw new Error(`[${lang}/${name}] internal link still names a .html file: ${hop[0].trim()}`);
     }
+    // The finished page: no local css/js/asset URL without its ?v= stamp (tools/asset-version.mjs assertVersioned).
+    assertVersioned(html, `${lang}/${name}`);
     const out = lang === 'zh' ? `${SITE}/${name}` : `${SITE}/en/${name}`;
     mkdirSync(out.slice(0, out.lastIndexOf('/')), { recursive: true });
     writeFileSync(out, html.replace(/[\t ]+$/gm, ''), 'utf8');
