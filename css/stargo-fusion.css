@@ -5982,7 +5982,12 @@ img[src*="stargo-photo/e06-cockpit-blocker-"] { object-position: 50% 20%; }
   .hero-track > .hero-agency { position: relative; }
   .hero-track .hero { transform: none !important; }
 
-  /* Home and capabilities — the problem-card stack held for 158px. */
+  /* Home and capabilities — the problem-card stack held for 158px. Its box was
+     also given a 1200px floor (monof template: `.work-main { min-height: 1200px }`,
+     for the pinned stack); the four stacked cards are 1042px tall at 390, so
+     158px of empty ground sat under them. From 480px the cards are taller than
+     the floor, so nothing moves there. */
+  .work-main { min-height: 0; }
   .work-main > .wrok-wrapper { position: relative; }
 
   /* Home — 「(一条业务主线)」: the five phrases one under the other, then the orb. */
