@@ -142,7 +142,10 @@
 .sg-ck-st.is-run::before { content: ""; width: 6px; height: 6px; margin-right: 6px; border-radius: 50%; background: #c2befd; }
 .sg-ck-st.is-review { color: #cccaff; background: rgba(204, 202, 255, .07); border-color: rgba(204, 202, 255, .35); }
 .sg-ck-st.is-done { color: #a3d6f4; background: rgba(70, 192, 253, .07); border-color: rgba(70, 192, 253, .3); }
-.sg-ck-st.is-block, .sg-ck-mchip.is-wait { color: #fff; background: #9382ff; border-color: #9382ff; }
+.sg-ck-st.is-block, .sg-ck-mchip.is-wait { color: #fff; background: #6e63e0; border-color: #6e63e0; }
+/* WCAG AA (Z20): white on #9382ff is 3.05:1; the same violet a little deeper (#6e63e0) is 4.6:1 under the same white text.
+   :where() keeps the specificity of the .sg-btn state rules, so is-done and is-busy still win. */
+:where(.sg-ck) .sg-btn.is-primary:not(.is-done):not(.is-busy) { background: #6e63e0; border-color: #6e63e0; }
 .sg-ck-st.is-block::after, .sg-ck-mchip.is-wait::after, .sg-ck-gate.is-hold .sg-btn::after { content: ""; position: absolute; inset: -1px; border-radius: inherit; animation: sg-ck-pulse 1.6s ease-out infinite; }
 .sg-ck-st.is-mine, .sg-ck-mchip.is-mine { color: #1b130b; background: #f4eee8; border-color: #f4eee8; }
 .sg-ck-why { color: #d1d0f3; background: rgba(147, 130, 255, .06); border: 1px dashed rgba(169, 160, 255, .6); }

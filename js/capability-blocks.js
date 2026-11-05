@@ -427,7 +427,20 @@
    donor's own numbers: 110% -> 0%, 0.5s, power2.out, 0.1s between lines,
    starting when the paragraph's top crosses 85% of the viewport.
 
-   NOTHING IS EVER HIDDEN THAT THIS SCRIPT CANNOT SHOW AGAIN. The paragraph is
+   ONE SENTENCE, TWO ELEMENTS. In cinery the title and the body are one `p`
+   with a `<br>` between them, so SplitText counts their lines as one run and
+   the stagger carries on from the title's last line into the body's first. The
+   page now marks the title up as the page's real `h1` and keeps the body as the
+   `p` (a11y lane: one native h1 per page). This script therefore splits every
+   `.cn-text-size-large` in the card (the h1, then the p, in document order) at
+   the same instant and animates all their lines in ONE tween, so the line
+   numbering, the 0.1s stagger and the end time are exactly those of the single
+   paragraph. The card's first element is the trigger, as the paragraph was.
+   (The h1 holds its title in an inline span, as the paragraph's title span
+   was: SplitText then boxes a title that wraps over two lines as one line,
+   as it always did. tools/a11y.mjs pageHeadings() writes it.)
+
+   NOTHING IS EVER HIDDEN THAT THIS SCRIPT CANNOT SHOW AGAIN. The text is
    split only at the instant it plays, and the split is reverted the moment the
    tween finishes, so:
 
@@ -452,8 +465,11 @@
 (function () {
   var root = document.querySelector('.cn-about');
   if (!root) return;
-  var p = root.querySelector('.cn-text-size-large');
-  if (!p) return;
+  /* The title (h1) and the body (p), in document order. `first` is what the
+     donor's trigger watched: the top of the card's text. */
+  var parts = Array.prototype.slice.call(root.querySelectorAll('.cn-text-size-large'));
+  if (!parts.length) return;
+  var first = parts[0];
 
   var gsap = window.gsap;
   var Split = window.SplitText;
@@ -472,7 +488,7 @@
       /* `mask: "lines"` is the donor's own option: SplitText wraps each line in
          an overflow-hidden box, which is what makes a 110% offset read as the
          line rising out of the page rather than sliding over its neighbour. */
-      split = Split.create(p, { type: 'lines', mask: 'lines' });
+      split = Split.create(parts, { type: 'lines', mask: 'lines' });
       if (!split.lines || !split.lines.length) throw new Error('no lines');
       /* fromTo, as the action's `tt: 2` says. immediateRender puts the lines
          down in the same task as the split, before the browser paints, so the
@@ -485,22 +501,22 @@
         onComplete: function () { try { split.revert(); } catch (e) { /* already gone */ } },
       });
     } catch (e) {
-      /* Anything unexpected and the paragraph goes back to being a paragraph. */
+      /* Anything unexpected and the text goes back to being plain text. */
       if (split && split.revert) { try { split.revert(); } catch (e2) { /* nothing to undo */ } }
     }
   }
 
   try { gsap.registerPlugin(ST); } catch (e) { /* the plugin registers itself */ }
-  ST.create({ trigger: p, start: 'top 85%', once: true, onEnter: play });
+  ST.create({ trigger: first, start: 'top 85%', once: true, onEnter: play });
 
   /* The donor's trigger is a scroll trigger on a page where this section is
      below the fold. Here the block may already be on screen when the script
      runs, and ScrollTrigger's behaviour for a trigger created inside its own
      range is not something to depend on — so the same line is checked once,
-     directly: "top 85%" is the paragraph's top crossing 85% of the viewport.
+     directly: "top 85%" is the text's top crossing 85% of the viewport.
      play() is idempotent, so whichever of the two speaks first wins and the
      other is a no-op. */
-  if (!played && p.getBoundingClientRect().top < window.innerHeight * 0.85) play();
+  if (!played && first.getBoundingClientRect().top < window.innerHeight * 0.85) play();
 })();
 
 

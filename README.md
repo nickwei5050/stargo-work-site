@@ -48,11 +48,18 @@ two in step:
 ```bash
 npm ci                 # install (pinned: @playwright/test, axe-core)
 npm run browsers       # one-off: download the Chromium the verifiers drive
-npm run build          # mirror-donor-assets -> capability-donors -> fuse-ix -> build-site
+npm run build          # mirror-donor-assets -> capability-donors -> fuse-ix -> build-site -> page-dates
 npm run serve          # static server on 127.0.0.1:4200 serving the repo root (PORT/HOST/ROOT env)
 npm run verify         # verify-site -> verify-integrity -> verify-interactions, against BASE_URL
 npm run verify:ci      # the same three, but runs all of them even if one fails
 ```
+
+`npm run build` ends with `tools/page-dates.mjs`, which keeps
+`tools/data/page-dates.json` (the sitemap's `<lastmod>` per page) in step with the
+built pages: a page whose content (words, title, links, images, structured data;
+not markup, scripts or styles) changed gets today's date, every other page keeps
+its date. Commit the file with the change. `make-dist` only reads it, so the
+sitemap is identical on every run and on every checkout, shallow or not.
 
 Every script resolves its own location, so the repository builds from any
 checkout directory on Windows, macOS or Linux. Nothing depends on a sibling

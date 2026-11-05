@@ -90,3 +90,45 @@ export function versionPage(html) {
     .replace(local, (_, pre, url) => `${pre}${withToken(url)}`)
     .replace(/\u0000([A-Za-z0-9+/=]*)\u0000/g, (_, b) => Buffer.from(b, 'base64').toString());
 }
+
+/**
+ * Build guard: every local file a built page loads must carry its `?v=<12 hex>`.
+ *
+ * versionPage() stamps what it recognises. A URL it does not recognise (an
+ * extension outside EXT, a position its pattern does not reach, a URL written
+ * into the page after it ran) is served `immutable` for a year under a name
+ * that never changes, which is exactly what Z18 exists to prevent, and nothing
+ * would say so. This scan is deliberately written apart from versionPage's own
+ * pattern: it looks at the finished page, after the links and assets have been
+ * moved up for the page's folder (`../assets/…`), and it throws a sentence that
+ * names the URL, the page and what to do. Same exclusions as versionPage
+ * (JSON-LD, which only names the share image, and comments); a URL that carries
+ * any other query string, or a stamp that is not 12 hex digits, counts as unstamped.
+ * A root-absolute `/assets/…` (`/css/…`, `/js/…`) counts too: versionPage() never
+ * stamps it, so it would be served immutable under a fixed name. Out of its reach:
+ * a path a script assembles at run time (`js/${name}.json`), which no scan of the
+ * finished markup can see.
+ */
+export function assertVersioned(html, label) {
+  // A wider list than versionPage's EXT on purpose: a new kind of file the stamper has not been taught is a finding, not a pass.
+  const SEEN = `${EXT}|mov|m4v|m4a|mp3|ogg|wav|wasm|map|webmanifest|xml|csv|zip`;
+  const scan = html.replace(/<script\b[^>]*type="application\/ld\+json"[^>]*>[\s\S]*?<\/script>|<!--[\s\S]*?-->/g, ' ');
+  const re = new RegExp(`(^|["'(,\\s]|&quot;)((?:\\/|(?:\\.\\.\\/)*)(?:assets|css|js)\\/[^"'\\s,?#&<>()]+?\\.(?:${SEEN}))(?![\\w.%-])(\\?v=[0-9a-f]{12}(?![0-9a-f]))?`, 'gi');
+  const site = SITE_URL.replace(/[.]/g, '\\.');
+  const share = new RegExp(`<meta\\b[^>]*\\scontent="(${site}\\/assets\\/[^"]*)"`, 'g');
+  const missing = [];
+  for (const m of scan.matchAll(re)) {
+    if (!m[3]) missing.push({ url: m[2], at: m.index });
+  }
+  for (const m of scan.matchAll(share)) {
+    if (!/\?v=[0-9a-f]{12}$/.test(m[1])) missing.push({ url: m[1], at: m.index });
+  }
+  if (!missing.length) return;
+  const shown = missing.slice(0, 8).map(({ url, at }) => `  ${url}   …${scan.slice(Math.max(0, at - 50), at + 90).replace(/\s+/g, ' ')}…`).join('\n');
+  throw new Error(
+    `[${label}] ${missing.length} local URL(s) load a css/js/asset file without its ?v=<content hash> stamp:\n${shown}\n` +
+    '  /assets, /css and /js are cached immutable for a year (tools/make-dist.mjs), so an unstamped URL can never be refreshed.\n' +
+    '  Fix: write the URL where tools/asset-version.mjs versionPage() reaches it (relative, without a leading slash: assets/…, css/…, js/…; a quote, bracket, comma or space before it; an extension in EXT), ' +
+    'or make versionPage() cover the new case. This check runs on the finished page, after the links were moved up for its folder.',
+  );
+}
