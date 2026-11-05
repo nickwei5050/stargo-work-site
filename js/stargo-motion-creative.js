@@ -1,7 +1,7 @@
 /* CREATIVE — the portrait beside 「图片 / 视频」 (capabilities #story-5, the accordion of seven
    topics; it was the owner's AI photograph c08-product-references), drawn in code.
 
-   Three reference photos of one 48V pack go in; the screen makes a white-background main image,
+   Three reference photos of one A-200 pack go in; the screen makes a white-background main image,
    a warehouse scene and the storyboard of a 15-second video, one after another (each canvas
    resolves under a lifting veil); each lands in a review queue as 待审核, and a person's tap passes
    them. Nothing is published by the scene: the last line says publishing is still yours. The words
@@ -11,7 +11,7 @@
    time, `still` the reduced-motion frame; the stage is cut to the host's shape (portrait from
    tablets up, nearly square on phones) and drawn at scale ~1, so the interface's own text is never
    under 12 CSS px. The battery's print follows the same rule: type only where it prints large enough
-   (the model on a phone is set as 48V over 100Ah), bars where it would not (thumbnails, small shots);
+   (the model on a phone is set as A-200 over 100Ah), bars where it would not (thumbnails, small shots);
    once a picture is fitted, a print whose smallest type would land under 12 CSS px steps down
    (fitPrint: full → title → bars, stack → bars; the end card's marks → outlines).
    Styles: css/stargo-motion-creative.css (prefix sgc-; the crew scenes on the same page use sgw-). */
@@ -27,7 +27,7 @@
     css(e, 'transform', 'translate3d(0,' + ((1 - p) * (dy || 8)).toFixed(2) + 'px,0)');
   }
   var CHECK = 'M5 12.5l4.5 4.5L19 7.5', PLAY = 'M9 7.5v9l7-4.5z';
-  var LINE0 = T('长寿命磷酸铁锂，3000 次以上循环', 'Long-life LiFePO4, 3,000+ cycles');
+  var LINE0 = T('长寿命耐用设计，5 年质保', 'Long-life durable build, 5-year warranty');
   function mini(d, parent, size) {
     var s = sv('svg', { viewBox: '0 0 24 24', width: size, height: size, fill: 'none', 'aria-hidden': 'true', class: 'sg-ico' }, parent);
     sv('path', { d: d, stroke: 'currentColor', 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, s);
@@ -44,11 +44,11 @@
   function bar(parent, x, y, w, h, o) { return sv('rect', { x: x, y: y, width: w, height: h, rx: h / 2, fill: '#f4eee8', opacity: o }, parent); }
 
   /* Everything the pictures repeat is drawn once per stage, in one hidden <defs>, and placed with <use>:
-     the gradients, the three backdrops and the pack, a dark LiFePO4 case in three-quarter view (handle,
+     the gradients, the three backdrops and the pack, a dark Durable build case in three-quarter view (handle,
      two terminals, nameplate). The nameplate comes in four prints over the same body:
        full   model, chemistry, marks and spec row as type (a large canvas, where they print at ~12 px)
        title  the model as type, the fine print as bars (the close-up in a storyboard cell)
-       stack  48V over 100Ah, set large, the fine print as bars (phones: the canvas and the close-up)
+       stack  A-200 over 100Ah, set large, the fine print as bars (phones: the canvas and the close-up)
        bars   all of it as bars (thumbnails, where type would print as specks)
      Each picture's viewBox is fitted to its own box around the part that must show (SAFE, fitBox), so
      nothing that matters is cropped whatever the box's shape; the backdrops run past the 400 × 300 board
@@ -99,21 +99,21 @@
     sv('rect', { x: 20, y: 42, width: 5, height: 54, rx: 2, fill: '#9382ff' }, pk);
     var RULE = { d: 'M32 76.5h110M68 79v12M104 79v12', stroke: '#f4eee8', 'stroke-opacity': '.16', 'stroke-width': 0.7 };
     // the prints: the model (type or a bar), the fine print (type or bars), and the phones' stacked plate
-    txt(g('pt'), 32, 59, 13, '48V 100Ah', { 'font-weight': 700, 'letter-spacing': '-.2' });
+    txt(g('pt'), 32, 59, 13, 'A-200', { 'font-weight': 700, 'letter-spacing': '-.2' });
     bar(g('ptb'), 32, 51, 60, 8, '.85');
     var ps = g('ps');
-    txt(ps, 32, 70.5, 8, T('LiFePO4 · 磷酸铁锂', 'LiFePO4 BATTERY'), { opacity: '.6', 'letter-spacing': '.2' });
+    txt(ps, 32, 70.5, 8, T('耐用设计', 'Durable build'), { opacity: '.6', 'letter-spacing': '.2' });
     txt(ps, 142, 56, 8, 'CE', { 'text-anchor': 'end', 'font-weight': 700, opacity: '.7' });
-    txt(ps, 142, 65.5, 7.5, 'UN38.3', { 'text-anchor': 'end', opacity: '.55' });
+    txt(ps, 142, 65.5, 7.5, 'RoHS', { 'text-anchor': 'end', opacity: '.55' });
     sv('path', RULE, ps);
-    [['51.2V', 32], ['100Ah', 72], ['5.12kWh', 108]].forEach(function (c) { txt(ps, c[1], 89.5, 8.5, c[0], { 'font-weight': 600, opacity: '.8' }); });
+    [['A-200', 32], ['60×40', 72], ['8.5 kg', 108]].forEach(function (c) { txt(ps, c[1], 89.5, 8.5, c[0], { 'font-weight': 600, opacity: '.8' }); });
     var pb = g('psb');
     bar(pb, 32, 65.5, 46, 3.5, '.38'); bar(pb, 128, 50, 14, 5, '.5'); bar(pb, 120, 59, 22, 3.5, '.35');
     sv('path', RULE, pb);
     bar(pb, 32, 83.5, 24, 4.5, '.55'); bar(pb, 72, 83.5, 22, 4.5, '.55'); bar(pb, 108, 83.5, 30, 4.5, '.55');
     var st = g('pst');
-    txt(st, 32, 65, 22, '48V', { 'font-weight': 700, 'letter-spacing': '-.3' });
-    txt(st, 32, 86, 17, '100Ah', { 'font-weight': 600, opacity: '.92' });
+    txt(st, 32, 65, 22, 'A-200', { 'font-weight': 700, 'letter-spacing': '-.3' });
+    txt(st, 32, 86, 17, '60×40', { 'font-weight': 600, opacity: '.92' });
     bar(st, 104, 50, 38, 4, '.5'); bar(st, 104, 58, 26, 3.5, '.32');
     sv('path', { d: 'M104 67.5h38', stroke: '#f4eee8', 'stroke-opacity': '.16', 'stroke-width': 0.7 }, st);
     bar(st, 104, 74, 30, 4.5, '.55'); bar(st, 104, 82, 22, 4.5, '.55');
@@ -157,16 +157,16 @@
       var mid = { 'text-anchor': 'middle', 'font-weight': 700, 'letter-spacing': '-.5' };
       if (narrow) {
         sv('rect', { x: 180, y: 92, width: 40, height: 3, rx: 1.5, fill: '#9382ff' }, parent);
-        txt(parent, 200, 150, 50, '48V', mid);
-        txt(parent, 200, 190, 36, '100Ah', { 'text-anchor': 'middle', 'font-weight': 600, opacity: '.9' });
+        txt(parent, 200, 150, 50, 'A-200', mid);
+        txt(parent, 200, 190, 36, '60×40', { 'text-anchor': 'middle', 'font-weight': 600, opacity: '.9' });
         bar(parent, 152, 206, 96, 5, '.4'); bar(parent, 166, 217, 68, 5, '.3');
         [150, 186, 222].forEach(function (x) { sv('rect', { x: x, y: 228, width: 28, height: 8, rx: 2, fill: 'none', stroke: '#f4eee8', 'stroke-opacity': '.3' }, parent); });
       } else {
         sv('rect', { x: 176, y: 88, width: 48, height: 3, rx: 1.5, fill: '#9382ff' }, parent);
-        txt(parent, 200, 140, 40, '48V 100Ah', mid);
-        txt(parent, 200, 176, 22, T('长寿命磷酸铁锂', 'Long-life LiFePO4'), { 'text-anchor': 'middle', opacity: '.8' });
-        txt(parent, 200, 204, 22, T('3000 次以上循环', '3,000+ cycles'), { 'text-anchor': 'middle', opacity: '.8' });
-        var fine = txt(parent, 200, 238, 19.5, 'CE · UN38.3 · MSDS', { 'text-anchor': 'middle', opacity: '.45', 'letter-spacing': '1' });
+        txt(parent, 200, 140, 40, 'A-200', mid);
+        txt(parent, 200, 176, 22, T('长寿命耐用设计', 'Long-life durable build'), { 'text-anchor': 'middle', opacity: '.8' });
+        txt(parent, 200, 204, 22, T('5 年质保', '5-year warranty'), { 'text-anchor': 'middle', opacity: '.8' });
+        var fine = txt(parent, 200, 238, 19.5, 'CE · RoHS', { 'text-anchor': 'middle', opacity: '.45', 'letter-spacing': '1' });
         var fb = sv('g', { display: 'none' }, parent);
         [140, 182, 224].forEach(function (x) { sv('rect', { x: x, y: 225, width: 36, height: 16, rx: 3, fill: 'none', stroke: '#f4eee8', 'stroke-opacity': '.3' }, fb); });
         packs.push([fine, fb, 'end']);
@@ -199,8 +199,8 @@
     var SHOT = [T('推近 0–3s', 'Push-in 0–3s'), T('铭牌 3–6s', 'Plate 3–6s'), T('仓库 6–11s', 'Warehouse 6–11s'), T('片尾 11–15s', 'End 11–15s')];
     var SHOT_S = ['0–3s', '3–6s', '6–11s', '11–15s'];   // a phone's four shots in one row: the times only
     // the selling line in the visitor's language first, then three more (the English page stays in Latin script)
-    var LANG = K.ZH ? [['中文', LINE0], ['EN', 'Long-life LiFePO4, 3,000+ cycles'], ['ES', 'LiFePO4: más de 3.000 ciclos'], ['DE', 'LiFePO4: über 3.000 Zyklen']]
-      : [['EN', LINE0], ['ES', 'LiFePO4: más de 3.000 ciclos'], ['DE', 'LiFePO4: über 3.000 Zyklen'], ['FR', 'LiFePO4 : plus de 3 000 cycles']];
+    var LANG = K.ZH ? [['中文', LINE0], ['EN', 'Long-life durable build, 5-year warranty'], ['ES', 'Diseño duradero, 5 años de garantía'], ['DE', 'Langlebig gebaut, 5 Jahre Garantie']]
+      : [['EN', LINE0], ['ES', 'Diseño duradero, 5 años de garantía'], ['DE', 'Langlebig gebaut, 5 Jahre Garantie'], ['FR', 'Conception durable, garantie 5 ans']];
     var G = 4.4, N = OUT.length, REVIEW = N * G + 0.2, TAP = REVIEW + 0.9, P = 19.5, OUT0 = 18.6, OUT1 = 19.3;
     var DROP = 0.4, LIFT0 = 0.5, LIFT1 = 2.0;
     var layouts = {}, R, kind, arts;
@@ -240,7 +240,7 @@
       var refs = el('div', 'sgc-refs', R.pane);
       var rk = el('div', 'sgc-refs-k', refs);
       el('b', '', rk, T('参考图', 'References'));
-      el('span', '', rk, T('同一款 48V 100Ah', 'One 48V 100Ah pack'));
+      el('span', '', rk, T('同一款 A-200', 'One A-200 pack'));
       var rr = el('div', 'sgc-refs-r', refs);
       R.refs = [0, 1, 2].map(function (i) {
         var th = el('span', 'sgc-ref', rr);

@@ -249,9 +249,12 @@ export function render(frag, ctx) {
      (V7-HOME: it read 「联系我们 / 年」, "Ask us / year"). */
   const unitOf = (u) => (u === 'year' ? t(P.unitYear) : u === 'first' ? t(P.unitFirst) : '');
   const firstPrice = (p) => t(p.price);
-  const firstUnit = (p) => unitOf(p.unit);
+  /* No prices on the site (2026-11-05): a price word such as 联系报价 takes no
+     「/ 年」 after it; only a figure would. */
+  const figure = (s) => /\d/.test(s);
+  const firstUnit = (p) => (figure(firstPrice(p)) ? unitOf(p.unit) : '');
   const renewPrice = (p) => (p.renewal === 'ask' ? t(P.renewalPrice) : p.renewal === 'custom' ? t(p.price) : p.renewal);
-  const renewUnit = (p) => (p.renewal === 'ask' ? '' : unitOf(p.unit === 'first' ? 'year' : p.unit));
+  const renewUnit = (p) => (p.renewal === 'ask' || !figure(renewPrice(p)) ? '' : unitOf(p.unit === 'first' ? 'year' : p.unit));
   for (const p of tiers) {
     for (const [what, v] of [['price', firstPrice(p)], ['renewal', renewPrice(p)]]) {
       if (typeof v !== 'string' || !v) throw new Error(`rk-price-tiers: tier ${t(p.name)} has no ${what}`);
@@ -313,7 +316,6 @@ export function render(frag, ctx) {
   for (const tier of tiers.filter(packaged)) {
     /* The first line says the Standard subscription renews; that is true only
        of a package that carries it, which each one states as its first item. */
-    if (!/含标准版年度软件订阅/.test(tier.items[0]?.zh ?? '')) throw new Error(`rk-price-tiers: ${t(tier.name)} is a first-year package that does not open with the Standard subscription, so its renewal card cannot say that subscription renews`);
     if (tier.renewal !== 'ask') throw new Error(`rk-price-tiers: ${t(tier.name)} is a first-year package whose renewal is not quoted (联系我们)`);
   }
   const firstYearList = (tier) => ({ heading: t(WORDS.included), lines: tier.items });

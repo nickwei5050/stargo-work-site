@@ -156,14 +156,14 @@
     return Scene('inquiry', 10.8, 9.2, function (R) {
       var n = R.name, ph = R.phone, X = {};
       var F = [
-        { k: 'Model', v: 'LFP-48100 · 48V 100Ah', cell: pre('48V 100Ah'), chip: '48V 100Ah', head: T('型号', 'Model') },
+        { k: 'Model', v: 'A-200 · Standard', cell: pre('A-200'), chip: 'A-200', head: T('型号', 'Model') },
         { k: 'Quantity', v: '200 pcs', cell: pre('2000'), chip: T('200 组', '200 pcs'), head: T('数量', 'Qty') },
         { k: 'Delivery', v: 'DAP Hamburg', cell: pre(T('DAP 汉堡', 'DAP Hamburg')), chip: T('DAP 汉堡', 'DAP Hamburg'), head: T('交货', 'Delivery') }
       ];
       // per field: read in the spec, typing starts, typing ends, entered
       var TM = [[1.9, 2.15, 2.85, 2.95], [3.3, 3.5, 3.82, 4.45], [4.8, 5.0, 5.7, 5.85]];
       var FIX = 7.3;
-      var OLD = [['Silva Mobilidade', '60V 30Ah', '500', T('FOB 深圳', 'FOB Shenzhen')], ['PT Surya Energi', '64V 104Ah', '120', T('CIF 雅加达', 'CIF Jakarta')]];
+      var OLD = [['Silva Comercial', 'A-150', '500', T('FOB 深圳', 'FOB Shenzhen')], ['PT Surya Niaga', 'A-260', '120', T('CIF 雅加达', 'CIF Jakarta')]];
 
       if (ph) {
         // phone: the mail as one row above the title, the log's new row below it
@@ -171,7 +171,7 @@
         X.msg = mr;
         var mi = el('span', 'sg-pn-prow-ico', mr); ico('mail', mi, 14);
         var mt = el('div', 'sg-pn-prow-main', mr);
-        var l1 = el('div', 'sg-pn-prow-l1', mt); el('b', '', l1, 'Jonas Weber'); el('span', '', l1, ' · Müller Energie');
+        var l1 = el('div', 'sg-pn-prow-l1', mt); el('b', '', l1, 'Jonas Weber'); el('span', '', l1, ' · Müller Handel');
         var pa = el('span', 'sg-pn-patt', mr); ico('clip', pa, 12); el('span', '', pa, 'Spec.pdf');
         var sh = X.sheet = box(el('div', 'sg-pn-prow sg-pn-psheet', R.bot), [8, 0, 328, R.botH]);
         var h1 = el('div', 'sg-pn-psheet-h', sh);
@@ -203,15 +203,15 @@
         var msg = X.msg = el('div', 'sg-pn-mail', m.body);
         if (!tall) el('span', 'sg-pn-mail-av', msg, 'JW');
         var mm = el('div', 'sg-pn-mail-main', msg);
-        var from = el('div', 'sg-pn-mail-from', mm); el('b', '', from, 'Jonas Weber'); el('span', '', from, ' · Müller Energie GmbH');
-        el('div', 'sg-pn-mail-sub', mm, 'RFQ: 48V 100Ah × 200 pcs, DAP Hamburg');
+        var from = el('div', 'sg-pn-mail-from', mm); el('b', '', from, 'Jonas Weber'); el('span', '', from, ' · Müller Handel GmbH');
+        el('div', 'sg-pn-mail-sub', mm, 'RFQ: A-200 × 200 pcs, DAP Hamburg');
         if (!tall) {
           if (!low) el('div', 'sg-pn-mail-pre', mm, 'Please quote per the attached spec.');
-          var at = el('span', 'sg-pn-att', mm); ico('doc', at, 14); el('b', '', at, 'Spec_48V100Ah.pdf'); el('span', '', at, T('2 页', '2 pages'));
+          var at = el('span', 'sg-pn-att', mm); ico('doc', at, 14); el('b', '', at, 'Spec_A-200.pdf'); el('span', '', at, T('2 页', '2 pages'));
         }
         el('span', 'sg-pn-mail-time', msg, '09:12');
         // the spec
-        var p = win(R.body, G.pdf, 'doc', 'Spec_48V100Ah.pdf', '1 / 2');
+        var p = win(R.body, G.pdf, 'doc', 'Spec_A-200.pdf', '1 / 2');
         X.pdf = p.w;
         var doc = el('div', 'sg-pn-doc', p.body);
         if (!tall && !low) el('div', 'sg-pn-doc-h', doc, 'Technical specification');
@@ -234,7 +234,7 @@
         }
         row('is-head', [T('客户', 'Customer'), F[0].head, F[1].head, F[2].head]);
         OLD.slice(0, nOld).forEach(function (v) { row('is-old', v); });
-        var nr = row('is-new', ['Müller Energie', '', '', '']);
+        var nr = row('is-new', ['Müller Handel', '', '', '']);
         X.row = nr.r;
         X.cellBox = nr.c.slice(1);
         X.cells = X.cellBox.map(function (c) { return el('span', 'sg-pn-td-t', c); });
@@ -302,9 +302,9 @@
       var WIN = [
         { ic: 'mail', name: T('邮件', 'Mail'), who: 'Jonas Weber', k: T('报价', 'Price'), l: 'Re: Quotation v2', v: 'USD 128 / pc · 200 pcs', pv: 'USD 128 / pc' },
         // lv: the low layout's window has room for one line of the question (1280 × 720, 1366 × 768)
-        { ic: 'chat', name: 'WhatsApp', who: '+49 151 ••• 2207', k: T('规格', 'Spec'), l: '', v: 'Can the 48V 100Ah come with a Bluetooth BMS?', lv: 'Bluetooth BMS on the 48V 100Ah?', pv: 'Bluetooth BMS?' },
-        { ic: 'store', name: T('阿里国际站', 'Alibaba.com'), who: 'Muller Energie', k: T('样品', 'Sample'), l: T('样品申请', 'Sample request'), v: '2 pcs, ship to Hamburg', pv: T('2 组，寄汉堡', '2 pcs to Hamburg') },
-        { ic: 'form', name: T('官网表单', 'Website form'), who: 'muller-energie.de', k: T('公司', 'Company'), l: 'Müller Energie GmbH', v: T('储能集成 · 年采购约 2,000 组', 'Storage integrator · ~2,000 packs a year'), pv: T('Müller Energie GmbH', 'Müller Energie') }
+        { ic: 'chat', name: 'WhatsApp', who: '+49 151 ••• 2207', k: T('规格', 'Spec'), l: '', v: 'Can the A-200 come with a Bluetooth module?', lv: 'Bluetooth module on the A-200?', pv: 'Bluetooth module?' },
+        { ic: 'store', name: T('阿里国际站', 'Alibaba.com'), who: 'Muller Handel', k: T('样品', 'Sample'), l: T('样品申请', 'Sample request'), v: '2 pcs, ship to Hamburg', pv: T('2 组，寄汉堡', '2 pcs to Hamburg') },
+        { ic: 'form', name: T('官网表单', 'Website form'), who: 'muller-handel.de', k: T('公司', 'Company'), l: 'Müller Handel GmbH', v: T('分销 · 年采购约 2,000 组', 'Distributor · ~2,000 packs a year'), pv: T('Müller Handel GmbH', 'Müller Handel') }
       ];
       // phone (344 px stage, ~1:1 at 360-390 px): each chip is 220 wide, so every pv shows whole after its key
       // (en 'Company' is wider than zh 公司, so en drops the GmbH there; the customer card below names it in full)
@@ -347,13 +347,13 @@
       var ch = el('div', 'sg-pn-cust-h', c);
       el('span', 'sg-pn-cust-av', ch, 'ME');
       var cn = el('div', 'sg-pn-cust-n', ch);
-      el('b', '', cn, 'Müller Energie GmbH');
-      if (!ph) el('span', '', cn, T('德国 汉堡 · 储能集成', 'Hamburg, Germany · storage integrator'));
+      el('b', '', cn, 'Müller Handel GmbH');
+      if (!ph) el('span', '', cn, T('德国 汉堡 · 分销', 'Hamburg, Germany · distributor'));
       var icons = el('span', 'sg-pn-cust-ch', ch);
       X.ci = WIN.map(function (d) { var s = el('i', '', icons); ico(d.ic, s, ph ? 12 : 14); return s; });
       if (!ph) {
         var fl = el('div', 'sg-pn-cust-f', c);
-        X.cf = [[T('报价', 'Price'), 'USD 128 / pc'], [T('规格', 'Spec'), T('48V 100Ah + 蓝牙 BMS', '48V 100Ah + Bluetooth BMS')], [T('样品', 'Sample'), T('2 组，寄汉堡', '2 pcs to Hamburg')], [T('规模', 'Volume'), T('约 2,000 组 / 年', '~2,000 packs / yr')]].map(function (f) {
+        X.cf = [[T('报价', 'Price'), 'USD 128 / pc'], [T('规格', 'Spec'), T('A-200 + 蓝牙模块', 'A-200 + Bluetooth module')], [T('样品', 'Sample'), T('2 组，寄汉堡', '2 pcs to Hamburg')], [T('规模', 'Volume'), T('约 2,000 组 / 年', '~2,000 packs / yr')]].map(function (f) {
           var r = el('div', 'sg-pn-cust-r', fl); el('span', '', r, f[0]); el('b', '', r, f[1]); return r;
         });
         var foot = el('div', 'sg-pn-cust-foot', c);
@@ -418,12 +418,12 @@
     return Scene('sheet', 11.6, 10.1, function (R) {
       var n = R.name, ph = R.phone, X = {};
       var ROWS = [
-        ['Gulf Coast Lift Supply', T('美国', 'US'), 15],
-        ['Silva Mobilidade', T('巴西', 'Brazil'), 14],
+        ['Gulf Coast Trading', T('美国', 'US'), 15],
+        ['Silva Comercial', T('巴西', 'Brazil'), 14],
         ['Ahmed Al-Rashid', T('阿联酋', 'UAE'), 16],
         ['Kowalski Sp. z o.o.', T('波兰', 'Poland'), 12],
-        ['Lagos Power Ltd', T('尼日利亚', 'Nigeria'), 13],
-        ['Nordic Mobility AB', T('瑞典', 'Sweden'), 9],
+        ['Lagos Trading Ltd', T('尼日利亚', 'Nigeria'), 13],
+        ['Nordic Home AB', T('瑞典', 'Sweden'), 9],
         ['Hanoi E-Moto JSC', T('越南', 'Vietnam'), 11]
       ];
       var LATE = 5, D0 = 16, DAYS = 7, DT = 0.8, FIX = 7.4;
@@ -434,7 +434,7 @@
       ROWS.forEach(function (r, i) { var a = []; for (var d2 = 0; d2 <= DAYS; d2++) a.push(i === LATE && d2 === DAYS ? T('14 天未跟进', '14 days silent') : ago(D0 + d2 - r[2])); AGE.push(a); });
       var NOTES = [[T('周三前回 Nordic 报价', 'Reply to Nordic by Wed'), 3.0], [T('给 Silva 寄目录', 'Send Silva the catalogue'), 4.4]];
       var DRAFTED = T('已起草跟进', 'Draft ready');
-      var draftText = pre('Hi Erik, following up on our quote for the 2,000 e-bike packs a year. Happy to send two samples first if that helps.');
+      var draftText = pre('Hi Erik, following up on our quote for the 2,000 units a year. Happy to send two samples first if that helps.');
       X.rows = []; X.age = []; X.notes = [];
 
       if (ph) {
@@ -485,7 +485,7 @@
         var dh = el('div', 'sg-pn-draft-h', dr);
         mark(dh);
         el('b', '', dh, T('跟进草稿', 'Follow-up draft'));
-        el('span', '', dh, ' · Nordic Mobility AB');
+        el('span', '', dh, ' · Nordic Home AB');
         X.draftT = el('div', 'sg-pn-draft-t', dr);
         var df = el('div', 'sg-pn-draft-foot', dr);
         X.ok = okPill(df);
@@ -588,8 +588,8 @@
         X.lockT = el('span', '', lk);
         var bd = el('div', 'sg-pn-order', s.body);
         var who = el('div', 'sg-pn-order-who', bd);
-        el('b', '', who, 'Müller Energie GmbH');
-        el('span', '', who, '48V 100Ah × ' + T('200 组', '200 pcs') + ' · ' + T('DAP 汉堡', 'DAP Hamburg'));
+        el('b', '', who, 'Müller Handel GmbH');
+        el('span', '', who, 'A-200 × ' + T('200 组', '200 pcs') + ' · ' + T('DAP 汉堡', 'DAP Hamburg'));
         var rl = el('div', 'sg-pn-rail', bd);
         STEPS.forEach(function (st, i) {
           if (i) { var ln = el('i', 'sg-pn-rail-ln', rl); X.lines.push(el('i', '', ln)); }

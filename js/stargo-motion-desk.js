@@ -4,8 +4,8 @@
    styles them, js/stargo-motion.js runs them like its own scenes.
 
    One demo deal on one 20 s clock, clockwise round the film:
-      0.3  Growth OS    (top left)     Nordwerk Energie rises to 94 on the shortlist
-      2.8  Sales Desk   (top right)    Müller's inquiry → 48V 100Ah · 200 组 · DAP 汉堡 → Q-1042 drafted
+      0.3  Growth OS    (top left)     Nordwerk Handel rises to 94 on the shortlist
+      2.8  Sales Desk   (top right)    Müller's inquiry → A-200 · 200 组 · DAP 汉堡 → Q-1042 drafted
       6.1  报价审批      (middle right) under the floor → 等你审批 → a person taps 批准, then 发送
       9.8  Sales Desk   again          已报价 → PI · 待定金 → 已成交 (deposit in)
      11.3  ERP          (bottom right) SO-2041: 备货 → 质检 → 装柜
@@ -134,8 +134,8 @@
   }
 
   /* ---------- the deal ---------- */
-  var NORDWERK = 'Nordwerk Energie GmbH', MULLER = 'Müller Energie GmbH';
-  var SPEC = T('48V 100Ah × 200 组', '48V 100Ah × 200'), DAP = T('DAP 汉堡', 'DAP Hamburg');
+  var NORDWERK = 'Nordwerk Handel GmbH', MULLER = 'Müller Handel GmbH';
+  var SPEC = T('A-200 × 200 组', 'A-200 × 200'), DAP = T('DAP 汉堡', 'DAP Hamburg');
 
   /* =================== Growth OS: the shortlist (top left) =================== */
   function placeRow(o, st, slot, op, dx) {
@@ -143,14 +143,14 @@
     css(o.r, 'opacity', op.toFixed(3));
   }
   var GROWTH = {
-    key: 'growth', name: 'Growth OS', pos: 'tl', B: 0.3, D: 3.6, crumb: T('德国 · 储能经销商', 'Germany · storage dealers'),
+    key: 'growth', name: T('主动获客', 'Lead Finder'), pos: 'tl', B: 0.3, D: 3.6, crumb: T('德国 · 进口经销商', 'Germany · import dealers'),
     rows: [
-      ['DE', NORDWERK, 'Nordwerk Energie', T('储能系统集成 · 汉堡', 'Storage integrator · Hamburg'), T('汉堡', 'Hamburg'), 94],
-      ['US', 'Gulf Coast Lift Supply', 'Gulf Coast Lift', T('叉车与仓储 · 休斯敦', 'Forklift fleets · Houston'), T('休斯敦', 'Houston'), 91],
+      ['DE', NORDWERK, 'Nordwerk Handel', T('分销商 · 汉堡', 'Distributor · Hamburg'), T('汉堡', 'Hamburg'), 94],
+      ['US', 'Gulf Coast Trading', 'Gulf Coast', T('仓储物流 · 休斯敦', 'Warehousing · Houston'), T('休斯敦', 'Houston'), 91],
       ['ZA', 'Table Bay Power (Pty) Ltd', 'Table Bay Power', T('家用备电 · 开普敦', 'Home backup · Cape Town'), T('开普敦', 'Cape Town'), 88],
       ['SA', 'Najd Energy Co.', 'Najd Energy', T('通信备电 · 利雅得', 'Telecom backup · Riyadh'), T('利雅得', 'Riyadh'), 84]
     ],
-    why: T('近 90 天发布 3 条储能招标，产品线与 48V 100Ah 高度匹配。', 'Three storage tenders in 90 days; the range fits 48V 100Ah.'),
+    why: T('近 90 天发布 3 条采购招标，产品线与 A-200 高度匹配。', 'Three purchase tenders in 90 days; the range fits A-200.'),
     whyMore: T('建议优先联系采购经理。', ' Contact the purchasing manager first.'),
     build: function (R) {
       var k = R.kind, small = R.small, land = k === 'land';
@@ -223,13 +223,13 @@
 
   /* =================== Sales Desk: the inquiry, then the deal (top right) =================== */
   var SALES = {
-    key: 'sales', name: 'Sales Desk', pos: 'tr', B: 2.8, D: 3.4, D2: [6.9, 8.6], crumb: T('询盘', 'Inquiry'), RS: 16.2,
+    key: 'sales', name: T('成交工作台', 'Sales Desk'), pos: 'tr', B: 2.8, D: 3.4, D2: [6.9, 8.6], crumb: T('询盘', 'Inquiry'), RS: 16.2,
     stages: [T('新询盘', 'New'), T('需求确认', 'Qualifying'), T('待报价', 'To quote'), T('报价中', 'Quoting'), T('已报价·谈判', 'Negotiating'), T('PI·待定金', 'PI · deposit'), T('已成交', 'Won')],
     stagesS: [T('新询盘', 'New'), T('需求确认', 'Qualify'), T('待报价', 'To quote'), T('报价中', 'Quoting'), T('已报价·谈判', 'Talks'), T('PI·待定金', 'Deposit'), T('已成交', 'Won')],   // the pill beside the tag in a phone's status bar
     SI: [2.0, 2.6, 3.0, 7.0, 7.6, 8.2],   // when the case moves on a stage
     H: [0.8, 1.2, 1.6],                   // when each of the three facts is underlined
-    msg: ['200 pcs', ' ', '48V 100Ah', ', ', 'DAP Hamburg', '?'],
-    chips: [[T('型号', 'Model'), '48V 100Ah', 2], [T('数量', 'Qty'), T('200 组', '200 pcs'), 0], [T('贸易术语', 'Incoterm'), DAP, 4]],
+    msg: ['200 pcs', ' ', 'A-200', ', ', 'DAP Hamburg', '?'],
+    chips: [[T('型号', 'Model'), 'A-200', 2], [T('数量', 'Qty'), T('200 组', '200 pcs'), 0], [T('贸易术语', 'Incoterm'), DAP, 4]],
     next: [   // u, what the case line says, and the same in a narrow window
       [3.0, T('报价 Q-1042 已起草，送去审批', 'Quote Q-1042 drafted, sent for approval'), T('Q-1042 送去审批', 'Q-1042 sent for approval')],
       [6.95, T('Q-1042 已由你发送', 'Q-1042 sent by you'), T('Q-1042 已由你发送', 'Q-1042 sent by you')],
@@ -240,7 +240,7 @@
       if (land && R.H >= 280) {   // an earlier thread, above the one that matters
         var ea = div('sgd-s-earlier', R.body);
         span('sgd-av is-dim', ea, 'AA');
-        var et = div('sgd-s-mt', ea); el('b', '', et, 'Ahmed Al-Rashid'); span('', et, T('阿联酋 · WhatsApp · 72V 锂电池包 50 组', 'UAE · WhatsApp · 72V lithium pack, 50 units'));
+        var et = div('sgd-s-mt', ea); el('b', '', et, 'Ahmed Al-Rashid'); span('', et, T('阿联酋 · WhatsApp · A-300 50 件', 'UAE · WhatsApp · A-300 sample, 50 units'));
         span('sgd-s-er', ea, T('已回复', 'Replied'));
       }
       var g = div('sgd-s-grid', R.body);
@@ -334,7 +334,7 @@
   }
   function okLine(parent, text, size) { var d = div('sgd-q-ok', parent); ico('check', span('sgd-ck', d), size); el('b', '', d, text); return d; }
   var QUOTE = {
-    key: 'quote', name: T('报价审批', 'Quote approval'), short: T('报价审批', 'Approval'), pos: 'mr', B: 6.1, D: 4.3, crumb: 'Sales Desk',
+    key: 'quote', name: T('报价审批', 'Quote approval'), short: T('报价审批', 'Approval'), pos: 'mr', B: 6.1, D: 4.3, crumb: T('成交工作台', 'Sales Desk'),
     note: T('批准和发送，都由你来点', 'You approve it, and you send it'),
     TAP1: 2.5, TAP2: 3.6, RS: 12.5,
     build: function (R) {
@@ -347,9 +347,9 @@
       var card = R.card = div('sgd-q-card', R.body), top = div('sgd-q-top', card);
       el('b', 'sgd-q-id', top, 'Q-1042');
       if (!slim) span('sgd-q-v', top, 'v2');
-      span('sgd-q-who', slim ? card : top, small ? 'Müller Energie' : MULLER);
+      span('sgd-q-who', slim ? card : top, small ? 'Müller Handel' : MULLER);
       // the spec and the incoterm are kept whole: a narrow card wraps between them, never inside 汉堡 / Hamburg
-      if (slim && !R.low) div('sgd-q-spec', card, '48V 100Ah × 200');
+      if (slim && !R.low) div('sgd-q-spec', card, 'A-200 × 200');
       else if (!slim) { var sp = div('sgd-q-spec is-split', card); span('', sp, SPEC); span('', sp, DAP); }
       if (!small && !R.low) {   // the price against the floor, in words and on a line
         var pr = div('sgd-q-price', card);
@@ -408,9 +408,9 @@
       var board = [T('2 单', '2 orders'), T('1 单', '1 order'), T('3 单', '3 orders')];
       var det = [T('仓位 A3 · 批次 2041', 'Bay A3 · lot 2041'), T('抽检 20 组 · 电压 / 内阻', 'Sample 20 · voltage / IR'), T('1 × 40HQ · 订舱已确认', '1 × 40HQ · booked')];
       var h = stack('sgd-e-h', R.body);
-      R.h0 = div('sgd-e-hl', h); el('b', '', R.h0, T('今日订单', 'Today')); span('sgd-e-who', R.h0, phone ? T('在制 6', '6 open') : T('柳州工厂 · 在制 6 单', 'Liuzhou plant · 6 open'));
-      R.h1 = div('sgd-e-hl', h); el('b', '', R.h1, 'SO-2041'); span('sgd-e-who', R.h1, phone || R.kind === 'sq' ? 'Müller' : land ? MULLER + ' · ' + DAP : 'Müller Energie');
-      if (!phone) span('sgd-e-item', R.h1, land ? SPEC : '48V 100Ah × 200');
+      R.h0 = div('sgd-e-hl', h); el('b', '', R.h0, T('今日订单', 'Today')); span('sgd-e-who', R.h0, phone ? T('在制 6', '6 open') : T('工厂 · 在制 6 单', 'the plant · 6 open'));
+      R.h1 = div('sgd-e-hl', h); el('b', '', R.h1, 'SO-2041'); span('sgd-e-who', R.h1, phone || R.kind === 'sq' ? 'Müller' : land ? MULLER + ' · ' + DAP : 'Müller Handel');
+      if (!phone) span('sgd-e-item', R.h1, land ? SPEC : 'A-200 × 200');
       var steps = div('sgd-e-steps' + (land ? ' is-row' : ''), R.body);
       R.steps = [];
       for (var i = 0; i < 3; i++) {
@@ -450,7 +450,7 @@
     var s = sv('svg', { viewBox: '0 0 160 104', preserveAspectRatio: 'xMidYMid slice', class: 'sgd-th-svg', 'aria-hidden': 'true' }, parent);
     var defs = sv('defs', {}, s);
     function lin(n, a, b) { var g = sv('linearGradient', { id: id + n, x1: 0, y1: 0, x2: 0, y2: 1 }, defs); sv('stop', { offset: 0, class: a }, g); sv('stop', { offset: 1, class: b }, g); return 'url(#' + id + n + ')'; }
-    function pack(x, y, w, h) {   // a lithium pack: top, side, front, the accent band and the nameplate
+    function pack(x, y, w, h) {   // a product: top, side, front, the accent band and the nameplate
       sv('path', { d: 'M' + x + ' ' + y + 'l8-7h' + w + 'l-8 7z', class: 't-ptop' }, s);
       sv('path', { d: 'M' + (x + w) + ' ' + y + 'l8-7v' + h + 'l-8 7z', class: 't-pside' }, s);
       sv('rect', { x: x, y: y, width: w, height: h, rx: 1.5, class: 't-pfront' }, s);
@@ -462,7 +462,7 @@
       sv('rect', { width: 160, height: 104, fill: lin('a', 't-s-paper0', 't-s-paper1') }, s);
       sv('ellipse', { cx: 82, cy: 84, rx: 46, ry: 6, class: 't-shadow' }, s);
       pack(50, 40, 56, 40);
-    } else if (k === 1) { // scene: a 48V rack in a dim room
+    } else if (k === 1) { // scene: a A-200 rack in a dim room
       sv('rect', { width: 160, height: 104, fill: lin('b', 't-s-room0', 't-s-room1') }, s);
       var rg = sv('radialGradient', { id: id + 'r', cx: 0.5, cy: 0, r: 0.75 }, defs);
       sv('stop', { offset: 0, class: 't-s-lamp0' }, rg); sv('stop', { offset: 1, class: 't-s-lamp1' }, rg);
@@ -488,8 +488,8 @@
   }
   var CREATIVE = {
     key: 'creative', name: T('AI 创作', 'AI Creative'), short: T('AI 创作', 'Creative'), pos: 'bl', B: 14.1, D: 3.0,
-    crumb: T('48V 100Ah · 德国站', '48V 100Ah · DE store'),
-    labels: [T('主图 · 白底', 'Main image'), T('场景 · 储能柜', 'Rack scene'), T('详情页 · 德语', 'German page')],
+    crumb: T('A-200 · 德国站', 'A-200 · DE store'),
+    labels: [T('主图 · 白底', 'Main image'), T('场景 · 产品', 'Rack scene'), T('详情页 · 德语', 'German page')],
     G0: [0.15, 0.7, 1.25], GEN: 0.95,
     build: function (R) {
       var land = R.kind === 'land', phone = R.small;
@@ -538,12 +538,12 @@
     so: ERP.B, board: ERP.B + ERP.RS, img: CREATIVE.B + CREATIVE.G0[0] + CREATIVE.GEN
   };
   var EV = [
-    [GROWTH.B + 1.95, 'Nordwerk Energie · ' + T('匹配 94', 'match 94')],
-    [E.mul, 'Müller Energie · ' + T('新询盘', 'new inquiry')],
+    [GROWTH.B + 1.95, 'Nordwerk Handel · ' + T('匹配 94', 'match 94')],
+    [E.mul, 'Müller Handel · ' + T('新询盘', 'new inquiry')],
     [E.wait, 'Q-1042 · ' + T('等你审批', 'needs your OK')],
     [E.appr, 'Q-1042 · ' + T('你已批准', 'approved by you')],
     [E.sent, 'Q-1042 · ' + T('你已发送', 'sent by you')],
-    [SALES.B + 8.2, 'Müller Energie · ' + T('定金已到账', 'deposit in')],
+    [SALES.B + 8.2, 'Müller Handel · ' + T('定金已到账', 'deposit in')],
     [E.so, 'SO-2041 · ' + T('新订单', 'new order')],
     [ERP.B + 2.7, 'SO-2041 · ' + T('已装柜', 'loaded')],
     [E.img, T('AI 创作 · 素材待你审核', 'AI Creative · images to review'), T('AI 创作 · 素材待审核', 'Creative · images to review')],

@@ -248,14 +248,14 @@
     // ended in an ellipsis there ("Please send the catalogue an…"): each has a shorter wording of the same
     // ask, measured at 140–170 px in the band's 12.5px type, so none is cut.
     var MSG = [
-      ['Müller Energie GmbH', T('德国', 'Germany'), '200 pcs 48V 100Ah, DAP Hamburg?', 'Quote 200 pcs 48V 100Ah?'],
-      ['Ahmed Al-Rashid', T('阿联酋', 'UAE'), 'Price for the 72V lithium pack? 50 units.', '72V pack price for 50 units?'],
-      ['Silva Mobilidade', T('巴西', 'Brazil'), 'Can you do OEM label? MOQ?', 'OEM label possible? MOQ?'],
-      ['Nordic Mobility AB', T('瑞典', 'Sweden'), 'E-bike pack supplier wanted, 2,000/yr.', 'E-bike packs, 2,000 a year.'],
-      ['PT Surya Energi', T('印尼', 'Indonesia'), 'Lead time for 64V 104Ah packs?', 'Lead time for 64V 104Ah?'],
+      ['Müller Handel GmbH', T('德国', 'Germany'), '200 pcs A-200, DAP Hamburg?', 'Quote 200 pcs A-200?'],
+      ['Ahmed Al-Rashid', T('阿联酋', 'UAE'), 'Price for the A-300 sample? 50 units.', 'A-300 pack price for 50 units?'],
+      ['Silva Comercial', T('巴西', 'Brazil'), 'Can you do OEM label? MOQ?', 'OEM label possible? MOQ?'],
+      ['Nordic Home AB', T('瑞典', 'Sweden'), 'Home goods pack supplier wanted, 2,000/yr.', 'Home goods packs, 2,000 a year.'],
+      ['PT Surya Niaga', T('印尼', 'Indonesia'), 'Lead time for A-260 packs?', 'Lead time for A-260?'],
       ['Kowalski Sp. z o.o.', T('波兰', 'Poland'), 'Please send the catalogue and CE files.', 'Catalogue and CE files?'],
-      ['Lagos Power Ltd', T('尼日利亚', 'Nigeria'), 'Off-grid storage, 30 sets, CIF Lagos.', 'Off-grid, 30 sets, CIF Lagos.'],
-      ['Hanoi E-Moto JSC', T('越南', 'Vietnam'), 'Sample order first? 2 pcs 60V 30Ah.', '2 samples first, 60V 30Ah?']
+      ['Lagos Trading Ltd', T('尼日利亚', 'Nigeria'), 'Outdoor goods, 30 sets, CIF Lagos.', 'Outdoor, 30 sets, CIF Lagos.'],
+      ['Hanoi E-Moto JSC', T('越南', 'Vietnam'), 'Sample order first? 2 pcs A-150.', '2 samples first, A-150?']
     ];
     var ST = [
       { n: '01', name: T('找到客户', 'Find prospects'), p: T('找到客户', 'Prospects') },
@@ -264,8 +264,8 @@
       { n: '04', name: T('制作内容', 'Create content'), p: T('制作内容', 'Content') },
       { n: '05', name: T('管好经营', 'Coordinate work'), p: T('管好经营', 'Operations') }
     ];
-    var NEED = [['48V 100Ah', T('200 组', '200 pcs'), T('DAP 汉堡', 'DAP Hamburg')], ['72V', T('50 组', '50 pcs'), T('贸易术语 待确认', 'Incoterm?')], [T('OEM 贴牌', 'OEM label'), T('问 MOQ', 'MOQ?'), T('巴西', 'Brazil')], [T('电动自行车', 'E-bike'), T('2,000 组/年', '2,000 / yr'), T('瑞典', 'Sweden')],
-      ['64V 104Ah', T('问交期', 'Lead time?'), T('印尼', 'Indonesia')], [T('产品目录', 'Catalogue'), T('CE 文件', 'CE files'), T('波兰', 'Poland')], [T('离网储能', 'Off-grid'), T('30 套', '30 sets'), T('CIF 拉各斯', 'CIF Lagos')], ['60V 30Ah', T('样品 2 组', '2 samples'), T('越南', 'Vietnam')]];  // what 理解需求 reads out of MSG[i]
+    var NEED = [['A-200', T('200 组', '200 pcs'), T('DAP 汉堡', 'DAP Hamburg')], ['A-300', T('50 组', '50 pcs'), T('贸易术语 待确认', 'Incoterm?')], [T('OEM 贴牌', 'OEM label'), T('问 MOQ', 'MOQ?'), T('巴西', 'Brazil')], [T('家居用品', 'Home goods'), T('2,000 组/年', '2,000 / yr'), T('瑞典', 'Sweden')],
+      ['A-260', T('问交期', 'Lead time?'), T('印尼', 'Indonesia')], [T('产品目录', 'Catalogue'), T('CE 文件', 'CE files'), T('波兰', 'Poland')], [T('户外用品', 'Outdoor'), T('30 套', '30 sets'), T('CIF 拉各斯', 'CIF Lagos')], ['A-150', T('样品 2 组', '2 samples'), T('越南', 'Vietnam')]];  // what 理解需求 reads out of MSG[i]
     var P = 2.2;           // a new inquiry every P seconds
     var GATE = 2;          // the stage that passes the approval gate
 
@@ -489,7 +489,7 @@
     /* The homepage band grows its window over this stage from a point in the middle out to the whole
        screen (the template's .absolute-photo, 0 → 100vw; the runner reports the part shown, in stage px).
        QA round 5 (2026-10-24): on the way the window's edge cut the cards mid-word (「最高匹」,
-       「for 64V 104Ah packs?」) and the 动态示意 · 演示数据 tag, placed in the stage's corner, sat outside
+       「for A-260 packs?」) and the 动态示意 · 演示数据 tag, placed in the stage's corner, sat outside
        the window for ~400px of scroll and was then cut by its edge. Now a box with words in it shows only
        once it is wholly inside the window — it fades in over the next 24 stage px the window opens, so the
        words appear as the window reaches them and are never shown cut — and the tag rides the window's
@@ -727,18 +727,18 @@
     var MAP = window.STARGO_MAP;
     var HOME = [109.4, 24.3];
     var B = [
-      ['DE', [10.0, 53.55], 'Nordwerk Energie GmbH', T('储能系统集成', 'Storage integrator'), T('汉堡', 'Hamburg'), 94, T('近 90 天发布 3 条储能招标，产品线与 48V 100Ah 高度匹配，建议优先联系采购经理。', 'Three storage tenders in 90 days and a product line that fits 48V 100Ah. Contact the purchasing manager first.')],
-      ['US', [-95.37, 29.76], 'Gulf Coast Lift Supply', T('叉车与仓储', 'Forklift fleets'), T('休斯敦', 'Houston'), 91, T('车队正在换锂电，近期招聘采购专员，可先发 24V/48V 叉车电池资料。', 'Fleet moving to lithium and hiring a buyer. Send the 24V/48V forklift range.')],
-      ['BR', [-46.63, -23.55], 'Silva Mobilidade Ltda', T('电动两轮', 'E-scooters'), T('圣保罗', 'São Paulo'), 89, T('新开 12 家门店，正在找 60V/72V 电池的第二供应商。', '12 new stores and looking for a second 60V/72V supplier.')],
-      ['AE', [55.27, 25.2], 'Gulf Solar Trading', T('光伏储能', 'Solar storage'), T('迪拜', 'Dubai'), 88, T('中标两个离网项目，需求与储能系列一致，交期是关键。', 'Won two off-grid projects; matches the storage series, lead time decides.')],
-      ['SE', [18.07, 59.33], 'Nordic Mobility AB', T('电动自行车', 'E-bikes'), T('斯德哥尔摩', 'Stockholm'), 93, T('年采购约 2,000 组，官网列出 CE 与 UN38.3 要求，我们资料齐全。', 'About 2,000 packs a year; asks for CE and UN38.3, which we have.')],
-      ['ID', [106.85, -6.2], 'PT Surya Energi', T('电动三轮', 'E-tricycles'), T('雅加达', 'Jakarta'), 90, T('电动三轮销量增长 40%，64V 104Ah 与其车型匹配。', 'Tricycle sales up 40%; 64V 104Ah fits their models.')],
-      ['PL', [21.01, 52.23], 'Wisła E-Bike Sp. z o.o.', T('电动自行车', 'E-bikes'), T('华沙', 'Warsaw'), 86, T('正在扩产，职业社交主页显示新任采购总监到岗，适合首封开发信。', 'Expanding, with a new purchasing director: a good first email.')],
-      ['AU', [151.2, -33.87], 'Harbour Off-Grid Pty', T('房车储能', 'RV storage'), T('悉尼', 'Sydney'), 92, T('房车改装业务需要 12V 100Ah，询价历史显示偏好 LiFePO4。', 'RV conversions need 12V 100Ah; past requests prefer LiFePO4.')],
-      ['MX', [-99.13, 19.43], 'Movilidad Verde SA', T('物流车队', 'Delivery fleets'), T('墨西哥城', 'Mexico City'), 87, T('城配车队电动化，预算已批，下季度采购。', 'Electrifying city delivery; budget approved, buying next quarter.')],
-      ['NG', [3.38, 6.52], 'Lagos Power Ltd', T('离网储能', 'Off-grid storage'), T('拉各斯', 'Lagos'), 85, T('离网储能需求旺，曾询价 30 套，适合 CIF 报价。', 'Strong off-grid demand; asked for 30 sets before, quote CIF.')],
-      ['SA', [46.7, 24.7], 'Najd Energy Co.', T('通信备电', 'Telecom backup'), T('利雅得', 'Riyadh'), 84, T('通信基站备电改造项目启动，48V 机架式产品匹配。', 'Telecom backup retrofit started; 48V rack packs fit.')],
-      ['ZA', [18.42, -33.92], 'Table Bay Power (Pty) Ltd', T('家用备电', 'Home backup'), T('开普敦', 'Cape Town'), 88, T('限电推高备电需求，48V 机架式储能匹配，可先寄样品。', 'Load-shedding drives backup demand; 48V rack packs fit. Offer samples first.')]
+      ['DE', [10.0, 53.55], 'Nordwerk Handel GmbH', T('分销商', 'Distributor'), T('汉堡', 'Hamburg'), 94, T('近 90 天发布 3 条采购招标，产品线与 A-200 高度匹配，建议优先联系采购经理。', 'Three purchase tenders in 90 days and a product line that fits A-200. Contact the purchasing manager first.')],
+      ['US', [-95.37, 29.76], 'Gulf Coast Trading', T('仓储物流', 'Warehousing'), T('休斯敦', 'Houston'), 91, T('正在换供应商，近期招聘采购专员，可先发 A-100/A-200 设备配件资料。', 'Fleet switching suppliers and hiring a buyer. Send the A-100/A-200 product range.')],
+      ['BR', [-46.63, -23.55], 'Silva Comercial Ltda', T('家居用品', 'Housewares'), T('圣保罗', 'São Paulo'), 89, T('新开 12 家门店，正在找 A-150/A-300 产品的第二供应商。', '12 new stores and looking for a second A-150/A-300 supplier.')],
+      ['AE', [55.27, 25.2], 'Gulf Home Trading', T('建材', 'Building materials'), T('迪拜', 'Dubai'), 88, T('中标两个工程项目，需求与同类产品线一致，交期是关键。', 'Won two building projects; matches the product line, lead time decides.')],
+      ['SE', [18.07, 59.33], 'Nordic Home AB', T('家居用品', 'Home goods'), T('斯德哥尔摩', 'Stockholm'), 93, T('年采购约 2,000 组，官网列出 CE 与 RoHS 要求，我们资料齐全。', 'About 2,000 packs a year; asks for CE and RoHS, which we have.')],
+      ['ID', [106.85, -6.2], 'PT Surya Niaga', T('五金工具', 'Hardware tools'), T('雅加达', 'Jakarta'), 90, T('五金工具销量增长 40%，A-260 与其产品线匹配。', 'Tool sales up 40%; A-260 fits their range.')],
+      ['PL', [21.01, 52.23], 'Wisła Dom Sp. z o.o.', T('家居用品', 'Home goods'), T('华沙', 'Warsaw'), 86, T('正在扩产，职业社交主页显示新任采购总监到岗，适合首封开发信。', 'Expanding, with a new purchasing director: a good first email.')],
+      ['AU', [151.2, -33.87], 'Harbour Outdoor Pty', T('户外用品', 'Outdoor goods'), T('悉尼', 'Sydney'), 92, T('门店扩张需要 A-120，询价历史显示偏好 Durable build。', 'Store expansion needs A-120; past requests prefer Durable build.')],
+      ['MX', [-99.13, 19.43], 'Movilidad Verde SA', T('物流配送', 'Delivery & logistics'), T('墨西哥城', 'Mexico City'), 87, T('门店扩张，预算已批，下季度采购。', 'Electrifying city delivery; budget approved, buying next quarter.')],
+      ['NG', [3.38, 6.52], 'Lagos Trading Ltd', T('户外用品', 'Outdoor goods'), T('拉各斯', 'Lagos'), 85, T('户外用品需求旺，曾询价 30 套，适合 CIF 报价。', 'Strong outdoor-goods demand; asked for 30 sets before, quote CIF.')],
+      ['SA', [46.7, 24.7], 'Najd Energy Co.', T('通信备电', 'Telecom backup'), T('利雅得', 'Riyadh'), 84, T('通信基站备电改造项目启动，A-200 机架式产品匹配。', 'Telecom backup retrofit started; A-200 units fit.')],
+      ['ZA', [18.42, -33.92], 'Table Bay Power (Pty) Ltd', T('家用备电', 'Home backup'), T('开普敦', 'Cape Town'), 88, T('限电推高备电需求，A-200 系列产品匹配，可先寄样品。', 'Load-shedding drives backup demand; A-200 units fit. Offer samples first.')]
     ];
     var P = 5.6;
     var L, R, mode;
@@ -754,8 +754,8 @@
       stage.className = 'sg-mo-stage sg-radar is-' + mode;
       var bar = el('div', 'sg-app-bar', stage);
       var mk = el('span', 'sg-app-mark', bar); icon('spark', mk, 14);
-      el('b', '', bar, 'Growth OS');
-      if (mode !== 'mini') el('span', 'sg-app-crumb', bar, T('主动获客', 'Prospecting'));
+      el('b', '', bar, T('主动获客', 'Lead Finder'));
+      if (mode !== 'mini') el('span', 'sg-app-crumb', bar, T('找客户', 'Prospecting'));
       var live = el('span', 'sg-app-live', bar); el('i', '', live); el('span', '', live, T('AI 扫描中', 'AI scanning'));
       // map
       // mid: 292 wide, so the factory's label (right of its dot) ends clear of the shortlist beside the map
@@ -788,7 +788,7 @@
       if (mode !== 'mini') {
         // up and to the right of the dot: routes leave it westwards, south to Jakarta and east-south-east to Sydney
         var hl = R.homeLab = sv('text', { x: h[0] + 9 * R.inv, y: h[1] - 11 * R.inv, 'text-anchor': 'start', class: 'sg-map-label is-home', style: 'font-size:' + (13 * R.inv).toFixed(1) + 'px;stroke-width:' + (4 * R.inv).toFixed(1) + 'px' }, g);
-        hl.textContent = T('柳州工厂', 'Liuzhou plant');
+        hl.textContent = T('工厂', 'the plant');
       }
       g.appendChild(R.pins[0].g);
       // KPIs
@@ -969,15 +969,15 @@
       // short: the queue's own name for the job on the mid layout, where its column is narrow
       { key: 'studio', label: T('主图 · 白底', 'Main image · white'), short: T('白底主图', 'Main image'), prompt: T('白底主图，柔光，突出铭牌', 'White background, soft light') },
       { key: 'ware', label: T('场景图 · 仓库 16:9', 'Scene · warehouse 16:9'), short: T('仓库场景 16:9', 'Warehouse 16:9'), prompt: T('仓库货架前，暖色顶灯', 'Warehouse racks, warm light') },
-      { key: 'solar', label: T('场景图 · 户外储能', 'Scene · outdoor storage'), short: T('户外储能', 'Outdoor storage'), prompt: T('户外光伏板前，日落逆光', 'Solar panels at sunset') },
+      { key: 'solar', label: T('场景图 · 户外使用', 'Scene · outdoor use'), short: T('户外使用', 'Outdoor use'), prompt: T('户外草地上，日落逆光', 'Outdoors at sunset') },
       { key: 'city', label: T('短视频 · 15 秒', 'Short video · 15 s'), short: T('短视频 15 秒', 'Video · 15 s'), prompt: T('城市夜景，镜头缓慢推近', 'City at night, slow push-in') }
     ];
     var LANG = [
-      ['中文', '长寿命磷酸铁锂电池，3000 次以上循环。'],
-      ['EN', 'Long-life LiFePO4 pack, 3,000+ cycles.'],
-      ['ES', 'Batería LiFePO4: más de 3.000 ciclos.'],
-      ['AR', 'بطارية LiFePO4 تدوم أكثر من 3000 دورة.'],
-      ['RU', 'Батарея LiFePO4: более 3000 циклов.']
+      ['中文', '长寿命耐用设计，5 年质保。'],
+      ['EN', 'Long-life durable build, 5-year warranty.'],
+      ['ES', 'Diseño duradero, 5 años de garantía.'],
+      ['AR', 'تصميم متين مع ضمان 5 سنوات.'],
+      ['RU', 'Прочная конструкция, гарантия 5 лет.']
     ];
     var P = 6.2, LP = P / 2;
     // 首页蓝: on the homepage the generated pictures take the css/stargo-blue.css tokens (read once per build,
@@ -1079,7 +1079,7 @@
       if (bars > 1) sv('rect', { x: 60, y: 86, width: 132, height: 20, rx: 4, fill: '#fff', opacity: '.88' }, g);
       else { var t1 = sv('text', { x: 60, y: 106, class: 'sg-bat-brand' }, g); t1.textContent = 'STARGO'; }
       if (bars) sv('rect', { x: 60, y: 124, width: 120, height: 9, rx: 4.5, fill: '#fff', opacity: '.22' }, g);
-      else { var t2 = sv('text', { x: 60, y: 134, class: 'sg-bat-spec' }, g); t2.textContent = 'LiFePO4 · 12.8V 100Ah'; }
+      else { var t2 = sv('text', { x: 60, y: 134, class: 'sg-bat-spec' }, g); t2.textContent = 'Durable build · A-120'; }
       // glint
       var clip = sv('clipPath', { id: id + 'c' }, defs);
       sv('rect', { x: 0, y: 30, width: 280, height: 170 }, clip);
@@ -1151,7 +1151,7 @@
           return r;
         });
         el('div', 'sg-rail-h', rail, T('卖点', 'Selling points'));
-        [T('3000+ 次循环', '3,000+ cycles'), 'LiFePO4', T('IP67 防水', 'IP67'), T('5 年质保', '5-year warranty')].forEach(function (s) { el('span', 'sg-pill', rail, s); });
+        [T('出口包装', 'Export packing'), T('耐用设计', 'Durable build'), T('IP67 防水', 'IP67'), T('5 年质保', '5-year warranty')].forEach(function (s) { el('span', 'sg-pill', rail, s); });
       }
       if (mode !== 'mini') {
         var qb = el('div', 'sg-queue', stage);

@@ -418,7 +418,10 @@ export const GALLERY_TILES = [
  */
 export const HOME_MODULES = {
   'Growth OS': PRODUCT.growth,
+  'Lead Finder': PRODUCT.growth,
+  主动获客: PRODUCT.growth,
   'Sales Desk': PRODUCT.caseDesk,
+  成交工作台: PRODUCT.caseDesk,
   ERP: PRODUCT.erpItems,
   'AI 创作': editorialToken('os-boot'),
   'AI Creative': editorialToken('os-boot'),

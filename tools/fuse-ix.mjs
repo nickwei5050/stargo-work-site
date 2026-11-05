@@ -215,7 +215,7 @@ delete mergedPayload.events['sc-e-133'];
    animates, keeping its transforms and durations; the reveal delays are then
    dealt out evenly down the whole list so ten items stagger the way four did. */
 {
-  const items = NAV.length + MORE.length + 1;          // chrome.mjs: [...nav, ...more, swap]
+  const items = NAV.length + MORE.length + 2;          // chrome.mjs: [...nav, ...more, growth, swap]
   const list = mergedPayload.actionLists['a-190'];
   if (!list?.actionItemGroups) throw new Error('overlay menu: a-190 is not the open interaction any more');
 

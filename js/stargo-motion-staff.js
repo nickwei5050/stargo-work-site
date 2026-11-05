@@ -3,7 +3,7 @@
    product's dark chrome; every loop ends at a person and nothing is sent.
      crewSignal 市场信号  signals arrive, buyers re-rank, the top one waits for you (Growth OS)
      crewQuote  报价      Q-1046 is built, fails the floor-price check, waits for approval (Sales Desk)
-     crewFollow 跟进      Müller Energie silent three days; a follow-up waits for your OK (客户会话)
+     crewFollow 跟进      Müller Handel silent three days; a follow-up waits for your OK (客户会话)
      crewCoord  统筹      a goal split into five steps for four roles; the summary waits (数字员工)
    The site's one demo cast; each tile carries the engine's demo-data tag.
    The stage is the tile's own size (scale 1): 'full' from 380 × 290 (tiles are
@@ -137,14 +137,14 @@
   /* =========================== 市场信号 =========================== */
   function SignalScene() {
     var B = [
-      { n: 'Nordic Mobility AB', cc: 'SE', sub: T('电动自行车 · 斯德哥尔摩', 'E-bikes · Stockholm'), s0: 93, s1: 93 },
-      { n: 'Silva Mobilidade Ltda', cc: 'BR', sub: T('电动两轮 · 圣保罗', 'E-scooters · São Paulo'), s0: 89, s1: 89 },
-      { n: 'Nordwerk Energie GmbH', sn: 'Nordwerk Energie', xn: 'Nordwerk', cc: 'DE', sub: T('储能系统集成 · 汉堡', 'Storage integrator · Hamburg'), s0: 88, s1: 94 },
-      { n: 'Gulf Coast Lift Supply', sn: 'Gulf Coast Lift', cc: 'US', sub: T('叉车与仓储 · 休斯敦', 'Forklift fleets · Houston'), s0: 85, s1: 91 }
+      { n: 'Nordic Home AB', cc: 'SE', sub: T('家居用品 · 斯德哥尔摩', 'Home goods · Stockholm'), s0: 93, s1: 93 },
+      { n: 'Silva Comercial Ltda', cc: 'BR', sub: T('家居用品 · 圣保罗', 'Housewares · São Paulo'), s0: 89, s1: 89 },
+      { n: 'Nordwerk Handel GmbH', sn: 'Nordwerk Handel', xn: 'Nordwerk', cc: 'DE', sub: T('分销商 · 汉堡', 'Distributor · Hamburg'), s0: 88, s1: 94 },
+      { n: 'Gulf Coast Trading', sn: 'Gulf Coast', cc: 'US', sub: T('仓储物流 · 休斯敦', 'Warehousing · Houston'), s0: 85, s1: 91 }
     ];
     var SIG = [
-      { at: 1.1, b: 3, k: T('招聘', 'Hiring'), text: T('车队换锂电，正在招聘采购专员', 'Fleet moving to lithium, hiring a buyer'), m: T('', 'Going lithium, hiring a buyer'), x: T('车队换锂电，招聘采购专员', 'Fleet going lithium') },
-      { at: 4.5, b: 2, k: T('招标', 'Tender'), text: T('近 90 天第 3 条储能招标', 'Third storage tender in 90 days'), x: T('', '3rd tender in 90 days') }
+      { at: 1.1, b: 3, k: T('招聘', 'Hiring'), text: T('正在换供应商，正在招聘采购专员', 'Fleet switching suppliers, hiring a buyer'), m: T('', 'Expanding, hiring a buyer'), x: T('正在换供应商，招聘采购专员', 'Expanding its range') },
+      { at: 4.5, b: 2, k: T('招标', 'Tender'), text: T('近 90 天第 3 条采购招标', 'Third purchase tender in 90 days'), x: T('', '3rd tender in 90 days') }
     ];
     var RANK = [[0, 1, 2, 3], [0, 2, 3, 1], [1, 3, 0, 2]], RE = [2.3, 5.7];
     var WHY = 7.7, TYPE1 = 10.1, ASK = 10.5;
@@ -155,9 +155,9 @@
       scanK: T('正在扫描', 'Scanning'), scan: T('招聘、招标、采购记录和官网动态…', 'Hiring, tenders, purchase records, websites…'), scanM: T('招聘、招标、采购和官网动态…', 'Hiring, tenders, purchases…'),
       scanX: T('招聘、招标、采购记录…', 'Hiring, tenders…'),
       sigK: T('新信号', 'New signal'), whyK: T('推荐理由', 'Why this buyer'),
-      why: T('近 90 天发布 3 条储能招标，产品线与 48V 100Ah 高度匹配，建议优先联系采购经理。', 'Three storage tenders in 90 days and a product line that fits 48V 100Ah. Contact the purchasing manager first.'),
-      whyMid: T('近 90 天发布 3 条储能招标，产品线与 48V 100Ah 高度匹配。', 'Three storage tenders in 90 days; the product line fits 48V 100Ah.'),
-      whyMini: T('近 90 天 3 条储能招标', '3 storage tenders'), whyX: T('3 条储能招标', ''),
+      why: T('近 90 天发布 3 条采购招标，产品线与 A-200 高度匹配，建议优先联系采购经理。', 'Three purchase tenders in 90 days and a product line that fits A-200. Contact the purchasing manager first.'),
+      whyMid: T('近 90 天发布 3 条采购招标，产品线与 A-200 高度匹配。', 'Three purchase tenders in 90 days; the product line fits A-200.'),
+      whyMini: T('近 90 天 3 条采购招标', '3 purchase tenders'), whyX: T('3 条采购招标', ''),
       ask: T('建议优先联系 · 由你决定', 'Contact first? Your call'), askMini: T('由你决定', 'Your call'),
       list: T('候选客户 · 按匹配度排序', 'Buyers, ranked by fit'), scanned: T('今日已扫描 ', 'Scanned today: '),
       live: [T('扫描中', 'Scanning'), T('写推荐', 'Writing'), T('等你决定', 'Your call')]
@@ -168,7 +168,7 @@
       return Math.round(s);
     }
     function build(stage, L) {
-      var F = frame(stage, L, 'Growth OS', 'signal'), full = F.full, R = { F: F };
+      var F = frame(stage, L, T('主动获客', 'Lead Finder'), 'signal'), full = F.full, R = { F: F };
       // a narrow tile keeps the suggestion on the signal card, so the top buyer's row keeps its name
       var narrow = full && F.W < 600;
       R.sn = narrow || !full;
@@ -259,14 +259,14 @@
   /* ============================= 报价 ============================= */
   function QuoteScene() {
     var LINES = [
-      { at: 1.0, k: T('72V 锂电池组', '72V lithium pack'), x: T('', '72V pack'), q: T('50 套', '50 sets'), u: 'US$ 412', v: 20600 },
-      { at: 1.9, k: T('运输文件 UN38.3 · MSDS', 'UN38.3 · MSDS documents'), q: '', u: T('含', 'incl.'), v: 0 },
+      { at: 1.0, k: T('A-300', 'A-300 sample'), x: T('', 'A-300 pack'), q: T('50 套', '50 sets'), u: 'US$ 412', v: 20600 },
+      { at: 1.9, k: T('运输文件 CE · RoHS', 'CE · RoHS documents'), q: '', u: T('含', 'incl.'), v: 0 },
       { at: 2.8, k: T('海运 · CIF Jebel Ali', 'Sea freight · CIF Jebel Ali'), x: T('', 'Sea · CIF Jebel Ali'), q: '', u: '', v: 1180 }
     ];
     var CHECK0 = 4.1, CHECK1 = 5.3, GATE = 6.3;
     var D = {
       title: T('报价 Q-1046', 'Quote Q-1046'), who: T('Ahmed Al-Rashid · 阿联酋', 'Ahmed Al-Rashid · UAE'),
-      ask: T('询盘：72V 锂电池组的价格，50 套', 'Inquiry: price for the 72V lithium pack, 50 units'),
+      ask: T('询盘：A-300的价格，50 套', 'Inquiry: price for the A-300 sample, 50 units'),
       total: T('合计', 'Total'), check: T('底价校验', 'Floor-price check'), checking: T('核对中…', 'Checking…'), checkingN: T('底价校验中…', 'Checking the floor price…'),
       below: T('单价低于底价 US$ 426（-3.3%）', 'Unit price below the US$ 426 floor (-3.3%)'), belowMini: T('低于底价 3.3%', 'Below floor, -3.3%'),
       gate: T('已提交审批 · 等你批准', 'Awaiting your approval'), gateSub: T('批准前不会发给客户', 'Not sent until you approve'),
@@ -277,7 +277,7 @@
       liveM: [T('报价中', 'Quoting'), T('校验中', 'Checking'), T('等你审批', 'Approve?')]
     };
     function build(stage, L) {
-      var F = frame(stage, L, 'Sales Desk', 'doc'), full = F.full, R = { F: F }, y = F.top;
+      var F = frame(stage, L, T('成交工作台', 'Sales Desk'), 'doc'), full = F.full, R = { F: F }, y = F.top;
       var hd = box('sg-crew-qhead', stage, F.pad, y, F.iw, full ? 48 : 20);
       var t1 = el('div', 'sg-crew-qtitle', hd); el('b', '', t1, full ? D.title : 'Q-1046'); el('span', '', t1, D.who);
       if (full) el('div', 'sg-crew-qask', hd, D.ask);
@@ -351,15 +351,15 @@
   function FollowScene() {
     var DAYS = [T('10/20', 'Oct 20'), T('10/21', 'Oct 21'), T('10/22', 'Oct 22'), T('今天', 'Today')];
     var DAY_AT = [0.7, 1.5, 2.3, 3.1], GAP = 3.5, DRAFT0 = 4.2, DRAFT1 = 8.6, GATE = 9.1;
-    var MAIL = 'Hello, following up on our quote for 200 pcs 48V 100Ah, DAP Hamburg. Happy to answer questions or arrange a sample pack first.';
-    var MAIL_2 = 'Following up on our quote for 200 pcs 48V 100Ah, DAP Hamburg. Can we answer any questions?';
+    var MAIL = 'Hello, following up on our quote for 200 pcs A-200, DAP Hamburg. Happy to answer questions or arrange a sample pack first.';
+    var MAIL_2 = 'Following up on our quote for 200 pcs A-200, DAP Hamburg. Can we answer any questions?';
     // one-line drafts, longest first: the first that fits whole is typed (≈ 8 / 6.9 px a character)
-    var MAIL_1 = ['Following up on our quote for 200 pcs 48V 100Ah, DAP Hamburg…', 'Following up on our quote for 200 pcs 48V 100Ah…', 'Following up on our 48V 100Ah quote…', 'Following up on our quote…'];
-    var MAIL_LONG = 'Hello,\nFollowing up on the quote we sent on 20 October for 200 pcs 48V 100Ah, DAP Hamburg. Is there anything we can clarify? We can also arrange a sample pack first.\nBest regards';
+    var MAIL_1 = ['Following up on our quote for 200 pcs A-200, DAP Hamburg…', 'Following up on our quote for 200 pcs A-200…', 'Following up on our A-200 quote…', 'Following up on our quote…'];
+    var MAIL_LONG = 'Hello,\nFollowing up on the quote we sent on 20 October for 200 pcs A-200, DAP Hamburg. Is there anything we can clarify? We can also arrange a sample pack first.\nBest regards';
     var D = {
-      who: 'Müller Energie GmbH', where: T('德国 · 询盘 200 pcs 48V 100Ah, DAP Hamburg', 'Germany · inquiry: 200 pcs 48V 100Ah, DAP Hamburg'),
-      whereS: T('德国 · 200 pcs 48V 100Ah', 'Germany · 200 pcs 48V 100Ah'), whereXS: T('德国 · 48V 100Ah', 'Germany · 48V 100Ah'),
-      whoMini: T('Müller Energie · 德国', 'Müller Energie · Germany'),
+      who: 'Müller Handel GmbH', where: T('德国 · 询盘 200 pcs A-200, DAP Hamburg', 'Germany · inquiry: 200 pcs A-200, DAP Hamburg'),
+      whereS: T('德国 · 200 pcs A-200', 'Germany · 200 pcs A-200'), whereXS: T('德国 · A-200', 'Germany · A-200'),
+      whoMini: T('Müller Handel · 德国', 'Müller Handel · Germany'),
       sent: T('已发报价', 'Quote sent'), quiet: T('未回复', 'No reply'), silent: T('3 天未回复', 'No reply in 3 days'),
       draftK: T('AI 起草的跟进信 · 英文', 'Follow-up drafted by AI'),
       gate: T('待你确认 · 尚未发送', 'Waiting for your OK'), gateSub: T('你确认后才会发出', 'Not sent until you confirm'),
@@ -404,7 +404,7 @@
       var withK = full && dh >= 72, lines = full ? Math.floor((dh - 24 - (withK ? 25 : 0)) / 23) : 1;
       var long = full && dh >= 170;
       if (withK) { var dk = el('div', 'sg-crew-k', dr); glyph('mail', dk, 13); el('span', '', dk, D.draftK); }
-      if (long) el('div', 'sg-crew-draft-subj', dr, 'Re: 200 pcs 48V 100Ah, DAP Hamburg');
+      if (long) el('div', 'sg-crew-draft-subj', dr, 'Re: 200 pcs A-200, DAP Hamburg');
       R.body = el('div', 'sg-crew-draft-text', dr);
       if (lines <= 1) cl(dr, 'is-one', true);
       var one = MAIL_1[MAIL_1.length - 1], cap = (F.iw - (full ? 32 : 16)) / (full ? 8 : 6.9);
@@ -438,10 +438,10 @@
 
   /* ============================= 统筹 ============================= */
   function CoordScene() {
-    var GOAL = T('开拓巴西电动两轮市场', 'Open the Brazil e-scooter market');
+    var GOAL = T('开拓巴西新市场', 'Open the Brazil market');
     var STEPS = [
       { t: T('找出 12 家经销商', 'Find 12 dealers'), m: T('找出 12 家经销商', 'Find 12 dealers'), s: T('找经销商', 'Dealers'), who: T('研究', 'Research'), a: 2.6, b: 6.4 },
-      { t: T('核对 60V/72V 参数', 'Check 60V/72V specs'), m: T('核对 60V/72V 参数', 'Check 60V/72V'), s: T('核对参数', 'Specs'), who: T('产品', 'Product'), a: 2.8, b: 5.2 },
+      { t: T('核对 A-150/A-300 参数', 'Check A-150/A-300 specs'), m: T('核对 A-150/A-300 参数', 'Check A-150/A-300'), s: T('核对参数', 'Specs'), who: T('产品', 'Product'), a: 2.8, b: 5.2 },
       { t: T('起草葡语开发信', 'Draft Portuguese emails'), m: T('起草葡语开发信', 'Draft PT emails'), s: T('写开发信', 'Emails'), who: T('销售', 'Sales'), a: 6.6, b: 9.0, wait: T('等名单和参数', 'Waits on 01, 02'), waitM: T('等 01·02', 'After 01·02') },
       { t: T('做 3 张场景图', 'Make 3 scene images'), m: T('做 3 张场景图', 'Make 3 images'), s: T('场景图', 'Images'), who: T('创意', 'Creative'), a: 3.0, b: 8.0 },
       { t: T('汇总，交你确认', 'Summary for your OK'), m: T('汇总，交你确认', 'Summary for you'), s: T('汇总', 'Summary'), who: T('统筹', 'Lead'), a: 9.2, b: 10.3, last: true }

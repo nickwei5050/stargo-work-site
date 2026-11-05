@@ -46,8 +46,8 @@ const ICON = (slug) => `${ICON_DIR}${slug}-128.webp`;
 
 /* The icons' own category colours: the short bar under each glyph. */
 export const APP_CATEGORIES = [
-  { id: 'core', count: 6, color: '#8ddaf5', rgb: '141,218,245', name: { zh: '核心与智脑', en: 'Core & Intelligence' }, desc: { zh: 'AI 员工对话、企业知识、语音与浏览器', en: 'AI conversations, company knowledge, voice and the browser' } },
-  { id: 'business', count: 7, color: '#8fa8ff', rgb: '143,168,255', name: { zh: '业务与客户', en: 'Business & Customers' }, desc: { zh: '企业管理、客户会话、找客户与合规尽调', en: 'Company records, customer conversations, prospecting and due diligence' } },
+  { id: 'core', count: 6, color: '#8ddaf5', rgb: '141,218,245', name: { zh: '核心与智脑', en: 'Core & Intelligence' }, desc: { zh: 'AI 工作台、企业知识、办公文档、语音与浏览器', en: 'AI workbench, company knowledge, office documents, voice and the browser' } },
+  { id: 'business', count: 7, color: '#8fa8ff', rgb: '143,168,255', name: { zh: '业务与客户', en: 'Business & Customers' }, desc: { zh: 'ERP、询盘、找客户与员工后台', en: 'ERP, inquiries, prospecting and the staff console' } },
   { id: 'creative', count: 5, color: '#b8baf6', rgb: '184,186,246', name: { zh: '视觉与创作', en: 'Visual & Creative' }, desc: { zh: '创意画布、视频与 3D 图纸', en: 'A creative canvas, video and 3D drawings' } },
   { id: 'automation', count: 4, color: '#b1c2df', rgb: '177,194,223', name: { zh: '自动化与底座', en: 'Automation & Platform' }, desc: { zh: '流程、脚本、应用连接与模型接入', en: 'Workflows, scripts, app connections and model access' } },
 ];
@@ -56,26 +56,26 @@ export const APP_CATEGORIES = [
    only names that would not fit there in two lines carry one. */
 export const APPS = [
   // 核心与智脑
-  { slug: 'brain', cat: 'core', group: '10', name: { zh: '智脑', en: 'AI Brain' }, role: { zh: '多个 AI 员工在一个对话里分工协作，结合企业资料作答', en: 'Several AI employees in one conversation, answering from your company’s own material' } },
-  { slug: 'knowledge', cat: 'core', group: '06', name: { zh: '知识库', en: 'Knowledge Base' }, role: { zh: '从企业文档里找出能回答问题的那一段，并注明出处', en: 'Finds the passage in your documents that answers the question, and cites it' } },
+  { slug: 'brain', cat: 'core', group: '10', name: { zh: 'AI 工作台', en: 'AI Workbench' }, short: { en: 'Workbench' }, role: { zh: '多个 AI 员工在一个对话里分工协作，结合企业资料作答', en: 'Several AI employees in one conversation, answering from your company’s own material' } },
+  { slug: 'knowledge', cat: 'core', group: '06', name: { zh: '企业知识库', en: 'Knowledge Base' }, role: { zh: '从企业文档里找出能回答问题的那一段，并注明出处', en: 'Finds the passage in your documents that answers the question, and cites it' } },
   { slug: 'voice', cat: 'core', group: '01', name: { zh: '语音助手', en: 'Voice Assistant' }, role: { zh: '开口说一句，就能提需求、建任务', en: 'Make a request or create a task just by speaking' } },
-  { slug: 'notes', cat: 'core', group: '06', name: { zh: '笔记', en: 'Notes' }, role: { zh: '文档、团队资料页和项目看板，AI 协助起草', en: 'Documents, team pages and project boards, with AI help drafting' } },
-  { slug: 'browser', cat: 'core', group: '01', name: { zh: '浏览器', en: 'Browser' }, role: { zh: '在云端打开网页和内部系统，只访问授权范围内的地址', en: 'Websites and internal systems in the cloud, only where access is authorized' } },
+  { slug: 'notes', cat: 'core', group: '06', name: { zh: '办公文档', en: 'Office' }, role: { zh: '文档、表格和演示文稿，AI 协助起草', en: 'Documents, spreadsheets and slides, with AI help drafting' } },
+  { slug: 'browser', cat: 'core', group: '01', name: { zh: '网页浏览器', en: 'Web Browser' }, role: { zh: '在企业自己的服务器上打开网页，只访问授权范围内的地址', en: 'Opens websites on the company’s own server, only where access is authorized' } },
   { slug: 'ai-browser', cat: 'core', group: '11', name: { zh: 'AI 浏览器', en: 'AI Browser' }, role: { zh: 'AI 员工在授权范围内操作网页工具，不绕过登录与安全验证', en: 'AI employees use web tools as authorized, never bypassing sign-in or security checks' } },
   // 业务与客户
-  { slug: 'enterprise', cat: 'business', group: '08', name: { zh: '企业管理', en: 'Enterprise Management' }, short: { en: 'Enterprise' }, role: { zh: '产品、物料、采购、库存、生产与财务记录', en: 'Products, purchasing, inventory, production and finance records' } },
-  { slug: 'conversations', cat: 'business', group: '04', name: { zh: '客户会话', en: 'Customer Chat' }, role: { zh: '邮件、官网和社媒的对话集中在一处；AI 起草，人确认后再发', en: 'Email, website and social chats in one place; AI drafts, a person approves before sending' } },
-  { slug: 'ai-staff', cat: 'business', group: '10', name: { zh: '数字员工', en: 'AI Staff' }, role: { zh: '给下属数字员工派活、看进度、复核结果（实验性）', en: 'Assign work to subordinate AI employees and review what they return (experimental)' } },
-  { slug: 'search', cat: 'business', group: '02', name: { zh: '智搜', en: 'Smart Search' }, role: { zh: '一次搜索多个来源，查公司、行业与贸易资讯', en: 'Searches many sources at once for companies, industries and trade news' } },
-  { slug: 'outreach', cat: 'business', group: '03', name: { zh: '拓客', en: 'Outreach' }, role: { zh: '找海外潜在客户与决策人，经你授权再联系', en: 'Finds overseas buyers and decision-makers; reaches out only with your authorization' } },
-  { slug: 'due-diligence', cat: 'business', group: '04', name: { zh: '合规尽调', en: 'Due Diligence' }, role: { zh: '协助对照合规名单筛查贸易伙伴、核实背景，结果由人复核', en: 'Helps screen partners against compliance lists; a person reviews every result' } },
+  { slug: 'enterprise', cat: 'business', group: '08', name: { zh: '企业管理 ERP', en: 'Business ERP' }, short: { en: 'ERP' }, role: { zh: '产品、物料、采购、库存、生产与财务记录', en: 'Products, purchasing, inventory, production and finance records' } },
+  { slug: 'conversations', cat: 'business', group: '04', name: { zh: '询盘接入', en: 'Inquiry Inbox' }, role: { zh: '询盘邮箱和 WhatsApp 的消息集中在一处；AI 起草，人确认后再发', en: 'Inquiry email and WhatsApp in one place; AI drafts, a person approves before sending' } },
+  { slug: 'ai-staff', cat: 'business', group: '10', name: { zh: '员工后台', en: 'Staff Console' }, role: { zh: '给数字员工派活、看进度、复核结果', en: 'Assign work to AI employees and review what they return' } },
+  { slug: 'search', cat: 'business', group: '02', name: { zh: '行业查找', en: 'Industry Finder' }, role: { zh: '一次搜索多个来源，查公司、行业与贸易资讯', en: 'Searches many sources at once for companies, industries and trade news' } },
+  { slug: 'outreach', cat: 'business', group: '03', name: { zh: '主动获客', en: 'Lead Finder' }, role: { zh: '按你的产品和市场找海外买家与决策人，经你确认再联系', en: 'Finds overseas buyers and decision-makers for your products; reaches out only after you confirm' } },
+  { slug: 'due-diligence', cat: 'business', group: '04', name: { zh: '合规尽调', en: 'Due Diligence' }, role: { zh: '对照合规名单筛查贸易伙伴，结果由人复核（取得数据商用许可前暂不对客户开放）', en: 'Screens partners against compliance lists, with a person reviewing every result (not yet open to customers until the data licence is in place)' } },
   { slug: 'cockpit', cat: 'business', group: '01', name: { zh: '经营驾驶舱', en: 'Business Cockpit' }, role: { zh: '公司现在在做什么，一屏看完', en: 'What the business is doing right now, on one screen' } },
   // 视觉与创作
-  { slug: 'canvas', cat: 'creative', group: '09', name: { zh: '无限画布', en: 'Infinite Canvas' }, role: { zh: 'AI 创意白板：草图、思维导图与局部重绘', en: 'An AI whiteboard for sketches, mind maps and partial redraws' } },
+  { slug: 'canvas', cat: 'creative', group: '09', name: { zh: '万能画布', en: 'Canvas' }, role: { zh: 'AI 创意白板：草图、思维导图与局部重绘', en: 'An AI whiteboard for sketches, mind maps and partial redraws' } },
   { slug: 'video-editor', cat: 'creative', group: '09', name: { zh: '视频编辑', en: 'Video Editor' }, role: { zh: '把产品素材剪成适合社媒发布的短视频', en: 'Cuts product footage into short clips ready for social media' } },
-  { slug: 'reference-video', cat: 'creative', group: '09', name: { zh: '参考视频', en: 'Reference Videos' }, role: { zh: '拆解参考视频的结构，为你的产品做原创改编', en: 'Borrows a reference video’s structure for an original video of your product' } },
-  { slug: 'video-studio', cat: 'creative', group: '09', name: { zh: '视频制作', en: 'Video Studio' }, role: { zh: '按脚本和产品资料生成营销视频', en: 'Makes marketing videos from a script and your product material' } },
-  { slug: 'cad', cat: 'creative', group: '06', name: { zh: '3D CAD', en: '3D CAD' }, role: { zh: '在浏览器里查看、标注和测量 2D 与 3D 图纸', en: 'View, mark up and measure 2D and 3D drawings in the browser' } },
+  { slug: 'reference-video', cat: 'creative', group: '09', name: { zh: '参考视频', en: 'Reference Videos' }, role: { zh: '拆解参考视频的结构做原创改编（取得商业授权前暂不对客户开放）', en: 'Borrows a reference video’s structure for an original video (not yet open to customers until the commercial licence is in place)' } },
+  { slug: 'video-studio', cat: 'creative', group: '09', name: { zh: '视频中心', en: 'Video Center' }, role: { zh: '按脚本和产品资料生成营销视频', en: 'Makes marketing videos from a script and your product material' } },
+  { slug: 'cad', cat: 'creative', group: '06', name: { zh: 'Stargo Work 3D CAD', en: '3D CAD' }, short: { zh: '3D CAD' }, role: { zh: '在浏览器里查看、标注和测量 2D 与 3D 图纸', en: 'View, mark up and measure 2D and 3D drawings in the browser' } },
   // 自动化与底座
   { slug: 'workflows', cat: 'automation', group: '11', name: { zh: '流程编排', en: 'Workflows' }, role: { zh: '跨应用把步骤连起来，不用写代码；对外动作设有审批', en: 'Links steps across apps without code, with approval gates on outbound actions' } },
   { slug: 'scripts', cat: 'automation', group: '11', name: { zh: '脚本执行', en: 'Scripts' }, role: { zh: '整理流程要用的数据，按时运行例行脚本', en: 'Prepares the data a workflow needs and runs routine scripts on schedule' } },

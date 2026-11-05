@@ -83,7 +83,7 @@
       el('span', 'sgi-cn', at, T('改进 #12', sq ? '#12' : 'Change #12'));
       el('b', '', at, T('开发信 v2', sq ? 'Email v2' : 'Outreach email v2'));
       R.aPill = el('span', 'sgi-pill', ah);
-      el('div', 'sgi-sub', a, T('从 #1d303b 的人工修正复盘：开头先提对方的储能项目', 'From the fix on #1d303b: open with the buyer’s storage project'));
+      el('div', 'sgi-sub', a, T('从 #1d303b 的人工修正复盘：开头先提对方的采购项目', 'From the fix on #1d303b: open with the buyer’s purchase project'));
       R.bars = [[T('现行 v1', 'Current v1'), 4.2], [T('新版 v2', 'New v2'), 6.7]].map(function (b, i) {
         var r = el('div', 'sgi-ab' + (i ? ' is-new' : ''), a);
         el('span', 'sgi-ab-k', r, b[0]);

@@ -17,7 +17,7 @@
 import { makeSub, findByClass, extractElement, escapeHtml } from './lib-html.mjs';
 import { editorialImages, photoAlt } from './editorial-images.mjs';
 import { readFileSync, existsSync } from 'node:fs';
-import { CAP_JUMPS, NAV, SECONDARY, MORE, LANG_SWITCH, CHROME, META, CONTACT_INFO, CONTACT_UI, SITE_URL } from './copy.mjs';
+import { CAP_JUMPS, NAV, SECONDARY, MORE, GROWTH_LINK, LANG_SWITCH, CHROME, META, CONTACT_INFO, CONTACT_UI, SITE_URL } from './copy.mjs';
 import { POSTS, BLOG_UI, postPath, coverSrc, faqEntities, wordCount } from './blog.mjs';
 import { OG, OS_ART, HOME_MOSAIC } from './replaceables.mjs';
 import { MENU_ART, menuTag } from './code-art-atmos.mjs';   // lane atmos: the side-menu card's harbour, drawn in code, and its tag
@@ -65,7 +65,7 @@ function firstLink(block) {
   return extractElement(block, m.index, 'a').text;
 }
 
-function renderLink(tpl, { href, label, lang }, current) {
+function renderLink(tpl, { href, label, lang, external }, current) {
   let out = tpl
     .replace(/\s*aria-current="page"/, '')
     .replace(/ w--current\b/, '')
@@ -74,6 +74,7 @@ function renderLink(tpl, { href, label, lang }, current) {
     .replace(/(<div class="button-text[^"]*">)[^<]*(<\/div>)/g, `$1${label}$2`);
   if (lang) out = out.replace(/<a\b/, `<a hreflang="${lang}" lang="${lang}"`);
   if (current) out = out.replace(/<a\b/, '<a aria-current="page"').replace(/class="([^"]*)"/, 'class="$1 w--current"');
+  if (external) out = out.replace(/\s*target="[^"]*"/, '').replace(/<a\b/, '<a target="_blank" rel="noopener"');
   return out;
 }
 
@@ -105,6 +106,7 @@ function links(lang, current) {
   const other = lang === 'zh' ? `en/${current}` : `../${current}`;
   const nav = NAV.map((n) => ({ href: n.href, label: t(n.label) }));
   const more = MORE.map((n) => ({ href: n.href, label: t(n.label) }));
+  const growth = { href: GROWTH_LINK.href, label: t(GROWTH_LINK.label), external: true };
   const secondary = SECONDARY.map((n) => ({ href: n.href, label: t(n.label) }));
   const swap = { href: other, label: t(LANG_SWITCH), swap: true, lang: lang === 'zh' ? 'en' : 'zh-CN' };
   /* The four stages a buyer looks for, jumping straight to their block on the
@@ -120,7 +122,7 @@ function links(lang, current) {
   const demoCta = CHROME.find(([k]) => k === 'Let’s Collaborate');
   if (!demoCta) throw new Error('chrome: demo CTA label not found');
   const demo = { href: 'contact.html', label: t(demoCta[1]) };
-  return { nav, more, secondary, swap, capJumps, demo };
+  return { nav, more, growth, secondary, swap, capJumps, demo };
 }
 
 function topNav(html, L, current) {
@@ -175,7 +177,7 @@ function overlayMenu(html, L, current) {
   }
   const item = findByClass(flex.text, 'div', 'menu-item');
   const linkTpl = firstLink(item.text);
-  const items = [...L.nav, ...L.more, L.swap].map((n, i) =>
+  const items = [...L.nav, ...L.more, L.growth, L.swap].map((n, i) =>
     `<div class="menu-item _${String(i + 1).padStart(2, '0')}">${renderLink(linkTpl, n, isCurrent(n.href, current))}</div>`).join('');
   return replaceInner(html, flex, items);
 }
@@ -212,7 +214,7 @@ function footerPages(html, L, current) {
   if (!grid) throw new Error('chrome: footer pages grid not found');
   const tpl = firstLink(grid.text);
   const n = L.nav;
-  const cols = [[n[0], n[1], n[2], n[3]], [n[4], n[5], n[6], L.swap], [...L.more, ...L.secondary]];
+  const cols = [[n[0], n[1], n[2], n[3]], [n[4], n[5], n[6], L.swap], [...L.more, L.growth, ...L.secondary]];
   const inner = cols.map((c) => `<div class="flex-item">${c.map((x) => renderLink(tpl, x, isCurrent(x.href, current))).join('')}</div>`).join('');
   return replaceInner(html, grid, inner);
 }

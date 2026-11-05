@@ -76,19 +76,19 @@ const CHECK = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" aria-
    app named on the chip that slides in on hover. */
 const ROLES = [
   {
-    ico: I.research, name: B('市场研究', 'Research'), task: B('按匹配度排序候选客户', 'Ranking buyers by fit'), ts: B('排序候选客户', 'Ranking buyers'), app: B('Growth OS', 'Growth OS'), chip: B('Growth OS', 'Growth OS'),
+    ico: I.research, name: B('市场研究', 'Research'), task: B('按匹配度排序候选客户', 'Ranking buyers by fit'), ts: B('排序候选客户', 'Ranking buyers'), app: B('主动获客', 'Lead Finder'), chip: B('Lead Finder', 'Lead Finder'),
     st: 'run', stl: B('进行中 · 2 条新信号', 'Running · 2 new signals'), s: B('进行中', 'Running'),
-    viz: (t) => `<div class="sg-rc-rank">${[['Nordwerk', 94], ['Nordic Mobility', 93, 'Nordic'], ['Gulf Coast', 91]].map(([n, v, sn]) => `<div class="sg-rc-rk"><span>${sn ? `<span class="sg-rc-vl">${n}</span><span class="sg-rc-xs">${sn}</span>` : n}</span><b>${v}</b><i style="--v:${((v - 70) / 30).toFixed(3)}"></i></div>`).join('')}</div>`,
+    viz: (t) => `<div class="sg-rc-rank">${[['Nordwerk', 94], ['Nordic Home', 93, 'Nordic'], ['Gulf Coast', 91]].map(([n, v, sn]) => `<div class="sg-rc-rk"><span>${sn ? `<span class="sg-rc-vl">${n}</span><span class="sg-rc-xs">${sn}</span>` : n}</span><b>${v}</b><i style="--v:${((v - 70) / 30).toFixed(3)}"></i></div>`).join('')}</div>`,
   },
   {
-    ico: I.follow, name: B('销售跟进', 'Follow-up'), task: B('Müller Energie 3 天未回复', 'Müller Energie, no reply in 3 days'), ts: B('Müller 3 天未回复', 'Müller: no reply'), app: B('客户会话', 'Customer Chat'), chip: B('客户会话', 'Customer Chat'),
+    ico: I.follow, name: B('销售跟进', 'Follow-up'), task: B('Müller Handel 3 天未回复', 'Müller Handel, no reply in 3 days'), ts: B('Müller 3 天未回复', 'Müller: no reply'), app: B('客户会话', 'Customer Chat'), chip: B('客户会话', 'Customer Chat'),
     st: 'wait', stl: B('跟进信待你确认', 'Draft needs your OK'), s: B('待你确认', 'Needs your OK'), xs: B('待你确认', 'Your OK'),
     viz: (t) => `<div class="sg-rc-tl"><i class="is-sent"></i><i></i><i></i><i class="is-now"></i><span>${t(B('10/20 已发报价', 'Oct 20 quote sent'))}</span></div>`,
   },
   {
-    ico: I.spec, name: B('产品规格', 'Specs'), task: B('核对 48V 100Ah 规格', 'Checking 48V 100Ah specs'), ts: B('核对 48V 100Ah', '48V 100Ah specs'), app: B('ERP · 产品资料', 'ERP · Products'), chip: B('ERP', 'ERP'),
+    ico: I.spec, name: B('产品规格', 'Specs'), task: B('核对 A-200 规格', 'Checking A-200 specs'), ts: B('核对 A-200', 'A-200 specs'), app: B('ERP · 产品资料', 'ERP · Products'), chip: B('ERP', 'ERP'),
     st: 'done', stl: B('规格已核对', 'Specs checked'), s: B('已核对', 'Checked'),
-    viz: (t) => `<div class="sg-rc-checks">${[B('电压 48V', 'Voltage 48V'), B('容量 100Ah', 'Capacity 100Ah'), B('UN38.3 文件', 'UN38.3 file')].map((x) => `<div>${CHECK}<span>${t(x)}</span></div>`).join('')}</div>`,
+    viz: (t) => `<div class="sg-rc-checks">${[B('型号 A-200', 'Model A-200'), B('尺寸与材质', 'Size & material'), B('CE 证书', 'CE certificate')].map((x) => `<div>${CHECK}<span>${t(x)}</span></div>`).join('')}</div>`,
   },
   {
     ico: I.finance, name: B('财务对账', 'Finance'), task: B('核对 10 月到账', 'Matching October payments'), ts: B('核对 10 月到账', 'October payments'), app: B('ERP · 收款', 'ERP · Receipts'), chip: B('ERP', 'ERP'),
@@ -96,7 +96,7 @@ const ROLES = [
     viz: (t) => `<div class="sg-rc-recon"><div><b>17</b><span>/18 ${t(B('笔已匹配', 'matched'))}</span></div><i><i style="--v:${(17 / 18).toFixed(3)}"></i></i><em>${t(B('1 笔差异待查', '1 to check'))}</em></div>`,
   },
   {
-    ico: I.coord, name: B('统筹协调', 'Coordinator'), task: B('开拓巴西电动两轮市场', 'Brazil e-scooter market'), ts: B('巴西电动两轮市场', 'Brazil e-scooters'), app: B('数字员工', 'AI Staff'), chip: B('数字员工', 'AI Staff'),
+    ico: I.coord, name: B('统筹协调', 'Coordinator'), task: B('开拓巴西新市场', 'Brazil market'), ts: B('巴西新市场', 'Brazil market'), app: B('数字员工', 'AI Staff'), chip: B('数字员工', 'AI Staff'),
     st: 'run', stl: B('4 位协作中 · 3/5', '4 at work · 3 of 5'), s: B('协作中', 'At work'),
     viz: (t) => `<div class="sg-rc-steps">${[B('研', 'R'), B('产', 'P'), B('销', 'S'), B('创', 'C'), B('统', 'L')].map((x, i) => `<i class="${i < 3 ? 'is-done' : i === 3 ? 'is-run' : ''}">${t(x)}</i>`).join('')}</div>`,
   },

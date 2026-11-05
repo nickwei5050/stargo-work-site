@@ -35,9 +35,9 @@ export const TOUR = {
   steps: [
     {
       tab: { zh: '找客户', en: 'Find buyers' },
-      product: 'Growth OS',
+      product: { zh: '主动获客', en: 'Lead Finder' },
       title: { zh: '告诉它卖什么、卖给谁，它去找客户。', en: 'Tell it what you sell and to whom. It finds the buyers.' },
-      shots: [{ base: 'live05-growth-home-2x1', w: 1600, h: 788, alt: { zh: 'Growth OS 首页真实截图：上手指引、开始找客户、发送开发信', en: 'Growth OS home, real screenshot: setup guide, find customers, send outreach' } }],
+      shots: [{ base: 'live05-growth-home-2x1', w: 1600, h: 788, alt: { zh: '主动获客首页真实截图：上手指引、开始找客户、发送开发信', en: 'Lead Finder home, real screenshot: setup guide, find customers, send outreach' } }],
       points: [
         { x: 12, y: 21, zh: '上手六步，做到哪一步、下一步做什么，一眼看清。', en: 'Six setup steps: where you are and what comes next.' },
         { x: 9, y: 74, zh: '按你的产品和目标市场找潜在客户，并写出为什么合适。花钱前先请你确认数量和花费。', en: 'Finds prospects for your products and markets and says why each one fits. Asks you to confirm quantity and cost first.' },
@@ -47,9 +47,9 @@ export const TOUR = {
     },
     {
       tab: { zh: '接询盘', en: 'Answer inquiries' },
-      product: 'Sales Desk',
+      product: { zh: '成交工作台', en: 'Sales Desk' },
       title: { zh: '询盘来了，谁先回、怎么回，一屏看完。', en: 'Who to answer first, and how, on one screen.' },
-      shots: [{ base: 'live09-sales-desk-case-16x9', w: 1600, h: 900, alt: { zh: 'Sales Desk 真实截图：询盘列表、成交七步、AI 起草回复与提交审批', en: 'Sales Desk, real screenshot: inquiry list, seven deal stages, AI draft reply and submit for approval' } }],
+      shots: [{ base: 'live09-sales-desk-case-16x9', w: 1600, h: 900, alt: { zh: '成交工作台真实截图：询盘列表、成交七步、AI 起草回复与提交审批', en: 'Sales Desk, real screenshot: inquiry list, seven deal stages, AI draft reply and submit for approval' } }],
       points: [
         { x: 24, y: 4, zh: '待回复、超时没回、等你审批，每天一打开就知道。', en: 'Waiting for reply, overdue, waiting for your approval: visible the moment you open it.' },
         { x: 44, y: 16, zh: '这单走到哪一步（新询盘到已成交共七步）；型号、数量、目的港、贸易术语自动整理好。', en: 'Which of the seven stages the deal is in; model, quantity, destination and Incoterm already pulled out.' },
@@ -60,7 +60,7 @@ export const TOUR = {
     },
     {
       tab: { zh: '报价审批', en: 'Approve quotes' },
-      product: 'Sales Desk',
+      product: { zh: '成交工作台', en: 'Sales Desk' },
       title: { zh: '价格、交期、认证，必须人来拍板。', en: 'Price, lead time and certification are signed off by a person.' },
       shots: [{ base: 'live18-quote-approval-16x9', w: 1600, h: 900, bare: true, alt: { zh: '报价审批真实截图：从邮件接入到 PI 的七步流程与待审批报价', en: 'Quote approval, real screenshot: the seven steps from email to PI and a quote waiting for approval' } }],
       points: [
@@ -74,16 +74,16 @@ export const TOUR = {
       tab: { zh: '产品资料', en: 'Product catalogue' },
       product: 'ERP',
       title: { zh: '产品资料在系统里，AI 回复和报价才有依据。', en: 'Your catalogue lives in the system, so replies and quotes have a source.' },
-      shots: [{ base: 'live23-erp-items-16x9', w: 1600, h: 899, alt: { zh: 'ERP 物料列表真实截图：STARGO 锂电池各系列产品', en: 'ERP item list, real screenshot: STARGO lithium battery series' } }],
+      shots: [{ base: 'live23-erp-items-16x9', w: 1600, h: 899, alt: { zh: 'ERP 物料列表真实截图（物料名称已打码）', en: 'ERP item list, real screenshot (item names masked)' } }],
       points: [
-        { x: 16, y: 44, zh: '这是我们自己工厂的真实产品库：STARGO 锂电池各系列。', en: 'This is our own factory’s real catalogue: STARGO lithium battery series.' },
-        { x: 91, y: 22, zh: '177 个物料，按物料组、变体管理，随时筛选。', en: '177 items, organised by group and variant, filterable.' },
+        { x: 16, y: 44, zh: '企业自己的产品、型号和规格都录在 ERP 里（截图里的物料名称已打码）。', en: 'The company’s own products, models and specs live in the ERP (item names are masked in this screenshot).' },
+        { x: 91, y: 22, zh: '物料按物料组、变体管理，随时筛选。', en: 'Items are organised by group and variant, and filterable.' },
         { x: 95, y: 3, zh: '新产品随手加，AI 回复客户时自动引用。', en: 'Add a product once; the AI cites it when it answers customers.' },
       ],
     },
     {
       tab: { zh: '手机处理', en: 'On the phone' },
-      product: 'Sales Desk',
+      product: { zh: '成交工作台', en: 'Sales Desk' },
       title: { zh: '出门在外，手机上也能回、也能批。', en: 'Away from the desk, answer and approve from the phone.' },
       phone: true,
       shots: [
@@ -115,7 +115,7 @@ function shotHtml(step, shot, si, lang) {
   if (step.phone) return `<div class="sg-tour-phone"><div class="sg-tour-pic">${img}${pins}</div></div>`;
   // a capture that already has its own window title bar gets no second one
   if (shot.bare) return `<div class="sg-tour-window"><div class="sg-tour-pic">${img}${pins}</div></div>`;
-  return `<div class="sg-tour-window"><div class="sg-tour-bar" aria-hidden="true"><i></i><i></i><i></i><span>STARGO WORK · ${escapeHtml(step.product)}</span></div><div class="sg-tour-pic">${img}${pins}</div></div>`;
+  return `<div class="sg-tour-window"><div class="sg-tour-bar" aria-hidden="true"><i></i><i></i><i></i><span>STARGO WORK · ${escapeHtml(t(step.product, lang))}</span></div><div class="sg-tour-pic">${img}${pins}</div></div>`;
 }
 
 export function productTour(lang) {
@@ -126,7 +126,7 @@ export function productTour(lang) {
     const list = s.points.map((p, j) => `<li data-pin="${j}"><span class="sg-tour-pin" aria-hidden="true">${j + 1}</span><span>${escapeHtml(t(p, lang))}</span></li>`).join('');
     return `<div role="tabpanel" id="sg-tour-panel-${i}" class="sg-tour-panel${s.phone ? ' is-phone' : ''}" aria-labelledby="sg-tour-tab-${i}"${i === 0 ? '' : ' hidden'}>`
       + `<div class="sg-tour-stage">${shots}</div>`
-      + `<div class="sg-tour-copy"><p class="sg-tour-product">${escapeHtml(s.product)}</p><h3 class="sg-tour-h3">${escapeHtml(t(s.title, lang))}</h3><ol class="sg-tour-points">${list}</ol></div>`
+      + `<div class="sg-tour-copy"><p class="sg-tour-product">${escapeHtml(t(s.product, lang))}</p><h3 class="sg-tour-h3">${escapeHtml(t(s.title, lang))}</h3><ol class="sg-tour-points">${list}</ol></div>`
       + '</div>';
   }).join('');
   return `<section id="product" class="sg-tour" aria-labelledby="sg-tour-title"><div class="sg-tour-inner">`

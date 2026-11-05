@@ -23,12 +23,12 @@ import { realShot } from './real-screens.mjs';
 
 const LABELS = {
   'stage-find': {
-    zh: '动态示意（演示数据）：Growth OS 排出候选客户——Nordwerk Energie GmbH 匹配度 94、Gulf Coast Lift Supply 91，并写下理由：近 90 天发布 3 条储能招标，产品线与 48V 100Ah 匹配，建议先开发。',
-    en: 'Illustrative motion (demo data): Growth OS ranks prospects — Nordwerk Energie GmbH at 94 and Gulf Coast Lift Supply at 91 — and writes down why: three storage tenders in 90 days and a fit with 48V 100Ah, so contact it first.',
+    zh: '动态示意（演示数据）：主动获客排出候选客户——Nordwerk Handel GmbH 匹配度 94、Gulf Coast Trading 91，并写下理由：近 90 天发布 3 条采购招标，产品线与 A-200 匹配，建议先开发。',
+    en: 'Illustrative motion (demo data): Lead Finder ranks prospects — Nordwerk Handel GmbH at 94 and Gulf Coast Trading at 91 — and writes down why: three purchase tenders in 90 days and a fit with A-200, so contact it first.',
   },
   'stage-sell': {
-    zh: '动态示意（演示数据）：Müller Energie GmbH 询价 200 组 48V 100Ah、DAP 汉堡；Sales Desk 读出型号、数量和贸易术语，AI 起草报价 Q-1042，提交后等你审批，批准前不会发送。',
-    en: 'Illustrative motion (demo data): Müller Energie GmbH asks for 200 pcs of 48V 100Ah, DAP Hamburg; Sales Desk reads out the model, quantity and trade term, AI drafts quote Q-1042, and it waits for your approval — nothing is sent before you approve.',
+    zh: '动态示意（演示数据）：Müller Handel GmbH 询价 200 组 A-200、DAP 汉堡；成交工作台读出型号、数量和贸易术语，AI 起草报价 Q-1042，提交后等你审批，批准前不会发送。',
+    en: 'Illustrative motion (demo data): Müller Handel GmbH asks for 200 pcs of A-200, DAP Hamburg; Sales Desk reads out the model, quantity and trade term, AI drafts quote Q-1042, and it waits for your approval — nothing is sent before you approve.',
   },
   'stage-make': {
     zh: '动态示意（演示数据）：订单 PI-1042 在 ERP 里依次走过排产（11/02）、质检（11/09，抽检 20 组全部合格）和装柜（11/12，1 × 20GP），与销售承诺的装柜日期一致。',
@@ -39,12 +39,12 @@ const LABELS = {
     en: 'Illustrative motion (demo data): the commercial invoice, packing list and bill of lading for order PI-1042 are ticked off one by one, and payment goes from the 30% deposit to 100% once the balance arrives and is reconciled.',
   },
   'stage-again': {
-    zh: '动态示意（演示数据）：PT Surya Energi 大约每 60 天下一次单，距上次下单已 60 天；Growth OS 建议补货 64V 104Ah × 120 组并备好跟进草稿，等你确认后才联系客户。',
-    en: 'Illustrative motion (demo data): PT Surya Energi orders about every 60 days and its last order was 60 days ago; Growth OS suggests a reorder of 120 packs of 64V 104Ah with a follow-up draft, and contacts the customer only after you confirm.',
+    zh: '动态示意（演示数据）：PT Surya Niaga 大约每 60 天下一次单，距上次下单已 60 天；主动获客建议补货 A-260 × 120 组并备好跟进草稿，等你确认后才联系客户。',
+    en: 'Illustrative motion (demo data): PT Surya Niaga orders about every 60 days and its last order was 60 days ago; Lead Finder suggests a reorder of 120 packs of A-260 with a follow-up draft, and contacts the customer only after you confirm.',
   },
   org: {
-    zh: '动态示意（演示数据）：企业版——多家公司、品牌、部门和账号各有自己的权限、审批和数据边界，共用同一支 AI 员工队伍；低于底价的报价 Q-1042 按审批路线逐级由人批准；现有 CRM、ERP 经授权接入；全部运行在私有化部署的环境里，由专属前置部署工程师对接。',
-    en: 'Illustrative motion (demo data): Enterprise — several companies, brands, departments and accounts, each with its own permissions, approvals and data boundary, sharing one AI workforce; quote Q-1042, below the floor price, goes up its approval route with a person signing at each step; existing CRM and ERP connect with authorization; all of it in a private deployment, with a dedicated forward-deployed engineer.',
+    zh: '动态示意（演示数据）：私有化定制——多家公司、品牌、部门和账号各有自己的权限、审批和数据边界，共用同一支 AI 员工队伍；低于底价的报价 Q-1042 按审批路线逐级由人批准；现有 CRM、ERP 经授权接入；全部运行在私有化部署的环境里。',
+    en: 'Illustrative motion (demo data): Private custom — several companies, brands, departments and accounts, each with its own permissions, approvals and data boundary, sharing one AI workforce; quote Q-1042, below the floor price, goes up its approval route with a person signing at each step; existing CRM and ERP connect with authorization; all of it in a private deployment.',
   },
 };
 Object.assign(MOTION_LABEL, LABELS);

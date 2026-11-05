@@ -95,9 +95,9 @@ const CARDS = [
   },
   {
     ratio: '480 / 480',
-    // the Müller Energie quote is Q-1042 everywhere on the site: below the floor price, so it ends waiting for you (card 3)
-    label: B('示意（演示数据）：工作与结果记录——Müller Energie 的报价，每一步记下时间、谁做的和结果：交期核对不符时出错即停，转给跟单，修正后复核通过；单价低于底价，交你审批，批准前不会发出。',
-      'Illustration (demo data): work and result records — the Müller Energie quote, each step logged with the time, who did it and the result: the lead-time check fails, so the work stops and passes to the orders desk; once fixed it passes the re-check, and as it is below the floor price it goes to you: nothing goes out before you approve.'),
+    // the Müller Handel quote is Q-1042 everywhere on the site: below the floor price, so it ends waiting for you (card 3)
+    label: B('示意（演示数据）：工作与结果记录——Müller Handel 的报价，每一步记下时间、谁做的和结果：交期核对不符时出错即停，转给跟单，修正后复核通过；单价低于底价，交你审批，批准前不会发出。',
+      'Illustration (demo data): work and result records — the Müller Handel quote, each step logged with the time, who did it and the result: the lead-time check fails, so the work stops and passes to the orders desk; once fixed it passes the re-check, and as it is below the floor price it goes to you: nothing goes out before you approve.'),
     draw: (t) => {
       const rows = [
         ['09:12', 'bot', B('销售 AI · 起草报价', 'Sales AI · drafts the quote'), B('AI 起草', 'AI drafts'), 'ok'],
@@ -106,7 +106,7 @@ const CARDS = [
         ['09:40', 'check', B('复核 · 符合要求', 'Re-check · meets spec'), B('复核通过', 'Re-check passed'), 'ok'],
         ['09:42', 'person', B('低于底价 · 交你审批', 'Below floor · to you'), B('等你审批', 'Needs your OK'), 'hand'],
       ];
-      return `<div class="sg-em-log-h"><b>${t(B('工作记录', 'Work record'))}</b><span>${t(B('报价 · Müller Energie', 'Quote · Müller Energie'))}</span></div><ol class="sg-em-log">${rows.map(([tm, i, s, ss, k]) => `<li class="is-${k}"><time>${tm}</time><span class="sg-em-li">${ico(i)}</span><span class="sg-em-lt">${two(t, s, ss)}</span><span class="sg-em-lr">${ico(k === 'stop' ? 'pause' : k === 'hand' ? 'person' : 'check')}</span></li>`).join('')}</ol>`;
+      return `<div class="sg-em-log-h"><b>${t(B('工作记录', 'Work record'))}</b><span>${t(B('报价 · Müller Handel', 'Quote · Müller Handel'))}</span></div><ol class="sg-em-log">${rows.map(([tm, i, s, ss, k]) => `<li class="is-${k}"><time>${tm}</time><span class="sg-em-li">${ico(i)}</span><span class="sg-em-lt">${two(t, s, ss)}</span><span class="sg-em-lr">${ico(k === 'stop' ? 'pause' : k === 'hand' ? 'person' : 'check')}</span></li>`).join('')}</ol>`;
     },
   },
   {

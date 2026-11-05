@@ -122,7 +122,7 @@
     var TAP = 5.75, C0 = 6.0, C1 = 6.55; // the tap on 批准, then the item folds
     var O0 = 11.1, O1 = 11.75;           // the list clears for the next round
     var ITEMS = [
-      { av: 'ME', avc: 'is-cyan', name: 'Müller Energie', when: T('刚刚', 'now'),
+      { av: 'ME', avc: 'is-cyan', name: 'Müller Handel', when: T('刚刚', 'now'),
         pill: T('3 天未回复', 'No reply in 3 days'), pc: 'is-red', body: T('已起草跟进 · 待你确认', 'Follow-up drafted · needs your OK'),
         bodyM: T('已起草跟进 · 待你确认', 'Follow-up drafted'),
         pillS: T('3 天未回复', '3 days, no reply'), bodyS: T('已起草', 'Drafted'), bodyX: T('已起草', 'Draft'), act: true },
@@ -384,7 +384,7 @@
     // role, what (wide / narrow / narrowest), runs from rs to rf, then done or waiting for the owner
     var STEPS = [
       { r: 1, t: [T('找出 12 家经销商', 'Find 12 dealers'), T('找出 12 家经销商', 'Find 12 dealers'), T('找经销商', 'Dealers')], rs: 2.3, rf: 4.0 },
-      { r: 3, t: [T('核对 60V/72V 参数', 'Check 60V/72V specs'), T('核对电池参数', 'Check specs'), T('核对参数', 'Specs')], rs: 2.7, rf: 4.9 },
+      { r: 3, t: [T('核对 A-150/A-300 参数', 'Check A-150/A-300 specs'), T('核对产品参数', 'Check specs'), T('核对参数', 'Specs')], rs: 2.7, rf: 4.9 },
       { r: 2, t: [T('起草葡语开发信', 'Portuguese emails'), T('起草开发信', 'Draft emails'), T('写开发信', 'Emails')], rs: 3.5, rf: 7.0, wait: true },
       { r: 4, t: [T('做 3 张场景图', 'Make 3 scene images'), T('做 3 张场景图', '3 scene images'), T('场景图', 'Images')], rs: 13.1, rf: 14.6 },
       { r: 0, t: [T('汇总，交你确认', 'Sum up for your OK'), T('汇总交你确认', 'Sum up for you'), T('汇总', 'Sum up')], rs: 14.6, rf: 15.5, wait: true }
@@ -435,7 +435,7 @@
       // the task: what, its state, its limits, and the owner's pause
       var tk = el('div', 'sgp-task', main);
       var th = el('div', 'sgp-task-h', tk);
-      el('b', '', th, xs ? T('开拓巴西两轮市场', 'Brazil e-scooters') : [T('开拓巴西电动两轮市场', 'Brazil e-scooter market'), T('开拓巴西电动两轮市场', 'Brazil e-scooters'), T('巴西两轮市场', 'Brazil e-scooters')][lv]);
+      el('b', '', th, xs ? T('开拓巴西新市场', 'Brazil market') : [T('开拓巴西新市场', 'Brazil market'), T('开拓巴西新市场', 'Brazil market'), T('巴西新市场', 'Brazil market')][lv]);
       if (!mini) R.state = el('span', STATE_C[0], th, STATE_T[0]);
       if (lv === 0) el('div', 'sgp-task-s', tk, T('负责人：你 · 截止 11/14 · 轮数和预算有上限', 'Owner: you · capped rounds & budget'));
       var ctl = el('div', 'sgp-ctl', tk);

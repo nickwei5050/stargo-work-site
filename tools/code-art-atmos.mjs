@@ -24,16 +24,16 @@ import { MOTION_LABEL, motionHost } from './motion-scenes.mjs';
 
 Object.assign(MOTION_LABEL, {
   night: {
-    zh: '动态示意（演示数据）：夜里的外贸生意是一张网——柳州工厂、去钦州港的路、码头和一艘集装箱船，用细线连着海那边的买家。Müller Energie 的询盘沿着线到港口、再到工厂，工厂的窗一扇扇亮起，一只集装箱运到码头、吊上船，货沿着同一条线发往汉堡。',
-    en: 'Illustrative motion with demo data: the trade business at night as one network — the Liuzhou plant, the road to Qinzhou port, the quay and a container ship, joined by thin lines to buyers across the sea. Müller Energie’s inquiry comes down its line to the port and on to the plant, the plant’s windows light up, a container is driven to the quay and craned aboard, and the shipment goes back up the line to Hamburg.',
+    zh: '动态示意（演示数据）：夜里的外贸生意是一张网——工厂、去港口的路、码头和一艘集装箱船，用细线连着海那边的买家。Müller Handel 的询盘沿着线到港口、再到工厂，工厂的窗一扇扇亮起，一只集装箱运到码头、吊上船，货沿着同一条线发往汉堡。',
+    en: 'Illustrative motion with demo data: the trade business at night as one network — the the plant, the road to the port, the quay and a container ship, joined by thin lines to buyers across the sea. Müller Handel’s inquiry comes down its line to the port and on to the plant, the plant’s windows light up, a container is driven to the quay and craned aboard, and the shipment goes back up the line to Hamburg.',
   },
   board: {
-    zh: '动态示意（演示数据）：今日优先事项由 AI 随时更新——PT Surya Energi 到了补货周期，先核实采购信号，核实后排到第一，跟进建议等你确认，不会自动发送。',
-    en: 'Illustrative motion with demo data: today’s priorities, kept current by the AI — PT Surya Energi reaches its restock cycle, its buying signal is checked first, it moves to the top, and the follow-up suggestion waits for your OK; nothing is sent automatically.',
+    zh: '动态示意（演示数据）：今日优先事项由 AI 随时更新——PT Surya Niaga 到了补货周期，先核实采购信号，核实后排到第一，跟进建议等你确认，不会自动发送。',
+    en: 'Illustrative motion with demo data: today’s priorities, kept current by the AI — PT Surya Niaga reaches its restock cycle, its buying signal is checked first, it moves to the top, and the follow-up suggestion waits for your OK; nothing is sent automatically.',
   },
   plant: {
-    zh: '动态示意（演示数据）：清晨的柳州工厂车间平面图，电池包沿 U 形产线依次经过电芯分选、模组装配、BMS 测试、老化测试、质检、包装和装柜，第一个电池包经过的工位一个个亮起来。',
-    en: 'Illustrative motion with demo data: a floor plan of the Liuzhou plant at dawn; battery packs move along a U-shaped line through cell sorting, module assembly, BMS test, ageing test, quality check, packing and loading, and each station lights up as the first pack reaches it.',
+    zh: '动态示意（演示数据）：清晨的工厂车间平面图，产品沿 U 形产线依次经过来料检验、组装、功能测试、老化测试、质检、包装和装柜，第一个产品经过的工位一个个亮起来。',
+    en: 'Illustrative motion with demo data: a floor plan of the the plant at dawn; products move along a U-shaped line through incoming inspection, assembly, function test, ageing test, quality check, packing and loading, and each station lights up as the first pack reaches it.',
   },
   request: {
     zh: '动态示意（演示数据）：提交表单之后——演示申请送达，我们先了解你的需求，再通过你留下的联系方式联系你，会议时间另行确认。',

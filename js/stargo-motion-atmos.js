@@ -6,9 +6,9 @@
 
    night — the homepage's full-screen picture before the four scenario cards
            (`.photo-half._01 / ._02`, R1v2 until 2026-10-24). The trade business
-           at night as one system: the Liuzhou plant, the road to Qinzhou port,
+           at night as one system: the the plant, the road to the port,
            a container ship and the buyers over the sea, joined by thin lines.
-           Müller Energie's inquiry comes down its line to the port and on to
+           Müller Handel's inquiry comes down its line to the port and on to
            the plant, the plant's windows light up, a container is driven to
            the quay and craned onto the ship, and the shipment goes back up the
            line to Hamburg. The template opens the picture like two doors, so
@@ -33,7 +33,7 @@
   }
 
   /* =====================================================================
-     NIGHT — 柳州工厂 → 钦州港 → buyers over the sea.
+     NIGHT — 工厂 → 港口 → buyers over the sea.
      ===================================================================== */
   function NightScene() {
     var P = 18;
@@ -41,20 +41,20 @@
     /* Each buyer's line leaves the port along `a` and comes into the pin along −`b` (k: how far the bends reach,
        as a share of the line's length). Until 2026-10-24 every line left straight up and came in from the lower
        left, whichever side the name sat on, so Müller's bright line ran through Ahmed's two lines and ended over
-       its own 「…48V 100Ah」, and PT Surya's ended over 「…补货周期到了」 (QA round 5 #12, 1440 zh). Now the names
+       its own 「…A-200」, and PT Surya's ended over 「…补货周期到了」 (QA round 5 #12, 1440 zh). Now the names
        stand in two columns either side of the port's column, Nordwerk over Ahmed to its west and Müller over
        PT Surya to its east, each name on the side its line does not come from: the lines rise up the middle
        between the columns and turn out to their pins from below, so no line passes through a name. Every name
        also stays east of the doors' seam (W / 2, + 16px): each door draws its own half of the stage, and a name
-       across the seam would split in two as they open (as en 'Qinzhou port' once did, see R.port below).
+       across the seam would split in two as they open (as en 'the port' once did, see R.port below).
        Checked in all four layouts with the widest strings (en, and the 0.8 fit of 1280 × 720 that sets the type
        bigger in stage px): a line ends 18px from its own buyer's name and keeps ≥ 36px from every other name
        and ≥ 24px from every other pin. */
     var BUY = [
-      { n: 'Müller Energie GmbH', c: T('德国 · 汉堡', 'Hamburg, Germany'), x: 0.78, y: 0.22, side: 1, a: [0.32, -0.95], b: [-0.83, 0.56], k: 0.42 },
-      { n: 'Ahmed Al-Rashid', c: T('阿联酋 · 询价 72V × 50 台', 'UAE · asks about 72V × 50'), x: 0.7, y: 0.32, side: -1, a: [-0.4, -0.92], b: [0.69, 0.73], k: 0.54 },
-      { n: 'PT Surya Energi', c: T('印度尼西亚 · 补货周期到了', 'Indonesia · due to restock'), x: 0.95, y: 0.435, side: -1, a: [0.41, -0.91], b: [0.26, 0.97], k: 0.5 },
-      { n: 'Nordwerk Energie GmbH', c: T('德国 · 匹配度 94', 'Germany · fit 94'), x: 0.705, y: 0.145, side: -1, a: [0.1, -1], b: [0.05, 1], k: 0.6 }
+      { n: 'Müller Handel GmbH', c: T('德国 · 汉堡', 'Hamburg, Germany'), x: 0.78, y: 0.22, side: 1, a: [0.32, -0.95], b: [-0.83, 0.56], k: 0.42 },
+      { n: 'Ahmed Al-Rashid', c: T('阿联酋 · 询价 A-300 × 50 台', 'UAE · asks about A-300 × 50'), x: 0.7, y: 0.32, side: -1, a: [-0.4, -0.92], b: [0.69, 0.73], k: 0.54 },
+      { n: 'PT Surya Niaga', c: T('印度尼西亚 · 补货周期到了', 'Indonesia · due to restock'), x: 0.95, y: 0.435, side: -1, a: [0.41, -0.91], b: [0.26, 0.97], k: 0.5 },
+      { n: 'Nordwerk Handel GmbH', c: T('德国 · 匹配度 94', 'Germany · fit 94'), x: 0.705, y: 0.145, side: -1, a: [0.1, -1], b: [0.05, 1], k: 0.6 }
     ];
     var WIN = 12, RIP = [0.6, 6.4, 9.6, 13.4], R, G, tio = null;   // RIP: when each buyer's ring ripples
 
@@ -115,7 +115,7 @@
       G.door = x1 - 46;
       sv('path', { d: 'M' + f1(G.door - 20) + ' ' + gy + 'v-30h40v30', class: 'sga-line' }, svg);
       R.doorLit = sv('rect', { x: f1(G.door - 19), y: gy - 29, width: 38, height: 29, class: 'sga-door' }, svg);
-      R.plant = label(stage, 'sga-place', x0, gy + 22, T('柳州工厂', 'Liuzhou plant'), '');
+      R.plant = label(stage, 'sga-place', x0, gy + 22, T('工厂', 'the plant'), '');
       // the road to the port
       sv('path', { d: 'M' + f1(x1 + 8) + ' ' + (gy + 8) + 'H' + f1(G.quay), class: 'sga-road' }, svg);
       // the port: container stacks, two quay cranes, the quay
@@ -147,14 +147,14 @@
       for (var m = 0; m < 3; m++) { sv('rect', { x: f1(s0 + 15 + m * 9), y: sy - 33, width: 6, height: 5, class: 'sga-lamp' }, R.shipLit); sv('rect', { x: f1(s0 + 15 + m * 9), y: sy + 30 + m * 3, width: 6, height: 26 - m * 6, class: 'sga-reflect' }, R.shipLit); }
       sv('circle', { cx: f1(s1 + 20), cy: sy - 16, r: 1.8, class: 'sga-lamp' }, R.shipLit);
       // under the quay's containers, ending 16px short of the doors' seam (W / 2): each door carries its own half of
-      // the stage, so a label that crossed the seam (en 'Qinzhou port' did, from the quay at 0.445 W) split in two as the doors opened
-      R.port = label(stage, 'sga-place is-left', W * 0.5 - 16, gy + 22, T('钦州港', 'Qinzhou port'), '');
+      // the stage, so a label that crossed the seam (en 'the port' did, from the quay at 0.445 W) split in two as the doors opened
+      R.port = label(stage, 'sga-place is-left', W * 0.5 - 16, gy + 22, T('港口', 'the port'), '');
       // the container that travels, and the pulse
       R.box = sv('rect', { x: -11, y: -5, width: 22, height: 10, rx: 1, class: 'sga-moving' }, svg);
       R.pulse = sv('g', { class: 'sga-pulse' }, svg);
       sv('circle', { r: 14, class: 'sga-glow' }, R.pulse); sv('circle', { r: 3.6, class: 'sga-head' }, R.pulse);
       R.trail = [0, 1, 2].map(function () { return sv('circle', { r: 2.2, class: 'sga-head' }, svg); });
-      // The tag rides the left door's inner edge, right-aligned with 钦州港 (W / 2 − 16): the doors slide outwards,
+      // The tag rides the left door's inner edge, right-aligned with 港口 (W / 2 − 16): the doors slide outwards,
       // so at the stage's outer edge it left the screen in the opening's first frames, while the inner edges are the
       // last of the picture to go. 94px above the foot keeps it clear of the fixed pill navigation (from 992px:
       // 50px tall, 15px off the bottom, across the middle), and the same place serves the resting frame and the still.
@@ -201,7 +201,7 @@
         op(n.rip, rip > 0 && rip < 1 ? 0.7 * (1 - rip) : 0);
         cl(n.lb.d, 'is-hot', hot || (rip > 0 && rip < 1));
       });
-      put(R.nodes[0].lb.s, 'text', ph > 14.8 && ph < 17.6 ? T('已发运 · DAP Hamburg', 'Shipped · DAP Hamburg') : T('询盘 · 200 pcs 48V 100Ah', 'Inquiry · 200 pcs 48V 100Ah'));
+      put(R.nodes[0].lb.s, 'text', ph > 14.8 && ph < 17.6 ? T('已发运 · DAP Hamburg', 'Shipped · DAP Hamburg') : T('询盘 · 200 pcs A-200', 'Inquiry · 200 pcs A-200'));
       // the plant wakes window by window
       var lit = 0;
       R.win.forEach(function (w, i) { var v = seg(ph, 4.9 + i * 0.26, 5.3 + i * 0.26) * fade; lit += v; op(w, v * (0.62 + 0.18 * hash(i + 20))); });
@@ -237,7 +237,7 @@
   }
 
   /* =====================================================================
-     PLANT — the Liuzhou plant at dawn, a floor plan whose line wakes up.
+     PLANT — the the plant at dawn, a floor plan whose line wakes up.
      ===================================================================== */
   function PlantScene() {
     /* The stage is drawn at the host's own size (scale 1, so every word is at its CSS size) and composed
@@ -251,7 +251,7 @@
                 a phone (20px gutters) it simply crosses the strip.
        Nothing that moves ever crosses a word: names sit above their machines, off the belt. */
     var layouts = {};
-    var ST = [T('电芯分选', 'Cell sorting'), T('模组装配', 'Module assembly'), T('BMS 测试', 'BMS test'), T('老化测试', 'Ageing test'), T('质检', 'Quality check'), T('包装', 'Packing'), T('装柜', 'Loading')];
+    var ST = [T('来料检验', 'Incoming inspection'), T('组装', 'Assembly'), T('功能测试', 'Function test'), T('老化测试', 'Ageing test'), T('质检', 'Quality check'), T('包装', 'Packing'), T('装柜', 'Loading')];
     var SPEED, GAP, PRE, R, U;
     function lay(kind, w, h, s) { var k = kind + '-' + w + 'x' + h + '-' + s; if (!layouts[k]) layouts[k] = { w: w, h: h, kind: kind, s: s }; return k; }
     function pick(w, h) {
@@ -345,7 +345,7 @@
         });
         R.st.push({ s: along(W / 2, uy1), lit: machine(svg, W / 2, uy1, 132, bh), lb: name(stage, 3, W / 2 + 66 + 12, uy1 - 6, 'is-n') });
         var tl = el('div', 'sga-plan-title', stage);
-        el('b', '', tl, T('柳州工厂', 'Liuzhou plant')); el('span', '', tl, T('车间平面示意', 'Floor plan'));
+        el('b', '', tl, T('工厂', 'the plant')); el('span', '', tl, T('车间平面示意', 'Floor plan'));
         tl.style.left = (ux0 + 14) + 'px'; tl.style.top = (y0 + 30) + 'px';
         // .sg-tag is placed by its bottom-right corner: here just above the south run, inside the east column
         var tag = el('div', 'sg-tag sga-tag', stage, TAG);
@@ -362,7 +362,7 @@
         var fy = uy1 + MH / 2 + u, mx2 = Math.max(16, ux0 + 10);
         if (W >= 340) {
           var tl2 = el('div', 'sga-plan-title is-row', stage);
-          el('b', '', tl2, T('柳州工厂', 'Liuzhou plant')); if (W >= 560) el('span', '', tl2, T('车间平面示意', 'Floor plan'));
+          el('b', '', tl2, T('工厂', 'the plant')); if (W >= 560) el('span', '', tl2, T('车间平面示意', 'Floor plan'));
           tl2.style.left = mx2 + 'px'; tl2.style.top = fy + 'px';
         }
         var tag2 = el('div', 'sg-tag sga-tag', stage, TAG);

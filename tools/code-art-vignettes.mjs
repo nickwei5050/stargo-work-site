@@ -10,13 +10,13 @@
  *   - the capability page's 「每项 工作」 ring (tools/blocks/cn-produce.mjs,
  *     RING_STILLS), 27 tilted cards on a turning wheel.
  * Each photograph is now one static vignette drawn in code, one per picture,
- * telling the same moment in the product's demo cast (Müller Energie's
- * 200 × 48V 100Ah order SO-2041, DAP Hamburg; quote Q-1042 waiting for
- * approval; 柳州工厂):
+ * telling the same moment in the product's demo cast (Müller Handel's
+ * 200 × A-200 order SO-2041, DAP Hamburg; quote Q-1042 waiting for
+ * approval; 工厂):
  *
  *   h01 港口蓝调   a quay crane at blue hour and the ETA board for Hamburg
- *   h02 深夜询盘   02:14, a new RFQ from Müller Energie, a reply drafted for you to confirm
- *   h03 样品墙     a sample wall of lithium packs, one tagged
+ *   h02 深夜询盘   02:14, a new RFQ from Müller Handel, a reply drafted for you to confirm
+ *   h03 样品墙     a sample wall of product samples, one tagged
  *   h04 卡尺质检   a caliper on a pack terminal, the readout inside its tolerance band
  *   h05 装配线     line throughput and station status
  *   h06 打包       a carton with its shipping mark and the packing list ticking
@@ -90,11 +90,10 @@ const appBar = (x, y, w, name, right, { h = 34, r = 12, fill = RAISE } = {}) =>
   + circ(x + 18, y + h / 2, 4.5, OR)
   + text(x + 32, y + h / 2 + 5, 14, name, { w: 600 })
   + (right ? text(x + w - 14, y + h / 2 + 5, 13, right, { f: MUTE, a: 'end' }) : '');
-/** A lithium pack seen from the front: case, two terminals, a label band. */
+/** A product carton seen from the front: box, a tape strip on top, a label band. */
 function pack(x, y, w, h, label, { hot = false, body = '#2c221b', band = '#2f2d42', lz } = {}) {
-  const t = Math.max(4, h * 0.09);
-  return rect(x + w * 0.18, y - t, w * 0.12, t + 2, '#4c496e', { rx: 2 })
-    + rect(x + w * 0.70, y - t, w * 0.12, t + 2, hot ? OR : '#4c496e', { rx: 2 })
+  const t = Math.max(3, h * 0.06);
+  return rect(x + w * 0.42, y - t, w * 0.16, t + 2, hot ? OR : '#4c496e', { rx: 1 })
     + rr(x, y, w, h, Math.min(8, h * 0.14), body, { stroke: hot ? OR2 : HAIR, 'stroke-width': hot ? 2 : 1 })
     + rect(x, y + h * 0.56, w, h * 0.2, band)
     + rect(x + w * 0.08, y + h * 0.18, w * 0.06, h * 0.22, hot ? OR : 'rgba(147, 130, 255,.55)', { rx: 1.5 })
@@ -162,34 +161,34 @@ const ART = {
     // the new RFQ
     s += rr(256, 184, 300, 120, 10, RAISE, { stroke: 'rgba(147, 130, 255,.5)' }) + rect(256, 196, 3, 96, OR);
     s += text(274, 208, 13, T('新询盘 · RFQ', 'New RFQ'), { f: PEACH, w: 600 });
-    s += text(274, 234, 18, 'Müller Energie GmbH', { w: 600 });
-    s += text(274, 258, 14, '200 pcs 48V 100Ah, DAP Hamburg?', { f: MUTE });
+    s += text(274, 234, 18, 'Müller Handel GmbH', { w: 600 });
+    s += text(274, 258, 14, '200 pcs A-200, DAP Hamburg?', { f: MUTE });
     s += pill(274, 272, 168, 22, T('回复已起草 · 待你确认', 'Reply drafted · your call'), { size: 12 });
     // earlier threads
-    s += line(226, 330, 586, 330) + circ(240, 356, 9, '#2f2d42') + text(258, 361, 14, 'Ahmed Al-Rashid', { f: MUTE }) + text(586, 361, 12, T('72V · 50 套', '72V · 50 units'), { f: DIM, a: 'end' });
-    s += line(226, 380, 586, 380) + circ(240, 404, 9, '#2f2d42') + text(258, 409, 14, 'PT Surya Energi', { f: DIM }) + text(586, 409, 12, T('补货', 'Restock'), { f: DIM, a: 'end' });
+    s += line(226, 330, 586, 330) + circ(240, 356, 9, '#2f2d42') + text(258, 361, 14, 'Ahmed Al-Rashid', { f: MUTE }) + text(586, 361, 12, T('A-300 · 50 套', 'A-300 · 50 units'), { f: DIM, a: 'end' });
+    s += line(226, 380, 586, 380) + circ(240, 404, 9, '#2f2d42') + text(258, 409, 14, 'PT Surya Niaga', { f: DIM }) + text(586, 409, 12, T('补货', 'Restock'), { f: DIM, a: 'end' });
     return s;
   },
 
-  /* H03 样品墙: shelves of 48V / 60V / 72V packs and rack storage, one tagged. */
+  /* H03 样品墙: shelves of A-200 / A-150 / A-300 packs and product range, one tagged. */
   samples: (T) => {
     let s = ground(400, 240);
     const shelf = (y) => rect(30, y, 740, 7, '#2f2e42') + rect(30, y + 7, 740, 2, 'rgba(0,0,0,.4)');
     for (const x of [34, 396, 760]) s += rect(x, 40, 6, 440, '#252532');
     s += shelf(176) + shelf(306) + shelf(436);
-    const row1 = [[52, 110, 112, 66, '48V'], [178, 96, 96, 80, '60V'], [290, 100, 110, 76, '72V'], [576, 92, 84, 84, '72V'], [672, 116, 80, 60, '48V']];
+    const row1 = [[52, 110, 112, 66, 'A-200'], [178, 96, 96, 80, 'A-150'], [290, 100, 110, 76, 'A-300'], [576, 92, 84, 84, 'A-300'], [672, 116, 80, 60, 'A-200']];
     for (const [x, y, w, h, l] of row1) s += pack(x, y, w, h, l);
-    const row3 = [[54, 360, 120, 76, '48V'], [190, 372, 100, 64, '72V'], [414, 350, 140, 86, T('48V 机架', '48V rack')], [570, 366, 90, 70, '60V'], [674, 376, 76, 60, '72V']];
+    const row3 = [[54, 360, 120, 76, 'A-200'], [190, 372, 100, 64, 'A-300'], [414, 350, 140, 86, T('A-200 机架', 'A-200 rack')], [570, 366, 90, 70, 'A-150'], [674, 376, 76, 60, 'A-300']];
     for (const [x, y, w, h, l] of row3) s += pack(x, y, w, h, l);
     // the middle shelf: the tagged sample in the centre
-    s += pack(70, 236, 100, 70, '48V') + pack(186, 244, 70, 62, '60V');
+    s += pack(70, 236, 100, 70, 'A-200') + pack(186, 244, 70, 62, 'A-150');
     s += `<ellipse cx="380" cy="262" rx="150" ry="70" fill="url(#sgv-lamp)" opacity=".7"/>`;
-    s += pack(300, 214, 150, 92, '72V 40Ah', { hot: true, body: '#2e2c42', band: '#3a3759' });
-    s += pack(590, 240, 110, 66, '48V');
+    s += pack(300, 214, 150, 92, 'A-300', { hot: true, body: '#2e2c42', band: '#3a3759' });
+    s += pack(590, 240, 110, 66, 'A-200');
     s += line(452, 214, 470, 196, MUTE, 1.2) + circ(452, 214, 2.5, MUTE);
     s += rr(464, 150, 92, 64, 8, '#efe6dc') + circ(476, 162, 3, BG);
     s += text(476, 186, 12, T('样品 A-12', 'Sample A-12'), { f: '#5b5784', w: 600 });
-    s += text(476, 205, 15, T('72V 锂电', '72V Li-ion'), { f: '#1f1813', w: 700 });
+    s += text(476, 205, 15, T('A-300 样品', 'A-300 sample'), { f: '#1f1813', w: 700 });
     return s;
   },
 
@@ -200,7 +199,7 @@ const ART = {
     // the part: a terminal block under the jaws
     s += rr(248, 226, 154, 104, 6, '#2f2d42', { stroke: HAIR }) + rect(248, 290, 154, 16, '#3a3759');
     s += rect(278, 208, 26, 20, '#7875a3', { rx: 2 }) + rect(346, 208, 26, 20, OR, { rx: 2 });
-    s += text(325, 302, 12, '48V 100Ah', { f: MUTE, a: 'middle', w: 600 });
+    s += text(325, 302, 12, 'A-200', { f: MUTE, a: 'middle', w: 600 });
     // the caliper beam and its scale
     s += rr(110, 160, 600, 30, 4, '#9aa0a8') + rect(110, 160, 600, 4, '#c4c8cd');
     let ticks = '';
@@ -239,7 +238,7 @@ const ART = {
     s += `<ellipse cx="410" cy="300" rx="70" ry="40" fill="url(#sgv-lamp)"/>`;
     // the rate card
     s += rr(270, 86, 260, 110, 12, 'rgba(31,24,19,.95)', { stroke: HAIR });
-    s += text(288, 112, 13, T('A 线 · 48V 100Ah · 今日', 'Line A · 48V 100Ah · today'), { f: MUTE });
+    s += text(288, 112, 13, T('A 线 · A-200 · 今日', 'Line A · A-200 · today'), { f: MUTE });
     s += text(288, 160, 44, '126', { w: 600, ls: '-1' }) + text(372, 160, 14, T('组 / 小时', 'packs / h'), { f: MUTE });
     const bars = [18, 24, 22, 30, 28, 34, 31, 36];
     bars.forEach((h, i) => { s += rect(452 + i * 8, 176 - h, 5, h, i === bars.length - 1 ? OR : 'rgba(244,238,232,.22)', { rx: 1 }); });
@@ -247,7 +246,7 @@ const ART = {
     return s;
   },
 
-  /* H06 打包: a carton with Müller Energie's shipping mark, the packing list. */
+  /* H06 打包: a carton with Müller Handel's shipping mark, the packing list. */
   packing: (T) => {
     let s = ground(360, 240);
     s += path('M0 0h300L120 500H0z', { fill: 'rgba(230, 230, 242,.035)' });
@@ -259,14 +258,14 @@ const ART = {
     s += rect(332, 108, 24, 284, '#6b61b3') + rect(226, 238, 236, 2, 'rgba(0,0,0,.25)');
     const ink = '#21170f';
     s += rr(244, 128, 80, 92, 3, 'none', { stroke: ink, 'stroke-width': 1.6 });
-    s += text(284, 152, 12, 'MÜLLER', { f: ink, a: 'middle', w: 700 }) + text(284, 167, 12, 'ENERGIE', { f: ink, a: 'middle', w: 700 });
+    s += text(284, 152, 12, 'MÜLLER', { f: ink, a: 'middle', w: 700 }) + text(284, 167, 12, 'HANDEL', { f: ink, a: 'middle', w: 700 });
     s += text(284, 188, 11, 'HAMBURG', { f: ink, a: 'middle', w: 600 }) + text(284, 208, 11, 'C/NO. 12/40', { f: ink, a: 'middle' });
-    s += text(250, 270, 12, '48V 100Ah', { f: ink, w: 700 }) + text(250, 288, 11, 'N.W. 46 KG', { f: ink }) + text(250, 304, 11, 'MADE IN CHINA', { f: ink });
+    s += text(250, 270, 12, 'A-200', { f: ink, w: 700 }) + text(250, 288, 11, 'N.W. 46 KG', { f: ink }) + text(250, 304, 11, 'MADE IN CHINA', { f: ink });
     s += path('M400 270l10-14 10 14zM400 290h20M410 290v-20', { fill: 'none', stroke: ink, 'stroke-width': 1.6 }) + text(410, 312, 9, 'THIS SIDE UP', { f: ink, a: 'middle' });
     // the packing list
     s += rr(400, 134, 196, 230, 12, 'rgba(31,24,19,.96)', { stroke: HAIR });
     s += text(416, 160, 14, T('装箱单 · SO-2041', 'Packing list · SO-2041'), { w: 600 });
-    const rows = [[T('电池组 × 5', 'Packs × 5'), 1], [T('说明书 · 合格证', 'Manual · cert.'), 1], [T('唛头照片', 'Shipping-mark photo'), 1], [T('封箱 · 称重', 'Seal · weigh'), 0]];
+    const rows = [[T('产品 × 5', 'Packs × 5'), 1], [T('说明书 · 合格证', 'Manual · cert.'), 1], [T('唛头照片', 'Shipping-mark photo'), 1], [T('封箱 · 称重', 'Seal · weigh'), 0]];
     rows.forEach(([l, d], i) => {
       const y = 182 + i * 34;
       s += rr(416, y, 18, 18, 5, d ? 'rgba(163, 214, 244,.16)' : 'none', { stroke: d ? 'rgba(163, 214, 244,.6)' : 'rgba(244,238,232,.3)' });
@@ -294,7 +293,7 @@ const ART = {
     s += rr(326, 64, 148, 376, 22, PANEL);
     s += rr(380, 72, 40, 10, 5, '#0b0908');
     s += text(338, 104, 11, '07:40', { f: MUTE }) + text(462, 104, 11, T('巡厂', 'Factory walk'), { f: MUTE, a: 'end' });
-    s += text(338, 132, 13, T('今日 · 柳州工厂', 'Today · Liuzhou'), { f: MUTE });
+    s += text(338, 132, 13, T('今日 · 工厂', 'Today · Plant'), { f: MUTE });
     s += text(338, 176, 36, '1,240', { w: 600, ls: '-1' });
     s += text(338, 196, 12, T('组 · 已下线', 'packs off the line'), { f: DIM });
     const bars = [30, 42, 38, 52, 46, 60, 34];
@@ -332,7 +331,7 @@ const ART = {
       s += `<defs><linearGradient id="sgv-c${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs>`;
       s += rr(x, y, 142, 142, 10, `url(#sgv-c${i})`, i === 0 ? { stroke: OR, 'stroke-width': 3 } : { stroke: HAIR });
       s += `<ellipse cx="${x + 71}" cy="${y + 112}" rx="46" ry="7" fill="rgba(0,0,0,.28)"/>`;
-      s += pack(x + 30, y + 50, 82, 60, '48V', { body, band: i === 0 ? '#2f2d42' : '#3a3759' });
+      s += pack(x + 30, y + 50, 82, 60, 'A-200', { body, band: i === 0 ? '#2f2d42' : '#3a3759' });
       s += text(x + 12, y + 132, 11, name, { f: i === 0 ? '#4b496c' : MUTE, w: 600 });
       if (i === 0) s += circ(x + 126, y + 16, 10, OR) + tick(x + 126, y + 16, 0.85, INK);
     });
@@ -373,13 +372,13 @@ const ART = {
     let s = ground(400, 200);
     s += rr(168, 64, 464, 270, 14, '#0d0b09', { stroke: HAIR });
     s += `<ellipse cx="400" cy="200" rx="210" ry="120" fill="url(#sgv-lamp)" opacity=".9"/>`;
-    // the product in frame: 48V rack storage
+    // the product in frame: A-200 product range
     s += rr(338, 128, 124, 150, 8, '#2c221b', { stroke: 'rgba(194, 190, 253,.4)' });
     for (let i = 0; i < 4; i++) s += rr(348, 140 + i * 34, 104, 26, 4, '#2f2d42') + rect(356, 150 + i * 34, 18, 6, i === 1 ? OR : 'rgba(147, 130, 255,.5)', { rx: 1.5 });
     s += `<ellipse cx="400" cy="286" rx="90" ry="8" fill="rgba(0,0,0,.4)"/>`;
     const app = T('视频制作', 'Video Studio');
     s += pill(184, 80, Math.max(92, n(est(app, 12) + 22)), 26, app, { fill: 'rgba(21,17,14,.8)', f: INK, stroke: HAIR, size: 12 });
-    s += text(604, 98, 12, T('48V 机架储能 · 产品片', '48V rack storage · product film'), { f: MUTE, a: 'end' });
+    s += text(604, 98, 12, T('A-200 系列产品 · 产品片', 'A-200 product range · product film'), { f: MUTE, a: 'end' });
     s += circ(400, 206, 28, 'rgba(21,17,14,.62)', { stroke: 'rgba(255,255,255,.5)', 'stroke-width': 1.5 }) + path('M392 192l24 14-24 14z', { fill: INK });
     s += rect(190, 312, 420, 4, 'rgba(244,238,232,.18)', { rx: 2 }) + rect(190, 312, 168, 4, OR, { rx: 2 }) + circ(358, 314, 6, INK);
     s += text(190, 302, 12, '0:18 / 0:45', { f: MUTE });
@@ -397,14 +396,14 @@ const ART = {
   /* P03 履约: SO-2041's milestones, at 装柜 today. */
   fulfil: (T) => {
     let s = ground(400, 250);
-    s += pack(54, 196, 130, 94, '48V 100Ah', { body: '#271e18' });
+    s += pack(54, 196, 130, 94, 'A-200', { body: '#271e18' });
     s += rr(610, 180, 160, 100, 12, 'rgba(31,24,19,.9)', { stroke: HAIR });
     s += text(626, 206, 12, 'ETA', { f: MUTE }) + text(626, 240, 26, T('11·18', '18 Nov'), { w: 600 }) + text(626, 264, 12, T('汉堡 · DAP', 'Hamburg · DAP'), { f: PEACH });
     s += rr(232, 104, 336, 290, 16, PANEL, { stroke: HAIR });
     s += appBar(232, 104, 336, 'ERP', T('履约', 'Fulfilment'));
     s += text(256, 170, 22, 'SO-2041', { w: 700 });
-    s += text(256, 194, 13, 'Müller Energie GmbH', { f: MUTE });
-    s += text(544, 170, 13, '200 × 48V', { f: MUTE, a: 'end' });
+    s += text(256, 194, 13, 'Müller Handel GmbH', { f: MUTE });
+    s += text(544, 170, 13, '200 × A-200', { f: MUTE, a: 'end' });
     const st = [[T('下单', 'Order'), '10·08'], [T('备货', 'Stock'), '10·15'], [T('质检', 'QC'), '10·21'], [T('装柜', 'Load'), T('今天', 'Today')], [T('到港', 'Arrive'), '11·18']];
     const x0 = 270;
     const dx = 65;
@@ -435,7 +434,7 @@ const ART = {
     s += `<defs><linearGradient id="sgv-gen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#282546"/><stop offset=".62" stop-color="#452b98"/><stop offset=".62" stop-color="#2a1a10"/><stop offset="1" stop-color="#160f0a"/></linearGradient></defs>`;
     s += rr(430, 96, 236, 280, 14, 'url(#sgv-gen)', { stroke: 'rgba(194, 190, 253,.45)', 'stroke-width': 1.5 });
     s += `<ellipse cx="548" cy="270" rx="90" ry="12" fill="rgba(0,0,0,.4)"/>`;
-    s += pack(488, 190, 120, 82, '48V', { body: '#2a2019', band: '#2f2d42', hot: true });
+    s += pack(488, 190, 120, 82, 'A-200', { body: '#2a2019', band: '#2f2d42', hot: true });
     s += pill(446, 112, 108, 24, T('生成 · 主图', 'Main image'), { fill: 'rgba(21,17,14,.75)', f: INK, stroke: HAIR, size: 12 });
     s += pill(446, 336, 98, 26, T('待你确认', 'Your call'), { size: 12 });
     return s;
@@ -463,7 +462,7 @@ const ART = {
     const note = T('B3 待料 12 分钟 · 已通知仓库', 'B3 waiting 12 min · warehouse told');
     s += rr(300, 234, est(note, 13) + 48, 34, 10, 'rgba(21,17,14,.96)', { stroke: 'rgba(147, 130, 255,.55)' }) + circ(318, 251, 4, OR2);
     s += text(330, 256, 13, note, { f: PEACH, w: 600 });
-    s += text(70, 46, 13, T('柳州工厂 · 2 号车间', 'Liuzhou plant · Workshop 2'), { f: MUTE });
+    s += text(70, 46, 13, T('工厂 · 2 号车间', 'the plant · Workshop 2'), { f: MUTE });
     s += text(730, 46, 13, T('运行 9 · 待料 2 · 停机 1', 'Running 9 · waiting 2 · stopped 1'), { f: MUTE, a: 'end' });
     return s;
   },
@@ -555,8 +554,8 @@ const RING = {
       s += text(172, 98, 15, T('德国 · 19:14', 'Germany · 19:14'), { f: MUTE });
       s += rr(28, 116, 288, 142, 10, RAISE, { stroke: 'rgba(147, 130, 255,.5)' }) + rect(28, 128, 3, 118, OR);
       s += text(44, 140, 15, T('新询盘 · RFQ', 'New RFQ'), { f: PEACH, w: 600 });
-      s += text(44, 166, 18, 'Müller Energie GmbH', { w: 600 });
-      s += text(44, 189, 15, '200 pcs 48V 100Ah,', { f: MUTE }) + text(44, 208, 15, 'DAP Hamburg?', { f: MUTE });
+      s += text(44, 166, 18, 'Müller Handel GmbH', { w: 600 });
+      s += text(44, 189, 15, '200 pcs A-200,', { f: MUTE }) + text(44, 208, 15, 'DAP Hamburg?', { f: MUTE });
       s += chip(44, 220, T('回复已起草 · 待你确认', 'Reply drafted · your call'), 15);
       return s;
     },
@@ -578,15 +577,15 @@ const RING = {
       const shelf = (y) => rect(0, y, 344, 7, '#2f2e42') + rect(0, y + 7, 344, 2, 'rgba(0,0,0,.4)');
       for (const x of [10, 334]) s += rect(x, 0, 6, 312, '#252532');
       s += shelf(104) + shelf(222);
-      s += pack(24, 52, 82, 52, '48V', { lz: 15 }) + pack(118, 44, 76, 60, '60V', { lz: 15 }) + pack(206, 56, 64, 48, '48V', { lz: 15 }) + pack(282, 46, 60, 58, '');
+      s += pack(24, 52, 82, 52, 'A-200', { lz: 15 }) + pack(118, 44, 76, 60, 'A-150', { lz: 15 }) + pack(206, 56, 64, 48, 'A-200', { lz: 15 }) + pack(282, 46, 60, 58, '');
       s += `<ellipse cx="160" cy="180" rx="120" ry="56" fill="url(#sgv-lamp)" opacity=".8"/>`;
-      s += pack(22, 166, 64, 56, '') + pack(98, 140, 132, 82, '72V 40Ah', { hot: true, body: '#2e2c42', band: '#3a3759', lz: 17 }) + pack(246, 172, 80, 50, '60V', { lz: 15 });
+      s += pack(22, 166, 64, 56, '') + pack(98, 140, 132, 82, 'A-300', { hot: true, body: '#2e2c42', band: '#3a3759', lz: 17 }) + pack(246, 172, 80, 50, 'A-150', { lz: 15 });
       for (const [x, w] of [[24, 70], [104, 96], [212, 60], [282, 52]]) s += pack(x, 252, w, 52, '');
-      // the tag on the 72V sample
+      // the tag on the A-300 sample
       s += line(222, 140, 230, 128, MUTE, 1.2) + circ(222, 140, 2.5, MUTE);
       s += rr(200, 70, 126, 58, 8, '#efe6dc') + circ(212, 82, 3, BG);
       s += text(222, 88, 15, T('样品 A-12', 'Sample A-12'), { f: '#5b5784', w: 600 });
-      s += text(212, 115, 17, T('72V 锂电', '72V Li-ion'), { f: '#1f1813', w: 700 });
+      s += text(212, 115, 17, T('A-300 样品', 'A-300 sample'), { f: '#1f1813', w: 700 });
       return s;
     },
     S: (T) => {
@@ -595,7 +594,7 @@ const RING = {
       s += shelf(122);
       s += pack(-30, 82, 56, 40, '') + pack(170, 86, 50, 36, '');
       s += `<ellipse cx="88" cy="100" rx="70" ry="36" fill="url(#sgv-lamp)" opacity=".8"/>`;
-      s += pack(36, 64, 108, 58, '72V', { hot: true, body: '#2e2c42', band: '#3a3759', lz: 22 });
+      s += pack(36, 64, 108, 58, 'A-300', { hot: true, body: '#2e2c42', band: '#3a3759', lz: 22 });
       s += line(132, 64, 142, 52, MUTE, 1.2);
       s += rr(118, 14, 66, 38, 7, '#efe6dc') + circ(127, 23, 2.5, BG);
       s += text(151, 42, 20, 'A-12', { f: '#1f1813', w: 700, a: 'middle' });
@@ -691,11 +690,11 @@ const RING = {
       s += rr(26, 52, 124, 112, 3, 'none', { stroke: ink, 'stroke-width': 1.6 });
       s += text(88, 80, 16, 'MÜLLER', { f: ink, a: 'middle', w: 700 }) + text(88, 104, 15, 'HAMBURG', { f: ink, a: 'middle', w: 600 });
       s += text(88, 134, 15, 'C/NO. 12/40', { f: ink, a: 'middle', w: 600 });
-      s += text(28, 216, 15, '48V 100Ah', { f: ink, w: 700 });
+      s += text(28, 216, 15, 'A-200', { f: ink, w: 700 });
       // the packing list
       s += rr(176, 52, 150, 206, 12, 'rgba(31,24,19,.96)', { stroke: HAIR });
       s += text(190, 80, 15, T('装箱单', 'Packing list'), { w: 600 });
-      const rows = [[T('电池组 × 5', 'Packs × 5'), 1], [T('合格证', 'Certificate'), 1], [T('封箱', 'Seal'), 0]];
+      const rows = [[T('产品 × 5', 'Packs × 5'), 1], [T('合格证', 'Certificate'), 1], [T('封箱', 'Seal'), 0]];
       rows.forEach(([l, d], i) => {
         const y = 98 + i * 34;
         s += rr(190, y, 18, 18, 5, d ? 'rgba(163, 214, 244,.16)' : 'none', { stroke: d ? 'rgba(163, 214, 244,.6)' : 'rgba(244,238,232,.3)' });
@@ -737,7 +736,7 @@ const RING = {
       // the phone
       s += rr(90, 10, 164, 340, 28, '#0b0908', { stroke: 'rgba(255,255,255,.14)' });
       s += rr(97, 17, 150, 330, 22, PANEL) + rr(152, 24, 40, 9, 4.5, '#0b0908');
-      s += text(112, 58, 15, T('今日 · 柳州工厂', 'Liuzhou plant'), { f: MUTE });
+      s += text(112, 58, 15, T('今日 · 工厂', 'the plant'), { f: MUTE });
       s += text(110, 100, 38, '1,240', { w: 600, ls: '-1' });
       s += text(112, 122, 15, T('组 · 今日下线', 'packs today'), { f: DIM });
       const bars = [22, 30, 27, 38, 33, 44, 26];
@@ -872,8 +871,8 @@ const RING = {
       let s = gnd(344, 312, 172, 160);
       s += rr(14, 14, 316, 320, 14, PANEL, { stroke: HAIR });
       s += bar(14, 14, 316, 'ERP', T('履约', 'Fulfilment'), 15);
-      s += text(30, 86, 24, 'SO-2041', { w: 700 }) + text(314, 86, 15, '200 × 48V', { f: MUTE, a: 'end' });
-      s += text(30, 110, 15, 'Müller Energie GmbH', { f: MUTE });
+      s += text(30, 86, 24, 'SO-2041', { w: 700 }) + text(314, 86, 15, '200 × A-200', { f: MUTE, a: 'end' });
+      s += text(30, 110, 15, 'Müller Handel GmbH', { f: MUTE });
       const st = [[T('下单', 'Order'), '10·08'], [T('备货', 'Stock'), '10·15'], [T('质检', 'QC'), '10·21'], [T('装柜', 'Load'), T('今天', 'Today')], [T('到港', 'Arrive'), '11·18']];
       const x0 = 48;
       const dx = 62;
@@ -916,7 +915,7 @@ const RING = {
       s += `<defs><linearGradient id="sgvr-gen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#282546"/><stop offset=".62" stop-color="#452b98"/><stop offset=".62" stop-color="#2a1a10"/><stop offset="1" stop-color="#160f0a"/></linearGradient></defs>`;
       s += rr(180, 16, 146, 256, 14, 'url(#sgvr-gen)', { stroke: 'rgba(194, 190, 253,.45)', 'stroke-width': 1.5 });
       s += `<ellipse cx="253" cy="190" rx="58" ry="9" fill="rgba(0,0,0,.4)"/>`;
-      s += pack(206, 112, 94, 70, '48V', { body: '#2a2019', band: '#2f2d42', hot: true, lz: 16 });
+      s += pack(206, 112, 94, 70, 'A-200', { body: '#2a2019', band: '#2f2d42', hot: true, lz: 16 });
       const p1 = T('AI 创作', 'AI Creative');
       s += chip(253 - pw(p1, 15, 10) / 2, 28, p1, 15, { fill: 'rgba(21,17,14,.75)', f: INK, stroke: HAIR, pad: 10 });
       const p2 = T('待你确认', 'Your call');
@@ -940,7 +939,7 @@ const RING = {
     L: (T) => {
       let s = gnd(344, 312, 172, 160);
       s += rr(10, 14, 324, 320, 10, 'rgba(31,24,19,.55)', { stroke: 'rgba(255,236,220,.18)', 'stroke-width': 1.5 });
-      s += text(26, 40, 15, T('柳州工厂 · 2 号车间', 'Liuzhou · Workshop 2'), { f: MUTE });
+      s += text(26, 40, 15, T('工厂 · 2 号车间', 'Plant · Workshop 2'), { f: MUTE });
       s += rect(10, 132, 324, 44, 'rgba(255,236,220,.04)') + line(16, 154, 328, 154, 'rgba(255,236,220,.16)', 1.5, { 'stroke-dasharray': '10 8' });
       const state = ['run', 'run', 'run', 'wait', 'run', 'idle', 'wait', 'run'];
       const col = { run: OK, wait: OR2, idle: DIM };
@@ -1007,18 +1006,18 @@ export const VIGNETTE_OF = {
 /** Each host's name for a screen reader: what the picture is, said once. */
 const LABEL = {
   port: ['蓝调时分的集装箱码头：岸桥吊着一个货柜，船期看板显示 SO-2041 发往汉堡。', 'A container quay at blue hour: a crane lifts a container, and the sailing board shows SO-2041 bound for Hamburg.'],
-  inquiry: ['凌晨 02:14，客户会话里来了 Müller Energie 的新询盘，回复已起草，等你确认。', 'At 02:14 a new RFQ from Müller Energie arrives in Conversations; a reply is drafted and waits for you.'],
-  samples: ['样品墙上摆着 48V、60V、72V 锂电池组，一组 72V 样品挂着标签。', 'A sample wall of 48V, 60V and 72V lithium packs, one 72V sample tagged.'],
-  qc: ['卡尺量电池组端子：读数 100.02 mm，在 ±0.05 公差内，合格。', 'A caliper on a pack terminal reads 100.02 mm, inside the ±0.05 tolerance: pass.'],
+  inquiry: ['凌晨 02:14，客户会话里来了 Müller Handel 的新询盘，回复已起草，等你确认。', 'At 02:14 a new RFQ from Müller Handel arrives in Conversations; a reply is drafted and waits for you.'],
+  samples: ['样品墙上摆着 A-200、A-150、A-300，一组 A-300 样品挂着标签。', 'A sample wall of A-200, A-150 and A-300 samples, one A-300 sample tagged.'],
+  qc: ['卡尺量零件尺寸：读数 100.02 mm，在 ±0.05 公差内，合格。', 'A caliper on a part reads 100.02 mm, inside the ±0.05 tolerance: pass.'],
   line: ['装配线：五个工位的状态，A 线今日每小时 126 组。', 'The assembly line: five stations and their state, line A at 126 packs an hour today.'],
-  packing: ['打包：纸箱上印着 Müller Energie 的唛头，装箱单逐项打勾。', 'Packing: a carton with Müller Energie’s shipping mark and the packing list being ticked off.'],
+  packing: ['打包：纸箱上印着 Müller Handel 的唛头，装箱单逐项打勾。', 'Packing: a carton with Müller Handel’s shipping mark and the packing list being ticked off.'],
   owner: ['老板在车间里看手机：今日产出、出货、在制，和一张待他审批的报价。', 'The owner on the shop floor checks his phone: today’s output, shipments, open orders and one quote for his approval.'],
   shoot: ['AI 创作生成的四张产品图，选中一张，等你确认。', 'AI Creative’s four product shots, one picked, waiting for your call.'],
   load: ['40HQ 装柜方案：20 托已装 14 托。', 'The 40HQ load plan: 14 of 20 pallets in.'],
   video: ['视频制作：产品片的播放器和四个分镜。', 'Video Studio: the product film’s player and its four storyboard shots.'],
   fulfil: ['订单 SO-2041 的履约节点：下单、备货、质检已完成，今天装柜。', 'Order SO-2041’s milestones: ordered, stocked and inspected, loading today.'],
   refs: ['三张产品参考图经 AI 创作生成一张主图，等你确认。', 'Three reference pictures become one main image in AI Creative, waiting for your call.'],
-  floor: ['柳州工厂 2 号车间平面图：每台设备的运行状态，B3 待料。', 'The floor plan of workshop 2 at the Liuzhou plant: each machine’s state, B3 waiting for stock.'],
+  floor: ['工厂 2 号车间平面图：每台设备的运行状态，B3 待料。', 'The floor plan of workshop 2 at the the plant: each machine’s state, B3 waiting for stock.'],
 };
 
 /* The drawings show the demo cast's business, so the tag says so: in full where
@@ -1055,8 +1054,8 @@ export function vignetteSprite(lang, keys) {
  * Each detail keeps whole words; picked against the drawings on 2026-10-24.
  */
 const ALT = {
-  samples: '20 40 300 380',   // the 48V and 60V packs on the left of the wall
-  packing: '120 70 290 368',  // the carton and its Müller Energie shipping mark
+  samples: '20 40 300 380',   // the A-200 and A-150 packs on the left of the wall
+  packing: '120 70 290 368',  // the carton and its Müller Handel shipping mark
   qc: '115 0 290 340',        // the caliper's jaws on the pack (the tolerance row stays out, under the tag)
   port: '84 70 318 404',      // the crane lifting the container
   video: '128 40 286 362',    // 视频制作, the play card and the first two storyboard shots

@@ -4,7 +4,7 @@
      inbox    「统一询盘入口」 (Sales Desk row 01; c05-unified-inbox): messages from email, WhatsApp,
               阿里国际站 and the website form land in one list. Each is read (its preview rolls up into
               language · intent · product), sorted into 新询盘 / 历史消息 / 垃圾 and handed to a team.
-     account  「客户全景」 (Sales Desk row 03; c06-customer-360): Müller Energie's record assembles itself
+     account  「客户全景」 (Sales Desk row 03; c06-customer-360): Müller Handel's record assembles itself
               (contacts and their roles, the stage, needs and samples, quotes, documents, the last
               conversations), then keeps moving: Q-1042 is approved, the MSDS is attached, and the
               follow-up that carries both waits for a person.
@@ -42,7 +42,7 @@
   function bar(stage, crumb) {
     var b = el('div', 'sgs-bar', stage);
     var mk = el('span', 'sg-app-mark', b); K.icon('spark', mk, 12);
-    el('b', '', b, 'Sales Desk');
+    el('b', '', b, T('成交工作台', 'Sales Desk'));
     if (crumb) el('span', 'sgs-crumb', b, crumb);
     el('span', 'sgs-tagline', b, TAG_MINI);
   }
@@ -67,10 +67,10 @@
     var P = 3;
     var CLS = { 'new': T('新询盘', 'New inquiry'), hist: T('历史消息', 'History'), spam: T('垃圾信息', 'Spam') }, CLS_S = { 'new': T('新询盘', 'New'), hist: T('历史', 'History'), spam: T('垃圾', 'Spam') };
     var MSG = [
-      { ch: 'mail', who: 'Müller Energie GmbH', s: ['Müller Energie', 'Müller'], text: '200 pcs 48V 100Ah, DAP Hamburg?', tags: [T('英语', 'EN'), T('询价', 'RFQ'), '48V 100Ah'], c: 'new', to: T('欧洲组', 'EU team') },
-      { ch: 'chat', who: 'Ahmed Al-Rashid', s: [0, 'Ahmed'], text: 'Price for the 72V lithium pack? 50 units.', tags: [T('英语', 'EN'), T('询价', 'RFQ'), T('72V 锂电', '72V pack')], c: 'new', to: T('中东组', 'ME team') },
-      { ch: 'store', who: 'Silva Mobilidade', s: [0, 'Silva'], text: 'Vocês fazem OEM? Qual o MOQ? 60V/72V', tags: [T('葡语', 'PT'), 'OEM', '60V/72V'], c: 'new', to: T('美洲组', 'Americas team') },
-      { ch: 'mail', who: 'PT Surya Energi', s: [0, 'PT Surya'], text: 'Re: Barang sudah tiba di Jakarta', tags: [T('印尼语', 'ID'), T('回复', 'Reply')], c: 'hist', to: T('并入客户记录', 'Filed to account') },
+      { ch: 'mail', who: 'Müller Handel GmbH', s: ['Müller Handel', 'Müller'], text: '200 pcs A-200, DAP Hamburg?', tags: [T('英语', 'EN'), T('询价', 'RFQ'), 'A-200'], c: 'new', to: T('欧洲组', 'EU team') },
+      { ch: 'chat', who: 'Ahmed Al-Rashid', s: [0, 'Ahmed'], text: 'Price for the A-300 sample? 50 units.', tags: [T('英语', 'EN'), T('询价', 'RFQ'), T('A-300 样品', 'A-300 pack')], c: 'new', to: T('中东组', 'ME team') },
+      { ch: 'store', who: 'Silva Comercial', s: [0, 'Silva'], text: 'Vocês fazem OEM? Qual o MOQ? A-150/A-300', tags: [T('葡语', 'PT'), 'OEM', 'A-150/A-300'], c: 'new', to: T('美洲组', 'Americas team') },
+      { ch: 'mail', who: 'PT Surya Niaga', s: [0, 'PT Surya'], text: 'Re: Barang sudah tiba di Jakarta', tags: [T('印尼语', 'ID'), T('回复', 'Reply')], c: 'hist', to: T('并入客户记录', 'Filed to account') },
       // a phishing message sent through the website form, from a reserved (never real) domain
       { ch: 'form', who: 'billing@pay-verify.example', s: ['Pay-Verify', 'Pay-Verify'], text: 'Urgent: verify your payment account', tags: [T('英语', 'EN'), T('钓鱼链接', 'Phishing')], c: 'spam', to: T('已拦截', 'Blocked') }
     ];
@@ -175,7 +175,7 @@
   }
 
   /* =====================================================================
-     ACCOUNT — 客户全景. Müller Energie's record fills in, piece by piece, then
+     ACCOUNT — 客户全景. Müller Handel's record fills in, piece by piece, then
      moves on: Q-1042 is approved, the MSDS is attached, and the follow-up that
      carries both waits for a person. Nothing is sent by the scene.
      ===================================================================== */
@@ -185,9 +185,9 @@
     // [label, value, class while pending, value once it moves on, the moment it moves (AT)]
     var TILES = [
       { g: 'user', k: T('联系人', 'Contacts'), rows: [['Jonas Müller', T('决策者', 'Decider')], ['Lena Vogt', T('影响者', 'Influencer')]] },
-      { g: 'box', k: T('需求与样品', 'Needs & samples'), opt: 1, rows: [['48V 100Ah', '× 200'], [T('样品 2 组', '2 samples'), T('已签收', 'Received')]] },
+      { g: 'box', k: T('需求与样品', 'Needs & samples'), opt: 1, rows: [['A-200', '× 200'], [T('样品 2 组', '2 samples'), T('已签收', 'Received')]] },
       { g: 'price', k: T('报价', 'Quotes'), rows: [['Q-1042 · v3', T('待审批', 'Pending'), 'is-warn', T('已批准', 'Approved'), 'quote'], ['Q-1031', T('已接受', 'Accepted')]] },
-      { g: 'doc', k: T('文件', 'Documents'), rows: [['MSDS', T('待发', 'To send'), 'is-warn', T('已附上', 'Attached'), 'doc'], ['CE · UN38.3', T('已发', 'Sent')]] }
+      { g: 'doc', k: T('文件', 'Documents'), rows: [['MSDS', T('待发', 'To send'), 'is-warn', T('已附上', 'Attached'), 'doc'], ['CE · RoHS', T('已发', 'Sent')]] }
     ];
     var LOG = [['mail', T('3 天前 · 邮件', '3 days ago · email'), T('规格书已发，未回复', 'Spec sheet sent, no reply')],
       ['chat', T('8 天前 · WhatsApp', '8 days ago · WhatsApp'), T('确认 DAP 汉堡', 'DAP Hamburg agreed')]];
@@ -214,8 +214,8 @@
       var hd = R.head = el('div', 'sgs-acct-h', pane);
       el('span', 'sgs-av', hd, 'ME');
       var ht = el('div', 'sgs-acct-ht', hd);
-      el('b', '', ht, 'Müller Energie GmbH');
-      el('span', '', ht, kind === 'list' ? T('德国 汉堡', 'Hamburg, DE') : kind === 'card' ? T('德国 汉堡 · 储能经销商', 'DE · storage dealer') : T('德国 汉堡 · 储能经销商', 'Hamburg, DE · storage dealer'));
+      el('b', '', ht, 'Müller Handel GmbH');
+      el('span', '', ht, kind === 'list' ? T('德国 汉堡', 'Hamburg, DE') : kind === 'card' ? T('德国 汉堡 · 进口经销商', 'DE · import dealer') : T('德国 汉堡 · 进口经销商', 'Hamburg, DE · import dealer'));
       // the stage: five labelled steps on a square card; a line of dots and the current step elsewhere
       R.stage = null;
       if (!lo) {
