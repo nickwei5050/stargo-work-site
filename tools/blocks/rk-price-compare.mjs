@@ -369,11 +369,11 @@ const LANGS = ['zh', 'en'];
  * levels whose own first sentence says they do, so the declaration and the
  * prose cannot drift apart in either direction.
  */
-const INCLUDES_BASE = '含标准版年度软件订阅';
+const INCLUDES_BASE = '含核心版';
 /** The level that sentence names — and the level it has to be. */
-const BASE_NAME = '标准版';
+const BASE_NAME = '核心版';
 /** How many levels may say it. */
-const BASE_CARRIERS = 3;
+const BASE_CARRIERS = 2;
 
 /* ------------------------------------------------------------ markup tools -- */
 
@@ -902,7 +902,7 @@ export function render(frag, ctx) {
     const cell = setText(priceCut.units[i % DONOR_PLANS], 'rk-rt-gap-off', escapeHtml(t(p.price)));
     /* The period carries no class of its own: it is drawn by the `body` rule
        tools/blocks/rk-price-compare.css restores. */
-    return swap(cell, PER_MONTH, `<div>${escapeHtml(unitOf(p.unit))}</div>`, 'price period');
+    return swap(cell, PER_MONTH, `<div>${escapeHtml(/\d/.test(t(p.price)) ? unitOf(p.unit) : '')}</div>`, 'price period');
   });
 
   /* -------------------------- the three cells every feature row is built of -- */

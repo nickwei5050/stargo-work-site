@@ -125,7 +125,7 @@ const LOOP = {
   title: B('核心业务全景：先找客户，再一路做到复购', 'The business loop: find customers, then carry every deal through to reorders'),
   stages: [
     [B('主动获客', 'Customer acquisition'), B('主动获客', 'Lead Finder'), B('找客户 · 判机会', 'Find and qualify')],
-    [B('外贸成交', 'Trade sales'), B('Sales Desk', 'Sales Desk'), B('沟通 · 报价 · PI', 'Engage and quote')],
+    [B('外贸成交', 'Trade sales'), B('成交工作台', 'Sales Desk'), B('沟通 · 报价 · PI', 'Engage and quote')],
     [B('企业履约', 'Fulfillment'), B('ERP 与交付', 'ERP and delivery'), B('采购 · 生产 · 库存', 'Source and deliver')],
     [B('经营协同', 'Business coordination'), B('财务与服务', 'Finance and service'), B('回款 · 售后 · 渠道', 'Collect and support')],
     [B('复购增长', 'Repeat business'), B('留存与增长', 'Retention and growth'), B('补货 · 唤醒 · 复盘', 'Retain and improve')],
@@ -751,7 +751,7 @@ ${chartStart('en', 1)}
     modified: '2026-09-17',
     cover: 'from-inquiry-to-quote',
     section: B('销售与报价', 'Sales & quoting'),   // en: '&' so the eyebrow of the 360px homepage card shows it whole
-    keywords: B(['Sales Desk', '询盘处理', '外贸报价', 'PI', '报价审批'], ['Sales Desk', 'inquiry handling', 'export quotation', 'proforma invoice', 'quote approval']),
+    keywords: B(['成交工作台', '询盘处理', '外贸报价', 'PI', '报价审批'], ['Sales Desk', 'inquiry handling', 'export quotation', 'proforma invoice', 'quote approval']),
     mentions: ['Sales Desk', 'Lead Finder'],
     title: B('成交工作台：从询盘到报价审批、出 PI', 'Sales Desk: from inquiry to an approved quote and PI'),
     titleChunks: ['成交工作台：', '从询盘到', '报价审批、', '出 PI'],

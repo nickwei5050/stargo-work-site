@@ -157,7 +157,7 @@
     var F = [
       [T('官网', 'Website'), T('产品页 12 个 · 德英双语', '12 product pages · DE / EN'), T('来源：官网 · 10-21 更新', 'Source: website · 10-21')],
       [T('主营产品', 'Products'), T('分销商 · A-200 机架式', 'A-200 product range'), T('来源：产品目录 · 10-18 更新', 'Source: catalogue · 10-18')],
-      [T('认证', 'Certified'), 'CE · RoHS · IEC 62619', T('来源：官网下载区 · 10-21 更新', 'Source: downloads · 10-21')],
+      [T('认证', 'Certified'), 'CE · RoHS · ISO 9001', T('来源：官网下载区 · 10-21 更新', 'Source: downloads · 10-21')],
       [T('市场与渠道', 'Markets'), T('德国 · 奥地利 · 经销与集成', 'DE · AT · dealers'), T('来源：新闻稿 · 10-19 更新', 'Source: press release · 10-19')],
       [T('规模', 'Size'), T('员工约 120 人', 'About 120 staff'), T('仅一个来源 · 待核实', 'One source only · to verify'), true],
       [T('新闻', 'News'), T('近 90 天 3 条采购招标', '3 purchase tenders in 90 days'), T('来源：公开招标 · 10-20 更新', 'Source: public tenders · 10-20')]

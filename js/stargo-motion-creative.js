@@ -27,7 +27,7 @@
     css(e, 'transform', 'translate3d(0,' + ((1 - p) * (dy || 8)).toFixed(2) + 'px,0)');
   }
   var CHECK = 'M5 12.5l4.5 4.5L19 7.5', PLAY = 'M9 7.5v9l7-4.5z';
-  var LINE0 = T('长寿命耐用材料，3000 次以上循环', 'Long-life Durable build, 3,000+ cycles');
+  var LINE0 = T('长寿命耐用设计，5 年质保', 'Long-life durable build, 5-year warranty');
   function mini(d, parent, size) {
     var s = sv('svg', { viewBox: '0 0 24 24', width: size, height: size, fill: 'none', 'aria-hidden': 'true', class: 'sg-ico' }, parent);
     sv('path', { d: d, stroke: 'currentColor', 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, s);
@@ -102,7 +102,7 @@
     txt(g('pt'), 32, 59, 13, 'A-200', { 'font-weight': 700, 'letter-spacing': '-.2' });
     bar(g('ptb'), 32, 51, 60, 8, '.85');
     var ps = g('ps');
-    txt(ps, 32, 70.5, 8, T('Durable build · 耐用材料', 'Durable build'), { opacity: '.6', 'letter-spacing': '.2' });
+    txt(ps, 32, 70.5, 8, T('耐用设计', 'Durable build'), { opacity: '.6', 'letter-spacing': '.2' });
     txt(ps, 142, 56, 8, 'CE', { 'text-anchor': 'end', 'font-weight': 700, opacity: '.7' });
     txt(ps, 142, 65.5, 7.5, 'RoHS', { 'text-anchor': 'end', opacity: '.55' });
     sv('path', RULE, ps);
@@ -164,9 +164,9 @@
       } else {
         sv('rect', { x: 176, y: 88, width: 48, height: 3, rx: 1.5, fill: '#9382ff' }, parent);
         txt(parent, 200, 140, 40, 'A-200', mid);
-        txt(parent, 200, 176, 22, T('长寿命耐用材料', 'Long-life Durable build'), { 'text-anchor': 'middle', opacity: '.8' });
-        txt(parent, 200, 204, 22, T('3000 次以上循环', '3,000+ cycles'), { 'text-anchor': 'middle', opacity: '.8' });
-        var fine = txt(parent, 200, 238, 19.5, 'CE · CE · RoHS', { 'text-anchor': 'middle', opacity: '.45', 'letter-spacing': '1' });
+        txt(parent, 200, 176, 22, T('长寿命耐用设计', 'Long-life durable build'), { 'text-anchor': 'middle', opacity: '.8' });
+        txt(parent, 200, 204, 22, T('5 年质保', '5-year warranty'), { 'text-anchor': 'middle', opacity: '.8' });
+        var fine = txt(parent, 200, 238, 19.5, 'CE · RoHS', { 'text-anchor': 'middle', opacity: '.45', 'letter-spacing': '1' });
         var fb = sv('g', { display: 'none' }, parent);
         [140, 182, 224].forEach(function (x) { sv('rect', { x: x, y: 225, width: 36, height: 16, rx: 3, fill: 'none', stroke: '#f4eee8', 'stroke-opacity': '.3' }, fb); });
         packs.push([fine, fb, 'end']);
@@ -199,8 +199,8 @@
     var SHOT = [T('推近 0–3s', 'Push-in 0–3s'), T('铭牌 3–6s', 'Plate 3–6s'), T('仓库 6–11s', 'Warehouse 6–11s'), T('片尾 11–15s', 'End 11–15s')];
     var SHOT_S = ['0–3s', '3–6s', '6–11s', '11–15s'];   // a phone's four shots in one row: the times only
     // the selling line in the visitor's language first, then three more (the English page stays in Latin script)
-    var LANG = K.ZH ? [['中文', LINE0], ['EN', 'Long-life Durable build, 3,000+ cycles'], ['ES', 'Durable build: más de 3.000 ciclos'], ['DE', 'Durable build: über 3.000 Zyklen']]
-      : [['EN', LINE0], ['ES', 'Durable build: más de 3.000 ciclos'], ['DE', 'Durable build: über 3.000 Zyklen'], ['FR', 'Durable build : plus de 3 000 cycles']];
+    var LANG = K.ZH ? [['中文', LINE0], ['EN', 'Long-life durable build, 5-year warranty'], ['ES', 'Diseño duradero, 5 años de garantía'], ['DE', 'Langlebig gebaut, 5 Jahre Garantie']]
+      : [['EN', LINE0], ['ES', 'Diseño duradero, 5 años de garantía'], ['DE', 'Langlebig gebaut, 5 Jahre Garantie'], ['FR', 'Conception durable, garantie 5 ans']];
     var G = 4.4, N = OUT.length, REVIEW = N * G + 0.2, TAP = REVIEW + 0.9, P = 19.5, OUT0 = 18.6, OUT1 = 19.3;
     var DROP = 0.4, LIFT0 = 0.5, LIFT1 = 2.0;
     var layouts = {}, R, kind, arts;

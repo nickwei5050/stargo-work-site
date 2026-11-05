@@ -491,7 +491,7 @@ const chip = (x, y, s, z, o = {}) => pill(x, y, pw(s, z, o.pad || 12), z + 15, s
 /** An app bar across a panel, its name at `z`. */
 const bar = (x, y, w, name, right, z) => {
   const h = z + 23;
-  return path(`M${x} ${y + h}V${y + 12}q0-12 12-12h${w - 24}q12 0 12 A-120${y + h}z`, { fill: RAISE })
+  return path(`M${x} ${y + h}V${y + 12}q0-12 12-12h${w - 24}q12 0 12 12V${y + h}z`, { fill: RAISE })
     + circ(x + 17, y + h / 2, 4.5, OR) + text(x + 30, y + h / 2 + z * 0.36, z, name, { w: 600 })
     + (right ? text(x + w - 14, y + h / 2 + z * 0.36, z, right, { f: MUTE, a: 'end' }) : '');
 };

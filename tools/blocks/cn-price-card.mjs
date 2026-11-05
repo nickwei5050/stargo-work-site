@@ -194,8 +194,11 @@ export function render(frag, ctx) {
   const base = P.panes?.[0]?.[0];
   if (!base) throw new Error('cn-price-card: PRICING.panes[0][0] is missing');
   if (base.unit !== 'year') throw new Error(`cn-price-card: the entry plan is priced per "${base.unit}", not per year; the unit slot beside the price would be wrong`);
-  if (typeof base.price !== 'string' || !/^¥[\d,]+$/.test(base.price)) throw new Error(`cn-price-card: the entry plan's price is ${JSON.stringify(base.price)}, which is not a figure this card can print`);
-  if (typeof base.renewal !== 'string' || !/^¥[\d,]+$/.test(base.renewal)) throw new Error(`cn-price-card: the entry plan renews at ${JSON.stringify(base.renewal)}, which is not a figure; the line behind the refund glyph would be an invented one`);
+  /* 2026-11-05 (Scott: 「官网不放价格」): the price slot prints the plan's own
+     price word (联系报价 / Ask us), never a figure, and no unit after it. */
+  if (/\d/.test(t(base.price ?? ''))) throw new Error(`cn-price-card: the entry plan carries a figure (${JSON.stringify(base.price)}); the site publishes no prices`);
+  if (base.renewal !== 'ask') throw new Error(`cn-price-card: the entry plan's renewal is ${JSON.stringify(base.renewal)}, not quoted on request`);
+  if (!P.renewalNote) throw new Error('cn-price-card: PRICING.renewalNote is missing; it is the line behind the refund glyph');
 
   let html = frag;
 
@@ -274,7 +277,7 @@ export function render(frag, ctx) {
 
        `.text-color-secondary` is on this element and on nothing else in the
        left column, which is what makes it addressable. */
-    const renewal = `${t(P.toggleB)} ${base.renewal} ${t(P.unitYear)}`;
+    const renewal = t(P.renewalNote);
     left = setText(left, 'cn-text-color-secondary', escapeHtml(renewal));
 
     html = put(html, r, left);
@@ -350,8 +353,8 @@ export function render(frag, ctx) {
     const r = region(html, '<div class="cn-price-wrap">', 'the price');
     let price = html.slice(r.at, r.end);
     price = setText(price, 'cn-price-text', escapeHtml(STRUCK[lang]));
-    price = setText(price, 'cn-prcing-title', escapeHtml(base.price));
-    price = setText(price, 'cn-text-size-small', escapeHtml(t(P.unitYear)));
+    price = setText(price, 'cn-prcing-title', escapeHtml(t(base.price)));
+    price = setText(price, 'cn-text-size-small', '');
     html = put(html, r, price);
   }
 
@@ -379,7 +382,7 @@ export function render(frag, ctx) {
     const LEVELS = [P.panes?.[0]?.[0], P.panes?.[0]?.[1], P.panes?.[0]?.[2], P.panes?.[1]?.[0]];
     LEVELS.forEach((lv, i) => {
       if (!lv) throw new Error(`cn-price-card: priced level ${i + 1} is missing from PRICING.panes`);
-      if (typeof lv.price !== 'string' || !/^¥[\d,]+$/.test(lv.price)) throw new Error(`cn-price-card: level ${i + 1} is priced ${JSON.stringify(lv.price)}, not a figure; the four bolded lines are the four priced levels`);
+      if (lv.unit === 'demo' || lv.unit === 'none') throw new Error(`cn-price-card: level ${i + 1} is a ${lv.unit} entry; the four bolded lines are the three software plans and the marketing system`);
       if (!lv.name || !lv.desc) throw new Error(`cn-price-card: level ${i + 1} has no name or no description`);
     });
 

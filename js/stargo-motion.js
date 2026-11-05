@@ -734,7 +734,7 @@
       ['SE', [18.07, 59.33], 'Nordic Home AB', T('家居用品', 'Home goods'), T('斯德哥尔摩', 'Stockholm'), 93, T('年采购约 2,000 组，官网列出 CE 与 RoHS 要求，我们资料齐全。', 'About 2,000 packs a year; asks for CE and RoHS, which we have.')],
       ['ID', [106.85, -6.2], 'PT Surya Niaga', T('五金工具', 'Hardware tools'), T('雅加达', 'Jakarta'), 90, T('五金工具销量增长 40%，A-260 与其产品线匹配。', 'Tool sales up 40%; A-260 fits their range.')],
       ['PL', [21.01, 52.23], 'Wisła Dom Sp. z o.o.', T('家居用品', 'Home goods'), T('华沙', 'Warsaw'), 86, T('正在扩产，职业社交主页显示新任采购总监到岗，适合首封开发信。', 'Expanding, with a new purchasing director: a good first email.')],
-      ['AU', [151.2, -33.87], 'Harbour Outdoor Pty', T('户外用品', 'Outdoor goods'), T('悉尼', 'Sydney'), 92, T('房车改装业务需要 A-120，询价历史显示偏好 Durable build。', 'RV conversions need A-120; past requests prefer Durable build.')],
+      ['AU', [151.2, -33.87], 'Harbour Outdoor Pty', T('户外用品', 'Outdoor goods'), T('悉尼', 'Sydney'), 92, T('门店扩张需要 A-120，询价历史显示偏好 Durable build。', 'Store expansion needs A-120; past requests prefer Durable build.')],
       ['MX', [-99.13, 19.43], 'Movilidad Verde SA', T('物流配送', 'Delivery & logistics'), T('墨西哥城', 'Mexico City'), 87, T('门店扩张，预算已批，下季度采购。', 'Electrifying city delivery; budget approved, buying next quarter.')],
       ['NG', [3.38, 6.52], 'Lagos Trading Ltd', T('户外用品', 'Outdoor goods'), T('拉各斯', 'Lagos'), 85, T('户外用品需求旺，曾询价 30 套，适合 CIF 报价。', 'Strong outdoor-goods demand; asked for 30 sets before, quote CIF.')],
       ['SA', [46.7, 24.7], 'Najd Energy Co.', T('通信备电', 'Telecom backup'), T('利雅得', 'Riyadh'), 84, T('通信基站备电改造项目启动，A-200 机架式产品匹配。', 'Telecom backup retrofit started; A-200 units fit.')],
@@ -973,11 +973,11 @@
       { key: 'city', label: T('短视频 · 15 秒', 'Short video · 15 s'), short: T('短视频 15 秒', 'Video · 15 s'), prompt: T('城市夜景，镜头缓慢推近', 'City at night, slow push-in') }
     ];
     var LANG = [
-      ['中文', '长寿命耐用材料，3000 次以上循环。'],
-      ['EN', 'Long-life Durable build pack, 3,000+ cycles.'],
-      ['ES', 'Batería Durable build: más de 3.000 ciclos.'],
-      ['AR', 'بطارية Durable build تدوم أكثر من 3000 دورة.'],
-      ['RU', 'Батарея Durable build: более 3000 циклов.']
+      ['中文', '长寿命耐用设计，5 年质保。'],
+      ['EN', 'Long-life durable build, 5-year warranty.'],
+      ['ES', 'Diseño duradero, 5 años de garantía.'],
+      ['AR', 'تصميم متين مع ضمان 5 سنوات.'],
+      ['RU', 'Прочная конструкция, гарантия 5 лет.']
     ];
     var P = 6.2, LP = P / 2;
     // 首页蓝: on the homepage the generated pictures take the css/stargo-blue.css tokens (read once per build,
@@ -1151,7 +1151,7 @@
           return r;
         });
         el('div', 'sg-rail-h', rail, T('卖点', 'Selling points'));
-        [T('3000+ 次循环', '3,000+ cycles'), 'Durable build', T('IP67 防水', 'IP67'), T('5 年质保', '5-year warranty')].forEach(function (s) { el('span', 'sg-pill', rail, s); });
+        [T('出口包装', 'Export packing'), T('耐用设计', 'Durable build'), T('IP67 防水', 'IP67'), T('5 年质保', '5-year warranty')].forEach(function (s) { el('span', 'sg-pill', rail, s); });
       }
       if (mode !== 'mini') {
         var qb = el('div', 'sg-queue', stage);

@@ -153,7 +153,7 @@
         if (F.wires) { var wire = el('i', 'sg-org-wire', s); R.pulses.push(el('i', '', wire)); }
       });
       el('span', 'sg-org-foot-k', ports, T('经授权接入', W >= 460 ? 'connected with authorization' : 'connected'));
-      var fde = el('span', 'sg-org-fde', foot); glyph('person', fde, 13); el('span', '', fde, T('专属前置部署工程师', 'Dedicated FDE'));
+      var fde = el('span', 'sg-org-fde', foot); glyph('person', fde, 13); el('span', '', fde, T('项目实施团队', 'Project team'));
       settle(stage, fence);
     }
 

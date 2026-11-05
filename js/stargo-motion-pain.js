@@ -156,7 +156,7 @@
     return Scene('inquiry', 10.8, 9.2, function (R) {
       var n = R.name, ph = R.phone, X = {};
       var F = [
-        { k: 'Model', v: 'LFP-48100 · A-200', cell: pre('A-200'), chip: 'A-200', head: T('型号', 'Model') },
+        { k: 'Model', v: 'A-200 · Standard', cell: pre('A-200'), chip: 'A-200', head: T('型号', 'Model') },
         { k: 'Quantity', v: '200 pcs', cell: pre('2000'), chip: T('200 组', '200 pcs'), head: T('数量', 'Qty') },
         { k: 'Delivery', v: 'DAP Hamburg', cell: pre(T('DAP 汉堡', 'DAP Hamburg')), chip: T('DAP 汉堡', 'DAP Hamburg'), head: T('交货', 'Delivery') }
       ];
