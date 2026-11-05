@@ -6168,7 +6168,11 @@ img[src*="stargo-photo/e06-cockpit-blocker-"] { object-position: 50% 20%; }
     position: static;
   }
   .qx-whatwedo .qx-trigger-spacer { display: none; }
-  .qx-whatwedo .qx-wrapper-image-change-service { width: 25vw !important; height: 25vw !important; }
+  /* The orb is held at the size the scrub ends on (20vw), not the 25vw the
+     479px rules use: at 25vw the 5vw it takes from the row broke 「每项业务的」
+     「四个基础」 onto two lines at 480-489px and 705-767px (「的」 and 「础」
+     alone on the second), which the finished scene never did. */
+  .qx-whatwedo .qx-wrapper-image-change-service { width: 20vw !important; height: 20vw !important; }
   .qx-whatwedo .qx-wrapper-image-change-service > img { transform: none !important; }
   .qx-whatwedo .qx-wrapper-content-service { opacity: 1 !important; transform: none !important; }
   .qx-whatwedo .qx-wrapper-main-services.qx-wrapper-main-services-one,
