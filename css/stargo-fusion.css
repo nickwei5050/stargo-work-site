@@ -2140,9 +2140,22 @@ html[lang^="zh"] .work-card .work-title.b {
 /* The hero's readable introduction is now the product definition, five
    lines at 1440 that left 「握。」 alone on the last one. `pretty` reworks
    only the tail. */
-html[lang^="zh"] .hero .max-w-left.add-tp p.top-text.big.nm {
+html[lang^="zh"] .hero .max-w-left.add-tp :is(p, h1).top-text.big.nm {
   text-wrap: pretty;
 }
+/* That sentence is the page's <h1> (tools/a11y.mjs: crawlers read tags, not
+   ARIA). A heading element brings its own top margin and tighter leading; it
+   takes back the paragraph's, so the hero is the same size and in the same
+   place as when the sentence was a <p>. */
+.hero .max-w-left.add-tp h1.top-text.big.nm {
+  margin-top: 0;
+  line-height: var(--line-height--paragraph-line-height);
+}
+
+/* About: the intro's first line is the page's <h1>, the rest of it the <p>
+   after it (tools/a11y.mjs). Same class, same type; the heading's own margins
+   come off so the two stack as the single paragraph did. */
+.cn-about h1.cn-text-size-large { margin: 0; }
 
 /* ===== V6 A: capability showcases (#story-1…#story-4, #story-6, foundations) =====
    Insertion point for this area's rules. Keep additions between this marker
