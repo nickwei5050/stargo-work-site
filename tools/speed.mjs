@@ -35,9 +35,10 @@
  *    for a film twenty screens down. The poster moves to `data-poster`;
  *    js/stargo-video-defer.js puts it back two screens before the film.
  *
- * 7, a start-up pass (speed lane, 2026-11-05), explained where its
- * constant is defined below: Lenis loads where it is used instead of in the
- * <head>.
+ * 7-8, a start-up pass (speed lane, 2026-11-05), each explained where its
+ * constant or function is defined below: Lenis loads where it is used instead
+ * of in the <head>; a page links only the donor stylesheets whose class
+ * namespace it uses.
  *
  * 4-6, a phone pass (speed lane, 2026-10-23), each explained where its
  * constant is defined below: Lenis's frame loop rests on a touch screen; the
@@ -48,6 +49,10 @@
  * page-wide mouse-move interactions) and the testimonial avatars' phone
  * pictures (css/monof-template.app.shared.ed8969994.css).
  */
+
+import { DONORS } from './block-lib.mjs';
+import { existsSync, readFileSync } from 'node:fs';
+import { SITE } from './paths.mjs';
 
 /* data-w-id → the IX2 elements whose inline start state hides first-screen text. */
 const FIRST_SCREEN = new Set([
@@ -143,6 +148,54 @@ const COLLAB_PHONE = {
 const LENIS_TAG = '<script src="js/lenis.min.js"></script>\n';
 const LENIS_SETUP = '<!-- Lenis setup -->';
 
+/* 8. A page links only the donor stylesheets it uses (speed lane). The pages that
+ *    carry capability-page blocks linked every donor sheet "so adding a block never
+ *    means remembering to link its styles" (tools/build-site.mjs): /contact took
+ *    Renok, Qubix, Rototo and Offgrid (581 KB of CSS, none of it matching an
+ *    element), /about the same four, /pricing Qubix, Rototo and Offgrid, and
+ *    /capabilities Rototo and Offgrid. Each donor sheet is namespaced by
+ *    tools/donor-lib.mjs: every class name carries the donor's prefix (rk-, qx-, cn-,
+ *    og-, ro-) and every rule is scoped under a root class that has it, so a page with
+ *    no element of that namespace can match none of the sheet's rules. The link is
+ *    therefore dropped when the page has no class token with the prefix. A sheet is
+ *    kept, whatever the markup says, when a script the page loads could build one
+ *    (a class written with className / classList / class= next to the prefix), and
+ *    when it carries something other sheets use: the donors' @font-face rules are
+ *    used only inside their own scopes (checked: Satoshi, Playfair, Instrument Serif
+ *    Roman and Interdisplay are named by no rule outside the donor's own sheet and
+ *    scalora-modules.sc.css, which declares Interdisplay itself), and their
+ *    keyframes and custom properties are prefixed. The sheets that stay are
+ *    unchanged and in the same order. */
+const sheetNeedsNs = Object.values(DONORS).map((d) => ({ sheet: d.sheet, ns: d.ns }));
+const pageScripts = (html) => {
+  let text = '';
+  for (const m of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g)) {
+    const src = m[1].match(/\ssrc="([^"?]+)/);
+    if (!src) { text += `\n${m[2]}`; continue; }
+    const f = `${SITE}/${src[1]}`;
+    if (/^js\//.test(src[1]) && existsSync(f)) text += `\n${readFileSync(f, 'utf8')}`;
+  }
+  return text;
+};
+const MAKES_CLASS = (ns) => new RegExp(`(?:className\\s*[+]?=|classList\\.(?:add|toggle|replace)\\(|setAttribute\\(\\s*["']class["']|\\bclass=\\\\?["'])[^;\\n]{0,160}?(?<![\\w.-])${ns.replace(/[-]/g, '\\-')}[a-z]`);
+
+function pruneDonorSheets(html, name) {
+  const used = new Set();
+  for (const m of html.matchAll(/\bclass="([^"]*)"/g)) for (const t of m[1].split(/\s+/)) if (t) used.add(t);
+  const scripts = pageScripts(html);
+  let out = html;
+  let dropped = 0;
+  for (const { sheet, ns } of sheetNeedsNs) {
+    const link = new RegExp(`<link href="css/${sheet.replace('.', '\\.')}" rel="stylesheet" type="text/css"/>\\n?`);
+    if (!link.test(out)) continue;
+    if ([...used].some((t) => t.startsWith(ns))) continue;
+    if (MAKES_CLASS(ns).test(scripts)) continue;
+    out = out.replace(link, '');
+    dropped++;
+  }
+  return out;
+}
+
 export function speedPage(html, name) {
   let out = html;
   let n = 0;
@@ -206,6 +259,9 @@ export function speedPage(html, name) {
   if (out.split(LENIS_TAG).length !== 2 || out.split(LENIS_SETUP).length !== 2) throw new Error(`speed: ${name}: expected one Lenis script and one Lenis setup`);
   if (out.indexOf(LENIS_TAG) > out.indexOf('</head>')) throw new Error(`speed: ${name}: the Lenis script is not in the <head> any more`);
   out = out.replace(LENIS_TAG, '').replace(LENIS_SETUP, `${LENIS_TAG}${LENIS_SETUP}`);
+
+  // 8. Donor stylesheets the page has no element for.
+  out = pruneDonorSheets(out, name);
 
   return out;
 }
