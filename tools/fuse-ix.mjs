@@ -357,6 +357,30 @@ addIx3({ ix3Interactions: donorIx3, ix3Timelines: donorTl }, false);
   timelines.set(ID, JSON.stringify({ ...tl, actions: hero }));
 }
 
+/* The dark pill buttons' hover (.contact-info.for-button: 聊聊你的流程,
+   预约企业演示, 查看定价 …), interaction i-f8c3e585 → timeline t-96353251.
+   Its two character actions target `wf:trigger-only` with a chars split, and
+   the runtime moves the hovered <a> itself by yPercent 0→100% instead of its
+   characters: the button dropped its own height (~50px) out from under the
+   cursor, which fired mouseleave, the reverse brought it back under the
+   cursor, mouseenter fired again — the button flickered for as long as the
+   pointer rested on its edge (owner report 2026-11-05, "光标一触碰就跳帧";
+   measured on every page, zh and en). Only those two actions go; the hover
+   keeps the template's background sliding up from below (ta-e429bceb). */
+{
+  const ID = 't-96353251';
+  const ROLL = ['ta-0723fef1', 'ta-291bbd3e'];
+  if (!timelines.has(ID)) throw new Error(`ix3: the pill button hover timeline ${ID} is missing`);
+  const tl = JSON.parse(timelines.get(ID));
+  for (const id of ROLL) {
+    const a = tl.actions.find((x) => x.id === id);
+    if (!a || a.targets[0]?.[0] !== 'wf:trigger-only' || !a.splitText) throw new Error(`ix3: ${ID} no longer carries the character roll ${id}`);
+  }
+  const kept = tl.actions.filter((a) => !ROLL.includes(a.id));
+  if (kept.length !== tl.actions.length - 2 || !kept.some((a) => a.id === 'ta-e429bceb')) throw new Error(`ix3: ${ID} hover not reduced to its background slide`);
+  timelines.set(ID, JSON.stringify({ ...tl, actions: kept }));
+}
+
 let out = monoSrc.slice(0, mono.ix2.argStart) + JSON.stringify(mergedPayload) + monoSrc.slice(mono.ix2.argEnd);
 const ix3 = readBundle(out).ix3;
 /* SplitText "words" splits on whitespace. Chinese has none, so a whole
