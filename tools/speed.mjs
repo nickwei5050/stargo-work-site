@@ -35,6 +35,10 @@
  *    for a film twenty screens down. The poster moves to `data-poster`;
  *    js/stargo-video-defer.js puts it back two screens before the film.
  *
+ * 7, a start-up pass (speed lane, 2026-11-05), explained where its
+ * constant is defined below: Lenis loads where it is used instead of in the
+ * <head>.
+ *
  * 4-6, a phone pass (speed lane, 2026-10-23), each explained where its
  * constant is defined below: Lenis's frame loop rests on a touch screen; the
  * intelligence hero's phone frame is fetched first; the homepage's
@@ -126,6 +130,19 @@ const COLLAB_PHONE = {
   'video/webm': 'assets/699b6466d5f19893993a4bf2/699b6466d5f19893993a4f83_collab-360.webm',
 };
 
+
+/* 7. Lenis loads where it is used (speed lane). The template put
+ *    <script src="js/lenis.min.js"> in the <head>, a parser-blocking script ahead of
+ *    the whole body. Only the template's own `new Lenis(...)` setup, in an inline
+ *    script at the very end of the body ("<!-- Lenis setup -->"), needs it; nothing
+ *    before that line (the Webflow runtime, jQuery, GSAP, this site's scripts)
+ *    names it, and the deferred scripts that talk to the `lenis` instance run after
+ *    that setup as before. So the tag moves to just before the setup script: same
+ *    file, same order relative to every script that uses it, and the first paint no
+ *    longer waits for it. lenis.css stays in the <head>. */
+const LENIS_TAG = '<script src="js/lenis.min.js"></script>\n';
+const LENIS_SETUP = '<!-- Lenis setup -->';
+
 export function speedPage(html, name) {
   let out = html;
   let n = 0;
@@ -184,5 +201,11 @@ export function speedPage(html, name) {
 
   if (out.split(LENIS_LOOP).length !== 2) throw new Error(`speed: ${name}: the template's Lenis loop not found exactly once`);
   out = out.replace(LENIS_LOOP, LENIS_DRIVE);
+
+  // 7. Lenis where it is used.
+  if (out.split(LENIS_TAG).length !== 2 || out.split(LENIS_SETUP).length !== 2) throw new Error(`speed: ${name}: expected one Lenis script and one Lenis setup`);
+  if (out.indexOf(LENIS_TAG) > out.indexOf('</head>')) throw new Error(`speed: ${name}: the Lenis script is not in the <head> any more`);
+  out = out.replace(LENIS_TAG, '').replace(LENIS_SETUP, `${LENIS_TAG}${LENIS_SETUP}`);
+
   return out;
 }
