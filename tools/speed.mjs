@@ -35,10 +35,11 @@
  *    for a film twenty screens down. The poster moves to `data-poster`;
  *    js/stargo-video-defer.js puts it back two screens before the film.
  *
- * 7-8, a start-up pass (speed lane, 2026-11-05), each explained where its
+ * 7-9, a start-up pass (speed lane, 2026-11-05), each explained where its
  * constant or function is defined below: Lenis loads where it is used instead
  * of in the <head>; a page links only the donor stylesheets whose class
- * namespace it uses.
+ * namespace it uses; the hero of /workforce and /intelligence waits hidden for
+ * its own load timeline instead of showing, vanishing and playing in.
  *
  * 4-6, a phone pass (speed lane, 2026-10-23), each explained where its
  * constant is defined below: Lenis's frame loop rests on a touch screen; the
@@ -196,6 +197,66 @@ function pruneDonorSheets(html, name) {
   return out;
 }
 
+/* 9. The hero of /workforce and /intelligence waits for its own timeline (speed
+ *    lane, Z13 "replay"). Both pages are Lifelogx pages whose Webflow IX3 load
+ *    timeline (t-54438232 on /workforce, t-44d7bc81 on /intelligence) opens by
+ *    putting the hero in its start state (opacity 0, a drop of 20px) and then
+ *    plays it in. The timeline starts at the window `load`; the HTML shows the hero
+ *    from the first paint. On a quick load the reader therefore saw the heading and
+ *    the buttons for about 0.3s, saw them vanish for up to 1.5s and then fade in
+ *    again (measured, real Chrome 155, 1440px, no throttling: /workforce
+ *    visible 174ms, hidden 473ms, back 763-2064ms; /intelligence visible 165ms,
+ *    hidden 463ms, back 731-1488ms). The first-screen hold of item 1 cannot be
+ *    used: it pins whatever is still at opacity 0 when its cap arrives, which would
+ *    cut the staggered reveal short, and an element split into characters never
+ *    gets a style of its own. So these elements carry `data-sg-hold` instead, and
+ *    css/stargo-fusion.css (speed lane block) keeps them at opacity 0 only until
+ *    the runtime writes an opacity on them (for a split heading, on one of its
+ *    characters), for at most 1.2s and only while `sg-ix-late` is not set. From
+ *    that moment the timeline's own start state keeps them hidden until their
+ *    turn, so nothing appears early and nothing is pinned; with the runtime late
+ *    (after `sg-ix-late`) js/stargo-splittext-cjk.js has already jumped the
+ *    timeline to its end, and the hero is simply there. Without scripts, or
+ *    without :has() (the split headings' rule), the page is as before.
+ *    [tag classes that must all be present, how many to mark (document order), 'split' when the
+ *    runtime writes the opacity on the pieces]. A page whose template changes fails
+ *    the build instead of silently losing the hold. */
+const HERO_HOLD = {
+  workforce: [
+    [['lx-heading-style-h1', 'lx-pink'], 1, 'split'],
+    [['lx-heading-style-h1', 'lx-white'], 1, 'split'],
+    [['lx-feature-description-holder'], 1, ''],
+    [['lx-button', 'lx-is-secondary'], 1, ''],
+  ],
+  intelligence: [
+    [['lx-hero-text'], 1, ''],
+    [['lx-big-button-holder'], 2, ''],
+    [['lx-hero-desc'], 1, ''],
+    [['lx-gradient-1st'], 1, ''],
+    [['lx-gradient-2nd'], 1, ''],
+    [['lx-integrations_06-app'], 1, ''],
+  ],
+};
+
+function holdHero(html, page, name) {
+  let out = html;
+  for (const [tokens, count, value] of HERO_HOLD[page]) {
+    let k = 0;
+    out = out.replace(/<([a-z][a-z0-9]*)\b([^>]*?)(\/?)>/g, (tag, el, attrs, close) => {
+      if (k >= count) return tag;
+      const cls = attrs.match(/\sclass="([^"]*)"/);
+      if (!cls) return tag;
+      const have = new Set(cls[1].split(/\s+/));
+      if (!tokens.every((t) => have.has(t))) return tag;
+      if (/\sstyle="/.test(attrs) || /\sdata-sg-hold\b/.test(attrs)) throw new Error(`speed: ${name}: a held hero element already has a style or a hold: ${tag.slice(0, 120)}`);
+      k++;
+      return `<${el}${attrs} data-sg-hold="${value}"${close}>`;
+    });
+    if (k !== count) throw new Error(`speed: ${name}: expected ${count} hero element(s) with .${tokens.join('.')} to hold, found ${k}`);
+  }
+  return out;
+}
+
 export function speedPage(html, name) {
   let out = html;
   let n = 0;
@@ -263,5 +324,8 @@ export function speedPage(html, name) {
   // 8. Donor stylesheets the page has no element for.
   out = pruneDonorSheets(out, name);
 
+  // 9. The workforce and intelligence heroes.
+  const hero = (name.match(/(?:^|\/)(workforce|intelligence)\.html$/) ?? [])[1];
+  if (hero) out = holdHero(out, hero, name);
   return out;
 }
