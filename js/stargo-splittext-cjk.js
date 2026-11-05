@@ -246,13 +246,6 @@
       var h = window.innerHeight || 800;
       return r.top > 2 * h || r.bottom < -h;
     }
-    // A link or button is split at once, wherever it is: its hover timeline is built on the
-    // element when it is not split yet, and nothing rebuilds it on the pieces afterwards (only
-    // line splits do, through onSplit), so the letter roll would move the whole pill and make
-    // it slide away from under the pointer. Headings and paragraphs are still split lazily.
-    function interactive(cfg, el) {
-      return String(cfg && cfg.type).indexOf('lines') < 0 && !!(el.closest && el.closest('a, button, [role="button"]'));
-    }
     var lazy = function (cfg, targets, ctx, Cls) {
       var now = [];
       for (var i = 0; i < targets.length; i++) {
@@ -263,7 +256,7 @@
         }
         var calls = pending.get(el);
         if (calls) { calls.push([this, cfg, ctx, Cls]); continue; }
-        if (!el || !el.getBoundingClientRect || !far(el) || interactive(cfg, el)) { now.push(el); continue; }
+        if (!el || !el.getBoundingClientRect || !far(el)) { now.push(el); continue; }
         pending.set(el, [[this, cfg, ctx, Cls]]);
         // The load trigger waits for web fonts when a timeline splits lines; keep that.
         try { if (String(cfg && cfg.type).indexOf('lines') > -1) ctx.timeline.data.splitLines = true; } catch (e) { /* ignore */ }

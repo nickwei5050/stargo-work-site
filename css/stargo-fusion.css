@@ -6304,3 +6304,16 @@ html.w-mod-js:not(.sg-ix-late) [data-sg-first]:not([style]) { animation: sg-firs
    css/stargo-motion-org.css. */
 .blog-flex .blog-photo-overlay[src*="/live01-desktop-home-16x9"] { object-position: 0% 50%; }
 .blog-photo-wrapper > .sg-mo-notice { position: absolute; inset: 0; }
+
+/* 「预约企业演示」等胶囊按钮（a.contact-info.for-button）：按钮和文字固定，不随悬停或点按移动。
+   悬停时间线把文字上下滚动（yPercent）；页面靠后的按钮晚拆字时，时间线挂在整个按钮上，
+   整个按钮会往下掉一个自身高度再弹回来，鼠标滑出后不停闪。这里一律压住：按钮本身和每个字
+   都不位移、不缩放。电脑上悬停时只有灰色底色从下往上铺开；触屏没有任何位移，按下时只变淡。
+   选择器写成 a.… 是为了压过 css/stargo-phone.css 里按下时缩小和底色滑动的规则。 */
+a.contact-info.for-button { transform: none !important; translate: none !important; scale: none !important; }
+a.contact-info.for-button .gsap_split_letter { transform: none !important; translate: none !important; }
+@media (hover: none) {
+  a.contact-info.for-button .bg-change,
+  a.contact-info.for-button:active .bg-change { transform: translate(0, 100%) !important; translate: none !important; }
+  a.contact-info.for-button:active { scale: none !important; opacity: .85 !important; }
+}
