@@ -86,13 +86,13 @@ const productText = {
      (growth analytics, control centre, workspace home). Those screens are
      demonstration interfaces, including a not-started analytics runtime on
      the growth view. Nothing is cropped. */
-  'gos10-growth-control-tower': ['Growth OS：笔记本电脑上的全球贸易看板，显示新买家、市场洞察、市场机会和产品趋势', 'Growth OS: a global trade dashboard on a laptop, showing new buyers, market insights, market opportunities and product trends'],
+  'gos10-growth-control-tower': ['主动获客：笔记本电脑上的全球贸易看板，显示新买家、市场洞察、市场机会和产品趋势', 'Lead Finder: a global trade dashboard on a laptop, showing new buyers, market insights, market opportunities and product trends'],
   'gos01-market-thesis': ['增长分析看板标题区：STARGO 增长分析', 'Growth analytics board header: STARGO growth analytics'],
   'gos09-reorder-radar': ['控制中心：本组应用的运行状态、延迟与相关能力域', 'Control center: health, latency and the capability domains for this group of applications'],
   'gos11-dormant-reactivation': ['全能工作台：对话、应用与语音控制台从同一个入口进入', 'The workspace home: conversation, applications and the voice console from one entrance'],
   'gos05-buying-committee': ['采购决策团队：一家客户的关键决策人找到了几位、还缺谁，每个角色下一步怎么跟', 'The buying committee: which decision roles are covered at one account, what is missing and the plan for each role'],
-  'sw028-sales-desk-inquiry-reply': ['Sales Desk：提取一封询盘的要点，起草有依据的回复', 'Sales Desk: the key facts extracted from an inquiry and a grounded draft reply'],
-  'sw033-sales-desk-document-pack': ['Sales Desk：询盘要点、报价草稿与单据中心在同一工作台', 'Sales Desk: the inquiry, a draft quote and the document center on one workbench'],
+  'sw028-sales-desk-inquiry-reply': ['成交工作台：提取一封询盘的要点，起草有依据的回复', 'Sales Desk: the key facts extracted from an inquiry and a grounded draft reply'],
+  'sw033-sales-desk-document-pack': ['成交工作台：询盘要点、报价草稿与单据中心在同一工作台', 'Sales Desk: the inquiry, a draft quote and the document center on one workbench'],
   /* Curated 2026-09-22 UI stills that keep editorial filenames (module cards /
      story art slots) but are product interfaces with demonstration data. */
   'brand-family-02': ['ERP：生产、库存和履约状态一屏看清', 'ERP: production, inventory and fulfillment status on one screen'],
@@ -106,19 +106,19 @@ const productText = {
      live mailbox, a real-looking customer and infrastructure details, and the
      generated renders with invented interfaces. Each line says what that crop
      shows and nothing more. */
-  'live09-sales-desk-case-4x3': ['Sales Desk 询盘处理：左边是按等待时间排列的询盘，右边是一封询盘的型号、数量、目的港和贸易术语，下方是审批后才发出的回复草稿', 'Sales Desk inquiry handling: inquiries ordered by waiting time on the left; on the right one inquiry\u2019s model, quantity, destination and trade term, and a reply draft that is sent only after approval'],
-  'live09-sales-desk-case-3x2': ['Sales Desk：询盘列表，一封询盘自动整理出的型号、数量、目的港和贸易术语，以及建议的下一步', 'Sales Desk: the inquiry list, the model, quantity, destination and trade term pulled out of one inquiry, and the suggested next step'],
-  'live09-sales-desk-case-16x9': ['Sales Desk 客户案例：询盘列表、询盘要点和回复草稿，右侧 AI 助手可以分析客户、起草回复、整理报价需求，发出前由你确认', 'A Sales Desk case: the inquiry list, the inquiry\u2019s key facts and a reply draft, with the AI assistant beside them to analyze the customer, draft replies and gather quote needs, all confirmed by you before anything is sent'],
-  'live23-erp-items-16x9': ['ERP 物料列表：177 个 STARGO 自有型号的名称、启用状态和物料组', 'The ERP item list: the name, status and item group of 177 STARGO products'],
-  'live23-erp-items-3x2': ['ERP 物料列表：177 个 STARGO 自有型号的名称、启用状态和物料组', 'The ERP item list: the name, status and item group of 177 STARGO products'],
-  'live05-growth-home-2x1': ['Growth OS 主动获客首页：上手进度，还有“开始找客户”和“发送开发信”两个入口，启动前都会先请你确认', 'The Growth OS home: onboarding progress and the two starting points, finding customers and sending outreach emails, each confirmed with you before it runs'],
+  'live09-sales-desk-case-4x3': ['成交工作台询盘处理：左边是按等待时间排列的询盘，右边是一封询盘的型号、数量、目的港和贸易术语，下方是审批后才发出的回复草稿', 'Sales Desk inquiry handling: inquiries ordered by waiting time on the left; on the right one inquiry\u2019s model, quantity, destination and trade term, and a reply draft that is sent only after approval'],
+  'live09-sales-desk-case-3x2': ['成交工作台：询盘列表，一封询盘自动整理出的型号、数量、目的港和贸易术语，以及建议的下一步', 'Sales Desk: the inquiry list, the model, quantity, destination and trade term pulled out of one inquiry, and the suggested next step'],
+  'live09-sales-desk-case-16x9': ['成交工作台客户案例：询盘列表、询盘要点和回复草稿，右侧 AI 助手可以分析客户、起草回复、整理报价需求，发出前由你确认', 'A Sales Desk case: the inquiry list, the inquiry\u2019s key facts and a reply draft, with the AI assistant beside them to analyze the customer, draft replies and gather quote needs, all confirmed by you before anything is sent'],
+  'live23-erp-items-16x9': ['ERP 物料列表：物料名称（已打码）、启用状态和物料组', 'The ERP item list: item names (masked), status and item group'],
+  'live23-erp-items-3x2': ['ERP 物料列表：物料名称（已打码）、启用状态和物料组', 'The ERP item list: item names (masked), status and item group'],
+  'live05-growth-home-2x1': ['主动获客首页：上手进度，还有“开始找客户”和“发送开发信”两个入口，启动前都会先请你确认', 'The Lead Finder home: onboarding progress and the two starting points, finding customers and sending outreach emails, each confirmed with you before it runs'],
   /* homemore (2026-10-23): the same capture on a 16:9 plate of its own page ground, for the hero gallery. */
-  'live05-growth-home-16x9': ['Growth OS 主动获客首页：上手进度，还有“开始找客户”和“发送开发信”两个入口，启动前都会先请你确认', 'The Growth OS home: onboarding progress and the two starting points, finding customers and sending outreach emails, each confirmed with you before it runs'],
-  'live05-growth-home-start-3x2': ['Growth OS 开始找客户：按你填写的产品和目标客户找新的潜在客户，由 AI 判断是否合适并写下理由', 'Growth OS, finding customers: new prospects found from the products and target customers you enter, with AI judging whether each fits and writing down why'],
-  'live05-growth-home-start-5x4': ['Growth OS 开始找客户：按你填写的产品和目标客户找新的潜在客户，由 AI 判断是否合适并写下理由', 'Growth OS, finding customers: new prospects found from the products and target customers you enter, with AI judging whether each fits and writing down why'],
+  'live05-growth-home-16x9': ['主动获客首页：上手进度，还有“开始找客户”和“发送开发信”两个入口，启动前都会先请你确认', 'The Lead Finder home: onboarding progress and the two starting points, finding customers and sending outreach emails, each confirmed with you before it runs'],
+  'live05-growth-home-start-3x2': ['主动获客开始找客户：按你填写的产品和目标客户找新的潜在客户，由 AI 判断是否合适并写下理由', 'Lead Finder, finding customers: new prospects found from the products and target customers you enter, with AI judging whether each fits and writing down why'],
+  'live05-growth-home-start-5x4': ['主动获客开始找客户：按你填写的产品和目标客户找新的潜在客户，由 AI 判断是否合适并写下理由', 'Lead Finder, finding customers: new prospects found from the products and target customers you enter, with AI judging whether each fits and writing down why'],
   'live01-desktop-home-16x9': ['网页桌面：AI 工作台、成交工作台、企业管理、视频制作等业务应用都在同一个桌面里', 'The web desktop: the AI workspace, the Sales Desk, enterprise management, video tools and other business apps on one desktop'],
   'live43-app-connections-16x9': ['应用连接：1,568 个可连接服务、18,345 个本地可执行操作，以及工具调用趋势和最近调用记录', 'App connections: 1,568 connectable services and 18,345 local executable actions, with the trend and the record of recent tool calls'],
-  'live52-mobile-case-16x9': ['手机上的 Sales Desk：一封询盘的型号和数量已经整理出来，下面是买家的原话', 'The Sales Desk on a phone: the model and quantity of an inquiry already pulled out, above the buyer\u2019s own message'],
+  'live52-mobile-case-16x9': ['手机上的成交工作台：一封询盘的型号和数量已经整理出来，下面是买家的原话', 'The Sales Desk on a phone: the model and quantity of an inquiry already pulled out, above the buyer\u2019s own message'],
   /* homemore (2026-10-23): live51 and live52 whole, side by side on one 16:9 plate, for the hero gallery. */
   'live51-52-mobile-pair-16x9': ['手机上的成交看板和一封询盘：左边是待回复、待审批和成交信号，右边是 AI 起草的回复，批准后才会发给客户', 'The deal board and an inquiry on a phone: replies due, approvals and buying signals on the left, an AI-drafted reply on the right that reaches the customer only after approval'],
   'live52-mobile-case-needs': ['买方需求提取：型号 DEMO C300、数量 4 直接列在买家原话上方', 'Buyer need extraction: model DEMO C300 and quantity 4 listed right above the buyer\u2019s own words'],

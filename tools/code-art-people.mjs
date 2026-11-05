@@ -76,7 +76,7 @@ const CHECK = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" aria-
    app named on the chip that slides in on hover. */
 const ROLES = [
   {
-    ico: I.research, name: B('市场研究', 'Research'), task: B('按匹配度排序候选客户', 'Ranking buyers by fit'), ts: B('排序候选客户', 'Ranking buyers'), app: B('Growth OS', 'Growth OS'), chip: B('Growth OS', 'Growth OS'),
+    ico: I.research, name: B('市场研究', 'Research'), task: B('按匹配度排序候选客户', 'Ranking buyers by fit'), ts: B('排序候选客户', 'Ranking buyers'), app: B('主动获客', 'Lead Finder'), chip: B('Lead Finder', 'Lead Finder'),
     st: 'run', stl: B('进行中 · 2 条新信号', 'Running · 2 new signals'), s: B('进行中', 'Running'),
     viz: (t) => `<div class="sg-rc-rank">${[['Nordwerk', 94], ['Nordic Mobility', 93, 'Nordic'], ['Gulf Coast', 91]].map(([n, v, sn]) => `<div class="sg-rc-rk"><span>${sn ? `<span class="sg-rc-vl">${n}</span><span class="sg-rc-xs">${sn}</span>` : n}</span><b>${v}</b><i style="--v:${((v - 70) / 30).toFixed(3)}"></i></div>`).join('')}</div>`,
   },

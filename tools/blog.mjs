@@ -124,7 +124,7 @@ const two = (n) => String(n).padStart(2, '0');
 const LOOP = {
   title: B('核心业务全景：先找客户，再一路做到复购', 'The business loop: find customers, then carry every deal through to reorders'),
   stages: [
-    [B('主动获客', 'Customer acquisition'), B('Growth OS', 'Growth OS'), B('找客户 · 判机会', 'Find and qualify')],
+    [B('主动获客', 'Customer acquisition'), B('主动获客', 'Lead Finder'), B('找客户 · 判机会', 'Find and qualify')],
     [B('外贸成交', 'Trade sales'), B('Sales Desk', 'Sales Desk'), B('沟通 · 报价 · PI', 'Engage and quote')],
     [B('企业履约', 'Fulfillment'), B('ERP 与交付', 'ERP and delivery'), B('采购 · 生产 · 库存', 'Source and deliver')],
     [B('经营协同', 'Business coordination'), B('财务与服务', 'Finance and service'), B('回款 · 售后 · 渠道', 'Collect and support')],
@@ -146,8 +146,8 @@ export function chartLoop(lang, n) {
 
 /* (2) Growth OS to Sales Desk — V4 guide pp. 5 and 7. */
 const PIPE = {
-  title: B('从 Growth OS 到 Sales Desk：找到客户，接着谈成', 'From Growth OS to Sales Desk: find the customer, then win the business'),
-  growth: B('Growth OS · 主动获客', 'Growth OS · customer acquisition'),
+  title: B('从主动获客到成交工作台：找到客户，接着谈成', 'From Lead Finder to Sales Desk: find the customer, then win the business'),
+  growth: B('主动获客', 'Lead Finder · customer acquisition'),
   sourcesLabel: B('数据来源（按授权接入）', 'Sources (authorized access only)'),
   sources: B(['公开搜索', '企业官网', '地图商家', '社交平台', '展会线索', '授权贸易数据'], ['Public search', 'Company websites', 'Map listings', 'Social channels', 'Trade shows', 'Authorized trade data']),
   profile: B('目标客户画像：产品\u00a0×\u00a0市场\u00a0×\u00a0客户类型', 'Ideal customer profile: product\u00a0×\u00a0market\u00a0×\u00a0buyer type'),   // the three terms stay on one line
@@ -157,13 +157,13 @@ const PIPE = {
     [B('判断什么时候|值得跟进', 'Spot opportunities backed by evidence'), B('采购信号、补货周期、供应商变化、商业价值', 'Buying signals, reorder patterns, supplier changes and commercial value')],
     [B('制定可执行的|开发计划', 'Prepare the outreach plan'), B('多语言话术、跟进计划、展会线索与沉睡客户唤醒', 'Multilingual playbooks, follow-ups, trade-show leads and reactivation')],
   ],
-  handoff: B('确认客户 → 转入 Sales Desk', 'Approved prospect → Sales Desk'),
+  handoff: B('确认客户 → 转入成交工作台', 'Approved prospect → Sales Desk'),
   handoffText: B('来源、背调、意向产品、下一步任务一起带过去，不用重新录入。', 'Source, research, product interests and next actions travel with it, so nothing is re-entered.'),
   outLabel: B('交付给销售', 'Sales-ready outputs'),
   outputs: B(['客户清单', '联系人信息', '商机简报', '开发计划'], ['Prospect list', 'Contact details', 'Opportunity brief', 'Outreach plan']),
-  sales: B('Sales Desk · 外贸销售', 'Sales Desk · trade sales'),
+  sales: B('成交工作台 · 外贸销售', 'Sales Desk · trade sales'),
   intakeLabel: B('多渠道入口', 'Intake'),
-  intake: B(['企业邮件', 'WhatsApp', '阿里国际站', '网站询盘', '主动开发客户'], ['Email', 'WhatsApp', 'Alibaba.com', 'Website inquiries', 'Growth OS prospects']),
+  intake: B(['企业邮件', 'WhatsApp', '阿里国际站', '网站询盘', '主动开发客户'], ['Email', 'WhatsApp', 'Alibaba.com', 'Website inquiries', 'Lead Finder prospects']),
   crmLabel: B('客户全景 · CRM', 'A complete customer view · CRM'),
   crm: B(['公司 / 联系人', '需求 / 意向产品', '商机 / 负责人', '沟通 / 报价记录'], ['Company / people', 'Requirements / products', 'Opportunity / owner', 'Messages / quotes']),
   work: [
@@ -355,9 +355,9 @@ const STATUS = {
   title: B('能力一览：现在能用什么', 'At a glance: what you can use today'),
   cols: [
     ['now', B('现已可用', 'Available now'), B(['AI 团队协作：组队、互发消息、并行处理、汇总交付', 'AI 一键生成视频：从制作需求到可导出的成片', '爆款结构再创作：从参考结构到三个原创方向'], ['AI teamwork: form a team, message, work in parallel, deliver one result', 'One-click AI video: from a brief to an exportable video', 'Viral creative adaptation: from a reference structure to three original directions'])],
-    ['base', B('核心应用', 'Core applications'), B(['网页桌面、客户管理与企业知识', 'Sales Desk 业务工作台', '创意工作室、ERP 与商城应用'], ['Browser desktop, customer management and enterprise knowledge', 'The Sales Desk workspace', 'Creative workspace, ERP and commerce applications'])],
-    ['link', B('接入你们的系统', 'Connected to your systems'), B(['Growth OS 数据与客户联系，经你授权接入', '各渠道真实收发与业务交接', '真实价格、合同、签章、单证、物流与财务'], ['Growth OS live data and outreach, with your authorization', 'Live channel messaging and business handoffs', 'Live prices, contracts, signatures, documents, logistics and finance'])],
-    ['next', B('也已上线', 'Also live'), B(['Growth OS 核心流程', '商品营销套件的|一键编排与局部检查', '企业级主动工作、统一长期记忆与高级改进', '原生客户端、移动端与小程序'], ['Growth OS core workflows', 'One-click marketing-kit production and local checks', 'Enterprise-wide proactive work, unified long-term memory and advanced improvement', 'Native clients, mobile and mini-programs'])],
+    ['base', B('核心应用', 'Core applications'), B(['网页桌面、客户管理与企业知识', '成交工作台', '创意工作室、ERP 与商城应用'], ['Browser desktop, customer management and enterprise knowledge', 'The Sales Desk workspace', 'Creative workspace, ERP and commerce applications'])],
+    ['link', B('接入你们的系统', 'Connected to your systems'), B(['主动获客数据与客户联系，经你授权接入', '各渠道真实收发与业务交接', '真实价格、合同、签章、单证、物流与财务'], ['Lead Finder live data and outreach, with your authorization', 'Live channel messaging and business handoffs', 'Live prices, contracts, signatures, documents, logistics and finance'])],
+    ['next', B('也已上线', 'Also live'), B(['主动获客核心流程', '商品营销套件的|一键编排与局部检查', '企业级主动工作、统一长期记忆与高级改进', '原生客户端、移动端与小程序'], ['Lead Finder core workflows', 'One-click marketing-kit production and local checks', 'Enterprise-wide proactive work, unified long-term memory and advanced improvement', 'Native clients, mobile and mini-programs'])],
   ],
   note: B('所有能力都在你们开通的服务、额度和权限内运行。发布到外部渠道、正式申报和付款，都由有审批权的人批准。', 'Every capability runs within the services, credits and access you enable. Publishing to external channels, official filings and payments are always approved by authorized people.'),
 };
@@ -438,24 +438,24 @@ const GUIDE_SECTIONS = [
   {
     id: 'guide-loop',
     h: B('一套系统，怎样把|获客和经营连起来？', 'How does one system connect acquisition to operations?'),
-    text: B('<p>Growth OS 与 Sales Desk 是业务主线：先主动找到客户、判断机会，再把沟通、报价、PI 和订单交接放进同一个销售流程。ERP、内容生产、数字员工、企业知识和管理工具都为这条主线服务，做出的结果都留下来，下一轮增长接着用。</p>',
-      '<p>Growth OS and Sales Desk lead the business: find customers and qualify opportunities, then move conversations, quotes, PIs and order handoffs through one sales process. Operations, creative work, AI employees, enterprise knowledge and management tools all support that main workflow, and every outcome feeds the next growth cycle.</p>'),
+    text: B('<p>主动获客与成交工作台是业务主线：先主动找到客户、判断机会，再把沟通、报价、PI 和订单交接放进同一个销售流程。ERP、内容生产、数字员工、企业知识和管理工具都为这条主线服务，做出的结果都留下来，下一轮增长接着用。</p>',
+      '<p>Lead Finder and Sales Desk lead the business: find customers and qualify opportunities, then move conversations, quotes, PIs and order handoffs through one sales process. Operations, creative work, AI employees, enterprise knowledge and management tools all support that main workflow, and every outcome feeds the next growth cycle.</p>'),
     fig: chartLoop,
     value: B('少些来回搬资料、反复交接，每一步都有依据，结果都能核对。', 'less copying and fewer handoffs; more evidence-backed progress and results you can check.'),
     cond: B('从获客到经营，各模块都已上线，按你们的需要开通。见<a href="capabilities.html#atlas">完整能力目录</a>。', 'every module, from acquisition to operations, is live and can be enabled as needed. See the <a href="capabilities.html#atlas">full capability catalog</a>.'),
   },
   {
     id: 'guide-growth',
-    h: B('Growth OS：怎样主动|把商机找出来？', 'Growth OS: how does it find opportunities proactively?'),
-    text: B('<p>Growth OS 不只整理已有询盘。它按你的产品、目标市场和客户画像，在公开搜索、企业官网、地图、社交平台、展会和授权贸易数据里找经销商、进口商和目标客户；再根据采购信号、补货周期和联系人背调排好开发顺序，准备多语言开发信和跟进计划。证据不足时标注待核实，不编造需求。</p>',
-      '<p>Growth OS goes beyond incoming inquiries. Based on your products, markets and customer profile, it finds dealers, importers and target accounts through public search, company websites, maps, social channels, trade shows and authorized trade data; ranks them by buying signals, reorder patterns and contact research; and prepares multilingual outreach and follow-up plans. Thin evidence is flagged, never filled in.</p>'),
+    h: B('主动获客：怎样主动|把商机找出来？', 'Lead Finder: how does it find opportunities proactively?'),
+    text: B('<p>主动获客不只整理已有询盘。它按你的产品、目标市场和客户画像，在公开搜索、企业官网、地图、社交平台、展会和授权贸易数据里找经销商、进口商和目标客户；再根据采购信号、补货周期和联系人背调排好开发顺序，准备多语言开发信和跟进计划。证据不足时标注待核实，不编造需求。</p>',
+      '<p>Lead Finder goes beyond incoming inquiries. Based on your products, markets and customer profile, it finds dealers, importers and target accounts through public search, company websites, maps, social channels, trade shows and authorized trade data; ranks them by buying signals, reorder patterns and contact research; and prepares multilingual outreach and follow-up plans. Thin evidence is flagged, never filled in.</p>'),
     value: B('把“到处找客户”变成有目标、有证据、有优先级的开发。', 'scattered prospecting becomes targeted, evidence-backed and prioritized.'),
     cond: B('数据和客户联系渠道，经你授权后接入。见<a href="capabilities.html#g02">主动获客与商机判断</a>。', 'data and outreach channels connect with your authorization. See <a href="capabilities.html#g02">Customer acquisition</a>.'),
   },
   {
     id: 'guide-sales',
-    h: B('Sales Desk：询盘怎样|一步步变成订单？', 'Sales Desk: how does an inquiry become an order?'),
-    text: B('<p>Growth OS 确认过的客户和各渠道询盘，都转到 Sales Desk：邮件、网站、WhatsApp 和阿里国际站的消息集中处理，从客户来信和附件里读出需求，客户资料、沟通记录、报价和订单都汇总到客户全景。回复按产品参数、价格政策、MOQ 和贸易条款来写；有跟进提醒，随时可以转人工接手，不会重复联系客户。</p>',
+    h: B('成交工作台：询盘怎样|一步步变成订单？', 'Sales Desk: how does an inquiry become an order?'),
+    text: B('<p>主动获客确认过的客户和各渠道询盘，都转到成交工作台：邮件、网站、WhatsApp 和阿里国际站的消息集中处理，从客户来信和附件里读出需求，客户资料、沟通记录、报价和订单都汇总到客户全景。回复按产品参数、价格政策、MOQ 和贸易条款来写；有跟进提醒，随时可以转人工接手，不会重复联系客户。</p>',
       '<p>Sales Desk takes over approved prospects and inquiries from every channel. Email, website, WhatsApp and Alibaba.com messages arrive in one place, requirements are read from messages and attachments, and records, conversations, quotes and orders form a complete customer view. Replies are based on product specifications, pricing policy, MOQ and trade terms; follow-ups, reminders and human takeover prevent duplicate outreach.</p>'),
     fig: chartPipeline,
     value: B('换人接手，客户背景不丢；从沟通、报价到下单、复购，一条线跟到底。', 'anyone can pick up an account with full context, from conversation to quote, order and reorder.'),
@@ -585,9 +585,9 @@ function guideBody(lang) {
       + `<p class="sgp-cond"><strong>${esc(BLOG_UI.condition[lang])}</strong>${s.cond[lang]}</p>`;
   }).join('\n');
   const lead = lang === 'zh'
-    ? '<p>STARGO WORK 是一套面向制造业与外贸企业的网页桌面级 AI 企业操作系统：以 Growth OS 主动获客和 Sales Desk 外贸销售为主线，把企业经营、内容生产、企业知识和 288 个 AI 员工放进同一个工作台，关键决定由人拍板。</p>'
+    ? '<p>STARGO WORK 是一套面向制造业与外贸企业的网页桌面级 AI 企业操作系统：以主动获客和成交工作台为主线，把企业经营、内容生产、企业知识和 288 个 AI 员工放进同一个工作台，关键决定由人拍板。</p>'
       + '<p>本文按业务顺序讲清十六个主题：每一项做什么，对老板有什么价值，使用时要注意什么。</p>'
-    : '<p>STARGO WORK is a browser-based desktop AI operating system for manufacturing and global trade enterprises. Growth OS for customer acquisition and Sales Desk for trade sales form the core, backed in one workspace by operations, creative work, enterprise knowledge and 288 AI employees. People make the key decisions.</p>'
+    : '<p>STARGO WORK is a browser-based desktop AI operating system for manufacturing and global trade enterprises. Lead Finder for customer acquisition and Sales Desk for trade sales form the core, backed in one workspace by operations, creative work, enterprise knowledge and 288 AI employees. People make the key decisions.</p>'
       + '<p>This guide covers sixteen topics in business order: what each one does, what it is worth to an owner and what to know in practice.</p>';
   const end = lang === 'zh'
     ? '<p class="sgp-cta">想先从哪块业务做起？<a href="contact.html">预约企业演示</a>。把工作交给 AI，把决定权留在企业。</p>'
@@ -620,13 +620,13 @@ export const POSTS = [
     modified: '2026-09-17',
     cover: 'stargo-work-visual-guide',
     section: B('产品解读', 'Product guides'),
-    keywords: B(['STARGO WORK', 'AI 企业操作系统', 'Growth OS', 'Sales Desk', '数字员工', '外贸 AI'], ['STARGO WORK', 'AI operating system', 'Growth OS', 'Sales Desk', 'AI employees', 'AI for manufacturers']),
-    mentions: ['Growth OS', 'Sales Desk'],
+    keywords: B(['STARGO WORK', 'AI 企业操作系统', '主动获客', '成交工作台', '数字员工', '外贸 AI'], ['STARGO WORK', 'AI operating system', 'Lead Finder', 'Sales Desk', 'AI employees', 'AI for manufacturers']),
+    mentions: ['Lead Finder', 'Sales Desk'],
     title: B('STARGO WORK 图文详解：从获客到经营', 'STARGO WORK, explained: one\u00a0system from acquisition to operations'),   // "one system" never splits (the heading broke "one / system" at 1280–1920)
     titleChunks: ['STARGO ', 'WORK ', '图文详解：', '从获客', '到经营'],
     description: B('一篇读懂 STARGO WORK：两大核心引擎、业务循环、288 个 AI 员工、AI 团队协作和一键视频，每项能力对老板有什么用。', 'A complete guide to STARGO WORK: two core engines, the business loop, 288 AI employees, AI teamwork and one-click video, and what each is worth to an owner.'),
     takeaways: [
-      B('一个网页桌面，两大核心引擎：Growth OS 主动获客，Sales Desk 外贸销售。', 'One browser desktop, two core engines: Growth OS for customer acquisition and Sales Desk for trade sales.'),
+      B('一个网页桌面，两大核心引擎：主动获客，成交工作台。', 'One browser desktop, two core engines: Lead Finder for customer acquisition and Sales Desk for trade sales.'),
       B('业务循环：主动获客 → 外贸成交 → 企业履约 → 经营协同 → 复购增长。', 'The loop: acquisition → trade sales → fulfillment → business coordination → repeat growth.'),
       B('288 个 AI 员工覆盖十类职能；AI 团队协作、一键视频和爆款再创作现已可用，在开通的服务、额度和权限内运行。', '288 AI employees across ten functions; AI teamwork, one-click video and viral adaptation are available now, within the services, credits and access you enable.'),
       B('报价、联系客户、付款这些关键操作，由有审批权的人批准；批准了，不等于已经发出去。', 'Authorized people approve quotes, outreach and payments; approved is not the same as sent.'),
@@ -635,11 +635,11 @@ export const POSTS = [
     body: B(guideBody('zh'), guideBody('en')),
     faq: [
       Q('STARGO WORK 到底是什么？', 'What is STARGO WORK?',
-        '它是一套面向制造业与外贸企业的网页桌面级 AI 企业操作系统。以 Growth OS 主动获客和 Sales Desk 外贸销售为业务主线，连接企业经营、内容生产、知识和数字员工，并保留人的审批与决定权。',
-        'It is a browser-based desktop AI operating system for manufacturing and global trade enterprises. Growth OS and Sales Desk lead the business journey, supported by operations, creative work, enterprise knowledge and AI roles, with people retaining approval and decision authority.'),
-      Q('Growth OS 与 Sales Desk 有什么区别？', 'How do Growth OS and Sales Desk differ?',
-        'Growth OS 主要解决“去哪里找客户、谁值得开发、下一步怎样联系”；Sales Desk 主要解决“怎样理解客户、持续跟进、报价并交接订单”。确认后的客户连同背景和任务一起转进销售流程，不用重新录入。',
-        'Growth OS focuses on finding accounts, qualifying opportunities and planning engagement. Sales Desk focuses on understanding customers, following up, quoting and handing over orders. Approved prospects carry their context and next actions into the sales process.'),
+        '它是一套面向制造业与外贸企业的网页桌面级 AI 企业操作系统。以主动获客和成交工作台为业务主线，连接企业经营、内容生产、知识和数字员工，并保留人的审批与决定权。',
+        'It is a browser-based desktop AI operating system for manufacturing and global trade enterprises. Lead Finder and Sales Desk lead the business journey, supported by operations, creative work, enterprise knowledge and AI roles, with people retaining approval and decision authority.'),
+      Q('主动获客与|成交工作台有什么区别？', 'How do Lead Finder and Sales Desk differ?',
+        '主动获客主要解决“去哪里找客户、谁值得开发、下一步怎样联系”；成交工作台主要解决“怎样理解客户、持续跟进、报价并交接订单”。确认后的客户连同背景和任务一起转进销售流程，不用重新录入。',
+        'Lead Finder focuses on finding accounts, qualifying opportunities and planning engagement. Sales Desk focuses on understanding customers, following up, quoting and handing over orders. Approved prospects carry their context and next actions into the sales process.'),
       Q('它只适用于外贸部门吗？', 'Is it only for the export department?',
         '不是。它从主动获客和外贸销售入手，同时覆盖 ERP、商城、采购库存、生产质检、财务履约、内容创作、企业知识、办公和管理；接上你们现有的系统后，这些工作都能直接在 STARGO WORK 里完成。',
         'No. Acquisition and trade sales are the starting point, while the scope also covers operations, commerce, purchasing, stock, production, quality, finance coordination, creative work, knowledge, office tasks and management. Once your existing systems are connected, all of this work can be done directly in STARGO WORK.'),
@@ -653,7 +653,7 @@ export const POSTS = [
         '不是。主动工作就是盯住客户、订单、期限和异常，提出下一步建议，在授权范围内推进任务。企业级主动工作、统一长期记忆和高级改进同样受权限约束，关键的事始终由人拍板。',
         'No. It means tracking customers, orders, deadlines and exceptions, recommending next steps and progressing authorized work. Enterprise-wide proactive work, unified long-term memory and advanced improvement follow the same permission rules, and people still make the key decisions.'),
       Q('所有渠道和全部功能|现在都能直接用吗？', 'Is every channel and feature available right away?',
-        '能。AI 团队协作、一键视频和爆款再创作已经上线，网页桌面、客户管理、企业知识、Sales Desk、ERP 和商城等应用也都能用。这些功能都在你们开通的服务、额度和权限内运行；渠道收发、客户交接、价格、物流和财务，接上你们自己的账号和系统就能用。',
+        '能。AI 团队协作、一键视频和爆款再创作已经上线，网页桌面、客户管理、企业知识、成交工作台、ERP 和商城等应用也都能用。这些功能都在你们开通的服务、额度和权限内运行；渠道收发、客户交接、价格、物流和财务，接上你们自己的账号和系统就能用。',
         'Yes. AI teamwork, one-click video and viral adaptation are live, and applications such as the browser desktop, customer management, enterprise knowledge, Sales Desk, ERP and commerce are ready to use. Everything runs within the services, credits and access you enable, and channels, customer handoffs, prices, logistics and finance work as soon as they are connected to your own accounts and systems.'),
       Q('能自动签发证书、报关退税或代替专业判断吗？', 'Can it automatically issue certificates, file customs declarations, claim tax rebates or replace professional review?',
         '不能。它负责准备资料、核对、跟进和推进流程，证书签发、申报受理和审批都由官方机构办理。付款、合同法律审阅、贸易合规这些重要的事，仍由相关机构或你们有审批权的人确认。',
@@ -700,7 +700,7 @@ ${chartStart('zh', 1)}
 <h3>人在这条流程里|负责什么？</h3>
 <p>从第一条流程开始就要设好审批。AI 负责整理资料、起草和提建议；报价、联系客户、重要承诺和付款这些关键操作，由有审批权的人拍板。批准、发送、核对结果分开处理，每一步都有记录。这就是 STARGO WORK 的原则：把工作交给 AI，把决定权留在企业。</p>
 <h3>跑通之后，怎样扩大范围？</h3>
-<p>第一条流程验证有效后，再把同样的做法用到更多业务板块，多派几位 AI 员工。经你授权，Growth OS 接入实际数据、联系客户；Sales Desk 接通各渠道收发和业务交接；ERP、履约和财务，走你们已接入的系统。</p>
+<p>第一条流程验证有效后，再把同样的做法用到更多业务板块，多派几位 AI 员工。经你授权，主动获客接入实际数据、联系客户；成交工作台接通各渠道收发和业务交接；ERP、履约和财务，走你们已接入的系统。</p>
 <p>实施步骤见<a href="enterprise.html">企业管理与交付</a>，各业务板块见<a href="capabilities.html#atlas">完整能力目录</a>，方案见<a href="pricing.html">定价</a>。</p>
 <p class="sgp-cta">想先改善哪条流程？<a href="contact.html">预约企业演示</a>，我们一起把它拆成五步。</p>`,
     `
@@ -727,7 +727,7 @@ ${chartStart('en', 1)}
 <h3>What do people do in the workflow?</h3>
 <p>Set up approvals from the first workflow; don’t wait until you scale. AI organizes information, drafts content and recommends next steps; authorized people decide on quotes, outreach, important commitments and payments. Approval, sending and checking the outcome are separate steps, each with a record. That is the STARGO WORK principle: delegate the work, keep the authority.</p>
 <h3>How do you expand after the first workflow?</h3>
-<p>Once the first workflow proves useful, apply the same approach to more business areas and add more AI employees. With your authorization, Growth OS connects live data and outreach; Sales Desk connects channel messaging and business handoffs; ERP, fulfillment and finance run on the systems you have connected.</p>
+<p>Once the first workflow proves useful, apply the same approach to more business areas and add more AI employees. With your authorization, Lead Finder connects live data and outreach; Sales Desk connects channel messaging and business handoffs; ERP, fulfillment and finance run on the systems you have connected.</p>
 <p>See <a href="enterprise.html">Enterprise control and delivery</a> for the implementation steps, the <a href="capabilities.html#atlas">full capability catalog</a> for every business area and <a href="pricing.html">Pricing</a> for plans.</p>
 <p class="sgp-cta">Which workflow would you fix first? <a href="contact.html">Book a Demo</a> and we will break it into five steps with you.</p>`),
     faq: [
@@ -752,10 +752,10 @@ ${chartStart('en', 1)}
     cover: 'from-inquiry-to-quote',
     section: B('销售与报价', 'Sales & quoting'),   // en: '&' so the eyebrow of the 360px homepage card shows it whole
     keywords: B(['Sales Desk', '询盘处理', '外贸报价', 'PI', '报价审批'], ['Sales Desk', 'inquiry handling', 'export quotation', 'proforma invoice', 'quote approval']),
-    mentions: ['Sales Desk', 'Growth OS'],
-    title: B('Sales Desk：从询盘到报价审批、出 PI', 'Sales Desk: from inquiry to an approved quote and PI'),
-    titleChunks: ['Sales ', 'Desk：', '从询盘到', '报价审批、', '出 PI'],
-    description: B('Sales Desk 读懂询盘、对上客户和产品、起草报价、交人审批、生成 PI，一条线走完。批准不等于发送，关键价格由有审批权的人定。', 'How Sales Desk takes an inquiry through customer context, product fit, a policy-based quote, approval and PI — and why approving a quote is not sending it.'),
+    mentions: ['Sales Desk', 'Lead Finder'],
+    title: B('成交工作台：从询盘到报价审批、出 PI', 'Sales Desk: from inquiry to an approved quote and PI'),
+    titleChunks: ['成交工作台：', '从询盘到', '报价审批、', '出 PI'],
+    description: B('成交工作台读懂询盘、对上客户和产品、起草报价、交人审批、生成 PI，一条线走完。批准不等于发送，关键价格由有审批权的人定。', 'How Sales Desk takes an inquiry through customer context, product fit, a policy-based quote, approval and PI — and why approving a quote is not sending it.'),
     takeaways: [
       B('从询盘、客户记录、产品匹配到报价和 PI，一条线推进到底。', 'Inquiries, customer records, product fit, quotes and PIs move through one workflow.'),
       B('报价按企业确认的价格表、折扣权限和利润底线起草，AI 不自行编价。', 'Quotes follow approved price lists, discount permissions and margin guardrails; AI never invents prices.'),
@@ -763,18 +763,18 @@ ${chartStart('en', 1)}
       B('渠道收发和业务交接，连上你们的账号就能用；实际价格和单证，对接你们自己的业务系统。', 'Channel messaging and handoffs work through your own accounts; live prices and documents come from your own business systems.'),
     ],
     body: B(`
-<p>Sales Desk 接住一封询盘，一路做到报价批准、出 PI：先读懂需求，对上客户和产品，再按你们确认过的价格规则起草报价，交给有审批权的人批准；批准后发不发、什么时候发，另外单独把关。</p>
+<p>成交工作台接住一封询盘，一路做到报价批准、出 PI：先读懂需求，对上客户和产品，再按你们确认过的价格规则起草报价，交给有审批权的人批准；批准后发不发、什么时候发，另外单独把关。</p>
 <h3>为什么报价|总是从电子表格开始？</h3>
 <p>一封询盘进来，业务员要先判断客户是谁、来自哪个市场、想买什么；再翻产品文件找参数，打开上一次的报价表对照价格，找老板确认折扣和利润，最后手工做成报价单。</p>
 <p>每一步都在不同的窗口里，判断和确认的过程很少留下记录；客户改了数量，还可能把旧版本误发出去。</p>
-<h3>询盘进来后，Sales Desk 先做什么？</h3>
+<h3>询盘进来后，成交工作台先做什么？</h3>
 <ul>
 <li><strong>统一入口：</strong>企业邮件、网站询盘、WhatsApp、阿里国际站等渠道的消息集中处理，区分新询盘、历史消息、状态回执、垃圾信息和异常线索。</li>
 <li><strong>读懂需求：</strong>识别产品、规格、数量、市场、预算和交期，整理客户发来的目录、表格、图片和图纸，并提示缺失的信息。</li>
 <li><strong>客户全景：</strong>公司、联系人、来源、负责人、商机阶段、沟通时间线、报价和订单记录放在一起，换人接手也有完整背景。</li>
 <li><strong>有依据的回复：</strong>查询产品参数、价格政策、MOQ、包装、认证、交期和贸易条款，辅助产品匹配、翻译和多语言回复；缺少真实资料时明确提示，不编造。</li>
 </ul>
-<p>Growth OS 确认过的客户也转到这里接着跟进，来源、背调和下一步任务一起带过来，不用重复建档。</p>
+<p>主动获客确认过的客户也转到这里接着跟进，来源、背调和下一步任务一起带过来，不用重复建档。</p>
 <h3>报价草稿从哪里来？</h3>
 <ol>
 <li><strong>按规则报价：</strong>按产品配置、数量、包装、币种和贸易条款起草，对照价格表、历史报价、折扣权限和利润底线。价格来自企业确认的数据，AI 不自行编价。</li>
@@ -787,7 +787,7 @@ ${chartStart('en', 1)}
 <h3>合同、单证和订单怎样接上？</h3>
 <p>合同模板、条款核对和版本管理放在一起处理，电子签和法务审核按你们自己的流程走。商业发票、装箱单、原产地证与 Form E 资料、提单等外贸单证可以准备、核对和归档，正式签发由相应机构完成。确认的订单再交接给履约、售后和复购跟进。</p>
 <h3>现在能用哪些功能？</h3>
-<p>Sales Desk 工作台已经上线，各渠道收发和业务交接，连上你们自己的账号就能用；报价和 PI 可以直接用。实际价格、合同、签章和单证，对接你们自己的业务系统。详见能力目录中的<a href="capabilities.html#g04">询盘与多渠道沟通</a>、<a href="capabilities.html#g05">CRM 与客户全景</a>和<a href="capabilities.html#g07">报价、PI 与商业文件</a>。</p>
+<p>成交工作台工作台已经上线，各渠道收发和业务交接，连上你们自己的账号就能用；报价和 PI 可以直接用。实际价格、合同、签章和单证，对接你们自己的业务系统。详见能力目录中的<a href="capabilities.html#g04">询盘与多渠道沟通</a>、<a href="capabilities.html#g05">CRM 与客户全景</a>和<a href="capabilities.html#g07">报价、PI 与商业文件</a>。</p>
 <p class="sgp-cta">想看一封真实询盘怎样走到 PI？<a href="contact.html">预约企业演示</a>。</p>`,
     `
 <p>Sales Desk carries an inquiry through to an approved quote and PI: it reads the request, matches it to the customer and your products, drafts the quote from company-approved pricing and routes it to an authorized person. Sending it afterwards is a separate, controlled action.</p>
@@ -801,7 +801,7 @@ ${chartStart('en', 1)}
 <li><strong>A complete customer view:</strong> company, contacts, source, owner, opportunity stage, conversation timeline, quotes and orders sit together, so whoever picks up the account has the full context.</li>
 <li><strong>Grounded replies:</strong> specifications, pricing policy, MOQ, packaging, certifications, lead times and trade terms support product matching, translation and multilingual replies. When a fact is not on file, the draft says so.</li>
 </ul>
-<p>Prospects approved in Growth OS continue here too, with their source, research and next actions attached, so nobody re-enters them.</p>
+<p>Prospects approved in Lead Finder continue here too, with their source, research and next actions attached, so nobody re-enters them.</p>
 <h3>Where does the quote draft come from?</h3>
 <ol>
 <li><strong>Draft by policy:</strong> configuration, quantity, packaging, currency and trade terms are combined with price lists, quote history, discount permissions and margin guardrails. Prices come from company-approved data; AI does not invent them.</li>
@@ -817,9 +817,9 @@ ${chartStart('en', 1)}
 <p>The Sales Desk workspace is live, and channel messaging and business handoffs work through your own accounts. Quotes and PIs are ready to use, and live prices, contracts, signatures and documents come from the business systems you connect. See <a href="capabilities.html#g04">Inquiries and customer conversations</a>, <a href="capabilities.html#g05">CRM and customer context</a> and <a href="capabilities.html#g07">Quotations, PI and commercial records</a> in the capability catalog.</p>
 <p class="sgp-cta">Want to see a real inquiry become a PI? <a href="contact.html">Book a Demo</a>.</p>`),
     faq: [
-      Q('Growth OS 与 Sales Desk 有什么区别？', 'How do Growth OS and Sales Desk differ?',
-        'Growth OS 主要解决“去哪里找客户、谁值得开发、下一步怎样联系”；Sales Desk 主要解决“怎样理解客户、持续跟进、报价并交接订单”。确认后的客户连同背景和任务一起转进销售流程，不用重新录入。',
-        'Growth OS focuses on finding accounts, qualifying opportunities and planning engagement. Sales Desk focuses on understanding customers, following up, quoting and handing over orders. Approved prospects carry their context and next actions into the sales process.'),
+      Q('主动获客与|成交工作台有什么区别？', 'How do Lead Finder and Sales Desk differ?',
+        '主动获客主要解决“去哪里找客户、谁值得开发、下一步怎样联系”；成交工作台主要解决“怎样理解客户、持续跟进、报价并交接订单”。确认后的客户连同背景和任务一起转进销售流程，不用重新录入。',
+        'Lead Finder focuses on finding accounts, qualifying opportunities and planning engagement. Sales Desk focuses on understanding customers, following up, quoting and handing over orders. Approved prospects carry their context and next actions into the sales process.'),
       Q('报价里的价格从哪里来？', 'Where do the prices in a quote come from?',
         '来自企业确认的价格表、历史报价、折扣权限和利润边界。AI 按这些规则起草报价，不自行编价；缺少真实资料时会明确提示。',
         'From company-approved price lists, quote history, discount permissions and margin guardrails. AI drafts within those rules and does not invent prices; when a fact is missing, it says so.'),
@@ -827,7 +827,7 @@ ${chartStart('en', 1)}
         '不会。批准和发送是两道关。批准说明审批人已认可价格和条款；发送是另一项对外操作，要单独授权，发出后还会核对客户有没有收到。',
         'No. Approval and sending are controlled separately. Approval confirms the price and terms; sending is a further outbound action that needs its own authorization, and receipt is checked afterwards.'),
       Q('所有渠道现在都能直接接通吗？', 'Are all channels connected right away?',
-        '可以。Sales Desk 已经上线，企业邮件、WhatsApp、阿里国际站和网站询盘都能接进来；连上你们授权的账号，就能直接收发消息、交接业务。',
+        '可以。成交工作台已经上线，企业邮件、WhatsApp、阿里国际站和网站询盘都能接进来；连上你们授权的账号，就能直接收发消息、交接业务。',
         'Yes. Sales Desk is live, and enterprise email, WhatsApp, Alibaba.com and website inquiries all connect to it. Once your authorized accounts are linked, you can send and receive messages and hand off work directly.'),
     ],
   },
@@ -931,19 +931,19 @@ ${chartOwner('en', 1)}
     modified: '2026-09-17',
     cover: 'ai-operating-system-for-global-trade',
     section: B('产品解读', 'Product guides'),
-    keywords: B(['AI 企业操作系统', '网页桌面', '制造业 AI', '外贸 AI', 'Growth OS'], ['AI operating system', 'browser-based desktop', 'AI for manufacturers', 'AI for exporters', 'Growth OS']),
-    mentions: ['Growth OS', 'Sales Desk'],
+    keywords: B(['AI 企业操作系统', '网页桌面', '制造业 AI', '外贸 AI', '主动获客'], ['AI operating system', 'browser-based desktop', 'AI for manufacturers', 'AI for exporters', 'Lead Finder']),
+    mentions: ['Lead Finder', 'Sales Desk'],
     title: B('什么是网页桌面级 AI 企业操作系统', 'What is a browser-based AI operating system for manufacturers?'),
     titleChunks: ['什么是', '网页桌面级 ', 'AI ', '企业', '操作系统'],
     description: B('STARGO WORK 是面向制造业与外贸企业的网页桌面级 AI 企业操作系统。它和聊天工具有什么不同、两大核心引擎做什么、怎样从获客做到复购，一文看懂。', 'STARGO WORK is a browser-based desktop AI operating system for manufacturers and exporters: how it differs from chat, its two engines and the business loop.'),
     takeaways: [
       B('网页桌面：在浏览器里打开，应用、文件、客户、知识和 AI 员工都连在一起。', 'A company workspace in the browser that connects apps, files, customers, knowledge and AI employees.'),
-      B('两大核心引擎：Growth OS 负责主动获客，Sales Desk 负责外贸销售。', 'Two core engines: Growth OS for customer acquisition and Sales Desk for trade sales.'),
+      B('两大核心引擎：主动获客负责找客户，成交工作台负责外贸销售。', 'Two core engines: Lead Finder for customer acquisition and Sales Desk for trade sales.'),
       B('业务循环：主动获客 → 外贸成交 → 企业履约 → 经营协同 → 复购增长。', 'The loop: acquisition → trade sales → fulfillment → business coordination → repeat growth.'),
       B('关键决定由人批准；各项能力按你们的需要配置。', 'People approve key decisions; capabilities are configured to fit your business.'),
     ],
     body: B(`
-<p>网页桌面级 AI 企业操作系统，就是在浏览器里打开的工作桌面：业务应用、文件、客户、知识和数字员工都在上面，串在同一条业务流程里。STARGO WORK 服务制造业和外贸企业，两大核心引擎是 Growth OS 主动获客和 Sales Desk 外贸销售。</p>
+<p>网页桌面级 AI 企业操作系统，就是在浏览器里打开的工作桌面：业务应用、文件、客户、知识和数字员工都在上面，串在同一条业务流程里。STARGO WORK 服务制造业和外贸企业，两大核心引擎是主动获客和成交工作台。</p>
 <h3>为什么说它|不是又多了一个工具？</h3>
 <p>制造业和外贸企业并不缺软件：邮箱收询盘，聊天工具谈客户，电子表格记报价，ERP 管订单。缺的是把这些工作串起来的一环：弄清客户、询盘、报价、订单和任务之间的关系，再顺着这些关系把事情往前推。</p>
 <p>STARGO WORK 要做的，是把这些断开的环节接上：少搬信息、少来回交接，每一步都有依据，谁负责、结果对不对，都查得清。</p>
@@ -954,8 +954,8 @@ ${chartOwner('en', 1)}
 <li><strong>结果要核对：</strong>关键操作由有审批权的人批准；AI 回一段话，不等于事情已经办完。</li>
 </ul>
 <h3>两大核心引擎|分别做什么？</h3>
-<p><strong>Growth OS</strong> 解决“去哪里找客户、谁值得开发、下一步怎样联系”：按产品、目标市场和客户类型，找经销商、进口商、批发商等目标客户，做背调，查联系人和采购信号，排好开发先后。确认要开发的客户，连同背景资料和待办任务一起转进 Sales Desk。</p>
-<p><strong>Sales Desk</strong> 解决“怎样理解客户、持续跟进、报价并交接订单”：询盘和消息从同一个入口进来，客户资料、往来记录、产品匹配、回复草稿、跟进、报价和 PI 都串在同一条销售流程里。</p>
+<p><strong>主动获客</strong> 解决“去哪里找客户、谁值得开发、下一步怎样联系”：按产品、目标市场和客户类型，找经销商、进口商、批发商等目标客户，做背调，查联系人和采购信号，排好开发先后。确认要开发的客户，连同背景资料和待办任务一起转进成交工作台。</p>
+<p><strong>成交工作台</strong> 解决“怎样理解客户、持续跟进、报价并交接订单”：询盘和消息从同一个入口进来，客户资料、往来记录、产品匹配、回复草稿、跟进、报价和 PI 都串在同一条销售流程里。</p>
 <h3>其他能力怎样配合|这两条主线？</h3>
 <ul>
 <li><strong>ERP 与履约：</strong>连接产品物料、采购、库存、生产质检、订单发票与商城业务，再衔接物流、财务、单证和售后。</li>
@@ -971,8 +971,8 @@ ${chartLoop('zh', 1)}
 <p>各项能力都已上线，每个模块的情况如下：</p>
 <ul>
 <li><strong>团队与视频：</strong>AI 团队协作、一键生成视频和爆款结构再创作，在你们开通的服务、额度和权限内运行。协作轮数和预算有上限，成片经人工审核后才发布，对外操作要经审批人批准。</li>
-<li><strong>Growth OS：</strong>数据和客户联系渠道，经你授权后接入。</li>
-<li><strong>Sales Desk：</strong>工作台已上线，各渠道收发和业务交接，连上你们自己的账号就能用；实际价格、合同、签章和单证，与你们现有的系统对接。</li>
+<li><strong>主动获客：</strong>数据和客户联系渠道，经你授权后接入。</li>
+<li><strong>成交工作台：</strong>工作台已上线，各渠道收发和业务交接，连上你们自己的账号就能用；实际价格、合同、签章和单证，与你们现有的系统对接。</li>
 <li><strong>ERP 与履约：</strong>ERP 和商城应用已上线，跨系统联动和 AI 操作也都能用；物流、财务和服务走你们已接入的系统。</li>
 <li><strong>创作、知识与管理：</strong>创意工作室已上线，商品营销套件能一键编排、局部检查。企业知识和业务关系图也已上线。看板上的指标只取自已接入的数据。</li>
 <li><strong>使用终端：</strong>以网页桌面为主，打开浏览器就能用；语音、自动化和对外操作都已支持，也有原生客户端、移动端和小程序。</li>
@@ -980,7 +980,7 @@ ${chartLoop('zh', 1)}
 <p>更深一层的原理见<a href="intelligence.html">企业智能</a>，全部能力见<a href="capabilities.html">能力全景</a>，岗位目录见<a href="workforce.html">数字员工</a>。</p>
 <p class="sgp-cta">想看它在你的业务里怎样运转？<a href="contact.html">预约企业演示</a>。</p>`,
     `
-<p>A browser-based desktop AI operating system is a company workspace you open in a browser, where business applications, files, customers, knowledge and AI employees come together around the same business process. STARGO WORK is built for manufacturers and exporters, with Growth OS for customer acquisition and Sales Desk for trade sales as its two core engines.</p>
+<p>A browser-based desktop AI operating system is a company workspace you open in a browser, where business applications, files, customers, knowledge and AI employees come together around the same business process. STARGO WORK is built for manufacturers and exporters, with Lead Finder for customer acquisition and Sales Desk for trade sales as its two core engines.</p>
 <h3>Why is it not just one more tool?</h3>
 <p>Manufacturers and exporters do not lack software. Email receives the inquiry, a chat app holds the conversation, a spreadsheet keeps the quote and the ERP tracks the order. What is missing is the layer that connects the work: one that knows how customers, inquiries, quotes, orders and tasks relate, and moves the work forward along those links.</p>
 <p>The goal is fewer disconnected handoffs, not another tool: less copying and re-explaining, more evidence-backed progress, clear ownership and results you can check.</p>
@@ -991,7 +991,7 @@ ${chartLoop('zh', 1)}
 <li><strong>Results are checked.</strong> Authorized people approve key actions, and a text answer is never treated as finished work.</li>
 </ul>
 <h3>What do the two core engines do?</h3>
-<p><strong>Growth OS</strong> answers where to find customers, who is worth pursuing and how to reach them next. It looks for dealers, importers, wholesalers and target accounts that fit your products, markets and buyer types, and turns research, contacts, buying signals and priorities into a plan. Approved prospects move into Sales Desk with their context and next actions.</p>
+<p><strong>Lead Finder</strong> answers where to find customers, who is worth pursuing and how to reach them next. It looks for dealers, importers, wholesalers and target accounts that fit your products, markets and buyer types, and turns research, contacts, buying signals and priorities into a plan. Approved prospects move into Sales Desk with their context and next actions.</p>
 <p><strong>Sales Desk</strong> answers how to understand a customer, keep following up, quote and hand over the order. It brings inquiries and messages into one intake and keeps customer records, conversations, product fit, reply drafts, follow-ups, quotes and PIs in one sales workflow.</p>
 <h3>How do the other capabilities support the two engines?</h3>
 <ul>
@@ -1008,7 +1008,7 @@ ${chartLoop('en', 1)}
 <p>Every capability is live. Here is where each part of the system stands today:</p>
 <ul>
 <li><strong>AI teams and video:</strong> AI teamwork, one-click video and viral creative adaptation run within the services, credits and access you have enabled. Collaboration rounds and budgets are capped, finished videos are reviewed by people before publishing, and external actions must be approved by an authorized person.</li>
-<li><strong>Growth OS:</strong> data and outreach channels connect with your authorization.</li>
+<li><strong>Lead Finder:</strong> data and outreach channels connect with your authorization.</li>
 <li><strong>Sales Desk:</strong> the workspace is live, and channel messaging and business handoffs work through your own accounts; live prices, contracts, signatures and documents come from your own systems.</li>
 <li><strong>ERP and fulfillment:</strong> ERP and commerce applications are live, and so are cross-system work and AI actions; logistics, finance and service run through your connected systems.</li>
 <li><strong>Creative work, knowledge and control:</strong> the creative workspace is live, with one-click marketing-kit production and local checks; enterprise knowledge and the relationship map are live; dashboard metrics come only from connected data.</li>
@@ -1018,8 +1018,8 @@ ${chartLoop('en', 1)}
 <p class="sgp-cta">Want to see it run on your own business? <a href="contact.html">Book a Demo</a>.</p>`),
     faq: [
       Q('STARGO WORK 到底是什么？', 'What is STARGO WORK?',
-        '它是一套面向制造业与外贸企业的网页桌面级 AI 企业操作系统。以 Growth OS 主动获客和 Sales Desk 外贸销售为业务主线，连接企业经营、内容生产、知识和数字员工，并保留人的审批与决定权。',
-        'It is a browser-based desktop AI operating system for manufacturing and global trade enterprises. Growth OS and Sales Desk lead the business journey, supported by operations, creative work, enterprise knowledge and AI roles, with people retaining approval and decision authority.'),
+        '它是一套面向制造业与外贸企业的网页桌面级 AI 企业操作系统。以主动获客和成交工作台为业务主线，连接企业经营、内容生产、知识和数字员工，并保留人的审批与决定权。',
+        'It is a browser-based desktop AI operating system for manufacturing and global trade enterprises. Lead Finder and Sales Desk lead the business journey, supported by operations, creative work, enterprise knowledge and AI roles, with people retaining approval and decision authority.'),
       Q('它和单独使用一个 AI 聊天窗口有什么区别？', 'How is this different from using a standalone AI chat?',
         '重点不在对话形式，而在任务是否连接了企业资料、客户历史、业务应用、责任、审批和结果。STARGO WORK 围绕完整业务流程组织这些信息与工作，而不把一次文字回答当作业务已经完成。',
         'The focus is not the chat format. It is whether the work connects enterprise information, customer history, business applications, ownership, approvals and results. STARGO WORK organizes those elements around a business workflow rather than equating a text answer with completed work.'),
@@ -1278,8 +1278,8 @@ const phrasesOf = (html) => html
 const CARD_PHRASES = [
   [LOOP.stages.map((x) => x[0]), 5.5, 'loop step title'],
   [LOOP.stages.flatMap((x) => x[2].zh.split(' · ')).map((zh) => ({ zh })), 7, 'loop label item'],
-  [PIPE.steps.map((x) => x[0]), 9.5, 'Growth OS step title'],
-  [PIPE.steps.map((x) => x[1]), 11.5, 'Growth OS step line'],
+  [PIPE.steps.map((x) => x[0]), 9.5, 'Lead Finder step title'],
+  [PIPE.steps.map((x) => x[1]), 11.5, 'Lead Finder step line'],
   [PIPE.work.map((x) => x[0]), 6.5, 'Sales Desk step title'],
   [PIPE.work.map((x) => x[1]), 8, 'Sales Desk step line'],
   [PROACTIVE.steps.map((x) => x[0]), 7, 'proactive step title'],

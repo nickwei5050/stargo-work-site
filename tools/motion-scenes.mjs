@@ -64,8 +64,8 @@ export const MOTION_LABEL = {
     en: 'Illustrative motion: inquiries from email, WhatsApp, Alibaba.com and the website flow into STARGO WORK, quotes pass a human approval, and work flows on to five stages.',
   },
   radar: {
-    zh: '动态示意：Growth OS 从柳州工厂出发在全球找到目标客户，按匹配度实时排序，并写出推荐理由。',
-    en: 'Illustrative motion: Growth OS finds buyers worldwide from the Liuzhou factory, ranks them by fit and writes down why.',
+    zh: '动态示意：主动获客从柳州工厂出发在全球找到目标客户，按匹配度实时排序，并写出推荐理由。',
+    en: 'Illustrative motion: Lead Finder finds buyers worldwide from the Liuzhou factory, ranks them by fit and writes down why.',
   },
   studio: {
     zh: '动态示意：AI 创作根据一句要求生成产品主图、场景图和短视频，并生成多语言卖点文案，全部人工审核后发布。',
@@ -115,8 +115,8 @@ export const MOTION_LABEL = {
      (tools/blocks/cn-service.mjs; js/stargo-motion-growth.js), in row order, and the closing card of
      intelligence.html (tools/build-site.mjs lxPage; js/stargo-motion-improve.js). */
   dossier: {
-    zh: '动态示意（演示数据）：Growth OS 为一家德国储能集成商建企业档案——官网、主营产品、认证、市场与渠道、新闻逐项汇总，每项注明来源和更新时间；只有一个来源的员工规模标为待核实。',
-    en: 'Illustrative motion (demo data): Growth OS builds a file on a German storage integrator — website, products, certifications, markets and channels, news — each fact with its source and date; the company size, found in one source only, is marked to verify.',
+    zh: '动态示意（演示数据）：主动获客为一家德国储能集成商建企业档案——官网、主营产品、认证、市场与渠道、新闻逐项汇总，每项注明来源和更新时间；只有一个来源的员工规模标为待核实。',
+    en: 'Illustrative motion (demo data): Lead Finder builds a file on a German storage integrator — website, products, certifications, markets and channels, news — each fact with its source and date; the company size, found in one source only, is marked to verify.',
   },
   lanes: {
     zh: '动态示意（演示数据）：点阵世界地图上，从宁波、深圳、钦州、海防出发的海运航线通往汉堡、休斯敦、雅加达和拉各斯；航线逐条亮起，显示这位买家的采购记录和供应商变化。',
@@ -127,7 +127,7 @@ export const MOTION_LABEL = {
     en: 'Illustrative motion (demo data): PT Surya Energi has ordered about every 60 days; the days since its last order count up to 60 and reach the restock window, so a check-in is suggested and the draft waits for your OK.',
   },
   committee: {
-    zh: '动态示意（演示数据）：德国买家 Nordwerk Energie GmbH 的采购决策链——采购经理发起需求，技术负责人评估规格，财务总监批预算，总经理拍板，每人注明身份依据；你确认后才交给 Sales Desk。',
+    zh: '动态示意（演示数据）：德国买家 Nordwerk Energie GmbH 的采购决策链——采购经理发起需求，技术负责人评估规格，财务总监批预算，总经理拍板，每人注明身份依据；你确认后才交给成交工作台。',
     en: 'Illustrative motion (demo data): the buying committee of Nordwerk Energie GmbH, a German buyer — the purchasing manager raises the need, the head of engineering checks the spec, the finance director holds the budget and the managing director decides, each with the source that identifies them; it goes to Sales Desk only after you confirm.',
   },
   improve: {
@@ -157,11 +157,11 @@ export const MOTION_LABEL = {
      they stay registered so a cell can go back to its window in one line (tools/replaceables.mjs
      HERO keeps the history). */
   'desk-growth': {
-    zh: '动态示意（演示数据）：Growth OS 的候选客户名单，Nordwerk Energie 以匹配度 94 排到第一，AI 写出理由。',
-    en: 'Illustrative motion (demo data): the Growth OS shortlist, where Nordwerk Energie rises to the top with a fit of 94 and the AI writes down why.',
+    zh: '动态示意（演示数据）：主动获客的候选客户名单，Nordwerk Energie 以匹配度 94 排到第一，AI 写出理由。',
+    en: 'Illustrative motion (demo data): the Lead Finder shortlist, where Nordwerk Energie rises to the top with a fit of 94 and the AI writes down why.',
   },
   'desk-sales': {
-    zh: '动态示意（演示数据）：Sales Desk 收到 Müller Energie 的询盘，AI 读出 48V 100Ah、200 组、DAP 汉堡，报价 Q-1042 送去审批。',
+    zh: '动态示意（演示数据）：成交工作台收到 Müller Energie 的询盘，AI 读出 48V 100Ah、200 组、DAP 汉堡，报价 Q-1042 送去审批。',
     en: 'Illustrative motion (demo data): Sales Desk receives Müller Energie’s inquiry, the AI reads out 48V 100Ah, 200 pcs and DAP Hamburg, and quote Q-1042 goes for approval.',
   },
   'desk-quote': {
@@ -183,8 +183,8 @@ export const MOTION_LABEL = {
   /* lane people (2026-10-23): about.html's four AI-employee tiles (js/stargo-motion-staff.js)
      and the workforce desktop collage card (js/stargo-motion-rolecard.js) */
   crewSignal: {
-    zh: '动态示意（演示数据）：市场信号 AI 员工在 Growth OS 里扫描招聘、招标等信号，候选客户随之重新排序；Nordwerk Energie 升到第一，推荐理由写好后，联系与否由你决定。',
-    en: 'Illustrative motion (demo data): the Market Signal AI scans hiring and tender signals in Growth OS and the buyer list re-ranks; Nordwerk Energie moves to the top with a written reason, and whether to contact them is your call.',
+    zh: '动态示意（演示数据）：市场信号 AI 员工在主动获客里扫描招聘、招标等信号，候选客户随之重新排序；Nordwerk Energie 升到第一，推荐理由写好后，联系与否由你决定。',
+    en: 'Illustrative motion (demo data): the Market Signal AI scans hiring and tender signals in Lead Finder and the buyer list re-ranks; Nordwerk Energie moves to the top with a written reason, and whether to contact them is your call.',
   },
   crewQuote: {
     zh: '动态示意（演示数据）：报价 AI 员工为 Ahmed Al-Rashid 的 72V 锂电池组询盘逐行生成报价 Q-1046，底价校验发现单价低于底价，报价提交审批，等你批准，批准前不会发给客户。',

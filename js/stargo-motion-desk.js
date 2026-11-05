@@ -143,7 +143,7 @@
     css(o.r, 'opacity', op.toFixed(3));
   }
   var GROWTH = {
-    key: 'growth', name: 'Growth OS', pos: 'tl', B: 0.3, D: 3.6, crumb: T('德国 · 储能经销商', 'Germany · storage dealers'),
+    key: 'growth', name: T('主动获客', 'Lead Finder'), pos: 'tl', B: 0.3, D: 3.6, crumb: T('德国 · 储能经销商', 'Germany · storage dealers'),
     rows: [
       ['DE', NORDWERK, 'Nordwerk Energie', T('储能系统集成 · 汉堡', 'Storage integrator · Hamburg'), T('汉堡', 'Hamburg'), 94],
       ['US', 'Gulf Coast Lift Supply', 'Gulf Coast Lift', T('叉车与仓储 · 休斯敦', 'Forklift fleets · Houston'), T('休斯敦', 'Houston'), 91],
@@ -223,7 +223,7 @@
 
   /* =================== Sales Desk: the inquiry, then the deal (top right) =================== */
   var SALES = {
-    key: 'sales', name: 'Sales Desk', pos: 'tr', B: 2.8, D: 3.4, D2: [6.9, 8.6], crumb: T('询盘', 'Inquiry'), RS: 16.2,
+    key: 'sales', name: T('成交工作台', 'Sales Desk'), pos: 'tr', B: 2.8, D: 3.4, D2: [6.9, 8.6], crumb: T('询盘', 'Inquiry'), RS: 16.2,
     stages: [T('新询盘', 'New'), T('需求确认', 'Qualifying'), T('待报价', 'To quote'), T('报价中', 'Quoting'), T('已报价·谈判', 'Negotiating'), T('PI·待定金', 'PI · deposit'), T('已成交', 'Won')],
     stagesS: [T('新询盘', 'New'), T('需求确认', 'Qualify'), T('待报价', 'To quote'), T('报价中', 'Quoting'), T('已报价·谈判', 'Talks'), T('PI·待定金', 'Deposit'), T('已成交', 'Won')],   // the pill beside the tag in a phone's status bar
     SI: [2.0, 2.6, 3.0, 7.0, 7.6, 8.2],   // when the case moves on a stage
@@ -334,7 +334,7 @@
   }
   function okLine(parent, text, size) { var d = div('sgd-q-ok', parent); ico('check', span('sgd-ck', d), size); el('b', '', d, text); return d; }
   var QUOTE = {
-    key: 'quote', name: T('报价审批', 'Quote approval'), short: T('报价审批', 'Approval'), pos: 'mr', B: 6.1, D: 4.3, crumb: 'Sales Desk',
+    key: 'quote', name: T('报价审批', 'Quote approval'), short: T('报价审批', 'Approval'), pos: 'mr', B: 6.1, D: 4.3, crumb: T('成交工作台', 'Sales Desk'),
     note: T('批准和发送，都由你来点', 'You approve it, and you send it'),
     TAP1: 2.5, TAP2: 3.6, RS: 12.5,
     build: function (R) {

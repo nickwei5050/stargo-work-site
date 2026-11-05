@@ -168,7 +168,7 @@
       return Math.round(s);
     }
     function build(stage, L) {
-      var F = frame(stage, L, 'Growth OS', 'signal'), full = F.full, R = { F: F };
+      var F = frame(stage, L, T('主动获客', 'Lead Finder'), 'signal'), full = F.full, R = { F: F };
       // a narrow tile keeps the suggestion on the signal card, so the top buyer's row keeps its name
       var narrow = full && F.W < 600;
       R.sn = narrow || !full;
@@ -277,7 +277,7 @@
       liveM: [T('报价中', 'Quoting'), T('校验中', 'Checking'), T('等你审批', 'Approve?')]
     };
     function build(stage, L) {
-      var F = frame(stage, L, 'Sales Desk', 'doc'), full = F.full, R = { F: F }, y = F.top;
+      var F = frame(stage, L, T('成交工作台', 'Sales Desk'), 'doc'), full = F.full, R = { F: F }, y = F.top;
       var hd = box('sg-crew-qhead', stage, F.pad, y, F.iw, full ? 48 : 20);
       var t1 = el('div', 'sg-crew-qtitle', hd); el('b', '', t1, full ? D.title : 'Q-1046'); el('span', '', t1, D.who);
       if (full) el('div', 'sg-crew-qask', hd, D.ask);

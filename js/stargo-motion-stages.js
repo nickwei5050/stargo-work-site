@@ -150,7 +150,7 @@
   var REASON = T('近 90 天发布 3 条储能招标，产品线与 48V 100Ah 高度匹配，建议优先联系采购经理。',
     'Three storage tenders in 90 days; fits 48V 100Ah. Contact the buyer first.');
   var REASON_S = T('近 90 天发布 3 条储能招标，与 48V 100Ah 高度匹配。', 'Three storage tenders in 90 days; fits 48V 100Ah.');
-  var prospect = stage('find', 'Growth OS', 'radar', 7.4, 1.95, function (R, b, m) {
+  var prospect = stage('find', T('主动获客', 'Lead Finder'), 'radar', 7.4, 1.95, function (R, b, m) {
     var big = m !== 'mini', cs = m === 'cards';
     if (m === 'card') {
       var hd = box('sg-stg-head', b, 12, 38, 312, 16);
@@ -188,7 +188,7 @@
   }, [94, '#', 'Nordwerk']);
 
   /* ---------------- 002 外贸销售 · Sales Desk ---------------- */
-  var deal = stage('sell', 'Sales Desk', 'chat', 7.4, 2.0, function (R, b, m) {
+  var deal = stage('sell', T('成交工作台', 'Sales Desk'), 'chat', 7.4, 2.0, function (R, b, m) {
     if (m === 'mini') {
       var mq = box('sg-stg-card', b, 8, 31, 164, 46);
       el('b', 'sg-stg-name', mq, 'Müller Energie');
@@ -342,7 +342,7 @@
 
   /* ---------------- 005 复购与改进 · Growth OS ---------------- */
   var SUGGEST = T('补货 64V 104Ah × 120 组，跟进草稿已备好', 'Reorder 120 × 64V 104Ah; follow-up drafted');
-  var reorder = stage('again', 'Growth OS', 'repeat', 7.4, 1.75, function (R, b, m) {
+  var reorder = stage('again', T('主动获客', 'Lead Finder'), 'repeat', 7.4, 1.75, function (R, b, m) {
     if (m === 'mini') {
       el('b', '', box('sg-stg-head', b, 8, 31, 164, 16), 'PT Surya Energi');
       var big = box('sg-stg-bigrow', b, 8, 52, 164, 28);

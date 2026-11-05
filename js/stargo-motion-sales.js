@@ -42,7 +42,7 @@
   function bar(stage, crumb) {
     var b = el('div', 'sgs-bar', stage);
     var mk = el('span', 'sg-app-mark', b); K.icon('spark', mk, 12);
-    el('b', '', b, 'Sales Desk');
+    el('b', '', b, T('成交工作台', 'Sales Desk'));
     if (crumb) el('span', 'sgs-crumb', b, crumb);
     el('span', 'sgs-tagline', b, TAG_MINI);
   }

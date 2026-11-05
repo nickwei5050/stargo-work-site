@@ -754,8 +754,8 @@
       stage.className = 'sg-mo-stage sg-radar is-' + mode;
       var bar = el('div', 'sg-app-bar', stage);
       var mk = el('span', 'sg-app-mark', bar); icon('spark', mk, 14);
-      el('b', '', bar, 'Growth OS');
-      if (mode !== 'mini') el('span', 'sg-app-crumb', bar, T('主动获客', 'Prospecting'));
+      el('b', '', bar, T('主动获客', 'Lead Finder'));
+      if (mode !== 'mini') el('span', 'sg-app-crumb', bar, T('找客户', 'Prospecting'));
       var live = el('span', 'sg-app-live', bar); el('i', '', live); el('span', '', live, T('AI 扫描中', 'AI scanning'));
       // map
       // mid: 292 wide, so the factory's label (right of its dot) ends clear of the shortlist beside the map

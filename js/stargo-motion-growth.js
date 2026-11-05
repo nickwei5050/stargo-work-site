@@ -384,7 +384,7 @@
       var ct = el('div', '', cap); el('b', '', ct, 'Nordwerk Energie GmbH'); el('span', '', ct, T(' · 采购决策链', ' · buying committee'));
       var tg = tag(cap, 0, 0, 'l'); tg.removeAttribute('style');
       var g = R.gate = box(stage, 'is-1 sgg-gate', G.cr, C.b.y, Math.min(T(330, 380), C.R), 'r');
-      el('span', '', g, T('关键人 4 位 · 确认后交给 Sales Desk', '4 key people · then Sales Desk'));
+      el('span', '', g, T('关键人 4 位 · 确认后交给成交工作台', '4 key people · then Sales Desk'));
       pill(g, T('等你确认', 'Waits for your OK'), 'is-amber');
       css(cap, 'opacity', '0');
       late(stage, L, R, function () { return R; }, build, function () { tick(lt); });
