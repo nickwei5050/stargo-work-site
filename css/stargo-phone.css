@@ -34,15 +34,15 @@
 .rk-insight .rk-rt-insights-item-image{inset:50% 54px auto auto;width:96px;max-width:none;height:64px;margin-top:-32px;border-radius:6px;overflow:hidden;pointer-events:none;opacity:0!important;scale:.6}
 .rk-insight .rk-rt-insights-item-image img{height:100%;object-fit:cover}
 .rk-insight .is-focus .rk-rt-tab-display-off{opacity:1!important;scale:1}
-.sg-focusing h3{opacity:.32;scale:.92;transition:.5s var(--sg-e)}
-.sg-focusing .is-focus h3{opacity:1;scale:1}
+.sg-focusing :is(h2,h3){opacity:.32;scale:.92;transition:.5s var(--sg-e)}
+.sg-focusing .is-focus :is(h2,h3){opacity:1;scale:1}
 }
 @media (max-width:479px){
 .rk-insight .rk-rt-insights-item-image{inset:auto 54px 9px auto;margin-top:0;width:84px;height:56px}
 }
 @media (max-width:767px) and (prefers-reduced-motion:reduce){
-.sg-fx-stages .service-title-wrap,.rk-insight .rk-rt-tab-display-off,.sg-focusing h3{transition:none}
-.sg-focusing h3{scale:none}
+.sg-fx-stages .service-title-wrap,.rk-insight .rk-rt-tab-display-off,.sg-focusing :is(h2,h3){transition:none}
+.sg-focusing :is(h2,h3){scale:none}
 }
 @media (max-width:767px) and (prefers-reduced-motion:no-preference){
 /* loop phrases, ladder peek, tour swipe */
