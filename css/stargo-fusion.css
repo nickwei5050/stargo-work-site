@@ -6390,6 +6390,12 @@ img[src*="stargo-photo/e06-cockpit-blocker-"] { object-position: 50% 20%; }
      left border, hence 4px there). */
   .cn-about .cn-social-link { position: relative; }
   .cn-about .cn-social-link::after { content: ""; position: absolute; inset: -4px -3px -3px -4px; }
+  /* Z20 small text, homepage on phones: the 1-4 on the markers that point at
+     the product captures in 「真实界面」 were 9px. 12px fits the 15px badge
+     they sit in, which keeps its size. (The labels drawn inside the code-made
+     scenes — carton marks, part numbers, timeline ticks — are part of the
+     drawings and scale with them; they are not touched.) */
+  .sg-tour .sg-tour-pic .sg-tour-pin b { font-size: 12px; }
 }
 /* ===================================================== speed lane (Z13) ==
    First-screen text the HTML no longer hides (tools/speed.mjs). A marked
