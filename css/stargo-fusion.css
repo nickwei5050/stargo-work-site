@@ -6141,6 +6141,55 @@ img[src*="stargo-photo/e06-cockpit-blocker-"] { object-position: 50% 20%; }
     transform: none !important;
   }
 }
+
+/* Z10 (480-767px). Capabilities: the two scenes the template's own stylesheet
+   (css/qubix.qx.css) already lays out as plain stacked content from 479px down
+   are laid out the same way up to 767px. Before, a phone 480-767px wide (a big
+   phone, a phone on its side, a small tablet) still met them pinned: 「每项业务的
+   ○ 四个基础」 held the screen for about 2.5 screens of scrolling while four
+   nodes faded in on a scroll scrub, and the 「成交工作台…」 cards piled on one
+   another as sticky blocks. Only the positioning is taken from the 479px
+   rules; type scale, container padding and every colour stay as they are
+   at 480-767px. The template's scroll scrub keeps writing its inline styles
+   (opacity, transform, the orb's size); `!important` outranks them, so the
+   scene reads in its finished state whatever the scroll position. From 768px
+   up nothing here applies and both scenes pin and scrub as before. */
+@media (min-width: 480px) and (max-width: 767px) {
+  .qx-whatwedo .qx-wrapper-service { position: static; height: auto !important; }
+  .qx-whatwedo .qx-sticky-service-wrapp { flex-flow: column; height: auto; position: relative; top: auto; }
+  .qx-whatwedo .qx-inner-content-service { min-height: 0; }
+  .qx-whatwedo .qx-outer-main-service {
+    margin-top: var(--_common-spacing---spacing-15xl-large);
+    grid-column-gap: var(--_common-spacing---spacing-6xl-large);
+    grid-row-gap: var(--_common-spacing---spacing-6xl-large);
+    flex-flow: column;
+    height: auto;
+    display: flex;
+    position: static;
+  }
+  .qx-whatwedo .qx-trigger-spacer { display: none; }
+  .qx-whatwedo .qx-wrapper-image-change-service { width: 25vw !important; height: 25vw !important; }
+  .qx-whatwedo .qx-wrapper-image-change-service > img { transform: none !important; }
+  .qx-whatwedo .qx-wrapper-content-service { opacity: 1 !important; transform: none !important; }
+  .qx-whatwedo .qx-wrapper-main-services.qx-wrapper-main-services-one,
+  .qx-whatwedo .qx-wrapper-main-services.qx-wrapper-main-services-two,
+  .qx-whatwedo .qx-wrapper-main-services.qx-wrapper-main-services-three { position: static; }
+  /* (qx-whatwedo.css rule 10 pushed the English node 02 4rem lower while the nodes overlapped.) */
+  .qx-whatwedo .qx-wrapper-main-services.qx-wrapper-main-services-two,
+  html[lang^="en"] .qx-whatwedo .qx-wrapper-main-services.qx-wrapper-main-services-two { margin-top: 0; }
+  .qx-whatwedo .qx-wrapper-main-services { opacity: 1 !important; transform: none !important; }
+  /* The fourth node was lifted clear of the third while both were placed on top of each other. */
+  .qx-whatwedo .qx-wrapper-main-services.qx-whatwedo-four { translate: none; }
+  /* An opened list flows under its node instead of hanging off it. */
+  .qx-whatwedo .qx-whatwedo-panel,
+  .qx-whatwedo .qx-wrapper-main-services-two .qx-whatwedo-panel,
+  .qx-whatwedo .qx-wrapper-main-services-three .qx-whatwedo-panel,
+  .qx-whatwedo .qx-whatwedo-four .qx-whatwedo-panel { position: static; width: auto; margin-top: var(--qx-gap); }
+
+  /* 「成交工作台…」 cards: the left block and each card flow in turn. */
+  .qx-news .qx-home-blog-left { position: static; }
+  .qx-news .qx-collection-item { position: static; }
+}
 /* ==========================================================================
    FORM LANE (next round, Z12 + the phone-table mechanics of Z11)
    ========================================================================== */
