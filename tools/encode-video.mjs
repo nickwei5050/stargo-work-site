@@ -40,6 +40,16 @@ const KEEP = new Set([
 ]);
 export const ORB = 'assets/699b6466d5f19893993a4bf2/699b6466d5f19893993a4f47_magical_orb_remix_mp4.mp4';
 const ORB_SMALL = { mp4: 'assets/stargo-motion/orb-360.mp4', webm: 'assets/stargo-motion/orb-360.webm' };
+/* Orb quality (speed lane, 2026-11-05). The logo orb was H.264 CRF 20 (533 KB) and VP9 CRF 34 (385 KB) for a
+   30-60 px ball: the ball fills 170 of the 360 px frame, so it is drawn at most 62 css px wide, and the file was
+   fetched by every page. CRF 32 / CRF 44 keep the same frame size, length (30 s), frame rate, colour tags and
+   frame 0 (the poster hand-off), at 193 KB and 223 KB. Measured on frames of the header orb at 390 px, 3x
+   (real Chrome decodes the mp4, the bundled Chromium the webm): 39-41 dB against today's pixels, about what the
+   mp4 and the webm already differ by (42-43 dB), and no visible difference side by side. One notch further
+   (CRF 34) already shows block edges on the ball's rim at 6x zoom, so this is where it stops. The encode is
+   skipped when the file exists: delete the two files to re-encode after changing a CRF. */
+const ORB_H264_CRF = 32;
+const ORB_VP9_CRF = 44;
 /* The orb's poster — the still every orb video shows before it plays, when autoplay is refused and under
    reduced motion (data-poster-url and the inline background-image of the template's background-video blocks,
    on every page that draws the orb: header and footer logos, the 288 card, the 连起来 card, the chat and
@@ -109,8 +119,8 @@ for (const rel of [...clips].sort()) {
 /* The orb at logo size: 360 px H.264, plus a VP9 webm for browsers without H.264. */
 {
   const webm = `${SITE}/${ORB.replace(/_mp4\.mp4$/, '_webm.webm')}`;
-  if (!existsSync(`${SITE}/${ORB_SMALL.mp4}`)) h264(webm, `${SITE}/${ORB_SMALL.mp4}`, 20, '360:360');
-  if (!existsSync(`${SITE}/${ORB_SMALL.webm}`)) ff(['-i', webm, '-an', '-vf', 'scale=360:360:flags=lanczos', '-c:v', 'libvpx-vp9', '-crf', '34', '-b:v', '0', '-row-mt', '1', '-deadline', 'good', '-cpu-used', '2', `${SITE}/${ORB_SMALL.webm}`]);
+  if (!existsSync(`${SITE}/${ORB_SMALL.mp4}`)) h264(webm, `${SITE}/${ORB_SMALL.mp4}`, ORB_H264_CRF, '360:360');
+  if (!existsSync(`${SITE}/${ORB_SMALL.webm}`)) ff(['-i', webm, '-an', '-vf', 'scale=360:360:flags=lanczos', '-c:v', 'libvpx-vp9', '-crf', String(ORB_VP9_CRF), '-b:v', '0', '-row-mt', '1', '-deadline', 'good', '-cpu-used', '2', `${SITE}/${ORB_SMALL.webm}`]);
   console.log(`orb 360: mp4 ${Math.round(statSync(`${SITE}/${ORB_SMALL.mp4}`).size / 1024)} KB, webm ${Math.round(statSync(`${SITE}/${ORB_SMALL.webm}`).size / 1024)} KB`);
 }
 

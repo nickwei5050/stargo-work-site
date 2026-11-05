@@ -13,6 +13,17 @@
  * layout features and hinting are kept, so text shapes and renders exactly as
  * it did from the .ttf. Byte-identical source files (the template exports carry
  * InterDisplay twice) share one copy.
+ *
+ * InterDisplay is the one face that does not keep the wide blocks. Its 2857
+ * glyphs came to 80 KB a weight as WOFF2 and the homepage loads three weights,
+ * /capabilities four and /pricing two, yet the site sets it only in English
+ * and Latin-script words. It keeps Basic Latin, Latin-1 and General
+ * Punctuation (the whole of what the copy and the page scripts use) plus every
+ * other character found in the built pages, the page scripts and the copy
+ * sources, wherever the font has it: 36 KB a weight, the same outlines, the
+ * same hinting and layout features. A character outside that set (a Latin
+ * Extended-A letter, say) would fall through to the next face in the stack;
+ * add it to the pages and run this again, as for any new font.
  */
 import { readFileSync, writeFileSync, readdirSync, statSync, existsSync, mkdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
@@ -22,6 +33,9 @@ import { SITE } from './paths.mjs';
 const css = readdirSync(`${SITE}/css`).filter((f) => f.endsWith('.css')).map((f) => readFileSync(`${SITE}/css/${f}`, 'utf8')).join('\n');
 const refs = new Set();
 for (const m of css.matchAll(/url\(["']?(?:\.\.\/)?(assets\/[^"')]+?\.(?:ttf|otf))["']?\)/gi)) refs.add(decodeURI(m[1]));
+/* The stylesheets in css/ name the WOFF2 copies once a build has run, so the fonts the last run listed count too. */
+const MANIFEST = `${SITE}/tools/data/font-woff2.json`;
+if (existsSync(MANIFEST)) for (const rel of Object.keys(JSON.parse(readFileSync(MANIFEST, 'utf8')).fonts)) refs.add(rel);
 
 /* Every character the site can put on screen. */
 const walk = (dir, out = []) => {
@@ -39,9 +53,16 @@ const sources = [
 ];
 const chars = new Set();
 for (const f of sources) for (const ch of readFileSync(f, 'utf8')) chars.add(ch.codePointAt(0));
+const found = new Set(chars); // what the pages, scripts and copy actually contain
 const BASE = [[0x20, 0x7e], [0xa0, 0x24f], [0x2b0, 0x2ff], [0x300, 0x36f], [0x1e00, 0x1eff], [0x2000, 0x206f], [0x2070, 0x209f], [0x20a0, 0x20cf], [0x2100, 0x214f], [0x2150, 0x218f], [0x2190, 0x21ff], [0x2200, 0x22ff], [0x2300, 0x23ff], [0x25a0, 0x25ff], [0x2600, 0x26ff], [0xfb00, 0xfb06], [0xfeff, 0xfeff], [0xfffd, 0xfffd]];
 for (const [a, b] of BASE) for (let c = a; c <= b; c++) chars.add(c);
-const unicodes = [...chars].filter((c) => c >= 0x20).sort((a, b) => a - b).map((c) => c.toString(16)).join(',');
+const hexList = (set) => [...set].filter((c) => c >= 0x20).sort((a, b) => a - b).map((c) => c.toString(16)).join(',');
+const unicodes = hexList(chars);
+/* InterDisplay: what the site's text uses (see the header), not the wide blocks. */
+const NARROW = /InterDisplay/i;
+const narrowChars = new Set(found);
+for (const [a, b] of [[0x20, 0x7e], [0xa0, 0xff], [0x2010, 0x205e]]) for (let c = a; c <= b; c++) narrowChars.add(c);
+const narrowUnicodes = hexList(narrowChars);
 const listFile = `${SITE}/tools/data/.font-unicodes.txt`;
 
 const canonical = new Map(); // md5 -> woff2 path
@@ -52,7 +73,7 @@ for (const rel of [...refs].sort()) {
   const md5 = createHash('md5').update(readFileSync(abs)).digest('hex');
   if (!canonical.has(md5)) {
     const out = rel.replace(/\.(ttf|otf)$/i, '.woff2');
-    writeFileSync(listFile, unicodes);
+    writeFileSync(listFile, NARROW.test(rel) ? narrowUnicodes : unicodes);
     execFileSync('pyftsubset', [abs, `--unicodes-file=${listFile}`, '--layout-features=*', '--name-IDs=*', '--name-languages=*', '--notdef-outline', '--flavor=woff2', `--output-file=${SITE}/${out}`], { stdio: ['ignore', 'ignore', 'inherit'] });
     canonical.set(md5, out);
     console.log(`${rel}  ${Math.round(statSync(abs).size / 1024)} KB -> ${Math.round(statSync(`${SITE}/${out}`).size / 1024)} KB`);
@@ -61,5 +82,5 @@ for (const rel of [...refs].sort()) {
 }
 try { execFileSync('rm', ['-f', listFile]); } catch {}
 mkdirSync(`${SITE}/tools/data`, { recursive: true });
-writeFileSync(`${SITE}/tools/data/font-woff2.json`, JSON.stringify({ note: 'Written by tools/optimize-fonts.mjs: each .ttf/.otf a stylesheet loads, and the subset WOFF2 it is served as.', fonts }, null, 2) + '\n');
+writeFileSync(MANIFEST, JSON.stringify({ note: 'Written by tools/optimize-fonts.mjs: each .ttf/.otf a stylesheet loads, and the subset WOFF2 it is served as.', fonts }, null, 2) + '\n');
 console.log(`${Object.keys(fonts).length} font references, ${canonical.size} WOFF2 files`);

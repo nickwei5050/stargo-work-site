@@ -54,7 +54,7 @@ try {
     pointerdown as the page saw it (stamp and handling, in ms from the opening's first frame;
     whether the overlay was still in the document), whether the button was followed, and — with
     `again` — whether one more, ordinary click on it a second later is. */
- const lateClicks=async(home,{from,ms,at,again=false})=>{
+ const lateClicksOnce=async(home,{from,ms,at,again=false})=>{
   const ctx=await browser.newContext({viewport:{width:1440,height:900}});const p=await ctx.newPage();const downs=[];
   await ctx.addInitScript(()=>addEventListener('pointerdown',(e)=>console.debug('__og '+JSON.stringify([e.timeStamp,performance.now(),!!document.querySelector('[data-og-intro]')])),{capture:true,passive:true}));
   p.on('console',(m)=>{if(m.text().startsWith('__og '))downs.push(JSON.parse(m.text().slice(5)));});
@@ -77,6 +77,19 @@ try {
    if(again&&!followed){await p.waitForTimeout(1000);await p.mouse.click(box.x,box.y);res.again=await p.waitForURL(/\/contact(?:\.html)?$/,{timeout:2500,waitUntil:'commit'}).then(()=>true,()=>false);}
    return res;
   }finally{await p.unrouteAll({behavior:'ignoreErrors'});await ctx.close();}
+ };
+ /* A run whose CDP calls are never answered used to hold the whole job for 30 minutes (seen once in CI, twice
+    on busy local runs; never when the machine was idle). So one run is given 60 s, far more than the ~10 s it
+    needs; if it hangs it is abandoned and repeated once on a fresh context. Only the hang is retried: an
+    assertion failure or the result of a run that finished is never repeated, and a second hang fails the check. */
+ const lateClicks=async(home,opts)=>{
+  for(let tries=0;;tries++){
+   let timer;const hung=new Promise((_,reject)=>{timer=setTimeout(()=>reject(Object.assign(new Error('the late-click run hung for 60 s'),{hung:true})),60000);});
+   const run=lateClicksOnce(home,opts);run.catch(()=>{});
+   try{return await Promise.race([run,hung]);}
+   catch(e){if(!e.hung||tries>=1)throw e;console.log('RETRY the late-click run hung once, starting it again on a fresh context');}
+   finally{clearTimeout(timer);}
+  }
  };
  for(const lang of ['', 'en/']){
   const home=BASE+'/'+lang+'index.html';

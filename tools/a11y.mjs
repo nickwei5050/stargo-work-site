@@ -11,12 +11,18 @@
  * `nav.w-dropdown-list` → `div.w-dropdown-list` (they are answers, not
  * navigation, and ten unnamed navigation landmarks were the result).
  *
- * Why ARIA rather than retagging the headings: the hero sentence, the STARGO /
- * WORK display words and the article headings are styled by tag-qualified
- * selectors (`p.top-text.big.nm`, `h1.h1`, `.lx-scope h3` …) across five
- * template sheets and css/stargo-fusion.css. `role="heading"`, `aria-level`,
- * `aria-hidden` and `role="none"` give screen readers and the accessibility
- * tree the right outline without moving a pixel.
+ * Headings: `role="heading"`, `aria-level`, `aria-hidden` and `role="none"` give
+ * screen readers the right outline without moving a pixel, and are what the
+ * article headings and the listing cards still use. Crawlers that read only the
+ * tags (Baidu) do not see ARIA, so on the six pages whose real title was not an
+ * <h1> (home, about, workforce, both languages) and on the intelligence page
+ * (a heading level skipped before its h1) the tags themselves are corrected in
+ * pageHeadings(). Each retag was measured first (Playwright, every computed
+ * style of the element before and after, 320-1920 px, both languages): the
+ * Lifelogx pages are styled by classes, so those are free; the two places where
+ * a tag-qualified rule or the template's heading defaults would have moved
+ * something (the home hero sentence's leading and top margin, the about intro's
+ * top margin) get an explicit rule in css/stargo-fusion.css.
  *
  * Every rule that targets something specific asserts that it matched, as the
  * rest of the build does: a template change that moves a target fails the
@@ -147,9 +153,12 @@ function pageHeadings(html, { lang, name }) {
   if (name === 'index.html') {
     /* The definition sentence is the page's level-one heading; STARGO / WORK
        are display type (the wordmark already names the site). */
-    html = exact(html, /<h1(\b[^>]*class="h1"[^>]*)>STARGO<\/h1>/g, '<h1 aria-hidden="true"$1>STARGO</h1>', 1, `${label} STARGO`);
+    html = exact(html, /<h1(\b[^>]*class="h1"[^>]*)>STARGO<\/h1>/g, '<h2 aria-hidden="true"$1>STARGO</h2>', 1, `${label} STARGO`);
     html = exact(html, /<h2(\b[^>]*class="h1"[^>]*)>WORK<\/h2>/g, '<h2 aria-hidden="true"$1>WORK</h2>', 1, `${label} WORK`);
-    html = exact(html, /<p class="top-text big nm" data-mobile-text=/g, '<p role="heading" aria-level="1" class="top-text big nm" data-mobile-text=', 1, `${label} hero sentence`);
+    /* The sentence is the page's native <h1> (crawlers read tags, not ARIA);
+       STARGO moved to <h2> to make room, as WORK already was: both rules for
+       `h1.h1` / `h2.h1` are written for the pair, so nothing changes size. */
+    html = exact(html, /<p class="top-text big nm" data-mobile-text="([^"]*)">([^<]*)<\/p>/g, '<h1 class="top-text big nm" data-mobile-text="$1">$2</h1>', 1, `${label} hero sentence`);
     /* The four problem cards: an empty h3 (a hover placeholder) and a
        number h3 each. */
     html = exact(html, /<h3 class="work-title"><\/h3>/g, '<h3 class="work-title" aria-hidden="true"></h3>', 4, `${label} empty work-title`);
@@ -161,13 +170,22 @@ function pageHeadings(html, { lang, name }) {
     if (n !== 8) throw new Error(`${label}: expected the eight split display fragments, found ${n}`);
   }
   if (name === 'about.html') {
-    /* The intro's first line is the page's title. It shares a paragraph with
-       the text after it, so it is marked as a heading where it stands. */
+    /* The intro's first line is the page's title: a native <h1>. It shared a
+       paragraph with the text after it, and a <p> cannot hold a heading, so
+       the paragraph is cut at its line break: <h1> for the title, <p> for the
+       rest, both with the paragraph's own class (css/stargo-fusion.css takes
+       the heading's margins off, so the two stack as the one paragraph did).
+       The title keeps the inline wrapper it had as a role="heading" span:
+       tools/blocks/cn-about.js splits the text into lines for its entrance,
+       and SplitText takes an inline element that wraps over two lines (the
+       Chinese title on a phone) as one line box, which is how the paragraph
+       always rose. Without the span the widow line would get a box and a
+       0.1s step of its own (11 line boxes instead of 10 at 390 px, zh). */
     const at = html.indexOf('<section class="cn-section-home-intro">');
     const m = at === -1 ? null : html.slice(at).match(/^[\s\S]*?(<p class="cn-text-size-large">)((?:(?!<\/p>)[\s\S])*?)<br\/>/);
     if (!m || m[2].length > 400 || /<(?:p|div|a)\b/.test(m[2])) throw new Error(`${label}: intro line not found`);
-    const start = at + m[0].length - m[2].length - '<br/>'.length;
-    html = html.slice(0, start) + `<span role="heading" aria-level="1">${m[2]}</span>` + html.slice(start + m[2].length);
+    const open = at + m[0].length - '<br/>'.length - m[2].length - m[1].length;
+    html = html.slice(0, open) + `<h1 class="cn-text-size-large"><span>${m[2]}</span></h1>${m[1]}` + html.slice(open + m[1].length + m[2].length + '<br/>'.length);
   }
   if (name === 'about.html' || name === 'pricing.html') {
     /* cinery's two-word display titles (“AI / 团队”, “四个 / 岗位”, “合适 /
@@ -184,8 +202,22 @@ function pageHeadings(html, { lang, name }) {
     });
   }
   if (name === 'workforce.html') {
-    /* Two lines of one headline, each an h1: the second is its subtitle. */
-    html = exact(html, /<h1 class="lx-heading-style-h1 lx-white">/g, '<h1 aria-level="2" class="lx-heading-style-h1 lx-white">', 1, `${label} second h1`);
+    /* Two lines of one headline, each an h1: the second is its subtitle, an h2
+       (same class, same look). */
+    html = exact(html, /<h1 class="lx-heading-style-h1 lx-white">([^<]*)<\/h1>/g, '<h2 class="lx-heading-style-h1 lx-white">$1</h2>', 1, `${label} second h1`);
+  }
+  if (name === 'intelligence.html') {
+    /* The page's title is the hero word (智能层 / Intelligence) and it is the
+       first heading in the page: <h1>. The statement further down that was the
+       h1 becomes an h2, and the headings that stood before it as h3 (the three
+       feature titles and the four gradient lines) are h2, so the outline reads
+       h1, h2, h3 with no level skipped, in the order the page is read. All of
+       them are styled by class (.lx-hero-text, .lx-big-text, .lx-expandable-text,
+       .lx-heading-style-h1): measured identical before and after. */
+    html = exact(html, /<div class="lx-hero-text">([^<]*)<\/div>/g, '<h1 class="lx-hero-text">$1</h1>', 1, `${label} hero word`);
+    html = exact(html, /<h1 class="lx-big-text">([^<]*)<\/h1>/g, '<h2 class="lx-big-text">$1</h2>', 1, `${label} statement`);
+    html = exact(html, /<h3 class="lx-expandable-text">([^<]*)<\/h3>/g, '<h2 class="lx-expandable-text">$1</h2>', 3, `${label} feature titles`);
+    html = exact(html, /<h3 gradient-section="text" class="(lx-heading-style-h1 lx-_[1-4])">([^<]*)<\/h3>/g, '<h2 gradient-section="text" class="$1">$2</h2>', 4, `${label} gradient lines`);
   }
   if (name === 'capabilities.html') {
     /* The title carries U+2060 word joiners and a U+200B break opportunity

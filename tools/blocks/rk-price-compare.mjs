@@ -251,7 +251,7 @@
  *
  * WHAT WAS MEASURED BEFORE THE WORDS WERE CHOSEN
  *   Type measured in renok's own Inter Tight (css/donor-fonts.css →
- *   assets/fonts/donor/InterTight-{400,600}.woff2) at renok's own sizes, in a
+ *   assets/fonts/donor/InterTight-400.woff2, the one file every weight shares) at renok's own sizes, in a
  *   headless Chromium; Han runs fall back to the system CJK face, as they do on
  *   renok's own stack, which carries none (`"Inter Tight", sans-serif`). Boxes
  *   measured on the rendered block at a 1440 viewport, where the container is

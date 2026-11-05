@@ -343,6 +343,17 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
    itself (tools/chrome.mjs marks it data-lenis-prevent), without a bar. */
 #stargo-side-menu .navigation-content { overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
 #stargo-side-menu .navigation-content::-webkit-scrollbar { display: none; }
+/* The closed menu's links (and the icon row under them) are hidden by the
+   Webflow runtime, which writes `opacity: 0` on each of them inline when it
+   starts. Until it does (about 0.2-0.4s after the first paint) they are drawn
+   at full opacity behind the page. Pages whose main block has a solid ground
+   cover them; the pricing page's ground is transparent, so on a desktop screen
+   the whole list showed through for a quarter of a second as the page opened.
+   While the menu is closed (`inert`, tools/chrome.mjs) and the runtime has not
+   written its own opacity, they are drawn at 0: the same value it then writes.
+   An open menu (no `inert`) and every item the runtime has touched are not
+   matched. */
+#stargo-side-menu[inert] :is(.menu-item, .social-menu-wrapper):not([style*="opacity"]) { opacity: 0; }
 /* With the menu scrolling inside itself the open page no longer overflows, so
    the document's scroll height drops to 0. Webflow's body ResizeObserver then
    refreshes every ScrollTrigger, and ScrollTrigger re-refreshes each earlier
@@ -2140,9 +2151,22 @@ html[lang^="zh"] .work-card .work-title.b {
 /* The hero's readable introduction is now the product definition, five
    lines at 1440 that left 「握。」 alone on the last one. `pretty` reworks
    only the tail. */
-html[lang^="zh"] .hero .max-w-left.add-tp p.top-text.big.nm {
+html[lang^="zh"] .hero .max-w-left.add-tp :is(p, h1).top-text.big.nm {
   text-wrap: pretty;
 }
+/* That sentence is the page's <h1> (tools/a11y.mjs: crawlers read tags, not
+   ARIA). A heading element brings its own top margin and tighter leading; it
+   takes back the paragraph's, so the hero is the same size and in the same
+   place as when the sentence was a <p>. */
+.hero .max-w-left.add-tp h1.top-text.big.nm {
+  margin-top: 0;
+  line-height: var(--line-height--paragraph-line-height);
+}
+
+/* About: the intro's first line is the page's <h1>, the rest of it the <p>
+   after it (tools/a11y.mjs). Same class, same type; the heading's own margins
+   come off so the two stack as the single paragraph did. */
+.cn-about h1.cn-text-size-large { margin: 0; }
 
 /* ===== V6 A: capability showcases (#story-1…#story-4, #story-6, foundations) =====
    Insertion point for this area's rules. Keep additions between this marker
@@ -4815,11 +4839,31 @@ html[lang^="en"] body:is([data-sg-page~="loop"] *, #sg-page-loop) section.with-m
      768 to 1439px and broke 「工具很/多，靠/人连接」. The copy marks the word
      boundaries (<wbr>) and `keep-all` breaks only there (and after 「，」):
      「工具/很多，/靠人/连接」 — one word a line, as the English heading has.
-   - The pricing heading broke 「从企业需要/的 AI 层级开始。」 at every width;
-     with `keep-all` it breaks at its spaces: 「从企业需要的/AI 层级开始。」. */
-html[lang^="zh"] section.gr h2.h2,
-html[lang^="zh"] section.drk h2.h2.for-stats {
+   - The pricing heading: see H7b. */
+html[lang^="zh"] section.gr h2.h2 {
   word-break: keep-all;
+}
+
+/* H7b. Homepage, Chinese: line breaking after the 2026-10-22 copy rewrite
+   (line breaking only: same type, same boxes, same words).
+   - The pricing heading used to be broken at its space by `keep-all`
+     (「从企业需要的/AI 层级开始。」). The title now reads
+     「从你需要的那一档开始。」 and has no space, so `keep-all` made it one
+     unbreakable 690px run in the 600px heading: from 992px up it stuck out 90px
+     past the right edge and pushed the orb onto a line of its own. Broken
+     normally and balanced it is two lines again, the orb at the start of the
+     first (「◉ 从你需要的/那一档开始。」). Below 992px it fits on one line and
+     does not move.
+   - The FAQ questions: 「报价、发消息、付款这些关键操作，谁说了算？」 left
+     「算？」 alone on its last line at 390 and 768 (and 「吗？」 of question 02
+     at 360). Balanced, a question that needs two lines gets two even ones;
+     a question that fits on one line does not move. */
+html[lang^="zh"] section.drk h2.h2.for-stats {
+  word-break: normal;
+  text-wrap: balance;
+}
+html[lang^="zh"][data-stargo-home] .faq-wrapper .toggle-header {
+  text-wrap: balance;
 }
 
 /* H17. Footer statement, English: the second sentence ("Delegate the work.
@@ -5951,7 +5995,12 @@ img[src*="stargo-photo/e06-cockpit-blocker-"] { object-position: 50% 20%; }
   .hero-track > .hero-agency { position: relative; }
   .hero-track .hero { transform: none !important; }
 
-  /* Home and capabilities — the problem-card stack held for 158px. */
+  /* Home and capabilities — the problem-card stack held for 158px. Its box was
+     also given a 1200px floor (monof template: `.work-main { min-height: 1200px }`,
+     for the pinned stack); the four stacked cards are 1042px tall at 390, so
+     158px of empty ground sat under them. From 480px the cards are taller than
+     the floor, so nothing moves there. */
+  .work-main { min-height: 0; }
   .work-main > .wrok-wrapper { position: relative; }
 
   /* Home — 「(一条业务主线)」: the five phrases one under the other, then the orb. */
@@ -6104,6 +6153,59 @@ img[src*="stargo-photo/e06-cockpit-blocker-"] { object-position: 50% 20%; }
     opacity: 1 !important;
     transform: none !important;
   }
+}
+
+/* Z10 (480-767px). Capabilities: the two scenes the template's own stylesheet
+   (css/qubix.qx.css) already lays out as plain stacked content from 479px down
+   are laid out the same way up to 767px. Before, a phone 480-767px wide (a big
+   phone, a phone on its side, a small tablet) still met them pinned: 「每项业务的
+   ○ 四个基础」 held the screen for about 2.5 screens of scrolling while four
+   nodes faded in on a scroll scrub, and the 「成交工作台…」 cards piled on one
+   another as sticky blocks. Only the positioning is taken from the 479px
+   rules; type scale, container padding and every colour stay as they are
+   at 480-767px. The template's scroll scrub keeps writing its inline styles
+   (opacity, transform, the orb's size); `!important` outranks them, so the
+   scene reads in its finished state whatever the scroll position. From 768px
+   up nothing here applies and both scenes pin and scrub as before. */
+@media (min-width: 480px) and (max-width: 767px) {
+  .qx-whatwedo .qx-wrapper-service { position: static; height: auto !important; }
+  .qx-whatwedo .qx-sticky-service-wrapp { flex-flow: column; height: auto; position: relative; top: auto; }
+  .qx-whatwedo .qx-inner-content-service { min-height: 0; }
+  .qx-whatwedo .qx-outer-main-service {
+    margin-top: var(--_common-spacing---spacing-15xl-large);
+    grid-column-gap: var(--_common-spacing---spacing-6xl-large);
+    grid-row-gap: var(--_common-spacing---spacing-6xl-large);
+    flex-flow: column;
+    height: auto;
+    display: flex;
+    position: static;
+  }
+  .qx-whatwedo .qx-trigger-spacer { display: none; }
+  /* The orb is held at the size the scrub ends on (20vw), not the 25vw the
+     479px rules use: at 25vw the 5vw it takes from the row broke 「每项业务的」
+     「四个基础」 onto two lines at 480-489px and 705-767px (「的」 and 「础」
+     alone on the second), which the finished scene never did. */
+  .qx-whatwedo .qx-wrapper-image-change-service { width: 20vw !important; height: 20vw !important; }
+  .qx-whatwedo .qx-wrapper-image-change-service > img { transform: none !important; }
+  .qx-whatwedo .qx-wrapper-content-service { opacity: 1 !important; transform: none !important; }
+  .qx-whatwedo .qx-wrapper-main-services.qx-wrapper-main-services-one,
+  .qx-whatwedo .qx-wrapper-main-services.qx-wrapper-main-services-two,
+  .qx-whatwedo .qx-wrapper-main-services.qx-wrapper-main-services-three { position: static; }
+  /* (qx-whatwedo.css rule 10 pushed the English node 02 4rem lower while the nodes overlapped.) */
+  .qx-whatwedo .qx-wrapper-main-services.qx-wrapper-main-services-two,
+  html[lang^="en"] .qx-whatwedo .qx-wrapper-main-services.qx-wrapper-main-services-two { margin-top: 0; }
+  .qx-whatwedo .qx-wrapper-main-services { opacity: 1 !important; transform: none !important; }
+  /* The fourth node was lifted clear of the third while both were placed on top of each other. */
+  .qx-whatwedo .qx-wrapper-main-services.qx-whatwedo-four { translate: none; }
+  /* An opened list flows under its node instead of hanging off it. */
+  .qx-whatwedo .qx-whatwedo-panel,
+  .qx-whatwedo .qx-wrapper-main-services-two .qx-whatwedo-panel,
+  .qx-whatwedo .qx-wrapper-main-services-three .qx-whatwedo-panel,
+  .qx-whatwedo .qx-whatwedo-four .qx-whatwedo-panel { position: static; width: auto; margin-top: var(--qx-gap); }
+
+  /* 「成交工作台…」 cards: the left block and each card flow in turn. */
+  .qx-news .qx-home-blog-left { position: static; }
+  .qx-news .qx-collection-item { position: static; }
 }
 /* ==========================================================================
    FORM LANE (next round, Z12 + the phone-table mechanics of Z11)
@@ -6281,6 +6383,37 @@ img[src*="stargo-photo/e06-cockpit-blocker-"] { object-position: 50% 20%; }
   .stargo-direct-row a { padding: 14px 0; margin: -14px 0; }
   .stargo-copy { min-height: 44px; margin: -9.5px 0; }
 }
+/* Z20 (phone lane, next round): three more targets under 44px at phone width.
+   Same rule as above: nothing moves and nothing is redrawn; only what a finger
+   hits grows. */
+@media (max-width: 767px) {
+  /* The header logo (the orb and the wordmark): 30px tall. 8px of padding on
+     each side, given back by the same margin, makes the link 46px tall; the
+     header bar (68px) and the logo's place in it do not change. */
+  .navbar > a.logo-first { padding-top: 8px; padding-bottom: 8px; margin-top: -8px; margin-bottom: -8px; }
+  /* 「真实界面」 tabs (home), 37px pills in a row that scrolls sideways. The
+     pill stays as drawn; an invisible layer reaching 4px past its edge above
+     and below is its hit area (45px; `inset` counts from inside the 1px
+     border). The row clips what sticks out of it, so it gets 4px of room
+     above and 8px below (it had 0 and 4), which its margins take back: the
+     row's place and the space after it are the same as before. */
+  .sg-tour .sg-tour-tab { position: relative; }
+  .sg-tour .sg-tour-tab::after { content: ""; position: absolute; inset: -5px 0; }
+  .sg-tour .sg-tour-tabs { padding-top: 4px; padding-bottom: 8px; margin-top: -4px; margin-bottom: 20px; }
+  /* The channel icons on /about: 40px glass circles, 12px apart. Drawn by
+     their own border and background (a lighter top-left edge), which a
+     transparent border would repaint, so the 3px on every side that makes
+     46px is an invisible layer (`inset` counts from inside the 1px top and
+     left border, hence 4px there). */
+  .cn-about .cn-social-link { position: relative; }
+  .cn-about .cn-social-link::after { content: ""; position: absolute; inset: -4px -3px -3px -4px; }
+  /* Z20 small text, homepage on phones: the 1-4 on the markers that point at
+     the product captures in 「真实界面」 were 9px. 12px fits the 15px badge
+     they sit in, which keeps its size. (The labels drawn inside the code-made
+     scenes — carton marks, part numbers, timeline ticks — are part of the
+     drawings and scale with them; they are not touched.) */
+  .sg-tour .sg-tour-pic .sg-tour-pin b { font-size: 12px; }
+}
 /* ===================================================== speed lane (Z13) ==
    First-screen text the HTML no longer hides (tools/speed.mjs). A marked
    element waits for the Webflow runtime only while scripts are on, the
@@ -6304,3 +6437,16 @@ html.w-mod-js:not(.sg-ix-late) [data-sg-first]:not([style]) { animation: sg-firs
    css/stargo-motion-org.css. */
 .blog-flex .blog-photo-overlay[src*="/live01-desktop-home-16x9"] { object-position: 0% 50%; }
 .blog-photo-wrapper > .sg-mo-notice { position: absolute; inset: 0; }
+
+/* 「预约企业演示」等胶囊按钮（a.contact-info.for-button）：按钮和文字固定，不随悬停或点按移动。
+   悬停时间线把文字上下滚动（yPercent）；页面靠后的按钮晚拆字时，时间线挂在整个按钮上，
+   整个按钮会往下掉一个自身高度再弹回来，鼠标滑出后不停闪。这里一律压住：按钮本身和每个字
+   都不位移、不缩放。电脑上悬停时只有灰色底色从下往上铺开；触屏没有任何位移，按下时只变淡。
+   选择器写成 a.… 是为了压过 css/stargo-phone.css 里按下时缩小和底色滑动的规则。 */
+a.contact-info.for-button { transform: none !important; translate: none !important; scale: none !important; }
+a.contact-info.for-button .gsap_split_letter { transform: none !important; translate: none !important; }
+@media (hover: none) {
+  a.contact-info.for-button .bg-change,
+  a.contact-info.for-button:active .bg-change { transform: translate(0, 100%) !important; translate: none !important; }
+  a.contact-info.for-button:active { scale: none !important; opacity: .85 !important; }
+}
