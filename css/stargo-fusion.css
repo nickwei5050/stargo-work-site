@@ -343,6 +343,17 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
    itself (tools/chrome.mjs marks it data-lenis-prevent), without a bar. */
 #stargo-side-menu .navigation-content { overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
 #stargo-side-menu .navigation-content::-webkit-scrollbar { display: none; }
+/* The closed menu's links (and the icon row under them) are hidden by the
+   Webflow runtime, which writes `opacity: 0` on each of them inline when it
+   starts. Until it does (about 0.2-0.4s after the first paint) they are drawn
+   at full opacity behind the page. Pages whose main block has a solid ground
+   cover them; the pricing page's ground is transparent, so on a desktop screen
+   the whole list showed through for a quarter of a second as the page opened.
+   While the menu is closed (`inert`, tools/chrome.mjs) and the runtime has not
+   written its own opacity, they are drawn at 0: the same value it then writes.
+   An open menu (no `inert`) and every item the runtime has touched are not
+   matched. */
+#stargo-side-menu[inert] :is(.menu-item, .social-menu-wrapper):not([style*="opacity"]) { opacity: 0; }
 /* With the menu scrolling inside itself the open page no longer overflows, so
    the document's scroll height drops to 0. Webflow's body ResizeObserver then
    refreshes every ScrollTrigger, and ScrollTrigger re-refreshes each earlier
