@@ -67,7 +67,7 @@ export function datedPages() {
 export function contentHash(html) {
   const cut = html.search(/<body[\s>]/);
   const head = cut === -1 ? html : html.slice(0, cut);
-  const unstamp = (v) => v.replace(/\?v=[0-9a-f]{12}/g, '');
+  const unstamp = (v) => v.replace(/\?v=[0-9a-f]{16}/g, '');
   const parts = [];
   for (const m of head.matchAll(/<title>([^<]*)<\/title>/g)) parts.push(`title ${m[1]}`);
   for (const m of head.matchAll(/<meta\b[^>]*>/g)) if (/\s(?:name|property)="(?:description|robots|og:[a-z:]+|twitter:[a-z:]+)"/.test(m[0])) parts.push(`meta ${unstamp(m[0])}`);
