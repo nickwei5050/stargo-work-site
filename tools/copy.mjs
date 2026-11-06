@@ -70,6 +70,12 @@ export const SITE_URL = 'https://stargowork.com';
    profile, official site, or sameAs of this organization, so it is not a
    contact channel here. */
 export const LEGAL_ENTITY = '广西博韦尔传媒科技有限公司';
+/** STARGO WORK is a product of Stargo Growth 星启出海 (same legal entity). Shown under the copyright on every page so
+    search engines and AI assistants connect the two brands instead of confusing them with other "Stargo" companies. */
+export const PARENT_LINE = {
+  zh: '星启出海 Stargo Growth 旗下产品（<a href="https://stargogrowth.com/" rel="noopener" style="color:inherit;text-decoration:underline">stargogrowth.com</a>）',
+  en: 'A product of Stargo Growth 星启出海 (<a href="https://stargogrowth.com/" rel="noopener" style="color:inherit;text-decoration:underline">stargogrowth.com</a>)',
+};
 
 /* The company's contact details, in ONE place. Everything the site prints or
    links — the footer, the side menu's and the about card's channel buttons,
@@ -164,11 +170,11 @@ export const CHROME = [
      homepage's line reads 「© 2026 STARGO WORK - 」 and neither donor key
      matches it any more. That entry catches it, and every other page passes
      through it unchanged. */
-  ['© 2026 Mōno™ Studio -', B(`© 2026 STARGO WORK<br/>${LEGAL_ENTITY}`, `© 2026 STARGO WORK<br/>${LEGAL_ENTITY}`)],
-  ['© 2026 Mōno™ Studio', B(`© 2026 STARGO WORK<br/>${LEGAL_ENTITY}`, `© 2026 STARGO WORK<br/>${LEGAL_ENTITY}`)],
-  ['© 2026 STARGO WORK -', B(`© 2026 STARGO WORK<br/>${LEGAL_ENTITY}`, `© 2026 STARGO WORK<br/>${LEGAL_ENTITY}`)],
+  ['© 2026 Mōno™ Studio -', B(`© 2026 STARGO WORK<br/>${LEGAL_ENTITY}<br/>${PARENT_LINE.zh}`, `© 2026 STARGO WORK<br/>${LEGAL_ENTITY}<br/>${PARENT_LINE.en}`)],
+  ['© 2026 Mōno™ Studio', B(`© 2026 STARGO WORK<br/>${LEGAL_ENTITY}<br/>${PARENT_LINE.zh}`, `© 2026 STARGO WORK<br/>${LEGAL_ENTITY}<br/>${PARENT_LINE.en}`)],
+  ['© 2026 STARGO WORK -', B(`© 2026 STARGO WORK<br/>${LEGAL_ENTITY}<br/>${PARENT_LINE.zh}`, `© 2026 STARGO WORK<br/>${LEGAL_ENTITY}<br/>${PARENT_LINE.en}`)],
   /* Homepage hero copyright has no trailing hyphen, so the three keys above miss it. */
-  ['<p class="top-text big gray sm">© 2026 STARGO WORK</p>', B(`<p class="top-text big gray sm">© 2026 STARGO WORK<br/>${LEGAL_ENTITY}</p>`, `<p class="top-text big gray sm">© 2026 STARGO WORK<br/>${LEGAL_ENTITY}</p>`)],
+  ['<p class="top-text big gray sm">© 2026 STARGO WORK</p>', B(`<p class="top-text big gray sm">© 2026 STARGO WORK<br/>${LEGAL_ENTITY}<br/>${PARENT_LINE.zh}</p>`, `<p class="top-text big gray sm">© 2026 STARGO WORK<br/>${LEGAL_ENTITY}<br/>${PARENT_LINE.en}</p>`)],
   ['(Pages)', B('(页面)', '(Pages)')],
   ['(New Projects / Business)', B('(商务合作)', '(Business)')],
   ['(General Inquiries)', B('(运营主体)', '(Legal entity)')],
