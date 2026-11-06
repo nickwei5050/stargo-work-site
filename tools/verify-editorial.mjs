@@ -175,7 +175,7 @@ for (const f of files) {
   {
     const og = html.match(/<meta property="og:image" content="([^"]*)"\/>/)?.[1] ?? '';
     const article = /^(?:en\/)?blog\//.test(f);
-    assert(/\?v=[0-9a-f]{12}$/.test(og), `${f}: share cover carries its content hash ${og}`);
+    assert(/\?v=[0-9a-f]{16}$/.test(og), `${f}: share cover carries its content hash ${og}`);
     assert(article ? /^https:\/\/[^/]+\/assets\/blog\/[\w-]+\.webp\?/.test(og) : og.split('?')[0].endsWith(`/${share.src}`), `${f}: share cover ${og}`);
     assert(existsSync(og.split('?')[0].replace(/^https:\/\/[^/]+\//, '')), `${f}: share cover not on disk: ${og}`);
     assert.equal(html.match(/<meta name="twitter:image" content="([^"]*)"\/>/)?.[1], og, `${f}: twitter:image is the share cover`);
@@ -192,14 +192,14 @@ for (const f of files) {
      if every page loaded it; since its rebuild about.html has no tab component
      and did not load it, and the check failed for the wrong reason. */
   for (const m of html.matchAll(/\s(?:src|href)="(?:\.\.\/)*((?:css|js)\/[^"]+)"/g)) {
-    assert(/\?v=[0-9a-f]{12}$/.test(m[1]), `${f}: runtime cache version on ${m[1]}`);
+    assert(/\?v=[0-9a-f]{16}$/.test(m[1]), `${f}: runtime cache version on ${m[1]}`);
   }
   /* js/stargo-tabs.js drives the tab components: Webflow tabs (.w-tabs), the
      pricing period toggle (.pricing-tabs-info-block), the homepage's core-systems
      switcher (.product-sticky-block) and the FAQ accordions' ARIA
      (.toggle-wrapper). A page that carries one of them must load it. */
   if (/class="[^"]*\b(?:w-tabs|pricing-tabs-info-block|product-sticky-block|toggle-wrapper)\b/.test(html)) {
-    assert(/js\/stargo-tabs\.js\?v=[0-9a-f]{12}/.test(html), `${f}: has tab components but does not load js/stargo-tabs.js`);
+    assert(/js\/stargo-tabs\.js\?v=[0-9a-f]{16}/.test(html), `${f}: has tab components but does not load js/stargo-tabs.js`);
   }
 }
 console.log(`owner photographs: ${photos.length} of ${photos.length} placed`);

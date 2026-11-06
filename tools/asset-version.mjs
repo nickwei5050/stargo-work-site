@@ -47,7 +47,7 @@ export function assetToken(rel) {
   const content = /\.css$/i.test(key)
     ? Buffer.from(versionCss(fileText(key)), 'latin1')
     : TEXT.test(key) ? Buffer.from(fileText(key), 'latin1') : readFileSync(`${SITE}/${key}`);
-  const token = createHash('sha256').update(content).digest('hex').slice(0, 12);
+  const token = createHash('sha256').update(content).digest('hex').slice(0, 16);
   tokens.set(key, token);
   return token;
 }
@@ -113,7 +113,7 @@ export function assertVersioned(html, label) {
   // A wider list than versionPage's EXT on purpose: a new kind of file the stamper has not been taught is a finding, not a pass.
   const SEEN = `${EXT}|mov|m4v|m4a|mp3|ogg|wav|wasm|map|webmanifest|xml|csv|zip`;
   const scan = html.replace(/<script\b[^>]*type="application\/ld\+json"[^>]*>[\s\S]*?<\/script>|<!--[\s\S]*?-->/g, ' ');
-  const re = new RegExp(`(^|["'(,\\s]|&quot;)((?:\\/|(?:\\.\\.\\/)*)(?:assets|css|js)\\/[^"'\\s,?#&<>()]+?\\.(?:${SEEN}))(?![\\w.%-])(\\?v=[0-9a-f]{12}(?![0-9a-f]))?`, 'gi');
+  const re = new RegExp(`(^|["'(,\\s]|&quot;)((?:\\/|(?:\\.\\.\\/)*)(?:assets|css|js)\\/[^"'\\s,?#&<>()]+?\\.(?:${SEEN}))(?![\\w.%-])(\\?v=[0-9a-f]{16}(?![0-9a-f]))?`, 'gi');
   const site = SITE_URL.replace(/[.]/g, '\\.');
   const share = new RegExp(`<meta\\b[^>]*\\scontent="(${site}\\/assets\\/[^"]*)"`, 'g');
   const missing = [];
@@ -121,7 +121,7 @@ export function assertVersioned(html, label) {
     if (!m[3]) missing.push({ url: m[2], at: m.index });
   }
   for (const m of scan.matchAll(share)) {
-    if (!/\?v=[0-9a-f]{12}$/.test(m[1])) missing.push({ url: m[1], at: m.index });
+    if (!/\?v=[0-9a-f]{16}$/.test(m[1])) missing.push({ url: m[1], at: m.index });
   }
   if (!missing.length) return;
   const shown = missing.slice(0, 8).map(({ url, at }) => `  ${url}   …${scan.slice(Math.max(0, at - 50), at + 90).replace(/\s+/g, ' ')}…`).join('\n');
