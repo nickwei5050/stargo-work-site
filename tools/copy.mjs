@@ -71,10 +71,12 @@ export const SITE_URL = 'https://stargowork.com';
    contact channel here. */
 export const LEGAL_ENTITY = '广西博韦尔传媒科技有限公司';
 /** STARGO WORK is a product of Stargo Growth 星启出海 (same legal entity). Shown under the copyright on every page so
-    search engines and AI assistants connect the two brands instead of confusing them with other "Stargo" companies. */
+    search engines and AI assistants connect the two brands instead of confusing them with other "Stargo" companies.
+    2026-11-08: Qwen and Hunyuan read "旗下产品" and still called Stargo Growth a module of STARGO WORK, so the line now
+    says what Stargo Growth itself is (an export website and SEO/GEO agency) and that it makes STARGO WORK. */
 export const PARENT_LINE = {
-  zh: '星启出海 Stargo Growth 旗下产品（<a href="https://stargogrowth.com/" rel="noopener" style="color:inherit;text-decoration:underline">stargogrowth.com</a>）',
-  en: 'A product of Stargo Growth 星启出海 (<a href="https://stargogrowth.com/" rel="noopener" style="color:inherit;text-decoration:underline">stargogrowth.com</a>)',
+  zh: '由星启出海 Stargo Growth 开发，星启出海是外贸官网与 SEO/GEO 服务品牌（<a href="https://stargogrowth.com/" rel="noopener" style="color:inherit;text-decoration:underline">stargogrowth.com</a>）',
+  en: 'Made by Stargo Growth 星启出海, an export website and SEO/GEO agency (<a href="https://stargogrowth.com/" rel="noopener" style="color:inherit;text-decoration:underline">stargogrowth.com</a>)',
 };
 
 /* The company's contact details, in ONE place. Everything the site prints or
