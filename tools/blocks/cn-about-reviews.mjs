@@ -358,6 +358,9 @@ const LABEL = { zh: '(示例场景)', en: '(Illustrative scenario)' };
  * a previous/next control and carry nothing of the template's voice. Same pair
  * as cn-reviews, on the same control.
  */
+/** The portrait beside each scenario is a stock photo, and the card says so. */
+const PORTRAIT_NOTE = { zh: '（示意人像，非真实客户）', en: ' (stock portrait, not a customer)' };
+
 const PREV = { zh: '上一条', en: 'Previous' };
 const NEXT = { zh: '下一条', en: 'Next' };
 
@@ -750,6 +753,10 @@ export function render(frag, ctx) {
     if (!/>-<\/div>/.test(top)) {
       throw new Error(`cn-about-reviews: slide ${i + 1} lost the "-" cinery sets between the rating and its stars`);
     }
+    /* No stars: a five-star row reads as a customer rating, and this company has no public ratings (owner decision 2026-11-09). The label stays; the "-" went with what it separated. */
+    const rated = top;
+    top = top.replace(/<div class="[^"]*">-<\/div>/, '').replace(/<div class="cn-star-rating-block">(?:<div class="cn-review-star w-embed"><svg[\s\S]*?<\/svg><\/div>)+<\/div>/, '');
+    if (top === rated || /cn-review-star/.test(top)) throw new Error(`cn-about-reviews: slide ${i + 1}: the rating stars were not removed`);
     top = setText(top, 'cn-text-size-large', lang === 'zh' ? zhQuote(t(card.quote), escapeHtml) : escapeHtml(t(card.quote)));
 
     /* Below it: the mark, the speaker, and what the scenario shows. */
@@ -758,7 +765,7 @@ export function render(frag, ctx) {
     if (names !== 1 || roles !== 1) {
       throw new Error(`cn-about-reviews: slide ${i + 1}: expected one name and one role line under the logo, found ${names} and ${roles}`);
     }
-    bot = setText(bot, 'cn-text-size-medium', escapeHtml(t(card.who)));
+    bot = setText(bot, 'cn-text-size-medium', escapeHtml(t(card.who) + t(PORTRAIT_NOTE)));
     bot = setText(bot, 'cn-text-size-regular', escapeHtml(t(card.concept)));
 
     return top + bot;
