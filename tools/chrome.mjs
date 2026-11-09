@@ -495,6 +495,8 @@ function scripts(html) {
      first paint rather than after the page bundle. */
   if (!out.includes('js/stargo-forms.js')) out = out.replace('</body>', '<script src="js/stargo-forms.js"></script></body>');
   if (!out.includes('js/stargo-tabs.js')) out = out.replace('</body>', '<script src="js/stargo-tabs.js"></script></body>');
+  /* Website chat: inert until its one setting is filled in (js/stargo-chat.js says how). */
+  if (!out.includes('js/stargo-chat.js')) out = out.replace('</body>', '<script src="js/stargo-chat.js"></script></body>');
   if (out.includes('id="stargo-side-menu"') && !out.includes('js/stargo-side-menu.js')) out = out.replace('</body>', '<script src="js/stargo-side-menu.js"></script></body>');
   if (out.includes('data-stargo-video') && !out.includes('js/stargo-media.js')) out = out.replace('</body>', '<script src="js/stargo-media.js"></script></body>');
   /* Every template clip waits until the reader is near it, on every page.

@@ -27,7 +27,7 @@ test('contact handler regression', async t => {
       ['unset CONTACT_TO / CONTACT_FROM use the owner address and Resend test sender', async () => {
         const r = await send(valid(), { env: { RESEND_API_KEY: 'fixture-not-a-key' } }); assert.equal(r.status, 200);
         const mail = JSON.parse(calls.at(-1).body);
-        assert.equal(OWNER, 'wei505099021@live.cn');
+        assert.equal(OWNER, 'sales@stargogrowth.com');
         assert.deepEqual(mail.to, [OWNER]); assert.equal(mail.from, RESEND_TEST_SENDER); assert.equal(mail.reply_to, 'qa@example.invalid');
         assert.equal(calls.at(-1).url, 'https://api.resend.com/emails'); assert.equal(calls.at(-1).headers.authorization, 'Bearer fixture-not-a-key');
       }],
@@ -62,7 +62,7 @@ test('contact handler regression', async t => {
       ['provider rejection is not success', async () => { const err = console.error; console.error = () => {}; globalThis.fetch = async () => Response.json({ message: 'unavailable' }, { status: 500 }); try { assert.equal((await send(valid())).status, 502); } finally { console.error = err; globalThis.fetch = transport; } }],
       ['Resend refusal: clean JSON error, logged with status and message, never the key', async () => {
         const logged = []; const err = console.error; console.error = (...a) => logged.push(a.map(String).join(' '));
-        globalThis.fetch = async () => Response.json({ statusCode: 403, name: 'validation_error', message: 'You can only send testing emails to your own email address (wei505099021@live.cn).' }, { status: 403 });
+        globalThis.fetch = async () => Response.json({ statusCode: 403, name: 'validation_error', message: 'You can only send testing emails to your own email address (sales@stargogrowth.com).' }, { status: 403 });
         try {
           const r = await send(valid(), { env: { RESEND_API_KEY: 're_secret_fixture_value' } });
           assert.equal(r.status, 502); assert.equal(r.headers.get('content-type'), 'application/json; charset=utf-8');
