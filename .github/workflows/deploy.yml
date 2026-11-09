@@ -56,20 +56,29 @@ jobs:
 
       - name: Upload to Cloudflare Pages
         if: steps.secrets.outputs.ready == 'true'
-        run: npx --yes wrangler@4.20.0 pages deploy dist --project-name stargowork --branch main --commit-hash "$GITHUB_SHA" --commit-message "main@${GITHUB_SHA::7}"
+        run: npx --yes wrangler@4.20.0 pages deploy dist --project-name stargowork --branch main --commit-hash "$GITHUB_SHA" --commit-message "main@${GITHUB_SHA::7}" | tee /tmp/wrangler.log
 
-      # Check the real domain, not a pages.dev host: the page must answer 200 and carry this commit's footer line.
+      # stargowork.com answers 403 to curl from GitHub's runners (Cloudflare bot protection, run 42653528315), so the
+      # check is: this deployment is the one the project serves on stargowork.com (Pages API), and its own URL
+      # carries this build's footer. The domain itself is then tried with a browser User-Agent, for the record only.
       - name: Smoke-check production
         if: steps.secrets.outputs.ready == 'true'
         run: |
-          sleep 30
+          url=$(grep -o 'https://[a-z0-9]*\.stargowork\.pages\.dev' /tmp/wrangler.log | tail -1)
+          [ -n "$url" ] || { echo "no deployment URL in the wrangler output"; exit 1; }
+          id=${url#https://}; id=${id%%.*}
+          sleep 20
+          curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/stargowork" > /tmp/project.json
+          node -e "const p=JSON.parse(require('fs').readFileSync('/tmp/project.json','utf8')).result||{};const d=p.domains||[];const c=(p.canonical_deployment||{}).id||'';console.log('domains: '+d.join(', ')+'; serving '+c);if(!d.includes('stargowork.com')){console.log('stargowork.com is not a domain of project stargowork');process.exit(1)}if(!c.startsWith('$id')){console.log('project does not serve deployment $id');process.exit(1)}"
           for path in / /en/ /pricing /contact; do
-            code=$(curl -s -o /dev/null -w '%{http_code}' "https://stargowork.com$path?deploy=${GITHUB_SHA::7}")
-            echo "$path → $code"
+            code=$(curl -s -o /dev/null -w '%{http_code}' "$url$path")
+            echo "$url$path → $code"
             [ "$code" = 200 ] || exit 1
           done
-          curl -s "https://stargowork.com/?deploy=${GITHUB_SHA::7}" > /tmp/home.html
+          curl -s "$url/" > /tmp/home.html
           # The copyright line of the page just built must be the one served (it carries the Stargo Growth line).
-          node -e "const fs=require('fs');const re=/© 2026 STARGO WORK[^]*?<\/p>/;const want=(fs.readFileSync('dist/index.html','utf8').match(re)||[])[0];const got=(fs.readFileSync('/tmp/home.html','utf8').match(re)||[])[0];if(!want||want!==got){console.log('live footer differs from this build:\n want '+want+'\n got  '+got);process.exit(1)}console.log('live footer matches this build')"
-
-          echo "Deployed main@${GITHUB_SHA::7} to the stargowork project (https://stargowork.com)" >> "$GITHUB_STEP_SUMMARY"
+          node -e "const fs=require('fs');const re=/© 2026 STARGO WORK[^]*?<\/p>/;const want=(fs.readFileSync('dist/index.html','utf8').match(re)||[])[0];const got=(fs.readFileSync('/tmp/home.html','utf8').match(re)||[])[0];if(!want||want!==got){console.log('deployed footer differs from this build:\n want '+want+'\n got  '+got);process.exit(1)}console.log('deployed footer matches this build')"
+          ua='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36'
+          echo "stargowork.com/ → $(curl -s -o /dev/null -w '%{http_code}' -A "$ua" "https://stargowork.com/?deploy=${GITHUB_SHA::7}") (for the record; 403 here is bot protection)"
+          echo "Deployed main@${GITHUB_SHA::7} as $id to the stargowork project (https://stargowork.com)" >> "$GITHUB_STEP_SUMMARY"
