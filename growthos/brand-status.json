@@ -9,18 +9,18 @@
     "zh",
     "en"
   ],
-  "updatedAt": "2026-11-09T16:31:24.517Z",
+  "updatedAt": "2026-11-09T23:53:53.899Z",
   "stages": {
     "A": {
       "status": "waiting_scott",
-      "note": "未接入中控：不在同步列表，运行工作区没有这个品牌",
+      "note": "11-09 已接入中控（业主打字同意）；目标和市场还没填",
       "evidence": [
         "https://github.com/nickwei5050/website-SEO-/blob/claude/stargowork-e2e-fixes/docs/website-growth/stargowork-e2e-2026-11-09.md"
       ]
     },
     "B": {
       "status": "in_progress",
-      "note": "11-09 体检只在临时数据根跑，抽 4 页，未进中控",
+      "note": "11-09 体检在部署 469cd0fb 上跑过，数据在临时数据根，要进中控需重跑",
       "evidence": [
         "https://github.com/nickwei5050/website-SEO-/blob/claude/stargowork-e2e-fixes/docs/website-growth/stargowork-e2e-2026-11-09.md"
       ]
@@ -72,7 +72,7 @@
     },
     "L": {
       "status": "waiting_scott",
-      "note": "聊天窗已上线；测试询盘未提交，hub 检查跑不了",
+      "note": "聊天窗和漏斗在跑；测试询盘未提交，hub 检查跑不了",
       "evidence": [
         "https://github.com/nickwei5050/website-SEO-/blob/claude/stargowork-e2e-fixes/docs/website-growth/stargowork-e2e-2026-11-09.md"
       ]
@@ -133,7 +133,7 @@
     },
     "chat": {
       "status": "pending",
-      "note": "Chatwoot 收件箱 10 的聊天窗已上线；漏斗服务未启动"
+      "note": "Chatwoot 收件箱 10；漏斗 growthos-funnel@stargowork-com 已开机自启；hub 未核对"
     },
     "gsc": {
       "status": "not_started"
