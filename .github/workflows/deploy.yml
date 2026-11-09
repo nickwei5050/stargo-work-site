@@ -1,12 +1,15 @@
 name: Deploy to Cloudflare Pages
 
-# Publishes the site to the Cloudflare Pages project `stargo` whenever main
+# Publishes the site to the Cloudflare Pages project `stargowork` (custom domains stargowork.com and
+# www.stargowork.com; checked 2026-11-09) whenever main
 # changes. Every change reaches main through a pull request that "Site
 # verification" has already checked, so this job only packages and uploads.
 #
 # Needs two repository secrets (Settings → Secrets and variables → Actions):
 #   CLOUDFLARE_API_TOKEN   an API token with "Cloudflare Pages: Edit"
-#   CLOUDFLARE_ACCOUNT_ID  the account that owns the `stargo` project
+#   CLOUDFLARE_ACCOUNT_ID  the account that owns the `stargowork` project
+# The old project `stargo` has no custom domain (only stargo.pages.dev, which 301s to stargowork.com), so a deploy
+# there changes nothing users see: until 2026-11-09 this job deployed there and stargowork.com stayed stale.
 # Until both exist the job says so and stops without failing.
 
 on:
@@ -53,21 +56,20 @@ jobs:
 
       - name: Upload to Cloudflare Pages
         if: steps.secrets.outputs.ready == 'true'
-        run: npx --yes wrangler@4.20.0 pages deploy dist --project-name stargo --branch main --commit-hash "$GITHUB_SHA" --commit-message "main@${GITHUB_SHA::7}"
+        run: npx --yes wrangler@4.20.0 pages deploy dist --project-name stargowork --branch main --commit-hash "$GITHUB_SHA" --commit-message "main@${GITHUB_SHA::7}"
 
-      # stargo.pages.dev is the retired host: functions/_middleware.js answers
-      # every page there with a 301 to the same page on https://stargowork.com,
-      # so a page passes on that redirect (or on a 200, before it is live).
+      # Check the real domain, not a pages.dev host: the page must answer 200 and carry this commit's footer line.
       - name: Smoke-check production
         if: steps.secrets.outputs.ready == 'true'
         run: |
-          sleep 20
+          sleep 30
           for path in / /en/ /pricing /contact; do
-            got=$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' "https://stargo.pages.dev$path")
-            echo "$path → $got"
-            case "$got" in
-              "200 "*|"301 https://stargowork.com$path") ;;
-              *) exit 1 ;;
-            esac
+            code=$(curl -s -o /dev/null -w '%{http_code}' "https://stargowork.com$path?deploy=${GITHUB_SHA::7}")
+            echo "$path → $code"
+            [ "$code" = 200 ] || exit 1
           done
-          echo "Deployed main@${GITHUB_SHA::7} to the stargo project (stargo.pages.dev redirects to https://stargowork.com)" >> "$GITHUB_STEP_SUMMARY"
+          curl -s "https://stargowork.com/?deploy=${GITHUB_SHA::7}" > /tmp/home.html
+          # The copyright line of the page just built must be the one served (it carries the Stargo Growth line).
+          node -e "const fs=require('fs');const re=/© 2026 STARGO WORK[^]*?<\/p>/;const want=(fs.readFileSync('dist/index.html','utf8').match(re)||[])[0];const got=(fs.readFileSync('/tmp/home.html','utf8').match(re)||[])[0];if(!want||want!==got){console.log('live footer differs from this build:\n want '+want+'\n got  '+got);process.exit(1)}console.log('live footer matches this build')"
+
+          echo "Deployed main@${GITHUB_SHA::7} to the stargowork project (https://stargowork.com)" >> "$GITHUB_STEP_SUMMARY"

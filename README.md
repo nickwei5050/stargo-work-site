@@ -102,7 +102,7 @@ working tree.
    checked, and what is a known deliberate compromise.
 4. **Read the scan.** Fix what it finds; push again; let it re-scan.
 5. **Only when the scan is clean, deploy** — `node tools/make-dist.mjs` then
-   `wrangler pages deploy dist --project-name stargo --branch main`, and verify
+   `wrangler pages deploy dist --project-name stargowork --branch main`, and verify
    production with `BASE_URL=https://stargo.pages.dev node tools/verify-release.mjs`
    (byte-for-byte comparison of every page and asset, plus browser scenarios).
 
@@ -146,7 +146,7 @@ is live there, so it is the owner's call, not the build's.
 
 ```bash
 node tools/make-dist.mjs
-node "F:/stargo 网站/stargo-work-website/node_modules/wrangler/bin/wrangler.js" pages deploy dist --project-name stargo --branch main --commit-dirty=true
+node "F:/stargo 网站/stargo-work-website/node_modules/wrangler/bin/wrangler.js" pages deploy dist --project-name stargowork --branch main --commit-dirty=true
 ```
 
 `dist/` carries the pages, `assets/`, `css/`, `js/`, `_headers` (cache + security
