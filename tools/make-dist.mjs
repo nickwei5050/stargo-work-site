@@ -7,7 +7,7 @@
  * in the static output directory. Deploy with:
  *
  *   node tools/make-dist.mjs
- *   node <wrangler> pages deploy dist --project-name stargo --branch main --commit-dirty=true
+ *   node <wrangler> pages deploy dist --project-name stargowork --branch main --commit-dirty=true
  *
  * Deploy with the local proxy bypassed (HTTP_PROXY/HTTPS_PROXY/ALL_PROXY
  * unset): through the proxy the upload API times out; direct works.
