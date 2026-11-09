@@ -1,0 +1,388 @@
+{
+  "schemaVersion": "growthos.experience-ledger.v1",
+  "rubricVersion": "1.0.0",
+  "brand": "stargowork",
+  "auditDate": null,
+  "scope": "",
+  "evidence": [
+    {
+      "id": "E1",
+      "type": "crawl",
+      "ref": "dist/contact.html + 线上 /contact 截图 contact-mobile.png",
+      "observedAt": "2026-11-09",
+      "file": "dist/contact.html + 线上 /contact 截图 contact-mobile.png"
+    },
+    {
+      "id": "E2",
+      "type": "crawl",
+      "ref": "launch-guard check：25 页、sitemap 38 条、0 失败",
+      "observedAt": "2026-11-09",
+      "file": "launch-guard check：25 页、sitemap 38 条、0 失败"
+    },
+    {
+      "id": "E3",
+      "type": "crawl",
+      "ref": "design-review round-1.json（axe、点击区）",
+      "observedAt": "2026-11-09",
+      "file": "design-review round-1.json（axe、点击区）"
+    },
+    {
+      "id": "E4",
+      "type": "crawl",
+      "ref": "dist 中/英 40 页；hreflang",
+      "observedAt": "2026-11-09",
+      "file": "dist 中/英 40 页；hreflang"
+    },
+    {
+      "id": "E5",
+      "type": "crawl",
+      "ref": "dist/privacy.html、terms.html、notices.html；brand-intake legal",
+      "observedAt": "2026-11-09",
+      "file": "dist/privacy.html、terms.html、notices.html；brand-intake legal"
+    },
+    {
+      "id": "E6",
+      "type": "crawl",
+      "ref": "article-seo-check 14 篇",
+      "observedAt": "2026-11-09",
+      "file": "article-seo-check 14 篇"
+    }
+  ],
+  "items": [
+    {
+      "id": "D01-1",
+      "status": "scored",
+      "score": 4,
+      "rationale": "页脚和联系页有主体名、电话、微信、WhatsApp、邮箱",
+      "evidence_ids": [
+        "E1"
+      ]
+    },
+    {
+      "id": "D01-2",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D01-3",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D01-4",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D01-5",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D02-1",
+      "status": "scored",
+      "score": 3,
+      "rationale": "主导航 9 项，较多但命名清楚",
+      "evidence_ids": [
+        "E2",
+        "E3"
+      ]
+    },
+    {
+      "id": "D02-2",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D02-3",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D02-4",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D02-5",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D03-1",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D03-2",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D03-3",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D03-4",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D03-5",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D04-1",
+      "status": "scored",
+      "score": 4,
+      "rationale": "导航、首屏、页脚都有预约入口，手机端有在线咨询",
+      "evidence_ids": [
+        "E1"
+      ]
+    },
+    {
+      "id": "D04-2",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D04-3",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D04-4",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D04-5",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D05-1",
+      "status": "scored",
+      "score": 4,
+      "rationale": "launch-guard 25 页无重复/缺失报错；SEO 分 100",
+      "evidence_ids": [
+        "E2"
+      ]
+    },
+    {
+      "id": "D05-2",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D05-3",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D05-4",
+      "status": "scored",
+      "score": 4,
+      "rationale": "robots 放行、sitemap 38 条、canonical 正常",
+      "evidence_ids": [
+        "E2"
+      ]
+    },
+    {
+      "id": "D05-5",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D06-1",
+      "status": "scored",
+      "score": 3,
+      "rationale": "中英双语，尚无其他语言",
+      "evidence_ids": [
+        "E4"
+      ]
+    },
+    {
+      "id": "D06-2",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D06-3",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D06-4",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D06-5",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D07-1",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D07-2",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D07-3",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D07-4",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D07-5",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D08-1",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D08-2",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D08-3",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D08-4",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D08-5",
+      "status": "scored",
+      "score": 1,
+      "rationale": "文章只有组织署名，看不到作者；无外部来源",
+      "evidence_ids": [
+        "E6"
+      ]
+    },
+    {
+      "id": "D09-1",
+      "status": "scored",
+      "score": 4,
+      "rationale": "隐私、条款、第三方声明齐全且全站链接",
+      "evidence_ids": [
+        "E5"
+      ]
+    },
+    {
+      "id": "D09-2",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D09-3",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    },
+    {
+      "id": "D09-4",
+      "status": "scored",
+      "score": 2,
+      "rationale": "axe 有 serious 项，减少动效模式文字不可见",
+      "evidence_ids": [
+        "E3"
+      ]
+    },
+    {
+      "id": "D09-5",
+      "status": "not_tested",
+      "score": null,
+      "rationale": "本轮没有观察或未授权（真实表单未提交）",
+      "evidence_ids": []
+    }
+  ],
+  "_comment": "evidence: [{id, url|file, observedAt, note}]. status: scored | not_tested | not_applicable | pending. Never score what you did not observe."
+}
