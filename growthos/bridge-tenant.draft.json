@@ -1,0 +1,107 @@
+{
+  "schemaVersion": "1.0",
+  "enabled": false,
+  "tenants": [
+    {
+      "id": "stargowork-com",
+      "chatwootOrigin": "http://rails:3000",
+      "maxkbOrigin": "http://maxkb:8080",
+      "accountId": 1,
+      "inboxId": 10,
+      "botId": "TO_BE_FILLED_CHATWOOT_AGENT_BOT_ID_INTEGER",
+      "applicationId": "TO_BE_FILLED_MAXKB_APPLICATION_UUID",
+      "webhookSecretEnv": "STARGOWORK_CHATWOOT_WEBHOOK_SECRET",
+      "chatwootTokenEnv": "STARGOWORK_CHATWOOT_BOT_TOKEN",
+      "maxkbTokenEnv": "STARGOWORK_MAXKB_APPLICATION_KEY",
+      "knowledgeVersion": "stargowork-kb-draft-2026-11-09",
+      "approvedSourceUrls": [
+        "https://stargowork.com/",
+        "https://stargowork.com/about",
+        "https://stargowork.com/contact",
+        "https://stargowork.com/capabilities",
+        "https://stargowork.com/workforce",
+        "https://stargowork.com/pricing",
+        "https://stargowork.com/enterprise",
+        "https://stargowork.com/privacy",
+        "https://stargowork.com/en/",
+        "https://stargowork.com/en/about",
+        "https://stargowork.com/en/contact",
+        "https://stargowork.com/en/capabilities",
+        "https://stargowork.com/en/workforce",
+        "https://stargowork.com/en/pricing",
+        "https://stargowork.com/en/enterprise",
+        "https://stargowork.com/en/privacy"
+      ],
+      "handoffPhrases": [
+        "转人工",
+        "人工客服",
+        "找人工",
+        "真人客服",
+        "联系客服",
+        "talk to a human",
+        "speak to a person",
+        "real person",
+        "human agent",
+        "agent please",
+        "[HUMAN_REQUIRED]",
+        "多少钱",
+        "什么价",
+        "价格是",
+        "价格多少",
+        "价钱",
+        "费用",
+        "收费",
+        "年费",
+        "月费",
+        "报价单",
+        "给个报价",
+        "付款",
+        "账期",
+        "定金",
+        "预付",
+        "折扣",
+        "优惠",
+        "退款",
+        "how much",
+        "price",
+        "prices",
+        "pricing",
+        "quote me",
+        "cost",
+        "costs",
+        "fee",
+        "fees",
+        "payment",
+        "payment terms",
+        "deposit",
+        "discount",
+        "refund"
+      ],
+      "handoffNotice": {
+        "zh": "这个问题我先转给同事，会尽快在这里回复您。着急的话可以发邮件到 sales@stargogrowth.com，或通过电话、微信、WhatsApp 联系 +86 187 7512 7878，也可以在这里留下邮箱，方便我们联系您。",
+        "en": "I've passed this to a colleague, who will reply here as soon as possible. If it is urgent, email sales@stargogrowth.com or reach us by phone, WeChat or WhatsApp at +86 187 7512 7878. You can also leave your email here so we can contact you."
+      },
+      "holdNotice": {
+        "zh": "同事还没来得及回复，让您久等了，我们会尽快在这里回复您。着急的话可以发邮件到 sales@stargogrowth.com，或通过电话、微信、WhatsApp 联系 +86 187 7512 7878。",
+        "en": "Sorry for the wait. A colleague has not replied yet and will do so here as soon as possible. If it is urgent, email sales@stargogrowth.com or reach us by phone, WeChat or WhatsApp at +86 187 7512 7878."
+      },
+      "holdNoticeMinutes": 30,
+      "formReceipt": {
+        "zh": "您的表单已收到，同事会尽快在这里回复您。着急的话可以发邮件到 sales@stargogrowth.com，或通过电话、微信、WhatsApp 联系 +86 187 7512 7878。",
+        "en": "We have received your form, and a colleague will reply here as soon as possible. If it is urgent, email sales@stargogrowth.com or reach us by phone, WeChat or WhatsApp at +86 187 7512 7878."
+      },
+      "formLeadTypes": [
+        "contact_form"
+      ],
+      "greetingReply": {
+        "zh": "您好！我是 STARGO WORK 在线助手，可以回答产品功能、部署方式和落地流程方面的问题，直接打字提问就行。价格和付款由同事答复，需要真人请回复「转人工」。着急的话可以发邮件到 sales@stargogrowth.com，或通过电话、微信、WhatsApp 联系 +86 187 7512 7878。",
+        "en": "Hi! I'm the STARGO WORK assistant. Ask me about product features, deployment or how rollout works. A colleague handles pricing and payment; type \"talk to a human\" any time to reach a person. If it is urgent, email sales@stargogrowth.com or reach us by phone, WeChat or WhatsApp at +86 187 7512 7878."
+      },
+      "maxMessagesPerDay": 200,
+      "maxMessagesPerConversation": 20,
+      "maxInputChars": 4000,
+      "maxOutputChars": 12000,
+      "requestTimeoutMs": 45000
+    }
+  ]
+}
