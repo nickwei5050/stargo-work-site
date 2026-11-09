@@ -2752,6 +2752,11 @@ for (const lang of C.LANGS) {
       const marks = [[/\sid="loop"/, 'loop'], [/\sid="atlas"/, 'atlas'], [/\sclass="[^"]*\brk-price-tiers\b/, 'price-tiers']].filter(([re]) => re.test(html)).map(([, m]) => m);
       if (marks.length) html = html.replace(/<html(?=[\s>])/, `<html data-sg-page="${marks.join(' ')}"`);
     }
+    /* Google review 2026-11-09 #08: a form's success and failure notices sit in
+       the static page (hidden until js/stargo-forms.js shows one), so Google
+       read them as page text and quoted 「提交没有成功，请稍后再试」 in results.
+       data-nosnippet keeps both out of search snippets; display is unchanged. */
+    html = html.replace(/<div class="([^"]*\bw-form-(?:done|fail)\b[^"]*)"(?![^>]*data-nosnippet)/g, '<div class="$1" data-nosnippet');
     // Every local file the page loads carries its content hash (Z18).
     html = versionPage(html);
     // Pages in a folder (blog/) link and load one level up; English pages one more.
