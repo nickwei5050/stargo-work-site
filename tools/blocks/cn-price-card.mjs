@@ -317,9 +317,9 @@ export function render(frag, ctx) {
      and the secondary line ~208px in Chinese / ~330px in English against the
      donor's own ~200px.
 
-     The five `.star-rating` glyphs are drawn artwork, not words, and stay where
-     they are drawn. Beside a workforce count rather than a score they read as
-     ornament, which is the most that can be done without touching markup. */
+     The five `.star-rating` glyphs are removed: beside faces they read as a
+     customer rating, and this company has no public ratings (owner decision
+     2026-11-09). The faces are stock photos, and the line under them says so. */
   {
     const r = region(html, '<div class="cn-client-rating-wrap">', 'the portrait and rating row');
     let row = html.slice(r.at, r.end);
@@ -339,6 +339,9 @@ export function render(frag, ctx) {
 
     row = setText(row, 'cn-text-size-regular', escapeHtml(`${stat.value} ${noun}`));
     row = setText(row, 'cn-text-color-secondary', escapeHtml(standalone));
+    const withStars = row;
+    row = row.replace(/<div class="cn-star-rating w-embed"><svg[\s\S]*?<\/svg><\/div>/g, '');
+    if (row === withStars) throw new Error('cn-price-card: the rating stars were not removed');
     html = put(html, r, row);
   }
 

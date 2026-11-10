@@ -1,0 +1,1201 @@
+{
+  "schemaVersion": "growthos.design-review.round.v1",
+  "round": 1,
+  "brand": "stargowork-com",
+  "url": "https://stargowork.com/",
+  "pages": [
+    "/",
+    "/capabilities",
+    "/pricing",
+    "/contact"
+  ],
+  "createdAt": "2026-11-09T15:57:24.504Z",
+  "findings": [
+    {
+      "id": "/|desktop|tap_target_lt_24",
+      "page": "/",
+      "viewport": "desktop",
+      "dimension": "responsive",
+      "severity": "issue",
+      "code": "tap_target_lt_24",
+      "detail": "42 个可点击元素小于 24px：a.stargo-skip 40×1, a.button-link 79×18, a.button-link 48×18"
+    },
+    {
+      "id": "/|desktop|img_no_dimensions",
+      "page": "/",
+      "viewport": "desktop",
+      "dimension": "responsive",
+      "severity": "issue",
+      "code": "img_no_dimensions",
+      "detail": "78 张图片没写 width/height（会跳布局）"
+    },
+    {
+      "id": "/|desktop|font_size_levels",
+      "page": "/",
+      "viewport": "desktop",
+      "dimension": "typography",
+      "severity": "note",
+      "code": "font_size_levels",
+      "detail": "18 档字号，层级可能过多"
+    },
+    {
+      "id": "/|desktop|axe_aria-prohibited-attr",
+      "page": "/",
+      "viewport": "desktop",
+      "dimension": "micro",
+      "severity": "blocker",
+      "code": "axe_aria-prohibited-attr",
+      "detail": "axe aria-prohibited-attr（serious）× 8"
+    },
+    {
+      "id": "/|desktop|axe_color-contrast",
+      "page": "/",
+      "viewport": "desktop",
+      "dimension": "color",
+      "severity": "blocker",
+      "code": "axe_color-contrast",
+      "detail": "axe color-contrast（serious）× 10"
+    },
+    {
+      "id": "/|desktop|axe_target-size",
+      "page": "/",
+      "viewport": "desktop",
+      "dimension": "responsive",
+      "severity": "blocker",
+      "code": "axe_target-size",
+      "detail": "axe target-size（serious）× 18"
+    },
+    {
+      "id": "/|desktop|cls",
+      "page": "/",
+      "viewport": "desktop",
+      "dimension": "motion",
+      "severity": "blocker",
+      "code": "cls",
+      "detail": "加载 + 滚动期间 CLS = 1.206（> 0.1）"
+    },
+    {
+      "id": "/|desktop|long_tasks",
+      "page": "/",
+      "viewport": "desktop",
+      "dimension": "motion",
+      "severity": "issue",
+      "code": "long_tasks",
+      "detail": "长任务合计 1572ms，动效可能卡顿"
+    },
+    {
+      "id": "/|desktop|reduced_motion_hidden",
+      "page": "/",
+      "viewport": "desktop",
+      "dimension": "motion",
+      "severity": "blocker",
+      "code": "reduced_motion_hidden",
+      "detail": "减少动态效果模式下 24 块文字仍不可见"
+    },
+    {
+      "id": "/|desktop|nojs_hidden",
+      "page": "/",
+      "viewport": "desktop",
+      "dimension": "motion",
+      "severity": "issue",
+      "code": "nojs_hidden",
+      "detail": "关掉 JavaScript 后 12 块文字不可见"
+    },
+    {
+      "id": "/|tablet|tap_target_lt_24",
+      "page": "/",
+      "viewport": "tablet",
+      "dimension": "responsive",
+      "severity": "issue",
+      "code": "tap_target_lt_24",
+      "detail": "5 个可点击元素小于 24px：a.stargo-skip 40×1, a.logo-first 550×21, a.button-with-line 86×21"
+    },
+    {
+      "id": "/|tablet|img_no_dimensions",
+      "page": "/",
+      "viewport": "tablet",
+      "dimension": "responsive",
+      "severity": "issue",
+      "code": "img_no_dimensions",
+      "detail": "60 张图片没写 width/height（会跳布局）"
+    },
+    {
+      "id": "/|tablet|font_size_levels",
+      "page": "/",
+      "viewport": "tablet",
+      "dimension": "typography",
+      "severity": "note",
+      "code": "font_size_levels",
+      "detail": "17 档字号，层级可能过多"
+    },
+    {
+      "id": "/|tablet|axe_aria-prohibited-attr",
+      "page": "/",
+      "viewport": "tablet",
+      "dimension": "micro",
+      "severity": "blocker",
+      "code": "axe_aria-prohibited-attr",
+      "detail": "axe aria-prohibited-attr（serious）× 8"
+    },
+    {
+      "id": "/|tablet|axe_color-contrast",
+      "page": "/",
+      "viewport": "tablet",
+      "dimension": "color",
+      "severity": "blocker",
+      "code": "axe_color-contrast",
+      "detail": "axe color-contrast（serious）× 9"
+    },
+    {
+      "id": "/|tablet|cls",
+      "page": "/",
+      "viewport": "tablet",
+      "dimension": "motion",
+      "severity": "blocker",
+      "code": "cls",
+      "detail": "加载 + 滚动期间 CLS = 1.295（> 0.1）"
+    },
+    {
+      "id": "/|tablet|long_tasks",
+      "page": "/",
+      "viewport": "tablet",
+      "dimension": "motion",
+      "severity": "issue",
+      "code": "long_tasks",
+      "detail": "长任务合计 1790ms，动效可能卡顿"
+    },
+    {
+      "id": "/|mobile|tap_target_lt_24",
+      "page": "/",
+      "viewport": "mobile",
+      "dimension": "responsive",
+      "severity": "issue",
+      "code": "tap_target_lt_24",
+      "detail": "5 个可点击元素小于 24px：a.stargo-skip 40×1, a.logo-first 374×21, a.button-with-line 96×21"
+    },
+    {
+      "id": "/|mobile|img_no_dimensions",
+      "page": "/",
+      "viewport": "mobile",
+      "dimension": "responsive",
+      "severity": "issue",
+      "code": "img_no_dimensions",
+      "detail": "41 张图片没写 width/height（会跳布局）"
+    },
+    {
+      "id": "/|mobile|font_size_levels",
+      "page": "/",
+      "viewport": "mobile",
+      "dimension": "typography",
+      "severity": "note",
+      "code": "font_size_levels",
+      "detail": "17 档字号，层级可能过多"
+    },
+    {
+      "id": "/|mobile|axe_aria-prohibited-attr",
+      "page": "/",
+      "viewport": "mobile",
+      "dimension": "micro",
+      "severity": "blocker",
+      "code": "axe_aria-prohibited-attr",
+      "detail": "axe aria-prohibited-attr（serious）× 8"
+    },
+    {
+      "id": "/|mobile|axe_color-contrast",
+      "page": "/",
+      "viewport": "mobile",
+      "dimension": "color",
+      "severity": "blocker",
+      "code": "axe_color-contrast",
+      "detail": "axe color-contrast（serious）× 6"
+    },
+    {
+      "id": "/|mobile|cls",
+      "page": "/",
+      "viewport": "mobile",
+      "dimension": "motion",
+      "severity": "blocker",
+      "code": "cls",
+      "detail": "加载 + 滚动期间 CLS = 0.976（> 0.1）"
+    },
+    {
+      "id": "/|mobile|long_tasks",
+      "page": "/",
+      "viewport": "mobile",
+      "dimension": "motion",
+      "severity": "issue",
+      "code": "long_tasks",
+      "detail": "长任务合计 1648ms，动效可能卡顿"
+    },
+    {
+      "id": "/capabilities|desktop|tap_target_lt_24",
+      "page": "/capabilities",
+      "viewport": "desktop",
+      "dimension": "responsive",
+      "severity": "issue",
+      "code": "tap_target_lt_24",
+      "detail": "48 个可点击元素小于 24px：a.stargo-skip 40×1, a.button-link 79×18, a.button-link 48×18"
+    },
+    {
+      "id": "/capabilities|desktop|img_no_dimensions",
+      "page": "/capabilities",
+      "viewport": "desktop",
+      "dimension": "responsive",
+      "severity": "issue",
+      "code": "img_no_dimensions",
+      "detail": "76 张图片没写 width/height（会跳布局）"
+    },
+    {
+      "id": "/capabilities|desktop|too_many_fonts",
+      "page": "/capabilities",
+      "viewport": "desktop",
+      "dimension": "typography",
+      "severity": "issue",
+      "code": "too_many_fonts",
+      "detail": "用了 5 个字族：Inter, Inter Tight, Instrument Serif Roman, Overused Grotesk, Interdisplay"
+    },
+    {
+      "id": "/capabilities|desktop|font_size_levels",
+      "page": "/capabilities",
+      "viewport": "desktop",
+      "dimension": "typography",
+      "severity": "note",
+      "code": "font_size_levels",
+      "detail": "22 档字号，层级可能过多"
+    },
+    {
+      "id": "/capabilities|desktop|axe_color-contrast",
+      "page": "/capabilities",
+      "viewport": "desktop",
+      "dimension": "color",
+      "severity": "blocker",
+      "code": "axe_color-contrast",
+      "detail": "axe color-contrast（serious）× 6"
+    },
+    {
+      "id": "/capabilities|desktop|axe_target-size",
+      "page": "/capabilities",
+      "viewport": "desktop",
+      "dimension": "responsive",
+      "severity": "blocker",
+      "code": "axe_target-size",
+      "detail": "axe target-size（serious）× 18"
+    },
+    {
+      "id": "/capabilities|desktop|cls",
+      "page": "/capabilities",
+      "viewport": "desktop",
+      "dimension": "motion",
+      "severity": "blocker",
+      "code": "cls",
+      "detail": "加载 + 滚动期间 CLS = 0.383（> 0.1）"
+    },
+    {
+      "id": "/capabilities|desktop|long_tasks",
+      "page": "/capabilities",
+      "viewport": "desktop",
+      "dimension": "motion",
+      "severity": "issue",
+      "code": "long_tasks",
+      "detail": "长任务合计 1389ms，动效可能卡顿"
+    },
+    {
+      "id": "/capabilities|desktop|reduced_motion_hidden",
+      "page": "/capabilities",
+      "viewport": "desktop",
+      "dimension": "motion",
+      "severity": "blocker",
+      "code": "reduced_motion_hidden",
+      "detail": "减少动态效果模式下 10 块文字仍不可见"
+    },
+    {
+      "id": "/capabilities|desktop|nojs_hidden",
+      "page": "/capabilities",
+      "viewport": "desktop",
+      "dimension": "motion",
+      "severity": "issue",
+      "code": "nojs_hidden",
+      "detail": "关掉 JavaScript 后 4 块文字不可见"
+    },
+    {
+      "id": "/capabilities|tablet|tap_target_lt_24",
+      "page": "/capabilities",
+      "viewport": "tablet",
+      "dimension": "responsive",
+      "severity": "issue",
+      "code": "tap_target_lt_24",
+      "detail": "11 个可点击元素小于 24px：a.stargo-skip 40×1, a.rk-testimonials-link 105×19, a.rk-testimonials-link 105×19"
+    },
+    {
+      "id": "/capabilities|tablet|img_no_dimensions",
+      "page": "/capabilities",
+      "viewport": "tablet",
+      "dimension": "responsive",
+      "severity": "issue",
+      "code": "img_no_dimensions",
+      "detail": "58 张图片没写 width/height（会跳布局）"
+    },
+    {
+      "id": "/capabilities|tablet|too_many_fonts",
+      "page": "/capabilities",
+      "viewport": "tablet",
+      "dimension": "typography",
+      "severity": "issue",
+      "code": "too_many_fonts",
+      "detail": "用了 5 个字族：Inter, Inter Tight, Instrument Serif Roman, Overused Grotesk, Interdisplay"
+    },
+    {
+      "id": "/capabilities|tablet|font_size_levels",
+      "page": "/capabilities",
+      "viewport": "tablet",
+      "dimension": "typography",
+      "severity": "note",
+      "code": "font_size_levels",
+      "detail": "21 档字号，层级可能过多"
+    },
+    {
+      "id": "/capabilities|tablet|axe_color-contrast",
+      "page": "/capabilities",
+      "viewport": "tablet",
+      "dimension": "color",
+      "severity": "blocker",
+      "code": "axe_color-contrast",
+      "detail": "axe color-contrast（serious）× 1"
+    },
+    {
+      "id": "/capabilities|tablet|cls",
+      "page": "/capabilities",
+      "viewport": "tablet",
+      "dimension": "motion",
+      "severity": "blocker",
+      "code": "cls",
+      "detail": "加载 + 滚动期间 CLS = 0.277（> 0.1）"
+    },
+    {
+      "id": "/capabilities|tablet|long_tasks",
+      "page": "/capabilities",
+      "viewport": "tablet",
+      "dimension": "motion",
+      "severity": "issue",
+      "code": "long_tasks",
+      "detail": "长任务合计 1022ms，动效可能卡顿"
+    },
+    {
+      "id": "/capabilities|mobile|tap_target_lt_24",
+      "page": "/capabilities",
+      "viewport": "mobile",
+      "dimension": "responsive",
+      "severity": "issue",
+      "code": "tap_target_lt_24",
+      "detail": "11 个可点击元素小于 24px：a.stargo-skip 40×1, a.rk-testimonials-link 98×17, a.rk-testimonials-link 98×17"
+    },
+    {
+      "id": "/capabilities|mobile|img_no_dimensions",
+      "page": "/capabilities",
+      "viewport": "mobile",
+      "dimension": "responsive",
+      "severity": "issue",
+      "code": "img_no_dimensions",
+      "detail": "44 张图片没写 width/height（会跳布局）"
+    },
+    {
+      "id": "/capabilities|mobile|too_many_fonts",
+      "page": "/capabilities",
+      "viewport": "mobile",
+      "dimension": "typography",
+      "severity": "issue",
+      "code": "too_many_fonts",
+      "detail": "用了 5 个字族：Inter, Inter Tight, Instrument Serif Roman, Overused Grotesk, Interdisplay"
+    },
+    {
+      "id": "/capabilities|mobile|font_size_levels",
+      "page": "/capabilities",
+      "viewport": "mobile",
+      "dimension": "typography",
+      "severity": "note",
+      "code": "font_size_levels",
+      "detail": "22 档字号，层级可能过多"
+    },
+    {
+      "id": "/capabilities|mobile|axe_color-contrast",
+      "page": "/capabilities",
+      "viewport": "mobile",
+      "dimension": "color",
+      "severity": "blocker",
+      "code": "axe_color-contrast",
+      "detail": "axe color-contrast（serious）× 1"
+    },
+    {
+      "id": "/capabilities|mobile|cls",
+      "page": "/capabilities",
+      "viewport": "mobile",
+      "dimension": "motion",
+      "severity": "blocker",
+      "code": "cls",
+      "detail": "加载 + 滚动期间 CLS = 0.328（> 0.1）"
+    },
+    {
+      "id": "/capabilities|mobile|long_tasks",
+      "page": "/capabilities",
+      "viewport": "mobile",
+      "dimension": "motion",
+      "severity": "issue",
+      "code": "long_tasks",
+      "detail": "长任务合计 1082ms，动效可能卡顿"
+    },
+    {
+      "id": "/pricing|desktop|tap_target_lt_24",
+      "page": "/pricing",
+      "viewport": "desktop",
+      "dimension": "responsive",
+      "severity": "issue",
+      "code": "tap_target_lt_24",
+      "detail": "39 个可点击元素小于 24px：a.stargo-skip 40×1, a.button-link 79×18, a.button-link 48×18"
+    },
+    {
+      "id": "/pricing|desktop|img_no_dimensions",
+      "page": "/pricing",
+      "viewport": "desktop",
+      "dimension": "responsive",
+      "severity": "issue",
+      "code": "img_no_dimensions",
+      "detail": "66 张图片没写 width/height（会跳布局）"
+    },
+    {
+      "id": "/pricing|desktop|too_many_fonts",
+      "page": "/pricing",
+      "viewport": "desktop",
+      "dimension": "typography",
+      "severity": "issue",
+      "code": "too_many_fonts",
+      "detail": "用了 4 个字族：Inter, Overused Grotesk, Inter Tight, Interdisplay"
+    },
+    {
+      "id": "/pricing|desktop|font_size_levels",
+      "page": "/pricing",
+      "viewport": "desktop",
+      "dimension": "typography",
+      "severity": "note",
+      "code": "font_size_levels",
+      "detail": "11 档字号，层级可能过多"
+    },
+    {
+      "id": "/pricing|desktop|axe_target-size",
+      "page": "/pricing",
+      "viewport": "desktop",
+      "dimension": "responsive",
+      "severity": "blocker",
+      "code": "axe_target-size",
+      "detail": "axe target-size（serious）× 18"
+    },
+    {
+      "id": "/pricing|desktop|long_tasks",
+      "page": "/pricing",
+      "viewport": "desktop",
+      "dimension": "motion",
+      "severity": "issue",
+      "code": "long_tasks",
+      "detail": "长任务合计 594ms，动效可能卡顿"
+    },
+    {
+      "id": "/pricing|desktop|reduced_motion_hidden",
+      "page": "/pricing",
+      "viewport": "desktop",
+      "dimension": "motion",
+      "severity": "blocker",
+      "code": "reduced_motion_hidden",
+      "detail": "减少动态效果模式下 3 块文字仍不可见"
+    },
+    {
+      "id": "/pricing|desktop|nojs_hidden",
+      "page": "/pricing",
+      "viewport": "desktop",
+      "dimension": "motion",
+      "severity": "issue",
+      "code": "nojs_hidden",
+      "detail": "关掉 JavaScript 后 8 块文字不可见"
+    },
+    {
+      "id": "/pricing|tablet|tap_target_lt_24",
+      "page": "/pricing",
+      "viewport": "tablet",
+      "dimension": "responsive",
+      "severity": "issue",
+      "code": "tap_target_lt_24",
+      "detail": "2 个可点击元素小于 24px：a.stargo-skip 40×1, input 218×23"
+    },
+    {
+      "id": "/pricing|tablet|img_no_dimensions",
+      "page": "/pricing",
+      "viewport": "tablet",
+      "dimension": "responsive",
+      "severity": "issue",
+      "code": "img_no_dimensions",
+      "detail": "48 张图片没写 width/height（会跳布局）"
+    },
+    {
+      "id": "/pricing|tablet|too_many_fonts",
+      "page": "/pricing",
+      "viewport": "tablet",
+      "dimension": "typography",
+      "severity": "issue",
+      "code": "too_many_fonts",
+      "detail": "用了 4 个字族：Inter, Overused Grotesk, Inter Tight, Interdisplay"
+    },
+    {
+      "id": "/pricing|tablet|font_size_levels",
+      "page": "/pricing",
+      "viewport": "tablet",
+      "dimension": "typography",
+      "severity": "note",
+      "code": "font_size_levels",
+      "detail": "11 档字号，层级可能过多"
+    },
+    {
+      "id": "/pricing|tablet|focus_invisible",
+      "page": "/pricing",
+      "viewport": "tablet",
+      "dimension": "micro",
+      "severity": "blocker",
+      "code": "focus_invisible",
+      "detail": "1 个元素键盘聚焦时没有可见焦点：input#Subscribe.subscribe-field-main"
+    },
+    {
+      "id": "/pricing|tablet|long_tasks",
+      "page": "/pricing",
+      "viewport": "tablet",
+      "dimension": "motion",
+      "severity": "issue",
+      "code": "long_tasks",
+      "detail": "长任务合计 624ms，动效可能卡顿"
+    },
+    {
+      "id": "/pricing|mobile|tap_target_lt_24",
+      "page": "/pricing",
+      "viewport": "mobile",
+      "dimension": "responsive",
+      "severity": "issue",
+      "code": "tap_target_lt_24",
+      "detail": "2 个可点击元素小于 24px：a.stargo-skip 40×1, input 218×23"
+    },
+    {
+      "id": "/pricing|mobile|img_no_dimensions",
+      "page": "/pricing",
+      "viewport": "mobile",
+      "dimension": "responsive",
+      "severity": "issue",
+      "code": "img_no_dimensions",
+      "detail": "29 张图片没写 width/height（会跳布局）"
+    },
+    {
+      "id": "/pricing|mobile|too_many_fonts",
+      "page": "/pricing",
+      "viewport": "mobile",
+      "dimension": "typography",
+      "severity": "issue",
+      "code": "too_many_fonts",
+      "detail": "用了 4 个字族：Inter, Overused Grotesk, Inter Tight, Interdisplay"
+    },
+    {
+      "id": "/pricing|mobile|font_size_levels",
+      "page": "/pricing",
+      "viewport": "mobile",
+      "dimension": "typography",
+      "severity": "note",
+      "code": "font_size_levels",
+      "detail": "12 档字号，层级可能过多"
+    },
+    {
+      "id": "/pricing|mobile|focus_invisible",
+      "page": "/pricing",
+      "viewport": "mobile",
+      "dimension": "micro",
+      "severity": "blocker",
+      "code": "focus_invisible",
+      "detail": "1 个元素键盘聚焦时没有可见焦点：input#Subscribe.subscribe-field-main"
+    },
+    {
+      "id": "/pricing|mobile|long_tasks",
+      "page": "/pricing",
+      "viewport": "mobile",
+      "dimension": "motion",
+      "severity": "issue",
+      "code": "long_tasks",
+      "detail": "长任务合计 578ms，动效可能卡顿"
+    },
+    {
+      "id": "/contact|desktop|tap_target_lt_24",
+      "page": "/contact",
+      "viewport": "desktop",
+      "dimension": "responsive",
+      "severity": "issue",
+      "code": "tap_target_lt_24",
+      "detail": "39 个可点击元素小于 24px：a.stargo-skip 40×1, a.button-link 79×18, a.button-link 48×18"
+    },
+    {
+      "id": "/contact|desktop|img_no_dimensions",
+      "page": "/contact",
+      "viewport": "desktop",
+      "dimension": "responsive",
+      "severity": "issue",
+      "code": "img_no_dimensions",
+      "detail": "40 张图片没写 width/height（会跳布局）"
+    },
+    {
+      "id": "/contact|desktop|axe_target-size",
+      "page": "/contact",
+      "viewport": "desktop",
+      "dimension": "responsive",
+      "severity": "blocker",
+      "code": "axe_target-size",
+      "detail": "axe target-size（serious）× 18"
+    },
+    {
+      "id": "/contact|desktop|cls",
+      "page": "/contact",
+      "viewport": "desktop",
+      "dimension": "motion",
+      "severity": "note",
+      "code": "cls",
+      "detail": "CLS = 0.053"
+    },
+    {
+      "id": "/contact|desktop|long_tasks",
+      "page": "/contact",
+      "viewport": "desktop",
+      "dimension": "motion",
+      "severity": "issue",
+      "code": "long_tasks",
+      "detail": "长任务合计 543ms，动效可能卡顿"
+    },
+    {
+      "id": "/contact|desktop|reduced_motion_hidden",
+      "page": "/contact",
+      "viewport": "desktop",
+      "dimension": "motion",
+      "severity": "blocker",
+      "code": "reduced_motion_hidden",
+      "detail": "减少动态效果模式下 4 块文字仍不可见"
+    },
+    {
+      "id": "/contact|desktop|nojs_hidden",
+      "page": "/contact",
+      "viewport": "desktop",
+      "dimension": "motion",
+      "severity": "issue",
+      "code": "nojs_hidden",
+      "detail": "关掉 JavaScript 后 3 块文字不可见"
+    },
+    {
+      "id": "/contact|tablet|tap_target_lt_24",
+      "page": "/contact",
+      "viewport": "tablet",
+      "dimension": "responsive",
+      "severity": "issue",
+      "code": "tap_target_lt_24",
+      "detail": "2 个可点击元素小于 24px：a.stargo-skip 40×1, input 218×23"
+    },
+    {
+      "id": "/contact|tablet|img_no_dimensions",
+      "page": "/contact",
+      "viewport": "tablet",
+      "dimension": "responsive",
+      "severity": "issue",
+      "code": "img_no_dimensions",
+      "detail": "22 张图片没写 width/height（会跳布局）"
+    },
+    {
+      "id": "/contact|tablet|focus_invisible",
+      "page": "/contact",
+      "viewport": "tablet",
+      "dimension": "micro",
+      "severity": "blocker",
+      "code": "focus_invisible",
+      "detail": "2 个元素键盘聚焦时没有可见焦点：button.stargo-copy, input#Subscribe.subscribe-field-main"
+    },
+    {
+      "id": "/contact|tablet|cls",
+      "page": "/contact",
+      "viewport": "tablet",
+      "dimension": "motion",
+      "severity": "note",
+      "code": "cls",
+      "detail": "CLS = 0.060"
+    },
+    {
+      "id": "/contact|tablet|long_tasks",
+      "page": "/contact",
+      "viewport": "tablet",
+      "dimension": "motion",
+      "severity": "issue",
+      "code": "long_tasks",
+      "detail": "长任务合计 380ms，动效可能卡顿"
+    },
+    {
+      "id": "/contact|mobile|tap_target_lt_24",
+      "page": "/contact",
+      "viewport": "mobile",
+      "dimension": "responsive",
+      "severity": "issue",
+      "code": "tap_target_lt_24",
+      "detail": "2 个可点击元素小于 24px：a.stargo-skip 40×1, input 218×23"
+    },
+    {
+      "id": "/contact|mobile|img_no_dimensions",
+      "page": "/contact",
+      "viewport": "mobile",
+      "dimension": "responsive",
+      "severity": "issue",
+      "code": "img_no_dimensions",
+      "detail": "3 张图片没写 width/height（会跳布局）"
+    },
+    {
+      "id": "/contact|mobile|focus_invisible",
+      "page": "/contact",
+      "viewport": "mobile",
+      "dimension": "micro",
+      "severity": "blocker",
+      "code": "focus_invisible",
+      "detail": "2 个元素键盘聚焦时没有可见焦点：button.stargo-copy, input#Subscribe.subscribe-field-main"
+    },
+    {
+      "id": "/contact|mobile|cls",
+      "page": "/contact",
+      "viewport": "mobile",
+      "dimension": "motion",
+      "severity": "note",
+      "code": "cls",
+      "detail": "CLS = 0.072"
+    },
+    {
+      "id": "/contact|mobile|long_tasks",
+      "page": "/contact",
+      "viewport": "mobile",
+      "dimension": "motion",
+      "severity": "issue",
+      "code": "long_tasks",
+      "detail": "长任务合计 370ms，动效可能卡顿"
+    }
+  ],
+  "autoCeiling": {
+    "typography": 3,
+    "whitespace": 5,
+    "hierarchy": 5,
+    "color": 2,
+    "motion": 2,
+    "micro": 2,
+    "responsive": 2,
+    "originality": 5
+  },
+  "motionInventory": [
+    {
+      "page": "/",
+      "viewport": "desktop",
+      "state": null,
+      "engine": "gsap 3.15.0",
+      "plugins": [
+        "ScrollTrigger",
+        "SplitText",
+        "Observer"
+      ],
+      "scrollTriggers": 25,
+      "timelines": 33,
+      "cssAnimations": 8,
+      "webflowIx": true,
+      "markers": 0,
+      "unboundMarkers": 0,
+      "errors": []
+    },
+    {
+      "page": "/",
+      "viewport": "tablet",
+      "state": null,
+      "engine": "gsap 3.15.0",
+      "plugins": [
+        "ScrollTrigger",
+        "SplitText",
+        "Observer"
+      ],
+      "scrollTriggers": 24,
+      "timelines": 33,
+      "cssAnimations": 8,
+      "webflowIx": true,
+      "markers": 0,
+      "unboundMarkers": 0,
+      "errors": [],
+      "viewportOnly": true
+    },
+    {
+      "page": "/",
+      "viewport": "mobile",
+      "state": null,
+      "engine": "gsap 3.15.0",
+      "plugins": [
+        "ScrollTrigger",
+        "SplitText",
+        "Observer"
+      ],
+      "scrollTriggers": 24,
+      "timelines": 38,
+      "cssAnimations": 17,
+      "webflowIx": true,
+      "markers": 0,
+      "unboundMarkers": 0,
+      "errors": [],
+      "viewportOnly": true
+    },
+    {
+      "page": "/capabilities",
+      "viewport": "desktop",
+      "state": null,
+      "engine": "gsap 3.15.0",
+      "plugins": [
+        "ScrollTrigger",
+        "SplitText",
+        "Observer"
+      ],
+      "scrollTriggers": 4,
+      "timelines": 27,
+      "cssAnimations": 23,
+      "webflowIx": true,
+      "markers": 0,
+      "unboundMarkers": 0,
+      "errors": []
+    },
+    {
+      "page": "/capabilities",
+      "viewport": "tablet",
+      "state": null,
+      "engine": "gsap 3.15.0",
+      "plugins": [
+        "ScrollTrigger",
+        "SplitText",
+        "Observer"
+      ],
+      "scrollTriggers": 4,
+      "timelines": 27,
+      "cssAnimations": 23,
+      "webflowIx": true,
+      "markers": 0,
+      "unboundMarkers": 0,
+      "errors": [],
+      "viewportOnly": true
+    },
+    {
+      "page": "/capabilities",
+      "viewport": "mobile",
+      "state": null,
+      "engine": "gsap 3.15.0",
+      "plugins": [
+        "ScrollTrigger",
+        "SplitText",
+        "Observer"
+      ],
+      "scrollTriggers": 4,
+      "timelines": 28,
+      "cssAnimations": 31,
+      "webflowIx": true,
+      "markers": 0,
+      "unboundMarkers": 0,
+      "errors": [],
+      "viewportOnly": true
+    },
+    {
+      "page": "/pricing",
+      "viewport": "desktop",
+      "state": null,
+      "engine": "gsap 3.15.0",
+      "plugins": [
+        "ScrollTrigger",
+        "SplitText",
+        "Observer"
+      ],
+      "scrollTriggers": 3,
+      "timelines": 25,
+      "cssAnimations": 0,
+      "webflowIx": true,
+      "markers": 0,
+      "unboundMarkers": 0,
+      "errors": []
+    },
+    {
+      "page": "/pricing",
+      "viewport": "tablet",
+      "state": null,
+      "engine": "gsap 3.15.0",
+      "plugins": [
+        "ScrollTrigger",
+        "SplitText",
+        "Observer"
+      ],
+      "scrollTriggers": 3,
+      "timelines": 25,
+      "cssAnimations": 0,
+      "webflowIx": true,
+      "markers": 0,
+      "unboundMarkers": 0,
+      "errors": [],
+      "viewportOnly": true
+    },
+    {
+      "page": "/pricing",
+      "viewport": "mobile",
+      "state": null,
+      "engine": "gsap 3.15.0",
+      "plugins": [
+        "ScrollTrigger",
+        "SplitText",
+        "Observer"
+      ],
+      "scrollTriggers": 3,
+      "timelines": 25,
+      "cssAnimations": 0,
+      "webflowIx": true,
+      "markers": 0,
+      "unboundMarkers": 0,
+      "errors": [],
+      "viewportOnly": true
+    },
+    {
+      "page": "/contact",
+      "viewport": "desktop",
+      "state": null,
+      "engine": "gsap 3.15.0",
+      "plugins": [
+        "ScrollTrigger",
+        "SplitText",
+        "Observer"
+      ],
+      "scrollTriggers": 2,
+      "timelines": 26,
+      "cssAnimations": 0,
+      "webflowIx": true,
+      "markers": 0,
+      "unboundMarkers": 0,
+      "errors": []
+    },
+    {
+      "page": "/contact",
+      "viewport": "tablet",
+      "state": null,
+      "engine": "gsap 3.15.0",
+      "plugins": [
+        "ScrollTrigger",
+        "SplitText",
+        "Observer"
+      ],
+      "scrollTriggers": 2,
+      "timelines": 18,
+      "cssAnimations": 0,
+      "webflowIx": true,
+      "markers": 0,
+      "unboundMarkers": 0,
+      "errors": [],
+      "viewportOnly": true
+    },
+    {
+      "page": "/contact",
+      "viewport": "mobile",
+      "state": null,
+      "engine": "gsap 3.15.0",
+      "plugins": [
+        "ScrollTrigger",
+        "SplitText",
+        "Observer"
+      ],
+      "scrollTriggers": 2,
+      "timelines": 18,
+      "cssAnimations": 0,
+      "webflowIx": true,
+      "markers": 0,
+      "unboundMarkers": 0,
+      "errors": [],
+      "viewportOnly": true
+    }
+  ],
+  "shots": [
+    {
+      "file": "round-1/home-hero-0ms.png",
+      "page": "/",
+      "viewport": "desktop",
+      "kind": "hero_0ms"
+    },
+    {
+      "file": "round-1/home-hero-500ms.png",
+      "page": "/",
+      "viewport": "desktop",
+      "kind": "hero_500ms"
+    },
+    {
+      "file": "round-1/home-hero-1500ms.png",
+      "page": "/",
+      "viewport": "desktop",
+      "kind": "hero_1500ms"
+    },
+    {
+      "file": "round-1/home-desktop.png",
+      "page": "/",
+      "viewport": "desktop",
+      "kind": "full"
+    },
+    {
+      "file": "round-1/home-tablet.png",
+      "page": "/",
+      "viewport": "tablet",
+      "kind": "full"
+    },
+    {
+      "file": "round-1/home-mobile.png",
+      "page": "/",
+      "viewport": "mobile",
+      "kind": "full"
+    },
+    {
+      "file": "round-1/home-nojs.png",
+      "page": "/",
+      "viewport": "desktop",
+      "kind": "no_js"
+    },
+    {
+      "file": "round-1/capabilities-desktop.png",
+      "page": "/capabilities",
+      "viewport": "desktop",
+      "kind": "full"
+    },
+    {
+      "file": "round-1/capabilities-tablet.png",
+      "page": "/capabilities",
+      "viewport": "tablet",
+      "kind": "full"
+    },
+    {
+      "file": "round-1/capabilities-mobile.png",
+      "page": "/capabilities",
+      "viewport": "mobile",
+      "kind": "full"
+    },
+    {
+      "file": "round-1/capabilities-nojs.png",
+      "page": "/capabilities",
+      "viewport": "desktop",
+      "kind": "no_js"
+    },
+    {
+      "file": "round-1/pricing-desktop.png",
+      "page": "/pricing",
+      "viewport": "desktop",
+      "kind": "full"
+    },
+    {
+      "file": "round-1/pricing-tablet.png",
+      "page": "/pricing",
+      "viewport": "tablet",
+      "kind": "full"
+    },
+    {
+      "file": "round-1/pricing-mobile.png",
+      "page": "/pricing",
+      "viewport": "mobile",
+      "kind": "full"
+    },
+    {
+      "file": "round-1/pricing-nojs.png",
+      "page": "/pricing",
+      "viewport": "desktop",
+      "kind": "no_js"
+    },
+    {
+      "file": "round-1/contact-desktop.png",
+      "page": "/contact",
+      "viewport": "desktop",
+      "kind": "full"
+    },
+    {
+      "file": "round-1/contact-tablet.png",
+      "page": "/contact",
+      "viewport": "tablet",
+      "kind": "full"
+    },
+    {
+      "file": "round-1/contact-mobile.png",
+      "page": "/contact",
+      "viewport": "mobile",
+      "kind": "full"
+    },
+    {
+      "file": "round-1/contact-nojs.png",
+      "page": "/contact",
+      "viewport": "desktop",
+      "kind": "no_js"
+    }
+  ],
+  "scores": {
+    "typography": {
+      "score": 3,
+      "rationale": "自动上限 3：17-18 档字号偏多；大标题有力，正文层级在手机上可读。",
+      "evidence": [
+        "round-1/home-desktop.png",
+        "round-1/contact-mobile.png"
+      ]
+    },
+    "whitespace": {
+      "score": 4,
+      "rationale": "首屏和表单留白好。整页截图里定价页中段是空白，实际滚动时是方案对比表（截图工具的问题，不是站点空白）。",
+      "evidence": [
+        "round-1/pricing-desktop.png"
+      ]
+    },
+    "hierarchy": {
+      "score": 4,
+      "rationale": "首屏品牌字和主 CTA 清楚，联系页表单主次分明。",
+      "evidence": [
+        "round-1/home-nojs.png",
+        "round-1/contact-mobile.png"
+      ]
+    },
+    "color": {
+      "score": 2,
+      "rationale": "自动上限 2：axe 对比度 serious（首页 6-10 处）。",
+      "evidence": [
+        "round-1/home-desktop.png"
+      ]
+    },
+    "motion": {
+      "score": 2,
+      "rationale": "自动上限 2：CLS 0.98-1.30，减少动效模式下首页 24 块文字仍不可见。",
+      "evidence": [
+        "round-1/home-hero-1500ms.png"
+      ]
+    },
+    "micro": {
+      "score": 2,
+      "rationale": "自动上限 2：aria-prohibited-attr 8 处，页脚小链接点击区偏小。",
+      "evidence": [
+        "round-1/home-desktop.png"
+      ]
+    },
+    "responsive": {
+      "score": 2,
+      "rationale": "自动上限 2：42 个点击目标小于 24px，78 张图未写尺寸。",
+      "evidence": [
+        "round-1/home-mobile.png",
+        "round-1/contact-mobile.png"
+      ]
+    },
+    "originality": {
+      "score": 3,
+      "rationale": "购买的模板改造而来，品牌大字有辨识度，业务板块版式仍偏模板。",
+      "evidence": [
+        "round-1/home-desktop.png",
+        "round-1/pricing-desktop.png"
+      ]
+    }
+  },
+  "nextImprovements": [
+    "减少动效模式下让文字可见",
+    "修对比度和 aria 问题",
+    "图片写 width/height 降低 CLS",
+    "评价区的星级和人像配示例场景要由业主确认是否保留"
+  ],
+  "_comment": "代理逐张看截图后填写 scores（1-5、理由、至少 1 张截图路径）和 nextImprovements（还能明显改进的点；真的没有才写 []）。不得高于 autoCeiling。"
+}

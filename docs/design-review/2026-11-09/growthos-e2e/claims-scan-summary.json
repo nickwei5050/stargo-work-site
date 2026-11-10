@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "growthos.claims-scan.v1",
+  "brand": "stargowork",
+  "scannedAt": "2026-11-09T16:31:24.397Z",
+  "status": "fail",
+  "summary": {
+    "files": 40,
+    "errors": 16,
+    "warnings": 11,
+    "registerErrors": 0,
+    "claims": 0,
+    "approved": 0,
+    "testimonialContainers": [
+      {
+        "container": ".lx-testimonial-card",
+        "count": 10
+      }
+    ]
+  },
+  "registerIssues": [],
+  "limits": "只看构建后的 html 文字；图片里的文字、视频、PDF、客户 Logo 图片不在扫描范围，需人工核对。命中规则不等于违规，未命中也不等于全部真实。"
+}

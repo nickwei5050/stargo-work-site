@@ -1,0 +1,182 @@
+{
+  "schemaVersion": "growthos.experience-score.v1",
+  "brand": "stargowork",
+  "auditDate": null,
+  "rubricVersion": "1.0.0",
+  "valid": true,
+  "errors": [],
+  "warnings": [],
+  "total": {
+    "points": 29,
+    "possible": 36,
+    "percent": 80.6,
+    "scoredItems": 9,
+    "totalItems": 45,
+    "coveragePercent": 20
+  },
+  "dimensions": [
+    {
+      "id": "D01",
+      "label": "品牌与可信度",
+      "points": 4,
+      "possible": 4,
+      "scored": 1,
+      "notTested": 4,
+      "notApplicable": 0,
+      "pending": 0,
+      "percent": 100
+    },
+    {
+      "id": "D02",
+      "label": "信息架构",
+      "points": 3,
+      "possible": 4,
+      "scored": 1,
+      "notTested": 4,
+      "notApplicable": 0,
+      "pending": 0,
+      "percent": 75
+    },
+    {
+      "id": "D03",
+      "label": "服务选型体验",
+      "points": 0,
+      "possible": 0,
+      "scored": 0,
+      "notTested": 5,
+      "notApplicable": 0,
+      "pending": 0,
+      "percent": null
+    },
+    {
+      "id": "D04",
+      "label": "咨询与转化",
+      "points": 4,
+      "possible": 4,
+      "scored": 1,
+      "notTested": 4,
+      "notApplicable": 0,
+      "pending": 0,
+      "percent": 100
+    },
+    {
+      "id": "D05",
+      "label": "SEO 基础",
+      "points": 8,
+      "possible": 8,
+      "scored": 2,
+      "notTested": 3,
+      "notApplicable": 0,
+      "pending": 0,
+      "percent": 100
+    },
+    {
+      "id": "D06",
+      "label": "本地化",
+      "points": 3,
+      "possible": 4,
+      "scored": 1,
+      "notTested": 4,
+      "notApplicable": 0,
+      "pending": 0,
+      "percent": 75
+    },
+    {
+      "id": "D07",
+      "label": "服务与支持",
+      "points": 0,
+      "possible": 0,
+      "scored": 0,
+      "notTested": 5,
+      "notApplicable": 0,
+      "pending": 0,
+      "percent": null
+    },
+    {
+      "id": "D08",
+      "label": "内容与答案引擎",
+      "points": 1,
+      "possible": 4,
+      "scored": 1,
+      "notTested": 4,
+      "notApplicable": 0,
+      "pending": 0,
+      "percent": 25
+    },
+    {
+      "id": "D09",
+      "label": "公开信任与可访问性",
+      "points": 6,
+      "possible": 8,
+      "scored": 2,
+      "notTested": 3,
+      "notApplicable": 0,
+      "pending": 0,
+      "percent": 75
+    }
+  ],
+  "notTested": [
+    "D01-2",
+    "D01-3",
+    "D01-4",
+    "D01-5",
+    "D02-2",
+    "D02-3",
+    "D02-4",
+    "D02-5",
+    "D03-1",
+    "D03-2",
+    "D03-3",
+    "D03-4",
+    "D03-5",
+    "D04-2",
+    "D04-3",
+    "D04-4",
+    "D04-5",
+    "D05-2",
+    "D05-3",
+    "D05-5",
+    "D06-2",
+    "D06-3",
+    "D06-4",
+    "D06-5",
+    "D07-1",
+    "D07-2",
+    "D07-3",
+    "D07-4",
+    "D07-5",
+    "D08-1",
+    "D08-2",
+    "D08-3",
+    "D08-4",
+    "D09-2",
+    "D09-3",
+    "D09-5"
+  ],
+  "notApplicable": [],
+  "opportunities": [
+    {
+      "id": "D08-5",
+      "dimension": "内容与答案引擎",
+      "label": "作者与审核责任",
+      "score": 1,
+      "criterion": "文章显示真实作者、审校人和更新日期",
+      "rationale": "文章只有组织署名，看不到作者；无外部来源",
+      "evidence_ids": [
+        "E6"
+      ]
+    },
+    {
+      "id": "D09-4",
+      "dimension": "公开信任与可访问性",
+      "label": "可访问语义与操作",
+      "score": 2,
+      "criterion": "跳过链接、键盘可达、焦点可见、对比度与减少动效通过实测",
+      "rationale": "axe 有 serious 项，减少动效模式文字不可见",
+      "evidence_ids": [
+        "E3"
+      ]
+    }
+  ],
+  "disclaimer": "公开可观察的业务适配评分；未测项和不适用项不计入分母，二者都单列在报告里供核对；不是技术 SEO 分、排名因素、流量或收入预测。"
+}
