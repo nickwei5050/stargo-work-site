@@ -1,0 +1,142 @@
+{
+  "schema": "growthos.brand-status/1",
+  "key": "stargowork",
+  "name": "STARGO WORK 星贸智能",
+  "siteUrl": "https://stargowork.com",
+  "repo": "nickwei5050/stargo-work-site",
+  "industry": "面向制造业与外贸企业的 AI 企业操作系统（自有）",
+  "languages": [
+    "zh",
+    "en"
+  ],
+  "updatedAt": "2026-11-09T23:53:53.899Z",
+  "stages": {
+    "A": {
+      "status": "waiting_scott",
+      "note": "11-09 已接入中控（业主打字同意）；目标和市场还没填",
+      "evidence": [
+        "https://github.com/nickwei5050/website-SEO-/blob/claude/stargowork-e2e-fixes/docs/website-growth/stargowork-e2e-2026-11-09.md"
+      ]
+    },
+    "B": {
+      "status": "in_progress",
+      "note": "11-09 体检在部署 469cd0fb 上跑过，数据在临时数据根，要进中控需重跑",
+      "evidence": [
+        "https://github.com/nickwei5050/website-SEO-/blob/claude/stargowork-e2e-fixes/docs/website-growth/stargowork-e2e-2026-11-09.md"
+      ]
+    },
+    "C": {
+      "status": "not_started",
+      "note": "不是迁移站；map 导入已试跑，未人工审核"
+    },
+    "D": {
+      "status": "not_started",
+      "note": "没有对标矩阵，本轮没有做同行研究"
+    },
+    "E": {
+      "status": "waiting_scott",
+      "note": "业主要求不换模板；没有选模板记录"
+    },
+    "F": {
+      "status": "in_progress",
+      "note": "线上站设计自检两轮 continue，28 个硬问题（模板未改）",
+      "evidence": [
+        "docs/design-review/2026-11-09/growthos-e2e/round-1.md"
+      ]
+    },
+    "G": {
+      "status": "waiting_scott",
+      "note": "没有首版签字记录"
+    },
+    "H": {
+      "status": "waiting_scott",
+      "note": "无版权台账"
+    },
+    "I": {
+      "status": "in_progress",
+      "note": "没有事实库和宣称台账；宣称扫描 40 页、文章门禁 14 篇已跑",
+      "evidence": [
+        "https://github.com/nickwei5050/website-SEO-/blob/claude/stargowork-e2e-fixes/docs/website-growth/stargowork-e2e-2026-11-09.md"
+      ]
+    },
+    "J": {
+      "status": "in_progress",
+      "note": "爬虫放行、SEO 100；AAO 未走到提交",
+      "evidence": [
+        "https://github.com/nickwei5050/website-SEO-/blob/claude/stargowork-e2e-fixes/docs/website-growth/stargowork-e2e-2026-11-09.md"
+      ]
+    },
+    "K": {
+      "status": "in_progress",
+      "note": "中英双语；其余语言未做"
+    },
+    "L": {
+      "status": "waiting_scott",
+      "note": "聊天窗和漏斗在跑；测试询盘未提交，hub 检查跑不了",
+      "evidence": [
+        "https://github.com/nickwei5050/website-SEO-/blob/claude/stargowork-e2e-fixes/docs/website-growth/stargowork-e2e-2026-11-09.md"
+      ]
+    },
+    "M": {
+      "status": "waiting_scott",
+      "note": "站点已上线但没有上线签字记录；临时数据根里上线守护通过",
+      "evidence": [
+        "https://github.com/nickwei5050/website-SEO-/blob/claude/stargowork-e2e-fixes/docs/website-growth/stargowork-e2e-2026-11-09.md"
+      ]
+    },
+    "N": {
+      "status": "in_progress",
+      "note": "同内容复测 4 项仍在，未做修复后复测",
+      "evidence": [
+        "https://github.com/nickwei5050/website-SEO-/blob/claude/stargowork-e2e-fixes/docs/website-growth/stargowork-e2e-2026-11-09.md"
+      ]
+    },
+    "O": {
+      "status": "not_started",
+      "note": "无站外台账"
+    },
+    "P": {
+      "status": "not_started",
+      "note": "无每周循环"
+    },
+    "Q": {
+      "status": "not_started",
+      "note": "无外链台账"
+    },
+    "R": {
+      "status": "not_started",
+      "note": "百度验证、ICP 都没有检测到"
+    }
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "label": "Growth OS 体检（部署 469cd0fb，临时数据根）",
+      "at": "2026-11-09",
+      "scores": {
+        "performance": 36,
+        "accessibility": 97,
+        "best-practices": 81,
+        "seo": 100
+      },
+      "note": "首页，Lighthouse 手机实验室数据，机器负载 15–50；同轮修复前版本 35/97/81/100"
+    }
+  ],
+  "connections": {
+    "repo": {
+      "status": "ok",
+      "url": "https://github.com/nickwei5050/stargo-work-site"
+    },
+    "production": {
+      "status": "ok",
+      "url": "https://stargowork.com"
+    },
+    "chat": {
+      "status": "pending",
+      "note": "Chatwoot 收件箱 10；漏斗 growthos-funnel@stargowork-com 已开机自启；hub 未核对"
+    },
+    "gsc": {
+      "status": "not_started"
+    }
+  }
+}

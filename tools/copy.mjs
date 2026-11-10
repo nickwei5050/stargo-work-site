@@ -878,7 +878,7 @@ export const PRICING = {
      figure, then the sentence split at its first comma. Restored to the live
      wording on the owner's instruction of 2026-09-17; the enterprise page keeps
      its own line (ENTERPRISE.stats[0]). */
-  cardStat: { value: '288', text: B('个 AI 员工，在企业设定的权限范围内工作。', 'AI employees, working inside the permissions the company sets.') },
+  cardStat: { value: '288', text: B('个 AI 员工，在企业设定的权限范围内工作（人像为示意）。', 'AI employees, working inside the permissions the company sets (portraits are illustrative).') },
   /* 2026-11-05, Scott: 「官网不放价格」. The site names each plan and what it
      contains, and every price slot reads 联系报价 / Ask us (私有化定制 reads
      定制 / Custom). Plans follow the real price list: 核心版, 专业版, 旗舰版,
