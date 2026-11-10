@@ -138,5 +138,14 @@
     "gsc": {
       "status": "not_started"
     }
+  },
+  "drillConsent": {
+    "by": "Stargo1",
+    "at": "2026-11-10T18:37:31Z",
+    "where": "Growth OS 项目线程「让中控自动升级和稳定运维」",
+    "entries": [
+      "chat"
+    ],
+    "note": "2026-11-10 23:35Z 业主原话「同意：升级中控、装全部定时器和服务、改漏斗提醒、跑询盘演练、注册 runner 并合并 PR #40」"
   }
 }
