@@ -1,4 +1,4 @@
-/* Cookie consent for the Google tag (GTM-MCGTFDLR), 2026-11-11.
+/* Cookie consent for the Google tag (GTM-NJL2ZDR8), 2026-11-11.
  * The inline script before the Google tag keeps the ad_* signals "denied" everywhere (these sites run no ads) and
  * sets analytics_storage "denied" for visitors in the EEA, the UK and Switzerland (Google applies that region list by
  * the visitor's IP); it then replays a saved choice. This file shows a small notice to visitors whose browser time
