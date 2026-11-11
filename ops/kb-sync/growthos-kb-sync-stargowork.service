@@ -1,0 +1,13 @@
+[Unit]
+Description=Growth OS: refresh MaxKB knowledge base stargowork.com from the site repo
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=stargo
+ExecStart=/bin/bash /home/stargo/searchos/bin/stargowork-kb-sync.sh
+Nice=19
+IOSchedulingClass=idle
+CPUWeight=20
+TimeoutStartSec=1200
