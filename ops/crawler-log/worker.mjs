@@ -1,4 +1,4 @@
-// Vendored from nickwei5050/website-SEO- integrations/site-kit/crawler-log (version 1.0.0). Do not edit here; update there and re-copy.
+// Vendored from nickwei5050/website-SEO- integrations/site-kit/crawler-log (version 1.0.1). Do not edit here; update there and re-copy.
 // Growth OS crawler log (site-kit, version in VERSION): a pass-through Cloudflare Worker for brand sites that are
 // proxied by Cloudflare but do not run their own Worker (WordPress, static hosts, SaaS builders).
 //
@@ -14,27 +14,51 @@
 // If anything here throws, the visitor still gets the origin response.
 import { BOTS } from './bots.mjs';
 
-const LOWER = BOTS.map(([token, operator, category]) => [token.toLowerCase(), token, operator, category]);
+// Tokens too generic to identify a crawler on their own ("Code" would match VSCode, "nbot" msnbot): skipped.
+export const AMBIGUOUS_TOKENS = new Set(['code', 'muse', 'trae', 'nbot', 'spider', 'operator', 'instinct', 'cursor']);
+const escapeRe = (x) => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+// Longest token first (bots.mjs is sorted that way), matched as a whole word: not preceded or followed by a letter
+// or digit, so "Claude-SearchBot" wins over "Claude" and "LinkedInBot" never matches "nbot".
+const MATCHERS = BOTS
+  .filter(([token]) => !AMBIGUOUS_TOKENS.has(token.toLowerCase()))
+  .map(([token, operator, category]) => [new RegExp(`(?:^|[^a-z0-9])${escapeRe(token.toLowerCase())}(?![a-z0-9])`), token, operator, category]);
 
-const AI_REFERRERS = [
+const AI_REFERRER_HOSTS = [
   ['chatgpt.com', 'ChatGPT'], ['chat.openai.com', 'ChatGPT'], ['perplexity.ai', 'Perplexity'], ['claude.ai', 'Claude'],
-  ['gemini.google.com', 'Gemini'], ['copilot.microsoft.com', 'Copilot'], ['bing.com/chat', 'Copilot'],
+  ['gemini.google.com', 'Gemini'], ['copilot.microsoft.com', 'Copilot'],
   ['chat.deepseek.com', 'DeepSeek'], ['kimi.com', 'Kimi'], ['kimi.moonshot.cn', 'Kimi'], ['doubao.com', 'Doubao'],
   ['yuanbao.tencent.com', 'Yuanbao'], ['tongyi.aliyun.com', 'Qwen'], ['chat.qwen.ai', 'Qwen'], ['grok.com', 'Grok'],
   ['meta.ai', 'Meta AI'], ['you.com', 'You.com'], ['poe.com', 'Poe'], ['phind.com', 'Phind'], ['metaso.cn', 'Metaso'],
+];
+// utm_source values AI apps add to links (chatgpt.com, perplexity, …) → one canonical name each, never the raw value.
+const AI_UTM = [
+  [/^chatgpt/, 'ChatGPT'], [/^perplexity/, 'Perplexity'], [/^claude/, 'Claude'], [/^gemini/, 'Gemini'],
+  [/^copilot/, 'Copilot'], [/^deepseek/, 'DeepSeek'], [/^kimi/, 'Kimi'], [/^doubao/, 'Doubao'],
 ];
 
 export function classifyAgent(ua) {
   const u = String(ua || '').toLowerCase();
   if (!u) return null;
-  for (const [low, token, operator, category] of LOWER) if (u.includes(low)) return { name: token, operator, category };
+  for (const [re, token, operator, category] of MATCHERS) if (re.test(u)) return { name: token, operator, category };
   return null;
 }
 
+const hostMatches = (host, domain) => host === domain || host.endsWith(`.${domain}`);
+
+/** AI answer engine a visitor came from, by Referer hostname or utm_source; a canonical name or null. */
 export function aiReferral(referer, utmSource) {
-  const src = `${String(referer || '').toLowerCase()} ${String(utmSource || '').toLowerCase()}`;
-  for (const [needle, name] of AI_REFERRERS) if (src.includes(needle)) return name;
-  if (/^(chatgpt|perplexity|claude|gemini|copilot|deepseek|kimi|doubao)/.test(String(utmSource || '').toLowerCase())) return String(utmSource).slice(0, 40);
+  let ref = null;
+  try { ref = referer ? new URL(String(referer)) : null; } catch { ref = null; }
+  if (ref) {
+    const host = ref.hostname.toLowerCase().replace(/\.$/, '');
+    for (const [domain, name] of AI_REFERRER_HOSTS) if (hostMatches(host, domain)) return name;
+    if ((host === 'bing.com' || host === 'www.bing.com') && /^\/chat(\/|$)/.test(ref.pathname)) return 'Copilot';
+  }
+  const utm = String(utmSource || '').trim().toLowerCase();
+  if (utm) {
+    for (const [domain, name] of AI_REFERRER_HOSTS) if (utm === domain) return name;
+    for (const [re, name] of AI_UTM) if (re.test(utm)) return name;
+  }
   return null;
 }
 
@@ -97,6 +121,7 @@ export async function crawlerSummary(env, days, nowMs = Date.now()) {
   const jobs = {
     agents: () => q(`SELECT blob1 AS kind, blob2 AS name, blob3 AS operator, blob4 AS category, COUNT(*) AS hits ${where} GROUP BY blob1, blob2, blob3, blob4 ORDER BY hits DESC LIMIT 100`),
     topPaths: () => q(`SELECT blob4 AS category, blob5 AS path, COUNT(*) AS hits ${where} AND blob1 = 'bot' GROUP BY blob4, blob5 ORDER BY hits DESC LIMIT 50`),
+    byCategory: () => q(`SELECT blob1 AS kind, blob4 AS category, COUNT(*) AS hits ${where} GROUP BY blob1, blob4`),
     formats: () => q(`SELECT blob6 AS format, COUNT(*) AS hits ${where} GROUP BY blob6 ORDER BY hits DESC LIMIT 20`),
     daily: () => q(`SELECT toStartOfDay(timestamp) AS day, blob1 AS kind, blob4 AS category, blob2 AS name, COUNT(*) AS hits ${where} GROUP BY day, blob1, blob4, blob2 ORDER BY day DESC, hits DESC LIMIT 500`)
       .catch(() => q(`SELECT date_trunc('day', timestamp) AS day, blob1 AS kind, blob4 AS category, blob2 AS name, COUNT(*) AS hits ${where} GROUP BY day, blob1, blob4, blob2 ORDER BY day DESC, hits DESC LIMIT 500`)),
@@ -107,12 +132,14 @@ export async function crawlerSummary(env, days, nowMs = Date.now()) {
   const errors = {};
   settled.forEach((s, i) => {
     if (s.status === 'fulfilled') out[names[i]] = s.value;
-    else { out[names[i]] = []; errors[names[i]] = String((s.reason && s.reason.message) || s.reason).slice(0, 300); }
+    else { out[names[i]] = []; errors[names[i]] = 'query_failed'; } // the SQL error text stays out of this public answer
   });
   if (Object.keys(errors).length === names.length) return { available: false, days, since: start, errors, note: 'All Analytics SQL queries failed.' };
   if (Object.keys(errors).length) out.errors = errors;
-  const agents = out.agents || [];
-  const sum = (f) => agents.filter(f).reduce((a, r) => a + Number(r.hits || 0), 0);
+  // Totals come from the per-category query (every row), falling back to the top-100 agents list.
+  const rows = errors.byCategory ? (out.agents || []) : (out.byCategory || []);
+  delete out.byCategory;
+  const sum = (f) => rows.filter(f).reduce((a, r) => a + Number(r.hits || 0), 0);
   out.totals = {
     botHits: sum((r) => r.kind === 'bot'),
     aiSearchHits: sum((r) => r.kind === 'bot' && r.category === 'ai-search'),
@@ -135,12 +162,14 @@ export async function handleCrawlers(request, env) {
   if (hit) return hit;
   let body;
   let status = 200;
-  try { body = await crawlerSummary(env, days); } catch (e) { body = { available: false, error: String((e && e.message) || e).slice(0, 300) }; status = 502; }
+  try { body = await crawlerSummary(env, days); } catch { body = { available: false, error: 'internal_error' }; status = 502; }
+  const ok = status === 200 && body.available === true;
   const res = new Response(JSON.stringify(body), {
     status,
-    headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=600', 'Access-Control-Allow-Origin': '*', 'X-Robots-Tag': 'noindex' },
+    // Only a real answer is cached (here and by browsers / proxies); a failure is retried on the next request.
+    headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': ok ? 'public, max-age=600' : 'no-store', 'Access-Control-Allow-Origin': '*', 'X-Robots-Tag': 'noindex' },
   });
-  if (cache && status === 200 && body.available) await cache.put(key, res.clone());
+  if (cache && ok) await cache.put(key, res.clone());
   return res;
 }
 
