@@ -53,7 +53,10 @@ env:
 jobs:
   verify:
     name: Build, reproduce and verify
-    runs-on: ubuntu-latest
+    # Local WSL runner, not GitHub-hosted minutes. This repository is public, so a pull
+    # request from a fork must never reach this machine: the condition below skips them.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: [self-hosted, linux, x64]
     # A hung browser is killed here, not after GitHub's six-hour default.
     timeout-minutes: 40
 
@@ -62,7 +65,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Check the build contract is present
-        # Runs before setup-node on purpose: ubuntu-latest ships Node, and a
+        # Runs before setup-node on purpose: the runner ships Node, and a
         # missing package-lock.json reported here reads as a sentence instead of
         # as an obscure cache error out of setup-node.
         run: node .github/scripts/check-contract.mjs
@@ -89,7 +92,8 @@ jobs:
             playwright-${{ runner.os }}-
 
       - name: Install the Chromium the verifiers drive
-        run: npx playwright install --with-deps chromium
+        # No --with-deps: it needs root, and the system libraries are already on the local runner.
+        run: npx playwright install chromium
 
       - name: Confirm the checked-out tree is clean before building
         # If this is dirty, the diff after the build would be meaningless: we
