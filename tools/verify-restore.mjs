@@ -20,6 +20,7 @@ import { POSTS, postPath } from './blog.mjs';
 import { ABOUT } from './copy.mjs';
 
 import { SITE, req } from './paths.mjs';
+import { GTM_HOST } from './google-tag.mjs';
 const pw = req('@playwright/test');
 /* Repo-relative paths below; run from anywhere. */
 process.chdir(SITE);
@@ -49,8 +50,8 @@ function watch(page) {
   page.on('pageerror', (e) => log.errors.push(String(e).split('\n')[0]));
   page.on('console', (m) => { if (m.type() === 'error' && !NOISE.test(m.text())) log.errors.push('console: ' + m.text().slice(0, 160)); });
   page.on('response', (r) => { if (r.status() >= 400) log.failed.push(`${r.status()} ${r.url().slice(0, 140)}`); });
-  page.on('requestfailed', (r) => { if (!/\.(mp4|webm)(?:\?|$)/.test(r.url()) && !NOISE.test(r.failure()?.errorText || '')) log.failed.push('failed ' + r.url().slice(0, 140)); });
-  page.on('request', (r) => { const u = new URL(r.url()); if (u.origin !== origin && !u.protocol.startsWith('data') && !u.protocol.startsWith('blob')) log.external.add(u.host); });
+  page.on('requestfailed', (r) => { if (!/\.(mp4|webm)(?:\?|$)/.test(r.url()) && new URL(r.url()).host !== GTM_HOST && !NOISE.test(r.failure()?.errorText || '')) log.failed.push('failed ' + r.url().slice(0, 140)); });
+  page.on('request', (r) => { const u = new URL(r.url()); if (u.origin !== origin && !u.protocol.startsWith('data') && !u.protocol.startsWith('blob') && u.host !== GTM_HOST) log.external.add(u.host); });
   return log;
 }
 const scrollTo = (page, y) => page.evaluate((y) => { if (typeof lenis !== 'undefined') lenis.scrollTo(y, { immediate: true }); else scrollTo(0, y); }, y);

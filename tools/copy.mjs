@@ -1394,7 +1394,7 @@ export const NOT_FOUND = {
 /** Privacy policy and terms of use: real pages, not placeholder anchors. */
 export const LEGAL = {
   privacy: {
-    date: B('2026 年 11 月 9 日生效', 'Effective 2026-11-09'),
+    date: B('2026 年 11 月 11 日生效', 'Effective 2026-11-11'),
     h1: B('隐私政策', 'Privacy policy'),
     body: B(`
 <p>本政策说明 STARGO WORK 官方网站（以下简称“本站”）收集哪些信息、为什么收集、保存多久，以及你拥有的权利。本站由${LEGAL_ENTITY}（中国广西柳州）运营。</p>
@@ -1402,7 +1402,7 @@ export const LEGAL = {
 <ul>
 <li><strong>你主动提交的信息。</strong>通过联系表单或订阅表单提交的姓名、邮箱、公司、WhatsApp、行业、目标市场、团队规模、现有系统与留言内容，以及你在在线咨询窗口里发送的内容。这些信息仅用于回复你的咨询、安排演示和发送你订阅的产品更新。</li>
 <li><strong>技术日志。</strong>本站托管在 Cloudflare Pages。访问时的 IP 地址、浏览器类型和请求时间会出现在托管方的标准访问日志中，用于安全防护与故障排查；本站不据此建立访客画像。</li>
-<li><strong>Cookie 与本地存储。</strong>本站不使用分析或广告 Cookie，不加载任何第三方追踪脚本；字体、图片与脚本都从本站自身域名加载。唯一的例外是在线咨询窗口：只有你点击打开时，才会从我们的客服系统 chat.stargogrowth.com（基于 Chatwoot）加载，并在你的浏览器里保存 Cookie 和本地数据以保持这段对话；不打开就不会加载，也不会设置。</li>
+<li><strong>Cookie 与本地存储。</strong>本站加载 Google 代码（Google Tag Manager，容器 GTM-MCGTFDLR），用于 Google Analytics 等访问统计：它会在你的浏览器里设置 Cookie，并把你浏览的页面、来源、设备和大致位置发给 Google，由 Google 按其隐私政策（policies.google.com/privacy）处理；你可以在浏览器里屏蔽或清除这些 Cookie，或安装 Google Analytics 停用插件（tools.google.com/dlpage/gaoptout）。本站不使用广告 Cookie；除上述 Google 代码外，字体、图片与脚本都从本站自身域名加载。另一个例外是在线咨询窗口：只有你点击打开时，才会从我们的客服系统 chat.stargogrowth.com（基于 Chatwoot）加载，并在你的浏览器里保存 Cookie 和本地数据以保持这段对话；不打开就不会加载，也不会设置。</li>
 </ul>
 <h4>如何使用与共享</h4>
 <p>提交时，表单内容先发到本站托管在 Cloudflare 上的接口校验。邮件服务配置完成后，通过 Resend 投递到 ${CONTACT_INFO.email}，用于处理你的请求。我们不出售你的信息；除完成托管、投递所需的服务商和法律要求外，不向第三方共享。在线客服启用后，联系表单的内容还会在我们的客服系统中创建一条会话，便于我们回复，订阅表单不会进入该系统；在线咨询的对话和这些会话保存在该系统中。接入 AI 助手后，你在窗口里发送的内容会交给 AI 模型服务（DeepSeek）生成回复，需要时转给同事。除此之外，本接口不会把表单内容写入数据库。</p>
@@ -1421,7 +1421,7 @@ export const LEGAL = {
 <ul>
 <li><strong>What you submit.</strong> Name, email, company, WhatsApp, industry, target markets, team size, current systems and your message, sent through the contact or newsletter forms, and anything you send in the live chat window. They are used only to answer your inquiry, arrange a demo and send the product updates you subscribed to.</li>
 <li><strong>Technical logs.</strong> The site is hosted on Cloudflare Pages. Your IP address, browser type and request time appear in the host’s standard access logs for security and troubleshooting; we do not build visitor profiles from them.</li>
-<li><strong>Cookies and local storage.</strong> The site sets no analytics or advertising cookies and loads no third-party tracking script; fonts, images and scripts are served from this site’s own domain. The one exception is the live chat window: only when you open it does it load from our customer-service system at chat.stargogrowth.com (built on Chatwoot), which stores a cookie and local data in your browser to keep the conversation going. If you do not open it, nothing is loaded or set.</li>
+<li><strong>Cookies and local storage.</strong> The site loads the Google tag (Google Tag Manager, container GTM-MCGTFDLR) for Google Analytics and other visit measurement: it sets cookies in your browser and sends the pages you view, referrer, device and approximate location to Google, which handles them under its own privacy policy (policies.google.com/privacy). You can block or clear these cookies in your browser, or install the Google Analytics opt-out add-on (tools.google.com/dlpage/gaoptout). The site sets no advertising cookies; apart from the Google tag, fonts, images and scripts are served from this site’s own domain. The other exception is the live chat window: only when you open it does it load from our customer-service system at chat.stargogrowth.com (built on Chatwoot), which stores a cookie and local data in your browser to keep the conversation going. If you do not open it, nothing is loaded or set.</li>
 </ul>
 <h4>How it is used and shared</h4>
 <p>When you submit a form, its contents first reach this site’s Cloudflare-hosted endpoint for validation. Once the mail service is configured, Resend delivers them to ${CONTACT_INFO.email} so we can handle your request. We do not sell your information. We share it only with the service providers needed for hosting and delivery, or when the law requires it. Once live chat is enabled, a contact-form submission also opens a conversation in our customer-service system so we can reply; newsletter sign-ups do not. Chat messages and those conversations are kept in that system. Once the AI assistant is connected, what you send in the chat window goes to an AI model service (DeepSeek) to draft a reply, and a colleague takes over when needed. Beyond that, this endpoint does not write form contents to a database.</p>

@@ -5,7 +5,8 @@
  *
  * Checks, per page: JavaScript errors, failed requests, requests that leave
  * the origin (this site must make none — its audience is behind the GFW and
- * a blocked CDN means a broken page), internal links that resolve to
+ * a blocked CDN means a broken page; the one exception is the async Google tag,
+ * stubbed here and required exactly once), internal links that resolve to
  * nothing, and Latin text that survived localisation. Also takes a full-page
  * screenshot for the human pass.
  *
@@ -13,6 +14,7 @@
  * failure, not a pass.
  */
 import { SITE, req } from './paths.mjs';
+import { stubGoogleTag, GTM_HOST } from './google-tag.mjs';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { SITE_PAGES } from './chrome.mjs';
 
@@ -41,7 +43,8 @@ for (const page of PAGES) {
   p.on('pageerror', (e) => errors.push(String(e).split('\n')[0]));
   p.on('console', (m) => { if (m.type() === 'error') errors.push('console: ' + m.text().slice(0, 160)); });
   p.on('requestfailed', (r) => { if (!/\.(mp4|webm)(?:\?|$)/.test(r.url())) failed.push(r.url()); });
-  p.on('request', (r) => { const u = new URL(r.url()); if (u.origin !== new URL(BASE).origin) external.add(u.host); });
+  const gtm = await stubGoogleTag(p);
+  p.on('request', (r) => { const u = new URL(r.url()); if (u.origin !== new URL(BASE).origin && u.host !== GTM_HOST) external.add(u.host); });
 
   let status = 0;
   try {
@@ -90,6 +93,8 @@ for (const page of PAGES) {
   ])];
   const dangling = [...new Set(hrefs.filter((h) => h === '#' || h === ''))].length;
 
+  // The Google tag (tools/google-tag.mjs) is the one off-origin script, loaded exactly once.
+  if (gtm.length !== 1) errors.push(`Google tag requested ${gtm.length} times`);
   const ok = status === 200 && errors.length === 0 && failed.length === 0 && external.size === 0 && broken.length === 0;
   if (!ok) failures++;
   summary.push({ page, status, height: H, errors, failed: failed.slice(0, 5), external: [...external], broken, hashLinks: dangling, latinResidue: residue.slice(0, 25) });
