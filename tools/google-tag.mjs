@@ -6,16 +6,18 @@
  * Google tag are configured inside the GTM container, never as a second tag on the page.
  *
  * The block goes right after <head> (after the <meta charset> when that comes first, so the encoding stays the first
- * thing in <head>). It opens with Consent Mode v2: "denied" by default for EEA/UK/CH visitors, and a choice saved by
- * js/consent-banner.js (Reject/Accept, shown to visitors in European time zones) is replayed before the container
- * runs. The banner script is versioned by content because /js/* is cached for a year.
+ * thing in <head>). It opens with Consent Mode v2: ad_* signals denied everywhere (no ads here), analytics_storage
+ * denied by default for EEA/UK/CH visitors, a choice saved by js/consent-banner.js (Reject/Accept, shown in those
+ * countries' time zones; a "#cookie-settings" link reopens it) replayed, then the classic gtm.js start event so
+ * Page View triggers in the container fire. The banner script is versioned by content because /js/* is cached for a
+ * year.
  */
 import { readdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { SITE } from './paths.mjs';
 
 export const GTM_ID = 'GTM-MCGTFDLR';
-const CONSENT_DEFAULT = `<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500,region:['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']});try{var c=localStorage.getItem('gos-consent');if(c==='granted'||c==='denied')gtag('consent','update',{ad_storage:c,ad_user_data:c,ad_personalization:c,analytics_storage:c});}catch(e){}</script>`;
+const CONSENT_DEFAULT = `<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('consent','default',{analytics_storage:'denied',wait_for_update:500,region:['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']});try{var c=localStorage.getItem('gos-consent');if(c==='granted'||c==='denied')gtag('consent','update',{analytics_storage:c});}catch(e){}dataLayer.push({'gtm.start':new Date().getTime(),event:'gtm.js'});</script>`;
 const BANNER_V = createHash('sha256').update(readFileSync(`${SITE}/js/consent-banner.js`)).digest('hex').slice(0, 10);
 export const GOOGLE_TAG = `<!-- Google tag (${GTM_ID}) -->${CONSENT_DEFAULT}<script async src="https://www.googletagmanager.com/gtm.js?id=${GTM_ID}"></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());</script><script src="/js/consent-banner.js?v=${BANNER_V}" defer></script><!-- /Google tag -->`;
 const BLOCK = /<!-- Google tag \(GTM-[A-Z0-9]+\) -->[\s\S]*?<!-- \/Google tag -->/g;
