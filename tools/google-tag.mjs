@@ -1,5 +1,5 @@
 /**
- * Google tag for GTM container GTM-MCGTFDLR (snippet as Google gives it, 2026-11-11). Google asks for it right after
+ * Google tag for GTM container GTM-NJL2ZDR8 (snippet as Google gives it, 2026-11-11). Google asks for it right after
  * <head>, once per page. This writes it into every published page (root *.html, en/, blog/), replacing any earlier
  * copy so it is never doubled; `--check` only reports pages that lack it or carry it more than once. It runs at the
  * end of `npm run build` and as a check in make-dist, so a rebuilt page cannot ship without it. GA4 and any other
@@ -16,7 +16,7 @@ import { readdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { SITE } from './paths.mjs';
 
-export const GTM_ID = 'GTM-MCGTFDLR';
+export const GTM_ID = 'GTM-NJL2ZDR8';
 const CONSENT_DEFAULT = `<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('consent','default',{analytics_storage:'denied',wait_for_update:500,region:['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']});try{var c=localStorage.getItem('gos-consent');if(c==='granted'||c==='denied')gtag('consent','update',{analytics_storage:c});}catch(e){}dataLayer.push({'gtm.start':new Date().getTime(),event:'gtm.js'});</script>`;
 const BANNER_V = createHash('sha256').update(readFileSync(`${SITE}/js/consent-banner.js`)).digest('hex').slice(0, 10);
 export const GOOGLE_TAG = `<!-- Google tag (${GTM_ID}) -->${CONSENT_DEFAULT}<script async src="https://www.googletagmanager.com/gtm.js?id=${GTM_ID}"></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());</script><script src="/js/consent-banner.js?v=${BANNER_V}" defer></script><!-- /Google tag -->`;
