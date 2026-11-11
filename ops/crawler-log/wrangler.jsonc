@@ -1,0 +1,18 @@
+// Growth OS crawler log for stargowork.com: a separate Worker attached as a ROUTE in front of the Pages project
+// "stargowork". Pages keeps serving every page; this only notes crawler / AI-assistant visits and answers /api/crawlers.
+// Deploy from this folder: npx wrangler@4 deploy   Roll back: delete the Worker (or its routes) in the dashboard.
+{
+  "name": "growthos-crawler-log-stargowork",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-10-01",
+  // Routes, not custom domains: requests keep going to the existing origin. Add www only if it is served.
+  "routes": [
+    { "pattern": "stargowork.com/*", "zone_name": "stargowork.com" },
+    { "pattern": "www.stargowork.com/*", "zone_name": "stargowork.com" }
+  ],
+  "analytics_engine_datasets": [ { "binding": "VISITS", "dataset": "stargowork_visits" } ],
+  "analytics": { "binding": "ANALYTICS_SQL" },
+  "vars": { "CRAWLER_DATASET": "stargowork_visits" },
+  "workers_dev": false,
+  "observability": { "enabled": true, "head_sampling_rate": 0.05 }
+}

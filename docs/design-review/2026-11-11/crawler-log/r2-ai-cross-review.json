@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "growthos.ai-cross-review.v1",
+  "reviewedAt": "2026-11-11T04:17:34.214Z",
+  "reviewer": "agy",
+  "family": "google",
+  "author": "claude",
+  "model": "gemini-4-argon-high",
+  "range": "origin/main...HEAD",
+  "images": [],
+  "verdict": "approve",
+  "summary": "Round 2 cleanly resolves the earlier issues: User-Agent tokens are matched on alphanumeric boundaries with ambiguous generic tokens excluded, Referer matching parses URL hostnames, utm_source values map to canonical names only, category totals aggregate across all rows rather than the top-100 agent slice, failed responses use Cache-Control: no-store, and raw SQL errors are no longer exposed.",
+  "findings": [
+    {
+      "severity": "nit",
+      "file": "ops/crawler-log/worker.mjs",
+      "line": "166",
+      "issue": "When some but not all Analytics SQL queries fail,crawlerSummary returns available: true alongside an errors map, so handleCrawlers still treats ok as true and caches the partial response for 600 seconds.",
+      "fix": "Include !body.errors in the ok check (const ok = status === 200 && body.available === true && !body.errors;) so transient partial query failures are not cached."
+    }
+  ],
+  "blocking": 0,
+  "pass": true,
+  "truncated": false,
+  "slices": [
+    {
+      "verdict": "approve",
+      "blocking": 0,
+      "pass": true,
+      "index": 1,
+      "files": [
+        "ops/crawler-log/bots.mjs",
+        "ops/crawler-log/worker.mjs",
+        "ops/crawler-log/wrangler.jsonc"
+      ],
+      "chars": 21357,
+      "truncated": false,
+      "reviewer": "agy",
+      "model": "gemini-4-argon-high",
+      "failedFirst": [],
+      "findings": 1
+    }
+  ]
+}
