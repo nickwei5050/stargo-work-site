@@ -1,4 +1,4 @@
-// Vendored from nickwei5050/website-SEO- integrations/site-kit/crawler-log (version 1.0.1). Do not edit here; update there and re-copy.
+// Vendored from nickwei5050/website-SEO- integrations/site-kit/crawler-log (version 1.0.2). Do not edit here; update there and re-copy.
 // Growth OS crawler log (site-kit, version in VERSION): a pass-through Cloudflare Worker for brand sites that are
 // proxied by Cloudflare but do not run their own Worker (WordPress, static hosts, SaaS builders).
 //
@@ -155,7 +155,7 @@ export async function crawlerSummary(env, days, nowMs = Date.now()) {
 export async function handleCrawlers(request, env) {
   const url = new URL(request.url);
   if (request.method !== 'GET' && request.method !== 'HEAD') return new Response(null, { status: 405, headers: { Allow: 'GET, HEAD' } });
-  const days = Math.min(Math.max(Number(url.searchParams.get('days')) || 7, 1), 90);
+  const days = Math.min(Math.max(Math.trunc(Number(url.searchParams.get('days'))) || 7, 1), 90); // whole days: one cache key each
   const cache = typeof caches !== 'undefined' ? caches.default : null;
   const key = new Request(`https://${url.hostname}/api/crawlers?days=${days}`);
   const hit = cache && (await cache.match(key));
@@ -163,7 +163,7 @@ export async function handleCrawlers(request, env) {
   let body;
   let status = 200;
   try { body = await crawlerSummary(env, days); } catch { body = { available: false, error: 'internal_error' }; status = 502; }
-  const ok = status === 200 && body.available === true;
+  const ok = status === 200 && body.available === true && !body.errors; // a partial answer is served but not cached
   const res = new Response(JSON.stringify(body), {
     status,
     // Only a real answer is cached (here and by browsers / proxies); a failure is retried on the next request.
