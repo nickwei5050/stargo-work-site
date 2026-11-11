@@ -244,7 +244,9 @@ async function worker() {
         assert.equal(await menu.getAttribute('aria-expanded'), 'true');
         assert(await switcher.isVisible(), 'mobile menu language link visible');
         await page.keyboard.press('Escape');
-        await page.waitForTimeout(500);
+        // Wait for the close rather than a fixed 500 ms: on the busy CI runner the heavy intelligence page
+        // sometimes needs longer, and a fixed sleep failed it although Escape does close the menu.
+        await page.waitForFunction(() => document.querySelector('.menu-button')?.getAttribute('aria-expanded') === 'false', null, { timeout: 5000 }).catch(() => {});
         assert.equal(await menu.getAttribute('aria-expanded'), 'false');
       }
       const height = await page.evaluate(() => document.documentElement.scrollHeight);
