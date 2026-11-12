@@ -837,6 +837,9 @@ PAGES['index.html'] = (lang) => {
   if ((h.match(/<html(?=[\s>])/g) ?? []).length !== 1) throw new Error('index: no single <html> to mark as the homepage');
   h = h.replace(/<html(?=[\s>])/, '<html data-stargo-home=""');
   h = homeIntro(h, lang);
+  /* Baidu 搜索资源平台 site verification (HTML-tag method, 2026-11-12): Baidu reads it from the homepage only. */
+  if ((h.match(/<\/head>/g) ?? []).length !== 1) throw new Error('index: no single </head> for the Baidu verification tag');
+  h = h.replace('</head>', '<meta name="baidu-site-verification" content="codeva-2TleHfaQK1" /></head>');
   return h;
 };
 
