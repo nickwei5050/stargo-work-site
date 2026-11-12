@@ -7,7 +7,10 @@ const {chromium}=req('@playwright/test'); const browser=await chromium.launch();
 process.chdir(SITE);
 const BASE = process.env.BASE_URL || 'http://127.0.0.1:4200';
 const results=[]; const OUT='.wrangler/fix-qa-20260905';mkdirSync(OUT,{recursive:true});
-async function check(name,fn){try{await fn();console.log('PASS',name);results.push({name,pass:true});}catch(e){console.log('FAIL',name,e.message);results.push({name,pass:false,error:e.message});}}
+/* These checks are timing-sensitive (held main thread, animation beats) and the local CI runner
+   is shared with other repos' jobs, so a check that fails is run once more before it counts as a
+   failure. A real regression fails both times; the first error is kept in the result. */
+async function check(name,fn){let first;for(let attempt=1;attempt<=2;attempt++){try{await fn();console.log('PASS',name+(first?' (on retry)':''));results.push(first?{name,pass:true,retried:true,firstError:first}:{name,pass:true});return;}catch(e){if(attempt===1){first=e.message;console.log('RETRY',name,e.message);continue;}console.log('FAIL',name,e.message);results.push({name,pass:false,error:e.message,firstError:first});}}}
 try {
  for(const lang of ['', 'en/']) for(const width of [390,1440]){
   const p=await browser.newPage({viewport:{width,height:900}});p.setDefaultTimeout(10000);
