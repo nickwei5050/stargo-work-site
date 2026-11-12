@@ -12,7 +12,7 @@
 
 - [ ] 老板确认后合并官网的聊天和表单 PR，由 `deploy.yml` 发布。合并后全站显示 sales@stargogrowth.com，聊天按钮出现。
 - [ ] **合并前先确认 Resend 能投递到新地址。** 默认发件人 `onboarding@resend.dev` 只能投递给 Resend 账号本人的邮箱。如果账号不是用 sales@stargogrowth.com 开的，表单会收到 403，访客看到“提交失败”。合并前要在 Resend 验证发件域名，并把 `CONTACT_FROM` 设成该域名下的地址。
-- [ ] 检查 Pages 变量 `CONTACT_TO`：如果还是 wei505099021@live.cn，要改成 sales@stargogrowth.com 或删除，否则通知仍发到旧地址。
+- [ ] 检查 Pages 变量 `CONTACT_TO`：如果还是原来的个人邮箱，要改成 sales@stargogrowth.com 或删除，否则通知仍发到旧地址。
 
 确认：老板打字同意合并 ______；同意改 Resend 和 `CONTACT_*` ______
 
