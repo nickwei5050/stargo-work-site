@@ -48,6 +48,8 @@ export const GROWTH_LINK = { href: 'https://stargogrowth.com/', label: B('营销
 export const MORE = [
   { href: 'about.html', label: B('关于', 'About') },
   { href: 'blog.html', label: B('博客', 'Blog') },
+  /* 2026-11-13: the client download page (tools/downloads.mjs). */
+  { href: 'download.html', label: B('下载', 'Download') },
 ];
 /* The pill's middle slot. Four stages, short enough to sit in a row, each
    pointing at its block on the capability page. The labels name what those
@@ -235,6 +237,7 @@ export const META = {
   'pricing.html': { title: B('定价', 'Pricing: software and growth services'), description: B('对比 STARGO WORK 年度软件订阅，以及可选的建站、内容与获客服务包。', 'Compare the annual STARGO WORK subscription with optional website, content and customer-acquisition service packages.') },
   'enterprise.html': { title: B('企业管理与交付', 'Enterprise control and delivery'), description: B('看清经营重点、谁负责什么、预算、审批和结果；了解账号怎么接入、实施分几步、哪些关键环节由人把关。', 'Review priorities, task owners, budgets, approvals and outcomes. See how company accounts connect, how implementation works and where people stay in control.') },
   'contact.html': { title: B('预约企业演示', 'Book an enterprise demo'), description: B('拿一条具体业务流程来谈：需要哪些资料、账号、岗位和审批，做到什么样算验收合格，再定合适的配置和交付范围。', 'Walk us through one business workflow, the information it needs and what a good result looks like. Together we define the right setup and delivery scope.') },
+  'download.html': { title: B('下载客户端', 'Download the apps'), description: B('下载 STARGO WORK 的 Windows、macOS 和 Android 客户端，连接你企业自己的工作区；iOS 与微信小程序即将上线。', 'Download STARGO WORK for Windows, macOS and Android and connect to your company workspace. iOS and the WeChat Mini Program are coming soon.') },
   'notices.html': { title: B('第三方声明', 'Third-party notices'), description: B('运行时库、字体、图片素材与上游软件的许可与署名。', 'Licenses and attribution for runtime libraries, fonts, imagery and upstream software.') },
   'about.html': { title: B('关于 · 从实际业务出发', 'About: built around real work'), description: B('STARGO WORK 从主动获客和外贸销售做起，连上企业经营、内容生产与数字员工。把工作交给 AI，把决定权留在企业。', 'Connect acquisition, trade sales, business operations, creative work and AI roles. Delegate the work while people retain decision authority.') },
   'blog.html': { title: B('业务实践与产品解读', 'Business practice and product guides'), description: B('讲清客户开发、销售报价、企业知识、数字员工协作和管理，用实际业务流程说明 AI 怎样参与日常工作。', 'Explore customer acquisition, sales, quotes, enterprise knowledge, AI teamwork and management through practical workflow explanations.') },

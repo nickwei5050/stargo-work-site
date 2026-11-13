@@ -20,6 +20,9 @@ try {
         if(url.origin !== 'http://site.test') continue;
         const path = url.pathname.slice(1); /* clean URLs (/pricing, /en/) map to their files, as the server does */
         const targetFile = path === '' || path.endsWith('/') ? path+'index.html' : /\.html$/.test(path) ? path : path+'.html'; const target = docs[targetFile];
+        /* a file offered for download (download.html: the Android APK) is not a page; its
+           existence is checked below, outside the browser */
+        if(/^assets\/[^?#]+\.(apk|zip|dmg|exe)$/.test(path)) continue;
         if(!target) { errors.push('missing page: '+raw); continue; }
         if(raw.endsWith('#')) errors.push('placeholder: '+raw);
         if(url.hash && !target.getElementById(decodeURIComponent(url.hash.slice(1)))) errors.push('missing anchor: '+raw);
@@ -29,6 +32,11 @@ try {
     });
   }, files.map(f=>[f,readFileSync(f,'utf8')]));
   for(const c of checks) { results.push({ name:c.file,pass:c.errors.length===0,errors:c.errors }); console.log(c.errors.length?'FAIL':'PASS',c.file,[...new Set(c.errors)].join('; ')); }
+  /* 下载 (2026-11-13): every installer the site serves itself must be in the tree. */
+  for(const file of files) {
+    const missing = [...readFileSync(file,'utf8').matchAll(/href="((?:\.\.\/)*assets\/[^"?#]+\.(?:apk|zip|dmg|exe))"/g)].map(m => m[1].replace(/^(\.\.\/)+/, '')).filter(f => !existsSync(decodeURIComponent(f)));
+    if(missing.length) { results.push({ name:file+' downloads',pass:false,errors:missing }); console.log('FAIL',file,'download files missing:',missing.join('; ')); }
+  }
   /* The homepage theatre: the brand film in the centre and, round it, six slots with the system's own
      screens (tools/real-theatre.mjs; tools/replaceables.mjs HERO.real records which crop each cell
      shows, in the ring's DOM order). Not the photographs W01–W06 of 2026-10-23 and earlier, and not
