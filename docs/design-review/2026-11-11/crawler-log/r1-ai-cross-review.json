@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "growthos.ai-cross-review.v1",
+  "reviewedAt": "2026-11-11T04:12:46.030Z",
+  "reviewer": "agy",
+  "family": "google",
+  "author": "claude",
+  "model": "gemini-4-argon-high",
+  "range": "origin/main...HEAD",
+  "images": [],
+  "verdict": "request_changes",
+  "summary": "The Worker route pass-through and Analytics Engine logging structure are mostly sound, but substring-based bot/referrer matching introduces false positives and allows query-parameter metric pollution, totals are computed from a truncated LIMIT 100 result set, and failed or unavailable responses are served with public caching headers and raw backend error messages.",
+  "findings": [
+    {
+      "severity": "major",
+      "file": "ops/crawler-log/bots.mjs",
+      "line": "3",
+      "issue": "BOTS ends with short, generic tokens such as \"Code\", \"nbot\", \"Muse\", \"Cursor\", \"Operator\", \"Instinct\", \"Trae\", and \"Spider\", which classifyAgent() (ops/crawler-log/worker.mjs:30) matches via case-insensitive u.includes(low) with no token boundaries. Any User-Agent containing \"code\" (e.g. VSCode, Xcode) or ending in \"nbot\" (e.g. LinkedInBot, msnbot, TurnitinBot, ProtonBot) is misclassified as an AI bot, inflating bot counts and skipping aiReferral tracking on line 66.",
+      "fix": "Require word/delimiter boundaries when matching short or ambiguous tokens in classifyAgent(), or remove/qualify overly generic 4-letter tokens in BOTS."
+    },
+    {
+      "severity": "major",
+      "file": "ops/crawler-log/worker.mjs",
+      "line": "34-39",
+      "issue": "aiReferral() checks src.includes(needle) against the raw concatenated Referer and utm_source string instead of parsing the referrer hostname, so short needles in AI_REFERRERS like \"you.com\", \"grok.com\", \"poe.com\", and \"kimi.com\" falsely match unrelated domains (e.g. thankyou.com, ngrok.com). In addition, line 37 returns up to 40 raw characters of any utm_source starting with chatgpt|perplexity|claude|..., allowing arbitrary campaign suffixes or crafted query strings to create unbounded high-cardinality entries in VISITS and pollute the public /api/crawlers response.",
+      "fix": "Parse the Referer header with new URL() and match hostname (equal to or subdomain of the target domain, plus path check for bing.com/chat), and normalize regex-matched utm_source values to canonical provider names instead of storing the raw query parameter slice."
+    },
+    {
+      "severity": "minor",
+      "file": "ops/crawler-log/worker.mjs",
+      "line": "98-123",
+      "issue": "out.totals is calculated in JavaScript by summing out.agents, which is capped at LIMIT 100 in the SQL query on line 98. Because BOTS defines 207 bots plus AI referral sources, any window with more than 100 active (kind, name, operator, category) tuples will silently undercount totals.",
+      "fix": "Compute category totals via a dedicated SQL query grouped by blob1 and blob4 (which has fewer than 10 combinations), or increase the agents limit to cover all known bots and referrers."
+    },
+    {
+      "severity": "minor",
+      "file": "ops/crawler-log/worker.mjs",
+      "line": "110, 138-143",
+      "issue": "handleCrawlers() always sets Cache-Control: public, max-age=600 even when status is 502 or body.available is false, allowing CDN edges and browsers to cache transient failures for 10 minutes. It also exposes raw exception and SQL error strings (errors[names[i]] and error) on a public CORS (*) endpoint.",
+      "fix": "Use Cache-Control: no-store when status !== 200 or !body.available, and log detailed SQL exceptions via console.error while returning a generic error message in the public JSON response."
+    }
+  ],
+  "blocking": 2,
+  "pass": false,
+  "truncated": false,
+  "slices": [
+    {
+      "verdict": "request_changes",
+      "blocking": 2,
+      "pass": false,
+      "index": 1,
+      "files": [
+        "ops/crawler-log/bots.mjs",
+        "ops/crawler-log/worker.mjs",
+        "ops/crawler-log/wrangler.jsonc"
+      ],
+      "chars": 19497,
+      "truncated": false,
+      "reviewer": "agy",
+      "model": "gemini-4-argon-high",
+      "failedFirst": [
+        "cursor: cursor CLI failed: timed out after 600 s"
+      ],
+      "findings": 4
+    }
+  ]
+}

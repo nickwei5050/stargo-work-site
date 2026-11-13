@@ -154,12 +154,26 @@
       "note": "Chatwoot 收件箱 10；漏斗 growthos-funnel@stargowork-com 已开机自启；hub 未核对"
     },
     "gsc": {
-      "status": "not_started"
+      "status": "partial",
+      "note": "2026-11-11 业主新建网域资源 sc-domain:stargowork.com，只读服务账号已加（受限）；数仓实拉 28 天 0 行（新资源，数据还没出来）"
+    },
+    "bing": {
+      "status": "partial",
+      "note": "2026-11-11 从 GSC 导入 https://stargowork.com/，已验证；API 实拉 28 天 0 行"
     }
   },
   "drillConsent": {
     "by": "Stargo1",
     "at": "2026-11-11T02:58:35Z",
-    "where": "Growth OS 项目线程「询盘不丢 γ」，业主原话：「同意 5 个品牌各做一次停接收器演练和聊天窗演练，写 drillConsent，只补测试会话，结果开草稿 PR」"
+    "where": "Growth OS 项目线程「询盘不丢 γ」，业主原话：「同意 5 个品牌各做一次停接收器演练和聊天窗演练，写 drillConsent，只补测试会话，结果开草稿 PR」",
+    "previous": {
+      "by": "Stargo1",
+      "at": "2026-11-10T18:37:31Z",
+      "where": "Growth OS 项目线程「让中控自动升级和稳定运维」",
+      "entries": [
+        "chat"
+      ],
+      "note": "2026-11-10 23:35Z 业主原话「同意：升级中控、装全部定时器和服务、改漏斗提醒、跑询盘演练、注册 runner 并合并 PR #40」"
+    }
   }
 }

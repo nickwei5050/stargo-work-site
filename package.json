@@ -9,7 +9,8 @@
     "node": ">=20"
   },
   "scripts": {
-    "build": "npm run build:assets && npm run build:donors && npm run build:ix && npm run build:pages && npm run build:dates",
+    "build": "npm run build:assets && npm run build:donors && npm run build:ix && npm run build:pages && npm run build:dates && npm run build:google-tag",
+    "build:google-tag": "node tools/google-tag.mjs",
     "build:assets": "node tools/mirror-donor-assets.mjs",
     "build:donors": "node tools/capability-donors.mjs",
     "build:ix": "node tools/fuse-ix.mjs",
@@ -33,6 +34,7 @@
     "verify:chat": "node tools/verify-all.mjs verify-chat-widget.mjs",
     "check:slots": "node tools/check-slots.mjs",
     "check:dates": "node tools/page-dates.mjs --check",
+    "check:google-tag": "node tools/google-tag.mjs --check",
     "check:ix-union": "node tools/ix-union-check.mjs",
     "browsers": "playwright install --with-deps chromium"
   },

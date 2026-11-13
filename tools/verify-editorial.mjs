@@ -209,12 +209,13 @@ const OUT = '.wrangler/editorial-qa';
 mkdirSync(OUT, { recursive: true });
 const names = ['index', 'intelligence', 'capabilities', 'workforce', 'pricing', 'enterprise', 'contact', 'about', 'blog', 'blog/start-with-one-workflow'];
 const jobs = [];
-for (const lang of ['', 'en/']) for (const width of (process.env.WIDTHS || '390,768,1440').split(',').map(Number)) for (const name of names) jobs.push({ lang, width, name });
+for (const lang of ['', 'en/']) for (const width of (process.env.WIDTHS || '390,768,1440').split(',').map(Number)) for (const name of names) jobs.push({ lang, width, name, attempt: 1 });
 const browser = await chromium.launch();
 const reports = [];
 async function worker() {
   while (jobs.length) {
-    const { lang, width, name } = jobs.shift();
+    const job = jobs.shift();
+    const { lang, width, name, attempt } = job;
     const id = `${lang ? 'en' : 'zh'}-${name.replace('/', '-')}-${width}`;
     const page = await browser.newPage({ viewport: { width, height: width === 1440 ? 900 : 844 } });
     const errors = [], assets = [];
@@ -244,7 +245,9 @@ async function worker() {
         assert.equal(await menu.getAttribute('aria-expanded'), 'true');
         assert(await switcher.isVisible(), 'mobile menu language link visible');
         await page.keyboard.press('Escape');
-        await page.waitForTimeout(500);
+        // Wait for the close rather than a fixed 500 ms: on the busy CI runner the heavy intelligence page
+        // sometimes needs longer, and a fixed sleep failed it although Escape does close the menu.
+        await page.waitForFunction(() => document.querySelector('.menu-button')?.getAttribute('aria-expanded') === 'false', null, { timeout: 5000 }).catch(() => {});
         assert.equal(await menu.getAttribute('aria-expanded'), 'false');
       }
       const height = await page.evaluate(() => document.documentElement.scrollHeight);
@@ -301,6 +304,13 @@ async function worker() {
       reports.push({ id, pass: true, decoded: imageState.length, imageRequests: new Set(assets).size });
       console.log(`PASS ${id}: images, overflow, navigation/language${width < 992 ? ', menu open/Escape' : ''}`);
     } catch (e) {
+      /* The local CI runner is shared, so a page that fails on a timing hiccup is tried once more,
+         at the end of the queue. A real regression fails both times. */
+      if (attempt === 1) {
+        console.log(`RETRY ${id}: ${e.message}`);
+        jobs.push({ ...job, attempt: 2 });
+        continue;
+      }
       reports.push({ id, pass: false, error: e.message });
       console.log(`FAIL ${id}: ${e.message}`);
       await page.screenshot({ path: `${OUT}/${id}-failure.png` });

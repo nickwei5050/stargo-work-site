@@ -23,6 +23,7 @@ import { SITE_URL, META, NAV, MORE, SECONDARY, WORKFORCE_ROLE_GROUPS } from './c
 import { SITE_PAGES, cleanUrl } from './chrome.mjs';
 import { POSTS, postPath } from './blog.mjs';
 import { readPageDates, pageDateFor } from './page-dates.mjs';
+import { pages as tagPages, problems as tagProblems } from './google-tag.mjs';
 
 import { SITE } from './paths.mjs';
 const DIST = `${SITE}/dist`;
@@ -35,6 +36,12 @@ const walk = (dir, rel, out) => {
     if (e.isDirectory()) walk(`${dir}/${e.name}`, r, out); else out.add(r);
   }
 };
+// Every published page must carry the Google tag once, right after <head> (tools/google-tag.mjs); stop before
+// copying anything if one does not.
+{
+  const bad = tagPages().map((rel) => tagProblems(rel, readFileSync(`${SITE}/${rel}`, 'utf8'))).filter(Boolean);
+  if (bad.length) throw new Error(`make-dist: run node tools/google-tag.mjs first\n${bad.join('\n')}`);
+}
 for (const f of readdirSync(SITE)) if (f.endsWith('.html')) wanted.add(f);
 // /favicon.ico: what browsers and crawlers ask for before reading any <link rel="icon">;
 // without it the 404 page (28 KB of HTML) answered. 16/32/48 PNGs of the brand mark.
