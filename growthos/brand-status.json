@@ -9,7 +9,7 @@
     "zh",
     "en"
   ],
-  "updatedAt": "2026-11-11T02:58:07Z",
+  "updatedAt": "2026-11-11T03:10:27.829Z",
   "stages": {
     "A": {
       "status": "waiting_scott",
@@ -72,10 +72,28 @@
     },
     "L": {
       "status": "waiting_scott",
-      "note": "聊天窗和漏斗在跑；测试询盘未提交，hub 检查跑不了",
+      "note": "2026-11-11 询盘不丢演练（聊天窗）：停接收器 65 秒期间发测试询盘（会话 123），重启后对账补回只含这条测试会话，补回后对账 pass；正常聊天窗演练 pass（会话 124，Chatwoot、漏斗、线索四跳都通过）。表单入口还没演练，所以 L 步状态不变。 聊天窗和漏斗在跑；测试询盘未提交，hub 检查跑不了",
       "evidence": [
+        "WSL 运行目录 project-runs/stargowork-com/inquiries/drill/drill-20261111T030819-cbf77d.json（drill/latest.json）；过程记录 evidence/drill-20261111/stargowork-com/",
         "https://github.com/nickwei5050/website-SEO-/blob/claude/stargowork-e2e-fixes/docs/website-growth/stargowork-e2e-2026-11-09.md"
-      ]
+      ],
+      "drill": {
+        "at": "2026-11-11",
+        "entry": "chat",
+        "outage": {
+          "conversation": 123,
+          "downtimeSec": 65,
+          "replay": "only_test_conversation",
+          "reconcileAfter": "pass"
+        },
+        "normal": {
+          "status": "pass",
+          "conversation": 124,
+          "record": "project-runs/stargowork-com/inquiries/drill/drill-20261111T030819-cbf77d.json"
+        },
+        "form": "not_run",
+        "approval": "Stargo1 2026-11-11T02:58:35Z「同意 5 个品牌各做一次停接收器演练和聊天窗演练，写 drillConsent，只补测试会话，结果开草稿 PR」（另有 00:04:14Z「同意上线」、02:27:10Z「同意建对账账号」）"
+      }
     },
     "M": {
       "status": "waiting_scott",
@@ -146,11 +164,19 @@
   },
   "drillConsent": {
     "by": "Stargo1",
-    "at": "2026-11-10T18:37:31Z",
-    "where": "Growth OS 项目线程「让中控自动升级和稳定运维」",
+    "at": "2026-11-11T02:58:35Z",
+    "where": "Growth OS 项目线程「询盘不丢 γ」，业主原话：「同意 5 个品牌各做一次停接收器演练和聊天窗演练，写 drillConsent，只补测试会话，结果开草稿 PR」",
     "entries": [
       "chat"
     ],
-    "note": "2026-11-10 23:35Z 业主原话「同意：升级中控、装全部定时器和服务、改漏斗提醒、跑询盘演练、注册 runner 并合并 PR #40」"
+    "previous": {
+      "by": "Stargo1",
+      "at": "2026-11-10T18:37:31Z",
+      "where": "Growth OS 项目线程「让中控自动升级和稳定运维」",
+      "entries": [
+        "chat"
+      ],
+      "note": "2026-11-10 23:35Z 业主原话「同意：升级中控、装全部定时器和服务、改漏斗提醒、跑询盘演练、注册 runner 并合并 PR #40」"
+    }
   }
 }
