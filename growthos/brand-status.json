@@ -166,6 +166,9 @@
     "by": "Stargo1",
     "at": "2026-11-11T02:58:35Z",
     "where": "Growth OS 项目线程「询盘不丢 γ」，业主原话：「同意 5 个品牌各做一次停接收器演练和聊天窗演练，写 drillConsent，只补测试会话，结果开草稿 PR」",
+    "entries": [
+      "chat"
+    ],
     "previous": {
       "by": "Stargo1",
       "at": "2026-11-10T18:37:31Z",
