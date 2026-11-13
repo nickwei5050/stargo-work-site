@@ -9,7 +9,7 @@
     "zh",
     "en"
   ],
-  "updatedAt": "2026-11-09T23:53:53.899Z",
+  "updatedAt": "2026-11-11T02:58:07Z",
   "stages": {
     "A": {
       "status": "waiting_scott",
@@ -136,7 +136,12 @@
       "note": "Chatwoot 收件箱 10；漏斗 growthos-funnel@stargowork-com 已开机自启；hub 未核对"
     },
     "gsc": {
-      "status": "not_started"
+      "status": "partial",
+      "note": "2026-11-11 业主新建网域资源 sc-domain:stargowork.com，只读服务账号已加（受限）；数仓实拉 28 天 0 行（新资源，数据还没出来）"
+    },
+    "bing": {
+      "status": "partial",
+      "note": "2026-11-11 从 GSC 导入 https://stargowork.com/，已验证；API 实拉 28 天 0 行"
     }
   },
   "drillConsent": {
