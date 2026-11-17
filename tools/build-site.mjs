@@ -29,6 +29,7 @@ import { HERO, HOME_MODULES, HOME_MODULE_SHOTS, HOME_STAGE_SHOTS, HOME_STAGES, H
 import { SITE } from './paths.mjs';
 import { productTour } from './product-tour.mjs';
 import { appSuite } from './app-suite.mjs';
+import { downloadBand, DOWNLOAD_COPY, DOWNLOAD_NOTES } from './downloads.mjs';   // 下载 (2026-11-13): the client download page
 import { motionHost, motionAssets, SCENE_FILE, MOTION_CSS, MOTION_SCRIPTS, PAIN_SCENES } from './motion-scenes.mjs';
 import { ATMOS_HOME, nightHalves, codeStill, boardHost, requestHost, plantHost } from './code-art-atmos.mjs';   // lane atmos: atmosphere photographs → code
 import { CAPSALES_SCENES } from './motion-capsales.mjs';
@@ -2676,6 +2677,35 @@ PAGES['notices.html'] = (lang) => {
   });
   h = s(h, '>Read more<', `>${t(N.view)}<`, { count: 4 });
   return h;
+};
+
+/* ---- download.html ---------------------------------------------------- */
+/* 下载 (2026-11-13): Mono's post layout, like the legal pages. The title block
+   says what the page is; the photo slot between the two curves becomes the
+   dark download band (tools/downloads.mjs), so the curves frame it; the
+   article body carries the install notes; no related stories. */
+PAGES['download.html'] = (lang) => {
+  const t = (p) => (typeof p === 'string' ? p : p[lang]);
+  const D = DOWNLOAD_COPY;
+  const { fn: s } = makeSub('download');
+  let h = tpl('post_designing-digital-systems-that-scale-with-your-business.html');
+  /* the eyebrow is 「( © date )」 in four <p>s; it becomes one 「(客户端下载)」 */
+  const eyebrow = h.match(/<div class="flex-kllapa mkc">(?:<p class="top-text for-inr">[^<]*<\/p>)+<\/div>/);
+  if (!eyebrow) throw new Error('download: the post title eyebrow is not where it was');
+  h = h.replace(eyebrow[0], `<div class="flex-kllapa mkc"><p class="top-text for-inr">${t(D.eyebrow)}</p></div>`);
+  h = s(h, '>Designing digital systems that scale your business<', `>${t(D.h1)}<`);
+  const photo = h.match(/<section style="background-image:url\(&quot;assets\/[^&]*blog-1\.webp&quot;\)" class="section work-photo"><\/section>/);
+  if (!photo) throw new Error('download: the post photo slot is not where it was');
+  h = h.replace(photo[0], downloadBand(lang));
+  h = setInner(h, '<div class="w-richtext">', `<h2>${t(D.notesTitle)}</h2>${t(DOWNLOAD_NOTES).trim()}`);
+  h = setLink(h, 'Back to blog', { href: 'index.html', text: t(D.back) });
+  const related = elementContaining(h, '>Related Stories<', 'section');
+  h = h.slice(0, related.start) + h.slice(related.end);
+  if (/Related Stories|blog-flex/.test(h)) throw new Error('download: related block survives');
+  h = h.replace(/(<link href="css\/[^"]*mono[^"]*\.css"[^>]*>)/i, '$1\n<link href="css/stargo-download.css" rel="stylesheet" type="text/css"/>');
+  if (!h.includes('css/stargo-download.css')) throw new Error('download: stylesheet not linked');
+  h = s(h, '</body>', '<script src="js/stargo-download.js" defer></script></body>', { count: 1 });
+  return h.replace(/<body\b/, '<body data-sg-download=""');
 };
 
 /* ---- 404.html --------------------------------------------------------- */

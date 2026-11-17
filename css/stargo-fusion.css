@@ -6450,3 +6450,10 @@ a.contact-info.for-button .gsap_split_letter { transform: none !important; trans
   a.contact-info.for-button:active .bg-change { transform: translate(0, 100%) !important; translate: none !important; }
   a.contact-info.for-button:active { scale: none !important; opacity: .85 !important; }
 }
+
+/* 下载 (2026-11-13): the top bar gained a tenth link. Between 992 and 1279px
+   the centred row reached the wordmark, so the gap and type step down there. */
+@media (min-width: 992px) and (max-width: 1279px) {
+  .nav-menu.first.w-nav-menu { gap: 2px; }
+  .nav-menu.first.w-nav-menu .button-link { font-size: 15px; }
+}
