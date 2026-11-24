@@ -9,7 +9,7 @@
     "zh",
     "en"
   ],
-  "updatedAt": "2026-11-24T13:05:44Z",
+  "updatedAt": "2026-11-24T13:24:43Z",
   "stages": {
     "A": {
       "status": "waiting_scott",
@@ -72,7 +72,7 @@
     },
     "L": {
       "status": "waiting_scott",
-      "note": "2026-11-24 下午：表单询盘已进 Chatwoot（Pages 变量 CHATWOOT_WEBSITE_TOKEN 已设、生产已重新部署；表单演练的测试会话进了漏斗，也建了测试线索）。客服桥 11-14 起 Chatwoot 调它超时，重启后 AI 约 1 秒回复。Twenty：漏斗单元环境文件的 SEARCHOS_TWENTY_ENV 指错了文件（那个文件里没有 API key），等业主同意后改成和其他品牌一样；目前 8 条线索全是测试线索，没有真线索漏推。L 是业主签字的步骤，状态不改。 2026-11-24 询盘漏斗演练：聊天演练（[TEST Growth OS]）entry/chatwoot/funnel/lead 四跳 ok，记录 project-runs/stargowork-com/inquiries/drill/drill-20261124T081604-197a1f.json；notify 一跳因企业微信智能机器人「消息」权限过期没发出，首次通知走邮件。L 是业主签字的步骤，状态不改。 2026-11-11 询盘不丢演练（聊天窗）：停接收器 65 秒期间发测试询盘（会话 123），重启后对账补回只含这条测试会话，补回后对账 pass；正常聊天窗演练 pass（会话 124，Chatwoot、漏斗、线索四跳都通过）。表单入口还没演练，所以 L 步状态不变。 聊天窗和漏斗在跑；测试询盘未提交，hub 检查跑不了",
+      "note": "2026-11-24 下午：表单询盘已进 Chatwoot（Pages 变量 CHATWOOT_WEBSITE_TOKEN 已设、生产已重新部署；表单演练的测试会话进了漏斗，也建了测试线索）。客服桥 11-14 起 Chatwoot 调它超时，重启后 AI 约 1 秒回复。Twenty：11-24 13:22Z 业主同意后漏斗改用共用 Twenty key，品牌设置 ready，twenty-sync 运行中；现有 8 条都是测试线索，没推。L 是业主签字的步骤，状态不改。 2026-11-24 询盘漏斗演练：聊天演练（[TEST Growth OS]）entry/chatwoot/funnel/lead 四跳 ok，记录 project-runs/stargowork-com/inquiries/drill/drill-20261124T081604-197a1f.json；notify 一跳因企业微信智能机器人「消息」权限过期没发出，首次通知走邮件。L 是业主签字的步骤，状态不改。 2026-11-11 询盘不丢演练（聊天窗）：停接收器 65 秒期间发测试询盘（会话 123），重启后对账补回只含这条测试会话，补回后对账 pass；正常聊天窗演练 pass（会话 124，Chatwoot、漏斗、线索四跳都通过）。表单入口还没演练，所以 L 步状态不变。 聊天窗和漏斗在跑；测试询盘未提交，hub 检查跑不了",
       "evidence": [
         "WSL ~/work/funnel-audit-2026-11-24/REPORT.md 和 backup/（11-24 询盘漏斗线程的实测记录与撤回说明）",
         "WSL 运行目录 project-runs/stargowork-com/inquiries/drill/drill-20261124T081604-197a1f.json",
@@ -96,7 +96,7 @@
         "form": "not_run",
         "approval": "Stargo1 2026-11-11T02:58:35Z「同意 5 个品牌各做一次停接收器演练和聊天窗演练，写 drillConsent，只补测试会话，结果开草稿 PR」（另有 00:04:14Z「同意上线」、02:27:10Z「同意建对账账号」）"
       },
-      "updatedAt": "2026-11-24T13:05:44Z"
+      "updatedAt": "2026-11-24T13:24:43Z"
     },
     "M": {
       "status": "waiting_scott",
