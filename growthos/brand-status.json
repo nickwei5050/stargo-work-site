@@ -9,70 +9,125 @@
     "zh",
     "en"
   ],
-  "updatedAt": "2026-11-24T08:27:57Z",
+  "updatedAt": "2026-11-24T10:30:00Z",
   "stages": {
     "A": {
-      "status": "waiting_scott",
-      "note": "11-09 已接入中控（业主打字同意）；目标和市场还没填",
+      "status": "done",
+      "note": "2026-11-24 业主确认：建站阶段全部完成。此前记录：11-09 已接入中控（业主打字同意）；目标和市场还没填",
       "evidence": [
         "https://github.com/nickwei5050/website-SEO-/blob/claude/stargowork-e2e-fixes/docs/website-growth/stargowork-e2e-2026-11-09.md"
-      ]
+      ],
+      "approval": {
+        "by": "Scott",
+        "at": "2026-11-24T09:41:15Z",
+        "where": "Growth OS 项目对话「更新全部品牌进度看板」线程，原话：「zbcarbon和三松都设计定稿了，完成第一阶段验收，剩下的stargo全系列和CLDBATTERY产品也是全部完成，后面就是开始每周两次的SEO,GEO,AEO等等一些列的优化了！」"
+      }
     },
     "B": {
-      "status": "in_progress",
-      "note": "11-09 体检在部署 469cd0fb 上跑过，数据在临时数据根，要进中控需重跑",
+      "status": "done",
+      "note": "2026-11-24 业主确认：建站阶段全部完成。此前记录：11-09 体检在部署 469cd0fb 上跑过，数据在临时数据根，要进中控需重跑",
       "evidence": [
         "https://github.com/nickwei5050/website-SEO-/blob/claude/stargowork-e2e-fixes/docs/website-growth/stargowork-e2e-2026-11-09.md"
-      ]
+      ],
+      "approval": {
+        "by": "Scott",
+        "at": "2026-11-24T09:41:15Z",
+        "where": "Growth OS 项目对话「更新全部品牌进度看板」线程，原话：「zbcarbon和三松都设计定稿了，完成第一阶段验收，剩下的stargo全系列和CLDBATTERY产品也是全部完成，后面就是开始每周两次的SEO,GEO,AEO等等一些列的优化了！」"
+      }
     },
     "C": {
-      "status": "not_started",
-      "note": "不是迁移站；map 导入已试跑，未人工审核"
+      "status": "skipped",
+      "note": "2026-11-24 业主确认建站阶段全部完成；stargowork.com 不是迁移站，没有要导入的旧站数据。 此前记录：不是迁移站；map 导入已试跑，未人工审核",
+      "approval": {
+        "by": "Scott",
+        "at": "2026-11-24T09:41:15Z",
+        "where": "Growth OS 项目对话「更新全部品牌进度看板」线程，原话：「zbcarbon和三松都设计定稿了，完成第一阶段验收，剩下的stargo全系列和CLDBATTERY产品也是全部完成，后面就是开始每周两次的SEO,GEO,AEO等等一些列的优化了！」"
+      }
     },
     "D": {
-      "status": "not_started",
-      "note": "没有对标矩阵，本轮没有做同行研究"
+      "status": "done",
+      "note": "2026-11-24 业主确认：建站阶段全部完成。此前记录：没有对标矩阵，本轮没有做同行研究",
+      "approval": {
+        "by": "Scott",
+        "at": "2026-11-24T09:41:15Z",
+        "where": "Growth OS 项目对话「更新全部品牌进度看板」线程，原话：「zbcarbon和三松都设计定稿了，完成第一阶段验收，剩下的stargo全系列和CLDBATTERY产品也是全部完成，后面就是开始每周两次的SEO,GEO,AEO等等一些列的优化了！」"
+      }
     },
     "E": {
-      "status": "waiting_scott",
-      "note": "业主要求不换模板；没有选模板记录"
+      "status": "done",
+      "note": "2026-11-24 业主确认：建站阶段全部完成。此前记录：业主要求不换模板；没有选模板记录",
+      "approval": {
+        "by": "Scott",
+        "at": "2026-11-24T09:41:15Z",
+        "where": "Growth OS 项目对话「更新全部品牌进度看板」线程，原话：「zbcarbon和三松都设计定稿了，完成第一阶段验收，剩下的stargo全系列和CLDBATTERY产品也是全部完成，后面就是开始每周两次的SEO,GEO,AEO等等一些列的优化了！」"
+      }
     },
     "F": {
-      "status": "in_progress",
-      "note": "线上站设计自检两轮 continue，28 个硬问题（模板未改）",
+      "status": "done",
+      "note": "2026-11-24 业主确认：建站阶段全部完成。此前记录：线上站设计自检两轮 continue，28 个硬问题（模板未改）",
       "evidence": [
         "docs/design-review/2026-11-09/growthos-e2e/round-1.md"
-      ]
+      ],
+      "approval": {
+        "by": "Scott",
+        "at": "2026-11-24T09:41:15Z",
+        "where": "Growth OS 项目对话「更新全部品牌进度看板」线程，原话：「zbcarbon和三松都设计定稿了，完成第一阶段验收，剩下的stargo全系列和CLDBATTERY产品也是全部完成，后面就是开始每周两次的SEO,GEO,AEO等等一些列的优化了！」"
+      }
     },
     "G": {
-      "status": "waiting_scott",
-      "note": "没有首版签字记录"
+      "status": "done",
+      "note": "2026-11-24 业主确认：建站阶段全部完成。此前记录：没有首版签字记录",
+      "approval": {
+        "by": "Scott",
+        "at": "2026-11-24T09:41:15Z",
+        "where": "Growth OS 项目对话「更新全部品牌进度看板」线程，原话：「zbcarbon和三松都设计定稿了，完成第一阶段验收，剩下的stargo全系列和CLDBATTERY产品也是全部完成，后面就是开始每周两次的SEO,GEO,AEO等等一些列的优化了！」"
+      }
     },
     "H": {
-      "status": "waiting_scott",
-      "note": "无版权台账"
+      "status": "done",
+      "note": "2026-11-24 业主确认：建站阶段全部完成。此前记录：无版权台账",
+      "approval": {
+        "by": "Scott",
+        "at": "2026-11-24T09:41:15Z",
+        "where": "Growth OS 项目对话「更新全部品牌进度看板」线程，原话：「zbcarbon和三松都设计定稿了，完成第一阶段验收，剩下的stargo全系列和CLDBATTERY产品也是全部完成，后面就是开始每周两次的SEO,GEO,AEO等等一些列的优化了！」"
+      }
     },
     "I": {
-      "status": "in_progress",
-      "note": "没有事实库和宣称台账；宣称扫描 40 页、文章门禁 14 篇已跑",
+      "status": "done",
+      "note": "2026-11-24 业主确认：建站阶段全部完成。此前记录：没有事实库和宣称台账；宣称扫描 40 页、文章门禁 14 篇已跑",
       "evidence": [
         "https://github.com/nickwei5050/website-SEO-/blob/claude/stargowork-e2e-fixes/docs/website-growth/stargowork-e2e-2026-11-09.md"
-      ]
+      ],
+      "approval": {
+        "by": "Scott",
+        "at": "2026-11-24T09:41:15Z",
+        "where": "Growth OS 项目对话「更新全部品牌进度看板」线程，原话：「zbcarbon和三松都设计定稿了，完成第一阶段验收，剩下的stargo全系列和CLDBATTERY产品也是全部完成，后面就是开始每周两次的SEO,GEO,AEO等等一些列的优化了！」"
+      }
     },
     "J": {
-      "status": "in_progress",
-      "note": "爬虫放行、SEO 100；AAO 未走到提交",
+      "status": "done",
+      "note": "2026-11-24 业主确认：建站阶段全部完成。此前记录：爬虫放行、SEO 100；AAO 未走到提交",
       "evidence": [
         "https://github.com/nickwei5050/website-SEO-/blob/claude/stargowork-e2e-fixes/docs/website-growth/stargowork-e2e-2026-11-09.md"
-      ]
+      ],
+      "approval": {
+        "by": "Scott",
+        "at": "2026-11-24T09:41:15Z",
+        "where": "Growth OS 项目对话「更新全部品牌进度看板」线程，原话：「zbcarbon和三松都设计定稿了，完成第一阶段验收，剩下的stargo全系列和CLDBATTERY产品也是全部完成，后面就是开始每周两次的SEO,GEO,AEO等等一些列的优化了！」"
+      }
     },
     "K": {
-      "status": "in_progress",
-      "note": "中英双语；其余语言未做"
+      "status": "done",
+      "note": "2026-11-24 业主确认：建站阶段全部完成。此前记录：中英双语；其余语言未做",
+      "approval": {
+        "by": "Scott",
+        "at": "2026-11-24T09:41:15Z",
+        "where": "Growth OS 项目对话「更新全部品牌进度看板」线程，原话：「zbcarbon和三松都设计定稿了，完成第一阶段验收，剩下的stargo全系列和CLDBATTERY产品也是全部完成，后面就是开始每周两次的SEO,GEO,AEO等等一些列的优化了！」"
+      }
     },
     "L": {
-      "status": "waiting_scott",
-      "note": "2026-11-24 询盘漏斗演练：聊天演练（[TEST Growth OS]）entry/chatwoot/funnel/lead 四跳 ok，记录 project-runs/stargowork-com/inquiries/drill/drill-20261124T081604-197a1f.json；notify 一跳因企业微信智能机器人「消息」权限过期没发出，首次通知走邮件。L 是业主签字的步骤，状态不改。 2026-11-11 询盘不丢演练（聊天窗）：停接收器 65 秒期间发测试询盘（会话 123），重启后对账补回只含这条测试会话，补回后对账 pass；正常聊天窗演练 pass（会话 124，Chatwoot、漏斗、线索四跳都通过）。表单入口还没演练，所以 L 步状态不变。 聊天窗和漏斗在跑；测试询盘未提交，hub 检查跑不了",
+      "status": "done",
+      "note": "2026-11-24 业主确认：建站阶段全部完成。此前记录：2026-11-24 询盘漏斗演练：聊天演练（[TEST Growth OS]）entry/chatwoot/funnel/lead 四跳 ok，记录 project-runs/stargowork-com/inquiries/drill/drill-20261124T081604-197a1f.json；notify 一跳因企业微信智能机器人「消息」权限过期没发出，首次通知走邮件。L 是业主签字的步骤，状态不改。 2026-11-11 询盘不丢演练（聊天窗）：停接收器 65 秒期间发测试询盘（会话 123），重启后对账补回只含这条测试会话，补回后对账 pass；正常聊天窗演练 pass（会话 124，Chatwoot、漏斗、线索四跳都通过）。表单入口还没演练，所以 L 步状态不变。 聊天窗和漏斗在跑；测试询盘未提交，hub 检查跑不了",
       "evidence": [
         "WSL 运行目录 project-runs/stargowork-com/inquiries/drill/drill-20261124T081604-197a1f.json",
         "WSL 运行目录 project-runs/stargowork-com/inquiries/drill/drill-20261111T030819-cbf77d.json（drill/latest.json）；过程记录 evidence/drill-20261111/stargowork-com/",
@@ -94,37 +149,47 @@
         },
         "form": "not_run",
         "approval": "Stargo1 2026-11-11T02:58:35Z「同意 5 个品牌各做一次停接收器演练和聊天窗演练，写 drillConsent，只补测试会话，结果开草稿 PR」（另有 00:04:14Z「同意上线」、02:27:10Z「同意建对账账号」）"
+      },
+      "approval": {
+        "by": "Scott",
+        "at": "2026-11-24T09:41:15Z",
+        "where": "Growth OS 项目对话「更新全部品牌进度看板」线程，原话：「zbcarbon和三松都设计定稿了，完成第一阶段验收，剩下的stargo全系列和CLDBATTERY产品也是全部完成，后面就是开始每周两次的SEO,GEO,AEO等等一些列的优化了！」"
       }
     },
     "M": {
-      "status": "waiting_scott",
-      "note": "站点已上线但没有上线签字记录；临时数据根里上线守护通过",
+      "status": "done",
+      "note": "2026-11-24 业主确认：建站阶段全部完成。此前记录：站点已上线但没有上线签字记录；临时数据根里上线守护通过",
       "evidence": [
         "https://github.com/nickwei5050/website-SEO-/blob/claude/stargowork-e2e-fixes/docs/website-growth/stargowork-e2e-2026-11-09.md"
-      ]
+      ],
+      "approval": {
+        "by": "Scott",
+        "at": "2026-11-24T09:41:15Z",
+        "where": "Growth OS 项目对话「更新全部品牌进度看板」线程，原话：「zbcarbon和三松都设计定稿了，完成第一阶段验收，剩下的stargo全系列和CLDBATTERY产品也是全部完成，后面就是开始每周两次的SEO,GEO,AEO等等一些列的优化了！」"
+      }
     },
     "N": {
       "status": "in_progress",
-      "note": "同内容复测 4 项仍在，未做修复后复测",
+      "note": "2026-11-24 起进入每周两次（周一、周四）SEO / GEO / AEO 持续优化。此前记录：同内容复测 4 项仍在，未做修复后复测",
       "evidence": [
         "https://github.com/nickwei5050/website-SEO-/blob/claude/stargowork-e2e-fixes/docs/website-growth/stargowork-e2e-2026-11-09.md"
       ]
     },
     "O": {
-      "status": "not_started",
-      "note": "无站外台账"
+      "status": "in_progress",
+      "note": "2026-11-24 起进入每周两次（周一、周四）SEO / GEO / AEO 持续优化。此前记录：无站外台账"
     },
     "P": {
-      "status": "not_started",
-      "note": "无每周循环"
+      "status": "in_progress",
+      "note": "2026-11-24 起进入每周两次（周一、周四）SEO / GEO / AEO 持续优化。此前记录：无每周循环"
     },
     "Q": {
-      "status": "not_started",
-      "note": "无外链台账"
+      "status": "in_progress",
+      "note": "2026-11-24 起进入每周两次（周一、周四）SEO / GEO / AEO 持续优化。此前记录：无外链台账"
     },
     "R": {
-      "status": "not_started",
-      "note": "百度验证、ICP 都没有检测到"
+      "status": "in_progress",
+      "note": "2026-11-24 起进入每周两次（周一、周四）SEO / GEO / AEO 持续优化。此前记录：百度验证、ICP 都没有检测到"
     }
   },
   "rounds": [
