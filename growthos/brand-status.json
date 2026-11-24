@@ -9,7 +9,7 @@
     "zh",
     "en"
   ],
-  "updatedAt": "2026-11-24T10:30:00Z",
+  "updatedAt": "2026-11-24T10:08:23Z",
   "stages": {
     "A": {
       "status": "done",
@@ -180,8 +180,9 @@
       "note": "2026-11-24 起进入每周两次（周一、周四）SEO / GEO / AEO 持续优化。此前记录：无站外台账"
     },
     "P": {
-      "status": "in_progress",
-      "note": "2026-11-24 起进入每周两次（周一、周四）SEO / GEO / AEO 持续优化。此前记录：无每周循环"
+      "status": "done",
+      "note": "2026-11-24：每周两次计划已启用并有认领——体检复测（Temporal growthos-autopilot，周一、周四北京时间上午）和全面检查（growthos-growth-check，周一、周四 10:00），持续跑到合同期满；第一次按日程跑是 11-26 周四。11-24 手动试跑：体检 completed，全面检查 not_measured。 AI 可见度实测不在这两个计划里（要花模型费，另按月度上限跑）。 此前记录：无每周循环",
+      "doneAt": "2026-11-24"
     },
     "Q": {
       "status": "in_progress",
